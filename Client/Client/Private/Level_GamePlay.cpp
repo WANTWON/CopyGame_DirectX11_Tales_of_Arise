@@ -42,6 +42,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	//³È³È³¿
+
+
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
