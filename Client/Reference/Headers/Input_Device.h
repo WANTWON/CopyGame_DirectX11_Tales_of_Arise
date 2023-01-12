@@ -21,12 +21,16 @@ public:
 	}
 
 	_long Get_DIMMoveState(DIMM eMouseMoveID) {		
-		// return *(((_long*)&m_MouseState) + eMouseMoveID);
 		return ((_long*)&m_MouseState)[eMouseMoveID];
 	}
 
+	_bool Key_Down(_uchar eKeyID);
+	_bool Key_Up(_uchar eKeyID);
+	_bool Key_Pressing(_uchar eKeyID);
 
-
+	_bool Mouse_Down(DIMK eMouseKeyID);
+	_bool Mouse_Up(DIMK eMouseKeyID);
+	_bool Mouse_Pressing(DIMK eMouseKeyID);
 
 
 public:
@@ -38,10 +42,10 @@ private:
 	LPDIRECTINPUTDEVICE8		m_pKeyboard = nullptr;
 	LPDIRECTINPUTDEVICE8		m_pMouse = nullptr;
 
-	
-
-private:	
+private:
+	_char				m_preKeyState[256] = { 0 };
 	_char				m_byKeyState[256] = { 0 };
+	DIMOUSESTATE		m_PreMouseState;
 	DIMOUSESTATE		m_MouseState;
 
 public:
