@@ -7,13 +7,6 @@ sampler LinearSampler = sampler_state
 	AddressV = wrap;
 };
 
-sampler FireSampler = sampler_state
-{
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
-
 sampler PointSampler = sampler_state
 {
 	Filter = MIN_MAG_MIP_POINT;
@@ -25,7 +18,7 @@ sampler PointSampler = sampler_state
 RasterizerState RS_Default
 {
 	FillMode = solid;
-	CullMode = None;
+	CullMode = back;
 	FrontCounterClockwise = false;
 };
 
@@ -40,13 +33,6 @@ RasterizerState RS_SkyBox
 {
 	FillMode = solid;
 	CullMode = front;
-	FrontCounterClockwise = false;
-};
-
-RasterizerState RS_ShockWave
-{
-	FillMode = solid;
-	CullMode = NONE;
 	FrontCounterClockwise = false;
 };
 
