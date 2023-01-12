@@ -49,7 +49,7 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	if (GetKeyState(VK_UP) & 0x8000)
 	{
-		m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
+		m_pTransformCom->Sliding_Straight(fTimeDelta, m_pNavigationCom, 0.f);
 		m_pModelCom->Set_CurrentAnimIndex(4);
 	}
 	else

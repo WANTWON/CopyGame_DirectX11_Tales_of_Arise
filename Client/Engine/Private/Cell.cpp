@@ -67,7 +67,7 @@ _bool CCell::Compare_Points(const _float3 * pSourPoint, const _float3 * pDestPoi
 	return false;
 }
 
-_bool CCell::isIn(_fvector vPosition, _int* pNeighborIndex)
+_bool CCell::isIn(_fvector vPosition, _int* pNeighborIndex, _float3* vLastNormal)
 {
 	for (_uint i = 0; i < LINE_END; ++i)
 	{
@@ -75,10 +75,22 @@ _bool CCell::isIn(_fvector vPosition, _int* pNeighborIndex)
 		if (0 < XMVectorGetX(XMVector3Dot(vDir, XMVector3Normalize(XMLoadFloat3(&m_vNormals[i])))))
 		{
 			*pNeighborIndex = m_iNeighborIndices[i];
+			if (vLastNormal != nullptr)
+				*vLastNormal = m_vNormals[i];
 			return false;
 		}
+		if (vLastNormal != nullptr)
+			*vLastNormal = m_vNormals[i];
 	}
 	return true;
+}
+
+_vector CCell::Get_Center()
+{
+	_float PositionX = (m_vPoints[POINT_A].x + m_vPoints[POINT_B].x + m_vPoints[POINT_C].x) / 3.f;
+	_float PositionY = (m_vPoints[POINT_A].y + m_vPoints[POINT_B].y + m_vPoints[POINT_C].y) / 3.f;
+	_float PositionZ = (m_vPoints[POINT_A].z + m_vPoints[POINT_B].z + m_vPoints[POINT_C].z) / 3.f;
+	return XMVectorSet(PositionX, PositionY, PositionZ, 1.f);
 }
 
 #ifdef _DEBUG

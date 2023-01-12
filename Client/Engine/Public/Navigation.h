@@ -19,9 +19,18 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype(const _tchar* pNavigationData);
 	virtual HRESULT Initialize(void* pArg);
+	
 
 public:
 	_bool isMove(_fvector vPosition);
+	_float	Compute_Height(_vector vPosition, _float foffset);
+	void	Compute_CurrentIndex_byXZ(_vector vPosition);
+
+public: /*Getter Setter*/
+	_int	Get_CurrentCellIndex() { return m_NaviDesc.iCurrentCellIndex; }
+	_uint	Get_CurrentCellType();
+	_vector Get_CurrentCellCenter();
+	_vector Get_LastNormal() { return XMLoadFloat3(&m_vLastNormal); }
 
 #ifdef _DEBUG
 public:
@@ -31,6 +40,7 @@ public:
 private:
 	NAVIDESC				m_NaviDesc;
 	vector<class CCell*>	m_Cells;
+	_float3					m_vLastNormal = _float3(0.f, 0.f, 0.f);
 
 #ifdef _DEBUG
 private:

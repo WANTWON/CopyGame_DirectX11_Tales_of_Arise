@@ -21,7 +21,7 @@ private:
 	CTransform(const CTransform& rhs);
 	virtual ~CTransform() = default;
 
-public:
+public: /*Getter Setter */
 	_vector Get_State(STATE eState) const {
 		return XMLoadFloat4((_float4*)&m_WorldMatrix.m[eState][0]);
 	}	
@@ -50,8 +50,6 @@ public:
 		return TransposeMatrix;
 	
 	}
-
-
 	_float Get_Scale(STATE eState) {
 		return XMVectorGetX(XMVector3Length(XMLoadFloat4x4(&m_WorldMatrix).r[eState]));
 	}
@@ -73,11 +71,23 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 
+public: /* Not Use Sliding */
+	bool Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+	bool Go_Backward(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+	bool Go_Left(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+	bool Go_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+
+public: /* Use Sliding */
+	bool Sliding_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+	bool Sliding_Backward(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+	bool Sliding_Left(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+	bool Sliding_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+
 public:
-	void Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
-	void Go_Backward(_float fTimeDelta);
-	void Go_Left(_float fTimeDelta);
-	void Go_Right(_float fTimeDelta);	
+	void Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight, _float fEndiHeight);
+	bool Go_PosTarget(_float fTimeDelta, _vector TargetPos, class CNavigation* pNavigation = nullptr);
+	bool Go_PosDir(_float fTimeDelta, _vector vecDir, class CNavigation* pNavigation = nullptr);
+	bool Go_PosLerp(_float fTimeDelta, _vector TargetPos, _float fVecOffset);
 
 public:
 	void Turn(_fvector vAxis, _float fTimeDelta);

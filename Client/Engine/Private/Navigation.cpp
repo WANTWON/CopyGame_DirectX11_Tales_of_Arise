@@ -76,7 +76,7 @@ _bool CNavigation::isMove(_fvector vPosition)
 	_int		iNeighborIndex = -1;
 
 	/* 현재 존재하는 쎌안에서 움직였다. */
-	if (true == m_Cells[m_NaviDesc.iCurrentCellIndex]->isIn(vPosition, &iNeighborIndex))
+	if (true == m_Cells[m_NaviDesc.iCurrentCellIndex]->isIn(vPosition, &iNeighborIndex, &m_vLastNormal))
 		return true;
 
 	/* 현재 존재하는 쎌을 벗어난다.  */
@@ -90,7 +90,7 @@ _bool CNavigation::isMove(_fvector vPosition)
 				if (-1 == iNeighborIndex)
 					return false;
 
-				if (true == m_Cells[iNeighborIndex]->isIn(vPosition, &iNeighborIndex))
+				if (true == m_Cells[iNeighborIndex]->isIn(vPosition, &iNeighborIndex, &m_vLastNormal))
 					break;
 			}
 			
@@ -112,6 +112,59 @@ _bool CNavigation::isMove(_fvector vPosition)
 	return _bool();
 }
 
+_float CNavigation::Compute_Height(_vector vPosition, _float foffset)
+{
+	if (m_NaviDesc.iCurrentCellIndex == -1)
+		return XMVectorGetY(vPosition);
+
+	_vector PointA = XMLoadFloat3(&m_Cells[m_NaviDesc.iCurrentCellIndex]->Get_PointValue(CCell::POINT_A));
+	PointA = XMVectorSetW(PointA, 1.f);
+	_vector PointB = XMLoadFloat3(&m_Cells[m_NaviDesc.iCurrentCellIndex]->Get_PointValue(CCell::POINT_B));
+	PointB = XMVectorSetW(PointB, 1.f);
+	_vector PointC = XMLoadFloat3(&m_Cells[m_NaviDesc.iCurrentCellIndex]->Get_PointValue(CCell::POINT_C));
+	PointC = XMVectorSetW(PointC, 1.f);
+
+	_vector vPlane = XMPlaneFromPoints(PointA, PointB, PointC);
+
+	// _float		fHeight = (-ax - cz - d) / b;
+	_float		fHeight = (-XMVectorGetX(vPlane) * XMVectorGetX(vPosition) - XMVectorGetZ(vPlane) *XMVectorGetZ(vPosition) - XMVectorGetW(vPlane)) / XMVectorGetY(vPlane) + foffset;
+
+	return fHeight;
+}
+
+void CNavigation::Compute_CurrentIndex_byXZ(_vector vPosition)
+{
+	int	iIndexNum = 0;
+	_float fMinDistance = 9999;
+	_float fDistance;
+
+	for (int i = 0; i < m_Cells.size(); ++i)
+	{
+		fDistance = XMVectorGetX(XMVector3Length(vPosition - m_Cells[i]->Get_Center()));
+
+		if (fMinDistance > fDistance)
+		{
+			fMinDistance = fDistance;
+			iIndexNum = i;
+		}
+	}
+
+	m_NaviDesc.iCurrentCellIndex = iIndexNum;
+}
+
+_uint CNavigation::Get_CurrentCellType()
+{
+	if (m_NaviDesc.iCurrentCellIndex == -1)
+		return false;
+
+	return (_uint)m_Cells[m_NaviDesc.iCurrentCellIndex]->Get_CellType();
+}
+
+_vector CNavigation::Get_CurrentCellCenter()
+{
+	return m_Cells[m_NaviDesc.iCurrentCellIndex]->Get_Center();
+}
+
 #ifdef _DEBUG
 HRESULT CNavigation::Render()
 {
@@ -130,12 +183,25 @@ HRESULT CNavigation::Render()
 	{
 		m_pShader->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
 		m_pShader->Set_RawValue("g_vColor", &_float4(0.f, 1.f, 0.f, 1.f), sizeof(_float4));
-		m_pShader->Begin(0);
+	
 
 		for (auto& pCell : m_Cells)
 		{
 			if (nullptr != pCell)
 			{
+				if (nullptr != pCell)
+				{
+					switch (pCell->Get_CellType())
+					{
+					case Engine::CCell::DEFAULT:
+						m_pShader->Set_RawValue("g_vColor", &_float4(1.f, 0.f, 0.f, 1.f), sizeof(_float4));
+						break;
+					case Engine::CCell::ONLYJUMP:
+						m_pShader->Set_RawValue("g_vColor", &_float4(0.f, 0.f, 1.f, 1.f), sizeof(_float4));
+						break;
+					}
+				}
+				m_pShader->Begin(0);
 				pCell->Render();
 			}
 		}
