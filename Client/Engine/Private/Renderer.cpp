@@ -214,10 +214,10 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 HRESULT CRenderer::Render_AlphaBlend()
 {
 	
-	//m_GameObjects[RENDER_ALPHABLEND].sort([](CGameObject* pSour, CGameObject* pDest)
-	//{
-	//	return pSour->Get_CamDistance() > pDest->Get_CamDistance();
-	//});
+	m_GameObjects[RENDER_ALPHABLEND].sort([](CGameObject* pSour, CGameObject* pDest)
+	{
+		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
+	});
 
 	for (auto& pGameObject : m_GameObjects[RENDER_ALPHABLEND])
 	{
@@ -235,7 +235,7 @@ HRESULT CRenderer::Render_AlphaBlend()
 
 HRESULT CRenderer::Render_UI()
 {
-	for (auto& pGameObject : m_GameObjects[RENDER_UI])
+	for (auto& pGameObject : m_GameObjects[RENDER_UI_BACK])
 	{
 		if (nullptr != pGameObject)
 		{
@@ -244,7 +244,18 @@ HRESULT CRenderer::Render_UI()
 		}
 	}
 
-	m_GameObjects[RENDER_UI].clear();
+	m_GameObjects[RENDER_UI_BACK].clear();
+
+	for (auto& pGameObject : m_GameObjects[RENDER_UI_FRONT])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render();
+			Safe_Release(pGameObject);
+		}
+	}
+
+	m_GameObjects[RENDER_UI_FRONT].clear();
 	return S_OK;
 }
 

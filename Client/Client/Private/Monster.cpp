@@ -4,12 +4,12 @@
 #include "GameInstance.h"
 
 CMonster::CMonster(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CBaseObj(pDevice, pContext)
 {
 }
 
 CMonster::CMonster(const CMonster & rhs)
-	: CGameObject(rhs)
+	: CBaseObj(rhs)
 {
 }
 
@@ -20,7 +20,7 @@ HRESULT CMonster::Initialize_Prototype()
 
 HRESULT CMonster::Initialize(void * pArg)
 {
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(rand() % 10, 0.f, rand() % 10, 1.f));
@@ -34,8 +34,6 @@ int CMonster::Tick(_float fTimeDelta)
 	
 	m_pModelCom->Play_Animation(fTimeDelta);
 
-	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
-	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return OBJ_NOEVENT;
@@ -45,20 +43,16 @@ void CMonster::Late_Tick(_float fTimeDelta)
 {
 	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
 
-	CCollider*	pTargetCollider = (CCollider*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_OBB"));
+	CCollider*	pTargetCollider = (CCollider*)pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_SPHERE"));
 	if (nullptr == pTargetCollider)
 		return;
 
-	m_pOBBCom->Collision_OBB(pTargetCollider);
+	m_pSPHERECom->Collision(pTargetCollider);
 	
 	if (nullptr != m_pRendererCom &&
 		true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 2.f))
 	{
-#ifdef _DEBUG
-		m_pRendererCom->Add_Debug(m_pAABBCom);
-		m_pRendererCom->Add_Debug(m_pOBBCom);
-		m_pRendererCom->Add_Debug(m_pSPHERECom);
-#endif
+		__super::Late_Tick(fTimeDelta);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
 
@@ -82,18 +76,15 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 0)))
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
 			return E_FAIL;
 	}
-
-
-
 
 
 	return S_OK;
 }
 
-HRESULT CMonster::Ready_Components()
+HRESULT CMonster::Ready_Components(void * pArg)
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -110,33 +101,21 @@ HRESULT CMonster::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimModel"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Model*/
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
+
 	CCollider::COLLIDERDESC		ColliderDesc;
-
-	/* For.Com_AABB */
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-
-	ColliderDesc.vScale = _float3(0.7f, 1.4f, 0.7f);
-	ColliderDesc.vPosition = _float3(0.f, 0.7f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
-		return E_FAIL;
-
-	/* For.Com_OBB*/
-	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
-	ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
-		return E_FAIL;
 
 	/* For.Com_SPHERE */
 	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
@@ -171,7 +150,7 @@ CMonster * CMonster::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pConte
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CPlayer"));
+		ERR_MSG(TEXT("Failed to Created : CMonster"));
 		Safe_Release(pInstance);
 	}
 
@@ -185,7 +164,7 @@ CGameObject * CMonster::Clone(void * pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CPlayer"));
+		ERR_MSG(TEXT("Failed to Cloned : CMonster"));
 		Safe_Release(pInstance);
 	}
 
@@ -196,12 +175,5 @@ void CMonster::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pAABBCom);
-	Safe_Release(m_pOBBCom);
-	Safe_Release(m_pSPHERECom);
-
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pShaderCom);	
 	Safe_Release(m_pModelCom);
-	Safe_Release(m_pRendererCom);
 }

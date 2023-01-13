@@ -5,12 +5,12 @@
 #include "Weapon.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CBaseObj(pDevice, pContext)
 {
 }
 
 CPlayer::CPlayer(const CPlayer & rhs)
-	: CGameObject(rhs)
+	: CBaseObj(rhs)
 {
 }
 
@@ -21,7 +21,7 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void * pArg)
 {
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Parts()))
@@ -57,8 +57,6 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta);
 
-	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
-	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	for (auto& pParts : m_Parts)
@@ -76,13 +74,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
-
-#ifdef _DEBUG
-		m_pRendererCom->Add_Debug(m_pAABBCom);
-		m_pRendererCom->Add_Debug(m_pOBBCom);
-		m_pRendererCom->Add_Debug(m_pSPHERECom);
-		m_pRendererCom->Add_Debug(m_pNavigationCom);
-#endif
+		__super::Late_Tick(fTimeDelta);
 		
 	}
 }
@@ -106,9 +98,6 @@ HRESULT CPlayer::Render()
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 0)))
 			return E_FAIL;
 	}
-
-
-
 
 
 	return S_OK;
@@ -144,7 +133,7 @@ HRESULT CPlayer::Ready_Parts()
 	return S_OK;
 }
 
-HRESULT CPlayer::Ready_Components()
+HRESULT CPlayer::Ready_Components(void* pArg)
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -161,7 +150,7 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxAnimModel"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Model*/
@@ -169,25 +158,12 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 
 	CCollider::COLLIDERDESC		ColliderDesc;
-
-	/* For.Com_AABB */
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-
-	ColliderDesc.vScale = _float3(0.7f, 1.4f, 0.7f);
-	ColliderDesc.vPosition = _float3(0.f, 0.7f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
-		return E_FAIL;
-
-	/* For.Com_OBB*/
-	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
-	ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
-		return E_FAIL;
 
 	/* For.Com_SPHERE */
 	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
@@ -199,6 +175,7 @@ HRESULT CPlayer::Ready_Components()
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
+	m_vecNavigaitions.push_back(m_pNavigationCom);
 
 	return S_OK;
 }
@@ -222,6 +199,25 @@ HRESULT CPlayer::SetUp_ShaderResources()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+void CPlayer::Change_Navigation(LEVEL eLevel)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	switch (eLevel)
+	{
+	case Client::LEVEL_GAMEPLAY:
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Navigation")));
+		break;
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CPlayer::Compute_CurrentIndex(LEVEL eLevel)
+{
+	m_pNavigationCom->Compute_CurrentIndex_byXZ(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 }
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -260,13 +256,10 @@ void CPlayer::Free()
 
 	m_Parts.clear();
 
-	Safe_Release(m_pAABBCom);
-	Safe_Release(m_pOBBCom);
-	Safe_Release(m_pSPHERECom);
+	for (auto& iter : m_vecNavigaitions)
+		Safe_Release(iter);
+	m_vecNavigaitions.clear();
 
 	Safe_Release(m_pNavigationCom);
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pShaderCom);	
 	Safe_Release(m_pModelCom);
-	Safe_Release(m_pRendererCom);
 }

@@ -246,6 +246,14 @@ _uint CGameInstance::Get_CurrentLevelIndex()
 	return m_pLevel_Manager->Get_CurrentLevelIndex();
 }
 
+_uint CGameInstance::Get_PastLevelIndex()
+{
+	if (nullptr == m_pLevel_Manager)
+		return _uint();
+
+	return m_pLevel_Manager->Get_PastLevelIndex();
+}
+
 _uint CGameInstance::Get_DestinationLevelIndex()
 {
 	if (nullptr == m_pLevel_Manager)

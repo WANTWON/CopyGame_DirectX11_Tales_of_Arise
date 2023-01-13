@@ -22,7 +22,7 @@ HRESULT CCustomFont::Render(const _tchar* pText, _fvector vPosition, _fvector vC
 
 	m_pSprite->Begin();
 
-	m_pFont->DrawString(m_pSprite, pText, vPosition, vColor, fScale);
+	m_pFont->DrawString(m_pSprite, pText, vPosition, vColor, 0, XMVectorSet(0, 0, 0, 0), fScale);
 
 	m_pSprite->End();
 

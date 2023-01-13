@@ -55,6 +55,7 @@ public: /* For.Level_Manager */
 	HRESULT Open_Level(unsigned int iLevelIndex, class CLevel* pNewLevel);
 	class CLevel* Get_CurrentLevel();
 	_uint Get_CurrentLevelIndex();
+	_uint Get_PastLevelIndex();
 	_uint Get_DestinationLevelIndex();
 	void Set_DestinationLevel(_uint LevelIndex);
 

@@ -1,15 +1,11 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "BaseObj.h"
 
 
 BEGIN(Engine)
 
-class CShader;
-class CCollider;
-class CRenderer;
-class CTransform;
 class CModel;
 
 END
@@ -17,7 +13,7 @@ END
 
 BEGIN(Client)
 
-class CMonster final : public CGameObject
+class CMonster final : public CBaseObj
 {
 private:
 	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -33,20 +29,11 @@ public:
 	virtual HRESULT Render();
 
 private:
-	CShader*				m_pShaderCom = nullptr;	
-	CRenderer*				m_pRendererCom = nullptr;
-	CTransform*				m_pTransformCom = nullptr;
-	CModel*					m_pModelCom = nullptr;
-
-	CCollider*				m_pAABBCom = nullptr;
-	CCollider*				m_pOBBCom = nullptr;
-	CCollider*				m_pSPHERECom = nullptr;
-
-
-private:
-	HRESULT Ready_Components();
+	HRESULT Ready_Components(void * pArg);
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
 
+private:
+	CModel*					m_pModelCom = nullptr;
 
 public:
 	static CMonster* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

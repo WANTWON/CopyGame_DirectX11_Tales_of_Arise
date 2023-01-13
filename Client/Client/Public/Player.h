@@ -1,15 +1,11 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "BaseObj.h"
 
 
 BEGIN(Engine)
 
-class CShader;
-class CCollider;
-class CRenderer;
-class CTransform;
 class CNavigation;
 class CModel;
 
@@ -18,7 +14,7 @@ END
 
 BEGIN(Client)
 
-class CPlayer final : public CGameObject
+class CPlayer final : public CBaseObj
 {	
 public:
 	enum PARTS { PARTS_WEAPON, PARTS_END };
@@ -34,25 +30,21 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+public: /*For Navigation*/
+	void	Change_Navigation(LEVEL eLevel);
+	void	Compute_CurrentIndex(LEVEL eLevel);
+
 private:
-	CShader*				m_pShaderCom = nullptr;	
-	CRenderer*				m_pRendererCom = nullptr;
-	CTransform*				m_pTransformCom = nullptr;
 	CModel*					m_pModelCom = nullptr;
-
 	CNavigation*			m_pNavigationCom = nullptr;
-
-	CCollider*				m_pAABBCom = nullptr;
-	CCollider*				m_pOBBCom = nullptr;
-	CCollider*				m_pSPHERECom = nullptr;
+	vector<CNavigation*>	m_vecNavigaitions;
 
 private:
 	vector<class CGameObject*>			m_Parts;
 
-
 private:
 	HRESULT Ready_Parts();
-	HRESULT Ready_Components();
+	HRESULT Ready_Components(void* pArg);
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
 
 

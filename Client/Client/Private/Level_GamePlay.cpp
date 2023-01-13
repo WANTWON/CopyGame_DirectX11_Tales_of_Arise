@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "Camera_Dynamic.h"
-
+#include "Player.h"
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -23,6 +23,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
+	
 	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
@@ -95,8 +96,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Player"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Player"), LEVEL_STATIC, pLayerTag, nullptr)))
 		return E_FAIL;	
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(36.3f, 0.f, 44.8f, 1.f));
+	//pPlayer->Set_State(CTransform::STATE_POSITION, XMVectorSet(16.3f, 0.f, 18.8f, 1.f));
+	//pPlayer->Set_State(CTransform::STATE_POSITION, XMVectorSet(55.8f, 4.2f, 10.3f, 1.f));
+	//pPlayer->Set_State(CTransform::STATE_POSITION, XMVectorSet(2.33f, 3.f, 66.8f, 1.f));
+	pPlayer->Change_Navigation(LEVEL_GAMEPLAY);
+	pPlayer->Compute_CurrentIndex(LEVEL_GAMEPLAY);
 
 	Safe_Release(pGameInstance);
 
@@ -116,7 +125,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Monster"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
 			return E_FAIL;
 	}
-
 	
 
 	Safe_Release(pGameInstance);
