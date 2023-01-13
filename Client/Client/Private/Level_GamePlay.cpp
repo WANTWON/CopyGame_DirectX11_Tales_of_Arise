@@ -100,7 +100,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 		return E_FAIL;	
 
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(36.3f, 0.f, 44.8f, 1.f));
+	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0, 0.f, 0, 1.f));
 	//pPlayer->Set_State(CTransform::STATE_POSITION, XMVectorSet(16.3f, 0.f, 18.8f, 1.f));
 	//pPlayer->Set_State(CTransform::STATE_POSITION, XMVectorSet(55.8f, 4.2f, 10.3f, 1.f));
 	//pPlayer->Set_State(CTransform::STATE_POSITION, XMVectorSet(2.33f, 3.f, 66.8f, 1.f));
