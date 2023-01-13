@@ -17,6 +17,7 @@ public:
 
 public:
 	HRESULT Initialize(const LIGHTDESC& LightDesc);
+	void Set_LightDesc(LIGHTDESC* pLightDesc) { memcpy(&m_LightDesc, pLightDesc, sizeof(LIGHTDESC)); }
 
 #ifdef _DEBUG
 public:

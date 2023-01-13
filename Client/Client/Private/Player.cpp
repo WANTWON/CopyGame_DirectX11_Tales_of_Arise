@@ -32,7 +32,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CPlayer::Tick(_float fTimeDelta)
+int CPlayer::Tick(_float fTimeDelta)
 {
 	if (GetKeyState(VK_LEFT) & 0x8000)
 	{
@@ -63,6 +63,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	for (auto& pParts : m_Parts)
 		pParts->Tick(fTimeDelta);
+
+	return OBJ_NOEVENT;
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)

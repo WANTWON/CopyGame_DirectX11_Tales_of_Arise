@@ -26,9 +26,9 @@ HRESULT CSky::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CSky::Tick(_float fTimeDelta)
+int CSky::Tick(_float fTimeDelta)
 {
-	
+	return OBJ_NOEVENT;
 }
 
 void CSky::Late_Tick(_float fTimeDelta)

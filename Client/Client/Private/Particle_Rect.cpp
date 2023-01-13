@@ -27,10 +27,10 @@ HRESULT CParticle_Rect::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CParticle_Rect::Tick(_float fTimeDelta)
+int CParticle_Rect::Tick(_float fTimeDelta)
 {
 	m_pVIBufferCom->Update(fTimeDelta);
-
+	return OBJ_NOEVENT;
 }
 
 void CParticle_Rect::Late_Tick(_float fTimeDelta)

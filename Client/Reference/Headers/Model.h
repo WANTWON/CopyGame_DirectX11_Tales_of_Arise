@@ -4,7 +4,7 @@
 #include "HierarchyNode.h"
 
 BEGIN(Engine)
-
+class CTransform;
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
@@ -35,9 +35,10 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 
 public:
-	HRESULT SetUp_Material(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType eType);
+	HRESULT SetUp_Material(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint TextureNum = 0);
 	HRESULT Play_Animation(_float fTimeDelta);
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
+	_bool Picking(CTransform * pTransform, _float3 * pOut);
 
 	
 

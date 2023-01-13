@@ -17,6 +17,9 @@ public:
 	virtual HRESULT Render();
 
 protected:
+	virtual _bool Picking(class CTransform * pTransform, _float3 * pOut = nullptr) { return false; };
+
+protected:
 	ID3D11Buffer*				m_pVB = nullptr;
 	_uint						m_iNumVertices = 0;
 	_uint						m_iStride = 0;

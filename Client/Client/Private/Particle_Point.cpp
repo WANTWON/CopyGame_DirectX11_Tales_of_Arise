@@ -28,10 +28,10 @@ HRESULT CParticle_Point::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CParticle_Point::Tick(_float fTimeDelta)
+int CParticle_Point::Tick(_float fTimeDelta)
 {
 	m_pVIBufferCom->Update(fTimeDelta);
-
+	return OBJ_NOEVENT;
 }
 
 void CParticle_Point::Late_Tick(_float fTimeDelta)

@@ -23,6 +23,8 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, const aiMesh* pAIMesh, class CModel* pModel, _fmatrix PivotMatrix);
 	virtual HRESULT Initialize(void* pArg);
+	_bool Picking(CTransform * pTransform, _float3 * pOut);
+
 
 public:
 	HRESULT SetUp_Bones(class CModel* pModel);

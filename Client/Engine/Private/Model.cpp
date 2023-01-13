@@ -104,12 +104,12 @@ HRESULT CModel::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _uint iMeshIndex, aiTextureType eType)
+HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _uint iMeshIndex, aiTextureType eType, _uint TextureNum)
 {
 	if (iMeshIndex >= m_iNumMeshes)
 		return E_FAIL;
 
-	return pShader->Set_ShaderResourceView(pConstantName, m_Materials[m_Meshes[iMeshIndex]->Get_MaterialIndex()].pMaterials[eType]->Get_SRV());
+	return pShader->Set_ShaderResourceView(pConstantName, m_Materials[m_Meshes[iMeshIndex]->Get_MaterialIndex()].pMaterials[eType]->Get_SRV(TextureNum));
 }
 
 HRESULT CModel::Play_Animation(_float fTimeDelta)
@@ -152,6 +152,17 @@ HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
 	m_Meshes[iMeshIndex]->Render();
 
 	return S_OK;
+}
+
+_bool CModel::Picking(CTransform * pTransform, _float3 * pOut)
+{
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	{
+		if (m_Meshes[i]->Picking(pTransform, pOut))
+			return true;
+	}
+
+	return false;
 }
 
 

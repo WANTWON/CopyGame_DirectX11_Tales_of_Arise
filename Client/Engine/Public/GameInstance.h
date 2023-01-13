@@ -13,6 +13,7 @@
 #include "Font_Manager.h"
 #include "Target_Manager.h"
 #include "Sound_Manager.h"
+#include "Picking.h"
 BEGIN(Engine)
 
 class ENGINE_DLL CGameInstance final : public CBase
@@ -80,10 +81,16 @@ public: /* For.PipeLine */
 public: /* For.Light_Manager */
 	const LIGHTDESC* Get_LightDesc(_uint iIndex);
 	HRESULT Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
+	void Set_LightDesc(_uint iIndex, LIGHTDESC* pLightDesc);
+	void Clear_AllLight();
+	void Clear_Light(_uint iIndex);
+	_uint Get_LightSize();
+	HRESULT	Set_ShadowLightView(_float4 vEye, _float4 vAt);
+	_float4x4	Get_ShadowLightView();
 
 public: /* For.Font_Manager */
 	HRESULT Add_Fonts(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pFontTag, const _tchar* pFontFilePath);
-	HRESULT Render_Font(const _tchar* pFontTag, const _tchar* pText, _fvector vPos, _fvector vColor);
+	HRESULT Render_Font(const _tchar* pFontTag, const _tchar* pText, _fvector vPos, _fvector vColor, _float fScale = 1.f);
 
 public: /* For. Sound Manager */
 	void PlaySounds(TCHAR* pSoundKey, const _uint& eID, const float& fVolume);
@@ -94,6 +101,10 @@ public: /* For. Sound Manager */
 	int  VolumeUp(const _uint& eID, const _float& _vol);
 	int  VolumeDown(const _uint& eID, const _float& _vol);
 	int  Pause(const _uint& eID);
+
+public: /* For Picking */
+	_vector Get_RayPos();
+	_vector Get_RayDir();
 
 public: /* For.Frustum */
 	_bool isIn_WorldFrustum(_fvector vPosition, _float fRange = 0.f);
@@ -115,6 +126,7 @@ private:
 	CFrustum*						m_pFrustum = nullptr;
 	CTarget_Manager*				m_pTarget_Manager = nullptr;
 	CSound_Manager*					m_pSound_Manager = nullptr;
+	CPicking*						m_pPicking = nullptr;
 public:
 	virtual void Free() override;
 };

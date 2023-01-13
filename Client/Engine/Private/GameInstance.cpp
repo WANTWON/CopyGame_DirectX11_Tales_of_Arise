@@ -15,7 +15,9 @@ CGameInstance::CGameInstance()
 	, m_pFrustum(CFrustum::Get_Instance())
 	, m_pTarget_Manager(CTarget_Manager::Get_Instance())
 	, m_pSound_Manager(CSound_Manager::Get_Instance())
+	, m_pPicking(CPicking::Get_Instance())
 {	
+	Safe_AddRef(m_pPicking);
 	Safe_AddRef(m_pSound_Manager);
 	Safe_AddRef(m_pTarget_Manager);
 	Safe_AddRef(m_pFrustum);
@@ -43,6 +45,10 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 
 	/* 입력 디바이스를 초기화한다. */
 	if (FAILED(m_pInput_Device->Initialize(hInst, GraphicDesc.hWnd)))
+		return E_FAIL;
+
+	/* 픽킹 초기화한다 */
+	if (FAILED(m_pPicking->Initialize(GraphicDesc.hWnd, GraphicDesc.iWinSizeX, GraphicDesc.iWinSizeY, *ppDevice, *ppContext)))
 		return E_FAIL;
 
 	/* 사운드 디바이스를 초기화한다. */
@@ -74,6 +80,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pObject_Manager->Tick(fTimeDelta);
 
 	m_pPipeLine->Update();
+	m_pPicking->Tick();
 	m_pFrustum->Transform_ToWorldSpace();
 
 	m_pLevel_Manager->Late_Tick(fTimeDelta);
@@ -383,6 +390,52 @@ HRESULT CGameInstance::Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * p
 	return m_pLight_Manager->Add_Light(pDevice, pContext, LightDesc);	
 }
 
+void CGameInstance::Set_LightDesc(_uint iIndex, LIGHTDESC * pLightDesc)
+{
+	if (nullptr == m_pLight_Manager)
+		return;
+
+	return m_pLight_Manager->Set_LightDesc(iIndex, pLightDesc);
+}
+
+
+void CGameInstance::Clear_AllLight()
+{
+	if (nullptr == m_pLight_Manager)
+		return;
+
+	return m_pLight_Manager->Clear_AllLight();
+}
+
+void CGameInstance::Clear_Light(_uint iIndex)
+{
+	if (nullptr == m_pLight_Manager)
+		return;
+
+	return m_pLight_Manager->Clear_Light(iIndex);
+}
+
+_uint CGameInstance::Get_LightSize()
+{
+	return m_pLight_Manager->Get_LightSize();
+}
+
+HRESULT CGameInstance::Set_ShadowLightView(_float4 vEye, _float4 vAt)
+{
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	return m_pLight_Manager->Set_ShadowLightView(vEye, vAt);
+}
+
+_float4x4 CGameInstance::Get_ShadowLightView()
+{
+	if (nullptr == m_pLight_Manager)
+		return _float4x4();
+
+	return m_pLight_Manager->Get_ShadowLightView();
+}
+
 HRESULT CGameInstance::Add_Fonts(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _tchar * pFontTag, const _tchar * pFontFilePath)
 {
 	if (nullptr == m_pFont_Manager)
@@ -391,12 +444,12 @@ HRESULT CGameInstance::Add_Fonts(ID3D11Device * pDevice, ID3D11DeviceContext * p
 	return m_pFont_Manager->Add_Fonts(pDevice, pContext, pFontTag, pFontFilePath);	
 }
 
-HRESULT CGameInstance::Render_Font(const _tchar * pFontTag, const _tchar * pText, _fvector vPos, _fvector vColor)
+HRESULT CGameInstance::Render_Font(const _tchar * pFontTag, const _tchar * pText, _fvector vPos, _fvector vColor, _float fScale)
 {
 	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
 
-	return m_pFont_Manager->Render_Font(pFontTag, pText, vPos, vColor);
+	return m_pFont_Manager->Render_Font(pFontTag, pText, vPos, vColor, fScale);
 }
 
 
@@ -464,6 +517,22 @@ int CGameInstance::Pause(const _uint & eID)
 	return m_pSound_Manager->Pause(eID);
 }
 
+_vector CGameInstance::Get_RayPos()
+{
+	if (nullptr == m_pPicking)
+		return _vector();
+
+	return m_pPicking->Get_RayPos();
+}
+
+_vector CGameInstance::Get_RayDir()
+{
+	if (nullptr == m_pPicking)
+		return _vector();
+
+	return m_pPicking->Get_RayDir();
+}
+
 
 _bool CGameInstance::isIn_WorldFrustum(_fvector vPosition, _float fRange)
 {
@@ -499,11 +568,14 @@ void CGameInstance::Release_Engine()
 
 	CSound_Manager::Get_Instance()->Destroy_Instance();
 
+	CPicking::Get_Instance()->Destroy_Instance();
+
 	CGraphic_Device::Get_Instance()->Destroy_Instance();
 }
 
 void CGameInstance::Free()
 {	
+	Safe_Release(m_pPicking);
 	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pFrustum);

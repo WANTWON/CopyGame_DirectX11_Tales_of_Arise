@@ -35,7 +35,7 @@ HRESULT CWeapon::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CWeapon::Tick(_float fTimeDelta)
+int CWeapon::Tick(_float fTimeDelta)
 {
 	_matrix		SocketMatrix = m_WeaponDesc.pSocket->Get_OffsetMatrix() * 
 		m_WeaponDesc.pSocket->Get_CombinedTransformationMatrix() * 
@@ -49,6 +49,8 @@ void CWeapon::Tick(_float fTimeDelta)
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix);
 
 	m_pOBBCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+
+	return OBJ_NOEVENT;
 }
 
 void CWeapon::Late_Tick(_float fTimeDelta)

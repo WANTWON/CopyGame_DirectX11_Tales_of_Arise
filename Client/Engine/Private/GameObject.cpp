@@ -25,8 +25,9 @@ HRESULT CGameObject::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CGameObject::Tick(_float fTimeDelta)
+int CGameObject::Tick(_float fTimeDelta)
 {
+	return OBJ_NOEVENT;
 }
 
 void CGameObject::Late_Tick(_float fTimeDelta)

@@ -34,12 +34,14 @@ HRESULT CUI_Portrait::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CUI_Portrait::Tick(_float fTimeDelta)
+int CUI_Portrait::Tick(_float fTimeDelta)
 {
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSizeX);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSizeY);
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+	return OBJ_NOEVENT;
 }
 
 void CUI_Portrait::Late_Tick(_float fTimeDelta)

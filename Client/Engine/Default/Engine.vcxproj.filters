@@ -139,6 +139,9 @@
     <ClCompile Include="..\Private\Sound_Manager.cpp">
       <Filter>00.System\03.Sound</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Picking.cpp">
+      <Filter>01.Utility\10.Picking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -291,6 +294,9 @@
     <ClInclude Include="..\Public\Sound_Manager.h">
       <Filter>00.System\03.Sound</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Picking.h">
+      <Filter>01.Utility\10.Picking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.System">
@@ -439,6 +445,9 @@
     </Filter>
     <Filter Include="00.System\03.Sound">
       <UniqueIdentifier>{96befa80-0f70-428f-9eee-9e9258b6cfd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\10.Picking">
+      <UniqueIdentifier>{ce0968bd-70b4-4c72-a608-dd2b9b19d741}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

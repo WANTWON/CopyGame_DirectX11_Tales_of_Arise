@@ -29,7 +29,7 @@ HRESULT CMonster::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CMonster::Tick(_float fTimeDelta)
+int CMonster::Tick(_float fTimeDelta)
 {
 	
 	m_pModelCom->Play_Animation(fTimeDelta);
@@ -37,6 +37,8 @@ void CMonster::Tick(_float fTimeDelta)
 	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+
+	return OBJ_NOEVENT;
 }
 
 void CMonster::Late_Tick(_float fTimeDelta)
