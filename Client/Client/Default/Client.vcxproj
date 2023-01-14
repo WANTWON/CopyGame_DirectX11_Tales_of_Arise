@@ -107,7 +107,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../Public/;../../Reference/Headers/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../Reference/Headers/;../Default/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,6 +173,9 @@
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Collision_Manger.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
+    <ClInclude Include="..\public\PlayerIdleState.h" />
+    <ClInclude Include="..\public\PlayerState.h" />
+    <ClInclude Include="..\public\PlayerRunState.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\public\UI_Screen.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
@@ -191,6 +194,7 @@
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\UI_Portrait.h" />
+    <ClInclude Include="..\public\PlayerWalkState.h" />
     <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -201,6 +205,8 @@
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Collision_Manger.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
+    <ClCompile Include="..\private\PlayerIdleState.cpp" />
+    <ClCompile Include="..\private\PlayerRunState.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\private\UI_Screen.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
@@ -218,6 +224,7 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\UI_Portrait.cpp" />
+    <ClCompile Include="..\private\PlayerWalkState.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
