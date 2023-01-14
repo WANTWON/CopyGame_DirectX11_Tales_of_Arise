@@ -72,7 +72,7 @@ public:
 	HRESULT SaveSceneData(DATA_BINSCENE* pScene, char* cModelName, DATA_TYPE eTYPE);
 	HRESULT ReadSceneData(char* pFileName, DATA_BINSCENE* pScene, DATA_TYPE eTYPE);
 
-	HRESULT Create_Try_BinModel(const _tchar* pModelName, LEVEL eLEVEL, DATA_TYPE eTYPE);
+	HRESULT Create_Try_BinModel(const _tchar* pModelName, LEVEL eLEVEL, DATA_TYPE eTYPE, _matrix* matPivot = nullptr);
 
 
 private:

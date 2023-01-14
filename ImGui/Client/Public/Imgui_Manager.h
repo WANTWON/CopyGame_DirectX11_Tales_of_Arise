@@ -44,7 +44,6 @@ public:
 public:
 	/* For Debug*/
 	void ShowSimpleMousePos(bool* p_open);
-	void ShowPickedObjLayOut(bool* p_open);
 	void ShowPickedObj();
 	void Show_PopupBox();
 

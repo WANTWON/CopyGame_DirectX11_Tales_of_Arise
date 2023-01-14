@@ -3,6 +3,7 @@
 #include "Imgui_Manager.h"
 #include "PickingMgr.h"
 #include "GameInstance.h"
+#include "Data_Manager.h"
 
 CNonAnim::CNonAnim(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -43,12 +44,19 @@ HRESULT CNonAnim::Initialize(void * pArg)
 	}
 	
 
-	
-		
 	if (CImgui_Manager::Get_Instance()->Get_CameraPicking() == true)
 		CCamera_Manager::Get_Instance()->Add_CreatedCamera(this);
 	else
 		CModelManager::Get_Instance()->Add_CreatedModel(this);
+
+
+	//CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	//CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
+	//char cName[MAX_PATH];
+	//ZeroMemory(cName, sizeof(char) * MAX_PATH);
+	//pData_Manager->Conv_Bin_Model(m_pModelCom, m_ModelDesc.pModeltag, CData_Manager::DATA_NONANIM);
+	//RELEASE_INSTANCE(CData_Manager);
+	//RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -201,6 +209,7 @@ HRESULT CNonAnim::Ready_Components(void* pArg)
 	/* For.Com_Model*/
 	_tchar			szModeltag[MAX_PATH] = TEXT("");
 	MultiByteToWideChar(CP_ACP, 0, m_ModelDesc.pModeltag, strlen(m_ModelDesc.pModeltag), szModeltag, MAX_PATH);
+	
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, szModeltag, (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 	

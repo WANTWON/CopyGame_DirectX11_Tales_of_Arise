@@ -19,6 +19,11 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain & rhs)
 	Safe_AddRef(m_pQuadTree);
 }
 
+HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight)
+{
+	return S_OK;
+}
+
 HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath)
 {
 	_ulong			dwByte = 0;
@@ -403,6 +408,86 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3* pOut)
 	return false;
 }
 
+void CVIBuffer_Terrain::Set_Terrain_Shape(_float fHeight, _float fRad, _float fSharp, _float3 vPoint, _float fTimeDelta)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource;
+
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTXNORTEX* pVertices = (VTXNORTEX*)SubResource.pData;
+
+
+	for (_uint i = 0; i < m_iNumVerticesZ - 1; ++i)
+	{
+
+		for (_uint j = 0; j < m_iNumVerticesX - 1; ++j)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			_float3 vPos = pVertices[iIndex].vPosition;
+
+			_float fH = fHeight;
+			_float fRange = fRad;
+
+			_float3 vTemp1 = vPoint;
+			_float3 vTemp2 = pVertices[iIndex].vPosition;
+			vTemp1.y = vTemp2.y = 0.f;
+
+			_vector fDis = XMLoadFloat3(&vTemp1) - XMLoadFloat3(&vTemp2);
+			_float fLen = XMVectorGetX(XMVector3Length(fDis));
+
+			if (fRange > fLen)
+			{
+
+				_float fAcc = (fRange - fLen) / fRange;
+
+				fAcc = pow(fAcc, (1.f / fSharp));
+
+				_float fTempY = fH * fAcc;
+				if (fH > 0.01f)
+				{
+					if (fTempY > vPos.y)
+						vPos.y = fTempY;
+				}
+				else if (fH < -0.01f)
+					vPos.y += fTempY * fTimeDelta;
+				else
+					vPos.y = 0.f;
+
+			}
+
+			pVertices[iIndex].vPosition = vPos;
+		}
+
+	}
+
+	m_pContext->Unmap(m_pVB, 0);
+
+}
+
+void CVIBuffer_Terrain::Set_Terrain_Buffer(TERRAINDESC TerrainDesc)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource;
+
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTXNORTEX* pVertices = (VTXNORTEX*)SubResource.pData;
+
+	for (_int i = 0; i < TerrainDesc.m_iVerticeNumZ; ++i)
+	{
+		for (_int j = 0; j < TerrainDesc.m_iVerticeNumX; ++j)
+		{
+			_int		iIndex = i * m_iNumVerticesX + j;
+
+			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3((_float)TerrainDesc.m_iPositionX + j, TerrainDesc.m_fHeight, (_float)TerrainDesc.m_iPositionZ + i);
+			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
+			pVertices[iIndex].vTexture = _float2(j / _float(m_iNumVerticesX - 1), i / _float(m_iNumVerticesZ - 1));
+		}
+	}
+	m_pContext->Unmap(m_pVB, 0);
+}
+
+
 
 void CVIBuffer_Terrain::Culling(const CTransform * pTransform)
 {
@@ -490,6 +575,19 @@ CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11Devi
 	return pInstance;
 }
 
+CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight)
+{
+	CVIBuffer_Terrain*	pInstance = new CVIBuffer_Terrain(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype(iNumVerticeX, iNumVerticeZ, fHeight)))
+	{
+		ERR_MSG(TEXT("Failed to Created : CVIBuffer_Terrain"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
 
 CComponent * CVIBuffer_Terrain::Clone(void * pArg)
 {
@@ -508,4 +606,5 @@ void CVIBuffer_Terrain::Free()
 {
 	__super::Free();
 	Safe_Release(m_pQuadTree);
+	Safe_Delete_Array(m_pVerticesPos);
 }

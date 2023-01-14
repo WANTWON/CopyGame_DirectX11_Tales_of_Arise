@@ -312,7 +312,7 @@ HRESULT CData_Manager::ReadSceneData(char * pFileName, DATA_BINSCENE* ReadScene,
 }
 
 
-HRESULT CData_Manager::Create_Try_BinModel(const _tchar * pModelName, LEVEL eLEVEL, DATA_TYPE eTYPE)
+HRESULT CData_Manager::Create_Try_BinModel(const _tchar * pModelName, LEVEL eLEVEL, DATA_TYPE eTYPE, _matrix* matPivot)
 {
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -388,7 +388,7 @@ HRESULT CData_Manager::Create_Try_BinModel(const _tchar * pModelName, LEVEL eLEV
 		if (DATA_ANIM == eTYPE)
 			PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		else
-			PivotMatrix = XMMatrixScaling(1.f, 1.f, 1.f);
+			PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 		if (FAILED(pGameInstance->Add_Prototype(eLEVEL, pModelName,
 			CModel::Bin_Create(m_pDevice, m_pContext, Scene, etype, tPath, PivotMatrix))))
 		{

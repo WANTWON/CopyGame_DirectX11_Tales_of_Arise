@@ -258,7 +258,6 @@ void CImgui_Manager::Tick_Imgui()
 
 	if (m_bSave || m_bLoad)			BrowseForFolder();
 	if (m_bShowSimpleMousePos)      ShowSimpleMousePos(&m_bShowSimpleMousePos);
-	if (m_bShowPickedObject)		ShowPickedObjLayOut(&m_bShowPickedObject);
 	if (m_bFilePath)				Set_File_Path_Dialog();
 	if (m_bShow_app_style_editor) { ImGui::Begin("Dear ImGui Style Editor", &m_bShow_app_style_editor); ImGui::ShowStyleEditor(); ImGui::End(); }
 	ImGui::End();
@@ -1049,11 +1048,9 @@ void CImgui_Manager::Set_Terrain_Map()
 		CTerrain_Manager::TERRAINDESC TerrainDesc = CTerrain_Manager::Get_Instance()->Get_TerrainDesc();
 		TerrainDesc.m_eDebugTerrain = CTerrain_Manager::DEBUG_SOILD;
 		TerrainDesc.m_bShowWireFrame = true;
-		//_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, TEXT("Layer_DebugTerrian"), &TerrainDesc)))
 			return;
 
-		//delete LayerTag;
 	}
 
 
@@ -1074,15 +1071,14 @@ void CImgui_Manager::Set_Terrain_Map()
 
 	m_pTerrain_Manager->Set_TerrainDesc(&TerrainDesc);
 
-	/*if (m_PickingType == PICKING_TERRAIN_TRANSFORM)
+	if (m_PickingType == PICKING_TERRAIN_TRANSFORM)
 	{
 		if (CGameInstance::Get_Instance()->Mouse_Down(DIMK_LBUTTON))
 			CPickingMgr::Get_Instance()->Picking();
-	}*/
+	}
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_Z))
 	{
-
 		list<CGameObject*>* plistClone = CGameInstance::Get_Instance()->Get_ObjectList(m_iCurrentLevel, TEXT("Layer_Terrain"));
 		if (nullptr == plistClone || plistClone->size() == 0)
 			return;
@@ -1092,11 +1088,6 @@ void CImgui_Manager::Set_Terrain_Map()
 		Safe_Release(*iter);
 		plistClone->erase(iter);
 	}
-	/*else if (CGameInstance::Get_Instance()->Key_Up(DIK_SPACE))
-	{
-		if (FAILED(m_pTerrain_Manager->Create_Terrain(m_iCurrentLevel, TEXT("Layer_Terrain"))))
-			return;
-	}*/
 
 }
 
@@ -1211,94 +1202,6 @@ void CImgui_Manager::ShowSimpleMousePos(bool* p_open)
 	ImGui::End();
 }
 
-void CImgui_Manager::ShowPickedObjLayOut(bool * p_open)
-{
-	CPickingMgr* pPickingMgr = GET_INSTANCE(CPickingMgr);
-	CGameObject* pPickedObj = pPickingMgr->Get_PickedObj();
-
-
-	ImGui::SetNextWindowSize(ImVec2(200, 300), ImGuiCond_FirstUseEver);
-	if (ImGui::Begin("Picked Object Info", p_open, ImGuiWindowFlags_MenuBar))
-	{
-		ImGui::BeginGroup();
-		ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
-
-		if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
-		{
-			if (ImGui::BeginTabItem("Description"))
-			{
-
-				ImGui::BulletText("ObjectInfo");
-				const char* ObjectID[] = { "OBJ_BACKGROUND", "OBJ_MONSTER", "OBJ_BLOCK", "OBJ_INTERATIVE", "OBJ_UNINTERATIVE", "OBJ_END" };
-				static int iObjectID = 5;
-
-				if (pPickedObj != nullptr)
-				{
-					iObjectID = dynamic_cast<CBaseObj*>(pPickedObj)->Get_ObjectID();
-					DirectX::XMStoreFloat3(&m_vPickedObjPos, dynamic_cast<CBaseObj*>(pPickedObj)->Get_Position());
-					m_vPickedObjScale = dynamic_cast<CBaseObj*>(pPickedObj)->Get_Scale();
-
-				}
-				else
-				{
-					iObjectID = 5;
-					m_vPickedObjPos = _float3(0.f, 0.f, 0.f);
-					m_vPickedObjScale = _float3(1.f, 1.f, 1.f);
-				}
-
-
-				ImGui::NewLine();
-				ImGui::BulletText("Position");
-				ImGui::Text("Position X");
-				ImGui::SameLine();
-				ImGui::DragFloat("##PositionX", &m_vPickedObjPos.x);
-
-				ImGui::Text("Position Z");
-				ImGui::SameLine();
-				ImGui::DragFloat("##PositionZ", &m_vPickedObjPos.z);
-
-				ImGui::Text("Position Y");
-				ImGui::SameLine();
-				ImGui::DragFloat("##PositionY", &m_vPickedObjPos.y, 1.f, -10, 10);
-
-				ImGui::NewLine();
-
-				ImGui::BulletText("Scale");
-
-				static _float Pos[3] = { m_vPickedObjScale.x, m_vPickedObjScale.y,  m_vPickedObjScale.z };
-				Pos[0] = m_vPickedObjScale.x;
-				Pos[1] = m_vPickedObjScale.y;
-				Pos[2] = m_vPickedObjScale.z;
-
-				ImGui::Text("Scale");
-				ImGui::SameLine();
-				ImGui::InputFloat3("##SettingScale", Pos);
-				m_vPickedObjScale = _float3(Pos[0], Pos[1], Pos[2]);
-
-				if (pPickedObj != nullptr)
-				{
-					_vector vSettingPosition = DirectX::XMLoadFloat3(&m_vPickedObjPos);
-					vSettingPosition = XMVectorSetW(vSettingPosition, 1.f);
-					dynamic_cast<CBaseObj*>(pPickedObj)->Set_State(CTransform::STATE_TRANSLATION, vSettingPosition);
-					dynamic_cast<CBaseObj*>(pPickedObj)->Set_Scale(m_vPickedObjScale);
-
-				}
-
-				ImGui::EndTabItem();
-			}
-			ImGui::EndTabBar();
-		}
-		ImGui::EndChild();
-		if (ImGui::Button("Reset")) {}
-		ImGui::SameLine();
-		if (ImGui::Button("Save")) {}
-		ImGui::EndGroup();
-	}
-
-	RELEASE_INSTANCE(CPickingMgr);
-
-	ImGui::End();
-}
 
 void CImgui_Manager::ShowPickedObj()
 {

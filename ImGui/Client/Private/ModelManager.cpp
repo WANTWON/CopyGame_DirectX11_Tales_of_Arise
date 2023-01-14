@@ -15,33 +15,6 @@ CModelManager::CModelManager()
 }
 
 
-HRESULT CModelManager::Create_Model_Prototype(LEVEL eLevel, const _tchar * pModelTag, ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CModel::TYPE eModelType, _fmatrix PivotMatrix)
-{
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	const _tchar* pModelFilePath = Find_ModelTag(pModelTag);
-	if (pModelFilePath == nullptr)
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return E_FAIL;
-	}
-		
-
-	char szLayertag[MAX_PATH] = "";
-	WideCharToMultiByte(CP_ACP, 0, pModelFilePath, MAX_PATH, szLayertag, MAX_PATH, NULL, NULL);
-
-
-	if (FAILED(pGameInstance->Add_Prototype(eLevel, pModelTag, CModel::Create(pDevice, pContext, eModelType, szLayertag, PivotMatrix))))
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return E_FAIL;
-	}
-		
-
-	RELEASE_INSTANCE(CGameInstance);
-	return S_OK;
-}
-
 HRESULT CModelManager::Create_Model(LEVEL eLevel, const _tchar* pModelTag, const _tchar* pLayerTag, ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CModel::TYPE eModelType, _fmatrix PivotMatrix, _bool bCreatePrototype)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -53,7 +26,10 @@ HRESULT CModelManager::Create_Model(LEVEL eLevel, const _tchar* pModelTag, const
 	memcpy(&NonAnimDesc, &m_InitModelDesc, sizeof(CNonAnim::NONANIMDESC));
 	char cModelTag[MAX_PATH] = "";
 	WideCharToMultiByte(CP_ACP, 0, pModelTag, MAX_PATH, cModelTag, MAX_PATH, NULL, NULL);
-	strcpy(NonAnimDesc.pModeltag , cModelTag);
+	char *temp = strtok(cModelTag, ".fbx"); //공백을 기준으로 문자열 자르기
+	 
+	strcpy(NonAnimDesc.pModeltag , temp);
+
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), eLevel, pLayerTag, &NonAnimDesc)))
 	{

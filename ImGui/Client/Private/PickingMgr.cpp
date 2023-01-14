@@ -71,8 +71,6 @@ _bool CPickingMgr::Picking()
 			vecPicked.push_back(pGameObject);
 			vecPos.push_back(vPosition);
 			m_vPickingPos = vPosition;
-
-			return true;
 		}
 	}
 

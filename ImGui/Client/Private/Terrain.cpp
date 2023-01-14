@@ -45,10 +45,8 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 int CTerrain::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);	
 	if (m_bDead)
 		return OBJ_DEAD;
-
 
 	if (m_eDebugtype == DEBUG_SOILD)
 	{
@@ -79,7 +77,6 @@ HRESULT CTerrain::Render()
 	if (nullptr == m_pShaderCom ||
 		nullptr == m_pVIBufferCom)
 		return E_FAIL;
-
 
 	if (FAILED(SetUp_ShaderID()))
 		return E_FAIL;
@@ -238,7 +235,7 @@ void CTerrain::Set_Terrain_Shape()
 		_float fRad = TerrainShapeDesc.fRadius;
 		_float fSharp = TerrainShapeDesc.fSharp;
 
-	//	m_pVIBufferCom->Set_Terrain_Shape(fHegith, fRad, fSharp, m_vMousePickPos, 1.f);
+		m_pVIBufferCom->Set_Terrain_Shape(fHegith, fRad, fSharp, m_vMousePickPos, 1.f);
 	}
 	
 

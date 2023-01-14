@@ -136,11 +136,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 
 	/*For.Prototype_Component_VIBuffer_Terrain*/
-	/*if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain2"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 50, 50, 1))))
-		return E_FAIL;*/
-
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 50, 50, 1))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Height"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Height.bmp")))))
 		return E_FAIL;
 
