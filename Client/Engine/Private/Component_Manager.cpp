@@ -50,6 +50,15 @@ CComponent * CComponent_Manager::Clone_Component(_uint iLevelIndex, const _tchar
 	return pComponent;
 }
 
+HRESULT CComponent_Manager::Check_Prototype(_int iLevelIndex, const _tchar * pPrototypeTag)
+{
+	CComponent*		pPrototype = Find_Component(iLevelIndex, pPrototypeTag);
+	if (nullptr == pPrototype)
+		return S_OK;
+
+	return E_FAIL;
+}
+
 void CComponent_Manager::Clear(_uint iLevelIndex)
 {
 	if (iLevelIndex >= m_iNumLevels)

@@ -91,6 +91,9 @@
     <Filter Include="02.GameObjects\00.Base">
       <UniqueIdentifier>{3cda322b-a88a-4727-83ce-aeebaf0a20f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.DataManager">
+      <UniqueIdentifier>{3714032a-de3a-40fb-a3ca-642696606767}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -174,6 +177,9 @@
     <ClInclude Include="..\Public\Collision_Manger.h">
       <Filter>04.CollisionManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Data_Manager.h">
+      <Filter>05.DataManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -241,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collision_Manger.cpp">
       <Filter>04.CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Data_Manager.cpp">
+      <Filter>05.DataManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

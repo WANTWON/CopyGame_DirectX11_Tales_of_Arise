@@ -154,29 +154,11 @@ namespace Engine
 		XMFLOAT4			vBlendWeight; /* 정점에게 영향을 주는 뼈상태의 비율 */
 	}VTXANIMMODEL;
 
-	///* 메시마다 할당. */
-	///* 애니메이션 재생 정도에 따라 계속 갱신되는 행렬들 */
-	//matrix			BoneMatrices[뼈의 갯수];
-
-	//matrix			Transformatrix = BoneMatrices[In.vBlendIndex[0]] * In.vBlendWeight[0] +
-	//	BoneMatrices[In.vBlendIndex[2]] * In.vBlendWeight[2] +
-	//	BoneMatrices[In.vBlendIndex[1]] * In.vBlendWeight[1] +
-	//	BoneMatrices[In.vBlendIndex[3]] * In.vBlendWeight[3];
-
-	//mul(In.vPositoin, TransformMatrix);
-
-
 	typedef struct ENGINE_DLL tagVertexAnimModel_Declaration
 	{
 		static const unsigned int iNumElements = 6;
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXANIMMODEL_DECLARATION;
-
-
-	/*typedef struct tagVertexAnimModel
-	{
-
-	};*/
 
 
 	typedef struct tagGraphicDesc
@@ -189,4 +171,87 @@ namespace Engine
 		WINMODE			eWinMode;
 
 	}GRAPHIC_DESC;
+
+
+	// For. Data
+
+	typedef struct tagBinHierarchyNode
+	{
+
+		char cName[MAX_PATH];
+		char cParent[MAX_PATH];
+		int  iDepth;
+		XMFLOAT4X4 mTransform;
+
+	}DATA_BINNODE;
+
+	typedef struct tagBinMaterial
+	{
+
+		char cNames[AI_TEXTURE_TYPE_MAX][MAX_PATH];
+
+	}DATA_BINMATERIAL;
+
+
+	typedef struct tagBinBone
+	{
+		char		cNames[MAX_PATH];
+		XMFLOAT4X4	mOffsetTransform;
+	}DATA_BINBONE;
+
+	typedef struct tagBinMesh
+	{
+		char				cName[MAX_PATH];
+		int					iMaterialIndex;
+
+		int					NumVertices;
+		VTXMODEL*			pNonAnimVertices;
+		VTXANIMMODEL*		pAnimVertices;
+
+		int					iNumPrimitives;
+		FACEINDICES32*		pIndices;
+
+		int					iNumBones;
+		DATA_BINBONE*		pBones;
+
+	}DATA_BINMESH;
+
+
+	typedef struct tagBinChannel
+	{
+
+		char				szName[MAX_PATH];
+		int					iNumKeyFrames;
+		KEYFRAME*			pKeyFrames;
+
+	}DATA_BINCHANNEL;
+	typedef struct tagBinAnim
+	{
+
+		bool				bLoop;
+		char				szName[MAX_PATH];
+		int					iNumChannels;
+		float				fDuration;
+		float				fTickPerSecond;
+		DATA_BINCHANNEL*	pBinChannel;
+
+
+	}DATA_BINANIM;
+
+	typedef struct tagBinScene
+	{
+
+		int iNodeCount;
+		DATA_BINNODE* pBinNodes;
+
+		int iMaterialCount;
+		DATA_BINMATERIAL* pBinMaterial;
+
+		int iMeshCount;
+		DATA_BINMESH* pBinMesh;
+
+		int iNumAnimations;
+		DATA_BINANIM* pBinAnim;
+
+	}DATA_BINSCENE;
 }

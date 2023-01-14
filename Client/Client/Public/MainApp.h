@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 #include "Base.h"
 #include "UI_Manager.h"
+#include "Data_Manager.h"
 
 BEGIN(Engine)
 class CRenderer;
@@ -25,6 +26,7 @@ public:
 private:
 	CGameInstance*			m_pGameInstance = nullptr;
 	CUI_Manager*			m_pUI_Manager = nullptr;
+	CData_Manager*			m_pDataManager = nullptr;
 private:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
@@ -40,8 +42,7 @@ private:
 private:
 	HRESULT Open_Level(LEVEL eLevel);
 	HRESULT Ready_Prototype_Component();	
-	HRESULT Ready_Gara();
-
+	
 public:
 	static CMainApp* Create();
 	virtual void Free();

@@ -4,6 +4,8 @@
 #include "Transform.h"
 #include "UI_Manager.h"
 #include "Collision_Manger.h"
+#include "Data_Manager.h"
+#include "Collision_Manger.h"
 
 BEGIN(Engine)
 class CShader;

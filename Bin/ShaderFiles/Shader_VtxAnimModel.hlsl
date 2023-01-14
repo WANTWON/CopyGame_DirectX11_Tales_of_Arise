@@ -8,7 +8,7 @@ texture2D		g_DiffuseTexture;
 /* 정점들에게 곱해져야할 행렬. */
 /* 정점들은 메시에게 소속. 이때 곱해져야하는 뼈의 행렬 == 이 메시에 영향을 주는 뼈다. */
 /* 모델 전체에 정의된 뼈다(xxxxx) */
-matrix			g_BoneMatrices[256];
+matrix			g_BoneMatrices[264];
 
 struct VS_IN
 {

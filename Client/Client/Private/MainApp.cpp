@@ -5,18 +5,22 @@
 #include "Level_Loading.h"
 #include "UI_Manager.h"
 #include "CameraManager.h"
+#include <time.h>
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
 	, m_pUI_Manager(CUI_Manager::Get_Instance())
+	, m_pDataManager(CData_Manager::Get_Instance())
 {
-	
+	Safe_AddRef(m_pDataManager);
 	Safe_AddRef(m_pUI_Manager);
 	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CMainApp::Initialize()
 {
+	srand(unsigned int(time(NULL)));
+
 	GRAPHIC_DESC		Graphic_Desc;
 	ZeroMemory(&Graphic_Desc, sizeof(GRAPHIC_DESC));
 
@@ -28,8 +32,8 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, Graphic_Desc, &m_pDevice, &m_pContext)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Gara()))
-		return E_FAIL;
+	if (FAILED(m_pDataManager->Init(m_pDevice, m_pContext)))
+		return E_FAIL;	// 추가
 
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
@@ -144,45 +148,6 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	return S_OK;
 }
 
-HRESULT CMainApp::Ready_Gara()
-{
-	_ulong		dwByte = 0;
-	HANDLE		hFile = CreateFile(TEXT("../../../Bin/Data/NavigationData.dat"), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	_float3		vPoints[3];
-
-	/* 쎌정보 생성. */
-	ZeroMemory(vPoints, sizeof(_float3) * 3);
-	vPoints[0] = _float3(0.f, 0.f, 5.f);
-	vPoints[1] = _float3(5.f, 0.f, 0.f);
-	vPoints[2] = _float3(0.f, 0.f, 0.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-	ZeroMemory(vPoints, sizeof(_float3) * 3);
-	vPoints[0] = _float3(0.f, 0.f, 5.f);
-	vPoints[1] = _float3(5.f, 0.f, 5.f);
-	vPoints[2] = _float3(5.f, 0.f, 0.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-	ZeroMemory(vPoints, sizeof(_float3) * 3);
-	vPoints[0] = _float3(0.f, 0.f, 10.f);
-	vPoints[1] = _float3(5.f, 0.f, 5.f);
-	vPoints[2] = _float3(0.f, 0.f, 5.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-	ZeroMemory(vPoints, sizeof(_float3) * 3);
-	vPoints[0] = _float3(5.f, 0.f, 5.f);
-	vPoints[1] = _float3(10.f, 0.f, 0.f);
-	vPoints[2] = _float3(5.f, 0.f, 0.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-	CloseHandle(hFile);
-
-	return S_OK;
-}
-
 CMainApp * CMainApp::Create()
 {
 	CMainApp*	pInstance = new CMainApp();
@@ -209,7 +174,10 @@ void CMainApp::Free()
 
 
 	Safe_Release(m_pUI_Manager);
+	Safe_Release(m_pDataManager);
+
 	CUI_Manager::Get_Instance()->Destroy_Instance();
+	CData_Manager::Get_Instance()->Destroy_Instance();
 	CCameraManager::Get_Instance()->Destroy_Instance();
 
 }

@@ -77,7 +77,7 @@ bool CTransform::Go_Backward(_float fTimeDelta, CNavigation * pNavigation, _floa
 bool CTransform::Go_Left(_float fTimeDelta, CNavigation * pNavigation, _float fRadius)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
-	_vector		vRight = Get_State(CTransform::STATE_TRANSLATION);
+	_vector		vRight = Get_State(CTransform::STATE_RIGHT);
 
 	vPosition -= XMVector3Normalize(vRight) * m_TransformDesc.fSpeedPerSec * fTimeDelta;
 
@@ -95,7 +95,7 @@ bool CTransform::Go_Left(_float fTimeDelta, CNavigation * pNavigation, _float fR
 bool CTransform::Go_Right(_float fTimeDelta, CNavigation * pNavigation, _float fRadius)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
-	_vector		vRight = Get_State(CTransform::STATE_TRANSLATION);
+	_vector		vRight = Get_State(CTransform::STATE_RIGHT);
 
 	vPosition += XMVector3Normalize(vRight) * m_TransformDesc.fSpeedPerSec * fTimeDelta;
 
@@ -177,7 +177,7 @@ bool CTransform::Sliding_Backward(_float fTimeDelta, CNavigation * pNavigation, 
 bool CTransform::Sliding_Left(_float fTimeDelta, CNavigation * pNavigation, _float fRadius)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
-	_vector		vRight = Get_State(CTransform::STATE_TRANSLATION)*-1.f;
+	_vector		vRight = Get_State(CTransform::STATE_RIGHT)*-1.f;
 
 	vPosition += XMVector3Normalize(vRight) * m_TransformDesc.fSpeedPerSec * fTimeDelta;
 
@@ -209,7 +209,7 @@ bool CTransform::Sliding_Left(_float fTimeDelta, CNavigation * pNavigation, _flo
 bool CTransform::Sliding_Right(_float fTimeDelta, CNavigation * pNavigation, _float fRadius)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
-	_vector		vRight = Get_State(CTransform::STATE_TRANSLATION);
+	_vector		vRight = Get_State(CTransform::STATE_RIGHT);
 
 	vPosition += XMVector3Normalize(vRight) * m_TransformDesc.fSpeedPerSec * fTimeDelta;
 

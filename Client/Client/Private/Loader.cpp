@@ -155,13 +155,11 @@ HRESULT CLoader::Loading_ForPrototype()
 
 HRESULT CLoader::Loading_ForStaticLevel()
 {
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
 		return E_FAIL;
-
-	Safe_AddRef(pGameInstance);
-
 	
+#pragma region Static Shader Loading
 	/* For.Prototype_Component_Shader_VtxNorTex*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Shaderfiles/Shader_VtxNorTex.hlsl"), VTXNORTEX_DECLARATION::Elements, VTXNORTEX_DECLARATION::iNumElements))))
@@ -196,9 +194,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Shaderfiles/Shader_UI.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements))))
 		return E_FAIL;
+#pragma endregion Static Shader Loading
 
 
 
+#pragma region Buffer Loading
 	/*For.Prototype_Component_VIBuffer_RectInstance */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_RectInstance"),
 		CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, 50))))
@@ -218,10 +218,27 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Height.bmp")))))
 		return E_FAIL;
+#pragma endregion Buffer Loading
+
+
+
+#pragma region Model Loading
+	_matrix			PivotMatrix = XMMatrixIdentity();
+
+	/*For.Prototype_Component_Model_Alphen*/
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Alphen"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Alphen/Alphen.fbx", PivotMatrix))))
+	//	return E_FAIL;
+	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_STATIC, CData_Manager::DATA_ANIM);
+
+#pragma endregion Model Loading
+
+
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
-	Safe_Release(pGameInstance);
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
@@ -268,11 +285,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	_matrix			PivotMatrix = XMMatrixIdentity();
 
-	/*For.Prototype_Component_Model_Fiona*/
-	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Fiona/Fiona.fbx", PivotMatrix))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/Fiona/Fiona.fbx", PivotMatrix))))
 		return E_FAIL;
+
 
 	/*For.Prototype_Component_Model_ForkLift*/
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));

@@ -24,57 +24,87 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Parts()))
-		return E_FAIL;
+//	if (FAILED(Ready_Parts()))
+//		return E_FAIL;
 
-	m_pModelCom->Set_CurrentAnimIndex(3);
+	m_eState = 0;
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
+
+
+	//CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	//	CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
+	//	char cName[MAX_PATH];
+	//	ZeroMemory(cName, sizeof(char) * MAX_PATH);
+	//	pData_Manager->TCtoC(TEXT("Alphen"), cName);
+	//	pData_Manager->Conv_Bin_Model(m_pModelCom, cName, CData_Manager::DATA_ANIM);
+	//	RELEASE_INSTANCE(CData_Manager);
+
+	//RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
 
 int CPlayer::Tick(_float fTimeDelta)
 {
-	if (GetKeyState(VK_LEFT) & 0x8000)
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_RIGHT))
 	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * -1.f);
+		m_pTransformCom->Sliding_Right(fTimeDelta, m_pNavigationCom, 0.f);
 	}
-	if (GetKeyState(VK_RIGHT) & 0x8000)
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LEFT))
 	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
+		m_pTransformCom->Sliding_Left(fTimeDelta, m_pNavigationCom, 0.f);
 	}
-	if (GetKeyState(VK_DOWN) & 0x8000)
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_DOWN))
 	{
-		m_pTransformCom->Go_Backward(fTimeDelta);
+		m_pTransformCom->Sliding_Backward(fTimeDelta, m_pNavigationCom, 0.f);
 	}
 
-	if (GetKeyState(VK_UP) & 0x8000)
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_UP))
 	{
 		m_pTransformCom->Sliding_Straight(fTimeDelta, m_pNavigationCom, 0.f);
-		m_pModelCom->Set_CurrentAnimIndex(4);
 	}
-	else
-		m_pModelCom->Set_CurrentAnimIndex(3);
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
+	{
+		m_eState++;
+		if (m_eState >= 114)
+			m_eState = 0;
+	}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
+	{
+		m_eState--;
+		if (m_eState <= 0)
+			m_eState = 114;
+	}
+		
+		
+
+	if (m_eState != m_ePreState)
+	{
+		m_pModelCom->Set_NextAnimIndex(m_eState);
+		m_ePreState = m_eState;
+	}
 
 	m_pModelCom->Play_Animation(fTimeDelta);
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
-	for (auto& pParts : m_Parts)
-		pParts->Tick(fTimeDelta);
+//	for (auto& pParts : m_Parts)
+//		pParts->Tick(fTimeDelta);
 
 	return OBJ_NOEVENT;
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
-	for (auto& pParts : m_Parts)
-		pParts->Late_Tick(fTimeDelta);
+//	for (auto& pParts : m_Parts)
+//		pParts->Late_Tick(fTimeDelta);
 
 	if (nullptr != m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
+		//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
 		if (m_pNavigationCom != nullptr)
 			m_pRendererCom->Add_Debug(m_pNavigationCom);
 		__super::Late_Tick(fTimeDelta);
@@ -130,11 +160,6 @@ HRESULT CPlayer::Ready_Parts()
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
-
-
-
-	
-
 	return S_OK;
 }
 
@@ -159,7 +184,7 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Alphen"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	CCollider::COLLIDERDESC		ColliderDesc;

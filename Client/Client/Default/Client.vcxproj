@@ -172,6 +172,7 @@
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Collision_Manger.h" />
+    <ClInclude Include="..\Public\Data_Manager.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\public\UI_Screen.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
@@ -199,6 +200,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Collision_Manger.cpp" />
+    <ClCompile Include="..\Private\Data_Manager.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\private\UI_Screen.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
