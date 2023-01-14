@@ -11,7 +11,7 @@ CIdleState::CIdleState()
 
 CPlayerState * CIdleState::HandleInput(CPlayer * pPlayer)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (pGameInstance->Key_Pressing(VK_UP) && pGameInstance->Key_Pressing(VK_LEFT))
 		return new CMoveState(DIR_STRAIGHT_LEFT);
@@ -28,16 +28,16 @@ CPlayerState * CIdleState::HandleInput(CPlayer * pPlayer)
 	else if (pGameInstance->Key_Pressing(VK_DOWN))
 		return new CMoveState(DIR_BACKWARD);
 	else if (pGameInstance->Key_Pressing(VK_UP))
-		return new CMoveState(DIR_STRAIGHT);
+		return new CMoveState(DIR_STRAIGHT);*/
 
 	return nullptr;
 }
 
 CPlayerState * CIdleState::Tick(CPlayer * pPlayer, _float fTimeDelta)
 {
-	pPlayer->Get_Model()->Play_Animation(fTimeDelta, m_bIsAnimationFinished, pPlayer->Is_AnimationLoop(pPlayer->Get_Model()->Get_CurrentAnimIndex()));
+	/*pPlayer->Get_Model()->Play_Animation(fTimeDelta, m_bIsAnimationFinished, pPlayer->Is_AnimationLoop(pPlayer->Get_Model()->Get_CurrentAnimIndex()));
 	pPlayer->Sync_WithNavigationHeight();
-
+*/
 	return nullptr;
 }
 
@@ -48,9 +48,9 @@ CPlayerState * CIdleState::LateTick(CPlayer * pPlayer, _float fTimeDelta)
 
 void CIdleState::Enter(CPlayer * pPlayer)
 {
-	m_eStateId = STATE_ID::STATE_IDLE;
+	//m_eStateId = STATE_ID::STATE_IDLE;
 
-	pPlayer->Get_Model()->Set_CurrentAnimIndex(CPlayer::ANIMID::ANIM_IDLE);
+	//pPlayer->Get_Model()->Set_CurrentAnimIndex(CPlayer::ANIMID::ANIM_IDLE);
 }
 
 void CIdleState::Exit(CPlayer * pPlayer)
