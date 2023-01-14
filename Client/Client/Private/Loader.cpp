@@ -10,8 +10,18 @@
 #include "UI_Screen.h"
 #include "Terrain.h"
 #include "Player.h"
+#include "Monster.h"
 #include "Weapon.h"
+//#include "Effect.h"
 #include "Sky.h"
+
+
+//#include "UI.h"
+#include "UI_Portrait.h"
+#include "UI_Screen.h"
+#include "ScreenFadeEffect.h"
+#include "UI_Loading.h"
+
 
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -106,6 +116,10 @@ HRESULT CLoader::Loading_ForPrototype()
 		CUI_Portrait::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"),
+		CScreenFadeEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/*For.Prototype_GameObject_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pDevice, m_pContext))))
@@ -114,6 +128,11 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_GameObject_Player*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
 		CPlayer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Monster */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster"),
+		CMonster::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Terrain*/
@@ -182,10 +201,6 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Shaderfiles/Shader_VtxCubeTexture.hlsl"), VTXCUBETEX_DECLARATION::Elements, VTXCUBETEX_DECLARATION::iNumElements))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_Shader_VtxCubeTexture */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Shaderfiles/Shader_UI.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements))))
-		return E_FAIL;
 #pragma endregion Static Shader Loading
 
 
@@ -326,6 +341,30 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 HRESULT CLoader::Loading_ForUITexture()
 {
+	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	/* 텍스쳐 로딩 중. */
+	lstrcpy(m_szLoadingText, TEXT("유아이 텍스쳐 로딩 중."));
+
+	/*For.texturelogo*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Logo/logo%d.dds"), 4))))
+		return E_FAIL;
+
+	/*For.texturefade */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fade"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/fade.png"), 1))))
+		return E_FAIL;
+
+	/*For.texturelogosprite */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logosprite"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/logosprite/logosprite%d.png"), 237))))
+		return E_FAIL;
+
+
+
 	return S_OK;
 }
 
