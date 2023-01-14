@@ -19,7 +19,7 @@ BEGIN(Client)
 class CUI_Base abstract : public CGameObject
 {
 public:
-	enum SHADERUI_ID { UI_ALPHADEFAULT, UI_ALPHABLEND, UI_PICKED, UI_ALPHASET, UI_SCREEN, UI_EFFECTSCREEN };
+	enum SHADERUI_ID { UI_ALPHADEFAULT, UI_ALPHABLEND, UI_PICKED, UI_ALPHASET, UI_SCREEN, UI_EFFECTFADEOUT, UI_EFFECTSCREEN };
 
 protected:
 	CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -27,7 +27,7 @@ protected:
 	virtual ~CUI_Base() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() =0;
+	virtual HRESULT Initialize_Prototype() = 0;
 	virtual HRESULT Initialize(void* pArg);
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
@@ -37,11 +37,11 @@ public:
 	_float2 Get_Position() { return m_fPosition; }
 	_float2 Get_Scale() { return m_fSize; }
 	void Set_Position(_float2 fPostion) { m_fPosition = fPostion; };
-	void Set_Scale(_float2 fScale) {m_fSize = fScale;};
-	
+	void Set_Scale(_float2 fScale) { m_fSize = fScale; };
+
 protected:
 	CShader*				m_pShaderCom = nullptr;
-	CTexture*				m_pTextureCom =  nullptr ;
+	CTexture*				m_pTextureCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
@@ -51,7 +51,9 @@ protected:
 	_float4x4				m_ViewMatrix, m_ProjMatrix;
 	_uint					m_eShaderID = UI_ALPHADEFAULT;
 	_float					m_fAlpha = 1.f;
-	
+
+	_bool                   m_bisinLoading = false;
+
 
 public:
 	virtual HRESULT Ready_Components(void * pArg = nullptr) = 0;

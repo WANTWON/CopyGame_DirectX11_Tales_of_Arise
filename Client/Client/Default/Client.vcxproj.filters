@@ -100,6 +100,9 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\States">
       <UniqueIdentifier>{abab21c8-ddcc-4a09-9b53-fc754ab64c56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\02.UI_LOADING">
+      <UniqueIdentifier>{9514bfa9-ed3c-4a7f-be3a-457b1311c64f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -198,6 +201,12 @@
     <ClInclude Include="..\public\PlayerIdleState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Loading.h">
+      <Filter>02.GameObjects\04.UI\02.UI_LOADING</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ScreenFadeEffect.h">
+      <Filter>02.GameObjects\04.UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -277,6 +286,12 @@
     </ClCompile>
     <ClCompile Include="..\private\PlayerIdleState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Loading.cpp">
+      <Filter>02.GameObjects\04.UI\02.UI_LOADING</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ScreenFadeEffect.cpp">
+      <Filter>02.GameObjects\04.UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

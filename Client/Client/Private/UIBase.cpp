@@ -49,8 +49,13 @@ void CUI_Base::Late_Tick(_float fTimeDelta)
 
 HRESULT CUI_Base::Render()
 {
-	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
-		return E_FAIL;
+	if (!m_bisinLoading)
+	{
+		if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
+			return E_FAIL;
+	}
+
+
 
 	if (nullptr == m_pShaderCom ||
 		nullptr == m_pVIBufferCom)
@@ -72,7 +77,7 @@ HRESULT CUI_Base::Render()
 
 void CUI_Base::Free()
 {
-	__super:: Free();
+	__super::Free();
 
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);

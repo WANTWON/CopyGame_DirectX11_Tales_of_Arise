@@ -5,6 +5,7 @@
 #include "Level_Loading.h"
 #include "UI_Manager.h"
 #include "CameraManager.h"
+#include "UI_Loading.h"
 #include <time.h>
 
 CMainApp::CMainApp()
@@ -39,7 +40,7 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Open_Level(LEVEL_LOGO)))
-		return E_FAIL; 
+		return E_FAIL;
 
 	// MakeSpriteFont "폰트이름" /FontSize:32 /FastPack /CharacterRegion:0x0020-0x00FF /CharacterRegion:0x3131-0x3163 /CharacterRegion:0xAC00-0xD800 /DefaultCharacter:0xAC00 출력파일이름.spritefont
 	if (FAILED(m_pGameInstance->Add_Fonts(m_pDevice, m_pContext, TEXT("Font_Nexon"), TEXT("../../../Bin/Resources/Fonts/130.spritefont"))))
@@ -85,7 +86,7 @@ HRESULT CMainApp::Render()
 	{
 		wsprintf(m_szFPS, TEXT("에프피에스 : %d"), m_iNumRender);
 
-		
+
 		m_fTimeAcc = 0.f;
 		m_iNumRender = 0;
 	}
@@ -143,6 +144,21 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 
 
+	/*FOR LOADING UI*/
+	/* For.Prototype_Component_Shader_VtxCubeTexture */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Shaderfiles/Shader_UI.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Loadingsprite"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/loadingsprite/loadingsprite%d.png"), 37))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Loading"),
+		CUI_Loading::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	///////////////////////////////
+
 	Safe_AddRef(m_pRenderer);
 
 	return S_OK;
@@ -169,7 +185,7 @@ void CMainApp::Free()
 	Safe_Release(m_pContext);
 
 	Safe_Release(m_pGameInstance);
-	
+
 	CGameInstance::Release_Engine();
 
 
