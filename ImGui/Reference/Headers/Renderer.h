@@ -51,7 +51,6 @@ private:
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_NonAlphaBlend();
-	HRESULT Render_ShadowDepth();
 
 	HRESULT Render_Lights();
 	HRESULT Render_Blend();

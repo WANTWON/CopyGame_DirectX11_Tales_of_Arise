@@ -29,7 +29,7 @@ HRESULT CChannel::Initialize(CModel* pModel, aiNodeAnim * pAIChannel)
 		if (i < pAIChannel->mNumScalingKeys)
 		{
 			memcpy(&vScale, &pAIChannel->mScalingKeys[i].mValue, sizeof(_float3));
-			Keyframe.fTime = pAIChannel->mScalingKeys[i].mTime;
+			Keyframe.fTime = (float)pAIChannel->mScalingKeys[i].mTime;
 		}
 
 		if (i < pAIChannel->mNumRotationKeys)
@@ -39,13 +39,13 @@ HRESULT CChannel::Initialize(CModel* pModel, aiNodeAnim * pAIChannel)
 			vRotation.y = pAIChannel->mRotationKeys[i].mValue.y;
 			vRotation.z = pAIChannel->mRotationKeys[i].mValue.z;
 			vRotation.w = pAIChannel->mRotationKeys[i].mValue.w;
-			Keyframe.fTime = pAIChannel->mRotationKeys[i].mTime;
+			Keyframe.fTime = (float)pAIChannel->mRotationKeys[i].mTime;
 		}
 
 		if (i < pAIChannel->mNumPositionKeys)
 		{
 			memcpy(&vPosition, &pAIChannel->mPositionKeys[i].mValue, sizeof(_float3));
-			Keyframe.fTime = pAIChannel->mPositionKeys[i].mTime;
+			Keyframe.fTime = (float)pAIChannel->mPositionKeys[i].mTime;
 		}
 
 		Keyframe.vScale = vScale;

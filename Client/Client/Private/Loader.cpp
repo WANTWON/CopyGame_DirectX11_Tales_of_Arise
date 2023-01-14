@@ -226,10 +226,10 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	_matrix			PivotMatrix = XMMatrixIdentity();
 
 	/*For.Prototype_Component_Model_Alphen*/
-	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Alphen"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Alphen/Alphen.fbx", PivotMatrix))))
-	//	return E_FAIL;
+	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Alphen"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Alphen/Alphen.fbx", PivotMatrix))))
+		return E_FAIL;*/
 	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_STATIC, CData_Manager::DATA_ANIM);
 
 #pragma endregion Model Loading

@@ -42,12 +42,12 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	/* For.Target_Depth */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Depth"), ViewportDesc.Width, ViewportDesc.Height,
-		DXGI_FORMAT_R16G16B16A16_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
+		DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
 
 	/* For.Target_Shade */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Shade"), ViewportDesc.Width, ViewportDesc.Height,
-		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(1.f, 1.f, 1.f, 1.f))))
+		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 1.f))))
 		return E_FAIL;
 
 	/* For.Target_Specular */
@@ -89,7 +89,7 @@ HRESULT CRenderer::Initialize_Prototype()
 
 
 #ifdef _DEBUG
-	
+
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Diffuse"), 100.f, 100.f, 200.f, 200.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Normal"), 100.f, 300.f, 200.f, 200.f)))
@@ -118,7 +118,7 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGame
 
 	m_GameObjects[eRenderGroup].push_back(pGameObject);
 
-	Safe_AddRef(pGameObject);	
+	Safe_AddRef(pGameObject);
 
 	return S_OK;
 }
@@ -127,22 +127,26 @@ HRESULT CRenderer::Render_GameObjects()
 {
 	if (FAILED(Render_Priority()))
 		return E_FAIL;
+
+	//// 광원 깊이를 그린다.
+	//if (FAILED(Render_ShadowDepth()))
+	//	return E_FAIL;
+
 	if (FAILED(Render_NonAlphaBlend()))
 		return E_FAIL;
+
 	if (FAILED(Render_Lights()))
 		return E_FAIL;
 	if (FAILED(Render_Blend()))
 		return E_FAIL;
-	
+
 	if (FAILED(Render_NonLight()))
 		return E_FAIL;
 	if (FAILED(Render_AlphaBlend()))
 		return E_FAIL;
 
-
 #ifdef _DEBUG	
-	if (FAILED(Render_Debug()))
-		return E_FAIL;
+	Render_Debug();
 #endif // _DEBUG
 
 	if (FAILED(Render_UI()))
@@ -159,8 +163,19 @@ HRESULT CRenderer::Add_Debug(CComponent* pDebugCom)
 	m_DebugComponents.push_back(pDebugCom);
 
 	Safe_AddRef(pDebugCom);
-	
+
 	return S_OK;
+}
+
+void CRenderer::Debug_Clear()
+{
+	for (auto& pComponent : m_DebugComponents)
+	{
+
+		Safe_Release(pComponent);
+	}
+
+	m_DebugComponents.clear();
 }
 
 
@@ -188,7 +203,7 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 	if (nullptr == m_pTarget_Manager)
 		return E_FAIL;
 
-	/* 현재까지는 백버퍼가 셋팅되어있었지만. 
+	/* 현재까지는 백버퍼가 셋팅되어있었지만.
 	빛연산ㅇ에 필요한 정보를 받아오기위해 MRT_Deferred타겟들을 바인딩한다. */
 	/* Target_Diffuse, Target_Normal에 그린다. */
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Deferred"))))
@@ -213,7 +228,7 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 
 HRESULT CRenderer::Render_AlphaBlend()
 {
-	
+
 	m_GameObjects[RENDER_ALPHABLEND].sort([](CGameObject* pSour, CGameObject* pDest)
 	{
 		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
@@ -261,7 +276,7 @@ HRESULT CRenderer::Render_UI()
 
 HRESULT CRenderer::Render_Lights()
 {
-	if (nullptr == m_pTarget_Manager || 
+	if (nullptr == m_pTarget_Manager ||
 		nullptr == m_pLight_Manager)
 		return E_FAIL;
 
@@ -271,7 +286,7 @@ HRESULT CRenderer::Render_Lights()
 
 	/* 노말 렌더타겟의 SRV를 셰이더에 바인딩 한다. */
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Normal"), m_pShader, "g_NormalTexture")))
-		return E_FAIL;	
+		return E_FAIL;
 
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShader, "g_DepthTexture")))
 		return E_FAIL;
@@ -291,7 +306,7 @@ HRESULT CRenderer::Render_Lights()
 	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return E_FAIL;	
+		return E_FAIL;
 	if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &pPipeLine->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
@@ -319,6 +334,10 @@ HRESULT CRenderer::Render_Blend()
 		return E_FAIL;
 
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Shade"), m_pShader, "g_ShadeTexture")))
+		return E_FAIL;
+
+
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Specular"), m_pShader, "g_SpecularTexture")))
 		return E_FAIL;
 
 

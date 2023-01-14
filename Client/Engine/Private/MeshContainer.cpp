@@ -433,7 +433,7 @@ HRESULT CMeshContainer::Create_VertexBuffer_AnimModel(const aiMesh* pAIMesh, CMo
 
 	m_pAnimVertices = pVertices;	// 추가
 
-									//Safe_Delete_Array(pVertices);	// 추가
+	//Safe_Delete_Array(pVertices);	// 추가
 
 	return S_OK;
 }

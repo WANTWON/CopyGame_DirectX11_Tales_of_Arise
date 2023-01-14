@@ -47,13 +47,14 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
+
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_RIGHT))
 	{
-		m_pTransformCom->Sliding_Right(fTimeDelta, m_pNavigationCom, 0.f);
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 	}
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LEFT))
 	{
-		m_pTransformCom->Sliding_Left(fTimeDelta, m_pNavigationCom, 0.f);
+		m_pTransformCom->Turn(XMVectorSet(0.f,1.f,0.f,0.f), -fTimeDelta);
 	}
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_DOWN))
 	{
@@ -128,6 +129,9 @@ HRESULT CPlayer::Render()
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 0)))

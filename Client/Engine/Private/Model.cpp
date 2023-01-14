@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "HierarchyNode.h"
 #include "Animation.h"
+#include <regex> 
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext), m_bIsProto(true) // 추가
@@ -12,12 +13,12 @@ CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 CModel::CModel(const CModel & rhs)
 	: CComponent(rhs)
-	, m_pAIScene(rhs.m_pAIScene)	
+	, m_pAIScene(rhs.m_pAIScene)
 	, m_Materials(rhs.m_Materials)
 	, m_iNumMeshes(rhs.m_iNumMeshes)
-	, m_iNumMaterials(rhs.m_iNumMaterials)	
+	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_iNumBones(rhs.m_iNumBones)
-	, m_PivotMatrix(rhs.m_PivotMatrix)		
+	, m_PivotMatrix(rhs.m_PivotMatrix)
 	, m_eModelType(rhs.m_eModelType)
 	, m_pBin_AIScene(rhs.m_pBin_AIScene)	// 추가
 	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)	// 추가
@@ -28,23 +29,36 @@ CModel::CModel(const CModel & rhs)
 	for (auto& pMeshContainer : rhs.m_Meshes)
 	{
 		m_Meshes.push_back((CMeshContainer*)pMeshContainer->Clone());
-	}	
-	
+	}
+
 	for (auto& Material : m_Materials)
 	{
 		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
 			Safe_AddRef(Material.pMaterials[i]);
-	}	
+	}
 }
 
 CHierarchyNode * CModel::Get_BonePtr(const char * pBoneName) const
 {
-	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CHierarchyNode* pNode) 
+	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CHierarchyNode* pNode)
 	{
 		return !strcmp(pNode->Get_Name(), pBoneName);
 	});
 
+	if (iter == m_Bones.end())
+		return nullptr;
+
 	return *iter;
+}
+
+void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
+{
+	m_iCurrentAnimIndex = iAnimIndex;
+}
+
+void CModel::Set_TimeReset()
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
@@ -55,56 +69,22 @@ HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePat
 
 	_uint			iFlag = 0;
 
-	if(TYPE_NONANIM == eModelType)	
+	if (TYPE_NONANIM == eModelType)
 		iFlag = aiProcess_PreTransformVertices | aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_CalcTangentSpace;
 	else
 		iFlag = aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_CalcTangentSpace;
-	
-	/* 파일로부터 모든 데이터르 ㄹ읽어서 assimp만의 구조로 보관한다.(aiScene) */
+
 	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
 
-	/* aiScene안에 있는 aiMesh로부터 정점의 위치, 노멀, 텍스쳐uv, 탄젠트, 뼈의 인덱스, 뼈의 영향력를 읽어와서. 
-	이후 렌더링에 사용하기 편한 상태로 만든다. */
-	/* 정점 버퍼 생성, 인덱스 버퍼 생성. */
 	if (FAILED(Create_MeshContainer()))
 		return E_FAIL;
 
-	/* 이 모델을 구성하는 메시들에게 각각 맵핑되어야할 텍스쳐 재질정볼르 읽어온다.  */
 	if (FAILED(Create_Materials(pModelFilePath)))
 		return E_FAIL;
 
-	/* 뼈를 로드하지않는이유 : 뼈는 이 모델이 복제될때마다 하나씩 생성해주기위해서. */
 
-	return S_OK;
-}
-
-HRESULT CModel::Initialize(void * pArg)
-{
-	if (TYPE_NONANIM == m_eModelType)
-		return S_OK;
-
-
-	/* 뼈의 정보 : 
-	aiNode : 뼈의 부모자식관계를 보여준다(전체뼈의 상태, aiScene) 
-	aiBone : 뼈가 어떤 정점에게 얼마만큼의 가중치로 영향을 끼치는지를 표현하기위해(특정 메시(정점들)에게 사용되는 뼈들을 모아서 보여준다. aiMesh)
-	aiNodeAnim(채널) : 애니메이션이 사용하고 있는 뼈. 이친구가 가지고 있는 키프레임들을 표현하기 위해. aiAnimation */
-	/* 뼈의 정보aiNode 를 로드한다. */
-	if (FAILED(Create_HierarchyNodes(m_pAIScene->mRootNode)))
-		return E_FAIL;
-
-	/* 메시들은 자기정점들에게 영향ㅇ르 주는 뼈들의 정보를 모아놔야했어.
-	why? 정점그릴때 뼈의 행렬을 가져와야하니께. 모델의 뼈들을 가져오면안돼? 안돼. 정점이 가지고 있는 뼈의 인덱스는 전체뼈의 인덱스를 ㄱ의미하는게 아니라. 
-	메시당 영햐을 주는 뼈들의 인덱스를 의미하고 있으니까 .*/
-	for (auto& pMeshContainer : m_Meshes)	
-		pMeshContainer->SetUp_Bones(this);
-
-	/* 애니메이션 객체를 생성했지. 애니메이션 객체 : 한 동작 전체.(대기, 공격, 달리기) */
-	/* 애니메니션 하나는 뭘가진다 : 뼈들(애니메이션 구동에 필요한 뼈들) , 이름*/
-	/* 뼈들 : 이 애니메이션 하나르 ㄹ구동할때 시간별로 표현되었어야할 상태(KEYFRAME) */
-	if (FAILED(Create_Animations()))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -127,6 +107,26 @@ HRESULT CModel::Bin_Initialize_Prototype(DATA_BINSCENE * pScene, TYPE eType, con
 
 
 	if (FAILED(Bin_Ready_Materials(pModelFilePath)))
+		return E_FAIL;
+
+	/*if (FAILED(Bin_Ready_Animations()))
+	return E_FAIL;*/
+
+	return S_OK;
+}
+
+HRESULT CModel::Initialize(void * pArg)
+{
+	if (TYPE_NONANIM == m_eModelType)
+		return S_OK;
+
+	if (FAILED(Create_HierarchyNodes(m_pAIScene->mRootNode)))
+		return E_FAIL;
+
+	for (auto& pMeshContainer : m_Meshes)
+		pMeshContainer->SetUp_Bones(this);
+
+	if (FAILED(Create_Animations()))
 		return E_FAIL;
 
 	return S_OK;
@@ -170,11 +170,17 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 	if (iMeshIndex >= m_iNumMeshes)
 		return E_FAIL;
 
+
+	if (m_Materials[m_Meshes[iMeshIndex]->Get_MaterialIndex()].pMaterials[eType] == nullptr)
+		return S_OK;
+
+
 	return pShader->Set_ShaderResourceView(pConstantName, m_Materials[m_Meshes[iMeshIndex]->Get_MaterialIndex()].pMaterials[eType]->Get_SRV(TextureNum));
 }
 
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop)
 {
+
 	if (m_iCurrentAnimIndex != m_iNextAnimIndex)
 	{	//TODO: 현재애님과 다음 애님프레임간의 선형보간 함수 호출 할 것.
 		if (m_bInterupted)
@@ -216,7 +222,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop)
 }
 
 HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
-{		
+{
 	/* 메시별로 그린다. */
 	/* 메시 당 영향ㅇ르 주는 뼈들의 행렬을 가져온다. */
 	if (TYPE_ANIM == m_eModelType)
@@ -228,13 +234,122 @@ HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
 		뼈 = 뼈의 오프셋 * 뼈의 컴바인드매트릭스 * 최초상태제어행렬 */
 		m_Meshes[iMeshIndex]->Get_BoneMatrices(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
 
-		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 256);
+		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 264);
 
 	}
-	
+
 	pShader->Begin(iPassIndex);
 
 	m_Meshes[iMeshIndex]->Render();
+
+	return S_OK;
+}
+
+HRESULT CModel::RenderShadow(CShader * pShader, _uint iMeshIndex, _uint iLevelIndex, _uint iPassIndex)
+{
+	// 바닥 부분의 그림자를 제외하고 렌더해야하는데 
+	// 각 레벨마다, 또는 메시마다 바닥에 대한 인덱스가 달라서 예외처리를 진행함.
+
+	char		szName[MAX_PATH] = "";
+	strcpy(szName, m_Meshes[iMeshIndex]->Get_Name());
+
+	if (iLevelIndex == 3) // Level Game Play
+	{
+		char CheckName[] = "grass";
+		char CheckName2[] = "road";
+		char CheckName3[] = "sand";
+		char CheckName4[] = "water";
+		char CheckName5[] = "wall_a_01a";
+		char CheckName6[] = "hole";
+		char CheckName7[] = "TailGate";
+		char CheckName8[] = "tile";
+		char CheckName9[] = "Flower";
+
+		char* ptr = strstr(szName, CheckName);
+		char* ptr2 = strstr(szName, CheckName2);
+		char* ptr3 = strstr(szName, CheckName3);
+		char* ptr4 = strstr(szName, CheckName4);
+		char* ptr5 = strstr(szName, CheckName5);
+		char* ptr6 = strstr(szName, CheckName6);
+		char* ptr7 = strstr(szName, CheckName7);
+		char* ptr8 = strstr(szName, CheckName8);
+		char* ptr9 = strstr(szName, CheckName9);
+
+		if (ptr != nullptr || ptr2 != nullptr || ptr3 != nullptr
+			|| ptr4 != nullptr || ptr5 != nullptr || ptr6 != nullptr
+			|| ptr7 != nullptr || ptr8 != nullptr || ptr9 != nullptr)
+			return S_OK;
+	}
+	else if (iLevelIndex == 4) //Level Tail Cave
+	{
+		char CheckName[] = "floor";
+		char CheckName2[] = "wall";
+		char CheckName3[] = "Tile";
+		char CheckName4[] = "gate";
+
+
+		char* ptr = strstr(szName, CheckName);
+		char* ptr2 = strstr(szName, CheckName2);
+		char* ptr3 = strstr(szName, CheckName3);
+		char* ptr4 = strstr(szName, CheckName4);
+
+		if (ptr != nullptr || ptr2 != nullptr || ptr3 != nullptr || ptr4 != nullptr)
+			return S_OK;
+	}
+	else if (iLevelIndex == 5) //Level Tower
+	{
+		char CheckName[] = "floor";
+		char CheckName2[] = "wall";
+		char CheckName3[] = "moss";
+
+
+		char* ptr = strstr(szName, CheckName);
+		char* ptr2 = strstr(szName, CheckName2);
+		char* ptr3 = strstr(szName, CheckName3);
+
+		if (ptr != nullptr || ptr2 != nullptr || ptr3 != nullptr)
+			return S_OK;
+	}
+	else if (iLevelIndex == 6) //Level Room
+	{
+		char CheckName[] = "floor";
+		char CheckName2[] = "wall";
+		char CheckName3[] = "moss";
+
+
+		char* ptr = strstr(szName, CheckName);
+		char* ptr2 = strstr(szName, CheckName2);
+		char* ptr3 = strstr(szName, CheckName3);
+
+		if (ptr != nullptr || ptr2 != nullptr || ptr3 != nullptr)
+			return S_OK;
+	}
+
+
+	/* 메시별로 그린다. */
+	/* 메시 당 영향ㅇ르 주는 뼈들의 행렬을 가져온다. */
+	if (TYPE_ANIM == m_eModelType)
+	{
+		_float4x4		BoneMatrix[264];
+
+		/* 메시에게 접근해서 니가 들고있는 뼈들을 배열에 담아와.
+		뼈 = 뼈의 오프셋 * 뼈의 컴바인드매트릭스 * 최초상태제어행렬 */
+		m_Meshes[iMeshIndex]->Get_BoneMatrices(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
+
+		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 264);
+
+	}
+
+	pShader->Begin(iPassIndex);
+
+	m_Meshes[iMeshIndex]->Render();
+
+	return S_OK;
+}
+
+HRESULT CModel::Set_AnimationReset()
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 
 	return S_OK;
 }
@@ -250,13 +365,6 @@ _bool CModel::Picking(CTransform * pTransform, _float3 * pOut)
 	return false;
 }
 
-HRESULT CModel::Set_AnimationReset()
-{
-	m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
-
-	return S_OK;
-}
-
 
 
 HRESULT CModel::Create_MeshContainer()
@@ -264,7 +372,6 @@ HRESULT CModel::Create_MeshContainer()
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
 
-	/* 하나의 모델은 다수의 메시로 구성되어있다. */
 	m_iNumMeshes = m_pAIScene->mNumMeshes;
 
 	m_Meshes.reserve(m_iNumMeshes);
@@ -273,7 +380,6 @@ HRESULT CModel::Create_MeshContainer()
 	{
 		aiMesh*		pAIMesh = m_pAIScene->mMeshes[i];
 
-		/* 메시를 생성한다. */
 		CMeshContainer*		pMeshContainer = CMeshContainer::Create(m_pDevice, m_pContext, m_eModelType, pAIMesh, this, XMLoadFloat4x4(&m_PivotMatrix));
 		if (nullptr == pMeshContainer)
 			return E_FAIL;
@@ -285,7 +391,7 @@ HRESULT CModel::Create_MeshContainer()
 }
 
 HRESULT CModel::Create_Materials(const char* pModelFilePath)
-{	
+{
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
 
@@ -304,7 +410,7 @@ HRESULT CModel::Create_Materials(const char* pModelFilePath)
 
 		for (_uint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j)
 		{
-			aiString		strPath;			
+			aiString		strPath;
 
 			if (FAILED(pAIMaterial->GetTexture(aiTextureType(j), 0, &strPath)))
 				continue;
@@ -330,7 +436,7 @@ HRESULT CModel::Create_Materials(const char* pModelFilePath)
 
 			_tchar			szRealPath[MAX_PATH] = TEXT("");
 
-			MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szRealPath, MAX_PATH);
+			MultiByteToWideChar(CP_ACP, 0, szFullPath, (int)strlen(szFullPath), szRealPath, MAX_PATH);
 
 			ModelMaterial.pMaterials[j] = CTexture::Create(m_pDevice, m_pContext, szRealPath);
 			if (nullptr == ModelMaterial.pMaterials[j])
@@ -343,6 +449,7 @@ HRESULT CModel::Create_Materials(const char* pModelFilePath)
 
 	return S_OK;
 }
+
 
 HRESULT CModel::Create_HierarchyNodes(const aiNode* pNode, CHierarchyNode* pParent)
 {
@@ -385,7 +492,7 @@ CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, 
 
 	if (FAILED(pInstance->Initialize_Prototype(eModelType, pModelFilePath, PivotMatrix)))
 	{
-		ERR_MSG(TEXT("Failed to Created : CModel"));
+		//ERR_MSG(TEXT("Failed to Created : CModel"));
 		Safe_Release(pInstance);
 	}
 
@@ -430,39 +537,6 @@ CComponent * CModel::Clone(void * pArg)
 
 	return pInstance;
 }
-void CModel::Free()
-{
-	__super::Free();
-
-	for (auto& pAnimation : m_Animations)
-		Safe_Release(pAnimation);
-	m_Animations.clear();
-
-	for (auto& pBoneNode : m_Bones)
-		Safe_Release(pBoneNode);
-	m_Bones.clear();
-
-	for (auto& pMeshContainer : m_Meshes)
-		Safe_Release(pMeshContainer);
-	m_Meshes.clear();
-
-	for (auto& Material : m_Materials)
-	{
-		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)		
-			Safe_Release(Material.pMaterials[i]);
-	}
-	m_Materials.clear();
-		
-
-
-
-	m_Importer.FreeScene();
-
-	if (m_pBin_AIScene && m_bIsProto)	// 추가
-	{
-		Safe_Release_Scene();
-	}
-}
 
 HRESULT CModel::Get_HierarchyNodeData(DATA_BINSCENE * pBinScene)
 {
@@ -473,7 +547,7 @@ HRESULT CModel::Get_HierarchyNodeData(DATA_BINSCENE * pBinScene)
 	}
 
 	pBinScene->pBinNodes = new DATA_BINNODE[m_Bones.size()];
-	pBinScene->iNodeCount = m_Bones.size();
+	pBinScene->iNodeCount = (int)m_Bones.size();
 
 	for (_int i = 0; i < m_Bones.size(); ++i)
 	{
@@ -540,7 +614,6 @@ HRESULT CModel::Get_AnimData(DATA_BINSCENE * pBinScene)
 	return S_OK;
 }
 
-
 HRESULT CModel::Bin_Ready_MeshContainers(_fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_pBin_AIScene->iMeshCount;
@@ -590,7 +663,7 @@ HRESULT CModel::Bin_Ready_Materials(const char * pModelFilePath)
 
 			_tchar			szWideFullPath[MAX_PATH] = TEXT("");
 
-			MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szWideFullPath, MAX_PATH);
+			MultiByteToWideChar(CP_ACP, 0, szFullPath, (int)strlen(szFullPath), szWideFullPath, MAX_PATH);
 
 			memcpy(&DataMaterialDesc.cNames[j], &pAIMaterial.cNames[j], sizeof(char) * MAX_PATH);
 
@@ -667,4 +740,40 @@ HRESULT CModel::Safe_Release_Scene()
 	Safe_Delete(m_pBin_AIScene);
 
 	return S_OK;
+}
+
+
+void CModel::Free()
+{
+	__super::Free();
+
+	for (auto& pAnimation : m_Animations)
+		Safe_Release(pAnimation);
+	m_Animations.clear();
+
+	for (auto& pBoneNode : m_Bones)
+		Safe_Release(pBoneNode);
+	m_Bones.clear();
+
+	for (auto& pMeshContainer : m_Meshes)
+		Safe_Release(pMeshContainer);
+	m_Meshes.clear();
+
+	for (auto& Material : m_Materials)
+	{
+		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
+			Safe_Release(Material.pMaterials[i]);
+	}
+	m_Materials.clear();
+
+
+
+	m_Importer.FreeScene();
+
+	if (m_pBin_AIScene && m_bIsProto)	// 추가
+	{
+		Safe_Release_Scene();
+	}
+
+
 }
