@@ -10,9 +10,7 @@
 #include "UI_Screen.h"
 #include "Terrain.h"
 #include "Player.h"
-#include "Monster.h"
 #include "Weapon.h"
-//#include "Effect.h"
 #include "Sky.h"
 
 
@@ -128,11 +126,6 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_GameObject_Player*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
 		CPlayer::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	/*For.Prototype_GameObject_Monster */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Monster"),
-		CMonster::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Terrain*/
