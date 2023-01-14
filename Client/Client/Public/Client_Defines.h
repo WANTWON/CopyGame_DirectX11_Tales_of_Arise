@@ -9,6 +9,15 @@ namespace Client
 
 	enum SOUND_ID { SOUND_BGM, SOUND_SYSTEM, SOUND_VOICE, SOUND_FOOT, SOUND_WEAPON, SOUND_EFFECT, SOUND_OBJECT, SOUND_END };
 	
+	typedef struct ObjectInfo
+	{
+		int iMaxHp;
+		int iCurrentHp;
+		int iDamage;
+		int iCoin = 100;
+
+	}OBJINFO;
+
 }
 
 #include <process.h>

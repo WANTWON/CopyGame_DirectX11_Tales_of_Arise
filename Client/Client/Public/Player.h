@@ -38,6 +38,7 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_ShadowDepth() override;
 
 public: /*For Navigation*/
 	void	Change_Navigation(LEVEL eLevel);

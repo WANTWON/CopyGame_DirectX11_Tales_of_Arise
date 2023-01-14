@@ -4,12 +4,12 @@
 #include "GameInstance.h"
 
 CTerrain::CTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CBaseObj(pDevice, pContext)
 {
 }
 
 CTerrain::CTerrain(const CTerrain & rhs)
-	: CGameObject(rhs)
+	: CBaseObj(rhs)
 {
 }
 
@@ -20,7 +20,7 @@ HRESULT CTerrain::Initialize_Prototype()
 
 HRESULT CTerrain::Initialize(void * pArg)
 {
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Create_FilterTexture()))
@@ -62,11 +62,11 @@ HRESULT CTerrain::Render()
 	m_pVIBufferCom->Render();
 
 
-
 	return S_OK;
 }
 
-HRESULT CTerrain::Ready_Components()
+
+HRESULT CTerrain::Ready_Components(void *pArg)
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))

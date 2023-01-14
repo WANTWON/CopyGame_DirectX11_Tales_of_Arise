@@ -1,6 +1,6 @@
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-matrix			g_ViewMatrixInv, g_ProjMatrixInv;
+matrix			g_ViewMatrixInv, g_ProjMatrixInv, g_LightViewMatrix, g_LightProjMatrix;
 
 vector			g_vCamPosition;
 
@@ -19,12 +19,20 @@ texture2D		g_NormalTexture;
 texture2D		g_DepthTexture;
 texture2D		g_ShadeTexture;
 texture2D		g_SpecularTexture;
+texture2D		g_ShadowDepthTexture;
 
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_Linear;
 };
 
+sampler DepthSampler = sampler_state
+{
+	filter = min_mag_Linear_mip_point;
+	AddressU = clamp;
+	AddressV = clamp;
+
+};
 
 struct VS_IN
 {
@@ -193,7 +201,36 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 
 	Out.vColor = vDiffuse * vShade + vSpecular;
 
-	if (Out.vColor.a == 0.f)
+	vector			vDepthInfo = g_DepthTexture.Sample(DepthSampler, In.vTexUV);
+	float			fViewZ = vDepthInfo.y * 500.f;
+
+	vector			vPosition;
+
+	vPosition.x = (In.vTexUV.x * 2.f - 1.f) * fViewZ;
+	vPosition.y = (In.vTexUV.y * -2.f + 1.f) * fViewZ;
+	vPosition.z = vDepthInfo.x * fViewZ;
+	vPosition.w = fViewZ;
+
+	// ºä »ó
+	vPosition = mul(vPosition, g_ProjMatrixInv);
+
+	// ¿ùµå »ó
+	vPosition = mul(vPosition, g_ViewMatrixInv);
+
+	vPosition = mul(vPosition, g_LightViewMatrix);
+
+	vector		vUVPos = mul(vPosition, g_LightProjMatrix);
+	float2		vNewUV;
+
+	vNewUV.x = (vUVPos.x / vUVPos.w) * 0.5f + 0.5f;
+	vNewUV.y = (vUVPos.y / vUVPos.w) * -0.5f + 0.5f;
+
+	vector		vShadowDepthInfo = g_ShadowDepthTexture.Sample(DepthSampler, vNewUV);
+
+	if (vPosition.z - 0.2f > vShadowDepthInfo.r * 500.f)
+		Out.vColor -= vector(0.1, 0.1f, 0.1f, 0.f);
+
+	if (Out.vColor.a <= 0.f)
 		discard;
 
 	return Out;

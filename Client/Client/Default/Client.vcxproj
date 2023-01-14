@@ -173,6 +173,7 @@
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Collision_Manger.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
+    <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\public\UI_Screen.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
@@ -183,7 +184,6 @@
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
-    <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\UIBase.h" />
     <ClInclude Include="..\Public\Particle_Point.h" />
     <ClInclude Include="..\public\Particle_Rect.h" />
@@ -201,6 +201,7 @@
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Collision_Manger.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\private\UI_Screen.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
@@ -210,7 +211,6 @@
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
-    <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\UIBase.cpp" />
     <ClCompile Include="..\Private\Particle_Point.cpp" />
     <ClCompile Include="..\private\Particle_Rect.cpp" />
