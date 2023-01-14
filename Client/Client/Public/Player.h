@@ -32,6 +32,14 @@ public:
 
 	enum PARTS { PARTS_WEAPON, PARTS_END };
 
+public:
+	CModel* Get_Model() { return m_pModelCom; }
+	CTransform* Get_Transform() { return m_pTransformCom; }
+	class CPlayerState* Get_State() { return m_pPlayerState; }
+	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
+
+	_bool Is_AnimationLoop(_uint eAnimId);
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& rhs);
@@ -44,7 +52,12 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-public: /*For Navigation*/
+public: /*For.State*/
+	void HandleInput();
+	void TickState(_float fTimeDelta);
+	void LateTickState(_float fTimeDelta);
+
+public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);
 	void Check_Navigation();
 	void Compute_CurrentIndex(LEVEL eLevel);
@@ -53,6 +66,8 @@ private:
 	CModel* m_pModelCom = nullptr;
 	CNavigation* m_pNavigationCom = nullptr;
 	vector<CNavigation*> m_vecNavigations;
+
+	class CPlayerState* m_pPlayerState = nullptr;
 
 private:
 	vector<class CGameObject*> m_Parts;
