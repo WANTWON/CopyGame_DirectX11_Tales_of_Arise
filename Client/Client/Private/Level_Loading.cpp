@@ -19,6 +19,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 		return E_FAIL;
 
 	m_eNextLevel = eNextLevel;
+	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Loading"), LEVEL_STATIC, TEXT("UI_LOADING"), nullptr);
+
 
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, eNextLevel);
 	if (nullptr == m_pLoader)
