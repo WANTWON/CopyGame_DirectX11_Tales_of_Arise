@@ -12,6 +12,8 @@ float			g_fBrushRange = 2.f;
 
 texture2D		g_FilterTexture;
 
+
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
