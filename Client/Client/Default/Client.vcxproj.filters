@@ -97,6 +97,12 @@
     <Filter Include="02.GameObjects\01.Actor\02.NPC">
       <UniqueIdentifier>{889715ea-45f4-49c2-8a44-1383682efa75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State">
+      <UniqueIdentifier>{1ea6f4a3-9604-423c-8175-8bcf005703dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\States">
+      <UniqueIdentifier>{abab21c8-ddcc-4a09-9b53-fc754ab64c56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -183,6 +189,18 @@
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PlayerState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerWalkState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerRunState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerIdleState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -253,6 +271,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerWalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerRunState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

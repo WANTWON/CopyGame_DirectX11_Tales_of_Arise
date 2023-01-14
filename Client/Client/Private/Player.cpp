@@ -27,7 +27,6 @@ HRESULT CPlayer::Initialize(void * pArg)
 //	if (FAILED(Ready_Parts()))
 //		return E_FAIL;
 
-	m_eState = 0;
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 
@@ -48,7 +47,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 int CPlayer::Tick(_float fTimeDelta)
 {
 
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_RIGHT))
+	/*if (CGameInstance::Get_Instance()->Key_Pressing(DIK_RIGHT))
 	{
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 	}
@@ -87,20 +86,20 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_ePreState = m_eState;
 	}
 
-	m_pModelCom->Play_Animation(fTimeDelta);
+	m_pModelCom->Play_Animation(fTimeDelta);*/
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
-//	for (auto& pParts : m_Parts)
-//		pParts->Tick(fTimeDelta);
+	//for (auto& pParts : m_Parts)
+	//	pParts->Tick(fTimeDelta);
 
 	return OBJ_NOEVENT;
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
-//	for (auto& pParts : m_Parts)
-//		pParts->Late_Tick(fTimeDelta);
+	/*for (auto& pParts : m_Parts)
+		pParts->Late_Tick(fTimeDelta);*/
 
 	if (nullptr != m_pRendererCom)
 	{
@@ -119,14 +118,13 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
-	if (nullptr == m_pShaderCom ||
-		nullptr == m_pModelCom)
+	if (nullptr == m_pShaderCom || nullptr == m_pModelCom)
 		return E_FAIL;
 
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
@@ -139,7 +137,6 @@ HRESULT CPlayer::Render()
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 0)))
 			return E_FAIL;
 	}
-
 
 	return S_OK;
 }
@@ -177,17 +174,17 @@ HRESULT CPlayer::Ready_Parts()
 	m_Parts.resize(PARTS_END);
 
 	/* For.Weapon */
-	CHierarchyNode*		pSocket = m_pModelCom->Get_BonePtr("SWORD");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("SWORD");
 	if (nullptr == pSocket)
 		return E_FAIL;
 
-	CWeapon::WEAPONDESC		WeaponDesc;
+	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.pSocket = pSocket;
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
 	Safe_AddRef(pSocket);
 
-	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	m_Parts[PARTS_WEAPON] = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Weapon"), &WeaponDesc);
 	if (nullptr == m_Parts[PARTS_WEAPON])
@@ -204,7 +201,7 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Transform */
-	CTransform::TRANSFORMDESC		TransformDesc;
+	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
 	TransformDesc.fSpeedPerSec = 5.f;
@@ -221,7 +218,7 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Alphen"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
-	CCollider::COLLIDERDESC		ColliderDesc;
+	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 
 	/* For.Com_SPHERE */
@@ -232,12 +229,12 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Navigation */
-	CNavigation::NAVIDESC			NaviDesc;
+	CNavigation::NAVIDESC NaviDesc;
 	ZeroMemory(&NaviDesc, sizeof NaviDesc);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
-	m_vecNavigaitions.push_back(m_pNavigationCom);
+	m_vecNavigations.push_back(m_pNavigationCom);
 
 	return S_OK;
 }
@@ -250,7 +247,7 @@ HRESULT CPlayer::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
-	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
 		return E_FAIL;
@@ -282,12 +279,11 @@ void CPlayer::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-
-		if (m_fWalkingHeight > XMVectorGetY(vPosition))
-		{
-			vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
-			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-		}
+	if (m_fWalkingHeight > XMVectorGetY(vPosition))
+	{
+		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	}
 }
 
 void CPlayer::Compute_CurrentIndex(LEVEL eLevel)
@@ -297,7 +293,7 @@ void CPlayer::Compute_CurrentIndex(LEVEL eLevel)
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CPlayer*	pInstance = new CPlayer(pDevice, pContext);
+	CPlayer* pInstance = new CPlayer(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -308,10 +304,9 @@ CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext
 	return pInstance;
 }
 
-
 CGameObject * CPlayer::Clone(void * pArg)
 {
-	CPlayer*	pInstance = new CPlayer(*this);
+	CPlayer* pInstance = new CPlayer(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -331,9 +326,10 @@ void CPlayer::Free()
 
 	m_Parts.clear();
 
-	for (auto& iter : m_vecNavigaitions)
+	for (auto& iter : m_vecNavigations)
 		Safe_Release(iter);
-	m_vecNavigaitions.clear();
+
+	m_vecNavigations.clear();
 
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
