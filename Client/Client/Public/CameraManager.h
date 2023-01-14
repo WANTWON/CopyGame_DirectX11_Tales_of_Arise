@@ -8,7 +8,7 @@ class CCameraManager final : public CBase
 {
 	DECLARE_SINGLETON(CCameraManager)
 public:
-	enum CAM_STATE { CAM_DYNAMIC, CAM_2D, CAM_TARGET, CAM_END };
+	enum CAM_STATE { CAM_DYNAMIC, CAM_END };
 
 public:
 	CCameraManager();
@@ -29,8 +29,6 @@ private:
 	CCamera*					m_pCurrentCamera = nullptr;
 	CAM_STATE					m_eCamState = CAM_DYNAMIC;
 	LEVEL						m_eCurrentLevel;
-
-	
 
 public:
 	virtual void Free() override;

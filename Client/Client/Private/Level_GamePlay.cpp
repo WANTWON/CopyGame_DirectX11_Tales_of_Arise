@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "Camera_Dynamic.h"
 #include "Player.h"
+#include "CameraManager.h"
+
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -36,7 +38,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	pCameraManager->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 
 	return S_OK;
 }
@@ -176,7 +181,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CCamera_Dynamic::CAMERADESC_DERIVED				CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCamera_Dynamic::CAMERADESC_DERIVED));
 
-	CameraDesc.iTest = 10;
+	CameraDesc.InitPostion = _float4(0.f, 0.f, 0.f, 1.f);
+	CameraDesc.vDistance = _float4(0, 10, -10, 0.f);
 
 	CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
 	CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);

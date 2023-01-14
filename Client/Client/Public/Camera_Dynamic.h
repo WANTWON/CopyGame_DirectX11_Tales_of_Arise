@@ -11,11 +11,16 @@ BEGIN(Client)
 class CCamera_Dynamic final : public CCamera
 {
 public:
+
+	enum CAMERAMODE {CAM_DEBUG, CAM_PLAYER, CAM_END};
+
 	typedef struct tagCameraDesc_Derived
 	{
-		_uint						iTest;
+		_float4						InitPostion = _float4(0.f, 0.f, 0.f, 1.f);
+		_float4						vDistance = _float4(0, 10, -10, 0.f);
 		CCamera::CAMERADESC			CameraDesc;
 	}CAMERADESC_DERIVED;
+
 private:
 	CCamera_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCamera_Dynamic(const CCamera_Dynamic& rhs);
@@ -28,7 +33,23 @@ public:
 	virtual void Late_Tick(_float fTimeDelta)override;
 	virtual HRESULT Render() override;
 
+public:
+	void Set_CamMode(CAMERAMODE _eCamMode);
+	void Set_Position(_vector vPosition);
+	void Set_TargetPosition(_vector vPosition) { XMStoreFloat4(&m_fTargetPos, vPosition); }
+	void Set_ZoomValue(_float fValue) { m_fZoom = fValue; }
 
+public:
+	void Debug_Camera(_float fTimeDelta);
+	void Player_Camera(_float fTimeDelta);
+
+private:
+	CAMERAMODE		m_ePreCamMode = CAM_PLAYER;
+	CAMERAMODE		m_eCamMode = CAM_PLAYER;
+	_float4			m_vDistance = _float4(0, 10, -10, 0.f);
+	_double			m_lMouseWheel = 0;
+	_float4			m_fTargetPos = _float4(0.f, 0.f, 0.f, 1.f);
+	_float			m_fZoom = 0.f;
 
 public:
 	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
