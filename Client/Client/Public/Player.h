@@ -32,6 +32,7 @@ public:
 
 public: /*For Navigation*/
 	void	Change_Navigation(LEVEL eLevel);
+	void	Check_Navigation();
 	void	Compute_CurrentIndex(LEVEL eLevel);
 
 private:

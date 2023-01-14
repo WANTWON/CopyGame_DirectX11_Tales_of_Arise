@@ -30,19 +30,26 @@ HRESULT CNavigation::Initialize_Prototype(const _tchar * pNavigationData)
 	if (0 == hFile)
 		return E_FAIL;	
 
+	_uint iNum = 0;
+	CCell::CELLTYPE eCelltype;
 	_float3		vPoints[3];
 
-	while (true)
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
 	{
 		ReadFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
+		ReadFile(hFile, &eCelltype, sizeof(CCell::CELLTYPE), &dwByte, nullptr);
 		if (0 == dwByte)
 			break;
 
-		CCell*			pCell = CCell::Create(m_pDevice, m_pContext, vPoints, m_Cells.size());
+		CCell*			pCell = CCell::Create(m_pDevice, m_pContext, vPoints, (int)m_Cells.size());
 		if (nullptr == pCell)
 			return E_FAIL;
 
-		m_Cells.push_back(pCell);		
+		m_Cells.push_back(pCell);
+		m_Cells.back()->Set_CellType(eCelltype);
 	}
 
 	CloseHandle(hFile);
@@ -211,7 +218,7 @@ HRESULT CNavigation::Render()
 	{
 		WorldMatrix._24 = 0.1f;
 		m_pShader->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4));
-		m_pShader->Set_RawValue("g_vColor", &_float4(1.f, 0.f, 0.f, 1.f), sizeof(_float4));
+		m_pShader->Set_RawValue("g_vColor", &_float4(1.f, 1.f, 1.f, 1.f), sizeof(_float4));
 
 		m_pShader->Begin(0);
 		m_Cells[m_NaviDesc.iCurrentCellIndex]->Render();

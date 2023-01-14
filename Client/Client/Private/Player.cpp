@@ -28,6 +28,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_pModelCom->Set_CurrentAnimIndex(3);
+	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	return S_OK;
 }
@@ -74,9 +75,13 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
+		if (m_pNavigationCom != nullptr)
+			m_pRendererCom->Add_Debug(m_pNavigationCom);
 		__super::Late_Tick(fTimeDelta);
 		
 	}
+
+	Check_Navigation();
 }
 
 HRESULT CPlayer::Render()
@@ -171,8 +176,6 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	CNavigation::NAVIDESC			NaviDesc;
 	ZeroMemory(&NaviDesc, sizeof NaviDesc);
 
-	NaviDesc.iCurrentCellIndex = 0;
-
 	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 	m_vecNavigaitions.push_back(m_pNavigationCom);
@@ -213,6 +216,19 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 	}
 
 	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CPlayer::Check_Navigation()
+{
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
+
+
+		if (m_fWalkingHeight > XMVectorGetY(vPosition))
+		{
+			vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		}
 }
 
 void CPlayer::Compute_CurrentIndex(LEVEL eLevel)
