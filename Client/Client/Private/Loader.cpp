@@ -19,6 +19,14 @@
 #include "UI_Screen.h"
 #include "ScreenFadeEffect.h"
 #include "UI_Loading.h"
+#include "HPbar.h"
+#include "HP_Font.h"
+#include "UI_Comboline.h"
+#include "UI_Combo_font_Damages.h"
+#include "UI_Combo_font_Hits.h"
+#include "UI_font_Damage_number.h"
+#include "UI_font_Hits_number.h"
+
 
 
 //Monster
@@ -119,6 +127,34 @@ HRESULT CLoader::Loading_ForPrototype()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"),
 		CScreenFadeEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HPbar"),
+		CHPbar::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HPfont"),
+		CHP_Font::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Comboline"),
+		CUI_Comboline::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Damagesfont"),
+		CUI_Combo_font_Damages::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_HITS_font"),
+		CUI_Combo_font_Hits::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"),
+		CUI_font_Damage_number::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_HITS_fontnum"),
+		CUI_font_Hits_number::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Sky */
@@ -252,7 +288,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 
 HRESULT CLoader::Loading_ForGamePlayLevel()
 {
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 
@@ -286,30 +322,16 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
 		return E_FAIL;
 
-
 	/* 모델 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("모델 로딩 중."));
 
-
-	_matrix			PivotMatrix = XMMatrixIdentity();
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/Fiona/Fiona.fbx", PivotMatrix))))
-		return E_FAIL;
-
-
-	/*For.Prototype_Component_Model_ForkLift*/
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/ForkLift/ForkLift.fbx", PivotMatrix))))
-		return E_FAIL;
+	_matrix	PivotMatrix = XMMatrixIdentity();
 
 	/*For.Prototype_Component_Model_IceWolf*/
 	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf"),
 	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Ice_Wolf/Ice_Wolf.fbx", PivotMatrix))))*/
 	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Ice_Wolf"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
-
 
 	/* 콜라이더 생성 중. */
 	lstrcpy(m_szLoadingText, TEXT("콜라이더 생성 중."));
@@ -335,13 +357,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/Filed_Navi.dat")))))
 		return E_FAIL;
 
-
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	Safe_Release(pGameInstance);
 
 	m_isFinished = true;
-
 
 	return S_OK;
 }
@@ -369,6 +389,39 @@ HRESULT CLoader::Loading_ForUITexture()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logosprite"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/logosprite/logosprite%d.png"), 237))))
 		return E_FAIL;
+
+	/*For.hpbar */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_HPbar"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/HPbar/HP_bar%d.dds"), 2))))
+		return E_FAIL;
+
+
+	/*For.gradation */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_hpgrad"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/HPbar/hpgrad.dds"), 1))))
+		return E_FAIL;
+
+	/*For.hpfont */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_font"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/numberfont/font%d.png"), 10))))
+		return E_FAIL;
+
+	/*For.line */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_line"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/comboline/sline%d.png"), 3))))
+		return E_FAIL;
+
+	/*For.combofont */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_hitfont"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/combofonts/hitfont0.png"), 1))))
+		return E_FAIL;
+
+	/*For.combofont */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_damagesfont"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/combofonts/damagefont0.png"), 1))))
+		return E_FAIL;
+
+
 
 
 

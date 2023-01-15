@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "..\Public\Ice_Wolf.h"
-#include "Ice_WolfIdleState.h"
+#include "Ice_Wolf.h"
+#include "IceWolfState.h"
+#include "IceWolfIdleState.h"
 
-
-using namespace Ice_Wolf;
+using namespace IceWolf;
 
 CIce_Wolf::CIce_Wolf(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -29,7 +29,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CIce_WolfState* pState = new CIdleState(this);
+	CIceWolfState* pState = new CIdleState(this);
 	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 
 	///* Set Binary */
@@ -111,7 +111,7 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 
 void CIce_Wolf::AI_Behavior()
 {
-	CIce_WolfState* pNewState = m_pIce_WolfState->AI_Behavior();
+	CIceWolfState* pNewState = m_pIce_WolfState->AI_Behaviour();
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
 }
@@ -119,14 +119,14 @@ void CIce_Wolf::AI_Behavior()
 
 void CIce_Wolf::TickState(_float fTimeDelta)
 {
-	CIce_WolfState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
+	CIceWolfState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
 }
 
 void CIce_Wolf::LateTickState(_float fTimeDelta)
 {
-	CIce_WolfState* pNewState = m_pIce_WolfState->LateTick(fTimeDelta);
+	CIceWolfState* pNewState = m_pIce_WolfState->LateTick(fTimeDelta);
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
 }
