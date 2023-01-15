@@ -22,9 +22,9 @@ struct VS_IN
 struct VS_OUT
 {
 	float4		vPosition : SV_POSITION;
-	float4		vNormal : NORMAL;	
+	float4		vNormal : NORMAL;
 	float2		vTexUV : TEXCOORD0;
-	float4		vWorldPos : TEXCOORD1;	
+	float4		vWorldPos : TEXCOORD1;
 	float4		vProjPos : TEXCOORD2;
 };
 
@@ -75,7 +75,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	vector		vBrush = vector(0.f, 0.f, 0.f, 0.f);
 
-	if (g_vBrushPos.x - g_fBrushRange < In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fBrushRange && 
+	if (g_vBrushPos.x - g_fBrushRange < In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fBrushRange &&
 		g_vBrushPos.z - g_fBrushRange < In.vWorldPos.z && In.vWorldPos.z < g_vBrushPos.z + g_fBrushRange)
 	{
 		float2		fNewUV;
@@ -90,14 +90,14 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = vMtrlDiffuse + vBrush;
 
 	/*if (Out.vDiffuse.a == 0.0f)
-		discard;*/
+	discard;*/
 
 	Out.vDiffuse.a = 1.f;
 
 	/* -1 ~ 1 => 0 ~ 1*/
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
-	/* near ~ far */ 
+	/* near ~ far */
 	/* 0 ~ far */
 	/* 0 ~ 1 */
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);

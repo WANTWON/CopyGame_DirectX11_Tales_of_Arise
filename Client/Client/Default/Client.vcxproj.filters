@@ -94,6 +94,9 @@
     <Filter Include="05.DataManager">
       <UniqueIdentifier>{3714032a-de3a-40fb-a3ca-642696606767}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\02.NPC">
+      <UniqueIdentifier>{889715ea-45f4-49c2-8a44-1383682efa75}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\State">
       <UniqueIdentifier>{1ea6f4a3-9604-423c-8175-8bcf005703dd}</UniqueIdentifier>
     </Filter>
@@ -141,9 +144,6 @@
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\01.Actor\00.Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Monster.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
       <Filter>02.GameObjects\01.Actor\00.Player\Weapon</Filter>
     </ClInclude>
@@ -188,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Data_Manager.h">
       <Filter>05.DataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State</Filter>
@@ -236,9 +239,6 @@
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Monster.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\Weapon</Filter>
     </ClCompile>
@@ -280,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Data_Manager.cpp">
       <Filter>05.DataManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerWalkState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>

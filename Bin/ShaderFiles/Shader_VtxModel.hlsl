@@ -68,6 +68,7 @@ struct PS_OUT
 	float4		vDiffuse : SV_TARGET0;
 	float4		vNormal : SV_TARGET1;
 	float4		vDepth : SV_TARGET2;
+	vector		vLightDepth : SV_TARGET3;
 };
 /* 이렇게 만들어진 픽셀을 PS_MAIN함수의 인자로 던진다. */
 /* 리턴하는 색은 Target0 == 장치에 0번째에 바인딩되어있는 렌더타겟(일반적으로 백버퍼)에 그린다. */
@@ -94,7 +95,16 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 
 
+PS_OUT PS_MAIN_SHADOW(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
 
+	Out.vLightDepth.r = In.vProjPos.w / 500.f;
+
+	Out.vLightDepth.a = 1.f;
+
+	return Out;
+}
 
 
 technique11 DefaultTechnique
@@ -110,4 +120,14 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
+	pass DepthShadow
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
+	}
 }
