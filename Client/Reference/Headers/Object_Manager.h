@@ -23,7 +23,13 @@ public:
 	class CGameObject* Clone_GameObject(const _tchar* pPrototypeTag, void* pArg = nullptr);
 	void Tick(_float fTimeDelta);
 	void Late_Tick(_float fTimeDelta);
+public:
+	class CGameObject* Get_Objects(_uint iLevelIndex, const _tchar* pLayerTag, _uint iIndex = 0);
+	list<CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);
+
+public:
 	void Clear(_uint iLevelIndex);
+	void Clear_Layer(_uint iLevelIndex, const _tchar* LayerTag);
 
 
 private:

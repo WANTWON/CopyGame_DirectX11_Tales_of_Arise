@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 #include "Camera_Dynamic.h"
+#include "Player.h"
+#include "CameraManager.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -23,8 +25,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -35,7 +35,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	pCameraManager->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 
 	return S_OK;
 }
@@ -52,6 +55,19 @@ void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+
+
+	CBaseObj* pPlayer = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+	_float4		vLightEye, vLightAt;
+
+	XMStoreFloat4(&vLightEye, pPlayer->Get_TransformState(CTransform::STATE_TRANSLATION));
+	vLightEye.y = 0.f;
+	vLightAt = vLightEye;
+	vLightEye.y += 50.f;
+	vLightEye.z += 50.f;
+
+	CGameInstance::Get_Instance()->Set_ShadowLightView(vLightEye, vLightAt);
+
 }
 
 HRESULT CLevel_GamePlay::Ready_Lights()
@@ -64,7 +80,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDirection = _float4(0.f, -1.f, 1.f, 0.f);
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);	
@@ -72,18 +88,13 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
 		return E_FAIL;
 
-	///* For.Point */
-	//ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+	_float4		vLightEye, vLightAt;
 
-	//LightDesc.eType = LIGHTDESC::TYPE_POINT;
-	//LightDesc.vPosition = _float4(10.f, 3.f, 10.f, 1.f);
-	//LightDesc.fRange = 7.f;	
-	//LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.3f, 1.f);
-	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	XMStoreFloat4(&vLightEye, XMVectorSet(36, 50, 70, 1.f));
+	XMStoreFloat4(&vLightAt, XMVectorSet(36, 0, 20, 1.f));
 
-	//if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
-	//	return E_FAIL;
+	pGameInstance->Set_ShadowLightView(vLightEye, vLightAt);
+
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -95,8 +106,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Player"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Player"), LEVEL_STATIC, pLayerTag, nullptr)))
 		return E_FAIL;	
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(10.f, 0.f, 10.f, 1.f));
+	pPlayer->Change_Navigation(LEVEL_GAMEPLAY);
+	pPlayer->Compute_CurrentIndex(LEVEL_GAMEPLAY);
 
 	Safe_Release(pGameInstance);
 
@@ -116,7 +132,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Monster"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
 			return E_FAIL;
 	}
-
 	
 
 	Safe_Release(pGameInstance);
@@ -171,7 +186,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CCamera_Dynamic::CAMERADESC_DERIVED				CameraDesc;
 	ZeroMemory(&CameraDesc, sizeof(CCamera_Dynamic::CAMERADESC_DERIVED));
 
-	CameraDesc.iTest = 10;
+	CameraDesc.InitPostion = _float4(0.f, 0.f, 0.f, 1.f);
+	CameraDesc.vDistance = _float4(0, 10, -10, 0.f);
 
 	CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
 	CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);

@@ -1,5 +1,7 @@
 #pragma once
 
+#pragma warning (disable : 4996)
+#pragma warning (disable : 4099)
 #pragma warning (disable : 4005)
 #pragma warning (disable : 4251)
 
@@ -38,6 +40,10 @@ enum DIMM { DIMM_X, DIMM_Y, DIMM_WHEEL, DIMM_END };
 #include <list>
 #include <algorithm>
 #include <typeinfo.h>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <math.h>
 using namespace std;
 
 
@@ -62,5 +68,8 @@ using namespace std;
 
 #endif // _DEBUG
 
-using namespace Engine;
+#define OBJ_DEAD 1
+#define OBJ_NOEVENT 0
 
+using namespace Engine;
+using namespace TriangleTests;

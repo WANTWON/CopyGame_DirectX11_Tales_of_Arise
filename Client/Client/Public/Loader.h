@@ -33,10 +33,13 @@ public:
 public:
 	HRESULT Initialize(LEVEL eNextLevel);
 
+	
 	HRESULT Loading_ForLogoLevel();
+	HRESULT Loading_ForPrototype();
+	HRESULT Loading_ForStaticLevel();
 	HRESULT Loading_ForGamePlayLevel();
-
-
+	HRESULT Loading_ForUITexture();
+	
 private:
 	LEVEL					m_eNextLevel = LEVEL_END;
 	_bool					m_isFinished = false;

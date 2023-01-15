@@ -1,10 +1,12 @@
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-matrix			g_ViewMatrixInv, g_ProjMatrixInv;
+matrix			g_ViewMatrixInv, g_ProjMatrixInv, g_LightViewMatrix, g_LightProjMatrix;
 
 vector			g_vCamPosition;
 
 vector			g_vLightDir;
+vector			g_vLightPos;
+float			g_fLightRange;
 vector			g_vLightDiffuse;
 vector			g_vLightAmbient;
 vector			g_vLightSpecular;
@@ -16,22 +18,31 @@ texture2D		g_DiffuseTexture;
 texture2D		g_NormalTexture;
 texture2D		g_DepthTexture;
 texture2D		g_ShadeTexture;
+texture2D		g_SpecularTexture;
+texture2D		g_ShadowDepthTexture;
 
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_Linear;
 };
 
+sampler DepthSampler = sampler_state
+{
+	filter = min_mag_Linear_mip_point;
+	AddressU = clamp;
+	AddressV = clamp;
+
+};
 
 struct VS_IN
 {
-	float3		vPosition : POSITION;	
+	float3		vPosition : POSITION;
 	float2		vTexUV : TEXCOORD0;
 };
 
 struct VS_OUT
 {
-	float4		vPosition : SV_POSITION;	
+	float4		vPosition : SV_POSITION;
 	float2		vTexUV : TEXCOORD0;
 };
 
@@ -69,7 +80,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	
+
 	return Out;
 }
 
@@ -122,6 +133,62 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
 	return Out;
 }
 
+PS_OUT_LIGHT PS_MAIN_LIGHT_POINT(PS_IN In)
+{
+	PS_OUT_LIGHT		Out = (PS_OUT_LIGHT)0;
+
+	/* 0 ~ 1 => -1 ~ 1*/
+	vector			vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
+	vector			vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
+
+	float			fViewZ = vDepthDesc.y * 500.f;
+
+	vector			vWorldPos = (vector)0.f;
+
+	/* 투영 공간상의 위치를 구했다. */
+	/* 투영 공간 == 로컬점의위치 * 월드행렬 * 뷰행렬 * 투영행렬 / w */
+	vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
+	vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
+	vWorldPos.z = vDepthDesc.r;
+	vWorldPos.w = 1.0f;
+
+	/* 로컬점의위치 * 월드행렬 * 뷰행렬 * 투영행렬 */
+	vWorldPos *= fViewZ;
+
+	/* 뷰 공간상의 위치르 ㄹ구한다. */
+	/* 로컬점의위치 * 월드행렬 * 뷰행렬  */
+	vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+
+	/* 로컬점의위치 * 월드행렬   */
+	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+	vector			vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+
+	vector			vLightDir = vWorldPos - g_vLightPos;
+
+	float			fDistance = length(vLightDir);
+
+	float			fAtt = saturate((g_fLightRange - fDistance) / g_fLightRange);
+
+	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient * g_vMtrlAmbient));
+	Out.vShade *= fAtt;
+
+	Out.vShade.a = 1.f;
+
+
+
+	vector			vReflect = reflect(normalize(vLightDir), normalize(vNormal));
+	vector			vLook = vWorldPos - g_vCamPosition;
+
+	Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vReflect) * -1.f, normalize(vLook))), 30.f);
+	Out.vSpecular *= fAtt;
+
+	Out.vSpecular.a = 0.f;
+
+	return Out;
+}
+
+
 
 PS_OUT PS_MAIN_BLEND(PS_IN In)
 {
@@ -129,10 +196,41 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 
 	vector			vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	vector			vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
+	vector			vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
 
-	Out.vColor = vDiffuse * vShade;
 
-	if (Out.vColor.a == 0.f)
+	Out.vColor = vDiffuse * vShade + vSpecular;
+
+	vector			vDepthInfo = g_DepthTexture.Sample(DepthSampler, In.vTexUV);
+	float			fViewZ = vDepthInfo.y * 500.f;
+
+	vector			vPosition;
+
+	vPosition.x = (In.vTexUV.x * 2.f - 1.f) * fViewZ;
+	vPosition.y = (In.vTexUV.y * -2.f + 1.f) * fViewZ;
+	vPosition.z = vDepthInfo.x * fViewZ;
+	vPosition.w = fViewZ;
+
+	// 뷰 상
+	vPosition = mul(vPosition, g_ProjMatrixInv);
+
+	// 월드 상
+	vPosition = mul(vPosition, g_ViewMatrixInv);
+
+	vPosition = mul(vPosition, g_LightViewMatrix);
+
+	vector		vUVPos = mul(vPosition, g_LightProjMatrix);
+	float2		vNewUV;
+
+	vNewUV.x = (vUVPos.x / vUVPos.w) * 0.5f + 0.5f;
+	vNewUV.y = (vUVPos.y / vUVPos.w) * -0.5f + 0.5f;
+
+	vector		vShadowDepthInfo = g_ShadowDepthTexture.Sample(DepthSampler, vNewUV);
+
+	if (vPosition.z - 0.2f > vShadowDepthInfo.r * 500.f)
+		Out.vColor -= vector(0.1, 0.1f, 0.1f, 0.f);
+
+	if (Out.vColor.a <= 0.f)
 		discard;
 
 	return Out;
@@ -148,6 +246,17 @@ BlendState BS_Default
 {
 	BlendEnable[0] = false;
 };
+
+BlendState BS_LightBlending
+{
+	BlendEnable[0] = true;
+	BlendEnable[1] = true;
+
+	SrcBlend = one;
+	DestBlend = one;
+	BlendOp = add;
+};
+
 DepthStencilState DSS_Default
 {
 	DepthEnable = true;
@@ -179,7 +288,7 @@ technique11 DefaultTechnique
 	pass Light_Directional
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_LightBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -190,12 +299,12 @@ technique11 DefaultTechnique
 	pass Light_Point
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_LightBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_LIGHT_DIRECTIONAL();
+		PixelShader = compile ps_5_0 PS_MAIN_LIGHT_POINT();
 	}
 
 	pass Blend

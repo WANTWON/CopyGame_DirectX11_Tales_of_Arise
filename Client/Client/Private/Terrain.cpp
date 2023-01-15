@@ -4,12 +4,12 @@
 #include "GameInstance.h"
 
 CTerrain::CTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CBaseObj(pDevice, pContext)
 {
 }
 
 CTerrain::CTerrain(const CTerrain & rhs)
-	: CGameObject(rhs)
+	: CBaseObj(rhs)
 {
 }
 
@@ -20,7 +20,7 @@ HRESULT CTerrain::Initialize_Prototype()
 
 HRESULT CTerrain::Initialize(void * pArg)
 {
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Create_FilterTexture()))
@@ -29,9 +29,9 @@ HRESULT CTerrain::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CTerrain::Tick(_float fTimeDelta)
+int CTerrain::Tick(_float fTimeDelta)
 {
-
+	return OBJ_NOEVENT;
 }
 
 void CTerrain::Late_Tick(_float fTimeDelta)
@@ -62,11 +62,11 @@ HRESULT CTerrain::Render()
 	m_pVIBufferCom->Render();
 
 
-
 	return S_OK;
 }
 
-HRESULT CTerrain::Ready_Components()
+
+HRESULT CTerrain::Ready_Components(void *pArg)
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -77,7 +77,7 @@ HRESULT CTerrain::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxNorTex"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -93,7 +93,7 @@ HRESULT CTerrain::Ready_Components()
 		return E_FAIL;	
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	/* For.Com_Navigation */

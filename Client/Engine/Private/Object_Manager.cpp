@@ -99,6 +99,24 @@ void CObject_Manager::Late_Tick(_float fTimeDelta)
 	}
 }
 
+CGameObject * CObject_Manager::Get_Objects(_uint iLevelIndex, const _tchar * pLayerTag, _uint iIndex)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (pLayer == nullptr)
+		return nullptr;
+
+	return pLayer->Get_Object(iIndex);
+}
+
+list<CGameObject*>* CObject_Manager::Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag)
+{
+	CLayer* pLayer = Find_Layer(iSceneID, pLayerTag);
+	if (nullptr == pLayer)
+		return nullptr;
+
+	return pLayer->Get_ObjectList();
+}
+
 void CObject_Manager::Clear(_uint iLevelIndex)
 {
 	if (iLevelIndex >= m_iNumLevels || 
@@ -110,6 +128,15 @@ void CObject_Manager::Clear(_uint iLevelIndex)
 
 	m_pLayers[iLevelIndex].clear();
 	
+}
+
+void CObject_Manager::Clear_Layer(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (pLayer == nullptr)
+		return;
+
+	pLayer->Free();
 }
 
 CGameObject * CObject_Manager::Find_Prototype(const _tchar * pPrototypeTag)

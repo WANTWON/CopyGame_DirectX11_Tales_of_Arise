@@ -27,10 +27,10 @@ HRESULT CParticle_Rect::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CParticle_Rect::Tick(_float fTimeDelta)
+int CParticle_Rect::Tick(_float fTimeDelta)
 {
 	m_pVIBufferCom->Update(fTimeDelta);
-
+	return OBJ_NOEVENT;
 }
 
 void CParticle_Rect::Late_Tick(_float fTimeDelta)
@@ -66,7 +66,7 @@ HRESULT CParticle_Rect::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxRectInstance"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxRectInstance"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -74,7 +74,7 @@ HRESULT CParticle_Rect::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_RectInstance"), (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_RectInstance"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	return S_OK;

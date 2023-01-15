@@ -12,8 +12,8 @@ HRESULT CChannel::Initialize(CModel* pModel, aiNodeAnim * pAIChannel)
 {
 	strcpy_s(m_szName, pAIChannel->mNodeName.data);
 
-	/* 이 애니메이션 하나르 ㄹ구동할때 시간별로 표현되었어야할 상태(KEYFRAME) */
-	/* 이 애니메이션 하나르 ㄹ구동할때 몇개의 상태로 표현되어야하는가? m_iNumKeyframes */
+	/* 이 애니메이션 하나를 구동할때 시간별로 표현되었어야할 상태(KEYFRAME) */
+	/* 이 애니메이션 하나를 구동할때 몇개의 상태로 표현되어야하는가? m_iNumKeyframes */
 	m_iNumKeyframes = max(pAIChannel->mNumScalingKeys, pAIChannel->mNumRotationKeys);
 	m_iNumKeyframes = max(m_iNumKeyframes, pAIChannel->mNumPositionKeys);
 
@@ -29,7 +29,7 @@ HRESULT CChannel::Initialize(CModel* pModel, aiNodeAnim * pAIChannel)
 		if (i < pAIChannel->mNumScalingKeys)
 		{
 			memcpy(&vScale, &pAIChannel->mScalingKeys[i].mValue, sizeof(_float3));
-			Keyframe.fTime = pAIChannel->mScalingKeys[i].mTime;
+			Keyframe.fTime = (float)pAIChannel->mScalingKeys[i].mTime;
 		}
 
 		if (i < pAIChannel->mNumRotationKeys)
@@ -39,13 +39,13 @@ HRESULT CChannel::Initialize(CModel* pModel, aiNodeAnim * pAIChannel)
 			vRotation.y = pAIChannel->mRotationKeys[i].mValue.y;
 			vRotation.z = pAIChannel->mRotationKeys[i].mValue.z;
 			vRotation.w = pAIChannel->mRotationKeys[i].mValue.w;
-			Keyframe.fTime = pAIChannel->mRotationKeys[i].mTime;
+			Keyframe.fTime = (float)pAIChannel->mRotationKeys[i].mTime;
 		}
 
 		if (i < pAIChannel->mNumPositionKeys)
 		{
 			memcpy(&vPosition, &pAIChannel->mPositionKeys[i].mValue, sizeof(_float3));
-			Keyframe.fTime = pAIChannel->mPositionKeys[i].mTime;
+			Keyframe.fTime = (float)pAIChannel->mPositionKeys[i].mTime;
 		}
 
 		Keyframe.vScale = vScale;
@@ -63,10 +63,32 @@ HRESULT CChannel::Initialize(CModel* pModel, aiNodeAnim * pAIChannel)
 	return S_OK;
 }
 
+HRESULT CChannel::Bin_Initialize(DATA_BINCHANNEL * pAIChannel, CModel * pModel)
+{
+	strcpy_s(m_szName, pAIChannel->szName);
+
+	m_iNumKeyframes = pAIChannel->iNumKeyFrames;
+
+	for (_uint i = 0; i < m_iNumKeyframes; ++i)
+	{
+		KEYFRAME			KeyFrame;
+		ZeroMemory(&KeyFrame, sizeof(KEYFRAME));
+
+		KeyFrame = pAIChannel->pKeyFrames[i];
+
+		m_KeyFrames.push_back(KeyFrame);
+	}
+
+	m_pBoneNode = pModel->Get_BonePtr(m_szName);
+	Safe_AddRef(m_pBoneNode);
+
+	return S_OK;
+}
+
 void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 {
 	/* 던져진 시간에 맞는 뼈의 상태를 만들거야. 
-	만들면 모델이 가지공 ㅣㅆ는 뼈에 던질꺼야. */
+	만들면 모델이 가지고 있는 뼈에 던질꺼야. */
 
 	_vector			vScale, vRotation, vPosition;
 
@@ -104,8 +126,14 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 		vPosition = XMVectorSetW(vPosition, 1.f);
 	}
 
+	/*Linear*/
+	XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
+	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
+	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
+
+
 	_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
-	
+
 	m_pBoneNode->Set_TransformationMatrix(TransformationMatrix);
 	
 }
@@ -115,6 +143,59 @@ void CChannel::Reset()
 	m_iCurrentKeyFrameIndex = 0;
 }
 
+bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime)
+{
+	_vector			vScale, vRotation, vPosition;
+
+	if (fLinearCurrentTime >= fLinearTotalTime)
+		return true;
+
+	_float		fRatio = fLinearCurrentTime / fLinearTotalTime;
+
+
+	_vector		vSourScale, vSourRotation, vSourPosition;
+	_vector		vDestScale, vDestRotation, vDestPosition;
+
+	vDestScale = XMLoadFloat3(&NextKeyFrame.vScale);
+	vDestRotation = XMLoadFloat4(&NextKeyFrame.vRotation);
+	vDestPosition = XMLoadFloat3(&NextKeyFrame.vPosition);
+
+	vSourScale = XMLoadFloat3(&m_KeyFrame_Linear.vScale);
+	vSourRotation = XMLoadFloat4(&m_KeyFrame_Linear.vRotation);
+	vSourPosition = XMLoadFloat3(&m_KeyFrame_Linear.vPosition);
+
+
+	vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
+	vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
+	vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
+	vPosition = XMVectorSetW(vPosition, 1.f);
+
+
+	XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
+	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
+	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
+
+	_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
+
+	m_pBoneNode->Set_TransformationMatrix(TransformationMatrix);
+
+	return false;
+}
+
+
+void CChannel::Get_ChannelData(DATA_BINCHANNEL * pChannelData)
+{
+	memcpy(&pChannelData->szName, m_szName, sizeof(char)*MAX_PATH);
+	pChannelData->iNumKeyFrames = m_iNumKeyframes;
+
+	pChannelData->pKeyFrames = new KEYFRAME[m_iNumKeyframes];
+
+	for (_uint i = 0; i < m_iNumKeyframes; ++i)
+	{
+		memcpy(&pChannelData->pKeyFrames[i], &m_KeyFrames[i], sizeof(KEYFRAME));
+	}
+}
+
 CChannel * CChannel::Create( CModel* pModel, aiNodeAnim * pAIChannel)
 {
 	CChannel*	pInstance = new CChannel();
@@ -122,6 +203,20 @@ CChannel * CChannel::Create( CModel* pModel, aiNodeAnim * pAIChannel)
 	if (FAILED(pInstance->Initialize(pModel, pAIChannel)))
 	{
 		ERR_MSG(TEXT("Failed to Created : CChannel"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+
+CChannel * CChannel::Bin_Create(DATA_BINCHANNEL * pAIChannel, CModel * pModel)
+{
+	CChannel*			pInstance = new CChannel();
+
+	if (FAILED(pInstance->Bin_Initialize(pAIChannel, pModel)))
+	{
+		ERR_MSG(TEXT("Failed To Created : CChannel_Bin"));
 		Safe_Release(pInstance);
 	}
 

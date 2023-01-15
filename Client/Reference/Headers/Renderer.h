@@ -8,10 +8,10 @@ BEGIN(Engine)
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum RENDERGROUP {RENDER_PRIORITY, RENDER_NONALPHABLEND, RENDER_NONLIGHT, RENDER_ALPHABLEND, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOWDEPTH, RENDER_NONALPHABLEND, RENDER_NONLIGHT, RENDER_ALPHABLEND, RENDER_UI_FRONT, RENDER_UI_BACK, RENDER_END };
 
 private:
-	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);	
+	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
 
 public:
@@ -19,14 +19,14 @@ public:
 	virtual HRESULT Initialize(void* pArg)override;
 
 public:
-	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);	
+	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
 	HRESULT Render_GameObjects();
 
 
 #ifdef _DEBUG
 public:
 	HRESULT Add_Debug(class CComponent* pDebugCom);
-
+	void Debug_Clear();
 #endif // _DEBUG
 
 
@@ -50,19 +50,24 @@ private:
 
 private:
 	HRESULT Render_Priority();
+	HRESULT Render_ShadowDepth();
 	HRESULT Render_NonAlphaBlend();
+
 	HRESULT Render_Lights();
 	HRESULT Render_Blend();
 	HRESULT Render_NonLight();
-	HRESULT Render_AlphaBlend();	
+	HRESULT Render_AlphaBlend();
 	HRESULT Render_UI();
-	
-	
+
+
 
 #ifdef _DEBUG
 private:
 	HRESULT Render_Debug();
+	bool	m_bRenderDebug = false;
+	bool	m_bRenderComponentDebug = false;
 #endif // _DEBUG
+
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(void* pArg = nullptr)override;

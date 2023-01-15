@@ -107,7 +107,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../Public/;../../Reference/Headers/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../../Reference/Headers/;../Default/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -170,7 +170,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
-    <ClInclude Include="..\public\BackGround.h" />
+    <ClInclude Include="..\Public\BaseObj.h" />
+    <ClInclude Include="..\Public\Collision_Manger.h" />
+    <ClInclude Include="..\Public\Data_Manager.h" />
+    <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\public\PlayerIdleState.h" />
+    <ClInclude Include="..\public\PlayerState.h" />
+    <ClInclude Include="..\public\PlayerRunState.h" />
+    <ClInclude Include="..\Public\ScreenFadeEffect.h" />
+    <ClInclude Include="..\Public\UI_Loading.h" />
+    <ClInclude Include="..\Public\UI_Manager.h" />
+    <ClInclude Include="..\public\UI_Screen.h" />
+    <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
@@ -178,13 +189,14 @@
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
-    <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\UIBase.h" />
     <ClInclude Include="..\Public\Particle_Point.h" />
     <ClInclude Include="..\public\Particle_Rect.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\UI_Portrait.h" />
+    <ClInclude Include="..\public\PlayerWalkState.h" />
     <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -192,20 +204,31 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\private\BackGround.cpp" />
+    <ClCompile Include="..\Private\BaseObj.cpp" />
+    <ClCompile Include="..\Private\Collision_Manger.cpp" />
+    <ClCompile Include="..\Private\Data_Manager.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\private\PlayerIdleState.cpp" />
+    <ClCompile Include="..\private\PlayerRunState.cpp" />
+    <ClCompile Include="..\Private\ScreenFadeEffect.cpp" />
+    <ClCompile Include="..\Private\UI_Loading.cpp" />
+    <ClCompile Include="..\Private\UI_Manager.cpp" />
+    <ClCompile Include="..\private\UI_Screen.cpp" />
+    <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
-    <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\UIBase.cpp" />
     <ClCompile Include="..\Private\Particle_Point.cpp" />
     <ClCompile Include="..\private\Particle_Rect.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\UI_Portrait.cpp" />
+    <ClCompile Include="..\private\PlayerWalkState.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -223,6 +246,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_UI.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxCubeTexture.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModel.hlsl" />

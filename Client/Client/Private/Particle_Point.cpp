@@ -28,10 +28,10 @@ HRESULT CParticle_Point::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CParticle_Point::Tick(_float fTimeDelta)
+int CParticle_Point::Tick(_float fTimeDelta)
 {
 	m_pVIBufferCom->Update(fTimeDelta);
-
+	return OBJ_NOEVENT;
 }
 
 void CParticle_Point::Late_Tick(_float fTimeDelta)
@@ -67,7 +67,7 @@ HRESULT CParticle_Point::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxPointInstance"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointInstance"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -75,7 +75,7 @@ HRESULT CParticle_Point::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_PointInstance"), (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_PointInstance"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	return S_OK;

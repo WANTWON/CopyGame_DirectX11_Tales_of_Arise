@@ -26,7 +26,7 @@ HRESULT CTarget_Manager::Add_MRT(const _tchar * pMRTTag, const _tchar * pTargetT
 {
 	CRenderTarget*	pRenderTarget = Find_RenderTarget(pTargetTag);
 
-	if(nullptr == pRenderTarget)
+	if (nullptr == pRenderTarget)
 		return E_FAIL;
 
 	list<CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
@@ -35,7 +35,7 @@ HRESULT CTarget_Manager::Add_MRT(const _tchar * pMRTTag, const _tchar * pTargetT
 	{
 		list<CRenderTarget*>		MRTList;
 
-		MRTList.push_back(pRenderTarget);		
+		MRTList.push_back(pRenderTarget);
 
 		m_MRTs.emplace(pMRTTag, MRTList);
 	}
@@ -67,7 +67,42 @@ HRESULT CTarget_Manager::Begin_MRT(ID3D11DeviceContext* pContext, const _tchar *
 	}
 
 	pContext->OMSetRenderTargets(iNumRenderTargets, pRTVs, m_pOldDSV);
-	
+
+	return S_OK;
+}
+
+HRESULT CTarget_Manager::Begin_ShadowMRT(ID3D11DeviceContext * pContext, const _tchar * pMRTTag)
+{
+	list<CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
+	if (nullptr == pMRTList)
+		return E_FAIL;
+
+	pContext->OMGetRenderTargets(1, &m_pOldRTV, &m_pOldDSV);
+
+	ID3D11RenderTargetView*		pRTVs[8] = { nullptr };
+
+	_uint		iNumRenderTargets = 0;
+
+	for (auto& pRenderTarget : *pMRTList)
+	{
+		pRenderTarget->Clear();
+		pRTVs[iNumRenderTargets++] = pRenderTarget->Get_RTV();
+	}
+
+	pContext->ClearDepthStencilView(m_pShadowDeptheStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+	pContext->OMSetRenderTargets(iNumRenderTargets, pRTVs, m_pShadowDeptheStencil);
+
+	D3D11_VIEWPORT         ViewPortDesc;
+	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
+	ViewPortDesc.TopLeftX = 0;
+	ViewPortDesc.TopLeftY = 0;
+	ViewPortDesc.Width = 1280.f *12.5f;
+	ViewPortDesc.Height = 720.f *12.5f;
+	ViewPortDesc.MinDepth = 0.f;
+	ViewPortDesc.MaxDepth = 1.f;
+
+	pContext->RSSetViewports(1, &ViewPortDesc);
+
 	return S_OK;
 }
 
@@ -78,6 +113,16 @@ HRESULT CTarget_Manager::End_MRT(ID3D11DeviceContext * pContext)
 	Safe_Release(m_pOldRTV);
 	Safe_Release(m_pOldDSV);
 
+	D3D11_VIEWPORT         ViewPortDesc;
+	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
+	ViewPortDesc.TopLeftX = 0;
+	ViewPortDesc.TopLeftY = 0;
+	ViewPortDesc.Width = 1280;
+	ViewPortDesc.Height = 720;
+	ViewPortDesc.MinDepth = 0.f;
+	ViewPortDesc.MaxDepth = 1.f;
+
+	pContext->RSSetViewports(1, &ViewPortDesc);
 	return S_OK;
 }
 
@@ -88,6 +133,42 @@ HRESULT CTarget_Manager::Bind_ShaderResource(const _tchar * pTargetTag, CShader 
 		return E_FAIL;
 
 	return pRenderTarget->Bind_ShaderResource(pShader, pConstantName);
+}
+
+HRESULT CTarget_Manager::Ready_ShadowDepthStencilRenderTargetView(ID3D11Device * pDevice, _uint iWinCX, _uint iWinCY)
+{
+	if (nullptr == pDevice)
+		return E_FAIL;
+
+	ID3D11Texture2D*		pDepthStencilTexture = nullptr;
+
+	D3D11_TEXTURE2D_DESC	TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+	TextureDesc.Width = iWinCX;
+	TextureDesc.Height = iWinCY;
+	TextureDesc.MipLevels = 1;
+	TextureDesc.ArraySize = 1;
+	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	TextureDesc.SampleDesc.Quality = 0;
+	TextureDesc.SampleDesc.Count = 1;
+
+	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	TextureDesc.CPUAccessFlags = 0;
+	TextureDesc.MiscFlags = 0;
+
+	if (FAILED(pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture)))
+		return E_FAIL;
+
+
+	if (FAILED(pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pShadowDeptheStencil)))
+		return E_FAIL;
+
+	Safe_Release(pDepthStencilTexture);
+
+	return S_OK;
 }
 
 #ifdef _DEBUG
@@ -106,10 +187,10 @@ HRESULT CTarget_Manager::Render_Debug(const _tchar * pMRTTag, class CShader* pSh
 	list<class CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
 
 	for (auto& pTarget : *pMRTList)
-	{		
+	{
 		if (nullptr != pTarget)
 			pTarget->Render_Debug(pShader, pVIBuffer);
-		
+
 	}
 
 	return S_OK;
@@ -135,11 +216,13 @@ list<class CRenderTarget*>* CTarget_Manager::Find_MRT(const _tchar * pMRTTag)
 	if (iter == m_MRTs.end())
 		return nullptr;
 
-	return &iter->second;	
+	return &iter->second;
 }
 
 void CTarget_Manager::Free()
 {
+	Safe_Release(m_pShadowDeptheStencil);
+
 	for (auto& Pair : m_MRTs)
 	{
 		for (auto& pRenderTarget : Pair.second)
@@ -150,10 +233,10 @@ void CTarget_Manager::Free()
 	}
 	m_MRTs.clear();
 
-	for (auto& Pair : m_RenderTargets)	
+	for (auto& Pair : m_RenderTargets)
 		Safe_Release(Pair.second);
 
-	m_RenderTargets.clear();	
+	m_RenderTargets.clear();
 
 	Safe_Release(m_pOldRTV);
 	Safe_Release(m_pOldDSV);
