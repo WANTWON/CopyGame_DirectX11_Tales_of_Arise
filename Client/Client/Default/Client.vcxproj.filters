@@ -222,14 +222,17 @@
     <ClInclude Include="..\Public\Ice_Wolf.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Ice_WolfState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Ice_WolfIdleState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\PlayerAttackNormalState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\IceWolfIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\IceWolfWalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -320,11 +323,14 @@
     <ClCompile Include="..\Private\Ice_Wolf.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Ice_WolfIdleState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\IceWolfIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\IceWolfWalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
