@@ -207,9 +207,10 @@ _bool CModel::Play_Animation(_float fTimeDelta, _matrix* pRootMatrix, _bool isLo
 				/* 뼈의 m_CombinedTransformationMatrix행렬을 갱신한다. */
 				pBoneNode->Invalidate_CombinedTransformationmatrix();
 				
-				if (!strcmp(pBoneNode->Get_Name(), "RootNode"))
+				if (!strcmp(pBoneNode->Get_Name(), "TransN"))
 				{
-					memcpy(pRootMatrix, &pBoneNode->Get_CombinedTransformationMatrix(), sizeof(_matrix));
+					_matrix matLocal = pBoneNode->Get_OffsetMatrix() * pBoneNode->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
+					memcpy(pRootMatrix, &matLocal, sizeof(_matrix));
 				}
 			}
 			return true;
@@ -221,9 +222,10 @@ _bool CModel::Play_Animation(_float fTimeDelta, _matrix* pRootMatrix, _bool isLo
 		/* 뼈의 m_CombinedTransformationMatrix행렬을 갱신한다. */
 		pBoneNode->Invalidate_CombinedTransformationmatrix();
 		
-		if (!strcmp(pBoneNode->Get_Name(), "RootNode"))
+		if (!strcmp(pBoneNode->Get_Name(), "TransN"))
 		{
-			memcpy(pRootMatrix, &pBoneNode->Get_CombinedTransformationMatrix(), sizeof(_matrix));
+			_matrix matLocal = pBoneNode->Get_OffsetMatrix() * pBoneNode->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
+			memcpy(pRootMatrix, &matLocal, sizeof(_matrix));
 		}
 	}
 

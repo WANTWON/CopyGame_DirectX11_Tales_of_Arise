@@ -45,10 +45,13 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 {
 	_matrix matRootNode;
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
-	m_pOwner->Check_Navigation();
-
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, &matRootNode, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	
+	m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, matRootNode.r[3]);
+	
 	Move(fTimeDelta);
+
+	m_pOwner->Check_Navigation();
 
 	return nullptr;
 }
