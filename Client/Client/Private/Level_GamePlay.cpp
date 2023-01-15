@@ -208,8 +208,57 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI"), LEVEL_GAMEPLAY, pLayerTag)))
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;*/
+
+
+	for (int i = 0; i < 4; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar"), LEVEL_GAMEPLAY, pLayerTag, &i)))
+			return E_FAIL;
+
+	}
+
+	for (int i = 0; i < 4; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont"), LEVEL_GAMEPLAY, pLayerTag, &i)))
+			return E_FAIL;
+
+	}
+	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Comboline"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL; 
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Damagesfont"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_font"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
+	for (int i = 0; i < 6; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_GAMEPLAY, pLayerTag, &i)))
+			return E_FAIL;
+
+	}
+	
+
+	for (int i = 0; i < 3; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_fontnum"), LEVEL_GAMEPLAY, pLayerTag, &i)))
+			return E_FAIL;
+
+	}
+	
+	
 
 	Safe_Release(pGameInstance);
 
