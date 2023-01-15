@@ -94,6 +94,9 @@
     <Filter Include="05.DataManager">
       <UniqueIdentifier>{3714032a-de3a-40fb-a3ca-642696606767}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\02.NPC">
+      <UniqueIdentifier>{889715ea-45f4-49c2-8a44-1383682efa75}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\State">
       <UniqueIdentifier>{1ea6f4a3-9604-423c-8175-8bcf005703dd}</UniqueIdentifier>
     </Filter>
@@ -117,6 +120,15 @@
     </Filter>
     <Filter Include="02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS">
       <UniqueIdentifier>{4d4ff152-4b83-48ab-9c9b-30a8adfa19d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf">
+      <UniqueIdentifier>{436daf2b-d1f0-4c8c-8406-fef9bfdc7639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State">
+      <UniqueIdentifier>{cdcf2c55-04ce-4280-9f56-469979925cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States">
+      <UniqueIdentifier>{8e0807c7-546b-4b32-9c19-4d12885792bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -155,9 +167,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\01.Actor\00.Player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Monster.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
       <Filter>02.GameObjects\01.Actor\00.Player\Weapon</Filter>
@@ -204,6 +213,9 @@
     <ClInclude Include="..\Public\Data_Manager.h">
       <Filter>05.DataManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\PlayerState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State</Filter>
     </ClInclude>
@@ -243,6 +255,21 @@
     <ClInclude Include="..\Public\UI_font_Hits_number.h">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ice_Wolf.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerAttackNormalState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\IceWolfIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\IceWolfWalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -268,9 +295,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Monster.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\Weapon</Filter>
@@ -314,6 +338,9 @@
     <ClCompile Include="..\Private\Data_Manager.cpp">
       <Filter>05.DataManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\PlayerWalkState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClCompile>
@@ -349,6 +376,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_font_Hits_number.cpp">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ice_Wolf.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerAttackNormalState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\IceWolfIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\IceWolfWalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

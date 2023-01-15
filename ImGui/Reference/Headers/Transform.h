@@ -46,7 +46,8 @@ public: /*Getter Setter */
 	
 	void Set_Scale(STATE eState, _float fScale);
 	void Set_TransformDesc(const TRANSFORMDESC& TransformDesc ) {m_TransformDesc = TransformDesc;}
-	
+	void Change_Speed(_float fSpeed) { m_TransformDesc.fSpeedPerSec = fSpeed; }
+
 
 public:
 	virtual HRESULT Initialize_Prototype();

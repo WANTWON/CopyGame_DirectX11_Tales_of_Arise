@@ -175,6 +175,12 @@
     <ClInclude Include="..\Public\Data_Manager.h" />
     <ClInclude Include="..\Public\HPbar.h" />
     <ClInclude Include="..\Public\HP_Font.h" />
+    <ClInclude Include="..\public\IceWolfIdleState.h" />
+    <ClInclude Include="..\Public\IceWolfState.h" />
+    <ClInclude Include="..\public\IceWolfWalkState.h" />
+    <ClInclude Include="..\Public\Ice_Wolf.h" />
+    <ClInclude Include="..\public\PlayerAttackNormalState.h" />
+    <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerRunState.h" />
@@ -194,7 +200,6 @@
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
-    <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\UIBase.h" />
     <ClInclude Include="..\Public\Particle_Point.h" />
     <ClInclude Include="..\public\Particle_Rect.h" />
@@ -216,6 +221,11 @@
     <ClCompile Include="..\Private\Data_Manager.cpp" />
     <ClCompile Include="..\Private\HPbar.cpp" />
     <ClCompile Include="..\Private\HP_Font.cpp" />
+    <ClCompile Include="..\private\IceWolfIdleState.cpp" />
+    <ClCompile Include="..\private\IceWolfWalkState.cpp" />
+    <ClCompile Include="..\Private\Ice_Wolf.cpp" />
+    <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp" />
@@ -233,7 +243,6 @@
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
-    <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\UIBase.cpp" />
     <ClCompile Include="..\Private\Particle_Point.cpp" />
     <ClCompile Include="..\private\Particle_Rect.cpp" />

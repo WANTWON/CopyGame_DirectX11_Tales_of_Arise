@@ -23,9 +23,12 @@ protected:
 	virtual ~CVIBuffer_Terrain() = default;
 
 public:
+	virtual HRESULT Initialize_Prototype(_uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight);
 	virtual HRESULT Initialize_Prototype(const _tchar* pHeightMapFilePath);
 	virtual HRESULT Initialize(void* pArg);
 	virtual _bool Picking(class CTransform* pTransform, _float3* pOut) override;
+	void Set_Terrain_Shape(_float fHeight, _float fRad, _float fSharp, _float3 vPoint, _float fTimeDelta);
+	void Set_Terrain_Buffer(TERRAINDESC TerrainDesc);
 
 public:
 	void Culling(const class CTransform* pTransform);
@@ -36,6 +39,7 @@ private:
 
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath);
+	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight);
 	virtual CComponent* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 };

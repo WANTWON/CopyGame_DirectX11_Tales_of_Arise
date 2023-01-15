@@ -4,17 +4,17 @@
 
 BEGIN(Client)
 BEGIN(Player)
-class CIdleState : public CPlayerState
+class CIdleState final : public CPlayerState
 {
 public:
-	CIdleState();
+	CIdleState(class CPlayer* pPlayer);
 
-	virtual CPlayerState* HandleInput(CPlayer* pPlayer) override;
-	virtual CPlayerState* Tick(CPlayer* pPlayer, _float fTimeDelta) override;
-	virtual CPlayerState* LateTick(CPlayer* pPlayer, _float fTimeDelta) override;
+	virtual CPlayerState* HandleInput() override;
+	virtual CPlayerState* Tick(_float fTimeDelta) override;
+	virtual CPlayerState* LateTick(_float fTimeDelta) override;
 
-	virtual void Enter(CPlayer* pPlayer) override;
-	virtual void Exit(CPlayer* pPlayer) override;
+	virtual void Enter() override;
+	virtual void Exit() override;
 };
 END
 END

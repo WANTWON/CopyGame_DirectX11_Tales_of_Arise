@@ -1,11 +1,10 @@
 #include "stdafx.h"
-#include "..\Public\PlayerWalkState.h"
+#include "PlayerWalkState.h"
 
 
 CWalkState::CWalkState()
 {
 }
-
 
 CWalkState::~CWalkState()
 {

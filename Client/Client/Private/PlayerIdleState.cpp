@@ -2,58 +2,63 @@
 
 #include "PlayerIdleState.h"
 #include "GameInstance.h"
+#include "PlayerRunState.h"
+#include "PlayerAttackNormalState.h"
 
 using namespace Player;
 
-CIdleState::CIdleState()
+CIdleState::CIdleState(CPlayer* pPlayer)
 {
+	m_pOwner = pPlayer;
 }
 
-CPlayerState * CIdleState::HandleInput(CPlayer * pPlayer)
+CPlayerState * CIdleState::HandleInput()
 {
-	/*CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (pGameInstance->Key_Pressing(VK_UP) && pGameInstance->Key_Pressing(VK_LEFT))
-		return new CMoveState(DIR_STRAIGHT_LEFT);
-	else if (pGameInstance->Key_Pressing(VK_UP) && pGameInstance->Key_Pressing(VK_RIGHT))
-		return new CMoveState(DIR_STRAIGHT_RIGHT);
-	else if (pGameInstance->Key_Pressing(VK_DOWN) && pGameInstance->Key_Pressing(VK_LEFT))
-		return new CMoveState(DIR_BACKWARD_LEFT);
-	else if (pGameInstance->Key_Pressing(VK_DOWN) && pGameInstance->Key_Pressing(VK_RIGHT))
-		return new CMoveState(DIR_BACKWARD_RIGHT);
-	else if (pGameInstance->Key_Pressing(VK_LEFT))
-		return new CMoveState(DIR_LEFT);
-	else if (pGameInstance->Key_Pressing(VK_RIGHT))
-		return new CMoveState(DIR_RIGHT);
-	else if (pGameInstance->Key_Pressing(VK_DOWN))
-		return new CMoveState(DIR_BACKWARD);
-	else if (pGameInstance->Key_Pressing(VK_UP))
-		return new CMoveState(DIR_STRAIGHT);*/
+	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+		return new CAttackNormalState(m_pOwner);
+	else if (pGameInstance->Key_Pressing(DIK_UP) && pGameInstance->Key_Pressing(DIK_LEFT))
+		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
+	else if (pGameInstance->Key_Pressing(DIK_UP) && pGameInstance->Key_Pressing(DIK_RIGHT))
+		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT);
+	else if (pGameInstance->Key_Pressing(DIK_DOWN) && pGameInstance->Key_Pressing(DIK_LEFT))
+		return new CRunState(m_pOwner, DIR_BACKWARD_LEFT);
+	else if (pGameInstance->Key_Pressing(DIK_DOWN) && pGameInstance->Key_Pressing(DIK_RIGHT))
+		return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT);
+	else if (pGameInstance->Key_Pressing(DIK_LEFT))
+		return new CRunState(m_pOwner, DIR_LEFT);
+	else if (pGameInstance->Key_Pressing(DIK_RIGHT))
+		return new CRunState(m_pOwner, DIR_RIGHT);
+	else if (pGameInstance->Key_Pressing(DIK_DOWN))
+		return new CRunState(m_pOwner, DIR_BACKWARD);
+	else if (pGameInstance->Key_Pressing(DIK_UP))
+		return new CRunState(m_pOwner, DIR_STRAIGHT);
 
 	return nullptr;
 }
 
-CPlayerState * CIdleState::Tick(CPlayer * pPlayer, _float fTimeDelta)
+CPlayerState * CIdleState::Tick(_float fTimeDelta)
 {
-	/*pPlayer->Get_Model()->Play_Animation(fTimeDelta, m_bIsAnimationFinished, pPlayer->Is_AnimationLoop(pPlayer->Get_Model()->Get_CurrentAnimIndex()));
-	pPlayer->Sync_WithNavigationHeight();
-*/
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_pOwner->Check_Navigation();
+
 	return nullptr;
 }
 
-CPlayerState * CIdleState::LateTick(CPlayer * pPlayer, _float fTimeDelta)
+CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 {
 	return nullptr;
 }
 
-void CIdleState::Enter(CPlayer * pPlayer)
+void CIdleState::Enter()
 {
-	//m_eStateId = STATE_ID::STATE_IDLE;
+	m_eStateId = STATE_ID::STATE_IDLE;
 
-	//pPlayer->Get_Model()->Set_CurrentAnimIndex(CPlayer::ANIMID::ANIM_IDLE);
+	m_pOwner->Get_Model()->Set_NextAnimIndex(CPlayer::ANIM::ANIM_IDLE);
 }
 
-void CIdleState::Exit(CPlayer * pPlayer)
+void CIdleState::Exit()
 {
 
 }
