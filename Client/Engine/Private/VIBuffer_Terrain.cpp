@@ -606,5 +606,4 @@ void CVIBuffer_Terrain::Free()
 {
 	__super::Free();
 	Safe_Release(m_pQuadTree);
-	Safe_Delete_Array(m_pVerticesPos);
 }
