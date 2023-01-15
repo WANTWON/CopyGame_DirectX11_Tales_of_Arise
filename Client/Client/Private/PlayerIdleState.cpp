@@ -3,6 +3,7 @@
 #include "PlayerIdleState.h"
 #include "GameInstance.h"
 #include "PlayerRunState.h"
+#include "PlayerAttackNormalState.h"
 
 using namespace Player;
 
@@ -15,7 +16,9 @@ CPlayerState * CIdleState::HandleInput()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (pGameInstance->Key_Pressing(DIK_UP) && pGameInstance->Key_Pressing(DIK_LEFT))
+	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+		return new CAttackNormalState(m_pOwner);
+	else if (pGameInstance->Key_Pressing(DIK_UP) && pGameInstance->Key_Pressing(DIK_LEFT))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
 	else if (pGameInstance->Key_Pressing(DIK_UP) && pGameInstance->Key_Pressing(DIK_RIGHT))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT);
@@ -37,8 +40,8 @@ CPlayerState * CIdleState::HandleInput()
 
 CPlayerState * CIdleState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Get_Model()->Play_Animation(fTimeDelta/*, m_bIsAnimationFinished, pPlayer->Is_AnimationLoop(pPlayer->Get_Model()->Get_CurrentAnimIndex())*/);
-	//pPlayer->Sync_WithNavigationHeight();
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_pOwner->Check_Navigation();
 
 	return nullptr;
 }
