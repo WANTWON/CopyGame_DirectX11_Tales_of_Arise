@@ -152,7 +152,7 @@ void CCollision_Manager::Update_Collider()
 	}
 }
 
-_float CCollision_Manager::Calculate_Direction(CBaseObj* Sour, CBaseObj* Dest, _float* fCross)
+_float CCollision_Manager::Calculate_DmgDirection(CBaseObj* Sour, CBaseObj* Dest, _float* fCross)
 {
 	_vector BulletLook = Sour->Get_TransformState(CTransform::STATE_LOOK);
 	_vector PlayerLook = Dest->Get_TransformState(CTransform::STATE_LOOK);

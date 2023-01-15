@@ -60,45 +60,6 @@ int CPlayer::Tick(_float fTimeDelta)
 	HandleInput();
 	TickState(fTimeDelta);
 
-	/*if (CGameInstance::Get_Instance()->Key_Pressing(DIK_RIGHT))
-	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
-	}
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LEFT))
-	{
-		m_pTransformCom->Turn(XMVectorSet(0.f,1.f,0.f,0.f), -fTimeDelta);
-	}
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_DOWN))
-	{
-		m_pTransformCom->Sliding_Backward(fTimeDelta, m_pNavigationCom, 0.f);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_UP))
-	{
-		m_pTransformCom->Sliding_Straight(fTimeDelta, m_pNavigationCom, 0.f);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
-	{
-		m_eState++;
-		if (m_eState >= 114)
-			m_eState = 0;
-	}
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
-	{
-		m_eState--;
-		if (m_eState <= 0)
-			m_eState = 114;
-	}
-		
-	if (m_eState != m_ePreState)
-	{
-		m_pModelCom->Set_NextAnimIndex(m_eState);
-		m_ePreState = m_eState;
-	}
-
-	m_pModelCom->Play_Animation(fTimeDelta);*/
-
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	//for (auto& pParts : m_Parts)
@@ -124,7 +85,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 
 	Check_Navigation();
-
 	LateTickState(fTimeDelta);
 }
 
