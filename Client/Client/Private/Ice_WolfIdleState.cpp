@@ -20,7 +20,7 @@ CIce_WolfState * CIdleState::AI_Behavior()
 
 CIce_WolfState * CIdleState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Get_Model()->Play_Animation(fTimeDelta/*, m_bIsAnimationFinished, pPlayer->Is_AnimationLoop(pPlayer->Get_Model()->Get_CurrentAnimIndex())*/);
+	m_pOwner->Get_Model()->Play_Animation(fTimeDelta,m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	m_pOwner->Check_Navigation();
 
 	if (m_pTarget)

@@ -6,6 +6,7 @@
 #include "UI_Manager.h"
 #include "CameraManager.h"
 #include "UI_Loading.h"
+#include "Collision_Manger.h"
 #include <time.h>
 
 CMainApp::CMainApp()
@@ -193,6 +194,7 @@ void CMainApp::Free()
 	Safe_Release(m_pDataManager);
 
 	CUI_Manager::Get_Instance()->Destroy_Instance();
+	CCollision_Manager::Get_Instance()->Destroy_Instance();
 	CData_Manager::Get_Instance()->Destroy_Instance();
 	CCameraManager::Get_Instance()->Destroy_Instance();
 
