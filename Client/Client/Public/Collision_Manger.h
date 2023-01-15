@@ -35,7 +35,7 @@ public:
 	void	Update_Collider();
 
 private:
-	_float  Calculate_Direction(CBaseObj* Sour, CBaseObj* Dest, _float* vCross = nullptr);
+	_float  Calculate_DmgDirection(CBaseObj* Sour, CBaseObj* Dest, _float* vCross = nullptr);
 
 private:
 	list<CBaseObj*>		m_GameObjects[COLLISION_END];

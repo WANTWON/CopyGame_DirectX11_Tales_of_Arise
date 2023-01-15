@@ -18,10 +18,6 @@ BEGIN(Client)
 
 class CBaseObj abstract : public CGameObject
 {
-public:
-	enum SHADER_ANIMID { SHADER_ANIMDEFAULT, SHADER_ANIMSHADOW };
-	enum SHADER_NONANIMID { SHADER_NONANIMDEFAULT, SHADER_NONANIM_SHADOW };
-
 protected:
 	CBaseObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBaseObj(const CBaseObj& rhs);
@@ -35,7 +31,7 @@ public:
 	virtual HRESULT Render();
 
 public:
-	virtual _uint Take_Damage(float fDamage, void* DamageType, CBaseObj* DamageCauser) { return 0; };
+	virtual _float Take_Damage(float fDamage, CBaseObj* DamageCauser) { return 0; };
 	void Update_Collider();
 	_bool Check_IsinFrustum(_float fOffset = 0);
 	void  SetUp_BillBoard();

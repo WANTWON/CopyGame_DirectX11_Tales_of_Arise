@@ -43,7 +43,7 @@ int CUI_Loading::Tick(_float fTimeDelta)
 
 	m_ftimer += fTimeDelta;
 
-	if (m_ftimer > 0.032)
+	if (m_ftimer > 0.048)
 	{
 		++m_itexnum;
 		m_ftimer = 0.f;
