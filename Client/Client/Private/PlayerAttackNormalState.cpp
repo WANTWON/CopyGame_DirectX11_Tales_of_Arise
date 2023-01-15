@@ -18,7 +18,7 @@ CPlayerState * CAttackNormalState::HandleInput()
 
 CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, &matRootNode, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), &matRootNode);
 	
 	if (!m_bIsAnimationFinished)
 	{
