@@ -93,9 +93,14 @@ struct PS_OUT
 	float4 vDiffuse : SV_TARGET0;
 	float4 vNormal : SV_TARGET1;
 	float4 vDepth : SV_TARGET2;
-	vector vLightDepth : SV_TARGET3;
-	float4 vGlow : SV_TARGET4;
+	float4 vGlow : SV_TARGET3;
 };
+
+struct PS_OUT_SHADOW
+{
+	float4 vLightDepth : SV_TARGET0;
+};
+
 
 /* 이렇게 만들어진 픽셀을 PS_MAIN함수의 인자로 던진다. */
 /* 리턴하는 색은 Target0 == 장치에 0번째에 바인딩되어있는 렌더타겟(일반적으로 백버퍼)에 그린다. */
@@ -122,9 +127,9 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_SHADOWDEPTH(PS_IN In)
+PS_OUT_SHADOW PS_SHADOWDEPTH(PS_IN In)
 {
-	PS_OUT Out = (PS_OUT)0;
+	PS_OUT_SHADOW Out = (PS_OUT_SHADOW)0;
 
 	Out.vLightDepth.r = In.vProjPos.w / 500.f;
 	Out.vLightDepth.a = 1.f;

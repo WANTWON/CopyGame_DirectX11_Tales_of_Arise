@@ -239,7 +239,6 @@ PS_OUT PS_HORIZONTAL_BLUR(PS_IN In)
 
 	// Create the weights that each neighbor pixel will contribute to the blur.
 	weight0 = 1.0f;
-	weight0 = 1.0f;
 	weight1 = 0.9f;
 	weight2 = 0.55f;
 	weight3 = 0.18f;
@@ -300,7 +299,6 @@ PS_OUT PS_VERTICAL_BLUR(PS_IN In)
 	float4 color;
 
 	// Create the weights that each neighbor pixel will contribute to the blur.
-	weight0 = 1.0f;
 	weight0 = 1.0f;
 	weight1 = 0.9f;
 	weight2 = 0.55f;
