@@ -10,7 +10,14 @@ using namespace Player;
 
 _bool CPlayer::Is_AnimationLoop(_uint eAnimId)
 {
-	return _bool();
+	switch ((ANIM)eAnimId)
+	{
+		case ANIM_IDLE:
+		case ANIM_RUN:
+			return true;
+		default:
+			return false;
+	}
 }
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
