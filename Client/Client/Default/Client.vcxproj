@@ -173,9 +173,10 @@
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Collision_Manger.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
+    <ClInclude Include="..\public\IceWolfIdleState.h" />
+    <ClInclude Include="..\Public\IceWolfState.h" />
+    <ClInclude Include="..\public\IceWolfWalkState.h" />
     <ClInclude Include="..\Public\Ice_Wolf.h" />
-    <ClInclude Include="..\Public\Ice_WolfIdleState.h" />
-    <ClInclude Include="..\Public\Ice_WolfState.h" />
     <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
@@ -211,8 +212,9 @@
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Collision_Manger.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
+    <ClCompile Include="..\private\IceWolfIdleState.cpp" />
+    <ClCompile Include="..\private\IceWolfWalkState.cpp" />
     <ClCompile Include="..\Private\Ice_Wolf.cpp" />
-    <ClCompile Include="..\Private\Ice_WolfIdleState.cpp" />
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
