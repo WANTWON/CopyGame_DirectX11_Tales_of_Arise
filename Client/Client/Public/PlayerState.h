@@ -6,14 +6,6 @@ BEGIN(Client)
 class CPlayerState
 {
 public:
-	enum STATETYPE
-	{
-		STATETYPE_START,
-		STATETYPE_MAIN,
-		STATETYPE_END,
-		STATETYPE_DEFAULT
-	};
-
 	enum STATE_ID
 	{
 		STATE_IDLE,

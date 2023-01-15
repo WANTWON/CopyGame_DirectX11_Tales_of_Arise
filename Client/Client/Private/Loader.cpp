@@ -14,12 +14,15 @@
 #include "Sky.h"
 
 
-//#include "UI.h"
+//UI
 #include "UI_Portrait.h"
 #include "UI_Screen.h"
 #include "ScreenFadeEffect.h"
 #include "UI_Loading.h"
 
+
+//Monster
+#include "Ice_Wolf.h"
 
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -153,6 +156,11 @@ HRESULT CLoader::Loading_ForPrototype()
 		CParticle_Point::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Ice_Wolf */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Ice_Wolf"),
+		CIce_Wolf::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
@@ -280,6 +288,14 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/* 모델 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("모델 로딩 중."));
+
+	_matrix	PivotMatrix = XMMatrixIdentity();
+
+	/*For.Prototype_Component_Model_IceWolf*/
+	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf"),
+	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Ice_Wolf/Ice_Wolf.fbx", PivotMatrix))))*/
+	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Ice_Wolf"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
 
 	/* 콜라이더 생성 중. */
 	lstrcpy(m_szLoadingText, TEXT("콜라이더 생성 중."));

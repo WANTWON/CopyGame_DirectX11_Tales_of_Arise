@@ -64,9 +64,9 @@ public: /*For.Navigation*/
 	void Compute_CurrentIndex(LEVEL eLevel);
 
 private:
-	CModel* m_pModelCom = nullptr;
-	CNavigation* m_pNavigationCom = nullptr;
-	vector<CNavigation*> m_vecNavigations;
+	CModel*					m_pModelCom = nullptr;
+	CNavigation*			m_pNavigationCom = nullptr;
+	vector<CNavigation*>	m_vecNavigations;
 
 	class CPlayerState* m_pPlayerState = nullptr;
 

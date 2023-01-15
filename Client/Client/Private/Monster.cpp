@@ -38,11 +38,6 @@ int CMonster::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (IsDead())
-	{
-		CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
-		return OBJ_DEAD;
-	}
 
 	return OBJ_NOEVENT;
 }
@@ -129,7 +124,7 @@ HRESULT CMonster::Render_ShadowDepth()
 }
 
 
-CMonster::DMG_DIRECTION CMonster::Calculate_Direction()
+CMonster::DMG_DIR CMonster::Calculate_DmgDirection()
 {
 	if (m_pTarget == nullptr)
 		return FRONT; 
@@ -162,7 +157,7 @@ CMonster::DMG_DIRECTION CMonster::Calculate_Direction()
 	return m_eDmg_Direction;
 }
 
-_vector CMonster::Calculate_PosDirction()
+_vector CMonster::Calculate_DirectionByPos()
 {
 	if (m_pTarget == nullptr)
 		return _vector();
@@ -251,7 +246,7 @@ void CMonster::Make_DeadEffect(CBaseObj * Target)
 }
 
 
-_uint CMonster::Take_Damage(float fDamage, void * DamageType, CBaseObj * DamageCauser)
+_float CMonster::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
@@ -271,11 +266,11 @@ _uint CMonster::Take_Damage(float fDamage, void * DamageType, CBaseObj * DamageC
 	return m_tInfo.iCurrentHp;
 }
 
-void CMonster::Check_Navigation(_float fTimeDelta)
+void CMonster::Compute_CurrentIndex()
 {
-	if (m_pNavigationCom == nullptr)
-		return;
+	m_pNavigationCom->Compute_CurrentIndex_byXZ(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 }
+
 
 HRESULT CMonster::SetUp_ShaderResources()
 {
@@ -317,7 +312,6 @@ HRESULT CMonster::SetUp_ShaderID()
 void CMonster::Free()
 {
 	__super::Free();
-
 
 	CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 

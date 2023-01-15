@@ -106,6 +106,15 @@
     <Filter Include="02.GameObjects\04.UI\02.UI_LOADING">
       <UniqueIdentifier>{9514bfa9-ed3c-4a7f-be3a-457b1311c64f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf">
+      <UniqueIdentifier>{436daf2b-d1f0-4c8c-8406-fef9bfdc7639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State">
+      <UniqueIdentifier>{cdcf2c55-04ce-4280-9f56-469979925cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States">
+      <UniqueIdentifier>{8e0807c7-546b-4b32-9c19-4d12885792bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -210,6 +219,15 @@
     <ClInclude Include="..\Public\ScreenFadeEffect.h">
       <Filter>02.GameObjects\04.UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ice_Wolf.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ice_WolfState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ice_WolfIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\PlayerAttackNormalState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClInclude>
@@ -298,6 +316,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp">
       <Filter>02.GameObjects\04.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ice_Wolf.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ice_WolfIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
