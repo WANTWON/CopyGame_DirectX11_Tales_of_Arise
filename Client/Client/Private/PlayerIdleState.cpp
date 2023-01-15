@@ -37,7 +37,9 @@ CPlayerState * CIdleState::HandleInput()
 
 CPlayerState * CIdleState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Get_Model()->Play_Animation(fTimeDelta/*, m_bIsAnimationFinished, pPlayer->Is_AnimationLoop(pPlayer->Get_Model()->Get_CurrentAnimIndex())*/);
+	_matrix matRootNode;
+
+	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, &matRootNode/*, m_bIsAnimationFinished, pPlayer->Is_AnimationLoop(pPlayer->Get_Model()->Get_CurrentAnimIndex())*/);
 	//pPlayer->Sync_WithNavigationHeight();
 
 	return nullptr;

@@ -40,10 +40,12 @@ CPlayerState * CRunState::HandleInput()
 
 CPlayerState * CRunState::Tick(_float fTimeDelta)
 {
-	Move(fTimeDelta);
+	_matrix matRootNode;
 
-	m_pOwner->Get_Model()->Play_Animation(fTimeDelta/*, m_bIsAnimationFinished, pPlayer->Is_AnimationLoop(pPlayer->Get_Model()->Get_CurrentAnimIndex())*/);
+	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, &matRootNode/*, m_bIsAnimationFinished, pPlayer->Is_AnimationLoop(pPlayer->Get_Model()->Get_CurrentAnimIndex())*/);
 	//pPlayer->Sync_WithNavigationHeight();
+
+	Move(fTimeDelta);
 
 	return nullptr;
 }
