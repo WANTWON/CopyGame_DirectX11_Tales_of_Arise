@@ -210,6 +210,9 @@
     <ClInclude Include="..\Public\ScreenFadeEffect.h">
       <Filter>02.GameObjects\04.UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PlayerAttackNormalState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -295,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp">
       <Filter>02.GameObjects\04.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerAttackNormalState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,7 @@ public:
 		STATE_IDLE,
 		STATE_WALK,
 		STATE_RUN,
+		STATE_ATTACK,
 		STATE_END
 	};
 

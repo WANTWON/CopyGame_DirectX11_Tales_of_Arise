@@ -173,6 +173,7 @@
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Collision_Manger.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
+    <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
     <ClInclude Include="..\public\PlayerState.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Collision_Manger.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
+    <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />

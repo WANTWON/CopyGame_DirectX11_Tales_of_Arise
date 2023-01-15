@@ -24,6 +24,8 @@ public:
 	}
 	class CHierarchyNode* Get_BonePtr(const char* pBoneName) const;
 
+	_uint Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; }
+
 public:
 	void Set_CurrentAnimIndex(_uint iAnimIndex);
 	/*For. NextTotalBody_Anim*/
