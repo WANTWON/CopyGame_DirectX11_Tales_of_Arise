@@ -293,17 +293,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	_matrix			PivotMatrix = XMMatrixIdentity();
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/Fiona/Fiona.fbx", PivotMatrix))))
-		return E_FAIL;
-
-
-	/*For.Prototype_Component_Model_ForkLift*/
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/ForkLift/ForkLift.fbx", PivotMatrix))))
-		return E_FAIL;
-
 	/*For.Prototype_Component_Model_IceWolf*/
 	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf"),
