@@ -209,7 +209,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _matrix* pRootMatrix, _bool isLo
 				
 				if (!strcmp(pBoneNode->Get_Name(), "RootNode"))
 				{
-					pRootMatrix = &(pBoneNode->Get_CombinedTransformationMatrix());
+					memcpy(pRootMatrix, &pBoneNode->Get_CombinedTransformationMatrix(), sizeof(_matrix));
 				}
 			}
 			return true;
@@ -223,7 +223,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _matrix* pRootMatrix, _bool isLo
 		
 		if (!strcmp(pBoneNode->Get_Name(), "RootNode"))
 		{
-			pRootMatrix = &(pBoneNode->Get_CombinedTransformationMatrix());
+			memcpy(pRootMatrix, &pBoneNode->Get_CombinedTransformationMatrix(), sizeof(_matrix));
 		}
 	}
 
