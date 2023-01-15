@@ -418,6 +418,8 @@ HRESULT CRenderer::Render_Glow()
 
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_Blend()

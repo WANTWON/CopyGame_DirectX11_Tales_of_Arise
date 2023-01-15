@@ -14,6 +14,7 @@ BEGIN(Client)
 class CTerrain final : public CBaseObj
 {
 public:
+	enum ShADERID { DEFAULT , WIRE, PICKED, SPLATTING };
 	enum TERRAIN_DEBUG_TYPE { DEBUG_SOILD, DEBUG_WIRE, DEBUG_NONE };
 	enum TEXTURE { TYPE_DIFFUSE, TYPE_BRUSH, TYPE_FILTER, TYPE_END };
 private:
