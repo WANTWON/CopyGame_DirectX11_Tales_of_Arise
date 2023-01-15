@@ -180,4 +180,6 @@ CGameObject * CHPbar::Clone(void * pArg)
 void CHPbar::Free()
 {
 	__super::Free();
+	Safe_Release(m_pTextureCom1);
+	Safe_Release(m_pTextureCom2);
 }
