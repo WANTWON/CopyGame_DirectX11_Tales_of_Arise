@@ -106,6 +106,10 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	if (m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
 	LateTickState(fTimeDelta);
 }
 

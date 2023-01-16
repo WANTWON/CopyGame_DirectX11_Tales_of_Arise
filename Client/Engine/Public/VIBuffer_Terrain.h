@@ -3,7 +3,7 @@
 #include "VIBuffer.h"
 
 BEGIN(Engine)
-
+class CTexture;
 class ENGINE_DLL CVIBuffer_Terrain final : public CVIBuffer
 {
 public:
@@ -36,7 +36,9 @@ public:
 private:
 	_uint				m_iNumVerticesX = 0, m_iNumVerticesZ = 0;
 	class CQuadTree*	m_pQuadTree = nullptr;
+	TERRAINDESC*		m_pTerrainDesc = nullptr;
 
+	
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath);
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight);

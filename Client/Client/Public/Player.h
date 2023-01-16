@@ -35,6 +35,7 @@ public:
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	CTransform* Get_Transform() { return m_pTransformCom; }
+	CTransform* Get_AnimTransform() { return m_pAnimTransformCom; }
 	class CPlayerState* Get_State() { return m_pPlayerState; }
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 
@@ -69,6 +70,9 @@ private:
 	vector<CNavigation*>	m_vecNavigations;
 
 	class CPlayerState* m_pPlayerState = nullptr;
+
+private:
+	_bool m_bIsFirst = true;
 
 private:
 	vector<class CGameObject*> m_Parts;

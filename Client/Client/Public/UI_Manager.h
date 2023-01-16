@@ -21,6 +21,18 @@ public:
 	void Tick_Map();
 	void Tick_PlayerState();
 	void Tick_Coin();
+
+
+//public:
+//	_uint get_player0hp() { return iplayer0_hp; }
+//	_uint get_player1hp() { return iplayer1_hp; }
+//	_uint get_player2hp() { return iplayer2_hp; }
+//	_uint get_player3hp() { return iplayer3_hp; }
+//
+//	void set_player0hp(_uint hp) { iplayer0_hp = hp; }
+//	void set_player1hp(_uint hp) { iplayer1_hp = hp; }
+//	void set_player2hp(_uint hp) { iplayer2_hp = hp; }
+//	void set_player3hp(_uint hp) { iplayer3_hp = hp; }
 	
 public: /*Getter Setter*/
 	void		Set_UI_OpenType(UITYPE eUIType);
@@ -28,6 +40,14 @@ public: /*Getter Setter*/
 
 private:
 	UITYPE				m_eUIType = UI_END;
+	
+
+//private:
+//	_uint iplayer0_hp = 0;
+//	_uint iplayer1_hp = 0;
+//	_uint iplayer2_hp = 0;
+//	_uint iplayer3_hp = 0;
+
 
 public:
 	void Free() override;

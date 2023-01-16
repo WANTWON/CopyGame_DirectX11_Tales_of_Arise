@@ -183,16 +183,13 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 	if (pArg == nullptr)
 		return S_OK;
 
-	TERRAINDESC TerrainDesc;
-	memcpy(&TerrainDesc, pArg, sizeof(TERRAINDESC));
-
-
-
+	m_pTerrainDesc = (TERRAINDESC*)pArg;
+	
 #pragma region VERTEXBUFFER
 
 	m_iNumVertexBuffers = 1;
-	m_iNumVerticesX = TerrainDesc.m_iVerticeNumX;
-	m_iNumVerticesZ = TerrainDesc.m_iVerticeNumZ;
+	m_iNumVerticesX = (*m_pTerrainDesc).m_iVerticeNumX;
+	m_iNumVerticesZ = (*m_pTerrainDesc).m_iVerticeNumZ;
 
 
 	m_iNumVertices = m_iNumVerticesX * m_iNumVerticesZ;
@@ -322,7 +319,7 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 	Safe_Delete_Array(pVertices);
 	Safe_Delete_Array(pIndices);
 
-	_uint		iLT = m_iNumVerticesX * m_iNumVerticesZ - m_iNumVerticesX;
+	/*_uint		iLT = m_iNumVerticesX * m_iNumVerticesZ - m_iNumVerticesX;
 	_uint		iRT = m_iNumVerticesX * m_iNumVerticesZ - 1;
 	_uint		iRB = m_iNumVerticesX - 1;
 	_uint		iLB = 0;
@@ -331,7 +328,7 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 	if (nullptr == m_pQuadTree)
 		return E_FAIL;
 
-	m_pQuadTree->SetUp_Neighbors();
+	m_pQuadTree->SetUp_Neighbors();*/
 
 	return S_OK;
 }
@@ -415,6 +412,12 @@ void CVIBuffer_Terrain::Set_Terrain_Shape(_float fHeight, _float fRad, _float fS
 	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
 	VTXNORTEX* pVertices = (VTXNORTEX*)SubResource.pData;
+	if (pVertices == nullptr)
+	{
+		m_pContext->Unmap(m_pVB, 0);
+		return;
+	}
+		return;
 
 
 	for (_uint i = 0; i < m_iNumVerticesZ - 1; ++i)
@@ -605,5 +608,10 @@ CComponent * CVIBuffer_Terrain::Clone(void * pArg)
 void CVIBuffer_Terrain::Free()
 {
 	__super::Free();
-	Safe_Release(m_pQuadTree);
+	
+	if(m_pTerrainDesc != nullptr)
+		Safe_Delete_Array(m_pVerticesPos);
+	else
+		Safe_Release(m_pQuadTree);
+
 }
