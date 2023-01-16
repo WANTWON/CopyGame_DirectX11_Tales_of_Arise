@@ -191,5 +191,7 @@ CGameObject * CMP_Guage::Clone(void * pArg)
 
 void CMP_Guage::Free()
 {
+
+	Safe_Release(m_pVIBufferCom1);
 	__super::Free();
 }

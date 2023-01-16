@@ -284,6 +284,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_MPguage.h">
       <Filter>02.GameObjects\04.UI\06.MP_Guage</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\IceWolfTurnLeftState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
@@ -417,6 +418,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_MPguage.cpp">
       <Filter>02.GameObjects\04.UI\06.MP_Guage</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\IceWolfTurnLeftState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>

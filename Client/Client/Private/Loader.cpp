@@ -269,6 +269,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, 50))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_VIBuffer_Point*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point"),
+		CVIBuffer_Point::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_VIBuffer_Cube */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"),
 		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
