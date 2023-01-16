@@ -178,9 +178,8 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 	return pShader->Set_ShaderResourceView(pConstantName, m_Materials[m_Meshes[iMeshIndex]->Get_MaterialIndex()].pMaterials[eType]->Get_SRV(TextureNum));
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop)
+_bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, _matrix* pRootMatrix)
 {
-
 	if (m_iCurrentAnimIndex != m_iNextAnimIndex)
 	{	//TODO: 현재애님과 다음 애님프레임간의 선형보간 함수 호출 할 것.
 		if (m_bInterupted)
@@ -207,6 +206,12 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop)
 			{
 				/* 뼈의 m_CombinedTransformationMatrix행렬을 갱신한다. */
 				pBoneNode->Invalidate_CombinedTransformationmatrix();
+				
+				if ((nullptr != pRootMatrix) && !strcmp(pBoneNode->Get_Name(), "TransN"))
+				{
+					_matrix matLocal = pBoneNode->Get_OffsetMatrix() * pBoneNode->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
+					memcpy(pRootMatrix, &matLocal, sizeof(_matrix));
+				}
 			}
 			return true;
 		}
@@ -216,6 +221,12 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop)
 	{
 		/* 뼈의 m_CombinedTransformationMatrix행렬을 갱신한다. */
 		pBoneNode->Invalidate_CombinedTransformationmatrix();
+		
+		if ((nullptr != pRootMatrix) && !strcmp(pBoneNode->Get_Name(), "TransN"))
+		{
+			_matrix matLocal = pBoneNode->Get_OffsetMatrix() * pBoneNode->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
+			memcpy(pRootMatrix, &matLocal, sizeof(_matrix));
+		}
 	}
 
 	return false;

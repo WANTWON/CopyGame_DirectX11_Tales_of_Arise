@@ -237,9 +237,6 @@
     <ClInclude Include="..\public\CustomFont.h">
       <Filter>01.Utility\07.Fonts</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Model.h">
-      <Filter>01.Utility\03.Components\06.Model</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\MeshContainer.h">
       <Filter>01.Utility\03.Components\06.Model\MeshContainer</Filter>
     </ClInclude>
@@ -296,6 +293,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Picking.h">
       <Filter>01.Utility\10.Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Model.h">
+      <Filter>01.Utility\03.Components\06.Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
