@@ -1,52 +1,65 @@
 #include "stdafx.h"
-#include "UI_font_Damage_number.h"
+#include "..\Public\CP_Guage_font.h"
 
 #include "GameInstance.h"
 
-CUI_font_Damage_number::CUI_font_Damage_number(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCP_Guage_font::CCP_Guage_font(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
 }
 
-CUI_font_Damage_number::CUI_font_Damage_number(const CUI_font_Damage_number & rhs)
+CCP_Guage_font::CCP_Guage_font(const CCP_Guage_font & rhs)
 	: CUI_Base(rhs)
 {
 }
 
-HRESULT CUI_font_Damage_number::Initialize_Prototype()
+HRESULT CCP_Guage_font::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CUI_font_Damage_number::Initialize(void * pArg)
+HRESULT CCP_Guage_font::Initialize(void * pArg)
 {
 	if (pArg != nullptr)
 		m_iIndex = *(_uint*)pArg;
+
 	m_eShaderID = UI_GOLDEN;
-	m_fSize.x = 28.f;
-	m_fSize.y = 32.f;
-	m_fPosition.x = 1030.f + (m_iIndex * 20);
-	m_fPosition.y = 165;
+	m_fSize.x = 14.f;
+	m_fSize.y = 19.f;
+	m_fPosition.x = 930.f + (m_iIndex * 15);
+	m_fPosition.y = 135;
+
+	if (m_iIndex < 3)
+	{
+		m_fSize.x = 20.f;
+		m_fSize.y = 26.f;
+		m_fPosition.x = 930.f + (m_iIndex * 16);
+		m_fPosition.y = 135;
+	}
+
+	
 
 	m_fAlpha = 0;
+
+
 	/*if (m_iYIndex == 0)
 	{
-		
+
 	}*/
 	/*if (m_iYIndex == 1)
 	{
-		m_fPosition.x = 1180.f + (m_iIndex * 14);
-		m_fPosition.y = 415;
+	m_fPosition.x = 1180.f + (m_iIndex * 14);
+	m_fPosition.y = 415;
 	}
 	if (m_iYIndex == 2)
 	{
-		m_fPosition.x = 1180.f + (m_iIndex * 14);
-		m_fPosition.y = 475;
+	m_fPosition.x = 1180.f + (m_iIndex * 14);
+	m_fPosition.y = 475;
 	}
 	if (m_iYIndex == 3)
 	{
-		m_fPosition.x = 1180.f + (m_iIndex * 14);
-		m_fPosition.y = 535;
+	m_fPosition.x = 1180.f + (m_iIndex * 14);
+	m_fPosition.y = 535;
 	}
 	*/
 	if (FAILED(__super::Initialize(pArg)))
@@ -55,155 +68,177 @@ HRESULT CUI_font_Damage_number::Initialize(void * pArg)
 	return S_OK;
 }
 
-int CUI_font_Damage_number::Tick(_float fTimeDelta)
+int CCP_Guage_font::Tick(_float fTimeDelta)
 {
-	
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_3))
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
 	{
-		m_iCurrentDamage += 111;
-		m_fSize.x = 36.f;
-		m_fSize.y = 40.f;
-		m_bsizedown = true;
+		m_iCurrentcp++;
+		/*m_fSize.x = 55.f;
+		m_fSize.y = 75.f;
+		m_bsizedown = true;*/
 		/*m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);*/
-	//	m_bfadein = true;
-	//	m_fAlpha = 1;
+		//	m_bfadein = true;
+		//	m_fAlpha = 1;
 	}
 
 
-	if (m_bsizedown)
-		sizedown();
+	//if (m_bsizedown)
+	//	sizedown();
+
 
 	switch (m_iIndex)
 	{
 	case 0:
-		if (m_iCurrentDamage < 100000)
+		if (m_iCurrentcp < 100)
 		{
 			m_bRender = false;
 			return OBJ_NOEVENT;
 		}
 		else
 		{
-			m_itexnum = m_iCurrentDamage / 100000;
+		
+			m_itexnum = m_iCurrentcp / 100;
 			m_bRender = true;
 			break;
 
 		}
-		
+
 	case 1:
-		if (m_iCurrentDamage < 10000)
+		if (m_iCurrentcp < 10)
 		{
 			m_bRender = false;
 			return OBJ_NOEVENT;
 		}
 		else
 		{
-			m_itexnum = ((m_iCurrentDamage % 100000) / 10000);
+		
+			m_itexnum = ((m_iCurrentcp % 100) / 10);
 			m_bRender = true;
 			break;
 		}
 	case 2:
-		if (m_iCurrentDamage < 1000)
+		if (m_iCurrentcp <= 0)
 		{
 			m_bRender = false;
 			return OBJ_NOEVENT;
 		}
 		else
 		{
-			m_itexnum = ((m_iCurrentDamage % 10000) / 1000);
+		
+			m_itexnum = m_iCurrentcp % 10;
 			m_bRender = true;
 			break;
 		}
 	case 3:
-		if (m_iCurrentDamage < 100)
-		{
-			m_bRender = false;
-			return OBJ_NOEVENT;
-		}
-		else
-		{
-			m_itexnum = ((m_iCurrentDamage % 1000) / 100);
-			m_bRender = true;
-			break;
-		}
-			
-		
+		m_bRender = true;
+		m_itexnum = 10;
+		break;
 
 	case 4:
-		if (m_iCurrentDamage < 10)
+		if (m_iMaxcp <= 0)
 		{
 			m_bRender = false;
 			return OBJ_NOEVENT;
 		}
 		else
 		{
-			m_itexnum = ((m_iCurrentDamage % 100) / 10);
+			m_itexnum = m_iMaxcp / 100;
 			m_bRender = true;
 			break;
 		}
-			
-
-		
 	case 5:
-		if (m_iCurrentDamage <= 0)
+		if (m_iMaxcp <= 0)
 		{
 			m_bRender = false;
 			return OBJ_NOEVENT;
 		}
 		else
-			{
-			m_itexnum = m_iCurrentDamage % 10;
+		{
+			m_itexnum = ((m_iMaxcp % 100) / 10);
 			m_bRender = true;
-		    break;
-			}
-	    
-	
+			break;
+		}
+	case 6:
+		if (m_iMaxcp <= 0)
+		{
+			m_bRender = false;
+			return OBJ_NOEVENT;
+		}
+		else
+		{
+			m_itexnum = m_iMaxcp % 10;
+			m_bRender = true;
+			break;
+		}
 	}
-	
-	
 
 
-	if (m_fSize.x <= 28.f || m_fSize.y <= 32.f)
-		m_bsizedown = false;
+	/*if (m_fSize.x <= 40.f || m_fSize.y <= 60.f)
+		m_bsizedown = false;*/
 	/*m_fSize.x = 28.f;
 	m_fSize.y = 32.f;*/
-	m_fPosition.x = 1030.f + (m_iIndex * 20);
-	m_fPosition.y = 165;
+	if (m_iIndex < 3)
+	{
+		m_fPosition.x = 1065.f + (m_iIndex * 16);
+		m_fPosition.y = 320.f;
+	}
+	else if (m_iIndex == 3)
+	{
+		m_fPosition.x = 1074.f + (m_iIndex * 13);
+		m_fPosition.y = 320.f;
+	}
+	else
+	{
+		m_fPosition.x = 1070.f + (m_iIndex * 13);
+		m_fPosition.y = 320.f;
+	}
+	
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	if (m_iCurrentDamage == 0)
-		m_itexnum = 0;
+	/*if (m_iCurrenthit == 0)
+		m_itexnum = 0;*/
 
 
 	return OBJ_NOEVENT;
 }
 
-void CUI_font_Damage_number::Late_Tick(_float fTimeDelta)
+void CCP_Guage_font::Late_Tick(_float fTimeDelta)
 {
-	
-	if (m_bRender == false)
+
+
+	if (!m_bRender)
 		return;
 
-	
-	
+
+	/*	switch (m_iIndex)
+	{
+	case 0:
+
+
+	case 1:
+
+	break;
+
+	case 2:
+
+
+	}*/
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
 
 }
 
-HRESULT CUI_font_Damage_number::Render()
+HRESULT CCP_Guage_font::Render()
 {
-	/*if (m_bRender == false)
-		return S_OK;*/
-
 	__super::Render();
 
 	return S_OK;
 }
 
-HRESULT CUI_font_Damage_number::Ready_Components(void * pArg)
+HRESULT CCP_Guage_font::Ready_Components(void * pArg)
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -232,7 +267,7 @@ HRESULT CUI_font_Damage_number::Ready_Components(void * pArg)
 	return S_OK;
 }
 
-HRESULT CUI_font_Damage_number::SetUp_ShaderResources()
+HRESULT CCP_Guage_font::SetUp_ShaderResources()
 {
 	if (nullptr == m_pShaderCom)
 		return E_FAIL;
@@ -255,13 +290,13 @@ HRESULT CUI_font_Damage_number::SetUp_ShaderResources()
 	return S_OK;
 }
 
-CUI_font_Damage_number * CUI_font_Damage_number::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCP_Guage_font * CCP_Guage_font::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CUI_font_Damage_number*	pInstance = new CUI_font_Damage_number(pDevice, pContext);
+	CCP_Guage_font*	pInstance = new CCP_Guage_font(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CUI_font_Damage_number"));
+		ERR_MSG(TEXT("Failed to Created : CCP_Guage_font"));
 		Safe_Release(pInstance);
 	}
 
@@ -269,22 +304,21 @@ CUI_font_Damage_number * CUI_font_Damage_number::Create(ID3D11Device * pDevice, 
 }
 
 
-CGameObject * CUI_font_Damage_number::Clone(void * pArg)
+CGameObject * CCP_Guage_font::Clone(void * pArg)
 {
-	CUI_font_Damage_number*	pInstance = new CUI_font_Damage_number(*this);
+	CCP_Guage_font*	pInstance = new CCP_Guage_font(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CUI_font_Damage_number"));
+		ERR_MSG(TEXT("Failed to Cloned : CCP_Guage_font"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CUI_font_Damage_number::Free()
+void CCP_Guage_font::Free()
 {
-
 	Safe_Release(m_pTextureCom1);
 	__super::Free();
 }

@@ -5,12 +5,12 @@
 
 BEGIN(Client)
 
-class CHPbar final : public CUI_Base
+class CCP_Guage final : public CUI_Base
 {
 private:
-	CHPbar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CHPbar(const CHPbar& rhs);
-	virtual ~CHPbar() = default;
+	CCP_Guage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCP_Guage(const CCP_Guage& rhs);
+	virtual ~CCP_Guage() = default;
 
 
 public:
@@ -26,15 +26,15 @@ private:
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
-	//CTexture*				m_pTextureCom2 = nullptr;
+	CTexture*				m_pTextureCom2 = nullptr;
 
-	_float 	m_fcurrenthp = 200.f;
-	_float m_fmaxhp = 200.f;
+	_float 	m_fcurrentcp = 200.f;
+	_float m_fmaxcp = 200.f;
 
 	_uint m_iIndex = 0;
-	
+
 public:
-	static CHPbar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CCP_Guage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 };

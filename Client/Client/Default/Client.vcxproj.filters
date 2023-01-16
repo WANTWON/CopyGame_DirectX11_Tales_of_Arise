@@ -130,6 +130,12 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States">
       <UniqueIdentifier>{8e0807c7-546b-4b32-9c19-4d12885792bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\05.CP_Guage">
+      <UniqueIdentifier>{2988ec64-d485-42a9-a8fd-118a65ca318b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\06.MP_Guage">
+      <UniqueIdentifier>{f52fe98f-b14d-4cde-8b18-2cbf54fcc949}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -270,6 +276,15 @@
     <ClInclude Include="..\public\IceWolfWalkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CP_Guage.h">
+      <Filter>02.GameObjects\04.UI\05.CP_Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CP_Guage_font.h">
+      <Filter>02.GameObjects\04.UI\05.CP_Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MPguage.h">
+      <Filter>02.GameObjects\04.UI\06.MP_Guage</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\IceWolfTurnLeftState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
@@ -394,6 +409,15 @@
     </ClCompile>
     <ClCompile Include="..\private\IceWolfWalkState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CP_Guage.cpp">
+      <Filter>02.GameObjects\04.UI\05.CP_Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CP_Guage_font.cpp">
+      <Filter>02.GameObjects\04.UI\05.CP_Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MPguage.cpp">
+      <Filter>02.GameObjects\04.UI\06.MP_Guage</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfTurnLeftState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
