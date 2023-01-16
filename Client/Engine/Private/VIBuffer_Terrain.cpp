@@ -62,7 +62,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 		{
 			_uint	iIndex = i * m_iNumVerticesX + j;
 
-			m_pVerticesPos[iIndex] = pVertices[iIndex].vPosition = _float3(_float(j), (pPixel[iIndex] & 0x000000ff) / 10.0f , _float(i));
+			m_pVerticesPos[iIndex] = pVertices[iIndex].vPosition = _float3(_float(j), (pPixel[iIndex] & 0x000000ff) / 10.0f, _float(i));
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexture = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
 		}
@@ -80,7 +80,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	FACEINDICES32*			pIndices = new FACEINDICES32[m_iNumPrimitive];
 
 	_uint		iNumFaces = 0;
-	
+
 	for (_uint i = 0; i < m_iNumVerticesZ - 1; i++)
 	{
 		for (_uint j = 0; j < m_iNumVerticesX - 1; j++)
@@ -88,9 +88,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
 			_uint		iIndices[4] = {
-				iIndex + m_iNumVerticesX, 
+				iIndex + m_iNumVerticesX,
 				iIndex + m_iNumVerticesX + 1,
-				iIndex + 1, 
+				iIndex + 1,
 				iIndex
 			};
 
@@ -127,7 +127,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3Normalize(XMLoadFloat3(&pVertices[i].vNormal)));
 
-	
+
 	/* 정점을 담기 위한 공간을 할당하고, 내가 전달해준 배열의 값들을 멤카피한다. */
 	m_BufferDesc.ByteWidth = m_iStride * m_iNumVertices;
 	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼를 생성한다. */
@@ -417,8 +417,6 @@ void CVIBuffer_Terrain::Set_Terrain_Shape(_float fHeight, _float fRad, _float fS
 		m_pContext->Unmap(m_pVB, 0);
 		return;
 	}
-		return;
-
 
 	for (_uint i = 0; i < m_iNumVerticesZ - 1; ++i)
 	{
@@ -489,6 +487,38 @@ void CVIBuffer_Terrain::Set_Terrain_Buffer(TERRAINDESC TerrainDesc)
 	}
 	m_pContext->Unmap(m_pVB, 0);
 }
+
+void CVIBuffer_Terrain::Save_VertexPosition(HANDLE hFile, _ulong & dwByte)
+{
+	/* 한번 TerrainDesc 정보 읽기 */
+	WriteFile(hFile, m_pTerrainDesc, sizeof(TERRAINDESC), &dwByte, nullptr);
+
+
+	D3D11_MAPPED_SUBRESOURCE		SubResource;
+
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+	VTXNORTEX* pVertices = (VTXNORTEX*)SubResource.pData;
+
+	for (_uint i = 0; i < m_pTerrainDesc->m_iVerticeNumX; ++i)
+	{
+		for (_uint j = 0; j < m_pTerrainDesc->m_iVerticeNumZ ; ++j)
+		{
+			_uint	iIndex = i * m_pTerrainDesc->m_iVerticeNumX + j;
+
+			WriteFile(hFile, &m_pTerrainDesc[iIndex], sizeof(VTXNORTEX), &dwByte, nullptr);
+		}
+	}
+
+	m_pContext->Unmap(m_pVB, 0);
+
+	return;
+}
+
+void CVIBuffer_Terrain::Load_Prototype(HANDLE hFile, _ulong & dwByte)
+{
+}
+
+
 
 
 
