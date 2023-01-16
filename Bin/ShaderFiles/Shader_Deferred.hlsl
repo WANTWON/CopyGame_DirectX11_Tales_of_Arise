@@ -21,9 +21,10 @@ texture2D g_ShadeTexture;
 texture2D g_SpecularTexture;
 texture2D g_ShadowDepthTexture;
 texture2D g_GlowTexture;
-
-float Weight[13] = { 0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231, 1, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561 };
-float WeightSum = 6.2108;
+float g_fGlowRadius = 1.f;
+const float Weight[17] = { 0.0561, 0.1353, 0.278, 0.4868, 0.6534, 0.7261, 0.8253, 0.9231, 1, 0.9231, 0.8253, 0.7261, 0.6534, 0.4868, 0.278, 0.1353, 0.0561 };
+const float WeightSum = 9.1682;
+const int WeightCount = 8;
 
 float g_fWinSizeX = 1280.f;
 float g_fWinSizeY = 720.f;
@@ -237,12 +238,12 @@ PS_OUT PS_HORIZONTAL_BLUR(PS_IN In)
 	PS_OUT Out = (PS_OUT)0;
 
 	float2 vTexUVOffset = 0;
-	float texelSizeX = 1.f / g_fWinSizeX; /* Get the size of a Texel Horizontally. */	
+	float texelSizeX = g_fGlowRadius / g_fWinSizeX; /* Get the size of a Texel Horizontally. */
 
-	for (int i = -6; i < 6; ++i)
+	for (int i = -WeightCount; i < WeightCount; ++i)
 	{
 		vTexUVOffset = In.vTexUV + float2(texelSizeX * i, 0); /* Get the UV coordinates for the Offsetted Pixel. */
-		Out.vColor += Weight[6 + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
+		Out.vColor += Weight[WeightCount + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
 	}
 
 	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
@@ -253,14 +254,14 @@ PS_OUT PS_HORIZONTAL_BLUR(PS_IN In)
 PS_OUT PS_VERTICAL_BLUR(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
-
+	
 	float2 vTexUVOffset = 0;				
-	float texelSizeY = 1.f / g_fWinSizeY; /* Get the size of a Texel Vertically. */	
+	float texelSizeY = g_fGlowRadius / g_fWinSizeY; /* Get the size of a Texel Vertically. */
 
-	for (int i = -6; i < 6; ++i)
+	for (int i = -WeightCount; i < WeightCount; ++i)
 	{
 		vTexUVOffset = In.vTexUV + float2(0, texelSizeY * i); /* Get the UV coordinates for the Offsetted Pixel. */
-		Out.vColor += Weight[6 + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
+		Out.vColor += Weight[WeightCount + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
 	}
 
 	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
