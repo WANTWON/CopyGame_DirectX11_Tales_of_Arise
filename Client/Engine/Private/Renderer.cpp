@@ -374,48 +374,62 @@ HRESULT CRenderer::Render_Lights()
 
 HRESULT CRenderer::Render_Glow()
 {
-	if (nullptr == m_pTarget_Manager)
-		return E_FAIL;
+	/* If there are not Glow Object return. (Blurring process is expensive) */
+	if (m_GameObjects[RENDER_GLOW].empty())
+		return S_OK;
+	else
+	{
+		if (!m_pTarget_Manager)
+			return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture")))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Glow"), m_pShader, "g_GlowTexture")))
-		return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Glow"), m_pShader, "g_GlowTexture")))
+			return E_FAIL;
 
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
-		return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+			return E_FAIL;
 
-	//	Horizontal Blur
-	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Horizontal"))))
-		return E_FAIL;
+		/* Horizontal Blur */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Horizontal"))))
+			return E_FAIL;
 
-	m_pShader->Begin(4);
-	m_pVIBuffer->Render();
+		m_pShader->Begin(4);
+		m_pVIBuffer->Render();
 
-	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-		return E_FAIL;
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShader, "g_GlowTexture")))
-		return E_FAIL;
+		/* Bind the Horizontally Blurred Image to the Glow Texture. */
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShader, "g_GlowTexture")))
+			return E_FAIL;
 
-	//	Vertical Blur
-	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Vertical"))))
-		return E_FAIL;
+		/* Vertical Blur */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Vertical"))))
+			return E_FAIL;
 
-	m_pShader->Begin(5);
-	m_pVIBuffer->Render();
+		m_pShader->Begin(5);
+		m_pVIBuffer->Render();
 
-	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-		return E_FAIL;
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShader, "g_GlowTexture")))
-		return E_FAIL;
+		/* Bind the Vertically Blurred Image to the Glow Texture. */
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShader, "g_GlowTexture")))
+			return E_FAIL;
 
-	return S_OK;
+		for (auto& pGameObject : m_GameObjects[RENDER_GLOW])
+		{
+			if (pGameObject)
+				Safe_Release(pGameObject);
+		}
+
+		m_GameObjects[RENDER_GLOW].clear();
+
+		return S_OK;
+	}
 }
 
 HRESULT CRenderer::Render_Blend()
