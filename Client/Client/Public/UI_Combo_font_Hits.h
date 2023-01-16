@@ -34,6 +34,7 @@ public:
 	void moveleft() { m_fPosition.x -= 10.f; }
 
 private:
+	CTexture*				m_pTextureCom1 = nullptr;
 	_bool m_bfadein = false;
 	_bool m_bfadeout = false;
 

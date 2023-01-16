@@ -29,22 +29,22 @@ HRESULT CHP_Font::Initialize(void * pArg)
 	if (m_iYIndex == 0)
 	{
 		m_fPosition.x = 1180.f + (m_iIndex * 14);
-		m_fPosition.y = 355;
+		m_fPosition.y = 375;
 	}
 	if (m_iYIndex == 1)
 	{
 		m_fPosition.x = 1180.f + (m_iIndex * 14);
-		m_fPosition.y = 415;
+		m_fPosition.y = 435;
 	}
 	if (m_iYIndex == 2)
 	{
 		m_fPosition.x = 1180.f + (m_iIndex * 14);
-		m_fPosition.y = 475;
+		m_fPosition.y = 495;
 	}
 	if (m_iYIndex == 3)
 	{
 		m_fPosition.x = 1180.f + (m_iIndex * 14);
-		m_fPosition.y = 535;
+		m_fPosition.y = 555;
 	}
 
 	if (FAILED(__super::Initialize(pArg)))

@@ -5,12 +5,12 @@
 
 BEGIN(Client)
 
-class CUI_Combo_font_Damages final : public CUI_Base
+class CCP_Guage_font final : public CUI_Base
 {
 private:
-	CUI_Combo_font_Damages(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUI_Combo_font_Damages(const CUI_Combo_font_Damages& rhs);
-	virtual ~CUI_Combo_font_Damages() = default;
+	CCP_Guage_font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCP_Guage_font(const CCP_Guage_font& rhs);
+	virtual ~CCP_Guage_font() = default;
 
 
 public:
@@ -26,20 +26,25 @@ private:
 
 
 public:
-	static CUI_Combo_font_Damages* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CCP_Guage_font* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 
 public:
-	void moveleft() { m_fPosition.x -= 10.f; }
-
+	void sizedown() { m_fSize.x -= 1.f;	m_fSize.y -= 1.f; }
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
-	_bool m_bfadein = false;
-	_bool m_bfadeout = false;
+	_uint m_iIndex = 0;
+	_uint m_iYIndex = 0;
 
-	_bool m_bmoveleft = true;
+	_uint m_itexnum = 0;
+	_uint m_iCurrentcp = 100;
+	_uint m_iMaxcp = 200;
+
+	_bool m_bsizedown = false;
+
+	_bool m_bRender = true;
 };
 
 END
