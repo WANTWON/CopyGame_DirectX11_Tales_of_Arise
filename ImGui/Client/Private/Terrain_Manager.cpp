@@ -25,7 +25,7 @@ HRESULT CTerrain_Manager::Create_Terrain(LEVEL eLevel, const _tchar* pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	TERRAINDESC TerrainDesc = m_TerrainDesc;
+	TERRAINDESC TerrainDesc = m_pTerrainDesc;
 	TerrainDesc.m_eDebugTerrain = DEBUG_NONE;
 
 

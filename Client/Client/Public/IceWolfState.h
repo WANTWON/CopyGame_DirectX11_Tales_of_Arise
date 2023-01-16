@@ -43,7 +43,7 @@ public:
 
 public:
 	STATE_ID Get_StateId() { return m_eStateId; }
-	_bool Has_Aggro() { return m_pTarget; }
+	_bool Has_Aggro() { return m_pOwner->Get_Aggro(); }
 	void Reset_Target() { m_pTarget = nullptr; }
 
 protected:

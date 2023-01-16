@@ -101,7 +101,7 @@ private:
 private:
 	/* For Terrain */
 	CTerrain_Manager*						m_pTerrain_Manager = nullptr;
-	CTerrain_Manager::TERRAINDESC			m_TerrainDesc;
+	CTerrain_Manager::TERRAINDESC			m_pTerrainDesc;
 	CTerrain_Manager::TERRAINSHAPEDESC		m_TerrainShapeDesc;
 	_bool									m_bTerrain_Show = true;
 

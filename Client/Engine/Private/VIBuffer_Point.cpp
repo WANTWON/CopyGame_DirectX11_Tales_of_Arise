@@ -19,24 +19,29 @@ HRESULT CVIBuffer_Point::Initialize_Prototype()
 #pragma region VERTICES
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
 
-	m_iStride = sizeof(VTXPOINT);
+	m_iStride = sizeof(VTXPOINTMATRIX);
 	m_iNumVertices = 1;
-	m_iNumVertexBuffers = 2;
+	m_iNumVertexBuffers = 1;
 	m_eFormat = DXGI_FORMAT_R16_UINT;
 	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
 
 	m_BufferDesc.ByteWidth = m_iStride * m_iNumVertices;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼를 생성한다. */
+	m_BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼를 생성한다. */
 	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iStride;
 
-	VTXPOINT*			pVertices = new VTXPOINT;
-	ZeroMemory(pVertices, sizeof(VTXPOINT));
+	VTXPOINTMATRIX*			pVertices = new VTXPOINTMATRIX;
+	ZeroMemory(pVertices, sizeof(VTXPOINTMATRIX));
 
 	pVertices->vPosition = _float3(0.0f, 0.f, 0.f);
 	pVertices->vPSize = _float2(1.f, 1.f);
+
+	pVertices->vRight = _float4(0.5f, 0.f, 0.f, 0.f);
+	pVertices->vUp = _float4(0.f, 0.5f, 0.f, 0.f);
+	pVertices->vLook = _float4(0.f, 0.f, 0.5f, 0.f);
+	pVertices->vTranslation = _float4(0.f,0.f,0.f, 1.f);
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pVertices;
@@ -57,9 +62,9 @@ HRESULT CVIBuffer_Point::Initialize_Prototype()
 	m_iNumIndicesPerPrimitive = 1;
 
 	m_BufferDesc.ByteWidth = m_iIndicesByte * m_iNumPrimitive;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼를 생성한다. */
+	m_BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼를 생성한다. */
 	m_BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = sizeof(_ushort);
 
@@ -75,6 +80,7 @@ HRESULT CVIBuffer_Point::Initialize_Prototype()
 
 	Safe_Delete_Array(pIndices);
 #pragma endregion
+
 	return S_OK;
 }
 

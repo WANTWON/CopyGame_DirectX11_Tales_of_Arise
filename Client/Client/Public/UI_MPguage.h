@@ -2,7 +2,7 @@
 
 #include "UIBase.h"
 BEGIN(Engine)
-class CVIBuffer_Point_Instance;
+class CVIBuffer_Point;
 
 END
 
@@ -28,7 +28,7 @@ private:
 	virtual HRESULT Ready_Components(void * pArg) override;
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
 
-	CVIBuffer_Point_Instance*			m_pVIBufferCom1 = nullptr;
+	CVIBuffer_Point*			m_pVIBufferCom1 = nullptr;
 
 
 public:

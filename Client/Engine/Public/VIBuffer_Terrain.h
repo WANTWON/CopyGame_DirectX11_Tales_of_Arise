@@ -29,8 +29,8 @@ public:
 	virtual _bool Picking(class CTransform* pTransform, _float3* pOut) override;
 	void Set_Terrain_Shape(_float fHeight, _float fRad, _float fSharp, _float3 vPoint, _float fTimeDelta);
 	void Set_Terrain_Buffer(TERRAINDESC TerrainDesc);
-	void Save_VertexPosition(HANDLE hFile, _ulong& dwByte);
-	void Load_Prototype(HANDLE hFile, _ulong& dwByte);
+	HRESULT Save_VertexPosition(HANDLE hFile, _ulong& dwByte);
+	HRESULT Load_Prototype(HANDLE hFile, _ulong& dwByte, _bool bCreateQuadTree = false);
 
 public:
 	void Culling(const class CTransform* pTransform);

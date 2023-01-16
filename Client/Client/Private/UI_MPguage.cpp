@@ -114,7 +114,7 @@ HRESULT CMP_Guage::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_PointInstance"), (CComponent**)&m_pVIBufferCom1)))
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point"), (CComponent**)&m_pVIBufferCom1)))
 		return E_FAIL;
 
 	//m_pVIBufferCom1
