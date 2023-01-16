@@ -142,6 +142,11 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	{
 	case ANIM_MOVE_IDLE:
 		return true;
+	case ANIM_TURN_L:
+		return false;
+	case ANIM_TURN_R:
+		return false;
+
 	}
 }
 

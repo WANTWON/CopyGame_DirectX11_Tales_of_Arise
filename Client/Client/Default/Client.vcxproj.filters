@@ -270,6 +270,12 @@
     <ClInclude Include="..\public\IceWolfWalkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\IceWolfTurnLeftState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfTurnRightState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -387,6 +393,12 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\IceWolfWalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfTurnLeftState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfTurnRightState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
   </ItemGroup>
