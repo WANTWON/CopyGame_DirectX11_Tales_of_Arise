@@ -122,8 +122,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);
 	Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV) * g_bGlow;
 
-	/*if (Out.vGlow.r != 0 && Out.vGlow.g != 0 && Out.vGlow.b != 0)
-		Out.vGlow = Out.vDiffuse;*/
+	if (Out.vGlow.r != 0 && Out.vGlow.g != 0 && Out.vGlow.b != 0)
+		Out.vGlow.rgb = Out.vDiffuse.rgb * Out.vGlow.r;
 
 	if (Out.vDiffuse.a <= 0.3f)
 		discard;

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\Public\Particle_Point.h"
+#include "Particle_Point.h"
 
 #include "GameInstance.h"
 
@@ -31,26 +31,25 @@ HRESULT CParticle_Point::Initialize(void * pArg)
 int CParticle_Point::Tick(_float fTimeDelta)
 {
 	m_pVIBufferCom->Update(fTimeDelta);
+
 	return OBJ_NOEVENT;
 }
 
 void CParticle_Point::Late_Tick(_float fTimeDelta)
 {
-	if (nullptr != m_pRendererCom)
+	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
 }
 
 HRESULT CParticle_Point::Render()
 {
-	if (nullptr == m_pShaderCom ||
-		nullptr == m_pVIBufferCom)
+	if (!m_pShaderCom || !m_pVIBufferCom)
 		return E_FAIL;
 
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
 	m_pShaderCom->Begin();
-
 	m_pVIBufferCom->Render();
 
 	return S_OK;
@@ -61,19 +60,15 @@ HRESULT CParticle_Point::Ready_Components()
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
-
 	/* For.Com_Transform */
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom)))
 		return E_FAIL;
-
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointInstance"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
-
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Snow"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
-
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_PointInstance"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
@@ -83,20 +78,18 @@ HRESULT CParticle_Point::Ready_Components()
 
 HRESULT CParticle_Point::SetUp_ShaderResources()
 {
-	if (nullptr == m_pShaderCom)
+	if (!m_pShaderCom)
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
-	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
 		return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Set_RawValue("g_vCamPosition", &pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
@@ -110,7 +103,7 @@ HRESULT CParticle_Point::SetUp_ShaderResources()
 
 CParticle_Point * CParticle_Point::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CParticle_Point*	pInstance = new CParticle_Point(pDevice, pContext);
+	CParticle_Point* pInstance = new CParticle_Point(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -124,7 +117,7 @@ CParticle_Point * CParticle_Point::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 
 CGameObject * CParticle_Point::Clone(void * pArg)
 {
-	CParticle_Point*	pInstance = new CParticle_Point(*this);
+	CParticle_Point* pInstance = new CParticle_Point(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

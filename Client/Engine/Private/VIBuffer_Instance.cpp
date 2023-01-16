@@ -36,28 +36,15 @@ HRESULT CVIBuffer_Instance::Initialize(void * pArg)
 
 HRESULT CVIBuffer_Instance::Render()
 {
-	ID3D11Buffer*		pBuffer[] = {
-		m_pVB,
-		m_pInstanceBuffer
-	};
-
-	_uint				iStrides[] = {
-		m_iStride,
-		m_iInstanceStride
-	};
-
-	_uint				iOffsets[] = {
-		0,
-		0
-	};
+	ID3D11Buffer* pBuffer[] = { m_pVB, m_pInstanceBuffer };
+	_uint iStrides[] = { m_iStride, m_iInstanceStride };
+	_uint iOffsets[] = { 0, 0 };
 
 	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pBuffer, iStrides, iOffsets);
 	m_pContext->IASetIndexBuffer(m_pIB, m_eFormat, 0);
 	m_pContext->IASetPrimitiveTopology(m_eTopology);
-	// m_pContext->IASetInputLayout();
 
 	m_pContext->DrawIndexedInstanced(m_iNumIndicesPerInstance, m_iNumInstance, 0, 0, 0);
-
 
 	return S_OK;
 }
@@ -67,5 +54,4 @@ void CVIBuffer_Instance::Free()
 	__super::Free();
 
 	Safe_Release(m_pInstanceBuffer);
-
 }

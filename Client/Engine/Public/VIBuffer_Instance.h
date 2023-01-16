@@ -3,7 +3,6 @@
 #include "VIBuffer.h"
 
 BEGIN(Engine)
-
 class ENGINE_DLL CVIBuffer_Instance abstract : public CVIBuffer
 {
 protected:
@@ -17,14 +16,13 @@ public:
 	virtual HRESULT Render() override;
 
 protected:
-	_uint							m_iNumInstance = 0;
-	ID3D11Buffer*					m_pInstanceBuffer = nullptr;
-	_uint							m_iInstanceStride = 0;
-	_uint							m_iNumIndicesPerInstance = 0;
+	ID3D11Buffer* m_pInstanceBuffer = nullptr;
+	_uint m_iNumInstance = 0;
+	_uint m_iInstanceStride = 0;
+	_uint m_iNumIndicesPerInstance = 0;
 
 public:
 	virtual CComponent* Clone(void* pArg = nullptr) = 0;
 	virtual void Free() override;
 };
-
 END
