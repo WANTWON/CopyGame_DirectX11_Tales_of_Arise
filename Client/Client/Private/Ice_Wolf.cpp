@@ -98,8 +98,6 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
-
-	
 	TickState(fTimeDelta);
 
 	return OBJ_NOEVENT;
@@ -108,6 +106,10 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	if (m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
 	LateTickState(fTimeDelta);
 }
 
@@ -140,6 +142,11 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	{
 	case ANIM_MOVE_IDLE:
 		return true;
+	case ANIM_TURN_L:
+		return false;
+	case ANIM_TURN_R:
+		return false;
+
 	}
 }
 
