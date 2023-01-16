@@ -3,7 +3,7 @@
 #include "VIBuffer.h"
 
 BEGIN(Engine)
-
+class CTexture;
 class ENGINE_DLL CVIBuffer_Terrain final : public CVIBuffer
 {
 public:
@@ -29,6 +29,8 @@ public:
 	virtual _bool Picking(class CTransform* pTransform, _float3* pOut) override;
 	void Set_Terrain_Shape(_float fHeight, _float fRad, _float fSharp, _float3 vPoint, _float fTimeDelta);
 	void Set_Terrain_Buffer(TERRAINDESC TerrainDesc);
+	void Save_VertexPosition(HANDLE hFile, _ulong& dwByte);
+	void Load_Prototype(HANDLE hFile, _ulong& dwByte);
 
 public:
 	void Culling(const class CTransform* pTransform);
@@ -36,7 +38,9 @@ public:
 private:
 	_uint				m_iNumVerticesX = 0, m_iNumVerticesZ = 0;
 	class CQuadTree*	m_pQuadTree = nullptr;
-
+	TERRAINDESC*		m_pTerrainDesc = nullptr;
+	vector<VTXNORTEX>	vecVertex;
+	
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath);
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight);

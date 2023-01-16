@@ -1011,8 +1011,6 @@ void CImgui_Manager::Load_Navigation()
 }
 
 
-
-
 void CImgui_Manager::Set_Terrain_Map()
 {
 	ImGui::GetIO().NavActive = false;
@@ -1048,9 +1046,9 @@ void CImgui_Manager::Set_Terrain_Map()
 		CTerrain_Manager::TERRAINDESC TerrainDesc = CTerrain_Manager::Get_Instance()->Get_TerrainDesc();
 		TerrainDesc.m_eDebugTerrain = CTerrain_Manager::DEBUG_SOILD;
 		TerrainDesc.m_bShowWireFrame = true;
+		CGameInstance::Get_Instance()->Clear_Layer(LEVEL_GAMEPLAY, TEXT("Layer_DebugTerrian"));
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, TEXT("Layer_DebugTerrian"), &TerrainDesc)))
 			return;
-
 	}
 
 
@@ -1071,11 +1069,12 @@ void CImgui_Manager::Set_Terrain_Map()
 
 	m_pTerrain_Manager->Set_TerrainDesc(&TerrainDesc);
 
-	if (m_PickingType == PICKING_TERRAIN_TRANSFORM)
+	if (m_PickingType == PICKING_TERRAIN_TRANSFORM )
 	{
 		if (CGameInstance::Get_Instance()->Mouse_Down(DIMK_LBUTTON))
 			CPickingMgr::Get_Instance()->Picking();
 	}
+
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_Z))
 	{
@@ -1129,15 +1128,15 @@ void CImgui_Manager::Set_Terrain_Shape()
 
 	ImGui::Text("Height");
 	ImGui::SameLine();
-	ImGui::DragFloat("##fHeight", &m_TerrainShapeDesc.fHeight);
+	ImGui::DragFloat("##fHeight", &m_TerrainShapeDesc.fHeight, 0.1f);
 
 	ImGui::Text("Radius");
 	ImGui::SameLine();
-	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius);
+	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius, 0.1f);
 
 	ImGui::Text("Sharp");
 	ImGui::SameLine();
-	ImGui::DragFloat("##fSharp", &m_TerrainShapeDesc.fSharp);
+	ImGui::DragFloat("##fSharp", &m_TerrainShapeDesc.fSharp, 0.1f);
 
 
 	m_pTerrain_Manager->Set_TerrainShapeDesc(&m_TerrainShapeDesc);

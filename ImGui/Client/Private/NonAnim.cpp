@@ -28,7 +28,8 @@ HRESULT CNonAnim::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	CPickingMgr::Get_Instance()->Add_PickingGroup(this);
+	if(CImgui_Manager::Get_Instance()->Get_PickingType() != CImgui_Manager::PICKING_TERRAIN_SHAPE)
+		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
 
 	m_eObjectID = OBJ_BLOCK;
 
@@ -131,8 +132,6 @@ _bool CNonAnim::Picking(_float3 * PickingPoint)
 {
 	/*if (CGameInstance::Get_Instance()->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), Get_Scale().y * 2) == false)
 		return false;*/
-
-	
 	if (true == m_pModelCom->Picking(m_pTransformCom, PickingPoint))
 		return true; 
 

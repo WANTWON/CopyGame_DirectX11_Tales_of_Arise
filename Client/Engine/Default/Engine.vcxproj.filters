@@ -142,6 +142,9 @@
     <ClCompile Include="..\Private\Picking.cpp">
       <Filter>01.Utility\10.Picking</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Point.cpp">
+      <Filter>01.Utility\03.Components\02.VIBuffer\06.VIBuffer_Point</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -237,9 +240,6 @@
     <ClInclude Include="..\public\CustomFont.h">
       <Filter>01.Utility\07.Fonts</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Model.h">
-      <Filter>01.Utility\03.Components\06.Model</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\MeshContainer.h">
       <Filter>01.Utility\03.Components\06.Model\MeshContainer</Filter>
     </ClInclude>
@@ -296,6 +296,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Picking.h">
       <Filter>01.Utility\10.Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Model.h">
+      <Filter>01.Utility\03.Components\06.Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Point.h">
+      <Filter>01.Utility\03.Components\02.VIBuffer\06.VIBuffer_Point</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -448,6 +454,9 @@
     </Filter>
     <Filter Include="01.Utility\10.Picking">
       <UniqueIdentifier>{ce0968bd-70b4-4c72-a608-dd2b9b19d741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\02.VIBuffer\06.VIBuffer_Point">
+      <UniqueIdentifier>{6942cc0e-8b3a-4809-99f6-4d2d4898fa10}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

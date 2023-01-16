@@ -182,4 +182,6 @@ void CHPbar::Free()
 
 	Safe_Release(m_pTextureCom1);
 	__super::Free();
+	Safe_Release(m_pTextureCom1);
+	Safe_Release(m_pTextureCom2);
 }
