@@ -12,7 +12,7 @@ vector g_vLightAmbient;
 vector g_vLightSpecular;
 
 vector g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
+vector g_vMtrlSpecular = vector(0.f, 0.f, 0.f, 0.f);
 
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
@@ -21,6 +21,9 @@ texture2D g_ShadeTexture;
 texture2D g_SpecularTexture;
 texture2D g_ShadowDepthTexture;
 texture2D g_GlowTexture;
+
+float Weight[13] = { 0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231, 1, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561 };
+float WeightSum = 6.2108;
 
 float g_fWinSizeX = 1280.f;
 float g_fWinSizeY = 720.f;
@@ -233,60 +236,17 @@ PS_OUT PS_HORIZONTAL_BLUR(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	float weight0, weight1, weight2, weight3, weight4;
-	float normalization; 
-	float4 color;
+	float2 vTexUVOffset = 0;
+	float texelSizeX = 1.f / g_fWinSizeX; /* Get the size of a Texel Horizontally. */	
 
-	// Create the weights that each neighbor pixel will contribute to the blur.
-	weight0 = 1.0f;
-	weight1 = 0.9f;
-	weight2 = 0.55f;
-	weight3 = 0.18f;
-	weight4 = 0.1f;
+	for (int i = -6; i < 6; ++i)
+	{
+		vTexUVOffset = In.vTexUV + float2(texelSizeX * i, 0); /* Get the UV coordinates for the Offsetted Pixel. */
+		Out.vColor += Weight[6 + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
+	}
 
-	// Create a normalized value to average the weights out a bit.
-	normalization = (weight0 + 2.0f * (weight1 + weight2 + weight3 + weight4));
-	
-	// Normalize the weights.
-	weight0 = weight0 / normalization;
-	weight1 = weight1 / normalization;
-	weight2 = weight2 / normalization;
-	weight3 = weight3 / normalization;
-	weight4 = weight4 / normalization;
-
-	// Determine the floating point size of a texel for a screen with this specific width.
-	float texelSize = 1.0f / g_fWinSizeX;
-
-	// Create UV coordinates for the pixel and its four horizontal neighbors on either side.
-	float2 texCoord1 = In.vTexUV + float2(texelSize * -4.0f, 0.0f);
-	float2 texCoord2 = In.vTexUV + float2(texelSize * -3.0f, 0.0f);
-	float2 texCoord3 = In.vTexUV + float2(texelSize * -2.0f, 0.0f);
-	float2 texCoord4 = In.vTexUV + float2(texelSize * -1.0f, 0.0f);
-	float2 texCoord5 = In.vTexUV + float2(texelSize *  0.0f, 0.0f);
-	float2 texCoord6 = In.vTexUV + float2(texelSize *  1.0f, 0.0f);
-	float2 texCoord7 = In.vTexUV + float2(texelSize *  2.0f, 0.0f);
-	float2 texCoord8 = In.vTexUV + float2(texelSize *  3.0f, 0.0f);
-	float2 texCoord9 = In.vTexUV + float2(texelSize *  4.0f, 0.0f);
-
-	// Initialize the color to black.
-	color = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	// Add the nine horizontal pixels to the color by the specific weight of each.
-	color += g_GlowTexture.Sample(LinearSampler, texCoord1) * weight4;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord2) * weight3;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord3) * weight2;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord4) * weight1;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord5) * weight0;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord6) * weight1;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord7) * weight2;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord8) * weight3;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord9) * weight4;
-
-	Out.vColor = color;
-
-	// Set the alpha channel to one.
-	color.a = 1.0f;
-
+	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
+	Out.vColor.a = 0.f;
 	return Out;
 }
 
@@ -294,60 +254,17 @@ PS_OUT PS_VERTICAL_BLUR(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	float weight0, weight1, weight2, weight3, weight4;
-	float normalization;
-	float4 color;
+	float2 vTexUVOffset = 0;				
+	float texelSizeY = 1.f / g_fWinSizeY; /* Get the size of a Texel Vertically. */	
 
-	// Create the weights that each neighbor pixel will contribute to the blur.
-	weight0 = 1.0f;
-	weight1 = 0.9f;
-	weight2 = 0.55f;
-	weight3 = 0.18f;
-	weight4 = 0.1f;
+	for (int i = -6; i < 6; ++i)
+	{
+		vTexUVOffset = In.vTexUV + float2(0, texelSizeY * i); /* Get the UV coordinates for the Offsetted Pixel. */
+		Out.vColor += Weight[6 + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
+	}
 
-	// Create a normalized value to average the weights out a bit.
-	normalization = (weight0 + 2.0f * (weight1 + weight2 + weight3 + weight4));
-	
-	// Normalize the weights.
-	weight0 = weight0 / normalization;
-	weight1 = weight1 / normalization;
-	weight2 = weight2 / normalization;
-	weight3 = weight3 / normalization;
-	weight4 = weight4 / normalization;
-
-	// Determine the floating point size of a texel for a screen with this specific width.
-	float texelSize = 1.0f / g_fWinSizeX;
-
-	// Create UV coordinates for the pixel and its four horizontal neighbors on either side.
-	float2 texCoord1 = In.vTexUV + float2(0.0f, texelSize * -4.0f);
-	float2 texCoord2 = In.vTexUV + float2(0.0f, texelSize * -3.0f);
-	float2 texCoord3 = In.vTexUV + float2(0.0f, texelSize * -2.0f);
-	float2 texCoord4 = In.vTexUV + float2(0.0f, texelSize * -1.0f);
-	float2 texCoord5 = In.vTexUV + float2(0.0f, texelSize *  0.0f);
-	float2 texCoord6 = In.vTexUV + float2(0.0f, texelSize *  1.0f);
-	float2 texCoord7 = In.vTexUV + float2(0.0f, texelSize *  2.0f);
-	float2 texCoord8 = In.vTexUV + float2(0.0f, texelSize *  3.0f);
-	float2 texCoord9 = In.vTexUV + float2(0.0f, texelSize *  4.0f);
-
-	// Initialize the color to black.
-	color = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	// Add the nine horizontal pixels to the color by the specific weight of each.
-	color += g_GlowTexture.Sample(LinearSampler, texCoord1) * weight4;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord2) * weight3;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord3) * weight2;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord4) * weight1;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord5) * weight0;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord6) * weight1;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord7) * weight2;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord8) * weight3;
-	color += g_GlowTexture.Sample(LinearSampler, texCoord9) * weight4;
-
-	Out.vColor = color;
-
-	// Set the alpha channel to one.
-	color.a = 1.0f;
-
+	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
+	Out.vColor.a = 0.f;
 	return Out;
 }
 

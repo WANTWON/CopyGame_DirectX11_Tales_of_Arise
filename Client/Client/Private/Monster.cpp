@@ -80,7 +80,7 @@ HRESULT CMonster::Render()
 	if (FAILED(SetUp_ShaderID()))
 		return E_FAIL;
 
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
 
 	_bool bGlow = true;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
