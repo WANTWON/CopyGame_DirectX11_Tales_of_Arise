@@ -59,7 +59,7 @@ public:
 	void Set_Macro();
 	void Show_ModelList();
 	void Show_CurrentModelList();
-	void BrowseForFolder();
+	void Save_Load_Model();
 
 	void Set_TrasureBox();
 	void Save_TrasureBox();

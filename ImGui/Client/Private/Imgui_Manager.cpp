@@ -256,7 +256,7 @@ void CImgui_Manager::Tick_Imgui()
 	}
 
 
-	if (m_bSave || m_bLoad)			BrowseForFolder();
+	if (m_bSave || m_bLoad)			Save_Load_Model();
 	if (m_bShowSimpleMousePos)      ShowSimpleMousePos(&m_bShowSimpleMousePos);
 	if (m_bFilePath)				Set_File_Path_Dialog();
 	if (m_bShow_app_style_editor) { ImGui::Begin("Dear ImGui Style Editor", &m_bShow_app_style_editor); ImGui::ShowStyleEditor(); ImGui::End(); }
@@ -264,7 +264,7 @@ void CImgui_Manager::Tick_Imgui()
 
 }
 
-void CImgui_Manager::BrowseForFolder()
+void CImgui_Manager::Save_Load_Model()
 {
 
 	if (m_bSave)

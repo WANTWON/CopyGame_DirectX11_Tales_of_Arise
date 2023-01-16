@@ -20,8 +20,12 @@ CIceWolfState * CRunState::Tick(_float fTimeDelta)
 {
 	Move(fTimeDelta);
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
-	m_pOwner->Check_Navigation();
+	if (m_pOwner->Check_IsinFrustum(0.f))
+	{
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+		m_pOwner->Check_Navigation();
+	}
+	
 
 	return nullptr;
 }

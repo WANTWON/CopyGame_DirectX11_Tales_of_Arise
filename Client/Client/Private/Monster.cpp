@@ -46,7 +46,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	if (Check_IsinFrustum(2.f) == false)
+	if (Check_IsinFrustum(0.f) == false)
 		return;
 
 	if (nullptr != m_pRendererCom)
