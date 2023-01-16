@@ -4,10 +4,10 @@
 
 BEGIN(Client)
 BEGIN(IceWolf)
-class CRunState final : public CIceWolfState
+class CWalkFrontState final : public CIceWolfState
 {
 public:
-	CRunState(class CIce_Wolf* pIceWolf, DIRID eDir);
+	CWalkFrontState(class CIce_Wolf* pIceWolf);
 
 	virtual CIceWolfState* AI_Behaviour() override;
 	virtual CIceWolfState* Tick(_float fTimeDelta) override;
@@ -16,11 +16,12 @@ public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
-private:
-	void Move(_float fTimeDelta);
+
 
 private:
-	DIRID m_eDirection = DIRID::DIR_END;
+	_float m_fWalkMoveTimer = 0.f;
+	_float m_fWalkAttackTimer = 1.5f;
+	_uint  m_iRand = 0.f;
 };
 END
 END
