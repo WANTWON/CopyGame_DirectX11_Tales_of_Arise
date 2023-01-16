@@ -106,6 +106,21 @@
     <Filter Include="02.GameObjects\04.UI\02.UI_LOADING">
       <UniqueIdentifier>{9514bfa9-ed3c-4a7f-be3a-457b1311c64f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\03.UI_HPbar">
+      <UniqueIdentifier>{656cd5fa-7129-4532-907d-5bd2520b7080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\04.UI_COMBO">
+      <UniqueIdentifier>{5442dacb-4ae8-45f4-91eb-d052faaf994f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS">
+      <UniqueIdentifier>{4c26c9dc-483e-462e-9bf1-5777738572bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage">
+      <UniqueIdentifier>{e0c41fb7-e092-4a86-a3d0-7b0eb057312e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS">
+      <UniqueIdentifier>{4d4ff152-4b83-48ab-9c9b-30a8adfa19d9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf">
       <UniqueIdentifier>{436daf2b-d1f0-4c8c-8406-fef9bfdc7639}</UniqueIdentifier>
     </Filter>
@@ -219,6 +234,27 @@
     <ClInclude Include="..\Public\ScreenFadeEffect.h">
       <Filter>02.GameObjects\04.UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\HPbar.h">
+      <Filter>02.GameObjects\04.UI\03.UI_HPbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HP_Font.h">
+      <Filter>02.GameObjects\04.UI\03.UI_HPbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Comboline.h">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Combo_font_Damages.h">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_font_Damage_number.h">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Combo_font_Hits.h">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_font_Hits_number.h">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Ice_Wolf.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
     </ClInclude>
@@ -319,6 +355,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp">
       <Filter>02.GameObjects\04.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HPbar.cpp">
+      <Filter>02.GameObjects\04.UI\03.UI_HPbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HP_Font.cpp">
+      <Filter>02.GameObjects\04.UI\03.UI_HPbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Comboline.cpp">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Combo_font_Damages.cpp">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_font_Damage_number.cpp">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Combo_font_Hits.cpp">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_font_Hits_number.cpp">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Ice_Wolf.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>

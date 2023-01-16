@@ -70,7 +70,15 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 		Set_TimeReset();
 		m_isFinished = true;
 		if (!isLoop)
+		{
+			for (auto& pChannel : m_Channels)
+			{
+				pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
+			}
+
 			return m_isFinished;
+		}
+			
 	}
 	else
 		m_isFinished = false;
@@ -104,9 +112,9 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 				m_bLinearFinished = true;
 				m_Channels[i]->Reset();
 			}
-
 		}
 	}
+
 	return m_bLinearFinished;
 }
 

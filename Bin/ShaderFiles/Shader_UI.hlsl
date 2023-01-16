@@ -3,12 +3,19 @@
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D		g_DiffuseTexture;
+texture2D       g_GradationTexture;
 float			g_fAlpha = 1.f;
 
 float			g_fMinRange = 100.f;
 float			g_fMaxRange = 400.f;
+
+float g_fCurrentHp;
+float g_fMaxHp;
+
 float4			g_PlayerProjPos;
 float2			g_TexUV;
+
+
 
 struct VS_IN
 {
@@ -63,6 +70,8 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
+	if (Out.vColor.a <= 0.3f)
+		discard;
 
 	return Out;
 }
@@ -103,6 +112,62 @@ PS_OUT PS_FADEOUT(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor.a -= g_fAlpha;
+
+	return Out;
+}
+
+PS_OUT PS_HPbar(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+		discard;
+	
+	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (origincolor.a > 0.4f)
+	{
+		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+		float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+
+		Out.vColor = lerpcolor;
+	}
+	else
+    Out.vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexUV);
+	
+	
+
+	if (Out.vColor.a<0.3f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_COMBOLINE(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	/*if (Out.vColor.a <= 0.3f)
+		discard;
+
+	if (Out.vColor.r == 0.f&&Out.vColor.g == 0.f&& Out.vColor.b ==0.f )
+		discard;
+
+	Out.vColor.r += 0.929f;
+	Out.vColor.g += 0.8f;
+	Out.vColor.b += 0.486f;*/
+	float3 yellowRef = normalize(float3(.69f, .62f, .42f)); //텍스쳐색
+
+
+	float weight = dot(Out.vColor, yellowRef); //알파만들기
+	Out.vColor.a = lerp(0, 1, weight);
+
+	Out.vColor.a = lerp(0, 1, saturate(weight));
+
 
 	Out.vColor.a -= g_fAlpha;
 
@@ -176,6 +241,28 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_FADEOUT();
+	}
+
+	pass HPbar
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_HPbar();
+	}
+
+	pass COMBOLINE
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_COMBOLINE();
 	}
 
 }

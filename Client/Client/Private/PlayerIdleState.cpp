@@ -34,13 +34,25 @@ CPlayerState * CIdleState::HandleInput()
 		return new CRunState(m_pOwner, DIR_BACKWARD);
 	else if (pGameInstance->Key_Pressing(DIK_UP))
 		return new CRunState(m_pOwner, DIR_STRAIGHT);
-
+	else if (pGameInstance->Key_Pressing(DIK_M))
+	{
+		m_pOwner->Get_AnimTransform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.01f);
+		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.01f);
+	}
+	
 	return nullptr;
 }
 
 CPlayerState * CIdleState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	_matrix matRootNode;
+
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), &matRootNode);
+
+	//m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, matRootNode.r[3]);
+
+	
+
 	m_pOwner->Check_Navigation();
 
 	return nullptr;
@@ -60,5 +72,4 @@ void CIdleState::Enter()
 
 void CIdleState::Exit()
 {
-
 }

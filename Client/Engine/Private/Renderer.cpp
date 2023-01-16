@@ -414,6 +414,8 @@ HRESULT CRenderer::Render_Glow()
 
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShader, "g_GlowTexture")))
 		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_Blend()
