@@ -20,11 +20,11 @@ public:
 
 	typedef struct tagCharacterStats
 	{
-		_float m_fMaxHp;
-		_float m_fCurrentHp;
-		_float m_fAttackPower;
-		_float m_fWalkSpeed;
-		_float m_fRunSpeed;
+		_float m_fMaxHp = 10.f;
+		_float m_fCurrentHp = 10.f;
+		_float m_fAttackPower = 10.f;
+		_float m_fWalkSpeed = 3.f;
+		_float m_fRunSpeed = 5.f;
 	}STATS;
 
 protected:
@@ -68,7 +68,9 @@ public: // Get & Set
 	_float		Get_AggroRadius() { return m_fAggroRadius; }
 	_float		Get_PatrolRadius() { return m_fPatrolRadius; }
 	_float		Get_AttackRadius() { return m_fAttackRadius; }
+	_float		Get_Attack_BiteRadius() { return m_fAttack_BiteRadius; }
 	STATS		Get_Stats() { return m_tStats; }
+	_bool		Get_BattleMode = false;
 
 protected:
 	DMG_DIR Calculate_DmgDirection();
@@ -77,9 +79,11 @@ protected:
 protected:
 	STATS					m_tStats;
 	_float					m_fAttackRadius = 0.5f;
-	_float					m_fAggroRadius = 3.f;
+	_float					m_fAttack_BiteRadius = 5.f;
+	_float					m_fAggroRadius = 15.f;
 	_float					m_fPatrolRadius = 5.f;
 	_float					m_fDistanceToTarget = 0.f;
+	
 
 	_float					m_fAnimSpeed = 1.f;
 
@@ -88,6 +92,7 @@ protected:
 	_bool					m_bHit = false;
 	_bool					m_bMove = true;
 	_bool					m_bMakeEffect = false;
+//	_bool					m_bBattleMode = false;
 	
 	//For Move Time
 	DWORD m_dwDeathTime = GetTickCount();

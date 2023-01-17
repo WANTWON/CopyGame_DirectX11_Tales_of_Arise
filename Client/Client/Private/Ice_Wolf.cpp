@@ -60,7 +60,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
-	TransformDesc.fSpeedPerSec = 5.f;
+	TransformDesc.fSpeedPerSec = 1.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -113,9 +113,9 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 	LateTickState(fTimeDelta);
 }
 
-void CIce_Wolf::AI_Behavior()
+void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 {
-	CIceWolfState* pNewState = m_pIce_WolfState->AI_Behaviour();
+	CIceWolfState* pNewState = m_pIce_WolfState->AI_Behaviour(fTimeDelta);
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
 }
@@ -126,6 +126,7 @@ void CIce_Wolf::TickState(_float fTimeDelta)
 	CIceWolfState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
+	
 }
 
 void CIce_Wolf::LateTickState(_float fTimeDelta)
@@ -141,12 +142,18 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	switch ((ANIM)eAnimId)
 	{
 	case ANIM_MOVE_IDLE:
+	case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:
+	case ANIM_MOVE_WALK_F:
 		return true;
-	case ANIM_TURN_L:
-		return false;
-	case ANIM_TURN_R:
-		return false;
 
+	case ANIM_TURN_L:
+	case ANIM_ATTACK_HOWLING:
+	case ANIM_TURN_R:
+	case ANIM_ATTACK_NORMAL:
+	case ANIM_ATTACK_ELEMENTAL_CHARGE_START:
+	case ANIM_ATTACK_ELEMENTAL_CHARGE_END:
+	case ANIM_SYMBOL_DETECT_IDLE:
+		return false;
 	}
 }
 

@@ -32,6 +32,7 @@ namespace Client
 }
 
 #include <process.h>
+#include <time.h>
 
 extern HWND			g_hWnd;
 extern HINSTANCE	g_hInst;
