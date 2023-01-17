@@ -284,6 +284,7 @@
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxCubeTexture.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModel.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPoint.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxRectInstance.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
