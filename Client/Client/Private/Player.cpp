@@ -8,11 +8,6 @@
 
 using namespace Player;
 
-void CPlayer::Copy_Transform(CTransform * TransformA, CTransform * Transform)
-{
-	TransformA->Set_State(CTransform::STATE_TRANSLATION, Transform->Get_State(CTransform::STATE_TRANSLATION));
-}
-
 _bool CPlayer::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
@@ -72,8 +67,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	HandleInput();
 	TickState(fTimeDelta);
 
-	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-
+	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	//for (auto& pParts : m_Parts)
 	//	pParts->Tick(fTimeDelta);
@@ -130,7 +124,7 @@ HRESULT CPlayer::Render_ShadowDepth()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pAnimTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &pGameInstance->Get_ShadowLightView(), sizeof(_float4x4))))
@@ -214,15 +208,6 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
 
-	/* For.Com_AnimTransform */
-	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
-
-	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-
-	if (FAILED(__super::Add_Components(TEXT("Com_AnimTransform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pAnimTransformCom, &TransformDesc)))
-		return E_FAIL;
-
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
@@ -234,11 +219,10 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 
-	/* For.Com_SPHERE */
-	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
-	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	/* For.Com_AABB */
+	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
+	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
 		return E_FAIL;
 
 	/* For.Com_Navigation */
@@ -257,7 +241,7 @@ HRESULT CPlayer::SetUp_ShaderResources()
 	if (nullptr == m_pShaderCom)
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pAnimTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

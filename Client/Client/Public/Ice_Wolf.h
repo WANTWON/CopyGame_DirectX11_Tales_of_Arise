@@ -17,7 +17,7 @@ public:
 		ANIM_ATTACK_ELEMENTAL_CHARGE_END, 
 		ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP,
 		ANIM_ATTACK_ELEMENTAL_CHARGE_START,
-		ANIM_ATTACK_HOWLING,
+		ANIM_ATTACK_HOWLING, //9
 		ANIM_ATTACK_NORMAL,
 		ANIM_ATTACK_SOMERSAULT_END,
 		ANIM_ATTACK_SOMERSAULT_LOOP,
@@ -91,7 +91,7 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 
 public: /*For.State*/
-	void AI_Behavior();
+	void AI_Behavior(_float fTimeDelta);
 	void TickState(_float fTimeDelta);
 	void LateTickState(_float fTimeDelta);
 		/*For Navigation*/

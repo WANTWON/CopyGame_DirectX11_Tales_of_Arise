@@ -77,6 +77,11 @@ namespace Engine
 	{
 		XMFLOAT3		vPosition;
 		XMFLOAT2		vPSize;
+
+		XMFLOAT4		vRight;
+		XMFLOAT4		vUp;
+		XMFLOAT4		vLook;
+		XMFLOAT4		vTranslation;
 	}VTXPOINT;
 
 	typedef struct ENGINE_DLL tagVertexPoint_Declaration
@@ -92,18 +97,6 @@ namespace Engine
 		XMFLOAT4		vLook;
 		XMFLOAT4		vPosition;
 	}VTXMATRIX;
-
-	typedef struct tagVertexPointMatrix
-	{
-		XMFLOAT3		vPosition;
-		XMFLOAT2		vPSize;
-
-		XMFLOAT4		vRight;
-		XMFLOAT4		vUp;
-		XMFLOAT4		vLook;
-		XMFLOAT4		vTranslation;
-
-	}VTXPOINTMATRIX;
 
 	typedef struct ENGINE_DLL tagVertexRectInstance_Declaration
 	{

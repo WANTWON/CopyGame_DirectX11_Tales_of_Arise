@@ -2,8 +2,6 @@
 #include "Model.h"
 #include "HierarchyNode.h"
 
-
-
 CChannel::CChannel()
 {
 }
@@ -131,11 +129,9 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
 	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
 
-
-	_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
+	_matrix	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 
 	m_pBoneNode->Set_TransformationMatrix(TransformationMatrix);
-	
 }
 
 void CChannel::Reset()
@@ -180,6 +176,14 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	m_pBoneNode->Set_TransformationMatrix(TransformationMatrix);
 
 	return false;
+}
+
+_bool CChannel::Compare_Name(const char * pName)
+{
+	if (!strcmp(m_szName, pName))
+		return true;
+	else
+		return false;
 }
 
 

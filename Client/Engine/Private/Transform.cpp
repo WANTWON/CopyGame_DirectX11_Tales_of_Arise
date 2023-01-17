@@ -238,6 +238,35 @@ bool CTransform::Sliding_Right(_float fTimeDelta, CNavigation * pNavigation, _fl
 	return true;
 }
 
+bool CTransform::Sliding_Anim(_matrix RootMatrix, CNavigation * pNavigation, _float fRadius)
+{
+	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
+	
+	_vector		vAfterPosition = RootMatrix.r[3];
+	_vector		vLook = XMVector4Normalize(RootMatrix.r[2]);
+	
+	if (pNavigation)
+		pNavigation->Compute_CurrentIndex_byXZ(vAfterPosition);
+
+	if (nullptr == pNavigation)
+		Set_State(CTransform::STATE_TRANSLATION, RootMatrix.r[3]);
+	else if (true == pNavigation->isMove(vAfterPosition + vLook * fRadius))
+		Set_State(CTransform::STATE_TRANSLATION, RootMatrix.r[3]);
+	else if (false == pNavigation->isMove(vAfterPosition + vLook * fRadius))
+	{
+		_vector vNormal = XMVector3Normalize(pNavigation->Get_LastNormal());
+		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vNormal));
+		vNormal = vNormal * fDot * -1.f;
+		_vector vSliding = XMVector3Normalize(vLook + vNormal);
+		vPosition += vSliding * XMVectorGetX(XMVector4Length(vAfterPosition - vPosition));
+		if (true == pNavigation->isMove(vPosition + XMVector3Normalize(vLook) * fRadius))
+			Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		return false;
+	}
+
+	return true;
+}
+
 void CTransform::Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight, _float fEndiHeight)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);

@@ -177,6 +177,13 @@
     <ClInclude Include="..\Public\Data_Manager.h" />
     <ClInclude Include="..\Public\HPbar.h" />
     <ClInclude Include="..\Public\HP_Font.h" />
+    <ClInclude Include="..\Public\IceWolfAttackNormalState.h" />
+    <ClInclude Include="..\Public\IceWolfAttack_Elemental_Charge.h" />
+    <ClInclude Include="..\Public\IceWolfBattle_HowLingState.h" />
+    <ClInclude Include="..\Public\IceWolfBattle_IdleState.h" />
+    <ClInclude Include="..\Public\IceWolfBattle_WalkState.h" />
+    <ClInclude Include="..\Public\IceWolfChaseState.h" />
+    <ClInclude Include="..\Public\IceWolfHowLingState.h" />
     <ClInclude Include="..\public\IceWolfIdleState.h" />
     <ClInclude Include="..\Public\IceWolfState.h" />
     <ClInclude Include="..\Public\IceWolfTurnLeftState.h" />
@@ -228,6 +235,13 @@
     <ClCompile Include="..\Private\Data_Manager.cpp" />
     <ClCompile Include="..\Private\HPbar.cpp" />
     <ClCompile Include="..\Private\HP_Font.cpp" />
+    <ClCompile Include="..\Private\IceWolfAttackNormalState.cpp" />
+    <ClCompile Include="..\Private\IceWolfAttack_Elemental_Charge.cpp" />
+    <ClCompile Include="..\Private\IceWolfBattle_HowLingState.cpp" />
+    <ClCompile Include="..\Private\IceWolfBattle_IdleState.cpp" />
+    <ClCompile Include="..\Private\IceWolfBattle_WalkState.cpp" />
+    <ClCompile Include="..\Private\IceWolfChaseState.cpp" />
+    <ClCompile Include="..\Private\IceWolfHowLingState.cpp" />
     <ClCompile Include="..\private\IceWolfIdleState.cpp" />
     <ClCompile Include="..\Private\IceWolfTurnLeftState.cpp" />
     <ClCompile Include="..\Private\IceWolfTurnRightState.cpp" />
@@ -284,6 +298,7 @@
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxCubeTexture.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModel.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPoint.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxRectInstance.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />

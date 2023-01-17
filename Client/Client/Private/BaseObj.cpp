@@ -96,6 +96,8 @@ _vector CBaseObj::Get_TransformState(CTransform::STATE eState)
 	if (m_pTransformCom == nullptr)
 		return _vector();
 
+	if (eState == CTransform::STATE_TRANSLATION)
+		return XMVectorSetW(m_pTransformCom->Get_State(eState), 1.f);
 
 	return m_pTransformCom->Get_State(eState);
 }
@@ -125,7 +127,6 @@ void CBaseObj::Set_State(CTransform::STATE eState, _fvector vState)
 		return;
 
 	m_pTransformCom->Set_State(eState, vState);
-	m_pAnimTransformCom->Set_State(eState, vState);
 }
 
 void CBaseObj::Set_Scale(_float3 vScale)
@@ -135,7 +136,6 @@ void CBaseObj::Set_Scale(_float3 vScale)
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_vScale.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_vScale.y);
 	m_pTransformCom->Set_Scale(CTransform::STATE_LOOK, m_vScale.z);
-
 }
 
 CCollider * CBaseObj::Get_Collider()
@@ -158,7 +158,6 @@ void CBaseObj::Free()
 	Safe_Release(m_pOBBCom);
 	Safe_Release(m_pSPHERECom);
 
-	Safe_Release(m_pAnimTransformCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pShaderCom);

@@ -18,11 +18,13 @@ CPlayerState * CAttackNormalState::HandleInput()
 
 CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), &matRootNode);
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 	
 	if (!m_bIsAnimationFinished)
 	{
-		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, (matRootNode * m_pOwner->Get_AnimTransform()->Get_WorldMatrix()).r[3]);
+		_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN"));
+
+		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -34,7 +36,6 @@ CPlayerState * CAttackNormalState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
 	{
-		//m_pOwner->Get_AnimTransform()->Set_State(CTransform::STATE_TRANSLATION, m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 		return new CIdleState(m_pOwner);
 	}
 
@@ -46,12 +47,10 @@ void CAttackNormalState::Enter()
 	m_eStateId = STATE_ID::STATE_ATTACK;
 
 	m_pOwner->Get_Model()->Set_NextAnimIndex(CPlayer::ANIM::ANIM_ATTACK_NORMAL_0);
+
+	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CAttackNormalState::Exit()
 {
-	_vector AnimTransAddValue = (m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION) - XMVectorSetW(matRootNode.r[3], 0.f));
-	_vector AnimTransform = m_pOwner->Get_AnimTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_AnimTransform()->Set_State(CTransform::STATE_TRANSLATION, AnimTransAddValue);
-	m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, AnimTransAddValue);
 }
