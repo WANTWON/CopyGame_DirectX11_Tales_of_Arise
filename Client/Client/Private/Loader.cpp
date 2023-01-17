@@ -302,6 +302,13 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;*/
 	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_STATIC, CData_Manager::DATA_ANIM);
 
+	/* For.Prototype_Component_Model_Alphen_Weapon01 */
+	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1(R00)"),
+	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/SWO1(R00)/SWO1(R00).fbx", PivotMatrix))))
+	return E_FAIL;
+	//CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_STATIC, CData_Manager::DATA_ANIM);
+
 #pragma endregion Model Loading
 
 

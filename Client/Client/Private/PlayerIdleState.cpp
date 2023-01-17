@@ -18,21 +18,21 @@ CPlayerState * CIdleState::HandleInput()
 
 	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
 		return new CAttackNormalState(m_pOwner);
-	else if (pGameInstance->Key_Pressing(DIK_UP) && pGameInstance->Key_Pressing(DIK_LEFT))
+	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
-	else if (pGameInstance->Key_Pressing(DIK_UP) && pGameInstance->Key_Pressing(DIK_RIGHT))
+	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT);
-	else if (pGameInstance->Key_Pressing(DIK_DOWN) && pGameInstance->Key_Pressing(DIK_LEFT))
+	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_BACKWARD_LEFT);
-	else if (pGameInstance->Key_Pressing(DIK_DOWN) && pGameInstance->Key_Pressing(DIK_RIGHT))
+	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
 		return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT);
-	else if (pGameInstance->Key_Pressing(DIK_LEFT))
+	else if (pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_LEFT);
-	else if (pGameInstance->Key_Pressing(DIK_RIGHT))
+	else if (pGameInstance->Key_Pressing(DIK_D))
 		return new CRunState(m_pOwner, DIR_RIGHT);
-	else if (pGameInstance->Key_Pressing(DIK_DOWN))
+	else if (pGameInstance->Key_Pressing(DIK_S))
 		return new CRunState(m_pOwner, DIR_BACKWARD);
-	else if (pGameInstance->Key_Pressing(DIK_UP))
+	else if (pGameInstance->Key_Pressing(DIK_W))
 		return new CRunState(m_pOwner, DIR_STRAIGHT);
 	else if (pGameInstance->Key_Pressing(DIK_M))
 		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.01f);

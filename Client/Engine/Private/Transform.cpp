@@ -125,7 +125,7 @@ bool CTransform::Sliding_Straight(_float fTimeDelta, CNavigation * pNavigation, 
 	if (nullptr == pNavigation)
 		Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	else if (true == pNavigation->isMove(vPosition + XMVector3Normalize(vLook)*fRadius))
-			Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	else if (false == pNavigation->isMove(vPosition + XMVector3Normalize(vLook)*fRadius))
 	{
 		_vector vNormal = XMVector3Normalize(pNavigation->Get_LastNormal());

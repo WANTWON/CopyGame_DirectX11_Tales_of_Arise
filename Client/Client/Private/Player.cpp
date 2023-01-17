@@ -40,8 +40,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Parts()))
-	//	return E_FAIL;
+	if (FAILED(Ready_Parts()))
+		return E_FAIL;
 
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
@@ -172,7 +172,7 @@ HRESULT CPlayer::Ready_Parts()
 	m_Parts.resize(PARTS_END);
 
 	/* For.Weapon */
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("SWORD");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("index_01_R");
 	if (nullptr == pSocket)
 		return E_FAIL;
 

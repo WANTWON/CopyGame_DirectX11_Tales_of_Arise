@@ -19,21 +19,21 @@ CPlayerState * CRunState::HandleInput()
 
 	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
 		return new CAttackNormalState(m_pOwner);
-	else if (pGameInstance->Key_Pressing(DIK_UP) && pGameInstance->Key_Pressing(DIK_LEFT))
+	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
-	else if (pGameInstance->Key_Pressing(DIK_UP) && pGameInstance->Key_Pressing(DIK_RIGHT))
+	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT);
-	else if (pGameInstance->Key_Pressing(DIK_DOWN) && pGameInstance->Key_Pressing(DIK_LEFT))
+	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_BACKWARD_LEFT);
-	else if (pGameInstance->Key_Pressing(DIK_DOWN) && pGameInstance->Key_Pressing(DIK_RIGHT))
+	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
 		return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT);
-	else if (pGameInstance->Key_Pressing(DIK_LEFT))
+	else if (pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_LEFT);
-	else if (pGameInstance->Key_Pressing(DIK_RIGHT))
+	else if (pGameInstance->Key_Pressing(DIK_D))
 		return new CRunState(m_pOwner, DIR_RIGHT);
-	else if (pGameInstance->Key_Pressing(DIK_DOWN))
+	else if (pGameInstance->Key_Pressing(DIK_S))
 		return new CRunState(m_pOwner, DIR_BACKWARD);
-	else if (pGameInstance->Key_Pressing(DIK_UP))
+	else if (pGameInstance->Key_Pressing(DIK_W))
 		return new CRunState(m_pOwner, DIR_STRAIGHT);
 	else
 		return new CIdleState(m_pOwner);
@@ -71,33 +71,43 @@ void CRunState::Exit()
 
 void CRunState::Move(_float fTimeDelta)
 {
-	/*switch (m_eDirection)
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	_float4x4 CameraMatrix = pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW);
+
+	_float fCosBtwCP = XMVectorGetX(XMVector3Dot(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK), XMVectorSet(CameraMatrix.m[2][0], 0.f, CameraMatrix.m[2][2], 0.f)));
+
+	m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), acosf(fCosBtwCP));
+
+	switch (m_eDirection)
 	{
-	case DIR_STRAIGHT_LEFT:
-		pPlayer->Get_Transform()->Set_RotationY(305.f);
+	/*case DIR_STRAIGHT_LEFT:
+		m_pOwner->Get_Transform()->Set_RotationY(305.f);
 		break;
 	case DIR_STRAIGHT_RIGHT:
-		pPlayer->Get_Transform()->Set_RotationY(45.f);
+		m_pOwner->Get_Transform()->Set_RotationY(45.f);
 		break;
 	case DIR_BACKWARD_LEFT:
-		pPlayer->Get_Transform()->Set_RotationY(225.f);
+		m_pOwner->Get_Transform()->Set_RotationY(225.f);
 		break;
 	case DIR_BACKWARD_RIGHT:
-		pPlayer->Get_Transform()->Set_RotationY(135.f);
-		break;
+		m_pOwner->Get_Transform()->Set_RotationY(135.f);
+		break;*/
 	case DIR_STRAIGHT:
-		pPlayer->Get_Transform()->Set_RotationY(0.f);
+		
 		break;
 	case DIR_BACKWARD:
-		pPlayer->Get_Transform()->Set_RotationY(180.f);
+		m_pOwner->Get_Transform()->Sliding_Backward(fTimeDelta, m_pOwner->Get_Navigation());
 		break;
 	case DIR_LEFT:
-		pPlayer->Get_Transform()->Set_RotationY(270.f);
+		m_pOwner->Get_Transform()->Sliding_Left(fTimeDelta, m_pOwner->Get_Navigation());
 		break;
 	case DIR_RIGHT:
-		pPlayer->Get_Transform()->Set_RotationY(90.f);
+		m_pOwner->Get_Transform()->Sliding_Right(fTimeDelta, m_pOwner->Get_Navigation());
 		break;
 	}
 
-	pPlayer->Get_Transform()->Move_Straight(fTimeDelta, pPlayer->Get_Navigation(), pPlayer->Get_Radius());*/
+	m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta, m_pOwner->Get_Navigation());
+
+	RELEASE_INSTANCE(CGameInstance);
 }
