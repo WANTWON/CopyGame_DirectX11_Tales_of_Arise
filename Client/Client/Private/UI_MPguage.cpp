@@ -44,6 +44,10 @@ HRESULT CMP_Guage::Initialize(void * pArg)
 
 int CMP_Guage::Tick(_float fTimeDelta)
 {
+
+	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
 	/*m_fPosition.x = 600.f;
 	m_fPosition.y = 600.f;
 	m_fSize.x = 1000.f;
