@@ -5,15 +5,17 @@ matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D		g_DiffuseTexture;
 vector			g_vCamPosition;
 
-float4			g_vRight;
-float4			g_vUp;
-
 float g_fUVx;
 
 struct VS_IN
 {
 	float3		vPosition : POSITION;
 	float2		vPSize : PSIZE;
+
+	float4		vRight : TEXCOORD0;
+	float4		vUp : TEXCOORD1;
+	float4		vLook : TEXCOORD2;
+	float4		vTranslation : TEXCOORD3;
 };
 
 struct VS_OUT
@@ -26,13 +28,13 @@ VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
 
-	float4x4	TransformMatrix = float4x4(g_vRight, g_vUp, float4(0.f, 0.f, 1.f, 0.f), float4(0.f, 0.f, 0.f, 1.f));
+	float4x4	TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
 
 	vector		vPosition = mul(vector(In.vPosition, 1.f), mul(TransformMatrix, g_WorldMatrix));
 
 	Out.vPosition = vPosition.xyz;
-	Out.vPSize.x = In.vPSize.x * length(g_vRight.xyz);
-	Out.vPSize.y = In.vPSize.y * length(g_vUp.xyz);
+	Out.vPSize.x = In.vPSize.x * length(In.vRight.xyz);
+	Out.vPSize.y = In.vPSize.y * length(In.vUp.xyz);
 
 	return Out;
 }
