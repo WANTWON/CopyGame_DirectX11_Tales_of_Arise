@@ -35,8 +35,8 @@ HRESULT CMP_Guage::Initialize(void * pArg)
 		return E_FAIL;*/
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(1.f, 0.f, 0.f, 1.f));
 
-	m_vRight = _float4(0.5f, 0.f, 0.f, 0.f);
-	m_vUp = _float4(0.f, 0.5f, 0.f, 0.f);
+	//m_vRight = _float4(0.5f, 0.f, 0.f, 0.f);
+	//m_vUp = _float4(0.f, 0.5f, 0.f, 0.f);
 	/*pVertices->vLook = _float4(0.f, 0.f, 0.5f, 0.f);*/
 
 	return S_OK;
@@ -156,12 +156,6 @@ HRESULT CMP_Guage::SetUp_ShaderResources()
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
-
-	if (FAILED(m_pShaderCom->Set_RawValue("g_vRight", &m_vRight, sizeof(_float4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Set_RawValue("g_vUp", &m_vUp, sizeof(_float4))))
-		return E_FAIL;
 
 	/*if (FAILED(m_pShaderCom->Set_RawValue("g_vCamPosition", &CGameInstance::Get_Instance()->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;*/
