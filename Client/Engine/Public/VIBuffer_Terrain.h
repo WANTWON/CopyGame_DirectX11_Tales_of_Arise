@@ -24,9 +24,9 @@ protected:
 	virtual ~CVIBuffer_Terrain() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype(_uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight);
+	virtual HRESULT Initialize_Prototype(_uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight, _bool bCreateQuadTree = false);
 	virtual HRESULT Initialize_Prototype(const _tchar* pHeightMapFilePath, _bool bCreateQuadTree = false);
-	virtual HRESULT Initialize(void* pArg, _bool bCreateQuadTree = false);
+	virtual HRESULT Initialize(void* pArg);
 	virtual _bool Picking(class CTransform* pTransform, _float3* pOut) override;
 	void Set_Terrain_Shape(_float fHeight, _float fRad, _float fSharp, _float3 vPoint, _float fTimeDelta);
 	void Set_Terrain_Buffer(TERRAINDESC TerrainDesc);
@@ -39,13 +39,14 @@ public:
 private:
 	_uint				m_iNumVerticesX = 0, m_iNumVerticesZ = 0;
 	class CQuadTree*	m_pQuadTree = nullptr;
-	TERRAINDESC		m_pTerrainDesc;
+	TERRAINDESC			m_pTerrainDesc;
 	vector<VTXNORTEX>	vecVertex;
+	_bool				m_bCreateQuadTree = false;
 	
 public:
-	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath);
-	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight);
-	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HANDLE hFile, _ulong& dwByte);
+	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath , _bool bCreateQuadTree = false);
+	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight, _bool bCreateQuadTree = false);
+	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HANDLE hFile, _ulong& dwByte, _bool bCreateQuadTree = false);
 
 	virtual CComponent* Clone(void* pArg = nullptr);
 	virtual void Free() override;
