@@ -19,6 +19,9 @@ public:
 
 public: /*Get*/
 	KEYFRAME	Get_StartKeyFrame(void) { return m_KeyFrames[0]; }
+	
+public:
+	_bool Compare_Name(const char* pName);
 
 private:
 	char					m_szName[MAX_PATH] = "";
@@ -30,7 +33,6 @@ private:
 
 	_uint					m_iCurrentKeyFrameIndex = 0;
 	KEYFRAME				m_KeyFrame_Linear;
-
 
 public: // For. Data
 	void Get_ChannelData(DATA_BINCHANNEL* pChannelData);

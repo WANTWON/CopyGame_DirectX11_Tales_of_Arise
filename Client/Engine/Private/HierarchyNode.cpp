@@ -49,9 +49,19 @@ HRESULT CHierarchyNode::Bin_Initialize(DATA_BINNODE * pNode)
 	return S_OK;
 }
 
-
-void CHierarchyNode::Invalidate_CombinedTransformationmatrix()
+void CHierarchyNode::Invalidate_CombinedTransformationmatrix(const char* pBoneName)
 {
+	if ((nullptr != pBoneName) && !strcmp(m_szName, pBoneName))
+	{
+		m_MoveTransformationMatrix = m_TransformationMatrix;
+
+		_matrix matBoneTransformation = XMLoadFloat4x4(&m_TransformationMatrix);
+
+		matBoneTransformation.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+
+		XMStoreFloat4x4(&m_TransformationMatrix, matBoneTransformation);
+	}
+
 	if (nullptr != m_pParent)
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&m_pParent->m_CombinedTransformationMatrix));
 	else

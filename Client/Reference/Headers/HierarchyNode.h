@@ -46,10 +46,12 @@ public:
 	// 추가
 	CHierarchyNode* Get_Parent() { return m_pParent; }
 
+	_float4x4 Get_MoveTransformationMatrix(void) { return m_MoveTransformationMatrix; }
+
 public:
 	HRESULT Initialize(const aiNode* pNode, CHierarchyNode* pParent);
 	HRESULT Bin_Initialize(DATA_BINNODE* pNode); // 추가
-	void Invalidate_CombinedTransformationmatrix();
+	void Invalidate_CombinedTransformationmatrix(const char* pBoneName);
 	void Set_FindParent(CHierarchyNode* pNode); // 추가
 
 private:
@@ -65,6 +67,9 @@ private:
 
 	/* m_TransformationMatrix * m_pParent->m_CombinedTransformationMatrix */
 	_float4x4			m_CombinedTransformationMatrix;
+
+	/* 이동값 살리기 위한 매트릭스 */
+	_float4x4 m_MoveTransformationMatrix;
 
 public:
 	static CHierarchyNode* Create(const aiNode* pNode, CHierarchyNode* pParent);

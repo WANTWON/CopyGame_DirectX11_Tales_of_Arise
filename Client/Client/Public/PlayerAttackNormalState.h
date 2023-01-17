@@ -17,7 +17,7 @@ public:
 	virtual void Exit() override;
 
 private:
-	_matrix matRootNode;
+	_matrix m_StartMatrix;
 };
 END
 END

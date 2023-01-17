@@ -116,8 +116,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Change_Navigation(LEVEL_GAMEPLAY);
 	pPlayer->Compute_CurrentIndex(LEVEL_GAMEPLAY);
 	pPlayer->Check_Navigation();
-	pPlayer->Copy_Transform(pPlayer->Get_AnimTransform(), pPlayer->Get_Transform());
-	//pPlayer->Get_AnimTransform()->Set_State(CTransform::STATE_TRANSLATION, pPlayer->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
 	Safe_Release(pGameInstance);
 	
