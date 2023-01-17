@@ -3,7 +3,6 @@
 #include "UIBase.h"
 BEGIN(Engine)
 class CVIBuffer_Point;
-
 END
 
 BEGIN(Client)
@@ -30,6 +29,9 @@ private:
 
 	CVIBuffer_Point*			m_pVIBufferCom1 = nullptr;
 
+private:
+	_float4 m_vRight;
+	_float4 m_vUp;
 
 public:
 	static CMP_Guage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

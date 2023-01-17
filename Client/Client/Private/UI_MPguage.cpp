@@ -34,6 +34,11 @@ HRESULT CMP_Guage::Initialize(void * pArg)
 	/*if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;*/
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(1.f, 0.f, 0.f, 1.f));
+
+	m_vRight = _float4(0.5f, 0.f, 0.f, 0.f);
+	m_vUp = _float4(0.f, 0.5f, 0.f, 0.f);
+	/*pVertices->vLook = _float4(0.f, 0.f, 0.5f, 0.f);*/
+
 	return S_OK;
 }
 
@@ -68,7 +73,7 @@ HRESULT CMP_Guage::Render()
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(1);
+	m_pShaderCom->Begin();
 
 	m_pVIBufferCom1->Render();
 
@@ -106,7 +111,7 @@ HRESULT CMP_Guage::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointInstance"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPoint"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -152,6 +157,12 @@ HRESULT CMP_Guage::SetUp_ShaderResources()
 
 	RELEASE_INSTANCE(CGameInstance);
 
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vRight", &m_vRight, sizeof(_float4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vUp", &m_vUp, sizeof(_float4))))
+		return E_FAIL;
+
 	/*if (FAILED(m_pShaderCom->Set_RawValue("g_vCamPosition", &CGameInstance::Get_Instance()->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;*/
 
@@ -191,7 +202,6 @@ CGameObject * CMP_Guage::Clone(void * pArg)
 
 void CMP_Guage::Free()
 {
-
 	Safe_Release(m_pVIBufferCom1);
 	__super::Free();
 }
