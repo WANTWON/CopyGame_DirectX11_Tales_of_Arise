@@ -221,7 +221,7 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 
 	/* For.Com_AABB */
 	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
-	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.3f);
+	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
 		return E_FAIL;
 
