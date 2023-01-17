@@ -31,6 +31,8 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	if (0 == hFile)
 		return E_FAIL;
 
+	m_pTerrainDesc.m_isHeightMap = true;
+
 	BITMAPFILEHEADER		fh;
 	BITMAPINFOHEADER		ih;
 	_ulong*					pPixel = nullptr;
@@ -187,13 +189,13 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg, _bool bCreateQuadTree)
 	if (pArg == nullptr)
 		return S_OK;
 
-	m_pTerrainDesc = (TERRAINDESC*)pArg;
+	memcpy(&m_pTerrainDesc, pArg, sizeof(TERRAINDESC));
 	
 #pragma region VERTEXBUFFER
 
 	m_iNumVertexBuffers = 1;
-	m_iNumVerticesX = (*m_pTerrainDesc).m_iVerticeNumX;
-	m_iNumVerticesZ = (*m_pTerrainDesc).m_iVerticeNumZ;
+	m_iNumVerticesX = (m_pTerrainDesc).m_iVerticeNumX;
+	m_iNumVerticesZ = (m_pTerrainDesc).m_iVerticeNumZ;
 
 
 	m_iNumVertices = m_iNumVerticesX * m_iNumVerticesZ;
@@ -499,7 +501,7 @@ void CVIBuffer_Terrain::Set_Terrain_Buffer(TERRAINDESC TerrainDesc)
 HRESULT CVIBuffer_Terrain::Save_VertexPosition(HANDLE hFile, _ulong* dwByte)
 {
 	/* 한번 TerrainDesc 정보 읽기 */
-	WriteFile(hFile, m_pTerrainDesc, sizeof(TERRAINDESC), dwByte, nullptr);
+	WriteFile(hFile, &m_pTerrainDesc, sizeof(TERRAINDESC), dwByte, nullptr);
 
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource;
@@ -507,13 +509,13 @@ HRESULT CVIBuffer_Terrain::Save_VertexPosition(HANDLE hFile, _ulong* dwByte)
 	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 	VTXNORTEX* pVertices = (VTXNORTEX*)SubResource.pData;
 
-	for (_uint i = 0; i < m_pTerrainDesc->m_iVerticeNumX; ++i)
+	for (_uint i = 0; i < m_pTerrainDesc.m_iVerticeNumX; ++i)
 	{
-		for (_uint j = 0; j < m_pTerrainDesc->m_iVerticeNumZ ; ++j)
+		for (_uint j = 0; j < m_pTerrainDesc.m_iVerticeNumZ ; ++j)
 		{
-			_uint	iIndex = i * m_pTerrainDesc->m_iVerticeNumX + j;
+			_uint	iIndex = i * m_pTerrainDesc.m_iVerticeNumX + j;
 
-			WriteFile(hFile, &m_pTerrainDesc[iIndex], sizeof(VTXNORTEX), dwByte, nullptr);
+			WriteFile(hFile, &pVertices[iIndex], sizeof(VTXNORTEX), dwByte, nullptr);
 		}
 	}
 
@@ -528,13 +530,13 @@ HRESULT CVIBuffer_Terrain::Load_Prototype(HANDLE hFile, _ulong & dwByte, _bool b
 	VTXNORTEX VertexTag;
 
 	/* 한번 TerrainDesc 정보 읽기 */
-	ReadFile(hFile, m_pTerrainDesc, sizeof(TERRAINDESC), &dwByte, nullptr);
+	ReadFile(hFile, &m_pTerrainDesc, sizeof(TERRAINDESC), &dwByte, nullptr);
 
 #pragma region VERTEXBUFFER
 
 	m_iNumVertexBuffers = 1;
-	m_iNumVerticesX = (*m_pTerrainDesc).m_iVerticeNumX;
-	m_iNumVerticesZ = (*m_pTerrainDesc).m_iVerticeNumZ;
+	m_iNumVerticesX = (m_pTerrainDesc).m_iVerticeNumX;
+	m_iNumVerticesZ = (m_pTerrainDesc).m_iVerticeNumZ;
 
 	m_iNumVertices = m_iNumVerticesX * m_iNumVerticesZ;
 	m_iStride = sizeof(VTXNORTEX);
@@ -552,7 +554,7 @@ HRESULT CVIBuffer_Terrain::Load_Prototype(HANDLE hFile, _ulong & dwByte, _bool b
 
 			ReadFile(hFile, &pVertices[iIndex], sizeof(VTXNORTEX), &dwByte, nullptr);
 
-		/*	pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3((_float)j, 0.f, (_float)i);
+			/*pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3((_float)j, 0.f, (_float)i);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexture = _float2(j / _float(m_iNumVerticesX - 1), i / _float(m_iNumVerticesZ - 1));*/
 		}
@@ -742,6 +744,19 @@ CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11Devi
 	return pInstance;
 }
 
+CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, HANDLE hFile, _ulong& dwByte)
+{
+	CVIBuffer_Terrain*	pInstance = new CVIBuffer_Terrain(pDevice, pContext);
+
+	if (FAILED(pInstance->Load_Prototype(hFile, dwByte)))
+	{
+		ERR_MSG(TEXT("Failed to Created : CVIBuffer_Terrain"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
 
 CComponent * CVIBuffer_Terrain::Clone(void * pArg)
 {
@@ -760,7 +775,7 @@ void CVIBuffer_Terrain::Free()
 {
 	__super::Free();
 	
-	if(m_pTerrainDesc != nullptr)
+	if(m_pTerrainDesc.m_isHeightMap == false)
 		Safe_Delete_Array(m_pVerticesPos);
 	else
 		Safe_Release(m_pQuadTree);

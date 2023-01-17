@@ -74,7 +74,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	Out.vDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV );
+	Out.vDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV*10.f );
 	Out.vDiffuse.a = 1.f;
 
 	/* -1 ~ 1 => 0 ~ 1*/

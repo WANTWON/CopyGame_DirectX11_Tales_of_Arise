@@ -49,6 +49,7 @@ protected:
 
 public:	
 	virtual CGameObject* Clone(void* pArg = nullptr) = 0;
+	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr) { return nullptr; };
 	virtual void Free() override;
 };
 

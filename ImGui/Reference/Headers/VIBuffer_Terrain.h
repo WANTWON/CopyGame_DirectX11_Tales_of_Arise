@@ -14,6 +14,7 @@ public:
 		_int	m_iVerticeNumX = 10;
 		_int	m_iVerticeNumZ = 10;
 		_float  m_fHeight = 0;
+		_bool	m_isHeightMap = false;
 
 	}TERRAINDESC;
 
@@ -38,12 +39,14 @@ public:
 private:
 	_uint				m_iNumVerticesX = 0, m_iNumVerticesZ = 0;
 	class CQuadTree*	m_pQuadTree = nullptr;
-	TERRAINDESC*		m_pTerrainDesc = nullptr;
+	TERRAINDESC		m_pTerrainDesc;
 	vector<VTXNORTEX>	vecVertex;
 	
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath);
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight);
+	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HANDLE hFile, _ulong& dwByte);
+
 	virtual CComponent* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 };

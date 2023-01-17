@@ -9,9 +9,9 @@ CTerrain_Manager::CTerrain_Manager()
 
 }
 
-CVIBuffer_Terrain* CTerrain_Manager::Create_Terrain(HFILE hFile, _ulong dwByte)
+CVIBuffer_Terrain* CTerrain_Manager::Create_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, HANDLE hFile, _ulong& dwByte)
 {
-	return CVIBuffer_Terrain::Create( ,hFile, dwByte);
+	return CVIBuffer_Terrain::Create(pDevice, pContext, hFile, dwByte);
 }
 
 void CTerrain_Manager::Out_DebugTerrain()

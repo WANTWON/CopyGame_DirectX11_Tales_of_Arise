@@ -1054,8 +1054,7 @@ void CImgui_Manager::Set_Terrain_Map()
 
 	if (ImGui::Button("Create Terrain"))
 	{
-		LEVEL pLevelIndex = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-		if (FAILED(m_pTerrain_Manager->Create_Terrain(pLevelIndex, TEXT("Layer_Terrain"))))
+		if (FAILED(m_pTerrain_Manager->Create_Terrain(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"))))
 			return;
 	}
 
@@ -1078,7 +1077,7 @@ void CImgui_Manager::Set_Terrain_Map()
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_Z))
 	{
-		list<CGameObject*>* plistClone = CGameInstance::Get_Instance()->Get_ObjectList(m_iCurrentLevel, TEXT("Layer_Terrain"));
+		list<CGameObject*>* plistClone = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"));
 		if (nullptr == plistClone || plistClone->size() == 0)
 			return;
 
@@ -1197,7 +1196,7 @@ void CImgui_Manager::Save_Terrain()
 
 		for (auto& iter : *pTerrainList)
 		{
-			dynamic_cast<CTerrain*>(iter)->Save_Terrain(OFN.lpstrFile, &dwByte);
+			dynamic_cast<CTerrain*>(iter)->Save_Terrain(hFile, &dwByte);
 		}
 
 		CloseHandle(hFile);
@@ -1229,28 +1228,28 @@ void CImgui_Manager::Load_Terrain()
 		HANDLE hFile = 0;
 		_ulong dwByte = 0;
 		_uint iNum = 0;
-		CCell::CELLTYPE eCelltype;
 		_float3		vPoints[3];
 
 		hFile = CreateFile(OFN.lpstrFile, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 		if (0 == hFile)
 			return;
 
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 		/* 타일의 개수 받아오기 */
 		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
+	
 		for (int i = 0; i< iNum; ++i)
 		{
-			_tchar			szFullPath0[MAX_PATH] = TEXT("Prototype_Component_VIBuffer_Terrain_Load0");
-			CGameInstance::Get_Instance()->Add_Prototype(LEVEL_STATIC, szFullPath0, m_pTerrain_Manager->Create_Terrain(hFile, dwByte));
-			if (0 == dwByte)
-				break;
+			_tchar			szFullPath[MAX_PATH] = TEXT("Prototype_Component_VIBuffer_Terrain_Load");
 
-			m_pNavigation_Manager->Add_Cell(vPoints, eCelltype);
+			if(pGameInstance->Check_Prototype(LEVEL_STATIC, szFullPath) == S_OK)
+				pGameInstance->Add_Prototype(LEVEL_STATIC, szFullPath, m_pTerrain_Manager->Create_Terrain(m_pDevice,m_pContext , hFile, dwByte));
+			pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), szFullPath);
 		}
 		CloseHandle(hFile);
 
+		RELEASE_INSTANCE(CGameInstance);
 	}
 }
 
