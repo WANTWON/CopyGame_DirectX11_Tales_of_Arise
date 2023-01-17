@@ -130,6 +130,9 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States">
       <UniqueIdentifier>{8e0807c7-546b-4b32-9c19-4d12885792bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\02.NonAnim\03.Water">
+      <UniqueIdentifier>{26addeea-b33a-44bf-b84f-73a6b30f6d6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -276,6 +279,9 @@
     <ClInclude Include="..\Public\IceWolfTurnRightState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Water.h">
+      <Filter>02.GameObjects\02.NonAnim\03.Water</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -400,6 +406,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfTurnRightState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Water.cpp">
+      <Filter>02.GameObjects\02.NonAnim\03.Water</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
