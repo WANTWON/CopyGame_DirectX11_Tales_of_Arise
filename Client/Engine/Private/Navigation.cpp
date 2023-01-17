@@ -111,8 +111,6 @@ _bool CNavigation::isMove(_fvector vPosition)
 			/*슬라이딩을 위한 리턴을 정의해도 된다. */		
 			return false;
 		}
-		
-		
 	}
 	
 

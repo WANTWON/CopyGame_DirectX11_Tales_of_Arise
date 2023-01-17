@@ -20,7 +20,7 @@ HRESULT CUI_Combo_font_Damages::Initialize_Prototype()
 
 HRESULT CUI_Combo_font_Damages::Initialize(void * pArg)
 {
-	m_eShaderID = UI_EFFECTFADEOUT;
+	m_eShaderID = UI_GOLDEN;;
 
 	m_fSize.x = 100.f;
 	m_fSize.y = 24.f;
@@ -122,6 +122,10 @@ HRESULT CUI_Combo_font_Damages::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_hpgrad"), (CComponent**)&m_pTextureCom1)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -177,5 +181,7 @@ CGameObject * CUI_Combo_font_Damages::Clone(void * pArg)
 
 void CUI_Combo_font_Damages::Free()
 {
+
+	Safe_Release(m_pTextureCom1);
 	__super::Free();
 }

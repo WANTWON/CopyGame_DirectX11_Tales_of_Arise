@@ -26,6 +26,9 @@
 #include "UI_Combo_font_Hits.h"
 #include "UI_font_Damage_number.h"
 #include "UI_font_Hits_number.h"
+#include "CP_Guage.h"
+#include "CP_Guage_font.h"
+#include "UI_MPguage.h"
 
 
 
@@ -133,6 +136,18 @@ HRESULT CLoader::Loading_ForPrototype()
 		CHPbar::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_CPguage"),
+		CCP_Guage::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_CPguage_font"),
+		CCP_Guage_font::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MPguage"),
+		CMP_Guage::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HPfont"),
 		CHP_Font::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -156,6 +171,7 @@ HRESULT CLoader::Loading_ForPrototype()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_HITS_fontnum"),
 		CUI_font_Hits_number::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
 
 	/*For.Prototype_GameObject_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
@@ -238,6 +254,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Shaderfiles/Shader_VtxCubeTexture.hlsl"), VTXCUBETEX_DECLARATION::Elements, VTXCUBETEX_DECLARATION::iNumElements))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_VtxPoint */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPoint"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Shaderfiles/Shader_VtxPoint.hlsl"), VTXPOINT_DECLARATION::Elements, VTXPOINT_DECLARATION::iNumElements))))
+		return E_FAIL;
+
 #pragma endregion Static Shader Loading
 
 
@@ -253,6 +274,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, 50))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_VIBuffer_Point*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point"),
+		CVIBuffer_Point::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_VIBuffer_Cube */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"),
 		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
@@ -260,7 +286,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Height.bmp")))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Texture2D_0.bmp")))))
 		return E_FAIL;
 #pragma endregion Buffer Loading
 
@@ -403,7 +429,7 @@ HRESULT CLoader::Loading_ForUITexture()
 
 	/*For.hpfont */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_font"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/numberfont/font%d.png"), 10))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/numberfont/font%d.dds"), 11))))
 		return E_FAIL;
 
 	/*For.line */
@@ -420,6 +446,15 @@ HRESULT CLoader::Loading_ForUITexture()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_damagesfont"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/combofonts/damagefont0.png"), 1))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CPguage"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/CPguage/cpguage%d.dds"), 2))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MPguage"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/MPguage/MPguage%d.dds"), 2))))
+		return E_FAIL;
+
 
 
 

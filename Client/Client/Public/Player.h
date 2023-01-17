@@ -35,7 +35,7 @@ public:
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	CTransform* Get_Transform() { return m_pTransformCom; }
-	CTransform* Get_AnimTransform() { return m_pAnimTransformCom; }
+	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
 	class CPlayerState* Get_State() { return m_pPlayerState; }
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 

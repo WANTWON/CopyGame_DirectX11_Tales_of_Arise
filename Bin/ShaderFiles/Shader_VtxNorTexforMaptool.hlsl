@@ -5,18 +5,6 @@ matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 vector			g_vCamPosition;
 
-float4			g_vLightDiffuse = float4(1.f, 1.f, 1.f, 1.f);
-float4			g_vLightAmbient = float4(0.3f, 0.3f, 0.3f, 1.f);
-float4			g_vLightSpecular = float4(1.f, 1.f, 1.f, 1.f);
-
-/* For.Directional */
-float4			g_vLightDir = float4(1.f, -1.f, 1.f, 0.f);
-
-/* For.Point */
-float4			g_vLightPos;
-float			g_fLightRange;
-
-
 /* For.Material */
 texture2D		g_DiffuseTexture[2];
 float4			g_vMtrlAmbient = float4(1.f, 1.f, 1.f, 1.f);

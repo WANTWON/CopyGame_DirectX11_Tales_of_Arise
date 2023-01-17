@@ -172,6 +172,8 @@
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Collision_Manger.h" />
+    <ClInclude Include="..\Public\CP_Guage.h" />
+    <ClInclude Include="..\Public\CP_Guage_font.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
     <ClInclude Include="..\Public\HPbar.h" />
     <ClInclude Include="..\Public\HP_Font.h" />
@@ -200,6 +202,7 @@
     <ClInclude Include="..\Public\UI_font_Hits_number.h" />
     <ClInclude Include="..\Public\UI_Loading.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
+    <ClInclude Include="..\Public\UI_MPguage.h" />
     <ClInclude Include="..\public\UI_Screen.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\Camera_Dynamic.h" />
@@ -227,6 +230,8 @@
   <ItemGroup>
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Collision_Manger.cpp" />
+    <ClCompile Include="..\Private\CP_Guage.cpp" />
+    <ClCompile Include="..\Private\CP_Guage_font.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
     <ClCompile Include="..\Private\HPbar.cpp" />
     <ClCompile Include="..\Private\HP_Font.cpp" />
@@ -253,6 +258,7 @@
     <ClCompile Include="..\Private\UI_font_Hits_number.cpp" />
     <ClCompile Include="..\Private\UI_Loading.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
+    <ClCompile Include="..\Private\UI_MPguage.cpp" />
     <ClCompile Include="..\private\UI_Screen.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\Camera_Dynamic.cpp" />
@@ -292,6 +298,7 @@
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxCubeTexture.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModel.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPoint.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxRectInstance.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />

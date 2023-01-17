@@ -174,6 +174,16 @@ HRESULT CLoader::Loading_ForGamePlayModel()
 	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
 
 
+	//For.Prototype_Component_NeviMesh
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NaviMesh"),
+	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/NaviMesh/NaviMesh.fbx", PivotMatrix))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Snow_Mountain"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/Snow_Mountain/Snow_Mountain.fbx", PivotMatrix))))
+		return E_FAIL;
+
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }

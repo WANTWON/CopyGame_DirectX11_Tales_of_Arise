@@ -174,6 +174,119 @@ PS_OUT PS_COMBOLINE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_Golden(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	/*if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+		discard;*/
+
+	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (origincolor.a > 0.4f)
+	{
+		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+		float4 lerpcolor = lerp(float4(0.9882f, 0.9843f, 0.9176f, 1.f), float4(0.9764f, 0.9921f, 0.8941f, 1.f), maskcolor);
+
+		Out.vColor = lerpcolor;
+	}
+	else
+		Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+
+
+	/*if (Out.vColor.a<0.3f)
+		discard;*/
+
+	Out.vColor.a -= g_fAlpha;
+
+	return Out;
+}
+
+PS_OUT PS_CPguage(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	if (1 - g_fCurrentHp / g_fMaxHp > In.vTexUV.y)
+		discard;
+
+	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (origincolor.a > 0.4f)
+	{
+		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+		float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+
+		Out.vColor = lerpcolor;
+	}
+	else
+		Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+
+
+	/*if (Out.vColor.a<0.1f)
+		discard;*/
+
+	return Out;
+}
+
+
+PS_OUT PS_CPguageblack(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	//if (1 - g_fCurrentHp / g_fMaxHp > In.vTexUV.y)// && Out.vColor.r == 0 && Out.vColor.g == 0  && Out.vColor.b ==0)
+	//	discard;
+
+	/*float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (origincolor.a > 0.4f)
+	{
+		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+		float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+
+		Out.vColor = lerpcolor;
+	}
+	else
+		*/
+
+
+
+	/*if (Out.vColor.a<0.1f)
+	discard;*/
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	return Out;
+}
+
+PS_OUT PS_MPGUAGE(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	//Out.vColor.a -= g_fAlpha;
+	Out.vColor.r = 0.0589019607843137f;
+	Out.vColor.g = 0.942708f;
+	Out.vColor.b = 0.83441f;
+		
+	return Out;
+}
+
+PS_OUT PS_BLACKCOLOR(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	//Out.vColor.a -= g_fAlpha;
+	Out.vColor.r = 0;
+	Out.vColor.g = 0;
+	Out.vColor.b = 0;
+
+	return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -265,6 +378,61 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_COMBOLINE();
 	}
 
+	pass Golden
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_Golden();
+	}
+
+	pass CPguage
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_CPguage();
+	}
+
+	pass CPguageblack
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_CPguageblack();
+	}
+
+	pass MPGUAGE
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MPGUAGE();
+	}
+
+	pass BLACKCOLOR
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BLACKCOLOR();
+	}
+	
 }
 
 

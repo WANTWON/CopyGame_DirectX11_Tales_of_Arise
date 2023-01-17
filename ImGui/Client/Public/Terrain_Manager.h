@@ -41,15 +41,15 @@ public:
 	void Out_DebugTerrain();
 
 public:
-	void Set_TerrainDesc(TERRAINDESC* eTerrainDesc) { memcpy(&m_TerrainDesc, eTerrainDesc, sizeof(TERRAINDESC)); }
+	void Set_TerrainDesc(TERRAINDESC* eTerrainDesc) { memcpy(&m_pTerrainDesc, eTerrainDesc, sizeof(TERRAINDESC)); }
 	void Set_TerrainShapeDesc(TERRAINSHAPEDESC* eTerrainDesc) { memcpy(&m_TerrainShapeDesc, eTerrainDesc, sizeof(TERRAINSHAPEDESC)); }
-	void Set_bWireFrame(_bool type) { m_TerrainDesc.m_bShowWireFrame = type; }
+	void Set_bWireFrame(_bool type) { m_pTerrainDesc.m_bShowWireFrame = type; }
 	void Set_TerrainShow(_bool type) { m_bTerrainShow = type; }
 	void Set_MoveOffset(_int iOffset ) { m_iMoveOffset = iOffset; }
 	void Set_PickingWorldPos(_float3 vPickingPos) {m_vMousePickPos = vPickingPos;}
 
 public:
-	TERRAINDESC Get_TerrainDesc() const { return m_TerrainDesc; }
+	TERRAINDESC Get_TerrainDesc() const { return m_pTerrainDesc; }
 	TERRAINSHAPEDESC Get_TerrainShapeDesc() const { return m_TerrainShapeDesc; }
 	_bool Get_TerrainShow() { return m_bTerrainShow; }
 	_float3 Get_PickingPos() { return m_vMousePickPos; }
@@ -61,7 +61,7 @@ public:
 
 private:
 	class CTerrain*		m_pTerrain =  nullptr;
-	TERRAINDESC		m_TerrainDesc;
+	TERRAINDESC		m_pTerrainDesc;
 	TERRAINSHAPEDESC m_TerrainShapeDesc;
 	_bool m_bTerrainShow = true;
 	_float3 m_vMousePickPos = _float3(0,0,0);

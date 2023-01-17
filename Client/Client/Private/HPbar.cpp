@@ -27,7 +27,7 @@ HRESULT CHPbar::Initialize(void * pArg)
 	m_fSize.x = 200.0f;
 	m_fSize.y = 22.0f;
 	m_fPosition.x = 1130.f; 
-	m_fPosition.y = 340 + (m_iIndex * 60);
+	m_fPosition.y = 360.f + (m_iIndex * 60.f);
 
 
 	m_eShaderID = UI_HPBAR;
@@ -179,7 +179,9 @@ CGameObject * CHPbar::Clone(void * pArg)
 
 void CHPbar::Free()
 {
+
+	//Safe_Release(m_pTextureCom1);
 	__super::Free();
 	Safe_Release(m_pTextureCom1);
-	Safe_Release(m_pTextureCom2);
+	//Safe_Release(m_pTextureCom2);
 }
