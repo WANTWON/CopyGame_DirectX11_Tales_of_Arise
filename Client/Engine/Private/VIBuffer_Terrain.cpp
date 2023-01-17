@@ -24,7 +24,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iNumVerticeX, _uint iNumVe
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath)
+HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath, _bool bCreateQuadTree)
 {
 	_ulong			dwByte = 0;
 	HANDLE			hFile = CreateFile(pHeightMapFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -163,22 +163,26 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	Safe_Delete_Array(pPixel);
 	CloseHandle(hFile);
 
-	_uint		iLT = m_iNumVerticesX * m_iNumVerticesZ - m_iNumVerticesX;
-	_uint		iRT = m_iNumVerticesX * m_iNumVerticesZ - 1;
-	_uint		iRB = m_iNumVerticesX - 1;
-	_uint		iLB = 0;
+	if (bCreateQuadTree)
+	{
+		_uint		iLT = m_iNumVerticesX * m_iNumVerticesZ - m_iNumVerticesX;
+		_uint		iRT = m_iNumVerticesX * m_iNumVerticesZ - 1;
+		_uint		iRB = m_iNumVerticesX - 1;
+		_uint		iLB = 0;
 
-	m_pQuadTree = CQuadTree::Create(iLT, iRT, iRB, iLB);
-	if (nullptr == m_pQuadTree)
-		return E_FAIL;
+		m_pQuadTree = CQuadTree::Create(iLT, iRT, iRB, iLB);
+		if (nullptr == m_pQuadTree)
+			return E_FAIL;
 
-	m_pQuadTree->SetUp_Neighbors();
+		m_pQuadTree->SetUp_Neighbors();
+	}
+	
 
 	return S_OK;
 }
 
 
-HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
+HRESULT CVIBuffer_Terrain::Initialize(void * pArg, _bool bCreateQuadTree)
 {
 	if (pArg == nullptr)
 		return S_OK;
@@ -319,16 +323,20 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 	Safe_Delete_Array(pVertices);
 	Safe_Delete_Array(pIndices);
 
-	/*_uint		iLT = m_iNumVerticesX * m_iNumVerticesZ - m_iNumVerticesX;
-	_uint		iRT = m_iNumVerticesX * m_iNumVerticesZ - 1;
-	_uint		iRB = m_iNumVerticesX - 1;
-	_uint		iLB = 0;
+	if (bCreateQuadTree)
+	{
+		_uint		iLT = m_iNumVerticesX * m_iNumVerticesZ - m_iNumVerticesX;
+		_uint		iRT = m_iNumVerticesX * m_iNumVerticesZ - 1;
+		_uint		iRB = m_iNumVerticesX - 1;
+		_uint		iLB = 0;
 
-	m_pQuadTree = CQuadTree::Create(iLT, iRT, iRB, iLB);
-	if (nullptr == m_pQuadTree)
-		return E_FAIL;
+		m_pQuadTree = CQuadTree::Create(iLT, iRT, iRB, iLB);
+		if (nullptr == m_pQuadTree)
+			return E_FAIL;
 
-	m_pQuadTree->SetUp_Neighbors();*/
+		m_pQuadTree->SetUp_Neighbors();
+	}
+
 
 	return S_OK;
 }
@@ -488,10 +496,10 @@ void CVIBuffer_Terrain::Set_Terrain_Buffer(TERRAINDESC TerrainDesc)
 	m_pContext->Unmap(m_pVB, 0);
 }
 
-HRESULT CVIBuffer_Terrain::Save_VertexPosition(HANDLE hFile, _ulong & dwByte)
+HRESULT CVIBuffer_Terrain::Save_VertexPosition(HANDLE hFile, _ulong* dwByte)
 {
 	/* 한번 TerrainDesc 정보 읽기 */
-	WriteFile(hFile, m_pTerrainDesc, sizeof(TERRAINDESC), &dwByte, nullptr);
+	WriteFile(hFile, m_pTerrainDesc, sizeof(TERRAINDESC), dwByte, nullptr);
 
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource;
@@ -505,7 +513,7 @@ HRESULT CVIBuffer_Terrain::Save_VertexPosition(HANDLE hFile, _ulong & dwByte)
 		{
 			_uint	iIndex = i * m_pTerrainDesc->m_iVerticeNumX + j;
 
-			WriteFile(hFile, &m_pTerrainDesc[iIndex], sizeof(VTXNORTEX), &dwByte, nullptr);
+			WriteFile(hFile, &m_pTerrainDesc[iIndex], sizeof(VTXNORTEX), dwByte, nullptr);
 		}
 	}
 
@@ -698,7 +706,7 @@ void CVIBuffer_Terrain::Culling(const CTransform * pTransform)
 
 	_uint				iNumFaces = 0;
 
-	//m_pQuadTree->Culling(pFrustum, m_pVerticesPos, XMMatrixInverse(nullptr, WorldMatrix), pIndices, &iNumFaces);
+	m_pQuadTree->Culling(pFrustum, m_pVerticesPos, XMMatrixInverse(nullptr, WorldMatrix), pIndices, &iNumFaces);
 
 	m_pContext->Unmap(m_pIB, 0);
 

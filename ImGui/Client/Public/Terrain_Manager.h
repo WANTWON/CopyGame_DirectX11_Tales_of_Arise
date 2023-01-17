@@ -38,6 +38,7 @@ private:
 
 public:
 	void Add_DebugTerrain(class CTerrain* pTerrain) { m_pTerrain = pTerrain; }
+	CVIBuffer_Terrain* Create_Terrain(HFILE hFile, _ulong dwByte);
 	void Out_DebugTerrain();
 
 public:

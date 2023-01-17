@@ -9,6 +9,11 @@ CTerrain_Manager::CTerrain_Manager()
 
 }
 
+CVIBuffer_Terrain* CTerrain_Manager::Create_Terrain(HFILE hFile, _ulong dwByte)
+{
+	return CVIBuffer_Terrain::Create( ,hFile, dwByte);
+}
+
 void CTerrain_Manager::Out_DebugTerrain()
 {
 	if (m_pTerrain == nullptr)

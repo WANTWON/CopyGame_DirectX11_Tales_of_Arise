@@ -270,6 +270,11 @@ void CTerrain::Set_Picked()
 	RELEASE_INSTANCE(CGameInstance);
 }
 
+void CTerrain::Save_Terrain(HANDLE hFile, _ulong* dwByte)
+{
+	m_pVIBufferCom->Save_VertexPosition(hFile, dwByte);
+}
+
 CTerrain * CTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CTerrain*	pInstance = new CTerrain(pDevice, pContext);

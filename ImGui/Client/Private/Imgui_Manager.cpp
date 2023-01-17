@@ -1146,6 +1146,112 @@ void CImgui_Manager::Set_Terrain_Shape()
 		CPickingMgr::Get_Instance()->Picking();
 	}
 
+	if (ImGui::Button("Save Terrian"))
+	{
+		Save_Terrain();
+	}
+	if (ImGui::Button("Load Terrian"))
+	{
+		Load_Terrain();
+	}
+
+
+}
+
+void CImgui_Manager::Save_Terrain()
+{
+	OPENFILENAME OFN;
+	TCHAR filePathName[300] = L"";
+	TCHAR lpstrFile[300] = L"";
+	static TCHAR filter[] = L"데이터 파일\0*.dat\0텍스트 파일\0*.txt";
+
+	memset(&OFN, 0, sizeof(OPENFILENAME));
+	OFN.lStructSize = sizeof(OPENFILENAME);
+	OFN.hwndOwner = g_hWnd;
+	OFN.lpstrFilter = filter;
+	OFN.lpstrFile = lpstrFile;
+	OFN.nMaxFile = 300;
+	OFN.lpstrInitialDir = L".";
+	OFN.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
+
+	if (GetSaveFileName(&OFN))
+	{
+		//ERR_MSG(TEXT("save-as  '%s'\n"), ofn.lpstrFile); //경로// 파일이름.확장자
+		//ERR_MSG(TEXT("filename '%s'\n"), ofn.lpstrFile + ofn.nFileOffset); 
+
+		HANDLE hFile = 0;
+		_ulong dwByte = 0;
+		_uint iNum = 0;
+		_float3	 vPoints[3];
+		list<CGameObject*>* pTerrainList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"));
+
+
+		iNum = (_int)pTerrainList->size();
+
+		hFile = CreateFile(OFN.lpstrFile, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);;
+		if (0 == hFile)
+			return;
+
+		/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
+		WriteFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+		for (auto& iter : *pTerrainList)
+		{
+			dynamic_cast<CTerrain*>(iter)->Save_Terrain(OFN.lpstrFile, &dwByte);
+		}
+
+		CloseHandle(hFile);
+	}
+}
+
+void CImgui_Manager::Load_Terrain()
+{
+	OPENFILENAME OFN;
+	TCHAR filePathName[300] = L"";
+	TCHAR lpstrFile[300] = L"";
+	static TCHAR filter[] = L"데이터 파일\0*.dat\0텍스트 파일\0*.txt";
+
+	memset(&OFN, 0, sizeof(OPENFILENAME));
+	OFN.lStructSize = sizeof(OPENFILENAME);
+	OFN.hwndOwner = g_hWnd;
+	OFN.lpstrFilter = filter;
+	OFN.lpstrFile = lpstrFile;
+	OFN.nMaxFile = 300;
+	OFN.lpstrInitialDir = L".";
+
+	if (GetOpenFileName(&OFN) != 0) {
+		wsprintf(filePathName, L"%s 파일을 열겠습니까?", OFN.lpstrFile);
+		MessageBox(g_hWnd, filePathName, L"열기 선택", MB_OK);
+
+		//ERR_MSG(TEXT("save-as  '%s'\n"), ofn.lpstrFile); //경로// 파일이름.확장자
+		//ERR_MSG(TEXT("filename '%s'\n"), ofn.lpstrFile + ofn.nFileOffset); 
+
+		HANDLE hFile = 0;
+		_ulong dwByte = 0;
+		_uint iNum = 0;
+		CCell::CELLTYPE eCelltype;
+		_float3		vPoints[3];
+
+		hFile = CreateFile(OFN.lpstrFile, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		if (0 == hFile)
+			return;
+
+
+		/* 타일의 개수 받아오기 */
+		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+		for (int i = 0; i< iNum; ++i)
+		{
+			_tchar			szFullPath0[MAX_PATH] = TEXT("Prototype_Component_VIBuffer_Terrain_Load0");
+			CGameInstance::Get_Instance()->Add_Prototype(LEVEL_STATIC, szFullPath0, m_pTerrain_Manager->Create_Terrain(hFile, dwByte));
+			if (0 == dwByte)
+				break;
+
+			m_pNavigation_Manager->Add_Cell(vPoints, eCelltype);
+		}
+		CloseHandle(hFile);
+
+	}
 }
 
 void CImgui_Manager::ShowSimpleMousePos(bool* p_open)
