@@ -39,7 +39,8 @@ private:
 public:
 	void Add_DebugTerrain(class CTerrain* pTerrain) { m_pTerrain = pTerrain; }
 	CVIBuffer_Terrain* Create_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, HANDLE hFile, _ulong& dwByte);
-	CVIBuffer_Terrain* Create_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, HANDLE hFile, _ulong& dwByte);
+	CVIBuffer_Terrain* Create_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath);
+	HRESULT Create_Terrain(LEVEL eLevel, const _tchar* pLayerTag, const _tchar* pTerrainTag = nullptr);
 	void Out_DebugTerrain();
 
 public:
@@ -56,10 +57,10 @@ public:
 	_bool Get_TerrainShow() { return m_bTerrainShow; }
 	_float3 Get_PickingPos() { return m_vMousePickPos; }
 	_int Get_MoveOffset() { return m_iMoveOffset; }
-
+	vector<const _tchar*> Get_PrototypeTagList() { return m_pPrototypeTags; }
 
 public:
-	HRESULT Create_Terrain(LEVEL eLevel, const _tchar* pLayerTag);
+	void Add_PrototypeTag(_tchar* TempTag) { m_pPrototypeTags.push_back(TempTag); }
 
 private:
 	class CTerrain*		m_pTerrain =  nullptr;
@@ -68,6 +69,10 @@ private:
 	_bool m_bTerrainShow = true;
 	_float3 m_vMousePickPos = _float3(0,0,0);
 	_int m_iMoveOffset = 1;
+
+private:
+	vector<const _tchar*>					m_pPrototypeTags;
+	vector<const _tchar*>					m_pCloneTerrainTags;
 
 public:
 	void Free() override;

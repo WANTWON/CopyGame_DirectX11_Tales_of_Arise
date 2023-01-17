@@ -52,6 +52,7 @@ public:
 	void Set_Terrain_Shape();
 	void Save_Terrain();
 	void Load_Terrain();
+	void Set_HeightMap();
 	void Set_Brush();
 
 	/* For Model Tool */
@@ -87,9 +88,10 @@ public:
 public:
 	void Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype = false);
 	void Read_Objects_Name( _tchar* cFolderPath);
-	void Add_TempTag(_tchar* TempTag) { m_TempLayerTags.push_back(TempTag); }
-	void Add_TempTag(char* TempTag) { m_TempCharTags.push_back(TempTag); }
+	void Add_PrototypeTag(_tchar* TempTag) { m_TempLayerTags.push_back(TempTag); }
+	void Add_PrototypeTag(char* TempTag) { m_TempCharTags.push_back(TempTag); }
 	
+
 private:
 	ID3D11Device* m_pDevice = nullptr;
 	ID3D11DeviceContext* m_pContext = nullptr;
@@ -114,9 +116,11 @@ private:
 	_tchar									m_pFilePath[MAX_PATH] = L"../../../Bin/Resources/Meshes/";
 	vector<string>							m_stLayerTags;
 	vector<const _tchar*>					m_TempLayerTags;
+	vector<const _tchar*>					m_TerrainTags;
 	vector<char*>							m_TempCharTags;
 	_int									m_iCreatedSelected = 0;
 	_int									m_iSeletecLayerNum = 0;
+	_int									m_iBmpTerrainNum = 0;
 	_float									m_fDist = 1.f;
 
 	//TreasureBox

@@ -17,6 +17,7 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain & rhs)
 	, m_pQuadTree(rhs.m_pQuadTree)
 {
 	Safe_AddRef(m_pQuadTree);
+	memcpy(&m_pTerrainDesc, &rhs.m_pTerrainDesc, sizeof(TERRAINDESC));
 }
 
 HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iNumVerticeX, _uint iNumVerticeZ, _float fHeight, _bool bCreateQuadTree)
@@ -32,8 +33,6 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	if (0 == hFile)
 		return E_FAIL;
 
-	
-
 	BITMAPFILEHEADER		fh;
 	BITMAPINFOHEADER		ih;
 	_ulong*					pPixel = nullptr;
@@ -43,6 +42,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 
 	m_iNumVerticesX = ih.biWidth;
 	m_iNumVerticesZ = ih.biHeight;
+
+	m_pTerrainDesc.m_iVerticeNumX = m_iNumVerticesX;
+	m_pTerrainDesc.m_iVerticeNumZ = m_iNumVerticesZ;
 
 	pPixel = new _ulong[m_iNumVerticesX * m_iNumVerticesZ];
 	ReadFile(hFile, pPixel, sizeof(_ulong) * m_iNumVerticesX * m_iNumVerticesZ, &dwByte, nullptr);
@@ -133,9 +135,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 
 	/* 정점을 담기 위한 공간을 할당하고, 내가 전달해준 배열의 값들을 멤카피한다. */
 	m_BufferDesc.ByteWidth = m_iStride * m_iNumVertices;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼를 생성한다. */
+	m_BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼를 생성한다. */
 	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iStride;
 
@@ -179,7 +181,6 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 
 		m_pQuadTree->SetUp_Neighbors();
 	}
-	m_isCloned = true;
 	m_pTerrainDesc.m_isHeightMap = true;
 	return S_OK;
 }
@@ -456,7 +457,7 @@ void CVIBuffer_Terrain::Set_Terrain_Shape(_float fHeight, _float fRad, _float fS
 				fAcc = pow(fAcc, (1.f / fSharp));
 
 				_float fTempY = fH * fAcc;
-				if (fH > 0.01f)
+				/*if (fH > 0.01f)
 				{
 					if (fTempY > vPos.y)
 						vPos.y = fTempY;
@@ -464,7 +465,18 @@ void CVIBuffer_Terrain::Set_Terrain_Shape(_float fHeight, _float fRad, _float fS
 				else if (fH < -0.01f)
 					vPos.y += fTempY * fTimeDelta;
 				else
-					vPos.y = 0.f;
+					vPos.y = 0.f;*/
+
+				if (fH > pVertices[iIndex].vPosition.y)
+				{
+					vPos.y += fTempY * fTimeDelta;
+				}
+				else if (fH < pVertices[iIndex].vPosition.y)
+				{
+					vPos.y -= fTempY * fTimeDelta;
+				}
+				else
+					vPos.y = vPos.y;
 
 			}
 
@@ -533,7 +545,6 @@ HRESULT CVIBuffer_Terrain::Load_Prototype(HANDLE hFile, _ulong & dwByte, _bool b
 	/* 한번 TerrainDesc 정보 읽기 */
 	ReadFile(hFile, &m_pTerrainDesc, sizeof(TERRAINDESC), &dwByte, nullptr);
 
-	m_isCloned = true;
 	m_pTerrainDesc.m_isHeightMap = true;
 #pragma region VERTEXBUFFER
 	
@@ -623,11 +634,11 @@ HRESULT CVIBuffer_Terrain::Load_Prototype(HANDLE hFile, _ulong & dwByte, _bool b
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3Normalize(XMLoadFloat3(&pVertices[i].vNormal)));
 
 
-	/* 정점을 담기 위한 공간을 할당하고, 내가 전달해준 배열의 값들을 멤카피한다. */
-	m_BufferDesc.ByteWidth = m_iStride * m_iNumVertices;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼를 생성한다. */
+	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
+	m_BufferDesc.ByteWidth = m_iNumVertices * m_iStride;
+	m_BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iStride;
 

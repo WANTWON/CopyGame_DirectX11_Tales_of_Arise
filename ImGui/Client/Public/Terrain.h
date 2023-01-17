@@ -38,14 +38,13 @@ private:
 	virtual HRESULT Ready_Components(void* pArg)override;
 	virtual HRESULT SetUp_ShaderID()override;
 	virtual HRESULT SetUp_ShaderResources()override;
+	
 
 public:
 	void Set_Terrain_Shape();
 	void Set_Picked();
 	void Save_Terrain(HANDLE hFile, _ulong* dwByte);
 	HRESULT Create_FilterTexture();
-	HRESULT Create_DiffuseTexture();
-
 
 private:
 	CTexture*							m_pTextureCom[TYPE_END] = { nullptr };

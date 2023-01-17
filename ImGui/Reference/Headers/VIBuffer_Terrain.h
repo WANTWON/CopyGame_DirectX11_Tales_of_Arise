@@ -35,6 +35,7 @@ public:
 
 public:
 	void Culling(const class CTransform* pTransform);
+	TERRAINDESC Get_TerrainDesc() { return m_pTerrainDesc; }
 
 private:
 	_uint				m_iNumVerticesX = 0, m_iNumVerticesZ = 0;

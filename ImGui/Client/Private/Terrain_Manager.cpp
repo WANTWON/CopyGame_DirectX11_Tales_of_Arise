@@ -14,6 +14,11 @@ CVIBuffer_Terrain* CTerrain_Manager::Create_Terrain(ID3D11Device * pDevice, ID3D
 	return CVIBuffer_Terrain::Create(pDevice, pContext, hFile, dwByte);
 }
 
+CVIBuffer_Terrain * CTerrain_Manager::Create_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _tchar * pHeightMapFilePath)
+{
+	return CVIBuffer_Terrain::Create(pDevice, pContext, pHeightMapFilePath);
+}
+
 void CTerrain_Manager::Out_DebugTerrain()
 {
 	if (m_pTerrain == nullptr)
@@ -24,7 +29,7 @@ void CTerrain_Manager::Out_DebugTerrain()
 	m_pTerrain = nullptr;
 }
 
-HRESULT CTerrain_Manager::Create_Terrain(LEVEL eLevel, const _tchar* pLayerTag)
+HRESULT CTerrain_Manager::Create_Terrain(LEVEL eLevel, const _tchar* pLayerTag, const _tchar* pTerrainTag)
 {
 
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
@@ -33,10 +38,17 @@ HRESULT CTerrain_Manager::Create_Terrain(LEVEL eLevel, const _tchar* pLayerTag)
 	TERRAINDESC TerrainDesc = m_pTerrainDesc;
 	TerrainDesc.m_eDebugTerrain = DEBUG_NONE;
 
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), eLevel, pLayerTag, &TerrainDesc)))
-		return E_FAIL;
-
+	if (pTerrainTag == nullptr)
+	{
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), eLevel, pLayerTag, &TerrainDesc)))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), eLevel, pLayerTag, pTerrainTag, nullptr)))
+			return E_FAIL;
+	}
+		
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -44,4 +56,7 @@ HRESULT CTerrain_Manager::Create_Terrain(LEVEL eLevel, const _tchar* pLayerTag)
 
 void CTerrain_Manager::Free()
 {
+	m_pPrototypeTags.clear();
+
+	m_pCloneTerrainTags.clear();
 }

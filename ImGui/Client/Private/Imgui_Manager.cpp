@@ -193,6 +193,7 @@ void CImgui_Manager::Tick_Imgui()
 
 			Set_Terrain_Map();
 			Set_Terrain_Shape();
+			Set_HeightMap();
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Model Tool"))
@@ -1051,13 +1052,7 @@ void CImgui_Manager::Set_Terrain_Map()
 			return;
 	}
 
-	if (ImGui::Button("Load HeightMap"))
-	{
-		if (FAILED(m_pTerrain_Manager->Create_Terrain(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"))))
-			return;
-	}
-
-
+	ImGui::SameLine();
 	if (ImGui::Button("Create Terrain"))
 	{
 		if (FAILED(m_pTerrain_Manager->Create_Terrain(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"))))
@@ -1155,6 +1150,7 @@ void CImgui_Manager::Set_Terrain_Shape()
 	{
 		Save_Terrain();
 	}
+	ImGui::SameLine();
 	if (ImGui::Button("Load Terrian"))
 	{
 		Load_Terrain();
@@ -1257,6 +1253,77 @@ void CImgui_Manager::Load_Terrain()
 
 		RELEASE_INSTANCE(CGameInstance);
 	}
+}
+
+void CImgui_Manager::Set_HeightMap()
+{
+	ImGui::GetIO().NavActive = false;
+	ImGui::GetIO().WantCaptureMouse = true;
+	ImGui::CollapsingHeader("Height_Map");
+
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Set_File_Path")) m_bFilePath = !m_bFilePath;
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
+	vector<const _tchar*> TerrainTags = m_pTerrain_Manager->Get_PrototypeTagList();
+
+	// ------------------------ Left-----------------------------------
+	static int selected = 0;
+	{
+		ImGui::BeginChild("left pane", ImVec2(150, 100), true);
+
+		int i = 0;
+
+		if (TerrainTags.size() != 0)
+		{
+			for (auto& iter : TerrainTags)
+			{
+				if (iter == nullptr)
+					continue;
+				char label[MAX_PATH];
+				char szLayertag[MAX_PATH] = "";
+				WideCharToMultiByte(CP_ACP, 0, iter, MAX_PATH, szLayertag, MAX_PATH, NULL, NULL);
+				sprintf(label, szLayertag);
+				if (ImGui::Selectable(label, selected == i))
+					selected = i;
+				i++;
+			}
+		}
+		ImGui::EndChild();
+	}
+	ImGui::SameLine();
+
+
+
+	// ------------------------ Right -----------------------------------
+	{
+
+		ImGui::BeginGroup();
+		ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
+		char szLayertag[MAX_PATH] = "";
+		if (TerrainTags.size() != 0)
+			WideCharToMultiByte(CP_ACP, 0, TerrainTags[selected], MAX_PATH, szLayertag, MAX_PATH, NULL, NULL);
+		ImGui::Text("Selected :"); ImGui::SameLine();  ImGui::Text(szLayertag);
+		if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
+		{
+			
+			if (ImGui::Button("Load_Bmp"))
+			{
+				m_pTerrain_Manager->Create_Terrain(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TerrainTags[selected]);
+			}
+			ImGui::EndTabBar();
+		}
+
+		ImGui::EndChild();
+		ImGui::EndGroup();
+	}
+
 }
 
 void CImgui_Manager::Set_Brush()
@@ -2343,6 +2410,10 @@ void CImgui_Manager::Free()
 	for (auto& iter : m_TempLayerTags)
 		Safe_Delete(iter);
 	m_TempLayerTags.clear();
+
+	for (auto& iter : m_TerrainTags)
+		Safe_Delete(iter);
+	m_TerrainTags.clear();
 
 	m_stLayerTags.clear();
 	//CleanupDeviceD3D();
