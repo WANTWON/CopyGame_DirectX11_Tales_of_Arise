@@ -79,6 +79,9 @@ public:
 	void Rotation(_fvector vAxis, _float fRadian);
 	void LookAt(_fvector vAt);
 
+public:
+	void RoamingTurn(_matrix WorldMatrix, _float fRadian);
+
 private:			
 	_float4x4				m_WorldMatrix;
 	TRANSFORMDESC			m_TransformDesc;

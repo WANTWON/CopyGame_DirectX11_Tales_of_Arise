@@ -43,7 +43,7 @@ CPlayerState * CRunState::HandleInput()
 
 CPlayerState * CRunState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	
 	Move(fTimeDelta);
 
@@ -75,39 +75,46 @@ void CRunState::Move(_float fTimeDelta)
 
 	_float4x4 CameraMatrix = pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW);
 
-	_float fCosBtwCP = XMVectorGetX(XMVector3Dot(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK), XMVectorSet(CameraMatrix.m[2][0], 0.f, CameraMatrix.m[2][2], 0.f)));
+	_vector vPlayerLook = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK);
+	_vector vCameraLook = XMVectorSet(CameraMatrix.m[2][0], 0.f, CameraMatrix.m[2][2], 0.f);
 
-	m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), acosf(fCosBtwCP));
+	_float fCosBtwCP = XMVectorGetX(XMVector3Dot(vPlayerLook, vCameraLook));
+
+	_float fRadian = acosf(fCosBtwCP);
+
+	//m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), fRadian);
+
+	_matrix PrePlayerMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
 	switch (m_eDirection)
 	{
-	/*case DIR_STRAIGHT_LEFT:
-		m_pOwner->Get_Transform()->Set_RotationY(305.f);
+	case DIR_STRAIGHT_LEFT:
+		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-45.f));
 		break;
 	case DIR_STRAIGHT_RIGHT:
-		m_pOwner->Get_Transform()->Set_RotationY(45.f);
+		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f));
 		break;
 	case DIR_BACKWARD_LEFT:
-		m_pOwner->Get_Transform()->Set_RotationY(225.f);
+		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-135.f));
 		break;
 	case DIR_BACKWARD_RIGHT:
-		m_pOwner->Get_Transform()->Set_RotationY(135.f);
-		break;*/
+		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(135.f));
+		break;
 	case DIR_STRAIGHT:
-		
+		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(0.f));
 		break;
 	case DIR_BACKWARD:
-		m_pOwner->Get_Transform()->Sliding_Backward(fTimeDelta, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
 		break;
 	case DIR_LEFT:
-		m_pOwner->Get_Transform()->Sliding_Left(fTimeDelta, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-90.f));
 		break;
 	case DIR_RIGHT:
-		m_pOwner->Get_Transform()->Sliding_Right(fTimeDelta, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
 		break;
 	}
 
-	m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta, m_pOwner->Get_Navigation());
+	m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());
 
 	RELEASE_INSTANCE(CGameInstance);
 }

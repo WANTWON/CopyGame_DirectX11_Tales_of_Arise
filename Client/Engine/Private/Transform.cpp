@@ -377,6 +377,13 @@ void CTransform::LookAt(_fvector vAt)
 	Set_State(STATE_LOOK, XMVector3Normalize(vLook) * Get_Scale(CTransform::STATE_LOOK));
 }
 
+void CTransform::RoamingTurn(_matrix WorldMatrix, _float fRadian)
+{
+	_matrix		RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), fRadian);
+
+	XMStoreFloat4x4(&m_WorldMatrix, XMLoadFloat4x4(&m_WorldMatrix) * RotationMatrix);
+}
+
 CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CTransform*	pInstance = new CTransform(pDevice, pContext);
