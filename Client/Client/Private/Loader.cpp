@@ -302,7 +302,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	//{
 		//_tchar			szFullPath[MAX_PATH] = TEXT("Prototype_Component_VIBuffer_Terrain_Load");
 		//if (pGameInstance->Check_Prototype(LEVEL_STATIC, szFullPath) == S_OK)
-		pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, true));
+		pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, false));
 	//}
 
 	CloseHandle(hFile);
