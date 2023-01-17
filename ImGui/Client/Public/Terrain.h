@@ -43,11 +43,15 @@ public:
 	void Set_Terrain_Shape();
 	void Set_Picked();
 	void Save_Terrain(HANDLE hFile, _ulong* dwByte);
+	HRESULT Create_FilterTexture();
+	HRESULT Create_DiffuseTexture();
 
 
 private:
-	CTexture*				m_pTextureCom[TYPE_END] = { nullptr };
-	CVIBuffer_Terrain*		m_pVIBufferCom = nullptr;
+	CTexture*							m_pTextureCom[TYPE_END] = { nullptr };
+	CVIBuffer_Terrain*					m_pVIBufferCom = nullptr;
+	ID3D11ShaderResourceView*			m_pFilterTexture = nullptr;
+
 
 	_bool	m_bWireFrame = false;
 	_bool	m_bDebugShow = true;

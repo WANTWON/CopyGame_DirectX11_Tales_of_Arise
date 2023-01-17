@@ -52,6 +52,7 @@ public:
 	void Set_Terrain_Shape();
 	void Save_Terrain();
 	void Load_Terrain();
+	void Set_Brush();
 
 	/* For Model Tool */
 	void Set_Object_Map();

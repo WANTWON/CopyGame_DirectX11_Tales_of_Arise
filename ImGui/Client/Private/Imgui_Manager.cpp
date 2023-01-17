@@ -1051,6 +1051,12 @@ void CImgui_Manager::Set_Terrain_Map()
 			return;
 	}
 
+	if (ImGui::Button("Load HeightMap"))
+	{
+		if (FAILED(m_pTerrain_Manager->Create_Terrain(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"))))
+			return;
+	}
+
 
 	if (ImGui::Button("Create Terrain"))
 	{
@@ -1251,6 +1257,45 @@ void CImgui_Manager::Load_Terrain()
 
 		RELEASE_INSTANCE(CGameInstance);
 	}
+}
+
+void CImgui_Manager::Set_Brush()
+{
+	ImGui::GetIO().NavActive = false;
+	ImGui::GetIO().WantCaptureMouse = true;
+
+	ImGui::CollapsingHeader("Brush");
+
+	ImGui::Text("Height");
+	ImGui::SameLine();
+	ImGui::DragFloat("##fHeight", &m_TerrainShapeDesc.fHeight, 0.1f);
+
+	ImGui::Text("Radius");
+	ImGui::SameLine();
+	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius, 0.1f);
+
+	ImGui::Text("Sharp");
+	ImGui::SameLine();
+	ImGui::DragFloat("##fSharp", &m_TerrainShapeDesc.fSharp, 0.1f);
+
+
+	m_pTerrain_Manager->Set_TerrainShapeDesc(&m_TerrainShapeDesc);
+
+	if (m_PickingType == PICKING_TERRAIN_SHAPE)
+	{
+		CPickingMgr::Get_Instance()->Picking();
+	}
+
+	if (ImGui::Button("Save Terrian"))
+	{
+		Save_Terrain();
+	}
+	if (ImGui::Button("Load Terrian"))
+	{
+		Load_Terrain();
+	}
+
+
 }
 
 void CImgui_Manager::ShowSimpleMousePos(bool* p_open)

@@ -39,6 +39,7 @@ private:
 public:
 	void Add_DebugTerrain(class CTerrain* pTerrain) { m_pTerrain = pTerrain; }
 	CVIBuffer_Terrain* Create_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, HANDLE hFile, _ulong& dwByte);
+	CVIBuffer_Terrain* Create_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, HANDLE hFile, _ulong& dwByte);
 	void Out_DebugTerrain();
 
 public:
