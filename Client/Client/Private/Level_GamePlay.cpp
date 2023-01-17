@@ -115,7 +115,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(10.f, 0.f, 10.f, 1.f));
 	pPlayer->Change_Navigation(LEVEL_GAMEPLAY);
 	pPlayer->Compute_CurrentIndex(LEVEL_GAMEPLAY);
-
+	pPlayer->Check_Navigation();
+	pPlayer->Copy_Transform(pPlayer->Get_AnimTransform(), pPlayer->Get_Transform());
 	//pPlayer->Get_AnimTransform()->Set_State(CTransform::STATE_TRANSLATION, pPlayer->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
 	Safe_Release(pGameInstance);
@@ -164,11 +165,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Particle_Rect"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Particle_Rect"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
+		return E_FAIL;*/
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Particle_Point"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Particle_Point"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
+		return E_FAIL;*/
 
 	/*for (_uint i = 0; i < 20; ++i)
 	{
@@ -265,8 +266,23 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+	
+	for (int i = 0; i < 7; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_GAMEPLAY, pLayerTag, &i)))
+			return E_FAIL;
+
+	}
 	
 	
+	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MPguage"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 

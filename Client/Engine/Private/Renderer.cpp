@@ -56,11 +56,11 @@ HRESULT CRenderer::Initialize_Prototype()
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
 	/* Glow Horizontal */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Glow_Horizontal"), ViewportDesc.Width, ViewportDesc.Height,
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Blur_Horizontal"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
 	/* Glow Vertical */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Glow_Vertical"), ViewportDesc.Width, ViewportDesc.Height,
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Blur_Vertical"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
 
@@ -99,10 +99,10 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 
 	/* For.MRT_Glow_Horizontal */
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Glow_Horizontal"), TEXT("Target_Glow_Horizontal"))))
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Blur_Horizontal"), TEXT("Target_Blur_Horizontal"))))
 		return E_FAIL;
 	/* For.MRT_Glow_Vertical */
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Glow_Vertical"), TEXT("Target_Glow_Vertical"))))
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Blur_Vertical"), TEXT("Target_Blur_Vertical"))))
 		return E_FAIL;
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
@@ -338,10 +338,8 @@ HRESULT CRenderer::Render_Lights()
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_LightAcc"))))
 		return E_FAIL;
 
-	/* 노말 렌더타겟의 SRV를 셰이더에 바인딩 한다. */
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Normal"), m_pShader, "g_NormalTexture")))
 		return E_FAIL;
-
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShader, "g_DepthTexture")))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Specular"), m_pShader, "g_SpecularTexture")))
@@ -349,14 +347,12 @@ HRESULT CRenderer::Render_Lights()
 
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
 		return E_FAIL;
-
 	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
 		return E_FAIL;
-
 	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
 		return E_FAIL;
 
-	CPipeLine*				pPipeLine = GET_INSTANCE(CPipeLine);
+	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
 
 	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
@@ -367,57 +363,73 @@ HRESULT CRenderer::Render_Lights()
 
 	RELEASE_INSTANCE(CPipeLine);
 
-
-
 	if (FAILED(m_pLight_Manager->Render_Lights(m_pShader, m_pVIBuffer)))
 		return E_FAIL;
 
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
 
-
 	return S_OK;
 }
 
 HRESULT CRenderer::Render_Glow()
 {
-	if (nullptr == m_pTarget_Manager)
-		return E_FAIL;
+	/* If there are not Glow Object return. (Blurring process is expensive) */
+	if (m_GameObjects[RENDER_GLOW].empty())
+		return S_OK;
+	else
+	{
+		if (!m_pTarget_Manager)
+			return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture")))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Glow"), m_pShader, "g_GlowTexture")))
-		return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Glow"), m_pShader, "g_GlowTexture")))
+			return E_FAIL;
 
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
-		return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+			return E_FAIL;
 
-	//	Horizontal Blur
-	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Glow_Horizontal"))))
-		return E_FAIL;
+		/* Horizontal Blur */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Horizontal"))))
+			return E_FAIL;
 
-	m_pShader->Begin(4);
-	m_pVIBuffer->Render();
+		m_pShader->Begin(4);
+		m_pVIBuffer->Render();
 
-	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-		return E_FAIL;
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Glow_Horizontal"), m_pShader, "g_GlowTexture")))
-		return E_FAIL;
+		/* Bind the Horizontally Blurred Image to the Glow Texture. */
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShader, "g_GlowTexture")))
+			return E_FAIL;
 
-	//	Vertical Blur
-	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Glow_Vertical"))))
-		return E_FAIL;
+		/* Vertical Blur */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Vertical"))))
+			return E_FAIL;
 
-	m_pShader->Begin(5);
-	m_pVIBuffer->Render();
+		m_pShader->Begin(5);
+		m_pVIBuffer->Render();
 
-	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-		return E_FAIL;
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		/* Bind the Vertically Blurred Image to the Glow Texture. */
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShader, "g_GlowTexture")))
+			return E_FAIL;
+
+		for (auto& pGameObject : m_GameObjects[RENDER_GLOW])
+		{
+			if (pGameObject)
+				Safe_Release(pGameObject);
+		}
+
+		m_GameObjects[RENDER_GLOW].clear();
+
+		return S_OK;
+	}
 }
 
 HRESULT CRenderer::Render_Blend()
@@ -451,10 +463,8 @@ HRESULT CRenderer::Render_Blend()
 
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
 		return E_FAIL;
-
 	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
 		return E_FAIL;
-
 	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
 		return E_FAIL;
 

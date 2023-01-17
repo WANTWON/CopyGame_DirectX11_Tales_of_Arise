@@ -133,9 +133,13 @@ void CTerrain::PickingTrue()
 HRESULT CTerrain::Ready_Components(void* pArg)
 {
 	CTerrain_Manager::TERRAINDESC TerrainDesc;
-	ZeroMemory(&TerrainDesc, sizeof(CTerrain_Manager::TERRAINDESC));
-	memcpy(&TerrainDesc, pArg, sizeof(CTerrain_Manager::TERRAINDESC));
-	m_eDebugtype = (TERRAIN_DEBUG_TYPE)TerrainDesc.m_eDebugTerrain;
+	if (pArg != nullptr)
+	{
+		ZeroMemory(&TerrainDesc, sizeof(CTerrain_Manager::TERRAINDESC));
+		memcpy(&TerrainDesc, pArg, sizeof(CTerrain_Manager::TERRAINDESC));
+		m_eDebugtype = (TERRAIN_DEBUG_TYPE)TerrainDesc.m_eDebugTerrain;
+	}
+	
 
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -145,9 +149,19 @@ HRESULT CTerrain::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
 		return E_FAIL;
 
-	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom, &TerrainDesc.TerrainDesc)))
-		return E_FAIL;
+	if (pArg != nullptr)
+	{
+		/* For.Com_VIBuffer */
+		if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"), (CComponent**)&m_pVIBufferCom, &TerrainDesc.TerrainDesc)))
+			return E_FAIL;
+	}
+	else
+	{
+		/* For.Com_VIBuffer */
+		if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Height"), (CComponent**)&m_pVIBufferCom)))
+			return E_FAIL;
+	}
+	
 
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"), (CComponent**)&m_pShaderCom)))
@@ -175,20 +189,20 @@ HRESULT CTerrain::SetUp_ShaderID()
 	{
 	case Client::CTerrain::DEBUG_SOILD:
 		if (m_bWireFrame)
-			m_eShaderID = SHADER_WIREFRAME;
+			m_eShaderID = WIRE;
 		else
-			m_eShaderID = SHADER_DEFAULT;
+			m_eShaderID = DEFAULT;
 		break;
 	case Client::CTerrain::DEBUG_WIRE:
-		m_eShaderID = SHADER_WIREFRAME;
+		m_eShaderID = WIRE;
 		break;
 	case Client::CTerrain::DEBUG_NONE:
 		if (m_bWireFrame)
-			m_eShaderID = SHADER_WIREFRAME;
+			m_eShaderID = WIRE;
 		else if (m_bPicked)
-			m_eShaderID = SHADER_PICKED;
+			m_eShaderID = PICKED;
 		else
-			m_eShaderID = SHADER_DEFAULT;
+			m_eShaderID = DEFAULT;
 		break;
 	default:
 		break;

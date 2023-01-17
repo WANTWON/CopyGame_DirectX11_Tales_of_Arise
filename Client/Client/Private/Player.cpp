@@ -8,6 +8,11 @@
 
 using namespace Player;
 
+void CPlayer::Copy_Transform(CTransform * TransformA, CTransform * Transform)
+{
+	TransformA->Set_State(CTransform::STATE_TRANSLATION, Transform->Get_State(CTransform::STATE_TRANSLATION));
+}
+
 _bool CPlayer::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
