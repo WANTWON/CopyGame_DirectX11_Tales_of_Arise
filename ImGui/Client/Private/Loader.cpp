@@ -184,7 +184,6 @@ HRESULT CLoader::Loading_ForGamePlayModel()
 	return E_FAIL;*/
 	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
 
-
 	//For.Prototype_Component_NeviMesh
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NaviMesh"),
@@ -205,7 +204,6 @@ HRESULT CLoader::Loading_ForGamePlayModel()
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
-
 
 CLoader * CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevel)
 {

@@ -11,19 +11,20 @@ vector g_vLightDiffuse;
 vector g_vLightAmbient;
 vector g_vLightSpecular;
 
-vector g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vMtrlSpecular = vector(0.f, 0.f, 0.f, 0.f);
+vector g_vMtrlSpecular = vector(0.5f, 0.5f, 0.5f, 0.5f);
 
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
 texture2D g_DepthTexture;
 texture2D g_ShadeTexture;
 texture2D g_SpecularTexture;
+texture2D g_AmbientTexture;
 texture2D g_ShadowDepthTexture;
 texture2D g_GlowTexture;
-
-float Weight[13] = { 0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231, 1, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561 };
-float WeightSum = 6.2108;
+float g_fGlowRadius = 1.f;
+const float Weight[17] = { 0.0561, 0.1353, 0.278, 0.4868, 0.6534, 0.7261, 0.8253, 0.9231, 1, 0.9231, 0.8253, 0.7261, 0.6534, 0.4868, 0.278, 0.1353, 0.0561 };
+const float WeightSum = 9.1682;
+const int WeightCount = 8;
 
 float g_fWinSizeX = 1280.f;
 float g_fWinSizeY = 720.f;
@@ -52,6 +53,15 @@ struct VS_OUT
 	float2 vTexUV : TEXCOORD0;
 };
 
+struct VS_OUT_WATER
+{
+	float4 Position : SV_Position0;
+	float4 ReflectionMapSamplingPos : Uv0;
+	float2 BumpMapSamplingPos : Uv1;
+	float4 RefractionMapSamplingPos : Uv2;
+	float4 wPosition : Uv3;
+};
+
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT Out = (VS_OUT)0;
@@ -78,9 +88,6 @@ struct PS_OUT
 	float4 vColor : SV_TARGET0;
 };
 
-/* 이렇게 만들어진 픽셀을 PS_MAIN함수의 인자로 던진다. */
-/* 리턴하는 색은 Target0 == 장치에 0번째에 바인딩되어있는 렌더타겟(일반적으로 백버퍼)에 그린다. */
-/* 그래서 백버퍼에 색이 그려진다. */
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
@@ -103,31 +110,23 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
 	/* 0 ~ 1 => -1 ~ 1*/
 	vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
+	vector vAmbientDesc = g_AmbientTexture.Sample(LinearSampler, In.vTexUV);
 
 	float fViewZ = vDepthDesc.y * 1000.f;
 
 	vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient * g_vMtrlAmbient));
+	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient * vAmbientDesc));
 	Out.vShade.a = 1.f;
 
 	vector vWorldPos = (vector)0.f;
-
-	/* 투영 공간상의 위치를 구했다. */
-	/* 투영 공간 == 로컬점의위치 * 월드행렬 * 뷰행렬 * 투영행렬 / w */
 	vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
 	vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
 	vWorldPos.z = vDepthDesc.r;
 	vWorldPos.w = 1.0f;
 
-	/* 로컬점의위치 * 월드행렬 * 뷰행렬 * 투영행렬 */
 	vWorldPos *= fViewZ;
-
-	/* 뷰 공간상의 위치르 ㄹ구한다. */
-	/* 로컬점의위치 * 월드행렬 * 뷰행렬  */
 	vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-
-	/* 로컬점의위치 * 월드행렬   */
 	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
 
 	vector vReflect = reflect(normalize(g_vLightDir), normalize(vNormal));
@@ -145,26 +144,18 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_POINT(PS_IN In)
 	/* 0 ~ 1 => -1 ~ 1*/
 	vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
+	vector vAmbientDesc = g_AmbientTexture.Sample(LinearSampler, In.vTexUV);
 
 	float fViewZ = vDepthDesc.y * 1000.f;
 
 	vector vWorldPos = (vector)0.f;
-
-	/* 투영 공간상의 위치를 구했다. */
-	/* 투영 공간 == 로컬점의위치 * 월드행렬 * 뷰행렬 * 투영행렬 / w */
 	vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
 	vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
 	vWorldPos.z = vDepthDesc.r;
 	vWorldPos.w = 1.0f;
 
-	/* 로컬점의위치 * 월드행렬 * 뷰행렬 * 투영행렬 */
 	vWorldPos *= fViewZ;
-
-	/* 뷰 공간상의 위치르 ㄹ구한다. */
-	/* 로컬점의위치 * 월드행렬 * 뷰행렬  */
 	vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-
-	/* 로컬점의위치 * 월드행렬   */
 	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
 
 	vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
@@ -172,7 +163,7 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_POINT(PS_IN In)
 	float fDistance = length(vLightDir);
 	float fAtt = saturate((g_fLightRange - fDistance) / g_fLightRange);
 
-	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient * g_vMtrlAmbient));
+	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient * vAmbientDesc));
 	Out.vShade *= fAtt;
 	Out.vShade.a = 1.f;
 
@@ -207,12 +198,8 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	vPosition.z = vDepthInfo.x * fViewZ;
 	vPosition.w = fViewZ;
 
-	// View
 	vPosition = mul(vPosition, g_ProjMatrixInv);
-
-	// World
 	vPosition = mul(vPosition, g_ViewMatrixInv);
-
 	vPosition = mul(vPosition, g_LightViewMatrix);
 
 	vector vUVPos = mul(vPosition, g_LightProjMatrix);
@@ -237,12 +224,12 @@ PS_OUT PS_HORIZONTAL_BLUR(PS_IN In)
 	PS_OUT Out = (PS_OUT)0;
 
 	float2 vTexUVOffset = 0;
-	float texelSizeX = 1.f / g_fWinSizeX; /* Get the size of a Texel Horizontally. */	
+	float texelSizeX = g_fGlowRadius / g_fWinSizeX; /* Get the size of a Texel Horizontally. */
 
-	for (int i = -6; i < 6; ++i)
+	for (int i = -WeightCount; i < WeightCount; ++i)
 	{
 		vTexUVOffset = In.vTexUV + float2(texelSizeX * i, 0); /* Get the UV coordinates for the Offsetted Pixel. */
-		Out.vColor += Weight[6 + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
+		Out.vColor += Weight[WeightCount + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
 	}
 
 	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
@@ -253,14 +240,14 @@ PS_OUT PS_HORIZONTAL_BLUR(PS_IN In)
 PS_OUT PS_VERTICAL_BLUR(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
-
+	
 	float2 vTexUVOffset = 0;				
-	float texelSizeY = 1.f / g_fWinSizeY; /* Get the size of a Texel Vertically. */	
+	float texelSizeY = g_fGlowRadius / g_fWinSizeY; /* Get the size of a Texel Vertically. */
 
-	for (int i = -6; i < 6; ++i)
+	for (int i = -WeightCount; i < WeightCount; ++i)
 	{
 		vTexUVOffset = In.vTexUV + float2(0, texelSizeY * i); /* Get the UV coordinates for the Offsetted Pixel. */
-		Out.vColor += Weight[6 + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
+		Out.vColor += Weight[WeightCount + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
 	}
 
 	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
@@ -375,4 +362,39 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_VERTICAL_BLUR();
 	}
+
+	// 6
+	pass Reflection
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	// 7
+	pass Refraction
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	/*pass Water
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN_WATER();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_WATER();
+	}*/
 }

@@ -130,6 +130,9 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States">
       <UniqueIdentifier>{8e0807c7-546b-4b32-9c19-4d12885792bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\02.NonAnim\03.Water">
+      <UniqueIdentifier>{26addeea-b33a-44bf-b84f-73a6b30f6d6e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates">
       <UniqueIdentifier>{ae23029e-ab52-4a7f-96b0-97b89ff8f1b2}</UniqueIdentifier>
     </Filter>
@@ -147,6 +150,30 @@
     </Filter>
     <Filter Include="02.GameObjects\04.UI\08.UI_SKillbutton">
       <UniqueIdentifier>{dc35b202-4c96-4b5f-be40-568841bf54f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Hawk">
+      <UniqueIdentifier>{83d39912-0aae-4659-9122-88ac9147ee0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Hawk\State">
+      <UniqueIdentifier>{47d3a59d-060a-402d-b019-58b2f14858da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates">
+      <UniqueIdentifier>{7621979f-c91f-4566-ae17-21a98515fde1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates">
+      <UniqueIdentifier>{983e85a5-dbe1-4f11-9843-a40c98ff655c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker">
+      <UniqueIdentifier>{7d93c39e-4855-4061-affc-89c6349efb09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker\State">
+      <UniqueIdentifier>{fac9559b-d08e-4c24-86d8-328edd1e8e29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates">
+      <UniqueIdentifier>{9e81ca7f-9071-4738-86ee-39a42b21960e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates">
+      <UniqueIdentifier>{dd455c3a-0f6e-4072-bea2-9e84af3fad1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -303,6 +330,9 @@
     <ClInclude Include="..\Public\IceWolfTurnRightState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Water.h">
+      <Filter>02.GameObjects\02.NonAnim\03.Water</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\HPbar_World.h">
       <Filter>02.GameObjects\04.UI\03.UI_HPbar</Filter>
     </ClInclude>
@@ -353,6 +383,57 @@
     </ClInclude>
     <ClInclude Include="..\Public\IceWolfBattle_HowLingState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_BombingState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_BraveState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_ChargeState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_IdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Berserker.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_DashStartState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_Double_ClawState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_Double_CrowState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_HowLingState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_IdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_Shock_WaveState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerWalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -488,6 +569,9 @@
     <ClCompile Include="..\Private\IceWolfTurnRightState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Water.cpp">
+      <Filter>02.GameObjects\02.NonAnim\03.Water</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\HPbar_World.cpp">
       <Filter>02.GameObjects\04.UI\03.UI_HPbar</Filter>
     </ClCompile>
@@ -538,6 +622,51 @@
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfBattle_HowLingState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_BombingState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_BraveState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_ChargeState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_IdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Berserker.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_DashStartState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_Double_ClawState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_Double_CrowState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_HowLingState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_IdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_Shock_WaveState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerWalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

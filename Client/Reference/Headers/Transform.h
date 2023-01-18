@@ -58,6 +58,7 @@ public: /* Not Use Sliding */
 	bool Go_Backward(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
 	bool Go_Left(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
 	bool Go_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+	bool Go_Up(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
 
 public: /* Use Sliding */
 	bool Sliding_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
@@ -78,6 +79,9 @@ public:
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian);
 	void LookAt(_fvector vAt);
+
+public:
+	void RoamingTurn(_matrix WorldMatrix, _float fRadian);
 
 private:			
 	_float4x4				m_WorldMatrix;

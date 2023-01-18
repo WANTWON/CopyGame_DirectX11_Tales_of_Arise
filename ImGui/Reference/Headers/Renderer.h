@@ -6,7 +6,7 @@ BEGIN(Engine)
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOWDEPTH, RENDER_NONALPHABLEND, RENDER_GLOW, RENDER_NONLIGHT, RENDER_ALPHABLEND, RENDER_UI_FRONT, RENDER_UI_BACK, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOWDEPTH, RENDER_NONALPHABLEND, RENDER_ALPHABLENDLIGHTS, RENDER_GLOW, RENDER_NONLIGHT, RENDER_ALPHABLEND, RENDER_REFLECTIVE, RENDER_UI_FRONT, RENDER_UI_BACK, RENDER_END };
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -42,16 +42,19 @@ private:
 	class CVIBuffer_Rect* m_pVIBuffer = nullptr;
 	class CShader* m_pShader = nullptr;
 	_float4x4 m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
+	_float4x4 m_ReflectionViewMatrix, m_RefractionViewMatrix;
 
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_ShadowDepth();
 	HRESULT Render_NonAlphaBlend();
+	HRESULT Render_AlphaBlendLights();
 	HRESULT Render_Lights();
 	HRESULT Render_Glow();
 	HRESULT Render_Blend();
 	HRESULT Render_NonLight();
 	HRESULT Render_AlphaBlend();
+	HRESULT Render_Reflective();
 	HRESULT Render_UI();
 
 #ifdef _DEBUG

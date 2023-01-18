@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\Public\Loader.h"
+#include "Loader.h"
 
 #include "GameInstance.h"
 
@@ -12,7 +12,7 @@
 #include "Player.h"
 #include "Weapon.h"
 #include "Sky.h"
-
+#include "Water.h"
 
 //UI
 #include "UI_Portrait.h"
@@ -40,10 +40,10 @@
 #include "UI_Skillbutton.h"
 #include "UI_Changebutton.h"
 
-
-
 //Monster
 #include "Ice_Wolf.h"
+#include "Berserker.h"
+#include "Hawk.h"
 
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -56,7 +56,7 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 unsigned int APIENTRY Thread_Main(void* pArg)
 {
-	CLoader*		pLoader = (CLoader*)pArg;
+	CLoader* pLoader = (CLoader*)pArg;
 
 	EnterCriticalSection(&pLoader->Get_CriticalSection());
 
@@ -90,11 +90,9 @@ HRESULT CLoader::Initialize(LEVEL eNextLevel)
 	return S_OK;
 }
 
-
-
 HRESULT CLoader::Loading_ForLogoLevel()
 {
-	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 
@@ -124,7 +122,7 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 HRESULT CLoader::Loading_ForPrototype()
 {
-	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 
@@ -241,6 +239,11 @@ HRESULT CLoader::Loading_ForPrototype()
 		CTerrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Water*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Water"),
+		CWater::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/*For.Prototype_GameObject_Camera_Dynamic */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Dynamic"),
 		CCamera_Dynamic::Create(m_pDevice, m_pContext))))
@@ -266,13 +269,23 @@ HRESULT CLoader::Loading_ForPrototype()
 		CIce_Wolf::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Berserker*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Berserker"),
+		CBerserker::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Hawk*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Hawk"),
+		CHawk::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
 HRESULT CLoader::Loading_ForStaticLevel()
 {
-	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 	
@@ -313,8 +326,6 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;
 
 #pragma endregion Static Shader Loading
-
-
 
 #pragma region Buffer Loading
 	/*For.Prototype_Component_VIBuffer_RectInstance */
@@ -361,10 +372,8 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	CloseHandle(hFile);
 #pragma endregion Buffer Loading
 
-
-
 #pragma region Model Loading
-	_matrix			PivotMatrix = XMMatrixIdentity();
+	_matrix PivotMatrix = XMMatrixIdentity();
 
 	/*For.Prototype_Component_Model_Alphen*/
 	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
@@ -373,10 +382,18 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;*/
 	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_STATIC, CData_Manager::DATA_ANIM);
 
+	/*For.Prototype_Component_Model_Water_Plane*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/Water/Plane.fbx"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Model_Alphen_Weapon01 */
+	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));*/
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1(R00)"),
+	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/SWO1(R00)/SWO1(R00).fbx", PivotMatrix))))
+	return E_FAIL;*/
+	//CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_STATIC, CData_Manager::DATA_ANIM);
+
 #pragma endregion Model Loading
-
-
-
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -437,6 +454,21 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Ice_Wolf/Ice_Wolf.fbx", PivotMatrix))))*/
 	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Ice_Wolf"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
 
+	/*For.Prototype_Component_Model_Berserker*/
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Berserker"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Berserker/Berserker.fbx", PivotMatrix))))
+	//	return E_FAIL;
+	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Berserker"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
+
+	/*For.Prototype_Component_Model_Hawk*/
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Hawk"),
+	//CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Hawk/Hawk.fbx", PivotMatrix))))
+	//return E_FAIL;
+	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Hawk"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
+
+
 	/* 콜라이더 생성 중. */
 	lstrcpy(m_szLoadingText, TEXT("콜라이더 생성 중."));
 
@@ -472,7 +504,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 HRESULT CLoader::Loading_ForUITexture()
 {
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 
@@ -549,18 +581,12 @@ HRESULT CLoader::Loading_ForUITexture()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillkey/ctrlicon.dds"), 1))))
 		return E_FAIL;
 
-
-
-
-
-
-
 	return S_OK;
 }
 
 CLoader * CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevel)
 {
-	CLoader*	pInstance = new CLoader(pDevice, pContext);
+	CLoader* pInstance = new CLoader(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize(eNextLevel)))
 	{

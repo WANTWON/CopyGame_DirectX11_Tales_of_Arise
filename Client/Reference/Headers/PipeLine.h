@@ -5,7 +5,6 @@
 #include "Base.h"
 
 BEGIN(Engine)
-
 class CPipeLine final : public CBase
 {
 	DECLARE_SINGLETON(CPipeLine)
@@ -40,20 +39,22 @@ public:
 		return m_vCamPosition;
 	}
 
-
+	_float4x4 Get_CamWorldMatrix() {
+		return m_CamWorldMatrix;
+	}
 
 public:
 	void Update();
 
 private:
-	_float4x4			m_PipeLineMatrix[D3DTS_END];
-	_float4x4			m_PipeLineMatrix_TP[D3DTS_END];
-	_float4x4			m_PipeLineMatrix_Inverse[D3DTS_END];
-	_float4x4			m_PipeLineMatrix_Inverse_TP[D3DTS_END];
-	_float4				m_vCamPosition;
+	_float4x4 m_PipeLineMatrix[D3DTS_END];
+	_float4x4 m_PipeLineMatrix_TP[D3DTS_END];
+	_float4x4 m_PipeLineMatrix_Inverse[D3DTS_END];
+	_float4x4 m_PipeLineMatrix_Inverse_TP[D3DTS_END];
+	_float4	m_vCamPosition;
+	_float4x4 m_CamWorldMatrix;
 
 public:
 	virtual void Free() override;
 };
-
 END

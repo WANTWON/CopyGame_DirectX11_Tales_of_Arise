@@ -6,6 +6,7 @@ texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
 texture2D g_GlowTexture;
 bool g_bGlow = false;
+//float4 g_GlowColor;
 
 float g_fAlpha = 1.f;
 float g_DissolveSize = 1.5f;
@@ -94,6 +95,7 @@ struct PS_OUT
 	float4 vNormal : SV_TARGET1;
 	float4 vDepth : SV_TARGET2;
 	float4 vGlow : SV_TARGET3;
+	float4 vAmbient : SV_TARGET4;
 };
 
 struct PS_OUT_SHADOW
@@ -120,6 +122,10 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 	Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV) * g_bGlow;
+	Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);
+
+	if (Out.vGlow.r != 0 && Out.vGlow.g != 0 && Out.vGlow.b != 0)
+		Out.vGlow.rgb = Out.vDiffuse.rgb * Out.vGlow.r;
 
 	if (Out.vDiffuse.a <= 0.3f)
 		discard;
