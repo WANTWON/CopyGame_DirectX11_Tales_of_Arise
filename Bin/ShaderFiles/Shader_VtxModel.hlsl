@@ -8,7 +8,8 @@ texture2D g_NormalTexture;
 /* Water (https://www.youtube.com/watch?v=aVCfVs1oZSY&list=PLv8DnRaQOs5-ST_VDqgbbMRtzMtpK36Hy&index=38&t=1610s) */
 float g_fScrollingSpeed = .05f;
 float g_fScrollingTimer;
-float4 g_WaterColor = float4(.1f, .62f, .81f, 1.f);
+float4 g_WaterColorDeep = float4(.1f, .62f, .81f, 1.f);
+float4 g_WaterColorShallow = float4(.1, .63f, .81f, 1.f);
 
 struct VS_IN
 {
@@ -109,7 +110,7 @@ PS_OUT PS_WATER(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	Out.vDiffuse = g_WaterColor;
+	Out.vDiffuse = g_WaterColorDeep;
 	Out.vDiffuse.a = 0.6f;
 
 	float2 texCoord = In.vTexUV * 20 + (g_fScrollingTimer * g_fScrollingSpeed);

@@ -37,11 +37,6 @@ int CWater::Tick(_float fTimeDelta)
 
 void CWater::Late_Tick(_float fTimeDelta)
 {
-	if (!Check_IsinFrustum(20.f))
-		return;
-
-	
-
 	if (m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);
