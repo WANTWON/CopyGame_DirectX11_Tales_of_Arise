@@ -142,6 +142,15 @@
     <Filter Include="02.GameObjects\04.UI\06.MP_Guage">
       <UniqueIdentifier>{f52fe98f-b14d-4cde-8b18-2cbf54fcc949}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\07.UI_Portrait">
+      <UniqueIdentifier>{ff08e023-8f0d-491a-8099-15273ed89f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\07.UI_Portrait\Front">
+      <UniqueIdentifier>{edb0353f-92e2-4020-b90e-270bec890854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\08.UI_SKillbutton">
+      <UniqueIdentifier>{dc35b202-4c96-4b5f-be40-568841bf54f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -299,6 +308,36 @@
     </ClInclude>
     <ClInclude Include="..\public\Water.h">
       <Filter>02.GameObjects\02.NonAnim\03.Water</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HPbar_World.h">
+      <Filter>02.GameObjects\04.UI\03.UI_HPbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HP_Font_World.h">
+      <Filter>02.GameObjects\04.UI\03.UI_HPbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitback.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront_top.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront_bottom.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront_left.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront_right.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront.h">
+      <Filter>02.GameObjects\04.UI\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Skillbutton.h">
+      <Filter>02.GameObjects\04.UI\08.UI_SKillbutton</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Changebutton.h">
+      <Filter>02.GameObjects\04.UI\08.UI_SKillbutton</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IceWolfHowLingState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
@@ -458,6 +497,36 @@
     <ClCompile Include="..\private\Water.cpp">
       <Filter>02.GameObjects\02.NonAnim\03.Water</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\HPbar_World.cpp">
+      <Filter>02.GameObjects\04.UI\03.UI_HPbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HP_Font_World.cpp">
+      <Filter>02.GameObjects\04.UI\03.UI_HPbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitback.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront_bottom.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront_left.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront_right.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront_top.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront.cpp">
+      <Filter>02.GameObjects\04.UI\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Skillbutton.cpp">
+      <Filter>02.GameObjects\04.UI\08.UI_SKillbutton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Changebutton.cpp">
+      <Filter>02.GameObjects\04.UI\08.UI_SKillbutton</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\IceWolfHowLingState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
@@ -486,6 +555,9 @@
     </Image>
     <Image Include="small.ico">
       <Filter>98.Default</Filter>
+    </Image>
+    <Image Include="..\..\..\Bin\Resources\Textures\UI\numberfont\font0.dds">
+      <Filter>01.Levels\00.Loading</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

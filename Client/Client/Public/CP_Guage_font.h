@@ -39,7 +39,7 @@ private:
 	_uint m_iYIndex = 0;
 
 	_uint m_itexnum = 0;
-	_uint m_iCurrentcp = 100;
+	_uint m_iCurrentcp = 200;
 	_uint m_iMaxcp = 200;
 
 	_bool m_bsizedown = false;

@@ -23,11 +23,11 @@ HRESULT CUI_font_Hits_number::Initialize(void * pArg)
 	if (pArg != nullptr)
 	m_iIndex = *(_uint*)pArg;
 
-	m_eShaderID = UI_GOLDEN;
-	m_fSize.x = 40.f;
-	m_fSize.y = 60.f;
-	m_fPosition.x = 1030.f + (m_iIndex * 30);
-	m_fPosition.y = 135;
+	m_eShaderID = 0;
+	m_fSize.x = 50.f;
+	m_fSize.y = 65.f;
+	m_fPosition.x = 1050.f;
+	m_fPosition.y = 120.f;
 
 	m_fAlpha = 0;
 
@@ -63,8 +63,8 @@ int CUI_font_Hits_number::Tick(_float fTimeDelta)
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_3))
 	{
 		m_iCurrenthit++; 
-		m_fSize.x = 55.f;
-		m_fSize.y = 75.f;
+		m_fSize.x = 75.f;
+		m_fSize.y = 80.f;
 		m_bsizedown = true;
 		/*m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);*/
@@ -77,58 +77,19 @@ int CUI_font_Hits_number::Tick(_float fTimeDelta)
 		sizedown();
 
 
-	switch (m_iIndex)
-	{
-	case 0:
-		if (m_iCurrenthit < 100)
-		{
-			m_bRender = false;
-			return OBJ_NOEVENT;
-		}
-		else
-		{
-			m_itexnum = m_iCurrenthit / 100;
-			m_bRender = true;
-			break;
-
-		}
-
-	case 1:
-		if (m_iCurrenthit < 10)
-		{
-			m_bRender = false;
-			return OBJ_NOEVENT;
-		}
-		else
-		{
-			m_itexnum = ((m_iCurrenthit % 100) / 10);
-			m_bRender = true;
-			break;
-		}
-	case 2:
-		if (m_iCurrenthit <= 0)
-		{
-			m_bRender = false;
-			return OBJ_NOEVENT;
-		}
-		else
-		{
-			m_itexnum = m_iCurrenthit % 10;
-			m_bRender = true;
-			break;
-		}
-	}
-
 	
-	if (m_fSize.x <= 40.f || m_fSize.y <= 60.f)
+	if (m_fSize.x <= 60.f || m_fSize.y <= 65.f)
 		m_bsizedown = false;
 	/*m_fSize.x = 28.f;
 	m_fSize.y = 32.f;*/
-	m_fPosition.x = 1090.f + (m_iIndex * 30);
-	m_fPosition.y = 125;
+	m_fPosition.x = 1060.f;
+	//m_fPosition.y = 120.f;
+	
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+
 	if (m_iCurrenthit == 0)
 		m_itexnum = 0;
 
@@ -165,7 +126,57 @@ void CUI_font_Hits_number::Late_Tick(_float fTimeDelta)
 
 HRESULT CUI_font_Hits_number::Render()
 {
-	__super::Render();
+	if (nullptr == m_pShaderCom ||
+		nullptr == m_pVIBufferCom)
+		return E_FAIL;
+
+	m_itexnum = m_iCurrenthit / 100;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+	if (m_iCurrenthit >= 100)
+	{
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+	}
+
+	if (m_iCurrenthit >= 10)
+	{
+		m_itexnum = ((m_iCurrenthit % 100) / 10);
+
+		m_fPosition.x = 1100.f;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+	}
+	
+
+	if (m_iCurrenthit >= 2)
+	{
+		m_itexnum = m_iCurrenthit % 10;
+
+		m_fPosition.x = 1140.f;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+
+
+	}
 
 	return S_OK;
 }
