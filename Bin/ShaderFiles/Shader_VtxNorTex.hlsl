@@ -5,6 +5,7 @@ matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 /* For.Material */
 texture2D		g_DiffuseTexture[2];
+texture2D		g_NormalTexture[2];
 
 texture2D		g_BrushTexture;
 float4			g_vBrushPos = float4(5.f, 0.f, 5.f, 1.f);
@@ -71,7 +72,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	vector		vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV * 30.f);
 	vector		vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexUV * 30.f);
-	vector		vFilter = g_FilterTexture.Sample(PointSampler, In.vTexUV);
+	vector		vFilter = g_FilterTexture.Sample(LinearSampler, In.vTexUV*10.f);
 
 	vector		vBrush = vector(0.f, 0.f, 0.f, 0.f);
 
@@ -100,7 +101,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	/* near ~ far */
 	/* 0 ~ far */
 	/* 0 ~ 1 */
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w /1000.f, 0.f, 0.f);
 
 	return Out;
 }

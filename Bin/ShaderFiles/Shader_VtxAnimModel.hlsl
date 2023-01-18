@@ -118,7 +118,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 	Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV) * g_bGlow;
 
 	if (Out.vDiffuse.a <= 0.3f)
@@ -131,7 +131,7 @@ PS_OUT_SHADOW PS_SHADOWDEPTH(PS_IN In)
 {
 	PS_OUT_SHADOW Out = (PS_OUT_SHADOW)0;
 
-	Out.vLightDepth.r = In.vProjPos.w / 500.f;
+	Out.vLightDepth.r = In.vProjPos.w / 1000.f;
 	Out.vLightDepth.a = 1.f;
 
 	return Out;

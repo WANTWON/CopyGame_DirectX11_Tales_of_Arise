@@ -457,7 +457,7 @@ HRESULT CTerrain::Create_FilterTexture()
 				_vector fDis = XMLoadFloat3(&vMousePos) - XMLoadFloat3(&vPixelPos);
 				_float fLen = XMVectorGetX(XMVector3Length(fDis));
 				_float fAlpha = (fLen / 10.f);
-				if (fAlpha > 1.f)
+				if (fAlpha > 1.f)     
 					fAlpha = 1.f;
 				_uint iPixelValue = (1 - fAlpha) * 255;
 				pPixel[iIndex] = D3DCOLOR_ARGB(iPixelValue, iPixelValue, iPixelValue, iPixelValue);
