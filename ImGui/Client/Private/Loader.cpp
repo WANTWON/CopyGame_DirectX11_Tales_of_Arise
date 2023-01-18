@@ -173,10 +173,6 @@ HRESULT CLoader::Loading_ForGamePlayModel()
 	return E_FAIL;*/
 	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Plane"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/Water/Plane.fbx"))))
-		return E_FAIL;
-
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
