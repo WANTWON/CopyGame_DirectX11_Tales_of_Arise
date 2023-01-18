@@ -390,6 +390,14 @@ _float4x4 CGameInstance::Get_TransformFloat4x4_TP(CPipeLine::TRANSFORMSTATE eSta
 	return m_pPipeLine->Get_TransformFloat4x4_TP(eState);
 }
 
+_float4x4 CGameInstance::Get_TransformFloat4x4_Inverse(CPipeLine::TRANSFORMSTATE eState)
+{
+	if (nullptr == m_pPipeLine)
+		return _float4x4();
+	
+	return m_pPipeLine->Get_TransformFloat4x4_Inverse(eState);
+}
+
 _float4 CGameInstance::Get_CamPosition()
 {
 	if (nullptr == m_pPipeLine)

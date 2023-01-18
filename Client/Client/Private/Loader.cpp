@@ -373,6 +373,13 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/Water/Plane.fbx"))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Model_Alphen_Weapon01 */
+	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));*/
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1(R00)"),
+	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/SWO1(R00)/SWO1(R00).fbx", PivotMatrix))))
+	return E_FAIL;*/
+	//CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_STATIC, CData_Manager::DATA_ANIM);
+
 #pragma endregion Model Loading
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 

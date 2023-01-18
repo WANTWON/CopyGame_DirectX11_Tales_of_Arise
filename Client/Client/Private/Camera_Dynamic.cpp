@@ -101,13 +101,13 @@ void CCamera_Dynamic::Debug_Camera(_float fTimeDelta)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	/* Camera Inputs */
-	if (pGameInstance->Key_Pressing(DIK_W))
+	if (pGameInstance->Key_Pressing(DIK_UP))
 		m_pTransform->Go_Straight(fTimeDelta * 2);
-	if (pGameInstance->Key_Pressing(DIK_S))
+	if (pGameInstance->Key_Pressing(DIK_DOWN))
 		m_pTransform->Go_Backward(fTimeDelta * 2);
-	if (pGameInstance->Key_Pressing(DIK_A))
+	if (pGameInstance->Key_Pressing(DIK_LEFT))
 		m_pTransform->Go_Left(fTimeDelta * 2);
-	if (pGameInstance->Key_Pressing(DIK_D))
+	if (pGameInstance->Key_Pressing(DIK_RIGHT))
 		m_pTransform->Go_Right(fTimeDelta * 2);
 
 	_long MouseMove = 0;
