@@ -5,14 +5,14 @@
 BEGIN(Client)
 BEGIN(IceWolf)
 
-class CAttack_Elemental_Charge : public CIceWolfState
+class CAttack_Elemental_Charge : public CHawkState
 {
 public:
 	CAttack_Elemental_Charge(class CIce_Wolf* pIceWolf, STATE_ID eStateType);
 	
-	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) override;
-	virtual CIceWolfState* Tick(_float fTimeDelta) override;
-	virtual CIceWolfState* LateTick(_float fTimeDelta) override;
+	virtual CHawkState* AI_Behaviour(_float fTimeDelta) override;
+	virtual CHawkState* Tick(_float fTimeDelta) override;
+	virtual CHawkState* LateTick(_float fTimeDelta) override;
 
 public:
 

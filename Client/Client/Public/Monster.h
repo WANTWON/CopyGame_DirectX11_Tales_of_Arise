@@ -71,6 +71,7 @@ public: // Get & Set
 	_float		Get_Attack_BiteRadius() { return m_fAttack_BiteRadius; }
 	STATS		Get_Stats() { return m_tStats; }
 	_bool		Get_BattleMode = false;
+	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
 
 protected:
 	DMG_DIR Calculate_DmgDirection();

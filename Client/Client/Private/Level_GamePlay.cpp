@@ -128,13 +128,29 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 
-	for (_uint i = 0; i < 10; ++i)
+	//for (_uint i = 0; i < 3; ++i)
+	//{
+	//	_vector vPosition = { rand() % 20, 0.f, rand() % 20 , 1.f };
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+	//		return E_FAIL;
+	//}
+
+	//for (_uint i = 0; i < 3; ++i)
+	//{
+	//	_vector vPosition = { rand() % 60, 10.f, rand() % 60 , 1.f };
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+	//		return E_FAIL;
+	//}
+
+
+
+	for (_uint i = 0; i < 3; ++i)
 	{
-		_vector vPosition = { rand() % 20, 0.f, rand() % 20 , 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+		_vector vPosition = { rand() % 30, 0.f, rand() % 30 , 1.f };
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
 			return E_FAIL;
 	}
-	
+
 
 	Safe_Release(pGameInstance);
 

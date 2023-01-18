@@ -110,6 +110,24 @@ bool CTransform::Go_Right(_float fTimeDelta, CNavigation * pNavigation, _float f
 	return true;
 }
 
+bool CTransform::Go_Up(_float fTimeDelta, CNavigation * pNavigation, _float fRadius)
+{
+	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
+	_vector		vUp = Get_State(CTransform::STATE_UP);
+
+	vPosition += XMVector3Normalize(vUp) * m_TransformDesc.fSpeedPerSec * fTimeDelta;
+
+	if (nullptr == pNavigation)
+		Set_State(CTransform::STATE_TRANSLATION, vPosition);
+
+	else if (true == pNavigation->isMove(vPosition + XMVector3Normalize(vUp)*fRadius))
+		Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	else
+		return false;
+
+	return true;
+}
+
 bool CTransform::Sliding_Straight(_float fTimeDelta, CNavigation * pNavigation, _float fRadius)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
