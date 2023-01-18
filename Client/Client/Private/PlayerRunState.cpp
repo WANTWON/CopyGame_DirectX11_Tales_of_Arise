@@ -73,48 +73,57 @@ void CRunState::Move(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	_float4x4 CameraMatrix = pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW);
-
-	_vector vPlayerLook = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK);
-	_vector vCameraLook = XMVectorSet(CameraMatrix.m[2][0], 0.f, CameraMatrix.m[2][2], 0.f);
-
-	_float fCosBtwCP = XMVectorGetX(XMVector3Dot(vPlayerLook, vCameraLook));
-
-	_float fRadian = acosf(fCosBtwCP);
-
-	//m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), fRadian);
-
-	_matrix PrePlayerMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	_matrix CameraMatrix = XMLoadFloat4x4(&pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW));
 
 	switch (m_eDirection)
 	{
 	case DIR_STRAIGHT_LEFT:
-		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-45.f));
+		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-45.f));
 		break;
 	case DIR_STRAIGHT_RIGHT:
-		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f));
+		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f));
 		break;
 	case DIR_BACKWARD_LEFT:
-		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-135.f));
+		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-135.f));
 		break;
 	case DIR_BACKWARD_RIGHT:
-		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(135.f));
+		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(135.f));
 		break;
 	case DIR_STRAIGHT:
-		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(0.f));
+		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(0.f));
 		break;
 	case DIR_BACKWARD:
-		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
+		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
 		break;
 	case DIR_LEFT:
-		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-90.f));
+		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-90.f));
 		break;
 	case DIR_RIGHT:
-		m_pOwner->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
+		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
 		break;
 	}
 
-	m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());
+	CTransform* pPlayerTransform = m_pOwner->Get_Transform();
+	
+	_float4x4 CameraFloat;
+	XMStoreFloat4x4(&CameraFloat, CameraMatrix);
+
+	_float4x4 PlayerFloat = pPlayerTransform->Get_World4x4();
+
+	_vector vLook = XMVectorLerp(XMVectorSet(PlayerFloat.m[2][0], 0.f, PlayerFloat.m[2][2], 0.f), XMVectorSet(CameraFloat.m[2][0], 0.f, CameraFloat.m[2][2], 0.f), 0.3f);
+	_float4 LookFloat;
+	XMStoreFloat4(&LookFloat, vLook);
+
+	_vector vPlayerLook = XMVectorSet(LookFloat.x, PlayerFloat.m[2][1], LookFloat.z, 0.f);
+	
+	_vector vRight = XMVector4Normalize(XMVector3Cross(pPlayerTransform->Get_State(CTransform::STATE_UP), vPlayerLook)) * pPlayerTransform->Get_Scale(CTransform::STATE_RIGHT);
+
+	pPlayerTransform->Set_State(CTransform::STATE_LOOK, XMVector4Normalize(vPlayerLook) * pPlayerTransform->Get_Scale(CTransform::STATE_LOOK));
+	pPlayerTransform->Set_State(CTransform::STATE_RIGHT, vRight);
+
+	_float fCos = XMVectorGetX(XMVector4Dot(pPlayerTransform->Get_State(CTransform::STATE_LOOK), vPlayerLook));
+	if (0.85f < fCos)
+		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());
 
 	RELEASE_INSTANCE(CGameInstance);
 }
