@@ -198,6 +198,8 @@ HRESULT CRenderer::Render_GameObjects()
 		return E_FAIL;
 	if (FAILED(Render_NonAlphaBlend()))
 		return E_FAIL;
+	if (FAILED(Render_AlphaBlendLights()))
+		return E_FAIL;
 	if (FAILED(Render_Lights()))
 		return E_FAIL;
 	if (FAILED(Render_Glow()))
@@ -305,6 +307,27 @@ HRESULT CRenderer::Render_NonAlphaBlend()
 	}
 
 	m_GameObjects[RENDER_NONALPHABLEND].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_AlphaBlendLights()
+{
+	m_GameObjects[RENDER_ALPHABLENDLIGHTS].sort([](CGameObject* pSour, CGameObject* pDest)
+	{
+		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
+	});
+
+	for (auto& pGameObject : m_GameObjects[RENDER_ALPHABLENDLIGHTS])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render();
+			Safe_Release(pGameObject);
+		}
+	}
+
+	m_GameObjects[RENDER_ALPHABLENDLIGHTS].clear();
 
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;

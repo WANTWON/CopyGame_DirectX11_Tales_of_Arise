@@ -110,6 +110,7 @@ PS_OUT PS_WATER(PS_IN In)
 	PS_OUT Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_WaterColor;
+	Out.vDiffuse.a = 0.6f;
 
 	float2 texCoord = In.vTexUV * 20 + (g_fScrollingTimer * g_fScrollingSpeed);
 	float2 texCoordOffset = (float2(-In.vTexUV.x, In.vTexUV.y) * 20) + (g_fScrollingTimer * g_fScrollingSpeed); /* Wave Motion UVs */

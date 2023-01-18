@@ -40,13 +40,17 @@ void CWater::Late_Tick(_float fTimeDelta)
 	if (!Check_IsinFrustum(20.f))
 		return;
 
+	
+
 	if (m_pRendererCom)
 	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);
 #ifdef _DEBUG		
 		m_pRendererCom->Add_Debug(m_pNavigationCom);
 #endif
 	}
+
+	Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 }
 
 HRESULT CWater::Render()
