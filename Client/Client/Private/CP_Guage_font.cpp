@@ -23,7 +23,7 @@ HRESULT CCP_Guage_font::Initialize(void * pArg)
 	if (pArg != nullptr)
 		m_iIndex = *(_uint*)pArg;
 
-	m_eShaderID = UI_GOLDEN;
+	m_eShaderID = 0;
 	m_fSize.x = 14.f;
 	m_fSize.y = 19.f;
 	m_fPosition.x = 930.f + (m_iIndex * 15);

@@ -20,20 +20,21 @@ HRESULT CMP_Guage::Initialize_Prototype()
 
 HRESULT CMP_Guage::Initialize(void * pArg)
 {
-	m_eShaderID = UI_MP_GUAGE;
+	if (FAILED(Ready_Components(pArg)))
+		return E_FAIL;
+	m_pTransformCom->Change_Speed(10.f);
+	Set_Scale({ 0.35f, 0.35f, 1.f });
 	//m_fSize.x = 1000.f;
 	//m_fSize.y = 1000.f;
 	//m_fPosition.x = 600.f;
 	//m_fPosition.y = 600.f;
 	///*m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f;
 	//m_fPosition.y = g_iWinSizeY - m_fSize.y * 0.5f;
-//*/
-	if (FAILED(Ready_Components(pArg)))
-		return E_FAIL;
+
 
 	/*if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;*/
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(1.f, 0.f, 0.f, 1.f));
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(1.f, 0.f, 0.f, 1.f));
 
 	//m_vRight = _float4(0.5f, 0.f, 0.f, 0.f);
 	//m_vUp = _float4(0.f, 0.5f, 0.f, 0.f);
@@ -47,7 +48,48 @@ int CMP_Guage::Tick(_float fTimeDelta)
 
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
+	//m_fmaxmp = 7.f;
+	_vector vplayerpos = pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vplayerpos);
+
+	m_pTransformCom->Go_Left(0.16f);
+	Set_Scale({ 0.25f, 0.25f, 1.f });
+	SetUp_BillBoard();
+
+	//Set_Scale({ 0.2f,0.2f,1.f });
+	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_V))
+	{*/
+//		m_pTransformCom->Change_Speed(1.f);
+//	
+//	m_pTransformCom->Go_Left(1.5f);
+////	}
+	
+
+	
+
+	
+
+	//_float3 pos = { 0.f,0.f,0.f };
+	////_vector vpos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	//XMStoreFloat3(&pos, vplayerpos);
+	//pos.x -= 1.6f;
+	//vplayerpos = XMLoadFloat3(&pos);
+	//vplayerpos = XMVectorSetW(vplayerpos, 1.f);
+	//SetUp_BillBoard();
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_5))
+	{
+		m_fcurrentmp += 0.1f;
+	}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_6))
+	{
+		m_fcurrentmp -= 0.1f;
+	}
+
+
+	
+
+	
 	/*m_fPosition.x = 600.f;
 	m_fPosition.y = 600.f;
 	m_fSize.x = 1000.f;
@@ -61,43 +103,227 @@ int CMP_Guage::Tick(_float fTimeDelta)
 
 void CMP_Guage::Late_Tick(_float fTimeDelta)
 {
+
+	m_fcurrent_render_slot_mp = m_fcurrentmp - (_uint)m_fcurrentmp;
+
 	__super::Late_Tick(fTimeDelta);
+
+
 
 }
 
 HRESULT CMP_Guage::Render()
 {
 	if (nullptr == m_pShaderCom ||
-		nullptr == m_pVIBufferCom1)
+		nullptr == m_pVIBufferCom)
 		return E_FAIL;
+	//0번
 
-	if (FAILED(SetUp_ShaderID()))
-		return E_FAIL;
-
+	
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
+	
+	
+	m_eShaderID = UI_MP_GUAGE;
+	if(m_fcurrentmp > 1.f)
+	m_eShaderID = UI_POTRAIT_ALLBLUE;
 
-	m_pShaderCom->Begin();
-
-	m_pVIBufferCom1->Render();
-
-	/*m_fPosition.x += 13.f;
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-	m_pShaderCom->Begin(UI_MP_GUAGE);
+	m_pShaderCom->Begin(12);
 
 	m_pVIBufferCom->Render();
 
-	m_fPosition.x += 13.f;
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	m_pShaderCom->Begin(m_eShaderID);
 
+	m_pVIBufferCom->Render();
+	/////////////////////////첫번째마나
+
+	m_pTransformCom->Go_Right(0.025f);
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
-	m_pShaderCom->Begin(UI_MP_GUAGE);
 
-	m_pVIBufferCom->Render();*/
+
+	if (m_fcurrentmp<1.f)
+		m_eShaderID = UI_COLOR_BLACK;
+	else if (m_fcurrentmp > 2.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+	else
+		m_eShaderID = UI_MP_GUAGE;
+	
+	
+	m_pShaderCom->Begin(12);
+
+	m_pVIBufferCom->Render();
+	m_pShaderCom->Begin(m_eShaderID);
+
+	m_pVIBufferCom->Render();
+
+	////////////////////////두번째마나
+	m_pTransformCom->Go_Right(0.025f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (m_fcurrentmp<2.f)
+		m_eShaderID = UI_COLOR_BLACK;
+	else if (m_fcurrentmp > 3.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+	else
+		m_eShaderID = UI_MP_GUAGE;
+	m_pShaderCom->Begin(12);
+
+	m_pVIBufferCom->Render();
+	m_pShaderCom->Begin(m_eShaderID);
+
+	m_pVIBufferCom->Render();
+
+	if (m_fmaxmp == 3)
+		return S_OK;
+	//////////////////////세번째마나
+	
+
+	m_pTransformCom->Go_Right(0.025f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (m_fcurrentmp<3.f)
+		m_eShaderID = UI_COLOR_BLACK;
+	else if (m_fcurrentmp > 4.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+	else
+		m_eShaderID = UI_MP_GUAGE;
+	m_pShaderCom->Begin(12);
+
+	m_pVIBufferCom->Render();
+	m_pShaderCom->Begin(m_eShaderID);
+
+	m_pVIBufferCom->Render();
+
+	if (m_fmaxmp == 4)
+		return S_OK;
+	//////////////////////네번째마나
+
+	m_pTransformCom->Go_Right(0.025f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (m_fcurrentmp<4.f)
+		m_eShaderID = UI_COLOR_BLACK;
+	else if (m_fcurrentmp > 5.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+	else
+		m_eShaderID = UI_MP_GUAGE;
+	m_pShaderCom->Begin(12);
+
+	m_pVIBufferCom->Render();
+	m_pShaderCom->Begin(m_eShaderID);
+
+	m_pVIBufferCom->Render();
+
+	if (m_fmaxmp == 5)
+		return S_OK;
+	//////////////////////오번째마나
+
+	m_pTransformCom->Go_Right(0.025f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (m_fcurrentmp<5.f)
+		m_eShaderID = UI_COLOR_BLACK;
+	else if (m_fcurrentmp > 6.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+	else
+		m_eShaderID = UI_MP_GUAGE;
+	m_pShaderCom->Begin(12);
+
+	m_pVIBufferCom->Render();
+	m_pShaderCom->Begin(m_eShaderID);
+
+	m_pVIBufferCom->Render();
+
+	if (m_fmaxmp == 6)
+		return S_OK;
+	//////////////////////욱번째마나
+	m_pTransformCom->Go_Right(0.025f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (m_fcurrentmp<6.f)
+		m_eShaderID = UI_COLOR_BLACK;
+	else if (m_fcurrentmp > 7.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+	else
+		m_eShaderID = UI_MP_GUAGE;
+	m_pShaderCom->Begin(12);
+
+	m_pVIBufferCom->Render();
+	m_pShaderCom->Begin(m_eShaderID);
+
+	m_pVIBufferCom->Render();
+
+	if (m_fmaxmp == 7)
+		return S_OK;
+	//////////////////////칠번째마나
+
+	m_pTransformCom->Go_Right(0.025f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (m_fcurrentmp<7.f)
+		m_eShaderID = UI_COLOR_BLACK;
+	else if (m_fcurrentmp > 8.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+	else
+		m_eShaderID = UI_MP_GUAGE;
+	m_pShaderCom->Begin(12);
+
+	m_pVIBufferCom->Render();
+	m_pShaderCom->Begin(m_eShaderID);
+
+	m_pVIBufferCom->Render();
+
+	if (m_fmaxmp == 8)
+		return S_OK;
+	//////////////////////팔번째마나
+
+	m_pTransformCom->Go_Right(0.025f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (m_fcurrentmp<8.f)
+		m_eShaderID = UI_COLOR_BLACK;
+	else if (m_fcurrentmp > 9.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+	else
+		m_eShaderID = UI_MP_GUAGE;
+	m_pShaderCom->Begin(12);
+
+	m_pVIBufferCom->Render();
+	m_pShaderCom->Begin(m_eShaderID);
+
+	m_pVIBufferCom->Render();
+
+	if (m_fmaxmp == 9)
+		return S_OK;
+	//////////////////////구번째마나
+
+	m_pTransformCom->Go_Right(0.025f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (m_fcurrentmp<9.f)
+		m_eShaderID = UI_COLOR_BLACK;
+	else if (m_fcurrentmp > 10.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+	else
+		m_eShaderID = UI_MP_GUAGE;
+	m_pShaderCom->Begin(12);
+
+	m_pVIBufferCom->Render();
+	m_pShaderCom->Begin(m_eShaderID);
+
+	m_pVIBufferCom->Render();
+
+	//////////////////////10번째마나
+
 		
 	
 
@@ -115,7 +341,7 @@ HRESULT CMP_Guage::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPoint"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -123,7 +349,7 @@ HRESULT CMP_Guage::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point"), (CComponent**)&m_pVIBufferCom1)))
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	//m_pVIBufferCom1
@@ -156,10 +382,25 @@ HRESULT CMP_Guage::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_RawValue("g_vCamPosition", &pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
+	/*if (FAILED(m_pShaderCom->Set_RawValue("g_vCamPosition", &pGameInstance->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;*/
+
+
 
 	RELEASE_INSTANCE(CGameInstance);
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fcurrent_render_slot_mp, sizeof(_float))))
+		return E_FAIL;
+	 
+	/*if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxMp", &m_fmaxmp, sizeof(_float))))
+		return E_FAIL;*/
+
+	
+
+	/*if (FAILED(m_pShaderCom->Set_RawValue("g_fUVx", &m_fmaxmp, sizeof(_float))))
+		return E_FAIL;*/
+
+	
 
 	/*if (FAILED(m_pShaderCom->Set_RawValue("g_vCamPosition", &CGameInstance::Get_Instance()->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;*/
@@ -200,6 +441,6 @@ CGameObject * CMP_Guage::Clone(void * pArg)
 
 void CMP_Guage::Free()
 {
-	Safe_Release(m_pVIBufferCom1);
+	//Safe_Release(m_pVIBufferCom1);
 	__super::Free();
 }

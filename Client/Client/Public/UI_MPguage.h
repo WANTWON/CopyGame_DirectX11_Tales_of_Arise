@@ -27,7 +27,7 @@ private:
 	virtual HRESULT Ready_Components(void * pArg) override;
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
 
-	CVIBuffer_Point*			m_pVIBufferCom1 = nullptr;
+	//CVIBuffer_Point*			m_pVIBufferCom1 = nullptr;
 
 private:
 	_float4 m_vRight;
@@ -40,6 +40,14 @@ public:
 
 private:
 	_uint m_itexnum = 0;
+	_float m_fcurrentmp = 0.f;
+	_float m_fmaxmp = 10.f;
+
+
+	_float m_fcurrent_render_slot_mp = 0.f;
+
+
+
 };
 
 END

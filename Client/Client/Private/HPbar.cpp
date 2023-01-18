@@ -39,10 +39,10 @@ HRESULT CHPbar::Initialize(void * pArg)
 
 int CHPbar::Tick(_float fTimeDelta)
 {
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
 		--m_fcurrenthp;
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_J))
 		++m_fcurrenthp;
 
 	return OBJ_NOEVENT;

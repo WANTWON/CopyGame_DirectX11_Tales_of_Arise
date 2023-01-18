@@ -8,6 +8,7 @@
 IMPLEMENT_SINGLETON(CUI_Manager)
 
 CUI_Manager::CUI_Manager()
+	:iPortrait_Arrived_Count(0)
 {
 }
 

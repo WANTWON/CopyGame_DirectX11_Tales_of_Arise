@@ -20,7 +20,7 @@ class CUI_Base abstract : public CGameObject
 {
 public:
 	enum SHADERUI_ID { UI_ALPHADEFAULT, UI_ALPHABLEND, UI_PICKED, UI_ALPHASET, UI_SCREEN, UI_EFFECTFADEOUT,UI_HPBAR,UI_COMBOLINE,UI_GOLDEN, UI_CP_GUAGE,
-		UI_CP_GUAGE_BLACK,UI_MP_GUAGE, UI_COLOR_BLACK, UI_EFFECTSCREEN,UI_END };
+		UI_CP_GUAGE_BLACK,UI_MP_GUAGE, UI_COLOR_BLACK, UI_POTRAIT_DARK , UI_POTRAIT_READY, UI_POTRAIT_ALLBLUE,  UI_EFFECTSCREEN,UI_END };
 
 protected:
 	CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -37,8 +37,13 @@ public:
 public:
 	_float2 Get_Position() { return m_fPosition; }
 	_float2 Get_Scale() { return m_fSize; }
+	_float3	Get_Scale_float3() { return m_vScale; };
 	void Set_Position(_float2 fPostion) { m_fPosition = fPostion; };
 	void Set_Scale(_float2 fScale) { m_fSize = fScale; };
+	void Set_Scale(_float3 vScale);
+	void SetUp_BillBoard();
+
+	
 
 protected:
 	CShader*				m_pShaderCom = nullptr;
@@ -52,6 +57,9 @@ protected:
 	_float4x4				m_ViewMatrix, m_ProjMatrix;
 	_uint					m_eShaderID = UI_ALPHADEFAULT;
 	_float					m_fAlpha = 1.f;
+
+
+	_float3			m_vScale = _float3(1.f, 1.f, 1.f);
 
 	_bool                   m_bisinLoading = false;
 

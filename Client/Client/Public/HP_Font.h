@@ -35,7 +35,7 @@ private:
 	_uint m_iYIndex = 0;
 
 	_uint m_itexnum = 0;
-	_uint m_iCurrenthp = 2357;
+	_uint m_iCurrenthp = 2000.f;
 };
 
 END
