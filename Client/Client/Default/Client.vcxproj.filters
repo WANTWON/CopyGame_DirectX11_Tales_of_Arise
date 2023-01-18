@@ -130,6 +130,9 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States">
       <UniqueIdentifier>{8e0807c7-546b-4b32-9c19-4d12885792bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates">
+      <UniqueIdentifier>{ae23029e-ab52-4a7f-96b0-97b89ff8f1b2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\04.UI\05.CP_Guage">
       <UniqueIdentifier>{2988ec64-d485-42a9-a8fd-118a65ca318b}</UniqueIdentifier>
     </Filter>
@@ -330,6 +333,27 @@
     <ClInclude Include="..\Public\UI_Changebutton.h">
       <Filter>02.GameObjects\04.UI\08.UI_SKillbutton</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\IceWolfHowLingState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfChaseState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfAttackNormalState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_WalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfAttack_Elemental_Charge.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_IdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_HowLingState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -493,6 +517,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Changebutton.cpp">
       <Filter>02.GameObjects\04.UI\08.UI_SKillbutton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfHowLingState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfChaseState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfAttackNormalState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_WalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfAttack_Elemental_Charge.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_IdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_HowLingState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

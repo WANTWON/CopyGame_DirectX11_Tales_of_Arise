@@ -339,8 +339,26 @@ HRESULT CLoader::Loading_ForStaticLevel()
 
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Texture2D_0.bmp")))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap2.bmp"), false))))
 		return E_FAIL;
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/Terrain_Test.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	//for (_uint i = 0; i < iNum; ++i)
+	//{
+		//_tchar			szFullPath[MAX_PATH] = TEXT("Prototype_Component_VIBuffer_Terrain_Load");
+		//if (pGameInstance->Check_Prototype(LEVEL_STATIC, szFullPath) == S_OK)
+		pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Load"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, false));
+	//}
+
+	CloseHandle(hFile);
 #pragma endregion Buffer Loading
 
 
@@ -378,7 +396,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Grass_%d.dds"), 2))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/MP_snow%d_D.dds"), 2))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Brush */

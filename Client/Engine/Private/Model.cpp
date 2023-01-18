@@ -51,6 +51,23 @@ CHierarchyNode * CModel::Get_BonePtr(const char * pBoneName) const
 	return *iter;
 }
 
+_float4x4 CModel::Get_MoveTransformationMatrix(const char * pBoneName)
+{
+	for (auto& Bone : m_Bones)
+	{
+		if (!strcmp(Bone->Get_Name(), pBoneName))
+		{
+			_matrix CombinedMatrix = Bone->Get_OffsetMatrix() * XMLoadFloat4x4(&Bone->Get_MoveTransformationMatrix()) * XMLoadFloat4x4(&m_PivotMatrix);
+			_float4x4 CombinedMatrixFloat;
+			XMStoreFloat4x4(&CombinedMatrixFloat, CombinedMatrix);
+
+			return CombinedMatrixFloat;
+		}	
+	}
+
+	return _float4x4();
+}
+
 void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
 {
 	m_iCurrentAnimIndex = iAnimIndex;
@@ -178,7 +195,7 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 	return pShader->Set_ShaderResourceView(pConstantName, m_Materials[m_Meshes[iMeshIndex]->Get_MaterialIndex()].pMaterials[eType]->Get_SRV(TextureNum));
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, _matrix* pRootMatrix)
+_bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
 	if (m_iCurrentAnimIndex != m_iNextAnimIndex)
 	{	//TODO: 현재애님과 다음 애님프레임간의 선형보간 함수 호출 할 것.
@@ -205,13 +222,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, _matrix* pRootMatr
 			for (auto& pBoneNode : m_Bones)
 			{
 				/* 뼈의 m_CombinedTransformationMatrix행렬을 갱신한다. */
-				pBoneNode->Invalidate_CombinedTransformationmatrix();
-				
-				if ((nullptr != pRootMatrix) && !strcmp(pBoneNode->Get_Name(), "TransN"))
-				{
-					_matrix matLocal = pBoneNode->Get_OffsetMatrix() * pBoneNode->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
-					memcpy(pRootMatrix, &matLocal, sizeof(_matrix));
-				}
+				pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName);
 			}
 			return true;
 		}
@@ -220,13 +231,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, _matrix* pRootMatr
 	for (auto& pBoneNode : m_Bones)
 	{
 		/* 뼈의 m_CombinedTransformationMatrix행렬을 갱신한다. */
-		pBoneNode->Invalidate_CombinedTransformationmatrix();
-		
-		if ((nullptr != pRootMatrix) && !strcmp(pBoneNode->Get_Name(), "TransN"))
-		{
-			_matrix matLocal = pBoneNode->Get_OffsetMatrix() * pBoneNode->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_PivotMatrix);
-			memcpy(pRootMatrix, &matLocal, sizeof(_matrix));
-		}
+		pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName);
 	}
 
 	return false;

@@ -9,7 +9,7 @@ class CIdleState : public CIceWolfState
 public:
 	CIdleState(class CIce_Wolf* pIceWolf);
 
-	virtual CIceWolfState* AI_Behaviour() override;
+	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CIceWolfState* Tick(_float fTimeDelta) override;
 	virtual CIceWolfState* LateTick(_float fTimeDelta) override;
 
@@ -19,7 +19,7 @@ public:
 private:
 	_float m_fIdleMoveTimer = 0.f;
 	_float m_fIdleAttackTimer = 1.5f;
-	_uint  m_iRand = 0.f;
+	_uint  m_iRand = 0;
 };
 END
 END
