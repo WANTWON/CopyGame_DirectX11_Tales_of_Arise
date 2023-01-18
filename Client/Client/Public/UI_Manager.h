@@ -38,8 +38,13 @@ public: /*Getter Setter*/
 	void		Set_UI_OpenType(UITYPE eUIType);
 	UITYPE		Get_UI_OpenType() { return m_eUIType; }
 
+	_uint Get_Arrived_Count() { return iPortrait_Arrived_Count; }
+	void plus_Arrived_Count() { ++iPortrait_Arrived_Count; }
+
 private:
 	UITYPE				m_eUIType = UI_END;
+
+	_uint iPortrait_Arrived_Count;
 	
 
 //private:
