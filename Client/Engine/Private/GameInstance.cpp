@@ -286,6 +286,14 @@ HRESULT CGameInstance::Add_GameObject(const _tchar * pPrototypeTag, _uint iLevel
 	return m_pObject_Manager->Add_GameObject(pPrototypeTag, iLevelIndex, pLayerTag, pArg);
 }
 
+HRESULT CGameInstance::Add_GameObjectLoad(const _tchar * pPrototypeTag, _uint iLevelIndex, const _tchar * pLayerTag, const _tchar * VIBUfferTag, void * pArg)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Add_GameObjectLoad(pPrototypeTag, iLevelIndex, pLayerTag, VIBUfferTag, pArg);
+}
+
 CGameObject * CGameInstance::Clone_GameObject(const _tchar * pPrototypeTag, void * pArg)
 {
 	if (nullptr == m_pObject_Manager)
@@ -382,12 +390,28 @@ _float4x4 CGameInstance::Get_TransformFloat4x4_TP(CPipeLine::TRANSFORMSTATE eSta
 	return m_pPipeLine->Get_TransformFloat4x4_TP(eState);
 }
 
+_float4x4 CGameInstance::Get_TransformFloat4x4_Inverse(CPipeLine::TRANSFORMSTATE eState)
+{
+	if (nullptr == m_pPipeLine)
+		return _float4x4();
+	
+	return m_pPipeLine->Get_TransformFloat4x4_Inverse(eState);
+}
+
 _float4 CGameInstance::Get_CamPosition()
 {
 	if (nullptr == m_pPipeLine)
 		return _float4();
 
 	return m_pPipeLine->Get_CamPosition();
+}
+
+_float4x4 CGameInstance::Get_CamWorldMatrix()
+{
+	if (nullptr == m_pPipeLine)
+		return _float4x4();
+
+	return m_pPipeLine->Get_CamWorldMatrix();
 }
 
 const LIGHTDESC * CGameInstance::Get_LightDesc(_uint iIndex)

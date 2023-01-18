@@ -193,7 +193,9 @@
     <ClInclude Include="..\Public\HawkIdleState.h" />
     <ClInclude Include="..\Public\HawkState.h" />
     <ClInclude Include="..\Public\HPbar.h" />
+    <ClInclude Include="..\Public\HPbar_World.h" />
     <ClInclude Include="..\Public\HP_Font.h" />
+    <ClInclude Include="..\Public\HP_Font_World.h" />
     <ClInclude Include="..\Public\IceWolfAttackNormalState.h" />
     <ClInclude Include="..\Public\IceWolfAttack_Elemental_Charge.h" />
     <ClInclude Include="..\Public\IceWolfBattle_HowLingState.h" />
@@ -212,6 +214,8 @@
     <ClInclude Include="..\public\PlayerIdleState.h" />
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerRunState.h" />
+    <ClInclude Include="..\Public\UI_Changebutton.h" />
+    <ClInclude Include="..\Public\UI_Portraitback.h" />
     <ClInclude Include="..\Public\ScreenFadeEffect.h" />
     <ClInclude Include="..\Public\UI_Comboline.h" />
     <ClInclude Include="..\Public\UI_Combo_font_Damages.h" />
@@ -220,6 +224,11 @@
     <ClInclude Include="..\Public\UI_Loading.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\Public\UI_MPguage.h" />
+    <ClInclude Include="..\Public\UI_Portraitfront.h" />
+    <ClInclude Include="..\Public\UI_Portraitfront_bottom.h" />
+    <ClInclude Include="..\Public\UI_Portraitfront_left.h" />
+    <ClInclude Include="..\Public\UI_Portraitfront_right.h" />
+    <ClInclude Include="..\Public\UI_Portraitfront_top.h" />
     <ClInclude Include="..\public\UI_Screen.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\Camera_Dynamic.h" />
@@ -237,6 +246,8 @@
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\UI_Portrait.h" />
     <ClInclude Include="..\public\PlayerWalkState.h" />
+    <ClInclude Include="..\public\Water.h" />
+    <ClInclude Include="..\Public\UI_Skillbutton.h" />
     <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -266,7 +277,9 @@
     <ClCompile Include="..\Private\HawkBattle_IdleState.cpp" />
     <ClCompile Include="..\Private\HawkIdleState.cpp" />
     <ClCompile Include="..\Private\HPbar.cpp" />
+    <ClCompile Include="..\Private\HPbar_World.cpp" />
     <ClCompile Include="..\Private\HP_Font.cpp" />
+    <ClCompile Include="..\Private\HP_Font_World.cpp" />
     <ClCompile Include="..\Private\IceWolfAttackNormalState.cpp" />
     <ClCompile Include="..\Private\IceWolfAttack_Elemental_Charge.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_HowLingState.cpp" />
@@ -283,6 +296,8 @@
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />
+    <ClCompile Include="..\Private\UI_Changebutton.cpp" />
+    <ClCompile Include="..\Private\UI_Portraitback.cpp" />
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp" />
     <ClCompile Include="..\Private\UI_Comboline.cpp" />
     <ClCompile Include="..\Private\UI_Combo_font_Damages.cpp" />
@@ -291,6 +306,11 @@
     <ClCompile Include="..\Private\UI_Loading.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\UI_MPguage.cpp" />
+    <ClCompile Include="..\Private\UI_Portraitfront.cpp" />
+    <ClCompile Include="..\Private\UI_Portraitfront_bottom.cpp" />
+    <ClCompile Include="..\Private\UI_Portraitfront_left.cpp" />
+    <ClCompile Include="..\Private\UI_Portraitfront_right.cpp" />
+    <ClCompile Include="..\Private\UI_Portraitfront_top.cpp" />
     <ClCompile Include="..\private\UI_Screen.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\Camera_Dynamic.cpp" />
@@ -307,6 +327,8 @@
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\UI_Portrait.cpp" />
     <ClCompile Include="..\private\PlayerWalkState.cpp" />
+    <ClCompile Include="..\private\Water.cpp" />
+    <ClCompile Include="..\Private\UI_Skillbutton.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -321,6 +343,7 @@
     <ResourceCompile Include="Client.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\Bin\Resources\Textures\UI\numberfont\font0.dds" />
     <Image Include="Client.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

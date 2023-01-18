@@ -4,8 +4,13 @@
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D		g_DiffuseTexture;
 vector			g_vCamPosition;
+float g_fCurrentMp;
+float g_fMaxMp;
 
-float g_fUVx;
+vector camlook;
+
+
+//float g_fUVx;
 
 struct VS_IN
 {
@@ -63,27 +68,27 @@ void GS_MPguage(point GS_IN In[1], inout TriangleStream<GS_OUT> DataStream)
 {
 	GS_OUT			Out[4];
 
-	float3			vLook = g_vCamPosition.xyz - In[0].vPosition;
-	float3			vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * (In[0].vPSize.x * 0.5f);
-	float3			vUp = normalize(cross(vLook, vRight)) * (In[0].vPSize.y * 0.5f);
-
+	float3			vLook = camlook;
+	float3			vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook)) * (In[0].vPSize.x * 0.3f);
+	float3			vUp = normalize(cross(vRight, vLook)) * (In[0].vPSize.y * 0.3f);
+	
 	matrix			matVP;
 
 	matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-	Out[0].vPosition = float4(In[0].vPosition/* + vRight*/ + vUp, 1.f);
+	Out[0].vPosition = float4(In[0].vPosition + (vRight * g_fMaxMp) - vUp, 1.f);
 	Out[0].vPosition = mul(Out[0].vPosition, matVP);
 	Out[0].vTexUV = float2(0.f, 0.f);
 
-	Out[1].vPosition = float4(In[0].vPosition - (vRight * 6.f) + vUp, 1.f);
+	Out[1].vPosition = float4(In[0].vPosition - (vRight * g_fMaxMp) - vUp, 1.f);
 	Out[1].vPosition = mul(Out[1].vPosition, matVP);
-	Out[1].vTexUV = float2(3.f, 0.f);
+	Out[1].vTexUV = float2(g_fMaxMp, 0.f);
 
-	Out[2].vPosition = float4(In[0].vPosition - (vRight * 6.f) - vUp, 1.f);
+	Out[2].vPosition = float4(In[0].vPosition - (vRight * g_fMaxMp) + vUp, 1.f);
 	Out[2].vPosition = mul(Out[2].vPosition, matVP);
-	Out[2].vTexUV = float2(3.f, 1.f);
+	Out[2].vTexUV = float2(g_fMaxMp, 1.f);
 
-	Out[3].vPosition = float4(In[0].vPosition/* + vRight*/ - vUp, 1.f);
+	Out[3].vPosition = float4(In[0].vPosition + (vRight * g_fMaxMp) + vUp, 1.f);
 	Out[3].vPosition = mul(Out[3].vPosition, matVP);
 	Out[3].vTexUV = float2(0.f, 1.f);
 
@@ -123,6 +128,13 @@ PS_OUT PS_MAIN(PS_IN In)
 	/*if (Out.vColor.a < 0.3f)
 	discard;*/
 
+	Out.vColor.r = 0.f;
+	Out.vColor.g = 0.f;
+	Out.vColor.b = 0.f;
+
+	if (Out.vColor.a < 0.5f)
+		discard;
+
 	return Out;
 }
 
@@ -130,6 +142,10 @@ PS_OUT PS_MAIN(PS_IN In)
 PS_OUT PS_MPGUAGE(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
+
+	if (g_fCurrentMp / g_fMaxMp < In.vTexUV.x)
+		discard;
+
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
 	//Out.vColor.a -= g_fAlpha;
@@ -146,7 +162,7 @@ PS_OUT PS_MPGUAGE(PS_IN In)
 
 technique11 DefaultTechnique
 {
-	pass Default
+	pass MPGuageblue
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -156,4 +172,17 @@ technique11 DefaultTechnique
 		GeometryShader = compile gs_5_0 GS_MPguage();
 		PixelShader = compile ps_5_0 PS_MPGUAGE();
 	}
+
+	pass MPGuageblack
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MPguage();
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	
 }

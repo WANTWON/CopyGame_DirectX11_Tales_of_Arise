@@ -40,11 +40,10 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Parts()))
-	//	return E_FAIL;
+	/*if (FAILED(Ready_Parts()))
+		return E_FAIL;*/
 
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
-
 
 	/*CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
@@ -69,8 +68,8 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
-	//for (auto& pParts : m_Parts)
-	//	pParts->Tick(fTimeDelta);
+	/*for (auto& pParts : m_Parts)
+		pParts->Tick(fTimeDelta);*/
 
 	return OBJ_NOEVENT;
 }
@@ -172,7 +171,7 @@ HRESULT CPlayer::Ready_Parts()
 	m_Parts.resize(PARTS_END);
 
 	/* For.Weapon */
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("SWORD");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("index_01_R");
 	if (nullptr == pSocket)
 		return E_FAIL;
 

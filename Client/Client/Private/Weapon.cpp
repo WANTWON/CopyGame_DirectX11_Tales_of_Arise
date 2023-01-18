@@ -2,6 +2,7 @@
 #include "..\Public\Weapon.h"
 
 #include "GameInstance.h"
+#include "Data_Manager.h"
 
 CWeapon::CWeapon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -25,6 +26,15 @@ HRESULT CWeapon::Initialize(void * pArg)
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
+	char cName[MAX_PATH];
+	ZeroMemory(cName, sizeof(char) * MAX_PATH);
+	pData_Manager->TCtoC(TEXT("Alphen_Weapon01"), cName);
+	pData_Manager->Conv_Bin_Model(m_pModelCom, cName, CData_Manager::DATA_ANIM);
+	RELEASE_INSTANCE(CData_Manager);
+	RELEASE_INSTANCE(CGameInstance);
 
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 0.1f);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, 0.1f);
@@ -109,7 +119,7 @@ HRESULT CWeapon::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Alphen_Weapon01"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	CCollider::COLLIDERDESC		ColliderDesc;
@@ -169,7 +179,7 @@ CWeapon * CWeapon::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CPlayer"));
+		ERR_MSG(TEXT("Failed to Created : CWeapon"));
 		Safe_Release(pInstance);
 	}
 
@@ -183,7 +193,7 @@ CGameObject * CWeapon::Clone(void * pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CPlayer"));
+		ERR_MSG(TEXT("Failed to Cloned : CWeapon"));
 		Safe_Release(pInstance);
 	}
 

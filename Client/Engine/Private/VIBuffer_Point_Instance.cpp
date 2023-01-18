@@ -1,4 +1,4 @@
-#include "..\Public\VIBuffer_Point_Instance.h"
+#include "VIBuffer_Point_Instance.h"
 
 CVIBuffer_Point_Instance::CVIBuffer_Point_Instance(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer_Instance(pDevice, pContext)
@@ -26,13 +26,13 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
 
 	m_BufferDesc.ByteWidth = m_iStride * m_iNumVertices;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼를 생성한다. */
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_BufferDesc.CPUAccessFlags = 0;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iStride;
 
-	VTXPOINT*			pVertices = new VTXPOINT;
+	VTXPOINT* pVertices = new VTXPOINT;
 	ZeroMemory(pVertices, sizeof(VTXPOINT));
 
 	pVertices->vPosition = _float3(0.0f, 0.f, 0.f);
@@ -41,13 +41,11 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pVertices;
 
-	/* 정점을 담기 위한 공간을 할당하고, 내가 전달해준 배열의 값들을 멤카피한다. */
 	if (FAILED(__super::Create_VertexBuffer()))
 		return E_FAIL;
 
 	Safe_Delete_Array(pVertices);
 #pragma endregion
-
 
 #pragma region Indices
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -57,25 +55,23 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 	m_iNumIndicesPerPrimitive = 1;
 
 	m_BufferDesc.ByteWidth = m_iIndicesByte * m_iNumPrimitive;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼를 생성한다. */
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	m_BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	m_BufferDesc.CPUAccessFlags = 0;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = sizeof(_ushort);
 
-	_ushort*			pIndices = new _ushort[m_iNumPrimitive];
+	_ushort* pIndices = new _ushort[m_iNumPrimitive];
 	ZeroMemory(pIndices, sizeof(_ushort) * m_iNumPrimitive);
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pIndices;
 
-	/* 정점을 담기 위한 공간을 할당하고, 내가 전달해준 배열의 값들을 멤카피한다. */
 	if (FAILED(__super::Create_IndexBuffer()))
 		return E_FAIL;
 
 	Safe_Delete_Array(pIndices);
 #pragma endregion
-
 
 #pragma region INSTANCE_BUFFER
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -85,13 +81,13 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 	m_iNumIndicesPerInstance = 1;
 
 	m_BufferDesc.ByteWidth = m_iInstanceStride * m_iNumInstance;
-	m_BufferDesc.Usage = D3D11_USAGE_DYNAMIC; /* 정적버퍼를 생성한다. */
+	m_BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iInstanceStride;
 
-	VTXMATRIX*			pInstanceVtx = new VTXMATRIX[m_iNumVertices];
+	VTXMATRIX* pInstanceVtx = new VTXMATRIX[m_iNumVertices];
 	m_pSpeedPerSec = new _float[m_iNumInstance];
 	ZeroMemory(m_pSpeedPerSec, sizeof(_float) * m_iNumInstance);
 
@@ -108,7 +104,6 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pInstanceVtx;
 
-	/* 정점을 담기 위한 공간을 할당하고, 내가 전달해준 배열의 값들을 멤카피한다. */
 	if (FAILED(m_pDevice->CreateBuffer(&m_BufferDesc, &m_SubResourceData, &m_pInstanceBuffer)))
 		return E_FAIL;
 
@@ -116,7 +111,6 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 #pragma endregion
 
 	return S_OK;
-
 }
 
 HRESULT CVIBuffer_Point_Instance::Initialize(void * pArg)
@@ -129,7 +123,7 @@ HRESULT CVIBuffer_Point_Instance::Initialize(void * pArg)
 
 void CVIBuffer_Point_Instance::Update(_float fTimeDelta)
 {
-	D3D11_MAPPED_SUBRESOURCE		MappedSubResource;
+	D3D11_MAPPED_SUBRESOURCE MappedSubResource;
 	ZeroMemory(&MappedSubResource, sizeof MappedSubResource);
 
 	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubResource);
@@ -138,20 +132,16 @@ void CVIBuffer_Point_Instance::Update(_float fTimeDelta)
 	{
 		((VTXMATRIX*)MappedSubResource.pData)[i].vPosition.y += m_pSpeedPerSec[i] * fTimeDelta;
 
-		if (5.0f < ((VTXMATRIX*)MappedSubResource.pData)[i].vPosition.y)
+		if (((VTXMATRIX*)MappedSubResource.pData)[i].vPosition.y > 5.0f)
 			((VTXMATRIX*)MappedSubResource.pData)[i].vPosition.y = 0.0f;
 	}
-
-	
 
 	m_pContext->Unmap(m_pInstanceBuffer, 0);
 }
 
-
-
 CVIBuffer_Point_Instance * CVIBuffer_Point_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iNumInstance)
 {
-	CVIBuffer_Point_Instance*	pInstance = new CVIBuffer_Point_Instance(pDevice, pContext);
+	CVIBuffer_Point_Instance* pInstance = new CVIBuffer_Point_Instance(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(iNumInstance)))
 	{
@@ -162,10 +152,9 @@ CVIBuffer_Point_Instance * CVIBuffer_Point_Instance::Create(ID3D11Device * pDevi
 	return pInstance;
 }
 
-
 CComponent * CVIBuffer_Point_Instance::Clone(void * pArg)
 {
-	CVIBuffer_Point_Instance*	pInstance = new CVIBuffer_Point_Instance(*this);
+	CVIBuffer_Point_Instance* pInstance = new CVIBuffer_Point_Instance(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -176,13 +165,10 @@ CComponent * CVIBuffer_Point_Instance::Clone(void * pArg)
 	return pInstance;
 }
 
-
 void CVIBuffer_Point_Instance::Free()
 {
 	__super::Free();
 
-	if (false == m_isCloned)
+	if (m_isCloned ==  false)
 		Safe_Delete_Array(m_pSpeedPerSec);
-
-
 }

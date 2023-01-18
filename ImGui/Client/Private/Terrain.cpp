@@ -43,6 +43,54 @@ HRESULT CTerrain::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	CTerrain_Manager::TERRAINDESC TerrainDesc;
+	if (pArg != nullptr)
+	{
+		ZeroMemory(&TerrainDesc, sizeof(CTerrain_Manager::TERRAINDESC));
+		memcpy(&TerrainDesc, pArg, sizeof(CTerrain_Manager::TERRAINDESC));
+		m_eDebugtype = (TERRAIN_DEBUG_TYPE)TerrainDesc.m_eDebugTerrain;
+	}
+
+	/* For.Com_Renderer */
+	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
+		return E_FAIL;
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, VIBufferTag, (CComponent**)&m_pVIBufferCom)))
+		return E_FAIL;
+	
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
+
+	/* For.Com_Transform */
+	CTransform::TRANSFORMDESC		TransformDesc;
+	TransformDesc.fRotationPerSec = 1.f;
+	TransformDesc.fSpeedPerSec = 3.f;
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+		return E_FAIL;
+
+	/* For.Com_Brush */
+	if (FAILED(__super::Add_Components(TEXT("Com_Brush"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Brush"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
+		return E_FAIL;
+
+	_vector vInitPosition = XMVectorSet(TerrainDesc.TerrainDesc.m_iPositionX, TerrainDesc.TerrainDesc.m_fHeight, TerrainDesc.TerrainDesc.m_iPositionZ, 1.f);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vInitPosition);
+
+	CPickingMgr::Get_Instance()->Add_PickingGroup(this);
+
+	m_eObjectID = OBJ_BACKGROUND;
+
+	return S_OK;
+}
+
 int CTerrain::Tick(_float fTimeDelta)
 {
 	if (m_bDead)
@@ -123,7 +171,8 @@ void CTerrain::PickingTrue()
 		Set_Picked();
 		break;
 	case Client::CImgui_Manager::PICKING_TERRAIN_SHAPE:
-		Set_Terrain_Shape();
+		//Set_Terrain_Shape();
+		Create_FilterTexture();
 		break;
 	default:
 		break;
@@ -178,6 +227,15 @@ HRESULT CTerrain::Ready_Components(void* pArg)
 	_vector vInitPosition = XMVectorSet(TerrainDesc.TerrainDesc.m_iPositionX, TerrainDesc.TerrainDesc.m_fHeight, TerrainDesc.TerrainDesc.m_iPositionZ, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vInitPosition);
 
+
+	/* For.Com_Brush */
+	if (FAILED(__super::Add_Components(TEXT("Com_Brush"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Brush"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
+		return E_FAIL;
+
+	///* For.Com_Filter */
+	//if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Filter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
+	//	return E_FAIL;
+
 	return S_OK;
 }
 
@@ -228,8 +286,24 @@ HRESULT CTerrain::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom[TYPE_DIFFUSE]->Get_SRV(0))))
+	ID3D11ShaderResourceView*		pSRVs[] = {
+		m_pTextureCom[TYPE_DIFFUSE]->Get_SRV(0),
+		m_pTextureCom[TYPE_DIFFUSE]->Get_SRV(1),
+	};
+
+	if (FAILED(m_pShaderCom->Set_ShaderResourceViewArray("g_DiffuseTexture", pSRVs, 2)))
 		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_BrushTexture", m_pTextureCom[TYPE_BRUSH]->Get_SRV(0))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vBrushPos", &m_vMousePickPos, sizeof(_float4))))
+		return E_FAIL;
+
+	_float fBrushRadius = CTerrain_Manager::Get_Instance()->Get_TerrainShapeDesc().fRadius;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fBrushRange", &fBrushRadius, sizeof(_float))))
+		return E_FAIL;
+	
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -270,6 +344,102 @@ void CTerrain::Set_Picked()
 	RELEASE_INSTANCE(CGameInstance);
 }
 
+void CTerrain::Save_Terrain(HANDLE hFile, _ulong* dwByte)
+{
+	m_pVIBufferCom->Save_VertexPosition(hFile, dwByte);
+}
+
+HRESULT CTerrain::Create_FilterTexture()
+{
+	if (CGameInstance::Get_Instance()->Mouse_Pressing(DIMK_LBUTTON))
+	{
+
+		ID3D11Texture2D*			pTexture2D = nullptr;
+
+		D3D11_TEXTURE2D_DESC		TextureDesc;
+		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		TextureDesc.Width = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumX;
+		TextureDesc.Height = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumZ;
+		TextureDesc.MipLevels = 1;
+		TextureDesc.ArraySize = 1;
+		TextureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+
+		TextureDesc.SampleDesc.Quality = 0;
+		TextureDesc.SampleDesc.Count = 1;
+
+		TextureDesc.Usage = D3D11_USAGE_DYNAMIC;
+		TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		TextureDesc.MiscFlags = 0;
+
+		_uint*			pPixel = new _uint[TextureDesc.Width * 	TextureDesc.Height];
+
+		for (_uint i = 0; i < TextureDesc.Height; ++i)
+		{
+			for (_uint j = 0; j < TextureDesc.Width; ++j)
+			{
+				_uint		iIndex = i * TextureDesc.Width + j;
+
+				_float3 vMousePos = m_vMousePickPos;
+				_float3 vPixelPos = _float3(j, 0., i);
+				vMousePos.y = vPixelPos.y = 0.f;
+				_vector fDis = XMLoadFloat3(&vMousePos) - XMLoadFloat3(&vPixelPos);
+				_float fLen = XMVectorGetX(XMVector3Length(fDis));
+				_uint iPixelValue = (1 - (fLen / 10.f)) * 255;
+				pPixel[iIndex] += D3DCOLOR_ARGB(iPixelValue, iPixelValue, iPixelValue, iPixelValue);
+				if ((pPixel[iIndex] & 0x000000ff) >= 255)
+				{
+					pPixel[iIndex] = D3DCOLOR_ARGB(255, 255, 255, 255);
+				}
+			}
+		}
+
+		D3D11_SUBRESOURCE_DATA			SubResourceData;
+		ZeroMemory(&SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+
+		SubResourceData.pSysMem = pPixel;
+		SubResourceData.SysMemPitch = 128 * 4;
+
+		if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, &SubResourceData, &pTexture2D)))
+			goto FAIL;
+
+
+		/*D3D11_MAP_WRITE_NO_OVERWRITE : 기존에 있던 값을 유지한상태로 메모리의 주소를 얻어오낟ㄷ. */
+		/*D3D11_MAP_WRITE_DISCARD : 기존에 있던 값은 날리고 메모리 주소를 얻어오낟. */
+
+		D3D11_MAPPED_SUBRESOURCE			SubResource;
+		ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+		if (FAILED(m_pContext->Map(pTexture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
+			goto FAIL;
+
+		//pPixel[0] = D3DCOLOR_ARGB(255, 255, 255, 0);
+
+		memcpy(SubResource.pData, pPixel, sizeof(_uint) * TextureDesc.Width * TextureDesc.Height);
+
+		m_pContext->Unmap(pTexture2D, 0);
+
+		if (FAILED(DirectX::SaveDDSTextureToFile(m_pContext, pTexture2D, TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.dds"))))
+			goto FAIL;
+
+		if (FAILED(m_pDevice->CreateShaderResourceView(pTexture2D, nullptr, &m_pFilterTexture)))
+			goto FAIL;
+			
+		Safe_Delete_Array(pPixel);
+		Safe_Release(pTexture2D);
+		return S_OK;
+
+	FAIL:
+		Safe_Delete_Array(pPixel);
+		Safe_Release(pTexture2D);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+
 CTerrain * CTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CTerrain*	pInstance = new CTerrain(pDevice, pContext);
@@ -288,6 +458,19 @@ CGameObject * CTerrain::Clone(void* pArg)
 	CTerrain*	pInstance = new CTerrain(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		ERR_MSG(TEXT("Failed to Cloned : CTerrain"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CGameObject * CTerrain::Clone_Load(const _tchar * VIBufferTag, void * pArg)
+{
+	CTerrain*	pInstance = new CTerrain(*this);
+
+	if (FAILED(pInstance->Initialize_Load(VIBufferTag, pArg)))
 	{
 		ERR_MSG(TEXT("Failed to Cloned : CTerrain"));
 		Safe_Release(pInstance);
