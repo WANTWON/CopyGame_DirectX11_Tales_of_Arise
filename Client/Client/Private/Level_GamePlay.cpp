@@ -177,6 +177,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _tchar * pLayerTag)
 			return E_FAIL;
 	}	*/
 
+
+
+
 	Safe_Release(pGameInstance);
 	
 	return S_OK;
@@ -221,7 +224,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 		return E_FAIL;*/
 
 
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 3; ++i)
 	{
 		_uint number = i;
 
@@ -230,7 +233,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	}
 
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 3; ++i)
 	{
 		_uint number = i;
 
@@ -258,14 +261,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 	}
 	
 
-	for (int i = 0; i < 3; ++i)
-	{
-		_uint number = i;
+//	for (int i = 0; i < 3; ++i)
+//	{
+//		_uint number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_fontnum"), LEVEL_GAMEPLAY, pLayerTag, &i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_fontnum"), LEVEL_GAMEPLAY, pLayerTag)))
 			return E_FAIL;
 
-	}
+//	}
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
@@ -283,6 +286,44 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 	
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MPguage"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar_World"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+
+//	for (int i = 0; i < 4; ++i)
+//	{
+//		_uint number = i;
+
+//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont_World"), LEVEL_GAMEPLAY, pLayerTag, &i)))
+//			return E_FAIL;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont_World"), LEVEL_GAMEPLAY, pLayerTag)))
+			return E_FAIL;
+
+//	}
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitback"), LEVEL_GAMEPLAY, pLayerTag)))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_top"), LEVEL_GAMEPLAY, pLayerTag)))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_right"), LEVEL_GAMEPLAY, pLayerTag)))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_bottom"), LEVEL_GAMEPLAY, pLayerTag)))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_left"), LEVEL_GAMEPLAY, pLayerTag)))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_button"), LEVEL_GAMEPLAY, pLayerTag)))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_change_button"), LEVEL_GAMEPLAY, pLayerTag)))
+			return E_FAIL;
+		
+		
+
+		
+	
 
 	Safe_Release(pGameInstance);
 

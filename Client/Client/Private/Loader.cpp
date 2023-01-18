@@ -29,6 +29,16 @@
 #include "CP_Guage.h"
 #include "CP_Guage_font.h"
 #include "UI_MPguage.h"
+#include "HPbar_World.h"
+#include "HP_Font_World.h"
+#include "UI_Portraitback.h"
+#include "UI_Portraitfront.h"
+#include "UI_Portraitfront_top.h"
+#include "UI_Portraitfront_right.h"
+#include "UI_Portraitfront_bottom.h"
+#include "UI_Portraitfront_left.h"
+#include "UI_Skillbutton.h"
+#include "UI_Changebutton.h"
 
 
 
@@ -136,6 +146,10 @@ HRESULT CLoader::Loading_ForPrototype()
 		CHPbar::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HPbar_World"),
+		CHPbar_World::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_CPguage"),
 		CCP_Guage::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -151,6 +165,12 @@ HRESULT CLoader::Loading_ForPrototype()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HPfont"),
 		CHP_Font::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_HPfont_World"),
+		CHP_Font_World::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Comboline"),
 		CUI_Comboline::Create(m_pDevice, m_pContext))))
@@ -172,8 +192,41 @@ HRESULT CLoader::Loading_ForPrototype()
 		CUI_font_Hits_number::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitback"),
+		CPortraitback::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
-	/*For.Prototype_GameObject_Sky */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_top"),
+		CUI_Portraitfront_top::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_right"),
+		CUI_Portraitfront_right::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_bottom"),
+		CUI_Portraitfront_bottom::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_left"),
+		CUI_Portraitfront_left::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SKill_button"),
+		CUI_Skillbutton::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance ->Add_Prototype(TEXT("Prototype_GameObject_UI_SKill_change_button"),
+		CUI_Changebutton::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront"),
+		CUI_Portraitfront::Create(m_pDevice, m_pContext))))
+		return E_FAIL;*/
+
+
+	/*For.Prototype_GameObject_Sky */                                
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -429,7 +482,7 @@ HRESULT CLoader::Loading_ForUITexture()
 
 	/*For.hpfont */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_font"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/numberfont/font%d.dds"), 11))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/numberfont/tfont%d.dds"), 11))))
 		return E_FAIL;
 
 	/*For.line */
@@ -454,6 +507,23 @@ HRESULT CLoader::Loading_ForUITexture()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MPguage"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/MPguage/MPguage%d.dds"), 2))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portrait_back"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/portrait/portraitbase%d.dds"), 2))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portrait_front"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/portrait/battle_portrait_%d.dds"), 5))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Skillbutton"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillkey/skillbutton%d.dds"), 3))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_changebutton"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillkey/ctrlicon.dds"), 1))))
+		return E_FAIL;
+
 
 
 

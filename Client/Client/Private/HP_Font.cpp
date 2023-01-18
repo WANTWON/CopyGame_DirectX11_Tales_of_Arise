@@ -26,24 +26,24 @@ HRESULT CHP_Font::Initialize(void * pArg)
 	m_fSize.x = 16.f;
 	m_fSize.y = 20.f;
 
-	if (m_iYIndex == 0)
+	if (m_iIndex == 0)
 	{
-		m_fPosition.x = 1180.f + (m_iIndex * 14);
+//		m_fPosition.x = 1180.f + (m_iIndex * 14);
 		m_fPosition.y = 375;
 	}
-	if (m_iYIndex == 1)
+	if (m_iIndex == 1)
 	{
-		m_fPosition.x = 1180.f + (m_iIndex * 14);
+//		m_fPosition.x = 1180.f + (m_iIndex * 14);
 		m_fPosition.y = 435;
 	}
-	if (m_iYIndex == 2)
+	if (m_iIndex == 2)
 	{
-		m_fPosition.x = 1180.f + (m_iIndex * 14);
+//		m_fPosition.x = 1180.f + (m_iIndex * 14);
 		m_fPosition.y = 495;
 	}
-	if (m_iYIndex == 3)
+	if (m_iIndex == 3)
 	{
-		m_fPosition.x = 1180.f + (m_iIndex * 14);
+//		m_fPosition.x = 1180.f + (m_iIndex * 14);
 		m_fPosition.y = 555;
 	}
 
@@ -55,25 +55,14 @@ HRESULT CHP_Font::Initialize(void * pArg)
 
 int CHP_Font::Tick(_float fTimeDelta)
 {
-	if (m_iIndex == 0)
-	{
-		m_itexnum = m_iCurrenthp / 1000;
-	}
-	else if (m_iIndex == 1)
-	{
-		m_itexnum = ((m_iCurrenthp % 1000) / 100);
-	}
-	else if (m_iIndex == 2)
-	{
-		m_itexnum = ((m_iCurrenthp % 100) / 10);
-	}
-	else if (m_iIndex == 3)
-	{
-		m_itexnum = m_iCurrenthp % 10;
-	}
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
+		--m_iCurrenthp;
 
-	if (m_iCurrenthp == 0)
-		m_itexnum = 0;
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_J))
+		++m_iCurrenthp;
+
+	m_fPosition.x = 1180.f;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	return OBJ_NOEVENT;
 }
 
@@ -86,7 +75,74 @@ void CHP_Font::Late_Tick(_float fTimeDelta)
 
 HRESULT CHP_Font::Render()
 {
-	__super::Render();
+	if (nullptr == m_pShaderCom ||
+		nullptr == m_pVIBufferCom)
+		return E_FAIL;
+
+	m_itexnum = m_iCurrenthp / 1000;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+	if (m_iCurrenthp >= 1000)
+	{
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+	}
+
+	if (m_iCurrenthp >= 100)
+	{
+		m_itexnum = ((m_iCurrenthp % 1000) / 100);
+
+		m_fPosition.x = 1194;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+	}
+
+	if (m_iCurrenthp >= 10)
+	{
+		m_itexnum = ((m_iCurrenthp % 100) / 10);
+
+		m_fPosition.x = 1208;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+	}
+
+
+	if (m_iCurrenthp >= 2)
+	{
+		m_itexnum = m_iCurrenthp % 10;
+
+		m_fPosition.x = 1222;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+
+
+	}
 
 	return S_OK;
 }

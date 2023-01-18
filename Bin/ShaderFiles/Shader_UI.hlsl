@@ -8,6 +8,7 @@ float			g_fAlpha = 1.f;
 
 float			g_fMinRange = 100.f;
 float			g_fMaxRange = 400.f;
+float a = 0.f;
 
 float g_fCurrentHp;
 float g_fMaxHp;
@@ -178,12 +179,12 @@ PS_OUT PS_Golden(PS_IN In)
 {
 	PS_OUT      Out = (PS_OUT)0;
 
-	/*if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+	/*if ((g_fCurrentHp / g_fMaxHp) < In.vTexUV.x)
 		discard;*/
 
 	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
-	if (origincolor.a > 0.4f)
+	if (origincolor.r >= 0.7f && origincolor.g >= 0.7f && origincolor.b >= 0.7f)//if (origincolor.a > 0.2f)// //
 	{
 		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -196,8 +197,8 @@ PS_OUT PS_Golden(PS_IN In)
 
 
 
-	/*if (Out.vColor.a<0.3f)
-		discard;*/
+	if (Out.vColor.a < 0.2f)
+		discard;
 
 	Out.vColor.a -= g_fAlpha;
 
@@ -264,6 +265,11 @@ PS_OUT PS_CPguageblack(PS_IN In)
 PS_OUT PS_MPGUAGE(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
+
+	if (g_fCurrentHp / 1.f < In.vTexUV.x)
+		discard;
+
+
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
 	//Out.vColor.a -= g_fAlpha;
@@ -286,6 +292,69 @@ PS_OUT PS_BLACKCOLOR(PS_IN In)
 
 	return Out;
 }
+
+PS_OUT PS_PORTRAITDARK(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+
+	if (Out.vColor.a <= 0.3f)
+		discard;
+
+	Out.vColor.a -= g_fAlpha;
+	Out.vColor.r -= 0.15f;
+	Out.vColor.g -= 0.15f;
+	Out.vColor.b -= 0.15f;
+
+	
+
+	return Out;
+}
+
+PS_OUT PS_POREADY(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	/*if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+		discard;*/
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.rgb += a;
+
+	Out.vColor.a -= g_fAlpha;
+	Out.vColor.r = max(0.9372549019607843f, Out.vColor.r);
+	Out.vColor.g = max(0.8745098039215686f, Out.vColor.g); 
+	Out.vColor.b = max(0.7647058823529412f, Out.vColor.b); 
+
+
+	/*if (Out.vColor.a == 0)
+		discard;*/
+	return Out;
+}
+
+PS_OUT PS_ALLBLUE(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+//	if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+//		discard;
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	//Out.vColor.a -= g_fAlpha;
+	Out.vColor.r = 0.0589019607843137f;
+	Out.vColor.g = 0.942708f;
+	Out.vColor.b = 0.83441f;
+
+	return Out;
+}
+
+
+
 
 
 technique11 DefaultTechnique
@@ -432,6 +501,42 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_BLACKCOLOR();
 	}
+
+	pass PORTRAITDARK
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_PORTRAITDARK();
+	}
+
+	pass POREADY
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_POREADY();
+	}
+
+	pass PS_ALLBLUE
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALLBLUE();
+	}
+
+
+	
 	
 }
 

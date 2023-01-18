@@ -22,7 +22,7 @@ HRESULT CUI_font_Damage_number::Initialize(void * pArg)
 {
 	if (pArg != nullptr)
 		m_iIndex = *(_uint*)pArg;
-	m_eShaderID = UI_GOLDEN;
+	m_eShaderID = 0;
 	m_fSize.x = 28.f;
 	m_fSize.y = 32.f;
 	m_fPosition.x = 1030.f + (m_iIndex * 20);

@@ -21,12 +21,12 @@ HRESULT CUI_Combo_font_Hits::Initialize_Prototype()
 
 HRESULT CUI_Combo_font_Hits::Initialize(void * pArg)
 {
-	m_eShaderID = UI_GOLDEN;
+	m_eShaderID = 0;
 
 	m_fSize.x = 70.f;
 	m_fSize.y = 20.f;
 	m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
-	m_fPosition.y = 135.f;
+	m_fPosition.y = 133.f;
 
 	m_fAlpha = 1;
 
