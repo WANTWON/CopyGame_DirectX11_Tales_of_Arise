@@ -31,6 +31,9 @@ HRESULT CTerrain::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Create_FilterTexture()))
+		return E_FAIL;
+
 	if (m_eDebugtype == DEBUG_SOILD)
 	{
 		CTerrain_Manager::Get_Instance()->Add_DebugTerrain(this);
@@ -304,6 +307,9 @@ HRESULT CTerrain::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fBrushRange", &fBrushRadius, sizeof(_float))))
 		return E_FAIL;
 	
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_FilterTexture", m_pFilterTexture)))
+		return E_FAIL;
+
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -351,9 +357,9 @@ void CTerrain::Save_Terrain(HANDLE hFile, _ulong* dwByte)
 
 HRESULT CTerrain::Create_FilterTexture()
 {
-	if (CGameInstance::Get_Instance()->Mouse_Pressing(DIMK_LBUTTON))
+	if (!m_bFirst)
 	{
-
+		m_bFirst = true;
 		ID3D11Texture2D*			pTexture2D = nullptr;
 
 		D3D11_TEXTURE2D_DESC		TextureDesc;
@@ -380,14 +386,82 @@ HRESULT CTerrain::Create_FilterTexture()
 			for (_uint j = 0; j < TextureDesc.Width; ++j)
 			{
 				_uint		iIndex = i * TextureDesc.Width + j;
+				pPixel[iIndex] = D3DCOLOR_ARGB(0, 0, 0, 255);
+			}
+		}
+
+		D3D11_SUBRESOURCE_DATA			SubResourceData;
+		ZeroMemory(&SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+
+		SubResourceData.pSysMem = pPixel;
+		SubResourceData.SysMemPitch = 128 * 4;
+
+		if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, &SubResourceData, &pTexture2D)))
+			goto FAIL;
+
+		D3D11_MAPPED_SUBRESOURCE			SubResource;
+		ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+		if (FAILED(m_pContext->Map(pTexture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
+			goto FAIL;
+
+		memcpy(SubResource.pData, pPixel, sizeof(_uint) * TextureDesc.Width * TextureDesc.Height);
+
+		m_pContext->Unmap(pTexture2D, 0);
+
+		if (FAILED(DirectX::SaveDDSTextureToFile(m_pContext, pTexture2D, TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.dds"))))
+			goto FAIL;
+
+		if (FAILED(m_pDevice->CreateShaderResourceView(pTexture2D, nullptr, &m_pFilterTexture)))
+			goto FAIL;
+
+		Safe_Delete_Array(pPixel);
+		Safe_Release(pTexture2D);
+		return S_OK;
+
+	}
+
+	if (CGameInstance::Get_Instance()->Mouse_Pressing(DIMK_LBUTTON))
+	{
+		
+		ID3D11Texture2D*			pTexture2D = nullptr;
+
+		D3D11_TEXTURE2D_DESC		TextureDesc;
+		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		TextureDesc.Width = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumX*30.f;
+		TextureDesc.Height = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumZ*30.f;
+		TextureDesc.MipLevels = 1;
+		TextureDesc.ArraySize = 1;
+		TextureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+
+		TextureDesc.SampleDesc.Quality = 0;
+		TextureDesc.SampleDesc.Count = 1;
+
+		TextureDesc.Usage = D3D11_USAGE_DYNAMIC;
+		TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		TextureDesc.MiscFlags = 0;
+
+		_uint*			pPixel = new _uint[TextureDesc.Width * 	TextureDesc.Height];
+
+		for (_uint i = 0; i < TextureDesc.Height; ++i)
+		{
+			for (_uint j = 0; j < TextureDesc.Width; ++j)
+			{
+				_uint		iIndex = i * TextureDesc.Width + j;
 
 				_float3 vMousePos = m_vMousePickPos;
-				_float3 vPixelPos = _float3(j, 0., i);
+				_float3 vPixelPos = _float3(j/30.f, 0., i/30.f);
 				vMousePos.y = vPixelPos.y = 0.f;
 				_vector fDis = XMLoadFloat3(&vMousePos) - XMLoadFloat3(&vPixelPos);
 				_float fLen = XMVectorGetX(XMVector3Length(fDis));
-				_uint iPixelValue = (1 - (fLen / 10.f)) * 255;
-				pPixel[iIndex] += D3DCOLOR_ARGB(iPixelValue, iPixelValue, iPixelValue, iPixelValue);
+				_float fAlpha = (fLen / 10.f);
+				if (fAlpha > 1.f)
+					fAlpha = 1.f;
+				_uint iPixelValue = (1 - fAlpha) * 255;
+				pPixel[iIndex] = D3DCOLOR_ARGB(iPixelValue, iPixelValue, iPixelValue, iPixelValue);
+
 				if ((pPixel[iIndex] & 0x000000ff) >= 255)
 				{
 					pPixel[iIndex] = D3DCOLOR_ARGB(255, 255, 255, 255);
@@ -414,8 +488,6 @@ HRESULT CTerrain::Create_FilterTexture()
 		if (FAILED(m_pContext->Map(pTexture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
 			goto FAIL;
 
-		//pPixel[0] = D3DCOLOR_ARGB(255, 255, 255, 0);
-
 		memcpy(SubResource.pData, pPixel, sizeof(_uint) * TextureDesc.Width * TextureDesc.Height);
 
 		m_pContext->Unmap(pTexture2D, 0);
@@ -423,6 +495,11 @@ HRESULT CTerrain::Create_FilterTexture()
 		if (FAILED(DirectX::SaveDDSTextureToFile(m_pContext, pTexture2D, TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.dds"))))
 			goto FAIL;
 
+
+		if (m_pFilterTexture != nullptr)
+		{
+			Safe_Release(m_pFilterTexture);
+		}
 		if (FAILED(m_pDevice->CreateShaderResourceView(pTexture2D, nullptr, &m_pFilterTexture)))
 			goto FAIL;
 			
