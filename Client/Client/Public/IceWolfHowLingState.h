@@ -19,7 +19,7 @@ public:
 private:
 	_float m_fHowLingMoveTimer = 0.f;
 	_float m_fHowLingAttackTimer = 1.5f;
-	_uint  m_iRand = 0.f;
+	_uint  m_iRand = 0;
 
 };
 END

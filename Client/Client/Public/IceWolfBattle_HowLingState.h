@@ -18,7 +18,7 @@ public:
 	virtual void Exit() override;
 
 private:
-	_uint		m_iRand = 0.f;
+	_uint		m_iRand = 0;
 	_float		m_fIdleAttackTimer = 0.f;
 	_bool		m_bAnimFinish = false;
 };

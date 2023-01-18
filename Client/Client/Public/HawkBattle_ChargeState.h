@@ -17,7 +17,7 @@ public:
 	virtual void Exit() override;
 
 private:
-	_uint		m_iRand = 0.f;
+	_uint		m_iRand = 0;
 	_float		m_fIdleMoveTimer = 0.f;
 	_float		m_fIdleAttackTimer = 1.5f;
 	_float		m_fTarget_Distance;

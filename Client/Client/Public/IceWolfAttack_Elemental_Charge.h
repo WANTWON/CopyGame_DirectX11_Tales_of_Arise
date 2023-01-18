@@ -26,7 +26,7 @@ private:
 	_vector		m_vCharge_End_BeforePos;
 	_bool		m_bEntry_Charge_End = false;
 
-	_uint		m_iRand = 0.f;
+	_uint		m_iRand = 0;
 
 
 	_float		m_fIdleAttackTimer = 0.0f;

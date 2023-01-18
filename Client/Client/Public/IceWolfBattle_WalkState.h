@@ -20,7 +20,7 @@ public:
 private:
 	
 	_float		m_fTarget_Distance;
-	_uint		m_iRand = 0.f;
+	_uint		m_iRand = 0;
 	_float		m_fIdleAttackTimer = 0.f;
 	
 };
