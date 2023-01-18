@@ -5,26 +5,24 @@ CAnimation::CAnimation()
 {
 }
 
-HRESULT CAnimation::Initialize(CModel* pModel, aiAnimation * pAIAnimation)
+HRESULT CAnimation::Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel)
 {
-	strcpy_s(m_szName, pAIAnimation->mName.data);
+	if (nullptr == hFile)
+		return E_FAIL;
 
-	/* 애니메이션 재생에 필요한 총 시간. */
-	m_fDuration = (_float)pAIAnimation->mDuration;
+	ReadFile(hFile, m_szName, sizeof(char) * MAX_PATH, pdwByte, nullptr);
 
-	/* 초당 애니메이션 재생 속도 */
-	m_fTickPerSecond = (_float)pAIAnimation->mTicksPerSecond;
+	double dbDuration, dbTickPerSecond;
+	ReadFile(hFile, &dbDuration, sizeof(double), pdwByte, nullptr);
+	ReadFile(hFile, &dbTickPerSecond, sizeof(double), pdwByte, nullptr);
+	m_fDuration = (_float)dbDuration;
+	m_fTickPerSecond = (_float)dbTickPerSecond;
 
-	/* 애니메이션을 표현하는데 사용하는 뼈의 갯수. */
-	m_iNumChannels = pAIAnimation->mNumChannels;
+	ReadFile(hFile, &m_iNumChannels, sizeof(_uint), pdwByte, nullptr);
 
 	for (_uint i = 0; i < m_iNumChannels; ++i)
 	{
-		aiNodeAnim*		pAIChannel = pAIAnimation->mChannels[i];
-
-		/* 이뼈가 이 애니메이션 하나를 구동할때 시간별로 표현되었어야할 상태(KEYFRAME)  */
-		CChannel*		pChannel = CChannel::Create(pModel, pAIAnimation->mChannels[i]);
-
+		CChannel* pChannel = CChannel::Create(hFile, pdwByte, pModel);
 		if (nullptr == pChannel)
 			return E_FAIL;
 
@@ -127,27 +125,40 @@ void CAnimation::Set_TimeReset()
 	m_fCurrentTime = 0.f;
 }
 
-void CAnimation::Get_AnimData(DATA_BINANIM * pAnimData)
+//void CAnimation::Get_AnimData(DATA_BINANIM * pAnimData)
+//{
+//	pAnimData->fDuration = m_fDuration;
+//	pAnimData->iNumChannels = m_iNumChannels;
+//	pAnimData->fTickPerSecond = m_fTickPerSecond;
+//	pAnimData->bLoop = m_isLoop;
+//	strcpy_s(pAnimData->szName, m_szName);
+//
+//	pAnimData->pBinChannel = new DATA_BINCHANNEL[m_iNumChannels];
+//
+//	for (_int i = 0; i < m_iNumChannels; ++i)
+//	{
+//		m_Channels[i]->Get_ChannelData(&pAnimData->pBinChannel[i]);
+//	}
+//}
+
+//CAnimation * CAnimation::Create( CModel* pModel, aiAnimation * pAIAnimation)
+//{
+//	CAnimation*	pInstance = new CAnimation();
+//
+//	if (FAILED(pInstance->Initialize(pModel, pAIAnimation)))
+//	{
+//		ERR_MSG(TEXT("Failed to Created : CAnimation"));
+//		Safe_Release(pInstance);
+//	}
+//
+//	return pInstance;
+//}
+
+CAnimation * CAnimation::Create(HANDLE hFile, _ulong * pdwByte, CModel * pModel)
 {
-	pAnimData->fDuration = m_fDuration;
-	pAnimData->iNumChannels = m_iNumChannels;
-	pAnimData->fTickPerSecond = m_fTickPerSecond;
-	pAnimData->bLoop = m_isLoop;
-	strcpy_s(pAnimData->szName, m_szName);
+	CAnimation* pInstance = new CAnimation();
 
-	pAnimData->pBinChannel = new DATA_BINCHANNEL[m_iNumChannels];
-
-	for (_int i = 0; i < m_iNumChannels; ++i)
-	{
-		m_Channels[i]->Get_ChannelData(&pAnimData->pBinChannel[i]);
-	}
-}
-
-CAnimation * CAnimation::Create( CModel* pModel, aiAnimation * pAIAnimation)
-{
-	CAnimation*	pInstance = new CAnimation();
-
-	if (FAILED(pInstance->Initialize(pModel, pAIAnimation)))
+	if (FAILED(pInstance->Initialize(hFile, pdwByte, pModel)))
 	{
 		ERR_MSG(TEXT("Failed to Created : CAnimation"));
 		Safe_Release(pInstance);

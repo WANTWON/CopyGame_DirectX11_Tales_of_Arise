@@ -27,11 +27,11 @@ public:
 public:
 	HRESULT Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
-	HRESULT Conv_Bin_Model(CModel* pModel, char* cModelName, DATA_TYPE eTYPE);
+	//HRESULT Conv_Bin_Model(CModel* pModel, char* cModelName, DATA_TYPE eTYPE);
 	HRESULT SaveSceneData(DATA_BINSCENE* pScene, char* cModelName, DATA_TYPE eTYPE);
 	HRESULT ReadSceneData(char* pFileName, DATA_BINSCENE* pScene, DATA_TYPE eTYPE);
 
-	HRESULT Create_Try_BinModel(const _tchar* pModelName, LEVEL eLEVEL, DATA_TYPE eTYPE);
+	//HRESULT Create_Try_BinModel(const _tchar* pModelName, LEVEL eLEVEL, DATA_TYPE eTYPE);
 
 
 private:

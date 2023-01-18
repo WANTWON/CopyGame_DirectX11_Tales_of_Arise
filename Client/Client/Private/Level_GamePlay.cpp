@@ -48,8 +48,6 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);	
-
-
 }
 
 void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
