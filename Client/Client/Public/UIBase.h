@@ -19,7 +19,8 @@ BEGIN(Client)
 class CUI_Base abstract : public CGameObject
 {
 public:
-	enum SHADERUI_ID { UI_ALPHADEFAULT, UI_ALPHABLEND, UI_PICKED, UI_ALPHASET, UI_SCREEN, UI_EFFECTFADEOUT,UI_HPBAR,UI_COMBOLINE, UI_EFFECTSCREEN,UI_END };
+	enum SHADERUI_ID { UI_ALPHADEFAULT, UI_ALPHABLEND, UI_PICKED, UI_ALPHASET, UI_SCREEN, UI_EFFECTFADEOUT,UI_HPBAR,UI_COMBOLINE,UI_GOLDEN, UI_CP_GUAGE,
+		UI_CP_GUAGE_BLACK,UI_MP_GUAGE, UI_COLOR_BLACK, UI_EFFECTSCREEN,UI_END };
 
 protected:
 	CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -54,6 +55,7 @@ protected:
 
 	_bool                   m_bisinLoading = false;
 
+	_bool m_bIsRender = false;
 
 public:
 	virtual HRESULT Ready_Components(void * pArg = nullptr) = 0;

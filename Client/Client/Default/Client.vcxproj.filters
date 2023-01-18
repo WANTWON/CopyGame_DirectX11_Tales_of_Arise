@@ -133,6 +133,15 @@
     <Filter Include="02.GameObjects\02.NonAnim\03.Water">
       <UniqueIdentifier>{26addeea-b33a-44bf-b84f-73a6b30f6d6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates">
+      <UniqueIdentifier>{ae23029e-ab52-4a7f-96b0-97b89ff8f1b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\05.CP_Guage">
+      <UniqueIdentifier>{2988ec64-d485-42a9-a8fd-118a65ca318b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\06.MP_Guage">
+      <UniqueIdentifier>{f52fe98f-b14d-4cde-8b18-2cbf54fcc949}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -273,6 +282,15 @@
     <ClInclude Include="..\public\IceWolfWalkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CP_Guage.h">
+      <Filter>02.GameObjects\04.UI\05.CP_Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CP_Guage_font.h">
+      <Filter>02.GameObjects\04.UI\05.CP_Guage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MPguage.h">
+      <Filter>02.GameObjects\04.UI\06.MP_Guage</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\IceWolfTurnLeftState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
@@ -281,6 +299,27 @@
     </ClInclude>
     <ClInclude Include="..\public\Water.h">
       <Filter>02.GameObjects\02.NonAnim\03.Water</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfHowLingState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfChaseState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfAttackNormalState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_WalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfAttack_Elemental_Charge.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_IdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_HowLingState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -401,6 +440,15 @@
     <ClCompile Include="..\private\IceWolfWalkState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CP_Guage.cpp">
+      <Filter>02.GameObjects\04.UI\05.CP_Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CP_Guage_font.cpp">
+      <Filter>02.GameObjects\04.UI\05.CP_Guage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MPguage.cpp">
+      <Filter>02.GameObjects\04.UI\06.MP_Guage</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\IceWolfTurnLeftState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
@@ -409,6 +457,27 @@
     </ClCompile>
     <ClCompile Include="..\private\Water.cpp">
       <Filter>02.GameObjects\02.NonAnim\03.Water</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfHowLingState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfChaseState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfAttackNormalState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_WalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfAttack_Elemental_Charge.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_IdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_HowLingState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -447,6 +516,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_UI.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPoint.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

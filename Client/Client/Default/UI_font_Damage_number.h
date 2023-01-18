@@ -34,13 +34,16 @@ public:
 	void sizedown() { m_fSize.x -= 0.4f;	m_fSize.y -= 0.4f; }
 
 private:
+	CTexture*				m_pTextureCom1 = nullptr;
 	_uint m_iIndex = 0;
 	_uint m_iYIndex = 0;
 
 	_uint m_itexnum = 0;
-	_uint m_iCurrentDamage = 514765;
+	_uint m_iCurrentDamage = 0;
 
 	_bool m_bsizedown = false;
+
+	_bool m_bRender = true;
 };
 
 END

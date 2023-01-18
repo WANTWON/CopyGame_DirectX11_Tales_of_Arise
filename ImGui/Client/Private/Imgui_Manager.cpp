@@ -193,6 +193,7 @@ void CImgui_Manager::Tick_Imgui()
 
 			Set_Terrain_Map();
 			Set_Terrain_Shape();
+			Set_HeightMap();
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Model Tool"))
@@ -1051,11 +1052,10 @@ void CImgui_Manager::Set_Terrain_Map()
 			return;
 	}
 
-
+	ImGui::SameLine();
 	if (ImGui::Button("Create Terrain"))
 	{
-		LEVEL pLevelIndex = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-		if (FAILED(m_pTerrain_Manager->Create_Terrain(pLevelIndex, TEXT("Layer_Terrain"))))
+		if (FAILED(m_pTerrain_Manager->Create_Terrain(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"))))
 			return;
 	}
 
@@ -1078,7 +1078,7 @@ void CImgui_Manager::Set_Terrain_Map()
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_Z))
 	{
-		list<CGameObject*>* plistClone = CGameInstance::Get_Instance()->Get_ObjectList(m_iCurrentLevel, TEXT("Layer_Terrain"));
+		list<CGameObject*>* plistClone = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"));
 		if (nullptr == plistClone || plistClone->size() == 0)
 			return;
 
@@ -1145,6 +1145,223 @@ void CImgui_Manager::Set_Terrain_Shape()
 	{
 		CPickingMgr::Get_Instance()->Picking();
 	}
+
+	if (ImGui::Button("Save Terrian"))
+	{
+		Save_Terrain();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Load Terrian"))
+	{
+		Load_Terrain();
+	}
+
+
+}
+
+void CImgui_Manager::Save_Terrain()
+{
+	OPENFILENAME OFN;
+	TCHAR filePathName[300] = L"";
+	TCHAR lpstrFile[300] = L"";
+	static TCHAR filter[] = L"데이터 파일\0*.dat\0텍스트 파일\0*.txt";
+
+	memset(&OFN, 0, sizeof(OPENFILENAME));
+	OFN.lStructSize = sizeof(OPENFILENAME);
+	OFN.hwndOwner = g_hWnd;
+	OFN.lpstrFilter = filter;
+	OFN.lpstrFile = lpstrFile;
+	OFN.nMaxFile = 300;
+	OFN.lpstrInitialDir = L".";
+	OFN.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
+
+	if (GetSaveFileName(&OFN))
+	{
+		//ERR_MSG(TEXT("save-as  '%s'\n"), ofn.lpstrFile); //경로// 파일이름.확장자
+		//ERR_MSG(TEXT("filename '%s'\n"), ofn.lpstrFile + ofn.nFileOffset); 
+
+		HANDLE hFile = 0;
+		_ulong dwByte = 0;
+		_uint iNum = 0;
+		_float3	 vPoints[3];
+		list<CGameObject*>* pTerrainList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"));
+
+
+		iNum = (_int)pTerrainList->size();
+
+		hFile = CreateFile(OFN.lpstrFile, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);;
+		if (0 == hFile)
+			return;
+
+		/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
+		WriteFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+		for (auto& iter : *pTerrainList)
+		{
+			dynamic_cast<CTerrain*>(iter)->Save_Terrain(hFile, &dwByte);
+		}
+
+		CloseHandle(hFile);
+	}
+}
+
+void CImgui_Manager::Load_Terrain()
+{
+	OPENFILENAME OFN;
+	TCHAR filePathName[300] = L"";
+	TCHAR lpstrFile[300] = L"";
+	static TCHAR filter[] = L"데이터 파일\0*.dat\0텍스트 파일\0*.txt";
+
+	memset(&OFN, 0, sizeof(OPENFILENAME));
+	OFN.lStructSize = sizeof(OPENFILENAME);
+	OFN.hwndOwner = g_hWnd;
+	OFN.lpstrFilter = filter;
+	OFN.lpstrFile = lpstrFile;
+	OFN.nMaxFile = 300;
+	OFN.lpstrInitialDir = L".";
+
+	if (GetOpenFileName(&OFN) != 0) {
+		wsprintf(filePathName, L"%s 파일을 열겠습니까?", OFN.lpstrFile);
+		MessageBox(g_hWnd, filePathName, L"열기 선택", MB_OK);
+
+		//ERR_MSG(TEXT("save-as  '%s'\n"), ofn.lpstrFile); //경로// 파일이름.확장자
+		//ERR_MSG(TEXT("filename '%s'\n"), ofn.lpstrFile + ofn.nFileOffset); 
+
+		HANDLE hFile = 0;
+		_ulong dwByte = 0;
+		_uint iNum = 0;
+		_float3		vPoints[3];
+
+		hFile = CreateFile(OFN.lpstrFile, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		if (0 == hFile)
+			return;
+
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		/* 타일의 개수 받아오기 */
+		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	
+		for (int i = 0; i< iNum; ++i)
+		{
+			_tchar			szFullPath[MAX_PATH] = TEXT("Prototype_Component_VIBuffer_Terrain_Load");
+
+			if(pGameInstance->Check_Prototype(LEVEL_STATIC, szFullPath) == S_OK)
+				pGameInstance->Add_Prototype(LEVEL_STATIC, szFullPath, m_pTerrain_Manager->Create_Terrain(m_pDevice,m_pContext , hFile, dwByte));
+			pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), szFullPath);
+		}
+		CloseHandle(hFile);
+
+		RELEASE_INSTANCE(CGameInstance);
+	}
+}
+
+void CImgui_Manager::Set_HeightMap()
+{
+	ImGui::GetIO().NavActive = false;
+	ImGui::GetIO().WantCaptureMouse = true;
+	ImGui::CollapsingHeader("Height_Map");
+
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Set_File_Path")) m_bFilePath = !m_bFilePath;
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
+	vector<const _tchar*> TerrainTags = m_pTerrain_Manager->Get_PrototypeTagList();
+
+	// ------------------------ Left-----------------------------------
+	static int selected = 0;
+	{
+		ImGui::BeginChild("left pane", ImVec2(150, 100), true);
+
+		int i = 0;
+
+		if (TerrainTags.size() != 0)
+		{
+			for (auto& iter : TerrainTags)
+			{
+				if (iter == nullptr)
+					continue;
+				char label[MAX_PATH];
+				char szLayertag[MAX_PATH] = "";
+				WideCharToMultiByte(CP_ACP, 0, iter, MAX_PATH, szLayertag, MAX_PATH, NULL, NULL);
+				sprintf(label, szLayertag);
+				if (ImGui::Selectable(label, selected == i))
+					selected = i;
+				i++;
+			}
+		}
+		ImGui::EndChild();
+	}
+	ImGui::SameLine();
+
+
+
+	// ------------------------ Right -----------------------------------
+	{
+
+		ImGui::BeginGroup();
+		ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
+		char szLayertag[MAX_PATH] = "";
+		if (TerrainTags.size() != 0)
+			WideCharToMultiByte(CP_ACP, 0, TerrainTags[selected], MAX_PATH, szLayertag, MAX_PATH, NULL, NULL);
+		ImGui::Text("Selected :"); ImGui::SameLine();  ImGui::Text(szLayertag);
+		if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
+		{
+			
+			if (ImGui::Button("Load_Bmp"))
+			{
+				m_pTerrain_Manager->Create_Terrain(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TerrainTags[selected]);
+			}
+			ImGui::EndTabBar();
+		}
+
+		ImGui::EndChild();
+		ImGui::EndGroup();
+	}
+
+}
+
+void CImgui_Manager::Set_Brush()
+{
+	ImGui::GetIO().NavActive = false;
+	ImGui::GetIO().WantCaptureMouse = true;
+
+	ImGui::CollapsingHeader("Brush");
+
+	ImGui::Text("Height");
+	ImGui::SameLine();
+	ImGui::DragFloat("##fHeight", &m_TerrainShapeDesc.fHeight, 0.1f);
+
+	ImGui::Text("Radius");
+	ImGui::SameLine();
+	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius, 0.1f);
+
+	ImGui::Text("Sharp");
+	ImGui::SameLine();
+	ImGui::DragFloat("##fSharp", &m_TerrainShapeDesc.fSharp, 0.1f);
+
+
+	m_pTerrain_Manager->Set_TerrainShapeDesc(&m_TerrainShapeDesc);
+
+	if (m_PickingType == PICKING_TERRAIN_SHAPE)
+	{
+		CPickingMgr::Get_Instance()->Picking();
+	}
+
+	if (ImGui::Button("Save Terrian"))
+	{
+		Save_Terrain();
+	}
+	if (ImGui::Button("Load Terrian"))
+	{
+		Load_Terrain();
+	}
+
 
 }
 
@@ -2193,6 +2410,10 @@ void CImgui_Manager::Free()
 	for (auto& iter : m_TempLayerTags)
 		Safe_Delete(iter);
 	m_TempLayerTags.clear();
+
+	for (auto& iter : m_TerrainTags)
+		Safe_Delete(iter);
+	m_TerrainTags.clear();
 
 	m_stLayerTags.clear();
 	//CleanupDeviceD3D();

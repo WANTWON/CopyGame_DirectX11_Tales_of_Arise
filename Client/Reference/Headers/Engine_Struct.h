@@ -77,7 +77,18 @@ namespace Engine
 	{
 		XMFLOAT3		vPosition;
 		XMFLOAT2		vPSize;
+
+		XMFLOAT4		vRight;
+		XMFLOAT4		vUp;
+		XMFLOAT4		vLook;
+		XMFLOAT4		vTranslation;
 	}VTXPOINT;
+
+	typedef struct ENGINE_DLL tagVertexPoint_Declaration
+	{
+		static const unsigned int iNumElements = 6;
+		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
+	}VTXPOINT_DECLARATION;
 
 	typedef struct tagVertexMatrix
 	{

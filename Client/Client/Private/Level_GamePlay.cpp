@@ -115,8 +115,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(10.f, 0.f, 10.f, 1.f));
 	pPlayer->Change_Navigation(LEVEL_GAMEPLAY);
 	pPlayer->Compute_CurrentIndex(LEVEL_GAMEPLAY);
-
-	//pPlayer->Get_AnimTransform()->Set_State(CTransform::STATE_TRANSLATION, pPlayer->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+	pPlayer->Check_Navigation();
 
 	Safe_Release(pGameInstance);
 	
@@ -129,7 +128,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 
-	for (_uint i = 0; i < 10; ++i)
+	for (_uint i = 0; i < 5; ++i)
 	{
 		_vector vPosition = { rand() % 20, 0.f, rand() % 20 , 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
@@ -146,6 +145,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	//if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Prototype_Component_VIBuffer_Terrain_Load"))))
+	//	return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
 		return E_FAIL;
@@ -257,8 +259,23 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
+	
+	for (int i = 0; i < 7; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_GAMEPLAY, pLayerTag, &i)))
+			return E_FAIL;
+
+	}
 	
 	
+	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MPguage"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 

@@ -26,6 +26,8 @@ public:
 
 	_uint Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; }
 
+	_float4x4 Get_MoveTransformationMatrix(const char* pBoneName);
+
 public:
 	void Set_CurrentAnimIndex(_uint iAnimIndex);
 	/*For. NextTotalBody_Anim*/
@@ -43,12 +45,11 @@ public:
 
 public:
 	HRESULT SetUp_Material(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint TextureNum = 0);
-	_bool Play_Animation(_float fTimeDelta, _bool isLoop = true, _matrix* pRootMatrix = nullptr);
+	_bool Play_Animation(_float fTimeDelta, _bool isLoop = true, const char* pBoneName = nullptr);
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
 	HRESULT RenderShadow(class CShader* pShader, _uint iMeshIndex, _uint iLevelIndex,  _uint iPassIndex = 0);
 	HRESULT Set_AnimationReset();
 	_bool Picking(CTransform * pTransform, _float3 * pOut);
-
 
 private:
 	const aiScene*				m_pAIScene = nullptr;

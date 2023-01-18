@@ -35,6 +35,7 @@ public:
 
 
 private:
+	CTexture*				m_pTextureCom1 = nullptr;
 	_bool m_bfadein = false;
 	_bool m_bfadeout = false;
 
