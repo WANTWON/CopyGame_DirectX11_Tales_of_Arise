@@ -100,7 +100,6 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext *
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
-	Read_Objects_Name(m_pFilePath);
 	return S_OK;
 }
 
@@ -186,20 +185,24 @@ void CImgui_Manager::Tick_Imgui()
 	{
 		if (ImGui::BeginTabItem("Terrain Tool"))
 		{
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Picking for Moving Terrain"); ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Move"); ImGui::SameLine();
 			ImGui::RadioButton("##Picking for Moving Terrain", &m_PickingType, PICKING_TERRAIN_TRANSFORM); ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Picking for Shaping Terrain"); ImGui::SameLine();
-			ImGui::RadioButton("##Picking for Shaping Terrain", &m_PickingType, PICKING_TERRAIN_SHAPE);
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Shape"); ImGui::SameLine();
+			ImGui::RadioButton("##Picking for Shaping Terrain", &m_PickingType, PICKING_TERRAIN_SHAPE); ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Brush"); ImGui::SameLine();
+			ImGui::RadioButton("##Picking for Brush Terrain", &m_PickingType, PICKING_TERRAIN_BRUSH);
+
 
 			Set_Terrain_Map();
 			Set_Terrain_Shape();
 			Set_HeightMap();
+			Set_Brush();
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Model Tool"))
 		{
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Picking for Object"); ImGui::SameLine();
-			ImGui::Checkbox("##Picking for Object", &m_bCreateModel);
+			ImGui::RadioButton("##Picking for Object", &m_PickingType, PICKING_MODEL);
 
 
 			if (ImGui::BeginTabBar("ModelsTabs", ImGuiTabBarFlags_None))
@@ -259,7 +262,6 @@ void CImgui_Manager::Tick_Imgui()
 
 	if (m_bSave || m_bLoad)			BrowseForFolder();
 	if (m_bShowSimpleMousePos)      ShowSimpleMousePos(&m_bShowSimpleMousePos);
-	if (m_bFilePath)				Set_File_Path_Dialog();
 	if (m_bShow_app_style_editor) { ImGui::Begin("Dear ImGui Style Editor", &m_bShow_app_style_editor); ImGui::ShowStyleEditor(); ImGui::End(); }
 	ImGui::End();
 
@@ -491,7 +493,7 @@ void CImgui_Manager::Set_TrasureBox()
 	}
 
 
-	if (m_bCreateModel && CGameInstance::Get_Instance()->Key_Up(DIK_X))
+	if (m_PickingType == PICKING_MODEL && CGameInstance::Get_Instance()->Key_Up(DIK_X))
 	{
 		if (CPickingMgr::Get_Instance()->Picking())
 		{
@@ -506,7 +508,7 @@ void CImgui_Manager::Set_TrasureBox()
 
 		}
 	}
-	if (m_bCreateModel && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
+	if (m_PickingType == PICKING_MODEL && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
 	{
 		_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 		m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
@@ -628,21 +630,6 @@ void CImgui_Manager::Load_TrasureBox()
 
 }
 
-void CImgui_Manager::Set_FilePath()
-{
-	//모델들이 있는 폴더 경로를 설정하면, 그 폴더 안에 있는 fbx 모델들을 읽는다.
-	ImGui::BulletText("Setting FilePath");
-	static char FilePath[MAX_PATH] = "";
-	WideCharToMultiByte(CP_ACP, 0, m_pFilePath, MAX_PATH, FilePath, MAX_PATH, NULL, NULL);
-	ImGui::InputText("##FilePath", FilePath, MAX_PATH);
-	MultiByteToWideChar(CP_ACP, 0, FilePath, MAX_PATH, m_pFilePath, MAX_PATH);
-	ImGui::SameLine();
-	if (ImGui::Button("ChangePath"))
-	{
-		m_pModel_Manager->Clear_Layer();
-		Read_Objects_Name(m_pFilePath);
-	}
-}
 
 void CImgui_Manager::Set_LayerTag()
 {
@@ -669,7 +656,7 @@ void CImgui_Manager::Set_LayerTag()
 
 void CImgui_Manager::Set_Macro()
 {
-	vector<const _tchar*> ModelTags = m_pModel_Manager->Get_LayerTags();
+	vector<const _tchar*> ModelTags = m_pModel_Manager->Get_PrototypeTag();
 	ImGui::NewLine();
 	ImGui::BulletText("Macro Setting");
 	ImGui::Text("fbx size : "); ImGui::SameLine(); ImGui::Text("%d", ModelTags.size());
@@ -1261,22 +1248,12 @@ void CImgui_Manager::Set_HeightMap()
 	ImGui::GetIO().WantCaptureMouse = true;
 	ImGui::CollapsingHeader("Height_Map");
 
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Set_File_Path")) m_bFilePath = !m_bFilePath;
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenuBar();
-	}
-
 	vector<const _tchar*> TerrainTags = m_pTerrain_Manager->Get_PrototypeTagList();
 
 	// ------------------------ Left-----------------------------------
 	static int selected = 0;
 	{
-		ImGui::BeginChild("left pane", ImVec2(150, 100), true);
+		ImGui::BeginChild("left pane", ImVec2(150, 50), true);
 
 		int i = 0;
 
@@ -1333,22 +1310,8 @@ void CImgui_Manager::Set_Brush()
 
 	ImGui::CollapsingHeader("Brush");
 
-	ImGui::Text("Height");
-	ImGui::SameLine();
-	ImGui::DragFloat("##fHeight", &m_TerrainShapeDesc.fHeight, 0.1f);
 
-	ImGui::Text("Radius");
-	ImGui::SameLine();
-	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius, 0.1f);
-
-	ImGui::Text("Sharp");
-	ImGui::SameLine();
-	ImGui::DragFloat("##fSharp", &m_TerrainShapeDesc.fSharp, 0.1f);
-
-
-	m_pTerrain_Manager->Set_TerrainShapeDesc(&m_TerrainShapeDesc);
-
-	if (m_PickingType == PICKING_TERRAIN_SHAPE)
+	if (m_PickingType == PICKING_TERRAIN_BRUSH)
 	{
 		CPickingMgr::Get_Instance()->Picking();
 	}
@@ -1361,8 +1324,6 @@ void CImgui_Manager::Set_Brush()
 	{
 		Load_Terrain();
 	}
-
-
 }
 
 void CImgui_Manager::ShowSimpleMousePos(bool* p_open)
@@ -1610,77 +1571,11 @@ void CImgui_Manager::Show_PopupBox()
 
 }
 
-void CImgui_Manager::Set_File_Path_Dialog()
-{
-
-	if (m_bFilePath)
-	{
-		OPENFILENAME OFN;
-		TCHAR filePathName[300] = L"";
-		TCHAR lpstrFile[300] = L"";
-		static TCHAR filter[] = L"모든 파일\0*.*\0텍스트 파일\0*.txt\0fbx 파일\0*.fbx";
-
-		memset(&OFN, 0, sizeof(OPENFILENAME));
-		OFN.lStructSize = sizeof(OPENFILENAME);
-		OFN.hwndOwner = g_hWnd;
-		OFN.lpstrFilter = filter;
-		OFN.lpstrFile = lpstrFile;
-		OFN.nMaxFile = 300;
-		OFN.lpstrInitialDir = L".";
-
-		if (GetOpenFileName(&OFN) != 0) {
-			wsprintf(filePathName, L"%s 파일을 열겠습니까?", OFN.lpstrFile);
-			MessageBox(g_hWnd, filePathName, L"열기 선택", MB_OK);
-
-			string StringPath = ToString(OFN.lpstrFile);
-
-			_tchar*     szFullPath = new _tchar[MAX_PATH]; // = TEXT("");
-			_tchar		szDrive[MAX_PATH] = TEXT("");
-			_tchar		szDir[MAX_PATH] = TEXT("");
-			_tchar		szFileName[MAX_PATH] = TEXT("");
-			_tchar		szExt[MAX_PATH] = TEXT("");
-
-			szFullPath = StringToTCHAR(StringPath);
-
-			/* 경로를 분해한다. */
-			_wsplitpath_s(szFullPath, szDrive, _MAX_DRIVE, szDir, _MAX_DIR, szFileName, _MAX_FNAME, szExt, MAX_PATH);
-			string DirPath = TCHARToString(szDir);
-			vector<string> Splitpaths;
-			Splitpaths = SplitPath(DirPath, '\\');
-
-			string FullRelativePath = "..";
-			int iIndex = 0;
-			auto ret = find(Splitpaths.begin(), Splitpaths.end(), "Bin");
-			if (ret != Splitpaths.end())
-			{
-				iIndex = _int(ret - Splitpaths.begin());
-
-				for (_uint i = iIndex; i < Splitpaths.size(); ++i)
-				{
-					FullRelativePath += "/" + Splitpaths[i];
-				}
-			}
-
-			int a = 0;
-		}
-		m_bFilePath = false;
-	}
-}
 
 void CImgui_Manager::Show_ModelList()
 {
 
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Set_File_Path")) m_bFilePath = !m_bFilePath;
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenuBar();
-	}
-
-	vector<const _tchar*> ModelTags = m_pModel_Manager->Get_LayerTags();
+	vector<const _tchar*> ModelTags = m_pModel_Manager->Get_PrototypeTag();
 
 	// ------------------------ Left-----------------------------------
 	static int selected = 0;
@@ -1722,7 +1617,6 @@ void CImgui_Manager::Show_ModelList()
 		{
 			if (ImGui::BeginTabItem("Setting"))
 			{
-				Set_FilePath();
 				ImGui::NewLine();
 				Set_LayerTag();
 				Set_Object_Map();
@@ -1735,11 +1629,28 @@ void CImgui_Manager::Show_ModelList()
 					m_TempLayerTags.push_back(LayerTag);
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("Revert")) {}
+				if (ImGui::Button("Revert")) 
+				{
+					_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
+					m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+					list<CGameObject*>* plistClone = CGameInstance::Get_Instance()->Get_ObjectList(m_iCurrentLevel, LayerTag);
+					if (nullptr == plistClone || plistClone->size() == 0)
+					{
+						delete LayerTag;
+						return;
+					}
+
+
+					auto iter = --plistClone->end();
+					m_pModel_Manager->Out_CreatedModel(dynamic_cast<CNonAnim*>(*iter));
+					Safe_Release(*iter);
+					plistClone->erase(iter);
+
+					delete LayerTag;
+				}
 			}
 			if (ImGui::BeginTabItem("Macro"))
 			{
-				Set_FilePath();
 				ImGui::NewLine();
 				Set_LayerTag();
 				Set_Macro();
@@ -1753,7 +1664,7 @@ void CImgui_Manager::Show_ModelList()
 	}
 
 
-	if (m_bCreateModel && CGameInstance::Get_Instance()->Key_Up(DIK_X))
+	if (m_PickingType == PICKING_MODEL && CGameInstance::Get_Instance()->Key_Up(DIK_X))
 	{
 		if (CPickingMgr::Get_Instance()->Picking())
 		{
@@ -1765,7 +1676,7 @@ void CImgui_Manager::Show_ModelList()
 		}
 	}
 
-	if (m_bCreateModel && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
+	if (m_PickingType == PICKING_MODEL && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
 	{
 		_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 		m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
@@ -1862,7 +1773,7 @@ void CImgui_Manager::Show_CurrentModelList()
 	}
 
 
-	if (m_bCreateModel && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
+	if (m_PickingType == PICKING_MODEL && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
 	{
 		_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 		m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
@@ -1882,65 +1793,6 @@ void CImgui_Manager::Show_CurrentModelList()
 	}
 }
 
-void CImgui_Manager::Read_Objects_Name(_tchar* cFolderPath)
-{
-	_tchar ObjectFilePath[MAX_PATH] = TEXT("");
-	_tchar filePath[MAX_PATH] = TEXT("");
-	wcscpy_s(filePath, MAX_PATH, cFolderPath); // Backup Path used for Sub-folders
-	wcscat_s(cFolderPath, MAX_PATH, TEXT("*"));
-
-	WIN32_FIND_DATA fileData;
-
-	HANDLE hDir = FindFirstFile(cFolderPath, &fileData);
-
-	/* No files found */
-	if (hDir == INVALID_HANDLE_VALUE)
-	{
-		FindClose(hDir);
-		return;
-	}
-
-	do {
-		if (fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) // Directory
-		{
-			if (lstrcmp(fileData.cFileName, TEXT(".")) == 0 || lstrcmp(fileData.cFileName, TEXT("..")) == 0)
-				continue;
-
-			_tchar subFilePath[MAX_PATH] = TEXT("");
-			wcscpy_s(subFilePath, MAX_PATH, filePath);
-			wcscat_s(subFilePath, MAX_PATH, fileData.cFileName);
-			wcscat_s(subFilePath, MAX_PATH, TEXT("/"));
-
-			wcscpy_s(ObjectFilePath, MAX_PATH, TEXT("")); // Backup Path used for Sub-folders
-			wcscpy_s(ObjectFilePath, MAX_PATH, subFilePath); // Backup Path used for Sub-folders
-			// Recursive Function Call
-			Read_Objects_Name(subFilePath);
-		}
-		else // File
-		{
-			_tchar szFileExt[MAX_PATH];
-
-			_wsplitpath_s(fileData.cFileName, nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
-
-			if (!wcscmp(szFileExt, TEXT(".fbx")))
-			{
-				wcscpy_s(ObjectFilePath, MAX_PATH, TEXT("")); // Backup Path used for Sub-folders
-				wcscpy_s(ObjectFilePath, MAX_PATH, filePath); // Backup Path used for Sub-folders
-				wcscat_s(ObjectFilePath, MAX_PATH, fileData.cFileName);
-
-				wstring wsFileName(fileData.cFileName);
-				string sFileName(wsFileName.begin(), wsFileName.end());
-
-				const _tchar* FileName = StringToTCHAR(sFileName);
-
-				m_pModel_Manager->Add_FileName(FileName, ObjectFilePath);
-				delete(FileName);
-			}
-		}
-	} while (FindNextFile(hDir, &fileData));
-
-	FindClose(hDir);
-}
 
 void CImgui_Manager::Set_Camera()
 {
@@ -2393,7 +2245,7 @@ void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLa
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	m_pModel_Manager->Set_InitModelDesc(m_InitDesc);
-
+	
 	_matrix			PivotMatrix = XMMatrixIdentity();
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 	m_pModel_Manager->Create_Model(iLevel, pPrototypeTag, pLayerTag, m_pDevice, m_pContext, CModel::TYPE_NONANIM, PivotMatrix, bCreatePrototype);

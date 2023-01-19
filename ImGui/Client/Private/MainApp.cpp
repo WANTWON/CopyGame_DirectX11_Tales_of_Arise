@@ -7,7 +7,6 @@
 #include "PickingMgr.h"
 #include "ModelManager.h"
 #include "Navigation_Manager.h"
-#include "Data_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -32,9 +31,6 @@ HRESULT CMainApp::Initialize()
 
 	if (FAILED(CImgui_Manager::Get_Instance()->Initialize(m_pDevice, m_pContext)))
 		return E_FAIL;
-
-	if (FAILED(CData_Manager::Get_Instance()->Init(m_pDevice, m_pContext)))
-		return E_FAIL;	// Ãß°¡
 
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
@@ -177,7 +173,6 @@ void CMainApp::Free()
 	CModelManager::Get_Instance()->Destroy_Instance();
 	CPickingMgr::Get_Instance()->Destroy_Instance();
 	CImgui_Manager::Get_Instance()->Destroy_Instance();
-	CData_Manager::Get_Instance()->Destroy_Instance();
 	
 	CCamera_Manager::Get_Instance()->Destroy_Instance();
 	CTerrain_Manager::Get_Instance()->Destroy_Instance();

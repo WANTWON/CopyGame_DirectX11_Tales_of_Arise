@@ -174,7 +174,9 @@ void CTerrain::PickingTrue()
 		Set_Picked();
 		break;
 	case Client::CImgui_Manager::PICKING_TERRAIN_SHAPE:
-		//Set_Terrain_Shape();
+		Set_Terrain_Shape();
+		break;
+	case Client::CImgui_Manager::PICKING_TERRAIN_BRUSH:
 		Create_FilterTexture();
 		break;
 	default:
@@ -365,8 +367,8 @@ HRESULT CTerrain::Create_FilterTexture()
 		D3D11_TEXTURE2D_DESC		TextureDesc;
 		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-		TextureDesc.Width = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumX;
-		TextureDesc.Height = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumZ;
+		TextureDesc.Width = 256;
+		TextureDesc.Height = 256;
 		TextureDesc.MipLevels = 1;
 		TextureDesc.ArraySize = 1;
 		TextureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -560,6 +562,7 @@ void CTerrain::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pFilterTexture);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);

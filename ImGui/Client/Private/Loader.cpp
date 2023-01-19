@@ -11,7 +11,6 @@
 #include "ModelManager.h"
 #include "Imgui_Manager.h"
 #include "TreasureBox.h"
-#include "Data_Manager.h"
 #include <DirectXTK/ScreenGrab.h>
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -99,7 +98,7 @@ HRESULT CLoader::Loading_ForClient()
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Grass_%d.dds"), 2))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/MP_snow%d_D.dds"), 2))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Brush */
@@ -113,10 +112,10 @@ HRESULT CLoader::Loading_ForClient()
 		return E_FAIL;
 
 
-	_matrix			PivotMatrix = XMMatrixIdentity();
+	/*_matrix			PivotMatrix = XMMatrixIdentity();
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Picking_Symbol"), CModel::Create(m_pDevice, m_pContext,
 		CModel::TYPE_NONANIM, "../Bin/Resources/Picking_Symbol/Picking_Symbol.fbx", PivotMatrix))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 
 	/* 셰이더 로딩 중. */
@@ -176,28 +175,41 @@ HRESULT CLoader::Loading_ForGamePlayModel()
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	_matrix			PivotMatrix = XMMatrixIdentity();
 
-
-	/*For.Prototype_Component_Model_Alphen*/
-	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	/* 객체 생성 중. */
+	lstrcpy(m_szLoadingText, TEXT("모델 생성 중."));
+	/* For.Prototype_Component_Model_Alphen */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen"),
-	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/Anim/Alphen/Alphen.fbx", PivotMatrix))))
-	return E_FAIL;*/
-	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
-
-	//For.Prototype_Component_NeviMesh
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NaviMesh"),
-	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/NaviMesh/NaviMesh.fbx", PivotMatrix))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Alphen/Alphen.dat"))))
 		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen"));
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Snow_Mountain"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/Snow_Mountain/Snow_Mountain.fbx", PivotMatrix))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/CliffRock/Desert_CliffRock.dat"))))
 		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("CliffRock"));
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock2"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/CliffRock/Desert_CliffRock2.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("CliffRock2"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock3"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/CliffRock/Desert_CliffRock3.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("CliffRock3"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock4"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/CliffRock/Desert_CliffRock4.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("CliffRock4"));
+
+
+	/* 객체 생성 중. */
+	lstrcpy(m_szLoadingText, TEXT("터레인 생성 중."));
 	_tchar*			pTerrainTag = TEXT("Terrain_HeightMap");
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, pTerrainTag,
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap2.bmp"), false))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap3.bmp"), false))))
 		return E_FAIL;
 	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(pTerrainTag);
 

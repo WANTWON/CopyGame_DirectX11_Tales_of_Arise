@@ -22,7 +22,9 @@ class CImgui_Manager final : public CBase
 	DECLARE_SINGLETON(CImgui_Manager)
 
 public:
-	enum PICKING_TYPE { PICKING_TERRAIN_TRANSFORM, PICKING_TERRAIN_SHAPE };
+	enum PICKING_TYPE { PICKING_TERRAIN_TRANSFORM,
+		PICKING_TERRAIN_SHAPE, PICKING_TERRAIN_BRUSH,
+	PICKING_MODEL,};
 
 	
 
@@ -39,7 +41,6 @@ public:
 
 public:
 	PICKING_TYPE Get_PickingType() {return (PICKING_TYPE)m_PickingType;}
-	_bool Get_ModelPicking() { return m_bCreateModel; }
 	_bool Get_CameraPicking() { return m_bMakeCamera; }
 public:
 	/* For Debug*/
@@ -57,8 +58,6 @@ public:
 
 	/* For Model Tool */
 	void Set_Object_Map();
-	void Set_File_Path_Dialog();
-	void Set_FilePath();
 	void Set_LayerTag();
 	void Set_Macro();
 	void Show_ModelList();
@@ -87,7 +86,6 @@ public:
 
 public:
 	void Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype = false);
-	void Read_Objects_Name( _tchar* cFolderPath);
 	void Add_PrototypeTag(_tchar* TempTag) { m_TempLayerTags.push_back(TempTag); }
 	void Add_PrototypeTag(char* TempTag) { m_TempCharTags.push_back(TempTag); }
 	
@@ -98,7 +96,6 @@ private:
 	_bool m_bShowSimpleMousePos = false;
 	_bool m_bShowPickedObject = false;
 	_bool m_bShow_app_style_editor = false;
-	_bool m_bFilePath = false;
 	_bool m_bSave = false;
 	_bool m_bLoad = false;
 	LEVEL m_iCurrentLevel = LEVEL_GAMEPLAY;
@@ -124,7 +121,6 @@ private:
 	_float									m_fDist = 1.f;
 
 	//TreasureBox
-	_bool									m_bCreateModel = false;
 	CTreasureBox::BOXTAG					m_BoxDesc;
 	_int									m_iTreasureIndex = 0;
 	_float3									m_fTreasureBoxPos = _float3(0.f, 0.f, 0.f);
