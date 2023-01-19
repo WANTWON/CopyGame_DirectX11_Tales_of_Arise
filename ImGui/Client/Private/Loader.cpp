@@ -125,8 +125,7 @@ HRESULT CLoader::Loading_ForClient()
 		CModel::TYPE_NONANIM, "../Bin/Resources/Picking_Symbol/Picking_Symbol.fbx", PivotMatrix))))
 		return E_FAIL;*/
 
-	/* ���̴� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("���̴� �ε� ��."));
+	lstrcpy(m_szLoadingText, TEXT("Loading For Shader"));
 
 	/* For.Prototype_Component_Shader_VtxModel */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxModel"),
@@ -138,8 +137,8 @@ HRESULT CLoader::Loading_ForClient()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Shaderfiles/Shader_VtxAnimModel.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements))))
 		return E_FAIL;
 
-	/* ��ü ���� ��. */
-	lstrcpy(m_szLoadingText, TEXT("��ü ���� ��."));
+
+	lstrcpy(m_szLoadingText, TEXT("Loading For Prototype"));
 
 	/*For.Prototype_GameObject_Player*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NonAnim"),
@@ -166,10 +165,10 @@ HRESULT CLoader::Loading_ForClient()
 		CEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	//if (FAILED(Loading_ForGamePlayModel()))
-		//return E_FAIL;
+	if (FAILED(Loading_ForGamePlayModel()))
+		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
+	lstrcpy(m_szLoadingText, TEXT("Finished"));
 
 	RELEASE_INSTANCE(CModelManager);
 	RELEASE_INSTANCE(CGameInstance);

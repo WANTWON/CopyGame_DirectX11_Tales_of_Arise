@@ -731,9 +731,11 @@ void CMeshContainer::Free()
 	m_Bones.clear();
 
 
-	if (m_bIsProto)
+	if (m_isCloned == false)
 	{
 		Safe_Delete_Array(m_pPickingVertices);
 		Safe_Delete_Array(m_pPickingIndices);
 	}
+
+	
 }

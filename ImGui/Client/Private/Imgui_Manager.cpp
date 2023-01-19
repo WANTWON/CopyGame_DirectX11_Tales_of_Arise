@@ -102,7 +102,6 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext *
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
 
-	Read_Objects_Name(m_pFilePath);
 	
 	/* Effect Tool */
 	Read_EffectsData();
