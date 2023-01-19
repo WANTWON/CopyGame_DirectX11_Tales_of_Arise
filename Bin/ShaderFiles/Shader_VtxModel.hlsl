@@ -25,6 +25,7 @@ struct VS_OUT
 	float3 vNormal : NORMAL;
 	float2 vTexUV : TEXCOORD0;
 	float4 vProjPos : TEXCOORD1;
+
 	float3 vTangent : TANGENT;
 	float3 vBinormal : BINORMAL;
 };

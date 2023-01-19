@@ -17,6 +17,8 @@ CMeshContainer::CMeshContainer(const CMeshContainer & rhs)
 	, m_pNonAnimVertices(rhs.m_pNonAnimVertices) // 추가
 	, m_pIndices(rhs.m_pIndices) // 추가
 	, m_bIsProto(false)	// 추가
+	, m_pPickingVertices(rhs.m_pPickingVertices) 
+	, m_pPickingIndices(rhs.m_pPickingIndices)
 {
 	strcpy_s(m_szName, rhs.m_szName);
 }
@@ -76,12 +78,17 @@ HRESULT CMeshContainer::Initialize_Prototype(CModel::TYPE eModelType, HANDLE hFi
 	m_BufferDesc.StructureByteStride = sizeof(_ulong);
 
 	FACEINDICES32* pIndices = new FACEINDICES32[m_iNumPrimitive];
+	m_pPickingIndices = new FACEINDICES32[m_iNumPrimitive];
 
 	for (_uint i = 0; i < m_iNumPrimitive; ++i)
 	{
 		ReadFile(hFile, &pIndices[i]._0, sizeof(_uint), pdwByte, nullptr);
 		ReadFile(hFile, &pIndices[i]._1, sizeof(_uint), pdwByte, nullptr);
 		ReadFile(hFile, &pIndices[i]._2, sizeof(_uint), pdwByte, nullptr);
+
+		m_pPickingIndices[i]._0 = pIndices[i]._0;
+		m_pPickingIndices[i]._1 = pIndices[i]._1;
+		m_pPickingIndices[i]._2 = pIndices[i]._2;
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -90,7 +97,7 @@ HRESULT CMeshContainer::Initialize_Prototype(CModel::TYPE eModelType, HANDLE hFi
 	/* 정점을 담기 위한 공간을 할당하고, 내가 전달해준 배열의 값들을 멤카피한다. */
 	if (FAILED(__super::Create_IndexBuffer()))
 		return E_FAIL;
-
+	
 	Safe_Delete_Array(pIndices);
 #pragma endregion
 
@@ -263,12 +270,9 @@ _bool CMeshContainer::Picking(CTransform * pTransform, _float3 * pOut)
 
 	for (_uint i = 0; i < m_iNumPrimitive; ++i)
 	{
-		aiFace		AIFace = m_pAIMesh->mFaces[i];
-
-		pIndices[i]._0 = AIFace.mIndices[0];
-		pIndices[i]._1 = AIFace.mIndices[1];
-		pIndices[i]._2 = AIFace.mIndices[2];
-
+		pIndices[i]._0 = m_pPickingIndices[i]._0;
+		pIndices[i]._1 = m_pPickingIndices[i]._1;
+		pIndices[i]._2 = m_pPickingIndices[i]._2;
 	}
 
 	for (_uint i = 0; i < m_iNumPrimitive; ++i)
@@ -278,13 +282,13 @@ _bool CMeshContainer::Picking(CTransform * pTransform, _float3 * pOut)
 		_float3 vPosition1 = _float3(0.f, 0.f, 0.f);
 		_float3 vPosition2 = _float3(0.f, 0.f, 0.f);
 
-		memcpy(&vPosition0, &m_pAIMesh->mVertices[pIndices[i]._0], sizeof(_float3));
+		memcpy(&vPosition0, &m_pPickingVertices[pIndices[i]._0], sizeof(_float3));
 		_vector vTemp_1 = XMLoadFloat3(&vPosition0);
 		vTemp_1 = XMVectorSetW(vTemp_1, 1.f);
-		memcpy(&vPosition1, &m_pAIMesh->mVertices[pIndices[i]._1], sizeof(_float3));
+		memcpy(&vPosition1, &m_pPickingVertices[pIndices[i]._1], sizeof(_float3));
 		_vector vTemp_2 = XMLoadFloat3(&vPosition1);
 		vTemp_2 = XMVectorSetW(vTemp_2, 1.f);
-		memcpy(&vPosition2, &m_pAIMesh->mVertices[pIndices[i]._2], sizeof(_float3));
+		memcpy(&vPosition2, &m_pPickingVertices[pIndices[i]._2], sizeof(_float3));
 		_vector vTemp_3 = XMLoadFloat3(&vPosition2);
 		vTemp_3 = XMVectorSetW(vTemp_3, 1.f);
 
@@ -456,11 +460,13 @@ HRESULT CMeshContainer::Create_VertexBuffer_NonAnimModel(HANDLE hFile, _ulong * 
 	m_BufferDesc.StructureByteStride = m_iStride;
 
 	VTXMODEL* pVertices = new VTXMODEL[m_iNumVertices];
+	m_pPickingVertices = new _float3[m_iNumVertices];
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		ReadFile(hFile, &pVertices[i].vPosition, sizeof(_float3), pdwByte, nullptr);
 		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PivotMatrix));
+		XMStoreFloat3(&m_pPickingVertices[i], XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PivotMatrix));
 
 		ReadFile(hFile, &pVertices[i].vNormal, sizeof(_float3), pdwByte, nullptr);
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vNormal), PivotMatrix));
@@ -724,10 +730,12 @@ void CMeshContainer::Free()
 
 	m_Bones.clear();
 
-	//if (false == m_isCloned)	// 추가
-	//{
-	//	Safe_Delete_Array(m_pIndices);
-	//	Safe_Delete_Array(m_pAnimVertices);
-	//	Safe_Delete_Array(m_pNonAnimVertices);
-	//}
+
+	if (m_isCloned == false)
+	{
+		Safe_Delete_Array(m_pPickingVertices);
+		Safe_Delete_Array(m_pPickingIndices);
+	}
+
+	
 }

@@ -96,6 +96,9 @@ _vector CBaseObj::Get_TransformState(CTransform::STATE eState)
 	if (m_pTransformCom == nullptr)
 		return _vector();
 
+	if (eState == CTransform::STATE_TRANSLATION)
+		return XMVectorSetW(m_pTransformCom->Get_State(eState), 1.f);
+
 	return m_pTransformCom->Get_State(eState);
 }
 

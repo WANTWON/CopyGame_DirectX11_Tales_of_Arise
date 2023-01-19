@@ -63,6 +63,10 @@ private:	// Ãß°¡
 	FACEINDICES32*		m_pIndices = nullptr;
 	_bool				m_bIsProto = false;
 
+private:
+	_float3*			m_pPickingVertices = nullptr;
+	FACEINDICES32*		m_pPickingIndices = nullptr;
+
 public:
 	//static CMeshContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, const aiMesh* pAIMesh, class CModel* pModel, _fmatrix PivotMatrix);
 	static CMeshContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, HANDLE hFile, _ulong* pdwByte, CModel* pModel, _fmatrix PivotMatrix);
