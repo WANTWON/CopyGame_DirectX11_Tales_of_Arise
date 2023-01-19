@@ -1,8 +1,7 @@
 #include "stdafx.h"
-#include "..\Public\Loader.h"
+#include "Loader.h"
 
 #include "GameInstance.h"
-
 
 #include "Camera_Dynamic.h"
 #include "BackGround.h"
@@ -12,6 +11,7 @@
 #include "Imgui_Manager.h"
 #include "TreasureBox.h"
 #include "Data_Manager.h"
+#include "Effect_Manager.h"
 #include <DirectXTK/ScreenGrab.h>
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -24,7 +24,7 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 unsigned int APIENTRY Thread_Main(void* pArg)
 {
-	CLoader*		pLoader = (CLoader*)pArg;
+	CLoader* pLoader = (CLoader*)pArg;
 
 	EnterCriticalSection(&pLoader->Get_CriticalSection());
 
@@ -60,7 +60,7 @@ HRESULT CLoader::Initialize(LEVEL eNextLevel)
 
 HRESULT CLoader::Loading_ForLogoLevel()
 {
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 
@@ -78,7 +78,6 @@ HRESULT CLoader::Loading_ForLogoLevel()
 		CBackGround::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	m_isFinished = true;
@@ -90,12 +89,11 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 HRESULT CLoader::Loading_ForClient()
 {
-	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
-	CModelManager*		pModelManager = GET_INSTANCE(CModelManager);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	CModelManager* pModelManager = GET_INSTANCE(CModelManager);
 
 	/* 텍스쳐 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중."));
-
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
@@ -112,12 +110,15 @@ HRESULT CLoader::Loading_ForClient()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.dds"), 1))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_Test */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Test"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/TO14_T_FX_Common_Kirakira%02d.png"), 3))))
+		return E_FAIL;
 
-	_matrix			PivotMatrix = XMMatrixIdentity();
+	_matrix PivotMatrix = XMMatrixIdentity();
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Picking_Symbol"), CModel::Create(m_pDevice, m_pContext,
 		CModel::TYPE_NONANIM, "../Bin/Resources/Picking_Symbol/Picking_Symbol.fbx", PivotMatrix))))
 		return E_FAIL;
-
 
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));
@@ -155,9 +156,13 @@ HRESULT CLoader::Loading_ForClient()
 		CCamera_Dynamic::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(Loading_ForGamePlayModel()))
+	/*For.Prototype_GameObject_Effect*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Effect"),
+		CEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(Loading_ForGamePlayModel()))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
@@ -166,7 +171,6 @@ HRESULT CLoader::Loading_ForClient()
 
 	m_isFinished = true;
 
-
 	return S_OK;
 }
 
@@ -174,8 +178,7 @@ HRESULT CLoader::Loading_ForClient()
 HRESULT CLoader::Loading_ForGamePlayModel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	_matrix			PivotMatrix = XMMatrixIdentity();
-
+	_matrix PivotMatrix = XMMatrixIdentity();
 
 	/*For.Prototype_Component_Model_Alphen*/
 	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
@@ -194,7 +197,7 @@ HRESULT CLoader::Loading_ForGamePlayModel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/Snow_Mountain/Snow_Mountain.fbx", PivotMatrix))))
 		return E_FAIL;
 
-	_tchar*			pTerrainTag = TEXT("Terrain_HeightMap");
+	_tchar* pTerrainTag = TEXT("Terrain_HeightMap");
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, pTerrainTag,
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap2.bmp"), false))))
@@ -207,7 +210,7 @@ HRESULT CLoader::Loading_ForGamePlayModel()
 
 CLoader * CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevel)
 {
-	CLoader*	pInstance = new CLoader(pDevice, pContext);
+	CLoader* pInstance = new CLoader(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize(eNextLevel)))
 	{

@@ -48,6 +48,9 @@ public: /*Getter Setter */
 	void Set_TransformDesc(const TRANSFORMDESC& TransformDesc ) {m_TransformDesc = TransformDesc;}
 	void Change_Speed(_float fSpeed) { m_TransformDesc.fSpeedPerSec = fSpeed; }
 
+	_float Get_CurrentRotationX() { return m_fCurrentRotationX; }
+	_float Get_CurrentRotationY() { return m_fCurrentRotationY; }
+	_float Get_CurrentRotationZ() { return m_fCurrentRotationZ; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -74,14 +77,22 @@ public:
 	bool Go_PosDir(_float fTimeDelta, _vector vecDir, class CNavigation* pNavigation = nullptr);
 	bool Go_PosLerp(_float fTimeDelta, _vector TargetPos, _float fVecOffset);
 
-public:
+public:/* Rotations */
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian);
+	void Set_Rotation(_float3 fAngle);
+	void Set_RotationY(_float fAngleY);
+
+public:
 	void LookAt(_fvector vAt);
 
 private:			
-	_float4x4				m_WorldMatrix;
-	TRANSFORMDESC			m_TransformDesc;
+	_float4x4 m_WorldMatrix;
+	TRANSFORMDESC m_TransformDesc;
+
+	_float m_fCurrentRotationX = 0.f;
+	_float m_fCurrentRotationY = 0.f;
+	_float m_fCurrentRotationZ = 0.f;
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

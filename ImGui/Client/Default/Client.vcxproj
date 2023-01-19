@@ -176,6 +176,8 @@
     <ClInclude Include="..\Public\Camera_Manager.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
+    <ClInclude Include="..\public\Effect.h" />
+    <ClInclude Include="..\public\Effect_Manager.h" />
     <ClInclude Include="..\Public\imconfig.h" />
     <ClInclude Include="..\Public\imgui.h" />
     <ClInclude Include="..\Public\imgui_impl_dx11.h" />
@@ -208,6 +210,8 @@
     <ClCompile Include="..\Private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\Private\Camera_Manager.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
+    <ClCompile Include="..\private\Effect.cpp" />
+    <ClCompile Include="..\private\Effect_Manager.cpp" />
     <ClCompile Include="..\Private\imgui.cpp" />
     <ClCompile Include="..\Private\imgui_demo.cpp" />
     <ClCompile Include="..\Private\imgui_draw.cpp" />

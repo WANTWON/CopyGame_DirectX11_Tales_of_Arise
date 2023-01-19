@@ -125,7 +125,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);
 
 	if (Out.vGlow.r != 0 && Out.vGlow.g != 0 && Out.vGlow.b != 0)
-		Out.vGlow.rgb = Out.vDiffuse.rgb * Out.vGlow.r;
+		Out.vGlow.rgb = /*Out.vDiffuse.rgb * Out.vGlow.r;*/float3(1.f, 1.f, 1.f);
 
 	if (Out.vDiffuse.a <= 0.3f)
 		discard;
