@@ -4,28 +4,29 @@ CHierarchyNode::CHierarchyNode()
 {
 }
 
-HRESULT CHierarchyNode::Initialize(const aiNode * pNode, CHierarchyNode* pParent)
+HRESULT CHierarchyNode::Initialize(HANDLE hFile, _ulong* pdwByte, CHierarchyNode* pParent)
 {
-	strcpy_s(m_szName, pNode->mName.data);
+	if (nullptr == hFile)
+		return E_FAIL;
+
+	ReadFile(hFile, &m_szName, sizeof(char) * MAX_PATH, pdwByte, nullptr);
 
 	/* m_OffsetMatrix 뼈의 로컬영역에서 정점의 로컬영역으로 변환해주기위한 행렬.  */
-	/* 나중에 채울꺼니까. */
+	/* 나중에 채울꺼니까 일단 항등으로 초기화. */
 	XMStoreFloat4x4(&m_OffsetMatrix, XMMatrixIdentity());
 
 	/* 언제든 바뀔 수 있다. 애니메이션이 재생되면. */
 	/* m_TransformationMatrix : 이 뼈만의 상태. (부모기준으로 표현된) (부모의 상태를 제외된) */
-	memcpy(&m_TransformationMatrix, &pNode->mTransformation, sizeof(_float4x4));
-
+	ReadFile(hFile, &m_TransformationMatrix, sizeof(_float4x4), pdwByte, nullptr);
 	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix)));
 
-	/* m_TransformationMatrix : 이 뼈 + 부모의 상태. (원점기준으로 표현된) (부모의 상태를 포함한) */
+	/* m_CombinedTransformationMatrix : 이 뼈 + 부모의 상태. (원점기준으로 표현된) (부모의 상태를 포함한) */
 	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
 
-	/* 자식의 주소를 가진다.(x)  
-	부모의 주소를 가진다 (o) : 나의 m_CombinedTransformationMatrix를 만들기위해서는 부모의 m_CombinedTransformationMatrix가 필요했기때문. 
-	그래서 부모의 주소가 필요해. */		
+	/* 자식의 주소를 가진다.(x)
+	부모의 주소를 가지지? : 나의 m_CombinedTransformationMatrix를 만들기위해서는 부모의 m_CombinedTransformationMatrix가 필요했기 때문.
+	그래서 부모의 주소가 필요해. */
 	m_pParent = pParent;
-
 	Safe_AddRef(m_pParent);
 
 	return S_OK;
@@ -80,16 +81,29 @@ void CHierarchyNode::Set_FindParent(CHierarchyNode * pNode)
 	m_pParent = nullptr;
 }
 
-CHierarchyNode * CHierarchyNode::Create(const aiNode* pNode, CHierarchyNode* pParent)
-{
-	CHierarchyNode*		pInstance = new CHierarchyNode();
+//CHierarchyNode * CHierarchyNode::Create(const aiNode* pNode, CHierarchyNode* pParent)
+//{
+//	CHierarchyNode*		pInstance = new CHierarchyNode();
+//
+//	if (FAILED(pInstance->Initialize(pNode, pParent)))
+//	{
+//		ERR_MSG(TEXT("Failed to Created : CTransform"));
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;	
+//}
 
-	if (FAILED(pInstance->Initialize(pNode, pParent)))
+CHierarchyNode * CHierarchyNode::Create(HANDLE hFile, _ulong * pdwByte, CHierarchyNode * pParent)
+{
+	CHierarchyNode* pInstance = new CHierarchyNode();
+
+	if (FAILED(pInstance->Initialize(hFile, pdwByte, pParent)))
 	{
-		ERR_MSG(TEXT("Failed to Created : CTransform"));
+		ERR_MSG(TEXT("Failed to Created : CHierarchyNode"));
 		Safe_Release(pInstance);
 	}
-	return pInstance;	
+
+	return pInstance;
 }
 
 CHierarchyNode * CHierarchyNode::Bin_Create(DATA_BINNODE * pNode)

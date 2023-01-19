@@ -29,7 +29,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CIceWolfState* pState = new CIdleState(this);
+	CHawkState* pState = new CIdleState(this);
 	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 
 	///* Set Binary */
@@ -115,7 +115,7 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 
 void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 {
-	CIceWolfState* pNewState = m_pIce_WolfState->AI_Behaviour(fTimeDelta);
+	CHawkState* pNewState = m_pIce_WolfState->AI_Behaviour(fTimeDelta);
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
 }
@@ -123,7 +123,7 @@ void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 
 void CIce_Wolf::TickState(_float fTimeDelta)
 {
-	CIceWolfState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
+	CHawkState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
 	
@@ -131,7 +131,7 @@ void CIce_Wolf::TickState(_float fTimeDelta)
 
 void CIce_Wolf::LateTickState(_float fTimeDelta)
 {
-	CIceWolfState* pNewState = m_pIce_WolfState->LateTick(fTimeDelta);
+	CHawkState* pNewState = m_pIce_WolfState->LateTick(fTimeDelta);
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
 }

@@ -14,13 +14,13 @@ CAttack_Elemental_Charge::CAttack_Elemental_Charge(class CIce_Wolf* pIceWolf, ST
 	
 }
 
-CIceWolfState * CAttack_Elemental_Charge::AI_Behaviour(_float fTimeDelta)
+CHawkState * CAttack_Elemental_Charge::AI_Behaviour(_float fTimeDelta)
 {
 
 	return nullptr;
 }
 
-CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
+CHawkState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 	m_fTarget_Distance = Find_BattleTarget();
@@ -29,7 +29,7 @@ CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
+CHawkState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 {
 	
 	m_iRand = rand() % 3;

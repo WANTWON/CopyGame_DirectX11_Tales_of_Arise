@@ -110,6 +110,24 @@ bool CTransform::Go_Right(_float fTimeDelta, CNavigation * pNavigation, _float f
 	return true;
 }
 
+bool CTransform::Go_Up(_float fTimeDelta, CNavigation * pNavigation, _float fRadius)
+{
+	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
+	_vector		vUp = Get_State(CTransform::STATE_UP);
+
+	vPosition += XMVector3Normalize(vUp) * m_TransformDesc.fSpeedPerSec * fTimeDelta;
+
+	if (nullptr == pNavigation)
+		Set_State(CTransform::STATE_TRANSLATION, vPosition);
+
+	else if (true == pNavigation->isMove(vPosition + XMVector3Normalize(vUp)*fRadius))
+		Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	else
+		return false;
+
+	return true;
+}
+
 bool CTransform::Sliding_Straight(_float fTimeDelta, CNavigation * pNavigation, _float fRadius)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
@@ -125,7 +143,7 @@ bool CTransform::Sliding_Straight(_float fTimeDelta, CNavigation * pNavigation, 
 	if (nullptr == pNavigation)
 		Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	else if (true == pNavigation->isMove(vPosition + XMVector3Normalize(vLook)*fRadius))
-			Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	else if (false == pNavigation->isMove(vPosition + XMVector3Normalize(vLook)*fRadius))
 	{
 		_vector vNormal = XMVector3Normalize(pNavigation->Get_LastNormal());
@@ -405,6 +423,13 @@ void CTransform::LookAt(_fvector vAt)
 	Set_State(STATE_RIGHT, XMVector3Normalize(vRight) * Get_Scale(CTransform::STATE_RIGHT));
 	Set_State(STATE_UP, XMVector3Normalize(vUp) * Get_Scale(CTransform::STATE_UP));
 	Set_State(STATE_LOOK, XMVector3Normalize(vLook) * Get_Scale(CTransform::STATE_LOOK));
+}
+
+void CTransform::RoamingTurn(_matrix WorldMatrix, _float fRadian)
+{
+	_matrix		RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), fRadian);
+
+	XMStoreFloat4x4(&m_WorldMatrix, XMLoadFloat4x4(&m_WorldMatrix) * RotationMatrix);
 }
 
 CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

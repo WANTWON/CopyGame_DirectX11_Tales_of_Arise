@@ -2,6 +2,7 @@
 #include "..\Public\Weapon.h"
 
 #include "GameInstance.h"
+#include "Data_Manager.h"
 
 CWeapon::CWeapon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -81,10 +82,6 @@ HRESULT CWeapon::Render()
 			return E_FAIL;
 	}
 
-
-
-
-
 	return S_OK;
 }
 
@@ -109,7 +106,7 @@ HRESULT CWeapon::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("SWO1(R00)"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	CCollider::COLLIDERDESC		ColliderDesc;
@@ -169,7 +166,7 @@ CWeapon * CWeapon::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CPlayer"));
+		ERR_MSG(TEXT("Failed to Created : CWeapon"));
 		Safe_Release(pInstance);
 	}
 
@@ -183,7 +180,7 @@ CGameObject * CWeapon::Clone(void * pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CPlayer"));
+		ERR_MSG(TEXT("Failed to Cloned : CWeapon"));
 		Safe_Release(pInstance);
 	}
 

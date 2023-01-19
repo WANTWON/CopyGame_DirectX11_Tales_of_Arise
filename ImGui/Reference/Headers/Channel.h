@@ -11,7 +11,7 @@ private:
 	virtual ~CChannel() = default;
 
 public:
-	HRESULT Initialize(class CModel* pModel, aiNodeAnim* pAIChannel);
+	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel);
 	HRESULT Bin_Initialize(DATA_BINCHANNEL* pAIChannel, class CModel* pModel); // 추가
 	void Invalidate_TransformationMatrix(_float fCurrentTime);
 	void Reset();
@@ -34,11 +34,12 @@ private:
 	_uint					m_iCurrentKeyFrameIndex = 0;
 	KEYFRAME				m_KeyFrame_Linear;
 
-public: // For. Data
-	void Get_ChannelData(DATA_BINCHANNEL* pChannelData);
+//public: // For. Data
+//	void Get_ChannelData(DATA_BINCHANNEL* pChannelData);
 
 public:
-	static CChannel* Create(class CModel* pModel, aiNodeAnim* pAIChannel);
+	//static CChannel* Create(class CModel* pModel, aiNodeAnim* pAIChannel);
+	static CChannel* Create(HANDLE hFile, _ulong* pdwByte, class CModel* pModel);
 	static CChannel* Bin_Create(DATA_BINCHANNEL* pAIChannel, class CModel* pModel);	// 추가
 	virtual void Free() override;
 };
