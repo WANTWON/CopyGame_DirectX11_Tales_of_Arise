@@ -66,6 +66,9 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.r -= 0.4f;
+	Out.vColor.g -= 0.4f;
+	Out.vColor.b -= 0.2f;
 
 	return Out;
 }

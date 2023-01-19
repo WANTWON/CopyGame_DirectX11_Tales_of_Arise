@@ -49,7 +49,7 @@ public:
 	_float4x4 Get_MoveTransformationMatrix(void) { return m_MoveTransformationMatrix; }
 
 public:
-	HRESULT Initialize(const aiNode* pNode, CHierarchyNode* pParent);
+	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, CHierarchyNode* pParent);
 	HRESULT Bin_Initialize(DATA_BINNODE* pNode); // 추가
 	void Invalidate_CombinedTransformationmatrix(const char* pBoneName);
 	void Set_FindParent(CHierarchyNode* pNode); // 추가
@@ -72,7 +72,8 @@ private:
 	_float4x4 m_MoveTransformationMatrix;
 
 public:
-	static CHierarchyNode* Create(const aiNode* pNode, CHierarchyNode* pParent);
+	//static CHierarchyNode* Create(const aiNode* pNode, CHierarchyNode* pParent);
+	static CHierarchyNode* Create(HANDLE hFile, _ulong* pdwByte, CHierarchyNode* pParent);
 	static CHierarchyNode* Bin_Create(DATA_BINNODE* pNode); // 추가
 	virtual void Free() override;
 };

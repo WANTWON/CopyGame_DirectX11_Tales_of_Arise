@@ -72,8 +72,8 @@ public:
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	CTransform* Get_Transform() { return m_pTransformCom; }
-	class CIceWolfState* Get_State() { return m_pIce_WolfState; }
-	void Set_PlayerState(class CIceWolfState* pPlayerState) { m_pIce_WolfState = pPlayerState; }
+	class CHawkState* Get_State() { return m_pIce_WolfState; }
+	void Set_PlayerState(class CHawkState* pPlayerState) { m_pIce_WolfState = pPlayerState; }
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
@@ -101,7 +101,7 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 
 private:
-	class CIceWolfState*  m_pIce_WolfState = nullptr;
+	class CHawkState*  m_pIce_WolfState = nullptr;
 
 public:
 	static CIce_Wolf* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

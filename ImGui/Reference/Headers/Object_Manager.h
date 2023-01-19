@@ -20,6 +20,7 @@ public:
 	HRESULT Reserve_Container(_uint iNumLevels);
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
+	HRESULT Add_GameObject_Out(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, OUT CGameObject*& pGameObjectOut, void* pArg = nullptr);
 	HRESULT Add_GameObjectLoad(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pVIBufferTag, void* pArg = nullptr);
 	class CGameObject* Clone_GameObject(const _tchar* pPrototypeTag, void* pArg = nullptr);
 	void Tick(_float fTimeDelta);

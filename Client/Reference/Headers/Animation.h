@@ -11,7 +11,7 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
-	HRESULT Initialize(class CModel* pModel, aiAnimation* pAIAnimation);
+	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel);
 	HRESULT Bin_Initialize(DATA_BINANIM* pAIAnimation, class CModel* pModel); // 추가
 	_bool Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop);
 	_bool Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* NextAnim);
@@ -43,11 +43,12 @@ private:
 	_float m_fLinear_CurrentTime = 0.f;
 	_bool	m_bLinearFinished = false;
 
-public: // For. Data 추가
-	void Get_AnimData(DATA_BINANIM* pAnimData);
+//public: // For. Data 추가
+//	void Get_AnimData(DATA_BINANIM* pAnimData);
 
 public:
-	static CAnimation* Create(class CModel* pModel, aiAnimation* pAIAnimation);
+	//static CAnimation* Create(class CModel* pModel, aiAnimation* pAIAnimation);
+	static CAnimation* Create(HANDLE hFile, _ulong* pdwByte, class CModel* pModel);
 	static CAnimation* Bin_Create(DATA_BINANIM* pAIAnimation, class CModel* pModel); // 추가
 	virtual void Free() override;
 };

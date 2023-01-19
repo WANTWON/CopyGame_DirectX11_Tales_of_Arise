@@ -19,10 +19,7 @@ public:
 	HRESULT Initialize(const LIGHTDESC& LightDesc);
 	void Set_LightDesc(LIGHTDESC* pLightDesc) { memcpy(&m_LightDesc, pLightDesc, sizeof(LIGHTDESC)); }
 
-#ifdef _DEBUG
-public:
 	HRESULT Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
-#endif // _DEBUG
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;

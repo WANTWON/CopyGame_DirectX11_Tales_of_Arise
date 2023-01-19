@@ -23,8 +23,8 @@ HRESULT CTerrain::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Create_FilterTexture()))
-		return E_FAIL;
+	//if (FAILED(Create_FilterTexture()))
+		//return E_FAIL;
 	
 	return S_OK;
 }
@@ -138,6 +138,9 @@ HRESULT CTerrain::Ready_Components(void *pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom)))
 		return E_FAIL;
 	
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_TerrainNormal"), (CComponent**)&m_pNormaltexture[TYPE_DIFFUSE])))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -165,15 +168,22 @@ HRESULT CTerrain::SetUp_ShaderResources()
 		m_pTextureCom[TYPE_DIFFUSE]->Get_SRV(1),
 	};
 
+	ID3D11ShaderResourceView*		pNormalSRVs[] = {
+		m_pNormaltexture[TYPE_DIFFUSE]->Get_SRV(0),
+		m_pNormaltexture[TYPE_DIFFUSE]->Get_SRV(1),
+	};
+
 	if (FAILED(m_pShaderCom->Set_ShaderResourceViewArray("g_DiffuseTexture", pSRVs, 2)))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceViewArray("g_NormalTexture", pNormalSRVs, 2)))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_BrushTexture", m_pTextureCom[TYPE_BRUSH]->Get_SRV(0))))
 		return E_FAIL;
-	/*if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_FilterTexture", m_pTextureCom[TYPE_FILTER]->Get_SRV(0))))
-		return E_FAIL;*/
-
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_FilterTexture", m_pFilterTexture)))
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_FilterTexture", m_pTextureCom[TYPE_FILTER]->Get_SRV(0))))
 		return E_FAIL;
+
+	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_FilterTexture", m_pFilterTexture)))
+		//return E_FAIL;
 
 	return S_OK;
 }
@@ -301,7 +311,11 @@ void CTerrain::Free()
 	Safe_Release(m_pShaderCom);
 
 	for (_uint i = 0; i < TYPE_END; ++i)
+	{
 		Safe_Release(m_pTextureCom[i]);
+		Safe_Release(m_pNormaltexture[i]);
+	}
+		
 
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);

@@ -115,11 +115,12 @@ namespace Engine
 		XMFLOAT3		vPosition;
 		XMFLOAT3		vNormal;
 		XMFLOAT2		vTexture;
+		XMFLOAT3		vTangent;
 	}VTXNORTEX;
 
 	typedef struct ENGINE_DLL tagVertexNormalTexture_Declaration
 	{
-		static const unsigned int iNumElements = 3;
+		static const unsigned int iNumElements = 4;
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXNORTEX_DECLARATION;
 

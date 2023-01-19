@@ -5,20 +5,20 @@
 BEGIN(Client)
 BEGIN(IceWolf)
 
-class CBattle_HowLingState : public CIceWolfState
+class CBattle_HowLingState : public CHawkState
 {
 public:
 	CBattle_HowLingState(class CIce_Wolf* pIceWolf);
 	
-	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) override;
-	virtual CIceWolfState* Tick(_float fTimeDelta) override;
-	virtual CIceWolfState* LateTick(_float fTimeDelta) override;
+	virtual CHawkState* AI_Behaviour(_float fTimeDelta) override;
+	virtual CHawkState* Tick(_float fTimeDelta) override;
+	virtual CHawkState* LateTick(_float fTimeDelta) override;
 
 	virtual void Enter() override;
 	virtual void Exit() override;
 
 private:
-	_uint		m_iRand = 0.f;
+	_uint		m_iRand = 0;
 	_float		m_fIdleAttackTimer = 0.f;
 	_bool		m_bAnimFinish = false;
 };

@@ -9,9 +9,8 @@ IMPLEMENT_SINGLETON(CModelManager)
 
 CModelManager::CModelManager()
 {
-	m_LayerTags.reserve(0);
 	m_CreatedModel.reserve(0);
-	
+	m_PrototypeTag.reserve(0);
 }
 
 
@@ -19,17 +18,11 @@ HRESULT CModelManager::Create_Model(LEVEL eLevel, const _tchar* pModelTag, const
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	//if(bCreatePrototype)
-	//	Create_Model_Prototype(eLevel, pModelTag, pDevice, pContext, eModelType, PivotMatrix);
-
 	CNonAnim::NONANIMDESC  NonAnimDesc;
 	memcpy(&NonAnimDesc, &m_InitModelDesc, sizeof(CNonAnim::NONANIMDESC));
 	char cModelTag[MAX_PATH] = "";
 	WideCharToMultiByte(CP_ACP, 0, pModelTag, MAX_PATH, cModelTag, MAX_PATH, NULL, NULL);
-	char *temp = strtok(cModelTag, ".fbx"); //공백을 기준으로 문자열 자르기
-	 
-	strcpy(NonAnimDesc.pModeltag , temp);
-
+	strcpy(NonAnimDesc.pModeltag, cModelTag);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), eLevel, pLayerTag, &NonAnimDesc)))
 	{
@@ -37,10 +30,16 @@ HRESULT CModelManager::Create_Model(LEVEL eLevel, const _tchar* pModelTag, const
 		return E_FAIL;
 	}
 		
-
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+void CModelManager::Add_PrototypeTag(const _tchar * PrototypeTag)
+{
+	_tchar*			pModeltag = new _tchar[MAX_PATH];
+	wsprintf(pModeltag, PrototypeTag);
+	m_PrototypeTag.push_back(pModeltag);
 }
 
 void CModelManager::Add_FileName(const _tchar * Layertag, const _tchar * FileName)
@@ -57,7 +56,6 @@ void CModelManager::Add_FileName(const _tchar * Layertag, const _tchar * FileNam
 	_tcscpy(szFullPath, FileName);
 
 	m_ModelTags.emplace(szLayerTag, szFullPath);
-	m_LayerTags.push_back(szLayerTag);
 }
 
 void CModelManager::Set_AllPickedFalse()
@@ -94,10 +92,6 @@ void CModelManager::Clear_Layer()
 	for (auto& iter : m_ModelTags)
 		Safe_Delete(iter.second);
 	m_ModelTags.clear();
-
-	for (auto& iter : m_LayerTags)
-		Safe_Delete(iter);
-	m_LayerTags.clear();
 
 }
 
@@ -143,10 +137,10 @@ void CModelManager::Free()
 		Safe_Delete(iter.second);
 	m_ModelTags.clear();
 
-
-	for (auto& iter : m_LayerTags)
+	for (auto& iter : m_PrototypeTag)
 		Safe_Delete(iter);
-	m_LayerTags.clear();
+	m_PrototypeTag.clear();
+
 
 	m_CreatedModel.clear();
 }

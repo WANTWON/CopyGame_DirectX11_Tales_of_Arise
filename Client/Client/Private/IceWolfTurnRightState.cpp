@@ -13,13 +13,13 @@ CTurnRightState::CTurnRightState(class CIce_Wolf* pIceWolf)
 	m_pOwner = pIceWolf;
 }
 
-CIceWolfState * CTurnRightState::AI_Behaviour(_float fTimeDelta)
+CHawkState * CTurnRightState::AI_Behaviour(_float fTimeDelta)
 {
 	Find_Target();
 	return nullptr;
 }
 
-CIceWolfState * CTurnRightState::Tick(_float fTimeDelta)
+CHawkState * CTurnRightState::Tick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 	Find_Target();
@@ -30,7 +30,7 @@ CIceWolfState * CTurnRightState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CIceWolfState * CTurnRightState::LateTick(_float fTimeDelta)
+CHawkState * CTurnRightState::LateTick(_float fTimeDelta)
 {
 	m_iRadian = rand() % 10;
 	m_fRadian = 0.05 * m_iRadian;

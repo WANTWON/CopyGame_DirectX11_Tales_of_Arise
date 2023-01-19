@@ -110,7 +110,7 @@ void CRunState::Move(_float fTimeDelta)
 
 	_float4x4 PlayerFloat = pPlayerTransform->Get_World4x4();
 
-	_vector vLook = XMVectorLerp(XMVectorSet(PlayerFloat.m[2][0], 0.f, PlayerFloat.m[2][2], 0.f), XMVectorSet(CameraFloat.m[2][0], 0.f, CameraFloat.m[2][2], 0.f), 0.5f);
+	_vector vLook = XMVectorLerp(XMVectorSet(PlayerFloat.m[2][0], 0.f, PlayerFloat.m[2][2], 0.f), XMVectorSet(CameraFloat.m[2][0], 0.f, CameraFloat.m[2][2], 0.f), 0.35f);
 	_float4 LookFloat;
 	XMStoreFloat4(&LookFloat, vLook);
 

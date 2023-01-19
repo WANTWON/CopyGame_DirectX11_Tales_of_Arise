@@ -6,55 +6,66 @@ CChannel::CChannel()
 {
 }
 
-HRESULT CChannel::Initialize(CModel* pModel, aiNodeAnim * pAIChannel)
+HRESULT CChannel::Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel)
 {
-	strcpy_s(m_szName, pAIChannel->mNodeName.data);
+	if (nullptr == hFile)
+		return E_FAIL;
 
-	/* 이 애니메이션 하나를 구동할때 시간별로 표현되었어야할 상태(KEYFRAME) */
-	/* 이 애니메이션 하나를 구동할때 몇개의 상태로 표현되어야하는가? m_iNumKeyframes */
-	m_iNumKeyframes = max(pAIChannel->mNumScalingKeys, pAIChannel->mNumRotationKeys);
-	m_iNumKeyframes = max(m_iNumKeyframes, pAIChannel->mNumPositionKeys);
+	ReadFile(hFile, m_szName, sizeof(char) * MAX_PATH, pdwByte, nullptr);
 
-	_float3			vScale;
-	_float4			vRotation;
-	_float3			vPosition;
+	_uint iNumScalingKeys, iNumRotationKeys, iNumPositionKeys;
+
+	ReadFile(hFile, &iNumScalingKeys, sizeof(_uint), pdwByte, nullptr);
+	ReadFile(hFile, &iNumRotationKeys, sizeof(_uint), pdwByte, nullptr);
+	ReadFile(hFile, &iNumPositionKeys, sizeof(_uint), pdwByte, nullptr);
+
+	ReadFile(hFile, &m_iNumKeyframes, sizeof(_uint), pdwByte, nullptr);
+
+	_float3 vScale, vPosition;
+	_float4 vRotation;
+	ZeroMemory(&vScale, sizeof(_float3));
+	ZeroMemory(&vPosition, sizeof(_float3));
+	ZeroMemory(&vRotation, sizeof(_float3));
 
 	for (_uint i = 0; i < m_iNumKeyframes; ++i)
 	{
-		KEYFRAME				Keyframe;
-		ZeroMemory(&Keyframe, sizeof(KEYFRAME));
+		KEYFRAME KeyFrame;
+		ZeroMemory(&KeyFrame, sizeof(KEYFRAME));
 
-		if (i < pAIChannel->mNumScalingKeys)
+		if (i < iNumScalingKeys)
 		{
-			memcpy(&vScale, &pAIChannel->mScalingKeys[i].mValue, sizeof(_float3));
-			Keyframe.fTime = (float)pAIChannel->mScalingKeys[i].mTime;
+			ReadFile(hFile, &vScale, sizeof(_float3), pdwByte, nullptr);
+			double fTime;
+			ReadFile(hFile, &fTime, sizeof(double), pdwByte, nullptr);
+			KeyFrame.fTime = (_float)fTime;
 		}
 
-		if (i < pAIChannel->mNumRotationKeys)
+		if (i < iNumRotationKeys)
 		{
-			/*memcpy(&vRotation, &pAIChannel->mRotationKeys[i].mValue, sizeof(_float4));*/
-			vRotation.x = pAIChannel->mRotationKeys[i].mValue.x;
-			vRotation.y = pAIChannel->mRotationKeys[i].mValue.y;
-			vRotation.z = pAIChannel->mRotationKeys[i].mValue.z;
-			vRotation.w = pAIChannel->mRotationKeys[i].mValue.w;
-			Keyframe.fTime = (float)pAIChannel->mRotationKeys[i].mTime;
+			ReadFile(hFile, &vRotation.x, sizeof(_float), pdwByte, nullptr);
+			ReadFile(hFile, &vRotation.y, sizeof(_float), pdwByte, nullptr);
+			ReadFile(hFile, &vRotation.z, sizeof(_float), pdwByte, nullptr);
+			ReadFile(hFile, &vRotation.w, sizeof(_float), pdwByte, nullptr);
+			double fTime;
+			ReadFile(hFile, &fTime, sizeof(double), pdwByte, nullptr);
+			KeyFrame.fTime = (_float)fTime;
 		}
 
-		if (i < pAIChannel->mNumPositionKeys)
+		if (i < iNumPositionKeys)
 		{
-			memcpy(&vPosition, &pAIChannel->mPositionKeys[i].mValue, sizeof(_float3));
-			Keyframe.fTime = (float)pAIChannel->mPositionKeys[i].mTime;
+			ReadFile(hFile, &vPosition, sizeof(_float3), pdwByte, nullptr);
+			double fTime;
+			ReadFile(hFile, &fTime, sizeof(double), pdwByte, nullptr);
+			KeyFrame.fTime = (_float)fTime;
 		}
 
-		Keyframe.vScale = vScale;
-		Keyframe.vRotation = vRotation;
-		Keyframe.vPosition = vPosition;
+		KeyFrame.vScale = vScale;
+		KeyFrame.vRotation = vRotation;
+		KeyFrame.vPosition = vPosition;
 
-		m_KeyFrames.push_back(Keyframe);
+		m_KeyFrames.push_back(KeyFrame);
 	}
 
-	/* 이 뼈의 현재 상태행렬을 만들면. 메시에가 가지고 있는 뼈에던지는게 맞아보이지만 
-	실제론 모델의 주소를 공유하고 있기때문에 모델이 가지고 있는 뼈에 던진다.  */
 	m_pBoneNode = pModel->Get_BonePtr(m_szName);
 	Safe_AddRef(m_pBoneNode);
 
@@ -186,25 +197,37 @@ _bool CChannel::Compare_Name(const char * pName)
 		return false;
 }
 
+//void CChannel::Get_ChannelData(DATA_BINCHANNEL * pChannelData)
+//{
+//	memcpy(&pChannelData->szName, m_szName, sizeof(char)*MAX_PATH);
+//	pChannelData->iNumKeyFrames = m_iNumKeyframes;
+//
+//	pChannelData->pKeyFrames = new KEYFRAME[m_iNumKeyframes];
+//
+//	for (_uint i = 0; i < m_iNumKeyframes; ++i)
+//	{
+//		memcpy(&pChannelData->pKeyFrames[i], &m_KeyFrames[i], sizeof(KEYFRAME));
+//	}
+//}
 
-void CChannel::Get_ChannelData(DATA_BINCHANNEL * pChannelData)
+//CChannel * CChannel::Create( CModel* pModel, aiNodeAnim * pAIChannel)
+//{
+//	CChannel*	pInstance = new CChannel();
+//
+//	if (FAILED(pInstance->Initialize(pModel, pAIChannel)))
+//	{
+//		ERR_MSG(TEXT("Failed to Created : CChannel"));
+//		Safe_Release(pInstance);
+//	}
+//
+//	return pInstance;
+//}
+
+CChannel * CChannel::Create(HANDLE hFile, _ulong * pdwByte, CModel * pModel)
 {
-	memcpy(&pChannelData->szName, m_szName, sizeof(char)*MAX_PATH);
-	pChannelData->iNumKeyFrames = m_iNumKeyframes;
+	CChannel* pInstance = new CChannel();
 
-	pChannelData->pKeyFrames = new KEYFRAME[m_iNumKeyframes];
-
-	for (_uint i = 0; i < m_iNumKeyframes; ++i)
-	{
-		memcpy(&pChannelData->pKeyFrames[i], &m_KeyFrames[i], sizeof(KEYFRAME));
-	}
-}
-
-CChannel * CChannel::Create( CModel* pModel, aiNodeAnim * pAIChannel)
-{
-	CChannel*	pInstance = new CChannel();
-
-	if (FAILED(pInstance->Initialize(pModel, pAIChannel)))
+	if (FAILED(pInstance->Initialize(hFile, pdwByte, pModel)))
 	{
 		ERR_MSG(TEXT("Failed to Created : CChannel"));
 		Safe_Release(pInstance);

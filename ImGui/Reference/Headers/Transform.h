@@ -48,6 +48,9 @@ public: /*Getter Setter */
 	void Set_TransformDesc(const TRANSFORMDESC& TransformDesc ) {m_TransformDesc = TransformDesc;}
 	void Change_Speed(_float fSpeed) { m_TransformDesc.fSpeedPerSec = fSpeed; }
 
+	_float Get_CurrentRotationX() { return m_fCurrentRotationX; }
+	_float Get_CurrentRotationY() { return m_fCurrentRotationY; }
+	_float Get_CurrentRotationZ() { return m_fCurrentRotationZ; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -58,6 +61,7 @@ public: /* Not Use Sliding */
 	bool Go_Backward(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
 	bool Go_Left(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
 	bool Go_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+	bool Go_Up(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
 
 public: /* Use Sliding */
 	bool Sliding_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
@@ -74,17 +78,25 @@ public:
 	bool Go_PosDir(_float fTimeDelta, _vector vecDir, class CNavigation* pNavigation = nullptr);
 	bool Go_PosLerp(_float fTimeDelta, _vector TargetPos, _float fVecOffset);
 
-public:
+public:/* Rotations */
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian);
+	void Set_Rotation(_float3 fAngle);
+	void Set_RotationY(_float fAngleY);
+
+public:
 	void LookAt(_fvector vAt);
 
 public:
 	void RoamingTurn(_matrix WorldMatrix, _float fRadian);
 
 private:			
-	_float4x4				m_WorldMatrix;
-	TRANSFORMDESC			m_TransformDesc;
+	_float4x4 m_WorldMatrix;
+	TRANSFORMDESC m_TransformDesc;
+
+	_float m_fCurrentRotationX = 0.f;
+	_float m_fCurrentRotationY = 0.f;
+	_float m_fCurrentRotationZ = 0.f;
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

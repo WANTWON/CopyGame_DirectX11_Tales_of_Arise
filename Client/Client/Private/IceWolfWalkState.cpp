@@ -15,13 +15,13 @@ CWalkFrontState::CWalkFrontState(CIce_Wolf* pIceWolf)
 	m_pOwner = pIceWolf;
 }
 
-CIceWolfState * CWalkFrontState::AI_Behaviour(_float fTimeDelta)
+CHawkState * CWalkFrontState::AI_Behaviour(_float fTimeDelta)
 {
 	Find_Target();
 	return nullptr;
 }
 
-CIceWolfState * CWalkFrontState::Tick(_float fTimeDelta)
+CHawkState * CWalkFrontState::Tick(_float fTimeDelta)
 {
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
@@ -34,7 +34,7 @@ CIceWolfState * CWalkFrontState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CIceWolfState * CWalkFrontState::LateTick(_float fTimeDelta)
+CHawkState * CWalkFrontState::LateTick(_float fTimeDelta)
 {
 
 		if (m_pTarget)

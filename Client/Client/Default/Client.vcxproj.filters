@@ -157,6 +157,30 @@
     <Filter Include="02.GameObjects\04.UI\09.UI_LOCKON">
       <UniqueIdentifier>{58dfe97a-44c5-4aed-bff1-646d1870960e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Hawk">
+      <UniqueIdentifier>{83d39912-0aae-4659-9122-88ac9147ee0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Hawk\State">
+      <UniqueIdentifier>{47d3a59d-060a-402d-b019-58b2f14858da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates">
+      <UniqueIdentifier>{7621979f-c91f-4566-ae17-21a98515fde1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates">
+      <UniqueIdentifier>{983e85a5-dbe1-4f11-9843-a40c98ff655c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker">
+      <UniqueIdentifier>{7d93c39e-4855-4061-affc-89c6349efb09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker\State">
+      <UniqueIdentifier>{fac9559b-d08e-4c24-86d8-328edd1e8e29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates">
+      <UniqueIdentifier>{9e81ca7f-9071-4738-86ee-39a42b21960e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates">
+      <UniqueIdentifier>{dd455c3a-0f6e-4072-bea2-9e84af3fad1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -273,9 +297,6 @@
     <ClInclude Include="..\Public\UI_Combo_font_Damages.h">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClInclude>
-    <ClInclude Include="UI_font_Damage_number.h">
-      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_Combo_font_Hits.h">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS</Filter>
     </ClInclude>
@@ -371,6 +392,60 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_LOCKON.h">
       <Filter>02.GameObjects\04.UI\09.UI_LOCKON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_BombingState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_BraveState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_ChargeState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_IdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Berserker.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_DashStartState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_Double_ClawState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_Double_CrowState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_HowLingState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_IdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_Shock_WaveState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerWalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_font_Damage_number.h">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -470,9 +545,6 @@
     <ClCompile Include="..\Private\UI_Combo_font_Damages.cpp">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClCompile>
-    <ClCompile Include="UI_font_Damage_number.cpp">
-      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UI_Combo_font_Hits.cpp">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS</Filter>
     </ClCompile>
@@ -565,6 +637,54 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_LOCKON.cpp">
       <Filter>02.GameObjects\04.UI\09.UI_LOCKON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_BombingState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_BraveState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_ChargeState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_IdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Berserker.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_DashStartState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_Double_ClawState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_Double_CrowState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_HowLingState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_IdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_Shock_WaveState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerWalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_font_Damage_number.cpp">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
