@@ -8,12 +8,12 @@ class CModel;
 class CVIBuffer_Point_Instance;
 END
 
+BEGIN(Client)
 class CEffect final : public CBaseObj
 {
 public:
 	enum EFFECT_TYPE 
 	{ 
-		TYPE_EFFECT,	/* Main Effect which is composed by Texture, Mesh and Particles. */
 		TYPE_TEXTURE,	
 		TYPE_MESH, 
 		TYPE_PARTICLE, 
@@ -24,17 +24,12 @@ public:
 	{
 		EFFECT_TYPE eType = TYPE_END;
 
-		_tchar wcFileName[MAX_PATH] = TEXT("");				/* "Effect.dds"
-																"Effect.fbx" */
+		_tchar wcFileName[MAX_PATH] = TEXT("");				// "Effect.dds" ~ "Effect.png" ~ "Effect.fbx" 
+		_tchar wcFilePath[MAX_PATH] = TEXT("");				// "../../../Bin/Resources/Textures/Effect/*" ~ "../../../Bin/Resources/Meshes/Effect/*"
 
-		_tchar wcFilePath[MAX_PATH] = TEXT("");				/* "../../../Bin/Resources/Textures/Effect/*
-																"../../../Bin/Resources/Meshes/Effect/* */
-
-		vector<CEffect*> Effects;							/* An Effect is in turn composed of other Effects. */
-
-		_tchar wcPrototypeId[MAX_PATH] = TEXT("");			/* "Prototype_Component_*_Effect_Hit" */
-
-		/* Common Infos. */
+		_tchar wcTexturePrototypeId[MAX_PATH] = TEXT("");
+		_tchar wcModelPrototypeId[MAX_PATH] = TEXT("");		
+	
 		_float fSpeed = 0.f;
 
 		/*vector<_float4> ScaleCurves;
@@ -65,7 +60,7 @@ public:
 
 private:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
-	virtual HRESULT SetUp_ShaderResources() override;
+	virtual HRESULT SetUp_ShaderResources() override; 
 
 private:
 	EFFECTDESC m_tEffectDesc;
@@ -85,3 +80,4 @@ public:
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
+END

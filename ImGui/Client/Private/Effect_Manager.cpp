@@ -1,7 +1,8 @@
 #include "stdafx.h"
 
-#include "Effect_Manager.h"
 #include "GameInstance.h"
+#include "Effect.h"
+#include "Effect_Manager.h"
 
 IMPLEMENT_SINGLETON(CEffect_Manager)
 
@@ -9,25 +10,23 @@ CEffect_Manager::CEffect_Manager()
 {
 }
 
-HRESULT CEffect_Manager::Create_Effect(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, void* pArg)
+void CEffect_Manager::Add_Effect(CEffect* pEffect)
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	CEffect::EFFECTDESC tEffectDesc;
-	memcpy(&tEffectDesc, (CEffect::EFFECTDESC*)pArg, sizeof(CEffect::EFFECTDESC));
-
-	CEffect* pEffect = nullptr;
-	if (FAILED(pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc)))
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return E_FAIL;
-	}
-
 	m_InstancedEffects.push_back(pEffect);
+}
 
-	RELEASE_INSTANCE(CGameInstance);
-
-	return S_OK;
+void CEffect_Manager::Remove_Effect(CEffect* pEffect)
+{
+	for (auto& iter = m_InstancedEffects.begin(); iter != m_InstancedEffects.end(); iter++)
+	{
+		if (!wcscmp((*iter)->Get_EffectDesc().wcFileName, pEffect->Get_EffectDesc().wcFileName))
+		{
+			pEffect->Set_Dead(true);
+			m_InstancedEffects.erase(iter);
+			
+			return;
+		}
+	}
 }
 
 void CEffect_Manager::Free()

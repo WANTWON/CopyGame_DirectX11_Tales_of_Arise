@@ -174,10 +174,14 @@ private:
 	/* Effect Resources (Texture, Meshes) */
 	list<string>							m_TextureNames;
 	list<string>							m_MeshNames;
-	string									m_sSelectedTexture;
-	string									m_sSelectedMesh;
+	string									m_sSelectedResource;
+
+	enum RESOURCE_TYPE { RESOURCE_TEXTURE, RESOURCE_MESH, RESOURCE_END };
+	RESOURCE_TYPE							m_eResourceType = RESOURCE_END;
+
+	/* Instanced Effects */
 	string									m_sSelectedEffect;
-	CEffect*								m_pSelectedEffect = nullptr;
+	class CEffect*							m_pSelectedEffect = nullptr;
 	
 	/* Effect Settings */
 	_bool									m_bIsPlaying = false;
