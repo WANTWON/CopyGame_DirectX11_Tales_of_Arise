@@ -9,14 +9,14 @@ CAttackNormalState::CAttackNormalState(class CIce_Wolf* pIceWolf)
 	m_pOwner = pIceWolf;
 }
 
-CIceWolfState * CAttackNormalState::AI_Behaviour(_float fTimeDelta)
+CHawkState * CAttackNormalState::AI_Behaviour(_float fTimeDelta)
 {
 
 
 	return nullptr;
 }
 
-CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
+CHawkState * CAttackNormalState::Tick(_float fTimeDelta)
 {
 	m_bAnimFinish = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
@@ -28,7 +28,7 @@ CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CIceWolfState * CAttackNormalState::LateTick(_float fTimeDelta)
+CHawkState * CAttackNormalState::LateTick(_float fTimeDelta)
 {
 
 	m_iRand = rand() % 2;

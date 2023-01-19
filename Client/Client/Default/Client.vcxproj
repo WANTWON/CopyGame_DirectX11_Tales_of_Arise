@@ -171,10 +171,27 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
     <ClInclude Include="..\Public\BaseObj.h" />
+    <ClInclude Include="..\Public\Berserker.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_DashStartState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_Double_ClawState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_Double_CrowState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_HowLingState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_IdleState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_Shock_WaveState.h" />
+    <ClInclude Include="..\Public\BerserkerIdleState.h" />
+    <ClInclude Include="..\Public\BerserkerState.h" />
+    <ClInclude Include="..\Public\BerserkerWalkState.h" />
     <ClInclude Include="..\Public\Collision_Manger.h" />
     <ClInclude Include="..\Public\CP_Guage.h" />
     <ClInclude Include="..\Public\CP_Guage_font.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
+    <ClInclude Include="..\Public\Hawk.h" />
+    <ClInclude Include="..\Public\HawkBattle_BombingState.h" />
+    <ClInclude Include="..\Public\HawkBattle_BraveState.h" />
+    <ClInclude Include="..\Public\HawkBattle_ChargeState.h" />
+    <ClInclude Include="..\Public\HawkBattle_IdleState.h" />
+    <ClInclude Include="..\Public\HawkIdleState.h" />
+    <ClInclude Include="..\Public\HawkState.h" />
     <ClInclude Include="..\Public\HPbar.h" />
     <ClInclude Include="..\Public\HPbar_World.h" />
     <ClInclude Include="..\Public\HP_Font.h" />
@@ -240,10 +257,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\BaseObj.cpp" />
+    <ClCompile Include="..\Private\Berserker.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_DashStartState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_Double_ClawState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_Double_CrowState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_HowLingState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_IdleState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_Shock_WaveState.cpp" />
+    <ClCompile Include="..\Private\BerserkerIdleState.cpp" />
+    <ClCompile Include="..\Private\BerserkerWalkState.cpp" />
     <ClCompile Include="..\Private\Collision_Manger.cpp" />
     <ClCompile Include="..\Private\CP_Guage.cpp" />
     <ClCompile Include="..\Private\CP_Guage_font.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
+    <ClCompile Include="..\Private\Hawk.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_BombingState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_BraveState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_ChargeState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_IdleState.cpp" />
+    <ClCompile Include="..\Private\HawkIdleState.cpp" />
     <ClCompile Include="..\Private\HPbar.cpp" />
     <ClCompile Include="..\Private\HPbar_World.cpp" />
     <ClCompile Include="..\Private\HP_Font.cpp" />

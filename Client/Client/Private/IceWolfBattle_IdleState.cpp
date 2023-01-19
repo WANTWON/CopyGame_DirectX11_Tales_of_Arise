@@ -12,12 +12,12 @@ CBattle_IdleState::CBattle_IdleState(class CIce_Wolf* pIceWolf)
 	m_pOwner = pIceWolf;
 }
 
-CIceWolfState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
+CHawkState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 {
 	return nullptr;
 }
 
-CIceWolfState * CBattle_IdleState::Tick(_float fTimeDelta)
+CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
 	m_bAnimFinish =	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	
@@ -29,7 +29,7 @@ CIceWolfState * CBattle_IdleState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
+CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 {
 	m_iRand = rand() % 4;
 
