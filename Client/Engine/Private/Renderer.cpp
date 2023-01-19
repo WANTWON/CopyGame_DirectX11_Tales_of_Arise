@@ -152,10 +152,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Depth"), 75.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow"), 75.f, 525.f, 150.f, 150.f)))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Ambient"), 75.f, 675.f, 150.f, 150.f)))
-		return E_FAIL;
+	//if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Ambient"), 75.f, 525.f, 150.f, 150.f)))
+	//	return E_FAIL;
 
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Shade"), 225.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
@@ -164,9 +162,11 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth"), 225.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Reflection"), 375.f, 75.f, 150.f, 150.f)))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Refraction"), 375.f, 225.f, 150.f, 150.f)))
+	//if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Reflection"), 375.f, 75.f, 150.f, 150.f)))
+		//return E_FAIL;
+	//if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Refraction"), 375.f, 225.f, 150.f, 150.f)))
+		//return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow"), 375.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 #endif
 

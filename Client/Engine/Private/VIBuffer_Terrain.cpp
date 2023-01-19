@@ -4,19 +4,6 @@
 #include "Transform.h"
 #include "Picking.h"
 
-XMFLOAT3 CalculateTerrainTangent(XMFLOAT3 p1, XMFLOAT3 p2, XMFLOAT3 p3, XMFLOAT2 uv1, XMFLOAT2 uv2, XMFLOAT2 uv3)
-{
-	XMFLOAT3 edge1 = XMFLOAT3(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
-	XMFLOAT3 edge2 = XMFLOAT3(p3.x - p1.x, p3.y - p1.y, p3.z - p1.z);
-	XMFLOAT2 deltaUV1 = XMFLOAT2(uv2.x - uv1.x, uv2.y - uv1.y);
-	XMFLOAT2 deltaUV2 = XMFLOAT2(uv3.x - uv1.x, uv3.y - uv1.y);
-	float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
-	XMFLOAT3 tangent = XMFLOAT3((deltaUV2.y * edge1.x - deltaUV1.y * edge2.x) * f, (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y) * f, (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z) * f);
-	XMVECTOR vTangent = XMLoadFloat3(&tangent);
-	XMStoreFloat3(&tangent, XMVector3Normalize(vTangent));
-	return tangent;
-}
-
 
 CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -80,8 +67,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 		{
 			_uint	iIndex = i * m_iNumVerticesX + j;
 
-			m_pVerticesPos[iIndex] = pVertices[iIndex].vPosition = _float3(_float(j)*10.f, (pPixel[iIndex] & 0x000000ff), _float(i)*10.f);
+			m_pVerticesPos[iIndex] = pVertices[iIndex].vPosition = _float3(_float(j)*5.f, (pPixel[iIndex] & 0x000000ff), _float(i)*5.f);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
+			pVertices[iIndex].vTangent = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexture = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
 		}
 	}
@@ -117,22 +105,14 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 			pIndices[iNumFaces]._2 = iIndices[2];
 
 			_vector		vSourDir, vDestDir, vNormal;
-			XMFLOAT3	vTangent;
 
 			vSourDir = XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vPosition) - XMLoadFloat3(&pVertices[pIndices[iNumFaces]._0].vPosition);
 			vDestDir = XMLoadFloat3(&pVertices[pIndices[iNumFaces]._2].vPosition) - XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vPosition);
 			vNormal = XMVector3Normalize(XMVector3Cross(vSourDir, vDestDir));
 
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal) + vNormal);
-
-			vTangent = CalculateTerrainTangent(pVertices[pIndices[iNumFaces]._0].vNormal, pVertices[pIndices[iNumFaces]._1].vNormal, pVertices[pIndices[iNumFaces]._2].vNormal,
-				pVertices[pIndices[iNumFaces]._0].vTexture, pVertices[pIndices[iNumFaces]._1].vTexture, pVertices[pIndices[iNumFaces]._2].vTexture);
-
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._0].vTangent, XMLoadFloat3(&vTangent));
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._1].vTangent, XMLoadFloat3(&vTangent));
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._2].vTangent, XMLoadFloat3(&vTangent));
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal, ( XMLoadFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal, (XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal, (XMLoadFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal) + vNormal));
 			++iNumFaces;
 
 			pIndices[iNumFaces]._0 = iIndices[0];
@@ -143,23 +123,24 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 			vDestDir = XMLoadFloat3(&pVertices[pIndices[iNumFaces]._2].vPosition) - XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vPosition);
 			vNormal = XMVector3Normalize(XMVector3Cross(vSourDir, vDestDir));
 
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal) + vNormal);
-			
-			
-			vTangent = CalculateTerrainTangent(pVertices[pIndices[iNumFaces]._0].vNormal, pVertices[pIndices[iNumFaces]._1].vNormal, pVertices[pIndices[iNumFaces]._2].vNormal,
-				pVertices[pIndices[iNumFaces]._0].vTexture, pVertices[pIndices[iNumFaces]._1].vTexture, pVertices[pIndices[iNumFaces]._2].vTexture);
-
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._0].vTangent, XMLoadFloat3(&vTangent));
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._1].vTangent, XMLoadFloat3(&vTangent));
-			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._2].vTangent, XMLoadFloat3(&vTangent));
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal, (XMLoadFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal, (XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal) + vNormal));
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal, (XMLoadFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal) + vNormal));
 			++iNumFaces;
 		}
 	}
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3Normalize(XMLoadFloat3(&pVertices[i].vNormal)));
+		
+		XMVECTOR arbitraryVector = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+		_vector normal = XMLoadFloat3(&pVertices[i].vNormal);	
+		_vector tangent = XMVector3Normalize(arbitraryVector - XMVector3Dot(arbitraryVector, normal) * normal);
+		
+		XMStoreFloat3(&pVertices[i].vTangent, tangent);
+	}
+		
 
 
 	/* 정점을 담기 위한 공간을 할당하고, 내가 전달해준 배열의 값들을 멤카피한다. */

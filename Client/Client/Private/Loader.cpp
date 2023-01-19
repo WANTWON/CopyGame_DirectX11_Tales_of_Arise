@@ -350,7 +350,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap2.bmp"), false))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap3.bmp"), true))))
 		return E_FAIL;
 
 	HANDLE hFile = 0;
@@ -423,7 +423,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/*For.Prototype_Component_Texture_Filter */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Filter"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.dds"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter2.dds"), 1))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Snow */
@@ -451,14 +451,14 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Berserker"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Berserker/Berserker.fbx", PivotMatrix))))
 	//	return E_FAIL;
-	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Berserker"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
+	//CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Berserker"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
 
 	/*For.Prototype_Component_Model_Hawk*/
 	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Hawk"),
 	//CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Hawk/Hawk.fbx", PivotMatrix))))
 	//return E_FAIL;
-	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Hawk"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
+	//CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Hawk"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
 
 
 	/* 콜라이더 생성 중. */

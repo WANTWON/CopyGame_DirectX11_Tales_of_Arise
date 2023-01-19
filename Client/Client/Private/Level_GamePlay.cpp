@@ -25,8 +25,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		return E_FAIL;
+//	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -129,7 +129,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	for (_uint i = 0; i < 5; ++i)
 	{
 		_vector vPosition = { rand() % 30, 0.f, rand() % 30 , 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_IceWolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
 			return E_FAIL;
 	}
 
