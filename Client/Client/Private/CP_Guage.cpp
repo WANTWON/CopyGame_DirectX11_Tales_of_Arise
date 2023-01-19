@@ -28,7 +28,7 @@ HRESULT CCP_Guage::Initialize(void * pArg)
 	m_fSize.x = 42.f;
 	m_fSize.y = 42.f;
 	m_fPosition.x = 1180.f;
-	m_fPosition.y = 300;
+	m_fPosition.y = 280;
 
 
 	m_eShaderID = UI_CP_GUAGE;

@@ -3,7 +3,6 @@
 #include "Imgui_Manager.h"
 #include "PickingMgr.h"
 #include "GameInstance.h"
-#include "Data_Manager.h"
 
 CNonAnim::CNonAnim(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -132,6 +131,13 @@ _bool CNonAnim::Picking(_float3 * PickingPoint)
 {
 	/*if (CGameInstance::Get_Instance()->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), Get_Scale().y * 2) == false)
 		return false;*/
+
+	CImgui_Manager::PICKING_TYPE PickingType = CImgui_Manager::Get_Instance()->Get_PickingType();
+	if (PickingType == CImgui_Manager::PICKING_TERRAIN_BRUSH ||
+		PickingType == CImgui_Manager::PICKING_TERRAIN_TRANSFORM ||
+		PickingType == CImgui_Manager::PICKING_TERRAIN_SHAPE)
+		return false;
+	
 	if (true == m_pModelCom->Picking(m_pTransformCom, PickingPoint))
 		return true; 
 
@@ -144,7 +150,7 @@ void CNonAnim::PickingTrue()
 
 	switch (ePickingtype)
 	{
-	case Client::CImgui_Manager::PICKING_TERRAIN_TRANSFORM:
+	case Client::CImgui_Manager::PICKING_MODEL:
 		Set_Picked();
 		break;
 	case Client::CImgui_Manager::PICKING_TERRAIN_SHAPE:

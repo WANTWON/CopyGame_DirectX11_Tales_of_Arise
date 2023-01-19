@@ -39,6 +39,9 @@
 #include "UI_Portraitfront_left.h"
 #include "UI_Skillbutton.h"
 #include "UI_Changebutton.h"
+#include "UI_LOCKON.h"
+
+#include "UI_RuneEffect.h"
 
 //Monster
 #include "Ice_Wolf.h"
@@ -218,6 +221,14 @@ HRESULT CLoader::Loading_ForPrototype()
 		CUI_Changebutton::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Rune_Effect"),
+		CUI_RuneEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_LOCKON"),
+		CUI_LOCKON::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront"),
 		CUI_Portraitfront::Create(m_pDevice, m_pContext))))
@@ -350,7 +361,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap2.bmp"), false))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap3.bmp"), true))))
 		return E_FAIL;
 
 	HANDLE hFile = 0;
@@ -373,25 +384,20 @@ HRESULT CLoader::Loading_ForStaticLevel()
 #pragma endregion Buffer Loading
 
 #pragma region Model Loading
-	_matrix PivotMatrix = XMMatrixIdentity();
-
-	/*For.Prototype_Component_Model_Alphen*/
-	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	/* For.Prototype_Component_Model_Alphen */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Alphen"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Alphen/Alphen.fbx", PivotMatrix))))
-		return E_FAIL;*/
-	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_STATIC, CData_Manager::DATA_ANIM);
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Alphen/Alphen.dat"))))
+		return E_FAIL;
 
 	/*For.Prototype_Component_Model_Water_Plane*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/Water/Plane.fbx"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Water/Plane.dat"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Alphen_Weapon01 */
-	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));*/
-	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1(R00)"),
-	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/NonAnim/SWO1(R00)/SWO1(R00).fbx", PivotMatrix))))
-	return E_FAIL;*/
-	//CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_STATIC, CData_Manager::DATA_ANIM);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1(R00)"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/SWO1(R00)/SWO1(R00).dat"))))
+		return E_FAIL;
 
 #pragma endregion Model Loading
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
@@ -416,6 +422,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/MP_snow%d_D.dds"), 2))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_SnowNormal */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_TerrainNormal"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/MP_snow%d_N.dds"), 2))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Texture_Brush */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Brush"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Brush.png"), 1))))
@@ -423,7 +434,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 
 	/*For.Prototype_Component_Texture_Filter */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Filter"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Filter.bmp"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter2.dds"), 1))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Snow */
@@ -431,35 +442,34 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Snow/snow.png"), 1))))
 		return E_FAIL;
 
+	
+
 	/*For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_SnowDark.dds"), 1))))
 		return E_FAIL;
 
 	/* 모델 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("모델 로딩 중."));
 
-	_matrix	PivotMatrix = XMMatrixIdentity();
-
 	/*For.Prototype_Component_Model_IceWolf*/
-	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf"),
-	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Ice_Wolf/Ice_Wolf.fbx", PivotMatrix))))*/
-	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Ice_Wolf"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
+		return E_FAIL;
 
 	/*For.Prototype_Component_Model_Berserker*/
 	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Berserker"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Berserker/Berserker.fbx", PivotMatrix))))
 	//	return E_FAIL;
-	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Berserker"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
+	//CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Berserker"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
 
 	/*For.Prototype_Component_Model_Hawk*/
 	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Hawk"),
 	//CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Resources/Meshes/Anim/Hawk/Hawk.fbx", PivotMatrix))))
 	//return E_FAIL;
-	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Hawk"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
+	//CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Hawk"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
 
 
 	/* 콜라이더 생성 중. */
@@ -572,6 +582,18 @@ HRESULT CLoader::Loading_ForUITexture()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_changebutton"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillkey/ctrlicon.dds"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_RuneEffect"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/runeeffect/rune%d.dds"), 5))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_charactername"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/charactername/charactername%d.dds"), 3))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lockon"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/lockon/lockon%d.dds"), 5))))
 		return E_FAIL;
 
 	return S_OK;

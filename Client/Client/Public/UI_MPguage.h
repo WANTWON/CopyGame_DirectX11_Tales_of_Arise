@@ -43,6 +43,8 @@ private:
 	_float m_fcurrentmp = 0.f;
 	_float m_fmaxmp = 10.f;
 
+	_float m_fNext = 13.f;
+
 
 	_float m_fcurrent_render_slot_mp = 0.f;
 

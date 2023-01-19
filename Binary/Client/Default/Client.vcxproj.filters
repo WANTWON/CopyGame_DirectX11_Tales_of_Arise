@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Client.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainApp.h">
+      <Filter>00. MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Defines.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Loading.h">
+      <Filter>01. Levels\00. Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loader.h">
+      <Filter>01. Levels\00. Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01. Levels\01. GamePlay</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Client.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainApp.cpp">
+      <Filter>00. MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Loading.cpp">
+      <Filter>01. Levels\00. Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01. Levels\00. Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GamePlay.cpp">
+      <Filter>01. Levels\01. GamePlay</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Client.ico">
+      <Filter>98. Default</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>98. Default</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="98. Default">
+      <UniqueIdentifier>{b421b949-4da7-49dd-a7cd-3aa228f006ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defines">
+      <UniqueIdentifier>{326d0779-0a07-4632-bea9-d8406bd91ed6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp">
+      <UniqueIdentifier>{37015320-2c96-4263-8722-c0156cf76c43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels">
+      <UniqueIdentifier>{faa2f05d-3051-49b5-a4e7-6e8366242f8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\00. Loader">
+      <UniqueIdentifier>{919684d8-8181-4d66-9e96-623059c8ccfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\01. GamePlay">
+      <UniqueIdentifier>{c5d49080-ee12-4714-9b2c-53425e20183d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>98. Default</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>98. Default</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

@@ -20,16 +20,17 @@ public:
 	HRESULT Create_Model(LEVEL eLevel, const _tchar* pPrototypeTag, const _tchar* pLayerTag, ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CModel::TYPE eModelType, _fmatrix PivotMatrix, _bool bCreatePrototype = false);
 
 public:
-	vector<const _tchar*> Get_LayerTags() { return m_LayerTags;}
 	const vector<class CNonAnim*> Get_CreatedModel() const { return m_CreatedModel; }
 
 public:
+	void Add_PrototypeTag(const _tchar* PrototypeTag);
 	void Add_FileName(const _tchar* Layertag, const _tchar* FileName);
 	void Add_CreatedModel( class CNonAnim* pNonAnimModel) { m_CreatedModel.push_back(pNonAnimModel); }
 	void Set_AllPickedFalse();
 	void Set_InitModelDesc(CNonAnim::NONANIMDESC ModelDesc) { memcpy(&m_InitModelDesc, &ModelDesc, sizeof(CNonAnim::NONANIMDESC)); }
 	void Out_CreatedModel(CNonAnim* pGameObject);
 	void Clear_Layer();
+	vector<const _tchar*> Get_PrototypeTag() { return m_PrototypeTag; }
 
 public:
 	HRESULT Add_TreasureBox(const _tchar* pLayerTag, CTreasureBox::BOXTAG* BoxDesc);
@@ -45,7 +46,7 @@ private:
 
 private:
 	map<const _tchar*, const _tchar*>  m_ModelTags;  //Prototype Tag & Path
-	vector<const _tchar*> m_LayerTags; //Prototype Tag ¸¸ ¸ð¾ÆµÐ°Å  
+	vector<const _tchar*> m_PrototypeTag;
 	vector<class CNonAnim*> m_CreatedModel;
 	CNonAnim::NONANIMDESC  m_InitModelDesc;
 

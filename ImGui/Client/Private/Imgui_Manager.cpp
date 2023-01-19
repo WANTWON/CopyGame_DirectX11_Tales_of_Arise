@@ -61,11 +61,13 @@ CImgui_Manager::CImgui_Manager()
 	, m_pModel_Manager(CModelManager::Get_Instance())
 	, m_pNavigation_Manager(CNavigation_Manager::Get_Instance())
 	, m_pCamera_Manager(CCamera_Manager::Get_Instance())
+	, m_pEffectManager(CEffect_Manager::Get_Instance())
 {
 	Safe_AddRef(m_pModel_Manager);
 	Safe_AddRef(m_pTerrain_Manager);
 	Safe_AddRef(m_pNavigation_Manager);
 	Safe_AddRef(m_pCamera_Manager);
+	Safe_AddRef(m_pEffectManager);
 
 	char* LayerTag = "Layer_Map";
 	char* LayerTag2 = "Layer_Terrain";
@@ -92,15 +94,25 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext *
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-
 	// Setup Dear ImGui style
+	io.FontDefault = io.Fonts->AddFontFromFileTTF("../../../Bin/Resources/Fonts/Quicksand-Medium.ttf", 16.0f);
 	ImGui::StyleColorsBlue();
-	//io.FontDefault = io.Fonts->AddFontFromFileTTF("../../Resources/Fonts/Quicksand-Medium.ttf", 16.0f);
 
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
-	Read_Objects_Name(m_pFilePath);
+
+	
+	/* Effect Tool */
+	Read_EffectsData();
+
+	_tchar wcTexturesPath[MAX_PATH] = TEXT("../../../Bin/Resources/Textures/Effect/");
+	Read_Textures(wcTexturesPath);
+
+	_tchar wcMeshesPath[MAX_PATH] = TEXT("../../../Bin/Resources/Meshes/Effect/");
+	Read_Meshes(wcMeshesPath);
+	/**/
+
 	return S_OK;
 }
 
@@ -186,20 +198,24 @@ void CImgui_Manager::Tick_Imgui()
 	{
 		if (ImGui::BeginTabItem("Terrain Tool"))
 		{
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Picking for Moving Terrain"); ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Move"); ImGui::SameLine();
 			ImGui::RadioButton("##Picking for Moving Terrain", &m_PickingType, PICKING_TERRAIN_TRANSFORM); ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Picking for Shaping Terrain"); ImGui::SameLine();
-			ImGui::RadioButton("##Picking for Shaping Terrain", &m_PickingType, PICKING_TERRAIN_SHAPE);
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Shape"); ImGui::SameLine();
+			ImGui::RadioButton("##Picking for Shaping Terrain", &m_PickingType, PICKING_TERRAIN_SHAPE); ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Brush"); ImGui::SameLine();
+			ImGui::RadioButton("##Picking for Brush Terrain", &m_PickingType, PICKING_TERRAIN_BRUSH);
+
 
 			Set_Terrain_Map();
 			Set_Terrain_Shape();
 			Set_HeightMap();
+			Set_Brush();
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Model Tool"))
 		{
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Picking for Object"); ImGui::SameLine();
-			ImGui::Checkbox("##Picking for Object", &m_bCreateModel);
+			ImGui::RadioButton("##Picking for Object", &m_PickingType, PICKING_MODEL);
 
 
 			if (ImGui::BeginTabBar("ModelsTabs", ImGuiTabBarFlags_None))
@@ -253,13 +269,17 @@ void CImgui_Manager::Tick_Imgui()
 			Set_Light();
 			ImGui::EndTabItem();
 		}
+		if (ImGui::BeginTabItem("Effect Tool"))
+		{
+			Set_Effect();
+			ImGui::EndTabItem();
+		}
 		ImGui::EndTabBar();
 	}
 
 
 	if (m_bSave || m_bLoad)			BrowseForFolder();
 	if (m_bShowSimpleMousePos)      ShowSimpleMousePos(&m_bShowSimpleMousePos);
-	if (m_bFilePath)				Set_File_Path_Dialog();
 	if (m_bShow_app_style_editor) { ImGui::Begin("Dear ImGui Style Editor", &m_bShow_app_style_editor); ImGui::ShowStyleEditor(); ImGui::End(); }
 	ImGui::End();
 
@@ -491,7 +511,7 @@ void CImgui_Manager::Set_TrasureBox()
 	}
 
 
-	if (m_bCreateModel && CGameInstance::Get_Instance()->Key_Up(DIK_X))
+	if (m_PickingType == PICKING_MODEL && CGameInstance::Get_Instance()->Key_Up(DIK_X))
 	{
 		if (CPickingMgr::Get_Instance()->Picking())
 		{
@@ -506,7 +526,7 @@ void CImgui_Manager::Set_TrasureBox()
 
 		}
 	}
-	if (m_bCreateModel && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
+	if (m_PickingType == PICKING_MODEL && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
 	{
 		_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 		m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
@@ -628,21 +648,6 @@ void CImgui_Manager::Load_TrasureBox()
 
 }
 
-void CImgui_Manager::Set_FilePath()
-{
-	//모델들이 있는 폴더 경로를 설정하면, 그 폴더 안에 있는 fbx 모델들을 읽는다.
-	ImGui::BulletText("Setting FilePath");
-	static char FilePath[MAX_PATH] = "";
-	WideCharToMultiByte(CP_ACP, 0, m_pFilePath, MAX_PATH, FilePath, MAX_PATH, NULL, NULL);
-	ImGui::InputText("##FilePath", FilePath, MAX_PATH);
-	MultiByteToWideChar(CP_ACP, 0, FilePath, MAX_PATH, m_pFilePath, MAX_PATH);
-	ImGui::SameLine();
-	if (ImGui::Button("ChangePath"))
-	{
-		m_pModel_Manager->Clear_Layer();
-		Read_Objects_Name(m_pFilePath);
-	}
-}
 
 void CImgui_Manager::Set_LayerTag()
 {
@@ -669,7 +674,7 @@ void CImgui_Manager::Set_LayerTag()
 
 void CImgui_Manager::Set_Macro()
 {
-	vector<const _tchar*> ModelTags = m_pModel_Manager->Get_LayerTags();
+	vector<const _tchar*> ModelTags = m_pModel_Manager->Get_PrototypeTag();
 	ImGui::NewLine();
 	ImGui::BulletText("Macro Setting");
 	ImGui::Text("fbx size : "); ImGui::SameLine(); ImGui::Text("%d", ModelTags.size());
@@ -1261,22 +1266,12 @@ void CImgui_Manager::Set_HeightMap()
 	ImGui::GetIO().WantCaptureMouse = true;
 	ImGui::CollapsingHeader("Height_Map");
 
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Set_File_Path")) m_bFilePath = !m_bFilePath;
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenuBar();
-	}
-
 	vector<const _tchar*> TerrainTags = m_pTerrain_Manager->Get_PrototypeTagList();
 
 	// ------------------------ Left-----------------------------------
 	static int selected = 0;
 	{
-		ImGui::BeginChild("left pane", ImVec2(150, 100), true);
+		ImGui::BeginChild("left pane", ImVec2(150, 50), true);
 
 		int i = 0;
 
@@ -1333,22 +1328,8 @@ void CImgui_Manager::Set_Brush()
 
 	ImGui::CollapsingHeader("Brush");
 
-	ImGui::Text("Height");
-	ImGui::SameLine();
-	ImGui::DragFloat("##fHeight", &m_TerrainShapeDesc.fHeight, 0.1f);
 
-	ImGui::Text("Radius");
-	ImGui::SameLine();
-	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius, 0.1f);
-
-	ImGui::Text("Sharp");
-	ImGui::SameLine();
-	ImGui::DragFloat("##fSharp", &m_TerrainShapeDesc.fSharp, 0.1f);
-
-
-	m_pTerrain_Manager->Set_TerrainShapeDesc(&m_TerrainShapeDesc);
-
-	if (m_PickingType == PICKING_TERRAIN_SHAPE)
+	if (m_PickingType == PICKING_TERRAIN_BRUSH)
 	{
 		CPickingMgr::Get_Instance()->Picking();
 	}
@@ -1361,8 +1342,6 @@ void CImgui_Manager::Set_Brush()
 	{
 		Load_Terrain();
 	}
-
-
 }
 
 void CImgui_Manager::ShowSimpleMousePos(bool* p_open)
@@ -1610,77 +1589,11 @@ void CImgui_Manager::Show_PopupBox()
 
 }
 
-void CImgui_Manager::Set_File_Path_Dialog()
-{
-
-	if (m_bFilePath)
-	{
-		OPENFILENAME OFN;
-		TCHAR filePathName[300] = L"";
-		TCHAR lpstrFile[300] = L"";
-		static TCHAR filter[] = L"모든 파일\0*.*\0텍스트 파일\0*.txt\0fbx 파일\0*.fbx";
-
-		memset(&OFN, 0, sizeof(OPENFILENAME));
-		OFN.lStructSize = sizeof(OPENFILENAME);
-		OFN.hwndOwner = g_hWnd;
-		OFN.lpstrFilter = filter;
-		OFN.lpstrFile = lpstrFile;
-		OFN.nMaxFile = 300;
-		OFN.lpstrInitialDir = L".";
-
-		if (GetOpenFileName(&OFN) != 0) {
-			wsprintf(filePathName, L"%s 파일을 열겠습니까?", OFN.lpstrFile);
-			MessageBox(g_hWnd, filePathName, L"열기 선택", MB_OK);
-
-			string StringPath = ToString(OFN.lpstrFile);
-
-			_tchar*     szFullPath = new _tchar[MAX_PATH]; // = TEXT("");
-			_tchar		szDrive[MAX_PATH] = TEXT("");
-			_tchar		szDir[MAX_PATH] = TEXT("");
-			_tchar		szFileName[MAX_PATH] = TEXT("");
-			_tchar		szExt[MAX_PATH] = TEXT("");
-
-			szFullPath = StringToTCHAR(StringPath);
-
-			/* 경로를 분해한다. */
-			_wsplitpath_s(szFullPath, szDrive, _MAX_DRIVE, szDir, _MAX_DIR, szFileName, _MAX_FNAME, szExt, MAX_PATH);
-			string DirPath = TCHARToString(szDir);
-			vector<string> Splitpaths;
-			Splitpaths = SplitPath(DirPath, '\\');
-
-			string FullRelativePath = "..";
-			int iIndex = 0;
-			auto ret = find(Splitpaths.begin(), Splitpaths.end(), "Bin");
-			if (ret != Splitpaths.end())
-			{
-				iIndex = _int(ret - Splitpaths.begin());
-
-				for (_uint i = iIndex; i < Splitpaths.size(); ++i)
-				{
-					FullRelativePath += "/" + Splitpaths[i];
-				}
-			}
-
-			int a = 0;
-		}
-		m_bFilePath = false;
-	}
-}
 
 void CImgui_Manager::Show_ModelList()
 {
 
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Set_File_Path")) m_bFilePath = !m_bFilePath;
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenuBar();
-	}
-
-	vector<const _tchar*> ModelTags = m_pModel_Manager->Get_LayerTags();
+	vector<const _tchar*> ModelTags = m_pModel_Manager->Get_PrototypeTag();
 
 	// ------------------------ Left-----------------------------------
 	static int selected = 0;
@@ -1722,7 +1635,6 @@ void CImgui_Manager::Show_ModelList()
 		{
 			if (ImGui::BeginTabItem("Setting"))
 			{
-				Set_FilePath();
 				ImGui::NewLine();
 				Set_LayerTag();
 				Set_Object_Map();
@@ -1735,11 +1647,28 @@ void CImgui_Manager::Show_ModelList()
 					m_TempLayerTags.push_back(LayerTag);
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("Revert")) {}
+				if (ImGui::Button("Revert")) 
+				{
+					_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
+					m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+					list<CGameObject*>* plistClone = CGameInstance::Get_Instance()->Get_ObjectList(m_iCurrentLevel, LayerTag);
+					if (nullptr == plistClone || plistClone->size() == 0)
+					{
+						delete LayerTag;
+						return;
+					}
+
+
+					auto iter = --plistClone->end();
+					m_pModel_Manager->Out_CreatedModel(dynamic_cast<CNonAnim*>(*iter));
+					Safe_Release(*iter);
+					plistClone->erase(iter);
+
+					delete LayerTag;
+				}
 			}
 			if (ImGui::BeginTabItem("Macro"))
 			{
-				Set_FilePath();
 				ImGui::NewLine();
 				Set_LayerTag();
 				Set_Macro();
@@ -1753,7 +1682,7 @@ void CImgui_Manager::Show_ModelList()
 	}
 
 
-	if (m_bCreateModel && CGameInstance::Get_Instance()->Key_Up(DIK_X))
+	if (m_PickingType == PICKING_MODEL && CGameInstance::Get_Instance()->Key_Up(DIK_X))
 	{
 		if (CPickingMgr::Get_Instance()->Picking())
 		{
@@ -1765,7 +1694,7 @@ void CImgui_Manager::Show_ModelList()
 		}
 	}
 
-	if (m_bCreateModel && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
+	if (m_PickingType == PICKING_MODEL && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
 	{
 		_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 		m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
@@ -1862,7 +1791,7 @@ void CImgui_Manager::Show_CurrentModelList()
 	}
 
 
-	if (m_bCreateModel && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
+	if (m_PickingType == PICKING_MODEL && CGameInstance::Get_Instance()->Key_Up(DIK_Z))
 	{
 		_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 		m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
@@ -1882,65 +1811,6 @@ void CImgui_Manager::Show_CurrentModelList()
 	}
 }
 
-void CImgui_Manager::Read_Objects_Name(_tchar* cFolderPath)
-{
-	_tchar ObjectFilePath[MAX_PATH] = TEXT("");
-	_tchar filePath[MAX_PATH] = TEXT("");
-	wcscpy_s(filePath, MAX_PATH, cFolderPath); // Backup Path used for Sub-folders
-	wcscat_s(cFolderPath, MAX_PATH, TEXT("*"));
-
-	WIN32_FIND_DATA fileData;
-
-	HANDLE hDir = FindFirstFile(cFolderPath, &fileData);
-
-	/* No files found */
-	if (hDir == INVALID_HANDLE_VALUE)
-	{
-		FindClose(hDir);
-		return;
-	}
-
-	do {
-		if (fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) // Directory
-		{
-			if (lstrcmp(fileData.cFileName, TEXT(".")) == 0 || lstrcmp(fileData.cFileName, TEXT("..")) == 0)
-				continue;
-
-			_tchar subFilePath[MAX_PATH] = TEXT("");
-			wcscpy_s(subFilePath, MAX_PATH, filePath);
-			wcscat_s(subFilePath, MAX_PATH, fileData.cFileName);
-			wcscat_s(subFilePath, MAX_PATH, TEXT("/"));
-
-			wcscpy_s(ObjectFilePath, MAX_PATH, TEXT("")); // Backup Path used for Sub-folders
-			wcscpy_s(ObjectFilePath, MAX_PATH, subFilePath); // Backup Path used for Sub-folders
-			// Recursive Function Call
-			Read_Objects_Name(subFilePath);
-		}
-		else // File
-		{
-			_tchar szFileExt[MAX_PATH];
-
-			_wsplitpath_s(fileData.cFileName, nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
-
-			if (!wcscmp(szFileExt, TEXT(".fbx")))
-			{
-				wcscpy_s(ObjectFilePath, MAX_PATH, TEXT("")); // Backup Path used for Sub-folders
-				wcscpy_s(ObjectFilePath, MAX_PATH, filePath); // Backup Path used for Sub-folders
-				wcscat_s(ObjectFilePath, MAX_PATH, fileData.cFileName);
-
-				wstring wsFileName(fileData.cFileName);
-				string sFileName(wsFileName.begin(), wsFileName.end());
-
-				const _tchar* FileName = StringToTCHAR(sFileName);
-
-				m_pModel_Manager->Add_FileName(FileName, ObjectFilePath);
-				delete(FileName);
-			}
-		}
-	} while (FindNextFile(hDir, &fileData));
-
-	FindClose(hDir);
-}
 
 void CImgui_Manager::Set_Camera()
 {
@@ -2291,7 +2161,6 @@ void CImgui_Manager::Set_Light()
 		ImGui::EndChild();
 		ImGui::EndGroup();
 	}
-
 }
 
 void CImgui_Manager::Save_Light()
@@ -2388,12 +2257,526 @@ void CImgui_Manager::Load_Light()
 	}
 }
 
+void CImgui_Manager::Draw_EffectModals()
+{
+	/* Create Effect Modal */
+	ImVec2 pCenter = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(pCenter, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f)); // Center Window when appearing
+	if (ImGui::BeginPopupModal("Create Effect", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Effect Created!\n");
+		ImGui::NewLine();
+		ImGui::Text("You can customize you effect by adding");
+		ImGui::Text("Textures, Meshes and/or Particles.");
+		ImGui::Separator();
+
+		_float fButtonSize = 100.f;
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2) - (fButtonSize / 2));
+		
+		if (ImGui::Button("Got it!", ImVec2(fButtonSize, 0)))
+			ImGui::CloseCurrentPopup();
+
+		ImGui::SetItemDefaultFocus();
+		ImGui::EndPopup();
+	}
+
+	/* Create Curve Editor Modal */
+	//ImVec2 pCenter = ImGui::GetMainViewport()->GetCenter();
+	//ImGui::SetNextWindowPos(pCenter, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f)); // Center Window when appearing
+	//if (ImGui::BeginPopupModal("Curve Editor", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	//{
+	//	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+	//	if (ImGui::BeginTabBar("CurveEditorTabBar", tab_bar_flags))
+	//	{
+	//		if (ImGui::BeginTabItem("Scale Curves"))
+	//		{
+	//			if (ImGui::BeginTable("ScaleCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Resizable, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+	//			{
+	//				ImGui::TableSetupScrollFreeze(0, 1);
+	//				ImGui::TableSetupColumn("X");
+	//				ImGui::TableSetupColumn("Y");
+	//				ImGui::TableSetupColumn("Z");
+	//				ImGui::TableSetupColumn("Curve Time");
+	//				ImGui::TableHeadersRow();
+
+	//				vector<_float4> ScaleCurves;
+
+	//				if (m_pSelectedEffect)
+	//					ScaleCurves = m_pSelectedEffect->Get_ScaleCurves();
+
+	//				for (_uint i = 0; i < ScaleCurves.size(); i++)
+	//				{
+	//					ImGui::TableNextRow();
+
+	//					ImGui::Text(to_string(ScaleCurves[i].x).c_str());
+	//					ImGui::TableNextColumn();
+
+	//					ImGui::Text(to_string(ScaleCurves[i].y).c_str());
+	//					ImGui::TableNextColumn();
+
+	//					ImGui::Text(to_string(ScaleCurves[i].z).c_str());
+	//					ImGui::TableNextColumn();
+
+	//					ImGui::Text(to_string(ScaleCurves[i].w).c_str());
+	//				}
+	//				
+	//				ImGui::EndTable();
+	//			}
+	//			if(ImGui::Button("Delete"))
+	//			{
+	//				/* TODO: .. */
+	//			}
+	//			ImGui::NewLine();
+
+	//			ImGui::SetNextItemWidth(65);
+	//			if (ImGui::DragFloat("##CurveX", &m_fCurveX, 0.05f, 0.f, 0.f, "X: %.03f"))
+	//			{
+	//			}
+	//			ImGui::SameLine();
+	//			ImGui::SetNextItemWidth(65);
+	//			if (ImGui::DragFloat("##CurveY", &m_fCurveY, 0.05f, 0.f, 0.f, "Y: %.03f"))
+	//			{
+	//			}
+	//			ImGui::SameLine();
+	//			ImGui::SetNextItemWidth(65);
+	//			if (ImGui::DragFloat("##CurveZ", &m_fCurveZ, 0.05f, 0.f, 0.f, "Z: %.03f"))
+	//			{
+	//			}
+	//			ImGui::SameLine();
+	//			ImGui::SetNextItemWidth(80);
+	//			if (ImGui::DragFloat("##CurveTime", &m_fCurveTime, 0.05f, 0.f, 1.f, "Time: %.02f"))
+	//			{
+	//			}
+	//			ImGui::SameLine();
+	//			if (ImGui::Button("Add"))
+	//			{
+	//				if (m_pSelectedEffect)
+	//					m_pSelectedEffect->Add_ScaleCurve(_float4(m_fCurveX, m_fCurveY, m_fCurveZ, m_fCurveTime));
+	//			}
+
+	//			ImGui::EndTabItem();
+	//		}
+	//		if (ImGui::BeginTabItem("Color Curves"))
+	//		{
+	//			ImGui::EndTabItem();
+	//		}
+	//		ImGui::EndTabBar();
+	//	}
+
+	//	ImGui::NewLine();
+	//	if (ImGui::Button("Done"))
+	//		ImGui::CloseCurrentPopup();
+
+	//	ImGui::SetItemDefaultFocus();
+	//	ImGui::EndPopup();
+	//}
+}
+
+void CImgui_Manager::Read_EffectsData()
+{
+	WIN32_FIND_DATA fileData;
+	HANDLE hDir = FindFirstFile(TEXT("../../../Bin/Data/EffectData/*"), &fileData);
+
+	/* No files found */
+	if (hDir == INVALID_HANDLE_VALUE)
+		return;
+
+	do {
+		if (fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			continue;
+
+		if (!lstrcmp(fileData.cFileName, TEXT(".")) || !lstrcmp(fileData.cFileName, TEXT("..")))
+			continue;
+
+		wstring wsFileName(fileData.cFileName);
+		string sFileName(wsFileName.begin(), wsFileName.end());
+
+		m_SavedEffects.push_back(sFileName);
+	} while (FindNextFile(hDir, &fileData));
+
+	FindClose(hDir);
+}
+
+void CImgui_Manager::Read_Textures(_tchar* pFolderPath)
+{
+	_tchar filePath[MAX_PATH] = TEXT("");
+	wcscpy_s(filePath, MAX_PATH, pFolderPath); // Backup Path used for Sub-folders
+
+	wcscat_s(pFolderPath, MAX_PATH, TEXT("*"));
+
+	WIN32_FIND_DATA fileData;
+
+	HANDLE hDir = FindFirstFile(pFolderPath, &fileData);
+
+	/* No files found */
+	if (hDir == INVALID_HANDLE_VALUE)
+		return;
+
+	do {
+		if (fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) // Directory
+		{
+			if (lstrcmp(fileData.cFileName, TEXT(".")) == 0 || lstrcmp(fileData.cFileName, TEXT("..")) == 0)
+				continue;
+
+			_tchar subFilePath[MAX_PATH] = TEXT("");
+			wcscpy_s(subFilePath, MAX_PATH, filePath);
+			wcscat_s(subFilePath, MAX_PATH, fileData.cFileName);
+			wcscat_s(subFilePath, MAX_PATH, TEXT("/"));
+
+			// Recursive Function Call
+			Read_Textures(subFilePath);
+		}
+		else // File
+		{
+			_tchar szFileExt[MAX_PATH];
+			_wsplitpath_s(fileData.cFileName, nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+
+			if (!wcscmp(szFileExt, TEXT(".dds")) || !wcscmp(szFileExt, TEXT(".png")))
+			{
+				wstring wsFileName = wstring(fileData.cFileName);
+				string sFileName = string(wsFileName.begin(), wsFileName.end());
+
+				m_TextureNames.push_back(sFileName);
+			}
+		}
+	} while (FindNextFile(hDir, &fileData));
+
+	FindClose(hDir);
+}
+
+void CImgui_Manager::Read_Meshes(_tchar* pFolderPath)
+{
+	_tchar filePath[MAX_PATH] = TEXT("");
+	wcscpy_s(filePath, MAX_PATH, pFolderPath); // Backup Path used for Sub-folders
+
+	wcscat_s(pFolderPath, MAX_PATH, TEXT("*"));
+
+	WIN32_FIND_DATA fileData;
+
+	HANDLE hDir = FindFirstFile(pFolderPath, &fileData);
+
+	/* No files found */
+	if (hDir == INVALID_HANDLE_VALUE)
+		return;
+
+	do {
+		if (fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) // Directory
+		{
+			if (lstrcmp(fileData.cFileName, TEXT(".")) == 0 || lstrcmp(fileData.cFileName, TEXT("..")) == 0)
+				continue;
+
+			_tchar subFilePath[MAX_PATH] = TEXT("");
+			wcscpy_s(subFilePath, MAX_PATH, filePath);
+			wcscat_s(subFilePath, MAX_PATH, fileData.cFileName);
+			wcscat_s(subFilePath, MAX_PATH, TEXT("/"));
+
+			// Recursive Function Call
+			Read_Meshes(subFilePath);
+		}
+		else // File
+		{
+			_tchar szFileExt[MAX_PATH];
+			_wsplitpath_s(fileData.cFileName, nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+
+			if (!wcscmp(szFileExt, TEXT(".fbx")))
+			{
+				wstring wsFileName = wstring(fileData.cFileName);
+				string sFileName = string(wsFileName.begin(), wsFileName.end());
+
+				m_MeshNames.push_back(sFileName);
+			}
+		}
+	} while (FindNextFile(hDir, &fileData));
+
+	FindClose(hDir);
+}
+
+void CImgui_Manager::Set_Effect()
+{
+#pragma region Create Effect
+	ImGuiTreeNodeFlags TreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
+	if (ImGui::CollapsingHeader("Create", TreeNodeFlags))
+	{
+		/* Create New Effect */
+		ImGui::Text("Effect Name");
+		static char cEffectName[MAX_PATH];
+		ImGui::SetNextItemWidth(175);
+		ImGui::InputText("##InputEffect", cEffectName, MAX_PATH);
+		ImGui::SameLine();
+		if (ImGui::Button("Create Effect"))
+		{
+			if (strcmp(cEffectName, ""))
+			{
+				m_sCurrentEffect = cEffectName; // Set Current Effect
+				m_sCurrentEffect += ".dat";
+
+				memset(cEffectName, 0, MAX_PATH);
+
+				ImGui::OpenPopup("Create Effect");
+			}
+		}
+		ImGui::NewLine();
+		ImGui::Separator();
+		ImGui::Text("Saved Effects");
+
+		if (ImGui::BeginListBox("##SavedEffects", ImVec2(-FLT_MIN, 4 * ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (int i = 0; i < m_SavedEffects.size(); i++)
+			{
+				if (ImGui::Selectable(m_SavedEffects[i].c_str(), m_iSavedEffect == i))
+					m_iSavedEffect = i;
+
+				if (m_iSavedEffect == i)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndListBox();
+		}
+
+		if (ImGui::Button("Load Effect"))
+		{
+			/* TODO: .. */
+		}
+		ImGui::NewLine();
+		ImGui::Separator();
+
+		ImGui::Text("Current Effect:");
+		ImGui::SameLine();
+		ImGui::Text(m_sCurrentEffect.c_str());
+		
+		if (ImGui::Button("Save Effect"))
+		{
+			/* TODO: .. */
+		}
+		ImGui::NewLine();
+	}
+#pragma endregion Create
+	
+#pragma region Customization
+	if (ImGui::CollapsingHeader("Customization"))
+	{
+		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+		if (ImGui::BeginTabBar("EffectTabBar", tab_bar_flags))
+		{
+			if (ImGui::BeginTabItem("Effect Textures"))
+			{
+				/* Available Textures (Effect) */
+				if (ImGui::BeginListBox("##Texture List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
+				{
+					for (string sTextureName : m_TextureNames)
+					{
+						if (ImGui::Selectable(sTextureName.c_str(), m_sSelectedTexture == sTextureName))
+							m_sSelectedTexture = sTextureName;
+
+						if (m_sSelectedTexture == sTextureName)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndListBox();
+				}
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Mesh Textures"))
+			{
+				/* Available Meshes (Effect) */
+				if (ImGui::BeginListBox("##Mesh List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
+				{
+					for (string sMeshName : m_MeshNames)
+					{
+						if (ImGui::Selectable(sMeshName.c_str(), m_sSelectedMesh == sMeshName))
+							m_sSelectedMesh = sMeshName;
+
+						if (m_sSelectedMesh == sMeshName)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndListBox();
+				}
+				ImGui::EndTabItem();
+			}
+			ImGui::EndTabBar();
+		}
+
+		if (ImGui::Button("Add", ImVec2(60, 0)))
+		{
+			CEffect::EFFECTDESC tEffectDesc;
+
+			tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_TEXTURE;
+			wstring wsSelectedTexture = wstring(m_sSelectedTexture.begin(), m_sSelectedTexture.end());
+			wcscpy_s(tEffectDesc.wcTexturePrototypeId, MAX_PATH, wsSelectedTexture.c_str());
+
+			if (FAILED(m_pEffectManager->Create_Effect(m_pDevice, m_pContext, &tEffectDesc)))
+			{
+
+			}
+
+		}
+		ImGui::NewLine();
+		ImGui::Separator();
+
+		/* Instanced Resources */
+		ImGui::Text("Instanced Resources");
+
+		if (ImGui::BeginListBox("##Instanced Resources List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
+		{
+			list<CEffect*> Effects = CEffect_Manager::Get_Instance()->Get_InstancedEffects();
+			for (CEffect* pEffect : Effects)
+			{
+				wstring wsEffectName = wstring(pEffect->Get_EffectDesc().wcFileName);
+				string sEffectName = string(wsEffectName.begin(), wsEffectName.end());
+
+				if (ImGui::Selectable(sEffectName.c_str(), m_sSelectedEffect == sEffectName))
+				{
+					m_sSelectedEffect = sEffectName;
+					m_pSelectedEffect = pEffect;
+
+					// Set Transform of the Selected Effect
+					CComponent* pComponent = pEffect->Find_Component(TEXT("Com_Transform"));
+					if (!pComponent)
+						return;
+					CTransform* pTransform = dynamic_cast<CTransform*>(pComponent);
+					if (!pTransform)
+						return;
+
+					m_pEffectTransform = pTransform;
+				}
+
+				if (m_sSelectedEffect == sEffectName)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndListBox();
+		}
+
+		if (ImGui::Button("Delete", ImVec2(60, 0)))
+		{
+			/* TODO: .. */
+		}
+		ImGui::NewLine();
+	}
+#pragma endregion Customization
+
+#pragma region Settings
+	if (ImGui::CollapsingHeader("Settings"))
+	{
+		if (ImGui::Button(m_bIsPlaying ? "Stop" : "Play", ImVec2(60, 0)))
+		{
+			/* TODO: .. */
+		}
+		ImGui::NewLine();
+		ImGui::Separator();
+
+		if (ImGui::RadioButton("Scale", m_eEffectTransformation == TRANS_SCALE))
+		{
+			m_eEffectTransformation = TRANS_SCALE;
+
+			if (m_pEffectTransform)
+			{
+				m_fX = m_pEffectTransform->Get_Scale(CTransform::STATE::STATE_RIGHT);
+				m_fY = m_pEffectTransform->Get_Scale(CTransform::STATE::STATE_UP);
+				m_fZ = m_pEffectTransform->Get_Scale(CTransform::STATE::STATE_LOOK);
+			}
+		}
+		ImGui::SameLine();
+
+		if (ImGui::RadioButton("Rotation", m_eEffectTransformation == TRANS_ROTATION))
+		{
+			m_eEffectTransformation = TRANS_ROTATION;
+
+			if (m_pEffectTransform)
+			{
+				m_fX = m_pEffectTransform->Get_CurrentRotationX();
+				m_fY = m_pEffectTransform->Get_CurrentRotationY();
+				m_fZ = m_pEffectTransform->Get_CurrentRotationZ();
+			}
+		}
+
+		ImGui::SetNextItemWidth(80);
+		if (ImGui::DragFloat("##X", &m_fX, m_eEffectTransformation == TRANS_ROTATION ? 1 : 0.05f, m_eEffectTransformation == TRANS_ROTATION ? -360.f : 0.f, m_eEffectTransformation == TRANS_ROTATION ? 360.f : 0.f, "X: %.03f"))
+		{
+			switch (m_eEffectTransformation)
+			{
+			case TRANS_SCALE:
+			{
+				if (m_pEffectTransform)
+					m_pEffectTransform->Set_Scale(CTransform::STATE::STATE_RIGHT, m_fX);
+				break;
+			}
+			case TRANS_ROTATION:
+			{
+				if (m_pEffectTransform)
+				{
+					_vector vRotationX = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+					m_pEffectTransform->Set_Rotation(_float3(m_fX, m_fY, m_fZ));
+				}
+
+				break;
+			}
+			}
+		}
+		ImGui::SameLine();
+
+		ImGui::SetNextItemWidth(80);
+		if (ImGui::DragFloat("##Y", &m_fY, m_eEffectTransformation == TRANS_ROTATION ? 1 : 0.05f, m_eEffectTransformation == TRANS_ROTATION ? -360.f : 0.f, m_eEffectTransformation == TRANS_ROTATION ? 360.f : 0.f, "Y: %.03f"))
+		{
+			switch (m_eEffectTransformation)
+			{
+			case TRANS_SCALE:
+			{
+				if (m_pEffectTransform)
+					m_pEffectTransform->Set_Scale(CTransform::STATE::STATE_UP, m_fY);
+				break;
+			}
+			case TRANS_ROTATION:
+			{
+				if (m_pEffectTransform)
+					m_pEffectTransform->Set_Rotation(_float3(m_fX, m_fY, m_fZ));
+				break;
+			}
+			}
+		}
+		ImGui::SameLine();
+
+		ImGui::SetNextItemWidth(80);
+		if (ImGui::DragFloat("##Z", &m_fZ, m_eEffectTransformation == TRANS_ROTATION ? 1 : 0.05f, m_eEffectTransformation == TRANS_ROTATION ? -360.f : 0.f, m_eEffectTransformation == TRANS_ROTATION ? 360.f : 0.f, "Z: %.03f"))
+		{
+			switch (m_eEffectTransformation)
+			{
+			case TRANS_SCALE:
+			{
+				if (m_pEffectTransform)
+					m_pEffectTransform->Set_Scale(CTransform::STATE::STATE_LOOK, m_fZ);
+				break;
+			}
+			case TRANS_ROTATION:
+			{
+				if (m_pEffectTransform)
+					m_pEffectTransform->Set_Rotation(_float3(m_fX, m_fY, m_fZ));
+				break;
+			}
+			}
+		}
+
+		if (ImGui::Button("Curve Editor"))
+			ImGui::OpenPopup("Curve Editor");
+#pragma endregion Settings
+	}
+
+	Draw_EffectModals();
+}
+
+void CImgui_Manager::Save_Effect()
+{
+
+}
+
+void CImgui_Manager::Load_Effect()
+{
+
+}
+
 void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	m_pModel_Manager->Set_InitModelDesc(m_InitDesc);
-
+	
 	_matrix			PivotMatrix = XMMatrixIdentity();
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 	m_pModel_Manager->Create_Model(iLevel, pPrototypeTag, pLayerTag, m_pDevice, m_pContext, CModel::TYPE_NONANIM, PivotMatrix, bCreatePrototype);
@@ -2424,6 +2807,8 @@ void CImgui_Manager::Free()
 	Safe_Release(m_pTerrain_Manager);
 	Safe_Release(m_pNavigation_Manager);
 	Safe_Release(m_pCamera_Manager);
+	Safe_Release(m_pEffectManager);
+	CEffect_Manager::Get_Instance()->Destroy_Instance();
 	CCamera_Manager::Get_Instance()->Destroy_Instance();
 	CTerrain_Manager::Get_Instance()->Destroy_Instance();
 	CModelManager::Get_Instance()->Destroy_Instance();

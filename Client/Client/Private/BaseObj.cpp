@@ -96,6 +96,9 @@ _vector CBaseObj::Get_TransformState(CTransform::STATE eState)
 	if (m_pTransformCom == nullptr)
 		return _vector();
 
+	if (eState == CTransform::STATE_TRANSLATION)
+		return XMVectorSetW(m_pTransformCom->Get_State(eState), 1.f);
+
 	return m_pTransformCom->Get_State(eState);
 }
 
@@ -111,7 +114,7 @@ _float2 CBaseObj::Get_ProjPosition()
 	vPosition = XMVector3TransformCoord(vPosition, ProjMatrix);
 
 	_float ScreenX = XMVectorGetX(vPosition)* (g_iWinSizeX / 2) + (g_iWinSizeX / 2);
-	_float ScreenY = XMVectorGetY(vPosition) * (g_iWinSizeY / 2) + (g_iWinSizeY / 2);
+	_float ScreenY = -1.f*XMVectorGetY(vPosition) * (g_iWinSizeY / 2) + (g_iWinSizeY / 2);
 
 	RELEASE_INSTANCE(CGameInstance);
 

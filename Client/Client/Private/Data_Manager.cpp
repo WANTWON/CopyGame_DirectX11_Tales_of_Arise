@@ -68,41 +68,41 @@ HRESULT CData_Manager::Init(ID3D11Device* pDevice, ID3D11DeviceContext* pContext
 	return S_OK;
 }
 
-HRESULT CData_Manager::Conv_Bin_Model(CModel * pModel, char* cModelName, DATA_TYPE eTYPE)
-{
-	DATA_BINSCENE Scene;
-	ZeroMemory(&Scene, sizeof(DATA_BINSCENE));
-
-	pModel->Get_HierarchyNodeData(&Scene);
-	pModel->Get_MaterialData(&Scene);
-	pModel->Get_MeshData(&Scene);
-	pModel->Get_AnimData(&Scene);
-
-	SaveSceneData(&Scene, cModelName, eTYPE);
-
-	Safe_Delete_Array(Scene.pBinNodes);
-	Safe_Delete_Array(Scene.pBinMaterial);
-
-	for (_int i = 0; i < Scene.iMeshCount; ++i)
-	{
-		Safe_Delete_Array(Scene.pBinMesh[i].pBones);
-	}
-	Safe_Delete_Array(Scene.pBinMesh);
-
-
-	for (_int i = 0; i < Scene.iNumAnimations; ++i)
-	{
-		for (_int j = 0; j < Scene.pBinAnim[i].iNumChannels; ++j)
-		{
-			Safe_Delete_Array(Scene.pBinAnim[i].pBinChannel[j].pKeyFrames);
-		}
-		Safe_Delete_Array(Scene.pBinAnim[i].pBinChannel);
-	}
-	Safe_Delete_Array(Scene.pBinAnim);
-
-
-	return S_OK;
-}
+//HRESULT CData_Manager::Conv_Bin_Model(CModel * pModel, char* cModelName, DATA_TYPE eTYPE)
+//{
+//	DATA_BINSCENE Scene;
+//	ZeroMemory(&Scene, sizeof(DATA_BINSCENE));
+//
+//	pModel->Get_HierarchyNodeData(&Scene);
+//	pModel->Get_MaterialData(&Scene);
+//	pModel->Get_MeshData(&Scene);
+//	pModel->Get_AnimData(&Scene);
+//
+//	SaveSceneData(&Scene, cModelName, eTYPE);
+//
+//	Safe_Delete_Array(Scene.pBinNodes);
+//	Safe_Delete_Array(Scene.pBinMaterial);
+//
+//	for (_int i = 0; i < Scene.iMeshCount; ++i)
+//	{
+//		Safe_Delete_Array(Scene.pBinMesh[i].pBones);
+//	}
+//	Safe_Delete_Array(Scene.pBinMesh);
+//
+//
+//	for (_int i = 0; i < Scene.iNumAnimations; ++i)
+//	{
+//		for (_int j = 0; j < Scene.pBinAnim[i].iNumChannels; ++j)
+//		{
+//			Safe_Delete_Array(Scene.pBinAnim[i].pBinChannel[j].pKeyFrames);
+//		}
+//		Safe_Delete_Array(Scene.pBinAnim[i].pBinChannel);
+//	}
+//	Safe_Delete_Array(Scene.pBinAnim);
+//
+//
+//	return S_OK;
+//}
 
 HRESULT CData_Manager::SaveSceneData(DATA_BINSCENE * pScene, char* cModelName, DATA_TYPE eTYPE)
 {
@@ -352,111 +352,111 @@ HRESULT CData_Manager::ReadSceneData(char * pFileName, DATA_BINSCENE* ReadScene,
 }
 
 
-HRESULT CData_Manager::Create_Try_BinModel(const _tchar * pModelName, LEVEL eLEVEL, DATA_TYPE eTYPE)
-{
-
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	// 원본 체크
-	if (FAILED(pGameInstance->Check_Prototype(eLEVEL, pModelName)))
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return S_OK;
-	}
-	RELEASE_INSTANCE(CGameInstance);
-
-	string str = TCHARToString(pModelName);
-	char cTempName[MAX_PATH];
-	char cPathName[MAX_PATH];
-	TCtoC(pModelName, cTempName);
-
-	if (str.find("Field") != string::npos)
-	{
-		
-		TCtoC(TEXT("Field"), cPathName);
-	}
-	else if (str.find("TailCave") != string::npos)
-	{
-		TCtoC(TEXT("TailCave"), cPathName);
-	}
-	else
-	{
-		TCtoC(pModelName, cPathName);
-	}
-	
-
-	char tPath[MAX_PATH] = ""; //Get_ManagedChar();
-	if (DATA_ANIM == eTYPE)
-		strcpy_s(tPath, "../../../Bin/Resources/Meshes/Anim/");
-	else if (DATA_NONANIM == eTYPE)
-		strcpy_s(tPath, "../../../Bin/Resources/Meshes/NonAnim/");
-	else if (DATA_PARTS == eTYPE)
-		strcpy_s(tPath, "../../../Bin/Resources/Meshes/Parts/");
-
-	strcat_s(tPath, cPathName);
-	strcat_s(tPath, "/");
-
-	char tFileName[MAX_PATH] = ""; //Get_ManagedChar();
-	strcpy_s(tFileName, cTempName);
-	char TempName[MAX_PATH];
-	strcpy_s(TempName, tFileName);
-	strcat_s(tFileName, ".fbx");
-
-	// Bin 체크 And Load
-	DATA_BINSCENE* Scene = new DATA_BINSCENE;
-	ZeroMemory(Scene, sizeof(DATA_BINSCENE));
-	_bool bIsBin = true;
-	if (FAILED(CData_Manager::Get_Instance()->ReadSceneData(TempName, Scene, eTYPE)))
-	{
-		bIsBin = false;
-		Safe_Delete(Scene);
-	}
-
-
-
-	pGameInstance = GET_INSTANCE(CGameInstance);
-
-
-	_matrix PivotMatrix;
-	CModel::TYPE etype = CModel::TYPE_END;
-	if (DATA_ANIM == eTYPE)
-		etype = CModel::TYPE_ANIM;
-	else
-		etype = CModel::TYPE_NONANIM;
-	// 원본 생성
-	if (bIsBin)
-	{
-		if (DATA_ANIM == eTYPE)
-			PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		else
-			PivotMatrix = XMMatrixScaling(1.f, 1.f, 1.f);
-		if (FAILED(pGameInstance->Add_Prototype(eLEVEL, pModelName,
-			CModel::Bin_Create(m_pDevice, m_pContext, Scene, etype, tPath, PivotMatrix))))
-		{
-			// 뭔가 파일 경로가 잘 못 됨.
-			RELEASE_INSTANCE(CGameInstance);
-			return E_FAIL;
-		}
-	}
-	else
-	{
-		if (DATA_ANIM == eTYPE)
-			PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		else
-			PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-		if (FAILED(pGameInstance->Add_Prototype(eLEVEL, pModelName,
-			CModel::Create(m_pDevice, m_pContext, etype, tPath, PivotMatrix))))
-		{
-			// 뭔가 파일 경로가 잘 못 됨.
-			RELEASE_INSTANCE(CGameInstance);
-			return E_FAIL;
-		}
-	}
-
-
-	RELEASE_INSTANCE(CGameInstance);
-
-	return S_OK;
-}
+//HRESULT CData_Manager::Create_Try_BinModel(const _tchar * pModelName, LEVEL eLEVEL, DATA_TYPE eTYPE)
+//{
+//
+//	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+//	// 원본 체크
+//	if (FAILED(pGameInstance->Check_Prototype(eLEVEL, pModelName)))
+//	{
+//		RELEASE_INSTANCE(CGameInstance);
+//		return S_OK;
+//	}
+//	RELEASE_INSTANCE(CGameInstance);
+//
+//	string str = TCHARToString(pModelName);
+//	char cTempName[MAX_PATH];
+//	char cPathName[MAX_PATH];
+//	TCtoC(pModelName, cTempName);
+//
+//	if (str.find("Field") != string::npos)
+//	{
+//		
+//		TCtoC(TEXT("Field"), cPathName);
+//	}
+//	else if (str.find("TailCave") != string::npos)
+//	{
+//		TCtoC(TEXT("TailCave"), cPathName);
+//	}
+//	else
+//	{
+//		TCtoC(pModelName, cPathName);
+//	}
+//	
+//
+//	char tPath[MAX_PATH] = ""; //Get_ManagedChar();
+//	if (DATA_ANIM == eTYPE)
+//		strcpy_s(tPath, "../../../Bin/Resources/Meshes/Anim/");
+//	else if (DATA_NONANIM == eTYPE)
+//		strcpy_s(tPath, "../../../Bin/Resources/Meshes/NonAnim/");
+//	else if (DATA_PARTS == eTYPE)
+//		strcpy_s(tPath, "../../../Bin/Resources/Meshes/Parts/");
+//
+//	strcat_s(tPath, cPathName);
+//	strcat_s(tPath, "/");
+//
+//	char tFileName[MAX_PATH] = ""; //Get_ManagedChar();
+//	strcpy_s(tFileName, cTempName);
+//	char TempName[MAX_PATH];
+//	strcpy_s(TempName, tFileName);
+//	strcat_s(tFileName, ".fbx");
+//
+//	// Bin 체크 And Load
+//	DATA_BINSCENE* Scene = new DATA_BINSCENE;
+//	ZeroMemory(Scene, sizeof(DATA_BINSCENE));
+//	_bool bIsBin = true;
+//	if (FAILED(CData_Manager::Get_Instance()->ReadSceneData(TempName, Scene, eTYPE)))
+//	{
+//		bIsBin = false;
+//		Safe_Delete(Scene);
+//	}
+//
+//
+//
+//	pGameInstance = GET_INSTANCE(CGameInstance);
+//
+//
+//	_matrix PivotMatrix;
+//	CModel::TYPE etype = CModel::TYPE_END;
+//	if (DATA_ANIM == eTYPE)
+//		etype = CModel::TYPE_ANIM;
+//	else
+//		etype = CModel::TYPE_NONANIM;
+//	// 원본 생성
+//	if (bIsBin)
+//	{
+//		if (DATA_ANIM == eTYPE)
+//			PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//		else
+//			PivotMatrix = XMMatrixScaling(1.f, 1.f, 1.f);
+//		if (FAILED(pGameInstance->Add_Prototype(eLEVEL, pModelName,
+//			CModel::Bin_Create(m_pDevice, m_pContext, Scene, etype, tPath, PivotMatrix))))
+//		{
+//			// 뭔가 파일 경로가 잘 못 됨.
+//			RELEASE_INSTANCE(CGameInstance);
+//			return E_FAIL;
+//		}
+//	}
+//	else
+//	{
+//		if (DATA_ANIM == eTYPE)
+//			PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//		else
+//			PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+//		if (FAILED(pGameInstance->Add_Prototype(eLEVEL, pModelName,
+//			CModel::Create(m_pDevice, m_pContext, etype, tPath, PivotMatrix))))
+//		{
+//			// 뭔가 파일 경로가 잘 못 됨.
+//			RELEASE_INSTANCE(CGameInstance);
+//			return E_FAIL;
+//		}
+//	}
+//
+//
+//	RELEASE_INSTANCE(CGameInstance);
+//
+//	return S_OK;
+//}
 
 void CData_Manager::Free()
 {

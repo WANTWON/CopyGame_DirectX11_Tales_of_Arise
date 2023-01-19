@@ -52,6 +52,7 @@ private:
 	ID3D11ShaderResourceView*			m_pFilterTexture = nullptr;
 
 
+	_bool	m_bFirst = false;
 	_bool	m_bWireFrame = false;
 	_bool	m_bDebugShow = true;
 	TERRAIN_DEBUG_TYPE m_eDebugtype = DEBUG_NONE;

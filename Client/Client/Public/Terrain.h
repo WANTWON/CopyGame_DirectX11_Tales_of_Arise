@@ -36,6 +36,7 @@ public:
 
 private:
 	CTexture*				m_pTextureCom[TYPE_END] = { nullptr };
+	CTexture*				m_pNormaltexture[TYPE_END] = { nullptr };
 	CNavigation*			m_pNavigationCom = nullptr;
 	CVIBuffer_Terrain*		m_pVIBufferCom = nullptr;
 

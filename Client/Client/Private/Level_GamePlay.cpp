@@ -5,6 +5,7 @@
 #include "Camera_Dynamic.h"
 #include "Player.h"
 #include "CameraManager.h"
+#include "UI_RuneEffect.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -24,7 +25,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
-
+		
 	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
@@ -41,6 +42,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
+	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
 
 	return S_OK;
 }
@@ -48,15 +50,13 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);	
-
-
 }
 
 void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetWindowText(g_hWnd, TEXT("°ÔÀÓÇÃ·¹ÀÌ·¹º§ÀÔ´Ï´Ù."));
+	SetWindowText(g_hWnd, TEXT("ï¿½ï¿½ï¿½ï¿½ï¿½Ã·ï¿½ï¿½Ì·ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½."));
 
 
 	CBaseObj* pPlayer = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
@@ -83,8 +83,8 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(0.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	LightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.8f, 1.f);
+	LightDesc.vAmbient = _float4(0.5f, 0.5f, 0.5f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);	
 
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pContext, LightDesc)))
@@ -144,8 +144,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	for (_uint i = 0; i < 1; ++i)
 	{
-		_vector vPosition = { rand() % 10, 5.f, rand() % 10 , 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+		_vector vPosition = { rand() % 30, 0.f, rand() % 30 , 1.f };
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_IceWolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
 			return E_FAIL;
 	}
 
@@ -162,8 +162,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	//if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TEXT("Prototype_Component_VIBuffer_Terrain_Load"))))
 	//	return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
+		return E_FAIL;*/
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Water"), LEVEL_GAMEPLAY, pLayerTag, nullptr)))
@@ -205,7 +205,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	CameraDesc.CameraDesc.fNear = 0.2f;
-	CameraDesc.CameraDesc.fFar = 500.f;
+	CameraDesc.CameraDesc.fFar = 1000.f;
 
 	CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
 	CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
@@ -227,7 +227,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 		return E_FAIL;*/
 
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
 		_uint number = i;
 
@@ -236,7 +236,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	}
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
 		_uint number = i;
 
@@ -289,8 +289,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 	
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MPguage"), LEVEL_GAMEPLAY, pLayerTag)))
 		return E_FAIL;
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar_World"), LEVEL_GAMEPLAY, pLayerTag)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar_World"), LEVEL_GAMEPLAY, pLayerTag)))
+		return E_FAIL;*/
 
 //	for (int i = 0; i < 4; ++i)
 //	{
@@ -298,8 +298,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 
 //	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont_World"), LEVEL_GAMEPLAY, pLayerTag, &i)))
 //			return E_FAIL;
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont_World"), LEVEL_GAMEPLAY, pLayerTag)))
-			return E_FAIL;
+		/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont_World"), LEVEL_GAMEPLAY, pLayerTag)))
+			return E_FAIL;*/
 
 //	}
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitback"), LEVEL_GAMEPLAY, pLayerTag)))
@@ -322,9 +322,29 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_change_button"), LEVEL_GAMEPLAY, pLayerTag)))
 			return E_FAIL;
-		
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_LOCKON"), LEVEL_GAMEPLAY, pLayerTag)))
+			return E_FAIL;
+
 		
 
+		//1130  360  1130 420   1130 4801180
+
+		
+		//CUI_RuneEffect::RUNEDESC desc;
+		/*desc.position.x = 1130.f;
+		desc.position.y = 375.f;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, pLayerTag , &desc)))
+			return E_FAIL;
+		desc.position.y = 435.f;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, pLayerTag, &desc)))
+			return E_FAIL;
+		desc.position.y = 495.f;
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, pLayerTag, &desc)))
+			return E_FAIL;*/
+		
+		
+		
 		
 	
 

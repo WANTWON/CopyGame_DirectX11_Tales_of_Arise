@@ -110,6 +110,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../Public/</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,6 +154,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../Public/</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -193,6 +195,7 @@
     <ClCompile Include="..\private\Light.cpp" />
     <ClCompile Include="..\private\Light_Manager.cpp" />
     <ClCompile Include="..\private\MeshContainer.cpp" />
+    <ClCompile Include="..\Private\MeshContainer_Instance.cpp" />
     <ClCompile Include="..\private\Model.cpp" />
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\Private\Object_Manager.cpp" />
@@ -248,6 +251,7 @@
     <ClInclude Include="..\public\Light.h" />
     <ClInclude Include="..\public\Light_Manager.h" />
     <ClInclude Include="..\public\MeshContainer.h" />
+    <ClInclude Include="..\Public\MeshContainer_Instance.h" />
     <ClInclude Include="..\public\Model.h" />
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\Public\Object_Manager.h" />
