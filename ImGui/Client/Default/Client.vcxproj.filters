@@ -73,6 +73,12 @@
     <Filter Include="02.GameObjects\04.TreasureBox">
       <UniqueIdentifier>{b14591bf-3e81-4afd-b902-9b852f7a00f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.ToolManager\Effect_Manager">
+      <UniqueIdentifier>{ea32a603-d889-42cb-9ff0-4c0c1e9beafe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05.Effect">
+      <UniqueIdentifier>{0cf1aef3-18c8-4afa-af51-3abc0da6794f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -171,6 +177,12 @@
     <ClInclude Include="..\Public\TreasureBox.h">
       <Filter>02.GameObjects\04.TreasureBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Effect_Manager.h">
+      <Filter>03.ToolManager\Effect_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Effect.h">
+      <Filter>02.GameObjects\05.Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -250,6 +262,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\TreasureBox.cpp">
       <Filter>02.GameObjects\04.TreasureBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Effect_Manager.cpp">
+      <Filter>03.ToolManager\Effect_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Effect.cpp">
+      <Filter>02.GameObjects\05.Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

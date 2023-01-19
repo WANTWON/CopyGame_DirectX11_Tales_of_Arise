@@ -8,9 +8,9 @@
 #include "ModelManager.h"
 #include "NonAnim.h"
 #include "Navigation_Manager.h"
+#include "Effect_Manager.h"
 #include "Camera_Manager.h"
 #include "TreasureBox.h"
-
 
 BEGIN(Engine)
 class CGameObject;
@@ -25,9 +25,6 @@ public:
 	enum PICKING_TYPE { PICKING_TERRAIN_TRANSFORM,
 		PICKING_TERRAIN_SHAPE, PICKING_TERRAIN_BRUSH,
 	PICKING_MODEL,};
-
-	
-
 
 private:
 	CImgui_Manager();
@@ -84,12 +81,22 @@ public:
 	void Save_Light();
 	void Load_Light();
 
+	/* For Effect Tool */
+	void Draw_EffectModals();
+
+	void Read_EffectsData();
+	void Read_Textures(_tchar* pFolderPath);
+	void Read_Meshes(_tchar* pFolderPath);
+
+	void Set_Effect();
+	void Save_Effect();
+	void Load_Effect();
+
 public:
 	void Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype = false);
 	void Add_PrototypeTag(_tchar* TempTag) { m_TempLayerTags.push_back(TempTag); }
 	void Add_PrototypeTag(char* TempTag) { m_TempCharTags.push_back(TempTag); }
 	
-
 private:
 	ID3D11Device* m_pDevice = nullptr;
 	ID3D11DeviceContext* m_pContext = nullptr;
@@ -134,7 +141,6 @@ private:
 	_float3									m_vPickedRotAxis = _float3(0.f, 1.f, 0.f);
 	_float									m_fRotAngle = 0.f;
 
-
 	/*For Navigation*/
 	CNavigation_Manager*					m_pNavigation_Manager = nullptr;
 	_bool									m_bNaviPicking = false;
@@ -155,8 +161,34 @@ private:
 	_int									m_iLightType = 0;
 	LIGHTDESC								m_LightDesc;
 
+	/*
+	* For Effect
+	*/
+	enum TRANSFORM_TYPE { TRANS_SCALE, TRANS_ROTATION, TRANS_END };
+
+	CEffect_Manager*						m_pEffectManager = nullptr;
+	vector<string>							m_SavedEffects;
+	_int									m_iSavedEffect;
+	string									m_sCurrentEffect;
+	
+	/* Effect Resources (Texture, Meshes) */
+	list<string>							m_TextureNames;
+	list<string>							m_MeshNames;
+	string									m_sSelectedTexture;
+	string									m_sSelectedMesh;
+	string									m_sSelectedEffect;
+	CEffect*								m_pSelectedEffect = nullptr;
+	
+	/* Effect Settings */
+	_bool									m_bIsPlaying = false;
+	TRANSFORM_TYPE							m_eEffectTransformation = TRANS_SCALE;
+	class CTransform*						m_pEffectTransform = nullptr;
+	_float									m_fX = 1.f, m_fY = 1.f, m_fZ = 1.f;
+	_bool									m_bBillboard = true;
+
+	_float									m_fCurveX = 1.f, m_fCurveY = 1.f, m_fCurveZ = 1.f, m_fCurveTime = 1.f;
+
 public:
 	virtual void Free() override;
 };
-
 END

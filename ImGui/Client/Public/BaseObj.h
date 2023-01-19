@@ -7,7 +7,6 @@ BEGIN(Engine)
 class CShader;
 class CRenderer;
 class CTransform;
-
 END
 
 BEGIN(Client)
