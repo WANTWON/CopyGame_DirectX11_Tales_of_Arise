@@ -54,8 +54,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	/* ¸ðµ¨ ·Îµù Áß. */
 	lstrcpy(m_szLoadingText, TEXT("¸ðµ¨ ·Îµù Áß."));
 
-	_matrix PivotMatrix = XMMatrixIdentity()*XMMatrixScaling(0.01f,0.01f,0.01f);
-
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SM_AST_Prop_Rock01"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SM_AST_Prop_Rock01.fbx", "../../../Bin/Bin_Data/NonAnim/Rock/", PivotMatrix))))
 	//	return E_FAIL;
