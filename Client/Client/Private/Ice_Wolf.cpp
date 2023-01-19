@@ -29,7 +29,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CHawkState* pState = new CIdleState(this);
+	CIceWolfState* pState = new CIdleState(this);
 	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 
 	///* Set Binary */
@@ -41,6 +41,10 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	//pData_Manager->Conv_Bin_Model(m_pModelCom, cName, CData_Manager::DATA_ANIM);
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
+
+	m_tInfo.iMaxHp = 3.f;
+	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.iDamage = 10.f;
 
 
 	_vector vPosition = *(_vector*)pArg;
@@ -115,7 +119,7 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 
 void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 {
-	CHawkState* pNewState = m_pIce_WolfState->AI_Behaviour(fTimeDelta);
+	CIceWolfState* pNewState = m_pIce_WolfState->AI_Behaviour(fTimeDelta);
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
 }
@@ -123,7 +127,7 @@ void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 
 void CIce_Wolf::TickState(_float fTimeDelta)
 {
-	CHawkState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
+	CIceWolfState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
 	
@@ -131,7 +135,7 @@ void CIce_Wolf::TickState(_float fTimeDelta)
 
 void CIce_Wolf::LateTickState(_float fTimeDelta)
 {
-	CHawkState* pNewState = m_pIce_WolfState->LateTick(fTimeDelta);
+	CIceWolfState* pNewState = m_pIce_WolfState->LateTick(fTimeDelta);
 	if (pNewState)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
 }
@@ -142,7 +146,7 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	switch ((ANIM)eAnimId)
 	{
 	case ANIM_MOVE_IDLE:
-	case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:
+	/*case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:*/
 	case ANIM_MOVE_WALK_F:
 		return true;
 
@@ -151,6 +155,7 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	case ANIM_TURN_R:
 	case ANIM_ATTACK_NORMAL:
 	case ANIM_ATTACK_ELEMENTAL_CHARGE_START:
+	case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:
 	case ANIM_ATTACK_ELEMENTAL_CHARGE_END:
 	case ANIM_SYMBOL_DETECT_IDLE:
 		return false;
@@ -159,6 +164,9 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 
 _float CIce_Wolf::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 {
+	if (fDamage <= 0 || m_bDead)
+		return 0;
+
 	if (fDamage > 0.f)
 	{
 			if (m_tStats.m_fCurrentHp - fDamage <= 0.f)

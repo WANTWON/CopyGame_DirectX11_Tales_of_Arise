@@ -189,7 +189,13 @@
     <ClInclude Include="..\Public\HawkBattle_BombingState.h" />
     <ClInclude Include="..\Public\HawkBattle_BraveState.h" />
     <ClInclude Include="..\Public\HawkBattle_ChargeState.h" />
+    <ClInclude Include="..\Public\HawkBattle_Flying_BackState.h" />
+    <ClInclude Include="..\Public\HawkBattle_GrabEndState.h" />
+    <ClInclude Include="..\Public\HawkBattle_GrabStartState.h" />
+    <ClInclude Include="..\Public\HawkBattle_GrabState.h" />
     <ClInclude Include="..\Public\HawkBattle_IdleState.h" />
+    <ClInclude Include="..\Public\HawkBattle_RevolveState.h" />
+    <ClInclude Include="..\Public\HawkBattle_RunState.h" />
     <ClInclude Include="..\Public\HawkIdleState.h" />
     <ClInclude Include="..\Public\HawkState.h" />
     <ClInclude Include="..\Public\HPbar.h" />
@@ -274,7 +280,13 @@
     <ClCompile Include="..\Private\HawkBattle_BombingState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_BraveState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_ChargeState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_Flying_BackState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_GrabEndState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_GrabStartState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_GrabState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_IdleState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_RevolveState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_RunState.cpp" />
     <ClCompile Include="..\Private\HawkIdleState.cpp" />
     <ClCompile Include="..\Private\HPbar.cpp" />
     <ClCompile Include="..\Private\HPbar_World.cpp" />

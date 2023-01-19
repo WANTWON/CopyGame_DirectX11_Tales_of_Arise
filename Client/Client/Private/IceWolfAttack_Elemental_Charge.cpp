@@ -14,32 +14,68 @@ CAttack_Elemental_Charge::CAttack_Elemental_Charge(class CIce_Wolf* pIceWolf, ST
 	
 }
 
-CHawkState * CAttack_Elemental_Charge::AI_Behaviour(_float fTimeDelta)
+CIceWolfState * CAttack_Elemental_Charge::AI_Behaviour(_float fTimeDelta)
 {
 
 	return nullptr;
 }
 
-CHawkState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
+CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 {
-	m_pOwner->Check_Navigation();
+	
 	m_fTarget_Distance = Find_BattleTarget();
 	
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	return nullptr;
 }
 
-CHawkState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
+CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 {
-	
+
 	m_iRand = rand() % 3;
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 	
+	if (m_bIsAnimationFinished)
+	{
+		switch (m_eStateId_Charge)
+		{
+		case Client::CIceWolfState::STATE_CHARGE_START:
+			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_LOOP);
+			break;
+
+		case Client::CIceWolfState::STATE_CHARGE_LOOP:
+			if (3 < m_fTarget_Distance)
+				return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_LOOP);
+			else if (3 >= m_fTarget_Distance)
+				return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
+			break;
+
+		case Client::CIceWolfState::STATE_CHARGE_END:
+			return new CBattle_IdleState(m_pOwner);
+			break;
+		}
+	}
+
+	else
+	{
+		_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
+
+		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
+
+
+
+
+
+
 
 	
-		if (STATE_CHARGE_START == m_eStateId_Charge && m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())))
+		/*if (STATE_CHARGE_START == m_eStateId_Charge && m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())))
 		{
 			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_LOOP);
 		}
@@ -72,7 +108,7 @@ CHawkState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 
 			else m_fIdleAttackTimer += fTimeDelta;
 
-		}
+		}*/
 	
 	return nullptr;
 }
@@ -96,6 +132,8 @@ void CAttack_Elemental_Charge::Enter()
 		break;
 	}
 
+
+	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CAttack_Elemental_Charge::Exit()

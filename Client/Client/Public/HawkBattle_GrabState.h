@@ -4,10 +4,10 @@
 
 BEGIN(Client)
 BEGIN(Hawk)
-class CBattle_BombingState : public CHawkState
+class CBattle_GrabState : public CHawkState
 {
 public:
-	CBattle_BombingState(class CHawk* pHawk);
+	CBattle_GrabState(class CHawk* pHawks);
 
 	virtual CHawkState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CHawkState* Tick(_float fTimeDelta) override;
@@ -17,11 +17,14 @@ public:
 	virtual void Exit() override;
 
 private:
+	_uint		m_iRand = 0;
+	_uint		m_iCollisionCount = 0;
+	_uint		m_iGrabCount = 0;
 	_float		m_fIdleMoveTimer = 0.f;
 	_float		m_fIdleAttackTimer = 1.5f;
 	_float		m_fTarget_Distance;
-	_bool		m_bAnimFinish = false;
-
+	_bool		m_bCollision = false;
+	
 private:
 	_matrix m_StartMatrix;
 };

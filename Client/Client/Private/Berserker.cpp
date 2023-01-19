@@ -144,13 +144,13 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	switch ((ANIM)eAnimId)
 	{
 	case MOVE_IDLE:
-	case DASH_LOOP:
 	case MOVE_WALK:
 		
 		return true;
 	
 
 	case DASH_START:
+	case DASH_LOOP:
 	case HOWING_AND_BACK:
 	case HOWING:
 	case FLYING_ATTACK2:

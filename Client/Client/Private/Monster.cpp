@@ -54,6 +54,9 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
 		
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_B))
+		Take_Damage(1.f, m_pTarget);
+
 
 #ifdef _DEBUG
 	if (m_pAABBCom != nullptr)

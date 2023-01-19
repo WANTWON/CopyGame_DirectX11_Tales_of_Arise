@@ -10,18 +10,26 @@ public:
 	enum ANIM {
 
 		ARI00,   //3D뷰어에서 1번 
-		ARI01,
-		ARISE_B,
-		ARISE_F,
-		ATTACK_BOMBING, //5//ATTACK0
+		FLAPPING,
+		ATTACK_ROTATION,
+		ATTACK_ROTATION2,//4
+		ATTACK_CHARGE,//5
+		ATTACK_CHARGE_ROTATION, //6
+		FLYING_BACK,//7
+		ATTACK_GRAB_START1, //8
+		ATTACK_GRAB_START2, //9//스타트로 쓰기엔 동작이 너무 짧음.
+		REVOLVING_FLIGHT, //10
+		ATTACK_GRAB_END,  //11
+		ATTACK_GRAB_LOOP2, //12
+		HANGING_INTHE_AIR, //13
 		ATTACK_BOMBING_DUP, //6//ATTACK1
 		ATTACK_BRAVE, //7
-		ATTACK_CHARGE, //8
+		ATTACK_CHARGE2, //8
 		ATTACK_DASH, //9
 		ATTACK_FLUTTER,
-		ATTACK_GRAB_END,
-		ATTACK_GRAB_LOOP,
-		ATTACK_GRAB_START,
+		ATTACK_GRAB_END2,
+		ATTACK_GRAB_LOOP3, //12
+		ATTACK_GRAB_START3, //13
 		ATTACK_PECK,
 		ATTACK_TORNADE, //15
 		BLOW_DOWN_B,
@@ -47,7 +55,7 @@ public:
 		DAMAGE_SMALL_L,//33 피격모션 
 		DAMAGE_SMALL_R,//34 피격모션 
 		DEAD, 
-		DEAD_DUP,
+		FAST_FLAP_OF_WINGS,//47
 		DOWN_B,//35 DEAD
 		DOWN_F,//36 DEAD
 		DOWN_UNIQUE,
@@ -76,7 +84,7 @@ public:
 	CModel* Get_Model() { return m_pModelCom; }
 	CTransform* Get_Transform() { return m_pTransformCom; }
 	class CHawkState* Get_State() { return m_pHawkState; }
-	void Set_PlayerState(class CHawkState* pPlayerState) { m_pHawkState = pPlayerState; }
+	void Set_PlayerState(class CHawkState* pHawkState) { m_pHawkState = pHawkState; }
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;

@@ -4,6 +4,12 @@
 #include "HawkIdleState.h"
 #include "HawkBattle_IdleState.h"
 #include "HawkBattle_BraveState.h"
+#include "HawkBattle_GrabState.h"
+#include "HawkBattle_ChargeState.h"
+#include "HawkBattle_RevolveState.h"
+#include "HawkBattle_RunState.h"
+#include "HawkBattle_Flying_BackState.h"
+#include "HawkBattle_GrabStartState.h"
 using namespace Hawk;
 
 CHawk::CHawk(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -30,7 +36,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CHawkState* pState = new CBattle_BraveState(this);
+	CHawkState* pState = new CBattle_RunState(this);
 	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 
 	///* Set Binary */
@@ -61,7 +67,7 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
-	TransformDesc.fSpeedPerSec = 1.f;
+	TransformDesc.fSpeedPerSec = 3.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -75,19 +81,18 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Hawk"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
-	/* For.Com_SPHERE */
-	CCollider::COLLIDERDESC ColliderDesc;
-	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
-	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 1.f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
-		return E_FAIL;
-
 	/* For.Com_Navigation */
 	CNavigation::NAVIDESC NaviDesc;
 	ZeroMemory(&NaviDesc, sizeof NaviDesc);
 	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+
+	/* For.Com_Sphere */
+	CCollider::COLLIDERDESC ColliderDesc;
+	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
+	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -99,6 +104,7 @@ int CHawk::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
+	AI_Behaviour(fTimeDelta);
 	TickState(fTimeDelta);
 
 	return OBJ_NOEVENT;
@@ -143,10 +149,21 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	switch ((ANIM)eAnimId)
 	{
 	case SYMBOL_DETECT_STOP:
+	case FAST_FLAP_OF_WINGS:
+	
 		return true;
 	
+
+	case ATTACK_GRAB_START1:
+	case ATTACK_GRAB_START2:
+	case ATTACK_GRAB_END:
 	case ATTACK_BRAVE:
-	case ATTACK_BOMBING:
+	case ATTACK_ROTATION:
+	case FLYING_BACK:
+	case ATTACK_FLUTTER:
+	case REVOLVING_FLIGHT:
+	case MOVE_IDLE:
+	case ATTACK_CHARGE_ROTATION:
 		return false;
 	}
 }
