@@ -40,19 +40,10 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Parts()))
-		return E_FAIL;*/
+	if (FAILED(Ready_Parts()))
+		return E_FAIL;
 
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
-
-	/*CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
-	char cName[MAX_PATH];
-	ZeroMemory(cName, sizeof(char) * MAX_PATH);
-	pData_Manager->TCtoC(TEXT("Alphen"), cName);
-	pData_Manager->Conv_Bin_Model(m_pModelCom, cName, CData_Manager::DATA_ANIM);
-	RELEASE_INSTANCE(CData_Manager);
-	RELEASE_INSTANCE(CGameInstance);*/
 
 	/* Set State */
 	CPlayerState* pState = new CIdleState(this);
@@ -68,22 +59,22 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
-	/*for (auto& pParts : m_Parts)
-		pParts->Tick(fTimeDelta);*/
+	for (auto& pParts : m_Parts)
+		pParts->Tick(fTimeDelta);
 
 	return OBJ_NOEVENT;
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
-	/*for (auto& pParts : m_Parts)
-		pParts->Late_Tick(fTimeDelta);*/
+	for (auto& pParts : m_Parts)
+		pParts->Late_Tick(fTimeDelta);
 
 	if (nullptr != m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
-		//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
 #ifdef _DEBUG
 		if (m_pNavigationCom != nullptr)
 			m_pRendererCom->Add_Debug(m_pNavigationCom);

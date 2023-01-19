@@ -145,6 +145,9 @@
     <ClCompile Include="..\Private\VIBuffer_Point.cpp">
       <Filter>01.Utility\03.Components\02.VIBuffer\06.VIBuffer_Point</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\MeshContainer_Instance.cpp">
+      <Filter>01.Utility\03.Components\06.Model\MeshContainer_Instance</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -303,6 +306,9 @@
     <ClInclude Include="..\Public\VIBuffer_Point.h">
       <Filter>01.Utility\03.Components\02.VIBuffer\06.VIBuffer_Point</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MeshContainer_Instance.h">
+      <Filter>01.Utility\03.Components\06.Model\MeshContainer_Instance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.System">
@@ -457,6 +463,9 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\02.VIBuffer\06.VIBuffer_Point">
       <UniqueIdentifier>{6942cc0e-8b3a-4809-99f6-4d2d4898fa10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Components\06.Model\MeshContainer_Instance">
+      <UniqueIdentifier>{b51f527f-dc4a-48a6-89ea-37873b48cced}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
