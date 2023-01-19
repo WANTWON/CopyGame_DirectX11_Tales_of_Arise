@@ -84,9 +84,11 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 		//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
+#ifdef _DEBUG
 		if (m_pNavigationCom != nullptr)
 			m_pRendererCom->Add_Debug(m_pNavigationCom);
 		__super::Late_Tick(fTimeDelta);
+#endif //_DEBUG
 		
 	}
 

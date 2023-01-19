@@ -635,7 +635,7 @@ HRESULT CRenderer::Render_Debug()
 
 	return S_OK;
 }
-#endif
+#endif // _DEBUG
 
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

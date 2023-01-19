@@ -13,7 +13,7 @@ class CCamera_Dynamic final : public CCamera
 public:
 
 	enum CAMERAMODE {CAM_DEBUG, CAM_PLAYER, CAM_END};
-
+	
 	typedef struct tagCameraDesc_Derived
 	{
 		_float4						InitPostion = _float4(0.f, 0.f, 0.f, 1.f);
@@ -44,12 +44,30 @@ public:
 	void Player_Camera(_float fTimeDelta);
 
 private:
+	class CBaseObj*		m_pTarget = nullptr;
 	CAMERAMODE		m_ePreCamMode = CAM_PLAYER;
 	CAMERAMODE		m_eCamMode = CAM_PLAYER;
+	
 	_float4			m_vDistance = _float4(0, 10, -10, 0.f);
-	_double			m_lMouseWheel = 0;
+	_long			m_lMouseWheel = 0;
 	_float4			m_fTargetPos = _float4(0.f, 0.f, 0.f, 1.f);
 	_float			m_fZoom = 0.f;
+	_float			m_fTime = 0.f;
+	_float			m_fOffsetPosY = 4.f;
+	_float			m_fAngle = 0.f;
+	_float			m_fYAngle = 0.f;
+	_double			m_fVec = 1.f;
+	_vector			m_OriginPos = { 0.f,0.f,0.f,0.f };
+	_vector			m_vNewPos;
+
+	_long			m_MoveValue = 0.f;
+	_long			XMouseMove = 0;
+	_long			YMouseMove = 0;
+
+	_bool			m_bLerp = false;
+
+
+	_float			m_fCameraY = 5.f;
 
 public:
 	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -291,9 +291,6 @@
     <ClInclude Include="..\Public\UI_Combo_font_Damages.h">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClInclude>
-    <ClInclude Include="UI_font_Damage_number.h">
-      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_Combo_font_Hits.h">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\HITS</Filter>
     </ClInclude>
@@ -435,6 +432,9 @@
     <ClInclude Include="..\Public\BerserkerWalkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_font_Damage_number.h">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -531,9 +531,6 @@
       <Filter>02.GameObjects\04.UI\04.UI_COMBO</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Combo_font_Damages.cpp">
-      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
-    </ClCompile>
-    <ClCompile Include="UI_font_Damage_number.cpp">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Combo_font_Hits.cpp">
@@ -667,6 +664,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BerserkerWalkState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_font_Damage_number.cpp">
+      <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

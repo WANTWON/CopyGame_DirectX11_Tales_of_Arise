@@ -4,6 +4,19 @@
 #include "Transform.h"
 #include "Picking.h"
 
+XMFLOAT3 CalculateTerrainTangent(XMFLOAT3 p1, XMFLOAT3 p2, XMFLOAT3 p3, XMFLOAT2 uv1, XMFLOAT2 uv2, XMFLOAT2 uv3)
+{
+	XMFLOAT3 edge1 = XMFLOAT3(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
+	XMFLOAT3 edge2 = XMFLOAT3(p3.x - p1.x, p3.y - p1.y, p3.z - p1.z);
+	XMFLOAT2 deltaUV1 = XMFLOAT2(uv2.x - uv1.x, uv2.y - uv1.y);
+	XMFLOAT2 deltaUV2 = XMFLOAT2(uv3.x - uv1.x, uv3.y - uv1.y);
+	float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+	XMFLOAT3 tangent = XMFLOAT3((deltaUV2.y * edge1.x - deltaUV1.y * edge2.x) * f, (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y) * f, (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z) * f);
+	XMVECTOR vTangent = XMLoadFloat3(&tangent);
+	XMStoreFloat3(&tangent, XMVector3Normalize(vTangent));
+	return tangent;
+}
+
 
 CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -46,8 +59,8 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	m_pTerrainDesc.m_iVerticeNumX = m_iNumVerticesX;
 	m_pTerrainDesc.m_iVerticeNumZ = m_iNumVerticesZ;
 
-	pPixel = new _ulong[m_iNumVerticesX * m_iNumVerticesZ];
-	ReadFile(hFile, pPixel, sizeof(_ulong) * m_iNumVerticesX * m_iNumVerticesZ, &dwByte, nullptr);
+	pPixel = new _ulong[m_iNumVerticesX *m_iNumVerticesZ];
+	ReadFile(hFile, pPixel, sizeof(_ulong) * m_iNumVerticesX *m_iNumVerticesZ, &dwByte, nullptr);
 
 #pragma region VERTICES
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -104,6 +117,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 			pIndices[iNumFaces]._2 = iIndices[2];
 
 			_vector		vSourDir, vDestDir, vNormal;
+			XMFLOAT3	vTangent;
 
 			vSourDir = XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vPosition) - XMLoadFloat3(&pVertices[pIndices[iNumFaces]._0].vPosition);
 			vDestDir = XMLoadFloat3(&pVertices[pIndices[iNumFaces]._2].vPosition) - XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vPosition);
@@ -112,6 +126,13 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal) + vNormal);
 			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal) + vNormal);
 			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal) + vNormal);
+
+			vTangent = CalculateTerrainTangent(pVertices[pIndices[iNumFaces]._0].vNormal, pVertices[pIndices[iNumFaces]._1].vNormal, pVertices[pIndices[iNumFaces]._2].vNormal,
+				pVertices[pIndices[iNumFaces]._0].vTexture, pVertices[pIndices[iNumFaces]._1].vTexture, pVertices[pIndices[iNumFaces]._2].vTexture);
+
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._0].vTangent, XMLoadFloat3(&vTangent));
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._1].vTangent, XMLoadFloat3(&vTangent));
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._2].vTangent, XMLoadFloat3(&vTangent));
 			++iNumFaces;
 
 			pIndices[iNumFaces]._0 = iIndices[0];
@@ -125,6 +146,14 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._0].vNormal) + vNormal);
 			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._1].vNormal) + vNormal);
 			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal, XMLoadFloat3(&pVertices[pIndices[iNumFaces]._2].vNormal) + vNormal);
+			
+			
+			vTangent = CalculateTerrainTangent(pVertices[pIndices[iNumFaces]._0].vNormal, pVertices[pIndices[iNumFaces]._1].vNormal, pVertices[pIndices[iNumFaces]._2].vNormal,
+				pVertices[pIndices[iNumFaces]._0].vTexture, pVertices[pIndices[iNumFaces]._1].vTexture, pVertices[pIndices[iNumFaces]._2].vTexture);
+
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._0].vTangent, XMLoadFloat3(&vTangent));
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._1].vTangent, XMLoadFloat3(&vTangent));
+			XMStoreFloat3(&pVertices[pIndices[iNumFaces]._2].vTangent, XMLoadFloat3(&vTangent));
 			++iNumFaces;
 		}
 	}
