@@ -10,7 +10,6 @@
 #include "ModelManager.h"
 #include "Imgui_Manager.h"
 #include "TreasureBox.h"
-#include "Data_Manager.h"
 #include "Effect_Manager.h"
 #include <DirectXTK/ScreenGrab.h>
 
@@ -115,10 +114,10 @@ HRESULT CLoader::Loading_ForClient()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/TO14_T_FX_Common_Kirakira%02d.png"), 3))))
 		return E_FAIL;
 
-	_matrix PivotMatrix = XMMatrixIdentity();
+	/*_matrix PivotMatrix = XMMatrixIdentity();
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Picking_Symbol"), CModel::Create(m_pDevice, m_pContext,
 		CModel::TYPE_NONANIM, "../Bin/Resources/Picking_Symbol/Picking_Symbol.fbx", PivotMatrix))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));
@@ -161,8 +160,8 @@ HRESULT CLoader::Loading_ForClient()
 		CEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(Loading_ForGamePlayModel()))
-		return E_FAIL;
+	//if (FAILED(Loading_ForGamePlayModel()))
+		//return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
@@ -185,7 +184,6 @@ HRESULT CLoader::Loading_ForGamePlayModel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen"),
 	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/Anim/Alphen/Alphen.fbx", PivotMatrix))))
 	return E_FAIL;*/
-	CData_Manager::Get_Instance()->Create_Try_BinModel(TEXT("Alphen"), LEVEL_GAMEPLAY, CData_Manager::DATA_ANIM);
 
 	//For.Prototype_Component_NeviMesh
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));

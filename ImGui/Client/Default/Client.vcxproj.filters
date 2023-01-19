@@ -73,9 +73,6 @@
     <Filter Include="02.GameObjects\04.TreasureBox">
       <UniqueIdentifier>{b14591bf-3e81-4afd-b902-9b852f7a00f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.ToolManager\Data_Manager">
-      <UniqueIdentifier>{226bc1a1-c7bf-4b55-8c9b-30e39cdffd35}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.ToolManager\Effect_Manager">
       <UniqueIdentifier>{ea32a603-d889-42cb-9ff0-4c0c1e9beafe}</UniqueIdentifier>
     </Filter>
@@ -180,9 +177,6 @@
     <ClInclude Include="..\Public\TreasureBox.h">
       <Filter>02.GameObjects\04.TreasureBox</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Data_Manager.h">
-      <Filter>03.ToolManager\Data_Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Effect_Manager.h">
       <Filter>03.ToolManager\Effect_Manager</Filter>
     </ClInclude>
@@ -268,9 +262,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\TreasureBox.cpp">
       <Filter>02.GameObjects\04.TreasureBox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Data_Manager.cpp">
-      <Filter>03.ToolManager\Data_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Effect_Manager.cpp">
       <Filter>03.ToolManager\Effect_Manager</Filter>
