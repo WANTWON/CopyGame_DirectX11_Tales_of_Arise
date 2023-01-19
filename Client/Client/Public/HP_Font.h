@@ -24,6 +24,9 @@ private:
 	virtual HRESULT Ready_Components(void * pArg) override;
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
 
+private:
+	CTexture*				m_pTextureCom1 = nullptr;
+
 
 public:
 	static CHP_Font* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -35,7 +38,15 @@ private:
 	_uint m_iYIndex = 0;
 
 	_uint m_itexnum = 0;
-	_uint m_iCurrenthp = 2000.f;
+	_uint m_iCurrenthp = 2000;
+	_bool m_bfadein = true;
+
+	_uint m_iCharacternum = 0;
+
+	_float m_fStart_timer = 0.f;
+	_float m_fnumberY = 0.f;
+	_float m_fNext = 0.f;
+
 };
 
 END

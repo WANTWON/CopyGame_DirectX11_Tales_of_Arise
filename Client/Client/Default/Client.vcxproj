@@ -198,6 +198,7 @@
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerRunState.h" />
     <ClInclude Include="..\Public\UI_Changebutton.h" />
+    <ClInclude Include="..\Public\UI_LOCKON.h" />
     <ClInclude Include="..\Public\UI_Portraitback.h" />
     <ClInclude Include="..\Public\ScreenFadeEffect.h" />
     <ClInclude Include="..\Public\UI_Comboline.h" />
@@ -212,6 +213,7 @@
     <ClInclude Include="..\Public\UI_Portraitfront_left.h" />
     <ClInclude Include="..\Public\UI_Portraitfront_right.h" />
     <ClInclude Include="..\Public\UI_Portraitfront_top.h" />
+    <ClInclude Include="..\public\UI_RuneEffect.h" />
     <ClInclude Include="..\public\UI_Screen.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\Camera_Dynamic.h" />
@@ -265,6 +267,7 @@
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />
     <ClCompile Include="..\Private\UI_Changebutton.cpp" />
+    <ClCompile Include="..\Private\UI_LOCKON.cpp" />
     <ClCompile Include="..\Private\UI_Portraitback.cpp" />
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp" />
     <ClCompile Include="..\Private\UI_Comboline.cpp" />
@@ -279,6 +282,7 @@
     <ClCompile Include="..\Private\UI_Portraitfront_left.cpp" />
     <ClCompile Include="..\Private\UI_Portraitfront_right.cpp" />
     <ClCompile Include="..\Private\UI_Portraitfront_top.cpp" />
+    <ClCompile Include="..\Private\UI_RuneEffect.cpp" />
     <ClCompile Include="..\private\UI_Screen.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\Camera_Dynamic.cpp" />

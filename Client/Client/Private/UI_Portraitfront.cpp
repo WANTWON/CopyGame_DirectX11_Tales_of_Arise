@@ -47,14 +47,14 @@ int CUI_Portraitfront::Tick(_float fTimeDelta)
 		//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
 		//m_bmoveleft = true;
 		//m_bfadein = true;
-		m_fAlpha -= 0.01;
+		m_fAlpha -= 0.01f;
 	}
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
 	{
 		//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
 		//m_bmoveleft = true;
 		//m_bfadein = true;
-		m_fAlpha += 0.01;
+		m_fAlpha += 0.01f;
 	}
 
 
@@ -124,7 +124,8 @@ HRESULT CUI_Portraitfront::Render()
 	m_fPosition.x = 195.f;
 	m_fPosition.y = 570.f;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(2))))
 		return E_FAIL;
 
@@ -136,7 +137,8 @@ HRESULT CUI_Portraitfront::Render()
 	m_fPosition.x = 140.f;
 	m_fPosition.y = 635.f;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(3))))
 		return E_FAIL;
 
@@ -148,7 +150,8 @@ HRESULT CUI_Portraitfront::Render()
 	m_fPosition.x = 87.f;
 	m_fPosition.y = 570.f;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(4))))
 		return E_FAIL;
 

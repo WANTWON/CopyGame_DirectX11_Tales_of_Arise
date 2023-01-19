@@ -63,7 +63,7 @@ HRESULT CGameObject::Add_Components(const _tchar * pComponentTag, _uint iLevelIn
 	return S_OK;
 }
 
-void CGameObject::Compute_CamDistance(_vector vWorldPos)
+void CGameObject::Compute_CamDistance(_fvector vWorldPos)
 {
 	_float4x4 ViewMatrix;
 	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);

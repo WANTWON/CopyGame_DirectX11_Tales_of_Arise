@@ -2,7 +2,7 @@
 #include "..\Public\HPbar.h"
 
 #include "GameInstance.h"
-
+#include "Player.h"
 CHPbar::CHPbar(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -29,7 +29,8 @@ HRESULT CHPbar::Initialize(void * pArg)
 	m_fPosition.x = 1130.f; 
 	m_fPosition.y = 360.f + (m_iIndex * 60.f);
 
-
+	
+	
 	m_eShaderID = UI_HPBAR;
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -39,6 +40,30 @@ HRESULT CHPbar::Initialize(void * pArg)
 
 int CHPbar::Tick(_float fTimeDelta)
 {
+	
+	if (m_iIndex == 3)
+	{
+		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
+		Compute_CamDistance(pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
+		m_fPosition.x= dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().x;
+		m_fPosition.y= dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().y + 20.f - (m_fCamDistance/5.f);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (m_fCamDistance > 20.f)
+		{
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 200.f / m_fCamDistance * 20.f);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, 22.f / m_fCamDistance * 20.f);
+		}
+		else
+		{
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 200.0f);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y = 22.0f);
+		}
+
+	}
+
+
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
 		--m_fcurrenthp;
 

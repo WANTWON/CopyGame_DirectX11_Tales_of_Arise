@@ -33,6 +33,8 @@ private:
 
 	_uint m_iIndex = 0;
 
+	_float m_fWorldsizeX, m_fWorldsizeY = 0.f;
+
 public:
 	static CHPbar_World* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
