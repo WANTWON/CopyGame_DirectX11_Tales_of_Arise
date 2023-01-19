@@ -2656,8 +2656,16 @@ void CImgui_Manager::Set_Effect()
 			{
 				m_sCurrentEffect = cEffectName; // Set Current Effect
 				m_sCurrentEffect += ".dat";
-
 				memset(cEffectName, 0, MAX_PATH);
+
+				CEffect::EFFECTDESC tEffectDesc;
+				tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_EFFECT;
+				
+
+				if (FAILED(m_pEffectManager->Create_Effect(m_pDevice, m_pContext, &tEffectDesc)))
+				{
+
+				}
 
 				ImGui::OpenPopup("Create Effect");
 			}
@@ -2747,7 +2755,7 @@ void CImgui_Manager::Set_Effect()
 
 			tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_TEXTURE;
 			wstring wsSelectedTexture = wstring(m_sSelectedTexture.begin(), m_sSelectedTexture.end());
-			wcscpy_s(tEffectDesc.wcTexturePrototypeId, MAX_PATH, wsSelectedTexture.c_str());
+			wcscpy_s(tEffectDesc.wcPrototypeId, MAX_PATH, wsSelectedTexture.c_str());
 
 			if (FAILED(m_pEffectManager->Create_Effect(m_pDevice, m_pContext, &tEffectDesc)))
 			{

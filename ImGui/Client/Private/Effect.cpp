@@ -94,7 +94,7 @@ HRESULT CEffect::Ready_Components(void * pArg)
 		case EFFECT_TYPE::TYPE_MESH:
 		{
 			/* For.Com_Model */
-			if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, m_tEffectDesc.wcModelPrototypeId, (CComponent**)&m_pModelCom)))
+			if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, m_tEffectDesc.wcPrototypeId, (CComponent**)&m_pModelCom)))
 				return E_FAIL;
 			/* For.Com_Shader */
 			if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), (CComponent**)&m_pShaderCom)))

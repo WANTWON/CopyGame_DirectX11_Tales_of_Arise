@@ -11,7 +11,14 @@ END
 class CEffect final : public CBaseObj
 {
 public:
-	enum EFFECT_TYPE { TYPE_TEXTURE, TYPE_MESH, TYPE_PARTICLE, TYPE_END };
+	enum EFFECT_TYPE 
+	{ 
+		TYPE_EFFECT,	/* Main Effect which is composed by Texture, Mesh and Particles. */
+		TYPE_TEXTURE,	
+		TYPE_MESH, 
+		TYPE_PARTICLE, 
+		TYPE_END 
+	};
 
 	typedef struct tagEffectDescription
 	{
@@ -23,13 +30,9 @@ public:
 		_tchar wcFilePath[MAX_PATH] = TEXT("");				/* "../../../Bin/Resources/Textures/Effect/*
 																"../../../Bin/Resources/Meshes/Effect/* */
 
-		/* Sprite Effect Infos. */
-		_tchar wcTexturePrototypeId[MAX_PATH] = TEXT("");	/* "Prototype_Component_Texture_Effect_Hit" */
+		vector<CEffect*> Effects;							/* An Effect is in turn composed of other Effects. */
 
-		/* Mesh Effect Infos. */
-		_tchar wcModelPrototypeId[MAX_PATH] = TEXT("");		/* "Prototype_Component_Model_Effect_Hit" */
-
-		/* Particle Effect Infos. */
+		_tchar wcPrototypeId[MAX_PATH] = TEXT("");			/* "Prototype_Component_*_Effect_Hit" */
 
 		/* Common Infos. */
 		_float fSpeed = 0.f;
