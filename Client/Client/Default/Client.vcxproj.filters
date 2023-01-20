@@ -465,6 +465,24 @@
     <ClInclude Include="..\Public\UI_font_Damage_number.h">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_Damage_LargeB_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_DeadState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_Damage_LargeB_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_DeadState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_Damage_LargeB_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_DeadState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -721,6 +739,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_Damage_LargeB_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_DeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_Damage_LargeB_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_DeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_Damage_LargeB_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_DeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

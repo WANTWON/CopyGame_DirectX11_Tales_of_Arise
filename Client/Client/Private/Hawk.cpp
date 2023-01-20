@@ -10,6 +10,9 @@
 #include "HawkBattle_RunState.h"
 #include "HawkBattle_Flying_BackState.h"
 #include "HawkBattle_GrabStartState.h"
+#include "HawkBattle_Damage_LargeB_State.h"
+#include "HawkBattle_DeadState.h"
+
 using namespace Hawk;
 
 CHawk::CHawk(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -49,10 +52,15 @@ HRESULT CHawk::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
+	m_tInfo.iMaxHp = 3;
+	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.iDamage = 10;
+
 
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
+	return S_OK;
 }
 
 
@@ -164,8 +172,11 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	case REVOLVING_FLIGHT:
 	case MOVE_IDLE:
 	case ATTACK_CHARGE_ROTATION:
+	case DEAD2:
 		return false;
 	}
+
+	return false;
 }
 
 _float CHawk::Take_Damage(float fDamage, CBaseObj * DamageCauser)
@@ -177,17 +188,26 @@ _float CHawk::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 				m_tStats.m_fCurrentHp = 0.f;
 
 				m_pModelCom->Set_TimeReset();
-			//	CIce_WolfState* pState = new CDieState(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
-			//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+				CHawkState* pState = new CBattle_DeadState(this);
+				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 			}
 			else
 			{
 				m_tStats.m_fCurrentHp -= fDamage;
 
 				m_pModelCom->Set_TimeReset();
-			//	CIce_WolfState* pState = new CHitState(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
-			//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+				CHawkState* pState = new CBattle_Damage_LargeB_State(this);
+				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 			}
+
+	//else
+	//{
+	//	m_tStats.m_fCurrentHp -= fDamage;
+
+	//	m_pModelCom->Set_TimeReset();
+	//	CHawkState* pState = new CBattle_Damage_LargeB_State(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
+	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	//}
 	}
 
 	return fDamage;

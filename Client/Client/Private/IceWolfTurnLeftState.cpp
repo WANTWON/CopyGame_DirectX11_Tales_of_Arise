@@ -32,7 +32,7 @@ CIceWolfState * CTurnLeftState::Tick(_float fTimeDelta)
 CIceWolfState * CTurnLeftState::LateTick(_float fTimeDelta)
 {
 	m_iRadian = rand() % 10;
-	m_fRadian = 0.05 * m_iRadian;
+	
 
 	if (m_pTarget)
 	{

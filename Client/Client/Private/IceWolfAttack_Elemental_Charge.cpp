@@ -139,6 +139,7 @@ void CAttack_Elemental_Charge::Enter()
 void CAttack_Elemental_Charge::Exit()
 {
 	m_fIdleAttackTimer = 0.f;
+	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
 }
 
 

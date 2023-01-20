@@ -174,7 +174,9 @@
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Berserker.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_Damage_LargeB_State.h" />
     <ClInclude Include="..\Public\BerserkerBattle_DashStartState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_DeadState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_Double_ClawState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_Double_CrowState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_HowLingState.h" />
@@ -191,6 +193,8 @@
     <ClInclude Include="..\Public\HawkBattle_BombingState.h" />
     <ClInclude Include="..\Public\HawkBattle_BraveState.h" />
     <ClInclude Include="..\Public\HawkBattle_ChargeState.h" />
+    <ClInclude Include="..\Public\HawkBattle_Damage_LargeB_State.h" />
+    <ClInclude Include="..\Public\HawkBattle_DeadState.h" />
     <ClInclude Include="..\Public\HawkBattle_Flying_BackState.h" />
     <ClInclude Include="..\Public\HawkBattle_GrabEndState.h" />
     <ClInclude Include="..\Public\HawkBattle_GrabStartState.h" />
@@ -206,6 +210,8 @@
     <ClInclude Include="..\Public\HP_Font_World.h" />
     <ClInclude Include="..\Public\IceWolfAttackNormalState.h" />
     <ClInclude Include="..\Public\IceWolfAttack_Elemental_Charge.h" />
+    <ClInclude Include="..\Public\IceWolfBattle_Damage_LargeB_State.h" />
+    <ClInclude Include="..\Public\IceWolfBattle_DeadState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_HowLingState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_IdleState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_WalkState.h" />
@@ -268,7 +274,9 @@
   <ItemGroup>
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Berserker.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_Damage_LargeB_State.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_DashStartState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_DeadState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_Double_ClawState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_Double_CrowState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_HowLingState.cpp" />
@@ -284,6 +292,8 @@
     <ClCompile Include="..\Private\HawkBattle_BombingState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_BraveState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_ChargeState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_Damage_LargeB_State.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_DeadState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_Flying_BackState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_GrabEndState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_GrabStartState.cpp" />
@@ -298,6 +308,8 @@
     <ClCompile Include="..\Private\HP_Font_World.cpp" />
     <ClCompile Include="..\Private\IceWolfAttackNormalState.cpp" />
     <ClCompile Include="..\Private\IceWolfAttack_Elemental_Charge.cpp" />
+    <ClCompile Include="..\Private\IceWolfBattle_Damage_LargeB_State.cpp" />
+    <ClCompile Include="..\Private\IceWolfBattle_DeadState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_HowLingState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_IdleState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_WalkState.cpp" />

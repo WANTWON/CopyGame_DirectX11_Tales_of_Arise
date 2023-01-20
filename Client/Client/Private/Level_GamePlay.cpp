@@ -56,7 +56,7 @@ void CLevel_GamePlay::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	SetWindowText(g_hWnd, TEXT("�����÷��̷����Դϴ�."));
+	SetWindowText(g_hWnd, TEXT("GamePlayLevel"));
 
 
 	CBaseObj* pPlayer = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
@@ -127,25 +127,24 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	//for (_uint i = 0; i < 3; ++i)
-	//{
-	//	_vector vPosition = { rand() % 25, 0.f, rand() % 25 , 1.f };
-	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
-	//		return E_FAIL;
-	//}
+	for (_uint i = 0; i < 1; ++i)
+	{
+		_vector vPosition = { _float(rand() % 17), 0.f, _float(rand() % 17), 1.f };
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+			return E_FAIL;
+	}
 
-
-	//for (_uint i = 0; i < 3; ++i)
-	//{
-	//	_vector vPosition = { rand() % 35, 0.f, rand() % 35 , 1.f };
-	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
-	//		return E_FAIL;
-	//}
+	for (_uint i = 0; i < 3; ++i)
+	{
+		_vector vPosition = { _float(rand() % 8), 0.f, _float(rand() % 8), 1.f };
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+			return E_FAIL;
+	}
 
 	for (_uint i = 0; i < 1; ++i)
 	{
-		_vector vPosition = { rand() % 30, 0.f, rand() % 30 , 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_IceWolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+		_vector vPosition = { _float(rand() % 10), 0.f, _float(rand() % 10) , 1.f };
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
 			return E_FAIL;
 	}
 

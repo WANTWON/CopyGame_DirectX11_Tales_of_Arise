@@ -13,6 +13,7 @@ using namespace Hawk;
 CBattle_RunState::CBattle_RunState(CHawk* pHawk)
 {
 	m_pOwner = pHawk;
+	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 CHawkState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
@@ -55,11 +56,14 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 		{
 			if (6.f > m_fTarget_Distance)
 				return new CBattle_GrabStartState(m_pOwner);
-
+			
 
 			m_fIdleAttackTimer += fTimeDelta;
 		}
-	
+		
+
+
+
 	return nullptr;
 }
 

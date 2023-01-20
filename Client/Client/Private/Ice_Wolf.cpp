@@ -2,6 +2,9 @@
 #include "Ice_Wolf.h"
 #include "IceWolfState.h"
 #include "IceWolfIdleState.h"
+#include "IceWolfBattle_IdleState.h"
+#include "IceWolfBattle_Damage_LargeB_State.h"
+#include "IceWolfBattle_DeadState.h"
 
 using namespace IceWolf;
 
@@ -29,7 +32,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CIceWolfState* pState = new CIdleState(this);
+	CIceWolfState* pState = new CBattle_IdleState(this);
 	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 
 	///* Set Binary */
@@ -42,14 +45,15 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
-	m_tInfo.iMaxHp = 3.f;
+	m_tInfo.iMaxHp = 3;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
-	m_tInfo.iDamage = 10.f;
+	m_tInfo.iDamage = 10;
 
 
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
+	return S_OK;
 }
 
 
@@ -158,8 +162,12 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:
 	case ANIM_ATTACK_ELEMENTAL_CHARGE_END:
 	case ANIM_SYMBOL_DETECT_IDLE:
+	case ANIM_DAMAGE_AIR_LARGE_B:
+	case ANIM_DEAD:
 		return false;
 	}
+
+	return false;
 }
 
 _float CIce_Wolf::Take_Damage(float fDamage, CBaseObj * DamageCauser)
@@ -174,16 +182,17 @@ _float CIce_Wolf::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 				m_tStats.m_fCurrentHp = 0.f;
 
 				m_pModelCom->Set_TimeReset();
-			//	CIce_WolfState* pState = new CDieState(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
-			//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+				CIceWolfState* pState = new CBattle_DeadState(this/*DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION)*/);
+				m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 			}
 			else
 			{
+				
 				m_tStats.m_fCurrentHp -= fDamage;
 
 				m_pModelCom->Set_TimeReset();
-			//	CIce_WolfState* pState = new CHitState(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
-			//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
+				m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 			}
 	}
 
