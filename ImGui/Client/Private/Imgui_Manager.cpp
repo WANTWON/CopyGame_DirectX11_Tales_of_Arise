@@ -6,6 +6,7 @@
 #include "Cell.h"
 #include "BaseObj.h"
 #include "Effect.h"
+#include "ParticleSystem.h"
 #include <windows.h>
 #include <string.h>
 
@@ -2551,16 +2552,15 @@ void CImgui_Manager::Set_Effect()
 	}
 #pragma endregion Create
 	
-#pragma region Customization
-	if (ImGui::CollapsingHeader("Customization"))
+#pragma region Customize
+	if (ImGui::CollapsingHeader("Customize"))
 	{
+		ImGui::Text("Available Resources");
 		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 		if (ImGui::BeginTabBar("EffectTabBar", tab_bar_flags))
 		{
 			if (ImGui::BeginTabItem("Effect Textures"))
 			{
-				m_eResourceType = RESOURCE_TYPE::RESOURCE_TEXTURE;
-
 				/* Available Textures (Effect) */
 				if (ImGui::BeginListBox("##Texture List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
 				{
@@ -2573,13 +2573,52 @@ void CImgui_Manager::Set_Effect()
 							ImGui::SetItemDefaultFocus();
 					}
 					ImGui::EndListBox();
+
+					if (ImGui::Button("Add Texture", ImVec2(100, 0)))
+					{
+						if (!m_sSelectedResource.empty())
+						{
+							CEffect::EFFECTDESC tEffectDesc;
+							tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_TEXTURE;
+
+							wstring wsTexturePrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcTexturePrototypeId, MAX_PATH, wsTexturePrototype.c_str());
+								
+							wstring wsSelectedResource = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcFileName, MAX_PATH, wsSelectedResource.c_str());
+
+							CEffect* pEffect = nullptr;
+							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectTexture"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc);
+
+							m_pEffectManager->Add_Effect(pEffect);
+						}
+					}
+					ImGui::SameLine();
+
+					if (ImGui::Button("Add Emitter", ImVec2(100, 0)))
+					{
+						if (!m_sSelectedResource.empty())
+						{
+							CEffect::EFFECTDESC tEffectDesc;
+							tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_PARTICLE;
+
+							wstring wsTexturePrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcTexturePrototypeId, MAX_PATH, wsTexturePrototype.c_str());
+
+							wstring wsSelectedResource = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcFileName, MAX_PATH, wsSelectedResource.c_str());
+
+							CEffect* pEffect = nullptr;
+							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc);
+
+							m_pEffectManager->Add_Effect(pEffect);		
+						}
+					}
 				}
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("Mesh Textures"))
+			if (ImGui::BeginTabItem("Effect Meshes"))
 			{
-				m_eResourceType = RESOURCE_TYPE::RESOURCE_MESH;
-
 				/* Available Meshes (Effect) */
 				if (ImGui::BeginListBox("##Mesh List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
 				{
@@ -2592,54 +2631,39 @@ void CImgui_Manager::Set_Effect()
 							ImGui::SetItemDefaultFocus();
 					}
 					ImGui::EndListBox();
+
+					if (ImGui::Button("Add Mesh", ImVec2(100, 0)))
+					{
+						if (!m_sSelectedResource.empty())
+						{
+							CEffect::EFFECTDESC tEffectDesc;
+							tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_MESH;
+
+							wstring wsMeshPrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcModelPrototypeId, MAX_PATH, wsMeshPrototype.c_str());				
+
+							wstring wsSelectedResource = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcFileName, MAX_PATH, wsSelectedResource.c_str());
+
+							CEffect* pEffect = nullptr;
+							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectMesh"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc);
+
+							m_pEffectManager->Add_Effect(pEffect);
+						}
+					}
 				}
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();
 		}
 
-		if (ImGui::Button("Add", ImVec2(60, 0)))
-		{
-			if (!m_sSelectedResource.empty())
-			{
-				CEffect::EFFECTDESC tEffectDesc;
-				
-				switch (m_eResourceType)
-				{
-					case RESOURCE_TYPE::RESOURCE_TEXTURE:
-					{
-						tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_TEXTURE;
-
-						wstring wsTexturePrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
-						wcscpy_s(tEffectDesc.wcTexturePrototypeId, MAX_PATH, wsTexturePrototype.c_str());
-						break;
-					}
-					case RESOURCE_TYPE::RESOURCE_MESH:
-					{
-						tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_MESH;
-
-						wstring wsMeshPrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
-						wcscpy_s(tEffectDesc.wcModelPrototypeId, MAX_PATH, wsMeshPrototype.c_str());
-						break;
-					}							
-				}
-
-				wstring wsSelectedResource = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
-				wcscpy_s(tEffectDesc.wcFileName, MAX_PATH, wsSelectedResource.c_str());
-
-				CEffect* pEffect = nullptr;
-				CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_Effect"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc);
-
-				m_pEffectManager->Add_Effect(pEffect);
-			}
-		}
 		ImGui::NewLine();
 		ImGui::Separator();
 
-		/* Instanced Resources */
-		ImGui::Text("Instanced Resources");
+		/* Instanced Effects */
+		ImGui::Text("Instanced Effects");
 
-		if (ImGui::BeginListBox("##Instanced Resources List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
+		if (ImGui::BeginListBox("##Instanced Effect List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
 		{
 			list<CEffect*> Effects = CEffect_Manager::Get_Instance()->Get_InstancedEffects();
 			for (CEffect* pEffect : Effects)
@@ -2680,14 +2704,18 @@ void CImgui_Manager::Set_Effect()
 
 		ImGui::NewLine();
 	}
-#pragma endregion Customization
+#pragma endregion Customize
 
 #pragma region Settings
 	if (ImGui::CollapsingHeader("Settings"))
 	{
-		if (ImGui::Button(m_bIsPlaying ? "Stop" : "Play", ImVec2(60, 0)))
+		if (ImGui::Button(m_bIsPlaying ? "Stop" : "Play", ImVec2(100, 0)))
 		{
-			m_bIsPlaying = !m_bIsPlaying;
+			if (m_pSelectedEffect)
+			{
+				m_bIsPlaying = !m_bIsPlaying;
+				m_pSelectedEffect->Set_Play(m_bIsPlaying);
+			}
 		}
 		ImGui::NewLine();
 		ImGui::Separator();

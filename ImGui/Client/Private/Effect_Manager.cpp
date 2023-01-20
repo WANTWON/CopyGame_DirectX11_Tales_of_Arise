@@ -1,8 +1,9 @@
 #include "stdafx.h"
 
+#include "Effect_Manager.h"
 #include "GameInstance.h"
 #include "Effect.h"
-#include "Effect_Manager.h"
+#include "ParticleSystem.h"
 
 IMPLEMENT_SINGLETON(CEffect_Manager)
 

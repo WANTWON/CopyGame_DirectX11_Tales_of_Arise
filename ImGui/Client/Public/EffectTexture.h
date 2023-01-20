@@ -1,25 +1,16 @@
 #pragma once
 
-#include "BaseObj.h"
+#include "Effect.h"
 
 BEGIN(Engine)
 class CVIBuffer_Rect;
-class CModel;
-class CVIBuffer_Point_Instance;
+class CTexture;
 END
 
 BEGIN(Client)
-class CEffect abstract : public CBaseObj
+class CEffectTexture final : public CEffect
 {
 public:
-	enum EFFECT_TYPE 
-	{ 
-		TYPE_TEXTURE,	
-		TYPE_MESH,
-		TYPE_PARTICLE,
-		TYPE_END 
-	};
-
 	typedef struct tagEffectDescription
 	{
 		EFFECT_TYPE eType = TYPE_END;
@@ -29,17 +20,12 @@ public:
 
 		_tchar wcTexturePrototypeId[MAX_PATH] = TEXT("");
 		_tchar wcModelPrototypeId[MAX_PATH] = TEXT("");
-
-		_bool bIsBillboard = true;
 	} EFFECTDESC;
-	
-	EFFECTDESC Get_EffectDesc() { return m_tEffectDesc; }
-	void Set_Play(_bool bPlay) { m_bPlay = bPlay; }
 
 public:
-	CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CEffect(const CEffect& rhs);
-	virtual ~CEffect() = default;
+	CEffectTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEffectTexture(const CEffectTexture& rhs);
+	virtual ~CEffectTexture() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -48,16 +34,18 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-protected:
+private:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
-	virtual HRESULT SetUp_ShaderResources() override; 
+	virtual HRESULT SetUp_ShaderResources() override;
 
-protected:
-	EFFECTDESC m_tEffectDesc;
-
-	_bool m_bPlay = false;
+private:
+	/* Texture Effect */
+	CVIBuffer_Rect*	m_pVIBufferCom = nullptr;
+	CTexture* m_pTextureCom = nullptr;
 
 public:
+	static CEffectTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 END

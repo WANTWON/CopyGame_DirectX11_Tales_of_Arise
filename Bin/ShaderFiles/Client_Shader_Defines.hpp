@@ -14,11 +14,17 @@ sampler PointSampler = sampler_state
 	AddressV = wrap;
 };
 
-
 RasterizerState RS_Default
 {
 	FillMode = solid;
 	CullMode = back;
+	FrontCounterClockwise = false;
+};
+
+RasterizerState RS_Default_NoCull
+{
+	FillMode = solid;
+	CullMode = none;
 	FrontCounterClockwise = false;
 };
 
