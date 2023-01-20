@@ -70,7 +70,6 @@ struct PS_OUT
 	float4		vDiffuse : SV_TARGET0;
 	float3		vNormal : SV_TARGET1;
 	float4		vDepth : SV_TARGET2;
-	float4		vSpecular : SV_TARGET3;
 	vector		vLightDepth : SV_TARGET4;
 };
 
@@ -92,8 +91,6 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);
-	Out.vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
-
 	Out.vDiffuse.a *= g_fAlpha;
 
 	if (Out.vDiffuse.a <= 0.0f)
@@ -118,8 +115,7 @@ PS_OUT PS_PICKED(PS_IN In)
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);
-	Out.vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
-
+	
 	Out.vDiffuse.rgb += 0.2f;
 	Out.vDiffuse.a *= g_fAlpha;
 

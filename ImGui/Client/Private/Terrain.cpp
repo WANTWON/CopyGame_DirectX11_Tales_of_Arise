@@ -321,7 +321,7 @@ HRESULT CTerrain::SetUp_ShaderResources()
 void CTerrain::Set_Terrain_Shape()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	if (CGameInstance::Get_Instance()->Mouse_Pressing(DIMK_LBUTTON))
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_0))
 	{
 		CPickingMgr::Get_Instance()->Set_PickedObj(nullptr);
 
@@ -334,6 +334,32 @@ void CTerrain::Set_Terrain_Shape()
 		m_pVIBufferCom->Set_Terrain_Shape(fHegith, fRad, fSharp, m_vMousePickPos, 1.f);
 	}
 	
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_MINUS))
+	{
+		CPickingMgr::Get_Instance()->Set_PickedObj(nullptr);
+
+		CTerrain_Manager::TERRAINSHAPEDESC TerrainShapeDesc = CTerrain_Manager::Get_Instance()->Get_TerrainShapeDesc();
+
+		_float fHegith = TerrainShapeDesc.fHeight;
+		_float fRad = TerrainShapeDesc.fRadius;
+		_float fSharp = TerrainShapeDesc.fSharp;
+
+		m_pVIBufferCom->Set_Terrain_UpDown(fHegith, fRad, fSharp, m_vMousePickPos, 1.f);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_EQUALS))
+	{
+		CPickingMgr::Get_Instance()->Set_PickedObj(nullptr);
+
+		CTerrain_Manager::TERRAINSHAPEDESC TerrainShapeDesc = CTerrain_Manager::Get_Instance()->Get_TerrainShapeDesc();
+
+		_float fHegith = TerrainShapeDesc.fHeight;
+		_float fRad = TerrainShapeDesc.fRadius;
+		_float fSharp = TerrainShapeDesc.fSharp;
+
+		m_pVIBufferCom->Set_Terrain_UpDown(-fHegith, fRad, fSharp, m_vMousePickPos, 1.f);
+	}
+
 
 	RELEASE_INSTANCE(CGameInstance);
 }
@@ -510,8 +536,8 @@ HRESULT CTerrain::Create_FilterTexture()
 		return S_OK;
 
 	FAIL:
-		Safe_Delete_Array(pPixel);
-		Safe_Release(pTexture2D);
+		//Safe_Delete_Array(pPixel);
+		//Safe_Release(pTexture2D);
 		return E_FAIL;
 	}
 

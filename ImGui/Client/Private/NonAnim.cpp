@@ -81,6 +81,7 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 
 	XMStoreFloat3(&m_ModelDesc.vPosition, Get_Position());
 	m_ModelDesc.vScale = Get_Scale();
+	m_ModelDesc.WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 }
 
 HRESULT CNonAnim::Render()
@@ -115,9 +116,6 @@ HRESULT CNonAnim::Render()
 		
 
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
-			return E_FAIL;
-
-		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_SpecularTexture", i, aiTextureType_SPECULAR)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))

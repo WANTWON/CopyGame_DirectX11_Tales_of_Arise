@@ -181,6 +181,9 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates">
       <UniqueIdentifier>{dd455c3a-0f6e-4072-bea2-9e84af3fad1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\03.InteractObject">
+      <UniqueIdentifier>{302f8212-a864-4482-aa5e-a307b89d73e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -483,6 +486,9 @@
     <ClInclude Include="..\Public\HawkBattle_DeadState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\InteractObject.h">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -757,6 +763,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\HawkBattle_DeadState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\InteractObject.cpp">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

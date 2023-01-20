@@ -60,7 +60,7 @@ public:
 	vector<const _tchar*> Get_PrototypeTagList() { return m_pPrototypeTags; }
 
 public:
-	void Add_PrototypeTag(_tchar* TempTag) { m_pPrototypeTags.push_back(TempTag); }
+	void Add_PrototypeTag(_tchar* TempTag);
 
 private:
 	class CTerrain*		m_pTerrain =  nullptr;
