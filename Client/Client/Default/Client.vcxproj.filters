@@ -103,9 +103,6 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\States">
       <UniqueIdentifier>{abab21c8-ddcc-4a09-9b53-fc754ab64c56}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\04.UI\02.UI_LOADING">
-      <UniqueIdentifier>{9514bfa9-ed3c-4a7f-be3a-457b1311c64f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04.UI\03.UI_HPbar">
       <UniqueIdentifier>{656cd5fa-7129-4532-907d-5bd2520b7080}</UniqueIdentifier>
     </Filter>
@@ -150,6 +147,15 @@
     </Filter>
     <Filter Include="02.GameObjects\04.UI\08.UI_SKillbutton">
       <UniqueIdentifier>{dc35b202-4c96-4b5f-be40-568841bf54f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\09.UI_RuneEffect">
+      <UniqueIdentifier>{f745ed0c-e7f1-4936-ab54-8faa54e34f97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING">
+      <UniqueIdentifier>{9514bfa9-ed3c-4a7f-be3a-457b1311c64f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\09.UI_LOCKON">
+      <UniqueIdentifier>{58dfe97a-44c5-4aed-bff1-646d1870960e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Hawk">
       <UniqueIdentifier>{83d39912-0aae-4659-9122-88ac9147ee0e}</UniqueIdentifier>
@@ -277,7 +283,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Loading.h">
-      <Filter>02.GameObjects\04.UI\02.UI_LOADING</Filter>
+      <Filter>02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ScreenFadeEffect.h">
       <Filter>02.GameObjects\04.UI</Filter>
@@ -383,6 +389,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\IceWolfBattle_HowLingState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI_RuneEffect.h">
+      <Filter>02.GameObjects\04.UI\09.UI_RuneEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LOCKON.h">
+      <Filter>02.GameObjects\04.UI\09.UI_LOCKON</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Hawk.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk</Filter>
@@ -522,7 +534,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Loading.cpp">
-      <Filter>02.GameObjects\04.UI\02.UI_LOADING</Filter>
+      <Filter>02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp">
       <Filter>02.GameObjects\04.UI</Filter>
@@ -625,6 +637,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfBattle_HowLingState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_RuneEffect.cpp">
+      <Filter>02.GameObjects\04.UI\09.UI_RuneEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LOCKON.cpp">
+      <Filter>02.GameObjects\04.UI\09.UI_LOCKON</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Hawk.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk</Filter>

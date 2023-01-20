@@ -5,12 +5,13 @@
 
 BEGIN(Client)
 
-class CHP_Font final : public CUI_Base
+
+class CUI_LOCKON final : public CUI_Base
 {
 private:
-	CHP_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CHP_Font(const CHP_Font& rhs);
-	virtual ~CHP_Font() = default;
+	CUI_LOCKON(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_LOCKON(const CUI_LOCKON& rhs);
+	virtual ~CUI_LOCKON() = default;
 
 
 public:
@@ -24,28 +25,28 @@ private:
 	virtual HRESULT Ready_Components(void * pArg) override;
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
 
-private:
-	CTexture*				m_pTextureCom1 = nullptr;
+									 //CVIBuffer_Point*			m_pVIBufferCom1 = nullptr;
 
+private:
+	_float4 m_vRight;
+	_float4 m_vUp;
 
 public:
-	static CHP_Font* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CUI_LOCKON* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 
 private:
-	_uint m_iIndex = 0;
-	_uint m_iYIndex = 0;
-
 	_uint m_itexnum = 0;
-	_uint m_iCurrenthp = 2000;
-	_bool m_bfadein = true;
+	_float m_fcurrentmp = 0.f;
+	_float m_fmaxmp = 4.f;
 
-	_uint m_iCharacternum = 0;
+	_float m_fNext = 50.f;
 
-	_float m_fStart_timer = 0.f;
-	_float m_fnumberY = 0.f;
-	_float m_fNext = 0.f;
+
+	_float m_fcurrent_render_slot_mp = 0.f;
+
+
 
 };
 

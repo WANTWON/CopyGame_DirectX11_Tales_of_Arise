@@ -21,7 +21,7 @@ HRESULT CUI_Combo_font_Hits::Initialize_Prototype()
 
 HRESULT CUI_Combo_font_Hits::Initialize(void * pArg)
 {
-	m_eShaderID = 0;
+	m_eShaderID = 5;
 
 	m_fSize.x = 70.f;
 	m_fSize.y = 20.f;

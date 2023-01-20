@@ -2,6 +2,7 @@
 #include "..\Public\HPbar_World.h"
 
 #include "GameInstance.h"
+#include "Player.h"
 
 CHPbar_World::CHPbar_World(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
@@ -29,7 +30,8 @@ HRESULT CHPbar_World::Initialize(void * pArg)
 	//m_fPosition.x = 1130.f;
 	//m_fPosition.y = 360.f + (m_iIndex * 60.f);
 
-	
+	m_fWorldsizeX = 4.f;
+	m_fWorldsizeY = 0.3f;
 	
 	//if (FAILED(__super::Initialize(pArg)))
 	//	return E_FAIL;
@@ -54,10 +56,12 @@ HRESULT CHPbar_World::Initialize(void * pArg)
 
 int CHPbar_World::Tick(_float fTimeDelta)
 {
+	Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
 	{
 		--m_fcurrenthp;
-		m_pTransformCom->Go_Right(0.0167);
+		m_pTransformCom->Go_Right(0.0167f);
 	}
 		
 
@@ -67,7 +71,7 @@ int CHPbar_World::Tick(_float fTimeDelta)
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
-
+	dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition();
 	SetUp_BillBoard();
 
 	_float3 pos = { 0.f,0.f,0.f };
@@ -78,8 +82,10 @@ int CHPbar_World::Tick(_float fTimeDelta)
 	vpos = XMVectorSetW(vpos, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vpos);
 
-	Set_Scale({ 4.f, 0.3f, 1.f });
-
+	if (m_fCamDistance < 14.6579256)
+		Set_Scale({ m_fWorldsizeX*m_fCamDistance / 13.f, m_fWorldsizeY*m_fCamDistance / 13.f, 1.f });
+	else
+		Set_Scale({ 4.f, 0.3f, 1.f });
 	return OBJ_NOEVENT;
 }
 

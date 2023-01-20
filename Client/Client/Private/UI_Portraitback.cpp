@@ -47,14 +47,14 @@ int CPortraitback::Tick(_float fTimeDelta)
 		//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
 		//m_bmoveleft = true;
 		//m_bfadein = true;
-		m_fAlpha -= 0.01;
+		m_fAlpha -= 0.01f;
 	}
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
 	{
 		//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
 		//m_bmoveleft = true;
 		//m_bfadein = true;
-		m_fAlpha += 0.01;
+		m_fAlpha += 0.01f;
 	}
 
 

@@ -181,17 +181,17 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 	if (m_iIndex < 3)
 	{
 		m_fPosition.x = 1065.f + (m_iIndex * 16);
-		m_fPosition.y = 320.f;
+		m_fPosition.y = 300.f;
 	}
 	else if (m_iIndex == 3)
 	{
 		m_fPosition.x = 1074.f + (m_iIndex * 13);
-		m_fPosition.y = 320.f;
+		m_fPosition.y = 300.f;
 	}
 	else
 	{
 		m_fPosition.x = 1070.f + (m_iIndex * 13);
-		m_fPosition.y = 320.f;
+		m_fPosition.y = 300.f;
 	}
 	
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);

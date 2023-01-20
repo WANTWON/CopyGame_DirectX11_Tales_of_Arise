@@ -2,6 +2,7 @@
 #include "..\Public\UI_MPguage.h"
 
 #include "GameInstance.h"
+#include "Player.h"
 
 CMP_Guage::CMP_Guage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
@@ -20,12 +21,11 @@ HRESULT CMP_Guage::Initialize_Prototype()
 
 HRESULT CMP_Guage::Initialize(void * pArg)
 {
-	if (FAILED(Ready_Components(pArg)))
-		return E_FAIL;
-	m_pTransformCom->Change_Speed(10.f);
-	Set_Scale({ 0.35f, 0.35f, 1.f });
-	//m_fSize.x = 1000.f;
-	//m_fSize.y = 1000.f;
+	
+	
+	//Set_Scale({ 0.35f, 0.35f, 1.f });
+	m_fSize.x = 16.f;
+	m_fSize.y = 16.f;
 	//m_fPosition.x = 600.f;
 	//m_fPosition.y = 600.f;
 	///*m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f;
@@ -40,6 +40,9 @@ HRESULT CMP_Guage::Initialize(void * pArg)
 	//m_vUp = _float4(0.f, 0.5f, 0.f, 0.f);
 	/*pVertices->vLook = _float4(0.f, 0.f, 0.5f, 0.f);*/
 
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -48,14 +51,29 @@ int CMP_Guage::Tick(_float fTimeDelta)
 
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
-	//m_fmaxmp = 7.f;
-	_vector vplayerpos = pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION);
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vplayerpos);
+	Compute_CamDistance(pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
+	m_fPosition.x = dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().x - 85.f;
+	m_fPosition.y = dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().y + (m_fCamDistance / 5.f);
+	
 
-	m_pTransformCom->Go_Left(0.16f);
-	Set_Scale({ 0.25f, 0.25f, 1.f });
-	SetUp_BillBoard();
+	if (m_fCamDistance > 20.f)
+	{
+		m_fNext = 13.f / m_fCamDistance * 20;
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 16.f / m_fCamDistance * 18.f);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, 16.f / m_fCamDistance * 18.f);
+		m_fPosition.x += m_fCamDistance *2.f - 35.f ;//(m_fNext*3);
+	}
+	else
+	{
+		m_fNext = 13.f;
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 16.f);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, 16.f);
+	}
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+
+
 
 	//Set_Scale({ 0.2f,0.2f,1.f });
 	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_V))
@@ -137,7 +155,8 @@ HRESULT CMP_Guage::Render()
 	m_pVIBufferCom->Render();
 	/////////////////////////첫번째마나
 
-	m_pTransformCom->Go_Right(0.025f);
+	m_fPosition.x += m_fNext;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -158,7 +177,8 @@ HRESULT CMP_Guage::Render()
 	m_pVIBufferCom->Render();
 
 	////////////////////////두번째마나
-	m_pTransformCom->Go_Right(0.025f);
+	m_fPosition.x += m_fNext;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -180,7 +200,8 @@ HRESULT CMP_Guage::Render()
 	//////////////////////세번째마나
 	
 
-	m_pTransformCom->Go_Right(0.025f);
+	m_fPosition.x += m_fNext;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -201,7 +222,8 @@ HRESULT CMP_Guage::Render()
 		return S_OK;
 	//////////////////////네번째마나
 
-	m_pTransformCom->Go_Right(0.025f);
+	m_fPosition.x += m_fNext;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -222,7 +244,8 @@ HRESULT CMP_Guage::Render()
 		return S_OK;
 	//////////////////////오번째마나
 
-	m_pTransformCom->Go_Right(0.025f);
+	m_fPosition.x += m_fNext;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -242,7 +265,8 @@ HRESULT CMP_Guage::Render()
 	if (m_fmaxmp == 6)
 		return S_OK;
 	//////////////////////욱번째마나
-	m_pTransformCom->Go_Right(0.025f);
+	m_fPosition.x += m_fNext;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -263,7 +287,8 @@ HRESULT CMP_Guage::Render()
 		return S_OK;
 	//////////////////////칠번째마나
 
-	m_pTransformCom->Go_Right(0.025f);
+	m_fPosition.x += m_fNext;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -284,7 +309,8 @@ HRESULT CMP_Guage::Render()
 		return S_OK;
 	//////////////////////팔번째마나
 
-	m_pTransformCom->Go_Right(0.025f);
+	m_fPosition.x += m_fNext;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -305,11 +331,12 @@ HRESULT CMP_Guage::Render()
 		return S_OK;
 	//////////////////////구번째마나
 
-	m_pTransformCom->Go_Right(0.025f);
+	m_fPosition.x += m_fNext;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (m_fcurrentmp<9.f)
+	if (m_fcurrentmp< 9.f)
 		m_eShaderID = UI_COLOR_BLACK;
 	else if (m_fcurrentmp > 10.f)
 		m_eShaderID = UI_POTRAIT_ALLBLUE;
@@ -376,10 +403,15 @@ HRESULT CMP_Guage::SetUp_ShaderResources()
 
 	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+	/*if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+		return E_FAIL;*/
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
 		return E_FAIL;
 
 	/*if (FAILED(m_pShaderCom->Set_RawValue("g_vCamPosition", &pGameInstance->Get_CamPosition(), sizeof(_float4))))
