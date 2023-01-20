@@ -154,6 +154,7 @@ void CQuadTree::Culling(const CFrustum*	pFrustum, _float3* pVerticesPos, _fmatri
 			true == isIn[1] ||
 			true == isIn[2])
 		{
+		
 			if (false == isDraw[NEIGHBOR_RIGHT])
 			{
 				pIndices[*pNumFaces]._0 = m_iCorners[CORNER_RT];

@@ -20,6 +20,7 @@ public:
 		_float3 vScale = _float3(1.f, 1.f, 1.f);
 		_float3 vRotation = _float3(0.f, 0.f, 0.f);
 		_float m_fAngle = 0.f;
+		_matrix WorldMatrix = XMMatrixIdentity();
 
 	}NONANIMDESC;
 

@@ -176,13 +176,11 @@ HRESULT CLoader::Loading_ForGamePlayModel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	/*For.Prototype_Component_Model_Alphen*/
-	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen"),
-	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Resources/Meshes/Anim/Alphen/Alphen.fbx", PivotMatrix))))
-	return E_FAIL;*/
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Alphen/Alphen.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen"));
 
-	
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/CliffRock/Desert_CliffRock.dat"))))
 		return E_FAIL;
@@ -439,12 +437,17 @@ HRESULT CLoader::Loading_ForGamePlayModel()
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("WoodShielf2"));
 
 
-	_tchar* pTerrainTag = TEXT("Terrain_HeightMap");
 	/*For.Prototype_Component_VIBuffer_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, pTerrainTag,
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Terrain_HeightMap"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap3.bmp"), false))))
 		return E_FAIL;
-	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(pTerrainTag);
+	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("Terrain_HeightMap"));
+
+	/*For.Prototype_Component_VIBuffer_Terrain*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("HeightMapPlane"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Height.bmp"), false))))
+		return E_FAIL;
+	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("HeightMapPlane"));
 
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;

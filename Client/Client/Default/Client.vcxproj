@@ -211,6 +211,7 @@
     <ClInclude Include="..\Public\IceWolfTurnRightState.h" />
     <ClInclude Include="..\public\IceWolfWalkState.h" />
     <ClInclude Include="..\Public\Ice_Wolf.h" />
+    <ClInclude Include="..\Public\InteractObject.h" />
     <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
@@ -294,6 +295,7 @@
     <ClCompile Include="..\Private\IceWolfTurnRightState.cpp" />
     <ClCompile Include="..\private\IceWolfWalkState.cpp" />
     <ClCompile Include="..\Private\Ice_Wolf.cpp" />
+    <ClCompile Include="..\Private\InteractObject.cpp" />
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
