@@ -2,7 +2,6 @@
 #include "Client_Defines.h"
 #include "BaseObj.h"
 #include "GameInstance.h"
-#include "Cell.h"
 
 BEGIN(Engine)
 class CModel;

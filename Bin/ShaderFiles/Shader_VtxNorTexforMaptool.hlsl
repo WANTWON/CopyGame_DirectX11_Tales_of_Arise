@@ -6,7 +6,7 @@ matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 vector			g_vCamPosition;
 
 /* For.Material */
-texture2D		g_DiffuseTexture[2];
+texture2D		g_DiffuseTexture[4];
 float4			g_vMtrlAmbient = float4(1.f, 1.f, 1.f, 1.f);
 float4			g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
 
@@ -75,8 +75,11 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector		vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV * 30.f);
-	vector		vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vDiffuse1 = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vDiffuse2 = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vDiffuse3 = g_DiffuseTexture[2].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vDiffuse4 = g_DiffuseTexture[3].Sample(LinearSampler, In.vTexUV * 30.f);
+
 	vector		vFilter = g_FilterTexture.Sample(LinearSampler, In.vTexUV);
 
 	vector		vBrush = vector(0.f, 0.f, 0.f, 0.f);
@@ -93,9 +96,8 @@ PS_OUT PS_MAIN(PS_IN In)
 		vBrush.a = vBrush.r;
 	}
 
-	vector		vMtrlDiffuse = vSourDiffuse * vFilter + vDestDiffuse * (1.f - vFilter);
-	Out.vDiffuse = vMtrlDiffuse +  vBrush;
-
+	vector		vMtrlDiffuse = vDiffuse1 * vFilter.r + vDiffuse2 * vFilter.g + vDiffuse3 * vFilter.b;
+	Out.vDiffuse = (1-vFilter.r - vFilter.g - vFilter.b)*vDiffuse4 + vMtrlDiffuse + vBrush;
 
 	/*if (Out.vDiffuse.a == 0.0f)
 	discard;*/
@@ -120,13 +122,15 @@ PS_OUT PS_WIRE(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector		vSourDiffuse = vector(1.f, 0.f, 0.f, 1.f);
-	vector		vDestDiffuse = vector(0.f, 0.f,0.f,1.f);
+	vector		vDiffuse1 = vector(1.f, 0.f, 0.f, 1.f);
+	vector		vDiffuse2 = vector(0.f, 1.f, 0.f, 1.f);
+	vector		vDiffuse3 = vector(0.f, 0.f, 1.f, 1.f);
+	vector		vDiffuse4 = vector(0.f, 0.f, 0.f, 1.f);
 
 	/* -1 ~ 1 => 0 ~ 1*/
 
 	vector		vFilter = g_FilterTexture.Sample(PointSampler, In.vTexUV);
-	vector vBrush = vector(0.f,0.f,0.f,0.f);
+	vector		vBrush = vector(0.f,0.f,0.f,0.f);
 
 	if (g_vBrushPos.x - g_fBrushRange < In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fBrushRange &&
 		g_vBrushPos.z - g_fBrushRange < In.vWorldPos.z && In.vWorldPos.z < g_vBrushPos.z + g_fBrushRange)
@@ -140,7 +144,7 @@ PS_OUT PS_WIRE(PS_IN In)
 		vBrush.a = vBrush.r;
 	}
 
-	vector		vMtrlDiffuse = vSourDiffuse * vFilter + vDestDiffuse * (1.f - vFilter);
+	vector		vMtrlDiffuse = vFilter.a* vDiffuse4 + vDiffuse1 * vFilter.r + vDiffuse2 * vFilter.g + vDiffuse3 * vFilter.b ;
 	Out.vDiffuse = vMtrlDiffuse + vBrush;
 
 

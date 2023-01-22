@@ -26,6 +26,8 @@ public:
 		PICKING_TERRAIN_SHAPE, PICKING_TERRAIN_BRUSH,
 	PICKING_MODEL,};
 
+	enum COLOR { RED, GREEN, BLUE};
+
 private:
 	CImgui_Manager();
 	virtual ~CImgui_Manager() = default;
@@ -39,6 +41,7 @@ public:
 public:
 	PICKING_TYPE Get_PickingType() {return (PICKING_TYPE)m_PickingType;}
 	_bool Get_CameraPicking() { return m_bMakeCamera; }
+	_int Get_BrushType() { return m_eBrushType; }
 public:
 	/* For Debug*/
 	void ShowSimpleMousePos(bool* p_open);
@@ -113,6 +116,8 @@ private:
 	CTerrain_Manager::TERRAINDESC			m_pTerrainDesc;
 	CTerrain_Manager::TERRAINSHAPEDESC		m_TerrainShapeDesc;
 	_bool									m_bTerrain_Show = true;
+	_int									m_eBrushType = RED;
+
 
 	/* For Object */
 	CModelManager*							m_pModel_Manager = nullptr;

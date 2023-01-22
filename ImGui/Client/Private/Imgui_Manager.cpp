@@ -1140,7 +1140,7 @@ void CImgui_Manager::Set_Terrain_Shape()
 	ImGui::SameLine();
 	ImGui::DragFloat("##fHeight", &m_TerrainShapeDesc.fHeight, 0.1f);
 
-	ImGui::Text("Radius");
+	ImGui::Text("Radius(Shape&Brush)");
 	ImGui::SameLine();
 	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius, 0.1f);
 
@@ -1165,7 +1165,6 @@ void CImgui_Manager::Set_Terrain_Shape()
 	{
 		Load_Terrain();
 	}
-
 
 }
 
@@ -1331,21 +1330,18 @@ void CImgui_Manager::Set_Brush()
 	ImGui::GetIO().NavActive = false;
 	ImGui::GetIO().WantCaptureMouse = true;
 
-	ImGui::CollapsingHeader("Brush");
-
+	ImGui::CollapsingHeader("Setting Brush Type");
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "RED"); ImGui::SameLine();
+	ImGui::RadioButton("##RED", &m_eBrushType, 0);
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "GREEN"); ImGui::SameLine();
+	ImGui::RadioButton("##GREEN", &m_eBrushType, 1);
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "BLUE"); ImGui::SameLine();
+	ImGui::RadioButton("##BLUE", &m_eBrushType, 2);
+		
 
 	if (m_PickingType == PICKING_TERRAIN_BRUSH)
 	{
 		CPickingMgr::Get_Instance()->Picking();
-	}
-
-	if (ImGui::Button("Save Terrian"))
-	{
-		Save_Terrain();
-	}
-	if (ImGui::Button("Load Terrian"))
-	{
-		Load_Terrain();
 	}
 }
 

@@ -63,6 +63,8 @@ void CTerrain_Manager::Add_PrototypeTag(_tchar * TempTag)
 
 void CTerrain_Manager::Free()
 {
+	for(auto& iter : m_pPrototypeTags)
+		Safe_Delete(iter);
 	m_pPrototypeTags.clear();
 
 	m_pCloneTerrainTags.clear();

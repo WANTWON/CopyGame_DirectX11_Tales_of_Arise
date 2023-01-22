@@ -45,12 +45,15 @@ public:
 	void Set_Picked();
 	void Save_Terrain(HANDLE hFile, _ulong* dwByte);
 	HRESULT Create_FilterTexture();
+	HRESULT Create_FirstFilterTexture();
 
 private:
 	CTexture*							m_pTextureCom[TYPE_END] = { nullptr };
 	CVIBuffer_Terrain*					m_pVIBufferCom = nullptr;
 	ID3D11ShaderResourceView*			m_pFilterTexture = nullptr;
+	_uint*								pPixel = nullptr;
 
+	_float3*							pPixelColor = nullptr;
 
 	_bool	m_bFirst = false;
 	_bool	m_bWireFrame = false;
