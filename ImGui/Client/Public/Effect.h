@@ -34,6 +34,7 @@ public:
 	} EFFECTDESC;
 	
 	EFFECTDESC Get_EffectDesc() { return m_tEffectDesc; }
+	_bool Get_Play() { return m_bPlay; }
 	void Set_Play(_bool bPlay) { m_bPlay = bPlay; }
 
 public:

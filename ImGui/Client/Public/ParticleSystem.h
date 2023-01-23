@@ -10,14 +10,32 @@ END
 BEGIN(Client)
 class CParticleSystem : public CEffect
 {
+public:
+	typedef struct tagParticleDesc
+	{
+		_float m_fParticleDeviationX = 0.f;
+		_float m_fParticleDeviationY = 0.f;
+		_float m_fParticleDeviationZ = 0.f;
+		_float m_fParticleVelocity = 1.f;
+		_float m_fParticleVelocityVariation = 0.f;
+		_float m_fParticleSize = 1.f;
+		_float m_fParticleSizeVariation = 0.f;
+		_float m_fParticlesPerSecond = 1.f;
+		_float m_fParticlesLifetime = 1.f;
+		_int m_iMaxParticles = 1000.f;
+
+		EFFECTDESC m_tEffectDesc;
+	} PARTICLEDESC;
+
 private:
 	struct ParticleType 
 	{
-		_tchar wcTexturePrototypeId[MAX_PATH] = TEXT("");
-		float fPositionX = 0.f, fPositionY = 0.f, fPositionZ = 0.f;
-		float fRed = 0.f, fGreen = 0.f, fBlue = 0.f;
-		float fVelocity = 0.f;
-		bool bActive = false;
+		_float fPositionX = 0.f, fPositionY = 0.f, fPositionZ = 0.f;
+		_float fRed = 0.f, fGreen = 0.f, fBlue = 0.f;
+		_float fVelocity = 0.f;
+		_float fSize = 0.f;
+		_float fLife = 0.f;
+		_bool bActive = false;
 	};
 
 	struct VertexType
@@ -29,6 +47,7 @@ private:
 
 public: /* Getters & Setters */
 	int GetIndexCount() { return m_iIndexCount; }
+	void Set_ParticleDesc(PARTICLEDESC tParticleDesc) { m_tParticleDesc = tParticleDesc; }
 
 public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -59,11 +78,7 @@ private:
 
 private:
 	/* Particle Properties. */
-	_float m_fParticleDeviationX, m_fParticleDeviationY, m_fParticleDeviationZ;
-	_float m_fParticleVelocity, m_fParticleVelocityVariation;
-	_float m_fParticleSize;
-	_float m_fParticlesPerSecond;
-	_int m_iMaxParticles;
+	PARTICLEDESC m_tParticleDesc;
 
 	_int m_fCurrentParticleCount;
 	_float m_fAccumulatedTime;

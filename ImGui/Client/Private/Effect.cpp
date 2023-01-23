@@ -45,6 +45,8 @@ HRESULT CEffect::Render()
 
 HRESULT CEffect::Ready_Components(void * pArg)
 {
+	memcpy(&m_tEffectDesc, (EFFECTDESC*)pArg, sizeof(EFFECTDESC));
+
 	return S_OK;
 }
 

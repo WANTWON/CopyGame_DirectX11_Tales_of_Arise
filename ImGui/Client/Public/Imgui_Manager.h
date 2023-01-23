@@ -11,6 +11,7 @@
 #include "Effect_Manager.h"
 #include "Camera_Manager.h"
 #include "TreasureBox.h"
+#include "ParticleSystem.h"
 
 BEGIN(Engine)
 class CGameObject;
@@ -164,7 +165,7 @@ private:
 	/*
 	* For Effect
 	*/
-	enum TRANSFORM_TYPE { TRANS_SCALE, TRANS_ROTATION, TRANS_END };
+	enum TRANSFORM_TYPE { TRANS_SCALE, TRANS_ROTATION, TRANS_TRANSLATION, TRANS_END };
 
 	CEffect_Manager*						m_pEffectManager = nullptr;
 	vector<string>							m_SavedEffects;
@@ -185,12 +186,14 @@ private:
 	
 	/* Effect Settings */
 	_bool									m_bIsPlaying = false;
+
 	TRANSFORM_TYPE							m_eEffectTransformation = TRANS_SCALE;
 	class CTransform*						m_pEffectTransform = nullptr;
-	_float									m_fX = 1.f, m_fY = 1.f, m_fZ = 1.f;
 	_bool									m_bBillboard = true;
 
 	_float									m_fCurveX = 1.f, m_fCurveY = 1.f, m_fCurveZ = 1.f, m_fCurveTime = 1.f;
+
+	CParticleSystem::PARTICLEDESC			m_tParticleDesc;
 
 public:
 	virtual void Free() override;

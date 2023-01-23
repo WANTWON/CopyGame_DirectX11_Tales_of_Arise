@@ -73,11 +73,11 @@ HRESULT CParticleSystem::Render()
 
 HRESULT CParticleSystem::Ready_Components(void * pArg)
 {
-	memcpy(&m_tEffectDesc, (EFFECTDESC*)pArg, sizeof(EFFECTDESC));
+	__super::Ready_Components(pArg);
 
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
-	TransformDesc.fSpeedPerSec = 0.1f;
+	TransformDesc.fSpeedPerSec = 0.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	/* For.Com_Transform */
@@ -108,29 +108,11 @@ HRESULT CParticleSystem::SetUp_ShaderResources()
 
 HRESULT CParticleSystem::InitializeParticleSystem()
 {
-	/* Set the random Deviation of the Particles (where they can be located when emitted). */
-	m_fParticleDeviationX = 0.5f;
-	m_fParticleDeviationY = 0.1f;
-	m_fParticleDeviationZ = 2.0f;
- 
-	/* Set the Speed and Speed Variation of the Particles. */
-	m_fParticleVelocity = 2.0f;
-	m_fParticleVelocityVariation = .5f;
-
-	/* Set the Size of the Particles. */
-	m_fParticleSize = .3f;
-
-	/* Set the number of Particles to emit per second. */
-	m_fParticlesPerSecond = 10.0f;
-
-	/* Set the maximum number of Particles allowed in the Particle System. */
-	m_iMaxParticles = 5000;
-
 	/* Create the Particle List. */
-	m_Particles = new ParticleType[m_iMaxParticles];
+	m_Particles = new ParticleType[m_tParticleDesc.m_iMaxParticles];
 
 	/* Initialize the Particle List. */
-	for (_int i = 0; i < m_iMaxParticles; i++)
+	for (_int i = 0; i < m_tParticleDesc.m_iMaxParticles; i++)
 		m_Particles[i].bActive = false;
 
 	/* Initialize the current Particle Count to zero since none are emitted yet. */
@@ -151,7 +133,7 @@ HRESULT CParticleSystem::InitializeBuffers()
 	HRESULT result;
 
 	/* Set the maximum number of vertices in the vertex array. */
-	m_iVertexCount = m_iMaxParticles * 6;
+	m_iVertexCount = m_tParticleDesc.m_iMaxParticles * 6;
 
 	/* Set the maximum number of indices in the index array. */
 	m_iIndexCount = m_iVertexCount;
@@ -210,7 +192,7 @@ HRESULT CParticleSystem::InitializeBuffers()
 void CParticleSystem::EmitParticles(_float fTimeDelta)
 {
 	bool bEmitParticle, bFound;
-	float fPositionX, fPositionY, fPositionZ, fVelocity, fRed, fGreen, fBlue;
+	float fPositionX, fPositionY, fPositionZ, fRed, fGreen, fBlue, fVelocity, fSize;
 	int iIndex, i, j;
 
 	/* Increment the frame time. */
@@ -220,27 +202,29 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 	bEmitParticle = false;
 
 	/* Check if it is time to emit a new particle or not. */
-	if (m_fAccumulatedTime > (1.f / m_fParticlesPerSecond))
+	if (m_fAccumulatedTime > (1.f / m_tParticleDesc.m_fParticlesPerSecond))
 	{
 		m_fAccumulatedTime = 0.f;
 		bEmitParticle = true;
 	}
 
 	/* If there are Particles to emit then emit one per frame. */
-	if ((bEmitParticle == true) && (m_fCurrentParticleCount < (m_iMaxParticles - 1)))
+	if ((bEmitParticle == true) && (m_fCurrentParticleCount < (m_tParticleDesc.m_iMaxParticles - 1)))
 	{
 		m_fCurrentParticleCount++;
 
 		/* Now generate the randomized particle properties. */
-		fPositionX = (((float)rand() - (float)rand()) / RAND_MAX) * m_fParticleDeviationX;
-		fPositionY = (((float)rand() - (float)rand()) / RAND_MAX) * m_fParticleDeviationY;
-		fPositionZ = (((float)rand() - (float)rand()) / RAND_MAX) * m_fParticleDeviationZ;
-
-		fVelocity = m_fParticleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_fParticleVelocityVariation;
+		fPositionX = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationX;
+		fPositionY = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationY;
+		fPositionZ = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationZ;
 
 		fRed = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 		fGreen = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 		fBlue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+
+		fVelocity = m_tParticleDesc.m_fParticleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleVelocityVariation;
+		
+		fSize = m_tParticleDesc.m_fParticleSize + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleSizeVariation;
 
 		/* Now since the Particles need to be rendered from back to front for blending we have to sort the particle array.
 		We will sort using Z depth so we need to find where in the list the particle should be inserted. */
@@ -267,6 +251,8 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 			m_Particles[i].fGreen = m_Particles[j].fGreen;
 			m_Particles[i].fBlue = m_Particles[j].fBlue;
 			m_Particles[i].fVelocity = m_Particles[j].fVelocity;
+			m_Particles[i].fSize = m_Particles[j].fSize;
+			m_Particles[i].fLife = m_Particles[j].fLife;
 			m_Particles[i].bActive = m_Particles[j].bActive;
 
 			i--;
@@ -281,38 +267,35 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 		m_Particles[iIndex].fGreen = fGreen;
 		m_Particles[iIndex].fBlue = fBlue;
 		m_Particles[iIndex].fVelocity = fVelocity;
+		m_Particles[iIndex].fSize = fSize;
+		m_Particles[iIndex].fLife = 0.f;
 		m_Particles[iIndex].bActive = true;
 	}
 }
 
 void CParticleSystem::UpdateParticles(_float fTimeDelta)
 {
-	/* Each frame we update all the Particles by making them move downwards using their Position, Velocity, and TimeDelta. */
+	/* Each frame we update all the Particles by making them move using their Position, Velocity, and TimeDelta. */
 	for (_uint i = 0; i < m_fCurrentParticleCount; i++)
-		m_Particles[i].fPositionY = m_Particles[i].fPositionY + (m_Particles[i].fVelocity * fTimeDelta);
-
-	/*if (m_tEffectDesc.bIsBillboard)
 	{
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-		m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
-		RELEASE_INSTANCE(CGameInstance);
-	}*/
+		m_Particles[i].fPositionY = m_Particles[i].fPositionY + (m_Particles[i].fVelocity * fTimeDelta);
+		m_Particles[i].fLife += fTimeDelta;
+	}
 
 	return;
 }
 
 void CParticleSystem::KillParticles()
 {
-	/* Kill all the particles that have gone below a certain height range. */
-	for (_uint i = 0; i < m_iMaxParticles; i++)
+	for (_uint i = 0; i < m_tParticleDesc.m_iMaxParticles; i++)
 	{
-		if ((m_Particles[i].bActive == true) && (m_Particles[i].fPositionY > 5.f))
+		if ((m_Particles[i].bActive == true) && (m_Particles[i].fLife > m_tParticleDesc.m_fParticlesLifetime))
 		{
 			m_Particles[i].bActive = false;
 			m_fCurrentParticleCount--;
 
 			/* Now shift all the live particles back up the array to erase the destroyed particle and keep the array sorted correctly. */
-			for (_uint j = i; j < m_iMaxParticles - 1; j++)
+			for (_uint j = i; j < m_tParticleDesc.m_iMaxParticles - 1; j++)
 			{
 				m_Particles[j].fPositionX = m_Particles[j + 1].fPositionX;
 				m_Particles[j].fPositionY = m_Particles[j + 1].fPositionY;
@@ -321,6 +304,8 @@ void CParticleSystem::KillParticles()
 				m_Particles[j].fGreen = m_Particles[j + 1].fGreen;
 				m_Particles[j].fBlue = m_Particles[j + 1].fBlue;
 				m_Particles[j].fVelocity = m_Particles[j + 1].fVelocity;
+				m_Particles[j].fSize = m_Particles[j + 1].fSize;
+				m_Particles[j].fLife = m_Particles[j + 1].fLife;
 				m_Particles[j].bActive = m_Particles[j + 1].bActive;
 			}
 		}
@@ -345,32 +330,32 @@ HRESULT CParticleSystem::UpdateBuffers()
 	for (i = 0; i < m_fCurrentParticleCount; i++)
 	{
 		/* Bottom Left */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_fParticleSize, m_Particles[i].fPositionY - m_fParticleSize, m_Particles[i].fPositionZ);
+		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_Particles[i].fSize, m_Particles[i].fPositionY - m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(0.0f, 1.0f);
 		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
 		index++;
 		/* Top Left */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_fParticleSize, m_Particles[i].fPositionY + m_fParticleSize, m_Particles[i].fPositionZ);
+		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_Particles[i].fSize, m_Particles[i].fPositionY + m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(0.0f, 0.0f);
 		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
 		index++;
 		/* Bottom Right */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_fParticleSize, m_Particles[i].fPositionY - m_fParticleSize, m_Particles[i].fPositionZ);
+		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_Particles[i].fSize, m_Particles[i].fPositionY - m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(1.0f, 1.0f);
 		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
 		index++;
 		/* Bottom right. */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_fParticleSize, m_Particles[i].fPositionY - m_fParticleSize, m_Particles[i].fPositionZ);
+		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_Particles[i].fSize, m_Particles[i].fPositionY - m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(1.0f, 1.0f);
 		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
 		index++;
 		/* Top left. */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_fParticleSize, m_Particles[i].fPositionY + m_fParticleSize, m_Particles[i].fPositionZ);
+		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_Particles[i].fSize, m_Particles[i].fPositionY + m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(0.0f, 0.0f);
 		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
 		index++;
 		/* Top right. */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_fParticleSize, m_Particles[i].fPositionY + m_fParticleSize, m_Particles[i].fPositionZ);
+		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_Particles[i].fSize, m_Particles[i].fPositionY + m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(1.0f, 0.0f);
 		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
 		index++;
