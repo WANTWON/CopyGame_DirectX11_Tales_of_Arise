@@ -212,6 +212,8 @@
     <ClInclude Include="..\public\IceWolfWalkState.h" />
     <ClInclude Include="..\Public\Ice_Wolf.h" />
     <ClInclude Include="..\Public\InteractObject.h" />
+    <ClInclude Include="..\Public\NonAnim.h" />
+    <ClInclude Include="..\Public\NonAnim_Instance.h" />
     <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
@@ -298,6 +300,8 @@
     <ClCompile Include="..\private\IceWolfWalkState.cpp" />
     <ClCompile Include="..\Private\Ice_Wolf.cpp" />
     <ClCompile Include="..\Private\InteractObject.cpp" />
+    <ClCompile Include="..\Private\NonAnim.cpp" />
+    <ClCompile Include="..\Private\NonAnim_Instance.cpp" />
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
@@ -360,6 +364,7 @@
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxCubeTexture.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModel.hlsl" />
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModelInstance.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPoint.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl" />

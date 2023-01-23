@@ -184,6 +184,12 @@
     <Filter Include="02.GameObjects\01.Actor\03.InteractObject">
       <UniqueIdentifier>{302f8212-a864-4482-aa5e-a307b89d73e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\02.NonAnim\04.NonAnim_Instancing">
+      <UniqueIdentifier>{8ff7f3a8-bea6-4ef9-aab0-5749a3d3a9ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\02.NonAnim\05.NonAnim">
+      <UniqueIdentifier>{6edd5324-28a2-4180-bbb3-6afd9febaeed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -453,6 +459,12 @@
     <ClInclude Include="..\Public\InteractObject.h">
       <Filter>02.GameObjects\01.Actor\03.InteractObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\NonAnim_Instance.h">
+      <Filter>02.GameObjects\02.NonAnim\04.NonAnim_Instancing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NonAnim.h">
+      <Filter>02.GameObjects\02.NonAnim\05.NonAnim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -695,6 +707,12 @@
     <ClCompile Include="..\Private\InteractObject.cpp">
       <Filter>02.GameObjects\01.Actor\03.InteractObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\NonAnim_Instance.cpp">
+      <Filter>02.GameObjects\02.NonAnim\04.NonAnim_Instancing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NonAnim.cpp">
+      <Filter>02.GameObjects\02.NonAnim\05.NonAnim</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -738,6 +756,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPoint.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModelInstance.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

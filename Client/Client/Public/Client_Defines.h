@@ -29,6 +29,7 @@ namespace Client
 		STATETYPE_END,
 		STATETYPE_DEFAULT
 	};
+
 }
 
 #include <process.h>

@@ -121,7 +121,7 @@ private:
 
 	/* For Object */
 	CModelManager*							m_pModel_Manager = nullptr;
-	CNonAnim::NONANIMDESC					m_InitDesc;
+	NONANIMDESC					m_InitDesc;
 	_tchar									m_pFilePath[MAX_PATH] = L"../../../Bin/Resources/Meshes/";
 	vector<string>							m_stLayerTags;
 	vector<const _tchar*>					m_TempLayerTags;

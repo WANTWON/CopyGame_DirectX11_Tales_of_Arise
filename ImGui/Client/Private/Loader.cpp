@@ -65,19 +65,17 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	Safe_AddRef(pGameInstance);
 
-	/* �ؽ��� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("�ؽ��� �ε� ��."));
+	lstrcpy(m_szLoadingText, TEXT("Loading Level"));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_BackGround"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Default%d.jpg"), 2))))
 		return E_FAIL;
 
-	/* ��ü ���� ���� ��. */
-	lstrcpy(m_szLoadingText, TEXT("��ü ���� ��."));
+
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
 		CBackGround::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
+	lstrcpy(m_szLoadingText, TEXT("Finished Loading"));
 
 	m_isFinished = true;
 

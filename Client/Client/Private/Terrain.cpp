@@ -52,7 +52,7 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Filter */
-	if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Filter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
+	if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BattleZoneFilter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -60,7 +60,11 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Navigation */
-	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom)))
+		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_TerrainNormal"), (CComponent**)&m_pNormaltexture[TYPE_DIFFUSE])))
 		return E_FAIL;
 
 
@@ -74,7 +78,7 @@ int CTerrain::Tick(_float fTimeDelta)
 
 void CTerrain::Late_Tick(_float fTimeDelta)
 {
-	m_pVIBufferCom->Culling(m_pTransformCom);
+	//m_pVIBufferCom->Culling(m_pTransformCom);
 
 	if (nullptr != m_pRendererCom)
 	{
@@ -127,7 +131,7 @@ HRESULT CTerrain::Ready_Components(void *pArg)
 		return E_FAIL;
 
 	/* For.Com_Filter */
-	if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Filter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
+	if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BattleZoneFilter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
 		return E_FAIL;	
 
 	/* For.Com_VIBuffer */
@@ -135,7 +139,7 @@ HRESULT CTerrain::Ready_Components(void *pArg)
 		return E_FAIL;
 
 	/* For.Com_Navigation */
-	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom)))
 		return E_FAIL;
 	
 	/* For.Com_Texture */

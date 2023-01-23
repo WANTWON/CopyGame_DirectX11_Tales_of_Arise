@@ -18,8 +18,8 @@ HRESULT CModelManager::Create_Model(LEVEL eLevel, const _tchar* pModelTag, const
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	CNonAnim::NONANIMDESC  NonAnimDesc;
-	memcpy(&NonAnimDesc, &m_InitModelDesc, sizeof(CNonAnim::NONANIMDESC));
+	NONANIMDESC  NonAnimDesc;
+	memcpy(&NonAnimDesc, &m_InitModelDesc, sizeof(NONANIMDESC));
 	char cModelTag[MAX_PATH] = "";
 	WideCharToMultiByte(CP_ACP, 0, pModelTag, MAX_PATH, cModelTag, MAX_PATH, NULL, NULL);
 	strcpy(NonAnimDesc.pModeltag, cModelTag);

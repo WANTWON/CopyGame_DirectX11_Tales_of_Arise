@@ -27,7 +27,8 @@ HRESULT CNonAnim::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if(CImgui_Manager::Get_Instance()->Get_PickingType() != CImgui_Manager::PICKING_TERRAIN_SHAPE)
+	if(CImgui_Manager::Get_Instance()->Get_PickingType() != CImgui_Manager::PICKING_TERRAIN_SHAPE &&
+		strcmp(m_ModelDesc.pModeltag, "Picking_Symbol"))
 		CPickingMgr::Get_Instance()->Add_PickingGroup(this);
 
 	m_eObjectID = OBJ_BLOCK;
@@ -81,7 +82,7 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 
 	XMStoreFloat3(&m_ModelDesc.vPosition, Get_Position());
 	m_ModelDesc.vScale = Get_Scale();
-	m_ModelDesc.WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	m_ModelDesc.WorldMatrix = m_pTransformCom->Get_World4x4();
 }
 
 HRESULT CNonAnim::Render()

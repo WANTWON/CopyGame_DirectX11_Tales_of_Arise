@@ -80,9 +80,9 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector		vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV * 100.f);
-	vector		vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexUV * 100.f);
-	vector		vFilter = g_FilterTexture.Sample(LinearSampler, In.vTexUV*10.f);
+	vector		vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV * 50.f);
+	vector		vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexUV * 50.f);
+	vector		vFilter = g_FilterTexture.Sample(LinearSampler, In.vTexUV);
 
 	vector		vBrush = vector(0.f, 0.f, 0.f, 0.f);
 
@@ -100,29 +100,25 @@ PS_OUT PS_MAIN(PS_IN In)
 	vector		vMtrlDiffuse = vSourDiffuse * vFilter + vDestDiffuse * (1.f - vFilter);
 	Out.vDiffuse = vMtrlDiffuse + vBrush;
 
-	/*if (Out.vDiffuse.a == 0.0f)
-	discard;*/
-
 	Out.vDiffuse.a = 1.f;
 
-	float4 vTextureNormal = g_NormalTexture[0].Sample(LinearSampler, In.vTexUV*100.f);
-	float3 vSourNormal;
+	//float4 vTextureNormal = g_NormalTexture[0].Sample(LinearSampler, In.vTexUV*50.f);
+	//float3 vSourNormal;
+	//vSourNormal = float3(vTextureNormal.x, vTextureNormal.y, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
+	//float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+	//vSourNormal = mul(vSourNormal, WorldMatrix);
+	//vector vNormalOut = vector(vSourNormal * 0.5f + 0.5f, 0.f);
 
-	vSourNormal = float3(vTextureNormal.x, vTextureNormal.y, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
-	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-	vSourNormal = mul(vSourNormal, WorldMatrix);
-	vector vNormalOut = vector(vSourNormal * 0.5f + 0.5f, 0.f);
+	//float4 vTextureNormal2 = g_NormalTexture[1].Sample(LinearSampler, In.vTexUV*50.f);
+	//float3 vDestNormal;
+	//vDestNormal = float3(vTextureNormal2.x, vTextureNormal2.y, sqrt(1 - vTextureNormal2.x * vTextureNormal2.x - vTextureNormal2.y * vTextureNormal2.y));
+	//float3x3 WorldMatrix2 = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+	//vDestNormal = mul(vDestNormal, WorldMatrix2);
+	//vector vNormal2Out = vector(vDestNormal * 0.5f + 0.5f, 0.f);
 
-	float4 vTextureNormal2 = g_NormalTexture[1].Sample(LinearSampler, In.vTexUV*100.f);
-	float3 vDestNormal;
-
-	vDestNormal = float3(vTextureNormal2.x, vTextureNormal2.y, sqrt(1 - vTextureNormal2.x * vTextureNormal2.x - vTextureNormal2.y * vTextureNormal2.y));
-	float3x3 WorldMatrix2 = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-	vDestNormal = mul(vDestNormal, WorldMatrix2);
-	vector vNormal2Out = vector(vDestNormal * 0.5f + 0.5f, 0.f);
-
-	vector		vMtrlNormal = vNormalOut * vFilter + vNormal2Out * (1.f - vFilter);
-	Out.vNormal = vNormalOut;
+	//vector		vMtrlNormal = vNormalOut * vFilter + vNormal2Out * (1.f - vFilter);
+	//Out.vNormal = vMtrlNormal;
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
 	/* near ~ far */
 	/* 0 ~ far */
