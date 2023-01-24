@@ -137,8 +137,8 @@ _bool CNonAnim::Picking(_float3 * PickingPoint)
 		PickingType == CImgui_Manager::PICKING_TERRAIN_SHAPE)
 		return false;
 	
-	if (true == m_pModelCom->Picking(m_pTransformCom, PickingPoint))
-		return true; 
+	//if (true == m_pModelCom->Picking(m_pTransformCom, PickingPoint))
+	//	return true; 
 
 	return false;
 }
