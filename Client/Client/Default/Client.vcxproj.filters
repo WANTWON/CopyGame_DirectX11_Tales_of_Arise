@@ -205,6 +205,12 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates">
       <UniqueIdentifier>{27632710-1fc5-4f94-9ac7-fae665b2b920}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\02.NonAnim\04.NonAnim_Instancing">
+      <UniqueIdentifier>{8ff7f3a8-bea6-4ef9-aab0-5749a3d3a9ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\02.NonAnim\05.NonAnim">
+      <UniqueIdentifier>{6edd5324-28a2-4180-bbb3-6afd9febaeed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -534,6 +540,12 @@
     <ClInclude Include="..\Public\SlimeBattle_RunState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\NonAnim_Instance.h">
+      <Filter>02.GameObjects\02.NonAnim\04.NonAnim_Instancing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NonAnim.h">
+      <Filter>02.GameObjects\02.NonAnim\05.NonAnim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -833,6 +845,12 @@
     <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\NonAnim_Instance.cpp">
+      <Filter>02.GameObjects\02.NonAnim\04.NonAnim_Instancing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NonAnim.cpp">
+      <Filter>02.GameObjects\02.NonAnim\05.NonAnim</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -840,9 +858,6 @@
     </Image>
     <Image Include="small.ico">
       <Filter>98.Default</Filter>
-    </Image>
-    <Image Include="..\..\..\Bin\Resources\Textures\UI\numberfont\font0.dds">
-      <Filter>01.Levels\00.Loading</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -876,6 +891,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPoint.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModelInstance.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

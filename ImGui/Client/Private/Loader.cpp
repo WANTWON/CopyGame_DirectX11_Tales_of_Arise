@@ -65,19 +65,17 @@ HRESULT CLoader::Loading_ForLogoLevel()
 
 	Safe_AddRef(pGameInstance);
 
-	/* �ؽ��� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("�ؽ��� �ε� ��."));
+	lstrcpy(m_szLoadingText, TEXT("Loading Level"));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_BackGround"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Default%d.jpg"), 2))))
 		return E_FAIL;
 
-	/* ��ü ���� ���� ��. */
-	lstrcpy(m_szLoadingText, TEXT("��ü ���� ��."));
+
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
 		CBackGround::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("�ε��� �Ϸ�Ǿ����ϴ�."));
+	lstrcpy(m_szLoadingText, TEXT("Finished Loading"));
 
 	m_isFinished = true;
 
@@ -92,21 +90,16 @@ HRESULT CLoader::Loading_ForClient()
 	CModelManager* pModelManager = GET_INSTANCE(CModelManager);
 
 	/* �ؽ��� �ε� ��. */
-	lstrcpy(m_szLoadingText, TEXT("�ؽ��� �ε� ��."));
+	lstrcpy(m_szLoadingText, TEXT("Loading Texture"));
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/MP_snow%d_D.dds"), 2))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/ForImguiDebug/Texture%d.dds"), 7))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Brush */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Brush"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Brush2.png"), 1))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_Filter */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Filter"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.dds"), 1))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Picking_Symbol"),

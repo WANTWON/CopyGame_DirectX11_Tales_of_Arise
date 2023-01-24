@@ -113,14 +113,14 @@ PS_OUT PS_MAIN(PS_IN In)
 	float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	float3 vNormal;
 
-	vNormal = float3(vTextureNormal.x, vTextureNormal.y, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
+	vNormal = float3(vTextureNormal.x*2.f-1.f, vTextureNormal.y*2.f-1.f, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
 
 	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
 	vNormal = mul(vNormal, WorldMatrix);
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);
 	Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV) * g_bGlow;
 	Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);
 

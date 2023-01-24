@@ -163,22 +163,21 @@ HRESULT CMeshContainer_Instance::Initialize_Prototype(CModel::TYPE eModelType, H
 	VTXMATRIX* pInstanceVtx = new VTXMATRIX[m_iNumVertices];
 	m_pInstance = new VTXMATRIX[m_iNumVertices];
 
+
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
+		NONANIMDESC  ModelDesc;
 		_float3 vPos, vScale, vRotation;
-		_float4x4 matDataMatrix;
-		_int iType;
 
-		ReadFile(hDataFile, &vPos, sizeof(_float3), &dwDataByte, nullptr);
-		ReadFile(hDataFile, &vScale, sizeof(_float3), &dwDataByte, nullptr);
-		ReadFile(hDataFile, &vRotation, sizeof(_float3), &dwDataByte, nullptr);
-		ReadFile(hDataFile, &iType, sizeof(_int), &dwDataByte, nullptr);
+		ReadFile(hDataFile, &(ModelDesc), sizeof(NONANIMDESC), &dwDataByte, nullptr);
+		vPos = ModelDesc.vPosition;
+		vScale = ModelDesc.vScale;
+		vRotation = ModelDesc.vRotation;
 
-		ReadFile(hDataFile, &matDataMatrix, sizeof(_float4x4), &dwDataByte, nullptr);
-		pInstanceVtx[i].vRight = *(_float4*)&matDataMatrix.m[0];
-		pInstanceVtx[i].vUp = *(_float4*)&matDataMatrix.m[1];
-		pInstanceVtx[i].vLook = *(_float4*)&matDataMatrix.m[2];
-		pInstanceVtx[i].vPosition = *(_float4*)&matDataMatrix.m[3];
+		pInstanceVtx[i].vRight = *(_float4*)&ModelDesc.WorldMatrix.m[0];
+		pInstanceVtx[i].vUp = *(_float4*)&ModelDesc.WorldMatrix.m[1];
+		pInstanceVtx[i].vLook = *(_float4*)&ModelDesc.WorldMatrix.m[2];
+		pInstanceVtx[i].vPosition = *(_float4*)&ModelDesc.WorldMatrix.m[3];
 
 		m_pInstance[i] = pInstanceVtx[i];
 	}
@@ -253,18 +252,18 @@ void CMeshContainer_Instance::Tick(void)
 
 	for (_uint i = 0; i < m_iOriginalInstance; ++i)
 	{
-		if (true == pFrustum->isIn_WorldFrustum(XMLoadFloat4(&m_pInstance[i].vPosition), 1.f))
+		if (true == pFrustum->isIn_WorldFrustum(XMLoadFloat4(&m_pInstance[i].vPosition), 2.f))
 			vInstance.push_back(m_pInstance[i]);
 	}
 
-	m_iNumInstance = vInstance.size();
+	m_iNumInstance = (_uint)vInstance.size();
 
 	D3D11_MAPPED_SUBRESOURCE		MappedSubResource;
 	ZeroMemory(&MappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubResource);
 
-	for (_int i = 0; i < m_iNumInstance; ++i)
+	for (_uint i = 0; i < m_iNumInstance; ++i)
 		((VTXMATRIX*)(MappedSubResource.pData))[i] = vInstance[i];
 
 	m_pContext->Unmap(m_pInstanceBuffer, 0);

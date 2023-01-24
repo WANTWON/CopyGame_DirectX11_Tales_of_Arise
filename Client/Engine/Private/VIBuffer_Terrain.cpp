@@ -410,7 +410,7 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3* pOut)
 			if (true == TriangleTests::Intersects((FXMVECTOR)vRayPos, (FXMVECTOR)vRayDir, (FXMVECTOR)vTemp_1, (GXMVECTOR)vTemp_2, (HXMVECTOR)vTemp_3, fDist))
 			{
 				_vector	vPickPos = vRayPos + vRayDir * fDist;
-
+				XMStoreFloat3(&m_bPickingLocalPos ,vPickPos);
 				XMStoreFloat3(pOut, XMVector3TransformCoord(vPickPos, WorldMatrix));
 
 				Safe_Release(pPicking);

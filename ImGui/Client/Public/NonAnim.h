@@ -12,17 +12,6 @@ BEGIN(Client)
 
 class CNonAnim final : public CBaseObj
 {
-public:
-	typedef struct NonAnimModelTag
-	{
-		char pModeltag[MAX_PATH] = "";
-		_float3 vPosition = _float3(0.f, 0.f, 0.f);
-		_float3 vScale = _float3(1.f, 1.f, 1.f);
-		_float3 vRotation = _float3(0.f, 0.f, 0.f);
-		_float m_fAngle = 0.f;
-		_matrix WorldMatrix = XMMatrixIdentity();
-
-	}NONANIMDESC;
 
 private:
 	CNonAnim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

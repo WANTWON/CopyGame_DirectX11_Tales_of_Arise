@@ -311,8 +311,8 @@ void CImgui_Manager::BrowseForFolder()
 
 			HANDLE hFile = 0;
 			_ulong dwByte = 0;
-			CNonAnim::NONANIMDESC  ModelDesc;
-			_uint iNum = 0;
+			NONANIMDESC  ModelDesc;
+			_int iNum = 0;
 			_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 			m_TempLayerTags.push_back(LayerTag);
 			m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
@@ -331,7 +331,7 @@ void CImgui_Manager::BrowseForFolder()
 				return;
 
 			/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
-			WriteFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+			WriteFile(hFile, &(iNum), sizeof(_int), &dwByte, nullptr);
 
 			for (auto& iter : *plistClone)
 			{
@@ -339,7 +339,7 @@ void CImgui_Manager::BrowseForFolder()
 					continue;
 
 				ModelDesc = dynamic_cast<CNonAnim*>(iter)->Get_ModelDesc();
-				WriteFile(hFile, &ModelDesc, sizeof(CNonAnim::NONANIMDESC), &dwByte, nullptr);
+				WriteFile(hFile, &ModelDesc, sizeof(NONANIMDESC), &dwByte, nullptr);
 
 			}
 
@@ -373,8 +373,8 @@ void CImgui_Manager::BrowseForFolder()
 
 			HANDLE hFile = 0;
 			_ulong dwByte = 0;
-			CNonAnim::NONANIMDESC  ModelDesc;
-			_uint iNum = 0;
+			NONANIMDESC  ModelDesc;
+			_int iNum = 0;
 			LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 			_matrix			PivotMatrix = XMMatrixIdentity();
 
@@ -386,11 +386,11 @@ void CImgui_Manager::BrowseForFolder()
 				return;
 
 			/* 타일의 개수 받아오기 */
-			ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+			ReadFile(hFile, &(iNum), sizeof(_int), &dwByte, nullptr);
 
 			for (_uint i = 0; i < iNum; ++i)
 			{
-				ReadFile(hFile, &(ModelDesc), sizeof(CNonAnim::NONANIMDESC), &dwByte, nullptr);
+				ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 				m_pModel_Manager->Set_InitModelDesc(ModelDesc);
 				_tchar			szModeltag[MAX_PATH] = TEXT("");
 				MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, (_int)strlen(ModelDesc.pModeltag), szModeltag, MAX_PATH);
@@ -1140,7 +1140,7 @@ void CImgui_Manager::Set_Terrain_Shape()
 	ImGui::SameLine();
 	ImGui::DragFloat("##fHeight", &m_TerrainShapeDesc.fHeight, 0.1f);
 
-	ImGui::Text("Radius");
+	ImGui::Text("Radius(Shape&Brush)");
 	ImGui::SameLine();
 	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius, 0.1f);
 
@@ -1165,7 +1165,6 @@ void CImgui_Manager::Set_Terrain_Shape()
 	{
 		Load_Terrain();
 	}
-
 
 }
 
@@ -1331,21 +1330,18 @@ void CImgui_Manager::Set_Brush()
 	ImGui::GetIO().NavActive = false;
 	ImGui::GetIO().WantCaptureMouse = true;
 
-	ImGui::CollapsingHeader("Brush");
-
+	ImGui::CollapsingHeader("Setting Brush Type");
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "RED"); ImGui::SameLine();
+	ImGui::RadioButton("##RED", &m_eBrushType, 0);
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "GREEN"); ImGui::SameLine();
+	ImGui::RadioButton("##GREEN", &m_eBrushType, 1);
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "BLUE"); ImGui::SameLine();
+	ImGui::RadioButton("##BLUE", &m_eBrushType, 2);
+		
 
 	if (m_PickingType == PICKING_TERRAIN_BRUSH)
 	{
 		CPickingMgr::Get_Instance()->Picking();
-	}
-
-	if (ImGui::Button("Save Terrian"))
-	{
-		Save_Terrain();
-	}
-	if (ImGui::Button("Load Terrian"))
-	{
-		Load_Terrain();
 	}
 }
 

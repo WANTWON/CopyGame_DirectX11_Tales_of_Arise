@@ -110,13 +110,13 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
 	/* 0 ~ 1 => -1 ~ 1*/
 	vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
-	vector vAmbientDesc = g_AmbientTexture.Sample(LinearSampler, In.vTexUV);
+	//vector vAmbientDesc = g_AmbientTexture.Sample(LinearSampler, In.vTexUV);
 
 	float fViewZ = vDepthDesc.y * 1000.f;
 
 	vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient * vAmbientDesc));
+	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient));
 	Out.vShade.a = 1.f;
 
 	vector vWorldPos = (vector)0.f;
@@ -144,7 +144,7 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_POINT(PS_IN In)
 	/* 0 ~ 1 => -1 ~ 1*/
 	vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
-	vector vAmbientDesc = g_AmbientTexture.Sample(LinearSampler, In.vTexUV);
+	//vector vAmbientDesc = g_AmbientTexture.Sample(LinearSampler, In.vTexUV);
 
 	float fViewZ = vDepthDesc.y * 1000.f;
 
@@ -163,7 +163,7 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_POINT(PS_IN In)
 	float fDistance = length(vLightDir);
 	float fAtt = saturate((g_fLightRange - fDistance) / g_fLightRange);
 
-	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient * vAmbientDesc));
+	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient ));
 	Out.vShade *= fAtt;
 	Out.vShade.a = 1.f;
 
@@ -270,7 +270,6 @@ BlendState BS_LightBlending
 {
 	BlendEnable[0] = true;
 	BlendEnable[1] = true;
-
 	SrcBlend = one;
 	DestBlend = one;
 	BlendOp = add;

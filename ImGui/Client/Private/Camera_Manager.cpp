@@ -19,7 +19,7 @@ HRESULT CCamera_Manager::Add_Camera()
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	
-	CNonAnim::NONANIMDESC  NonAnimDesc;
+	NONANIMDESC  NonAnimDesc;
 	CTransform* pTransform = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), TEXT("Com_Transform"));
 
 	if (pTransform == nullptr)
@@ -46,7 +46,7 @@ HRESULT CCamera_Manager::Add_Camera(_float3 position)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 
-	CNonAnim::NONANIMDESC  NonAnimDesc;
+	NONANIMDESC  NonAnimDesc;
 	NonAnimDesc.vPosition = position;
 	char pModeltag[MAX_PATH] = "Boulder.fbx";
 	strcpy(NonAnimDesc.pModeltag, pModeltag);

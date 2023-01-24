@@ -94,7 +94,7 @@ HRESULT CNavigation_Manager::Add_ClickedSymbol(_float3 vClickPos, SYMBOL Symbolt
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	CNonAnim::NONANIMDESC NonAnimDesc;
+	NONANIMDESC NonAnimDesc;
 	char cModelTag[MAX_PATH] = "";
 	WideCharToMultiByte(CP_ACP, 0, TEXT("Picking_Symbol"), MAX_PATH, cModelTag, MAX_PATH, NULL, NULL);
 	strcpy(NonAnimDesc.pModeltag, cModelTag);
