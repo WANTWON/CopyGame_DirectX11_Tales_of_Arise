@@ -7,9 +7,6 @@ vector			g_vCamPosition;
 
 /* For.Material */
 texture2D		g_DiffuseTexture[4];
-float4			g_vMtrlAmbient = float4(1.f, 1.f, 1.f, 1.f);
-float4			g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
-
 
 texture2D		g_BrushTexture;
 float4			g_vBrushPos = float4(5.f, 0.f, 5.f, 1.f);

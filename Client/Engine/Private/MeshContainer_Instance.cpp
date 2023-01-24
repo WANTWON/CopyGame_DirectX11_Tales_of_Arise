@@ -252,18 +252,18 @@ void CMeshContainer_Instance::Tick(void)
 
 	for (_uint i = 0; i < m_iOriginalInstance; ++i)
 	{
-		if (true == pFrustum->isIn_WorldFrustum(XMLoadFloat4(&m_pInstance[i].vPosition), 3.f))
+		if (true == pFrustum->isIn_WorldFrustum(XMLoadFloat4(&m_pInstance[i].vPosition), 2.f))
 			vInstance.push_back(m_pInstance[i]);
 	}
 
-	m_iNumInstance = vInstance.size();
+	m_iNumInstance = (_uint)vInstance.size();
 
 	D3D11_MAPPED_SUBRESOURCE		MappedSubResource;
 	ZeroMemory(&MappedSubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
 	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubResource);
 
-	for (_int i = 0; i < m_iNumInstance; ++i)
+	for (_uint i = 0; i < m_iNumInstance; ++i)
 		((VTXMATRIX*)(MappedSubResource.pData))[i] = vInstance[i];
 
 	m_pContext->Unmap(m_pInstanceBuffer, 0);

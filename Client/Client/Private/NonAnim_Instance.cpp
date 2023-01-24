@@ -47,14 +47,14 @@ int CNonAnim_Instance::Tick(_float fTimeDelta)
 	if (__super::Tick(fTimeDelta))
 		return OBJ_DEAD;
 
-	m_pModelCom->Update();
-
 	return OBJ_NOEVENT;
 }
 
 void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	m_pModelCom->Update();
 
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 

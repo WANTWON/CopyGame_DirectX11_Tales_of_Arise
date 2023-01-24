@@ -355,7 +355,6 @@
     <ResourceCompile Include="Client.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\Bin\Resources\Textures\UI\numberfont\font0.dds" />
     <Image Include="Client.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
