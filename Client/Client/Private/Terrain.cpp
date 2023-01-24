@@ -44,7 +44,7 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
 		return E_FAIL;
 
 	/* For.Com_Brush */
@@ -64,7 +64,7 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_TerrainNormal"), (CComponent**)&m_pNormaltexture[TYPE_DIFFUSE])))
+	if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_TerrainNormal_SnowBattle"), (CComponent**)&m_pNormaltexture[TYPE_DIFFUSE])))
 		return E_FAIL;
 
 
@@ -170,16 +170,20 @@ HRESULT CTerrain::SetUp_ShaderResources()
 	ID3D11ShaderResourceView*		pSRVs[] = {
 		m_pTextureCom[TYPE_DIFFUSE]->Get_SRV(0), 
 		m_pTextureCom[TYPE_DIFFUSE]->Get_SRV(1),
+		m_pTextureCom[TYPE_DIFFUSE]->Get_SRV(2),
+		m_pTextureCom[TYPE_DIFFUSE]->Get_SRV(3),
 	};
 
 	ID3D11ShaderResourceView*		pNormalSRVs[] = {
 		m_pNormaltexture[TYPE_DIFFUSE]->Get_SRV(0),
 		m_pNormaltexture[TYPE_DIFFUSE]->Get_SRV(1),
+		m_pNormaltexture[TYPE_DIFFUSE]->Get_SRV(2),
+		m_pNormaltexture[TYPE_DIFFUSE]->Get_SRV(3),
 	};
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceViewArray("g_DiffuseTexture", pSRVs, 2)))
+	if (FAILED(m_pShaderCom->Set_ShaderResourceViewArray("g_DiffuseTexture", pSRVs, 4)))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceViewArray("g_NormalTexture", pNormalSRVs, 2)))
+	if (FAILED(m_pShaderCom->Set_ShaderResourceViewArray("g_NormalTexture", pNormalSRVs, 4)))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_BrushTexture", m_pTextureCom[TYPE_BRUSH]->Get_SRV(0))))
 		return E_FAIL;

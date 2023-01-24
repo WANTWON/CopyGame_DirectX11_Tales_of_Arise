@@ -98,8 +98,8 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	for (_uint i = 0; i< iNum; ++i)
 	{
 		ReadFile(hFile, &LightDesc, sizeof(LIGHTDESC), &dwByte, nullptr);
-		if (0 == dwByte)
-			break;
+		//if (0 == dwByte)
+			//break;
 
 		if(LightDesc.eType == LIGHTDESC::TYPE_POINT)
 			LightDesc.vPosition.w = 1.f;
