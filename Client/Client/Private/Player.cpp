@@ -255,7 +255,7 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 
 	switch (eLevel)
 	{
-	case Client::LEVEL_GAMEPLAY:
+	case Client::LEVEL_BATTLE:
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Navigation")));
 		break;
 	}

@@ -44,15 +44,15 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_Terrain_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
 		return E_FAIL;
 
 	/* For.Com_Brush */
-	if (FAILED(__super::Add_Components(TEXT("Com_Brush"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Brush"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
+	if (FAILED(__super::Add_Components(TEXT("Com_Brush"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_Brush"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
 		return E_FAIL;
 
 	/* For.Com_Filter */
-	if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BattleZoneFilter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
+	if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_BattleZoneFilter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
@@ -64,7 +64,7 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_TerrainNormal_SnowBattle"), (CComponent**)&m_pNormaltexture[TYPE_DIFFUSE])))
+	if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_TerrainNormal_SnowBattle"), (CComponent**)&m_pNormaltexture[TYPE_DIFFUSE])))
 		return E_FAIL;
 
 
@@ -123,15 +123,15 @@ HRESULT CTerrain::Ready_Components(void *pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
 		return E_FAIL;
 
 	/* For.Com_Brush */
-	if (FAILED(__super::Add_Components(TEXT("Com_Brush"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Brush"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
+	if (FAILED(__super::Add_Components(TEXT("Com_Brush"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_Brush"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
 		return E_FAIL;
 
 	/* For.Com_Filter */
-	if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_BattleZoneFilter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
+	if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_BattleZoneFilter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
 		return E_FAIL;	
 
 	/* For.Com_VIBuffer */
@@ -143,7 +143,7 @@ HRESULT CTerrain::Ready_Components(void *pArg)
 		return E_FAIL;
 	
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_TerrainNormal"), (CComponent**)&m_pNormaltexture[TYPE_DIFFUSE])))
+	if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_TerrainNormal"), (CComponent**)&m_pNormaltexture[TYPE_DIFFUSE])))
 		return E_FAIL;
 
 	return S_OK;

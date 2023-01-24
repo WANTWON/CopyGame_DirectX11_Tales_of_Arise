@@ -50,7 +50,7 @@ int CUI_Screen::Tick(_float fTimeDelta)
 			//++m_itexnum;
 			/*CScreenFadeEffect::SCREENFADE_DESC fadedesc;
 			fadedesc.bin = true;
-			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"), LEVEL_GAMEPLAY, TEXT("fadeeffect"), &fadedesc);*/
+			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"), LEVEL_SNOWFIELD, TEXT("fadeeffect"), &fadedesc);*/
 			m_ftimer = 0.f;
 		}
 

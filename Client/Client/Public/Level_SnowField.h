@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CLevel_GamePlay final : public CLevel
+class CLevel_SnowField final : public CLevel
 {
 private:
-	CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CLevel_GamePlay() = default;
+	CLevel_SnowField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLevel_SnowField() = default;
 
 public:
 	virtual HRESULT Initialize();
@@ -29,7 +29,7 @@ public:
 	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
 
 public:
-	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLevel_SnowField* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 };
 

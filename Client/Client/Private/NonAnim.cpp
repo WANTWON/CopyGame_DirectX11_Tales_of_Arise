@@ -56,9 +56,11 @@ int CNonAnim::Tick(_float fTimeDelta)
 void CNonAnim::Late_Tick(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	_float fRadius = max(Get_Scale().z, max(Get_Scale().x, Get_Scale().y)) + 20.f;
-	if (Check_IsinFrustum(fRadius) == false)
-		goto FAILD_CULLING;
+	if (Check_IsinFrustum(20.f) == false)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return;
+	}
 
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 
