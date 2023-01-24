@@ -721,9 +721,6 @@
     <Image Include="small.ico">
       <Filter>98.Default</Filter>
     </Image>
-    <Image Include="..\..\..\Bin\Resources\Textures\UI\numberfont\font0.dds">
-      <Filter>01.Levels\00.Loading</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
