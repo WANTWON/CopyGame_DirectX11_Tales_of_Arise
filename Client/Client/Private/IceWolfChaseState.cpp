@@ -10,24 +10,24 @@ CChaseState::CChaseState(CIce_Wolf * pIceWolf)
 	m_pOwner = pIceWolf;
 }
 
-CHawkState * CChaseState::AI_Behaviour(_float fTimeDelta)
+CIceWolfState * CChaseState::AI_Behaviour(_float fTimeDelta)
 {
 	
 	return nullptr;
 }
 
-CHawkState * CChaseState::Tick(_float fTimeDelta)
+CIceWolfState * CChaseState::Tick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 	Find_Target();
 
 
-	if (m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())))
+	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
 	return nullptr;
 }
 
-CHawkState * CChaseState::LateTick(_float fTimeDelta)
+CIceWolfState * CChaseState::LateTick(_float fTimeDelta)
 {
 	if (false == m_bBattleMode)
 	{

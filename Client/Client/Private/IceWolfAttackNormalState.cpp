@@ -9,18 +9,18 @@ CAttackNormalState::CAttackNormalState(class CIce_Wolf* pIceWolf)
 	m_pOwner = pIceWolf;
 }
 
-CHawkState * CAttackNormalState::AI_Behaviour(_float fTimeDelta)
+CIceWolfState * CAttackNormalState::AI_Behaviour(_float fTimeDelta)
 {
 
 
 	return nullptr;
 }
 
-CHawkState * CAttackNormalState::Tick(_float fTimeDelta)
+CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
 {
-	m_bAnimFinish = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	m_pOwner->Check_Navigation();
+	
 	m_fTarget_Distance = Find_BattleTarget();
 
 	
@@ -28,7 +28,7 @@ CHawkState * CAttackNormalState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CHawkState * CAttackNormalState::LateTick(_float fTimeDelta)
+CIceWolfState * CAttackNormalState::LateTick(_float fTimeDelta)
 {
 
 	m_iRand = rand() % 2;
@@ -37,20 +37,30 @@ CHawkState * CAttackNormalState::LateTick(_float fTimeDelta)
 
 	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 	
-	if(10 < m_fTarget_Distance)
+	if(6 < m_fTarget_Distance)
 	m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
 
 
 
-		if (m_fIdleAttackTimer > 3.f && m_iRand == 0 && true == m_bAnimFinish)
-			return new CAttackNormalState(m_pOwner);
+		//if (m_fIdleAttackTimer > 3.f && m_iRand == 0 && true == m_bIsAnimationFinished)
+		//	return new CAttackNormalState(m_pOwner);
 
-		else if (m_fIdleAttackTimer > 3.f && m_iRand == 1 && true == m_bAnimFinish)
+		//else if (m_fIdleAttackTimer > 3.f && m_iRand == 1 && true == m_bIsAnimationFinished)
+		//	return new CBattle_IdleState(m_pOwner);
+
+		//else m_fIdleAttackTimer += fTimeDelta;
+
+		if (true == m_bIsAnimationFinished)
 			return new CBattle_IdleState(m_pOwner);
 
-		else m_fIdleAttackTimer += fTimeDelta;
+		else
+		{
+			_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
 
+			m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 
+			m_pOwner->Check_Navigation();
+		}
 
 
 	return nullptr;

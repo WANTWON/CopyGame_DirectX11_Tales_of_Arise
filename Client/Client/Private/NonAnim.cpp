@@ -78,13 +78,9 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 	}
 
 	Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
-	
 	RELEASE_INSTANCE(CGameInstance);
 	return;
 
-FAILD_CULLING:
-	RELEASE_INSTANCE(CGameInstance);
-	return;
 }
 
 HRESULT CNonAnim::Render()

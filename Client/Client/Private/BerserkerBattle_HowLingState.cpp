@@ -32,10 +32,8 @@ CBerserkerState * CBattle_HowLingState::Tick(_float fTimeDelta)
 
 CBerserkerState * CBattle_HowLingState::LateTick(_float fTimeDelta)
 {
-	
-
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	
 
 
 	if (m_fIdleAttackTimer > 3.f && true == m_bAnimFinish)

@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "Hawk.h"
 #include "Client_Defines.h"
-
+#include "Collision_Manger.h"
 
 BEGIN(Client)
 class CHawkState
@@ -15,6 +15,9 @@ public:
 		STATE_MOVE,
 		STATE_DISCOVER,
 		STATE_BATTLE,
+		STATE_GRAB_START,
+		STATE_GRAB_LOOP,
+		STATE_GRAB_END,
 		STATE_END
 	};
 
@@ -95,11 +98,11 @@ protected:
 			_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 			_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
-			_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+			_float fDistance = XMVectorGetY(XMVector3Length(vPlayerPosition - vPosition));
 			return fDistance;
 
 			
-
+			m_pOwner->Get_Transform()->Change_Speed(m_pOwner->Get_Stats().m_fRunSpeed);
 			if (fDistance < m_pOwner->Get_Attack_BiteRadius())
 			{
 

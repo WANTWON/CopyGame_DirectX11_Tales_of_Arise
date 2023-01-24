@@ -17,13 +17,13 @@ CIdleState::CIdleState(CIce_Wolf* pIceWolf)
 	m_pOwner = pIceWolf;
 }
 
-CHawkState * CIdleState::AI_Behaviour(_float fTimeDelta)
+CIceWolfState * CIdleState::AI_Behaviour(_float fTimeDelta)
 {
 	Find_Target();
 	return nullptr;
 }
 
-CHawkState * CIdleState::Tick(_float fTimeDelta)
+CIceWolfState * CIdleState::Tick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation(); // ÀÚÀ¯
 	Find_Target();
@@ -36,7 +36,7 @@ CHawkState * CIdleState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CHawkState * CIdleState::LateTick(_float fTimeDelta)
+CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 {
 	
 
