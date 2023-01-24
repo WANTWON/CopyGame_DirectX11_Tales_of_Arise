@@ -14,8 +14,8 @@ namespace Client
 
 	typedef struct ObjectInfo
 	{
-		int iMaxHp;
-		int iCurrentHp;
+		float iMaxHp;
+		float iCurrentHp;
 		int iDamage;
 		int iCoin = 100;
 

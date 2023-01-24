@@ -83,13 +83,9 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 		//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 
 	Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
-	
 	RELEASE_INSTANCE(CGameInstance);
 	return;
 
-FAILD_CULLING:
-	RELEASE_INSTANCE(CGameInstance);
-	return;
 }
 
 HRESULT CNonAnim::Render()
