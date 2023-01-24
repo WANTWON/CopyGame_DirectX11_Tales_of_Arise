@@ -56,6 +56,9 @@ int CNonAnim::Tick(_float fTimeDelta)
 void CNonAnim::Late_Tick(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	_float fRadius = max(Get_Scale().z, max(Get_Scale().x, Get_Scale().y)) + 20.f;
+	if (Check_IsinFrustum(fRadius) == false)
+		goto FAILD_CULLING;
 
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 
@@ -73,14 +76,6 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 			m_pRendererCom->Add_Debug(m_pSPHERECom);
 #endif
 	}
-
-	CBaseObj* pPlayer = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-	_float fDistanceX = fabsf(XMVectorGetX(pPlayer->Get_TransformState(CTransform::STATE_TRANSLATION)) - XMVectorGetX(Get_TransformState(CTransform::STATE_TRANSLATION)));
-	_float fDistanceZ = fabsf(XMVectorGetZ(pPlayer->Get_TransformState(CTransform::STATE_TRANSLATION)) - XMVectorGetZ(Get_TransformState(CTransform::STATE_TRANSLATION)));
-
-	
-	//if (iLevel == LEVEL_GAMEPLAY && fDistanceX < 30.f && fDistanceZ < 30.f)
-		//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 
 	Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 	
