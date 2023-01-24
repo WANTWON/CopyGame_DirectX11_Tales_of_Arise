@@ -38,6 +38,12 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
+		return E_FAIL;
+
+
+	
+
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_GAMEPLAY);
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
@@ -134,9 +140,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 			return E_FAIL;
 	}
 
-	for (_uint i = 0; i < 3; ++i)
+	for (_uint i = 0; i < 1; ++i)
 	{
-		_vector vPosition = { _float(rand() % 8), 0.f, _float(rand() % 8), 1.f };
+		_vector vPosition = { _float(rand() % 15), 0.f, _float(rand() % 15), 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
 			return E_FAIL;
 	}
@@ -147,6 +153,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
 			return E_FAIL;
 	}
+
+	for (_uint i = 0; i < 1; ++i)
+	{
+		_vector vPosition = { _float(rand() % 40), 0.f, _float(rand() % 40) , 1.f };
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+			return E_FAIL;
+	}
+
+	
 
 	Safe_Release(pGameInstance);
 
@@ -346,6 +361,31 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _tchar * pLayerTag)
 		
 		
 	
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Interact_Object(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	for (_uint i = 0; i < 1; ++i)
+	{
+		_vector vPosition = { 30.f, 5.f, 30.f, 1.f };
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_TreasureBox"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+			return E_FAIL;
+	}
+
+	for (_uint i = 0; i < 1; ++i)
+	{
+		_vector vPosition = { 15.f, 5.f, 15.f, 1.f };
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Apple"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+			return E_FAIL;
+	}
+
 
 	Safe_Release(pGameInstance);
 

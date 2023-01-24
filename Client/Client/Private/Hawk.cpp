@@ -170,9 +170,9 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	case FLYING_BACK:
 	case ATTACK_FLUTTER:
 	case REVOLVING_FLIGHT:
-	case MOVE_IDLE:
 	case ATTACK_CHARGE_ROTATION:
 	case DEAD2:
+	case MOVE_IDLE:
 		return false;
 	}
 

@@ -47,7 +47,11 @@
 #include "Ice_Wolf.h"
 #include "Berserker.h"
 #include "Hawk.h"
+#include "Slime.h"
 
+//InteractObject
+#include "TreasureBox.h"
+#include "Apple.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -275,6 +279,8 @@ HRESULT CLoader::Loading_ForPrototype()
 		CParticle_Point::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	//Monster//
+
 	/*For.Prototype_GameObject_Ice_Wolf */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Ice_Wolf"),
 		CIce_Wolf::Create(m_pDevice, m_pContext))))
@@ -289,6 +295,26 @@ HRESULT CLoader::Loading_ForPrototype()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Hawk"),
 		CHawk::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/*For.Prototype_GameObject_Slime*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Slime"),
+		CSlime::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+
+	//InteractObject
+
+	/*For.Prototype_GameObject_TreasureBox*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TreasureBox"),
+		CTreasureBox::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_TreasureBox*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Apple"),
+		CApple::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
@@ -465,6 +491,89 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_Component_Model_Hawk*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Hawk"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Hawk/Hawk.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Slime*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Slime"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Slime/Slime.dat"))))
+		return E_FAIL;
+
+
+	/*For.Prototype_Component_Model_TreasureBox00*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("TreasureBox00"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox00/TreasureBox00.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_TreasureBox02_Blue*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("TreasureBox02_Blue"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Blue/TreasureBox02_Blue.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_TreasureBox02_Red*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("TreasureBox02_Red"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Red/TreasureBox02_Red.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_TreasureBox02*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("TreasureBox02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02/TreasureBox02.dat"))))
+		return E_FAIL;
+
+	///NON ANIM 
+
+	/*For.Prototype_Component_Model_Apple*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Apple"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Apple/Apple.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Egg*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Egg"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Egg/Egg.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Mushroom*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Mushroom"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Mushroom/Mushroom.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_NOBJ_BAG_002*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NOBJ_BAG_002"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NOBJ_BAG_002/NOBJ_BAG_002.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_NOBJ_BASK_001*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NOBJ_BASK_001"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NOBJ_BASK_001/NOBJ_BASK_001.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_NOBJ_BOX_000*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NOBJ_BOX_000"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NOBJ_BOX_000/NOBJ_BOX_000.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_NOBJ_BOX_002*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NOBJ_BOX_002"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NOBJ_BOX_002/NOBJ_BOX_002.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_ORE_001*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ORE_001"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/ORE_001/ORE_001.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_ORE_002*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ORE_002"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/ORE_002/ORE_002.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_ORE_003*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ORE_003"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/ORE_003/ORE_003.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Pot_001*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Pot_001"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Pot_001/Pot_001.dat"))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Model_Berserker*/

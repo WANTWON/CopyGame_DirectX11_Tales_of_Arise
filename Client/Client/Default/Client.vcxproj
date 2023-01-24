@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\Apple.h" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Berserker.h" />
     <ClInclude Include="..\Public\BerserkerBattle_Damage_LargeB_State.h" />
@@ -229,6 +230,13 @@
     <ClInclude Include="..\public\PlayerIdleState.h" />
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerRunState.h" />
+    <ClInclude Include="..\Public\Slime.h" />
+    <ClInclude Include="..\Public\SlimeBattle_Atk_TackleState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_RunState.h" />
+    <ClInclude Include="..\Public\SlimeIdleState.h" />
+    <ClInclude Include="..\Public\SlimeState.h" />
+    <ClInclude Include="..\Public\SlimeWalkState.h" />
+    <ClInclude Include="..\Public\TreasureBox.h" />
     <ClInclude Include="..\Public\UI_Changebutton.h" />
     <ClInclude Include="..\Public\UI_LOCKON.h" />
     <ClInclude Include="..\Public\UI_font_Damage_number.h" />
@@ -273,6 +281,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Apple.cpp" />
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Berserker.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_Damage_LargeB_State.cpp" />
@@ -326,6 +335,12 @@
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />
+    <ClCompile Include="..\Private\Slime.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_RunState.cpp" />
+    <ClCompile Include="..\Private\SlimeIdleState.cpp" />
+    <ClCompile Include="..\Private\SlimeWalkState.cpp" />
+    <ClCompile Include="..\Private\TreasureBox.cpp" />
     <ClCompile Include="..\Private\UI_Changebutton.cpp" />
     <ClCompile Include="..\Private\UI_LOCKON.cpp" />
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp" />

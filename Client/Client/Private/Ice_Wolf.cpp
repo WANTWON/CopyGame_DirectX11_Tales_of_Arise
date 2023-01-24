@@ -106,6 +106,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
+	AI_Behaviour(fTimeDelta);
 	TickState(fTimeDelta);
 
 	return OBJ_NOEVENT;

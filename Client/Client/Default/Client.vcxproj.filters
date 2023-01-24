@@ -184,6 +184,27 @@
     <Filter Include="02.GameObjects\01.Actor\03.InteractObject">
       <UniqueIdentifier>{302f8212-a864-4482-aa5e-a307b89d73e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime">
+      <UniqueIdentifier>{dccde0d2-f24a-4122-978b-fdd8e9f1741f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime\State">
+      <UniqueIdentifier>{2dce8974-526c-4d8f-9074-010f66192a9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates">
+      <UniqueIdentifier>{28ef28cc-fa93-4829-91e5-711f6d46ffc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\03.InteractObject\00.Anim">
+      <UniqueIdentifier>{49efdc7b-f5f3-40bc-922a-f747181d9a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\03.InteractObject\00.Anim\TreasureBox">
+      <UniqueIdentifier>{18a4740f-1d68-4696-9b38-b0be268bd26d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\03.InteractObject\01.NonAnim">
+      <UniqueIdentifier>{08985868-cd3c-4867-8956-95cb13f47443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates">
+      <UniqueIdentifier>{27632710-1fc5-4f94-9ac7-fae665b2b920}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -399,9 +420,6 @@
     <ClInclude Include="..\Public\Hawk.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HawkState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\HawkBattle_BombingState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClInclude>
@@ -488,6 +506,33 @@
     </ClInclude>
     <ClInclude Include="..\Public\InteractObject.h">
       <Filter>02.GameObjects\01.Actor\03.InteractObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TreasureBox.h">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject\00.Anim\TreasureBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Slime.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Apple.h">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeWalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeBattle_Atk_TackleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeBattle_RunState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -766,6 +811,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\InteractObject.cpp">
       <Filter>02.GameObjects\01.Actor\03.InteractObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TreasureBox.cpp">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject\00.Anim\TreasureBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Slime.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Apple.cpp">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeWalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeBattle_RunState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

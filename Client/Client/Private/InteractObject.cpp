@@ -46,8 +46,8 @@ void CInteractObject::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	if (Check_IsinFrustum(2.f) == false)
-		return;
+	//if (Check_IsinFrustum(2.f) == false)
+		//return;
 
 	if (nullptr != m_pRendererCom)
 	{
@@ -82,9 +82,9 @@ HRESULT CInteractObject::Render()
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
 
-	_bool bGlow = true;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-		return E_FAIL;
+	//_bool bGlow = true;
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+	//	return E_FAIL;
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
@@ -94,16 +94,16 @@ HRESULT CInteractObject::Render()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
-			return E_FAIL;
+		//if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
+		//	return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
 			return E_FAIL;
 	}
 
-	bGlow = false;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-		return E_FAIL;
+	//bGlow = false;
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -192,6 +192,6 @@ void CInteractObject::Free()
 
 	Safe_Release(m_pDissolveTexture);
 	Safe_Release(m_pModelCom);
-
-
+	Safe_Release(m_pSPHERECom);
+	//Safe_Release(m_pAABBCom);
 }
