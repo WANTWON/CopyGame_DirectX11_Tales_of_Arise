@@ -53,7 +53,7 @@
 
 //InteractObject
 #include "TreasureBox.h"
-#include "Apple.h"
+#include "Item.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -327,8 +327,8 @@ HRESULT CLoader::Loading_ForPrototype()
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_TreasureBox*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Apple"),
-		CApple::Create(m_pDevice, m_pContext))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Item"),
+		CItem::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

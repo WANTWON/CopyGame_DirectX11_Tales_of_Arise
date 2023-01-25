@@ -172,7 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
-    <ClInclude Include="..\Public\Apple.h" />
+    <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Berserker.h" />
     <ClInclude Include="..\Public\BerserkerBattle_Damage_LargeB_State.h" />
@@ -284,7 +284,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\Apple.cpp" />
+    <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Berserker.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_Damage_LargeB_State.cpp" />

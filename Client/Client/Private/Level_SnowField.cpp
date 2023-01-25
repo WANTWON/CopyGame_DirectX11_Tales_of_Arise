@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "CameraManager.h"
 #include "UI_RuneEffect.h"
+#include "Item.h"
 
 CLevel_SnowField::CLevel_SnowField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -30,9 +31,6 @@ HRESULT CLevel_SnowField::Initialize()
 		//return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Effect(TEXT("Layer_Effect"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
@@ -391,15 +389,19 @@ HRESULT CLevel_SnowField::Ready_Layer_Interact_Object(const _tchar * pLayerTag)
 
 	for (_uint i = 0; i < 1; ++i)
 	{
-		_vector vPosition = { 128, 5.f, 128, 1.f };
+		_vector vPosition = { 64, 0.f, 64, 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_TreasureBox"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
 			return E_FAIL;
 	}
 
 	for (_uint i = 0; i < 1; ++i)
 	{
-		_vector vPosition = { 128, 5.f, 128, 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Apple"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
+		CItem::ITEMDESC ItemDesc;
+		ItemDesc.etype = CItem::APPLE;
+		ItemDesc.fScale = _float3(3.5f, 3.5f, 3.5f);
+		ItemDesc.vPosition = { 70.f, 5.f, 70.f, 1.f };
+	
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
 			return E_FAIL;
 	}
 
