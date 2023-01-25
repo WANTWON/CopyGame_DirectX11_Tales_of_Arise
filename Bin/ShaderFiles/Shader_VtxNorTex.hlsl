@@ -92,11 +92,10 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	vector		vMtrlDiffuse = vDiffuse2 * vFilter.r + vDiffuse3 * vFilter.g + vDiffuse4 * vFilter.b;
 	Out.vDiffuse = (1 - vFilter.r - vFilter.g - vFilter.b)*vDiffuse1 + vMtrlDiffuse ;
-
-
 	Out.vDiffuse.a = 1.f;
 
 	/* -1 ~ 1 => 0 ~ 1*/
+
 
 	float fFilterSum = min((vFilter.r + vFilter.g + vFilter.b), 1.f);
 	float fFilterStrength = 1 - fFilterSum;
@@ -120,16 +119,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	vNormalD = mul(vNormalD, WorldMatrix);
 
 
-	//float3 finalNormal = lerp(vNormalB, vFilter, vFilter.r) + lerp(vNormalC, vFilter, vFilter.g) + lerp(vNormalD, vFilter, vFilter.b);
-	//vNormalA = lerp(vNormalA, vFilter, fFilterStrength);
-
-	//Out.vNormal.xyz = vNormalA + finalNormal;
-	//Out.vNormal = vector(Out.vNormal.xyz * 0.5f + 0.5f, 0.f);
-
-
-	float3 vMtrlNormal = vNormalB * vFilter.r + vNormalC * vFilter.g + vNormalD * vFilter.b;
-	vNormalA *= fFilterStrength;
-	Out.vNormal.xyz = vMtrlNormal + vNormalA;
+	float3 vMtrlNormal = (vNormalA*fFilterStrength) + (vNormalB * vFilter.r)+ (vNormalC * vFilter.g) + (vNormalD * vFilter.b);
+	Out.vNormal.xyz = vMtrlNormal;
 	Out.vNormal = vector(Out.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
 	/* near ~ far */

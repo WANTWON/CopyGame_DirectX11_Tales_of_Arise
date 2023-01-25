@@ -391,7 +391,7 @@ void CTerrain::Save_Terrain(HANDLE hFile, _ulong* dwByte)
 HRESULT CTerrain::Create_FilterTexture()
 {
 
-	if (CGameInstance::Get_Instance()->Mouse_Pressing(DIMK_LBUTTON))
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_9))
 	{
 		ID3D11Texture2D*					pTexture2D = nullptr;
 		D3D11_TEXTURE2D_DESC		TextureDesc;
@@ -413,6 +413,7 @@ HRESULT CTerrain::Create_FilterTexture()
 
 		_float3 vMousePos = m_vMousePickPos;
 		_float fRange = CTerrain_Manager::Get_Instance()->Get_TerrainShapeDesc().fRadius;
+		_float fStrength = CTerrain_Manager::Get_Instance()->Get_TerrainShapeDesc().fSharp;
 
 	//	_int iNumTerrainX = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumX;
 	//	_int iNumTerrainZ = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumZ;
@@ -444,7 +445,7 @@ HRESULT CTerrain::Create_FilterTexture()
 
 				if (fAlpha > 1.f)
 					fAlpha = 1.f;
-				_uint iPixelValue = (1 - fAlpha) * 10;
+				_uint iPixelValue = (1 - fAlpha) * fStrength;
 
 				_float3 vCurrentPixelColor = pPixelColor[iIndex];
 				if (vCurrentPixelColor.x != 0.f)

@@ -23,8 +23,11 @@ HRESULT CLevel_BattleZone::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
+
+	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -38,8 +41,8 @@ HRESULT CLevel_BattleZone::Initialize()
 	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
+	//	return E_FAIL;
 
 
 
@@ -56,6 +59,8 @@ HRESULT CLevel_BattleZone::Initialize()
 void CLevel_BattleZone::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+
 }
 
 void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
@@ -120,6 +125,35 @@ HRESULT CLevel_BattleZone::Ready_Lights()
 	return S_OK;
 }
 
+HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
+	{
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Player"), LEVEL_STATIC, pLayerTag, nullptr)))
+			return E_FAIL;
+
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0.f, 22, 1.f));
+		pPlayer->Change_Navigation(LEVEL_BATTLE);
+		pPlayer->Compute_CurrentIndex(LEVEL_BATTLE);
+		pPlayer->Check_Navigation();
+	}
+	else
+	{
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(64.f, 0.f, 64.f, 1.f));
+		pPlayer->Change_Navigation(LEVEL_BATTLE);
+		pPlayer->Compute_CurrentIndex(LEVEL_BATTLE);
+		pPlayer->Check_Navigation();
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
 
 HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 {

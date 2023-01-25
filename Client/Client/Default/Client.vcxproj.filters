@@ -543,14 +543,14 @@
     <ClInclude Include="..\Public\NonAnim.h">
       <Filter>02.GameObjects\02.NonAnim\05.NonAnim</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_BattleZone.h">
-      <Filter>01.Levels\03.BattleZone</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_SnowField.h">
       <Filter>01.Levels\02.SnowField</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Item.h">
       <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_BattleZone.h">
+      <Filter>01.Levels\03.BattleZone</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -851,14 +851,14 @@
     <ClCompile Include="..\Private\NonAnim.cpp">
       <Filter>02.GameObjects\02.NonAnim\05.NonAnim</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Level_BattleZone.cpp">
-      <Filter>01.Levels\03.BattleZone</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Level_SnowField.cpp">
       <Filter>01.Levels\02.SnowField</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Item.cpp">
       <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_BattleZone.cpp">
+      <Filter>01.Levels\03.BattleZone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

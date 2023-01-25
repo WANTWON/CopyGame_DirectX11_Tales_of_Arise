@@ -94,7 +94,7 @@ HRESULT CLoader::Loading_ForClient()
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/ForImguiDebug/Texture%d.dds"), 7))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/SnowField/Terrain%d_D.dds"), 4))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Brush */

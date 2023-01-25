@@ -225,6 +225,7 @@
     <ClInclude Include="..\public\IceWolfWalkState.h" />
     <ClInclude Include="..\Public\Ice_Wolf.h" />
     <ClInclude Include="..\Public\InteractObject.h" />
+    <ClInclude Include="..\Public\Level_BattleZone.h" />
     <ClInclude Include="..\Public\Level_SnowField.h" />
     <ClInclude Include="..\Public\NonAnim.h" />
     <ClInclude Include="..\Public\NonAnim_Instance.h" />
@@ -262,7 +263,6 @@
     <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
-    <ClInclude Include="..\Public\Level_BattleZone.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Loader.h" />
@@ -334,6 +334,7 @@
     <ClCompile Include="..\private\IceWolfWalkState.cpp" />
     <ClCompile Include="..\Private\Ice_Wolf.cpp" />
     <ClCompile Include="..\Private\InteractObject.cpp" />
+    <ClCompile Include="..\Private\Level_BattleZone.cpp" />
     <ClCompile Include="..\Private\Level_SnowField.cpp" />
     <ClCompile Include="..\Private\NonAnim.cpp" />
     <ClCompile Include="..\Private\NonAnim_Instance.cpp" />
@@ -368,7 +369,6 @@
     <ClCompile Include="..\private\UI_Screen.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\Camera_Dynamic.cpp" />
-    <ClCompile Include="..\Private\Level_BattleZone.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />

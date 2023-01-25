@@ -7,10 +7,13 @@
 #include "CameraManager.h"
 #include "UI_RuneEffect.h"
 #include "Item.h"
+#include "Level_Loading.h"
 
 CLevel_SnowField::CLevel_SnowField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
+	, m_pCollision_Manager(CCollision_Manager::Get_Instance())
 {
+	Safe_AddRef(m_pCollision_Manager);
 }
 
 HRESULT CLevel_SnowField::Initialize()
@@ -59,6 +62,26 @@ HRESULT CLevel_SnowField::Initialize()
 void CLevel_SnowField::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_MINUS))
+	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		LEVEL eNextLevel = LEVEL_BATTLE;
+
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MONSTER);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_BLOCK);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_INTERACT);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_TRAP);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MBULLET);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_ITEM);
+		pGameInstance->Set_DestinationLevel(eNextLevel);
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
+			return;
+		Safe_Release(pGameInstance);
+	}
 }
 
 void CLevel_SnowField::Late_Tick(_float fTimeDelta)
@@ -509,5 +532,5 @@ void CLevel_SnowField::Free()
 {
 	__super::Free();
 
-
+	Safe_Release(m_pCollision_Manager);
 }
