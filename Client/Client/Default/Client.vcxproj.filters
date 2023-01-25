@@ -19,9 +19,6 @@
     <Filter Include="01.Levels\01.Logo">
       <UniqueIdentifier>{5267b1be-398c-4f1f-8043-c7305aa0e1d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GamePlay">
-      <UniqueIdentifier>{35c5c360-0a21-4524-b3bd-78fd1a809214}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{ffd39a2b-4897-4694-bc2f-d9c96bf2d061}</UniqueIdentifier>
     </Filter>
@@ -211,6 +208,12 @@
     <Filter Include="02.GameObjects\02.NonAnim\05.NonAnim">
       <UniqueIdentifier>{6edd5324-28a2-4180-bbb3-6afd9febaeed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\03.BattleZone">
+      <UniqueIdentifier>{35c5c360-0a21-4524-b3bd-78fd1a809214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.SnowField">
+      <UniqueIdentifier>{0cb32519-764b-482d-ac95-758e07433f8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -233,9 +236,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Client_Defines.h">
       <Filter>99.Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\02.GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01.Levels\00.Loading</Filter>
@@ -525,9 +525,6 @@
     <ClInclude Include="..\Public\SlimeIdleState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Apple.h">
-      <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\HawkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State</Filter>
     </ClInclude>
@@ -546,6 +543,15 @@
     <ClInclude Include="..\Public\NonAnim.h">
       <Filter>02.GameObjects\02.NonAnim\05.NonAnim</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_BattleZone.h">
+      <Filter>01.Levels\03.BattleZone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_SnowField.h">
+      <Filter>01.Levels\02.SnowField</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Item.h">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -556,9 +562,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\MainApp.cpp">
       <Filter>00.MainApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Level_GamePlay.cpp">
-      <Filter>01.Levels\02.GamePlay</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Loading.cpp">
       <Filter>01.Levels\00.Loading</Filter>
@@ -833,9 +836,6 @@
     <ClCompile Include="..\Private\SlimeIdleState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Apple.cpp">
-      <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\SlimeWalkState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClCompile>
@@ -850,6 +850,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\NonAnim.cpp">
       <Filter>02.GameObjects\02.NonAnim\05.NonAnim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_BattleZone.cpp">
+      <Filter>01.Levels\03.BattleZone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_SnowField.cpp">
+      <Filter>01.Levels\02.SnowField</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Item.cpp">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

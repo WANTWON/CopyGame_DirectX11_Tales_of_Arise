@@ -3,14 +3,23 @@
 
 
 BEGIN(Client)
-class CApple final : public CInteractObject
+class CItem final : public CInteractObject
 {
+public:
+	enum ITEMTYPE { APPLE, JEWEL, MUSHROOM };
+
+	typedef struct ItemTag
+	{
+		ITEMTYPE etype = APPLE;
+		_vector  vPosition = {0.f,0.f,0.f,1.f};
+		_float3	 fScale = _float3(1.f, 1.f, 1.f);
+	}ITEMDESC;
 
 
 protected:
-	CApple(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CApple(const CApple& rhs);
-	virtual ~CApple() = default;
+	CItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CItem(const CItem& rhs);
+	virtual ~CItem() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -18,7 +27,6 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
-	virtual HRESULT Render_ShadowDepth();
 
 
 protected:
@@ -26,11 +34,12 @@ protected:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	
 private:
-	_bool	m_bIsGain = false;
+	ITEMDESC	m_ItemDesc;
+	_bool		m_bIsGain = false;
 	
 
 public:
-	static CApple* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CItem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 };

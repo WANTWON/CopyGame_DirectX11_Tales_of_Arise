@@ -65,6 +65,7 @@ private:
 	_long			YMouseMove = 0;
 
 	_bool			m_bLerp = false;
+	_bool			m_bStop = false;
 
 
 	_float			m_fCameraY = 5.f;
