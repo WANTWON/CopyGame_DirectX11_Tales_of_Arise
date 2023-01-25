@@ -34,8 +34,19 @@ public:
 	} EFFECTDESC;
 	
 	EFFECTDESC Get_EffectDesc() { return m_tEffectDesc; }
+	vector<_float3> Get_VelocityCurves() { return m_VelocityCurves; }
+	vector<_float3> Get_SizeCurves() { return m_SizeCurves; }
+	vector<_float3> Get_AlphaCurves() { return m_AlphaCurves; }
 	_bool Get_Play() { return m_bPlay; }
 	void Set_Play(_bool bPlay) { m_bPlay = bPlay; }
+	void Set_ShaderId(_uint iShaderId) { m_eShaderID = iShaderId; }
+
+	void Add_VelocityCurve(_float3 VelocityCurve) { m_VelocityCurves.push_back(VelocityCurve); }
+	void Add_SizeCurve(_float3 SizeCurve) { m_SizeCurves.push_back(SizeCurve); }
+	void Add_AlphaCurve(_float3 AlphaCurve) { m_AlphaCurves.push_back(AlphaCurve); }
+	void Remove_VelocityCurve(_uint iIndex) { m_VelocityCurves.erase(m_VelocityCurves.begin() + iIndex); };
+	void Remove_SizeCurve(_uint iIndex) { m_SizeCurves.erase(m_SizeCurves.begin() + iIndex); };
+	void Remove_AlphaCurve(_uint iIndex) { m_AlphaCurves.erase(m_AlphaCurves.begin() + iIndex); };
 
 public:
 	CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -57,6 +68,11 @@ protected:
 	EFFECTDESC m_tEffectDesc;
 
 	_bool m_bPlay = false;
+
+	/* X = Value, Y = Start, Z = End */
+	vector<_float3> m_VelocityCurves;
+	vector<_float3> m_SizeCurves;
+	vector<_float3> m_AlphaCurves;
 
 public:
 	virtual void Free() override;

@@ -186,12 +186,15 @@ private:
 	
 	/* Effect Settings */
 	_bool									m_bIsPlaying = false;
+	vector<string>							m_Shaders = { "SHADER_DEFAULT", "SHADER_ALPHAMASK" };
+	string									m_sCurrentShader = "SHADER_DEFAULT";
 
 	TRANSFORM_TYPE							m_eEffectTransformation = TRANS_SCALE;
 	class CTransform*						m_pEffectTransform = nullptr;
 	_bool									m_bBillboard = true;
 
-	_float									m_fCurveX = 1.f, m_fCurveY = 1.f, m_fCurveZ = 1.f, m_fCurveTime = 1.f;
+	_float									m_fCurveValue = 1.f, m_fCurveStart = 1.f, m_fCurveEnd = 1.f;
+	_uint									m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedAlphaCurve = 0;
 
 	CParticleSystem::PARTICLEDESC			m_tParticleDesc;
 

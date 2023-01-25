@@ -16,6 +16,7 @@ public:
 		_float m_fParticleDeviationX = 0.f;
 		_float m_fParticleDeviationY = 0.f;
 		_float m_fParticleDeviationZ = 0.f;
+		_float3 m_vParticleDirection = _float3(0.f, 0.f, 0.f);
 		_float m_fParticleVelocity = 1.f;
 		_float m_fParticleVelocityVariation = 0.f;
 		_float m_fParticleSize = 1.f;
@@ -23,8 +24,6 @@ public:
 		_float m_fParticlesPerSecond = 1.f;
 		_float m_fParticlesLifetime = 1.f;
 		_int m_iMaxParticles = 1000.f;
-
-		EFFECTDESC m_tEffectDesc;
 	} PARTICLEDESC;
 
 private:
@@ -32,8 +31,9 @@ private:
 	{
 		_float fPositionX = 0.f, fPositionY = 0.f, fPositionZ = 0.f;
 		_float fRed = 0.f, fGreen = 0.f, fBlue = 0.f;
-		_float fVelocity = 0.f;
-		_float fSize = 0.f;
+		_float fInitialAlpha = 0.f, fAlpha = 0.f;
+		_float fInitialVelocity = 0.f, fVelocity = 0.f;
+		_float fInitialSize = 0.f, fSize = 0.f;
 		_float fLife = 0.f;
 		_bool bActive = false;
 	};
@@ -42,6 +42,7 @@ private:
 	{
 		_float3 vPosition = _float3(0.f, 0.f, 0.f);
 		_float2 vTexture = _float2(0.f, 0.f);
+		_float fAlpha = 1.f;
 		_float4 vColor = _float4(0.f, 0.f, 0.f, 1.f);
 	};
 
@@ -71,6 +72,11 @@ private:
 
 	void EmitParticles(_float fTimeDelta);
 	void UpdateParticles(_float fTimeDelta);
+	
+	void VelocityLerp(_uint iParticleIndex);
+	void SizeLerp(_uint iParticleIndex);
+	void AlphaLerp(_uint iParticleIndex);
+
 	void KillParticles();
 
 	HRESULT UpdateBuffers();
