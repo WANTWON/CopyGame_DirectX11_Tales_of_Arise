@@ -313,8 +313,8 @@ void CImgui_Manager::BrowseForFolder()
 
 			HANDLE hFile = 0;
 			_ulong dwByte = 0;
-			CNonAnim::NONANIMDESC  ModelDesc;
-			_uint iNum = 0;
+			NONANIMDESC  ModelDesc;
+			_int iNum = 0;
 			_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 			m_TempLayerTags.push_back(LayerTag);
 			m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
@@ -333,7 +333,7 @@ void CImgui_Manager::BrowseForFolder()
 				return;
 
 			/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
-			WriteFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+			WriteFile(hFile, &(iNum), sizeof(_int), &dwByte, nullptr);
 
 			for (auto& iter : *plistClone)
 			{
@@ -341,7 +341,7 @@ void CImgui_Manager::BrowseForFolder()
 					continue;
 
 				ModelDesc = dynamic_cast<CNonAnim*>(iter)->Get_ModelDesc();
-				WriteFile(hFile, &ModelDesc, sizeof(CNonAnim::NONANIMDESC), &dwByte, nullptr);
+				WriteFile(hFile, &ModelDesc, sizeof(NONANIMDESC), &dwByte, nullptr);
 
 			}
 
@@ -375,8 +375,8 @@ void CImgui_Manager::BrowseForFolder()
 
 			HANDLE hFile = 0;
 			_ulong dwByte = 0;
-			CNonAnim::NONANIMDESC  ModelDesc;
-			_uint iNum = 0;
+			NONANIMDESC  ModelDesc;
+			_int iNum = 0;
 			LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 			_matrix			PivotMatrix = XMMatrixIdentity();
 
@@ -388,11 +388,11 @@ void CImgui_Manager::BrowseForFolder()
 				return;
 
 			/* 타일의 개수 받아오기 */
-			ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+			ReadFile(hFile, &(iNum), sizeof(_int), &dwByte, nullptr);
 
 			for (_uint i = 0; i < iNum; ++i)
 			{
-				ReadFile(hFile, &(ModelDesc), sizeof(CNonAnim::NONANIMDESC), &dwByte, nullptr);
+				ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 				m_pModel_Manager->Set_InitModelDesc(ModelDesc);
 				_tchar			szModeltag[MAX_PATH] = TEXT("");
 				MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, (_int)strlen(ModelDesc.pModeltag), szModeltag, MAX_PATH);
@@ -1106,6 +1106,11 @@ void CImgui_Manager::Set_Object_Map()
 	static _float Position[3] = { m_InitDesc.vPosition.x , m_InitDesc.vPosition.y, m_InitDesc.vPosition.z };
 	ImGui::Text("Position"); ImGui::SameLine();
 	ImGui::InputFloat3("##1", Position);
+
+	static _float OffsetPos [3] = { m_vfOffset.x , m_vfOffset.y, m_vfOffset.z };
+	ImGui::Text("Offset"); ImGui::SameLine();
+	ImGui::InputFloat3("##1", Position);
+	m_vfOffset = _float3(OffsetPos[0], OffsetPos[1], OffsetPos[2]);
 	m_InitDesc.vPosition = _float3(Position[0], Position[1], Position[2]);
 
 	static _float Scale[3] = { m_InitDesc.vScale.x , m_InitDesc.vScale.y, m_InitDesc.vScale.z };
@@ -1133,11 +1138,11 @@ void CImgui_Manager::Set_Terrain_Shape()
 
 	ImGui::CollapsingHeader("Shape Setting (Height, Sharp, Range)");
 
-	ImGui::Text("Height");
+	ImGui::Text("Height/UpDonwValue");
 	ImGui::SameLine();
 	ImGui::DragFloat("##fHeight", &m_TerrainShapeDesc.fHeight, 0.1f);
 
-	ImGui::Text("Radius");
+	ImGui::Text("Radius(Shape&Brush)");
 	ImGui::SameLine();
 	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius, 0.1f);
 
@@ -1162,7 +1167,6 @@ void CImgui_Manager::Set_Terrain_Shape()
 	{
 		Load_Terrain();
 	}
-
 
 }
 
@@ -1328,21 +1332,18 @@ void CImgui_Manager::Set_Brush()
 	ImGui::GetIO().NavActive = false;
 	ImGui::GetIO().WantCaptureMouse = true;
 
-	ImGui::CollapsingHeader("Brush");
-
+	ImGui::CollapsingHeader("Setting Brush Type");
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "RED"); ImGui::SameLine();
+	ImGui::RadioButton("##RED", &m_eBrushType, 0);
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "GREEN"); ImGui::SameLine();
+	ImGui::RadioButton("##GREEN", &m_eBrushType, 1);
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "BLUE"); ImGui::SameLine();
+	ImGui::RadioButton("##BLUE", &m_eBrushType, 2);
+		
 
 	if (m_PickingType == PICKING_TERRAIN_BRUSH)
 	{
 		CPickingMgr::Get_Instance()->Picking();
-	}
-
-	if (ImGui::Button("Save Terrian"))
-	{
-		Save_Terrain();
-	}
-	if (ImGui::Button("Load Terrian"))
-	{
-		Load_Terrain();
 	}
 }
 
@@ -1417,7 +1418,8 @@ void CImgui_Manager::ShowPickedObj()
 	{
 		m_vPickedObjPos = _float3(0.f, 0.f, 0.f);
 		m_vPickedObjScale = _float3(1.f, 1.f, 1.f);
-	}
+		m_fRotAngle = 0.f;
+ 	}
 
 
 	ImGui::NewLine();
@@ -1432,7 +1434,7 @@ void CImgui_Manager::ShowPickedObj()
 
 	ImGui::Text("Position Y");
 	ImGui::SameLine();
-	ImGui::DragFloat("##PositionY", &m_vPickedObjPos.y, 0.01f, -10, 10);
+	ImGui::DragFloat("##PositionY", &m_vPickedObjPos.y, 0.01f);
 
 	ImGui::NewLine();
 
@@ -1454,10 +1456,9 @@ void CImgui_Manager::ShowPickedObj()
 	ImGui::InputFloat3("##Setting RotAxis", Rotation);
 	m_vPickedRotAxis = _float3(Rotation[0], Rotation[1], Rotation[2]);
 
-	static _float RotAngle = { m_fRotAngle };
 	ImGui::Text("Rotaion Angle"); ImGui::SameLine();
-	ImGui::DragFloat("##Setting Rot", &RotAngle, 0.1f);
-	m_fRotAngle = RotAngle;
+	ImGui::DragFloat("##Setting Rot", &m_fRotAngle, 0.1f);
+	//m_fRotAngle = RotAngle;
 
 
 	if (pPickedObj != nullptr)
@@ -1662,6 +1663,7 @@ void CImgui_Manager::Show_ModelList()
 
 
 					auto iter = --plistClone->end();
+					CPickingMgr::Get_Instance()->Out_PickingGroup(*iter);
 					m_pModel_Manager->Out_CreatedModel(dynamic_cast<CNonAnim*>(*iter));
 					Safe_Release(*iter);
 					plistClone->erase(iter);
@@ -1689,6 +1691,9 @@ void CImgui_Manager::Show_ModelList()
 		if (CPickingMgr::Get_Instance()->Picking())
 		{
 			m_InitDesc.vPosition = CPickingMgr::Get_Instance()->Get_PickingPos();
+			m_InitDesc.vPosition.x += m_vfOffset.x;
+			m_InitDesc.vPosition.y += m_vfOffset.y;
+			m_InitDesc.vPosition.z += m_vfOffset.z;
 			_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 			Create_Model(ModelTags[selected], LayerTag, true);
 			m_TempLayerTags.push_back(LayerTag);
@@ -1709,6 +1714,8 @@ void CImgui_Manager::Show_ModelList()
 
 
 		auto iter = --plistClone->end();
+		CPickingMgr::Get_Instance()->Out_PickingGroup(*iter);
+		CPickingMgr::Get_Instance()->Set_PickedObj(nullptr);
 		m_pModel_Manager->Out_CreatedModel(dynamic_cast<CNonAnim*>(*iter));
 		Safe_Release(*iter);
 		plistClone->erase(iter);
@@ -2954,6 +2961,9 @@ void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLa
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	m_InitDesc.vPosition.x += m_vfOffset.x;
+	m_InitDesc.vPosition.y += m_vfOffset.y;
+	m_InitDesc.vPosition.z += m_vfOffset.z;
 	m_pModel_Manager->Set_InitModelDesc(m_InitDesc);
 	
 	_matrix			PivotMatrix = XMMatrixIdentity();

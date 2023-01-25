@@ -15,18 +15,20 @@ CBattle_Shock_WaveState::CBattle_Shock_WaveState(CBerserker* pBerserker)
 CBerserkerState * CBattle_Shock_WaveState::AI_Behaviour(_float fTimeDelta)
 {
 	Find_BattleTarget();
+
 	return nullptr;
 }
 
 CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Check_Navigation(); // ÀÚÀ¯
+	
 	Find_BattleTarget();
 
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
-	m_bAnimFinish = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
-	
-
+	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	if (false == m_bIsAnimationFinished)
+		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 
 	return nullptr;
 }
@@ -34,16 +36,20 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 CBerserkerState * CBattle_Shock_WaveState::LateTick(_float fTimeDelta)
 {
 	
-
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	
 
-
-	if (m_fIdleAttackTimer > 3.f && true == m_bAnimFinish)
+	if (m_bIsAnimationFinished)
 		return new CBattle_IdleState(m_pOwner);
 
 	else
-		m_fIdleAttackTimer += fTimeDelta;
+	{
+		_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
+
+		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 
 	return nullptr;
 }
@@ -53,6 +59,8 @@ void CBattle_Shock_WaveState::Enter()
 	m_eStateId = STATE_ID::STATE_IDLE;
 
 	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::ATTACK_SHOCK_WAVE);
+
+	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CBattle_Shock_WaveState::Exit()

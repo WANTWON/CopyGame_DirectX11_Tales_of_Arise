@@ -27,6 +27,8 @@ public:
 		PICKING_TERRAIN_SHAPE, PICKING_TERRAIN_BRUSH,
 	PICKING_MODEL,};
 
+	enum COLOR { RED, GREEN, BLUE};
+
 private:
 	CImgui_Manager();
 	virtual ~CImgui_Manager() = default;
@@ -40,6 +42,7 @@ public:
 public:
 	PICKING_TYPE Get_PickingType() {return (PICKING_TYPE)m_PickingType;}
 	_bool Get_CameraPicking() { return m_bMakeCamera; }
+	_int Get_BrushType() { return m_eBrushType; }
 public:
 	/* For Debug*/
 	void ShowSimpleMousePos(bool* p_open);
@@ -114,10 +117,12 @@ private:
 	CTerrain_Manager::TERRAINDESC			m_pTerrainDesc;
 	CTerrain_Manager::TERRAINSHAPEDESC		m_TerrainShapeDesc;
 	_bool									m_bTerrain_Show = true;
+	_int									m_eBrushType = RED;
+
 
 	/* For Object */
 	CModelManager*							m_pModel_Manager = nullptr;
-	CNonAnim::NONANIMDESC					m_InitDesc;
+	NONANIMDESC					m_InitDesc;
 	_tchar									m_pFilePath[MAX_PATH] = L"../../../Bin/Resources/Meshes/";
 	vector<string>							m_stLayerTags;
 	vector<const _tchar*>					m_TempLayerTags;
@@ -127,6 +132,7 @@ private:
 	_int									m_iSeletecLayerNum = 0;
 	_int									m_iBmpTerrainNum = 0;
 	_float									m_fDist = 1.f;
+	_float3									m_vfOffset = _float3(0.f, 0.f, 0.f);
 
 	//TreasureBox
 	CTreasureBox::BOXTAG					m_BoxDesc;

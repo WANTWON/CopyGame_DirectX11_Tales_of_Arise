@@ -9,13 +9,13 @@ CHowLingState::CHowLingState(CIce_Wolf* pIceWolf)
 	m_pOwner = pIceWolf;
 }
 
-CHawkState * CHowLingState::AI_Behaviour(_float fTimeDelta)
+CIceWolfState * CHowLingState::AI_Behaviour(_float fTimeDelta)
 {
 	Find_Target();
 	return nullptr;
 }
 
-CHawkState * CHowLingState::Tick(_float fTimeDelta)
+CIceWolfState * CHowLingState::Tick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 
@@ -27,7 +27,7 @@ CHawkState * CHowLingState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CHawkState * CHowLingState::LateTick(_float fTimeDelta)
+CIceWolfState * CHowLingState::LateTick(_float fTimeDelta)
 {
 	return nullptr;
 }

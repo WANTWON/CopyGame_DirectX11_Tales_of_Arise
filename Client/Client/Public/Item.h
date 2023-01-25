@@ -1,0 +1,46 @@
+#pragma once
+#include "InteractObject.h"
+
+
+BEGIN(Client)
+class CItem final : public CInteractObject
+{
+public:
+	enum ITEMTYPE { APPLE, JEWEL, MUSHROOM };
+
+	typedef struct ItemTag
+	{
+		ITEMTYPE etype = APPLE;
+		_vector  vPosition = {0.f,0.f,0.f,1.f};
+		_float3	 fScale = _float3(1.f, 1.f, 1.f);
+	}ITEMDESC;
+
+
+protected:
+	CItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CItem(const CItem& rhs);
+	virtual ~CItem() = default;
+
+public:
+	virtual HRESULT Initialize_Prototype();
+	virtual HRESULT Initialize(void* pArg);
+	virtual int Tick(_float fTimeDelta);
+	virtual void Late_Tick(_float fTimeDelta);
+	virtual HRESULT Render();
+
+
+protected:
+	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
+	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
+	
+private:
+	ITEMDESC	m_ItemDesc;
+	_bool		m_bIsGain = false;
+	
+
+public:
+	static CItem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg = nullptr);
+	virtual void Free() override;
+};
+END

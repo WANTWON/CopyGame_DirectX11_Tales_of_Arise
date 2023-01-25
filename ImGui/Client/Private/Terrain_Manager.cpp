@@ -54,8 +54,17 @@ HRESULT CTerrain_Manager::Create_Terrain(LEVEL eLevel, const _tchar* pLayerTag, 
 	return S_OK;
 }
 
+void CTerrain_Manager::Add_PrototypeTag(_tchar * TempTag)
+{
+	_tchar*			pModeltag = new _tchar[MAX_PATH];
+	wsprintf(pModeltag, TempTag);
+	m_pPrototypeTags.push_back(pModeltag);
+}
+
 void CTerrain_Manager::Free()
 {
+	for(auto& iter : m_pPrototypeTags)
+		Safe_Delete(iter);
 	m_pPrototypeTags.clear();
 
 	m_pCloneTerrainTags.clear();

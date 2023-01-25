@@ -21,7 +21,10 @@ private:
 	_float		m_fIdleMoveTimer = 0.f;
 	_float		m_fIdleAttackTimer = 1.5f;
 	_float		m_fTarget_Distance;
-	_bool		m_bAnimFinish = false;
+	
+
+private:
+	_matrix m_StartMatrix;
 };
 END
 END

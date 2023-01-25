@@ -354,6 +354,49 @@ PS_OUT PS_ALLBLUE(PS_IN In)
 }
 
 
+PS_OUT PS_RUNECOLOR(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	//	if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+	//		discard;
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	//Out.vColor.a -= g_fAlpha;
+	Out.vColor.r = 0.9803921568627451f;
+	Out.vColor.g = 0.9019607843137255f;
+	Out.vColor.b = 0.7607843137254902f;
+
+
+	if (Out.vColor.a < 0.2f)
+		discard;
+
+	Out.vColor.a -= g_fAlpha;
+
+	return Out;
+}
+
+
+PS_OUT PS_REVERSELOCKON(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	if (1-(g_fCurrentHp / 1.f )> In.vTexUV.x)
+		discard;
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	//Out.vColor.a -= g_fAlpha;
+	Out.vColor.r = 0.0589019607843137f;
+	Out.vColor.g = 0.942708f;
+	Out.vColor.b = 0.83441f;
+
+	return Out;
+}
+
 
 
 
@@ -535,7 +578,30 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_ALLBLUE();
 	}
 
+	pass RUNECOLOR
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
 
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_RUNECOLOR();
+	}
+
+
+	pass REVERSELOCKON
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_REVERSELOCKON();
+	}
+
+	
 	
 	
 }

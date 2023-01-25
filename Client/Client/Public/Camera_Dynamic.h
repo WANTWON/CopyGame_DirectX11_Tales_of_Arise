@@ -60,11 +60,12 @@ private:
 	_vector			m_OriginPos = { 0.f,0.f,0.f,0.f };
 	_vector			m_vNewPos;
 
-	_long			m_MoveValue = 0.f;
+	_long			m_MoveValue = 0;
 	_long			XMouseMove = 0;
 	_long			YMouseMove = 0;
 
 	_bool			m_bLerp = false;
+	_bool			m_bStop = false;
 
 
 	_float			m_fCameraY = 5.f;

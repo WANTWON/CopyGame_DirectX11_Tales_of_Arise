@@ -172,9 +172,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Berserker.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_Damage_LargeB_State.h" />
     <ClInclude Include="..\Public\BerserkerBattle_DashStartState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_DeadState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_Double_ClawState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_Double_CrowState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_HowLingState.h" />
@@ -191,7 +194,15 @@
     <ClInclude Include="..\Public\HawkBattle_BombingState.h" />
     <ClInclude Include="..\Public\HawkBattle_BraveState.h" />
     <ClInclude Include="..\Public\HawkBattle_ChargeState.h" />
+    <ClInclude Include="..\Public\HawkBattle_Damage_LargeB_State.h" />
+    <ClInclude Include="..\Public\HawkBattle_DeadState.h" />
+    <ClInclude Include="..\Public\HawkBattle_Flying_BackState.h" />
+    <ClInclude Include="..\Public\HawkBattle_GrabEndState.h" />
+    <ClInclude Include="..\Public\HawkBattle_GrabStartState.h" />
+    <ClInclude Include="..\Public\HawkBattle_GrabState.h" />
     <ClInclude Include="..\Public\HawkBattle_IdleState.h" />
+    <ClInclude Include="..\Public\HawkBattle_RevolveState.h" />
+    <ClInclude Include="..\Public\HawkBattle_RunState.h" />
     <ClInclude Include="..\Public\HawkIdleState.h" />
     <ClInclude Include="..\Public\HawkState.h" />
     <ClInclude Include="..\Public\HPbar.h" />
@@ -200,6 +211,8 @@
     <ClInclude Include="..\Public\HP_Font_World.h" />
     <ClInclude Include="..\Public\IceWolfAttackNormalState.h" />
     <ClInclude Include="..\Public\IceWolfAttack_Elemental_Charge.h" />
+    <ClInclude Include="..\Public\IceWolfBattle_Damage_LargeB_State.h" />
+    <ClInclude Include="..\Public\IceWolfBattle_DeadState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_HowLingState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_IdleState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_WalkState.h" />
@@ -211,12 +224,24 @@
     <ClInclude Include="..\Public\IceWolfTurnRightState.h" />
     <ClInclude Include="..\public\IceWolfWalkState.h" />
     <ClInclude Include="..\Public\Ice_Wolf.h" />
+    <ClInclude Include="..\Public\InteractObject.h" />
+    <ClInclude Include="..\Public\Level_SnowField.h" />
+    <ClInclude Include="..\Public\NonAnim.h" />
+    <ClInclude Include="..\Public\NonAnim_Instance.h" />
     <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerRunState.h" />
+    <ClInclude Include="..\Public\Slime.h" />
+    <ClInclude Include="..\Public\SlimeBattle_Atk_TackleState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_RunState.h" />
+    <ClInclude Include="..\Public\SlimeIdleState.h" />
+    <ClInclude Include="..\Public\SlimeState.h" />
+    <ClInclude Include="..\Public\SlimeWalkState.h" />
+    <ClInclude Include="..\Public\TreasureBox.h" />
     <ClInclude Include="..\Public\UI_Changebutton.h" />
+    <ClInclude Include="..\Public\UI_LOCKON.h" />
     <ClInclude Include="..\Public\UI_font_Damage_number.h" />
     <ClInclude Include="..\Public\UI_Portraitback.h" />
     <ClInclude Include="..\Public\ScreenFadeEffect.h" />
@@ -232,11 +257,12 @@
     <ClInclude Include="..\Public\UI_Portraitfront_left.h" />
     <ClInclude Include="..\Public\UI_Portraitfront_right.h" />
     <ClInclude Include="..\Public\UI_Portraitfront_top.h" />
+    <ClInclude Include="..\public\UI_RuneEffect.h" />
     <ClInclude Include="..\public\UI_Screen.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
-    <ClInclude Include="..\Public\Level_GamePlay.h" />
+    <ClInclude Include="..\Public\Level_BattleZone.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Loader.h" />
@@ -258,9 +284,12 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Berserker.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_Damage_LargeB_State.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_DashStartState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_DeadState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_Double_ClawState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_Double_CrowState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_HowLingState.cpp" />
@@ -276,7 +305,15 @@
     <ClCompile Include="..\Private\HawkBattle_BombingState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_BraveState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_ChargeState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_Damage_LargeB_State.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_DeadState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_Flying_BackState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_GrabEndState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_GrabStartState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_GrabState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_IdleState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_RevolveState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_RunState.cpp" />
     <ClCompile Include="..\Private\HawkIdleState.cpp" />
     <ClCompile Include="..\Private\HPbar.cpp" />
     <ClCompile Include="..\Private\HPbar_World.cpp" />
@@ -284,6 +321,8 @@
     <ClCompile Include="..\Private\HP_Font_World.cpp" />
     <ClCompile Include="..\Private\IceWolfAttackNormalState.cpp" />
     <ClCompile Include="..\Private\IceWolfAttack_Elemental_Charge.cpp" />
+    <ClCompile Include="..\Private\IceWolfBattle_Damage_LargeB_State.cpp" />
+    <ClCompile Include="..\Private\IceWolfBattle_DeadState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_HowLingState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_IdleState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_WalkState.cpp" />
@@ -294,11 +333,22 @@
     <ClCompile Include="..\Private\IceWolfTurnRightState.cpp" />
     <ClCompile Include="..\private\IceWolfWalkState.cpp" />
     <ClCompile Include="..\Private\Ice_Wolf.cpp" />
+    <ClCompile Include="..\Private\InteractObject.cpp" />
+    <ClCompile Include="..\Private\Level_SnowField.cpp" />
+    <ClCompile Include="..\Private\NonAnim.cpp" />
+    <ClCompile Include="..\Private\NonAnim_Instance.cpp" />
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />
+    <ClCompile Include="..\Private\Slime.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_RunState.cpp" />
+    <ClCompile Include="..\Private\SlimeIdleState.cpp" />
+    <ClCompile Include="..\Private\SlimeWalkState.cpp" />
+    <ClCompile Include="..\Private\TreasureBox.cpp" />
     <ClCompile Include="..\Private\UI_Changebutton.cpp" />
+    <ClCompile Include="..\Private\UI_LOCKON.cpp" />
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp" />
     <ClCompile Include="..\Private\UI_Portraitback.cpp" />
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp" />
@@ -314,10 +364,11 @@
     <ClCompile Include="..\Private\UI_Portraitfront_left.cpp" />
     <ClCompile Include="..\Private\UI_Portraitfront_right.cpp" />
     <ClCompile Include="..\Private\UI_Portraitfront_top.cpp" />
+    <ClCompile Include="..\Private\UI_RuneEffect.cpp" />
     <ClCompile Include="..\private\UI_Screen.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\Camera_Dynamic.cpp" />
-    <ClCompile Include="..\Private\Level_GamePlay.cpp" />
+    <ClCompile Include="..\Private\Level_BattleZone.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
@@ -345,7 +396,6 @@
     <ResourceCompile Include="Client.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\Bin\Resources\Textures\UI\numberfont\font0.dds" />
     <Image Include="Client.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
@@ -354,6 +404,7 @@
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxCubeTexture.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModel.hlsl" />
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModelInstance.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPoint.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl" />

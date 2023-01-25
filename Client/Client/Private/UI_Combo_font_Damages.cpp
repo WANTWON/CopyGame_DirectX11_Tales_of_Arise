@@ -20,7 +20,7 @@ HRESULT CUI_Combo_font_Damages::Initialize_Prototype()
 
 HRESULT CUI_Combo_font_Damages::Initialize(void * pArg)
 {
-	m_eShaderID = 0;
+	m_eShaderID = 5;
 
 	m_fSize.x = 100.f;
 	m_fSize.y = 24.f;

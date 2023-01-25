@@ -354,85 +354,7 @@ HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
 
 HRESULT CModel::RenderShadow(CShader * pShader, _uint iMeshIndex, _uint iLevelIndex, _uint iPassIndex)
 {
-	// 바닥 부분의 그림자를 제외하고 렌더해야하는데 
-	// 각 레벨마다, 또는 메시마다 바닥에 대한 인덱스가 달라서 예외처리를 진행함.
-
-	char		szName[MAX_PATH] = "";
-	strcpy(szName, m_Meshes[iMeshIndex]->Get_Name());
-
-	if (iLevelIndex == 3) // Level Game Play
-	{
-		char CheckName[] = "grass";
-		char CheckName2[] = "road";
-		char CheckName3[] = "sand";
-		char CheckName4[] = "water";
-		char CheckName5[] = "wall_a_01a";
-		char CheckName6[] = "hole";
-		char CheckName7[] = "TailGate";
-		char CheckName8[] = "tile";
-		char CheckName9[] = "Flower";
-
-		char* ptr = strstr(szName, CheckName);
-		char* ptr2 = strstr(szName, CheckName2);
-		char* ptr3 = strstr(szName, CheckName3);
-		char* ptr4 = strstr(szName, CheckName4);
-		char* ptr5 = strstr(szName, CheckName5);
-		char* ptr6 = strstr(szName, CheckName6);
-		char* ptr7 = strstr(szName, CheckName7);
-		char* ptr8 = strstr(szName, CheckName8);
-		char* ptr9 = strstr(szName, CheckName9);
-
-		if (ptr != nullptr || ptr2 != nullptr || ptr3 != nullptr
-			|| ptr4 != nullptr || ptr5 != nullptr || ptr6 != nullptr
-			|| ptr7 != nullptr || ptr8 != nullptr || ptr9 != nullptr)
-			return S_OK;
-	}
-	else if (iLevelIndex == 4) //Level Tail Cave
-	{
-		char CheckName[] = "floor";
-		char CheckName2[] = "wall";
-		char CheckName3[] = "Tile";
-		char CheckName4[] = "gate";
-
-
-		char* ptr = strstr(szName, CheckName);
-		char* ptr2 = strstr(szName, CheckName2);
-		char* ptr3 = strstr(szName, CheckName3);
-		char* ptr4 = strstr(szName, CheckName4);
-
-		if (ptr != nullptr || ptr2 != nullptr || ptr3 != nullptr || ptr4 != nullptr)
-			return S_OK;
-	}
-	else if (iLevelIndex == 5) //Level Tower
-	{
-		char CheckName[] = "floor";
-		char CheckName2[] = "wall";
-		char CheckName3[] = "moss";
-
-
-		char* ptr = strstr(szName, CheckName);
-		char* ptr2 = strstr(szName, CheckName2);
-		char* ptr3 = strstr(szName, CheckName3);
-
-		if (ptr != nullptr || ptr2 != nullptr || ptr3 != nullptr)
-			return S_OK;
-	}
-	else if (iLevelIndex == 6) //Level Room
-	{
-		char CheckName[] = "floor";
-		char CheckName2[] = "wall";
-		char CheckName3[] = "moss";
-
-
-		char* ptr = strstr(szName, CheckName);
-		char* ptr2 = strstr(szName, CheckName2);
-		char* ptr3 = strstr(szName, CheckName3);
-
-		if (ptr != nullptr || ptr2 != nullptr || ptr3 != nullptr)
-			return S_OK;
-	}
-
-
+	
 	/* 메시별로 그린다. */
 	/* 메시 당 영향ㅇ르 주는 뼈들의 행렬을 가져온다. */
 	if (TYPE_ANIM == m_eModelType)
@@ -449,7 +371,10 @@ HRESULT CModel::RenderShadow(CShader * pShader, _uint iMeshIndex, _uint iLevelIn
 
 	pShader->Begin(iPassIndex);
 
-	m_Meshes[iMeshIndex]->Render();
+	if (TYPE_NONANIM_INSTANCE != m_eModelType)
+		m_Meshes[iMeshIndex]->Render();
+	else
+		m_InstanceMeshes[iMeshIndex]->Render();
 
 	return S_OK;
 }

@@ -19,11 +19,11 @@ CHawkState * CBattle_BraveState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CBattle_BraveState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Check_Navigation(); // ÀÚÀ¯
+	
 	Find_BattleTarget();
 
 
-	m_bAnimFinish = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 
 
@@ -37,11 +37,18 @@ CHawkState * CBattle_BraveState::LateTick(_float fTimeDelta)
 
 
 
-	if (m_fIdleAttackTimer > 3.f && true == m_bAnimFinish)
+	if (true == m_bIsAnimationFinished)
 		return new CBattle_BombingState(m_pOwner);
 
 	else
-		m_fIdleAttackTimer += fTimeDelta;
+	{
+		_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
+
+		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
+		
 
 
 
@@ -53,10 +60,13 @@ void CBattle_BraveState::Enter()
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
 	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_BRAVE);
+
+	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CBattle_BraveState::Exit()
 {
+	
 	m_fIdleMoveTimer = 0.f;
 	m_fIdleAttackTimer = 0.f;
 }

@@ -41,11 +41,12 @@ protected:
 
 protected:
 	HRESULT Add_Components(const _tchar* pComponentTag, _uint iLevelIndex, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg = nullptr);
-	void Compute_CamDistance(_fvector vWorldPos);
+	
 
 public:	
 	virtual CGameObject* Clone(void* pArg = nullptr) = 0;
 	virtual CGameObject* Clone_Load(const _tchar* VIBufferTag, void* pArg = nullptr) { return nullptr; };
+	void Compute_CamDistance(_fvector vWorldPos);
 	virtual void Free() override;
 };
 END

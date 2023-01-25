@@ -32,6 +32,8 @@ private:
 	_float m_fmaxhp = 2000.f;
 
 	_uint m_iIndex = 0;
+
+	
 	
 public:
 	static CHPbar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
