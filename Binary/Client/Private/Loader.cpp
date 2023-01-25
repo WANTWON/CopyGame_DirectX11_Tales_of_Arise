@@ -192,9 +192,9 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/NOBJ_BOX_002.fbx", "../../../Bin/Bin_Data/NonAnim/NOBJ_BOX_002/", PivotMatrix))))
 	//	return E_FAIL;
 
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ORE_001"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/ORE_001.fbx", "../../../Bin/Bin_Data/NonAnim/ORE_001/", PivotMatrix))))
-	//	return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ORE_001"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/ORE_001.fbx", "../../../Bin/Bin_Data/NonAnim/ORE_001/", PivotMatrix))))
+		return E_FAIL;
 
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ORE_002"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/ORE_002.fbx", "../../../Bin/Bin_Data/NonAnim/ORE_002/", PivotMatrix))))
@@ -204,9 +204,9 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/ORE_003.fbx", "../../../Bin/Bin_Data/NonAnim/ORE_003/", PivotMatrix))))
 	//	return E_FAIL;
 
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Pot_001"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Pot_001.fbx", "../../../Bin/Bin_Data/NonAnim/Pot_001/", PivotMatrix))))
-	//	return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Pot"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Pot.fbx", "../../../Bin/Bin_Data/NonAnim/Pot/", PivotMatrix))))
+		return E_FAIL;
 
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Slime"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Slime.fbx", "../../../Bin/Bin_Data/Anim/Slime/", PivotMatrix))))

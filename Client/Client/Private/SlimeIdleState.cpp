@@ -10,18 +10,14 @@ using namespace Slime;
 CIdleState::CIdleState(CSlime* pSlime)
 {
 	m_pOwner = pSlime;
-	//m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	
 }
 
 CSlimeState * CIdleState::AI_Behaviour(_float fTimeDelta)
 {
 	Find_Target();
 	
-	/*if(m_pTarget)
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);*/
-	
-	
-	
+
 	return nullptr;
 }
 
@@ -40,8 +36,8 @@ CSlimeState * CIdleState::LateTick(_float fTimeDelta)
 {
 	
 
-	if (m_pTarget)
-		return new CBattle_RunState(m_pOwner);
+	/*if (m_pTarget)
+		return new CBattle_RunState(m_pOwner);*/
 
 
 	//if (m_pTarget)
@@ -90,7 +86,7 @@ void CIdleState::Enter()
 	m_eStateId = STATE_ID::STATE_IDLE;
 
 	m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::MOVE_IDLE);
-	//m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	
 }
 
 void CIdleState::Exit()

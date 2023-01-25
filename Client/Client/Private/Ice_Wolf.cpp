@@ -97,6 +97,8 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 
+
+
 	return S_OK;
 }
 

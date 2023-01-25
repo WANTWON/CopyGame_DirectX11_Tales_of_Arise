@@ -57,12 +57,16 @@ int CTreasureBox::Tick(_float fTimeDelta)
 
 	}
 
-	if (false == m_bCollision && false == m_bOpen)
+	else if (false == m_bCollision && false == m_bOpen)
 	{
 		m_pModelCom->Play_Animation(0.f, false);
 
 	}
-	//else if(false == m_bCollision && false == m_bOpen)
+
+
+
+
+	//if (false == m_bCollision && false == m_bOpen)
 	//{
 	//	m_pModelCom->Play_Animation(0.f, false);
 

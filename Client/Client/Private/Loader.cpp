@@ -54,6 +54,8 @@
 //InteractObject
 #include "TreasureBox.h"
 #include "Apple.h"
+#include "Pot.h"
+#include "Ore_001.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -323,11 +325,20 @@ HRESULT CLoader::Loading_ForPrototype()
 		CTreasureBox::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/*For.Prototype_GameObject_TreasureBox*/
+	/*For.Prototype_GameObject_Apple*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Apple"),
 		CApple::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Pot*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Pot"),
+		CPot::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Pot*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Ore_001"),
+		COre_001::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
@@ -568,6 +579,16 @@ HRESULT CLoader::Loading_ForGamePlayLevel()
 	/*For.Prototype_Component_Model_Mushroom*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Mushroom"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Mushroom/Mushroom.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Pot*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Pot"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Pot/Pot.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Ore_001*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ore_001"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Ore_001/Ore_001.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock"),
