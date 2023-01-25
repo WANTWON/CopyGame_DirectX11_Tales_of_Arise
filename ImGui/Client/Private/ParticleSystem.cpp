@@ -2,6 +2,7 @@
 
 #include "ParticleSystem.h"
 #include "GameInstance.h"
+#include "Imgui_Manager.h"
 
 CParticleSystem::CParticleSystem(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEffect(pDevice, pContext)
@@ -194,98 +195,212 @@ HRESULT CParticleSystem::InitializeBuffers()
 
 void CParticleSystem::EmitParticles(_float fTimeDelta)
 {
-	bool bEmitParticle, bFound;
-	float fPositionX, fPositionY, fPositionZ, fRed, fGreen, fBlue, fInitialAlpha, fAlpha, fInitialVelocity, fVelocity, fInitialSize, fSize;
-	int iIndex, i, j;
+	_bool bEmitParticle, bFound;
+	_float fPositionX, fPositionY, fPositionZ, fRed, fGreen, fBlue, fInitialAlpha, fAlpha, fInitialVelocity, fVelocity, fInitialSize, fSize;
+	_float3 vDirection;
+	_int iIndex, i, j;
 
-	/* Increment the frame time. */
-	m_fAccumulatedTime += fTimeDelta;
-
-	/* Set emit particle to false for now. */
-	bEmitParticle = false;
-
-	/* Check if it is time to emit a new particle or not. */
-	if (m_fAccumulatedTime > (1.f / m_tParticleDesc.m_fParticlesPerSecond))
+	/* LOOP (keep spawning based on "m_fAccumulatedTime" and "m_fParticlesPerSecond"). */
+	if (m_tParticleDesc.m_eSpawnType == 0)
 	{
-		m_fAccumulatedTime = 0.f;
-		bEmitParticle = true;
+		/* Increment the frame time. */
+		m_fAccumulatedTime += fTimeDelta;
+
+		/* Set emit particle to false for now. */
+		bEmitParticle = false;
+
+		/* Check if it is time to emit a new particle or not. */
+		if (m_fAccumulatedTime > (1.f / m_tParticleDesc.m_fParticlesPerSecond))
+		{
+			m_fAccumulatedTime = 0.f;
+			bEmitParticle = true;
+		}
+
+		/* If there are Particles to emit then emit one per frame. */
+		if ((bEmitParticle == true) && (m_fCurrentParticleCount < (m_tParticleDesc.m_iMaxParticles - 1)))
+		{
+			m_fCurrentParticleCount++;
+
+			/* Now generate the randomized particle properties. */
+			fPositionX = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationX;
+			fPositionY = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationY;
+			fPositionZ = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationZ;
+
+			vDirection = m_tParticleDesc.m_vParticleDirection;
+
+			if (m_tParticleDesc.m_bRandomDirectionX)
+				vDirection.x = ((float)std::rand() / (float)RAND_MAX) * 2.0f - 1.0f; /* -1 ~ 1 */
+			if (m_tParticleDesc.m_bRandomDirectionY)
+				vDirection.y = ((float)std::rand() / (float)RAND_MAX) * 2.0f - 1.0f; /* -1 ~ 1 */
+			if (m_tParticleDesc.m_bRandomDirectionZ)
+				vDirection.z = ((float)std::rand() / (float)RAND_MAX) * 2.0f - 1.0f; /* -1 ~ 1 */
+			
+			fRed = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+			fGreen = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+			fBlue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+
+			fInitialAlpha = 1.f;
+			fAlpha = fInitialAlpha;
+
+			fInitialVelocity = m_tParticleDesc.m_fParticleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleVelocityVariation;
+			fVelocity = fInitialVelocity;
+
+			fInitialSize = m_tParticleDesc.m_fParticleSize + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleSizeVariation;
+			fSize = fInitialSize;
+
+			/* Now since the Particles need to be rendered from back to front for blending we have to sort the particle array.
+			We will sort using Z depth so we need to find where in the list the particle should be inserted. */
+			iIndex = 0;
+			bFound = false;
+			while (!bFound)
+			{
+				if ((m_Particles[iIndex].bActive == false) || (m_Particles[iIndex].fPositionZ < fPositionZ))
+					bFound = true;
+				else
+					iIndex++;
+			}
+
+			/* Now that we know the location to insert into we need to copy the array over by one position from the index to make room for the new particle. */
+			i = m_fCurrentParticleCount;
+			j = i - 1;
+
+			while (i != iIndex)
+			{
+				m_Particles[i].fPositionX = m_Particles[j].fPositionX;
+				m_Particles[i].fPositionY = m_Particles[j].fPositionY;
+				m_Particles[i].fPositionZ = m_Particles[j].fPositionZ;
+				m_Particles[i].vDirection = m_Particles[j].vDirection;
+				m_Particles[i].fRed = m_Particles[j].fRed;
+				m_Particles[i].fGreen = m_Particles[j].fGreen;
+				m_Particles[i].fBlue = m_Particles[j].fBlue;
+				m_Particles[i].fInitialAlpha = m_Particles[j].fInitialAlpha;
+				m_Particles[i].fAlpha = m_Particles[j].fAlpha;
+				m_Particles[i].fInitialVelocity = m_Particles[j].fInitialVelocity;
+				m_Particles[i].fVelocity = m_Particles[j].fVelocity;
+				m_Particles[i].fInitialSize = m_Particles[j].fInitialSize;
+				m_Particles[i].fSize = m_Particles[j].fSize;
+				m_Particles[i].fLife = m_Particles[j].fLife;
+				m_Particles[i].bActive = m_Particles[j].bActive;
+
+				i--;
+				j--;
+			}
+
+			/* Now insert it into the Particle array in the correct depth order. */
+			m_Particles[iIndex].fPositionX = fPositionX;
+			m_Particles[iIndex].fPositionY = fPositionY;
+			m_Particles[iIndex].fPositionZ = fPositionZ;
+			m_Particles[iIndex].vDirection = vDirection;
+			m_Particles[iIndex].fRed = fRed;
+			m_Particles[iIndex].fGreen = fGreen;
+			m_Particles[iIndex].fBlue = fBlue;
+			m_Particles[iIndex].fInitialAlpha = fInitialAlpha;
+			m_Particles[iIndex].fAlpha = fAlpha;
+			m_Particles[iIndex].fInitialVelocity = fInitialVelocity;
+			m_Particles[iIndex].fVelocity = fVelocity;
+			m_Particles[iIndex].fInitialSize = fInitialSize;
+			m_Particles[iIndex].fSize = fSize;
+			m_Particles[iIndex].fLife = 0.f;
+			m_Particles[iIndex].bActive = true;
+		}
 	}
-
-	/* If there are Particles to emit then emit one per frame. */
-	if ((bEmitParticle == true) && (m_fCurrentParticleCount < (m_tParticleDesc.m_iMaxParticles - 1)))
+	/* BURST (spawns once based on "m_iMaxParticles"). */
+	else
 	{
-		m_fCurrentParticleCount++;
+		/* Increment the frame time. */
+		m_fAccumulatedTime += fTimeDelta;
 
-		/* Now generate the randomized particle properties. */
-		fPositionX = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationX;
-		fPositionY = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationY;
-		fPositionZ = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationZ;
-
-		fRed = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-		fGreen = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-		fBlue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-
-		fInitialAlpha = 1.f;
-		fAlpha = fInitialAlpha;
-
-		fInitialVelocity = m_tParticleDesc.m_fParticleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleVelocityVariation;
-		fVelocity = fInitialVelocity;
-		
-		fInitialSize = m_tParticleDesc.m_fParticleSize + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleSizeVariation;
-		fSize = fInitialSize;
-
-		/* Now since the Particles need to be rendered from back to front for blending we have to sort the particle array.
-		We will sort using Z depth so we need to find where in the list the particle should be inserted. */
-		iIndex = 0;
-		bFound = false;
-		while (!bFound)
+		if (m_fCurrentParticleCount == 0)
 		{
-			if ((m_Particles[iIndex].bActive == false) || (m_Particles[iIndex].fPositionZ < fPositionZ))
-				bFound = true;
-			else
-				iIndex++;
+			while (m_fCurrentParticleCount < (m_tParticleDesc.m_iMaxParticles - 1))
+			{
+				m_fCurrentParticleCount++;
+
+				/* Now generate the randomized particle properties. */
+				fPositionX = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationX;
+				fPositionY = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationY;
+				fPositionZ = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationZ;
+
+				vDirection = m_tParticleDesc.m_vParticleDirection;
+
+				if (m_tParticleDesc.m_bRandomDirectionX)
+					vDirection.x = ((float)std::rand() / (float)RAND_MAX) * 2.0f - 1.0f; /* -1 ~ 1 */
+				if (m_tParticleDesc.m_bRandomDirectionY)
+					vDirection.y = ((float)std::rand() / (float)RAND_MAX) * 2.0f - 1.0f; /* -1 ~ 1 */
+				if (m_tParticleDesc.m_bRandomDirectionZ)
+					vDirection.z = ((float)std::rand() / (float)RAND_MAX) * 2.0f - 1.0f; /* -1 ~ 1 */
+
+				fRed = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+				fGreen = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+				fBlue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+
+				fInitialAlpha = 1.f;
+				fAlpha = fInitialAlpha;
+
+				fInitialVelocity = m_tParticleDesc.m_fParticleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleVelocityVariation;
+				fVelocity = fInitialVelocity;
+
+				fInitialSize = m_tParticleDesc.m_fParticleSize + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleSizeVariation;
+				fSize = fInitialSize;
+
+				/* Now since the Particles need to be rendered from back to front for blending we have to sort the particle array.
+				We will sort using Z depth so we need to find where in the list the particle should be inserted. */
+				iIndex = 0;
+				bFound = false;
+				while (!bFound)
+				{
+					if ((m_Particles[iIndex].bActive == false) || (m_Particles[iIndex].fPositionZ < fPositionZ))
+						bFound = true;
+					else
+						iIndex++;
+				}
+
+				/* Now that we know the location to insert into we need to copy the array over by one position from the index to make room for the new particle. */
+				i = m_fCurrentParticleCount;
+				j = i - 1;
+
+				while (i != iIndex)
+				{
+					m_Particles[i].fPositionX = m_Particles[j].fPositionX;
+					m_Particles[i].fPositionY = m_Particles[j].fPositionY;
+					m_Particles[i].fPositionZ = m_Particles[j].fPositionZ;
+					m_Particles[i].vDirection = m_Particles[j].vDirection;
+					m_Particles[i].fRed = m_Particles[j].fRed;
+					m_Particles[i].fGreen = m_Particles[j].fGreen;
+					m_Particles[i].fBlue = m_Particles[j].fBlue;
+					m_Particles[i].fInitialAlpha = m_Particles[j].fInitialAlpha;
+					m_Particles[i].fAlpha = m_Particles[j].fAlpha;
+					m_Particles[i].fInitialVelocity = m_Particles[j].fInitialVelocity;
+					m_Particles[i].fVelocity = m_Particles[j].fVelocity;
+					m_Particles[i].fInitialSize = m_Particles[j].fInitialSize;
+					m_Particles[i].fSize = m_Particles[j].fSize;
+					m_Particles[i].fLife = m_Particles[j].fLife;
+					m_Particles[i].bActive = m_Particles[j].bActive;
+
+					i--;
+					j--;
+				}
+
+				/* Now insert it into the Particle array in the correct depth order. */
+				m_Particles[iIndex].fPositionX = fPositionX;
+				m_Particles[iIndex].fPositionY = fPositionY;
+				m_Particles[iIndex].fPositionZ = fPositionZ;
+				m_Particles[iIndex].vDirection = vDirection;
+				m_Particles[iIndex].fRed = fRed;
+				m_Particles[iIndex].fGreen = fGreen;
+				m_Particles[iIndex].fBlue = fBlue;
+				m_Particles[iIndex].fInitialAlpha = fInitialAlpha;
+				m_Particles[iIndex].fAlpha = fAlpha;
+				m_Particles[iIndex].fInitialVelocity = fInitialVelocity;
+				m_Particles[iIndex].fVelocity = fVelocity;
+				m_Particles[iIndex].fInitialSize = fInitialSize;
+				m_Particles[iIndex].fSize = fSize;
+				m_Particles[iIndex].fLife = 0.f;
+				m_Particles[iIndex].bActive = true;
+			}
+
+			m_bDidBurst = true;
 		}
-
-		/* Now that we know the location to insert into we need to copy the array over by one position from the index to make room for the new particle. */
-		i = m_fCurrentParticleCount;
-		j = i - 1;
-
-		while (i != iIndex)
-		{
-			m_Particles[i].fPositionX = m_Particles[j].fPositionX;
-			m_Particles[i].fPositionY = m_Particles[j].fPositionY;
-			m_Particles[i].fPositionZ = m_Particles[j].fPositionZ;
-			m_Particles[i].fRed = m_Particles[j].fRed;
-			m_Particles[i].fGreen = m_Particles[j].fGreen;
-			m_Particles[i].fBlue = m_Particles[j].fBlue;
-			m_Particles[i].fInitialAlpha = m_Particles[j].fInitialAlpha;
-			m_Particles[i].fAlpha = m_Particles[j].fAlpha;
-			m_Particles[i].fInitialVelocity = m_Particles[j].fInitialVelocity;
-			m_Particles[i].fVelocity = m_Particles[j].fVelocity;
-			m_Particles[i].fInitialSize = m_Particles[j].fInitialSize;
-			m_Particles[i].fSize = m_Particles[j].fSize;
-			m_Particles[i].fLife = m_Particles[j].fLife;
-			m_Particles[i].bActive = m_Particles[j].bActive;
-
-			i--;
-			j--;
-		}
-
-		/* Now insert it into the Particle array in the correct depth order. */
-		m_Particles[iIndex].fPositionX = fPositionX;
-		m_Particles[iIndex].fPositionY = fPositionY;
-		m_Particles[iIndex].fPositionZ = fPositionZ;
-		m_Particles[iIndex].fRed = fRed;
-		m_Particles[iIndex].fGreen = fGreen;
-		m_Particles[iIndex].fBlue = fBlue;
-		m_Particles[iIndex].fInitialAlpha = fInitialAlpha;
-		m_Particles[iIndex].fAlpha = fAlpha;
-		m_Particles[iIndex].fInitialVelocity = fInitialVelocity;
-		m_Particles[iIndex].fVelocity = fVelocity;
-		m_Particles[iIndex].fInitialSize = fInitialSize;
-		m_Particles[iIndex].fSize = fSize;
-		m_Particles[iIndex].fLife = 0.f;
-		m_Particles[iIndex].bActive = true;
 	}
 }
 
@@ -295,7 +410,7 @@ void CParticleSystem::UpdateParticles(_float fTimeDelta)
 	for (_uint i = 0; i < m_fCurrentParticleCount; i++)
 	{
 		_float3 vPosition = _float3(m_Particles[i].fPositionX, m_Particles[i].fPositionY, m_Particles[i].fPositionZ);
-		_vector vNewPosition = XMLoadFloat3(&m_tParticleDesc.m_vParticleDirection) * m_Particles[i].fVelocity * fTimeDelta;
+		_vector vNewPosition = XMVector3Normalize(XMLoadFloat3(&m_Particles[i].vDirection)) * m_Particles[i].fVelocity * fTimeDelta;
 		XMStoreFloat3(&vPosition, XMLoadFloat3(&vPosition) + vNewPosition);
 
 		m_Particles[i].fPositionX = vPosition.x;
@@ -423,6 +538,7 @@ void CParticleSystem::KillParticles()
 				m_Particles[j].fPositionX = m_Particles[j + 1].fPositionX;
 				m_Particles[j].fPositionY = m_Particles[j + 1].fPositionY;
 				m_Particles[j].fPositionZ = m_Particles[j + 1].fPositionZ;
+				m_Particles[j].vDirection = m_Particles[j + 1].vDirection;
 				m_Particles[j].fRed = m_Particles[j + 1].fRed;
 				m_Particles[j].fGreen = m_Particles[j + 1].fGreen;
 				m_Particles[j].fBlue = m_Particles[j + 1].fBlue;
@@ -434,6 +550,13 @@ void CParticleSystem::KillParticles()
 				m_Particles[j].fSize = m_Particles[j + 1].fSize;
 				m_Particles[j].fLife = m_Particles[j + 1].fLife;
 				m_Particles[j].bActive = m_Particles[j + 1].bActive;
+			}
+
+			/* If SpawnType is BURST after removing the last Particle stop emitting. */
+			if (m_tParticleDesc.m_eSpawnType == 1 && m_fCurrentParticleCount == 0 && m_bDidBurst)
+			{
+				m_bPlay = false;
+				CImgui_Manager::Get_Instance()->Set_Play(false);
 			}
 		}
 	}

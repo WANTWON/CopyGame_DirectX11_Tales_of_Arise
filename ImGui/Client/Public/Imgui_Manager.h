@@ -96,6 +96,8 @@ public:
 	void Save_Effect();
 	void Load_Effect();
 
+	void Set_Play(_bool bPlay) { m_bIsPlaying = bPlay; }
+
 public:
 	void Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype = false);
 	void Add_PrototypeTag(_tchar* TempTag) { m_TempLayerTags.push_back(TempTag); }
@@ -194,6 +196,9 @@ private:
 	_bool									m_bIsPlaying = false;
 	vector<string>							m_Shaders = { "SHADER_DEFAULT", "SHADER_ALPHAMASK" };
 	string									m_sCurrentShader = "SHADER_DEFAULT";
+
+	vector<string>							m_SpawnTypes = { "LOOP", "BURST" };
+	string									m_sCurrentSpawnType = "LOOP";
 
 	TRANSFORM_TYPE							m_eEffectTransformation = TRANS_SCALE;
 	class CTransform*						m_pEffectTransform = nullptr;

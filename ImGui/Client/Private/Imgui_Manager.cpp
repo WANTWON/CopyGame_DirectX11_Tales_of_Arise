@@ -2833,6 +2833,34 @@ void CImgui_Manager::Set_Effect()
 		}
 		ImGui::NewLine();
 
+		ImGui::Text("Spawn Type");
+		ImGui::SameLine();
+		if (ImGui::BeginCombo("##SpawnType", m_sCurrentSpawnType.c_str()))
+		{
+			_uint iCounter = 0;
+			for (auto& iter = m_SpawnTypes.begin(); iter != m_SpawnTypes.end(); iter++)
+			{
+				if (ImGui::Selectable(iter->c_str(), iter->c_str() == m_sCurrentSpawnType))
+				{
+					m_sCurrentSpawnType = *iter;
+
+					CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+					if (pParticleSystem)
+					{
+						m_tParticleDesc.m_eSpawnType = iCounter;
+						pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+					}
+				}
+
+				if (iter->c_str() == m_sCurrentSpawnType)
+					ImGui::SetItemDefaultFocus();
+
+				iCounter++;
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::Text("Shader");
+		ImGui::SameLine();
 		if (ImGui::BeginCombo("##Shader", m_sCurrentShader.c_str()))
 		{
 			_uint iCounter = 0;
@@ -2851,11 +2879,35 @@ void CImgui_Manager::Set_Effect()
 			}
 			ImGui::EndCombo();
 		}
+
+		ImGui::Checkbox("Billboard", &m_tParticleDesc.m_bBillboard);
 		ImGui::NewLine();
 		ImGui::Separator();
 		
 		ImGui::Text("Particles Settings");
 		
+		if (ImGui::DragInt("##ParticlesNum", &m_tParticleDesc.m_iMaxParticles, 1, 0, 1000, "Max Particles: %d"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (m_sCurrentSpawnType == "BURST")
+			ImGui::BeginDisabled();
+		if (ImGui::DragFloat("##ParticlesPerSecond", &m_tParticleDesc.m_fParticlesPerSecond, 0.05f, 0, m_tParticleDesc.m_iMaxParticles, "Particles/Sec: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (m_sCurrentSpawnType == "BURST")
+			ImGui::EndDisabled();
+		if (ImGui::DragFloat("##ParticlesLifetime", &m_tParticleDesc.m_fParticlesLifetime, 0.05f, 0, 0, "Particles Lifetime: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
 		if (ImGui::DragFloat("##ParticleDeviationX", &m_tParticleDesc.m_fParticleDeviationX, 0.05f, 0, 0, "X Variation: %.02f"))
 		{
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
@@ -2874,24 +2926,66 @@ void CImgui_Manager::Set_Effect()
 			if (pParticleSystem)
 				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
+		if (m_tParticleDesc.m_bRandomDirectionX)
+			ImGui::BeginDisabled();
 		if (ImGui::DragFloat("##ParticleDirectionX", &m_tParticleDesc.m_vParticleDirection.x, 0.05f, -1, 1, "Direction X: %.02f"))
 		{
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
 			if (pParticleSystem)
 				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
-		if (ImGui::DragFloat("##ParticleDirectionY", &m_tParticleDesc.m_vParticleDirection.y, 0.05f, -1, 1, "Direction Y: %.02f"))
+		if (m_tParticleDesc.m_bRandomDirectionX)
+			ImGui::EndDisabled();
+		ImGui::SameLine();
+		ImGui::Text("Random");
+		ImGui::SameLine();
+		if (ImGui::Checkbox("##RandomDirectionX", &m_tParticleDesc.m_bRandomDirectionX))
 		{
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
 			if (pParticleSystem)
 				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
+
+		if (m_tParticleDesc.m_bRandomDirectionY)
+			ImGui::BeginDisabled();
+		if (ImGui::DragFloat("##ParticleDirectionY", &m_tParticleDesc.m_vParticleDirection.y, 0.05f, -1, 1, "Direction Y: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect); 
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (m_tParticleDesc.m_bRandomDirectionY)
+			ImGui::EndDisabled();
+		ImGui::SameLine();
+		ImGui::Text("Random");
+		ImGui::SameLine();
+		if (ImGui::Checkbox("##RandomDirectionY", &m_tParticleDesc.m_bRandomDirectionY))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+
+		if (m_tParticleDesc.m_bRandomDirectionZ)
+			ImGui::BeginDisabled();
 		if (ImGui::DragFloat("##ParticleDirectionZ", &m_tParticleDesc.m_vParticleDirection.z, 0.05f, -1, 1, "Direction Z: %.02f"))
 		{
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
 			if (pParticleSystem)
 				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
+		if (m_tParticleDesc.m_bRandomDirectionZ)
+			ImGui::EndDisabled();
+		ImGui::SameLine();
+		ImGui::Text("Random");
+		ImGui::SameLine();
+		if (ImGui::Checkbox("##RandomDirectionZ", &m_tParticleDesc.m_bRandomDirectionZ))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+
 		if (ImGui::DragFloat("##Velocity", &m_tParticleDesc.m_fParticleVelocity, 0.05f, 0, 100.f, "Velocity: %.02f"))
 		{
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
@@ -2915,25 +3009,7 @@ void CImgui_Manager::Set_Effect()
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
 			if (pParticleSystem)
 				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
-		}
-		if (ImGui::DragFloat("##ParticlesPerSecond", &m_tParticleDesc.m_fParticlesPerSecond, 0.05f, 0, m_tParticleDesc.m_iMaxParticles, "Particles/Sec: %.02f"))
-		{
-			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
-			if (pParticleSystem)
-				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
-		}
-		if (ImGui::DragFloat("##ParticlesLifetime", &m_tParticleDesc.m_fParticlesLifetime, 0.05f, 0, 0, "Particles Lifetime: %.02f"))
-		{
-			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
-			if (pParticleSystem)
-				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
-		}
-		if (ImGui::DragInt("##ParticlesNum", &m_tParticleDesc.m_iMaxParticles, 1, 0, 1000, "Max Particles: %d"))
-		{
-			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
-			if (pParticleSystem)
-				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
-		}
+		}	
 
 		ImGui::NewLine();
 		if (ImGui::Button("Curve Editor", ImVec2(100, 0)))
