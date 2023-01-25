@@ -98,15 +98,19 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	/* -1 ~ 1 => 0 ~ 1*/
 
-	vector		vNormal1 = g_NormalTexture[0].Sample(LinearSampler, In.vTexUV * 40.f);
-	vector		vNormal2 = g_NormalTexture[1].Sample(LinearSampler, In.vTexUV * 30.f);
-	vector		vNormal3 = g_NormalTexture[2].Sample(LinearSampler, In.vTexUV * 30.f);
-	vector		vNormal4 = g_NormalTexture[3].Sample(LinearSampler, In.vTexUV * 30.f);
+	float fFilterSum = min((vFilter.r + vFilter.g + vFilter.b), 1.f);
+	float fFilterStrength = 1 - fFilterSum;
 
-	float3 vNormalA = normalize(float4(vNormal1.x*2.f - 1.f, vNormal1.y*2.f - 1.f, sqrt(1 - vNormal1.x * vNormal1.x - vNormal1.y * vNormal1.y), 0.f));
-	float3 vNormalB = normalize(float4(vNormal2.x*2.f - 1.f, vNormal2.y*2.f - 1.f, sqrt(1 - vNormal2.x * vNormal2.x - vNormal2.y * vNormal2.y), 0.f));
-	float3 vNormalC = normalize(float4(vNormal3.x*2.f - 1.f, vNormal3.y*2.f - 1.f, sqrt(1 - vNormal3.x * vNormal3.x - vNormal3.y * vNormal3.y), 0.f));
-	float3 vNormalD = normalize(float4(vNormal4.x*2.f - 1.f, vNormal4.y*2.f - 1.f, sqrt(1 - vNormal4.x * vNormal4.x - vNormal4.y * vNormal4.y), 0.f));
+
+	vector		vNormal1 = g_NormalTexture[0].Sample(LinearSampler, In.vTexUV*fFilterStrength * 40.f);
+	vector		vNormal2 = g_NormalTexture[1].Sample(LinearSampler, In.vTexUV*vFilter.r * 30.f);
+	vector		vNormal3 = g_NormalTexture[2].Sample(LinearSampler, In.vTexUV*vFilter.g * 30.f);
+	vector		vNormal4 = g_NormalTexture[3].Sample(LinearSampler, In.vTexUV*vFilter.b * 30.f);
+
+	float3 vNormalA = normalize(float4(vNormal1.x*2.f - 1.f, vNormal1.y*2.f - 1.f, sqrt(1 - vNormal1.x * vNormal1.x - vNormal1.y * vNormal1.y), 0.f)).xyz;
+	float3 vNormalB = normalize(float4(vNormal2.x*2.f - 1.f, vNormal2.y*2.f - 1.f, sqrt(1 - vNormal2.x * vNormal2.x - vNormal2.y * vNormal2.y), 0.f)).xyz;
+	float3 vNormalC = normalize(float4(vNormal3.x*2.f - 1.f, vNormal3.y*2.f - 1.f, sqrt(1 - vNormal3.x * vNormal3.x - vNormal3.y * vNormal3.y), 0.f)).xyz;
+	float3 vNormalD = normalize(float4(vNormal4.x*2.f - 1.f, vNormal4.y*2.f - 1.f, sqrt(1 - vNormal4.x * vNormal4.x - vNormal4.y * vNormal4.y), 0.f)).xyz;
 
 	
 	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
@@ -115,13 +119,18 @@ PS_OUT PS_MAIN(PS_IN In)
 	vNormalC = mul(vNormalC, WorldMatrix);
 	vNormalD = mul(vNormalD, WorldMatrix);
 
-	float3 vMtrlNormal = vNormalB * vFilter.r + vNormalC * vFilter.g + vNormalD * vFilter.b;
-	float fFilterSum = min( (vFilter.r+ vFilter.g + vFilter.b), 1.f);
-	float fFilterStrength = 1 - fFilterSum;
-	vNormalA *= fFilterStrength;
-	Out.vNormal.xyz = vMtrlNormal + vNormalC;
-	Out.vNormal = vector(Out.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
+	//float3 finalNormal = lerp(vNormalB, vFilter, vFilter.r) + lerp(vNormalC, vFilter, vFilter.g) + lerp(vNormalD, vFilter, vFilter.b);
+	//vNormalA = lerp(vNormalA, vFilter, fFilterStrength);
+
+	//Out.vNormal.xyz = vNormalA + finalNormal;
+	//Out.vNormal = vector(Out.vNormal.xyz * 0.5f + 0.5f, 0.f);
+
+
+	float3 vMtrlNormal = vNormalB * vFilter.r + vNormalC * vFilter.g + vNormalD * vFilter.b;
+	vNormalA *= fFilterStrength;
+	Out.vNormal.xyz = vMtrlNormal + vNormalA;
+	Out.vNormal = vector(Out.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
 	/* near ~ far */
 	/* 0 ~ far */

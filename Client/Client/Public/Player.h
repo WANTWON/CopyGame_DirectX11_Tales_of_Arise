@@ -9,6 +9,7 @@ class CModel;
 END
 
 BEGIN(Client)
+class CPlayerState;
 class CPlayer final : public CBaseObj
 {	
 public:
@@ -36,8 +37,11 @@ public:
 	CModel* Get_Model() { return m_pModelCom; }
 	CTransform* Get_Transform() { return m_pTransformCom; }
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
-	class CPlayerState* Get_State() { return m_pPlayerState; }
+	CPlayerState* Get_State() { return m_pPlayerState; }
+	_vector Get_LastPosition() { return m_vLastPos; }
+
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
+	void Set_LastPosition(_vector vPosition) { m_vLastPos = vPosition; }
 
 	_bool Is_AnimationLoop(_uint eAnimId);
 
@@ -69,10 +73,11 @@ private:
 	CNavigation*			m_pNavigationCom = nullptr;
 	vector<CNavigation*>	m_vecNavigations;
 
-	class CPlayerState* m_pPlayerState = nullptr;
+	CPlayerState* m_pPlayerState = nullptr;
 
 private:
-	_bool m_bIsFirst = true;
+	_bool	m_bIsFirst = true;
+	_vector m_vLastPos = { 0.f,0.f,0.f,1.f };
 
 private:
 	vector<class CGameObject*> m_Parts;
