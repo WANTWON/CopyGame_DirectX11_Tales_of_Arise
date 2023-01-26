@@ -45,13 +45,27 @@ HRESULT CUI_MENU_Back::Initialize(void * pArg)
 int CUI_MENU_Back::Tick(_float fTimeDelta)
 {
 	
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_I) && !CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_ESCAPE) && !CUI_Manager::Get_Instance()->Get_Mainmenuon())
 		fadeinMain();
 
 	if (!CUI_Manager::Get_Instance()->Get_Mainmenuon())
 		return OBJ_NOEVENT;
 
 	
+	if (m_fbackfadeout)
+	{
+		m_fMainAlpha -= 0.05f;
+		m_fbackalpha -= 0.05f;
+		if (m_fbackalpha <= 0.f)
+		{
+			m_fbackalpha = 0.f;
+			m_fMainAlpha = 0.f;
+			m_fbackfadeout = false;
+			CUI_Manager::Get_Instance()->Set_Mainmenuon(false);
+		}
+
+	}
+
 	/*if (CUI_Manager::Get_Instance()->Get_UI_OpenType() == CUI_Manager::UI_INVEN)
 	{
 
@@ -99,11 +113,12 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 	
 	if (m_fbackfadein)
 	{
-		m_fbackalpha += 0.08f;
+		m_fbackalpha += 0.05f;
 		if (m_fbackalpha >= 1.f)
 		{
 			m_fbackalpha = 1.f;
 			m_fbackfadein = false;
+			CUI_Manager::Get_Instance()->Set_StopTick(true);
 		}
 	}
 
@@ -125,6 +140,15 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 
 		if (m_ficonposition1 <= 300.f)
 			m_biconfirstmove = false;
+	}
+
+	if (m_biconlastmove) //icon moving
+	{
+		m_ficonposition1 += 50.f;
+		m_ficonposition2 += 25.f;
+
+		if (m_ficonposition1 >= 600.f)
+			m_biconlastmove = false;
 	}
 
 	m_fAngle += 0.02f;
@@ -479,9 +503,9 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_ESCAPE))
 		{
 			m_fbackfadeout = true;
-			
-			m_fMain_Bottom_buttonY = 400.f;
-			m_ficonposition2 = m_ficonposition1 = 600.f;
+			CUI_Manager::Get_Instance()->Set_StopTick(false);
+			//m_fMain_Bottom_buttonY = 400.f;
+			m_biconlastmove = true;
 			
 		}
 			
@@ -489,11 +513,12 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 	
 	if (m_fbackfadeout)
 	{
-		m_fMainAlpha -= 0.08f;
-		m_fbackalpha -= 0.08f;
+		m_fMainAlpha -= 0.05f;
+		m_fbackalpha -= 0.05f;
 		if (m_fbackalpha <= 0.f)
 		{
 			m_fbackalpha = 0.f;
+			m_fMainAlpha = 0.f;
 			m_fbackfadeout = false;
 			CUI_Manager::Get_Instance()->Set_Mainmenuon(false);
 		}
@@ -729,6 +754,8 @@ HRESULT CUI_MENU_Back::Render()
 	{
 	case MENU_MAIN:
 		Render_MAINBACK();
+		if (m_fbackfadeout)
+			return S_OK;
 		Render_bottmline();
 		Render_Mainbottombutton();
 		Render_GALD();
@@ -4986,7 +5013,8 @@ void CUI_MENU_Back::fadeinMain()
 	desc.position.x = 110.f;
 	desc.position.y = 110.f;
 	desc.m_etype = 1;
-
+	m_fMain_Bottom_buttonY = 400.f;
+	m_ficonposition2 = m_ficonposition1 = 600.f;
 
 	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc);
 

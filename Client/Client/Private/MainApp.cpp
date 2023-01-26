@@ -55,7 +55,7 @@ void CMainApp::Tick(_float fTimeDelta)
 	if (nullptr == m_pGameInstance)
 		return;
 
-	if (m_pGameInstance->Key_Up(DIK_I) && !(m_pUI_Manager->Get_Mainmenuon()))
+	if (m_pGameInstance->Key_Up(DIK_ESCAPE) && !(m_pUI_Manager->Get_StopTick()))
 		m_pUI_Manager->Set_Mainmenuon(true);
 	/*if (m_pGameInstance->Key_Up(DIK_MINUS))
 		m_pUI_Manager->Set_UI_OpenType(CUI_Manager::UI_MAP);*/

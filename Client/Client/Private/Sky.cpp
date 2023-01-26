@@ -35,7 +35,7 @@ int CSky::Tick(_float fTimeDelta)
 void CSky::Late_Tick(_float fTimeDelta)
 {
 
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
 

@@ -162,6 +162,7 @@ private:
 
 
 	_bool m_biconfirstmove = true;
+	_bool m_biconlastmove = false;
 	_float m_ficonposition1 = 600.f;
 	_float m_ficonposition2 = 600.f;
 

@@ -61,6 +61,9 @@ public: /*Getter Setter*/
 	void Set_Mainmenuon(_bool onoff) { m_bMainMenuon = onoff; }
 	_bool Get_Mainmenuon() { return m_bMainMenuon; }
 
+	void Set_StopTick(_bool onoff) { m_bStopTick = onoff; }
+	_bool Get_StopTick() { return m_bStopTick; }
+
 
 private:
 	UITYPE				m_eUIType = UI_END;
@@ -82,6 +85,7 @@ private:
 	_uint m_iMAXCP;
 
 	_bool m_bMainMenuon = false;
+	_bool m_bStopTick = false;
 //private:
 //	_uint iplayer0_hp = 0;
 //	_uint iplayer1_hp = 0;
