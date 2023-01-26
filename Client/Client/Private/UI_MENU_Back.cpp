@@ -32,6 +32,10 @@ HRESULT CUI_MENU_Back::Initialize(void * pArg)
 
 	m_bfadein = true;
 
+	m_fMainAlpha = 0.f;
+	m_fMain_Bottom_buttonY = 400.f;
+	m_ficonposition2 = m_ficonposition1 = 600.f;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -40,8 +44,14 @@ HRESULT CUI_MENU_Back::Initialize(void * pArg)
 
 int CUI_MENU_Back::Tick(_float fTimeDelta)
 {
+	
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_I) && !CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		fadeinMain();
+
 	if (!CUI_Manager::Get_Instance()->Get_Mainmenuon())
 		return OBJ_NOEVENT;
+
+	
 	/*if (CUI_Manager::Get_Instance()->Get_UI_OpenType() == CUI_Manager::UI_INVEN)
 	{
 
@@ -87,6 +97,15 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 	if (!CUI_Manager::Get_Instance()->Get_Mainmenuon())
 		return;
 	
+	if (m_fbackfadein)
+	{
+		m_fbackalpha += 0.08f;
+		if (m_fbackalpha >= 1.f)
+		{
+			m_fbackalpha = 1.f;
+			m_fbackfadein = false;
+		}
+	}
 
 	if(m_bMainAlphaup) //main and icon screenswitch moving
 	{
@@ -441,6 +460,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 			if (m_busingiteminmenu)
 			{
 				m_busingiteminmenu = false;
+				
 			}
 			else
 			{
@@ -457,9 +477,28 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 	if (m_etype == MENU_MAIN)
 	{
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_ESCAPE))
-			CUI_Manager::Get_Instance()->Set_Mainmenuon(false);
+		{
+			m_fbackfadeout = true;
+			
+			m_fMain_Bottom_buttonY = 400.f;
+			m_ficonposition2 = m_ficonposition1 = 600.f;
+			
+		}
+			
 	}
 	
+	if (m_fbackfadeout)
+	{
+		m_fMainAlpha -= 0.08f;
+		m_fbackalpha -= 0.08f;
+		if (m_fbackalpha <= 0.f)
+		{
+			m_fbackalpha = 0.f;
+			m_fbackfadeout = false;
+			CUI_Manager::Get_Instance()->Set_Mainmenuon(false);
+		}
+
+	}
 
 	if (m_bfadeout_inventory)
 	{
@@ -589,7 +628,8 @@ HRESULT CUI_MENU_Back::Render()
 	m_fSize.y = 720.f + m_fScale_Mainback;
 	m_fPosition.x = 640.f;
 	m_fPosition.y = 360.f;
-
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fbackalpha, sizeof(_float))))
+		return E_FAIL;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -599,7 +639,7 @@ HRESULT CUI_MENU_Back::Render()
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(0);
+	m_pShaderCom->Begin(UI_ALPHASET);
 
 	m_pVIBufferCom->Render();
 	
@@ -4934,6 +4974,29 @@ HRESULT CUI_MENU_Back::Render_inven_bottom_item_forUseitem()
 	Render_Player4_Status_useitem();
 	return S_OK;
 
+}
+
+void CUI_MENU_Back::fadeinMain()
+{
+	m_bMainAlphaup = true;
+	m_biconfirstmove = true;
+	m_fbackfadein = true;
+	//m_fInven_Bottom_buttonY = 0.f;
+	CUI_RuneEffect::RUNEDESC desc;
+	desc.position.x = 110.f;
+	desc.position.y = 110.f;
+	desc.m_etype = 1;
+
+
+	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc);
+
+	desc.position.y += 55.f;
+	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc);
+
+	desc.position.y += 55.f;
+	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc);
+	desc.position.y += 55.f;
+	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc);
 }
 
 void CUI_MENU_Back::pingpong()

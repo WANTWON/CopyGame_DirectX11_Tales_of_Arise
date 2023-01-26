@@ -60,6 +60,7 @@ public:
 
 	HRESULT Render_inven_bottom_item_forUseitem();
 
+	void fadeinMain();
 
 	void pingpong();
 
@@ -196,6 +197,10 @@ private:
 
 	_uint m_iHpbarshaderpass = 0;
 
+	_float m_fbackalpha = 0.f;
+
+	_bool m_fbackfadeout = false;
+	_bool m_fbackfadein = false;
 };
 
 END

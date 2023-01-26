@@ -108,6 +108,8 @@ HRESULT CHawk::Ready_Components(void * pArg)
 
 int CHawk::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
 
@@ -120,6 +122,8 @@ int CHawk::Tick(_float fTimeDelta)
 
 void CHawk::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)

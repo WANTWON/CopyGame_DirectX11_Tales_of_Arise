@@ -2,6 +2,7 @@
 #include "..\Public\Sky.h"
 
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 CSky::CSky(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -33,6 +34,9 @@ int CSky::Tick(_float fTimeDelta)
 
 void CSky::Late_Tick(_float fTimeDelta)
 {
+
+	/*if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;*/
 	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, 
