@@ -132,6 +132,7 @@ void CRunState::Move(_float fTimeDelta)
 	pPlayerTransform->Set_State(CTransform::STATE_RIGHT, vRight);
 
 	_float fCos = XMVectorGetX(XMVector4Dot(pPlayerTransform->Get_State(CTransform::STATE_LOOK), vPlayerLook));
+
 	if (0.85f < fCos)
 		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());
 

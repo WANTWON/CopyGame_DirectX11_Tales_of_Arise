@@ -1330,6 +1330,11 @@ void CImgui_Manager::Set_Brush()
 	ImGui::GetIO().NavActive = false;
 	ImGui::GetIO().WantCaptureMouse = true;
 
+	static char FilePath[MAX_PATH] = "";
+	WideCharToMultiByte(CP_ACP, 0, m_pBmpFilePath, MAX_PATH, FilePath, MAX_PATH, NULL, NULL);
+	ImGui::InputText("BmpPath", FilePath, MAX_PATH);
+	MultiByteToWideChar(CP_ACP, 0, FilePath, MAX_PATH, m_pBmpFilePath, MAX_PATH);
+
 	ImGui::CollapsingHeader("Setting Brush Type");
 	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "RED"); ImGui::SameLine();
 	ImGui::RadioButton("##RED", &m_eBrushType, 0);

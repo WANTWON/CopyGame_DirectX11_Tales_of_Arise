@@ -34,7 +34,7 @@ void CMeshContainer_Instance::Get_BoneMatrices(_float4x4 * pBoneMatrices, _fmatr
 	}
 }
 
-HRESULT CMeshContainer_Instance::Initialize_Prototype(CModel::PLAYERID eModelType, HANDLE hFile, _ulong * pdwByte, const char* pDataFilePath, CModel * pModel, _fmatrix PivotMatrix)
+HRESULT CMeshContainer_Instance::Initialize_Prototype(CModel::TYPE eModelType, HANDLE hFile, _ulong * pdwByte, const char* pDataFilePath, CModel * pModel, _fmatrix PivotMatrix)
 {
 	_tchar szModelFilePath[MAX_PATH] = TEXT("");
 	MultiByteToWideChar(CP_ACP, 0, pDataFilePath, (_int)strlen(pDataFilePath), szModelFilePath, MAX_PATH);
@@ -271,7 +271,7 @@ void CMeshContainer_Instance::Tick(void)
 	RELEASE_INSTANCE(CFrustum);
 }
 
-CMeshContainer_Instance * CMeshContainer_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CModel::PLAYERID eModelType, HANDLE hFile, _ulong * pdwByte, const char* pDataFilePath, CModel * pModel, _fmatrix PivotMatrix)
+CMeshContainer_Instance * CMeshContainer_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CModel::TYPE eModelType, HANDLE hFile, _ulong * pdwByte, const char* pDataFilePath, CModel * pModel, _fmatrix PivotMatrix)
 {
 	CMeshContainer_Instance* pInstance = new CMeshContainer_Instance(pDevice, pContext);
 

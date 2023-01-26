@@ -18,9 +18,9 @@ namespace Engine
 	/* 빛의 정보를 표현한다. */
 	typedef struct tagLightDesc
 	{
-		enum PLAYERID { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_END };
+		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_END };
 
-		PLAYERID		eType = TYPE_END;
+		TYPE		eType = TYPE_END;
 		XMFLOAT4	vPosition;
 		float		fRange;
 		XMFLOAT4	vDirection;
