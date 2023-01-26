@@ -55,7 +55,7 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 	{
 		case Client::CCamera_Dynamic::CAM_PLAYER:
 			Player_Camera(fTimeDelta);
-			break;
+			break; 
 		case Client::CCamera_Dynamic::CAM_DEBUG:
 			Debug_Camera(fTimeDelta);
 			break;

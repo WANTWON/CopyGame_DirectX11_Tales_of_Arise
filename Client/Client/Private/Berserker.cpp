@@ -104,6 +104,9 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 
 int CBerserker::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
+
 	if (m_bDead)
 		return OBJ_DEAD;
 
@@ -115,6 +118,8 @@ int CBerserker::Tick(_float fTimeDelta)
 
 void CBerserker::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)

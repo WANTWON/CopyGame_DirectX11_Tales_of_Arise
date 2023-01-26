@@ -175,6 +175,9 @@
     <ClInclude Include="..\Public\AIIdleState.h" />
     <ClInclude Include="..\Public\AIState.h" />
     <ClInclude Include="..\Public\Alphen.h" />
+    <ClInclude Include="..\Public\Effect.h" />
+    <ClInclude Include="..\Public\EffectMesh.h" />
+    <ClInclude Include="..\Public\EffectTexture.h" />
     <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Berserker.h" />
@@ -232,6 +235,7 @@
     <ClInclude Include="..\Public\Level_SnowField.h" />
     <ClInclude Include="..\Public\NonAnim.h" />
     <ClInclude Include="..\Public\NonAnim_Instance.h" />
+    <ClInclude Include="..\Public\ParticleSystem.h" />
     <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
@@ -249,6 +253,7 @@
     <ClInclude Include="..\Public\UI_Changebutton.h" />
     <ClInclude Include="..\Public\UI_LOCKON.h" />
     <ClInclude Include="..\Public\UI_font_Damage_number.h" />
+    <ClInclude Include="..\Public\UI_MENU_Back.h" />
     <ClInclude Include="..\Public\UI_Portraitback.h" />
     <ClInclude Include="..\Public\ScreenFadeEffect.h" />
     <ClInclude Include="..\Public\UI_Comboline.h" />
@@ -291,6 +296,9 @@
   <ItemGroup>
     <ClCompile Include="..\Private\AIIdleState.cpp" />
     <ClCompile Include="..\Private\Alphen.cpp" />
+    <ClCompile Include="..\Private\Effect.cpp" />
+    <ClCompile Include="..\Private\EffectMesh.cpp" />
+    <ClCompile Include="..\Private\EffectTexture.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Berserker.cpp" />
@@ -345,6 +353,7 @@
     <ClCompile Include="..\Private\Level_SnowField.cpp" />
     <ClCompile Include="..\Private\NonAnim.cpp" />
     <ClCompile Include="..\Private\NonAnim_Instance.cpp" />
+    <ClCompile Include="..\Private\ParticleSystem.cpp" />
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
@@ -360,6 +369,7 @@
     <ClCompile Include="..\Private\UI_Changebutton.cpp" />
     <ClCompile Include="..\Private\UI_LOCKON.cpp" />
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp" />
+    <ClCompile Include="..\Private\UI_MENU_Back.cpp" />
     <ClCompile Include="..\Private\UI_Portraitback.cpp" />
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp" />
     <ClCompile Include="..\Private\UI_Comboline.cpp" />
@@ -409,6 +419,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_Effect.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_UI.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxCubeTexture.hlsl" />

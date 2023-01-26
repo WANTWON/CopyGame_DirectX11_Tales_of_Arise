@@ -79,6 +79,15 @@
     <Filter Include="02.GameObjects\05.Effect">
       <UniqueIdentifier>{0cf1aef3-18c8-4afa-af51-3abc0da6794f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\05.Effect\ParticleSystem">
+      <UniqueIdentifier>{58cb54e5-c03d-473d-b0a2-fb77a636aa22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05.Effect\EffectTexture">
+      <UniqueIdentifier>{d63aff72-b2ff-48d4-879a-01447cf49b4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05.Effect\EffectMesh">
+      <UniqueIdentifier>{76ac3937-4e09-4b80-8978-b8d19deef312}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -183,6 +192,15 @@
     <ClInclude Include="..\public\Effect.h">
       <Filter>02.GameObjects\05.Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ParticleSystem.h">
+      <Filter>02.GameObjects\05.Effect\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EffectMesh.h">
+      <Filter>02.GameObjects\05.Effect\EffectMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EffectTexture.h">
+      <Filter>02.GameObjects\05.Effect\EffectTexture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -269,6 +287,15 @@
     <ClCompile Include="..\private\Effect.cpp">
       <Filter>02.GameObjects\05.Effect</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\ParticleSystem.cpp">
+      <Filter>02.GameObjects\05.Effect\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EffectMesh.cpp">
+      <Filter>02.GameObjects\05.Effect\EffectMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EffectTexture.cpp">
+      <Filter>02.GameObjects\05.Effect\EffectTexture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -294,6 +321,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxNorTexforMaptool.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_Effect.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

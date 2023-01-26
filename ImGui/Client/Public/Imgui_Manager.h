@@ -11,6 +11,9 @@
 #include "Effect_Manager.h"
 #include "Camera_Manager.h"
 #include "TreasureBox.h"
+#include "EffectTexture.h"
+#include "EffectMesh.h"
+#include "ParticleSystem.h"
 
 BEGIN(Engine)
 class CGameObject;
@@ -92,8 +95,10 @@ public:
 	void Read_Meshes(_tchar* pFolderPath);
 
 	void Set_Effect();
-	void Save_Effect();
-	void Load_Effect();
+	_bool Save_Effect();
+	_bool Load_Effect();
+
+	void Set_Play(_bool bPlay) { m_bIsPlaying = bPlay; }
 
 public:
 	void Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype = false);
@@ -170,7 +175,7 @@ private:
 	/*
 	* For Effect
 	*/
-	enum TRANSFORM_TYPE { TRANS_SCALE, TRANS_ROTATION, TRANS_END };
+	enum TRANSFORM_TYPE { TRANS_SCALE, TRANS_ROTATION, TRANS_TRANSLATION, TRANS_END };
 
 	CEffect_Manager*						m_pEffectManager = nullptr;
 	vector<string>							m_SavedEffects;
@@ -180,19 +185,33 @@ private:
 	/* Effect Resources (Texture, Meshes) */
 	list<string>							m_TextureNames;
 	list<string>							m_MeshNames;
-	string									m_sSelectedTexture;
-	string									m_sSelectedMesh;
+	string									m_sSelectedResource;
+
+	enum RESOURCE_TYPE { RESOURCE_TEXTURE, RESOURCE_MESH, RESOURCE_END };
+	RESOURCE_TYPE							m_eResourceType = RESOURCE_END;
+
+	/* Instanced Effects */
 	string									m_sSelectedEffect;
-	CEffect*								m_pSelectedEffect = nullptr;
+	class CEffect*							m_pSelectedEffect = nullptr;
 	
 	/* Effect Settings */
 	_bool									m_bIsPlaying = false;
+	vector<string>							m_Shaders = { "SHADER_DEFAULT", "SHADER_ALPHAMASK" };
+	string									m_sCurrentShader = "SHADER_DEFAULT";
+
+	vector<string>							m_SpawnTypes = { "LOOP", "BURST" };
+	string									m_sCurrentSpawnType = "LOOP";
+
 	TRANSFORM_TYPE							m_eEffectTransformation = TRANS_SCALE;
 	class CTransform*						m_pEffectTransform = nullptr;
-	_float									m_fX = 1.f, m_fY = 1.f, m_fZ = 1.f;
 	_bool									m_bBillboard = true;
 
-	_float									m_fCurveX = 1.f, m_fCurveY = 1.f, m_fCurveZ = 1.f, m_fCurveTime = 1.f;
+	_float									m_fCurveValue = 1.f, m_fCurveStart = 1.f, m_fCurveEnd = 1.f;
+	_uint									m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedAlphaCurve = 0;
+
+	CEffectTexture::TEXTUREEFFECTDESC		m_tTextureEffectDesc;
+	CEffectMesh::MESHEFFECTDESC				m_tMeshEffectDesc;
+	CParticleSystem::PARTICLEDESC			m_tParticleDesc;
 
 public:
 	virtual void Free() override;

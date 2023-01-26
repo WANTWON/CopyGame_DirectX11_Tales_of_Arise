@@ -23,8 +23,11 @@ public:
 	HRESULT Add_GameObject_Out(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, OUT CGameObject*& pGameObjectOut, void* pArg = nullptr);
 	HRESULT Add_GameObjectLoad(const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pVIBufferTag, void* pArg = nullptr);
 	class CGameObject* Clone_GameObject(const _tchar* pPrototypeTag, void* pArg = nullptr);
+
+public:
 	void Tick(_float fTimeDelta);
 	void Late_Tick(_float fTimeDelta);
+
 public:
 	class CGameObject* Get_Objects(_uint iLevelIndex, const _tchar* pLayerTag, _uint iIndex = 0);
 	list<CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);

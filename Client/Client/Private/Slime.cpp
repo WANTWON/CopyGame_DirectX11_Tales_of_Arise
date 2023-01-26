@@ -103,6 +103,8 @@ HRESULT CSlime::Ready_Components(void * pArg)
 
 int CSlime::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
 
@@ -117,6 +119,8 @@ int CSlime::Tick(_float fTimeDelta)
 
 void CSlime::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)

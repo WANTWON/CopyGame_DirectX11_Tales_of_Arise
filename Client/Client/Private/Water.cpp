@@ -30,6 +30,8 @@ HRESULT CWater::Initialize(void * pArg)
 
 int CWater::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	m_fScrollingTimer += fTimeDelta;
 
 	return OBJ_NOEVENT;
@@ -37,6 +39,9 @@ int CWater::Tick(_float fTimeDelta)
 
 void CWater::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
+
 	if (m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);

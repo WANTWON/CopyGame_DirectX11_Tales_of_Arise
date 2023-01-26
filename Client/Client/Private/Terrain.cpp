@@ -95,11 +95,14 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 
 int CTerrain::Tick(_float fTimeDelta)
 {
+
 	return OBJ_NOEVENT;
 }
 
 void CTerrain::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return ;
 	//m_pVIBufferCom->Culling(m_pTransformCom);
 
 	if (nullptr != m_pRendererCom)
