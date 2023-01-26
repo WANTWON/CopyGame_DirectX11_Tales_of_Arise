@@ -5081,13 +5081,16 @@ void CUI_MENU_Back::use_HPrecover_item()
 	switch (m_eSelected_UsableItem)
 	{
 
-	case ITEMNAME_LEMONJELLY:
+	case ITEMNAME_LEMONJELLY:  //여기서 셰이더 패스를 바꾸는 작업을 통해서 파란색으로 디는걸  하고.. 몇번째 플레이어를 받아왔냐에 따라서 걍 hp를 plus해주자 포인터로
+		m_iRecover = 2000;
 		break;
 
 	case ITEMNAME_HWANGJELLY:
+		m_iRecover = 1000;
 		break;
 
 	case ITEMNAME_GRAPEJELLY:
+		m_iRecover = 2800;
 		break;
 
 	case ITEMNAME_PINEAPPLEJELLY:

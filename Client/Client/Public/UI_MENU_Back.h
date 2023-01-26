@@ -192,6 +192,10 @@ private:
 
 	ITEM_NAME m_eSelected_UsableItem = ITEMNAME_END;
 
+	_uint m_iRecover = 0;
+
+	_uint m_iHpbarshaderpass = 0;
+
 };
 
 END
