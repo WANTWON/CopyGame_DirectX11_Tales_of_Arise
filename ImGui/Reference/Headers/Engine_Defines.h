@@ -52,6 +52,7 @@ using namespace std;
 #include "Engine_Struct.h"
 #include "Engine_Typedef.h"
 
+enum EVENTTYPE { EVENT_SOUND, EVENT_EFFECT, EVENT_COLLIDER, EVENT_STATE, EVENT_END };
 
 #ifdef _DEBUG
 

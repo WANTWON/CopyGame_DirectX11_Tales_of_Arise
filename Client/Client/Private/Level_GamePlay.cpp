@@ -26,8 +26,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 		
-	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		//return E_FAIL;
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -129,7 +129,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 		return E_FAIL;	
 
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(64.f, 0.f, 64.f, 1.f));
+	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(64.f, 5.f, 64.f, 1.f));
 	pPlayer->Change_Navigation(LEVEL_GAMEPLAY);
 	pPlayer->Compute_CurrentIndex(LEVEL_GAMEPLAY);
 	pPlayer->Check_Navigation();
@@ -147,7 +147,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _tchar * pLayerTag)
 	for (_uint i = 0; i < 5; ++i)
 	{
 		_vector vPosition = { rand() % 30, 0.f, rand() % 30 , 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_IceWolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_GAMEPLAY, pLayerTag, &vPosition)))
 			return E_FAIL;
 	}
 

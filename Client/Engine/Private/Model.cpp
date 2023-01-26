@@ -55,21 +55,24 @@ CHierarchyNode * CModel::Get_BonePtr(const char * pBoneName) const
 	return *iter;
 }
 
-_float4x4 CModel::Get_MoveTransformationMatrix(const char * pBoneName)
+vector<EVENT> CModel::Get_Events(void)
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_Events();
+}
+
+_matrix CModel::Get_MoveTransformationMatrix(const char * pBoneName)
 {
 	for (auto& Bone : m_Bones)
 	{
 		if (!strcmp(Bone->Get_Name(), pBoneName))
 		{
 			_matrix CombinedMatrix = Bone->Get_OffsetMatrix() * XMLoadFloat4x4(&Bone->Get_MoveTransformationMatrix()) * XMLoadFloat4x4(&m_PivotMatrix);
-			_float4x4 CombinedMatrixFloat;
-			XMStoreFloat4x4(&CombinedMatrixFloat, CombinedMatrix);
 
-			return CombinedMatrixFloat;
+			return CombinedMatrix;
 		}
 	}
 
-	return _float4x4();
+	return _matrix();
 }
 
 void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
@@ -194,17 +197,28 @@ HRESULT CModel::Initialize(void * pArg)
 		char szAnimName[MAX_PATH] = "_Animation";
 		char szExt[MAX_PATH] = "";
 		char szAnimationFileName[MAX_PATH] = "";
+		
+		char szAddData[MAX_PATH] = "_Add";
+		char szAnimationAddFileName[MAX_PATH] = "";
 
 		_splitpath_s(szFilePath, nullptr, 0, szDir, MAX_PATH, szName, MAX_PATH, szExt, MAX_PATH);
 
 		strcpy_s(szAnimationFileName, szDir);
 		strcat_s(szAnimationFileName, szName);
 		strcat_s(szAnimationFileName, szAnimName);
+
+		strcpy_s(szAnimationAddFileName, szAnimationFileName);
+
 		strcat_s(szAnimationFileName, szExt);
 
+		strcat_s(szAnimationAddFileName, szAddData);
+		strcat_s(szAnimationAddFileName, szExt);
+
 		_tchar szTFullPath[MAX_PATH] = TEXT("");
+		_tchar szTAddFullPath[MAX_PATH] = TEXT("");
 
 		MultiByteToWideChar(CP_ACP, 0, szAnimationFileName, (int)strlen(szAnimationFileName), szTFullPath, MAX_PATH);
+		MultiByteToWideChar(CP_ACP, 0, szAnimationAddFileName, (int)strlen(szAnimationAddFileName), szTAddFullPath, MAX_PATH);
 
 		_ulong dwByte = 0;
 		HANDLE hFile = CreateFile(szTFullPath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -222,7 +236,7 @@ HRESULT CModel::Initialize(void * pArg)
 		for (auto& pMeshContainer : m_Meshes)
 			pMeshContainer->SetUp_Bones(hFile, &dwByte, this);
 
-		if (FAILED(Create_Animations(hFile, &dwByte)))
+		if (FAILED(Create_Animations(hFile, &dwByte, szTAddFullPath)))
 			return E_FAIL;
 
 		CloseHandle(hFile);
@@ -301,7 +315,6 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 
 			m_iCurrentAnimIndex = m_iNextAnimIndex;
-
 		}
 	}
 	else
@@ -583,36 +596,42 @@ HRESULT CModel::Create_Materials(HANDLE hFile, _ulong * pdwByte)
 
 HRESULT CModel::Create_HierarchyNodes(HANDLE hFile, _ulong * pdwByte, CHierarchyNode * pParent)
 {
-	CHierarchyNode* pHierarchyNode = CHierarchyNode::Create(hFile, pdwByte, pParent);
+	BINBONE BinBone;
+
+	ReadFile(hFile, &BinBone, sizeof(BINBONE), pdwByte, nullptr);
+
+	CHierarchyNode* pHierarchyNode = CHierarchyNode::Create(BinBone, pParent);
 	if (nullptr == pHierarchyNode)
 		return E_FAIL;
 
 	m_Bones.push_back(pHierarchyNode);
 
-	_uint iNumChildren;
-	ReadFile(hFile, &iNumChildren, sizeof(_uint), pdwByte, nullptr);
-
-	for (_uint i = 0; i < iNumChildren; ++i)
+	for (_uint i = 0; i < BinBone.iNumChildren; ++i)
 		Create_HierarchyNodes(hFile, pdwByte, pHierarchyNode);
 
 	return S_OK;
 }
 
-HRESULT CModel::Create_Animations(HANDLE hFile, _ulong * pdwByte)
+HRESULT CModel::Create_Animations(HANDLE hFile, _ulong * pdwByte, const _tchar* pAddDataFilePath)
 {
 	if (nullptr == hFile)
 		return E_FAIL;
 
 	ReadFile(hFile, &m_iNumAnimations, sizeof(_uint), pdwByte, nullptr);
 
+	_ulong dwAddByte = 0;
+	HANDLE hAddFile = CreateFile(pAddDataFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
 	for (_uint i = 0; i < m_iNumAnimations; ++i)
 	{
-		CAnimation* pAnimation = CAnimation::Create(hFile, pdwByte, this);
+		CAnimation* pAnimation = CAnimation::Create(hFile, pdwByte, this, hAddFile, &dwAddByte);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
 		m_Animations.push_back(pAnimation);
 	}
+
+	CloseHandle(hAddFile);
 
 	return S_OK;
 }

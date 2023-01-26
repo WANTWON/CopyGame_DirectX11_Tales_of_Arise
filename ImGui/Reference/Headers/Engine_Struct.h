@@ -283,4 +283,32 @@ namespace Engine
 		XMFLOAT4X4 WorldMatrix;
 
 	}NONANIMDESC;
+
+	typedef struct tagJBinBone
+	{
+		char szName[MAX_PATH];
+		XMFLOAT4X4 Transformation;
+		unsigned int iNumChildren;
+	}BINBONE;
+
+	typedef struct tagBinAnimation
+	{
+		char szName[MAX_PATH];
+		double dbDuration;
+		double dbTickPerSecond;
+
+		int iNumChannels;
+	}BINANIM;
+
+	typedef struct tagJBinChannel
+	{
+		char szName[MAX_PATH];
+		int iNumKeyFrames;
+	}BINCHANNEL;
+
+	typedef struct tagEvent
+	{
+		bool isPlay;
+		int iEventType;
+	}EVENT;
 }

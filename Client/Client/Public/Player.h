@@ -38,6 +38,7 @@ public:
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
 	class CPlayerState* Get_State() { return m_pPlayerState; }
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
+	CGameObject* Get_Parts(_int iIndex) { return m_Parts[iIndex]; }
 
 	_bool Is_AnimationLoop(_uint eAnimId);
 

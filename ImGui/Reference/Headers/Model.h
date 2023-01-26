@@ -27,7 +27,9 @@ public:
 
 	_uint Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; }
 
-	_float4x4 Get_MoveTransformationMatrix(const char* pBoneName);
+	vector<EVENT> Get_Events(void);
+
+	_matrix Get_MoveTransformationMatrix(const char* pBoneName);
 
 public:
 	void Set_CurrentAnimIndex(_uint iAnimIndex);
@@ -117,7 +119,7 @@ private:
 	HRESULT Create_MeshContainer(HANDLE hFile, _ulong* pdwByte);
 	HRESULT Create_Materials(HANDLE hFile, _ulong* pdwByte);
 	HRESULT Create_HierarchyNodes(HANDLE hFile, _ulong* pdwByte, CHierarchyNode* pParent = nullptr);
-	HRESULT Create_Animations(HANDLE hFile, _ulong* pdwByte);
+	HRESULT Create_Animations(HANDLE hFile, _ulong* pdwByte, const _tchar* pAddDataFilePath);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eModelType, const char* pModelFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());

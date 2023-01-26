@@ -102,11 +102,13 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Desert_CliffRock4.fbx", "../../../Bin/Bin_Data/NonAnim/CliffRock/", PivotMatrix))))
 		return E_FAIL;*/
 
-	///*For.Prototype_Component_Model_SWO1(R00)*/
-	//PivotMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO1(R00)"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO1(R00).fbx", "../../../Bin/Bin_Data/NonAnim/SWO1(R00)/", PivotMatrix))))
-	//	return E_FAIL;
+	_matrix PivotMatrix;
+
+	/*For.Prototype_Component_Model_SWO1(R00)*/
+	PivotMatrix = XMMatrixScaling(0.03f, 0.03f, 0.03f);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO1(R00)"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO1(R00).fbx", "../../../Bin/Bin_Data/NonAnim/SWO1(R00)/", PivotMatrix))))
+		return E_FAIL;
 
 	///*For.Prototype_Component_Model_SWO1(R00)*/
 	//PivotMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
@@ -115,16 +117,16 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	return E_FAIL;
 
 	///*For.Prototype_Component_Model_IceWolf*/
-	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf"),
-	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Ice_Wolf.fbx","../../../Bin/Bin_Data/Anim/Ice_Wolf/", PivotMatrix))))
-		return E_FAIL;*/
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf"),
+	//CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Ice_Wolf.fbx","../../../Bin/Bin_Data/Anim/Ice_Wolf/", PivotMatrix))))
+	//	return E_FAIL;
 
 	///*For.Prototype_Component_Model_Alphen*/
-	_matrix PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ice_Wolf.fbx", "../../../Bin/Bin_Data/Anim/Ice_Wolf/", PivotMatrix))))
-		return E_FAIL;
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Alphen"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Alphen.fbx", "../../../Bin/Bin_Data/Anim/Alphen/", PivotMatrix))))
+	//	return E_FAIL;
 
 	///*For.Prototype_Component_Model_Water_Plane*/
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Water_Plane"),

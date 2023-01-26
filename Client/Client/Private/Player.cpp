@@ -164,7 +164,7 @@ HRESULT CPlayer::Ready_Parts()
 	m_Parts.resize(PARTS_END);
 
 	/* For.Weapon */
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("index_01_R");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
 	if (nullptr == pSocket)
 		return E_FAIL;
 

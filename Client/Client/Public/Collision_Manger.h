@@ -19,6 +19,8 @@ public:
 		COLLISION_PBULLET, COLLISION_MBULLET, COLLISION_INTERACT, COLLISION_TRAP,
 		COLLISION_ITEM, COLLISION_END };
 
+	enum COLLIDERTYPE { COLLIDER_AABB, COLLIDER_OBB, COLLIDER_SPHERE, COLLIDER_END };
+
 private:
 	explicit CCollision_Manager();
 	virtual ~CCollision_Manager() = default;
@@ -34,11 +36,17 @@ public:
 	void	CollisionwithBullet();
 	void	Update_Collider();
 
+public:
+	CCollider* Reuse_Collider(CCollider::TYPE eType, _uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg);
+	void Collect_Collider(CCollider::TYPE eType, CCollider* pCollider);
+
 private:
 	_float  Calculate_DmgDirection(CBaseObj* Sour, CBaseObj* Dest, _float* vCross = nullptr);
 
 private:
 	list<CBaseObj*>		m_GameObjects[COLLISION_END];
+
+	list<CCollider*> m_ColliderPool[COLLIDER_END];
 
 public:
 	virtual void Free() override;
