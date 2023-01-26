@@ -31,8 +31,8 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("6_UI_Sys_Do_Start.wav"), SOUND_SYSTEM, 0.4f);
 
-		pGameInstance->Set_DestinationLevel(LEVEL_GAMEPLAY);
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY))))
+		pGameInstance->Set_DestinationLevel(LEVEL_SNOWFIELD);
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWFIELD))))
 			return;
 
 		Safe_Release(pGameInstance);

@@ -55,7 +55,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	lstrcpy(m_szLoadingText, TEXT("모델 로딩 중."));
 
 
-
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SM_AST_Prop_Rock01"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SM_AST_Prop_Rock01.fbx", "../../../Bin/Bin_Data/NonAnim/Rock/", PivotMatrix))))
 	//	return E_FAIL;
@@ -127,11 +126,13 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Alphen"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Alphen.fbx", "../../../Bin/Bin_Data/Anim/Alphen/", PivotMatrix))))
 	//	return E_FAIL;
+	///*For.Prototype_Component_Model_Alphen*/
+	_matrix PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 
-	///*For.Prototype_Component_Model_Water_Plane*/
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Water_Plane"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Plane.fbx", "../../../Bin/Bin_Data/NonAnim/Water/"))))
-	//	return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Snow_Mountain"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Snow_Mountain.fbx", "../../../Bin/Bin_Data/NonAnim/Snow_Mountain/", PivotMatrix))))
+		return E_FAIL;
+
 
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));

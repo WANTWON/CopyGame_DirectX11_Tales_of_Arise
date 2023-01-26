@@ -4,6 +4,15 @@
 #include "HawkIdleState.h"
 #include "HawkBattle_IdleState.h"
 #include "HawkBattle_BraveState.h"
+#include "HawkBattle_GrabState.h"
+#include "HawkBattle_ChargeState.h"
+#include "HawkBattle_RevolveState.h"
+#include "HawkBattle_RunState.h"
+#include "HawkBattle_Flying_BackState.h"
+#include "HawkBattle_GrabStartState.h"
+#include "HawkBattle_Damage_LargeB_State.h"
+#include "HawkBattle_DeadState.h"
+
 using namespace Hawk;
 
 CHawk::CHawk(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -30,7 +39,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CHawkState* pState = new CBattle_BraveState(this);
+	CHawkState* pState = new CBattle_RunState(this);
 	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 
 	///* Set Binary */
@@ -43,10 +52,15 @@ HRESULT CHawk::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
+	m_tInfo.iMaxHp = 3;
+	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.iDamage = 10;
+
 
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
+	return S_OK;
 }
 
 
@@ -61,7 +75,7 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
-	TransformDesc.fSpeedPerSec = 1.f;
+	TransformDesc.fSpeedPerSec = 3.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -72,22 +86,21 @@ HRESULT CHawk::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Hawk"), (CComponent**)&m_pModelCom)))
-		return E_FAIL;
-
-	/* For.Com_SPHERE */
-	CCollider::COLLIDERDESC ColliderDesc;
-	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
-	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 1.f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_BATTLE, TEXT("Hawk"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* For.Com_Navigation */
 	CNavigation::NAVIDESC NaviDesc;
 	ZeroMemory(&NaviDesc, sizeof NaviDesc);
-	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+
+	/* For.Com_Sphere */
+	CCollider::COLLIDERDESC ColliderDesc;
+	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
+	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -95,10 +108,13 @@ HRESULT CHawk::Ready_Components(void * pArg)
 
 int CHawk::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
+	AI_Behaviour(fTimeDelta);
 	TickState(fTimeDelta);
 
 	return OBJ_NOEVENT;
@@ -106,6 +122,8 @@ int CHawk::Tick(_float fTimeDelta)
 
 void CHawk::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)
@@ -143,12 +161,26 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	switch ((ANIM)eAnimId)
 	{
 	case SYMBOL_DETECT_STOP:
+	case FAST_FLAP_OF_WINGS:
+	
 		return true;
 	
+
+	case ATTACK_GRAB_START1:
+	case ATTACK_GRAB_START2:
+	case ATTACK_GRAB_END:
 	case ATTACK_BRAVE:
-	case ATTACK_BOMBING:
+	case ATTACK_ROTATION:
+	case FLYING_BACK:
+	case ATTACK_FLUTTER:
+	case REVOLVING_FLIGHT:
+	case ATTACK_CHARGE_ROTATION:
+	case DEAD2:
+	case MOVE_IDLE:
 		return false;
 	}
+
+	return false;
 }
 
 _float CHawk::Take_Damage(float fDamage, CBaseObj * DamageCauser)
@@ -160,17 +192,26 @@ _float CHawk::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 				m_tStats.m_fCurrentHp = 0.f;
 
 				m_pModelCom->Set_TimeReset();
-			//	CIce_WolfState* pState = new CDieState(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
-			//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+				CHawkState* pState = new CBattle_DeadState(this);
+				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 			}
 			else
 			{
 				m_tStats.m_fCurrentHp -= fDamage;
 
 				m_pModelCom->Set_TimeReset();
-			//	CIce_WolfState* pState = new CHitState(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
-			//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+				CHawkState* pState = new CBattle_Damage_LargeB_State(this);
+				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 			}
+
+	//else
+	//{
+	//	m_tStats.m_fCurrentHp -= fDamage;
+
+	//	m_pModelCom->Set_TimeReset();
+	//	CHawkState* pState = new CBattle_Damage_LargeB_State(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
+	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	//}
 	}
 
 	return fDamage;

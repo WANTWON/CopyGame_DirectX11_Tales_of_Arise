@@ -45,6 +45,8 @@ HRESULT CNonAnim::Initialize(void * pArg)
 
 int CNonAnim::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (__super::Tick(fTimeDelta))
 		return OBJ_DEAD;
 
@@ -55,7 +57,14 @@ int CNonAnim::Tick(_float fTimeDelta)
 
 void CNonAnim::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (Check_IsinFrustum(20.f) == false)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return;
+	}
 
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 
@@ -74,22 +83,10 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 #endif
 	}
 
-	CBaseObj* pPlayer = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-	_float fDistanceX = fabsf(XMVectorGetX(pPlayer->Get_TransformState(CTransform::STATE_TRANSLATION)) - XMVectorGetX(Get_TransformState(CTransform::STATE_TRANSLATION)));
-	_float fDistanceZ = fabsf(XMVectorGetZ(pPlayer->Get_TransformState(CTransform::STATE_TRANSLATION)) - XMVectorGetZ(Get_TransformState(CTransform::STATE_TRANSLATION)));
-
-	
-	//if (iLevel == LEVEL_GAMEPLAY && fDistanceX < 30.f && fDistanceZ < 30.f)
-		//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
-
 	Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
-	
 	RELEASE_INSTANCE(CGameInstance);
 	return;
 
-FAILD_CULLING:
-	RELEASE_INSTANCE(CGameInstance);
-	return;
 }
 
 HRESULT CNonAnim::Render()

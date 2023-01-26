@@ -24,6 +24,7 @@ void CPipeLine::Update()
 		XMStoreFloat4x4(&m_PipeLineMatrix_Inverse_TP[i],
 			XMMatrixTranspose(XMLoadFloat4x4(&m_PipeLineMatrix_Inverse[i])));
 	}
+
 }
 
 void CPipeLine::Free()

@@ -37,7 +37,8 @@ public:
 	HRESULT Loading_ForLogoLevel();
 	HRESULT Loading_ForPrototype();
 	HRESULT Loading_ForStaticLevel();
-	HRESULT Loading_ForGamePlayLevel();
+	HRESULT Loading_ForBattleLevel();
+	HRESULT Loading_ForSnowFieldLevel();
 	HRESULT Loading_ForUITexture();
 	
 private:

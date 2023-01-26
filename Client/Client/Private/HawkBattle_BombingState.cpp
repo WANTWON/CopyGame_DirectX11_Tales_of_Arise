@@ -19,11 +19,11 @@ CHawkState * CBattle_BombingState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CBattle_BombingState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Check_Navigation(); // ÀÚÀ¯
+	
 	m_fTarget_Distance = Find_BattleTarget();
 
 
-	m_bAnimFinish = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 
 
@@ -38,9 +38,17 @@ CHawkState * CBattle_BombingState::LateTick(_float fTimeDelta)
 	if (10 < m_fTarget_Distance)
 		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
 
-	if (true == m_bAnimFinish)
+	if (true == m_bIsAnimationFinished)
 		return new CBattle_IdleState(m_pOwner);
 
+	else
+	{
+		_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
+
+		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 	
 
 	//if (m_pTarget)
@@ -88,7 +96,9 @@ void CBattle_BombingState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_BOMBING);
+	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_BOMBING_DUP);
+
+	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CBattle_BombingState::Exit()

@@ -107,7 +107,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	/* near ~ far */
 	/* 0 ~ far */
 	/* 0 ~ 1 */
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 
 	return Out;
 }
@@ -146,7 +146,7 @@ PS_OUT PS_WIRE(PS_IN In)
 
 
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 	return Out;
 }
 
@@ -163,7 +163,7 @@ PS_OUT PS_PICKED(PS_IN In)
 
 	/* -1 ~ 1 => 0 ~ 1*/
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 	return Out;
 }
 
@@ -203,7 +203,7 @@ PS_OUT PS_BRUSH(PS_IN In)
 	/* near ~ far */
 	/* 0 ~ far */
 	/* 0 ~ 1 */
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 
 	return Out;
 }

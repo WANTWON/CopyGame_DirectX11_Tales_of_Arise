@@ -19,20 +19,11 @@
     <Filter Include="01.Levels\01.Logo">
       <UniqueIdentifier>{5267b1be-398c-4f1f-8043-c7305aa0e1d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GamePlay">
-      <UniqueIdentifier>{35c5c360-0a21-4524-b3bd-78fd1a809214}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{ffd39a2b-4897-4694-bc2f-d9c96bf2d061}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\03.Effect">
       <UniqueIdentifier>{7c9e8516-a6f7-48f2-bf6d-b1f00a55a434}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03.Effect\Rect">
-      <UniqueIdentifier>{6271ddfa-3e2f-4945-9359-9b57227b63fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03.Effect\Point">
-      <UniqueIdentifier>{db7dbd70-3c60-4ea1-81f8-2062d9944113}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\01.Actor">
       <UniqueIdentifier>{351f7121-273e-4af4-b95f-a59fe4d18953}</UniqueIdentifier>
@@ -151,9 +142,6 @@
     <Filter Include="02.GameObjects\04.UI\09.UI_RuneEffect">
       <UniqueIdentifier>{f745ed0c-e7f1-4936-ab54-8faa54e34f97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING">
-      <UniqueIdentifier>{9514bfa9-ed3c-4a7f-be3a-457b1311c64f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04.UI\09.UI_LOCKON">
       <UniqueIdentifier>{58dfe97a-44c5-4aed-bff1-646d1870960e}</UniqueIdentifier>
     </Filter>
@@ -181,14 +169,68 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates">
       <UniqueIdentifier>{dd455c3a-0f6e-4072-bea2-9e84af3fad1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\10.UI_MENU">
+      <UniqueIdentifier>{c0ba6400-f6cc-4009-ae60-57abd3c7cce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\11.UI_ITEM">
+      <UniqueIdentifier>{98868d8a-2e52-4c7d-ad21-2ea866b11000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\02.UI_LOADING">
+      <UniqueIdentifier>{9514bfa9-ed3c-4a7f-be3a-457b1311c64f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01.Actor\03.InteractObject">
       <UniqueIdentifier>{302f8212-a864-4482-aa5e-a307b89d73e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime">
+      <UniqueIdentifier>{dccde0d2-f24a-4122-978b-fdd8e9f1741f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime\State">
+      <UniqueIdentifier>{2dce8974-526c-4d8f-9074-010f66192a9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates">
+      <UniqueIdentifier>{28ef28cc-fa93-4829-91e5-711f6d46ffc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\03.InteractObject\00.Anim">
+      <UniqueIdentifier>{49efdc7b-f5f3-40bc-922a-f747181d9a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\03.InteractObject\00.Anim\TreasureBox">
+      <UniqueIdentifier>{18a4740f-1d68-4696-9b38-b0be268bd26d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\03.InteractObject\01.NonAnim">
+      <UniqueIdentifier>{08985868-cd3c-4867-8956-95cb13f47443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates">
+      <UniqueIdentifier>{27632710-1fc5-4f94-9ac7-fae665b2b920}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\02.NonAnim\04.NonAnim_Instancing">
       <UniqueIdentifier>{8ff7f3a8-bea6-4ef9-aab0-5749a3d3a9ac}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\02.NonAnim\05.NonAnim">
       <UniqueIdentifier>{6edd5324-28a2-4180-bbb3-6afd9febaeed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\03.BattleZone">
+      <UniqueIdentifier>{35c5c360-0a21-4524-b3bd-78fd1a809214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.SnowField">
+      <UniqueIdentifier>{0cb32519-764b-482d-ac95-758e07433f8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\00.EffectTexture">
+      <UniqueIdentifier>{d5484d3b-fa55-4e7f-b3c6-6b32995ce9f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\01.EffectMesh">
+      <UniqueIdentifier>{cadb140a-2efe-49db-a298-e5397d48ad47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\02.EffectParticle">
+      <UniqueIdentifier>{3761d43f-9900-4fda-aea4-7e067db54cbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\03.Instancing">
+      <UniqueIdentifier>{7ba82ed8-50e9-4eba-837e-fa620dd7bcad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\03.Instancing\Rect">
+      <UniqueIdentifier>{6271ddfa-3e2f-4945-9359-9b57227b63fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\03.Instancing\Point">
+      <UniqueIdentifier>{db7dbd70-3c60-4ea1-81f8-2062d9944113}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -213,9 +255,6 @@
     <ClInclude Include="..\Public\Client_Defines.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\02.GamePlay</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01.Levels\00.Loading</Filter>
     </ClInclude>
@@ -232,10 +271,10 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Particle_Rect.h">
-      <Filter>02.GameObjects\03.Effect\Rect</Filter>
+      <Filter>02.GameObjects\03.Effect\03.Instancing\Rect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Particle_Point.h">
-      <Filter>02.GameObjects\03.Effect\Point</Filter>
+      <Filter>02.GameObjects\03.Effect\03.Instancing\Point</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObjects\02.NonAnim\02.Sky</Filter>
@@ -289,7 +328,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Loading.h">
-      <Filter>02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING</Filter>
+      <Filter>02.GameObjects\04.UI\02.UI_LOADING</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ScreenFadeEffect.h">
       <Filter>02.GameObjects\04.UI</Filter>
@@ -405,9 +444,6 @@
     <ClInclude Include="..\Public\Hawk.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HawkState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\HawkBattle_BombingState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClInclude>
@@ -453,17 +489,101 @@
     <ClInclude Include="..\Public\BerserkerWalkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_GrabState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_GrabEndState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_RevolveState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_GrabStartState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_RunState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_Flying_BackState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\UI_font_Damage_number.h">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_MENU_Back.h">
+      <Filter>02.GameObjects\04.UI\10.UI_MENU</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_Damage_LargeB_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_DeadState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_Damage_LargeB_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_DeadState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_Damage_LargeB_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_DeadState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\InteractObject.h">
       <Filter>02.GameObjects\01.Actor\03.InteractObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TreasureBox.h">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject\00.Anim\TreasureBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Slime.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeWalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeBattle_Atk_TackleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeBattle_RunState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\NonAnim_Instance.h">
       <Filter>02.GameObjects\02.NonAnim\04.NonAnim_Instancing</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\NonAnim.h">
       <Filter>02.GameObjects\02.NonAnim\05.NonAnim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_BattleZone.h">
+      <Filter>01.Levels\03.BattleZone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_SnowField.h">
+      <Filter>01.Levels\02.SnowField</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Item.h">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect.h">
+      <Filter>02.GameObjects\03.Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectMesh.h">
+      <Filter>02.GameObjects\03.Effect\01.EffectMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ParticleSystem.h">
+      <Filter>02.GameObjects\03.Effect\02.EffectParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectTexture.h">
+      <Filter>02.GameObjects\03.Effect\00.EffectTexture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -475,9 +595,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\MainApp.cpp">
       <Filter>00.MainApp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Level_GamePlay.cpp">
-      <Filter>01.Levels\02.GamePlay</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Loading.cpp">
       <Filter>01.Levels\00.Loading</Filter>
@@ -495,10 +612,10 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Particle_Rect.cpp">
-      <Filter>02.GameObjects\03.Effect\Rect</Filter>
+      <Filter>02.GameObjects\03.Effect\03.Instancing\Rect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Particle_Point.cpp">
-      <Filter>02.GameObjects\03.Effect\Point</Filter>
+      <Filter>02.GameObjects\03.Effect\03.Instancing\Point</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sky.cpp">
       <Filter>02.GameObjects\02.NonAnim\02.Sky</Filter>
@@ -546,7 +663,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Loading.cpp">
-      <Filter>02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING</Filter>
+      <Filter>02.GameObjects\04.UI\02.UI_LOADING</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp">
       <Filter>02.GameObjects\04.UI</Filter>
@@ -701,17 +818,95 @@
     <ClCompile Include="..\Private\BerserkerWalkState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_GrabState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_GrabEndState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_RevolveState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_GrabStartState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_RunState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_Flying_BackState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UI_MENU_Back.cpp">
+      <Filter>02.GameObjects\04.UI\10.UI_MENU</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_Damage_LargeB_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_DeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_Damage_LargeB_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_DeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_Damage_LargeB_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_DeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\InteractObject.cpp">
       <Filter>02.GameObjects\01.Actor\03.InteractObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TreasureBox.cpp">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject\00.Anim\TreasureBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Slime.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeWalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeBattle_RunState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NonAnim_Instance.cpp">
       <Filter>02.GameObjects\02.NonAnim\04.NonAnim_Instancing</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NonAnim.cpp">
       <Filter>02.GameObjects\02.NonAnim\05.NonAnim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_BattleZone.cpp">
+      <Filter>01.Levels\03.BattleZone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_SnowField.cpp">
+      <Filter>01.Levels\02.SnowField</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Item.cpp">
+      <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect.cpp">
+      <Filter>02.GameObjects\03.Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectMesh.cpp">
+      <Filter>02.GameObjects\03.Effect\01.EffectMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ParticleSystem.cpp">
+      <Filter>02.GameObjects\03.Effect\02.EffectParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectTexture.cpp">
+      <Filter>02.GameObjects\03.Effect\00.EffectTexture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -756,6 +951,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModelInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_Effect.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

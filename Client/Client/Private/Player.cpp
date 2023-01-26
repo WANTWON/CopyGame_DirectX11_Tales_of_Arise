@@ -255,7 +255,7 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 
 	switch (eLevel)
 	{
-	case Client::LEVEL_GAMEPLAY:
+	case Client::LEVEL_BATTLE:
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Navigation")));
 		break;
 	}
@@ -268,11 +268,11 @@ void CPlayer::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{
+	//if (m_fWalkingHeight > XMVectorGetY(vPosition))
+	//{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
+	//}
 }
 
 void CPlayer::Compute_CurrentIndex(LEVEL eLevel)

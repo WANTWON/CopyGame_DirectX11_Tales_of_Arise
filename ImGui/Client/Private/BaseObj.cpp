@@ -80,6 +80,4 @@ void CBaseObj::Set_Scale(_float3 vScale)
 void CBaseObj::Free()
 {
 	__super::Free();
-
-	
 }

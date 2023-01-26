@@ -36,6 +36,8 @@ HRESULT CMonster::Initialize(void* pArg)
 
 int CMonster::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	__super::Tick(fTimeDelta);
 
 
@@ -44,6 +46,8 @@ int CMonster::Tick(_float fTimeDelta)
 
 void CMonster::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	if (Check_IsinFrustum(2.f) == false)
@@ -54,6 +58,9 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
 		
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_B))
+		Take_Damage(1.f, m_pTarget);
+
 
 #ifdef _DEBUG
 	if (m_pAABBCom != nullptr)
@@ -81,11 +88,11 @@ HRESULT CMonster::Render()
 		return E_FAIL;
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
-
+  //
 	_bool bGlow = true;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
 		return E_FAIL;
-
+//
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
@@ -94,16 +101,20 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
 
+		//
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
 			return E_FAIL;
+		//
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
 			return E_FAIL;
 	}
 
+	//
 	bGlow = false;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
 		return E_FAIL;
+	//
 
 	return S_OK;
 }

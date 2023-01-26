@@ -2,6 +2,7 @@
 #include "..\Public\Sky.h"
 
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 CSky::CSky(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -33,6 +34,9 @@ int CSky::Tick(_float fTimeDelta)
 
 void CSky::Late_Tick(_float fTimeDelta)
 {
+
+	/*if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;*/
 	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, 
@@ -74,13 +78,28 @@ HRESULT CSky::Ready_Components()
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxCubeTexture"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
-	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"), (CComponent**)&m_pTextureCom)))
-		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
+
+	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
+
+	switch (iLevel)
+	{
+	case Client::LEVEL_SNOWFIELD:
+		/* For.Com_Texture */
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Sky"), (CComponent**)&m_pTextureCom)))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_BATTLE:
+		/* For.Com_Texture */
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_Sky"), (CComponent**)&m_pTextureCom)))
+			return E_FAIL;
+		break;
+	default:
+		break;
+	}
 
 	return S_OK;
 }

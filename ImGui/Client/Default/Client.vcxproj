@@ -176,6 +176,8 @@
     <ClInclude Include="..\Public\Camera_Manager.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\Effect.h" />
+    <ClInclude Include="..\public\EffectMesh.h" />
+    <ClInclude Include="..\public\EffectTexture.h" />
     <ClInclude Include="..\public\Effect_Manager.h" />
     <ClInclude Include="..\Public\imconfig.h" />
     <ClInclude Include="..\Public\imgui.h" />
@@ -194,6 +196,7 @@
     <ClInclude Include="..\Public\ModelManager.h" />
     <ClInclude Include="..\Public\Navigation_Manager.h" />
     <ClInclude Include="..\Public\NonAnim.h" />
+    <ClInclude Include="..\public\ParticleSystem.h" />
     <ClInclude Include="..\Public\PickingMgr.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Terrain_Manager.h" />
@@ -209,6 +212,8 @@
     <ClCompile Include="..\Private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\Private\Camera_Manager.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
+    <ClCompile Include="..\private\EffectMesh.cpp" />
+    <ClCompile Include="..\private\EffectTexture.cpp" />
     <ClCompile Include="..\private\Effect_Manager.cpp" />
     <ClCompile Include="..\Private\imgui.cpp" />
     <ClCompile Include="..\Private\imgui_demo.cpp" />
@@ -226,6 +231,7 @@
     <ClCompile Include="..\Private\ModelManager.cpp" />
     <ClCompile Include="..\Private\Navigation_Manager.cpp" />
     <ClCompile Include="..\Private\NonAnim.cpp" />
+    <ClCompile Include="..\private\ParticleSystem.cpp" />
     <ClCompile Include="..\Private\PickingMgr.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Terrain_Manager.cpp" />
@@ -246,6 +252,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_Effect.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModelforMaptool.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxNorTexforMaptool.hlsl" />
