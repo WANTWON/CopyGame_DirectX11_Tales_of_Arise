@@ -5,20 +5,21 @@ CAnimation::CAnimation()
 {
 }
 
-HRESULT CAnimation::Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel)
+HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, HANDLE hAddFile, _ulong* pdwAddByte)
 {
 	if (nullptr == hFile)
 		return E_FAIL;
 
-	ReadFile(hFile, m_szName, sizeof(char) * MAX_PATH, pdwByte, nullptr);
+	BINANIM BinAnim;
 
-	double dbDuration, dbTickPerSecond;
-	ReadFile(hFile, &dbDuration, sizeof(double), pdwByte, nullptr);
-	ReadFile(hFile, &dbTickPerSecond, sizeof(double), pdwByte, nullptr);
-	m_fDuration = (_float)dbDuration;
-	m_fTickPerSecond = (_float)dbTickPerSecond;
+	ReadFile(hFile, &BinAnim, sizeof(BINANIM), pdwByte, nullptr);
 
-	ReadFile(hFile, &m_iNumChannels, sizeof(_uint), pdwByte, nullptr);
+	memcpy(&m_szName, &BinAnim.szName, sizeof(char) * MAX_PATH);
+	m_fDuration = (_float)BinAnim.dbDuration;
+	m_fTickPerSecond = (_float)BinAnim.dbTickPerSecond;
+	m_fOriTickPerSecond = m_fTickPerSecond;
+
+	m_iNumChannels = BinAnim.iNumChannels;
 
 	for (_uint i = 0; i < m_iNumChannels; ++i)
 	{
@@ -29,6 +30,58 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pMod
 		m_Channels.push_back(pChannel);
 	}
 
+	if (0 != hAddFile)
+	{
+		ReadFile(hAddFile, &m_fDuration, sizeof(_float), pdwAddByte, nullptr);
+
+		for (_uint i = 0; i < m_iNumChannels; ++i)
+		{
+			vector<KEYFRAME>KeyFrames = m_Channels[i]->Get_KeyFrames();
+
+			for (_uint j = 0; j < KeyFrames.size(); ++j)
+			{
+				KEYFRAME KeyFrame;
+				ReadFile(hAddFile, &KeyFrame, sizeof(KEYFRAME), pdwAddByte, nullptr);
+
+				m_Channels[i]->Set_KeyFrame(j, KeyFrame);
+			}
+		}
+
+		_int TickPerSecondsSize, ChangeTimesSize, EventsSize;
+
+		ReadFile(hAddFile, &TickPerSecondsSize, sizeof(_uint), pdwAddByte, nullptr);
+		for (_int i = 0; i < TickPerSecondsSize; ++i)
+		{
+			_float fTickPerSecond;
+			ReadFile(hAddFile, &fTickPerSecond, sizeof(_float), pdwAddByte, nullptr);
+
+			m_TickPerSeconds.push_back(fTickPerSecond);
+		}
+
+		ReadFile(hAddFile, &ChangeTimesSize, sizeof(_uint), pdwAddByte, nullptr);
+		for (_int i = 0; i < ChangeTimesSize; ++i)
+		{
+			_float fChangeTime;
+			ReadFile(hAddFile, &fChangeTime, sizeof(_float), pdwAddByte, nullptr);
+
+			m_ChangeTickTimes.push_back(fChangeTime);
+		}
+
+		ReadFile(hAddFile, &EventsSize, sizeof(_uint), pdwAddByte, nullptr);
+		for (_int i = 0; i < EventsSize; ++i)
+		{
+			ANIMEVENT tEvent;
+			ReadFile(hAddFile, &tEvent, sizeof(ANIMEVENT), pdwAddByte, nullptr);
+
+			m_vecAnimEvent.push_back(tEvent);
+			
+			EVENT tCheckEvent;
+			tCheckEvent.isPlay = false;
+			tCheckEvent.iEventType = tEvent.eType;
+			m_vecEvents.push_back(tCheckEvent);
+		}
+	}
+	
 	return S_OK;
 }
 
@@ -60,13 +113,46 @@ HRESULT CAnimation::Bin_Initialize(DATA_BINANIM * pAIAnimation, CModel * pModel)
 
 _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop)
 {
+	//애니메이션 구간별 재생 속도 변화
+	_int iSize = m_ChangeTickTimes.size() - 1;
+	if ((iSize >= 0) && (m_iTickPerSecondIndex <= iSize))
+	{
+		if (m_ChangeTickTimes[m_iTickPerSecondIndex] <= m_fCurrentTime)
+		{
+			m_fTickPerSecond = m_TickPerSeconds[m_iTickPerSecondIndex];
+			if (m_iTickPerSecondIndex != iSize)
+				++m_iTickPerSecondIndex;
+		}
+		else
+		{
+			if (m_iTickPerSecondIndex >= 1)
+			{
+				m_fTickPerSecond = m_TickPerSeconds[m_iTickPerSecondIndex - 1];
+			}
+			else
+				m_fTickPerSecond = m_fOriTickPerSecond;
+		}
+	}
+	else if (0 > iSize)
+		m_fTickPerSecond = m_fOriTickPerSecond;
+
 	/* 현재 재생중인 시간. */
 	m_fCurrentTime += m_fTickPerSecond * fTimeDelta;
+
+	//애니메이션 이벤트
+	for (_int i = 0; i < m_vecAnimEvent.size(); ++i)
+	{
+		if (m_vecAnimEvent[i].fStartTime < m_fCurrentTime && m_vecAnimEvent[i].fEndTime > m_fCurrentTime)
+			m_vecEvents[i].isPlay = true;
+		else
+			m_vecEvents[i].isPlay = false;
+	}
 
 	if (m_fCurrentTime >= m_fDuration)
 	{
 		Set_TimeReset();
 		m_isFinished = true;
+		m_iTickPerSecondIndex = 0;
 		if (!isLoop)
 		{
 			for (auto& pChannel : m_Channels)
@@ -102,7 +188,7 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 
 	if (!m_bLinearFinished)
 	{
-		for (_uint i = 0; i<m_iNumChannels; ++i)
+		for (_uint i = 0; i < m_iNumChannels; ++i)
 		{
 			if (m_Channels[i]->Linear_Interpolation(NextAnimChannels[i]->Get_StartKeyFrame(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration))
 			{
@@ -154,11 +240,11 @@ void CAnimation::Set_TimeReset()
 //	return pInstance;
 //}
 
-CAnimation * CAnimation::Create(HANDLE hFile, _ulong * pdwByte, CModel * pModel)
+CAnimation * CAnimation::Create(HANDLE hFile, _ulong * pdwByte, CModel * pModel, HANDLE hAddFile, _ulong* pdwAddByte)
 {
 	CAnimation* pInstance = new CAnimation();
 
-	if (FAILED(pInstance->Initialize(hFile, pdwByte, pModel)))
+	if (FAILED(pInstance->Initialize(hFile, pdwByte, pModel, hAddFile, pdwAddByte)))
 	{
 		ERR_MSG(TEXT("Failed to Created : CAnimation"));
 		Safe_Release(pInstance);

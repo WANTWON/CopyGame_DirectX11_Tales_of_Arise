@@ -5,11 +5,15 @@
 
 #include "UI_Portrait.h"
 #include "Camera_Dynamic.h"
+#include "EffectTexture.h"
+#include "EffectMesh.h"
+#include "ParticleSystem.h"
 #include "Particle_Rect.h"
 #include "Particle_Point.h"
 #include "UI_Screen.h"
 #include "Terrain.h"
-#include "Player.h"
+#include "Alphen.h"
+#include "Sion.h"
 #include "Weapon.h"
 #include "Sky.h"
 #include "Water.h"
@@ -42,6 +46,7 @@
 #include "UI_Skillbutton.h"
 #include "UI_Changebutton.h"
 #include "UI_LOCKON.h"
+#include "UI_MENU_Back.h"
 
 #include "UI_RuneEffect.h"
 
@@ -108,22 +113,22 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 
-	/* Static Resource 중. */
-	lstrcpy(m_szLoadingText, TEXT("Static Resource 로딩 중."));
+	/* Static Resource */
+	lstrcpy(m_szLoadingText, TEXT("Static Resource Loading"));
 	if (FAILED(Loading_ForStaticLevel()))
 		return E_FAIL;
 
-	/* 객체 원형 생성 중. */
-	lstrcpy(m_szLoadingText, TEXT("객체 원형 생성 중."));
+	/* Loading Prototype */
+	lstrcpy(m_szLoadingText, TEXT("Loading Prototype"));
 	if (FAILED(Loading_ForPrototype()))
 		return E_FAIL;
 
-	/* UI 생성 중. */
-	lstrcpy(m_szLoadingText, TEXT("UI 생성 중."));
+	/* UI Loading */
+	lstrcpy(m_szLoadingText, TEXT("UI Loading"));
 	if (FAILED(Loading_ForUITexture()))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+	lstrcpy(m_szLoadingText, TEXT("Finished Loading"));
 
 	m_isFinished = true;
 
@@ -249,6 +254,10 @@ HRESULT CLoader::Loading_ForPrototype()
 		CUI_LOCKON::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MENU_BACK"),
+		CUI_MENU_Back::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront"),
 		CUI_Portraitfront::Create(m_pDevice, m_pContext))))
@@ -261,8 +270,13 @@ HRESULT CLoader::Loading_ForPrototype()
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Player*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
-		CPlayer::Create(m_pDevice, m_pContext))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Alphen"),
+		CAlphen::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Player*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sion"),
+		CSion::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Terrain*/
@@ -283,6 +297,21 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_GameObject_Weapon */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon"),
 		CWeapon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_EffectTexture*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_EffectTexture"),
+		CEffectTexture::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_EffectMesh*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_EffectMesh"),
+		CEffectMesh::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.GameObject_ParticleSystem*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ParticleSystem"),
+		CParticleSystem::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Particle_Rect */
@@ -346,6 +375,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	/* For.Prototype_Component_Shader_VtxNorTex*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Shaderfiles/Shader_VtxNorTex.hlsl"), VTXNORTEX_DECLARATION::Elements, VTXNORTEX_DECLARATION::iNumElements))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Shader_Effect*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Effect"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Shaderfiles/Shader_Effect.hlsl"), VTXTEXALPHA_DECLARATION::Elements, VTXTEXALPHA_DECLARATION::iNumElements))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_VtxModel */
@@ -420,8 +454,33 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;
 	CloseHandle(hFile);
 
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+	hFile = 0;
+	dwByte = 0;
+	iNum = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Terrain2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_SnowField_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, true))))
+		return E_FAIL;
+	CloseHandle(hFile);
+
 #pragma endregion Buffer Loading
+
+#pragma region Texture Loading
+	/*For.Prototype_Component_Texture_Spark */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Spark_00"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Spark_00.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Spark_01"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Spark_01.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Spark_02"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Spark_02.png"), 1))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_Dissolve*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Dissolve_Texture.png"), 1))))
+		return E_FAIL;
+#pragma endregion Texture Loading
 
 #pragma region Model Loading
 	/* For.Prototype_Component_Model_Alphen */
@@ -442,10 +501,17 @@ HRESULT CLoader::Loading_ForStaticLevel()
 #pragma endregion Model Loading
 
 #pragma region Navigation Loading
-	lstrcpy(m_szLoadingText, TEXT("네비게이션 생성 중"));
+
+	/* Loading Navigation */
+	lstrcpy(m_szLoadingText, TEXT("Loading Navigation "));
 	/* For.Prototype_Component_Navigation */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"),
 		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Battle_Navi.dat")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Navigation */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"),
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/Field_Data/Field_Navi.dat")))))
 		return E_FAIL;
 #pragma endregion Navigation Loading
 
@@ -478,8 +544,8 @@ HRESULT CLoader::Loading_ForBattleLevel()
 
 	Safe_AddRef(pGameInstance);
 
-	/* 텍스쳐 로딩 중. */
-	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중."));
+	/* Loading Texture */
+	lstrcpy(m_szLoadingText, TEXT("Loading Texture"));
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Prototype_Component_Texture_Terrain_SnowBattle"),
@@ -497,7 +563,7 @@ HRESULT CLoader::Loading_ForBattleLevel()
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Filter */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Prototype_Component_Texture_BattleZoneFilter"),
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Prototype_Component_Texture_Filter"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/BattleZone1.bmp"), 1))))
 		return E_FAIL;
 
@@ -511,49 +577,49 @@ HRESULT CLoader::Loading_ForBattleLevel()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_SnowDark.dds"), 1))))
 		return E_FAIL;
 
-	/* 모델 로딩 중. */
-	lstrcpy(m_szLoadingText, TEXT("모델 로딩 중."));
+	/* Loading Model */
+	lstrcpy(m_szLoadingText, TEXT("Loading Model"));
 
-	/*For.Prototype_Component_Model_IceWolf*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Ice_Wolf"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_IceWolf*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Ice_Wolf"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
+	//	return E_FAIL;
 
-	/*For.Prototype_Component_Model_Berserker*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Berserker"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Berserker/Berserker.dat"))))
-		return E_FAIL;
-	
-	/*For.Prototype_Component_Model_Hawk*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Hawk"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Hawk/Hawk.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_Berserker*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Berserker"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Berserker/Berserker.dat"))))
+	//	return E_FAIL;
+	//
+	///*For.Prototype_Component_Model_Hawk*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Hawk"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Hawk/Hawk.dat"))))
+	//	return E_FAIL;
 
-	/*For.Prototype_Component_Model_Slime*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Slime"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Slime/Slime.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_Slime*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Slime"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Slime/Slime.dat"))))
+	//	return E_FAIL;
 
 
-	/*For.Prototype_Component_Model_TreasureBox00*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox00"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox00/TreasureBox00.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_TreasureBox00*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox00"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox00/TreasureBox00.dat"))))
+	//	return E_FAIL;
 
-	/*For.Prototype_Component_Model_TreasureBox02_Blue*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox02_Blue"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Blue/TreasureBox02_Blue.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_TreasureBox02_Blue*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox02_Blue"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Blue/TreasureBox02_Blue.dat"))))
+	//	return E_FAIL;
 
-	/*For.Prototype_Component_Model_TreasureBox02_Red*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox02_Red"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Red/TreasureBox02_Red.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_TreasureBox02_Red*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox02_Red"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Red/TreasureBox02_Red.dat"))))
+	//	return E_FAIL;
 
-	/*For.Prototype_Component_Model_TreasureBox02*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox02"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02/TreasureBox02.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_TreasureBox02*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox02"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02/TreasureBox02.dat"))))
+	//	return E_FAIL;
 
 	///NON ANIM 
 
@@ -656,8 +722,8 @@ HRESULT CLoader::Loading_ForBattleLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Snow_Mountain/Snow_Mountain.dat"))))
 		return E_FAIL;
 
-	/* 콜라이더 생성 중. */
-	lstrcpy(m_szLoadingText, TEXT("콜라이더 생성 중."));
+	/* Loading Collider */
+	lstrcpy(m_szLoadingText, TEXT("Loading Collider"));
 
 	/* For.Prototype_Component_Collider_AABB */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Prototype_Component_Collider_AABB"),
@@ -674,6 +740,9 @@ HRESULT CLoader::Loading_ForBattleLevel()
 		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
 		return E_FAIL;
 
+
+	/* Loading Instancing */
+	lstrcpy(m_szLoadingText, TEXT("Loading Instancing"));
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Conifer3"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Conifer3.dat", 
@@ -702,7 +771,7 @@ HRESULT CLoader::Loading_ForBattleLevel()
 			"../../../Bin/Data/BattleZoneData/SnowPlane/Broken_Tree.dat"))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+	lstrcpy(m_szLoadingText, TEXT("Finished Loading"));
 
 
 	Safe_Release(pGameInstance);
@@ -720,17 +789,15 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 
 	Safe_AddRef(pGameInstance);
 
-	/* 텍스쳐 로딩 중. */
-	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중."));
+	/* Loading Texture */
+	lstrcpy(m_szLoadingText, TEXT("Loading Texture"));
 
 	/*For.Prototype_Component_Texture_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Terrain_SnowBattle"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/SnowBattleZone/Floor%d_C.dds"), 4))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Terrain"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/SnowField/Terrain%d_D.dds"), 4))))
 		return E_FAIL;
-
-	/*For.Prototype_Component_Texture_SnowNormal */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_TerrainNormal_SnowBattle"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/SnowBattleZone/Floor%d_N.dds"), 4))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_NormalTerrain"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/SnowField/Terrain%d_N.dds"), 4))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Brush */
@@ -739,9 +806,10 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Filter */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_BattleZoneFilter"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/BattleZone1.bmp"), 1))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Filter"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/SnowField.bmp"), 1))))
 		return E_FAIL;
+
 
 	/*For.Prototype_Component_Texture_Snow */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Snow"),
@@ -753,54 +821,48 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_SnowDark.dds"), 1))))
 		return E_FAIL;
 
-	/*For.Prototype_Component_Texture_Dissolve*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Dissolve"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Dissolve_Texture.png"), 1))))
-		return E_FAIL;
-
-	/* 모델 로딩 중. */
-	lstrcpy(m_szLoadingText, TEXT("모델 로딩 중."));
+	/* Loading Model */
+	lstrcpy(m_szLoadingText, TEXT("Loading Model"));
 
 	/*For.Prototype_Component_Model_IceWolf*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Ice_Wolf"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
 		return E_FAIL;
 
-	/*For.Prototype_Component_Model_Berserker*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Berserker"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Berserker/Berserker.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_Berserker*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Berserker"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Berserker/Berserker.dat"))))
+	//	return E_FAIL;
 
 	/*For.Prototype_Component_Model_Hawk*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Hawk"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Hawk/Hawk.dat"))))
 		return E_FAIL;
 
-	/*For.Prototype_Component_Model_Slime*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Slime"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Slime/Slime.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_Slime*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Slime"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Slime/Slime.dat"))))
+	//	return E_FAIL;
 
+	///*For.Prototype_Component_Model_TreasureBox00*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("TreasureBox00"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox00/TreasureBox00.dat"))))
+	//	return E_FAIL;
 
-	/*For.Prototype_Component_Model_TreasureBox00*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("TreasureBox00"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox00/TreasureBox00.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_TreasureBox02_Blue*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("TreasureBox02_Blue"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Blue/TreasureBox02_Blue.dat"))))
+	//	return E_FAIL;
 
-	/*For.Prototype_Component_Model_TreasureBox02_Blue*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("TreasureBox02_Blue"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Blue/TreasureBox02_Blue.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_TreasureBox02_Red*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("TreasureBox02_Red"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Red/TreasureBox02_Red.dat"))))
+	//	return E_FAIL;
 
-	/*For.Prototype_Component_Model_TreasureBox02_Red*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("TreasureBox02_Red"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Red/TreasureBox02_Red.dat"))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Model_TreasureBox02*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("TreasureBox02"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02/TreasureBox02.dat"))))
-		return E_FAIL;
+	///*For.Prototype_Component_Model_TreasureBox02*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("TreasureBox02"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02/TreasureBox02.dat"))))
+	//	return E_FAIL;
 
 	///NON ANIM 
 
@@ -870,10 +932,6 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Snow.dat"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Snow2"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Snow2.dat"))))
-		return E_FAIL;
-
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Snow3"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Snow3.dat"))))
 		return E_FAIL;
@@ -918,8 +976,8 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Snow_Mountain/Snow_Mountain.dat"))))
 		return E_FAIL;
 
-	/* 콜라이더 생성 중. */
-	lstrcpy(m_szLoadingText, TEXT("콜라이더 생성 중."));
+	/* Loading Collider */
+	lstrcpy(m_szLoadingText, TEXT("Loading Collider"));
 
 	/* For.Prototype_Component_Collider_AABB */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_AABB"),
@@ -936,35 +994,36 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
 		return E_FAIL;
 
+	/* Loading Instancing */
+	lstrcpy(m_szLoadingText, TEXT("Loading Instancing "));
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Conifer3"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Conifer3.dat",
-			"../../../Bin/Data/BattleZoneData/SnowPlane/Conifer.dat"))))
+			"../../../Bin/Data/Field_Data/Conifer.dat"))))
 		return E_FAIL;
-
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Dead_Grass"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Dead_Grass.dat",
-			"../../../Bin/Data/BattleZoneData/SnowPlane/Dead_Grass.dat"))))
+			"../../../Bin/Data/Field_Data/Dead_Grass.dat"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Dead_Tree1"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Dead_Tree1.dat",
-			"../../../Bin/Data/BattleZoneData/SnowPlane/Dead_Tree1.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Tree5"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Tree5.dat",
+			"../../../Bin/Data/Field_Data/Tree5.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Bush"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Bush.dat",
-			"../../../Bin/Data/BattleZoneData/SnowPlane/Bush.dat"))))
+			"../../../Bin/Data/Field_Data/Bush.dat"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Broken_Tree"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Broken_Tree.dat",
-			"../../../Bin/Data/BattleZoneData/SnowPlane/Broken_Tree.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Snow2"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Astrik/Snow2.dat",
+			"../../../Bin/Data/Field_Data/Snow.dat"))))
 		return E_FAIL;
 
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+	lstrcpy(m_szLoadingText, TEXT("Loading Finished"));
 
 
 	Safe_Release(pGameInstance);
@@ -980,8 +1039,8 @@ HRESULT CLoader::Loading_ForUITexture()
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 
-	/* 텍스쳐 로딩 중. */
-	lstrcpy(m_szLoadingText, TEXT("유아이 텍스쳐 로딩 중."));
+	/* Loading UI_Texture */
+	lstrcpy(m_szLoadingText, TEXT("Loading UI_Texture "));
 
 	/*For.texturelogo*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
@@ -1012,6 +1071,11 @@ HRESULT CLoader::Loading_ForUITexture()
 	/*For.hpfont */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_font"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/numberfont/tfont%d.dds"), 11))))
+		return E_FAIL;
+
+	/*For.hpfont */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_smallfont"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/numberfont/smallfont%d.dds"), 11))))
 		return E_FAIL;
 
 	/*For.line */
@@ -1062,9 +1126,71 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lockon"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/lockon/lockon%d.dds"), 5))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/lockon/lockon%d.dds"), 6))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENU_BACK"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/menuback/menuback%d.dds"), 3))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENU_ICON"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/menuback/menuicon%d.dds"), 2))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENU_SELECT"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/menuback/menuselect%d.dds"), 2))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Inventory_back"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/menuback/Inventoryback%d.dds"), 2))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Item_name"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/itemname/itemname%d.dds"), 10))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENULINE"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/menuback/menuline%d.dds"), 2))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ITEMICON"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/itemicon/itemicon%d.dds"), 20))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ITEMINFO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/iteminfo/iteminfo%d.dds"), 10))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENUGALD"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/menuback/menugald%d.dds"), 2))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENUBUTTON"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillkey/menubutton%d.dds"), 6))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENUFONT"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillkey/menufont%d.dds"), 8))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_CATEGORYNAMEFONT"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/categorynamefont/categorynamefont%d.dds"), 5))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_FLAG"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/flags/flag0.dds"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ITEMUSEPORTRAIT"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/itemuseportrait/portrait%d.dds"), 12))))
+		return E_FAIL;
+
+
+	
+
+	
+	
 	return S_OK;
 }
 

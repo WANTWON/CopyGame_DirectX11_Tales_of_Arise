@@ -111,27 +111,32 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
 	AI_Behaviour(fTimeDelta);
-	TickState(fTimeDelta);
+
+	Tick_State(fTimeDelta);
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 		
+
 	return OBJ_NOEVENT;
 }
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return ;
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-	LateTickState(fTimeDelta);
 
-
+	LateTick_State(fTimeDelta);
 
 }
 
@@ -143,7 +148,7 @@ void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 }
 
 
-void CIce_Wolf::TickState(_float fTimeDelta)
+void CIce_Wolf::Tick_State(_float fTimeDelta)
 {
 	CIceWolfState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
 	if (pNewState)
@@ -151,7 +156,7 @@ void CIce_Wolf::TickState(_float fTimeDelta)
 	
 }
 
-void CIce_Wolf::LateTickState(_float fTimeDelta)
+void CIce_Wolf::LateTick_State(_float fTimeDelta)
 {
 	CIceWolfState* pNewState = m_pIce_WolfState->LateTick(fTimeDelta);
 	if (pNewState)

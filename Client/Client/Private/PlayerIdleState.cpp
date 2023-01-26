@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "PlayerRunState.h"
 #include "PlayerAttackNormalState.h"
+#include "Effect.h"
 
 using namespace Player;
 
@@ -36,6 +37,9 @@ CPlayerState * CIdleState::HandleInput()
 		return new CRunState(m_pOwner, DIR_STRAIGHT);
 	else if (pGameInstance->Key_Pressing(DIK_M))
 		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.01f);
+	/* Particle Test */
+	else if (pGameInstance->Key_Down(DIK_P))
+		CEffect::PlayEffect(TEXT("SparkTest.dat"), m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
 	
 	return nullptr;
 }
@@ -58,7 +62,18 @@ void CIdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CPlayer::ANIM::ANIM_IDLE);
+	switch (m_pOwner->Get_PlayerID())
+	{
+	case CPlayer::ALPHEN:
+		m_pOwner->Get_Model()->Set_NextAnimIndex(CAlphen::ANIM::ANIM_IDLE);
+		break;
+	case CPlayer::SION:
+		m_pOwner->Get_Model()->Set_NextAnimIndex(CSion::ANIM::ANIM_IDLE);
+		break;
+	default:
+		break;
+	}
+
 }
 
 void CIdleState::Exit()

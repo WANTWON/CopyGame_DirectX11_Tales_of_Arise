@@ -18,9 +18,9 @@ namespace Engine
 	/* 빛의 정보를 표현한다. */
 	typedef struct tagLightDesc
 	{
-		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_END };
+		enum PLAYERID { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_END };
 
-		TYPE		eType = TYPE_END;
+		PLAYERID		eType = TYPE_END;
 		XMFLOAT4	vPosition;
 		float		fRange;
 		XMFLOAT4	vDirection;
@@ -72,6 +72,19 @@ namespace Engine
 		static const unsigned int iNumElements = 2;
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXTEX_DECLARATION;
+
+	typedef struct tagVertexTextureAlpha
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT2		vTexture;
+		float			fAlpha;
+	}VTXTEXALPHA;
+
+	typedef struct ENGINE_DLL tagVertexTextureAlpha_Declaration
+	{
+		static const unsigned int iNumElements = 3;
+		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
+	}VTXTEXALPHA_DECLARATION;
 
 	typedef struct tagVertexPoint
 	{
@@ -283,4 +296,32 @@ namespace Engine
 		XMFLOAT4X4 WorldMatrix;
 
 	}NONANIMDESC;
+
+	typedef struct tagJBinBone
+	{
+		char szName[MAX_PATH];
+		XMFLOAT4X4 Transformation;
+		unsigned int iNumChildren;
+	}BINBONE;
+
+	typedef struct tagBinAnimation
+	{
+		char szName[MAX_PATH];
+		double dbDuration;
+		double dbTickPerSecond;
+
+		int iNumChannels;
+	}BINANIM;
+
+	typedef struct tagJBinChannel
+	{
+		char szName[MAX_PATH];
+		int iNumKeyFrames;
+	}BINCHANNEL;
+
+	typedef struct tagEvent
+	{
+		bool isPlay;
+		int iEventType;
+	}EVENT;
 }

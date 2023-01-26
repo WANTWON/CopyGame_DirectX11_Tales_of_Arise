@@ -18,7 +18,7 @@ public:
 	_float4x4 Get_PivotFloat4x4(void) const { return m_PivotMatrix; }
 
 public:
-	virtual HRESULT Initialize_Prototype(TYPE eModelType, const char* pModelFilePath, const char* pMaterialPath, _fmatrix PivotMatrix);
+	virtual HRESULT Initialize_Prototype(TYPE eModelType, const char* pModelFilePath, const char* pMaterialPath, _fmatrix PivotMatrix = XMMatrixIdentity());
 	virtual HRESULT Initialize(void* pArg);
 
 private:
@@ -45,7 +45,7 @@ private:
 	_float m_fCurrentTime = 0.f;
 
 private:
-	void Save_Hierarchy(HANDLE hFile, _ulong* pdwByte, const aiNode* pNode);
+	void Save_Hierarchy(vector<BINBONE>* pBones, const aiNode* pNode);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eModelType, const char* pModelFilePath, const char* pMaterialPath, _fmatrix PivotMatrix = XMMatrixIdentity());

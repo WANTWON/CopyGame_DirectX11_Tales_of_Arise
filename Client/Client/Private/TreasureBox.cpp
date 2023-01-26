@@ -40,7 +40,8 @@ HRESULT CTreasureBox::Initialize(void* pArg)
 
 int CTreasureBox::Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	__super::Tick(fTimeDelta);
 	
 
@@ -104,6 +105,8 @@ int CTreasureBox::Tick(_float fTimeDelta)
 
 void CTreasureBox::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return ;
 	__super::Late_Tick(fTimeDelta);
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();

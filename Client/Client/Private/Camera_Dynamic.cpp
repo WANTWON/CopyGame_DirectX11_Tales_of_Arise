@@ -2,6 +2,7 @@
 #include "..\Public\Camera_Dynamic.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "PlayerManager.h"
 
 CCamera_Dynamic::CCamera_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
@@ -54,7 +55,7 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 	{
 		case Client::CCamera_Dynamic::CAM_PLAYER:
 			Player_Camera(fTimeDelta);
-			break;
+			break; 
 		case Client::CCamera_Dynamic::CAM_DEBUG:
 			Debug_Camera(fTimeDelta);
 			break;
@@ -132,8 +133,8 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	
-	if (m_pTarget == nullptr)
-		m_pTarget = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+	//if (m_pTarget == nullptr)
+		m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	
 	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vDir = (vCameraPosition - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));

@@ -71,6 +71,8 @@ protected:
 	_float			m_fAlpha = 1.f;
 	_float			m_DissolveAlpha = 0.f;
 
+	OBJINFO  m_tInfo;
+
 public:
 	virtual void Free() override;
 };

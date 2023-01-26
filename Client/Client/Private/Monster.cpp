@@ -36,6 +36,8 @@ HRESULT CMonster::Initialize(void* pArg)
 
 int CMonster::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	__super::Tick(fTimeDelta);
 
 	if (m_bTakeDamage)
@@ -52,6 +54,8 @@ int CMonster::Tick(_float fTimeDelta)
 
 void CMonster::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	if (Check_IsinFrustum(2.f) == false)

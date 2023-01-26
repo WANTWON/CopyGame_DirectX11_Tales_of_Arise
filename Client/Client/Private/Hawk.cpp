@@ -107,12 +107,14 @@ HRESULT CHawk::Ready_Components(void * pArg)
 
 int CHawk::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
 	AI_Behaviour(fTimeDelta);
-	TickState(fTimeDelta);
+	Tick_State(fTimeDelta);
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	return OBJ_NOEVENT;
@@ -120,12 +122,14 @@ int CHawk::Tick(_float fTimeDelta)
 
 void CHawk::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-	LateTickState(fTimeDelta);
+	LateTick_State(fTimeDelta);
 }
 
 void CHawk::AI_Behavior(_float fTimeDelta)
@@ -136,7 +140,7 @@ void CHawk::AI_Behavior(_float fTimeDelta)
 }
 
 
-void CHawk::TickState(_float fTimeDelta)
+void CHawk::Tick_State(_float fTimeDelta)
 {
 	CHawkState* pNewState = m_pHawkState->Tick(fTimeDelta);
 	if (pNewState)
@@ -144,7 +148,7 @@ void CHawk::TickState(_float fTimeDelta)
 	
 }
 
-void CHawk::LateTickState(_float fTimeDelta)
+void CHawk::LateTick_State(_float fTimeDelta)
 {
 	CHawkState* pNewState = m_pHawkState->LateTick(fTimeDelta);
 	if (pNewState)

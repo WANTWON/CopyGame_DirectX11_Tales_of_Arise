@@ -106,7 +106,6 @@ protected:
 
 
 	MONSTER_ID	m_eMonsterID = MONSTER_END;
-	OBJINFO  m_tInfo;
 	DMG_DIR	m_eDmg_Direction = FRONT;
 
 

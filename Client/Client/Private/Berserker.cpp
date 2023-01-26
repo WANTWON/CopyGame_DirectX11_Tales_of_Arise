@@ -104,23 +104,28 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 
 int CBerserker::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
+
 	if (m_bDead)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
-	TickState(fTimeDelta);
+	Tick_State(fTimeDelta);
 
 	return OBJ_NOEVENT;
 }
 
 void CBerserker::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-	LateTickState(fTimeDelta);
+	LateTick_State(fTimeDelta);
 }
 
 void CBerserker::AI_Behavior(_float fTimeDelta)
@@ -131,7 +136,7 @@ void CBerserker::AI_Behavior(_float fTimeDelta)
 }
 
 
-void CBerserker::TickState(_float fTimeDelta)
+void CBerserker::Tick_State(_float fTimeDelta)
 {
 	CBerserkerState* pNewState = m_pBerserkerState->Tick(fTimeDelta);
 	if (pNewState)
@@ -139,7 +144,7 @@ void CBerserker::TickState(_float fTimeDelta)
 	
 }
 
-void CBerserker::LateTickState(_float fTimeDelta)
+void CBerserker::LateTick_State(_float fTimeDelta)
 {
 	CBerserkerState* pNewState = m_pBerserkerState->LateTick(fTimeDelta);
 	if (pNewState)

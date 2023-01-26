@@ -9,7 +9,7 @@ class CTransform;
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
-	enum TYPE { TYPE_NONANIM, TYPE_NONANIM_INSTANCE, TYPE_ANIM, TYPE_END };
+	enum PLAYERID { TYPE_NONANIM, TYPE_NONANIM_INSTANCE, TYPE_ANIM, TYPE_END };
 
 private:
 	CModel(ID3D11Device* pDevice ,ID3D11DeviceContext* pContext);
@@ -27,7 +27,9 @@ public:
 
 	_uint Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; }
 
-	_float4x4 Get_MoveTransformationMatrix(const char* pBoneName);
+	vector<EVENT> Get_Events(void);
+
+	_matrix Get_MoveTransformationMatrix(const char* pBoneName);
 
 public:
 	void Set_CurrentAnimIndex(_uint iAnimIndex);
@@ -39,8 +41,8 @@ public:
 	void Set_TimeReset();
 
 public:
-	virtual HRESULT Initialize_Prototype(TYPE eModelType, const char* pModelFilePath, _fmatrix PivotMatrix);
-	virtual HRESULT Instance_Initialize_Prototype(TYPE eModelType, const char* pModelFilePath, const char* pDataFilePath, _fmatrix PivotMatrix);
+	virtual HRESULT Initialize_Prototype(PLAYERID eModelType, const char* pModelFilePath, _fmatrix PivotMatrix);
+	virtual HRESULT Instance_Initialize_Prototype(PLAYERID eModelType, const char* pModelFilePath, const char* pDataFilePath, _fmatrix PivotMatrix);
 	//virtual HRESULT Bin_Initialize_Prototype(DATA_BINSCENE* pScene, TYPE eType, const char* pModelFilePath, _fmatrix PivotMatrix);	// 추가
 	virtual HRESULT Initialize(void* pArg);
 	//virtual HRESULT Bin_Initialize(void* pArg); // 추가
@@ -65,7 +67,7 @@ private:
 	_tchar m_szFilePath[MAX_PATH] = TEXT("");
 
 private:
-	TYPE								m_eModelType = TYPE_END;
+	PLAYERID								m_eModelType = TYPE_END;
 	_uint								m_iNumMeshes = 0;
 	vector<class CMeshContainer*>		m_Meshes;
 	vector<class CMeshContainer_Instance*> m_InstanceMeshes;
@@ -117,11 +119,11 @@ private:
 	HRESULT Create_MeshContainer(HANDLE hFile, _ulong* pdwByte);
 	HRESULT Create_Materials(HANDLE hFile, _ulong* pdwByte);
 	HRESULT Create_HierarchyNodes(HANDLE hFile, _ulong* pdwByte, CHierarchyNode* pParent = nullptr);
-	HRESULT Create_Animations(HANDLE hFile, _ulong* pdwByte);
+	HRESULT Create_Animations(HANDLE hFile, _ulong* pdwByte, const _tchar* pAddDataFilePath);
 
 public:
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eModelType, const char* pModelFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eModelType, const char* pModelFilePath, const char* pDataFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, PLAYERID eModelType, const char* pModelFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, PLAYERID eModelType, const char* pModelFilePath, const char* pDataFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());
 	//static CModel* Bin_Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, DATA_BINSCENE* pScene, TYPE eType, const char* pModelFilePath, _fmatrix PivotMatrix = XMMatrixIdentity()); // 추가
 	virtual CComponent* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;

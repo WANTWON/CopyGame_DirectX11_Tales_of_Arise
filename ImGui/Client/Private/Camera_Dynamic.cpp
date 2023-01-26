@@ -35,71 +35,29 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (GetKeyState('W') < 0)
+	/* Debug Camera*/
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
-		m_pTransform->Go_Straight(fTimeDelta);
+		/* Camera Inputs */
+		if (pGameInstance->Key_Pressing(DIK_W))
+			m_pTransform->Go_Straight(fTimeDelta * 2);
+		if (pGameInstance->Key_Pressing(DIK_S))
+			m_pTransform->Go_Backward(fTimeDelta * 2);
+		if (pGameInstance->Key_Pressing(DIK_A))
+			m_pTransform->Go_Left(fTimeDelta * 2);
+		if (pGameInstance->Key_Pressing(DIK_D))
+			m_pTransform->Go_Right(fTimeDelta * 2);
+
+		_long MouseMove = 0;
+		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+			m_pTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * 0.1f);
+		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+			m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
 	}
 
-	if (GetKeyState('S') < 0)
-	{
-		m_pTransform->Go_Backward(fTimeDelta);
-	}
-
-	if (GetKeyState('A') < 0)
-	{
-		
-		m_pTransform->Go_Left(fTimeDelta);
-	}
-
-	if (GetKeyState('D') < 0)
-	{
-		
-		m_pTransform->Go_Right(fTimeDelta);
-	}
-
-	if (GetKeyState('Q') < 0)
-	{
-		_vector Axis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-		m_pTransform->Turn(Axis, -fTimeDelta);
-	}
-
-	if (GetKeyState('E') < 0)
-	{
-		_vector Axis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-		m_pTransform->Turn(Axis, fTimeDelta);
-	}
-
-	if (GetKeyState('1') < 0)
-	{
-
-		_vector Axis = m_pTransform->Get_State(CTransform::STATE_RIGHT);
-		m_pTransform->Turn(Axis, -fTimeDelta);
-	}
-
-	if (GetKeyState('2') < 0)
-	{
-		_vector Axis = m_pTransform->Get_State(CTransform::STATE_RIGHT);
-		m_pTransform->Turn(Axis, fTimeDelta);
-	}
-
-	/*CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	_long			MouseMove = 0;
-
-	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
-	{
-		_vector Axis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-		m_pTransform->Turn(Axis, fTimeDelta * MouseMove * 0.1f);
-	}
-
-	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
-	{
-		m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
-	}
-
-
-	Safe_Release(pGameInstance);*/
+	RELEASE_INSTANCE(CGameInstance);
 
 	if (FAILED(Bind_OnPipeLine()))
 		return OBJ_NOEVENT;
