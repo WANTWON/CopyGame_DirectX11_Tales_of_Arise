@@ -39,6 +39,8 @@ HRESULT CItem::Initialize(void* pArg)
 
 int CItem::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
 
@@ -51,6 +53,8 @@ int CItem::Tick(_float fTimeDelta)
 
 void CItem::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();

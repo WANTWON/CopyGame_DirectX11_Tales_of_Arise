@@ -30,6 +30,7 @@ HRESULT CParticle_Point::Initialize(void * pArg)
 
 int CParticle_Point::Tick(_float fTimeDelta)
 {
+	
 	m_pVIBufferCom->Update(fTimeDelta);
 
 	return OBJ_NOEVENT;
