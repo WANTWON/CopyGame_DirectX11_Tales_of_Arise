@@ -27,8 +27,6 @@ HRESULT CTreasureBox::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
-	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_INTERACT, this);
 	
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
@@ -46,22 +44,46 @@ int CTreasureBox::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 	
 
-	if (m_bCollision && 0 == m_iCollisiongCount)
-	{
-		m_bIsAnimationFinished =  m_pModelCom->Play_Animation(fTimeDelta, false);
-		if (m_bIsAnimationFinished)
-		{
-			m_iCollisiongCount = 1;
-			m_bOpen = true;
-		}
+	//if (m_bCollision && 0 == m_iCollisiongCount)
+	//{
+	//	m_bIsAnimationFinished =  m_pModelCom->Play_Animation(fTimeDelta, false);
+	//	if (m_bIsAnimationFinished)
+	//	{
+	//		m_iCollisiongCount = 1;
+	//		m_bOpen = true;
+	//	}
 
+	//}
+	
+	if (m_bCollision)
+	{
+		m_bOpen = true;
 	}
+
+	if (m_bOpen /*&& false == m_bOpenFinish*/)
+	{
+		m_bIsAnimationFinished = m_pModelCom->Play_Animation(fTimeDelta, false);
+
+		if (m_bIsAnimationFinished)
+			m_bOpen = false;
+			m_bOpenFinish = true;
+	}
+
+
 
 	else if (false == m_bCollision && false == m_bOpen)
 	{
 		m_pModelCom->Play_Animation(0.f, false);
 
 	}
+
+	//else if (/*false == m_bOpen || */true == m_bOpenFinish)
+	//{
+	//	m_bIsAnimationFinished = m_pModelCom->Play_Animation(1.f, false);
+
+	//	if (m_bIsAnimationFinished)
+	//		m_bOpenFinish = false;
+	//}
 
 
 

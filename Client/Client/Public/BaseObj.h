@@ -69,6 +69,7 @@ protected:
 	_float3			m_vMousePickPos;
 	_float			m_fWalkingHeight = 0.f;
 	_float			m_fAlpha = 1.f;
+	_float			m_DissolveAlpha = 0.f;
 
 public:
 	virtual void Free() override;

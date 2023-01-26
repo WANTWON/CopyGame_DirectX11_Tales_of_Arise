@@ -3,6 +3,7 @@
 #include "IceWolfBattle_WalkState.h"
 #include "IceWolfAttackNormalState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
+#include "Ice_Wolf.h"
 
 using namespace IceWolf;
 
@@ -22,29 +23,31 @@ CIceWolfState * CBattle_DeadState::Tick(_float fTimeDelta)
 {
 	AI_Behaviour(fTimeDelta);
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	
-	
+	if (false == m_bDeadAnimFinish)
+	{
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+		
+	}
 	return nullptr;
 }
 
 CIceWolfState * CBattle_DeadState::LateTick(_float fTimeDelta)
 {
-	m_iRand = rand() % 4;
+	
 
-	/*if (m_fIdleAttackTimer > 3.f && m_iRand == 0)
-		return new CBattle_WalkState(m_pOwner);
 
-	else if (m_fIdleAttackTimer > 3.f && m_iRand == 1)
-		return new CBattle_DeadState(m_pOwner);
+	if(m_bIsAnimationFinished && false == m_bDeadAnimFinish)
+	{
+		_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
 
-	else if (m_fIdleAttackTimer > 3.f && m_iRand == 2)
-		return new CAttackNormalState(m_pOwner);
 
-	else if (m_fIdleAttackTimer > 3.f && m_iRand == 3)
-		return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
-
-	else m_fIdleAttackTimer += fTimeDelta;*/
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
+		m_pOwner->Get_Model()->Play_Animation(2.55f, false);
+		m_pOwner->Set_Dissolve();
+		
+		m_bDeadAnimFinish = true;
+		//m_pOwner->Get_Model()->Play_Animation(2.5f, false);
+	}
 
 	return nullptr;
 }
@@ -52,8 +55,10 @@ CIceWolfState * CBattle_DeadState::LateTick(_float fTimeDelta)
 void CBattle_DeadState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_DEAD;
-
+	
 	m_pOwner->Get_Model()->Set_NextAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
+
+	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CBattle_DeadState::Exit()

@@ -81,7 +81,7 @@ HRESULT CSlime::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_BATTLE, TEXT("Slime"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Slime"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* For.Com_Navigation */
@@ -95,7 +95,7 @@ HRESULT CSlime::Ready_Components(void * pArg)
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(1.1f, 1.1f, 1.1f);
 	ColliderDesc.vPosition = _float3(0.f, 0.3f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -235,14 +235,6 @@ _float CSlime::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 	//			m_pSlimeState = m_pHawkState->ChangeState(m_pHawkState, pState);
 	//		}
 
-	////else
-	////{
-	////	m_tStats.m_fCurrentHp -= fDamage;
-
-	////	m_pModelCom->Set_TimeReset();
-	////	CHawkState* pState = new CBattle_Damage_LargeB_State(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
-	////	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	////}
 	//}
 
 	return fDamage;

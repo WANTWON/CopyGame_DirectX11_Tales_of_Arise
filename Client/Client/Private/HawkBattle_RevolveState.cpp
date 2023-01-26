@@ -115,7 +115,7 @@ void CBattle_RevolveState::Enter()
 
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::/*ATTACK_ROTATION*/FLAPPING);
+	//m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::/*ATTACK_ROTATION*/FLAPPING);
 
 	////
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();

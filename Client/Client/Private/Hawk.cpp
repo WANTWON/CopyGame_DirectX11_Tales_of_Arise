@@ -3,7 +3,6 @@
 #include "HawkState.h"
 #include "HawkIdleState.h"
 #include "HawkBattle_IdleState.h"
-#include "HawkBattle_BraveState.h"
 #include "HawkBattle_GrabState.h"
 #include "HawkBattle_ChargeState.h"
 #include "HawkBattle_RevolveState.h"
@@ -39,7 +38,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CHawkState* pState = new CBattle_RunState(this);
+	CHawkState* pState = new CBattle_IdleState(this);
 	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 
 	///* Set Binary */
@@ -59,7 +58,7 @@ HRESULT CHawk::Initialize(void * pArg)
 
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-
+	
 	return S_OK;
 }
 
@@ -86,7 +85,7 @@ HRESULT CHawk::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_BATTLE, TEXT("Hawk"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Hawk"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* For.Com_Navigation */
@@ -100,7 +99,7 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
 	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -115,6 +114,7 @@ int CHawk::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 	TickState(fTimeDelta);
 
+	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	return OBJ_NOEVENT;
 }
 
@@ -156,23 +156,14 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
 	{
-	case SYMBOL_DETECT_STOP:
-	case FAST_FLAP_OF_WINGS:
-	
+		SYMBOL_IDLE,
+			MOVE_RUN,
+			SYMBOL_RUN;
 		return true;
 	
-
-	case ATTACK_GRAB_START1:
-	case ATTACK_GRAB_START2:
-	case ATTACK_GRAB_END:
-	case ATTACK_BRAVE:
-	case ATTACK_ROTATION:
-	case FLYING_BACK:
-	case ATTACK_FLUTTER:
-	case REVOLVING_FLIGHT:
-	case ATTACK_CHARGE_ROTATION:
-	case DEAD2:
-	case MOVE_IDLE:
+		ATTACK_FLUTTER,
+		ATTACK_DASH,
+		ATTACK_PECK;
 		return false;
 	}
 

@@ -59,7 +59,7 @@ protected:
 	virtual _bool Is_AnimationLoop(_uint eAnimId)			PURE;
 	virtual void Check_Navigation()							PURE;
 
-
+	
 	
 public: // Get & Set
 	MONSTER_ID	Get_MonsterID(void) { return m_eMonsterID; }
@@ -72,6 +72,8 @@ public: // Get & Set
 	STATS		Get_Stats() { return m_tStats; }
 	_bool		Get_BattleMode = false;
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
+	void		Set_Dissolve() { m_bDissolve = true; }
+	
 
 protected:
 	DMG_DIR Calculate_DmgDirection();
@@ -84,7 +86,7 @@ protected:
 	_float					m_fAggroRadius = 15.f;
 	_float					m_fPatrolRadius = 5.f;
 	_float					m_fDistanceToTarget = 0.f;
-	
+	_float					m_fTime_TakeDamageDeltaAcc = 0.f;
 
 	_float					m_fAnimSpeed = 1.f;
 
@@ -93,7 +95,7 @@ protected:
 	_bool					m_bHit = false;
 	_bool					m_bMove = true;
 	_bool					m_bMakeEffect = false;
-//	_bool					m_bBattleMode = false;
+	_bool					m_bTakeDamage = false;
 	
 	//For Move Time
 	DWORD m_dwDeathTime = GetTickCount();
@@ -115,6 +117,10 @@ protected: /* For.Components */
 
 	/* Dissolve */
 	CTexture*				m_pDissolveTexture = nullptr;
+	
+protected:
+	_bool		m_bDissolve = false;
+
 
 public:
 	virtual void Free() override;
