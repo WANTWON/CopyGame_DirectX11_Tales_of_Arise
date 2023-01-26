@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Player.h"
+#include "Alphen.h"
+#include "Sion.h"
 
 BEGIN(Client)
 class CPlayerState

@@ -21,9 +21,9 @@ public:
 	void Get_BoneMatrices(_float4x4* pBoneMatrices, _fmatrix PivotMatrix);
 
 public:
-	virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, HANDLE hFile, _ulong* pdwByte, class CModel* pModel, _fmatrix PivotMatrix);
+	virtual HRESULT Initialize_Prototype(CModel::PLAYERID eModelType, HANDLE hFile, _ulong* pdwByte, class CModel* pModel, _fmatrix PivotMatrix);
 	virtual HRESULT Initialize(void* pArg);
-	virtual HRESULT Bin_Initialize_Prototype(CModel::TYPE eModelType, DATA_BINMESH* pAIMesh, class CModel* pModel, _fmatrix PivotMatrix);	// 추가
+	virtual HRESULT Bin_Initialize_Prototype(CModel::PLAYERID eModelType, DATA_BINMESH* pAIMesh, class CModel* pModel, _fmatrix PivotMatrix);	// 추가
 	virtual HRESULT Bin_Initialize(void* pArg);	// 추가
 	char* Get_Name() { return m_szName; }
 
@@ -69,8 +69,8 @@ private:
 
 public:
 	//static CMeshContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, const aiMesh* pAIMesh, class CModel* pModel, _fmatrix PivotMatrix);
-	static CMeshContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, HANDLE hFile, _ulong* pdwByte, CModel* pModel, _fmatrix PivotMatrix);
-	static CMeshContainer* Bin_Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, DATA_BINMESH* pAIMesh, class CModel* pModel, _fmatrix PivotMatrix); // 추가
+	static CMeshContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::PLAYERID eModelType, HANDLE hFile, _ulong* pdwByte, CModel* pModel, _fmatrix PivotMatrix);
+	static CMeshContainer* Bin_Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::PLAYERID eModelType, DATA_BINMESH* pAIMesh, class CModel* pModel, _fmatrix PivotMatrix); // 추가
 	virtual CComponent* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

@@ -85,7 +85,7 @@ void CModel::Set_TimeReset()
 	m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 }
 
-HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
+HRESULT CModel::Initialize_Prototype(PLAYERID eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
 {
 	m_eModelType = eModelType;
 
@@ -117,7 +117,7 @@ HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePat
 	return S_OK;
 }
 
-HRESULT CModel::Instance_Initialize_Prototype(TYPE eModelType, const char * pModelFilePath, const char * pDataFilePath, _fmatrix PivotMatrix)
+HRESULT CModel::Instance_Initialize_Prototype(PLAYERID eModelType, const char * pModelFilePath, const char * pDataFilePath, _fmatrix PivotMatrix)
 {
 	m_eModelType = eModelType;
 
@@ -636,7 +636,7 @@ HRESULT CModel::Create_Animations(HANDLE hFile, _ulong * pdwByte, const _tchar* 
 	return S_OK;
 }
 
-CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
+CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, PLAYERID eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
 {
 	CModel*	pInstance = new CModel(pDevice, pContext);
 
@@ -649,7 +649,7 @@ CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, 
 	return pInstance;
 }
 
-CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eModelType, const char * pModelFilePath, const char * pDataFilePath, _fmatrix PivotMatrix)
+CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, PLAYERID eModelType, const char * pModelFilePath, const char * pDataFilePath, _fmatrix PivotMatrix)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);
 

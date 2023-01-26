@@ -48,11 +48,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	/* ÅØ½ºÃÄ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("ÅØ½ºÃÄ ·Îµù Áß"));
-
-	/* ¸ðµ¨ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("¸ðµ¨ ·Îµù Áß."));
+	/* ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½. */
+	lstrcpy(m_szLoadingText, TEXT("Loading"));
 
 
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SM_AST_Prop_Rock01"),
@@ -129,8 +126,16 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	///*For.Prototype_Component_Model_Alphen*/
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Snow_Mountain"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Snow_Mountain.fbx", "../../../Bin/Bin_Data/NonAnim/Snow_Mountain/", PivotMatrix))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Fence"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Fence_001.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("LightPillar"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/StreetLight_002.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Lamp4"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/StreetLightLamp_001.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Model_SWO1(R00)*/
@@ -140,16 +145,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		return E_FAIL;
 
 
-	/* ¼ÎÀÌ´õ ·Îµù Áß. */
-	lstrcpy(m_szLoadingText, TEXT("¼ÎÀÌ´õ ·Îµù Áß."));
 
-	/* ÄÝ¶óÀÌ´õ »ý¼º Áß. */
-	lstrcpy(m_szLoadingText, TEXT("ÄÝ¶óÀÌ´õ »ý¼º Áß."));
-
-	/* °´Ã¼ »ý¼º Áß. */
-	lstrcpy(m_szLoadingText, TEXT("°´Ã¼ »ý¼º Áß."));
-
-	lstrcpy(m_szLoadingText, TEXT("·ÎµùÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù."));
+	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));
 
 	m_isFinished = true;
 
