@@ -35,8 +35,13 @@ int CSky::Tick(_float fTimeDelta)
 void CSky::Late_Tick(_float fTimeDelta)
 {
 
+
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
+
+	/*if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;*/
+
 	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, 

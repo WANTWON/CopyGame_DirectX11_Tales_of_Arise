@@ -10,17 +10,16 @@ BEGIN(Client)
 class CEffectMesh final : public CEffect
 {
 public:
-	typedef struct tagEffectDescription
+	typedef struct tagMeshEffectDescription
 	{
-		EFFECT_TYPE eType = TYPE_END;
+		_tchar wcPrototypeId[MAX_PATH] = TEXT("");	/* "Spark.dds > Spark" */
+	} MESHEFFECTDESC;
 
-		_tchar wcFileName[MAX_PATH] = TEXT("");				// "Effect.dds" ~ "Effect.png" ~ "Effect.fbx" 
-		_tchar wcFilePath[MAX_PATH] = TEXT("");				// "../../../Bin/Resources/Textures/Effect/*" ~ "../../../Bin/Resources/Meshes/Effect/*"
+public:
+	virtual _tchar* Get_PrototypeId() { return m_tMeshEffectDesc.wcPrototypeId; }
 
-		_tchar wcTexturePrototypeId[MAX_PATH] = TEXT("");
-		_tchar wcModelPrototypeId[MAX_PATH] = TEXT("");
-	} EFFECTDESC;
-
+	MESHEFFECTDESC Get_MeshEffectDesc() { return m_tMeshEffectDesc; }
+	
 public:
 	CEffectMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CEffectMesh(const CEffectMesh& rhs);
@@ -38,6 +37,8 @@ private:
 	virtual HRESULT SetUp_ShaderResources() override;
 
 private:
+	MESHEFFECTDESC  m_tMeshEffectDesc;
+
 	/* Mesh Effect */
 	CModel* m_pModelCom = nullptr;
 

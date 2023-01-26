@@ -11,6 +11,8 @@
 #include "Effect_Manager.h"
 #include "Camera_Manager.h"
 #include "TreasureBox.h"
+#include "EffectTexture.h"
+#include "EffectMesh.h"
 #include "ParticleSystem.h"
 
 BEGIN(Engine)
@@ -93,8 +95,10 @@ public:
 	void Read_Meshes(_tchar* pFolderPath);
 
 	void Set_Effect();
-	void Save_Effect();
-	void Load_Effect();
+	_bool Save_Effect();
+	_bool Load_Effect();
+
+	void Set_Play(_bool bPlay) { m_bIsPlaying = bPlay; }
 
 public:
 	void Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype = false);
@@ -195,6 +199,9 @@ private:
 	vector<string>							m_Shaders = { "SHADER_DEFAULT", "SHADER_ALPHAMASK" };
 	string									m_sCurrentShader = "SHADER_DEFAULT";
 
+	vector<string>							m_SpawnTypes = { "LOOP", "BURST" };
+	string									m_sCurrentSpawnType = "LOOP";
+
 	TRANSFORM_TYPE							m_eEffectTransformation = TRANS_SCALE;
 	class CTransform*						m_pEffectTransform = nullptr;
 	_bool									m_bBillboard = true;
@@ -202,6 +209,8 @@ private:
 	_float									m_fCurveValue = 1.f, m_fCurveStart = 1.f, m_fCurveEnd = 1.f;
 	_uint									m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedAlphaCurve = 0;
 
+	CEffectTexture::TEXTUREEFFECTDESC		m_tTextureEffectDesc;
+	CEffectMesh::MESHEFFECTDESC				m_tMeshEffectDesc;
 	CParticleSystem::PARTICLEDESC			m_tParticleDesc;
 
 public:

@@ -5,8 +5,6 @@
 #include "PickingMgr.h"
 #include "Cell.h"
 #include "BaseObj.h"
-#include "Effect.h"
-#include "ParticleSystem.h"
 #include <windows.h>
 #include <string.h>
 
@@ -2545,11 +2543,12 @@ void CImgui_Manager::Read_Textures(_tchar* pFolderPath)
 		else // File
 		{
 			_tchar szFileExt[MAX_PATH];
-			_wsplitpath_s(fileData.cFileName, nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+			_tchar szFileName[MAX_PATH];
+			_wsplitpath_s(fileData.cFileName, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szFileExt, MAX_PATH);
 
 			if (!wcscmp(szFileExt, TEXT(".dds")) || !wcscmp(szFileExt, TEXT(".png")))
 			{
-				wstring wsFileName = wstring(fileData.cFileName);
+				wstring wsFileName = wstring(szFileName);
 				string sFileName = string(wsFileName.begin(), wsFileName.end());
 
 				m_TextureNames.push_back(sFileName);
@@ -2592,11 +2591,12 @@ void CImgui_Manager::Read_Meshes(_tchar* pFolderPath)
 		else // File
 		{
 			_tchar szFileExt[MAX_PATH];
-			_wsplitpath_s(fileData.cFileName, nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
+			_tchar szFileName[MAX_PATH];
+			_wsplitpath_s(fileData.cFileName, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szFileExt, MAX_PATH);
 
 			if (!wcscmp(szFileExt, TEXT(".dat")))
 			{
-				wstring wsFileName = wstring(fileData.cFileName);
+				wstring wsFileName = wstring(szFileName);
 				string sFileName = string(wsFileName.begin(), wsFileName.end());
 
 				m_MeshNames.push_back(sFileName);
@@ -2648,9 +2648,8 @@ void CImgui_Manager::Set_Effect()
 		}
 
 		if (ImGui::Button("Load Effect"))
-		{
-			/* TODO: .. */
-		}
+			Load_Effect();
+
 		ImGui::NewLine();
 		ImGui::Separator();
 
@@ -2659,9 +2658,8 @@ void CImgui_Manager::Set_Effect()
 		ImGui::Text(m_sCurrentEffect.c_str());
 		
 		if (ImGui::Button("Save Effect"))
-		{
-			/* TODO: .. */
-		}
+			Save_Effect();
+
 		ImGui::NewLine();
 	}
 #pragma endregion Create
@@ -2692,19 +2690,16 @@ void CImgui_Manager::Set_Effect()
 					{
 						if (!m_sSelectedResource.empty())
 						{
-							CEffect::EFFECTDESC tEffectDesc;
-							tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_TEXTURE;
+							CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc;
 
 							wstring wsTexturePrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
-							wcscpy_s(tEffectDesc.wcTexturePrototypeId, MAX_PATH, wsTexturePrototype.c_str());
-								
-							wstring wsSelectedResource = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
-							wcscpy_s(tEffectDesc.wcFileName, MAX_PATH, wsSelectedResource.c_str());
+							wcscpy_s(tTextureEffectDesc.wcPrototypeId, MAX_PATH, wsTexturePrototype.c_str());
 
 							CEffect* pEffect = nullptr;
-							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectTexture"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc);
+							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectTexture"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tTextureEffectDesc);
 
 							m_pEffectManager->Add_Effect(pEffect);
+							pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_TEXTURE);
 						}
 					}
 					ImGui::SameLine();
@@ -2713,19 +2708,16 @@ void CImgui_Manager::Set_Effect()
 					{
 						if (!m_sSelectedResource.empty())
 						{
-							CEffect::EFFECTDESC tEffectDesc;
-							tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_PARTICLE;
+							CParticleSystem::PARTICLEDESC tParticleDesc;
 
 							wstring wsTexturePrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
-							wcscpy_s(tEffectDesc.wcTexturePrototypeId, MAX_PATH, wsTexturePrototype.c_str());
-
-							wstring wsSelectedResource = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
-							wcscpy_s(tEffectDesc.wcFileName, MAX_PATH, wsSelectedResource.c_str());
+							wcscpy_s(tParticleDesc.wcPrototypeId, MAX_PATH, wsTexturePrototype.c_str());
 
 							CEffect* pEffect = nullptr;
-							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc);
+							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tParticleDesc);
 
 							m_pEffectManager->Add_Effect(pEffect);
+							pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_PARTICLE);
 						}
 					}
 				}
@@ -2750,19 +2742,16 @@ void CImgui_Manager::Set_Effect()
 					{
 						if (!m_sSelectedResource.empty())
 						{
-							CEffect::EFFECTDESC tEffectDesc;
-							tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_MESH;
+							CEffectMesh::MESHEFFECTDESC tMeshEffectDesc;
 
 							wstring wsMeshPrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
-							wcscpy_s(tEffectDesc.wcModelPrototypeId, MAX_PATH, wsMeshPrototype.c_str());				
-
-							wstring wsSelectedResource = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
-							wcscpy_s(tEffectDesc.wcFileName, MAX_PATH, wsSelectedResource.c_str());
+							wcscpy_s(tMeshEffectDesc.wcPrototypeId, MAX_PATH, wsMeshPrototype.c_str());
 
 							CEffect* pEffect = nullptr;
-							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectMesh"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc);
+							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectMesh"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tMeshEffectDesc);
 
 							m_pEffectManager->Add_Effect(pEffect);
+							pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_MESH);
 						}
 					}
 				}
@@ -2779,16 +2768,36 @@ void CImgui_Manager::Set_Effect()
 
 		if (ImGui::BeginListBox("##Instanced Effect List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
 		{
-			list<CEffect*> Effects = CEffect_Manager::Get_Instance()->Get_InstancedEffects();
+			vector<CEffect*> Effects = CEffect_Manager::Get_Instance()->Get_InstancedEffects();
 			for (CEffect* pEffect : Effects)
 			{
-				wstring wsEffectName = wstring(pEffect->Get_EffectDesc().wcFileName);
+				wstring wsEffectName = wstring(pEffect->Get_PrototypeId());
 				string sEffectName = string(wsEffectName.begin(), wsEffectName.end());
 
 				if (ImGui::Selectable(sEffectName.c_str(), m_sSelectedEffect == sEffectName))
 				{
 					m_sSelectedEffect = sEffectName;
 					m_pSelectedEffect = pEffect;
+					m_bIsPlaying = false;
+
+					switch (m_pSelectedEffect->Get_EffectType())
+					{
+						case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+						{
+							wcscpy_s(m_tTextureEffectDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
+							break;
+						}	
+						case CEffect::EFFECT_TYPE::TYPE_MESH:
+						{
+							wcscpy_s(m_tMeshEffectDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
+							break;
+						}
+						case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
+						{
+							wcscpy_s(m_tParticleDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
+							break;
+						}
+					}
 
 					// Set Transform of the Selected Effect
 					CComponent* pComponent = pEffect->Find_Component(TEXT("Com_Transform"));
@@ -2833,6 +2842,34 @@ void CImgui_Manager::Set_Effect()
 		}
 		ImGui::NewLine();
 
+		ImGui::Text("Spawn Type");
+		ImGui::SameLine();
+		if (ImGui::BeginCombo("##SpawnType", m_sCurrentSpawnType.c_str()))
+		{
+			_uint iCounter = 0;
+			for (auto& iter = m_SpawnTypes.begin(); iter != m_SpawnTypes.end(); iter++)
+			{
+				if (ImGui::Selectable(iter->c_str(), iter->c_str() == m_sCurrentSpawnType))
+				{
+					m_sCurrentSpawnType = *iter;
+
+					CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+					if (pParticleSystem)
+					{
+						m_tParticleDesc.m_eSpawnType = iCounter;
+						pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+					}
+				}
+
+				if (iter->c_str() == m_sCurrentSpawnType)
+					ImGui::SetItemDefaultFocus();
+
+				iCounter++;
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::Text("Shader");
+		ImGui::SameLine();
 		if (ImGui::BeginCombo("##Shader", m_sCurrentShader.c_str()))
 		{
 			_uint iCounter = 0;
@@ -2851,11 +2888,35 @@ void CImgui_Manager::Set_Effect()
 			}
 			ImGui::EndCombo();
 		}
+
+		ImGui::Checkbox("Billboard", &m_tParticleDesc.m_bBillboard);
 		ImGui::NewLine();
 		ImGui::Separator();
 		
 		ImGui::Text("Particles Settings");
 		
+		if (ImGui::DragInt("##ParticlesNum", &m_tParticleDesc.m_iMaxParticles, 1, 0, 1000, "Max Particles: %d"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (m_sCurrentSpawnType == "BURST")
+			ImGui::BeginDisabled();
+		if (ImGui::DragFloat("##ParticlesPerSecond", &m_tParticleDesc.m_fParticlesPerSecond, 0.05f, 0, m_tParticleDesc.m_iMaxParticles, "Particles/Sec: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (m_sCurrentSpawnType == "BURST")
+			ImGui::EndDisabled();
+		if (ImGui::DragFloat("##ParticlesLifetime", &m_tParticleDesc.m_fParticlesLifetime, 0.05f, 0, 0, "Particles Lifetime: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
 		if (ImGui::DragFloat("##ParticleDeviationX", &m_tParticleDesc.m_fParticleDeviationX, 0.05f, 0, 0, "X Variation: %.02f"))
 		{
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
@@ -2874,24 +2935,66 @@ void CImgui_Manager::Set_Effect()
 			if (pParticleSystem)
 				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
+		if (m_tParticleDesc.m_bRandomDirectionX)
+			ImGui::BeginDisabled();
 		if (ImGui::DragFloat("##ParticleDirectionX", &m_tParticleDesc.m_vParticleDirection.x, 0.05f, -1, 1, "Direction X: %.02f"))
 		{
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
 			if (pParticleSystem)
 				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
-		if (ImGui::DragFloat("##ParticleDirectionY", &m_tParticleDesc.m_vParticleDirection.y, 0.05f, -1, 1, "Direction Y: %.02f"))
+		if (m_tParticleDesc.m_bRandomDirectionX)
+			ImGui::EndDisabled();
+		ImGui::SameLine();
+		ImGui::Text("Random");
+		ImGui::SameLine();
+		if (ImGui::Checkbox("##RandomDirectionX", &m_tParticleDesc.m_bRandomDirectionX))
 		{
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
 			if (pParticleSystem)
 				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
+
+		if (m_tParticleDesc.m_bRandomDirectionY)
+			ImGui::BeginDisabled();
+		if (ImGui::DragFloat("##ParticleDirectionY", &m_tParticleDesc.m_vParticleDirection.y, 0.05f, -1, 1, "Direction Y: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect); 
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (m_tParticleDesc.m_bRandomDirectionY)
+			ImGui::EndDisabled();
+		ImGui::SameLine();
+		ImGui::Text("Random");
+		ImGui::SameLine();
+		if (ImGui::Checkbox("##RandomDirectionY", &m_tParticleDesc.m_bRandomDirectionY))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+
+		if (m_tParticleDesc.m_bRandomDirectionZ)
+			ImGui::BeginDisabled();
 		if (ImGui::DragFloat("##ParticleDirectionZ", &m_tParticleDesc.m_vParticleDirection.z, 0.05f, -1, 1, "Direction Z: %.02f"))
 		{
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
 			if (pParticleSystem)
 				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
+		if (m_tParticleDesc.m_bRandomDirectionZ)
+			ImGui::EndDisabled();
+		ImGui::SameLine();
+		ImGui::Text("Random");
+		ImGui::SameLine();
+		if (ImGui::Checkbox("##RandomDirectionZ", &m_tParticleDesc.m_bRandomDirectionZ))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+
 		if (ImGui::DragFloat("##Velocity", &m_tParticleDesc.m_fParticleVelocity, 0.05f, 0, 100.f, "Velocity: %.02f"))
 		{
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
@@ -2915,25 +3018,7 @@ void CImgui_Manager::Set_Effect()
 			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
 			if (pParticleSystem)
 				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
-		}
-		if (ImGui::DragFloat("##ParticlesPerSecond", &m_tParticleDesc.m_fParticlesPerSecond, 0.05f, 0, m_tParticleDesc.m_iMaxParticles, "Particles/Sec: %.02f"))
-		{
-			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
-			if (pParticleSystem)
-				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
-		}
-		if (ImGui::DragFloat("##ParticlesLifetime", &m_tParticleDesc.m_fParticlesLifetime, 0.05f, 0, 0, "Particles Lifetime: %.02f"))
-		{
-			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
-			if (pParticleSystem)
-				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
-		}
-		if (ImGui::DragInt("##ParticlesNum", &m_tParticleDesc.m_iMaxParticles, 1, 0, 1000, "Max Particles: %d"))
-		{
-			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
-			if (pParticleSystem)
-				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
-		}
+		}	
 
 		ImGui::NewLine();
 		if (ImGui::Button("Curve Editor", ImVec2(100, 0)))
@@ -2947,14 +3032,226 @@ void CImgui_Manager::Set_Effect()
 	Draw_EffectModals();
 }
 
-void CImgui_Manager::Save_Effect()
+_bool CImgui_Manager::Save_Effect()
 {
+	wstring wsCurrentEffect = wstring(m_sCurrentEffect.begin(), m_sCurrentEffect.end());
 
+	/* Create Effect Data File */
+	HANDLE hFileEffect = nullptr;
+	_tchar LoadPathEffect[MAX_PATH] = TEXT("../../../Bin/Data/EffectData/");
+	wcscat_s(LoadPathEffect, MAX_PATH, wsCurrentEffect.c_str());
+
+	hFileEffect = CreateFile(LoadPathEffect, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	if (hFileEffect == INVALID_HANDLE_VALUE)
+		return false;
+
+	DWORD dwByte = 0;
+
+	/* Write how many Effects are in this File (needed when Loading). */
+	_uint iEffectsCount = (_uint)m_pEffectManager->Get_InstancedEffects().size();
+	WriteFile(hFileEffect, &iEffectsCount, sizeof(_uint), &dwByte, nullptr);
+
+	vector<CEffect*> Effects = m_pEffectManager->Get_InstancedEffects();
+	/* For every Effect in this File: */
+	for (_uint i = 0; i < Effects.size(); i++)
+	{
+		/* Write Effect Type (needed when Loading). */
+		CEffect::EFFECT_TYPE eType = Effects[i]->Get_EffectType();
+		WriteFile(hFileEffect, &eType, sizeof(CEffect::EFFECT_TYPE), &dwByte, nullptr);
+
+		/* Write Effect Type-specific Description. */
+		switch (Effects[i]->Get_EffectType())
+		{
+			case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+			{
+				CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc = static_cast<CEffectTexture*>(Effects[i])->Get_TextureEffectDesc();
+				WriteFile(hFileEffect, &tTextureEffectDesc, sizeof(CEffectTexture::TEXTUREEFFECTDESC), &dwByte, nullptr);
+				break;
+			}
+			case CEffect::EFFECT_TYPE::TYPE_MESH:
+			{
+				CEffectMesh::MESHEFFECTDESC tMeshEffectDesc = static_cast<CEffectMesh*>(Effects[i])->Get_MeshEffectDesc();
+				WriteFile(hFileEffect, &tMeshEffectDesc, sizeof(CEffectMesh::MESHEFFECTDESC), &dwByte, nullptr);
+				break;
+			}
+			case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
+			{
+				CParticleSystem::PARTICLEDESC tParticleDesc = static_cast<CParticleSystem*>(Effects[i])->Get_ParticleDesc();
+				WriteFile(hFileEffect, &tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
+				break;
+			}
+		}
+
+		/* Write how many Velocity Curves there are for this Effect (needed when Loading). */
+		_uint iVelocityCurvesCount = (_uint)(Effects[i]->Get_VelocityCurves().size());
+		WriteFile(hFileEffect, &iVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
+
+		/* Write Velocity Curves. */
+		for (_uint j = 0; j < iVelocityCurvesCount; j++)
+			WriteFile(hFileEffect, &Effects[i]->Get_VelocityCurves()[j], sizeof(_float3), &dwByte, nullptr);
+
+		/* Write how many Size Curves there are for this Effect (needed when Loading). */
+		_uint iSizeCurvesCount = (_uint)(Effects[i]->Get_SizeCurves().size());
+		WriteFile(hFileEffect, &iSizeCurvesCount, sizeof(_uint), &dwByte, nullptr);
+
+		/* Write Size Curves. */
+		for (_uint j = 0; j < iSizeCurvesCount; j++)
+			WriteFile(hFileEffect, &Effects[i]->Get_SizeCurves()[j], sizeof(_float3), &dwByte, nullptr);
+		
+		/* Write how many Alpha Curves there are for this Effect (needed when Loading). */
+		_uint iAlphaCurvesCount = (_uint)(Effects[i]->Get_AlphaCurves().size());
+		WriteFile(hFileEffect, &iAlphaCurvesCount, sizeof(_uint), &dwByte, nullptr);
+
+		/* Write Alpha Curves. */
+		for (_uint j = 0; j < iAlphaCurvesCount; j++)
+			WriteFile(hFileEffect, &Effects[i]->Get_AlphaCurves()[j], sizeof(_float3), &dwByte, nullptr);
+	}
+
+	CloseHandle(hFileEffect);
+
+	Read_EffectsData();
 }
 
-void CImgui_Manager::Load_Effect()
+_bool CImgui_Manager::Load_Effect()
 {
+	wstring wsSelectedSavedEffect = wstring(m_SavedEffects[m_iSavedEffect].begin(), m_SavedEffects[m_iSavedEffect].end());
 
+	/* Load Effect File. */
+	HANDLE hFileEffect = nullptr;
+	_tchar LoadPathEffect[MAX_PATH] = TEXT("../../../Bin/Data/EffectData/");
+	wcscat_s(LoadPathEffect, MAX_PATH, wsSelectedSavedEffect.c_str());
+
+	hFileEffect = CreateFile(LoadPathEffect, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	if (hFileEffect == INVALID_HANDLE_VALUE)
+		return false;
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	DWORD dwByte = 0;
+	_uint iEffectsCount = 0;
+
+	/* Read how many Effects there are in this File. */
+	ReadFile(hFileEffect, &iEffectsCount, sizeof(_uint), &dwByte, nullptr);
+
+	while (true)
+	{
+		if (!dwByte)
+			break;
+
+		/* For every Effect in this File: */
+		for (_uint i = 0; i < iEffectsCount; i++)
+		{
+			/* Read Effect Type. */
+			CEffect::EFFECT_TYPE eType;
+			ReadFile(hFileEffect, &eType, sizeof(CEffect::EFFECT_TYPE), &dwByte, nullptr);
+
+			CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc;
+			CEffectMesh::MESHEFFECTDESC tMeshEffectDesc;
+			CParticleSystem::PARTICLEDESC tParticleDesc;
+			CEffect* pEffect = nullptr;
+
+			/* Read Effect Type-specific Description. */
+			switch (eType)
+			{
+				case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+				{
+					ReadFile(hFileEffect, &tTextureEffectDesc, sizeof(CEffectTexture::TEXTUREEFFECTDESC), &dwByte, nullptr);
+
+					if (!dwByte)
+						break;
+
+					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectTexture"), LEVEL_GAMEPLAY, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tTextureEffectDesc);
+
+					m_pEffectManager->Add_Effect(pEffect);
+					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_TEXTURE);
+					break;
+				}
+				case CEffect::EFFECT_TYPE::TYPE_MESH:
+				{
+					ReadFile(hFileEffect, &tMeshEffectDesc, sizeof(CEffectMesh::MESHEFFECTDESC), &dwByte, nullptr);
+
+					if (!dwByte)
+						break;
+
+					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectMesh"), LEVEL_GAMEPLAY, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tMeshEffectDesc);
+
+					m_pEffectManager->Add_Effect(pEffect);
+					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_MESH);
+					break;
+				}
+				case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
+				{
+					ReadFile(hFileEffect, &tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
+
+					if (!dwByte)
+						break;
+
+					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tParticleDesc);
+
+					m_tParticleDesc = tParticleDesc;
+					m_pEffectManager->Add_Effect(pEffect);
+					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_PARTICLE);
+					break;
+				}
+			}
+
+			/* Read how many Velocity Curves there are for this Effect. */
+			_uint iVelocityCurvesCount = 0;
+			ReadFile(hFileEffect, &iVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
+
+			/* Read Velocity Curves. */
+			vector<_float3> VelocityCurves;
+			_float3 VelocityCurve;
+			for (_uint j = 0; j < iVelocityCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &VelocityCurve, sizeof(_float3), &dwByte, nullptr);
+				VelocityCurves.push_back(VelocityCurve);
+			}
+			if (!VelocityCurves.empty())
+				pEffect->Set_VelocityCurves(VelocityCurves);
+
+			/* Read how many Size Curves there are for this Effect. */
+			_uint iSizeCurvesCount = 0;
+			ReadFile(hFileEffect, &iSizeCurvesCount, sizeof(_uint), &dwByte, nullptr);
+
+			/* Read Size Curves. */
+			vector<_float3> SizeCurves;
+			_float3 SizeCurve;
+			for (_uint j = 0; j < iSizeCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &SizeCurve, sizeof(_float3), &dwByte, nullptr);
+				SizeCurves.push_back(SizeCurve);
+			}
+			if (!SizeCurves.empty())
+				pEffect->Set_SizeCurves(SizeCurves);
+
+			/* Read how many Alpha Curves there are for this Effect. */
+			_uint iAlphaCurvesCount = 0;
+			ReadFile(hFileEffect, &iAlphaCurvesCount, sizeof(_uint), &dwByte, nullptr);
+
+			/* Read Alpha Curves. */
+			vector<_float3> AlphaCurves;
+			_float3 AlphaCurve;
+			for (_uint j = 0; j < iAlphaCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &AlphaCurve, sizeof(_float3), &dwByte, nullptr);
+				AlphaCurves.push_back(AlphaCurve);
+			}
+			if (!AlphaCurves.empty())
+				pEffect->Set_AlphaCurves(AlphaCurves);
+		}
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	CloseHandle(hFileEffect);
+
+	m_sCurrentEffect = m_SavedEffects[m_iSavedEffect];
+
+
+	return true;
 }
 
 void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype)
