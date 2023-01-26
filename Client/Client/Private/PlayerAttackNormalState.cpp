@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "PlayerIdleState.h"
 #include "Weapon.h"
+#include "PlayerAttack2NormalState.h"
 
 using namespace Player;
 
@@ -43,6 +44,8 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 		{
 			if (EVENT_COLLIDER == pEvent.iEventType)
 				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+			if (EVENT_STATE == pEvent.iEventType)
+				return new CAttack2NormalState(m_pOwner);
 		}
 		else
 		{
