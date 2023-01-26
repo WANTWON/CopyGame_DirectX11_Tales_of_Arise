@@ -39,6 +39,7 @@ public:
 		m_iNextAnimIndex = iAnimIndex;
 	}
 	void Set_TimeReset();
+	void Reset_Events(void);
 
 public:
 	virtual HRESULT Initialize_Prototype(PLAYERID eModelType, const char* pModelFilePath, _fmatrix PivotMatrix);

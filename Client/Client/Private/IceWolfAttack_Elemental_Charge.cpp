@@ -36,7 +36,7 @@ CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 	m_iRand = rand() % 3;
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 	
 	if (m_bIsAnimationFinished)
 	{

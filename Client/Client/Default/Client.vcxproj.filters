@@ -619,7 +619,7 @@
       <Filter>02.GameObjects\03.Effect\00.EffectTexture</Filter>
     </ClInclude>
     <ClInclude Include="PlayerAttack2NormalState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -957,7 +957,7 @@
       <Filter>02.GameObjects\03.Effect\00.EffectTexture</Filter>
     </ClCompile>
     <ClCompile Include="PlayerAttack2NormalState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

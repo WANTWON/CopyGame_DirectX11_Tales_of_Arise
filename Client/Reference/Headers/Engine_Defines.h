@@ -4,6 +4,7 @@
 #pragma warning (disable : 4099)
 #pragma warning (disable : 4005)
 #pragma warning (disable : 4251)
+#pragma warning (disable : 4819)
 
 #include <d3d11.h>
 #include <DirectXMath.h>

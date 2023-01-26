@@ -19,7 +19,7 @@ CPlayerState * CAttack2NormalState::HandleInput(void)
 
 CPlayerState * CAttack2NormalState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())/*, "TransN"*/);
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -30,7 +30,7 @@ CPlayerState * CAttack2NormalState::Tick(_float fTimeDelta)
 		ChangeMatrix.r[1] = XMVector4Normalize(ChangeMatrix.r[1]);
 		ChangeMatrix.r[2] = XMVector4Normalize(ChangeMatrix.r[2]);
 
-		m_pOwner->Get_Transform()->Sliding_Anim(ChangeMatrix, m_pOwner->Get_Navigation());
+		//m_pOwner->Get_Transform()->Sliding_Anim(ChangeMatrix, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -69,11 +69,12 @@ void CAttack2NormalState::Enter(void)
 {
 	m_eStateId = STATE_ID::STATE_ATTACK;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CPlayer::ANIM::ANIM_ATTACK_NORMAL_1);
+	m_pOwner->Get_Model()->Set_NextAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_1);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CAttack2NormalState::Exit(void)
 {
+	__super::Exit();
 }

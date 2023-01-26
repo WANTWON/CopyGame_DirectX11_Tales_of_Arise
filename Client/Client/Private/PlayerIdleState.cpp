@@ -78,4 +78,5 @@ void CIdleState::Enter()
 
 void CIdleState::Exit()
 {
+	__super::Exit();
 }

@@ -111,6 +111,8 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
+	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+
 	return OBJ_NOEVENT;
 }
 

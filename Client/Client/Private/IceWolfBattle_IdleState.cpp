@@ -34,9 +34,9 @@ CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	m_iRand = rand() % 4;
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 
-	if (m_fIdleAttackTimer > 3.f && m_iRand == 0)
+	/*if (m_fIdleAttackTimer > 3.f && m_iRand == 0)
 		return new CBattle_WalkState(m_pOwner);
 
 	else if (m_fIdleAttackTimer > 3.f && m_iRand == 1)
@@ -48,7 +48,7 @@ CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	else if (m_fIdleAttackTimer > 3.f && m_iRand == 3)
 		return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
 
-	else m_fIdleAttackTimer += fTimeDelta;
+	else m_fIdleAttackTimer += fTimeDelta;*/
 
 	return nullptr;
 }
