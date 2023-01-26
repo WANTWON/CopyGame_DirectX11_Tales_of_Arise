@@ -51,6 +51,8 @@ public:
 	void Remove_SizeCurve(_uint iIndex) { m_SizeCurves.erase(m_SizeCurves.begin() + iIndex); };
 	void Remove_AlphaCurve(_uint iIndex) { m_AlphaCurves.erase(m_AlphaCurves.begin() + iIndex); };
 
+	static void PlayEffect(_tchar* wcEffectName, _vector vPosition);
+
 public:
 	CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CEffect(const CEffect& rhs);

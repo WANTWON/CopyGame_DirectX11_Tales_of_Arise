@@ -34,12 +34,10 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	KillParticles();					/* Release old Particles. */
-
-	if (m_bPlay)
-		EmitParticles(fTimeDelta);		/* Emit new Particles.	*/
-
-	UpdateParticles(fTimeDelta);		/* Update Particles. */
+	KillParticles();				/* Release old Particles. */
+	
+	EmitParticles(fTimeDelta);		/* Emit new Particles.	*/
+	UpdateParticles(fTimeDelta);	/* Update Particles. */
 
 	UpdateBuffers();
 	
@@ -54,7 +52,7 @@ void CParticleSystem::Late_Tick(_float fTimeDelta)
 		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);*/	/* Alphablend with Normals */
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);			/* Alphablend */
 
-		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+		//Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 	}
 }
 
@@ -64,8 +62,6 @@ HRESULT CParticleSystem::Render()
 		return E_FAIL;
 
 	__super::Render();
-
-
 
 	m_pShaderCom->Begin(m_eShaderID);
 	RenderBuffers();
@@ -552,7 +548,7 @@ void CParticleSystem::KillParticles()
 
 			/* If SpawnType is BURST after removing the last Particle stop emitting. */
 			if (m_tParticleDesc.m_eSpawnType == 1 && m_fCurrentParticleCount == 0 && m_bDidBurst)
-				m_bPlay = false;
+				m_bDead = true;
 		}
 	}
 
