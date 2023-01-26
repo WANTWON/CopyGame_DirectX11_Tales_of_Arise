@@ -191,15 +191,15 @@ inline aiReturn aiMaterial::Get(const char* pKey,unsigned int type,
 
 
 // ---------------------------------------------------------------------------
-template<class TYPE>
-aiReturn aiMaterial::AddProperty (const TYPE* pInput,
+template<class PLAYERID>
+aiReturn aiMaterial::AddProperty (const PLAYERID* pInput,
     const unsigned int pNumValues,
     const char* pKey,
     unsigned int type,
     unsigned int index)
 {
     return AddBinaryProperty((const void*)pInput,
-        pNumValues * sizeof(TYPE),
+        pNumValues * sizeof(PLAYERID),
         pKey,type,index,aiPTI_Buffer);
 }
 
