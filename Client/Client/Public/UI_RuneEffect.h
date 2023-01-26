@@ -41,12 +41,20 @@ private:
 	_bool m_bfadeout1 = false;
 	_bool m_bfadein2 = false;
 	_bool m_bfadeout2 = false;
+	_bool m_bfadein3 = false;
+	_bool m_bfadeout3 = false;
+	_bool m_bfadein4 = false;
+	_bool m_bfadeout4 = false;
 
 	_float m_fDeadtimer = 0.f;
 
 	_float  m_fAlpha1 = 1.f;
 	_float  m_fAlpha2 = 1.f;
 
+	_float  m_fAlpha3 = 1.f;
+	_float  m_fAlpha4 = 1.f;
+
+	_uint m_itype = 0;
 	/*_bool m_bfirst = true;
 	_bool m_bsecond = true;*/
 

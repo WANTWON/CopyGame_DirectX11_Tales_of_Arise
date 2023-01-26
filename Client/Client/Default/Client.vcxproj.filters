@@ -148,9 +148,6 @@
     <Filter Include="02.GameObjects\04.UI\09.UI_RuneEffect">
       <UniqueIdentifier>{f745ed0c-e7f1-4936-ab54-8faa54e34f97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING">
-      <UniqueIdentifier>{9514bfa9-ed3c-4a7f-be3a-457b1311c64f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04.UI\09.UI_LOCKON">
       <UniqueIdentifier>{58dfe97a-44c5-4aed-bff1-646d1870960e}</UniqueIdentifier>
     </Filter>
@@ -177,6 +174,15 @@
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates">
       <UniqueIdentifier>{dd455c3a-0f6e-4072-bea2-9e84af3fad1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\10.UI_MENU">
+      <UniqueIdentifier>{c0ba6400-f6cc-4009-ae60-57abd3c7cce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\11.UI_ITEM">
+      <UniqueIdentifier>{98868d8a-2e52-4c7d-ad21-2ea866b11000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\02.UI_LOADING">
+      <UniqueIdentifier>{9514bfa9-ed3c-4a7f-be3a-457b1311c64f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\03.InteractObject">
       <UniqueIdentifier>{302f8212-a864-4482-aa5e-a307b89d73e1}</UniqueIdentifier>
@@ -310,7 +316,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Loading.h">
-      <Filter>02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING</Filter>
+      <Filter>02.GameObjects\04.UI\02.UI_LOADING</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ScreenFadeEffect.h">
       <Filter>02.GameObjects\04.UI</Filter>
@@ -492,6 +498,9 @@
     <ClInclude Include="..\Public\UI_font_Damage_number.h">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_MENU_Back.h">
+      <Filter>02.GameObjects\04.UI\10.UI_MENU</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\IceWolfBattle_Damage_LargeB_State.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClInclude>
@@ -630,7 +639,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Loading.cpp">
-      <Filter>02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING</Filter>
+      <Filter>02.GameObjects\04.UI\02.UI_LOADING</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp">
       <Filter>02.GameObjects\04.UI</Filter>
@@ -805,6 +814,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp">
       <Filter>02.GameObjects\04.UI\04.UI_COMBO\UI_COMBO_FONTS\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MENU_Back.cpp">
+      <Filter>02.GameObjects\04.UI\10.UI_MENU</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfBattle_Damage_LargeB_State.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>

@@ -5,10 +5,13 @@ matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D		g_DiffuseTexture;
 texture2D       g_GradationTexture;
 float			g_fAlpha = 1.f;
+float           g_fAlpha1 = 1.f;
 
 float			g_fMinRange = 100.f;
 float			g_fMaxRange = 400.f;
 float a = 0.f;
+float g_fAngle; 
+float g_fAngle1;
 
 float g_fCurrentHp;
 float g_fMaxHp;
@@ -276,6 +279,8 @@ PS_OUT PS_MPGUAGE(PS_IN In)
 	Out.vColor.r = 0.0589019607843137f;
 	Out.vColor.g = 0.942708f;
 	Out.vColor.b = 0.83441f;
+	if (Out.vColor.a <= 0.1)
+		discard;
 		
 	return Out;
 }
@@ -394,18 +399,263 @@ PS_OUT PS_REVERSELOCKON(PS_IN In)
 	Out.vColor.g = 0.942708f;
 	Out.vColor.b = 0.83441f;
 
+	if (Out.vColor.a <= 0.1)
+	discard;
+
+	return Out;
+}
+
+PS_OUT PS_UVROTATION(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	/*Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	if (Out.vColor.r == 0 && Out.vColor.g == 0 && Out.vColor.b && 0)
+		return Out;*/
+	
+
+	float2x2 rotationMatrix = float2x2(cos(g_fAngle), -sin(g_fAngle), sin(g_fAngle), cos(g_fAngle));
+
+	if (In.vTexUV.x < 0.15f || In.vTexUV.x > 0.85f)
+		discard;
+
+	if (In.vTexUV.y < 0.2f || In.vTexUV.y > 0.8f)
+		discard;
+
+	float2 rotatedUV = mul(rotationMatrix, In.vTexUV -0.5f) + 0.5f;
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, rotatedUV);
+
+	Out.vColor.a = Out.vColor.r;
+
+	//if (Out.vColor.r >= 0.2f)
+		Out.vColor.rgb = float3(0.5882352941176471f, 0.5372549019607843f, 0.3686274509803922f);
+
+		
+
+
+	Out.vColor.a -= 0.2f;
+
+	return Out;
+}
+
+PS_OUT PS_INVENICON(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	
+	if (Out.vColor.r < 0.53f || Out.vColor.g < 0.5f || Out.vColor.b < 0.5f)
+		discard;
+	else
+	{
+
+		Out.vColor.r = 0.9372549019607843f;
+		Out.vColor.g = 0.8745098039215686f;
+		Out.vColor.b = 0.7647058823529412f;
+	//	Out.vColor.r = max(0.9372549019607843f, Out.vColor.r);
+	//	Out.vColor.g = max(0.8745098039215686f, Out.vColor.g);
+	//	Out.vColor.b = max(0.7647058823529412f, Out.vColor.b);
+	}
+	
+		
+		
+		
+	Out.vColor.a -= 0.3f;
+	
+
+	return Out;
+}
+
+PS_OUT PS_INVENBACK(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor.a = Out.vColor.r;
+	Out.vColor.rgb = float3(0.5882352941176471f, 0.5372549019607843f, 0.3686274509803922f);
+	//if (Out.vColor.r < 0.53f || Out.vColor.g < 0.5f || Out.vColor.b < 0.5f)
+	//	discard;
+	//else
+	//{
+
+	//	Out.vColor.r = 0.9372549019607843f;
+	//	Out.vColor.g = 0.8745098039215686f;
+	//	Out.vColor.b = 0.7647058823529412f;
+	//	//	Out.vColor.r = max(0.9372549019607843f, Out.vColor.r);
+	//	//	Out.vColor.g = max(0.8745098039215686f, Out.vColor.g);
+	//	//	Out.vColor.b = max(0.7647058823529412f, Out.vColor.b);
+	//}
+
+
+
+
+	Out.vColor.a -= 0.3f;
+
+
+	return Out;
+}
+
+PS_OUT PS_MENULINE(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+
+	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+	
+	
+	//origincolor.a = maskcolor.a;
+	//Out.vColor = origincolor;
+
+	float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+
+	Out.vColor = lerpcolor;
+	Out.vColor.a = maskcolor.a;
+	
+
+
+		if (Out.vColor.a == 0.f)
+			discard;
+	/*if (Out.vColor.a<0.3f)
+		discard;*/
+
 	return Out;
 }
 
 
+PS_OUT PS_INVENTOPBOTTOM(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
 
+
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+
+	Out.vColor.r = 0.f;
+	Out.vColor.g = 0.f;
+	Out.vColor.b = 0.f;
+	Out.vColor.a = 1.f;
+
+	Out.vColor.a -= 0.4f;
+
+
+	return Out;
+}
+
+PS_OUT PS_INVENTOPBOTTOMALPHA(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+
+	Out.vColor.r = 0.f;
+	Out.vColor.g = 0.f;
+	Out.vColor.b = 0.f;
+	Out.vColor.a = 0.6f;
+
+	Out.vColor.a -= g_fAlpha1;
+
+
+	return Out;
+}
+
+PS_OUT PS_GALDBACK(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor.a -= Out.vColor.r + 0.2f;
+
+	Out.vColor.rgb -= 0.2f;
+	/*if (Out.vColor.a <= 1.f)
+		discard;*/
+
+	return Out;
+}
+
+PS_OUT PS_UVROTATIONSTRONG(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	/*Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	if (Out.vColor.r == 0 && Out.vColor.g == 0 && Out.vColor.b && 0)
+	return Out;*/
+
+
+	float2x2 rotationMatrix = float2x2(cos(g_fAngle), -sin(g_fAngle1), sin(g_fAngle1), cos(g_fAngle1));
+
+	if (In.vTexUV.x < 0.15f || In.vTexUV.x > 0.85f)
+		discard;
+
+	if (In.vTexUV.y < 0.2f || In.vTexUV.y > 0.8f)
+		discard;
+
+	float2 rotatedUV = mul(rotationMatrix, In.vTexUV - 0.5f) + 0.5f;
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, rotatedUV);
+
+	Out.vColor.a = Out.vColor.r;
+
+	//if (Out.vColor.r >= 0.2f)
+	Out.vColor.rgb = float3(0.6f, 0.5f, 0.3f);//(0.5882352941176471f, 0.5372549019607843f, 0.3686274509803922f);
+
+
+
+
+	Out.vColor.a += 0.15f;
+
+	return Out;
+
+
+}
+
+PS_OUT PS_USINGITEMPORTRAIT(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	////Out.vColor.a = Out.vColor.r;
+
+	////if (Out.vColor.r >= 0.2f)
+	//Out.vColor.rgb = (0.5882352941176471f, 0.5372549019607843f, 0.3686274509803922f);
+
+	float4 lerpcolor = lerp(float4(0.5882352941176471f, 0.5372549019607843f, 0.3686274509803922f, 1.f), float4(0.9f, 0.8352f, 0.9f, 1.f), Out.vColor);
+
+
+	
+	Out.vColor = lerpcolor;
+	Out.vColor.a -= 0.5f;
+	return Out;
+
+
+}
 
 technique11 DefaultTechnique
 {
 	pass Default
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_Priority, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -601,6 +851,104 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_REVERSELOCKON();
 	}
 
+	pass UVROT
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_UVROTATION();
+	}
+
+	pass INVENICON
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_INVENICON();
+	}
+
+	pass INVENBACK
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_INVENBACK();
+	}
+
+	pass MENULINE
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MENULINE();
+	}
+
+	pass INVENTOPBOTTOM
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_INVENTOPBOTTOM();
+	}
+
+	pass INVENTOPBOTTOMALPHA
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_INVENTOPBOTTOMALPHA();
+	}
+
+	pass GALDBACK
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_GALDBACK();
+	}
+	
+	pass UVROTATIONSTRONG
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_UVROTATIONSTRONG();
+	}
+	
+	pass USINGITEMPORTRAIT
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_USINGITEMPORTRAIT();
+	}
 	
 	
 	

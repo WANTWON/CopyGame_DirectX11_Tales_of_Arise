@@ -55,10 +55,10 @@ void CMainApp::Tick(_float fTimeDelta)
 	if (nullptr == m_pGameInstance)
 		return;
 
-	if (m_pGameInstance->Key_Up(DIK_I))
-		m_pUI_Manager->Set_UI_OpenType(CUI_Manager::UI_INVEN);
-	if (m_pGameInstance->Key_Up(DIK_MINUS))
-		m_pUI_Manager->Set_UI_OpenType(CUI_Manager::UI_MAP);
+	if (m_pGameInstance->Key_Up(DIK_I) && !(m_pUI_Manager->Get_Mainmenuon()))
+		m_pUI_Manager->Set_Mainmenuon(true);
+	/*if (m_pGameInstance->Key_Up(DIK_MINUS))
+		m_pUI_Manager->Set_UI_OpenType(CUI_Manager::UI_MAP);*/
 
 	if (m_pUI_Manager->Get_UI_OpenType() == CUI_Manager::UI_INVEN && m_pGameInstance->Get_CurrentLevelIndex() != LEVEL_LOADING)
 		m_pUI_Manager->Tick_Inventory();

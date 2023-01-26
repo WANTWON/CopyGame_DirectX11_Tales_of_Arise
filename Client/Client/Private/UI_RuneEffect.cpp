@@ -26,7 +26,7 @@ HRESULT CUI_RuneEffect::Initialize(void * pArg)
 
 	m_fPosition.x = runedesc.position.x;
 	m_fPosition.y = runedesc.position.y;
-
+	m_itype = runedesc.m_etype;
 
 	m_eShaderID = UI_RUNECOLOR;
 
@@ -55,10 +55,21 @@ int CUI_RuneEffect::Tick(_float fTimeDelta)
 	if (m_fAlpha1 <= 0.7f)
 		m_bfadein2 = true;
 
+	if (m_itype == 1)
+	{
+		if (m_fAlpha2 <= 0.7f)
+			m_bfadein3 = true;
+
+		if (m_fAlpha3 <= 0.7f)
+			m_bfadein4 = true;
+	}
+
+	
+
     
 	m_fDeadtimer += fTimeDelta;
 
-	if (m_fDeadtimer > 5.f)
+	if (m_fDeadtimer > 100.f)
 	{
 		return OBJ_DEAD;
 	}
@@ -81,20 +92,95 @@ int CUI_RuneEffect::Tick(_float fTimeDelta)
 	}*/
 
 	if (m_bfadein)
-		m_fAlpha -= 0.03f; //생길때
+	{
+		if (m_itype == 1)
+		{
+			m_fAlpha -= 0.08f; //생길때
+
+		}
+		else
+			m_fAlpha -= 0.03f;
+	}
 	else if (m_bfadeout)
-		m_fAlpha += 0.03f;
+	{
+		if (m_itype == 1)
+		{
+			m_fAlpha += 0.08f; //생길때
+
+		}
+		else
+			m_fAlpha += 0.03f;
+	}
 
 	if (m_bfadein1)
-		m_fAlpha1 -= 0.03f; //생길때
+	{
+		if (m_itype == 1)
+		{
+			m_fAlpha1 -= 0.08f; //생길때
+
+		}
+		else
+			m_fAlpha1 -= 0.03f;
+	}
 	else if (m_bfadeout1)
-		m_fAlpha1 += 0.03f;
+	{
+		if (m_itype == 1)
+		{
+			m_fAlpha1 += 0.08f; //생길때
+
+		}
+		else
+			m_fAlpha1 += 0.03f;
+	}
 
 	if (m_bfadein2)
-		m_fAlpha2 -= 0.03f; //생길때
-	else if (m_bfadeout2)
-		m_fAlpha2 += 0.03f;
+	{
+		if (m_itype == 1)
+		{
+			m_fAlpha2 -= 0.08f; //생길때
 
+		}
+		else
+			m_fAlpha2 -= 0.03f;
+	}
+	else if (m_bfadeout)
+	{
+		if (m_itype == 1)
+		{
+			m_fAlpha2 += 0.08f; //생길때
+
+		}
+		else
+			m_fAlpha2 += 0.03f;
+	}
+		//m_fAlpha += 0.08f;
+		
+
+	//if (m_bfadein1)
+	//	m_fAlpha1 -= 0.08f; //생길때
+	//else if (m_bfadeout1)
+	//	m_fAlpha1 += 0.08f;
+
+	//if (m_bfadein2)
+	//	m_fAlpha2 -= 0.08f; //생길때
+	//else if (m_bfadeout2)
+	//	m_fAlpha2 += 0.08f;
+
+	
+
+
+	if (m_itype == 1)
+	{
+		if (m_bfadein3)
+			m_fAlpha3 -= 0.08f; //생길때
+		else if (m_bfadeout3)
+			m_fAlpha3 += 0.08f;
+
+		if (m_bfadein4)
+			m_fAlpha4 -= 0.08f; //생길때
+		else if (m_bfadeout4)
+			m_fAlpha4 += 0.08f;
+	}
 
 	//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
 	//{
@@ -158,6 +244,22 @@ int CUI_RuneEffect::Tick(_float fTimeDelta)
 
 	}
 
+	if (m_fAlpha3 <= 0.20f)
+	{
+		m_fAlpha3 = 0.20f;
+		m_bfadein3 = false;
+		m_bfadeout3 = true;
+
+	}
+
+	if (m_fAlpha4 <= 0.20f)
+	{
+		m_fAlpha4 = 0.20f;
+		m_bfadein4 = false;
+		m_bfadeout4 = true;
+
+	}
+
 
 
 	return OBJ_NOEVENT;
@@ -201,7 +303,7 @@ void CUI_RuneEffect::Late_Tick(_float fTimeDelta)
 
 
 	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_FRONT, this);
 
 }
 
@@ -251,6 +353,40 @@ HRESULT CUI_RuneEffect::Render()
 	m_pShaderCom->Begin(m_eShaderID);
 
 	m_pVIBufferCom->Render();
+
+	if (m_itype == 1)
+	{
+		m_fPosition.x += 15.f;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(3))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha3, sizeof(_float))))
+			return E_FAIL;
+
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+
+
+		m_fPosition.x += 15.f;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha4, sizeof(_float))))
+			return E_FAIL;
+
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+	}
 
 
 
