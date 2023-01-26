@@ -11,13 +11,13 @@ namespace Client
 	enum SHADER_ANIMID { SHADER_ANIMDEFAULT, SHADER_ANIMSHADOW };
 	enum SHADER_NONANIMID { SHADER_NONANIMDEFAULT, SHADER_NONANIM_SHADOW, SHADER_NONANIM_WATER };
 
+	enum PLAYER_MODE { ACTIVE, AI_MODE, UNVISIBLE };
 
 	typedef struct ObjectInfo
 	{
 		float iMaxHp;
 		float iCurrentHp;
 		int iDamage;
-		int iCoin = 100;
 
 	}OBJINFO;
 
@@ -37,5 +37,6 @@ namespace Client
 
 extern HWND			g_hWnd;
 extern HINSTANCE	g_hInst;
+extern bool		g_bUIMade;
 
 using namespace Client;

@@ -6,10 +6,13 @@
 #include "Player.h"
 #include "CameraManager.h"
 #include "UI_RuneEffect.h"
+#include "Level_Loading.h"
 
 CLevel_BattleZone::CLevel_BattleZone(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
+	, m_pCollision_Manager(CCollision_Manager::Get_Instance())
 {
+	Safe_AddRef(m_pCollision_Manager);
 }
 
 HRESULT CLevel_BattleZone::Initialize()
@@ -60,7 +63,26 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_MINUS))
+	{
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
 
+		LEVEL eNextLevel = LEVEL_SNOWFIELD;
+
+		CPlayerManager::Get_Instance()->Save_LastPosition();
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MONSTER);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_BLOCK);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_INTERACT);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_TRAP);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MBULLET);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_ITEM);
+		pGameInstance->Set_DestinationLevel(eNextLevel);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
+			return;
+		Safe_Release(pGameInstance);
+	}
 }
 
 void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
@@ -132,24 +154,39 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
 	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Player"), LEVEL_STATIC, pLayerTag, nullptr)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Alphen"), LEVEL_STATIC, pLayerTag, nullptr)))
 			return E_FAIL;
 
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0.f, 22, 1.f));
-		pPlayer->Change_Navigation(LEVEL_BATTLE);
-		pPlayer->Compute_CurrentIndex(LEVEL_BATTLE);
-		pPlayer->Check_Navigation();
+		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, pLayerTag, nullptr)))
+			return E_FAIL;
 	}
 	else
 	{
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(64.f, 0.f, 64.f, 1.f));
 		pPlayer->Change_Navigation(LEVEL_BATTLE);
 		pPlayer->Compute_CurrentIndex(LEVEL_BATTLE);
 		pPlayer->Check_Navigation();
+
+		vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
+		_vector vPosition[3] = {{ 58.f, 0.f, 60.f, 1.f },{ 70.f, 0.f, 60.f, 1.f },{ 64.f, 0.f, 56.f, 1.f } };
+		_int i = 0;
+		for (auto& iter : pAIPlayers)
+		{
+			iter->Set_State(CTransform::STATE_TRANSLATION, vPosition[i]);
+			iter->Change_Navigation(LEVEL_BATTLE);
+			iter->Compute_CurrentIndex(LEVEL_BATTLE);
+			iter->Check_Navigation();
+			i++;
+		}
 	}
 
+	CPlayerManager::Get_Instance()->Set_BattleMode(true);
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -413,5 +450,5 @@ void CLevel_BattleZone::Free()
 {
 	__super::Free();
 
-
+	Safe_Release(m_pCollision_Manager);
 }

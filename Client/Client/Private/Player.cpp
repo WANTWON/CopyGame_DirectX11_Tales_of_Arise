@@ -5,20 +5,11 @@
 #include "Weapon.h"
 #include "PlayerState.h"
 #include "PlayerIdleState.h"
+#include "AIState.h"
+#include "AIIdleState.h"
 
 using namespace Player;
-
-_bool CPlayer::Is_AnimationLoop(_uint eAnimId)
-{
-	switch ((ANIM)eAnimId)
-	{
-		case ANIM_IDLE:
-		case ANIM_RUN:
-			return true;
-		default:
-			return false;
-	}
-}
+using namespace AIPlayer;
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -46,29 +37,66 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CPlayerState* pState = new CIdleState(this);
-	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+	CPlayerState* pPlayerState = new Player::CIdleState(this);
+	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
 
+	CAIState* pAIState = new AIPlayer::CIdleState(this);
+	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+
+
+	m_pPlayerManager = CPlayerManager::Get_Instance();
+	Safe_AddRef(m_pPlayerManager);
 	return S_OK;
 }
 
 int CPlayer::Tick(_float fTimeDelta)
 {
-	HandleInput();
-	TickState(fTimeDelta);
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	switch (eMode)
+	{
+	case Client::ACTIVE:
+		HandleInput();
+		Tick_State(fTimeDelta);
+		break;
+	case Client::AI_MODE:
+		Tick_AIState(fTimeDelta);
+		break;
+	case Client::UNVISIBLE:
+		return S_OK;
+	}	
 
 	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	for (auto& pParts : m_Parts)
-		pParts->Tick(fTimeDelta);
+	{
+		if(pParts != nullptr)
+			pParts->Tick(fTimeDelta);
+	}
+		
 
 	return OBJ_NOEVENT;
 }
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
-	for (auto& pParts : m_Parts)
-		pParts->Late_Tick(fTimeDelta);
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	switch (eMode)
+	{
+	case Client::ACTIVE:
+		LateTick_State(fTimeDelta);
+		break;
+	case Client::AI_MODE:
+	{
+		LateTick_AIState(fTimeDelta);
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_ePlayerID == SION)
+			m_pPlayerManager->Set_ActivePlayer(this);
+	}
+		break;
+	case Client::UNVISIBLE:
+		return;
+	}
 
 	if (nullptr != m_pRendererCom)
 	{
@@ -76,15 +104,21 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
 #ifdef _DEBUG
-		if (m_pNavigationCom != nullptr)
+		if (m_pNavigationCom != nullptr && eMode == ACTIVE)
 			m_pRendererCom->Add_Debug(m_pNavigationCom);
 		__super::Late_Tick(fTimeDelta);
 #endif //_DEBUG
-		
+
+	}
+
+	for (auto& pParts : m_Parts)
+	{
+		if (pParts != nullptr)
+			pParts->Late_Tick(fTimeDelta);
 	}
 
 	Check_Navigation();
-	LateTickState(fTimeDelta);
+	
 }
 
 HRESULT CPlayer::Render()
@@ -145,92 +179,34 @@ void CPlayer::HandleInput()
 		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
 }
 
-void CPlayer::TickState(_float fTimeDelta)
+void CPlayer::Tick_State(_float fTimeDelta)
 {
 	CPlayerState* pNewState = m_pPlayerState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
 }
 
-void CPlayer::LateTickState(_float fTimeDelta)
+void CPlayer::LateTick_State(_float fTimeDelta)
 {
 	CPlayerState* pNewState = m_pPlayerState->LateTick(fTimeDelta);
 	if (pNewState)
 		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
 }
 
-HRESULT CPlayer::Ready_Parts()
+void CPlayer::Tick_AIState(_float fTimeDelta)
 {
-	m_Parts.resize(PARTS_END);
-
-	/* For.Weapon */
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
-	if (nullptr == pSocket)
-		return E_FAIL;
-
-	CWeapon::WEAPONDESC WeaponDesc;
-	WeaponDesc.pSocket = pSocket;
-	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
-	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
-	Safe_AddRef(pSocket);
-
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	m_Parts[PARTS_WEAPON] = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Weapon"), &WeaponDesc);
-	if (nullptr == m_Parts[PARTS_WEAPON])
-		return E_FAIL;
-
-	RELEASE_INSTANCE(CGameInstance);
-	return S_OK;
+	CAIState* pNewState = m_pAIState->Tick(fTimeDelta);
+	if (pNewState)
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pNewState);
 }
 
-HRESULT CPlayer::Ready_Components(void* pArg)
+void CPlayer::LateTick_AIState(_float fTimeDelta)
 {
-	/* For.Com_Renderer */
-	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
-	/* For.Com_Transform */
-	CTransform::TRANSFORMDESC TransformDesc;
-	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
-
-	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-
-	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
-		return E_FAIL;
-
-	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"), (CComponent**)&m_pShaderCom)))
-		return E_FAIL;
-
-	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Alphen"), (CComponent**)&m_pModelCom)))
-		return E_FAIL;
-
-	CCollider::COLLIDERDESC ColliderDesc;
-	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-
-	/* For.Com_AABB */
-	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
-	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
-		return E_FAIL;
-
-	/* For.Com_Navigation */
-	CNavigation::NAVIDESC NaviDesc;
-	ZeroMemory(&NaviDesc, sizeof NaviDesc);
-
-	if (FAILED(__super::Add_Components(TEXT("Com_BattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
-		return E_FAIL;
-	m_vecNavigations.push_back(m_pNavigationCom);
-
-	if (FAILED(__super::Add_Components(TEXT("Com_FieldNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
-		return E_FAIL;
-	m_vecNavigations.push_back(m_pNavigationCom);
-
-	return S_OK;
+	CAIState* pNewState = m_pAIState->LateTick(fTimeDelta);
+	if (pNewState)
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pNewState);
 }
+
 
 HRESULT CPlayer::SetUp_ShaderResources()
 {
@@ -287,31 +263,6 @@ void CPlayer::Compute_CurrentIndex(LEVEL eLevel)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 }
 
-CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-{
-	CPlayer* pInstance = new CPlayer(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		ERR_MSG(TEXT("Failed to Created : CPlayer"));
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
-
-CGameObject * CPlayer::Clone(void * pArg)
-{
-	CPlayer* pInstance = new CPlayer(*this);
-
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		ERR_MSG(TEXT("Failed to Cloned : CPlayer"));
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
 
 void CPlayer::Free()
 {
@@ -329,6 +280,9 @@ void CPlayer::Free()
 
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
+	Safe_Release(m_pPlayerManager);
+
 
 	Safe_Delete(m_pPlayerState);
+	Safe_Delete(m_pAIState);
 }

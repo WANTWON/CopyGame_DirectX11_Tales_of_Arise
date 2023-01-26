@@ -58,7 +58,18 @@ void CIdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CPlayer::ANIM::ANIM_IDLE);
+	switch (m_pOwner->Get_PlayerID())
+	{
+	case CPlayer::ALPHEN:
+		m_pOwner->Get_Model()->Set_NextAnimIndex(CAlphen::ANIM::ANIM_IDLE);
+		break;
+	case CPlayer::SION:
+		m_pOwner->Get_Model()->Set_NextAnimIndex(CSion::ANIM::ANIM_IDLE);
+		break;
+	default:
+		break;
+	}
+
 }
 
 void CIdleState::Exit()

@@ -46,7 +46,19 @@ void CAttackNormalState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_ATTACK;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CPlayer::ANIM::ANIM_ATTACK_NORMAL_0);
+	switch (m_pOwner->Get_PlayerID())
+	{
+	case CPlayer::ALPHEN:
+		m_pOwner->Get_Model()->Set_NextAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
+		break;
+	case CPlayer::SION:
+		m_pOwner->Get_Model()->Set_NextAnimIndex(CSion::ANIM::ANIM_ATTACK_NORMAL_0);
+		break;
+	default:
+		break;
+	}
+
+	
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

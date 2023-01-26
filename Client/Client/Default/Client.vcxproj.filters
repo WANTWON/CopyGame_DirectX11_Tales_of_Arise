@@ -97,9 +97,6 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\State">
       <UniqueIdentifier>{1ea6f4a3-9604-423c-8175-8bcf005703dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01.Actor\00.Player\State\States">
-      <UniqueIdentifier>{abab21c8-ddcc-4a09-9b53-fc754ab64c56}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04.UI\03.UI_HPbar">
       <UniqueIdentifier>{656cd5fa-7129-4532-907d-5bd2520b7080}</UniqueIdentifier>
     </Filter>
@@ -214,6 +211,27 @@
     <Filter Include="01.Levels\02.SnowField">
       <UniqueIdentifier>{0cb32519-764b-482d-ac95-758e07433f8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState">
+      <UniqueIdentifier>{a7fff6e6-1deb-4368-89b0-a24335eabab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States">
+      <UniqueIdentifier>{abab21c8-ddcc-4a09-9b53-fc754ab64c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState">
+      <UniqueIdentifier>{8eb08625-fc97-4635-b599-e0aa8af43974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\00.Alphen">
+      <UniqueIdentifier>{14241fe6-1678-46b2-9aa5-b9069e722ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\01.Sion">
+      <UniqueIdentifier>{07ceaa0b-61ee-4ef4-8bd0-98feee9ed4d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States">
+      <UniqueIdentifier>{01ca6b4e-9be6-4a8d-9d1f-419da47ca73a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Manager">
+      <UniqueIdentifier>{575e09da-0184-48c0-89d5-0b9fc2716218}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -297,17 +315,14 @@
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PlayerState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\PlayerWalkState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerRunState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerIdleState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Loading.h">
       <Filter>02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING</Filter>
@@ -337,7 +352,7 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerAttackNormalState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IceWolfState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State</Filter>
@@ -552,6 +567,24 @@
     <ClInclude Include="..\Public\Level_BattleZone.h">
       <Filter>01.Levels\03.BattleZone</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PlayerState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Alphen.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\00.Alphen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIIdleState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerManager.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sion.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -621,13 +654,13 @@
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerWalkState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerRunState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerIdleState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Loading.cpp">
       <Filter>02.GameObjects\04.UI\03.UI_HPbar\02.UI_LOADING</Filter>
@@ -657,7 +690,7 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\IceWolfIdleState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
@@ -859,6 +892,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_BattleZone.cpp">
       <Filter>01.Levels\03.BattleZone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Alphen.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\00.Alphen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AIIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerManager.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sion.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

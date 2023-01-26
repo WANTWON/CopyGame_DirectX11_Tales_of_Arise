@@ -107,7 +107,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 	AI_Behaviour(fTimeDelta);
-	TickState(fTimeDelta);
+	Tick_State(fTimeDelta);
 
 	return OBJ_NOEVENT;
 }
@@ -119,7 +119,7 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-	LateTickState(fTimeDelta);
+	LateTick_State(fTimeDelta);
 }
 
 void CIce_Wolf::AI_Behavior(_float fTimeDelta)
@@ -130,7 +130,7 @@ void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 }
 
 
-void CIce_Wolf::TickState(_float fTimeDelta)
+void CIce_Wolf::Tick_State(_float fTimeDelta)
 {
 	CIceWolfState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
 	if (pNewState)
@@ -138,7 +138,7 @@ void CIce_Wolf::TickState(_float fTimeDelta)
 	
 }
 
-void CIce_Wolf::LateTickState(_float fTimeDelta)
+void CIce_Wolf::LateTick_State(_float fTimeDelta)
 {
 	CIceWolfState* pNewState = m_pIce_WolfState->LateTick(fTimeDelta);
 	if (pNewState)

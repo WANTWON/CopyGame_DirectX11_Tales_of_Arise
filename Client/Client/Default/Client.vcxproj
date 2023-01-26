@@ -172,6 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\AIIdleState.h" />
+    <ClInclude Include="..\Public\AIState.h" />
+    <ClInclude Include="..\Public\Alphen.h" />
     <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Berserker.h" />
@@ -232,8 +235,10 @@
     <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
+    <ClInclude Include="..\Public\PlayerManager.h" />
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerRunState.h" />
+    <ClInclude Include="..\Public\Sion.h" />
     <ClInclude Include="..\Public\Slime.h" />
     <ClInclude Include="..\Public\SlimeBattle_Atk_TackleState.h" />
     <ClInclude Include="..\Public\SlimeBattle_RunState.h" />
@@ -284,6 +289,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\AIIdleState.cpp" />
+    <ClCompile Include="..\Private\Alphen.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Berserker.cpp" />
@@ -341,7 +348,9 @@
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
+    <ClCompile Include="..\Private\PlayerManager.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />
+    <ClCompile Include="..\Private\Sion.cpp" />
     <ClCompile Include="..\Private\Slime.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_RunState.cpp" />

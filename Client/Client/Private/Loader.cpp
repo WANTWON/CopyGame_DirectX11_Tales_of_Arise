@@ -9,7 +9,8 @@
 #include "Particle_Point.h"
 #include "UI_Screen.h"
 #include "Terrain.h"
-#include "Player.h"
+#include "Alphen.h"
+#include "Sion.h"
 #include "Weapon.h"
 #include "Sky.h"
 #include "Water.h"
@@ -261,8 +262,13 @@ HRESULT CLoader::Loading_ForPrototype()
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Player*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
-		CPlayer::Create(m_pDevice, m_pContext))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Alphen"),
+		CAlphen::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_Player*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sion"),
+		CSion::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Terrain*/
@@ -423,7 +429,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	hFile = 0;
 	dwByte = 0;
 	iNum = 0;
-	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Terrain.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Terrain2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_SnowField_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, true))))
 		return E_FAIL;
@@ -751,7 +757,7 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 
 	/*For.Prototype_Component_Texture_Filter */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Filter"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/SnowFieldfilter.bmp"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/SnowField.bmp"), 1))))
 		return E_FAIL;
 
 

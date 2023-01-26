@@ -40,7 +40,7 @@ void CMeshContainer::Get_BoneMatrices(_float4x4 * pBoneMatrices, _fmatrix PivotM
 	}
 }
 
-HRESULT CMeshContainer::Initialize_Prototype(CModel::TYPE eModelType, HANDLE hFile, _ulong* pdwByte, class CModel* pModel, _fmatrix PivotMatrix)
+HRESULT CMeshContainer::Initialize_Prototype(CModel::PLAYERID eModelType, HANDLE hFile, _ulong* pdwByte, class CModel* pModel, _fmatrix PivotMatrix)
 {
 	/* 메시의 이름을 보관한다. */
 	/* 정해진 뼈가 없는 경우에는 최초에는 항등으로 셋팅했었고 이후 메시가 배치되어야할 위치에 셋팅하기위해.
@@ -109,7 +109,7 @@ HRESULT CMeshContainer::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CMeshContainer::Bin_Initialize_Prototype(CModel::TYPE eModelType, DATA_BINMESH * pAIMesh, CModel * pModel, _fmatrix PivotMatrix)
+HRESULT CMeshContainer::Bin_Initialize_Prototype(CModel::PLAYERID eModelType, DATA_BINMESH * pAIMesh, CModel * pModel, _fmatrix PivotMatrix)
 {
 	strcpy_s(m_szName, pAIMesh->cName);
 	m_iMaterialIndex = pAIMesh->iMaterialIndex;
@@ -671,7 +671,7 @@ void CMeshContainer::Get_MeshData(DATA_BINMESH * pMeshData)
 //	return pInstance;
 //}
 
-CMeshContainer * CMeshContainer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CModel::TYPE eModelType, HANDLE hFile, _ulong * pdwByte, CModel * pModel, _fmatrix PivotMatrix)
+CMeshContainer * CMeshContainer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CModel::PLAYERID eModelType, HANDLE hFile, _ulong * pdwByte, CModel * pModel, _fmatrix PivotMatrix)
 {
 	CMeshContainer* pInstance = new CMeshContainer(pDevice, pContext);
 
@@ -684,7 +684,7 @@ CMeshContainer * CMeshContainer::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 	return pInstance;
 }
 
-CMeshContainer * CMeshContainer::Bin_Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CModel::TYPE eModelType, DATA_BINMESH * pAIMesh, CModel * pModel, _fmatrix PivotMatrix)
+CMeshContainer * CMeshContainer::Bin_Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, CModel::PLAYERID eModelType, DATA_BINMESH * pAIMesh, CModel * pModel, _fmatrix PivotMatrix)
 {
 	CMeshContainer*			pInstance = new CMeshContainer(pDevice, pContext);
 

@@ -2,12 +2,14 @@
 #include "..\Public\Level_SnowField.h"
 
 #include "GameInstance.h"
-#include "Camera_Dynamic.h"
 #include "Player.h"
 #include "CameraManager.h"
 #include "UI_RuneEffect.h"
 #include "Item.h"
 #include "Level_Loading.h"
+#include "PlayerManager.h"
+
+extern bool		g_bUIMade = false;
 
 CLevel_SnowField::CLevel_SnowField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -45,11 +47,15 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
-		return E_FAIL;
+	if (!g_bUIMade)
+	{
+		if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
+			return E_FAIL;
+		g_bUIMade = true;
+	}
 
 
-
+	CPlayerManager::Get_Instance()->Set_BattleMode(false);
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_SNOWFIELD);
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
@@ -71,6 +77,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 		LEVEL eNextLevel = LEVEL_BATTLE;
 
+		CPlayerManager::Get_Instance()->Save_LastPosition();
 		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MONSTER);
 		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_BLOCK);
 		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_INTERACT);
@@ -78,6 +85,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MBULLET);
 		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_ITEM);
 		pGameInstance->Set_DestinationLevel(eNextLevel);
+
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
 			return;
 		Safe_Release(pGameInstance);
@@ -153,19 +161,20 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
 	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Player"), LEVEL_STATIC, pLayerTag, nullptr)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Alphen"), LEVEL_STATIC, pLayerTag, nullptr)))
 			return E_FAIL;
 
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0.f, 22, 1.f));
-		pPlayer->Change_Navigation(LEVEL_SNOWFIELD);
-		pPlayer->Compute_CurrentIndex(LEVEL_SNOWFIELD);
-		pPlayer->Check_Navigation();
+		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, pLayerTag, nullptr)))
+			return E_FAIL;
 	}
 	else
 	{
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-		pPlayer->Set_State(CTransform::STATE_TRANSLATION,pPlayer->Get_LastPosition());
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
 		pPlayer->Change_Navigation(LEVEL_SNOWFIELD);
 		pPlayer->Compute_CurrentIndex(LEVEL_SNOWFIELD);
 		pPlayer->Check_Navigation();
