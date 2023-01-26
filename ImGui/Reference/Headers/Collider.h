@@ -9,7 +9,7 @@ BEGIN(Engine)
 class ENGINE_DLL CCollider final : public CComponent
 {
 public:
-	enum PLAYERID { TYPE_AABB, TYPE_OBB, TYPE_SPHERE, TYPE_END };
+	enum TYPE { TYPE_AABB, TYPE_OBB, TYPE_SPHERE, TYPE_END };
 	enum BOUNDING { BOUNDING_ORIGINAL, BOUNDING_WORLD, BOUNDING_END };
 
 public: /* 내 콜라이더가 생성될 때 취해야할 초기 상태. */
@@ -33,7 +33,7 @@ private:
 	virtual ~CCollider() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype(PLAYERID eType);
+	virtual HRESULT Initialize_Prototype(TYPE eType);
 	virtual HRESULT Initialize(void* pArg);
 
 public:
@@ -52,7 +52,7 @@ public:
 
 
 private:
-	PLAYERID					m_eType = TYPE_END;
+	TYPE					m_eType = TYPE_END;
 	
 	COLLIDERDESC			m_ColliderDesc;
 
@@ -81,7 +81,7 @@ private:
 
 
 public:
-	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, PLAYERID eType);
+	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType);
 	virtual CComponent* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

@@ -23,7 +23,7 @@ CCollider::CCollider(const CCollider & rhs)
 #endif // _DEBUG
 }
 
-HRESULT CCollider::Initialize_Prototype(PLAYERID eType)
+HRESULT CCollider::Initialize_Prototype(TYPE eType)
 {
 	m_eType = eType;
 
@@ -318,7 +318,7 @@ CCollider::OBBDESC CCollider::Compute_OBBDesc()
 	return OBBDesc;
 }
 
-CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, PLAYERID eType)
+CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eType)
 {
 	CCollider*	pInstance = new CCollider(pDevice, pContext);
 

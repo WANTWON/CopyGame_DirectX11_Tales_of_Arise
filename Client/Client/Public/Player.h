@@ -41,6 +41,8 @@ public: /* Getter &  Setter */
 	_uint			Get_SkillAnimIndex(SKILL SkillIndex) { return m_eSkills[SkillIndex]; }
 	OBJINFO			Get_Info() { return m_tInfo; }
 	PLAYERID			Get_PlayerID() { return m_ePlayerID; }
+	CGameObject*	Get_Parts(_int iIndex) { return m_Parts[iIndex]; }
+
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	
