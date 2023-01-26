@@ -57,10 +57,10 @@ int CWeapon::Tick(_float fTimeDelta)
 
 			CCollider::COLLIDERDESC		ColliderDesc;
 
-			ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
-			ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
+			ColliderDesc.vScale = _float3(0.25f, 0.25f, 3.f);
+			ColliderDesc.vPosition = _float3(0.f, 0.f, -2.f);
 
-			m_pOBBCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+			m_pOBBCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}

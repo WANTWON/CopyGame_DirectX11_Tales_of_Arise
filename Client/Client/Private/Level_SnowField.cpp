@@ -152,9 +152,9 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	for (_uint i = 0; i < 1; ++i)
 	{
-		_vector vPosition = { _float(rand() % 17 + 128.f), 0.f, _float(rand() % 17 + 128.f), 1.f };
+		/*_vector vPosition = { _float(rand() % 17 + 128.f), 0.f, _float(rand() % 17 + 128.f), 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-			return E_FAIL;
+			return E_FAIL;*/
 	}
 
 	for (_uint i = 0; i < 1; ++i)
@@ -173,9 +173,9 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	for (_uint i = 0; i < 1; ++i)
 	{
-		_vector vPosition = { _float(rand() % 40 + 128.f), 0.f, _float(rand() % 40 + 128.f) , 1.f };
+		/*_vector vPosition = { _float(rand() % 40 + 128.f), 0.f, _float(rand() % 40 + 128.f) , 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-			return E_FAIL;
+			return E_FAIL;*/
 	}
 
 
@@ -391,9 +391,9 @@ HRESULT CLevel_SnowField::Ready_Layer_Interact_Object(const _tchar * pLayerTag)
 
 	for (_uint i = 0; i < 1; ++i)
 	{
-		_vector vPosition = { 64, 0.f, 64, 1.f };
+		/*_vector vPosition = { 64, 0.f, 64, 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_TreasureBox"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-			return E_FAIL;
+			return E_FAIL;*/
 	}
 
 	for (_uint i = 0; i < 1; ++i)
