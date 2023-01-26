@@ -25,12 +25,6 @@
     <Filter Include="02.GameObjects\03.Effect">
       <UniqueIdentifier>{7c9e8516-a6f7-48f2-bf6d-b1f00a55a434}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\03.Effect\Rect">
-      <UniqueIdentifier>{6271ddfa-3e2f-4945-9359-9b57227b63fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03.Effect\Point">
-      <UniqueIdentifier>{db7dbd70-3c60-4ea1-81f8-2062d9944113}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01.Actor">
       <UniqueIdentifier>{351f7121-273e-4af4-b95f-a59fe4d18953}</UniqueIdentifier>
     </Filter>
@@ -220,6 +214,24 @@
     <Filter Include="01.Levels\02.SnowField">
       <UniqueIdentifier>{0cb32519-764b-482d-ac95-758e07433f8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\03.Effect\00.EffectTexture">
+      <UniqueIdentifier>{d5484d3b-fa55-4e7f-b3c6-6b32995ce9f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\01.EffectMesh">
+      <UniqueIdentifier>{cadb140a-2efe-49db-a298-e5397d48ad47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\02.EffectParticle">
+      <UniqueIdentifier>{3761d43f-9900-4fda-aea4-7e067db54cbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\03.Instancing">
+      <UniqueIdentifier>{7ba82ed8-50e9-4eba-837e-fa620dd7bcad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\03.Instancing\Rect">
+      <UniqueIdentifier>{6271ddfa-3e2f-4945-9359-9b57227b63fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\03.Instancing\Point">
+      <UniqueIdentifier>{db7dbd70-3c60-4ea1-81f8-2062d9944113}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -259,10 +271,10 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Particle_Rect.h">
-      <Filter>02.GameObjects\03.Effect\Rect</Filter>
+      <Filter>02.GameObjects\03.Effect\03.Instancing\Rect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Particle_Point.h">
-      <Filter>02.GameObjects\03.Effect\Point</Filter>
+      <Filter>02.GameObjects\03.Effect\03.Instancing\Point</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObjects\02.NonAnim\02.Sky</Filter>
@@ -561,6 +573,18 @@
     <ClInclude Include="..\Public\Item.h">
       <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Effect.h">
+      <Filter>02.GameObjects\03.Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectMesh.h">
+      <Filter>02.GameObjects\03.Effect\01.EffectMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ParticleSystem.h">
+      <Filter>02.GameObjects\03.Effect\02.EffectParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectTexture.h">
+      <Filter>02.GameObjects\03.Effect\00.EffectTexture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -588,10 +612,10 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Particle_Rect.cpp">
-      <Filter>02.GameObjects\03.Effect\Rect</Filter>
+      <Filter>02.GameObjects\03.Effect\03.Instancing\Rect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Particle_Point.cpp">
-      <Filter>02.GameObjects\03.Effect\Point</Filter>
+      <Filter>02.GameObjects\03.Effect\03.Instancing\Point</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sky.cpp">
       <Filter>02.GameObjects\02.NonAnim\02.Sky</Filter>
@@ -871,6 +895,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Item.cpp">
       <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect.cpp">
+      <Filter>02.GameObjects\03.Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectMesh.cpp">
+      <Filter>02.GameObjects\03.Effect\01.EffectMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ParticleSystem.cpp">
+      <Filter>02.GameObjects\03.Effect\02.EffectParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectTexture.cpp">
+      <Filter>02.GameObjects\03.Effect\00.EffectTexture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
