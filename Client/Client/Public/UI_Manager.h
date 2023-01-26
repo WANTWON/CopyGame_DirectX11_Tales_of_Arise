@@ -58,8 +58,8 @@ public: /*Getter Setter*/
 	_uint Get_CP() { return m_iCP; }
 	_uint Get_MAXCP() { return m_iMAXCP; }
 
-
-
+	void Set_Mainmenuon(_bool onoff) { m_bMainMenuon = onoff; }
+	_bool Get_Mainmenuon() { return m_bMainMenuon; }
 
 
 private:
@@ -81,6 +81,7 @@ private:
 	_uint m_iCP;
 	_uint m_iMAXCP;
 
+	_bool m_bMainMenuon = false;
 //private:
 //	_uint iplayer0_hp = 0;
 //	_uint iplayer1_hp = 0;

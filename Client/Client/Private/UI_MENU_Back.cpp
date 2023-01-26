@@ -40,7 +40,8 @@ HRESULT CUI_MENU_Back::Initialize(void * pArg)
 
 int CUI_MENU_Back::Tick(_float fTimeDelta)
 {
-
+	if (!CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	/*if (CUI_Manager::Get_Instance()->Get_UI_OpenType() == CUI_Manager::UI_INVEN)
 	{
 
@@ -83,6 +84,10 @@ int CUI_MENU_Back::Tick(_float fTimeDelta)
 
 void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 {
+	if (!CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
+	
+
 	if(m_bMainAlphaup) //main and icon screenswitch moving
 	{
 		m_fMainAlpha += 0.05f;
@@ -167,7 +172,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 			desc.m_etype = 1;
 
 
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc)))
 				return;
 			m_fMainAlpha = 0.f;
 			m_fMain_Bottom_buttonY = 400.f;
@@ -448,6 +453,12 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		}
 		
 	}
+
+	if (m_etype == MENU_MAIN)
+	{
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_ESCAPE))
+			CUI_Manager::Get_Instance()->Set_Mainmenuon(false);
+	}
 	
 
 	if (m_bfadeout_inventory)
@@ -502,17 +513,17 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 			desc.m_etype = 1;
 
 
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc)))
 				return;
 
 			desc.position.y += 55.f;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc)))
 				return;
 			desc.position.y += 55.f;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc)))
 				return;
 			desc.position.y += 55.f;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc)))
 				return;
 		//	m_fTopAlpha = 0.4f;
 		}

@@ -122,7 +122,7 @@ int CHP_Font::Tick(_float fTimeDelta)
 		//		return E_FAIL;
 		//}
 
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
+		/*if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
 		{
 			CUI_RuneEffect::RUNEDESC desc;
 			desc.position.x = 1130.f;
@@ -135,7 +135,7 @@ int CHP_Font::Tick(_float fTimeDelta)
 			desc.position.y = 495.f;
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
 				return E_FAIL;
-		}
+		}*/
 
 
 		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
