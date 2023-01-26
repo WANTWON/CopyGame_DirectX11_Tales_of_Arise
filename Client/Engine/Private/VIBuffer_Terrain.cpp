@@ -67,7 +67,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 		{
 			_uint	iIndex = i * m_iNumVerticesX + j;
 
-			m_pVerticesPos[iIndex] = pVertices[iIndex].vPosition = _float3(_float(j)*5.f, (pPixel[iIndex] & 0x000000ff), _float(i)*5.f);
+			m_pVerticesPos[iIndex] = pVertices[iIndex].vPosition = _float3(_float(j), (pPixel[iIndex] & 0x000000ff)/10.f, _float(i));
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTangent = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexture = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
@@ -371,7 +371,6 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3* pOut)
 	vRayDir = XMLoadFloat3(&vTempRayDir);
 	vRayDir = XMVector3Normalize(vRayDir);
 
-
 	for (_uint i = 0; i < m_iNumVerticesZ - 1; ++i)
 	{
 		for (_uint j = 0; j < m_iNumVerticesX - 1; ++j)
@@ -384,6 +383,19 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3* pOut)
 				iIndex + 1,
 				iIndex
 			};
+
+
+			//iIndices[0]이랑 iIndices[2]사이에 직선이 있거나
+			//iIndices[1]이랑 iIndices[3]사이에 직선이 있으면 픽킹 체크 
+			_float discriminant0 = (vTempRayDir.z*(m_pVerticesPos[iIndices[0]].x - vTempRayPos.x) + vTempRayPos.z ) / vTempRayDir.x -m_pVerticesPos[iIndices[0]].z;
+			_float discriminant1 = (vTempRayDir.z*(m_pVerticesPos[iIndices[1]].x - vTempRayPos.x) + vTempRayPos.z ) / vTempRayDir.x -m_pVerticesPos[iIndices[1]].z;
+			_float discriminant2 = (vTempRayDir.z*(m_pVerticesPos[iIndices[2]].x - vTempRayPos.x) + vTempRayPos.z ) / vTempRayDir.x -m_pVerticesPos[iIndices[2]].z;
+			_float discriminant3 = (vTempRayDir.z*(m_pVerticesPos[iIndices[3]].x - vTempRayPos.x) + vTempRayPos.z ) / vTempRayDir.x -m_pVerticesPos[iIndices[3]].z;
+
+
+			if (discriminant0*discriminant2 < 0 && discriminant1*discriminant3 < 0)
+				continue;
+
 
 			_float		fDist;
 			_matrix	WorldMatrix = pTransform->Get_WorldMatrix();
@@ -398,7 +410,7 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3* pOut)
 			if (true == TriangleTests::Intersects((FXMVECTOR)vRayPos, (FXMVECTOR)vRayDir, (FXMVECTOR)vTemp_1, (GXMVECTOR)vTemp_2, (HXMVECTOR)vTemp_3, fDist))
 			{
 				_vector	vPickPos = vRayPos + vRayDir * fDist;
-
+				XMStoreFloat3(&m_bPickingLocalPos ,vPickPos);
 				XMStoreFloat3(pOut, XMVector3TransformCoord(vPickPos, WorldMatrix));
 
 				Safe_Release(pPicking);
@@ -497,6 +509,67 @@ void CVIBuffer_Terrain::Set_Terrain_Shape(_float fHeight, _float fRad, _float fS
 
 	m_pContext->Unmap(m_pVB, 0);
 
+}
+
+void CVIBuffer_Terrain::Set_Terrain_UpDown(_float fVec, _float fRad, _float fSharp, _float3 vPoint, _float fTimeDelta)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource;
+
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTXNORTEX* pVertices = (VTXNORTEX*)SubResource.pData;
+	if (pVertices == nullptr)
+	{
+		m_pContext->Unmap(m_pVB, 0);
+		return;
+	}
+
+	for (_uint i = 0; i < m_iNumVerticesZ - 1; ++i)
+	{
+
+		for (_uint j = 0; j < m_iNumVerticesX - 1; ++j)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			_float3 vPos = pVertices[iIndex].vPosition;
+
+			_float fH =  fVec;
+			_float fRange = fRad;
+
+			_float3 vTemp1 = vPoint;
+			_float3 vTemp2 = pVertices[iIndex].vPosition;
+			vTemp1.y = vTemp2.y = 0.f;
+
+			_vector fDis = XMLoadFloat3(&vTemp1) - XMLoadFloat3(&vTemp2);
+			_float fLen = XMVectorGetX(XMVector3Length(fDis));
+
+			if (fRange > fLen)
+			{
+
+				_float fAcc = (fRange - fLen) / fRange;
+
+				fAcc = pow(fAcc, (1.f / fSharp));
+
+				_float fTempY = fH * fAcc;
+				if (fH > pVertices[iIndex].vPosition.y)
+				{
+					vPos.y += fTempY * fTimeDelta;
+				}
+				else if (fH < pVertices[iIndex].vPosition.y)
+				{
+					vPos.y -= fTempY * fTimeDelta;
+				}
+				else
+					vPos.y = vPos.y;
+
+			}
+
+			pVertices[iIndex].vPosition = vPos;
+		}
+
+	}
+
+	m_pContext->Unmap(m_pVB, 0);
 }
 
 void CVIBuffer_Terrain::Set_Terrain_Buffer(TERRAINDESC TerrainDesc)

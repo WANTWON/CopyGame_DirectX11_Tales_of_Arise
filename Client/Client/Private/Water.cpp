@@ -84,7 +84,7 @@ HRESULT CWater::Ready_Components(void *pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 	/* For.Com_Navigation */
-	/*if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom)))
+	/*if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom)))
 		return E_FAIL;*/
 	/* For.Com_Model*/
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"), (CComponent**)&m_pModelCom)))

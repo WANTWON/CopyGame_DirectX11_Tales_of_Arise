@@ -6,7 +6,7 @@
 
 
 BEGIN(Client)
-class CHawkState
+class CIceWolfState
 {
 public:
 	enum STATE_ID
@@ -18,20 +18,22 @@ public:
 		STATE_CHARGE_START,
 		STATE_CHARGE_LOOP,
 		STATE_CHARGE_END,
+		STATE_HIT,
+		STATE_DEAD,
 		STATE_END
 	};
 
 	
 
-	virtual ~CHawkState() {};
-	virtual CHawkState* AI_Behaviour(_float fTimeDelta) { return nullptr; };
-	virtual CHawkState* Tick(_float fTimeDelta) PURE;
-	virtual CHawkState* LateTick(_float fTimeDelta) PURE;
+	virtual ~CIceWolfState() {};
+	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) { return nullptr; };
+	virtual CIceWolfState* Tick(_float fTimeDelta) PURE;
+	virtual CIceWolfState* LateTick(_float fTimeDelta) PURE;
 
 	virtual void Enter() PURE;
 	virtual void Exit() PURE;
 
-	CHawkState* ChangeState(CHawkState* pCurrentState, CHawkState* pNewState)
+	CIceWolfState* ChangeState(CIceWolfState* pCurrentState, CIceWolfState* pNewState)
 	{
 		if (pCurrentState)
 		{

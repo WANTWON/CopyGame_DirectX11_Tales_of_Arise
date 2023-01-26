@@ -11,6 +11,7 @@
 #include "Effect_Manager.h"
 #include "Camera_Manager.h"
 #include "TreasureBox.h"
+#include "ParticleSystem.h"
 
 BEGIN(Engine)
 class CGameObject;
@@ -26,6 +27,8 @@ public:
 		PICKING_TERRAIN_SHAPE, PICKING_TERRAIN_BRUSH,
 	PICKING_MODEL,};
 
+	enum COLOR { RED, GREEN, BLUE};
+
 private:
 	CImgui_Manager();
 	virtual ~CImgui_Manager() = default;
@@ -39,6 +42,7 @@ public:
 public:
 	PICKING_TYPE Get_PickingType() {return (PICKING_TYPE)m_PickingType;}
 	_bool Get_CameraPicking() { return m_bMakeCamera; }
+	_int Get_BrushType() { return m_eBrushType; }
 public:
 	/* For Debug*/
 	void ShowSimpleMousePos(bool* p_open);
@@ -113,10 +117,12 @@ private:
 	CTerrain_Manager::TERRAINDESC			m_pTerrainDesc;
 	CTerrain_Manager::TERRAINSHAPEDESC		m_TerrainShapeDesc;
 	_bool									m_bTerrain_Show = true;
+	_int									m_eBrushType = RED;
+
 
 	/* For Object */
 	CModelManager*							m_pModel_Manager = nullptr;
-	CNonAnim::NONANIMDESC					m_InitDesc;
+	NONANIMDESC					m_InitDesc;
 	_tchar									m_pFilePath[MAX_PATH] = L"../../../Bin/Resources/Meshes/";
 	vector<string>							m_stLayerTags;
 	vector<const _tchar*>					m_TempLayerTags;
@@ -126,6 +132,7 @@ private:
 	_int									m_iSeletecLayerNum = 0;
 	_int									m_iBmpTerrainNum = 0;
 	_float									m_fDist = 1.f;
+	_float3									m_vfOffset = _float3(0.f, 0.f, 0.f);
 
 	//TreasureBox
 	CTreasureBox::BOXTAG					m_BoxDesc;
@@ -164,7 +171,7 @@ private:
 	/*
 	* For Effect
 	*/
-	enum TRANSFORM_TYPE { TRANS_SCALE, TRANS_ROTATION, TRANS_END };
+	enum TRANSFORM_TYPE { TRANS_SCALE, TRANS_ROTATION, TRANS_TRANSLATION, TRANS_END };
 
 	CEffect_Manager*						m_pEffectManager = nullptr;
 	vector<string>							m_SavedEffects;
@@ -174,19 +181,28 @@ private:
 	/* Effect Resources (Texture, Meshes) */
 	list<string>							m_TextureNames;
 	list<string>							m_MeshNames;
-	string									m_sSelectedTexture;
-	string									m_sSelectedMesh;
+	string									m_sSelectedResource;
+
+	enum RESOURCE_TYPE { RESOURCE_TEXTURE, RESOURCE_MESH, RESOURCE_END };
+	RESOURCE_TYPE							m_eResourceType = RESOURCE_END;
+
+	/* Instanced Effects */
 	string									m_sSelectedEffect;
-	CEffect*								m_pSelectedEffect = nullptr;
+	class CEffect*							m_pSelectedEffect = nullptr;
 	
 	/* Effect Settings */
 	_bool									m_bIsPlaying = false;
+	vector<string>							m_Shaders = { "SHADER_DEFAULT", "SHADER_ALPHAMASK" };
+	string									m_sCurrentShader = "SHADER_DEFAULT";
+
 	TRANSFORM_TYPE							m_eEffectTransformation = TRANS_SCALE;
 	class CTransform*						m_pEffectTransform = nullptr;
-	_float									m_fX = 1.f, m_fY = 1.f, m_fZ = 1.f;
 	_bool									m_bBillboard = true;
 
-	_float									m_fCurveX = 1.f, m_fCurveY = 1.f, m_fCurveZ = 1.f, m_fCurveTime = 1.f;
+	_float									m_fCurveValue = 1.f, m_fCurveStart = 1.f, m_fCurveEnd = 1.f;
+	_uint									m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedAlphaCurve = 0;
+
+	CParticleSystem::PARTICLEDESC			m_tParticleDesc;
 
 public:
 	virtual void Free() override;

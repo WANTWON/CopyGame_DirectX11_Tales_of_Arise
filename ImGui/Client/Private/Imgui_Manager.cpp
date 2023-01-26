@@ -5,6 +5,8 @@
 #include "PickingMgr.h"
 #include "Cell.h"
 #include "BaseObj.h"
+#include "Effect.h"
+#include "ParticleSystem.h"
 #include <windows.h>
 #include <string.h>
 
@@ -109,7 +111,7 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext *
 	_tchar wcTexturesPath[MAX_PATH] = TEXT("../../../Bin/Resources/Textures/Effect/");
 	Read_Textures(wcTexturesPath);
 
-	_tchar wcMeshesPath[MAX_PATH] = TEXT("../../../Bin/Resources/Meshes/Effect/");
+	_tchar wcMeshesPath[MAX_PATH] = TEXT("../../../Bin/Bin_Data/Effect/");
 	Read_Meshes(wcMeshesPath);
 	/**/
 
@@ -311,8 +313,8 @@ void CImgui_Manager::BrowseForFolder()
 
 			HANDLE hFile = 0;
 			_ulong dwByte = 0;
-			CNonAnim::NONANIMDESC  ModelDesc;
-			_uint iNum = 0;
+			NONANIMDESC  ModelDesc;
+			_int iNum = 0;
 			_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 			m_TempLayerTags.push_back(LayerTag);
 			m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
@@ -331,7 +333,7 @@ void CImgui_Manager::BrowseForFolder()
 				return;
 
 			/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
-			WriteFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+			WriteFile(hFile, &(iNum), sizeof(_int), &dwByte, nullptr);
 
 			for (auto& iter : *plistClone)
 			{
@@ -339,7 +341,7 @@ void CImgui_Manager::BrowseForFolder()
 					continue;
 
 				ModelDesc = dynamic_cast<CNonAnim*>(iter)->Get_ModelDesc();
-				WriteFile(hFile, &ModelDesc, sizeof(CNonAnim::NONANIMDESC), &dwByte, nullptr);
+				WriteFile(hFile, &ModelDesc, sizeof(NONANIMDESC), &dwByte, nullptr);
 
 			}
 
@@ -373,8 +375,8 @@ void CImgui_Manager::BrowseForFolder()
 
 			HANDLE hFile = 0;
 			_ulong dwByte = 0;
-			CNonAnim::NONANIMDESC  ModelDesc;
-			_uint iNum = 0;
+			NONANIMDESC  ModelDesc;
+			_int iNum = 0;
 			LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 			_matrix			PivotMatrix = XMMatrixIdentity();
 
@@ -386,11 +388,11 @@ void CImgui_Manager::BrowseForFolder()
 				return;
 
 			/* 타일의 개수 받아오기 */
-			ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+			ReadFile(hFile, &(iNum), sizeof(_int), &dwByte, nullptr);
 
 			for (_uint i = 0; i < iNum; ++i)
 			{
-				ReadFile(hFile, &(ModelDesc), sizeof(CNonAnim::NONANIMDESC), &dwByte, nullptr);
+				ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 				m_pModel_Manager->Set_InitModelDesc(ModelDesc);
 				_tchar			szModeltag[MAX_PATH] = TEXT("");
 				MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, (_int)strlen(ModelDesc.pModeltag), szModeltag, MAX_PATH);
@@ -1104,6 +1106,11 @@ void CImgui_Manager::Set_Object_Map()
 	static _float Position[3] = { m_InitDesc.vPosition.x , m_InitDesc.vPosition.y, m_InitDesc.vPosition.z };
 	ImGui::Text("Position"); ImGui::SameLine();
 	ImGui::InputFloat3("##1", Position);
+
+	static _float OffsetPos [3] = { m_vfOffset.x , m_vfOffset.y, m_vfOffset.z };
+	ImGui::Text("Offset"); ImGui::SameLine();
+	ImGui::InputFloat3("##1", Position);
+	m_vfOffset = _float3(OffsetPos[0], OffsetPos[1], OffsetPos[2]);
 	m_InitDesc.vPosition = _float3(Position[0], Position[1], Position[2]);
 
 	static _float Scale[3] = { m_InitDesc.vScale.x , m_InitDesc.vScale.y, m_InitDesc.vScale.z };
@@ -1131,11 +1138,11 @@ void CImgui_Manager::Set_Terrain_Shape()
 
 	ImGui::CollapsingHeader("Shape Setting (Height, Sharp, Range)");
 
-	ImGui::Text("Height");
+	ImGui::Text("Height/UpDonwValue");
 	ImGui::SameLine();
 	ImGui::DragFloat("##fHeight", &m_TerrainShapeDesc.fHeight, 0.1f);
 
-	ImGui::Text("Radius");
+	ImGui::Text("Radius(Shape&Brush)");
 	ImGui::SameLine();
 	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius, 0.1f);
 
@@ -1160,7 +1167,6 @@ void CImgui_Manager::Set_Terrain_Shape()
 	{
 		Load_Terrain();
 	}
-
 
 }
 
@@ -1326,21 +1332,18 @@ void CImgui_Manager::Set_Brush()
 	ImGui::GetIO().NavActive = false;
 	ImGui::GetIO().WantCaptureMouse = true;
 
-	ImGui::CollapsingHeader("Brush");
-
+	ImGui::CollapsingHeader("Setting Brush Type");
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "RED"); ImGui::SameLine();
+	ImGui::RadioButton("##RED", &m_eBrushType, 0);
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "GREEN"); ImGui::SameLine();
+	ImGui::RadioButton("##GREEN", &m_eBrushType, 1);
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "BLUE"); ImGui::SameLine();
+	ImGui::RadioButton("##BLUE", &m_eBrushType, 2);
+		
 
 	if (m_PickingType == PICKING_TERRAIN_BRUSH)
 	{
 		CPickingMgr::Get_Instance()->Picking();
-	}
-
-	if (ImGui::Button("Save Terrian"))
-	{
-		Save_Terrain();
-	}
-	if (ImGui::Button("Load Terrian"))
-	{
-		Load_Terrain();
 	}
 }
 
@@ -1415,7 +1418,8 @@ void CImgui_Manager::ShowPickedObj()
 	{
 		m_vPickedObjPos = _float3(0.f, 0.f, 0.f);
 		m_vPickedObjScale = _float3(1.f, 1.f, 1.f);
-	}
+		m_fRotAngle = 0.f;
+ 	}
 
 
 	ImGui::NewLine();
@@ -1430,7 +1434,7 @@ void CImgui_Manager::ShowPickedObj()
 
 	ImGui::Text("Position Y");
 	ImGui::SameLine();
-	ImGui::DragFloat("##PositionY", &m_vPickedObjPos.y, 0.01f, -10, 10);
+	ImGui::DragFloat("##PositionY", &m_vPickedObjPos.y, 0.01f);
 
 	ImGui::NewLine();
 
@@ -1452,10 +1456,9 @@ void CImgui_Manager::ShowPickedObj()
 	ImGui::InputFloat3("##Setting RotAxis", Rotation);
 	m_vPickedRotAxis = _float3(Rotation[0], Rotation[1], Rotation[2]);
 
-	static _float RotAngle = { m_fRotAngle };
 	ImGui::Text("Rotaion Angle"); ImGui::SameLine();
-	ImGui::DragFloat("##Setting Rot", &RotAngle, 0.1f);
-	m_fRotAngle = RotAngle;
+	ImGui::DragFloat("##Setting Rot", &m_fRotAngle, 0.1f);
+	//m_fRotAngle = RotAngle;
 
 
 	if (pPickedObj != nullptr)
@@ -1660,6 +1663,7 @@ void CImgui_Manager::Show_ModelList()
 
 
 					auto iter = --plistClone->end();
+					CPickingMgr::Get_Instance()->Out_PickingGroup(*iter);
 					m_pModel_Manager->Out_CreatedModel(dynamic_cast<CNonAnim*>(*iter));
 					Safe_Release(*iter);
 					plistClone->erase(iter);
@@ -1687,6 +1691,9 @@ void CImgui_Manager::Show_ModelList()
 		if (CPickingMgr::Get_Instance()->Picking())
 		{
 			m_InitDesc.vPosition = CPickingMgr::Get_Instance()->Get_PickingPos();
+			m_InitDesc.vPosition.x += m_vfOffset.x;
+			m_InitDesc.vPosition.y += m_vfOffset.y;
+			m_InitDesc.vPosition.z += m_vfOffset.z;
 			_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 			Create_Model(ModelTags[selected], LayerTag, true);
 			m_TempLayerTags.push_back(LayerTag);
@@ -1707,6 +1714,8 @@ void CImgui_Manager::Show_ModelList()
 
 
 		auto iter = --plistClone->end();
+		CPickingMgr::Get_Instance()->Out_PickingGroup(*iter);
+		CPickingMgr::Get_Instance()->Set_PickedObj(nullptr);
 		m_pModel_Manager->Out_CreatedModel(dynamic_cast<CNonAnim*>(*iter));
 		Safe_Release(*iter);
 		plistClone->erase(iter);
@@ -2264,7 +2273,7 @@ void CImgui_Manager::Draw_EffectModals()
 	ImGui::SetNextWindowPos(pCenter, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f)); // Center Window when appearing
 	if (ImGui::BeginPopupModal("Create Effect", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 	{
-		ImGui::Text("Effect Created!\n");
+		ImGui::Text("Effect Created!");
 		ImGui::NewLine();
 		ImGui::Text("You can customize you effect by adding");
 		ImGui::Text("Textures, Meshes and/or Particles.");
@@ -2281,95 +2290,202 @@ void CImgui_Manager::Draw_EffectModals()
 	}
 
 	/* Create Curve Editor Modal */
-	//ImVec2 pCenter = ImGui::GetMainViewport()->GetCenter();
-	//ImGui::SetNextWindowPos(pCenter, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f)); // Center Window when appearing
-	//if (ImGui::BeginPopupModal("Curve Editor", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-	//{
-	//	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
-	//	if (ImGui::BeginTabBar("CurveEditorTabBar", tab_bar_flags))
-	//	{
-	//		if (ImGui::BeginTabItem("Scale Curves"))
-	//		{
-	//			if (ImGui::BeginTable("ScaleCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Resizable, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
-	//			{
-	//				ImGui::TableSetupScrollFreeze(0, 1);
-	//				ImGui::TableSetupColumn("X");
-	//				ImGui::TableSetupColumn("Y");
-	//				ImGui::TableSetupColumn("Z");
-	//				ImGui::TableSetupColumn("Curve Time");
-	//				ImGui::TableHeadersRow();
+	ImGui::SetNextWindowPos(pCenter, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f)); // Center Window when appearing
+	if (ImGui::BeginPopupModal("Curve Editor", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+		if (ImGui::BeginTabBar("CurveEditorTabBar", tab_bar_flags))
+		{
+			if (ImGui::BeginTabItem("Velocity Curves"))
+			{
+				if (ImGui::BeginTable("VelocityCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				{
+					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("Velocity");
+					ImGui::TableSetupColumn("Start");
+					ImGui::TableSetupColumn("End");
+					ImGui::TableHeadersRow();
 
-	//				vector<_float4> ScaleCurves;
+					vector<_float3> VelocityCurves;
 
-	//				if (m_pSelectedEffect)
-	//					ScaleCurves = m_pSelectedEffect->Get_ScaleCurves();
+					if (m_pSelectedEffect)
+						VelocityCurves = m_pSelectedEffect->Get_VelocityCurves();
 
-	//				for (_uint i = 0; i < ScaleCurves.size(); i++)
-	//				{
-	//					ImGui::TableNextRow();
+					for (_uint i = 0; i < VelocityCurves.size(); i++)
+					{
+						ImGui::TableNextColumn();
+						if (ImGui::Selectable(to_string(VelocityCurves[i].x).c_str(), i == m_iSelectedVelocityCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Velocity */
+							m_iSelectedVelocityCurve = i;
 
-	//					ImGui::Text(to_string(ScaleCurves[i].x).c_str());
-	//					ImGui::TableNextColumn();
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(VelocityCurves[i].y).c_str()); /* Start */
 
-	//					ImGui::Text(to_string(ScaleCurves[i].y).c_str());
-	//					ImGui::TableNextColumn();
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(VelocityCurves[i].z).c_str()); /* End */
+					}
 
-	//					ImGui::Text(to_string(ScaleCurves[i].z).c_str());
-	//					ImGui::TableNextColumn();
+					ImGui::EndTable();
+				}
+				if (ImGui::Button("Delete"))
+					if (m_pSelectedEffect->Get_VelocityCurves().size() > m_iSelectedVelocityCurve)
+						m_pSelectedEffect->Remove_VelocityCurve(m_iSelectedVelocityCurve);
 
-	//					ImGui::Text(to_string(ScaleCurves[i].w).c_str());
-	//				}
-	//				
-	//				ImGui::EndTable();
-	//			}
-	//			if(ImGui::Button("Delete"))
-	//			{
-	//				/* TODO: .. */
-	//			}
-	//			ImGui::NewLine();
+				ImGui::NewLine();
 
-	//			ImGui::SetNextItemWidth(65);
-	//			if (ImGui::DragFloat("##CurveX", &m_fCurveX, 0.05f, 0.f, 0.f, "X: %.03f"))
-	//			{
-	//			}
-	//			ImGui::SameLine();
-	//			ImGui::SetNextItemWidth(65);
-	//			if (ImGui::DragFloat("##CurveY", &m_fCurveY, 0.05f, 0.f, 0.f, "Y: %.03f"))
-	//			{
-	//			}
-	//			ImGui::SameLine();
-	//			ImGui::SetNextItemWidth(65);
-	//			if (ImGui::DragFloat("##CurveZ", &m_fCurveZ, 0.05f, 0.f, 0.f, "Z: %.03f"))
-	//			{
-	//			}
-	//			ImGui::SameLine();
-	//			ImGui::SetNextItemWidth(80);
-	//			if (ImGui::DragFloat("##CurveTime", &m_fCurveTime, 0.05f, 0.f, 1.f, "Time: %.02f"))
-	//			{
-	//			}
-	//			ImGui::SameLine();
-	//			if (ImGui::Button("Add"))
-	//			{
-	//				if (m_pSelectedEffect)
-	//					m_pSelectedEffect->Add_ScaleCurve(_float4(m_fCurveX, m_fCurveY, m_fCurveZ, m_fCurveTime));
-	//			}
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##VelocityCurve", &m_fCurveValue, 0.05f, 0.f, 100.f, "Velocity: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##VelocityStart", &m_fCurveStart, 0.05f, 0.f, 1.f, "Start: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##VelocityEnd", &m_fCurveEnd, 0.05f, 0.f, 1.f, "End: %.02f"))
+				{
+				}
+				ImGui::SameLine();
 
-	//			ImGui::EndTabItem();
-	//		}
-	//		if (ImGui::BeginTabItem("Color Curves"))
-	//		{
-	//			ImGui::EndTabItem();
-	//		}
-	//		ImGui::EndTabBar();
-	//	}
+				if (ImGui::Button("Add"))
+				{
+					if (m_pSelectedEffect)
+						m_pSelectedEffect->Add_VelocityCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+				}
 
-	//	ImGui::NewLine();
-	//	if (ImGui::Button("Done"))
-	//		ImGui::CloseCurrentPopup();
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Size Curves"))
+			{
+				if (ImGui::BeginTable("SizeCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				{
+					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("Size");
+					ImGui::TableSetupColumn("Start");
+					ImGui::TableSetupColumn("End");
+					ImGui::TableHeadersRow();
 
-	//	ImGui::SetItemDefaultFocus();
-	//	ImGui::EndPopup();
-	//}
+					vector<_float3> SizeCurves;
+
+					if (m_pSelectedEffect)
+						SizeCurves = m_pSelectedEffect->Get_SizeCurves();
+
+					for (_uint i = 0; i < SizeCurves.size(); i++)
+					{
+						ImGui::TableNextColumn();
+						if (ImGui::Selectable(to_string(SizeCurves[i].x).c_str(), i == m_iSelectedSizeCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Size */
+							m_iSelectedSizeCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(SizeCurves[i].y).c_str()); /* Start */
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(SizeCurves[i].z).c_str()); /* End */
+					}
+
+					ImGui::EndTable();
+				}
+				if (ImGui::Button("Delete"))
+					if (m_pSelectedEffect->Get_SizeCurves().size() > m_iSelectedSizeCurve)
+						m_pSelectedEffect->Remove_SizeCurve(m_iSelectedSizeCurve);
+
+				ImGui::NewLine();
+
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##SizeCurve", &m_fCurveValue, 0.05f, 0.f, 100.f, "Size: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##SizeStart", &m_fCurveStart, 0.05f, 0.f, 1.f, "Start: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##SizeEnd", &m_fCurveEnd, 0.05f, 0.f, 1.f, "End: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+
+				if (ImGui::Button("Add"))
+				{
+					if (m_pSelectedEffect)
+						m_pSelectedEffect->Add_SizeCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+				}
+
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Alpha Curves"))
+			{
+				if (ImGui::BeginTable("AlphaCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				{
+					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("Alpha");
+					ImGui::TableSetupColumn("Start");
+					ImGui::TableSetupColumn("End");
+					ImGui::TableHeadersRow();
+
+					vector<_float3> AlphaCurves;
+
+					if (m_pSelectedEffect)
+						AlphaCurves = m_pSelectedEffect->Get_AlphaCurves();
+
+					for (_uint i = 0; i < AlphaCurves.size(); i++)
+					{
+						ImGui::TableNextColumn();
+						if (ImGui::Selectable(to_string(AlphaCurves[i].x).c_str(), i == m_iSelectedAlphaCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
+							m_iSelectedAlphaCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(AlphaCurves[i].y).c_str()); /* Start */
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(AlphaCurves[i].z).c_str()); /* End */
+					}
+
+					ImGui::EndTable();
+				}
+				if (ImGui::Button("Delete"))
+					if (m_pSelectedEffect->Get_AlphaCurves().size() > m_iSelectedAlphaCurve)
+						m_pSelectedEffect->Remove_AlphaCurve(m_iSelectedAlphaCurve);
+
+				ImGui::NewLine();
+
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##AlphaCurve", &m_fCurveValue, 0.05f, 0.f, 100.f, "Alpha: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##AlphaStart", &m_fCurveStart, 0.05f, 0.f, 1.f, "Start: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##AlphaEnd", &m_fCurveEnd, 0.05f, 0.f, 1.f, "End: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+
+				if (ImGui::Button("Add"))
+				{
+					if (m_pSelectedEffect)
+						m_pSelectedEffect->Add_AlphaCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+				}
+
+				ImGui::EndTabItem();
+			}
+			ImGui::EndTabBar();
+		}
+
+		ImGui::NewLine();
+		if (ImGui::Button("Done"))
+			ImGui::CloseCurrentPopup();
+	
+		ImGui::SetItemDefaultFocus();
+		ImGui::EndPopup();
+	}
 }
 
 void CImgui_Manager::Read_EffectsData()
@@ -2478,7 +2594,7 @@ void CImgui_Manager::Read_Meshes(_tchar* pFolderPath)
 			_tchar szFileExt[MAX_PATH];
 			_wsplitpath_s(fileData.cFileName, nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
 
-			if (!wcscmp(szFileExt, TEXT(".fbx")))
+			if (!wcscmp(szFileExt, TEXT(".dat")))
 			{
 				wstring wsFileName = wstring(fileData.cFileName);
 				string sFileName = string(wsFileName.begin(), wsFileName.end());
@@ -2509,7 +2625,6 @@ void CImgui_Manager::Set_Effect()
 			{
 				m_sCurrentEffect = cEffectName; // Set Current Effect
 				m_sCurrentEffect += ".dat";
-
 				memset(cEffectName, 0, MAX_PATH);
 
 				ImGui::OpenPopup("Create Effect");
@@ -2551,9 +2666,10 @@ void CImgui_Manager::Set_Effect()
 	}
 #pragma endregion Create
 	
-#pragma region Customization
-	if (ImGui::CollapsingHeader("Customization"))
+#pragma region Customize
+	if (ImGui::CollapsingHeader("Customize"))
 	{
+		ImGui::Text("Available Resources");
 		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 		if (ImGui::BeginTabBar("EffectTabBar", tab_bar_flags))
 		{
@@ -2564,57 +2680,104 @@ void CImgui_Manager::Set_Effect()
 				{
 					for (string sTextureName : m_TextureNames)
 					{
-						if (ImGui::Selectable(sTextureName.c_str(), m_sSelectedTexture == sTextureName))
-							m_sSelectedTexture = sTextureName;
+						if (ImGui::Selectable(sTextureName.c_str(), m_sSelectedResource == sTextureName))
+							m_sSelectedResource = sTextureName;
 
-						if (m_sSelectedTexture == sTextureName)
+						if (m_sSelectedResource == sTextureName)
 							ImGui::SetItemDefaultFocus();
 					}
 					ImGui::EndListBox();
+
+					if (ImGui::Button("Add Texture", ImVec2(100, 0)))
+					{
+						if (!m_sSelectedResource.empty())
+						{
+							CEffect::EFFECTDESC tEffectDesc;
+							tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_TEXTURE;
+
+							wstring wsTexturePrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcTexturePrototypeId, MAX_PATH, wsTexturePrototype.c_str());
+								
+							wstring wsSelectedResource = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcFileName, MAX_PATH, wsSelectedResource.c_str());
+
+							CEffect* pEffect = nullptr;
+							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectTexture"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc);
+
+							m_pEffectManager->Add_Effect(pEffect);
+						}
+					}
+					ImGui::SameLine();
+
+					if (ImGui::Button("Add Particle", ImVec2(100, 0)))
+					{
+						if (!m_sSelectedResource.empty())
+						{
+							CEffect::EFFECTDESC tEffectDesc;
+							tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_PARTICLE;
+
+							wstring wsTexturePrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcTexturePrototypeId, MAX_PATH, wsTexturePrototype.c_str());
+
+							wstring wsSelectedResource = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcFileName, MAX_PATH, wsSelectedResource.c_str());
+
+							CEffect* pEffect = nullptr;
+							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc);
+
+							m_pEffectManager->Add_Effect(pEffect);
+						}
+					}
 				}
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("Mesh Textures"))
+			if (ImGui::BeginTabItem("Effect Meshes"))
 			{
 				/* Available Meshes (Effect) */
 				if (ImGui::BeginListBox("##Mesh List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
 				{
 					for (string sMeshName : m_MeshNames)
 					{
-						if (ImGui::Selectable(sMeshName.c_str(), m_sSelectedMesh == sMeshName))
-							m_sSelectedMesh = sMeshName;
+						if (ImGui::Selectable(sMeshName.c_str(), m_sSelectedResource == sMeshName))
+							m_sSelectedResource = sMeshName;
 
-						if (m_sSelectedMesh == sMeshName)
+						if (m_sSelectedResource == sMeshName)
 							ImGui::SetItemDefaultFocus();
 					}
 					ImGui::EndListBox();
+
+					if (ImGui::Button("Add Mesh", ImVec2(100, 0)))
+					{
+						if (!m_sSelectedResource.empty())
+						{
+							CEffect::EFFECTDESC tEffectDesc;
+							tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_MESH;
+
+							wstring wsMeshPrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcModelPrototypeId, MAX_PATH, wsMeshPrototype.c_str());				
+
+							wstring wsSelectedResource = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
+							wcscpy_s(tEffectDesc.wcFileName, MAX_PATH, wsSelectedResource.c_str());
+
+							CEffect* pEffect = nullptr;
+							CGameInstance::Get_Instance()->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectMesh"), LEVEL_GAMEPLAY, TEXT("Layer_Effect"), (CGameObject*&)pEffect, &tEffectDesc);
+
+							m_pEffectManager->Add_Effect(pEffect);
+						}
+					}
 				}
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();
 		}
 
-		if (ImGui::Button("Add", ImVec2(60, 0)))
-		{
-			CEffect::EFFECTDESC tEffectDesc;
-
-			tEffectDesc.eType = CEffect::EFFECT_TYPE::TYPE_TEXTURE;
-			wstring wsSelectedTexture = wstring(m_sSelectedTexture.begin(), m_sSelectedTexture.end());
-			wcscpy_s(tEffectDesc.wcTexturePrototypeId, MAX_PATH, wsSelectedTexture.c_str());
-
-			if (FAILED(m_pEffectManager->Create_Effect(m_pDevice, m_pContext, &tEffectDesc)))
-			{
-
-			}
-
-		}
 		ImGui::NewLine();
 		ImGui::Separator();
 
-		/* Instanced Resources */
-		ImGui::Text("Instanced Resources");
+		/* Instanced Effects */
+		ImGui::Text("Instanced Effects");
 
-		if (ImGui::BeginListBox("##Instanced Resources List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
+		if (ImGui::BeginListBox("##Instanced Effect List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
 		{
 			list<CEffect*> Effects = CEffect_Manager::Get_Instance()->Get_InstancedEffects();
 			for (CEffect* pEffect : Effects)
@@ -2646,115 +2809,138 @@ void CImgui_Manager::Set_Effect()
 
 		if (ImGui::Button("Delete", ImVec2(60, 0)))
 		{
-			/* TODO: .. */
+			if (m_pSelectedEffect)
+			{
+				m_pEffectManager->Remove_Effect(m_pSelectedEffect);
+				m_pSelectedEffect = nullptr;
+			}
 		}
+
 		ImGui::NewLine();
 	}
-#pragma endregion Customization
+#pragma endregion Customize
 
 #pragma region Settings
 	if (ImGui::CollapsingHeader("Settings"))
 	{
 		if (ImGui::Button(m_bIsPlaying ? "Stop" : "Play", ImVec2(60, 0)))
 		{
-			/* TODO: .. */
+			if (m_pSelectedEffect)
+			{
+				m_bIsPlaying = !m_bIsPlaying;
+				m_pSelectedEffect->Set_Play(m_bIsPlaying);
+			}
+		}
+		ImGui::NewLine();
+
+		if (ImGui::BeginCombo("##Shader", m_sCurrentShader.c_str()))
+		{
+			_uint iCounter = 0;
+			for (auto& iter = m_Shaders.begin(); iter != m_Shaders.end(); iter++)
+			{
+				if (ImGui::Selectable(iter->c_str(), iter->c_str() == m_sCurrentShader))
+				{
+					m_sCurrentShader = *iter;
+					m_pSelectedEffect->Set_ShaderId(iCounter);
+				}
+
+				if (iter->c_str() == m_sCurrentShader)
+					ImGui::SetItemDefaultFocus();
+
+				iCounter++;
+			}
+			ImGui::EndCombo();
 		}
 		ImGui::NewLine();
 		ImGui::Separator();
-
-		if (ImGui::RadioButton("Scale", m_eEffectTransformation == TRANS_SCALE))
+		
+		ImGui::Text("Particles Settings");
+		
+		if (ImGui::DragFloat("##ParticleDeviationX", &m_tParticleDesc.m_fParticleDeviationX, 0.05f, 0, 0, "X Variation: %.02f"))
 		{
-			m_eEffectTransformation = TRANS_SCALE;
-
-			if (m_pEffectTransform)
-			{
-				m_fX = m_pEffectTransform->Get_Scale(CTransform::STATE::STATE_RIGHT);
-				m_fY = m_pEffectTransform->Get_Scale(CTransform::STATE::STATE_UP);
-				m_fZ = m_pEffectTransform->Get_Scale(CTransform::STATE::STATE_LOOK);
-			}
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
-		ImGui::SameLine();
-
-		if (ImGui::RadioButton("Rotation", m_eEffectTransformation == TRANS_ROTATION))
+		if (ImGui::DragFloat("##ParticleDeviationY", &m_tParticleDesc.m_fParticleDeviationY, 0.05f, 0, 0, "Y Variation: %.02f"))
 		{
-			m_eEffectTransformation = TRANS_ROTATION;
-
-			if (m_pEffectTransform)
-			{
-				m_fX = m_pEffectTransform->Get_CurrentRotationX();
-				m_fY = m_pEffectTransform->Get_CurrentRotationY();
-				m_fZ = m_pEffectTransform->Get_CurrentRotationZ();
-			}
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
-
-		ImGui::SetNextItemWidth(80);
-		if (ImGui::DragFloat("##X", &m_fX, m_eEffectTransformation == TRANS_ROTATION ? 1 : 0.05f, m_eEffectTransformation == TRANS_ROTATION ? -360.f : 0.f, m_eEffectTransformation == TRANS_ROTATION ? 360.f : 0.f, "X: %.03f"))
+		if (ImGui::DragFloat("##ParticleDeviationZ", &m_tParticleDesc.m_fParticleDeviationZ, 0.05f, 0, 0, "Z Variation: %.02f"))
 		{
-			switch (m_eEffectTransformation)
-			{
-			case TRANS_SCALE:
-			{
-				if (m_pEffectTransform)
-					m_pEffectTransform->Set_Scale(CTransform::STATE::STATE_RIGHT, m_fX);
-				break;
-			}
-			case TRANS_ROTATION:
-			{
-				if (m_pEffectTransform)
-				{
-					_vector vRotationX = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-					m_pEffectTransform->Set_Rotation(_float3(m_fX, m_fY, m_fZ));
-				}
-
-				break;
-			}
-			}
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
-		ImGui::SameLine();
-
-		ImGui::SetNextItemWidth(80);
-		if (ImGui::DragFloat("##Y", &m_fY, m_eEffectTransformation == TRANS_ROTATION ? 1 : 0.05f, m_eEffectTransformation == TRANS_ROTATION ? -360.f : 0.f, m_eEffectTransformation == TRANS_ROTATION ? 360.f : 0.f, "Y: %.03f"))
+		if (ImGui::DragFloat("##ParticleDirectionX", &m_tParticleDesc.m_vParticleDirection.x, 0.05f, -1, 1, "Direction X: %.02f"))
 		{
-			switch (m_eEffectTransformation)
-			{
-			case TRANS_SCALE:
-			{
-				if (m_pEffectTransform)
-					m_pEffectTransform->Set_Scale(CTransform::STATE::STATE_UP, m_fY);
-				break;
-			}
-			case TRANS_ROTATION:
-			{
-				if (m_pEffectTransform)
-					m_pEffectTransform->Set_Rotation(_float3(m_fX, m_fY, m_fZ));
-				break;
-			}
-			}
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
-		ImGui::SameLine();
-
-		ImGui::SetNextItemWidth(80);
-		if (ImGui::DragFloat("##Z", &m_fZ, m_eEffectTransformation == TRANS_ROTATION ? 1 : 0.05f, m_eEffectTransformation == TRANS_ROTATION ? -360.f : 0.f, m_eEffectTransformation == TRANS_ROTATION ? 360.f : 0.f, "Z: %.03f"))
+		if (ImGui::DragFloat("##ParticleDirectionY", &m_tParticleDesc.m_vParticleDirection.y, 0.05f, -1, 1, "Direction Y: %.02f"))
 		{
-			switch (m_eEffectTransformation)
-			{
-			case TRANS_SCALE:
-			{
-				if (m_pEffectTransform)
-					m_pEffectTransform->Set_Scale(CTransform::STATE::STATE_LOOK, m_fZ);
-				break;
-			}
-			case TRANS_ROTATION:
-			{
-				if (m_pEffectTransform)
-					m_pEffectTransform->Set_Rotation(_float3(m_fX, m_fY, m_fZ));
-				break;
-			}
-			}
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (ImGui::DragFloat("##ParticleDirectionZ", &m_tParticleDesc.m_vParticleDirection.z, 0.05f, -1, 1, "Direction Z: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (ImGui::DragFloat("##Velocity", &m_tParticleDesc.m_fParticleVelocity, 0.05f, 0, 100.f, "Velocity: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (ImGui::DragFloat("##VelocityVariation", &m_tParticleDesc.m_fParticleVelocityVariation, 0.05f, 0, 100.f, "Velocity Variation: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (ImGui::DragFloat("##Size", &m_tParticleDesc.m_fParticleSize, 0.05f, .1f, 100.f, "Size: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (ImGui::DragFloat("##SizeVariation", &m_tParticleDesc.m_fParticleSizeVariation, 0.05f, 0, 100.f, "Size Variation: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (ImGui::DragFloat("##ParticlesPerSecond", &m_tParticleDesc.m_fParticlesPerSecond, 0.05f, 0, m_tParticleDesc.m_iMaxParticles, "Particles/Sec: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (ImGui::DragFloat("##ParticlesLifetime", &m_tParticleDesc.m_fParticlesLifetime, 0.05f, 0, 0, "Particles Lifetime: %.02f"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+		}
+		if (ImGui::DragInt("##ParticlesNum", &m_tParticleDesc.m_iMaxParticles, 1, 0, 1000, "Max Particles: %d"))
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+			if (pParticleSystem)
+				pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 		}
 
-		if (ImGui::Button("Curve Editor"))
-			ImGui::OpenPopup("Curve Editor");
+		ImGui::NewLine();
+		if (ImGui::Button("Curve Editor", ImVec2(100, 0)))
+		{
+			if (m_pSelectedEffect)
+				ImGui::OpenPopup("Curve Editor");
+		}
 #pragma endregion Settings
 	}
 
@@ -2775,6 +2961,9 @@ void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLa
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	m_InitDesc.vPosition.x += m_vfOffset.x;
+	m_InitDesc.vPosition.y += m_vfOffset.y;
+	m_InitDesc.vPosition.z += m_vfOffset.z;
 	m_pModel_Manager->Set_InitModelDesc(m_InitDesc);
 	
 	_matrix			PivotMatrix = XMMatrixIdentity();

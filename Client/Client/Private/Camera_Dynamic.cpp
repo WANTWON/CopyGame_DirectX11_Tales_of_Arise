@@ -101,21 +101,29 @@ void CCamera_Dynamic::Debug_Camera(_float fTimeDelta)
 	/* Debug Camera*/
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	/* Camera Inputs */
-	if (pGameInstance->Key_Pressing(DIK_UP))
-		m_pTransform->Go_Straight(fTimeDelta * 2);
-	if (pGameInstance->Key_Pressing(DIK_DOWN))
-		m_pTransform->Go_Backward(fTimeDelta * 2);
-	if (pGameInstance->Key_Pressing(DIK_LEFT))
-		m_pTransform->Go_Left(fTimeDelta * 2);
-	if (pGameInstance->Key_Pressing(DIK_RIGHT))
-		m_pTransform->Go_Right(fTimeDelta * 2);
+	if (pGameInstance->Key_Pressing(DIK_SPACE))
+		m_bStop = !m_bStop;
 
-	_long MouseMove = 0;
-	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
-		m_pTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * 0.1f);
-	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
-		m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
+
+	if (!m_bStop)
+	{
+		/* Camera Inputs */
+		if (pGameInstance->Key_Pressing(DIK_UP))
+			m_pTransform->Go_Straight(fTimeDelta * 2);
+		if (pGameInstance->Key_Pressing(DIK_DOWN))
+			m_pTransform->Go_Backward(fTimeDelta * 2);
+		if (pGameInstance->Key_Pressing(DIK_LEFT))
+			m_pTransform->Go_Left(fTimeDelta * 2);
+		if (pGameInstance->Key_Pressing(DIK_RIGHT))
+			m_pTransform->Go_Right(fTimeDelta * 2);
+
+		_long MouseMove = 0;
+		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+			m_pTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * 0.1f);
+		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+			m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
+	}
+	
 
 	RELEASE_INSTANCE(CGameInstance);
 }

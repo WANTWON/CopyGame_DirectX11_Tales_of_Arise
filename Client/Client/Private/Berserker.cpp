@@ -4,6 +4,8 @@
 #include "BerserkerIdleState.h"
 #include "BerserkerBattle_IdleState.h"
 #include "BerserkerBattle_HowLingState.h"
+#include "BerserkerBattle_Damage_LargeB_State.h"
+#include "BerserkerBattle_DeadState.h"
 
 using namespace Berserker;
 
@@ -45,9 +47,15 @@ HRESULT CBerserker::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CGameInstance);
 
 
+	m_tInfo.iMaxHp = 3;
+	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.iDamage = 10;
+
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
+
+	return S_OK;
 }
 
 
@@ -73,7 +81,7 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Berserker"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_BATTLE, TEXT("Berserker"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* For.Com_SPHERE */
@@ -82,13 +90,13 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 1.f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 	/* For.Com_Navigation */
 	CNavigation::NAVIDESC NaviDesc;
 	ZeroMemory(&NaviDesc, sizeof NaviDesc);
-	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -144,21 +152,24 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	switch ((ANIM)eAnimId)
 	{
 	case MOVE_IDLE:
-	case DASH_LOOP:
 	case MOVE_WALK:
 		
 		return true;
 	
 
 	case DASH_START:
+	case DASH_LOOP:
 	case HOWING_AND_BACK:
 	case HOWING:
 	case FLYING_ATTACK2:
 	case ATTACK_DOUBLE_CLAW:
 	case ATTACK_DOUBLE_CROW:
 	case ATTACK_SHOCK_WAVE:
+	case DAMAGE_LARGE_B:
 		return false;
 	}
+
+	return false;
 }
 
 _float CBerserker::Take_Damage(float fDamage, CBaseObj * DamageCauser)
@@ -169,17 +180,17 @@ _float CBerserker::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 			{
 				m_tStats.m_fCurrentHp = 0.f;
 
-				m_pModelCom->Set_TimeReset();
-			//	CIce_WolfState* pState = new CDieState(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
-			//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+				m_pModelCom->Set_TimeReset(); 
+				CBerserkerState* pState = new CBattle_DeadState(this);
+				m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
 			}
 			else
 			{
 				m_tStats.m_fCurrentHp -= fDamage;
 
 				m_pModelCom->Set_TimeReset();
-			//	CIce_WolfState* pState = new CHitState(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
-			//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+				CBerserkerState* pState = new CBattle_Damage_LargeB_State(this);
+				m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
 			}
 	}
 

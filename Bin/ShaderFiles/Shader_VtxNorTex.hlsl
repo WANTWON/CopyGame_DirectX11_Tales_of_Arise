@@ -3,13 +3,16 @@
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
+vector			g_vCamPosition;
+
 /* For.Material */
-texture2D		g_DiffuseTexture[2];
-texture2D		g_NormalTexture[2];
+texture2D		g_DiffuseTexture[4];
+texture2D		g_NormalTexture[4];
 
 texture2D		g_BrushTexture;
 float4			g_vBrushPos = float4(5.f, 0.f, 5.f, 1.f);
 float			g_fBrushRange = 2.f;
+
 
 texture2D		g_FilterTexture;
 
@@ -80,61 +83,58 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector		vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV * 100.f);
-	vector		vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexUV * 100.f);
-	vector		vFilter = g_FilterTexture.Sample(LinearSampler, In.vTexUV*10.f);
+	vector		vDiffuse1 = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV * 40.f);
+	vector		vDiffuse2 = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vDiffuse3 = g_DiffuseTexture[2].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vDiffuse4 = g_DiffuseTexture[3].Sample(LinearSampler, In.vTexUV * 30.f);
 
-	vector		vBrush = vector(0.f, 0.f, 0.f, 0.f);
+	vector		vFilter = g_FilterTexture.Sample(LinearSampler, In.vTexUV);
 
-	if (g_vBrushPos.x - g_fBrushRange < In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fBrushRange &&
-		g_vBrushPos.z - g_fBrushRange < In.vWorldPos.z && In.vWorldPos.z < g_vBrushPos.z + g_fBrushRange)
-	{
-		float2		fNewUV;
+	vector		vMtrlDiffuse = vDiffuse2 * vFilter.r + vDiffuse3 * vFilter.g + vDiffuse4 * vFilter.b;
+	Out.vDiffuse = (1 - vFilter.r - vFilter.g - vFilter.b)*vDiffuse1 + vMtrlDiffuse ;
 
-		fNewUV.x = (In.vWorldPos.x - (g_vBrushPos.x - g_fBrushRange)) / (2.f * g_fBrushRange);
-		fNewUV.y = ((g_vBrushPos.z + g_fBrushRange) - In.vWorldPos.z) / (2.f * g_fBrushRange);
-
-		vBrush = g_BrushTexture.Sample(LinearSampler, fNewUV);
-	}
-
-	vector		vMtrlDiffuse = vSourDiffuse * vFilter + vDestDiffuse * (1.f - vFilter);
-	Out.vDiffuse = vMtrlDiffuse + vBrush;
-
-	/*if (Out.vDiffuse.a == 0.0f)
-	discard;*/
 
 	Out.vDiffuse.a = 1.f;
 
-	float4 vTextureNormal = g_NormalTexture[0].Sample(LinearSampler, In.vTexUV*100.f);
-	float3 vSourNormal;
+	/* -1 ~ 1 => 0 ~ 1*/
 
-	vSourNormal = float3(vTextureNormal.x, vTextureNormal.y, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
+	vector		vNormal1 = g_NormalTexture[0].Sample(LinearSampler, In.vTexUV * 40.f);
+	vector		vNormal2 = g_NormalTexture[1].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vNormal3 = g_NormalTexture[2].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vNormal4 = g_NormalTexture[3].Sample(LinearSampler, In.vTexUV * 30.f);
+
+	float3 vNormalA = normalize(float4(vNormal1.x*2.f - 1.f, vNormal1.y*2.f - 1.f, sqrt(1 - vNormal1.x * vNormal1.x - vNormal1.y * vNormal1.y), 0.f));
+	float3 vNormalB = normalize(float4(vNormal2.x*2.f - 1.f, vNormal2.y*2.f - 1.f, sqrt(1 - vNormal2.x * vNormal2.x - vNormal2.y * vNormal2.y), 0.f));
+	float3 vNormalC = normalize(float4(vNormal3.x*2.f - 1.f, vNormal3.y*2.f - 1.f, sqrt(1 - vNormal3.x * vNormal3.x - vNormal3.y * vNormal3.y), 0.f));
+	float3 vNormalD = normalize(float4(vNormal4.x*2.f - 1.f, vNormal4.y*2.f - 1.f, sqrt(1 - vNormal4.x * vNormal4.x - vNormal4.y * vNormal4.y), 0.f));
+
+	
 	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-	vSourNormal = mul(vSourNormal, WorldMatrix);
-	vector vNormalOut = vector(vSourNormal * 0.5f + 0.5f, 0.f);
+	vNormalA = mul(vNormalA, WorldMatrix);
+	vNormalB = mul(vNormalB, WorldMatrix);
+	vNormalC = mul(vNormalC, WorldMatrix);
+	vNormalD = mul(vNormalD, WorldMatrix);
 
-	float4 vTextureNormal2 = g_NormalTexture[1].Sample(LinearSampler, In.vTexUV*100.f);
-	float3 vDestNormal;
+	float3 vMtrlNormal = vNormalB * vFilter.r + vNormalC * vFilter.g + vNormalD * vFilter.b;
+	float fFilterSum = min( (vFilter.r+ vFilter.g + vFilter.b), 1.f);
+	float fFilterStrength = 1 - fFilterSum;
+	vNormalA *= fFilterStrength;
+	Out.vNormal.xyz = vMtrlNormal + vNormalC;
+	Out.vNormal = vector(Out.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
-	vDestNormal = float3(vTextureNormal2.x, vTextureNormal2.y, sqrt(1 - vTextureNormal2.x * vTextureNormal2.x - vTextureNormal2.y * vTextureNormal2.y));
-	float3x3 WorldMatrix2 = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-	vDestNormal = mul(vDestNormal, WorldMatrix2);
-	vector vNormal2Out = vector(vDestNormal * 0.5f + 0.5f, 0.f);
-
-	vector		vMtrlNormal = vNormalOut * vFilter + vNormal2Out * (1.f - vFilter);
-	Out.vNormal = vNormalOut;
 
 	/* near ~ far */
 	/* 0 ~ far */
 	/* 0 ~ 1 */
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w /1000.f, 0.f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 
 	return Out;
 }
 
+
 technique11 DefaultTechnique
 {
-	pass Terrain
+	pass Default
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -144,6 +144,5 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
-
 
 }

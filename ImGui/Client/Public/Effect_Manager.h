@@ -1,22 +1,23 @@
 #pragma once
 
 #include "Base.h"
-#include "Effect.h"
+#include "Client_Defines.h"
 
 BEGIN(Client)
 class CEffect_Manager final : public CBase
 {
 	DECLARE_SINGLETON(CEffect_Manager)
 
-public:
-	list<class CEffect*> Get_InstancedEffects() { return m_InstancedEffects; }
-
-public:
+private:
 	CEffect_Manager();
 	virtual ~CEffect_Manager() = default;
 
 public:
-	HRESULT Create_Effect(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, void* pArg = nullptr);
+	list<class CEffect*> Get_InstancedEffects() { return m_InstancedEffects; }
+
+public:
+	void Add_Effect(class CEffect * pEffect);
+	void Remove_Effect(class CEffect * pEffect);
 
 private:
 	list<class CEffect*> m_InstancedEffects;

@@ -14,6 +14,9 @@ CIdleState::CIdleState(CHawk* pIceWolf)
 CHawkState * CIdleState::AI_Behaviour(_float fTimeDelta)
 {
 	Find_Target();
+	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	//m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
+	//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 	return nullptr;
 }
 

@@ -73,6 +73,19 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXTEX_DECLARATION;
 
+	typedef struct tagVertexTextureAlpha
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT2		vTexture;
+		float			fAlpha;
+	}VTXTEXALPHA;
+
+	typedef struct ENGINE_DLL tagVertexTextureAlpha_Declaration
+	{
+		static const unsigned int iNumElements = 3;
+		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
+	}VTXTEXALPHA_DECLARATION;
+
 	typedef struct tagVertexPoint
 	{
 		XMFLOAT3		vPosition;
@@ -173,6 +186,12 @@ namespace Engine
 	}VTXANIMMODEL_DECLARATION;
 
 
+	typedef struct ENGINE_DLL tagVertexModelInstance_Declaration
+	{
+		static const unsigned int iNumElements = 8;
+		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
+	}VTXMODELINSTANCE_DECLARATION;
+
 	typedef struct tagGraphicDesc
 	{
 		enum WINMODE { MODE_FULL, MODE_WIN, MODE_END };
@@ -266,4 +285,15 @@ namespace Engine
 		DATA_BINANIM* pBinAnim;
 
 	}DATA_BINSCENE;
+
+	typedef struct NonAnimModelTag
+	{
+		char pModeltag[MAX_PATH] = "";
+		XMFLOAT3	vPosition = XMFLOAT3(0.f, 0.f, 0.f);
+		XMFLOAT3	vScale = XMFLOAT3(1.f, 1.f, 1.f);
+		XMFLOAT3	vRotation = XMFLOAT3(0.f, 0.f, 0.f);
+		float		m_fAngle = 0.f;
+		XMFLOAT4X4 WorldMatrix;
+
+	}NONANIMDESC;
 }

@@ -27,7 +27,7 @@ public:
 	void Add_FileName(const _tchar* Layertag, const _tchar* FileName);
 	void Add_CreatedModel( class CNonAnim* pNonAnimModel) { m_CreatedModel.push_back(pNonAnimModel); }
 	void Set_AllPickedFalse();
-	void Set_InitModelDesc(CNonAnim::NONANIMDESC ModelDesc) { memcpy(&m_InitModelDesc, &ModelDesc, sizeof(CNonAnim::NONANIMDESC)); }
+	void Set_InitModelDesc(NONANIMDESC ModelDesc) { memcpy(&m_InitModelDesc, &ModelDesc, sizeof(NONANIMDESC)); }
 	void Out_CreatedModel(CNonAnim* pGameObject);
 	void Clear_Layer();
 	vector<const _tchar*> Get_PrototypeTag() { return m_PrototypeTag; }
@@ -48,7 +48,7 @@ private:
 	map<const _tchar*, const _tchar*>  m_ModelTags;  //Prototype Tag & Path
 	vector<const _tchar*> m_PrototypeTag;
 	vector<class CNonAnim*> m_CreatedModel;
-	CNonAnim::NONANIMDESC  m_InitModelDesc;
+	NONANIMDESC  m_InitModelDesc;
 
 	/* For Treasure Box*/
 	vector<CTreasureBox*>			m_TreasureBox;
