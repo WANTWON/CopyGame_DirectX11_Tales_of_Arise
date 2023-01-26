@@ -156,7 +156,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 	{
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Alphen"), LEVEL_STATIC, pLayerTag, nullptr)))
 			return E_FAIL;
-
+			
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0.f, 22, 1.f));
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
@@ -201,6 +201,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	{
 		_vector vPosition = { _float(rand() % 17 + 128.f), 0.f, _float(rand() % 17 + 128.f), 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_BATTLE, pLayerTag, &vPosition)))
+
 			return E_FAIL;
 	}
 
