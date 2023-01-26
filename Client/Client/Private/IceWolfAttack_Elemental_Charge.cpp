@@ -4,8 +4,6 @@
 #include "IceWolfBattle_WalkState.h"
 #include "IceWolfBattle_IdleState.h"
 #include "IceWolfAttackNormalState.h"
-#include "IceWolfBattle_RunState.h"
-#include "IceWolfAttackBiteState.h"
 
 using namespace IceWolf;
 
@@ -28,46 +26,37 @@ CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 	m_fTarget_Distance = Find_BattleTarget();
 	
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+
 	return nullptr;
 }
 
 CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 {
 
-	m_iRand = rand() % 2;
+	m_iRand = rand() % 3;
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	
+	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 	
 	if (m_bIsAnimationFinished)
 	{
 		switch (m_eStateId_Charge)
 		{
 		case Client::CIceWolfState::STATE_CHARGE_START:
-			m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-			m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
 			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_LOOP);
 			break;
 
 		case Client::CIceWolfState::STATE_CHARGE_LOOP:
-			m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-			m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-
-			if (6.5f < m_fTarget_Distance)
+			if (3 < m_fTarget_Distance)
 				return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_LOOP);
-			else if (6.5f >= m_fTarget_Distance)
+			else if (3 >= m_fTarget_Distance)
 				return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
 			break;
 
 		case Client::CIceWolfState::STATE_CHARGE_END:
-			if (0 == m_iRand)
-				return new CBattle_RunState(m_pOwner);
-			else
-				return new CAttackBiteState(m_pOwner);
+			return new CBattle_IdleState(m_pOwner);
 			break;
 		}
-		
 	}
 
 	else
@@ -150,11 +139,7 @@ void CAttack_Elemental_Charge::Enter()
 void CAttack_Elemental_Charge::Exit()
 {
 	m_fIdleAttackTimer = 0.f;
-
-	if(STATE_CHARGE_END == m_eStateId_Charge)
-		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
-
-
+	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
 }
 
 

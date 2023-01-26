@@ -85,6 +85,11 @@ void CModel::Set_TimeReset()
 	m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 }
 
+void CModel::Reset_Events(void)
+{
+	m_Animations[m_iCurrentAnimIndex]->Reset_Events();
+}
+
 HRESULT CModel::Initialize_Prototype(PLAYERID eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
 {
 	m_eModelType = eModelType;

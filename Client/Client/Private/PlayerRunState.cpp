@@ -76,7 +76,7 @@ void CRunState::Enter()
 
 void CRunState::Exit()
 {
-
+	__super::Exit();
 }
 
 void CRunState::Move(_float fTimeDelta)

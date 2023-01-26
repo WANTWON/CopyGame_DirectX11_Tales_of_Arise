@@ -123,6 +123,8 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 		
 
+	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+
 	return OBJ_NOEVENT;
 }
 

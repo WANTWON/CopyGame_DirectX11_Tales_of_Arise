@@ -29,8 +29,8 @@ HRESULT CLevel_BattleZone::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -197,34 +197,34 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	for (_uint i = 0; i < 1; ++i)
+	/*for (_uint i = 0; i < 1; ++i)
 	{
 		_vector vPosition = { _float(rand() % 17 + 128.f), 0.f, _float(rand() % 17 + 128.f), 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_BATTLE, pLayerTag, &vPosition)))
 
 			return E_FAIL;
-	}
+	}*/
 
-	for (_uint i = 0; i < 1; ++i)
+	/*for (_uint i = 0; i < 1; ++i)
 	{
 		_vector vPosition = { _float(rand() % 15 + 128.f), 0.f, _float(rand() % 15 + 128.f), 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_BATTLE, pLayerTag, &vPosition)))
 			return E_FAIL;
-	}
+	}*/
 
 	for (_uint i = 0; i < 1; ++i)
 	{
-		_vector vPosition = { _float(rand() % 10 + 128.f), 0.f, _float(rand() % 10 + 128.f) , 1.f };
+		_vector vPosition = { 64.f, 10.f, 64.f, 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_BATTLE, pLayerTag, &vPosition)))
 			return E_FAIL;
 	}
 
-	for (_uint i = 0; i < 1; ++i)
+	/*for (_uint i = 0; i < 1; ++i)
 	{
 		_vector vPosition = { _float(rand() % 40 + 128.f), 0.f, _float(rand() % 40 + 128.f) , 1.f };
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_BATTLE, pLayerTag, &vPosition)))
 			return E_FAIL;
-	}
+	}*/
 
 
 

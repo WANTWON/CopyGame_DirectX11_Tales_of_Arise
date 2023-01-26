@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "PlayerIdleState.h"
 #include "Weapon.h"
+#include "PlayerAttack2NormalState.h"
 
 using namespace Player;
 
@@ -43,6 +44,15 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 		{
 			if (EVENT_COLLIDER == pEvent.iEventType)
 				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+			if (EVENT_STATE == pEvent.iEventType)
+			{
+				CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+				if (GetKeyState(VK_LBUTTON) < 0)
+					m_bIsStateEvent = true;
+				
+				RELEASE_INSTANCE(CGameInstance);
+			}
 		}
 		else
 		{
@@ -56,10 +66,11 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 
 CPlayerState * CAttackNormalState::LateTick(_float fTimeDelta)
 {
+	if (m_bIsStateEvent)
+		return new CAttack2NormalState(m_pOwner);
+
 	if (m_bIsAnimationFinished)
-	{
 		return new CIdleState(m_pOwner);
-	}
 
 	return nullptr;
 }
@@ -80,11 +91,10 @@ void CAttackNormalState::Enter()
 		break;
 	}
 
-	
-
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CAttackNormalState::Exit()
 {
+	__super::Exit();
 }

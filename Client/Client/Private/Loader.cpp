@@ -580,10 +580,10 @@ HRESULT CLoader::Loading_ForBattleLevel()
 	/* Loading Model */
 	lstrcpy(m_szLoadingText, TEXT("Loading Model"));
 
-	///*For.Prototype_Component_Model_IceWolf*/
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Ice_Wolf"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
-	//	return E_FAIL;
+	/*For.Prototype_Component_Model_IceWolf*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Ice_Wolf"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
+		return E_FAIL;
 
 	///*For.Prototype_Component_Model_Berserker*/
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Berserker"),
