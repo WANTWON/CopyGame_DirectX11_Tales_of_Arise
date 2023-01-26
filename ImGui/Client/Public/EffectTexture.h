@@ -11,16 +11,15 @@ BEGIN(Client)
 class CEffectTexture final : public CEffect
 {
 public:
-	typedef struct tagEffectDescription
+	typedef struct tagTextureEffectDescription
 	{
-		EFFECT_TYPE eType = TYPE_END;
+		_tchar wcPrototypeId[MAX_PATH] = TEXT("");	/* "Spark.dds > Spark" */
+	} TEXTUREEFFECTDESC;
 
-		_tchar wcFileName[MAX_PATH] = TEXT("");				// "Effect.dds" ~ "Effect.png" ~ "Effect.fbx" 
-		_tchar wcFilePath[MAX_PATH] = TEXT("");				// "../../../Bin/Resources/Textures/Effect/*" ~ "../../../Bin/Resources/Meshes/Effect/*"
+public:
+	virtual _tchar* Get_PrototypeId() { return m_tTextureEffectDesc.wcPrototypeId; }
 
-		_tchar wcTexturePrototypeId[MAX_PATH] = TEXT("");
-		_tchar wcModelPrototypeId[MAX_PATH] = TEXT("");
-	} EFFECTDESC;
+	TEXTUREEFFECTDESC Get_TextureEffectDesc() { return m_tTextureEffectDesc; }
 
 public:
 	CEffectTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -39,6 +38,8 @@ private:
 	virtual HRESULT SetUp_ShaderResources() override;
 
 private:
+	TEXTUREEFFECTDESC m_tTextureEffectDesc;
+
 	/* Texture Effect */
 	CVIBuffer_Rect*	m_pVIBufferCom = nullptr;
 	CTexture* m_pTextureCom = nullptr;

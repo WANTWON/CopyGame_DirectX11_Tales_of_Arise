@@ -13,7 +13,8 @@ class CParticleSystem : public CEffect
 public:
 	typedef struct tagParticleDesc
 	{
-		_uint m_eSpawnType = 0; /* 0 = LOOP, 1 = BURST */
+		_tchar wcPrototypeId[MAX_PATH] = TEXT("");	/* "Spark.dds > Spark" */
+		_uint m_eSpawnType = 0;
 		_bool m_bBillboard = false;
 		_int m_iMaxParticles = 1000.f;
 		_float m_fParticlesLifetime = 1.f;
@@ -53,6 +54,8 @@ private:
 	};
 
 public: /* Getters & Setters */
+	virtual _tchar* Get_PrototypeId() { return m_tParticleDesc.wcPrototypeId; }
+	PARTICLEDESC Get_ParticleDesc() { return m_tParticleDesc; }
 	void Set_ParticleDesc(PARTICLEDESC tParticleDesc) { m_tParticleDesc = tParticleDesc; }
 
 public:

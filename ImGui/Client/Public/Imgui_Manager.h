@@ -11,6 +11,8 @@
 #include "Effect_Manager.h"
 #include "Camera_Manager.h"
 #include "TreasureBox.h"
+#include "EffectTexture.h"
+#include "EffectMesh.h"
 #include "ParticleSystem.h"
 
 BEGIN(Engine)
@@ -93,8 +95,8 @@ public:
 	void Read_Meshes(_tchar* pFolderPath);
 
 	void Set_Effect();
-	void Save_Effect();
-	void Load_Effect();
+	_bool Save_Effect();
+	_bool Load_Effect();
 
 	void Set_Play(_bool bPlay) { m_bIsPlaying = bPlay; }
 
@@ -207,6 +209,8 @@ private:
 	_float									m_fCurveValue = 1.f, m_fCurveStart = 1.f, m_fCurveEnd = 1.f;
 	_uint									m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedAlphaCurve = 0;
 
+	CEffectTexture::TEXTUREEFFECTDESC		m_tTextureEffectDesc;
+	CEffectMesh::MESHEFFECTDESC				m_tMeshEffectDesc;
 	CParticleSystem::PARTICLEDESC			m_tParticleDesc;
 
 public:

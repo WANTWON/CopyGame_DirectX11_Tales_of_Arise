@@ -76,8 +76,7 @@ HRESULT CParticleSystem::Render()
 
 HRESULT CParticleSystem::Ready_Components(void * pArg)
 {
-	if (FAILED(__super::Ready_Components(pArg)))
-		return E_FAIL;
+	memcpy(&m_tParticleDesc, (PARTICLEDESC*)pArg, sizeof(PARTICLEDESC));
 
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
@@ -91,7 +90,7 @@ HRESULT CParticleSystem::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, m_tEffectDesc.wcTexturePrototypeId, (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, m_tParticleDesc.wcPrototypeId, (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Effect"), (CComponent**)&m_pShaderCom)))

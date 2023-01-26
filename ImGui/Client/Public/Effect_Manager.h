@@ -13,14 +13,14 @@ private:
 	virtual ~CEffect_Manager() = default;
 
 public:
-	list<class CEffect*> Get_InstancedEffects() { return m_InstancedEffects; }
+	vector<class CEffect*> Get_InstancedEffects() { return m_InstancedEffects; }
 
 public:
 	void Add_Effect(class CEffect * pEffect);
 	void Remove_Effect(class CEffect * pEffect);
 
 private:
-	list<class CEffect*> m_InstancedEffects;
+	vector<class CEffect*> m_InstancedEffects;
 
 public:
 	virtual void Free() override;

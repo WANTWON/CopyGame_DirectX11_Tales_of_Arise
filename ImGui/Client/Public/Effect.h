@@ -20,27 +20,30 @@ public:
 		TYPE_END 
 	};
 
+	/* Struct used to Save/Load Data. */
 	typedef struct tagEffectDescription
 	{
 		EFFECT_TYPE eType = TYPE_END;
-
-		_tchar wcFileName[MAX_PATH] = TEXT("");				// "Effect.dds" ~ "Effect.png" ~ "Effect.fbx" 
-		_tchar wcFilePath[MAX_PATH] = TEXT("");				// "../../../Bin/Resources/Textures/Effect/*" ~ "../../../Bin/Resources/Meshes/Effect/*"
-
-		_tchar wcTexturePrototypeId[MAX_PATH] = TEXT("");
-		_tchar wcModelPrototypeId[MAX_PATH] = TEXT("");
-
-		_bool bIsBillboard = true;
+		_uint iVelocityCurvesCount = 0;
+		_uint iSizeCurvesCount = 0;
+		_uint iAlphaCurvesCount = 0;
 	} EFFECTDESC;
 	
-	EFFECTDESC Get_EffectDesc() { return m_tEffectDesc; }
+public:
 	vector<_float3> Get_VelocityCurves() { return m_VelocityCurves; }
 	vector<_float3> Get_SizeCurves() { return m_SizeCurves; }
 	vector<_float3> Get_AlphaCurves() { return m_AlphaCurves; }
+	void Set_VelocityCurves(vector<_float3> VelocityCurves) { m_VelocityCurves = VelocityCurves; }
+	void Set_SizeCurves(vector<_float3> SizeCurves) { m_SizeCurves = SizeCurves; }
+	void Set_AlphaCurves(vector<_float3> AlphaCurves) { m_AlphaCurves = AlphaCurves; }
+	EFFECT_TYPE Get_EffectType() { return m_eType; }
+	virtual _tchar* Get_PrototypeId() PURE;
 	_bool Get_Play() { return m_bPlay; }
+	void Set_EffectType(EFFECT_TYPE eType) { m_eType = eType; }
 	void Set_Play(_bool bPlay) { m_bPlay = bPlay; }
 	void Set_ShaderId(_uint iShaderId) { m_eShaderID = iShaderId; }
 
+public:
 	void Add_VelocityCurve(_float3 VelocityCurve) { m_VelocityCurves.push_back(VelocityCurve); }
 	void Add_SizeCurve(_float3 SizeCurve) { m_SizeCurves.push_back(SizeCurve); }
 	void Add_AlphaCurve(_float3 AlphaCurve) { m_AlphaCurves.push_back(AlphaCurve); }
@@ -65,7 +68,7 @@ protected:
 	virtual HRESULT SetUp_ShaderResources() override; 
 
 protected:
-	EFFECTDESC m_tEffectDesc;
+	EFFECT_TYPE m_eType = TYPE_END;
 
 	_bool m_bPlay = false;
 
