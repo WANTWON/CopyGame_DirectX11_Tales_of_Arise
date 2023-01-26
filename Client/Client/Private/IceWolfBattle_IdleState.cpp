@@ -19,7 +19,7 @@ CIceWolfState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
-	m_bAnimFinish =	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	
 	
 	Find_BattleTarget();
@@ -62,7 +62,7 @@ void CBattle_IdleState::Enter()
 
 void CBattle_IdleState::Exit()
 {
-	m_fIdleAttackTimer = 0.f;
+	
 	m_iRand = false;
 }
 

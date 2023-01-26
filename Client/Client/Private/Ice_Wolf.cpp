@@ -82,11 +82,11 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Ice_Wolf"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Ice_Wolf"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
 		return E_FAIL;
 
 	/* For.Com_SPHERE */
@@ -95,7 +95,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 	/* For.Com_Navigation */

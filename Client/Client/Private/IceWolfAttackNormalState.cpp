@@ -77,7 +77,7 @@ void CAttackNormalState::Enter()
 void CAttackNormalState::Exit()
 {
 	m_fIdleAttackTimer = 0.f;
-	m_bAnimFinish = false;
+	
 }
 
 
