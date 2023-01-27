@@ -6,12 +6,23 @@ BEGIN(Engine)
 
 class CAnimation final : public CBase
 {
+public:
+	typedef struct tagAnimationEvent
+	{
+		_float fStartTime;
+		_float fEndTime;
+		EVENTTYPE eType;
+	}ANIMEVENT;
+
 private:
 	CAnimation();
 	virtual ~CAnimation() = default;
 
 public:
-	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel);
+	vector<EVENT> Get_Events(void) { return m_vecEvents; }
+
+public:
+	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel, HANDLE hAddFile, _ulong* pdwAddByte);
 	HRESULT Bin_Initialize(DATA_BINANIM* pAIAnimation, class CModel* pModel); // 추가
 	_bool Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop);
 	_bool Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* NextAnim);
@@ -19,6 +30,7 @@ public:
 public:
 	vector<class CChannel*>	Get_Channels(void) { return m_Channels; }
 	void	Set_TimeReset();
+	void Reset_Events(void);
 
 private:
 	char				m_szName[MAX_PATH] = "";
@@ -43,12 +55,22 @@ private:
 	_float m_fLinear_CurrentTime = 0.f;
 	_bool	m_bLinearFinished = false;
 
+	/* For. Original TickPerSecond */
+	_float m_fOriTickPerSecond = 0.f;
+	/* For. Animation Playing Time */
+	vector<_float> m_TickPerSeconds;
+	vector<_float> m_ChangeTickTimes;
+	_int m_iTickPerSecondIndex = 0;
+	/* For. Animation Event */
+	vector<ANIMEVENT> m_vecAnimEvent;
+	vector<EVENT> m_vecEvents;
+
 //public: // For. Data 추가
 //	void Get_AnimData(DATA_BINANIM* pAnimData);
 
 public:
 	//static CAnimation* Create(class CModel* pModel, aiAnimation* pAIAnimation);
-	static CAnimation* Create(HANDLE hFile, _ulong* pdwByte, class CModel* pModel);
+	static CAnimation* Create(HANDLE hFile, _ulong* pdwByte, class CModel* pModel, HANDLE hAddFile, _ulong* pdwAddByte);
 	static CAnimation* Bin_Create(DATA_BINANIM* pAIAnimation, class CModel* pModel); // 추가
 	virtual void Free() override;
 };

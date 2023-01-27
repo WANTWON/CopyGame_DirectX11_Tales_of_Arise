@@ -11,57 +11,17 @@ HRESULT CChannel::Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel
 	if (nullptr == hFile)
 		return E_FAIL;
 
-	ReadFile(hFile, m_szName, sizeof(char) * MAX_PATH, pdwByte, nullptr);
+	BINCHANNEL BinChannel;
+	ReadFile(hFile, &BinChannel, sizeof(BINCHANNEL), pdwByte, nullptr);
 
-	_uint iNumScalingKeys, iNumRotationKeys, iNumPositionKeys;
-
-	ReadFile(hFile, &iNumScalingKeys, sizeof(_uint), pdwByte, nullptr);
-	ReadFile(hFile, &iNumRotationKeys, sizeof(_uint), pdwByte, nullptr);
-	ReadFile(hFile, &iNumPositionKeys, sizeof(_uint), pdwByte, nullptr);
-
-	ReadFile(hFile, &m_iNumKeyframes, sizeof(_uint), pdwByte, nullptr);
-
-	_float3 vScale, vPosition;
-	_float4 vRotation;
-	ZeroMemory(&vScale, sizeof(_float3));
-	ZeroMemory(&vPosition, sizeof(_float3));
-	ZeroMemory(&vRotation, sizeof(_float3));
+	memcpy(m_szName, BinChannel.szName, sizeof(char) * MAX_PATH);
+	m_iNumKeyframes = BinChannel.iNumKeyFrames;
 
 	for (_uint i = 0; i < m_iNumKeyframes; ++i)
 	{
 		KEYFRAME KeyFrame;
-		ZeroMemory(&KeyFrame, sizeof(KEYFRAME));
-
-		if (i < iNumScalingKeys)
-		{
-			ReadFile(hFile, &vScale, sizeof(_float3), pdwByte, nullptr);
-			double fTime;
-			ReadFile(hFile, &fTime, sizeof(double), pdwByte, nullptr);
-			KeyFrame.fTime = (_float)fTime;
-		}
-
-		if (i < iNumRotationKeys)
-		{
-			ReadFile(hFile, &vRotation.x, sizeof(_float), pdwByte, nullptr);
-			ReadFile(hFile, &vRotation.y, sizeof(_float), pdwByte, nullptr);
-			ReadFile(hFile, &vRotation.z, sizeof(_float), pdwByte, nullptr);
-			ReadFile(hFile, &vRotation.w, sizeof(_float), pdwByte, nullptr);
-			double fTime;
-			ReadFile(hFile, &fTime, sizeof(double), pdwByte, nullptr);
-			KeyFrame.fTime = (_float)fTime;
-		}
-
-		if (i < iNumPositionKeys)
-		{
-			ReadFile(hFile, &vPosition, sizeof(_float3), pdwByte, nullptr);
-			double fTime;
-			ReadFile(hFile, &fTime, sizeof(double), pdwByte, nullptr);
-			KeyFrame.fTime = (_float)fTime;
-		}
-
-		KeyFrame.vScale = vScale;
-		KeyFrame.vRotation = vRotation;
-		KeyFrame.vPosition = vPosition;
+		
+		ReadFile(hFile, &KeyFrame, sizeof(KEYFRAME), pdwByte, nullptr);
 
 		m_KeyFrames.push_back(KeyFrame);
 	}
@@ -187,6 +147,11 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	m_pBoneNode->Set_TransformationMatrix(TransformationMatrix);
 
 	return false;
+}
+
+void CChannel::Set_KeyFrame(_int iIndex, KEYFRAME KeyFrame)
+{
+	m_KeyFrames[iIndex] = KeyFrame;
 }
 
 _bool CChannel::Compare_Name(const char * pName)

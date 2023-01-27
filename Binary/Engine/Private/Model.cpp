@@ -56,7 +56,6 @@ HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePat
 		return E_FAIL;
 	}
 
-	//WriteFile(hFile, &m_eModelType, sizeof(m_eModelType), &dwByte, nullptr);
 	WriteFile(hFile, &m_PivotMatrix, sizeof(_float4x4), &dwByte, nullptr);
 
 	_uint m_iNumMeshes = m_pAIScene->mNumMeshes;
@@ -71,30 +70,72 @@ HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePat
 		_uint iNumVertices = m_pAIScene->mMeshes[i]->mNumVertices;
 		WriteFile(hFile, &iNumVertices, sizeof(_uint), &dwByte, nullptr);
 
-		for (_uint j = 0; j < iNumVertices; ++j)
+		if (TYPE_NONANIM == m_eModelType)
 		{
-			WriteFile(hFile, &m_pAIScene->mMeshes[i]->mVertices[j], sizeof(_float3), &dwByte, nullptr);
-			WriteFile(hFile, &m_pAIScene->mMeshes[i]->mNormals[j], sizeof(_float3), &dwByte, nullptr);
-			WriteFile(hFile, &m_pAIScene->mMeshes[i]->mTextureCoords[0][j], sizeof(_float2), &dwByte, nullptr);
-			WriteFile(hFile, &m_pAIScene->mMeshes[i]->mTangents[j], sizeof(_float3), &dwByte, nullptr);
-		}
+			for (_uint j = 0; j < iNumVertices; ++j)
+			{
+				VTXMODEL pVertices;
 
-		if (TYPE_ANIM == m_eModelType)
+				memcpy(&pVertices.vPosition, &m_pAIScene->mMeshes[i]->mVertices[j], sizeof(_float3));
+				memcpy(&pVertices.vNormal, &m_pAIScene->mMeshes[i]->mNormals[j], sizeof(_float3));
+				memcpy(&pVertices.vTexUV, &m_pAIScene->mMeshes[i]->mTextureCoords[0][j], sizeof(_float2));
+				memcpy(&pVertices.vTangent, &m_pAIScene->mMeshes[i]->mTangents[j], sizeof(_float3));
+
+				WriteFile(hFile, &pVertices, sizeof(VTXMODEL), &dwByte, nullptr);
+			}
+		}
+		else if (TYPE_ANIM == m_eModelType)
 		{
+			VTXANIMMODEL* pVertices = new VTXANIMMODEL[iNumVertices];
+			ZeroMemory(pVertices, sizeof(VTXANIMMODEL) * iNumVertices);
+
+			for (_uint j = 0; j < iNumVertices; ++j)
+			{
+				memcpy(&pVertices[j].vPosition, &m_pAIScene->mMeshes[i]->mVertices[j], sizeof(_float3));
+				memcpy(&pVertices[j].vNormal, &m_pAIScene->mMeshes[i]->mNormals[j], sizeof(_float3));
+				memcpy(&pVertices[j].vTexUV, &m_pAIScene->mMeshes[i]->mTextureCoords[0][j], sizeof(_float2));
+				memcpy(&pVertices[j].vTangent, &m_pAIScene->mMeshes[i]->mTangents[j], sizeof(_float3));
+			} 
+
 			_uint iNumBones = m_pAIScene->mMeshes[i]->mNumBones;
-			WriteFile(hFile, &iNumBones, sizeof(_uint), &dwByte, nullptr);
 
 			for (_uint j = 0; j < iNumBones; ++j)
 			{
 				_uint iNumWeights = m_pAIScene->mMeshes[i]->mBones[j]->mNumWeights;
-				WriteFile(hFile, &iNumWeights, sizeof(_uint), &dwByte, nullptr);
 
 				for (_uint k = 0; k < iNumWeights; k++)
 				{
-					WriteFile(hFile, &m_pAIScene->mMeshes[i]->mBones[j]->mWeights[k].mVertexId, sizeof(_uint), &dwByte, nullptr);
-					WriteFile(hFile, &m_pAIScene->mMeshes[i]->mBones[j]->mWeights[k].mWeight, sizeof(_float), &dwByte, nullptr);
+					_uint iVertexIndex = m_pAIScene->mMeshes[i]->mBones[j]->mWeights[k].mVertexId;
+
+					if (0 == pVertices[iVertexIndex].vBlendWeight.x)
+					{
+						pVertices[iVertexIndex].vBlendWeight.x = m_pAIScene->mMeshes[i]->mBones[j]->mWeights[k].mWeight;
+						pVertices[iVertexIndex].vBlendIndex.x = j;
+					}
+					else if (0 == pVertices[iVertexIndex].vBlendWeight.y)
+					{
+						pVertices[iVertexIndex].vBlendWeight.y = m_pAIScene->mMeshes[i]->mBones[j]->mWeights[k].mWeight;
+						pVertices[iVertexIndex].vBlendIndex.y = j;
+					}
+					else if (0 == pVertices[iVertexIndex].vBlendWeight.z)
+					{
+						pVertices[iVertexIndex].vBlendWeight.z = m_pAIScene->mMeshes[i]->mBones[j]->mWeights[k].mWeight;
+						pVertices[iVertexIndex].vBlendIndex.z = j;
+					}
+					else if (0 == pVertices[iVertexIndex].vBlendWeight.w)
+					{
+						pVertices[iVertexIndex].vBlendWeight.w = m_pAIScene->mMeshes[i]->mBones[j]->mWeights[k].mWeight;
+						pVertices[iVertexIndex].vBlendIndex.w = j;
+					}
 				}
 			}
+
+			for (_uint j = 0; j < iNumVertices; ++j)
+				WriteFile(hFile, &pVertices[j], sizeof(VTXANIMMODEL), &dwByte, nullptr);
+			
+			WriteFile(hFile, &iNumBones, sizeof(_uint), &dwByte, nullptr);
+
+			Safe_Delete_Array(pVertices);
 		}
 
 		_uint iNumPrimitive = m_pAIScene->mMeshes[i]->mNumFaces;
@@ -102,9 +143,13 @@ HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePat
 
 		for (_uint j = 0; j < iNumPrimitive; ++j)
 		{
-			WriteFile(hFile, &m_pAIScene->mMeshes[i]->mFaces[j].mIndices[0], sizeof(_uint), &dwByte, nullptr);
-			WriteFile(hFile, &m_pAIScene->mMeshes[i]->mFaces[j].mIndices[1], sizeof(_uint), &dwByte, nullptr);
-			WriteFile(hFile, &m_pAIScene->mMeshes[i]->mFaces[j].mIndices[2], sizeof(_uint), &dwByte, nullptr);
+			FACEINDICES32 pIndices;
+
+			pIndices._0 = m_pAIScene->mMeshes[i]->mFaces[j].mIndices[0];
+			pIndices._1 = m_pAIScene->mMeshes[i]->mFaces[j].mIndices[1];
+			pIndices._2 = m_pAIScene->mMeshes[i]->mFaces[j].mIndices[2];
+
+			WriteFile(hFile, &pIndices, sizeof(FACEINDICES32), &dwByte, nullptr);
 		}
 	}
 
@@ -115,13 +160,15 @@ HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePat
 	{
 		aiMaterial* pAIMaterial = m_pAIScene->mMaterials[i];
 
+		char szTextureFilePath[AI_TEXTURE_TYPE_MAX][MAX_PATH];
+
 		for (_uint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j)
 		{
 			aiString strPath;
 
 			if (FAILED(pAIMaterial->GetTexture(aiTextureType(j), 0, &strPath)))
 			{
-				WriteFile(hFile, "", sizeof(char) * MAX_PATH, &dwByte, nullptr);
+				strcpy_s(szTextureFilePath[j], "");
 				continue;
 			}
 
@@ -141,8 +188,10 @@ HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePat
 			strcpy_s(szFullPath, szDirectory);
 			strcat_s(szFullPath, szTextureFileName);
 
-			WriteFile(hFile, szFullPath, sizeof(char) * MAX_PATH, &dwByte, nullptr);
+			strcpy_s(szTextureFilePath[j], szFullPath);
 		}
+
+		WriteFile(hFile, szTextureFilePath, sizeof(char) * MAX_PATH * AI_TEXTURE_TYPE_MAX, &dwByte, nullptr);
 	}
 
 	CloseHandle(hFile);
@@ -172,7 +221,11 @@ HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePat
 			return E_FAIL;
 		}
 
-		Save_Hierarchy(hFile, &dwByte, m_pAIScene->mRootNode);
+		vector<BINBONE> Bones;
+		Save_Hierarchy(&Bones, m_pAIScene->mRootNode);
+
+		for (_int i = 0; i < Bones.size(); ++i)
+			WriteFile(hFile, &Bones[i], sizeof(BINBONE), &dwByte, nullptr);
 
 		for (_uint i = 0; i < m_iNumMeshes; ++i)
 		{
@@ -188,16 +241,21 @@ HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePat
 
 		for (_uint i = 0; i < iNumAnimations; ++i)
 		{
-			WriteFile(hFile, m_pAIScene->mAnimations[i]->mName.data, sizeof(char) * MAX_PATH, &dwByte, nullptr);
-			WriteFile(hFile, &m_pAIScene->mAnimations[i]->mDuration, sizeof(double), &dwByte, nullptr);
-			WriteFile(hFile, &m_pAIScene->mAnimations[i]->mTicksPerSecond, sizeof(double), &dwByte, nullptr);
+			BINANIM BinAnim; 
+
+			memcpy(BinAnim.szName, m_pAIScene->mAnimations[i]->mName.data, sizeof(char) * MAX_PATH);
+			BinAnim.dbDuration = m_pAIScene->mAnimations[i]->mDuration;
+			BinAnim.dbTickPerSecond = m_pAIScene->mAnimations[i]->mTicksPerSecond;
 			
 			_uint iNumChannels = m_pAIScene->mAnimations[i]->mNumChannels;
-			WriteFile(hFile, &iNumChannels, sizeof(_uint), &dwByte, nullptr);
+			BinAnim.iNumChannels = iNumChannels;
+
+			WriteFile(hFile, &BinAnim, sizeof(BINANIM), &dwByte, nullptr);
 
 			for (_uint j = 0; j < iNumChannels; ++j)
 			{
-				WriteFile(hFile, m_pAIScene->mAnimations[i]->mChannels[j]->mNodeName.data, sizeof(char) * MAX_PATH, &dwByte, nullptr);
+				BINCHANNEL BinChannel;
+				memcpy(BinChannel.szName, m_pAIScene->mAnimations[i]->mChannels[j]->mNodeName.data, sizeof(char) * MAX_PATH);
 				
 				_uint iNumScalingKeys = m_pAIScene->mAnimations[i]->mChannels[j]->mNumScalingKeys;
 				_uint iNumRotationKeys = m_pAIScene->mAnimations[i]->mChannels[j]->mNumRotationKeys;
@@ -206,32 +264,35 @@ HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePat
 				_uint iNumKeyFrames = max(iNumScalingKeys, iNumRotationKeys);
 				iNumKeyFrames = max(iNumKeyFrames, iNumPositionKeys);
 
-				WriteFile(hFile, &iNumScalingKeys, sizeof(_uint), &dwByte, nullptr);
-				WriteFile(hFile, &iNumRotationKeys, sizeof(_uint), &dwByte, nullptr);
-				WriteFile(hFile, &iNumPositionKeys, sizeof(_uint), &dwByte, nullptr);
+				BinChannel.iNumKeyFrames = iNumKeyFrames;
 
-				WriteFile(hFile, &iNumKeyFrames, sizeof(_uint), &dwByte, nullptr);
+				WriteFile(hFile, &BinChannel, sizeof(BINCHANNEL), &dwByte, nullptr);
 
 				for (_uint k = 0; k < iNumKeyFrames; ++k)
 				{
+					KEYFRAME KeyFrame;
+					ZeroMemory(&KeyFrame, sizeof(KEYFRAME));
+
 					if (k < iNumScalingKeys)
 					{
-						WriteFile(hFile, &m_pAIScene->mAnimations[i]->mChannels[j]->mScalingKeys[k].mValue, sizeof(_float3), &dwByte, nullptr);
-						WriteFile(hFile, &m_pAIScene->mAnimations[i]->mChannels[j]->mScalingKeys[k].mTime, sizeof(double), &dwByte, nullptr);
+						memcpy(&KeyFrame.vScale, &m_pAIScene->mAnimations[i]->mChannels[j]->mScalingKeys[k].mValue, sizeof(_float3));
+						KeyFrame.fTime = m_pAIScene->mAnimations[i]->mChannels[j]->mScalingKeys[k].mTime;
 					}
 					if (k < iNumRotationKeys)
 					{
-						WriteFile(hFile, &m_pAIScene->mAnimations[i]->mChannels[j]->mRotationKeys[k].mValue.x, sizeof(_float), &dwByte, nullptr);
-						WriteFile(hFile, &m_pAIScene->mAnimations[i]->mChannels[j]->mRotationKeys[k].mValue.y, sizeof(_float), &dwByte, nullptr);
-						WriteFile(hFile, &m_pAIScene->mAnimations[i]->mChannels[j]->mRotationKeys[k].mValue.z, sizeof(_float), &dwByte, nullptr);
-						WriteFile(hFile, &m_pAIScene->mAnimations[i]->mChannels[j]->mRotationKeys[k].mValue.w, sizeof(_float), &dwByte, nullptr);
-						WriteFile(hFile, &m_pAIScene->mAnimations[i]->mChannels[j]->mRotationKeys[k].mTime, sizeof(double), &dwByte, nullptr);
+						memcpy(&KeyFrame.vRotation.x, &m_pAIScene->mAnimations[i]->mChannels[j]->mRotationKeys[k].mValue.x, sizeof(_float));
+						memcpy(&KeyFrame.vRotation.y, &m_pAIScene->mAnimations[i]->mChannels[j]->mRotationKeys[k].mValue.y, sizeof(_float));
+						memcpy(&KeyFrame.vRotation.z, &m_pAIScene->mAnimations[i]->mChannels[j]->mRotationKeys[k].mValue.z, sizeof(_float));
+						memcpy(&KeyFrame.vRotation.w, &m_pAIScene->mAnimations[i]->mChannels[j]->mRotationKeys[k].mValue.w, sizeof(_float));
+						KeyFrame.fTime = m_pAIScene->mAnimations[i]->mChannels[j]->mRotationKeys[k].mTime;
 					}
 					if (k < iNumPositionKeys)
 					{
-						WriteFile(hFile, &m_pAIScene->mAnimations[i]->mChannels[j]->mPositionKeys[k].mValue, sizeof(_float3), &dwByte, nullptr);
-						WriteFile(hFile, &m_pAIScene->mAnimations[i]->mChannels[j]->mPositionKeys[k].mTime, sizeof(double), &dwByte, nullptr);
+						memcpy(&KeyFrame.vPosition, &m_pAIScene->mAnimations[i]->mChannels[j]->mPositionKeys[k].mValue, sizeof(_float3));
+						KeyFrame.fTime = m_pAIScene->mAnimations[i]->mChannels[j]->mPositionKeys[k].mTime;
 					}
+
+					WriteFile(hFile, &KeyFrame, sizeof(KEYFRAME), &dwByte, nullptr);
 				}
 			}
 		}
@@ -247,22 +308,20 @@ HRESULT CModel::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CModel::Save_Hierarchy(HANDLE hFile, _ulong * pdwByte, const aiNode* pNode)
+void CModel::Save_Hierarchy(vector<BINBONE>* pBones, const aiNode* pNode)
 {
-	if (nullptr == hFile)
-	{
-		ERR_MSG(TEXT("Failed to Save Hierarchy"));
-		return;
-	}
-
-	WriteFile(hFile, pNode->mName.data, sizeof(char) * MAX_PATH, pdwByte, nullptr);
-	WriteFile(hFile, &pNode->mTransformation, sizeof(_float4x4), pdwByte, nullptr);
+	BINBONE BinBone;
+	
+	memcpy(&BinBone.szName, pNode->mName.data, sizeof(char) * MAX_PATH);
+	memcpy(&BinBone.Transformation, &pNode->mTransformation, sizeof(_float4x4));
 
 	_uint iNumChildren = pNode->mNumChildren;
-	WriteFile(hFile, &iNumChildren, sizeof(_uint), pdwByte, nullptr);
+	memcpy(&BinBone.iNumChildren, &iNumChildren, sizeof(_uint));
+
+	pBones->push_back(BinBone);
 
 	for (_uint i = 0; i < iNumChildren; ++i)
-		Save_Hierarchy(hFile, pdwByte, pNode->mChildren[i]);
+		Save_Hierarchy(pBones, pNode->mChildren[i]);
 }
 
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, TYPE eModelType, const char* pModelFilePath, const char* pMaterialPath, _fmatrix PivotMatrix)

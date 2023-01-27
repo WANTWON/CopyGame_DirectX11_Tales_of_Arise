@@ -27,14 +27,12 @@ HRESULT CTreasureBox::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
-	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_INTERACT, this);
 	
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
 	m_pModelCom->Set_CurrentAnimIndex(CTreasureBox::ANIM::Close2);
-	m_pModelCom->Set_NextAnimIndex(CTreasureBox::ANIM::Open2);
+	m_pModelCom->Set_CurrentAnimIndex(CTreasureBox::ANIM::Open2);
 	m_pModelCom->Play_Animation(0.3f, false);
 
 	return S_OK;
@@ -42,28 +40,56 @@ HRESULT CTreasureBox::Initialize(void* pArg)
 
 int CTreasureBox::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	__super::Tick(fTimeDelta);
 	
 
-	if (m_bCollision && 0 == m_iCollisiongCount)
-	{
-		m_bIsAnimationFinished =  m_pModelCom->Play_Animation(fTimeDelta, false);
-		if (m_bIsAnimationFinished)
-		{
-			m_iCollisiongCount = 1;
-			m_bOpen = true;
-		}
+	//if (m_bCollision && 0 == m_iCollisiongCount)
+	//{
+	//	m_bIsAnimationFinished =  m_pModelCom->Play_Animation(fTimeDelta, false);
+	//	if (m_bIsAnimationFinished)
+	//	{
+	//		m_iCollisiongCount = 1;
+	//		m_bOpen = true;
+	//	}
 
+	//}
+	
+	if (m_bCollision)
+	{
+		m_bOpen = true;
 	}
 
-	if (false == m_bCollision && false == m_bOpen)
+	if (m_bOpen /*&& false == m_bOpenFinish*/)
+	{
+		m_bIsAnimationFinished = m_pModelCom->Play_Animation(fTimeDelta, false);
+
+		if (m_bIsAnimationFinished)
+			m_bOpen = false;
+			m_bOpenFinish = true;
+	}
+
+
+
+	else if (false == m_bCollision && false == m_bOpen)
 	{
 		m_pModelCom->Play_Animation(0.f, false);
 
 	}
-	//else if(false == m_bCollision && false == m_bOpen)
+
+	//else if (/*false == m_bOpen || */true == m_bOpenFinish)
+	//{
+	//	m_bIsAnimationFinished = m_pModelCom->Play_Animation(1.f, false);
+
+	//	if (m_bIsAnimationFinished)
+	//		m_bOpenFinish = false;
+	//}
+
+
+
+
+	//if (false == m_bCollision && false == m_bOpen)
 	//{
 	//	m_pModelCom->Play_Animation(0.f, false);
 
@@ -79,7 +105,7 @@ int CTreasureBox::Tick(_float fTimeDelta)
 
 void CTreasureBox::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 	__super::Late_Tick(fTimeDelta);
 

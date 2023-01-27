@@ -252,7 +252,7 @@ void CMeshContainer_Instance::Tick(void)
 
 	for (_uint i = 0; i < m_iOriginalInstance; ++i)
 	{
-		if (true == pFrustum->isIn_WorldFrustum(XMLoadFloat4(&m_pInstance[i].vPosition), 2.f))
+		if (true == pFrustum->isIn_WorldFrustum(XMLoadFloat4(&m_pInstance[i].vPosition), 3))
 			vInstance.push_back(m_pInstance[i]);
 	}
 

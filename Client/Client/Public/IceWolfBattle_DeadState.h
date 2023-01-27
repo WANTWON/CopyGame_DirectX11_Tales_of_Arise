@@ -20,7 +20,10 @@ public:
 private:
 	_uint		m_iRand = 0;
 	_float		m_fIdleAttackTimer = 0.f;
-	
+	_bool		m_bDeadAnimFinish = false;
+
+private:
+	_matrix m_StartMatrix;
 };
 
 END

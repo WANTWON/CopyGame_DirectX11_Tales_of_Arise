@@ -76,7 +76,7 @@ CBerserkerState * CBattle_DashStartState::LateTick(_float fTimeDelta)
 		//}
 
 		//////
-		_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
+		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
 		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 
@@ -94,13 +94,13 @@ void CBattle_DashStartState::Enter()
 	switch (m_eStateId)
 	{
 	case STATE_DASH_START:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::DASH_START);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DASH_START);
 		break;
 	case STATE_DASH_LOOP:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::DASH_LOOP);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DASH_LOOP);
 		break;
 	case STATE_DASH_SCRATCHES:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::FLYING_ATTACK2);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::FLYING_ATTACK2);
 		break;
 	}
 	////

@@ -35,7 +35,7 @@ CIceWolfState * CAttackNormalState::LateTick(_float fTimeDelta)
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 	
 	if(6 < m_fTarget_Distance)
 	m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
@@ -55,7 +55,7 @@ CIceWolfState * CAttackNormalState::LateTick(_float fTimeDelta)
 
 		else
 		{
-			_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
+			_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
 			m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 
@@ -70,14 +70,14 @@ void CAttackNormalState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_NORMAL);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_NORMAL);
 }
 
 
 void CAttackNormalState::Exit()
 {
 	m_fIdleAttackTimer = 0.f;
-	m_bAnimFinish = false;
+	
 }
 
 

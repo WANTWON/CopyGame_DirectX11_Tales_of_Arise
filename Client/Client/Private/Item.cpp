@@ -39,7 +39,7 @@ HRESULT CItem::Initialize(void* pArg)
 
 int CItem::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
@@ -53,7 +53,7 @@ int CItem::Tick(_float fTimeDelta)
 
 void CItem::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 	__super::Late_Tick(fTimeDelta);
 
@@ -69,8 +69,20 @@ void CItem::Late_Tick(_float fTimeDelta)
 	if (m_bCollision)
 	{
 		m_bIsGain = true;
-		m_bDead = true;
+		
 	}
+
+	if (m_bIsGain)
+	{
+		m_DissolveAlpha += fTimeDelta;
+
+		if (1 < m_DissolveAlpha)
+		{
+			m_DissolveAlpha = 1.f;
+			m_bDead = true;
+		}
+	}
+	
 		
 }
 
@@ -132,15 +144,53 @@ HRESULT CItem::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
-
-	/* For.Com_SPHERE */
-	CCollider::COLLIDERDESC ColliderDesc;
-	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(0.40f, 0.40f, 0.40f);
-	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
 		return E_FAIL;
+	///* For.Com_SPHERE */
+
+	CCollider::COLLIDERDESC ColliderDesc;
+
+	switch (m_ItemDesc.etype)
+	{
+	case APPLE:
+		ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+		ColliderDesc.vScale = _float3(0.15f, 0.40f, 0.15f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+			return E_FAIL;
+		break;
+	case JEWEL:
+		ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+		ColliderDesc.vScale = _float3(1.1f, 1.1f, 1.1f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+			return E_FAIL;
+		break;
+	case MUSHROOM:
+		ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+		ColliderDesc.vScale = _float3(1.0f, 6.0f, 1.0f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
+		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+			return E_FAIL;
+		break;
+
+	case LETTUCE:
+		ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+		ColliderDesc.vScale = _float3(1.0f, 0.5f, 1.0f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+			return E_FAIL;
+		break;
+
+	default:
+		break;
+	}
+
 
 	/* For.Com_Model*/
 	switch (m_ItemDesc.etype)
@@ -150,9 +200,19 @@ HRESULT CItem::Ready_Components(void * pArg)
 			return E_FAIL;
 		break;
 	case JEWEL:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Ore_001"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
 		break;
 	case MUSHROOM:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Mushroom"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
 		break;
+
+	case LETTUCE:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Lettuce_002"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
+
 	default:
 		break;
 	}
@@ -164,6 +224,17 @@ HRESULT CItem::Ready_Components(void * pArg)
 _bool CItem::Is_AnimationLoop(_uint eAnimId)
 {
 	return false;
+}
+
+HRESULT CItem::SetUp_ShaderID()
+{
+	if (false == m_bIsGain)
+		m_eShaderID = SHADER_NONANIMDEFAULT;
+
+	else
+		m_eShaderID = SHADER_NONANIM_DISSOLVE;
+
+	return S_OK;
 }
 
 

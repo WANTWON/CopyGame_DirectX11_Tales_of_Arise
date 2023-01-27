@@ -6,7 +6,7 @@ BEGIN(Client)
 class CItem final : public CInteractObject
 {
 public:
-	enum ITEMTYPE { APPLE, JEWEL, MUSHROOM };
+	enum ITEMTYPE { APPLE, JEWEL, MUSHROOM, LETTUCE};
 
 	typedef struct ItemTag
 	{
@@ -32,7 +32,8 @@ public:
 protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
-	
+	virtual HRESULT SetUp_ShaderID() override;
+
 private:
 	ITEMDESC	m_ItemDesc;
 	_bool		m_bIsGain = false;

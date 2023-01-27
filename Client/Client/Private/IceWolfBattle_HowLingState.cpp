@@ -48,7 +48,7 @@ void CBattle_HowLingState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_DETECT_IDLE);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_DETECT_IDLE);
 }
 
 void CBattle_HowLingState::Exit()

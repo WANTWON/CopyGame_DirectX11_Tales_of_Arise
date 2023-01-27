@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Data_Manager.h"
+#include "Collision_Manger.h"
 
 CWeapon::CWeapon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -46,10 +47,36 @@ int CWeapon::Tick(_float fTimeDelta)
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, /*m_pTransformCom->Get_WorldMatrix() * */SocketMatrix);
 
-	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix);
+	if (m_isCollider)
+	{
+		if (nullptr == m_pOBBCom)
+		{
+			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
-	m_pOBBCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+			CCollider::COLLIDERDESC		ColliderDesc;
+
+			ColliderDesc.vScale = _float3(0.25f, 0.25f, 3.f);
+			ColliderDesc.vPosition = _float3(0.f, 0.f, -2.f);
+
+			m_pOBBCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+
+			RELEASE_INSTANCE(CCollision_Manager);
+		}
+		else
+			m_pOBBCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+	}
+	else if (nullptr != m_pOBBCom && !m_isCollider)
+	{
+		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+
+		pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pOBBCom);
+
+		m_pOBBCom = nullptr;
+
+		RELEASE_INSTANCE(CCollision_Manager);
+	}
 
 	return OBJ_NOEVENT;
 }
@@ -57,9 +84,9 @@ int CWeapon::Tick(_float fTimeDelta)
 void CWeapon::Late_Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	m_pRendererCom->Add_Debug(m_pOBBCom);
+	if (nullptr != m_pOBBCom)
+		m_pRendererCom->Add_Debug(m_pOBBCom);
 #endif
-	
 }
 
 HRESULT CWeapon::Render()
@@ -106,32 +133,36 @@ HRESULT CWeapon::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("SWO1(R00)"), (CComponent**)&m_pModelCom)))
+	/* For.Com_Model*/
+	_tchar			szModeltag[MAX_PATH] = TEXT("");
+	MultiByteToWideChar(CP_ACP, 0, m_WeaponDesc.pModeltag, (int)strlen(m_WeaponDesc.pModeltag), szModeltag, MAX_PATH);
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, szModeltag, (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
-	CCollider::COLLIDERDESC		ColliderDesc;
 
-	/* For.Com_AABB */
-	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	//CCollider::COLLIDERDESC		ColliderDesc;
 
-	ColliderDesc.vScale = _float3(0.7f, 1.4f, 0.7f);
-	ColliderDesc.vPosition = _float3(0.f, 0.7f, 0.f);
-	//if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
+	///* For.Com_AABB */
+	//ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+
+	//ColliderDesc.vScale = _float3(0.7f, 1.4f, 0.7f);
+	//ColliderDesc.vPosition = _float3(0.f, 0.7f, 0.f);
+	//if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
 	//	return E_FAIL;
 
-	/* For.Com_OBB*/
-	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
-	ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
-		return E_FAIL;
+	///* For.Com_OBB*/
+	//ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
+	//ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
+	//if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
 
-	/* For.Com_SPHERE */
-	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
-	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	//if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 	//	return E_FAIL;
 
+	///* For.Com_SPHERE */
+	//ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
+	//ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	//ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	//if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	//	return E_FAIL;
 
 	return S_OK;
 }

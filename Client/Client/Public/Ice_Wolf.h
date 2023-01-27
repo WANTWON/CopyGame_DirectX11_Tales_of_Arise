@@ -8,6 +8,21 @@ class CIce_Wolf final : public CMonster
 {
 public:
 	enum ANIM {
+		//TO14_MTN_CHR_WOL_000_BTL_ADVENT,
+		//TO14_MTN_CHR_WOL_000_BTL_ARISE_B,
+		//TO14_MTN_CHR_WOL_000_BTL_ARISE_F,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_BITE,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_BREATH_LEFT,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_CHARGE_ALL,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_ELEMENTAL_CHARGE_END,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_ELEMENTAL_CHARGE_LOOP,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_ELEMENTAL_CHARGE_START,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_HOWLING,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_JUMP_SCRATCH,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_SIDEWALK_R_END,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_SIDEWALK_R_LOOP,
+		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_SIDEWALK_R_START,
+		
 		ANIM_ADVENT, 
 		ANIM_ARISE_B, 
 		ANIM_ARISE_F,
@@ -78,7 +93,8 @@ public:
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _float Take_Damage(float fDamage, CBaseObj* DamageCauser) override;
-	
+	virtual HRESULT SetUp_ShaderID() override;
+
 private:
 	CIce_Wolf(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CIce_Wolf(const CIce_Wolf& rhs);
@@ -92,8 +108,8 @@ public:
 
 public: /*For.State*/
 	void AI_Behavior(_float fTimeDelta);
-	void TickState(_float fTimeDelta);
-	void LateTickState(_float fTimeDelta);
+	void Tick_State(_float fTimeDelta);
+	void LateTick_State(_float fTimeDelta);
 		/*For Navigation*/
 	virtual void Check_Navigation() override;
 
@@ -102,6 +118,9 @@ private:
 
 private:
 	class CIceWolfState*  m_pIce_WolfState = nullptr;
+	
+
+	
 
 public:
 	static CIce_Wolf* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

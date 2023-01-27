@@ -62,7 +62,7 @@ void CBattle_DeadState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::SLOW_DEAD);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::SLOW_DEAD);
 }
 
 void CBattle_DeadState::Exit()

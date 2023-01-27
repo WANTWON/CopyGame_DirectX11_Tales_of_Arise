@@ -62,7 +62,7 @@ CSlimeState * CAtk_TackleState::Tick(_float fTimeDelta)
 
 	else
 	{
-		_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
+		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 		m_pOwner->Check_Navigation();
 	}
@@ -120,15 +120,15 @@ void CAtk_TackleState::Enter()
 	switch (m_eStateId)
 	{
 	case STATE_TACKLE_START:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::ATTACK_TACKLE);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::ATTACK_TACKLE);
 		break;
 
 	case STATE_TACKLE_DOWN:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::DOWN_F);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::DOWN_F);
 		break;
 
 	case STATE_TACKLE_ARISE:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::ARISE_F);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::ARISE_F);
 		break;
 
 

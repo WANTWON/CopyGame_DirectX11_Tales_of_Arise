@@ -33,7 +33,7 @@ private:
 
 	_uint m_iIndex = 0;
 
-	
+	_bool m_bforMainPlayer = false;
 	
 public:
 	static CHPbar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

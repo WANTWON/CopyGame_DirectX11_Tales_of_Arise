@@ -93,8 +93,8 @@ PS_OUT PS_MAIN(PS_IN In)
 		vBrush.a = vBrush.r;
 	}
 
-	vector		vMtrlDiffuse = vDiffuse1 * vFilter.r + vDiffuse2 * vFilter.g + vDiffuse3 * vFilter.b;
-	Out.vDiffuse = (1-vFilter.r - vFilter.g - vFilter.b)*vDiffuse4 + vMtrlDiffuse + vBrush;
+	vector		vMtrlDiffuse = vDiffuse2 * vFilter.r + vDiffuse3 * vFilter.g + vDiffuse4 * vFilter.b;
+	Out.vDiffuse = (1-vFilter.r - vFilter.g - vFilter.b)*vDiffuse1 + vMtrlDiffuse + vBrush;
 
 	/*if (Out.vDiffuse.a == 0.0f)
 	discard;*/

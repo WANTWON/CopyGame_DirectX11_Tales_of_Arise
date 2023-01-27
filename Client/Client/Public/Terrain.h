@@ -18,7 +18,7 @@ BEGIN(Client)
 class CTerrain final : public CBaseObj
 {
 public:
-	enum TEXTURE { TYPE_DIFFUSE, TYPE_BRUSH, TYPE_FILTER, TYPE_END };
+	enum TEXTURE { TYPE_DIFFUSE, TYPE_NORMAL, TYPE_BRUSH, TYPE_FILTER, TYPE_END };
 private:
 	CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTerrain(const CTerrain& rhs);
@@ -36,7 +36,6 @@ public:
 
 private:
 	CTexture*				m_pTextureCom[TYPE_END] = { nullptr };
-	CTexture*				m_pNormaltexture[TYPE_END] = { nullptr };
 	CNavigation*			m_pNavigationCom = nullptr;
 	CVIBuffer_Terrain*		m_pVIBufferCom = nullptr;
 

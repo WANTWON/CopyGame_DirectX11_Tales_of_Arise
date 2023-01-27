@@ -49,7 +49,7 @@ void CBattle_HowLingState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::HOWING);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::HOWING);
 }
 
 void CBattle_HowLingState::Exit()

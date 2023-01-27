@@ -821,8 +821,8 @@ public:
      *  @param pKey Key/Usage of the property (AI_MATKEY_XXX)
      *  @param type Set by the AI_MATKEY_XXX macro
      *  @param index Set by the AI_MATKEY_XXX macro  */
-    template<class TYPE>
-    aiReturn AddProperty (const TYPE* pInput,
+    template<class PLAYERID>
+    aiReturn AddProperty (const PLAYERID* pInput,
         unsigned int pNumValues,
         const char* pKey,
         unsigned int type  = 0,

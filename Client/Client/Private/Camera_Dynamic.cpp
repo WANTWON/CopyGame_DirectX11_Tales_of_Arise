@@ -2,6 +2,7 @@
 #include "..\Public\Camera_Dynamic.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "PlayerManager.h"
 
 CCamera_Dynamic::CCamera_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
@@ -132,8 +133,8 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	
-	if (m_pTarget == nullptr)
-		m_pTarget = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+	//if (m_pTarget == nullptr)
+		m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	
 	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vDir = (vCameraPosition - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -171,13 +172,13 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 		m_bLerp = true;
 		if (XMouseMove < 0)
 		{
-			m_fAngle += 5.f;
+			m_fAngle += 4.f;
 			if (m_fAngle >= 360.f)
 				m_fAngle = 0.f;
 		}
 		else if (XMouseMove > 0)
 		{
-			m_fAngle -= 5.f;
+			m_fAngle -= 4.f;
 			if (m_fAngle <= 0.f)
 				m_fAngle = 360.f;
 		}
@@ -199,12 +200,12 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 		m_bLerp = true;
 		if (YMouseMove > 0)
 		{
-			m_fCameraY += 1.f;	
+			m_fCameraY += 0.3f;	
 			m_fOffsetPosY -= 0.1f;
 		}
 		else if (YMouseMove < 0)
 		{
-			m_fCameraY -= 1.f;
+			m_fCameraY -= 0.3f;
 			m_fOffsetPosY += 0.1f;
 		}
 

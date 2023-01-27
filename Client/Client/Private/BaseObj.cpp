@@ -7,17 +7,17 @@
 CBaseObj::CBaseObj(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
 {
+	ZeroMemory(&m_tInfo, sizeof(OBJINFO));
 }
 
 CBaseObj::CBaseObj(const CBaseObj & rhs)
 	: CGameObject(rhs)
+	, m_tInfo(rhs.m_tInfo)
 {
 }
 
 HRESULT CBaseObj::Initialize_Prototype()
 {
-
-
 	return S_OK;
 }
 

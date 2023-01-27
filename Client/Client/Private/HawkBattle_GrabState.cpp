@@ -45,7 +45,7 @@ CHawkState * CBattle_GrabState::Tick(_float fTimeDelta)
 
 	else
 	{
-		_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
+		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix);
 		m_pOwner->Check_Navigation();
 	}
@@ -113,7 +113,7 @@ CHawkState * CBattle_GrabState::LateTick(_float fTimeDelta)
 
 	else
 	{
-		_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
+		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 		m_pOwner->Check_Navigation();
 	}
@@ -163,19 +163,19 @@ void CBattle_GrabState::Enter()
 	//switch (m_eStateId)
 	//{
 	//case STATE_GRAB_START:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_START1);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_START1);
 	//	break;
 	////case STATE_GRAB_LOOP:
-	////	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP1);
+	////	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP1);
 	////	break;
 	//case STATE_GRAB_END:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_END);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_END);
 	//	break;
 	//}
 
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_START2);
+//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_START2);
 
 	////
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
@@ -189,7 +189,7 @@ void CBattle_GrabState::Exit()
 	m_fIdleMoveTimer = 0.f;
 	m_fIdleAttackTimer = 0.f;
 	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
-	_matrix RootMatrix = XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone"));
+	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 	m_pOwner->Check_Navigation();
 }

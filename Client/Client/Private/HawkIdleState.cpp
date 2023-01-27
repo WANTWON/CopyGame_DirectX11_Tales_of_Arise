@@ -13,17 +13,13 @@ CIdleState::CIdleState(CHawk* pIceWolf)
 
 CHawkState * CIdleState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_Target();
-	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	//m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-	//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+	
 	return nullptr;
 }
 
 CHawkState * CIdleState::Tick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation(); // ÀÚÀ¯
-	Find_Target();
 
 
 	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
@@ -82,7 +78,7 @@ void CIdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_BRAVE);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_BRAVE);
 }
 
 void CIdleState::Exit()

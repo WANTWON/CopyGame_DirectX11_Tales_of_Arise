@@ -62,7 +62,7 @@ void CBattle_Damage_LargeB_State::Enter()
 {
 	m_eStateId = STATE_ID::STATE_DEAD;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::DAMAGE_LARGE_B);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DAMAGE_LARGE_B);
 }
 
 void CBattle_Damage_LargeB_State::Exit()

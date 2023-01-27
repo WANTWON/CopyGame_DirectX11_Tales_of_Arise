@@ -21,7 +21,7 @@ public:
 		STATE_END
 	};
 
-	
+
 
 	virtual ~CHawkState() {};
 	virtual CHawkState* AI_Behaviour(_float fTimeDelta) { return nullptr; };
@@ -89,26 +89,21 @@ protected:
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameObject);
-	/*	if (!pPlayer)
-			return;*/
 
-		
+		m_pTarget = pPlayer;
+		_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+		return fDistance;
+
+
+		m_pOwner->Get_Transform()->Change_Speed(m_pOwner->Get_Stats().m_fRunSpeed);
+		if (fDistance < m_pOwner->Get_Attack_BiteRadius())
 		{
-			m_pTarget = pPlayer;
-			_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-			_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
-			_float fDistance = XMVectorGetY(XMVector3Length(vPlayerPosition - vPosition));
-			return fDistance;
-
-			
 			m_pOwner->Get_Transform()->Change_Speed(m_pOwner->Get_Stats().m_fRunSpeed);
-			if (fDistance < m_pOwner->Get_Attack_BiteRadius())
-			{
 
-				m_pOwner->Get_Transform()->Change_Speed(m_pOwner->Get_Stats().m_fRunSpeed);
-				
-			}
 		}
 	}
 
@@ -125,19 +120,19 @@ protected:
 		return vPlayerPosition;
 	}
 
-	
+
 
 
 
 protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
 	STATE_ID m_eStateId = STATE_END;
-	
+
 	_bool m_bIsAnimationFinished = false;
 	_bool m_bHasSpottedTarget = false;
 	_bool m_bBattleMode = false;
 	_bool m_bBitePossible = false;
-	
+
 	CHawk* m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
 };

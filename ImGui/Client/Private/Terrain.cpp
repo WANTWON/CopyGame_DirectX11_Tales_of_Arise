@@ -88,12 +88,11 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 	_vector vInitPosition = XMVectorSet(TerrainDesc.TerrainDesc.m_iPositionX, TerrainDesc.TerrainDesc.m_fHeight, TerrainDesc.TerrainDesc.m_iPositionZ, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vInitPosition);
 
-	CPickingMgr::Get_Instance()->Add_PickingGroup(this);
-
-	m_eObjectID = OBJ_BACKGROUND;
-
 	if (FAILED(Create_FirstFilterTexture()))
 		return E_FAIL;
+
+	CPickingMgr::Get_Instance()->Add_PickingGroup(this);
+	m_eObjectID = OBJ_BACKGROUND;
 
 	return S_OK;
 }
@@ -119,7 +118,7 @@ void CTerrain::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 
-	if (nullptr != m_pRendererCom)
+	if (nullptr != m_pRendererCom && nullptr != m_pRendererCom && CImgui_Manager::Get_Instance()->Get_ShowOnlyNavi() == false)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
 }
@@ -181,7 +180,7 @@ void CTerrain::PickingTrue()
 		Set_Terrain_Shape();
 		break;
 	case Client::CImgui_Manager::PICKING_TERRAIN_BRUSH:
-		Create_FilterTexture();
+		Create_FilterTexture(CImgui_Manager::Get_Instance()->Get_BmpPath());
 		break;
 	default:
 		break;
@@ -389,10 +388,10 @@ void CTerrain::Save_Terrain(HANDLE hFile, _ulong* dwByte)
 	m_pVIBufferCom->Save_VertexPosition(hFile, dwByte);
 }
 
-HRESULT CTerrain::Create_FilterTexture()
+HRESULT CTerrain::Create_FilterTexture(_tchar* bmpPath)
 {
 
-	if (CGameInstance::Get_Instance()->Mouse_Pressing(DIMK_LBUTTON))
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_9))
 	{
 		ID3D11Texture2D*					pTexture2D = nullptr;
 		D3D11_TEXTURE2D_DESC		TextureDesc;
@@ -414,12 +413,14 @@ HRESULT CTerrain::Create_FilterTexture()
 
 		_float3 vMousePos = m_vMousePickPos;
 		_float fRange = CTerrain_Manager::Get_Instance()->Get_TerrainShapeDesc().fRadius;
+		_float fStrength = CTerrain_Manager::Get_Instance()->Get_TerrainShapeDesc().fSharp;
 
-		_int iNumTerrainX = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumX;
-		_int iNumTerrainZ = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumZ;
+	//	_int iNumTerrainX = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumX;
+	//	_int iNumTerrainZ = m_pVIBufferCom->Get_TerrainDesc().m_iVerticeNumZ;
 
-		_float3 ConevertPos = _float3(m_vMousePickPos.x * 256 / iNumTerrainX, 0.f, m_vMousePickPos.z * 256 / iNumTerrainZ);
-		_uint iConvertRange = (fRange * 256)/ iNumTerrainX;
+		_float3 ConevertPos = m_vMousePickPos;
+		ConevertPos.y = 0.f; //_float3(m_vMousePickPos.x * 256 / iNumTerrainX, 0.f, m_vMousePickPos.z * 256 / iNumTerrainZ);
+		_uint iConvertRange = fRange;// (fRange * 256) / iNumTerrainX;
 
 		_int StartX = max( ConevertPos.x - iConvertRange, 0);
 		
@@ -434,7 +435,7 @@ HRESULT CTerrain::Create_FilterTexture()
 			{
 				_uint		iIndex = i * TextureDesc.Width + j;
 
-				_float3 vPixelPos = _float3(j, 0.f, i);
+				_float3 vPixelPos = _float3(j, 0.f, 256-i);
 				_vector fDis = XMLoadFloat3(&ConevertPos) - XMLoadFloat3(&vPixelPos);
 				_float fLen = XMVectorGetX(XMVector3Length(fDis));
 				_float fAlpha =  (fLen / _float(iConvertRange));
@@ -444,7 +445,7 @@ HRESULT CTerrain::Create_FilterTexture()
 
 				if (fAlpha > 1.f)
 					fAlpha = 1.f;
-				_uint iPixelValue = (1 - fAlpha) * 10;
+				_uint iPixelValue = (1 - fAlpha) * fStrength;
 
 				_float3 vCurrentPixelColor = pPixelColor[iIndex];
 				if (vCurrentPixelColor.x != 0.f)
@@ -505,7 +506,10 @@ HRESULT CTerrain::Create_FilterTexture()
 
 		memcpy(SubResource.pData, pPixel, sizeof(_uint) * TextureDesc.Width * TextureDesc.Height);
 
-		HANDLE hFile = CreateFile(TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.bmp"), GENERIC_WRITE, 0, NULL, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		//SetFileAttributes(TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.bmp"), FILE_ATTRIBUTE_NORMAL);
+		HANDLE hFile = CreateFile(bmpPath, GENERIC_WRITE, 0, NULL, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (hFile == INVALID_HANDLE_VALUE)
+			int a = 0;//goto FAIL;
 
 		BITMAPFILEHEADER bmfh;
 		bmfh.bfType = 0x4d42; // "BM"
@@ -536,9 +540,7 @@ HRESULT CTerrain::Create_FilterTexture()
 
 		m_pContext->Unmap(pTexture2D, 0);
 
-		//if (FAILED(DirectX::SaveDDSTextureToFile(m_pContext, pTexture2D, TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.dds"))))
-		//	goto FAIL;
-
+	
 
 		if (m_pFilterTexture != nullptr)
 		{
@@ -613,8 +615,11 @@ HRESULT CTerrain::Create_FirstFilterTexture()
 		memcpy(SubResource.pData, pPixel, sizeof(_uint) * TextureDesc.Width * TextureDesc.Height);
 
 
+	//	SetFileAttributes(TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.bmp"), FILE_ATTRIBUTE_NORMAL);
+		HANDLE hFile = CreateFile(TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.bmp"), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-		HANDLE hFile = CreateFile(TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.bmp"), GENERIC_WRITE, 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+		//if (hFile == INVALID_HANDLE_VALUE)
+		//	goto FAIL;
 
 		BITMAPFILEHEADER bmfh;
 		bmfh.bfType = 0x4d42; // "BM"
@@ -661,7 +666,7 @@ HRESULT CTerrain::Create_FirstFilterTexture()
 
 	FAIL:
 		Safe_Release(pTexture2D);
-		return E_FAIL;
+		return S_OK;
 	}
 
 

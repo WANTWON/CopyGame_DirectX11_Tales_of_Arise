@@ -5,6 +5,8 @@
 #include "IceWolfBattle_IdleState.h"
 #include "IceWolfBattle_Damage_LargeB_State.h"
 #include "IceWolfBattle_DeadState.h"
+#include "IceWolfAttackNormalState.h"
+#include "IceWolfBattle_SomerSaultState.h"
 
 using namespace IceWolf;
 
@@ -33,6 +35,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 	/* Set State */
 	CIceWolfState* pState = new CBattle_IdleState(this);
+	
 	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 
 	///* Set Binary */
@@ -45,7 +48,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
-	m_tInfo.iMaxHp = 3;
+	m_tInfo.iMaxHp = 1;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_tInfo.iDamage = 10;
 
@@ -68,7 +71,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
-	TransformDesc.fSpeedPerSec = 1.f;
+	TransformDesc.fSpeedPerSec = 3.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -79,16 +82,20 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_BATTLE, TEXT("Ice_Wolf"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Ice_Wolf"), (CComponent**)&m_pModelCom)))
+		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
 		return E_FAIL;
 
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
+	ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 1.f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 	/* For.Com_Navigation */
@@ -97,33 +104,42 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 
+
+
 	return S_OK;
 }
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
 	AI_Behaviour(fTimeDelta);
-	TickState(fTimeDelta);
+
+	Tick_State(fTimeDelta);
+	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+		
+
+	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return OBJ_NOEVENT;
 }
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-	LateTickState(fTimeDelta);
+
+	LateTick_State(fTimeDelta);
+
 }
 
 void CIce_Wolf::AI_Behavior(_float fTimeDelta)
@@ -134,7 +150,7 @@ void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 }
 
 
-void CIce_Wolf::TickState(_float fTimeDelta)
+void CIce_Wolf::Tick_State(_float fTimeDelta)
 {
 	CIceWolfState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
 	if (pNewState)
@@ -142,7 +158,7 @@ void CIce_Wolf::TickState(_float fTimeDelta)
 	
 }
 
-void CIce_Wolf::LateTickState(_float fTimeDelta)
+void CIce_Wolf::LateTick_State(_float fTimeDelta)
 {
 	CIceWolfState* pNewState = m_pIce_WolfState->LateTick(fTimeDelta);
 	if (pNewState)
@@ -155,8 +171,11 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	switch ((ANIM)eAnimId)
 	{
 	case ANIM_MOVE_IDLE:
-	/*case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:*/
+	case ANIM_MOVE_RUN:
 	case ANIM_MOVE_WALK_F:
+		
+	
+	
 		return true;
 
 	case ANIM_TURN_L:
@@ -164,11 +183,15 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	case ANIM_TURN_R:
 	case ANIM_ATTACK_NORMAL:
 	case ANIM_ATTACK_ELEMENTAL_CHARGE_START:
-	case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:
+	
 	case ANIM_ATTACK_ELEMENTAL_CHARGE_END:
 	case ANIM_SYMBOL_DETECT_IDLE:
 	case ANIM_DAMAGE_AIR_LARGE_B:
 	case ANIM_DEAD:
+	case ANIM_ATTACK_STEP_BACK:
+	case ANIM_ATTACK_SOMERSAULT_END:
+	case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:
+	case ANIM_ATTACK_BITE:
 		return false;
 	}
 
@@ -180,28 +203,36 @@ _float CIce_Wolf::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	if (fDamage > 0.f)
+	_float iHp = __super::Take_Damage(fDamage, DamageCauser);
+
+	if (iHp <= 0)
 	{
-			if (m_tStats.m_fCurrentHp - fDamage <= 0.f)
-			{
-				m_tStats.m_fCurrentHp = 0.f;
-
-				m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CBattle_DeadState(this/*DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION)*/);
-				m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
-			}
-			else
-			{
-				
-				m_tStats.m_fCurrentHp -= fDamage;
-
-				m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
-				m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
-			}
+		m_pModelCom->Set_TimeReset();
+		CIceWolfState* pState = new CBattle_DeadState(this/*DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION)*/);
+		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+		
+		
+		return 0.f;
+	}
+	else
+	{
+		m_pModelCom->Set_TimeReset();
+		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
+		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 	}
 
-	return fDamage;
+	return iHp;
+}
+
+HRESULT CIce_Wolf::SetUp_ShaderID()
+{
+	if (false == m_bDissolve)
+		m_eShaderID = SHADER_ANIMDEFAULT;
+
+	else
+		m_eShaderID = SHADER_ANIM_DISSLOVE;
+
+	return S_OK;
 }
 
 void CIce_Wolf::Check_Navigation()

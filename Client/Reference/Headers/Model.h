@@ -27,16 +27,19 @@ public:
 
 	_uint Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; }
 
-	_float4x4 Get_MoveTransformationMatrix(const char* pBoneName);
+	vector<EVENT> Get_Events(void);
+
+	_matrix Get_MoveTransformationMatrix(const char* pBoneName);
 
 public:
 	void Set_CurrentAnimIndex(_uint iAnimIndex);
-	/*For. NextTotalBody_Anim*/
-	void Set_NextAnimIndex(_uint iAnimIndex) {
-		if (m_iNextAnimIndex != iAnimIndex) { m_bInterupted = true; }
-		m_iNextAnimIndex = iAnimIndex;
-	}
+	///*For. NextTotalBody_Anim*/
+	//void Set_CurrentAnimIndex(_uint iAnimIndex) {
+	//	if (m_iNextAnimIndex != iAnimIndex) { m_bInterupted = true; }
+	//	m_iNextAnimIndex = iAnimIndex;
+	//}
 	void Set_TimeReset();
+	void Reset_Events(void);
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eModelType, const char* pModelFilePath, _fmatrix PivotMatrix);
@@ -84,8 +87,9 @@ private:
 	vector<class CAnimation*>			m_Animations;
 	_uint								m_iCurrentAnimIndex = 0;
 
-	/*For. NextIndex*/
-	_uint								m_iNextAnimIndex = 0;
+	/*For. PreIndex*/
+	_uint								m_iPreAnimIndex = 0;
+	
 	/*For. Lineared*/
 	_bool								m_bLinearFinished = false;
 	_bool								m_bInterupted = false;
@@ -117,7 +121,7 @@ private:
 	HRESULT Create_MeshContainer(HANDLE hFile, _ulong* pdwByte);
 	HRESULT Create_Materials(HANDLE hFile, _ulong* pdwByte);
 	HRESULT Create_HierarchyNodes(HANDLE hFile, _ulong* pdwByte, CHierarchyNode* pParent = nullptr);
-	HRESULT Create_Animations(HANDLE hFile, _ulong* pdwByte);
+	HRESULT Create_Animations(HANDLE hFile, _ulong* pdwByte, const _tchar* pAddDataFilePath);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eModelType, const char* pModelFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());

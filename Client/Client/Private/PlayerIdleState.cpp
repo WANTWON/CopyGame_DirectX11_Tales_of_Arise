@@ -61,8 +61,7 @@ CPlayerState * CIdleState::HandleInput()
 
 CPlayerState * CIdleState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
-
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 	m_pOwner->Check_Navigation();
 
 	return nullptr;
@@ -77,9 +76,21 @@ void CIdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CPlayer::ANIM::ANIM_IDLE);
+	switch (m_pOwner->Get_PlayerID())
+	{
+	case CPlayer::ALPHEN:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE);
+		break;
+	case CPlayer::SION:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_IDLE);
+		break;
+	default:
+		break;
+	}
+
 }
 
 void CIdleState::Exit()
 {
+	__super::Exit();
 }
