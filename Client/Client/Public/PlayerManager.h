@@ -30,6 +30,7 @@ public: /* Getter Setter */
 	PLAYER_MODE	 Check_ActiveMode(CPlayer* pPlayer);
 	void	 Set_BattleMode(_bool bType) { m_bBattleMode = bType; }
 
+	CPlayer* Get_EnumPlayer(_uint eID);
 
 private:
 	CPlayer* m_pActivePlayer = nullptr;

@@ -47,6 +47,12 @@ private:
 	_float m_fnumberY = 0.f;
 	_float m_fNext = 0.f;
 
+	_bool m_bRenderoff = false;
+
+	_bool m_bforMainPlayer = false;
+
+	_uint m_iCharactername = 0;
+
 };
 
 END
