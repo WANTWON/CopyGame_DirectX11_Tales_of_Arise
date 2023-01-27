@@ -489,8 +489,13 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Sion */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Sion"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/Sion.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SionBody"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/SionBody.dat"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Model_Sion */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SionHead"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Anim/Sion/SionHead.dat"))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Model_Water_Plane*/

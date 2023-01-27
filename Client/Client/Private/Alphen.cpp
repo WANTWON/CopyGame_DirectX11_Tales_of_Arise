@@ -60,6 +60,7 @@ HRESULT CAlphen::Ready_Parts()
 	WeaponDesc.pSocket = pSocket;
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
+	strcpy(WeaponDesc.pModeltag, "SWO1(R00)");
 	Safe_AddRef(pSocket);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
