@@ -476,6 +476,10 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Spark_02"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Spark_02.png"), 1))))
 		return E_FAIL;
+	/*For.Prototype_Component_Texture_Dissolve*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Dissolve_Texture.png"), 1))))
+		return E_FAIL;
 #pragma endregion Texture Loading
 
 #pragma region Model Loading
@@ -497,6 +501,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	/* For.Prototype_Component_Model_Alphen_Weapon01 */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1(R00)"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/SWO1(R00)/SWO1(R00).dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_IceWolf*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ice_Wolf"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
 		return E_FAIL;
 
 #pragma endregion Model Loading
@@ -581,10 +590,10 @@ HRESULT CLoader::Loading_ForBattleLevel()
 	/* Loading Model */
 	lstrcpy(m_szLoadingText, TEXT("Loading Model"));
 
-	///*For.Prototype_Component_Model_IceWolf*/
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Ice_Wolf"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
-	//	return E_FAIL;
+	/*For.Prototype_Component_Model_IceWolf*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Ice_Wolf"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
+		return E_FAIL;
 
 	///*For.Prototype_Component_Model_Berserker*/
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Berserker"),
@@ -880,6 +889,21 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 	/*For.Prototype_Component_Model_Mushroom*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Mushroom"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Mushroom/Mushroom.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Lettuce*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Lettuce_002"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Lettuce/Lettuce_002.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Ore*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Ore_001"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/ORE_001/ORE_001.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Pot*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Pot"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Pot/Pot.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("CliffRock"),

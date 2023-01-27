@@ -175,7 +175,7 @@ void CBattle_GrabState::Enter()
 
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_START2);
+//	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_START2);
 
 	////
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();

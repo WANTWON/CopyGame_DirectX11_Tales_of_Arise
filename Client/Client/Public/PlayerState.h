@@ -1,7 +1,12 @@
 #pragma once
 
+#include "GameInstance.h"
 #include "Alphen.h"
 #include "Sion.h"
+
+BEGIN(Engine)
+class CModel;
+END
 
 BEGIN(Client)
 class CPlayerState
@@ -24,7 +29,7 @@ public:
 	virtual CPlayerState* LateTick(_float fTimeDelta) PURE;
 
 	virtual void Enter() PURE;
-	virtual void Exit() PURE;
+	virtual void Exit() { m_pOwner->Get_Model()->Reset_Events(); }
 
 	CPlayerState* ChangeState(CPlayerState* pCurrentState, CPlayerState* pNewState)
 	{
@@ -46,5 +51,6 @@ protected:
 	CPlayer* m_pOwner = nullptr;
 
 	_bool m_bIsAnimationFinished = false;
+	_bool m_bIsStateEvent = false;
 };
 END

@@ -30,7 +30,7 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 		m_Channels.push_back(pChannel);
 	}
 
-	if (0 != hAddFile)
+	if (INVALID_HANDLE_VALUE != hAddFile)
 	{
 		ReadFile(hAddFile, &m_fDuration, sizeof(_float), pdwAddByte, nullptr);
 
@@ -209,6 +209,12 @@ void CAnimation::Set_TimeReset()
 		pChannel->Reset();
 	}
 	m_fCurrentTime = 0.f;
+}
+
+void CAnimation::Reset_Events(void)
+{
+	for (auto& Event : m_vecEvents)
+		Event.isPlay = false;
 }
 
 //void CAnimation::Get_AnimData(DATA_BINANIM * pAnimData)

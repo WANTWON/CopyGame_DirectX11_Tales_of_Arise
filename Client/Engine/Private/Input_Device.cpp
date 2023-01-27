@@ -41,7 +41,10 @@ _bool CInput_Device::Mouse_Down(DIMK eMouseKeyID)
 	if (m_PreMouseState.rgbButtons[eMouseKeyID] != m_MouseState.rgbButtons[eMouseKeyID])
 	{
 		if (m_MouseState.rgbButtons[eMouseKeyID] & 0x80)
+		{
 			return true;
+		}
+			
 	}
 	return false;
 }
@@ -51,7 +54,10 @@ _bool CInput_Device::Mouse_Up(DIMK eMouseKeyID)
 	if (m_PreMouseState.rgbButtons[eMouseKeyID] != m_MouseState.rgbButtons[eMouseKeyID])
 	{
 		if (m_PreMouseState.rgbButtons[eMouseKeyID] & 0x80)
+		{
 			return true;
+		}
+			
 	}
 	return false;
 }

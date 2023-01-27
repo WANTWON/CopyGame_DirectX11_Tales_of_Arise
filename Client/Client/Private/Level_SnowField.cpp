@@ -32,20 +32,20 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		//return E_FAIL;
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
+	//	return E_FAIL;
 
-	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
+	//	return E_FAIL;
 
-	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
+	//	return E_FAIL;
 
 	if (!g_bUIMade)
 	{
@@ -177,34 +177,6 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
-
-	for (_uint i = 0; i < 1; ++i)
-	{
-		/*_vector vPosition = { _float(rand() % 17 + 128.f), 0.f, _float(rand() % 17 + 128.f), 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-			return E_FAIL;*/
-	}
-
-	for (_uint i = 0; i < 1; ++i)
-	{
-		_vector vPosition = { _float(rand() % 15 + 128.f), 0.f, _float(rand() % 15 + 128.f), 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-			return E_FAIL;
-	}
-
-	for (_uint i = 0; i < 1; ++i)
-	{
-		_vector vPosition = { _float(rand() % 10 + 128.f), 0.f, _float(rand() % 10 + 128.f) , 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-			return E_FAIL;
-	}
-
-	for (_uint i = 0; i < 1; ++i)
-	{
-		/*_vector vPosition = { _float(rand() % 40 + 128.f), 0.f, _float(rand() % 40 + 128.f) , 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-			return E_FAIL;*/
-	}
 
 
 
@@ -397,24 +369,64 @@ HRESULT CLevel_SnowField::Ready_Layer_Interact_Object(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	for (_uint i = 0; i < 1; ++i)
-	{
-		/*_vector vPosition = { 64, 0.f, 64, 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_TreasureBox"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-			return E_FAIL;*/
-	}
-
-	for (_uint i = 0; i < 1; ++i)
-	{
-		CItem::ITEMDESC ItemDesc;
-		ItemDesc.etype = CItem::APPLE;
-		ItemDesc.fScale = _float3(3.5f, 3.5f, 3.5f);
-		ItemDesc.vPosition = { 70.f, 5.f, 70.f, 1.f };
-	
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-			return E_FAIL;
-	}
-
+//	for (_uint i = 0; i < 1; ++i)
+//	{
+//<<<<<<< HEAD
+//		_vector vPosition = { 61, 0.2f, 61, 1.f };
+//=======
+//		/*_vector vPosition = { 64, 0.f, 64, 1.f };
+//>>>>>>> Main_Clone
+//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_TreasureBox"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
+//			return E_FAIL;*/
+//	}
+//
+//	for (_uint i = 0; i < 1; ++i)
+//	{
+//		CItem::ITEMDESC ItemDesc;
+//		ItemDesc.etype = CItem::APPLE;
+//		ItemDesc.fScale = _float3(3.5f, 3.5f, 3.5f);
+//		ItemDesc.vPosition = { 70.f, 0.2f, 70.f, 1.f };
+//	
+//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+//			return E_FAIL;
+//	}
+//
+//	for (_uint i = 0; i < 1; ++i)
+//	{
+//		CItem::ITEMDESC ItemDesc;
+//		ItemDesc.etype = CItem::JEWEL;
+//		ItemDesc.fScale = _float3(3.5f, 3.5f, 3.5f);
+//		ItemDesc.vPosition = { 67.f, 1.f, 67.f, 1.f };
+//
+//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+//			return E_FAIL;
+//
+//	}
+//
+//	for (_uint i = 0; i < 1; ++i)
+//	{
+//		CItem::ITEMDESC ItemDesc;
+//		ItemDesc.etype = CItem::MUSHROOM;
+//		ItemDesc.fScale = _float3(0.2f, 0.2f, 0.2f);
+//		ItemDesc.vPosition = { 64.f, 0.2f, 67.f, 1.f };
+//
+//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+//			return E_FAIL;
+//	}
+//
+//	for (_uint i = 0; i < 1; ++i)
+//	{
+//		CItem::ITEMDESC ItemDesc;
+//		ItemDesc.etype = CItem::LETTUCE;
+//		ItemDesc.fScale = _float3(1.0f, 1.0f, 1.0f);
+//		ItemDesc.vPosition = { 62.f, 0.2f, 62.f, 1.f };
+//
+//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+//			return E_FAIL;
+//	}
+//
+//
+//	
 
 	Safe_Release(pGameInstance);
 

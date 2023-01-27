@@ -19,8 +19,8 @@ public:
 
 private:
 	_uint		m_iRand = 0;
-	_float		m_fIdleAttackTimer = 0.f;
-	_bool		m_bAnimFinish = false;
+	_float		m_fRedayAttackTimer = 0.f;
+	
 };
 
 END
