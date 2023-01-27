@@ -32,7 +32,7 @@ HRESULT CTreasureBox::Initialize(void* pArg)
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
 	m_pModelCom->Set_CurrentAnimIndex(CTreasureBox::ANIM::Close2);
-	m_pModelCom->Set_NextAnimIndex(CTreasureBox::ANIM::Open2);
+	m_pModelCom->Set_CurrentAnimIndex(CTreasureBox::ANIM::Open2);
 	m_pModelCom->Play_Animation(0.3f, false);
 
 	return S_OK;

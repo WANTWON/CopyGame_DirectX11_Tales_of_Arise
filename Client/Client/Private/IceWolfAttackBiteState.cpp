@@ -87,7 +87,7 @@ void CAttackBiteState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_BITE);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_BITE);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

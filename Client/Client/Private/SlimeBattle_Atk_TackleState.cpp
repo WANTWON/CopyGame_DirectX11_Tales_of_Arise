@@ -120,15 +120,15 @@ void CAtk_TackleState::Enter()
 	switch (m_eStateId)
 	{
 	case STATE_TACKLE_START:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::ATTACK_TACKLE);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::ATTACK_TACKLE);
 		break;
 
 	case STATE_TACKLE_DOWN:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::DOWN_F);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::DOWN_F);
 		break;
 
 	case STATE_TACKLE_ARISE:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::ARISE_F);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::ARISE_F);
 		break;
 
 

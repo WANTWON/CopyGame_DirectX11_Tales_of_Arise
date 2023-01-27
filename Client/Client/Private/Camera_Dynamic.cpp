@@ -172,13 +172,13 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 		m_bLerp = true;
 		if (XMouseMove < 0)
 		{
-			m_fAngle += 5.f;
+			m_fAngle += 4.f;
 			if (m_fAngle >= 360.f)
 				m_fAngle = 0.f;
 		}
 		else if (XMouseMove > 0)
 		{
-			m_fAngle -= 5.f;
+			m_fAngle -= 4.f;
 			if (m_fAngle <= 0.f)
 				m_fAngle = 360.f;
 		}
@@ -200,12 +200,12 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 		m_bLerp = true;
 		if (YMouseMove > 0)
 		{
-			m_fCameraY += 1.f;	
+			m_fCameraY += 0.3f;	
 			m_fOffsetPosY -= 0.1f;
 		}
 		else if (YMouseMove < 0)
 		{
-			m_fCameraY -= 1.f;
+			m_fCameraY -= 0.3f;
 			m_fOffsetPosY += 0.1f;
 		}
 
