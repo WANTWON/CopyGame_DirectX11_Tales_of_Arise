@@ -252,6 +252,7 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	CUI_Manager::Get_Instance()->Set_Mainmenuon(false);
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI"), LEVEL_SNOWFIELD, pLayerTag)))
 		return E_FAIL;*/
 
@@ -283,14 +284,14 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_font"), LEVEL_SNOWFIELD, pLayerTag)))
 		return E_FAIL;
 
-	for (int i = 0; i < 6; ++i)
+	/*for (int i = 0; i < 6; ++i)
 	{
 		_uint number = i;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_SNOWFIELD, pLayerTag, &i)))
+*/
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_SNOWFIELD, pLayerTag)))
 			return E_FAIL;
 
-	}
+	//}
 
 
 	//	for (int i = 0; i < 3; ++i)

@@ -84,8 +84,8 @@ private:
 	_uint m_iCP;
 	_uint m_iMAXCP;
 
-	_bool m_bMainMenuon = false;
-	_bool m_bStopTick = false;
+	_bool m_bMainMenuon = false; 
+	_bool m_bStopTick = false;;
 //private:
 //	_uint iplayer0_hp = 0;
 //	_uint iplayer1_hp = 0;

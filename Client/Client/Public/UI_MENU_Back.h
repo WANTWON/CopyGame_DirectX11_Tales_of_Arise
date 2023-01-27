@@ -98,6 +98,8 @@ private:
 	CTexture*               m_pTextureCom18 = nullptr; //flag
 
 	CTexture*               m_pTextureCom19 = nullptr; //itemuseportrait
+	CTexture*               m_pTextureCom20 = nullptr; //lighteffect;
+	
 	
 	_bool m_bfadein = false;
 	_bool m_bfadeout = false;
@@ -202,6 +204,14 @@ private:
 
 	_bool m_fbackfadeout = false;
 	_bool m_fbackfadein = false;
+
+	_float m_fbrightpos = 0.f;   //name
+	_float m_fbrightpos_hpbar = 0.f;
+	_float m_fbrightpos_icon = -2.f;
+
+	_float m_fbrightpos_hpfont[9] = { 0.f , -0.5f, -1.f, -1.5f , -2.f , -2.5f, -3.f , -3.5f , -4.f };
+
+	_bool m_breverselerp = false;
 };
 
 END

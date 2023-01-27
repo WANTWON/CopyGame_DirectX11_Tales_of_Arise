@@ -8,8 +8,9 @@
 IMPLEMENT_SINGLETON(CUI_Manager)
 
 CUI_Manager::CUI_Manager()
-	:iPortrait_Arrived_Count(0), m_iGald(1000) , m_iCP(255) , m_iMAXCP(300)
-{
+	:iPortrait_Arrived_Count(0), m_iGald(1000) , m_iCP(255) , m_iMAXCP(300) , m_bStopTick(false)
+{									
+	m_bMainMenuon = false;
 }
 
 void CUI_Manager::Initialize_PlayerState()
