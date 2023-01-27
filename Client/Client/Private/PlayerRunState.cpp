@@ -64,10 +64,10 @@ void CRunState::Enter()
 	switch (m_pOwner->Get_PlayerID())
 	{
 	case CPlayer::ALPHEN:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CAlphen::ANIM::ANIM_RUN);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
 		break;
 	case CPlayer::SION:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSion::ANIM::ANIM_RUN);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_RUN);
 		break;
 	default:
 		break;

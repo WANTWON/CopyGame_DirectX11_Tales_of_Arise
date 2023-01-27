@@ -66,7 +66,7 @@ void CIdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::TURN_POSE);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::TURN_POSE);
 }
 
 void CIdleState::Exit()

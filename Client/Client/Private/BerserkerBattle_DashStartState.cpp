@@ -94,13 +94,13 @@ void CBattle_DashStartState::Enter()
 	switch (m_eStateId)
 	{
 	case STATE_DASH_START:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::DASH_START);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DASH_START);
 		break;
 	case STATE_DASH_LOOP:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::DASH_LOOP);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DASH_LOOP);
 		break;
 	case STATE_DASH_SCRATCHES:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::FLYING_ATTACK2);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::FLYING_ATTACK2);
 		break;
 	}
 	////

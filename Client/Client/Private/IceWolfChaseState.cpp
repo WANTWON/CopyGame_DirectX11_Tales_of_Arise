@@ -63,7 +63,7 @@ void CChaseState::Enter()
 	m_eStateId = STATE_ID::STATE_DISCOVER;
 
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_RUN);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_RUN);
 }
 
 void CChaseState::Exit()
