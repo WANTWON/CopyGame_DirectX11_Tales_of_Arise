@@ -93,7 +93,7 @@ HRESULT CSion::Ready_Components(void* pArg)
 
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Alphen"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Sion"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* For.Com_AABB */
