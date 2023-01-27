@@ -147,7 +147,7 @@ private:
 	_int									m_iTreasureIndex = 0;
 	_float3									m_fTreasureBoxPos = _float3(0.f, 0.f, 0.f);
 	_int									m_ItemType = 0;
-	_bool									m_Visible = false;
+
 
 	/* For Picking */
 	_float3									m_vPickedObjPos = _float3(1.f, 1.f, 1.f);

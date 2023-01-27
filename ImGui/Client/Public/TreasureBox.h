@@ -11,14 +11,10 @@ BEGIN(Client)
 class CTreasureBox final : public CBaseObj
 {
 public:
-	enum STATE { APPEAR, CLOSE, CLOSE_WAIT, NOT_OPEN, OPEN, OPEN_WAIT };
-	enum ITEMTYPE { COMPASS, MAP, SMALL_KEY, BOSS_KEY, FEATHER, HEART, RUBY };
-
 	typedef struct TreasureBoxTag
 	{
-		ITEMTYPE eItemType = COMPASS;
+		_uint eItemType = 0;
 		_float3 vPosition = _float3(0.f, 0.f, 0.f);
-		_bool	bVisible = true;
 	}BOXTAG;
 	
 

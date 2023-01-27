@@ -120,7 +120,7 @@ HRESULT CTreasureBox::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("TreasureBox.fbx"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("TreasureBox02.fbx"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	return S_OK;

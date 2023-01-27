@@ -451,15 +451,13 @@ void CImgui_Manager::Set_TrasureBox()
 		{
 			XMStoreFloat3(&m_vPickedObjPos, pTreasureBox->Get_Position());
 			CTreasureBox::BOXTAG  BoxTag = pTreasureBox->Get_BoxDesc();
-			m_Visible = BoxTag.bVisible;
 			m_ItemType = BoxTag.eItemType;
 		}
 		else
 		{
 			m_vPickedObjPos = _float3(0.f, 0.f, 0.f);
 			m_vPickedObjScale = _float3(1.f, 1.f, 1.f);
-			m_Visible = false;
-			m_ItemType = CTreasureBox::COMPASS;
+			m_ItemType = 0;
 		}
 
 		ImGui::NewLine();
@@ -478,20 +476,17 @@ void CImgui_Manager::Set_TrasureBox()
 
 		ImGui::NewLine();
 	
-		ImGui::Checkbox("isVisible", &m_Visible);
 
-		const char* TypeList[] = { "COMPASS", "MAP","SMALL_KEY","BOSS_KEY", "FEATHER", "HEART", "RUBY" };
+		const char* TypeList[] = { "Item1", "Item2","Item3","Item4", "Item5", "Item6", "Item7" };
 		ImGui::Combo("ItemType", &m_ItemType, TypeList, IM_ARRAYSIZE(TypeList));
 		
-
 
 		if (pTreasureBox != nullptr)
 		{
 			CTreasureBox::BOXTAG BoxDesc; 
 			BoxDesc.vPosition = m_vPickedObjPos;
 			m_vPickedObjPos = BoxDesc.vPosition;
-			BoxDesc.eItemType = (CTreasureBox::ITEMTYPE)m_ItemType;
-			BoxDesc.bVisible = m_Visible;
+			BoxDesc.eItemType = m_ItemType;
 
 			pTreasureBox->Set_BoxDesc(BoxDesc);
 		}
@@ -516,8 +511,7 @@ void CImgui_Manager::Set_TrasureBox()
 		if (CPickingMgr::Get_Instance()->Picking())
 		{
 			m_BoxDesc.vPosition = CPickingMgr::Get_Instance()->Get_PickingPos();
-			m_BoxDesc.bVisible = m_Visible;
-			m_BoxDesc.eItemType = (CTreasureBox::ITEMTYPE)m_ItemType;
+			m_BoxDesc.eItemType = m_ItemType;
 			_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 			m_TempLayerTags.push_back(LayerTag);
 			if (FAILED(m_pModel_Manager->Add_TreasureBox(LayerTag, &m_BoxDesc)))
