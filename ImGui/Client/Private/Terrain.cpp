@@ -121,6 +121,13 @@ void CTerrain::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom && nullptr != m_pRendererCom && CImgui_Manager::Get_Instance()->Get_ShowOnlyNavi() == false)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 
+	if (CImgui_Manager::Get_Instance()->Get_UpdateTerrain())
+	{
+		Load_FilterTexture(CImgui_Manager::Get_Instance()->Get_BmpPath());
+		CImgui_Manager::Get_Instance()->Set_UpdateTerrain(false);
+	}
+		
+
 }
 
 HRESULT CTerrain::Render()
@@ -435,7 +442,7 @@ HRESULT CTerrain::Create_FilterTexture(_tchar* bmpPath)
 			{
 				_uint		iIndex = i * TextureDesc.Width + j;
 
-				_float3 vPixelPos = _float3(j, 0.f, 256-i);
+				_float3 vPixelPos = _float3(j, 0.f, i);
 				_vector fDis = XMLoadFloat3(&ConevertPos) - XMLoadFloat3(&vPixelPos);
 				_float fLen = XMVectorGetX(XMVector3Length(fDis));
 				_float fAlpha =  (fLen / _float(iConvertRange));
@@ -558,6 +565,94 @@ HRESULT CTerrain::Create_FilterTexture(_tchar* bmpPath)
 	}
 
 	return S_OK;
+}
+
+HRESULT CTerrain::Load_FilterTexture(_tchar * bmpPath)
+{
+	ID3D11Texture2D*					pTexture2D = nullptr;
+	D3D11_TEXTURE2D_DESC		TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+	TextureDesc.Width = 256;
+	TextureDesc.Height = 256;
+	TextureDesc.MipLevels = 1;
+	TextureDesc.ArraySize = 1;
+	TextureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+
+	TextureDesc.SampleDesc.Quality = 0;
+	TextureDesc.SampleDesc.Count = 1;
+
+	TextureDesc.Usage = D3D11_USAGE_DYNAMIC;
+	TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	TextureDesc.MiscFlags = 0;
+
+	HANDLE hFile = CreateFile(bmpPath, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+		int a = 0;//goto FAIL;
+
+	BITMAPFILEHEADER bmfh;
+	DWORD dwBytesRead;
+	ReadFile(hFile, &bmfh, sizeof(bmfh), &dwBytesRead, NULL);
+
+	BITMAPINFOHEADER bmih;
+	ReadFile(hFile, &bmih, sizeof(bmih), &dwBytesRead, NULL);
+	ReadFile(hFile, pPixel, sizeof(_uint) * TextureDesc.Width * TextureDesc.Height, &dwBytesRead, NULL);
+
+	D3D11_SUBRESOURCE_DATA			SubResourceData;
+	ZeroMemory(&SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+
+	SubResourceData.pSysMem = pPixel;
+	SubResourceData.SysMemPitch = 256 * 4;
+
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, &SubResourceData, &pTexture2D)))
+		goto FAIL;
+
+	/*D3D11_MAP_WRITE_NO_OVERWRITE : 기존에 있던 값을 유지한상태로 메모리의 주소를 얻어오낟ㄷ. */
+	/*D3D11_MAP_WRITE_DISCARD : 기존에 있던 값은 날리고 메모리 주소를 얻어오낟. */
+
+	D3D11_MAPPED_SUBRESOURCE			SubResource;
+	ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+	if (FAILED(m_pContext->Map(pTexture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
+		goto FAIL;
+
+	memcpy(SubResource.pData, pPixel, sizeof(_uint) * TextureDesc.Width * TextureDesc.Height);
+
+	CloseHandle(hFile);
+
+
+	for (_uint i = 0; i < TextureDesc.Height; ++i)
+	{
+		for (_uint j = 0; j < TextureDesc.Width; ++j)
+		{
+			_uint		iIndex = i * TextureDesc.Width + j;
+			_uint red = pPixel[iIndex] & 0x00FF0000;
+			red = red >> 16;
+			_uint green = pPixel[iIndex] & 0x0000FF00;
+			green = green >> 8;
+			_uint blue = pPixel[iIndex] & 0x000000FF;
+			blue = blue >> 0;
+			pPixelColor[iIndex] = _float3(red, green, blue);
+		}
+	}
+
+	m_pContext->Unmap(pTexture2D, 0);
+
+
+	if (m_pFilterTexture != nullptr)
+	{
+		Safe_Release(m_pFilterTexture);
+	}
+	if (FAILED(m_pDevice->CreateShaderResourceView(pTexture2D, nullptr, &m_pFilterTexture)))
+		goto FAIL;
+
+	Safe_Release(pTexture2D);
+	return S_OK;
+
+FAIL:
+	Safe_Release(pTexture2D);
+	return E_FAIL;
 }
 
 HRESULT CTerrain::Create_FirstFilterTexture()

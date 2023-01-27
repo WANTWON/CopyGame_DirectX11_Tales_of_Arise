@@ -3,7 +3,7 @@
 #include "QuadTree.h"
 #include "Transform.h"
 #include "Picking.h"
-
+#include "Frustum.h"
 
 CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -371,11 +371,16 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3* pOut)
 	vRayDir = XMLoadFloat3(&vTempRayDir);
 	vRayDir = XMVector3Normalize(vRayDir);
 
+	CFrustum* pFrustum = GET_INSTANCE(CFrustum);
+
 	for (_uint i = 0; i < m_iNumVerticesZ - 1; ++i)
 	{
 		for (_uint j = 0; j < m_iNumVerticesX - 1; ++j)
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			if (false == pFrustum->isIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_pVerticesPos[iIndex]), 1.f), 1))
+				continue;
 
 			_uint		iIndices[] = {
 				iIndex + m_iNumVerticesX,
@@ -383,6 +388,7 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3* pOut)
 				iIndex + 1,
 				iIndex
 			};
+
 
 
 			//iIndices[0]이랑 iIndices[2]사이에 직선이 있거나
@@ -414,6 +420,7 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3* pOut)
 				XMStoreFloat3(pOut, XMVector3TransformCoord(vPickPos, WorldMatrix));
 
 				Safe_Release(pPicking);
+				RELEASE_INSTANCE(CFrustum);
 				return true;
 			}
 
@@ -430,11 +437,13 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3* pOut)
 				XMStoreFloat3(pOut, XMVector3TransformCoord(vPickPos, WorldMatrix));
 
 				Safe_Release(pPicking);
+				RELEASE_INSTANCE(CFrustum);
 				return true;
 			}
 		}
 	}
 
+	RELEASE_INSTANCE(CFrustum);
 	Safe_Release(pPicking);
 	return false;
 }
