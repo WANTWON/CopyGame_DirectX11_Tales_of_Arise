@@ -99,27 +99,10 @@ HRESULT CEffectTexture::SetUp_ShaderResources()
 	if (m_tTextureEffectDesc.bIsDistortion)
 	{
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	
+		ID3D11ShaderResourceView* pBackBufferSRV = pGameInstance->Get_BackBufferSRV();
 
-		/* Get the Back Buffer Texture from the Swap Chain */
-		ID3D11Texture2D* pBackBufferTexture = nullptr;
-		if (FAILED(pGameInstance->Get_SwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBufferTexture)))
-			return E_FAIL;
-
-		D3D11_TEXTURE2D_DESC tTextureDesc;
-		pBackBufferTexture->GetDesc(&tTextureDesc);		
-
-		D3D11_SHADER_RESOURCE_VIEW_DESC tSRVDesc;
-		tSRVDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		tSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		tSRVDesc.Texture2D.MipLevels = tTextureDesc.MipLevels;
-		tSRVDesc.Texture2D.MostDetailedMip = 0;
-
-		/* Create the SRV */
-		ID3D11ShaderResourceView* pSRV = nullptr;
-		if (FAILED(m_pDevice->CreateShaderResourceView(pBackBufferTexture, &tSRVDesc, &pSRV)))
-			return E_FAIL;
-
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", pSRV)))
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", pBackBufferSRV)))
 			return E_FAIL;
 
 		RELEASE_INSTANCE(CGameInstance);

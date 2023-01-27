@@ -31,7 +31,7 @@ public: /* For.Engine */
 
 
 public: /* For.Graphic_Device */	
-	IDXGISwapChain* Get_SwapChain();
+	ID3D11ShaderResourceView* Get_BackBufferSRV();
 	HRESULT Clear_BackBuffer_View(_float4 vClearColor);
 	HRESULT Clear_DepthStencil_View();
 	HRESULT Present();

@@ -97,12 +97,12 @@ void CGameInstance::Clear(_uint iLevelIndex)
 	m_pObject_Manager->Clear(iLevelIndex);
 }
 
-IDXGISwapChain * CGameInstance::Get_SwapChain()
+ID3D11ShaderResourceView * CGameInstance::Get_BackBufferSRV()
 {
 	if (nullptr == m_pGraphic_Device)
 		return nullptr;
 
-	return m_pGraphic_Device->Get_SwapChain();
+	return m_pGraphic_Device->Get_BackBufferSRV();
 }
 
 HRESULT CGameInstance::Clear_BackBuffer_View(_float4 vClearColor)

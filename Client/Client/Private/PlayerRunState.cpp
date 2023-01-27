@@ -67,9 +67,7 @@ void CRunState::Enter()
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
 		break;
 	case CPlayer::SION:
-
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
-
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
 		break;
 	default:
 		break;
