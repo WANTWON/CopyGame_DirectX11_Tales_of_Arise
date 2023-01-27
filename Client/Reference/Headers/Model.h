@@ -33,11 +33,11 @@ public:
 
 public:
 	void Set_CurrentAnimIndex(_uint iAnimIndex);
-	/*For. NextTotalBody_Anim*/
-	void Set_NextAnimIndex(_uint iAnimIndex) {
-		if (m_iNextAnimIndex != iAnimIndex) { m_bInterupted = true; }
-		m_iNextAnimIndex = iAnimIndex;
-	}
+	///*For. NextTotalBody_Anim*/
+	//void Set_CurrentAnimIndex(_uint iAnimIndex) {
+	//	if (m_iNextAnimIndex != iAnimIndex) { m_bInterupted = true; }
+	//	m_iNextAnimIndex = iAnimIndex;
+	//}
 	void Set_TimeReset();
 	void Reset_Events(void);
 
@@ -87,8 +87,9 @@ private:
 	vector<class CAnimation*>			m_Animations;
 	_uint								m_iCurrentAnimIndex = 0;
 
-	/*For. NextIndex*/
-	_uint								m_iNextAnimIndex = 0;
+	/*For. PreIndex*/
+	_uint								m_iPreAnimIndex = 0;
+	
 	/*For. Lineared*/
 	_bool								m_bLinearFinished = false;
 	_bool								m_bInterupted = false;

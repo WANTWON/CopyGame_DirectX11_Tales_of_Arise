@@ -148,9 +148,8 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 			m_vecEvents[i].isPlay = false;
 	}
 
-	if (m_fCurrentTime >= m_fDuration)
+	if (m_fCurrentTime > m_fDuration)
 	{
-		Set_TimeReset();
 		m_isFinished = true;
 		m_iTickPerSecondIndex = 0;
 		if (!isLoop)
@@ -160,9 +159,11 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 				pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
 			}
 
+			Set_TimeReset();
+
 			return m_isFinished;
 		}
-			
+		Set_TimeReset();
 	}
 	else
 		m_isFinished = false;
@@ -198,6 +199,8 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 			}
 		}
 	}
+	else
+		m_iTickPerSecondIndex = 0;
 
 	return m_bLinearFinished;
 }

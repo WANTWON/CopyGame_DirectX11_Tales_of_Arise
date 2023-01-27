@@ -91,7 +91,7 @@ void CWalkState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_MOVE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::MOVE_WALK_F);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::MOVE_WALK_F);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

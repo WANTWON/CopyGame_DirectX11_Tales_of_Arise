@@ -60,7 +60,7 @@ void CBattle_Double_ClawState::Enter()
 
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::ATTACK_DOUBLE_CLAW);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DOUBLE_CLAW);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
