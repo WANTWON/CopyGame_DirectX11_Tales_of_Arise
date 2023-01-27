@@ -36,7 +36,7 @@ HRESULT CMonster::Initialize(void* pArg)
 
 int CMonster::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	__super::Tick(fTimeDelta);
 
@@ -54,7 +54,7 @@ int CMonster::Tick(_float fTimeDelta)
 
 void CMonster::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 	__super::Late_Tick(fTimeDelta);
 

@@ -30,7 +30,7 @@ HRESULT CWater::Initialize(void * pArg)
 
 int CWater::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	m_fScrollingTimer += fTimeDelta;
 
@@ -39,7 +39,7 @@ int CWater::Tick(_float fTimeDelta)
 
 void CWater::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 
 	if (m_pRendererCom)

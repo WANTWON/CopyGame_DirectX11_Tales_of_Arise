@@ -489,13 +489,8 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Sion */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SionBody"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/SionBody.dat"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_Model_Sion */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SionHead"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Anim/Sion/SionHead.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Sion"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/Sion.dat"))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Model_Water_Plane*/
@@ -1227,6 +1222,10 @@ HRESULT CLoader::Loading_ForUITexture()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ITEMUSEPORTRAIT"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/itemuseportrait/portrait%d.dds"), 12))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_LIGHTEFFECT"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/lighteffect/light%d.dds"), 1))))
 		return E_FAIL;
 
 

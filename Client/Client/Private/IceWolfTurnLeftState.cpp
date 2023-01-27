@@ -71,7 +71,7 @@ void CTurnLeftState::Enter()
 	m_eStateId = STATE_ID::STATE_MOVE;
 
 	
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_TURN_LEFT);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_TURN_LEFT);
 }
 
 void CTurnLeftState::Exit()

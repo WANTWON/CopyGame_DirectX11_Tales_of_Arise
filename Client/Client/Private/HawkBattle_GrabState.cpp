@@ -163,19 +163,19 @@ void CBattle_GrabState::Enter()
 	//switch (m_eStateId)
 	//{
 	//case STATE_GRAB_START:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_START1);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_START1);
 	//	break;
 	////case STATE_GRAB_LOOP:
-	////	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP1);
+	////	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP1);
 	////	break;
 	//case STATE_GRAB_END:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_END);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_END);
 	//	break;
 	//}
 
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-//	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_START2);
+//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_START2);
 
 	////
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();

@@ -51,7 +51,7 @@ private:
 	_bool							m_isLoop = true;
 
 	/*For. Linear Time*/
-	_float m_fTotal_Linear_Duration = 2.2f;
+	_float m_fTotal_Linear_Duration = 0.2f;
 	_float m_fLinear_CurrentTime = 0.f;
 	_bool	m_bLinearFinished = false;
 

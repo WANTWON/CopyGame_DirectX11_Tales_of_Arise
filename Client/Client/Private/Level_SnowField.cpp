@@ -152,12 +152,14 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Alphen"), LEVEL_STATIC, pLayerTag, nullptr)))
 			return E_FAIL;
 
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, pLayerTag, nullptr)))
+			return E_FAIL;
+
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0.f, 22, 1.f));
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, pLayerTag, nullptr)))
-			return E_FAIL;
+		
 	}
 	else
 	{
@@ -253,26 +255,33 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	CUI_Manager::Get_Instance()->Set_Mainmenuon(false);
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI"), LEVEL_SNOWFIELD, pLayerTag)))
 		return E_FAIL;*/
 
-	for (int i = 0; i < 4; ++i)
+	
+
+	_uint numcreate = (CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
+
+	for (int i = 0; i < numcreate; ++i)
 	{
 		_uint number = i;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar"), LEVEL_STATIC, pLayerTag, &i)))
 			return E_FAIL;
 
-	}
-
-	for (int i = 0; i < 4; ++i)
-	{
-		_uint number = i;
-
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont"), LEVEL_STATIC, pLayerTag, &i)))
 			return E_FAIL;
 
 	}
+
+	/*for (int i = 0; i < numcreate; ++i)
+	{
+		_uint number = i;
+
+		
+
+	}*/
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Comboline"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
@@ -283,14 +292,15 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_font"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	for (int i = 0; i < 6; ++i)
+	/*for (int i = 0; i < 6; ++i)
 	{
 		_uint number = i;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag, &i)))
+*/
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag)))
 			return E_FAIL;
+	
 
-	}
+	//}
 
 
 	//	for (int i = 0; i < 3; ++i)

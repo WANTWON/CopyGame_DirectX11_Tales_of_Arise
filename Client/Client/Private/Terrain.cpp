@@ -101,7 +101,7 @@ int CTerrain::Tick(_float fTimeDelta)
 
 void CTerrain::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 	//m_pVIBufferCom->Culling(m_pTransformCom);
 

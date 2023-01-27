@@ -62,7 +62,7 @@ void CBattle_IdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::MOVE_IDLE);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_IDLE);
 }
 
 void CBattle_IdleState::Exit()

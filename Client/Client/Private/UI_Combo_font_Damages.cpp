@@ -20,14 +20,14 @@ HRESULT CUI_Combo_font_Damages::Initialize_Prototype()
 
 HRESULT CUI_Combo_font_Damages::Initialize(void * pArg)
 {
-	m_eShaderID = 5;
+	m_eShaderID = UI_BRIGHT;
 
 	m_fSize.x = 100.f;
 	m_fSize.y = 24.f;
 	m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
 	m_fPosition.y = 170.f;
 
-	m_fAlpha = 1;
+	m_fAlpha = 0;
 
 	m_bfadein = true;
 
@@ -48,13 +48,13 @@ int CUI_Combo_font_Damages::Tick(_float fTimeDelta)
 		m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
 		m_bmoveleft = true;
 		m_bfadein = true;
-		m_fAlpha = 1;
+		m_fAlpha = 0;
 	}
 
 	if (m_bfadein)
-		m_fAlpha -= 0.04f; //생길때
+		m_fAlpha += 0.04f; //생길때
 	else if (m_bfadeout)
-		m_fAlpha += 0.0483f;
+		m_fAlpha -= 0.0483f;
 
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
@@ -82,9 +82,9 @@ void CUI_Combo_font_Damages::Late_Tick(_float fTimeDelta)
 	if (m_fPosition.x <= 1200.f)
 		m_bmoveleft = false;
 
-	if (m_fAlpha <= 0)
+	if (m_fAlpha >= 1)
 	{
-		m_fAlpha = 0;
+		m_fAlpha = 1;
 		m_bfadein = false;
 	}
 

@@ -77,7 +77,11 @@ _matrix CModel::Get_MoveTransformationMatrix(const char * pBoneName)
 
 void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
 {
-	m_iCurrentAnimIndex = iAnimIndex;
+	if (m_iCurrentAnimIndex != iAnimIndex)
+	{
+		m_iPreAnimIndex = m_iCurrentAnimIndex;
+		m_iCurrentAnimIndex = iAnimIndex;
+	}
 }
 
 void CModel::Set_TimeReset()
@@ -306,20 +310,20 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
-	if (m_iCurrentAnimIndex != m_iNextAnimIndex)
+	if (m_iCurrentAnimIndex != m_iPreAnimIndex)
 	{	//TODO: ����ִ԰� ���� �ִ������Ӱ��� �������� �Լ� ȣ�� �� ��.
-		if (m_bInterupted)
+		/*if (m_bInterupted)
 		{
 			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 			m_bInterupted = false;
-		}
-		m_bLinearFinished = m_Animations[m_iCurrentAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iNextAnimIndex]);
+		}*/
+		m_bLinearFinished = m_Animations[m_iPreAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iCurrentAnimIndex]);
 
 		if (m_bLinearFinished == true)
 		{
 			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 
-			m_iCurrentAnimIndex = m_iNextAnimIndex;
+			m_iPreAnimIndex = m_iCurrentAnimIndex;
 		}
 	}
 	else
