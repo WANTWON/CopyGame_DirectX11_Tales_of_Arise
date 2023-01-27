@@ -40,6 +40,14 @@ int CMonster::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 	__super::Tick(fTimeDelta);
 
+	if (m_bTakeDamage)
+		m_fTime_TakeDamageDeltaAcc += fTimeDelta;
+
+	if (3 <= m_fTime_TakeDamageDeltaAcc)
+	{
+		m_bTakeDamage = false;
+		m_fTime_TakeDamageDeltaAcc = 0.f;
+	}
 
 	return OBJ_NOEVENT;
 }
@@ -58,8 +66,26 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
 		
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_B))
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
+	{
 		Take_Damage(1.f, m_pTarget);
+		m_bTakeDamage = true;
+	}
+
+	if (m_bDissolve)
+	{
+		m_DissolveAlpha += fTimeDelta/* * 0.13*/;
+
+		if (1 < m_DissolveAlpha)
+		{
+			m_DissolveAlpha = 1.f;
+			m_bDead = true;
+		}
+	}
+
+
+	
+	
 
 
 #ifdef _DEBUG
@@ -90,8 +116,12 @@ HRESULT CMonster::Render()
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
   //
 	_bool bGlow = true;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-		return E_FAIL;
+	if (false == m_bDead)
+	{
+		
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+			return E_FAIL;
+	}
 //
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
@@ -102,8 +132,11 @@ HRESULT CMonster::Render()
 			return E_FAIL;
 
 		//
-		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
-			return E_FAIL;
+		if (false == m_bDead)
+		{
+			if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
+				return E_FAIL;
+		}
 		//
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
@@ -111,9 +144,12 @@ HRESULT CMonster::Render()
 	}
 
 	//
-	bGlow = false;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-		return E_FAIL;
+	if (false == m_bDead)
+	{
+		bGlow = false;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+			return E_FAIL;
+	}
 	//
 
 	return S_OK;
@@ -278,6 +314,7 @@ _float CMonster::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 	if (m_tInfo.iCurrentHp <= 0)
 	{
 		m_tInfo.iCurrentHp = 0;
+		/*m_bDissolve = true;*/
 		return m_tInfo.iCurrentHp;
 	}
 
@@ -315,8 +352,9 @@ HRESULT CMonster::SetUp_ShaderResources()
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DissolveTexture", m_pDissolveTexture->Get_SRV(0))))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fDissolveAlpha", &m_DissolveAlpha, sizeof(_float))))
 			return E_FAIL;
+
 	}
 
 	RELEASE_INSTANCE(CGameInstance);

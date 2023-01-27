@@ -37,6 +37,7 @@ protected: /* For.Components */
 	//CModel*					m_pModelCom = nullptr;
 	//CTexture*				m_pDissolveTexture = nullptr;
 	_bool					m_bOpen = false;
+	_bool					m_bOpenFinish = false;
 
 public:
 	static CTreasureBox* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

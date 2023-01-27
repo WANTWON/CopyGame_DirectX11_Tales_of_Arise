@@ -47,9 +47,10 @@ public:
 	CHierarchyNode* Get_Parent() { return m_pParent; }
 
 	_float4x4 Get_MoveTransformationMatrix(void) { return m_MoveTransformationMatrix; }
+	_float4x4 Get_RotationTransformationMatrix(void) { return m_RotationTransformationMatrix; }
 
 public:
-	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, CHierarchyNode* pParent);
+	HRESULT Initialize(BINBONE tBone, CHierarchyNode* pParent);
 	HRESULT Bin_Initialize(DATA_BINNODE* pNode); // 추가
 	void Invalidate_CombinedTransformationmatrix(const char* pBoneName);
 	void Set_FindParent(CHierarchyNode* pNode); // 추가
@@ -68,12 +69,13 @@ private:
 	/* m_TransformationMatrix * m_pParent->m_CombinedTransformationMatrix */
 	_float4x4			m_CombinedTransformationMatrix;
 
-	/* 이동값 살리기 위한 매트릭스 */
+	/* 이동, 회전값 살리기 위한 매트릭스 */
 	_float4x4 m_MoveTransformationMatrix;
+	_float4x4 m_RotationTransformationMatrix;
 
 public:
 	//static CHierarchyNode* Create(const aiNode* pNode, CHierarchyNode* pParent);
-	static CHierarchyNode* Create(HANDLE hFile, _ulong* pdwByte, CHierarchyNode* pParent);
+	static CHierarchyNode* Create(BINBONE tBone, CHierarchyNode* pParent);
 	static CHierarchyNode* Bin_Create(DATA_BINNODE* pNode); // 추가
 	virtual void Free() override;
 };

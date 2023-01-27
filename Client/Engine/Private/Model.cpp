@@ -8,7 +8,7 @@
 #include "MeshContainer_Instance.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CComponent(pDevice, pContext)//, m_bIsProto(true) // Ãß°¡
+	: CComponent(pDevice, pContext)//, m_bIsProto(true) // ï¿½ß°ï¿½
 {
 }
 
@@ -21,11 +21,11 @@ CModel::CModel(const CModel & rhs)
 	, m_iNumBones(rhs.m_iNumBones)
 	, m_PivotMatrix(rhs.m_PivotMatrix)
 	, m_eModelType(rhs.m_eModelType)
-	//, m_pBin_AIScene(rhs.m_pBin_AIScene)	// Ãß°¡
-	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)	// Ãß°¡
-	, m_iNumAnimations(rhs.m_iNumAnimations)	// Ãß°¡
-	//, m_DataMaterials(rhs.m_DataMaterials)	// Ãß°¡
-	//, m_bIsBin(rhs.m_bIsBin)	// Ãß°¡
+	//, m_pBin_AIScene(rhs.m_pBin_AIScene)	// ï¿½ß°ï¿½
+	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)	// ï¿½ß°ï¿½
+	, m_iNumAnimations(rhs.m_iNumAnimations)	// ï¿½ß°ï¿½
+	//, m_DataMaterials(rhs.m_DataMaterials)	// ï¿½ß°ï¿½
+	//, m_bIsBin(rhs.m_bIsBin)	// ï¿½ß°ï¿½
 {
 	for (auto& pMeshContainer : rhs.m_Meshes)
 		m_Meshes.push_back((CMeshContainer*)pMeshContainer->Clone());
@@ -55,21 +55,24 @@ CHierarchyNode * CModel::Get_BonePtr(const char * pBoneName) const
 	return *iter;
 }
 
-_float4x4 CModel::Get_MoveTransformationMatrix(const char * pBoneName)
+vector<EVENT> CModel::Get_Events(void)
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_Events();
+}
+
+_matrix CModel::Get_MoveTransformationMatrix(const char * pBoneName)
 {
 	for (auto& Bone : m_Bones)
 	{
 		if (!strcmp(Bone->Get_Name(), pBoneName))
 		{
 			_matrix CombinedMatrix = Bone->Get_OffsetMatrix() * XMLoadFloat4x4(&Bone->Get_MoveTransformationMatrix()) * XMLoadFloat4x4(&m_PivotMatrix);
-			_float4x4 CombinedMatrixFloat;
-			XMStoreFloat4x4(&CombinedMatrixFloat, CombinedMatrix);
 
-			return CombinedMatrixFloat;
+			return CombinedMatrix;
 		}
 	}
 
-	return _float4x4();
+	return _matrix();
 }
 
 void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
@@ -80,6 +83,11 @@ void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
 void CModel::Set_TimeReset()
 {
 	m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
+}
+
+void CModel::Reset_Events(void)
+{
+	m_Animations[m_iCurrentAnimIndex]->Reset_Events();
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
@@ -168,7 +176,7 @@ HRESULT CModel::Instance_Initialize_Prototype(TYPE eModelType, const char * pMod
 //	if (nullptr == m_pBin_AIScene)
 //		return E_FAIL;
 //
-//	/* ¸ðµ¨À» ±¸¼ºÇÏ´Â ¸Þ½ÃµéÀ» ¸¸µç´Ù. */
+//	/* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ½Ãµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½. */
 //	if (FAILED(Bin_Ready_MeshContainers(PivotMatrix)))
 //		return E_FAIL;
 //
@@ -194,17 +202,28 @@ HRESULT CModel::Initialize(void * pArg)
 		char szAnimName[MAX_PATH] = "_Animation";
 		char szExt[MAX_PATH] = "";
 		char szAnimationFileName[MAX_PATH] = "";
+		
+		char szAddData[MAX_PATH] = "_Add";
+		char szAnimationAddFileName[MAX_PATH] = "";
 
 		_splitpath_s(szFilePath, nullptr, 0, szDir, MAX_PATH, szName, MAX_PATH, szExt, MAX_PATH);
 
 		strcpy_s(szAnimationFileName, szDir);
 		strcat_s(szAnimationFileName, szName);
 		strcat_s(szAnimationFileName, szAnimName);
+
+		strcpy_s(szAnimationAddFileName, szAnimationFileName);
+
 		strcat_s(szAnimationFileName, szExt);
 
+		strcat_s(szAnimationAddFileName, szAddData);
+		strcat_s(szAnimationAddFileName, szExt);
+
 		_tchar szTFullPath[MAX_PATH] = TEXT("");
+		_tchar szTAddFullPath[MAX_PATH] = TEXT("");
 
 		MultiByteToWideChar(CP_ACP, 0, szAnimationFileName, (int)strlen(szAnimationFileName), szTFullPath, MAX_PATH);
+		MultiByteToWideChar(CP_ACP, 0, szAnimationAddFileName, (int)strlen(szAnimationAddFileName), szTAddFullPath, MAX_PATH);
 
 		_ulong dwByte = 0;
 		HANDLE hFile = CreateFile(szTFullPath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -222,7 +241,7 @@ HRESULT CModel::Initialize(void * pArg)
 		for (auto& pMeshContainer : m_Meshes)
 			pMeshContainer->SetUp_Bones(hFile, &dwByte, this);
 
-		if (FAILED(Create_Animations(hFile, &dwByte)))
+		if (FAILED(Create_Animations(hFile, &dwByte, szTAddFullPath)))
 			return E_FAIL;
 
 		CloseHandle(hFile);
@@ -288,7 +307,7 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
 	if (m_iCurrentAnimIndex != m_iNextAnimIndex)
-	{	//TODO: ÇöÀç¾Ö´Ô°ú ´ÙÀ½ ¾Ö´ÔÇÁ·¹ÀÓ°£ÀÇ ¼±Çüº¸°£ ÇÔ¼ö È£Ãâ ÇÒ °Í.
+	{	//TODO: ï¿½ï¿½ï¿½ï¿½Ö´Ô°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½.
 		if (m_bInterupted)
 		{
 			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
@@ -301,17 +320,16 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 
 			m_iCurrentAnimIndex = m_iNextAnimIndex;
-
 		}
 	}
 	else
 	{
-		/* »ÀÀÇ m_TransformationMatrixÇà·ÄÀ» °»½ÅÇÑ´Ù. */
+		/* ï¿½ï¿½ï¿½ï¿½ m_TransformationMatrixï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½. */
 		if (m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(fTimeDelta, isLoop))
 		{
 			for (auto& pBoneNode : m_Bones)
 			{
-				/* »ÀÀÇ m_CombinedTransformationMatrixÇà·ÄÀ» °»½ÅÇÑ´Ù. */
+				/* ï¿½ï¿½ï¿½ï¿½ m_CombinedTransformationMatrixï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½. */
 				pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName);
 			}
 			return true;
@@ -320,7 +338,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 
 	for (auto& pBoneNode : m_Bones)
 	{
-		/* »ÀÀÇ m_CombinedTransformationMatrixÇà·ÄÀ» °»½ÅÇÑ´Ù. */
+		/* ï¿½ï¿½ï¿½ï¿½ m_CombinedTransformationMatrixï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½. */
 		pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName);
 	}
 
@@ -329,17 +347,17 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 
 HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
 {
-	/* ¸Þ½Ãº°·Î ±×¸°´Ù. */
-	/* ¸Þ½Ã ´ç ¿µÇâ¤·¸£ ÁÖ´Â »ÀµéÀÇ Çà·ÄÀ» °¡Á®¿Â´Ù. */
+	/* ï¿½Þ½Ãºï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½. */
+	/* ï¿½Þ½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½â¤·ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½. */
 	if (TYPE_ANIM == m_eModelType)
 	{
-		_float4x4		BoneMatrix[264];
+		_float4x4		BoneMatrix[400];
 
-		/* ¸Þ½Ã¿¡°Ô Á¢±ÙÇØ¼­ ´Ï°¡ µé°íÀÖ´Â »ÀµéÀ» ¹è¿­¿¡ ´ã¾Æ¿Í.
-		»À = »ÀÀÇ ¿ÀÇÁ¼Â * »ÀÀÇ ÄÄ¹ÙÀÎµå¸ÅÆ®¸¯½º * ÃÖÃÊ»óÅÂÁ¦¾îÇà·Ä */
+		/* ï¿½Þ½Ã¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½Æ¿ï¿½.
+		ï¿½ï¿½ = ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ * ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¹ï¿½ï¿½Îµï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ * ï¿½ï¿½ï¿½Ê»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 		m_Meshes[iMeshIndex]->Get_BoneMatrices(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
 
-		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 264);
+		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 400);
 	}
 
 	pShader->Begin(iPassIndex);
@@ -355,17 +373,17 @@ HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
 HRESULT CModel::RenderShadow(CShader * pShader, _uint iMeshIndex, _uint iLevelIndex, _uint iPassIndex)
 {
 	
-	/* ¸Þ½Ãº°·Î ±×¸°´Ù. */
-	/* ¸Þ½Ã ´ç ¿µÇâ¤·¸£ ÁÖ´Â »ÀµéÀÇ Çà·ÄÀ» °¡Á®¿Â´Ù. */
+	/* ï¿½Þ½Ãºï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½. */
+	/* ï¿½Þ½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½â¤·ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½. */
 	if (TYPE_ANIM == m_eModelType)
 	{
-		_float4x4		BoneMatrix[264];
+		_float4x4		BoneMatrix[400];
 
-		/* ¸Þ½Ã¿¡°Ô Á¢±ÙÇØ¼­ ´Ï°¡ µé°íÀÖ´Â »ÀµéÀ» ¹è¿­¿¡ ´ã¾Æ¿Í.
-		»À = »ÀÀÇ ¿ÀÇÁ¼Â * »ÀÀÇ ÄÄ¹ÙÀÎµå¸ÅÆ®¸¯½º * ÃÖÃÊ»óÅÂÁ¦¾îÇà·Ä */
+		/* ï¿½Þ½Ã¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½Æ¿ï¿½.
+		ï¿½ï¿½ = ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ * ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¹ï¿½ï¿½Îµï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ * ï¿½ï¿½ï¿½Ê»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 		m_Meshes[iMeshIndex]->Get_BoneMatrices(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
 
-		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 264);
+		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 400);
 
 	}
 
@@ -444,8 +462,8 @@ void CModel::Update(void)
 //		ZeroMemory(&ModelMaterial, sizeof(MODELMATERIAL));
 //
 //
-//		DATA_BINMATERIAL	DataMaterialDesc;	// Ãß°¡
-//		ZeroMemory(&DataMaterialDesc, sizeof(DATA_BINMATERIAL)); // Ãß°¡
+//		DATA_BINMATERIAL	DataMaterialDesc;	// ï¿½ß°ï¿½
+//		ZeroMemory(&DataMaterialDesc, sizeof(DATA_BINMATERIAL)); // ï¿½ß°ï¿½
 //
 //		for (_uint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j)
 //		{
@@ -463,7 +481,7 @@ void CModel::Update(void)
 //			strcpy_s(szTextureFileName, szName);
 //			strcat_s(szTextureFileName, szExt);
 //
-//			memcpy(&DataMaterialDesc.cNames[j], &szTextureFileName, sizeof(char) * MAX_PATH); // Ãß°¡
+//			memcpy(&DataMaterialDesc.cNames[j], &szTextureFileName, sizeof(char) * MAX_PATH); // ï¿½ß°ï¿½
 //
 //
 //			char			szDirectory[MAX_PATH] = "";
@@ -483,7 +501,7 @@ void CModel::Update(void)
 //		}
 //
 //		m_Materials.push_back(ModelMaterial);
-//		m_DataMaterials.push_back(DataMaterialDesc); // Ãß°¡
+//		m_DataMaterials.push_back(DataMaterialDesc); // ï¿½ß°ï¿½
 //	}
 //
 //	return S_OK;
@@ -583,36 +601,42 @@ HRESULT CModel::Create_Materials(HANDLE hFile, _ulong * pdwByte)
 
 HRESULT CModel::Create_HierarchyNodes(HANDLE hFile, _ulong * pdwByte, CHierarchyNode * pParent)
 {
-	CHierarchyNode* pHierarchyNode = CHierarchyNode::Create(hFile, pdwByte, pParent);
+	BINBONE BinBone;
+
+	ReadFile(hFile, &BinBone, sizeof(BINBONE), pdwByte, nullptr);
+
+	CHierarchyNode* pHierarchyNode = CHierarchyNode::Create(BinBone, pParent);
 	if (nullptr == pHierarchyNode)
 		return E_FAIL;
 
 	m_Bones.push_back(pHierarchyNode);
 
-	_uint iNumChildren;
-	ReadFile(hFile, &iNumChildren, sizeof(_uint), pdwByte, nullptr);
-
-	for (_uint i = 0; i < iNumChildren; ++i)
+	for (_uint i = 0; i < BinBone.iNumChildren; ++i)
 		Create_HierarchyNodes(hFile, pdwByte, pHierarchyNode);
 
 	return S_OK;
 }
 
-HRESULT CModel::Create_Animations(HANDLE hFile, _ulong * pdwByte)
+HRESULT CModel::Create_Animations(HANDLE hFile, _ulong * pdwByte, const _tchar* pAddDataFilePath)
 {
 	if (nullptr == hFile)
 		return E_FAIL;
 
 	ReadFile(hFile, &m_iNumAnimations, sizeof(_uint), pdwByte, nullptr);
 
+	_ulong dwAddByte = 0;
+	HANDLE hAddFile = CreateFile(pAddDataFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
 	for (_uint i = 0; i < m_iNumAnimations; ++i)
 	{
-		CAnimation* pAnimation = CAnimation::Create(hFile, pdwByte, this);
+		CAnimation* pAnimation = CAnimation::Create(hFile, pdwByte, this, hAddFile, &dwAddByte);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
 		m_Animations.push_back(pAnimation);
 	}
+
+	CloseHandle(hAddFile);
 
 	return S_OK;
 }
@@ -660,7 +684,7 @@ CComponent * CModel::Clone(void * pArg)
 {
 	CModel*	pInstance = new CModel(*this);
 
-	//if (!m_pBin_AIScene)	// Ãß°¡
+	//if (!m_pBin_AIScene)	// ï¿½ß°ï¿½
 	//{
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -914,7 +938,7 @@ void CModel::Free()
 
 	//m_Importer.FreeScene();
 
-	//if (m_pBin_AIScene && m_bIsProto)	// Ãß°¡
+	//if (m_pBin_AIScene && m_bIsProto)	// ï¿½ß°ï¿½
 	//{
 	//	Safe_Release_Scene();
 	//}

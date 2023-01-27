@@ -19,6 +19,10 @@ public:
 
 public: /*Get*/
 	KEYFRAME	Get_StartKeyFrame(void) { return m_KeyFrames[0]; }
+	vector<KEYFRAME> Get_KeyFrames(void) { return m_KeyFrames; }
+
+public: /*Set*/
+	void Set_KeyFrame(_int iIndex, KEYFRAME KeyFrame);
 	
 public:
 	_bool Compare_Name(const char* pName);

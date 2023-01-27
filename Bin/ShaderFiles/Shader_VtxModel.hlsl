@@ -4,12 +4,15 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
+texture2D g_DissolveTexture;
 
 /* Water (https://www.youtube.com/watch?v=aVCfVs1oZSY&list=PLv8DnRaQOs5-ST_VDqgbbMRtzMtpK36Hy&index=38&t=1610s) */
 float g_fScrollingSpeed = .05f;
 float g_fScrollingTimer;
+float g_fDissolveAlpha;
 float4 g_WaterColorDeep = float4(.1f, .62f, .81f, 1.f);
 float4 g_WaterColorShallow = float4(.1, .63f, .81f, 1.f);
+
 
 struct VS_IN
 {
@@ -18,6 +21,8 @@ struct VS_IN
 	float2 vTexUV : TEXCOORD0;
 	float3 vTangent : TANGENT;
 };
+
+
 
 struct VS_OUT
 {
@@ -91,7 +96,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 	Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);
 
-	if (Out.vDiffuse.a <= 0.3f)
+	if (Out.vDiffuse.a <= 0.0f)
 		discard;
 
 	return Out;
@@ -135,6 +140,34 @@ PS_OUT PS_WATER(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_DISSOLVE(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
+	float3 vNormal;
+
+	vNormal = float3(vTextureNormal.x*2.f - 1.f, vTextureNormal.y*2.f - 1.f, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
+	vNormal = normalize(vNormal);
+	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+	vNormal = mul(vNormal, WorldMatrix);
+	
+
+	float4 vDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
+
+
+
+
+	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+	Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);
+	if (vDissolve.r < g_fDissolveAlpha)
+		discard;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default
@@ -168,5 +201,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_WATER();
+	}
+
+	pass Dissolve
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISSOLVE();
 	}
 }

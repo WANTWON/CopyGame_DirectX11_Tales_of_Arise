@@ -45,6 +45,7 @@ public:
 	PICKING_TYPE Get_PickingType() {return (PICKING_TYPE)m_PickingType;}
 	_bool Get_CameraPicking() { return m_bMakeCamera; }
 	_int Get_BrushType() { return m_eBrushType; }
+	_tchar* Get_BmpPath() { return m_pBmpFilePath; }
 public:
 	/* For Debug*/
 	void ShowSimpleMousePos(bool* p_open);
@@ -122,7 +123,7 @@ private:
 	CTerrain_Manager::TERRAINSHAPEDESC		m_TerrainShapeDesc;
 	_bool									m_bTerrain_Show = true;
 	_int									m_eBrushType = RED;
-
+	_tchar									m_pBmpFilePath[MAX_PATH] = L"../../../Bin/Resources/Textures/Terrain/Newfilter.bmp";
 
 	/* For Object */
 	CModelManager*							m_pModel_Manager = nullptr;

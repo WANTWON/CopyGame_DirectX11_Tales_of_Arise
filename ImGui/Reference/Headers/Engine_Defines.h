@@ -4,6 +4,7 @@
 #pragma warning (disable : 4099)
 #pragma warning (disable : 4005)
 #pragma warning (disable : 4251)
+#pragma warning (disable : 4819)
 
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -52,6 +53,7 @@ using namespace std;
 #include "Engine_Struct.h"
 #include "Engine_Typedef.h"
 
+enum EVENTTYPE { EVENT_SOUND, EVENT_EFFECT, EVENT_COLLIDER, EVENT_STATE, EVENT_END };
 
 #ifdef _DEBUG
 

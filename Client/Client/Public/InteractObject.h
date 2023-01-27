@@ -41,6 +41,7 @@ protected: /* For.Components */
 	_uint					m_iCollisiongCount = 0;
 	_bool					m_bCollision = false;
 	_bool					m_bIsAnimationFinished = false;
+	
 public:
 	virtual void Free() override;
 };

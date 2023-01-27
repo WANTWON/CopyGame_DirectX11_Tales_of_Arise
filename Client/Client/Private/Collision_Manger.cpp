@@ -16,6 +16,7 @@ void CCollision_Manager::Add_CollisionGroup(COLLSIONGROUP CollisionGroup, CBaseO
 {
 	if (nullptr == pGameObject)
 		return;
+
 	m_GameObjects[CollisionGroup].push_back(pGameObject);
 }
 
@@ -148,8 +149,39 @@ void CCollision_Manager::Update_Collider()
 			if(iter->Get_IsSocket() == false)
 				iter->Update_Collider();
 		}
-			
 	}
+}
+
+CCollider * CCollision_Manager::Reuse_Collider(CCollider::TYPE eType, _uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg)
+{
+	CCollider* pCollider = nullptr;
+
+	if (m_ColliderPool[eType].empty())
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		pCollider = (CCollider*)pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
+		
+		RELEASE_INSTANCE(CGameInstance);
+	}
+	else
+	{
+		pCollider = m_ColliderPool[eType].front();
+		m_ColliderPool[eType].pop_front();
+	}
+
+	if (nullptr == pCollider)
+		return nullptr;
+
+	return pCollider;
+}
+
+void CCollision_Manager::Collect_Collider(CCollider::TYPE eType, CCollider * pCollider)
+{
+	if (nullptr == pCollider)
+		return;
+	
+	m_ColliderPool[eType].push_back(pCollider);
 }
 
 _float CCollision_Manager::Calculate_DmgDirection(CBaseObj* Sour, CBaseObj* Dest, _float* fCross)
@@ -167,12 +199,18 @@ _float CCollision_Manager::Calculate_DmgDirection(CBaseObj* Sour, CBaseObj* Dest
 	return fAngleDegree;
 }
 
-
-
 void CCollision_Manager::Free()
 {
 	for (_uint i = 0; i < COLLISION_END; ++i)
 	{
 		m_GameObjects[i].clear();
+	}
+
+	for (_uint i = 0; i < COLLIDER_END; ++i)
+	{
+		for (auto& iter : m_ColliderPool[i])
+			Safe_Release(iter);
+		
+		m_ColliderPool[i].clear();
 	}
 }

@@ -6,8 +6,10 @@ texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
 texture2D g_GlowTexture;
 bool g_bGlow = false;
+texture2D g_DissolveTexture;
 //float4 g_GlowColor;
 
+float g_fDissolveAlpha;
 float g_fAlpha = 1.f;
 float g_DissolveSize = 1.5f;
 vector g_DissolveColor = vector(1.f, 0.7f, 0.f, 1);
@@ -17,7 +19,7 @@ float g_fMinRange = 5.f;
 float g_fMaxRange = 10.f;
 float4 g_PlayerPosition;
 
-matrix g_BoneMatrices[264];
+matrix g_BoneMatrices[400];
 
 struct VS_IN
 {
@@ -143,6 +145,37 @@ PS_OUT_SHADOW PS_SHADOWDEPTH(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_DISSOLVE(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+	float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
+	float3 vNormal;
+
+	vNormal = float3(vTextureNormal.x*2.f - 1.f, vTextureNormal.y*2.f - 1.f, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
+
+	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+	vNormal = mul(vNormal, WorldMatrix);
+
+	float4 vDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
+
+	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+	Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV) * g_bGlow;
+	Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);
+
+	if (Out.vGlow.r != 0 && Out.vGlow.g != 0 && Out.vGlow.b != 0)
+		Out.vGlow.rgb = /*Out.vDiffuse.rgb * Out.vGlow.r;*/float3(1.f, 1.f, 1.f);
+
+	if (vDissolve.r < g_fDissolveAlpha)
+		discard;
+
+	//if (Out.vDiffuse.a <= 0.3f)
+	//	discard;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default
@@ -165,5 +198,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_SHADOWDEPTH();
+	}
+
+	pass Dissolve
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISSOLVE();
 	}
 }

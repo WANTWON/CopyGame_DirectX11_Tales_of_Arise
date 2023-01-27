@@ -26,6 +26,7 @@ public:
 		CHierarchyNode*		pSocket = nullptr;
 		_float4x4			SocketPivotMatrix;
 		const _float4x4*	pParentWorldMatrix;
+		char				pModeltag[MAX_PATH] = "";
 
 	}WEAPONDESC;
 private:
@@ -33,6 +34,9 @@ private:
 	CWeapon(const CWeapon& rhs);
 	virtual ~CWeapon() = default;
 
+public:
+	void On_Collider(void) { m_isCollider = true; }
+	void Off_Collider(void) { m_isCollider = false; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -59,6 +63,9 @@ private:
 private:
 	HRESULT Ready_Components();
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
+
+private:
+	_bool m_isCollider = false;
 
 
 public:

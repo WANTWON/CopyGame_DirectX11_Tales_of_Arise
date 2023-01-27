@@ -126,4 +126,26 @@ namespace Engine
 		XMFLOAT4 vRotation;
 		XMFLOAT3 vPosition;
 	}KEYFRAME;
+
+	typedef struct tagBinBone
+	{
+		char szName[MAX_PATH];
+		XMFLOAT4X4 Transformation;
+		unsigned int iNumChildren;
+	}BINBONE;
+
+	typedef struct tagBinChannel
+	{
+		char szName[MAX_PATH];
+		int iNumKeyFrames;
+	}BINCHANNEL;
+
+	typedef struct tagBinAnimation
+	{
+		char szName[MAX_PATH];
+		double dbDuration;
+		double dbTickPerSecond;
+
+		int iNumChannels;
+	}BINANIM;
 }

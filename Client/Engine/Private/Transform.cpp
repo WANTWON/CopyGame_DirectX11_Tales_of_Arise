@@ -267,9 +267,19 @@ bool CTransform::Sliding_Anim(_matrix RootMatrix, CNavigation * pNavigation, _fl
 		pNavigation->Compute_CurrentIndex_byXZ(vAfterPosition);
 
 	if (nullptr == pNavigation)
+	{
+		/*Set_State(CTransform::STATE_RIGHT, RootMatrix.r[0]);
+		Set_State(CTransform::STATE_UP, RootMatrix.r[1]);
+		Set_State(CTransform::STATE_LOOK, RootMatrix.r[2]);*/
 		Set_State(CTransform::STATE_TRANSLATION, RootMatrix.r[3]);
+	}	
 	else if (true == pNavigation->isMove(vAfterPosition + vLook * fRadius))
+	{
+		/*Set_State(CTransform::STATE_RIGHT, RootMatrix.r[0]);
+		Set_State(CTransform::STATE_UP, RootMatrix.r[1]);
+		Set_State(CTransform::STATE_LOOK, RootMatrix.r[2]);*/
 		Set_State(CTransform::STATE_TRANSLATION, RootMatrix.r[3]);
+	}
 	else if (false == pNavigation->isMove(vAfterPosition + vLook * fRadius))
 	{
 		_vector vNormal = XMVector3Normalize(pNavigation->Get_LastNormal());

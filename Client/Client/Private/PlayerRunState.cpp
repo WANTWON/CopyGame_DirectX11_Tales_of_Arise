@@ -61,12 +61,22 @@ void CRunState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_RUN;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CPlayer::ANIM::ANIM_RUN);
+	switch (m_pOwner->Get_PlayerID())
+	{
+	case CPlayer::ALPHEN:
+		m_pOwner->Get_Model()->Set_NextAnimIndex(CAlphen::ANIM::ANIM_RUN);
+		break;
+	case CPlayer::SION:
+		m_pOwner->Get_Model()->Set_NextAnimIndex(CSion::ANIM::ANIM_RUN);
+		break;
+	default:
+		break;
+	}
 }
 
 void CRunState::Exit()
 {
-
+	__super::Exit();
 }
 
 void CRunState::Move(_float fTimeDelta)
@@ -122,6 +132,7 @@ void CRunState::Move(_float fTimeDelta)
 	pPlayerTransform->Set_State(CTransform::STATE_RIGHT, vRight);
 
 	_float fCos = XMVectorGetX(XMVector4Dot(pPlayerTransform->Get_State(CTransform::STATE_LOOK), vPlayerLook));
+
 	if (0.85f < fCos)
 		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());
 
