@@ -90,7 +90,7 @@ void CModel::Reset_Events(void)
 	m_Animations[m_iCurrentAnimIndex]->Reset_Events();
 }
 
-HRESULT CModel::Initialize_Prototype(PLAYERID eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
+HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
 {
 	m_eModelType = eModelType;
 
@@ -351,13 +351,13 @@ HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
 	/* �޽� �� ���⤷�� �ִ� ������ ����� �����´�. */
 	if (TYPE_ANIM == m_eModelType)
 	{
-		_float4x4		BoneMatrix[264];
+		_float4x4		BoneMatrix[400];
 
 		/* �޽ÿ��� �����ؼ� �ϰ� ����ִ� ������ �迭�� ��ƿ�.
 		�� = ���� ������ * ���� �Ĺ��ε��Ʈ���� * ���ʻ���������� */
 		m_Meshes[iMeshIndex]->Get_BoneMatrices(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
 
-		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 264);
+		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 400);
 	}
 
 	pShader->Begin(iPassIndex);
@@ -377,13 +377,13 @@ HRESULT CModel::RenderShadow(CShader * pShader, _uint iMeshIndex, _uint iLevelIn
 	/* �޽� �� ���⤷�� �ִ� ������ ����� �����´�. */
 	if (TYPE_ANIM == m_eModelType)
 	{
-		_float4x4		BoneMatrix[264];
+		_float4x4		BoneMatrix[400];
 
 		/* �޽ÿ��� �����ؼ� �ϰ� ����ִ� ������ �迭�� ��ƿ�.
 		�� = ���� ������ * ���� �Ĺ��ε��Ʈ���� * ���ʻ���������� */
 		m_Meshes[iMeshIndex]->Get_BoneMatrices(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
 
-		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 264);
+		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 400);
 
 	}
 
