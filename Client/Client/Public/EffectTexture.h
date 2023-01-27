@@ -14,6 +14,7 @@ public:
 	typedef struct tagTextureEffectDescription
 	{
 		_tchar wcPrototypeId[MAX_PATH] = TEXT("");	/* "Spark.dds > Spark" */
+		_bool bIsDistortion = false;
 	} TEXTUREEFFECTDESC;
 
 public:

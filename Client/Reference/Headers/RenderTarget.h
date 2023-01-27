@@ -11,9 +11,8 @@ private:
 	virtual ~CRenderTarget() = default;
 
 public:
-	ID3D11RenderTargetView*	Get_RTV() const {
-		return m_pRTV;
-	}
+	ID3D11RenderTargetView*	Get_RTV() const { return m_pRTV; }
+	ID3D11ShaderResourceView* Get_SRV() const { return m_pSRV; }
 
 public:
 	HRESULT Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4* pColor);

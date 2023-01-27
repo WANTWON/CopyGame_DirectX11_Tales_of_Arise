@@ -38,11 +38,14 @@ void CEffectTexture::Late_Tick(_float fTimeDelta)
 {
 	if (m_pRendererCom)
 	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);			/* Non-Alphablend */
-		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);*/	/* Alphablend with Normals */
-		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);*/		/* Alphablend */
+		if (m_tTextureEffectDesc.bIsDistortion)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_DISTORTION, this);
+		else
+		{
+			Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 
-		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		}
 	}
 }
 
@@ -53,7 +56,11 @@ HRESULT CEffectTexture::Render()
 
 	__super::Render();
 
-	m_pShaderCom->Begin(0);
+	if (m_tTextureEffectDesc.bIsDistortion)
+		m_pShaderCom->Begin(0);
+	else
+		m_pShaderCom->Begin(0);
+	
 	m_pVIBufferCom->Render();
 
 	return S_OK;
@@ -81,7 +88,7 @@ HRESULT CEffectTexture::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, m_tTextureEffectDesc.wcPrototypeId, (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Effect"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 }
 
@@ -89,9 +96,40 @@ HRESULT CEffectTexture::SetUp_ShaderResources()
 {
 	__super::SetUp_ShaderResources();
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
-		return E_FAIL;
+	if (m_tTextureEffectDesc.bIsDistortion)
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+		/* Get the Back Buffer Texture from the Swap Chain */
+		ID3D11Texture2D* pBackBufferTexture = nullptr;
+		if (FAILED(pGameInstance->Get_SwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBufferTexture)))
+			return E_FAIL;
+
+		D3D11_TEXTURE2D_DESC tTextureDesc;
+		pBackBufferTexture->GetDesc(&tTextureDesc);		
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC tSRVDesc;
+		tSRVDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		tSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		tSRVDesc.Texture2D.MipLevels = tTextureDesc.MipLevels;
+		tSRVDesc.Texture2D.MostDetailedMip = 0;
+
+		/* Create the SRV */
+		ID3D11ShaderResourceView* pSRV = nullptr;
+		if (FAILED(m_pDevice->CreateShaderResourceView(pBackBufferTexture, &tSRVDesc, &pSRV)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", pSRV)))
+			return E_FAIL;
+
+		RELEASE_INSTANCE(CGameInstance);
+	}
+	else
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
+			return E_FAIL;
+	}
+	
 	return S_OK;
 }
 

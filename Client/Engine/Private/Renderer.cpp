@@ -68,6 +68,10 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Specular"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
+	/* For.Target_Distortion */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_BackBufferSubsection"), ViewportDesc.Width, ViewportDesc.Height,
+		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
+		return E_FAIL;
 
 	/* For.Target_ShadowDepth */
 	_uint iShadowMapCX = 1280.f * 12.5f;
@@ -78,15 +82,6 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_ShadowDepth"), iShadowMapCX, iShadowMapCY,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(1.0f, 1.0f, 1.0f, 1.0f))))
-		return E_FAIL;
-
-	/* For.Target_Reflection */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Reflection"), ViewportDesc.Width, ViewportDesc.Height,
-		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
-		return E_FAIL;
-	/* For.Target_Refraction */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Refraction"), ViewportDesc.Width, ViewportDesc.Height,
-		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
 
 	/**
@@ -121,11 +116,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Blur_Vertical"), TEXT("Target_Blur_Vertical"))))
 		return E_FAIL;
 
-	/* For.MRT_Reflection */
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Reflection"), TEXT("Target_Reflection"))))
-		return E_FAIL;
-	/* For.MRT_Refraction */
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Refraction"), TEXT("Target_Refraction"))))
+	/* For.MRT_Distortion*/
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Distortion"), TEXT("Target_BackBufferSubsection"))))
 		return E_FAIL;
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
@@ -152,20 +144,12 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Depth"), 75.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
-	//if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Ambient"), 75.f, 525.f, 150.f, 150.f)))
-	//	return E_FAIL;
-
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Shade"), 225.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Specular"), 225.f, 225.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth"), 225.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
-
-	//if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Reflection"), 375.f, 75.f, 150.f, 150.f)))
-		//return E_FAIL;
-	//if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Refraction"), 375.f, 225.f, 150.f, 150.f)))
-		//return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow"), 375.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 #endif
@@ -210,11 +194,8 @@ HRESULT CRenderer::Render_GameObjects()
 		return E_FAIL;
 	if (FAILED(Render_AlphaBlend()))
 		return E_FAIL;
-
-	/* Reflective Objects need to reflect the scene around them,
-	so the entire scene must be rendered before them. */
-	//if (FAILED(Render_Reflective())) /* and Refractive */
-	//	return E_FAIL;
+	if (FAILED(Render_Distortion()))
+		return E_FAIL;
 
 #ifdef _DEBUG	
 	Render_Debug();
@@ -356,42 +337,26 @@ HRESULT CRenderer::Render_AlphaBlend()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Reflective()
+HRESULT CRenderer::Render_Distortion()
 {
-	/* If there are not Reflective Object return. (Reflection/Refraction process is expensive) */
-	if (m_GameObjects[RENDER_REFLECTIVE].empty())
+	/* If there are not Distortion Object return. */
+	if (m_GameObjects[RENDER_DISTORTION].empty())
 		return S_OK;
 	else
 	{
-		if (!m_pTarget_Manager)
-			return E_FAIL;
-
-		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-		if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-		if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-
-		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Reflection"))))
-			return E_FAIL;
-
-		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Refractive"))))
-			return E_FAIL;
-
-		for (auto& pGameObject : m_GameObjects[RENDER_REFLECTIVE])
+		for (auto& pGameObject : m_GameObjects[RENDER_DISTORTION])
 		{
-			if (nullptr != pGameObject)
+			if (pGameObject)
 			{
-				//pGameObject->Render();
+				pGameObject->Render();
 				Safe_Release(pGameObject);
 			}
 		}
 
-		m_GameObjects[RENDER_REFLECTIVE].clear();
+		m_GameObjects[RENDER_DISTORTION].clear();
+		
+		return S_OK;
 	}
-
-	return S_OK;
 }
 
 HRESULT CRenderer::Render_UI()
@@ -510,7 +475,7 @@ HRESULT CRenderer::Render_Glow()
 		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 			return E_FAIL;
 
-		/* Bind the Vertically Blurred Image to the Glow Texture. */
+		/* Bind the Horizontally and Vertically Blurred Image to the Glow Texture. */
 		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShader, "g_GlowTexture")))
 			return E_FAIL;
 

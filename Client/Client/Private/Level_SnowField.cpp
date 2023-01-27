@@ -45,11 +45,6 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	
-
-
-
-
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_SNOWFIELD);
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
