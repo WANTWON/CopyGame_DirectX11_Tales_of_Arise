@@ -1024,6 +1024,7 @@ void CUI_MENU_Back::Free()
 	Safe_Release(m_pTextureCom17);
 	Safe_Release(m_pTextureCom18);
 	Safe_Release(m_pTextureCom19);
+	Safe_Release(m_pTextureCom20);
 	__super::Free();
 }
 
