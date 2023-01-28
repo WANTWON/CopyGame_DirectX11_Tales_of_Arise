@@ -38,9 +38,9 @@ CBerserkerState * CBattle_DashStartState::Tick(_float fTimeDelta)
 	}
 	else
 	{
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+//		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -80,17 +80,17 @@ void CBattle_DashStartState::Enter()
 	//switch (m_eStateId)
 	//{
 	//case STATE_DASH_START:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_START);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_START);
 	//	break;
 	//case STATE_DASH_LOOP:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_LOOP);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_LOOP);
 	//	break;
 	//case STATE_DASH_SCRATCHES:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_END);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_END);
 	//	break;
 	//}
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_END);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_END);
 	////
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 	////

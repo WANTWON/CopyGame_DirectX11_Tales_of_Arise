@@ -67,7 +67,7 @@ CSlimeState * CBattle_Poision_ShotState::LateTick(_float fTimeDelta)
 void CBattle_Poision_ShotState::Enter()
 {
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::ATTACK_POISON_SHOT);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::ATTACK_POISON_SHOT);
 	
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

@@ -39,9 +39,9 @@ CHawkState * CBattle_DeadState::Tick(_float fTimeDelta)
 			
 	else
 	{
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+	//	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -59,7 +59,7 @@ CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 		{
 
 
-			_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+//			_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DEAD);
 			m_pOwner->Get_Model()->Play_Animation(2.55f, false);
@@ -90,7 +90,7 @@ void CBattle_DeadState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_TAKE_DAMAGE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::DEAD);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DEAD);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

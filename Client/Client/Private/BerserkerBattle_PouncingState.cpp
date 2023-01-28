@@ -46,9 +46,9 @@ CBerserkerState * CBattle_PouncingState::Tick(_float fTimeDelta)
 	}
 	else
 	{
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+	//	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 
@@ -68,7 +68,7 @@ void CBattle_PouncingState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_ANGRY;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::ATTACK_POUNCING);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_POUNCING);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

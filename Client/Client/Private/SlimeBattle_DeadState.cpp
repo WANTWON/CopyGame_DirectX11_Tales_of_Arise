@@ -38,7 +38,7 @@ CSlimeState * CBattle_DeadState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
 	{
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+//		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::DEAD);
 		m_pOwner->Get_Model()->Play_Animation(6.2f, false);
@@ -54,7 +54,7 @@ void CBattle_DeadState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_DEAD;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::DEAD);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::DEAD);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

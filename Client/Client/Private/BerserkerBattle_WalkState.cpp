@@ -92,7 +92,7 @@ void CBattle_WalkState::Enter()
 
 	m_eStateId = STATE_ID::STATE_CALM;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::MOVE_WALK_F);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_WALK_F);
 
 	////
 

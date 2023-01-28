@@ -75,7 +75,7 @@ CSlimeState * CBattle_Poision_RainState::LateTick(_float fTimeDelta)
 void CBattle_Poision_RainState::Enter()
 {
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::ATTACK_POISON_RAIN);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::ATTACK_POISON_RAIN);
 	
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

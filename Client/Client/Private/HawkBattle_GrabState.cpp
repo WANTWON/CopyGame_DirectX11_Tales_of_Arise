@@ -149,23 +149,23 @@ void CBattle_GrabState::Enter()
 	//switch (m_eStateId)
 	//{
 	//case STATE_GRAB_START:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_START1);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_START1);
 	//	break;
 	////case STATE_GRAB_LOOP:
-	////	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP1);
+	////	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP1);
 	////	break;
 	//case STATE_GRAB_END:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_END);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_END);
 	//	break;
 	//}
 
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP);
 
 	if (m_eGrapType == STATE_ID::STATE_GRAB_LOOP)
 	{
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP);
 		m_pOwner->Get_Model()->Play_Animation(1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	}
 	////

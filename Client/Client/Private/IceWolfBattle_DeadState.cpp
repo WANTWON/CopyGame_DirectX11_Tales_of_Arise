@@ -40,7 +40,7 @@ CIceWolfState * CBattle_DeadState::LateTick(_float fTimeDelta)
 	{
 
 
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+//		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
 		m_pOwner->Get_Model()->Play_Animation(2.55f, false);
@@ -59,7 +59,7 @@ void CBattle_DeadState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_DEAD;
 	
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

@@ -65,8 +65,8 @@ CHawkState * CBattle_GrabStartState::LateTick(_float fTimeDelta)
 
 	else
 	{
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+//		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+//		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 		m_pOwner->Check_Navigation();
 	}
 
@@ -77,7 +77,7 @@ void CBattle_GrabStartState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::ATTACK_GRAB_START);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_START);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 	

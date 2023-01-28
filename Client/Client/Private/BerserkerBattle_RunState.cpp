@@ -78,7 +78,7 @@ void CBattle_RunState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_ANGRY;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::MOVE_RUN);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_RUN);
 
 
 	////
