@@ -186,7 +186,9 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-
+	_vector vPosition = { 50, 0.f, 22, 1.f };
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 

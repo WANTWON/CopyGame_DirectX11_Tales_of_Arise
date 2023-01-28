@@ -70,7 +70,7 @@ public: /* Use Sliding */
 	bool Sliding_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
 
 public: /* Use Sliding while Animation */
-	bool Sliding_Anim(_matrix RootMatrix, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
+	bool Sliding_Anim(_float fMoveLength, _vector vecRotation, class CNavigation* pNavigation = nullptr);
 
 public:
 	void Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight, _float fEndiHeight);

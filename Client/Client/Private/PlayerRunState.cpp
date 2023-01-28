@@ -18,7 +18,7 @@ CPlayerState * CRunState::HandleInput()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-		return new CAttackNormalState(m_pOwner);
+		return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
@@ -78,7 +78,6 @@ void CRunState::Enter()
 
 void CRunState::Exit()
 {
-	__super::Exit();
 }
 
 void CRunState::Move(_float fTimeDelta)

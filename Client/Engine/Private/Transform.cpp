@@ -256,31 +256,33 @@ bool CTransform::Sliding_Right(_float fTimeDelta, CNavigation * pNavigation, _fl
 	return true;
 }
 
-bool CTransform::Sliding_Anim(_matrix RootMatrix, CNavigation * pNavigation, _float fRadius)
+bool CTransform::Sliding_Anim(_float fMoveLength, _vector vecRotation, class CNavigation* pNavigation)
 {
+	_matrix WorldMatrix = XMLoadFloat4x4(&m_WorldMatrix);
+
+	_vector vWorldScale, vWorldRot, vWorldPos;
+	XMMatrixDecompose(&vWorldScale, &vWorldRot, &vWorldPos, WorldMatrix);
+
+	WorldMatrix = XMMatrixRotationQuaternion(vWorldRot * vecRotation) * XMMatrixTranslationFromVector(vWorldPos);
+
+	WorldMatrix.r[0] = XMVector4Normalize(WorldMatrix.r[0]) * Get_Scale(CTransform::STATE_RIGHT);
+	WorldMatrix.r[1] = XMVector4Normalize(WorldMatrix.r[1]) * Get_Scale(CTransform::STATE_UP);
+	WorldMatrix.r[2] = XMVector4Normalize(WorldMatrix.r[2]) * Get_Scale(CTransform::STATE_LOOK);
+
+	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
+
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
 	
-	_vector		vAfterPosition = RootMatrix.r[3];
-	_vector		vLook = XMVector4Normalize(RootMatrix.r[2]);
+	_vector		vAfterPosition = vPosition + (Get_State(CTransform::STATE_LOOK) * fMoveLength);
 	
 	if (pNavigation)
 		pNavigation->Compute_CurrentIndex_byXZ(vAfterPosition);
 
 	if (nullptr == pNavigation)
-	{
-		/*Set_State(CTransform::STATE_RIGHT, RootMatrix.r[0]);
-		Set_State(CTransform::STATE_UP, RootMatrix.r[1]);
-		Set_State(CTransform::STATE_LOOK, RootMatrix.r[2]);*/
-		Set_State(CTransform::STATE_TRANSLATION, RootMatrix.r[3]);
-	}	
-	else if (true == pNavigation->isMove(vAfterPosition + vLook * fRadius))
-	{
-		/*Set_State(CTransform::STATE_RIGHT, RootMatrix.r[0]);
-		Set_State(CTransform::STATE_UP, RootMatrix.r[1]);
-		Set_State(CTransform::STATE_LOOK, RootMatrix.r[2]);*/
-		Set_State(CTransform::STATE_TRANSLATION, RootMatrix.r[3]);
-	}
-	else if (false == pNavigation->isMove(vAfterPosition + vLook * fRadius))
+		Set_State(CTransform::STATE_TRANSLATION, vAfterPosition);
+	else if (true == pNavigation->isMove(vAfterPosition))
+		Set_State(CTransform::STATE_TRANSLATION, vAfterPosition);
+	/*else if (false == pNavigation->isMove(vAfterPosition))
 	{
 		_vector vNormal = XMVector3Normalize(pNavigation->Get_LastNormal());
 		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vNormal));
@@ -290,7 +292,7 @@ bool CTransform::Sliding_Anim(_matrix RootMatrix, CNavigation * pNavigation, _fl
 		if (true == pNavigation->isMove(vPosition + XMVector3Normalize(vLook) * fRadius))
 			Set_State(CTransform::STATE_TRANSLATION, vPosition);
 		return false;
-	}
+	}*/
 
 	return true;
 }

@@ -89,7 +89,8 @@ public:
 	CTransform* Get_Transform() { return m_pTransformCom; }
 	class CIceWolfState* Get_State() { return m_pIce_WolfState; }
 	void Set_PlayerState(class CIceWolfState* pPlayerState) { m_pIce_WolfState = pPlayerState; }
-
+	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
+	
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _int Take_Damage(float fDamage, CBaseObj* DamageCauser) override;
@@ -118,7 +119,7 @@ private:
 
 private:
 	class CIceWolfState*  m_pIce_WolfState = nullptr;
-	
+		  _float m_fSpeed = 3.f;
 
 	
 

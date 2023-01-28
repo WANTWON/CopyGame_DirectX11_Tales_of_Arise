@@ -49,7 +49,7 @@ CHawkState * CBattle_RevolveState::Tick(_float fTimeDelta)
 				if (80 >= m_fTarget_Distance)
 				{
 					m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-					return new CBattle_GrabState(m_pOwner);
+					//return new CBattle_GrabState(m_pOwner);
 						
 				}
 
@@ -59,8 +59,8 @@ CHawkState * CBattle_RevolveState::Tick(_float fTimeDelta)
 
 			else
 			{
-				_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-				m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix/*, m_pOwner->Get_Navigation()*/);
+				//_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+				//m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix/*, m_pOwner->Get_Navigation()*/);
 				m_pOwner->Check_Navigation();
 
 			}

@@ -53,6 +53,7 @@ protected:
 	virtual HRESULT Drop_Items();
 	virtual _int Take_Damage(float fDamage, CBaseObj* DamageCauser);
 	virtual void Compute_CurrentIndex();
+	
 
 protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr)	PURE;

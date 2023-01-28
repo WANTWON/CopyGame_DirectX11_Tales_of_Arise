@@ -2,6 +2,8 @@
 #include "..\Public\IceWolfBattle_HowLingState.h"
 #include "IceWolfAttackNormalState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
+#include "IceWolfBattle_RunState.h"
+#include "IceWolfAttackBiteState.h"
 
 using namespace IceWolf;
 
@@ -17,7 +19,7 @@ CIceWolfState * CBattle_HowLingState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CBattle_HowLingState::Tick(_float fTimeDelta)
 {
-	m_bAnimFinish = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 
 	Find_BattleTarget();
@@ -28,18 +30,47 @@ CIceWolfState * CBattle_HowLingState::Tick(_float fTimeDelta)
 
 CIceWolfState * CBattle_HowLingState::LateTick(_float fTimeDelta)
 {
+	srand((_uint)time(NULL));
 	m_iRand = rand() % 2;
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	if (false == m_bTargetSetting)
+	{
+		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+		
+		
+		m_bTargetSetting = true;
+	}
 
 	
-		if (m_fIdleAttackTimer > 3.f && true == m_bAnimFinish)
-			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
+	if (m_bIsAnimationFinished)
+	{
+		switch (m_iRand)
+		{
+		case 0:
+			return new CBattle_RunState(m_pOwner);
+			break;
 
-		else
-			m_fIdleAttackTimer += fTimeDelta;
+		case 1:
+			return new CAttackBiteState(m_pOwner);
+			break;
+
+		default:
+			break;
+		}
+
+	}
 	
+
+	else
+	{
+	//	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+
+	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
+
 
 	return nullptr;
 }
@@ -48,7 +79,9 @@ void CBattle_HowLingState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_DETECT_IDLE);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_HOWLING);
+
+	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CBattle_HowLingState::Exit()

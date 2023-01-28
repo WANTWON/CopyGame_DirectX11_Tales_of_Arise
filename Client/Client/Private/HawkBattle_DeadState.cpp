@@ -15,16 +15,12 @@ using namespace Hawk;
 CBattle_DeadState::CBattle_DeadState(CHawk* pHawk)
 {
 	m_pOwner = pHawk;
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	
 }
 
 CHawkState * CBattle_DeadState::AI_Behaviour(_float fTimeDelta)
 {
-	m_fTarget_Distance = Find_BattleTarget();
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	//m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-	//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+
 	return nullptr;
 
 
@@ -32,47 +28,69 @@ CHawkState * CBattle_DeadState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CBattle_DeadState::Tick(_float fTimeDelta)
 {
-	AI_Behaviour(fTimeDelta);
-
-	m_pOwner->Check_Navigation(); // ÀÚÀ¯
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
 
-	m_iRand = rand() % 3;
+	if (false == m_bDeadAnimFinish)
+	{
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-
-
-
-		//if (m_fIdleAttackTimer > 3.f)
-		//	return new CBattle_Flying_BackState(m_pOwner);
-
-		//else m_fIdleAttackTimer += fTimeDelta;
-
-		//else if (m_fIdleAttackTimer > 3.f && m_iRand == 2)
-		//	return new CAttackNormalState(m_pOwner);
-
-		//else if (m_fIdleAttackTimer > 3.f && m_iRand == 3)
-		//	return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
+	}
 
 			
-	
+	else
+	{
+	//	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+
+	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
+
 
 	return nullptr;
 }
 
 CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 {
+	m_fTimeDletaAcc += fTimeDelta;
+	
+
+		if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
+		{
+
+
+//			_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DEAD);
+			m_pOwner->Get_Model()->Play_Animation(2.55f, false);
+
+
+			m_pOwner->Get_Transform()->Go_Up(fTimeDelta * -1.f);
+
+			_vector vHawkPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+			_float4 fHawkPos;
+
+			XMStoreFloat4(&fHawkPos, vHawkPos);
+
+
+
+			if (m_fTimeDletaAcc >= 5 || fHawkPos.y <= 0)
+			{
+			m_bDeadAnimFinish = true;
+			m_pOwner->Set_Dissolve();
+			m_fTimeDletaAcc = 0.f;
+			}
+
+		}
 
 	return nullptr;
 }
 
 void CBattle_DeadState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_BATTLE;
+	m_eStateId = STATE_ID::STATE_TAKE_DAMAGE;
 
-//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DEAD1);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DEAD);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

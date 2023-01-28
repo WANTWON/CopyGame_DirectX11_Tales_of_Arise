@@ -508,6 +508,23 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Model_Hawk*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Hawk"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Hawk/Hawk.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Berserker*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Berserker"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Berserker/Berserker.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Slime*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Slime"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Slime/Slime.dat"))))
+		return E_FAIL;
+
+
+
 #pragma endregion Model Loading
 
 #pragma region Navigation Loading
@@ -590,6 +607,53 @@ HRESULT CLoader::Loading_ForBattleLevel()
 	/* Loading Model */
 	lstrcpy(m_szLoadingText, TEXT("Loading Model"));
 
+	/*For.Prototype_Component_Model_IceWolf*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Ice_Wolf"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Hawk*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Hawk"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Hawk/Hawk.dat"))))
+		return E_FAIL;
+
+	///*For.Prototype_Component_Model_Berserker*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Berserker"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Berserker/Berserker.dat"))))
+	//	return E_FAIL;
+	//
+	///*For.Prototype_Component_Model_Hawk*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Hawk"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Hawk/Hawk.dat"))))
+	//	return E_FAIL;
+
+	///*For.Prototype_Component_Model_Slime*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Slime"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Slime/Slime.dat"))))
+	//	return E_FAIL;
+
+
+	///*For.Prototype_Component_Model_TreasureBox00*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox00"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox00/TreasureBox00.dat"))))
+	//	return E_FAIL;
+
+	///*For.Prototype_Component_Model_TreasureBox02_Blue*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox02_Blue"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Blue/TreasureBox02_Blue.dat"))))
+	//	return E_FAIL;
+
+	///*For.Prototype_Component_Model_TreasureBox02_Red*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox02_Red"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02_Red/TreasureBox02_Red.dat"))))
+	//	return E_FAIL;
+
+	///*For.Prototype_Component_Model_TreasureBox02*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("TreasureBox02"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02/TreasureBox02.dat"))))
+	//	return E_FAIL;
+
+	///NON ANIM 
 
 	/*For.Prototype_Component_Model_Apple*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Apple"),
