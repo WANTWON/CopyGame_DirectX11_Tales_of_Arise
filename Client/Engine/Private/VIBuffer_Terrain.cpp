@@ -379,8 +379,8 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3* pOut)
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
-			if (false == pFrustum->isIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_pVerticesPos[iIndex]), 1.f), 1))
-				continue;
+		//	if (false == pFrustum->isIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_pVerticesPos[iIndex]), 1.f), 1))
+		//		continue;
 
 			_uint		iIndices[] = {
 				iIndex + m_iNumVerticesX,
@@ -485,10 +485,8 @@ void CVIBuffer_Terrain::Set_Terrain_Shape(_float fHeight, _float fRad, _float fS
 
 				_float fAcc = (fRange - fLen) / fRange;
 
-				fAcc = pow(fAcc, (1.f / fSharp));
-
 				_float fTempY = fH * fAcc;
-				/*if (fH > 0.01f)
+				if (fH > 0.01f)
 				{
 					if (fTempY > vPos.y)
 						vPos.y = fTempY;
@@ -496,18 +494,7 @@ void CVIBuffer_Terrain::Set_Terrain_Shape(_float fHeight, _float fRad, _float fS
 				else if (fH < -0.01f)
 					vPos.y += fTempY * fTimeDelta;
 				else
-					vPos.y = 0.f;*/
-
-				if (fH > pVertices[iIndex].vPosition.y)
-				{
-					vPos.y += fTempY * fTimeDelta;
-				}
-				else if (fH < pVertices[iIndex].vPosition.y)
-				{
-					vPos.y -= fTempY * fTimeDelta;
-				}
-				else
-					vPos.y = vPos.y;
+					vPos.y = 0.f;
 
 			}
 

@@ -29,6 +29,9 @@ public:
 	const char* Get_Modeltag() { return m_ModelDesc.pModeltag; }
 	const NONANIMDESC Get_ModelDesc() {return m_ModelDesc;}
 
+private:
+	_bool IsRenderShadow();
+
 protected:
 	CModel*					m_pModelCom = nullptr;
 	CTexture*				m_pFogtexture = nullptr;

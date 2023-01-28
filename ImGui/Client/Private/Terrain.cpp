@@ -156,6 +156,14 @@ _bool CTerrain::Picking(_float3 * PickingPoint)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	//if (m_eDebugtype != DEBUG_SOILD)
+	//{
+
+	//	RELEASE_INSTANCE(CGameInstance);
+	//	return false;
+	//}
+		
+
 	if (m_pVIBufferCom->Picking(m_pTransformCom, PickingPoint) == true)
 	{
 		m_vMousePickPos = *PickingPoint;
@@ -184,10 +192,12 @@ void CTerrain::PickingTrue()
 		Set_Picked();
 		break;
 	case Client::CImgui_Manager::PICKING_TERRAIN_SHAPE:
-		Set_Terrain_Shape();
+		if (m_eDebugtype != DEBUG_SOILD)
+			Set_Terrain_Shape();
 		break;
 	case Client::CImgui_Manager::PICKING_TERRAIN_BRUSH:
-		Create_FilterTexture(CImgui_Manager::Get_Instance()->Get_BmpPath());
+		if (m_eDebugtype != DEBUG_SOILD)
+			Create_FilterTexture(CImgui_Manager::Get_Instance()->Get_BmpPath());
 		break;
 	default:
 		break;

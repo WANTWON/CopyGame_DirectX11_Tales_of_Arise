@@ -80,7 +80,7 @@ public:
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
-	virtual _float Take_Damage(float fDamage, CBaseObj* DamageCauser) override;
+	virtual _int Take_Damage(float fDamage, CBaseObj* DamageCauser) override;
 	
 private:
 	CSlime(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -479,12 +479,31 @@ void CImgui_Manager::Set_TrasureBox()
 
 		const char* TypeList[] = { "Item1", "Item2","Item3","Item4", "Item5", "Item6", "Item7" };
 		ImGui::Combo("ItemType", &m_ItemType, TypeList, IM_ARRAYSIZE(TypeList));
-		
+
+		static _float Scale[3] = { m_InitDesc.vScale.x , m_InitDesc.vScale.y, m_InitDesc.vScale.z };
+		ImGui::Text("Scale"); ImGui::SameLine();
+		ImGui::InputFloat3("##Scale", Scale);
+		m_InitDesc.vScale = _float3(Scale[0], Scale[1], Scale[2]);
+
+		static _float Rotation[3] = { m_InitDesc.vRotation.x , m_InitDesc.vRotation.y, m_InitDesc.vRotation.z };
+		ImGui::Text("Rotation axis"); ImGui::SameLine();
+		ImGui::InputFloat3("##2", Rotation);
+		m_InitDesc.vRotation = _float3(Rotation[0], Rotation[1], Rotation[2]);
+
+		static _float Offset[2] = { m_InitDesc.m_fAngle , m_fDist };
+		ImGui::Text("Rotaion Angle / dist"); ImGui::SameLine();
+		ImGui::InputFloat2("##3", Offset);
+		m_InitDesc.m_fAngle = Offset[0];
+		m_fDist = Offset[1];
+
 
 		if (pTreasureBox != nullptr)
 		{
 			CTreasureBox::BOXTAG BoxDesc; 
 			BoxDesc.vPosition = m_vPickedObjPos;
+			BoxDesc.vScale = m_InitDesc.vScale; 
+			BoxDesc.vRotation = m_InitDesc.vRotation;
+			BoxDesc.m_fAngle = m_InitDesc.m_fAngle;
 			m_vPickedObjPos = BoxDesc.vPosition;
 			BoxDesc.eItemType = m_ItemType;
 
@@ -512,6 +531,9 @@ void CImgui_Manager::Set_TrasureBox()
 		{
 			m_BoxDesc.vPosition = CPickingMgr::Get_Instance()->Get_PickingPos();
 			m_BoxDesc.eItemType = m_ItemType;
+			m_BoxDesc.vScale = m_InitDesc.vScale;
+			m_BoxDesc.vRotation = m_InitDesc.vRotation;
+			m_BoxDesc.m_fAngle = m_InitDesc.m_fAngle;
 			_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 			m_TempLayerTags.push_back(LayerTag);
 			if (FAILED(m_pModel_Manager->Add_TreasureBox(LayerTag, &m_BoxDesc)))
@@ -1032,7 +1054,7 @@ void CImgui_Manager::Set_Terrain_Map()
 	ImGui::DragInt("##PositionZ", &TerrainDesc.TerrainDesc.m_iPositionZ);
 
 	ImGui::Text("Position Y"); ImGui::SameLine();
-	ImGui::DragFloat("##PositionY", &TerrainDesc.TerrainDesc.m_fHeight, 0.05f, -10, 10);
+	ImGui::DragFloat("##PositionY", &TerrainDesc.TerrainDesc.m_fHeight, 0.05f);
 
 	static _int iOffset = m_pTerrain_Manager->Get_MoveOffset();
 	ImGui::Text("Move Offset"); ImGui::SameLine();
@@ -1138,7 +1160,7 @@ void CImgui_Manager::Set_Terrain_Shape()
 	ImGui::SameLine();
 	ImGui::DragFloat("##fRadius", &m_TerrainShapeDesc.fRadius, 0.1f);
 
-	ImGui::Text("Sharp");
+	ImGui::Text("Sharp(=BrushStrength)");
 	ImGui::SameLine();
 	ImGui::DragFloat("##fSharp", &m_TerrainShapeDesc.fSharp, 0.1f);
 
@@ -1298,20 +1320,18 @@ void CImgui_Manager::Set_HeightMap()
 	{
 
 		ImGui::BeginGroup();
-		ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
+		ImGui::BeginChild("item view", ImVec2(0, 50)); // Leave room for 1 line below us
 		char szLayertag[MAX_PATH] = "";
 		if (TerrainTags.size() != 0)
 			WideCharToMultiByte(CP_ACP, 0, TerrainTags[selected], MAX_PATH, szLayertag, MAX_PATH, NULL, NULL);
 		ImGui::Text("Selected :"); ImGui::SameLine();  ImGui::Text(szLayertag);
-		if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
-		{
+		
 			
 			if (ImGui::Button("Load_Bmp"))
 			{
 				m_pTerrain_Manager->Create_Terrain(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TerrainTags[selected]);
 			}
-			ImGui::EndTabBar();
-		}
+			
 
 		ImGui::EndChild();
 		ImGui::EndGroup();
@@ -1329,17 +1349,18 @@ void CImgui_Manager::Set_Brush()
 
 	static char FilePath[MAX_PATH] = "";
 	WideCharToMultiByte(CP_ACP, 0, m_pBmpFilePath, MAX_PATH, FilePath, MAX_PATH, NULL, NULL);
-	if(ImGui::InputText("BmpPath", FilePath, MAX_PATH))
-	MultiByteToWideChar(CP_ACP, 0, FilePath, MAX_PATH, m_pBmpFilePath, MAX_PATH);
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "BmpPath"); ImGui::SameLine();
+	if(ImGui::InputText("##BmpPath", FilePath, MAX_PATH))
+	MultiByteToWideChar(CP_ACP, 0, FilePath, MAX_PATH, m_pBmpFilePath, MAX_PATH); ImGui::SameLine();
 
 	if (ImGui::Button("Update"))
 		m_bUpdateTerrain = true;
 
-	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "RED"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.0f, 1.0f), "red"); ImGui::SameLine();
 	ImGui::RadioButton("##RED", &m_eBrushType, 0);
-	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "GREEN"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "green"); ImGui::SameLine();
 	ImGui::RadioButton("##GREEN", &m_eBrushType, 1);
-	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "BLUE"); ImGui::SameLine();
+	ImGui::TextColored(ImVec4(0.5f, 0.7f, 1.0f, 1.0f), "blue"); ImGui::SameLine();
 	ImGui::RadioButton("##BLUE", &m_eBrushType, 2);
 		
 

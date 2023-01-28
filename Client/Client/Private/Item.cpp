@@ -2,7 +2,7 @@
 #include "..\Public\Item.h"
 #include "Player.h"
 #include "Level_Manager.h"
-
+#include "PlayerManager.h"
 
 CItem::CItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CInteractObject(pDevice, pContext)
@@ -31,9 +31,17 @@ HRESULT CItem::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, m_ItemDesc.vPosition);
-	Set_Scale(m_ItemDesc.fScale);
-	
+	if (pArg != nullptr)
+	{
+		_vector vPosition = XMLoadFloat3(&m_ItemDesc.ModelDesc.vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		Set_Scale(m_ItemDesc.ModelDesc.vScale);
+
+		if (m_ItemDesc.ModelDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMLoadFloat3(&m_ItemDesc.ModelDesc.vRotation), XMConvertToRadians(m_ItemDesc.ModelDesc.m_fAngle));
+	}
+
 	return S_OK;
 }
 
@@ -57,9 +65,7 @@ void CItem::Late_Tick(_float fTimeDelta)
 		return;
 	__super::Late_Tick(fTimeDelta);
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameObject);
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (!pPlayer)
 		return;
 
@@ -126,6 +132,8 @@ void CItem::Free()
 
 HRESULT CItem::Ready_Components(void * pArg)
 {
+	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
+
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
@@ -145,78 +153,24 @@ HRESULT CItem::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
 		return E_FAIL;
 	///* For.Com_SPHERE */
 
 	CCollider::COLLIDERDESC ColliderDesc;
-
-	switch (m_ItemDesc.etype)
-	{
-	case APPLE:
-		ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-		ColliderDesc.vScale = _float3(0.15f, 0.40f, 0.15f);
-		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
-			return E_FAIL;
-		break;
-	case JEWEL:
-		ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-		ColliderDesc.vScale = _float3(1.1f, 1.1f, 1.1f);
-		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
-			return E_FAIL;
-		break;
-	case MUSHROOM:
-		ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-		ColliderDesc.vScale = _float3(1.0f, 6.0f, 1.0f);
-		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-		ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
-		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
-			return E_FAIL;
-		break;
-
-	case LETTUCE:
-		ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-		ColliderDesc.vScale = _float3(1.0f, 0.5f, 1.0f);
-		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
-			return E_FAIL;
-		break;
-
-	default:
-		break;
-	}
-
+	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
+	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+		return E_FAIL;
 
 	/* For.Com_Model*/
-	switch (m_ItemDesc.etype)
-	{
-	case APPLE:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Apple"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-	case JEWEL:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Ore_001"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-	case MUSHROOM:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Mushroom"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
+	_tchar			szModeltag[MAX_PATH] = TEXT("");
+	MultiByteToWideChar(CP_ACP, 0, m_ItemDesc.ModelDesc.pModeltag, (int)strlen(m_ItemDesc.ModelDesc.pModeltag), szModeltag, MAX_PATH);
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), iLevel, szModeltag, (CComponent**)&m_pModelCom)))
+		return E_FAIL;
 
-	case LETTUCE:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Lettuce_002"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-
-	default:
-		break;
-	}
-	
 
 	return S_OK;
 }

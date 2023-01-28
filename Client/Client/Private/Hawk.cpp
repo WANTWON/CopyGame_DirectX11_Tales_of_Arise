@@ -174,7 +174,7 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_float CHawk::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CHawk::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage > 0.f)
 	{

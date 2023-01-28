@@ -28,9 +28,16 @@ HRESULT CTreasureBox::Initialize(void * pArg)
 	m_eObjectID = OBJID::OBJ_BLOCK;
 	Set_Scale(_float3(1.2f, 1.2f, 1.2f));
 
-	_vector vecPostion = XMLoadFloat3(&m_eTreasureBoxDesc.vPosition);
-	vecPostion = XMVectorSetW(vecPostion, 1.f);
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vecPostion);
+	if (pArg != nullptr)
+	{
+		_vector vPosition = XMLoadFloat3(&m_eTreasureBoxDesc.vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		Set_Scale(m_eTreasureBoxDesc.vScale);
+
+		if (m_eTreasureBoxDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMLoadFloat3(&m_eTreasureBoxDesc.vRotation), XMConvertToRadians(m_eTreasureBoxDesc.m_fAngle));
+	}
 
 	CModelManager::Get_Instance()->Add_TreasureBoxGroup(this);
 	return S_OK;
@@ -120,7 +127,7 @@ HRESULT CTreasureBox::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("TreasureBox02.fbx"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("TreasureBox02"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	return S_OK;

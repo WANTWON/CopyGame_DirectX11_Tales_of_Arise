@@ -68,7 +68,7 @@ void CRunState::Enter()
 		break;
 	case CPlayer::SION:
 
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
 
 		break;
 	default:

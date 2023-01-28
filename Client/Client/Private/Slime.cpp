@@ -218,7 +218,7 @@ _bool CSlime::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_float CSlime::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CSlime::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 {
 	//if (fDamage > 0.f)
 	//{

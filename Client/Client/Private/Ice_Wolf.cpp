@@ -198,7 +198,7 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_float CIce_Wolf::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CIce_Wolf::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
