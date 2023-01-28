@@ -30,7 +30,7 @@ public:
 public:
 	vector<class CChannel*>	Get_Channels(void) { return m_Channels; }
 	void	Set_TimeReset();
-	void Reset_Events(void);
+	void Reset(void);
 
 private:
 	char				m_szName[MAX_PATH] = "";

@@ -77,7 +77,7 @@ void CTurnRightState::Enter()
 
 void CTurnRightState::Exit()
 {
-	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 2.f);
+	//m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 2.f);
 }
 
 

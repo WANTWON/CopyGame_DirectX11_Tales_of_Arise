@@ -38,7 +38,7 @@ CIceWolfState * CBattle_DeadState::LateTick(_float fTimeDelta)
 
 	if(m_bIsAnimationFinished && false == m_bDeadAnimFinish)
 	{
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+		/*_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");*/
 
 
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
