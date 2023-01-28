@@ -17,7 +17,9 @@ public:
 		STATE_IDLE,
 		STATE_WALK,
 		STATE_RUN,
-		STATE_ATTACK,
+		STATE_NORMAL_ATTACK1,
+		STATE_NORMAL_ATTACK2,
+		STATE_NORMAL_ATTACK3,
 		STATE_END
 	};
 
@@ -29,7 +31,7 @@ public:
 	virtual CPlayerState* LateTick(_float fTimeDelta) PURE;
 
 	virtual void Enter() PURE;
-	virtual void Exit() { m_pOwner->Get_Model()->Reset_Events(); }
+	virtual void Exit() { m_pOwner->Get_Model()->Reset(); }
 
 	CPlayerState* ChangeState(CPlayerState* pCurrentState, CPlayerState* pNewState)
 	{

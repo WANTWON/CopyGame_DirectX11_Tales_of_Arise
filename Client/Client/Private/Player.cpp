@@ -65,7 +65,10 @@ int CPlayer::Tick(_float fTimeDelta)
 		return S_OK;
 	}	
 
-	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if (nullptr != m_pAABBCom)
+		m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if (nullptr != m_pOBBCom)
+		m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	for (auto& pParts : m_Parts)
 	{
