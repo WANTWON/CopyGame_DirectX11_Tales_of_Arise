@@ -6,9 +6,6 @@ CHierarchyNode::CHierarchyNode()
 
 void CHierarchyNode::Set_TransformationMatrix(_fmatrix TransformationMatrix)
 {
-	// 기존 변환을 이전 변환으로 저장
-	m_PreTransforamtionMatrix = XMLoadFloat4x4(&m_TransformationMatrix);
-	// 기존 변환에 새로운 변환 저장
 	XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix);
 }
 
@@ -106,13 +103,14 @@ void CHierarchyNode::Set_RootMotionMatrix(const char* pBoneName)
 		XMMatrixDecompose(&vScale, &vAfterQuat, &vPos, AfterTransformMatrix);
 
 		// 쿼터니언 내적을 통한 두 쿼터니언 사이 각 구함
-		m_RotationTransformationMatrix = XMMatrixRotationQuaternion(XMQuaternionDot(vPreQuat, vAfterQuat));
+		m_vecRotationTransformation = XMQuaternionDot(vPreQuat, vAfterQuat);
+
+		// 이전 변환 행렬 저장
+		m_PreTransforamtionMatrix = AfterTransformMatrix;
 
 		// 루트 본 이동 값 제거
 		AfterTransformMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 		XMStoreFloat4x4(&m_TransformationMatrix, AfterTransformMatrix);
-
-		m_PreTransforamtionMatrix = AfterTransformMatrix;
 	}
 }
 

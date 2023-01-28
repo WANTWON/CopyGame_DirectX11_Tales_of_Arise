@@ -256,12 +256,24 @@ bool CTransform::Sliding_Right(_float fTimeDelta, CNavigation * pNavigation, _fl
 	return true;
 }
 
-bool CTransform::Sliding_Anim(_float fMoveLength, class CNavigation* pNavigation)
+bool CTransform::Sliding_Anim(_float fMoveLength, _vector vecRotation, class CNavigation* pNavigation)
 {
+	_matrix WorldMatrix = XMLoadFloat4x4(&m_WorldMatrix);
+
+	_vector vWorldScale, vWorldRot, vWorldPos;
+	XMMatrixDecompose(&vWorldScale, &vWorldRot, &vWorldPos, WorldMatrix);
+
+	WorldMatrix = XMMatrixRotationQuaternion(vWorldRot * vecRotation) * XMMatrixTranslationFromVector(vWorldPos);
+
+	WorldMatrix.r[0] = XMVector4Normalize(WorldMatrix.r[0]) * Get_Scale(CTransform::STATE_RIGHT);
+	WorldMatrix.r[1] = XMVector4Normalize(WorldMatrix.r[1]) * Get_Scale(CTransform::STATE_UP);
+	WorldMatrix.r[2] = XMVector4Normalize(WorldMatrix.r[2]) * Get_Scale(CTransform::STATE_LOOK);
+
+	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
+
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
 	
 	_vector		vAfterPosition = vPosition + (Get_State(CTransform::STATE_LOOK) * fMoveLength);
-	//_vector		vLook = XMVector4Normalize(RootMatrix.r[2]);
 	
 	if (pNavigation)
 		pNavigation->Compute_CurrentIndex_byXZ(vAfterPosition);

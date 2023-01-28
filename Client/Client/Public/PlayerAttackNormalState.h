@@ -19,7 +19,6 @@ public:
 
 private:
 	_matrix m_StartMatrix;
-	vector<_float> fTranslation;
 };
 END
 END

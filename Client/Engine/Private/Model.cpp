@@ -60,7 +60,7 @@ vector<EVENT> CModel::Get_Events(void)
 	return m_Animations[m_iCurrentAnimIndex]->Get_Events();
 }
 
-void CModel::Get_MoveTransformationMatrix(const char * pBoneName, _float * pTranslationLength, _matrix * pRotationMatrix)
+void CModel::Get_MoveTransformationMatrix(const char * pBoneName, _float * pTranslationLength, _vector * pRotation)
 {
 	for (auto& pBone : m_Bones)
 	{
@@ -68,11 +68,11 @@ void CModel::Get_MoveTransformationMatrix(const char * pBoneName, _float * pTran
 		if (!strcmp(pBoneName, pBone->Get_Name()))
 		{
 			_float fMoveLength = pBone->Get_MoveTransformationLength();
-			_matrix RotationMatrix = pBone->Get_RotationTransformationMatrix();
+			_vector Rotation = pBone->Get_RotationTransformation();
 
 			// 이동 값, 회전 값 복사
 			memcpy(pTranslationLength, &fMoveLength, sizeof(_float));
-			memcpy(pRotationMatrix, &RotationMatrix, sizeof(_matrix));
+			memcpy(pRotation, &Rotation, sizeof(_vector));
 		}
 	}
 }

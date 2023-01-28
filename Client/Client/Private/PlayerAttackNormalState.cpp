@@ -25,26 +25,13 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 	if (!m_bIsAnimationFinished)
 	{
 		_float fTranslationLength;
-		_matrix RotationMatrix;
+		_vector vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &fTranslationLength, &RotationMatrix);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &fTranslationLength, &vecRotation);
 
-		fTranslation.push_back(fTranslationLength);
-
-		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.001f), m_pOwner->Get_Navigation());
-
-		/*_matrix ChangeMatrix = RootMatrix * m_StartMatrix;
-		ChangeMatrix.r[0] = XMVector4Normalize(ChangeMatrix.r[0]);
-		ChangeMatrix.r[1] = XMVector4Normalize(ChangeMatrix.r[1]);
-		ChangeMatrix.r[2] = XMVector4Normalize(ChangeMatrix.r[2]);
-
-		*/
+		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
-	}
-	else
-	{
-		int a = 10;
 	}
 
 	vector<EVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
