@@ -25,11 +25,11 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 	if (!m_bIsAnimationFinished)
 	{
 		_float fTranslationLength;
-		_vector vecRotation;
+		_float fRotationRadian;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &fTranslationLength, &vecRotation);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &fTranslationLength, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), vecRotation, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}

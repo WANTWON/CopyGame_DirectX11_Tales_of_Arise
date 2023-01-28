@@ -25,20 +25,17 @@ CIceWolfState * CAttack_Elemental_Charge::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 {
-	
 	m_fTarget_Distance = Find_BattleTarget();
 	
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-
 	if (!m_bIsAnimationFinished)
 	{
-		_float fTranslationLength;
-		_vector vecRotation;
+		_float fTranslationLength, fRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &vecRotation);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &fRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), vecRotation, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -118,8 +115,8 @@ void CAttack_Elemental_Charge::Exit()
 {
 	m_fIdleAttackTimer = 0.f;
 
-	if(STATE_CHARGE_END == m_eStateId_Charge)
-	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
+	//if(STATE_CHARGE_END == m_eStateId_Charge)
+	//m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
 }
 
 
