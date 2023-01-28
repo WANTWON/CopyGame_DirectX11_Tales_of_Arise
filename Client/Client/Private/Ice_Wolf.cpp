@@ -94,7 +94,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	/* For.Com_OBB */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(3.f, 3.f, 3.f);
+	ColliderDesc.vScale = _float3(7.f, 3.f, 3.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
