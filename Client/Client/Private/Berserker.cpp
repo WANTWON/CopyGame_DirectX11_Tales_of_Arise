@@ -188,7 +188,7 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CBerserker::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CBerserker::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage > 0.f)
 	{

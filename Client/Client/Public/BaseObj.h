@@ -31,7 +31,7 @@ public:
 	virtual HRESULT Render();
 
 public:
-	virtual _int Take_Damage(float fDamage, CBaseObj* DamageCauser) { return 0; };
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) { return 0; };
 	void Update_Collider();
 	_bool Check_IsinFrustum(_float fOffset = 0);
 	void  SetUp_BillBoard();

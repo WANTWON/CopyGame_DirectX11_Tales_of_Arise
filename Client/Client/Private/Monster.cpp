@@ -304,7 +304,7 @@ void CMonster::Make_DeadEffect(CBaseObj * Target)
 }
 
 
-_int CMonster::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;

@@ -51,7 +51,7 @@ protected:
 	virtual HRESULT SetUp_ShaderResources();
 	virtual HRESULT SetUp_ShaderID();
 	virtual HRESULT Drop_Items();
-	virtual _int Take_Damage(float fDamage, CBaseObj* DamageCauser);
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser);
 	virtual void Compute_CurrentIndex();
 	
 

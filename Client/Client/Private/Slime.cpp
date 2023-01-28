@@ -228,12 +228,12 @@ _bool CSlime::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CSlime::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CSlime::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	_float iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
 	if (iHp <= 0)
 	{
@@ -241,7 +241,7 @@ _int CSlime::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 		CSlimeState* pState = new CBattle_DeadState(this);
 		m_pSlimeState = m_pSlimeState->ChangeState(m_pSlimeState, pState);
 
-		return 0.f;
+		return 0;
 	}
 
 	else

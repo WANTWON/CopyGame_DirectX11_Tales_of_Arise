@@ -303,10 +303,7 @@ void CTransform::Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _flo
 	float fPosY = fStartiHeight + fVelocity * fTimeDelta - (0.5f*fGravity*fTimeDelta*fTimeDelta);
 
 	vPosition = XMVectorSetY(vPosition, fPosY);
-
 	float y = XMVectorGetY(vPosition);
-	if (y < fEndiHeight)
-		vPosition = XMVectorSetY(vPosition, fEndiHeight);
 	Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
