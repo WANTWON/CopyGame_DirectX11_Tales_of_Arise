@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "HawkBattle_BombingState.h"
 #include "HawkBattle_RunState.h"
+#include "HawkBattle_TornadeState.h"
 
 using namespace Hawk;
 
@@ -26,7 +27,7 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+	//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 
 
 	return nullptr;
@@ -38,9 +39,19 @@ CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 		return nullptr;
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 
-	m_iRand = rand() % 1;
+
+	if (false == m_bTargetSetting)
+	{
+		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
+		m_bTargetSetting = true;
+	}
+
+
+	
+	srand((_uint)time(NULL));
+	m_iRand = rand() % 2;
 
 
 	if (m_bIsAnimationFinished)
@@ -48,8 +59,10 @@ CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 		switch (m_iRand)
 		{
 		case 0:
-			m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-			m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
+			return new CBattle_BombingState(m_pOwner);
+			break;
+
+		case 1:
 			return new CBattle_RunState(m_pOwner);
 			break;
 

@@ -49,7 +49,7 @@ CHawkState * CBattle_RevolveState::Tick(_float fTimeDelta)
 				if (80 >= m_fTarget_Distance)
 				{
 					m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-					return new CBattle_GrabState(m_pOwner);
+					//return new CBattle_GrabState(m_pOwner);
 						
 				}
 

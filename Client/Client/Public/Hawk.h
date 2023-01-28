@@ -146,7 +146,7 @@ public:
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _float Take_Damage(float fDamage, CBaseObj* DamageCauser) override;
-	
+	HRESULT CHawk::SetUp_ShaderID();
 private:
 	CHawk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CHawk(const CHawk& rhs);

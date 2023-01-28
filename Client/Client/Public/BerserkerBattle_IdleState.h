@@ -21,6 +21,8 @@ private:
 	_float		m_fIdleAttackTimer = 1.5f;
 	_uint		m_iRand = 0;
 	_bool		m_bAnimFinish = false;
+	_bool		m_bTargetSetting = false;
+	_float		m_fRedayAttackTimer = 0.f;
 };
 END
 END

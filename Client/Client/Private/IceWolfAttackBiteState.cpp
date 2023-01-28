@@ -7,6 +7,8 @@
 #include "IceWolfAttackNormalState.h"
 #include "IceWolfBattle_BackStepState.h"
 #include "IceWolfTurnLeftState.h"
+#include "IceWolfAttack_Elemental_Charge.h"
+#include "IceWolfBattle_HowLingState.h"
 
 using namespace IceWolf;
 
@@ -27,15 +29,22 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 	
 	m_fTarget_Distance = Find_BattleTarget();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())/*, "ABone"*/);
 
 	m_fDegreeToTarget = RadianToTarget();
-
+	
+	
 	return nullptr;
 }
 
 CIceWolfState * CAttackBiteState::LateTick(_float fTimeDelta)
 {
+	CCollider* pCollider = m_pOwner->Get_Collider();
+	pCollider->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
+	m_bCollision = pCollider->Collision(m_pTarget->Get_Collider());
+	if (m_bCollision)
+		m_iCollisionCount = 1;
+
 
 	m_iRand = rand() % 2;
 
@@ -44,12 +53,14 @@ CIceWolfState * CAttackBiteState::LateTick(_float fTimeDelta)
 	if (false == m_bTargetSetting)
 	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
+		//m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
 		m_bTargetSetting = true;
 	}
 
 	if (m_bIsAnimationFinished)
 	{
+		m_pOwner->Get_Transform()->Go_Straight(1.f);
+
 		switch (m_iRand)
 		{
 		case 0:
@@ -74,11 +85,11 @@ CIceWolfState * CAttackBiteState::LateTick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-	if (m_fDegreeToTarget >= 30)
-	{
-		return new CTurnLeftState(m_pOwner);
-		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 0.5f);
-	}
+	//if (m_fDegreeToTarget >= 30)
+	//{
+	//	return new CTurnLeftState(m_pOwner);
+	//	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 0.5f);
+	//}
 
 	return nullptr;
 }
@@ -98,6 +109,7 @@ void CAttackBiteState::Exit()
 	m_fIdleAttackTimer = 0.f;
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	//m_pOwner->Get_Transform()->Go_Straight(1.1f);
 }
 
 

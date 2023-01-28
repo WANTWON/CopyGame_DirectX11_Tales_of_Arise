@@ -20,10 +20,7 @@ CBattle_RunState::CBattle_RunState(CHawk* pHawk)
 CHawkState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
 {
 
-
 	return nullptr;
-
-
 }
 
 CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
@@ -48,13 +45,11 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 
 	
 
-	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-
 	if (4.0f < m_fTarget_Distance)
 	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		//m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+		
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.1f );
 	}
 	else
 	{
@@ -63,10 +58,10 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 		case 0:
 			return new CBattle_PeckState(m_pOwner);
 			break;
-		/*case 1:
-			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
+
+
 		default:
-			break;*/
+			break;
 		}
 	}
 
@@ -105,7 +100,7 @@ void CBattle_RunState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::SYMBOL_RUN);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::MOVE_RUN);
 
 	
 }

@@ -17,10 +17,11 @@ public:
 	virtual void Exit() override;
 
 private:
-	_float  m_fIdleMoveTimer = 0.f;
-	_float  m_fIdleAttackTimer = 1.5f;
-	_bool	m_bAnimFinish = false;
-	_uint	m_iRand = 0;
+	_float		m_fIdleMoveTimer = 0.f;
+	_float		m_fIdleAttackTimer = 1.5f;
+	_bool		m_bAnimFinish = false;
+	_uint		m_iRand = 0;
+	_bool		m_bTargetSetting = false;
 private:
 	_matrix m_StartMatrix;
 };

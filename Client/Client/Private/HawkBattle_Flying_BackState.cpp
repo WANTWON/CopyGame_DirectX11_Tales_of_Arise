@@ -10,6 +10,7 @@
 #include "HawkBattle_IdleState.h"
 #include "HawkBattle_RunState.h"
 #include "HawkBattle_DashState.h"
+#include "HawkBattle_TornadeState.h"
 
 using namespace Hawk;
 
@@ -36,7 +37,11 @@ CHawkState * CBattle_Flying_BackState::Tick(_float fTimeDelta)
 	
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	m_iRand = rand() % 1;
+	srand((_uint)time(NULL));
+	m_iRand = rand() % 2;
+
+	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 
 	if (m_bIsAnimationFinished)
 	{
@@ -46,9 +51,9 @@ CHawkState * CBattle_Flying_BackState::Tick(_float fTimeDelta)
 			return new CBattle_DashState(m_pOwner);
 			break;
 			
-		//case 1:
-		//	return new CBattle_ChargeState(m_pOwner);
-		//	break;
+		case 1:
+			return new CBattle_TornadeState(m_pOwner);
+			break;
 		}
 		
 	}

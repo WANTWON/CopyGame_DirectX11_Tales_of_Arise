@@ -5,6 +5,7 @@
 #include "HawkBattle_BombingState.h"
 #include "HawkBattle_IdleState.h"
 #include "HawkBattle_RunState.h"
+#include "HawkBattle_TornadeState.h"
 
 using namespace Hawk;
 
@@ -18,10 +19,7 @@ CBattle_ChargeState::CBattle_ChargeState(CHawk* pHawk)
 
 CHawkState * CBattle_ChargeState::AI_Behaviour(_float fTimeDelta)
 {
-	m_fTarget_Distance = Find_BattleTarget();
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
+
 
 	return nullptr;
 }
@@ -30,9 +28,25 @@ CHawkState * CBattle_ChargeState::Tick(_float fTimeDelta)
 {
 	AI_Behaviour(fTimeDelta);
 
+	Find_BattleTarget();
+
+
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
+	if (m_pTarget == nullptr)
+		return nullptr;
 
+	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+
+	if (false == m_bTargetSetting)
+	{
+		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
+		m_bTargetSetting = true;
+	}
+
+	srand((_uint)time(NULL));
 	m_iRand = rand() % 2;
 
 	if (m_bIsAnimationFinished)
@@ -42,9 +56,8 @@ CHawkState * CBattle_ChargeState::Tick(_float fTimeDelta)
 		case 0:
 			return new CBattle_RunState(m_pOwner);
 		case 1:
-			return new CBattle_ChargeState(m_pOwner);
-		/*case 2:
-			return new CBattle_IdleState(m_pOwner);*/
+			return new CBattle_TornadeState(m_pOwner);
+
 		}
 	}
 
