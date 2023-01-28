@@ -28,6 +28,15 @@ CSlimeState * CIdleState::Tick(_float fTimeDelta)
 	m_pOwner->Check_Navigation(); // ÀÚÀ¯
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
+
+	m_fRedayAttackTimer += fTimeDelta;
+
+	if (m_fRedayAttackTimer >= 2.f)
+	{
+		return new CBattle_RunState(m_pOwner, STATE_IDLE);
+
+	}
+
 	
 	return nullptr;
 }
@@ -35,6 +44,8 @@ CSlimeState * CIdleState::Tick(_float fTimeDelta)
 CSlimeState * CIdleState::LateTick(_float fTimeDelta)
 {
 	
+
+
 
 	/*if (m_pTarget)
 		return new CBattle_RunState(m_pOwner);*/
@@ -77,6 +88,7 @@ CSlimeState * CIdleState::LateTick(_float fTimeDelta)
 			m_fIdleMoveTimer += fTimeDelta;
 
 	}*/
+	
 
 	return nullptr;
 }

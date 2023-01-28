@@ -51,6 +51,15 @@ CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 			break;
 		}
 	}
+
+	else
+	{
+		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+
+		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 	//switch (m_eDamageAnim)
 	//{
 	//case 0:
@@ -148,14 +157,12 @@ void CBattle_Damage_LargeB_State::Enter()
 	//default:
 	//	break;
 	//}
-	
+	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CBattle_Damage_LargeB_State::Exit()
 {
-	m_fIdleAttackTimer = 0.f;
-	m_iRand = false;
-	//m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
+	
 }
 
 

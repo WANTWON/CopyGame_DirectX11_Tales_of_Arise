@@ -636,6 +636,42 @@
     <ClInclude Include="PlayerAttack2NormalState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\HawkBattle_TornadeState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_RunState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_WalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_Quadruple_ClawState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_FireBallState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_Multiple_FireState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_PouncingState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeBattle_Poision_RainState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeBattle_Poision_ShotState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeBattle_TakeDamage_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeBattle_DeadState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -988,6 +1024,42 @@
     </ClCompile>
     <ClCompile Include="PlayerAttack2NormalState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_RunState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_WalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_Quadruple_ClawState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_FireBallState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_Multiple_FireState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_PouncingState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeBattle_Poision_RainState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeBattle_Poision_ShotState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeBattle_TakeDamage_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeBattle_DeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

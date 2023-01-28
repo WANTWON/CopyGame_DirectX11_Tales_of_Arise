@@ -172,7 +172,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_FireBallState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_Multiple_FireState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_PouncingState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_Quadruple_ClawState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_RunState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_WalkState.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
+    <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
     <ClInclude Include="..\Public\IceWolfAttackBiteState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_BackStepState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_RunState.h" />
@@ -250,7 +258,11 @@
     <ClInclude Include="..\Public\Sion.h" />
     <ClInclude Include="..\Public\Slime.h" />
     <ClInclude Include="..\Public\SlimeBattle_Atk_TackleState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_DeadState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_Poision_RainState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_Poision_ShotState.h" />
     <ClInclude Include="..\Public\SlimeBattle_RunState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_TakeDamage_State.h" />
     <ClInclude Include="..\Public\SlimeIdleState.h" />
     <ClInclude Include="..\Public\SlimeState.h" />
     <ClInclude Include="..\Public\SlimeWalkState.h" />
@@ -300,7 +312,15 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_FireBallState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_Multiple_FireState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_PouncingState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_Quadruple_ClawState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_RunState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_WalkState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
     <ClCompile Include="..\Private\IceWolfAttackBiteState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_RunState.cpp" />
@@ -373,6 +393,10 @@
     <ClCompile Include="..\Private\Sion.cpp" />
     <ClCompile Include="..\Private\Slime.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_DeadState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_Poision_RainState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_Poision_ShotState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_TakeDamage_State.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_RunState.cpp" />
     <ClCompile Include="..\Private\SlimeIdleState.cpp" />
     <ClCompile Include="..\Private\SlimeWalkState.cpp" />

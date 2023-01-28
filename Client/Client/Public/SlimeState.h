@@ -15,9 +15,10 @@ public:
 		STATE_MOVE,
 		STATE_DISCOVER,
 		STATE_BATTLE,
-		STATE_TACKLE_START,
-		STATE_TACKLE_DOWN,
-		STATE_TACKLE_ARISE,
+		STATE_TACKLE,
+		STATE_POSION_RAIN,
+		STATE_POSION_SHOT,
+		STATE_DEAD,
 		STATE_END
 	};
 
@@ -134,7 +135,7 @@ protected:
 	_bool m_bHasSpottedTarget = false;
 	_bool m_bBattleMode = false;
 	_bool m_bBitePossible = false;
-	
+	_vector vTargetPosition;
 	CSlime* m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
 };

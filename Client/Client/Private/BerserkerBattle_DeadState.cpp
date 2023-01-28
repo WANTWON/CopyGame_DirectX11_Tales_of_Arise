@@ -16,17 +16,16 @@ CBattle_DeadState::CBattle_DeadState(CBerserker* pBerserker)
 
 CBerserkerState * CBattle_DeadState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_BattleTarget();
+	
 	return nullptr;
 }
 
 CBerserkerState * CBattle_DeadState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Check_Navigation(); // ÀÚÀ¯
-	Find_BattleTarget();
 
-	
-	m_bAnimFinish = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+
+	if(false == m_bDeadAnimFinish)
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 
 
@@ -36,33 +35,46 @@ CBerserkerState * CBattle_DeadState::Tick(_float fTimeDelta)
 CBerserkerState * CBattle_DeadState::LateTick(_float fTimeDelta)
 {
 	
-
-	/*_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);*/
-
-
-	m_iRand = rand() % 3;
+	if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
+	{
 
 
-	//if (m_fIdleAttackTimer > 3.f && m_iRand == 0)
-	//	return new CBattle_Double_CrowState(m_pOwner);
+		
+		m_pOwner->Get_Model()->Play_Animation(4.5f, false);
+		
+		//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DEAD);
+		
+		m_StartPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	//else if (m_fIdleAttackTimer > 3.f && m_iRand == 1)
-	//	return new CBattle_Double_ClawState(m_pOwner);
+		m_bDeadAnimFinish = true;
 
-	//else if (m_fIdleAttackTimer > 3.f && m_iRand == 2)
-	//	return new CBattle_Shock_WaveState(m_pOwner);
 
-	//else m_fIdleAttackTimer += fTimeDelta;
+		//m_pOwner->Get_Model()->Play_Animation(2.5f, false);
+	}
 
+	else
+	{
+		/*_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());*/
+	}
+
+	if (m_bDeadAnimFinish)
+	{
+		m_pOwner->Set_State(CTransform::STATE_TRANSLATION, m_StartPos);
+		m_pOwner->Set_Dissolve();
+	}
 	return nullptr;
+
 }
 
 void CBattle_DeadState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::SLOW_DEAD);
+	m_pOwner->Get_Model()->Set_NextAnimIndex(CBerserker::ANIM::DEAD);
+
+	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	
 }
 
 void CBattle_DeadState::Exit()

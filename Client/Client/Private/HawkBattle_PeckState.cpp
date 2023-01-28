@@ -41,6 +41,7 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
 {
+	srand((_uint)time(NULL));
 	m_iRand = rand() % 1;
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -48,7 +49,7 @@ CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
 	if (false == m_bTargetSetting)
 	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
+		
 		m_bTargetSetting = true;
 	}
 
@@ -59,9 +60,7 @@ CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
 		case 0:
 			return new CBattle_Flying_BackState(m_pOwner);
 			break;
-		//case 1:
-		//	return new CBattle_BackStepState(m_pOwner);
-		//	break;
+	
 
 		default:
 			break;

@@ -48,9 +48,9 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
-	m_tInfo.iMaxHp = 1;
-	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
-	m_tInfo.iDamage = 10;
+	m_tStats.m_fMaxHp = 3;
+	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
+	m_tStats.m_fAttackPower = 10;
 
 
 	_vector vPosition = *(_vector*)pArg;
@@ -71,7 +71,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
-	TransformDesc.fSpeedPerSec = 3.f;
+	TransformDesc.fSpeedPerSec = 6.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -121,9 +121,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 	Tick_State(fTimeDelta);
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-		
-
-	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+	
 
 	return OBJ_NOEVENT;
 }
@@ -173,8 +171,6 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	case ANIM_MOVE_IDLE:
 	case ANIM_MOVE_RUN:
 	case ANIM_MOVE_WALK_F:
-		
-	
 	
 		return true;
 
@@ -183,14 +179,13 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	case ANIM_TURN_R:
 	case ANIM_ATTACK_NORMAL:
 	case ANIM_ATTACK_ELEMENTAL_CHARGE_START:
-	
+	case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:
 	case ANIM_ATTACK_ELEMENTAL_CHARGE_END:
 	case ANIM_SYMBOL_DETECT_IDLE:
 	case ANIM_DAMAGE_AIR_LARGE_B:
 	case ANIM_DEAD:
 	case ANIM_ATTACK_STEP_BACK:
 	case ANIM_ATTACK_SOMERSAULT_END:
-	case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:
 	case ANIM_ATTACK_BITE:
 		return false;
 	}

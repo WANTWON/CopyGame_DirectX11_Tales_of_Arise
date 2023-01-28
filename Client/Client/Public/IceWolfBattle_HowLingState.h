@@ -21,6 +21,10 @@ private:
 	_uint		m_iRand = 0;
 	_float		m_fIdleAttackTimer = 0.f;
 	_bool		m_bAnimFinish = false;
+	_bool		m_bTargetSetting = false;
+
+private:
+	_matrix m_StartMatrix;
 };
 
 END
