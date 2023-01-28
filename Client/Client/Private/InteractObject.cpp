@@ -36,7 +36,7 @@ HRESULT CInteractObject::Initialize(void* pArg)
 
 int CInteractObject::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	__super::Tick(fTimeDelta);
 
@@ -46,7 +46,7 @@ int CInteractObject::Tick(_float fTimeDelta)
 
 void CInteractObject::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 	__super::Late_Tick(fTimeDelta);
 

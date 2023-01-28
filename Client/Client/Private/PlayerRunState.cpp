@@ -18,7 +18,7 @@ CPlayerState * CRunState::HandleInput()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-		return new CAttackNormalState(m_pOwner);
+		return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
@@ -64,10 +64,12 @@ void CRunState::Enter()
 	switch (m_pOwner->Get_PlayerID())
 	{
 	case CPlayer::ALPHEN:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CAlphen::ANIM::ANIM_RUN);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
 		break;
 	case CPlayer::SION:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSion::ANIM::ANIM_RUN);
+
+		m_pOwner->Get_Model()->Set_NextAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+
 		break;
 	default:
 		break;
@@ -76,7 +78,6 @@ void CRunState::Enter()
 
 void CRunState::Exit()
 {
-	__super::Exit();
 }
 
 void CRunState::Move(_float fTimeDelta)
@@ -132,6 +133,7 @@ void CRunState::Move(_float fTimeDelta)
 	pPlayerTransform->Set_State(CTransform::STATE_RIGHT, vRight);
 
 	_float fCos = XMVectorGetX(XMVector4Dot(pPlayerTransform->Get_State(CTransform::STATE_LOOK), vPlayerLook));
+
 	if (0.85f < fCos)
 		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());
 

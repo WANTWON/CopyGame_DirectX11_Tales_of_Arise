@@ -133,8 +133,12 @@ HRESULT CWeapon::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("SWO1(R00)"), (CComponent**)&m_pModelCom)))
+	/* For.Com_Model*/
+	_tchar			szModeltag[MAX_PATH] = TEXT("");
+	MultiByteToWideChar(CP_ACP, 0, m_WeaponDesc.pModeltag, (int)strlen(m_WeaponDesc.pModeltag), szModeltag, MAX_PATH);
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, szModeltag, (CComponent**)&m_pModelCom)))
 		return E_FAIL;
+
 
 	//CCollider::COLLIDERDESC		ColliderDesc;
 

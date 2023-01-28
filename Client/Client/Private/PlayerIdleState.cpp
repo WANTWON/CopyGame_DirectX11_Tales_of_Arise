@@ -18,7 +18,7 @@ CPlayerState * CIdleState::HandleInput()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-		return new CAttackNormalState(m_pOwner);
+		return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
@@ -46,8 +46,7 @@ CPlayerState * CIdleState::HandleInput()
 
 CPlayerState * CIdleState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
-
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 	m_pOwner->Check_Navigation();
 
 	return nullptr;
@@ -65,10 +64,10 @@ void CIdleState::Enter()
 	switch (m_pOwner->Get_PlayerID())
 	{
 	case CPlayer::ALPHEN:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CAlphen::ANIM::ANIM_IDLE);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE);
 		break;
 	case CPlayer::SION:
-		m_pOwner->Get_Model()->Set_NextAnimIndex(CSion::ANIM::ANIM_IDLE);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_IDLE);
 		break;
 	default:
 		break;

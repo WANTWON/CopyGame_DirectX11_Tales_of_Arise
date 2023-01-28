@@ -22,11 +22,11 @@ HRESULT CUI_font_Damage_number::Initialize(void * pArg)
 {
 	if (pArg != nullptr)
 		m_iIndex = *(_uint*)pArg;
-	m_eShaderID = 0;
+	m_eShaderID = UI_BRIGHT;
 	m_fSize.x = 28.f;
 	m_fSize.y = 32.f;
-	m_fPosition.x = 1030.f + (m_iIndex * 20);
-	m_fPosition.y = 165;
+	m_fPosition.x = 1030.f;
+	m_fPosition.y = 165.f;
 
 	m_fAlpha = 0;
 	/*if (m_iYIndex == 0)
@@ -57,7 +57,20 @@ HRESULT CUI_font_Damage_number::Initialize(void * pArg)
 
 int CUI_font_Damage_number::Tick(_float fTimeDelta)
 {
-	
+	/*m_fBright += 0.02f;
+
+	if (m_fBright >= 2.f)
+		m_fBright = 0.f;
+*/
+	for (_uint i = 0; i < 6; ++i)
+		m_fbrightpos_damagefont[i] += 0.015f;
+
+	for (_uint i = 0; i < 6; ++i)
+	{
+		if (m_fbrightpos_damagefont[i] >= 3.f)
+			m_fbrightpos_damagefont[i] = 0.f;
+	}
+
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_3))
 	{
 		m_iCurrentDamage += 111;
@@ -70,11 +83,11 @@ int CUI_font_Damage_number::Tick(_float fTimeDelta)
 	//	m_fAlpha = 1;
 	}
 
-
+	m_fAlpha = 1.f;
 	if (m_bsizedown)
 		sizedown();
 
-	switch (m_iIndex)
+	/*switch (m_iIndex)
 	{
 	case 0:
 		if (m_iCurrentDamage < 100000)
@@ -158,7 +171,7 @@ int CUI_font_Damage_number::Tick(_float fTimeDelta)
 			}
 	    
 	
-	}
+	}*/
 	
 	
 
@@ -167,8 +180,8 @@ int CUI_font_Damage_number::Tick(_float fTimeDelta)
 		m_bsizedown = false;
 	/*m_fSize.x = 28.f;
 	m_fSize.y = 32.f;*/
-	m_fPosition.x = 1030.f + (m_iIndex * 20);
-	m_fPosition.y = 165;
+	m_fPosition.x = 1030.f;
+	m_fPosition.y = 165.f;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -198,7 +211,127 @@ HRESULT CUI_font_Damage_number::Render()
 	/*if (m_bRender == false)
 		return S_OK;*/
 
-	__super::Render();
+	if (nullptr == m_pShaderCom ||
+		nullptr == m_pVIBufferCom)
+		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+	//m_fPosition.x += 20.f;
+	if (m_iCurrentDamage >= 100000)
+	{
+		m_itexnum = (m_iCurrentDamage/ 100000);
+
+		
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_damagefont[0], sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BRIGHT);
+
+		m_pVIBufferCom->Render();
+	}
+	m_fPosition.x += 20.f;
+	if (m_iCurrentDamage >= 10000)
+	{
+		m_itexnum = ((m_iCurrentDamage % 100000) / 10000);
+
+		
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_damagefont[1], sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BRIGHT);
+
+		m_pVIBufferCom->Render();
+	}
+	m_fPosition.x += 20.f;
+	if(m_iCurrentDamage >= 1000)
+	{
+		m_itexnum = ((m_iCurrentDamage % 10000) / 1000);
+
+		
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_damagefont[2], sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BRIGHT);
+
+		m_pVIBufferCom->Render();
+	}
+	m_fPosition.x += 20.f;
+	if (m_iCurrentDamage >= 100)
+	{
+		m_itexnum = ((m_iCurrentDamage % 1000) / 100);
+
+		
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_damagefont[3], sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BRIGHT);
+
+		m_pVIBufferCom->Render();
+	}
+	m_fPosition.x += 20.f;
+	if (m_iCurrentDamage >= 10)
+	{
+		m_itexnum = ((m_iCurrentDamage % 100) / 10);
+
+		
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_damagefont[4], sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BRIGHT);
+
+		m_pVIBufferCom->Render();
+	}
+
+	m_fPosition.x += 20.f;
+	if (m_iCurrentDamage > 0)
+	{
+		m_itexnum = (m_iCurrentDamage % 10);
+
+		
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_damagefont[5], sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BRIGHT);
+
+		m_pVIBufferCom->Render();
+	}
 
 	return S_OK;
 }
@@ -244,12 +377,15 @@ HRESULT CUI_font_Damage_number::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
-		return E_FAIL;
+	/*if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+		return E_FAIL;*/
 
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
+
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fBright, sizeof(_float))))
+	//	return E_FAIL;
 
 
 	return S_OK;

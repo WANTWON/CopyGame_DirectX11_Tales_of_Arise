@@ -180,7 +180,7 @@ void CTerrain::PickingTrue()
 		Set_Terrain_Shape();
 		break;
 	case Client::CImgui_Manager::PICKING_TERRAIN_BRUSH:
-		Create_FilterTexture();
+		Create_FilterTexture(CImgui_Manager::Get_Instance()->Get_BmpPath());
 		break;
 	default:
 		break;
@@ -388,7 +388,7 @@ void CTerrain::Save_Terrain(HANDLE hFile, _ulong* dwByte)
 	m_pVIBufferCom->Save_VertexPosition(hFile, dwByte);
 }
 
-HRESULT CTerrain::Create_FilterTexture()
+HRESULT CTerrain::Create_FilterTexture(_tchar* bmpPath)
 {
 
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_9))
@@ -435,7 +435,7 @@ HRESULT CTerrain::Create_FilterTexture()
 			{
 				_uint		iIndex = i * TextureDesc.Width + j;
 
-				_float3 vPixelPos = _float3(j, 0.f, i);
+				_float3 vPixelPos = _float3(j, 0.f, 256-i);
 				_vector fDis = XMLoadFloat3(&ConevertPos) - XMLoadFloat3(&vPixelPos);
 				_float fLen = XMVectorGetX(XMVector3Length(fDis));
 				_float fAlpha =  (fLen / _float(iConvertRange));
@@ -507,7 +507,7 @@ HRESULT CTerrain::Create_FilterTexture()
 		memcpy(SubResource.pData, pPixel, sizeof(_uint) * TextureDesc.Width * TextureDesc.Height);
 
 		//SetFileAttributes(TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.bmp"), FILE_ATTRIBUTE_NORMAL);
-		HANDLE hFile = CreateFile(TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.bmp"), GENERIC_WRITE, 0, NULL, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		HANDLE hFile = CreateFile(bmpPath, GENERIC_WRITE, 0, NULL, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (hFile == INVALID_HANDLE_VALUE)
 			int a = 0;//goto FAIL;
 

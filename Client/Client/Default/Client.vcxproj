@@ -305,7 +305,6 @@
     <ClInclude Include="..\public\Water.h" />
     <ClInclude Include="..\Public\UI_Skillbutton.h" />
     <ClInclude Include="..\Public\Weapon.h" />
-    <ClInclude Include="PlayerAttack2NormalState.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -438,7 +437,6 @@
     <ClCompile Include="..\private\Water.cpp" />
     <ClCompile Include="..\Private\UI_Skillbutton.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
-    <ClCompile Include="PlayerAttack2NormalState.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -32,7 +32,7 @@ HRESULT CTreasureBox::Initialize(void* pArg)
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
 	m_pModelCom->Set_CurrentAnimIndex(CTreasureBox::ANIM::Close2);
-	m_pModelCom->Set_NextAnimIndex(CTreasureBox::ANIM::Open2);
+	m_pModelCom->Set_CurrentAnimIndex(CTreasureBox::ANIM::Open2);
 	m_pModelCom->Play_Animation(0.3f, false);
 
 	return S_OK;
@@ -40,7 +40,7 @@ HRESULT CTreasureBox::Initialize(void* pArg)
 
 int CTreasureBox::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	__super::Tick(fTimeDelta);
 	
@@ -105,7 +105,7 @@ int CTreasureBox::Tick(_float fTimeDelta)
 
 void CTreasureBox::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 	__super::Late_Tick(fTimeDelta);
 

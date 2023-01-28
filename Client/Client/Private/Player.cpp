@@ -36,13 +36,14 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	/* Set State */
-	CPlayerState* pPlayerState = new Player::CIdleState(this);
-	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
 
 	CAIState* pAIState = new AIPlayer::CIdleState(this);
 	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
+	/* Set State */
+
+	CPlayerState* pPlayerState = new Player::CIdleState(this);
+	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
 
 	m_pPlayerManager = CPlayerManager::Get_Instance();
 	Safe_AddRef(m_pPlayerManager);
@@ -66,7 +67,10 @@ int CPlayer::Tick(_float fTimeDelta)
 		return S_OK;
 	}	
 
-	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if (nullptr != m_pAABBCom)
+		m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if (nullptr != m_pOBBCom)
+		m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	for (auto& pParts : m_Parts)
 	{
@@ -95,6 +99,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 		break;
 	case Client::UNVISIBLE:
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_ePlayerID == SION)
+			m_pPlayerManager->Set_ActivePlayer(this);
 		return;
 	}
 

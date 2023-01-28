@@ -79,7 +79,7 @@ void CBattle_RunState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_MOVE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CSlime::ANIM::MOVE_RUN);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::MOVE_RUN);
 
 	
 }

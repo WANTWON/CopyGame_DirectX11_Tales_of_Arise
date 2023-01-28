@@ -19,7 +19,7 @@ float g_fMinRange = 5.f;
 float g_fMaxRange = 10.f;
 float4 g_PlayerPosition;
 
-matrix g_BoneMatrices[264];
+matrix g_BoneMatrices[400];
 
 struct VS_IN
 {

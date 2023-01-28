@@ -29,7 +29,7 @@ void CIdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CAlphen::ANIM::ANIM_IDLE);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
 }
 
 void CIdleState::Exit()

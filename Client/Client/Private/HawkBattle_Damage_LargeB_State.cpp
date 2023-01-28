@@ -74,7 +74,7 @@ void CBattle_Damage_LargeB_State::Enter()
 {
 	m_eStateId = STATE_ID::STATE_TAKE_DAMAGE;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CHawk::ANIM::DAMAGE_LARGE_F);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DAMAGE_LARGE_F);
 
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }

@@ -38,11 +38,11 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
+		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
+		return E_FAIL;
 
 	//if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
 	//	return E_FAIL;
@@ -98,18 +98,6 @@ void CLevel_SnowField::Late_Tick(_float fTimeDelta)
 
 	SetWindowText(g_hWnd, TEXT("SnowFieldLevel"));
 
-
-	CBaseObj* pPlayer = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-	_float4		vLightEye, vLightAt;
-
-	XMStoreFloat4(&vLightEye, pPlayer->Get_TransformState(CTransform::STATE_TRANSLATION));
-	vLightEye.y = 0.f;
-	vLightAt = vLightEye;
-	vLightEye.y += 50.f;
-	vLightEye.z += 50.f;
-
-	CGameInstance::Get_Instance()->Set_ShadowLightView(vLightEye, vLightAt);
-
 }
 
 HRESULT CLevel_SnowField::Ready_Lights()
@@ -143,8 +131,8 @@ HRESULT CLevel_SnowField::Ready_Lights()
 
 	_float4		vLightEye, vLightAt;
 
-	XMStoreFloat4(&vLightEye, XMVectorSet(36, 50, 70, 1.f));
-	XMStoreFloat4(&vLightAt, XMVectorSet(36, 0, 20, 1.f));
+	XMStoreFloat4(&vLightEye, XMVectorSet(36, 100, 100, 1.f));
+	XMStoreFloat4(&vLightAt, XMVectorSet(36, 0, 90, 1.f));
 
 	pGameInstance->Set_ShadowLightView(vLightEye, vLightAt);
 
@@ -164,12 +152,14 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Alphen"), LEVEL_STATIC, pLayerTag, nullptr)))
 			return E_FAIL;
 
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, pLayerTag, nullptr)))
+			return E_FAIL;
+
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0.f, 22, 1.f));
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, pLayerTag, nullptr)))
-			return E_FAIL;
+		
 	}
 	else
 	{
@@ -190,7 +180,9 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-
+	_vector vPosition = { 50, 0.f, 22, 1.f };
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
@@ -265,26 +257,33 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
+	CUI_Manager::Get_Instance()->Set_Mainmenuon(false);
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI"), LEVEL_SNOWFIELD, pLayerTag)))
 		return E_FAIL;*/
 
-	for (int i = 0; i < 4; ++i)
+	
+
+	_uint numcreate = (CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
+
+	for (int i = 0; i < numcreate; ++i)
 	{
 		_uint number = i;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar"), LEVEL_STATIC, pLayerTag, &i)))
 			return E_FAIL;
 
-	}
-
-	for (int i = 0; i < 4; ++i)
-	{
-		_uint number = i;
-
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont"), LEVEL_STATIC, pLayerTag, &i)))
 			return E_FAIL;
 
 	}
+
+	/*for (int i = 0; i < numcreate; ++i)
+	{
+		_uint number = i;
+
+		
+
+	}*/
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Comboline"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
@@ -295,14 +294,15 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_font"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	for (int i = 0; i < 6; ++i)
+	/*for (int i = 0; i < 6; ++i)
 	{
 		_uint number = i;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag, &i)))
+*/
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag)))
 			return E_FAIL;
+	
 
-	}
+	//}
 
 
 	//	for (int i = 0; i < 3; ++i)
@@ -469,6 +469,42 @@ HRESULT CLevel_SnowField::Ready_Layer_Instancing(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
 		return E_FAIL;
 
+	strcpy(stModelDesc.pModeltag, "Dead_Tree");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Fence");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Lamppillar");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Tree5");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Tree");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Birch1");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Birch2");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Stalagmite5");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Stalagmite4");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -518,7 +554,7 @@ HRESULT CLevel_SnowField::Ready_Layer_DecoObject(const _tchar * pLayerTag)
 
 	hFile = 0;
 	dwByte = 0;
-	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Stalagmite5.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Torch.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 

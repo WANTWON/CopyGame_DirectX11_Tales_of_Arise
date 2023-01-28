@@ -39,8 +39,10 @@ HRESULT CAlphen::Initialize(void * pArg)
 
 	m_ePlayerID = ALPHEN;
 
-	m_tInfo.iMaxHp = 100;
+	m_tInfo.iMaxHp = 5877;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.fMaxMp = 5.f;
+	m_tInfo.fCurrentMp = 2.3f;
 	m_tInfo.iDamage = 100;
 
 	return S_OK;
@@ -60,6 +62,7 @@ HRESULT CAlphen::Ready_Parts()
 	WeaponDesc.pSocket = pSocket;
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
+	strcpy(WeaponDesc.pModeltag, "SWO1(R00)");
 	Safe_AddRef(pSocket);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -96,12 +99,12 @@ HRESULT CAlphen::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Alphen"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
-	/* For.Com_AABB */
+	/* For.Com_OBB */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
 	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
 		return E_FAIL;
 
 

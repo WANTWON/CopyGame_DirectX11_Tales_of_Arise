@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "UI_RuneEffect.h"
 #include "Player.h"
+#include "PlayerManager.h"
 CHP_Font::CHP_Font(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -24,6 +25,10 @@ HRESULT CHP_Font::Initialize(void * pArg)
 {
 	if (pArg != nullptr)
 		m_iIndex = *(_uint*)pArg;
+
+	if (m_iIndex == CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1)
+		m_bforMainPlayer = true;
+
 	m_eShaderID = UI_EFFECTFADEOUT;
 	m_fSize.x = 16.f;
 	m_fSize.y = 20.f;
@@ -98,7 +103,77 @@ HRESULT CHP_Font::Initialize(void * pArg)
 
 int CHP_Font::Tick(_float fTimeDelta)
 {
+	//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();
+	
+	switch (m_iIndex)
+	{
+	case 0:
+		//if(m_bforMainPlayer)
+		m_iCurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
+		m_iCharactername = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
+			break;
+
+	case 1:
+		if (m_bforMainPlayer)
+		{
+			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
+			m_iCharactername = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
+		}
+			
+		else
+		{
+			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_Info().iCurrentHp;
+			m_iCharactername = CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_PlayerID();
+		}
+		
+		
+			
+			break;
+
+	case 2:
+		if (m_bforMainPlayer)
+		{
+			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
+			m_iCharactername = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
+		}
+
+		else
+		{
+			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_Info().iCurrentHp;
+			m_iCharactername = CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_PlayerID();
+		}
+		/*else
+		{
+			m_bRenderoff = true;
+			return OBJ_NOEVENT;
+		}*/
+		break;
+
+	case 3:
+		if (m_bforMainPlayer)
+		{
+			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
+			m_iCharactername = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
+		}
+
+		else
+		{
+			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_Info().iCurrentHp;
+			m_iCharactername = CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_PlayerID();
+		}
+	/*	else
+		{
+			m_bRenderoff = true;
+			return OBJ_NOEVENT;
+		}*/
+		break;
+	}
+
+
+	
 	m_fStart_timer += fTimeDelta;
+
+
 
 	if (m_fStart_timer > 0.5f || m_iIndex == 3)
 	{
@@ -144,7 +219,7 @@ int CHP_Font::Tick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_J))
 			++m_iCurrenthp;
 
-		if (m_iIndex < 3)
+		if (!m_bforMainPlayer)
 		{
 			m_fSize.x = 16.f;
 			m_fSize.y = 20.f;
@@ -156,13 +231,13 @@ int CHP_Font::Tick(_float fTimeDelta)
 		}
 		else
 		{
-			CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-			CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
-			Compute_CamDistance(pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
-			m_fPosition.x = dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().x + 44.f;
-			m_fPosition.y = dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().y + 31.f - (m_fCamDistance / 5.f);
-			
+			/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+			CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));*/
+			Compute_CamDistance(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));//Get_State(CTransform::STATE_TRANSLATION));
+			m_fPosition.x = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().x + 44.f;
+			m_fPosition.y = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().y + 31.f - (m_fCamDistance / 5.f);
 
+		}
 			if (m_fCamDistance > 20.f)
 			{
 				m_fNext = 14.f / m_fCamDistance * 20;
@@ -180,13 +255,14 @@ int CHP_Font::Tick(_float fTimeDelta)
 		}
 		
 		return OBJ_NOEVENT;
-	}
-	return OBJ_NOEVENT;
-	
 }
+	
 
 void CHP_Font::Late_Tick(_float fTimeDelta)
 {
+	if (m_bRenderoff)
+		return;
+
 	if (m_fStart_timer > 0.8f)
 	{
 		if (m_fAlpha <= 0.f)
@@ -223,7 +299,7 @@ HRESULT CHP_Font::Render()
 	if (m_iCurrenthp >= 100)
 	{
 		m_itexnum = ((m_iCurrenthp % 1000) / 100);
-		if (m_iIndex == 3)
+		if (m_bforMainPlayer)
 			m_fPosition.x += m_fNext;
 		else
 		m_fPosition.x = 1194.f;
@@ -243,7 +319,7 @@ HRESULT CHP_Font::Render()
 	{
 		m_itexnum = ((m_iCurrenthp % 100) / 10);
 
-		if (m_iIndex == 3)
+	if (m_bforMainPlayer)
 			m_fPosition.x += m_fNext;
 		else
 			m_fPosition.x = 1208.f;
@@ -264,7 +340,7 @@ HRESULT CHP_Font::Render()
 	{
 		m_itexnum = m_iCurrenthp % 10;
 
-		if (m_iIndex == 3)
+		if (m_bforMainPlayer)
 			m_fPosition.x += m_fNext;
 		else
 			m_fPosition.x = 1222.f;
@@ -282,7 +358,7 @@ HRESULT CHP_Font::Render()
 
 	}
 
-	if (m_iIndex < 3)
+	if (!m_bforMainPlayer)
 	{
 		m_fPosition.x = 1060.f;
 		m_fPosition.y = m_fnumberY - 34.f;
@@ -295,7 +371,7 @@ HRESULT CHP_Font::Render()
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(2))))
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(m_iCharactername))))
 			return E_FAIL;
 		m_pShaderCom->Begin(m_eShaderID);
 

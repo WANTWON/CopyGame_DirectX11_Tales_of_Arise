@@ -44,7 +44,7 @@ HRESULT CNonAnim_Instance::Initialize(void * pArg)
 
 int CNonAnim_Instance::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	if (__super::Tick(fTimeDelta))
 		return OBJ_DEAD;
@@ -54,7 +54,7 @@ int CNonAnim_Instance::Tick(_float fTimeDelta)
 
 void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 

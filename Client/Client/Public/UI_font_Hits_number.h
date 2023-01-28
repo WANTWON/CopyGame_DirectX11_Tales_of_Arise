@@ -44,6 +44,8 @@ private:
 	_bool m_bsizedown = false;
 
 	_bool m_bRender = true;
+
+	_float m_fbrightpos_hitfont[3] = { 0.f , -0.5f, -1.f };
 };
 
 END

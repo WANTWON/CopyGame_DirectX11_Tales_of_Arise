@@ -4,10 +4,11 @@
 
 BEGIN(Client)
 BEGIN(Player)
+
 class CAttackNormalState final : public CPlayerState
 {
 public:
-	CAttackNormalState(class CPlayer* pPlayer);
+	CAttackNormalState(class CPlayer* pPlayer, STATE_ID eStateType);
 
 	virtual CPlayerState* HandleInput() override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -18,6 +19,7 @@ public:
 
 private:
 	_matrix m_StartMatrix;
+	vector<_float> fTranslation;
 };
 END
 END

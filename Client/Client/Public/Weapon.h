@@ -26,6 +26,7 @@ public:
 		CHierarchyNode*		pSocket = nullptr;
 		_float4x4			SocketPivotMatrix;
 		const _float4x4*	pParentWorldMatrix;
+		char				pModeltag[MAX_PATH] = "";
 
 	}WEAPONDESC;
 private:

@@ -124,35 +124,35 @@ void CBattle_Damage_LargeB_State::Enter()
 
 	m_eStateId = STATE_ID::STATE_HIT;
 
-	m_pOwner->Get_Model()->Set_NextAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
 	//switch (m_iRand)
 	//{
 	//case 0:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_LARGE_B);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_LARGE_B);
 	//	break;
 	//case 1:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_LARGE_F);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_LARGE_F);
 	//	break;
 	//case 2:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_LARGE_L);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_LARGE_L);
 	//	break;
 	//case 3:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_LARGE_R);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_LARGE_R);
 	//	break;
 	//case 4:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_LOOP);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_LOOP);
 	//	break;
 	//case 5:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_SMALL_B);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_SMALL_B);
 	//	break;
 	//case 6:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_SMALL_F);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_SMALL_F);
 	//	break;
 	//case 7:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_SMALL_L);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_SMALL_L);
 	//	break;
 	//case 8:
-	//	m_pOwner->Get_Model()->Set_NextAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_SMALL_R);
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(Client::CIce_Wolf::ANIM_DAMAGE_SMALL_R);
 	//	break;
 	//default:
 	//	break;

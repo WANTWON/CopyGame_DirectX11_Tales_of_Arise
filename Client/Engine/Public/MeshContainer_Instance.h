@@ -19,7 +19,7 @@ public:
 	void Get_BoneMatrices(_float4x4* pBoneMatrices, _fmatrix PivotMatrix);
 
 public:
-	virtual HRESULT Initialize_Prototype(CModel::PLAYERID eModelType, HANDLE hFile, _ulong* pdwByte, const char* pDataFilePath, class CModel* pModel, _fmatrix PivotMatrix);
+	virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, HANDLE hFile, _ulong* pdwByte, const char* pDataFilePath, class CModel* pModel, _fmatrix PivotMatrix);
 	virtual HRESULT Initialize(void* pArg);
 
 public:
@@ -38,7 +38,7 @@ private:
 	_uint m_iOriginalInstance = 0;
 
 public:
-	static CMeshContainer_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::PLAYERID eModelType, HANDLE hFile, _ulong* pdwByte, const char* pDataFilePath, CModel* pModel, _fmatrix PivotMatrix);
+	static CMeshContainer_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eModelType, HANDLE hFile, _ulong* pdwByte, const char* pDataFilePath, CModel* pModel, _fmatrix PivotMatrix);
 	virtual CComponent* Clone(void* pArg = nullptr);
 	virtual void Free(void) override;
 };

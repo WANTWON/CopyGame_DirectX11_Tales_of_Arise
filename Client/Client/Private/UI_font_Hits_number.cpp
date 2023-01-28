@@ -29,7 +29,7 @@ HRESULT CUI_font_Hits_number::Initialize(void * pArg)
 	m_fPosition.x = 1050.f;
 	m_fPosition.y = 120.f;
 
-	m_fAlpha = 0;
+	m_fAlpha = 1;
 
 
 	/*if (m_iYIndex == 0)
@@ -69,9 +69,16 @@ int CUI_font_Hits_number::Tick(_float fTimeDelta)
 		/*m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);*/
 		//	m_bfadein = true;
-		//	m_fAlpha = 1;
+		//	m_fAlpha = 0;
 	}
+	for (_uint i = 0; i < 3; ++i)
+		m_fbrightpos_hitfont[i] += 0.015f;
 
+	for (_uint i = 0; i < 3; ++i)
+	{
+		if (m_fbrightpos_hitfont[i] >= 3.f)
+			m_fbrightpos_hitfont[i] = 0.f;
+	}
 
 	if (m_bsizedown)
 		sizedown();
@@ -136,7 +143,9 @@ HRESULT CUI_font_Hits_number::Render()
 		return E_FAIL;
 	if (m_iCurrenthit >= 100)
 	{
-		m_pShaderCom->Begin(m_eShaderID);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hitfont[0], sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BRIGHT);
 
 		m_pVIBufferCom->Render();
 	}
@@ -153,7 +162,9 @@ HRESULT CUI_font_Hits_number::Render()
 
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
 			return E_FAIL;
-		m_pShaderCom->Begin(m_eShaderID);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hitfont[1], sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BRIGHT);
 
 		m_pVIBufferCom->Render();
 	}
@@ -171,7 +182,9 @@ HRESULT CUI_font_Hits_number::Render()
 
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
 			return E_FAIL;
-		m_pShaderCom->Begin(m_eShaderID);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hitfont[2], sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BRIGHT);
 
 		m_pVIBufferCom->Render();
 
