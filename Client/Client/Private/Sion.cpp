@@ -52,7 +52,7 @@ HRESULT CSion::Ready_Parts()
 	m_Parts.resize(PARTS_END);
 
 	/* For.Weapon */
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("head");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
 	if (nullptr == pSocket)
 		return E_FAIL;
 
@@ -60,7 +60,7 @@ HRESULT CSion::Ready_Parts()
 	WeaponDesc.pSocket = pSocket;
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
-	strcpy(WeaponDesc.pModeltag, "SionHead");
+	strcpy(WeaponDesc.pModeltag, "SWO1(R00)");
 	Safe_AddRef(pSocket);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -94,7 +94,7 @@ HRESULT CSion::Ready_Components(void* pArg)
 
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("SionBody"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Sion"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* For.Com_AABB */

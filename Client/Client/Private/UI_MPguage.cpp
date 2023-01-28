@@ -48,12 +48,15 @@ HRESULT CMP_Guage::Initialize(void * pArg)
 
 int CMP_Guage::Tick(_float fTimeDelta)
 {
+	m_fmaxmp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxMp;
+	m_fcurrentmp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentMp;
+	
 
-	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
-	Compute_CamDistance(pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
-	m_fPosition.x = dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().x - 85.f;
-	m_fPosition.y = dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().y + (m_fCamDistance / 5.f);
+	/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));*/
+	Compute_CamDistance(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+	m_fPosition.x = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().x - 85.f;
+	m_fPosition.y = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().y + (m_fCamDistance / 5.f);
 	
 
 	if (m_fCamDistance > 20.f)
@@ -95,14 +98,14 @@ int CMP_Guage::Tick(_float fTimeDelta)
 	//vplayerpos = XMLoadFloat3(&pos);
 	//vplayerpos = XMVectorSetW(vplayerpos, 1.f);
 	//SetUp_BillBoard();
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_5))
+	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_5))
 	{
 		m_fcurrentmp += 0.1f;
 	}
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_6))
 	{
 		m_fcurrentmp -= 0.1f;
-	}
+	}*/
 
 
 	
@@ -122,7 +125,7 @@ int CMP_Guage::Tick(_float fTimeDelta)
 void CMP_Guage::Late_Tick(_float fTimeDelta)
 {
 
-	m_fcurrent_render_slot_mp = m_fcurrentmp - (_uint)m_fcurrentmp;
+	m_fcurrent_render_slot_mp = m_fcurrentmp - m_fcurrentmp;
 
 	__super::Late_Tick(fTimeDelta);
 

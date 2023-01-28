@@ -24,6 +24,9 @@ HRESULT CHPbar::Initialize(void * pArg)
 	if (pArg != nullptr)
 		m_iIndex = *(_uint*)pArg;
 		//memcpy(&m_ScreenEffectdesc, pArg, sizeof(SCREENFADE_DESC));
+	if (m_iIndex == CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1)
+		m_bforMainPlayer = true;
+
 	m_fSize.x = 200.0f;
 	m_fSize.y = 22.0f;
 	m_fPosition.x = 1130.f; 
@@ -40,15 +43,71 @@ HRESULT CHPbar::Initialize(void * pArg)
 
 int CHPbar::Tick(_float fTimeDelta)
 {
-	
-	if (m_iIndex == 3)
+
+	switch (m_iIndex)
 	{
-		CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-		CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
-		Compute_CamDistance(pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
-		m_fPosition.x= dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().x;
-		m_fPosition.y= dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().y + 20.f - (m_fCamDistance/5.f);
+	case 0:
+		//if(m_bforMainPlayer)
+		m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
+		m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iMaxHp;
+		break;
+
+	case 1:
+		if (m_bforMainPlayer)
+		{
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iMaxHp;
+		}
+
+		else
+		{
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_Info().iCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_Info().iMaxHp;
+		}
+
+		break;
+
+	case 2:
+		if (m_bforMainPlayer)
+		{
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iMaxHp;
+		}
+
+		else
+		{
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_Info().iCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_Info().iMaxHp;
+		}
+
+		break;
+
+	case 3:
+		if (m_bforMainPlayer)
+		{
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iMaxHp;
+		}
+
+		else
+		{
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_Info().iCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_Info().iMaxHp;
+		}
+
+		break;
+	}
+	
+	if (m_bforMainPlayer)
+	{
+		/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));*/
+		Compute_CamDistance(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+		m_fPosition.x= CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().x;
+		m_fPosition.y= CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().y + 20.f - (m_fCamDistance/5.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		
 
 		if (m_fCamDistance > 20.f)
 		{

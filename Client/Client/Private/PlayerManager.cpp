@@ -63,6 +63,18 @@ PLAYER_MODE CPlayerManager::Check_ActiveMode(CPlayer * pPlayer)
 	return ACTIVE;
 }
 
+CPlayer * CPlayerManager::Get_EnumPlayer(_uint eID)
+{
+	list<CGameObject*>* pPlayerLists = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player"));
+	for (auto& iter : *pPlayerLists)
+	{
+		if (eID == dynamic_cast<CPlayer*>(iter)->Get_PlayerID())
+			return dynamic_cast<CPlayer*>(iter);
+	}
+	
+	return nullptr;
+}
+
 void CPlayerManager::Free()
 {
 
