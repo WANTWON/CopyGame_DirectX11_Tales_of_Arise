@@ -284,7 +284,6 @@ void CPlayer::Free()
 
 	m_vecNavigations.clear();
 
-	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pPlayerManager);
 

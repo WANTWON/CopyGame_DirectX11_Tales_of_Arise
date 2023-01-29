@@ -50,8 +50,8 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
+		return E_FAIL;
 
 	if (!g_bUIMade)
 	{
@@ -654,8 +654,6 @@ HRESULT CLevel_SnowField::Ready_Layer_DecoObject(const _tchar * pLayerTag)
 			return E_FAIL;
 	}
 	CloseHandle(hFile);
-
-	Safe_Release(pGameInstance);
 
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
