@@ -41,7 +41,7 @@ HRESULT CNonAnim::Initialize(void * pArg)
 		Set_Scale(m_ModelDesc.vScale);
 
 		if(m_ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMVectorSet(0.f,1.f,0.f,0.f), XMConvertToRadians(m_ModelDesc.m_fAngle));
+			m_pTransformCom->Rotation(XMLoadFloat3(&m_ModelDesc.vRotation), XMConvertToRadians(m_ModelDesc.m_fAngle));
 	}
 	
 
@@ -137,8 +137,8 @@ _bool CNonAnim::Picking(_float3 * PickingPoint)
 		PickingType == CImgui_Manager::PICKING_TERRAIN_SHAPE)
 		return false;
 	
-	//if (true == m_pModelCom->Picking(m_pTransformCom, PickingPoint))
-	//	return true; 
+	if (true == m_pModelCom->Picking(m_pTransformCom, PickingPoint))
+		return true; 
 
 	return false;
 }

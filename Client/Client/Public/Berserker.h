@@ -36,7 +36,7 @@ public:
 		//SCRATCHES_FOURTIMES,
 		//ATTACK_SHOCK_WAVE2,
 		//ATTACK_STEP_BACK2, 
-		//FLYING_ATTACK2, //28 'DASH_START, DASH_LOOP¶û ÀÌ¾îÁö´Â µ¿ÀÛÀÎ µí' 
+		//FLYING_ATTACK2, //28 'DASH_START, DASH_LOOPï¿½ï¿½ ï¿½Ì¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½' 
 		//BLOW_DOWN_F1,
 		//BLOW_UP_F1,
 		//BLOW_DOWN_B1,
@@ -170,9 +170,8 @@ public:
 	void Set_OnAngry() { m_bOnAngry = true; }
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
-	virtual _float Take_Damage(float fDamage, CBaseObj* DamageCauser) override;
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
 	HRESULT CBerserker::SetUp_ShaderID();
-
 private:
 	CBerserker(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBerserker(const CBerserker& rhs);

@@ -93,7 +93,7 @@ public:
 	
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
-	virtual _float Take_Damage(float fDamage, CBaseObj* DamageCauser) override;
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
 	virtual HRESULT SetUp_ShaderID() override;
 
 private:

@@ -256,18 +256,23 @@ bool CTransform::Sliding_Right(_float fTimeDelta, CNavigation * pNavigation, _fl
 	return true;
 }
 
-bool CTransform::Sliding_Anim(_float fMoveLength, _vector vecRotation, class CNavigation* pNavigation)
+bool CTransform::Sliding_Anim(_float fMoveLength, _float fRotation, class CNavigation* pNavigation)
 {
 	_matrix WorldMatrix = XMLoadFloat4x4(&m_WorldMatrix);
 
-	_vector vWorldScale, vWorldRot, vWorldPos;
-	XMMatrixDecompose(&vWorldScale, &vWorldRot, &vWorldPos, WorldMatrix);
+	_vector vWorldPos = WorldMatrix.r[3];
+	WorldMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 
-	WorldMatrix = XMMatrixRotationQuaternion(vWorldRot * vecRotation) * XMMatrixTranslationFromVector(vWorldPos);
+	_vector vWorldRot = XMQuaternionNormalize(XMQuaternionRotationMatrix(WorldMatrix));
+
+	_vector RotationQuat = XMQuaternionRotationAxis(WorldMatrix.r[1], fRotation);
+
+	WorldMatrix = XMMatrixRotationQuaternion(XMQuaternionNormalize(XMQuaternionMultiply(vWorldRot, RotationQuat)));
 
 	WorldMatrix.r[0] = XMVector4Normalize(WorldMatrix.r[0]) * Get_Scale(CTransform::STATE_RIGHT);
 	WorldMatrix.r[1] = XMVector4Normalize(WorldMatrix.r[1]) * Get_Scale(CTransform::STATE_UP);
 	WorldMatrix.r[2] = XMVector4Normalize(WorldMatrix.r[2]) * Get_Scale(CTransform::STATE_LOOK);
+	WorldMatrix.r[3] = vWorldPos;
 
 	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
 
@@ -303,10 +308,7 @@ void CTransform::Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _flo
 	float fPosY = fStartiHeight + fVelocity * fTimeDelta - (0.5f*fGravity*fTimeDelta*fTimeDelta);
 
 	vPosition = XMVectorSetY(vPosition, fPosY);
-
 	float y = XMVectorGetY(vPosition);
-	if (y < fEndiHeight)
-		vPosition = XMVectorSetY(vPosition, fEndiHeight);
 	Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 

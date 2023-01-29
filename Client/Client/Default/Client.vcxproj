@@ -255,6 +255,7 @@
     <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
+    <ClInclude Include="..\Public\PlayerJumpState.h" />
     <ClInclude Include="..\Public\PlayerManager.h" />
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerRunState.h" />
@@ -393,6 +394,7 @@
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
+    <ClCompile Include="..\Private\PlayerJumpState.cpp" />
     <ClCompile Include="..\Private\PlayerManager.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />
     <ClCompile Include="..\Private\Sion.cpp" />

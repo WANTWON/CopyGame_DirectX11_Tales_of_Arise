@@ -46,7 +46,7 @@ public:
 
 	// 루트노드 위한 함수들 - 이동 행렬, 회전 행렬 반환
 	_float Get_MoveTransformationLength(void) { return m_fMoveTransformationLength; }
-	_vector Get_RotationTransformation(void) { return m_vecRotationTransformation; }
+	_float Get_RotationRadian(void) { return m_fRotationRadian; }
 
 public:
 	HRESULT Initialize(BINBONE tBone, CHierarchyNode* pParent);
@@ -70,7 +70,7 @@ private:
 
 	/* 이동, 회전값 살리기 위한 매트릭스 */
 	_float m_fMoveTransformationLength;
-	_vector m_vecRotationTransformation;
+	_float m_fRotationRadian;
 	_matrix m_PreTransforamtionMatrix;
 
 private:

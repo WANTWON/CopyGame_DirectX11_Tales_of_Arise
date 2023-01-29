@@ -11,6 +11,7 @@ _bool CAlphen::Is_AnimationLoop(_uint eAnimId)
 	{
 		case ANIM_IDLE:
 		case ANIM_RUN:
+		case ANIM_JUMP_LOOP:
 			return true;
 		default:
 			return false;

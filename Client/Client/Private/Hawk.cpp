@@ -168,7 +168,7 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_GRAB_LOOP:
 	case SYMBOL_RUN:
 		return true;
-	
+
 	case ATTACK_FLUTTER:
 	case ATTACK_DASH:
 	case ATTACK_PECK:
@@ -182,13 +182,13 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_float CHawk::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CHawk::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 
 		if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	_float iHp = __super::Take_Damage(fDamage, DamageCauser);
+		_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
 	if (iHp <= 0)
 	{
@@ -197,7 +197,7 @@ _float CHawk::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 		
 		
-		return 0.f;
+		return 0;
 	}
 	else
 	{
