@@ -36,12 +36,12 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_float fTranslationLength;
+		_vector vecTranslation;
 		_float fRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &fRotation);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotation, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
