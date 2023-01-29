@@ -36,15 +36,32 @@ CHawkState * CBattle_DeadState::Tick(_float fTimeDelta)
 
 	}
 
-			
-	else
-	{
-	//	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
-	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+
+	if (!m_bIsAnimationFinished)
+	{
+		_float fTranslationLength, fRotation;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &fRotation);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
+
+
+
+
+	//else
+	//{
+	////	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+
+	////	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+
+	//	m_pOwner->Check_Navigation();
+	//}
 
 
 	return nullptr;

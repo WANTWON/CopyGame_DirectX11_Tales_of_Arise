@@ -4,10 +4,10 @@
 
 BEGIN(Client)
 BEGIN(Slime)
-class CWalkState : public CSlimeState
+class CBattle_IdleState : public CSlimeState
 {
 public:
-	CWalkState(class CSlime* pIceWolf);
+	CBattle_IdleState(class CSlime* pIceWolf);
 
 	virtual CSlimeState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CSlimeState* Tick(_float fTimeDelta) override;
@@ -21,7 +21,8 @@ private:
 	_float		m_fIdleAttackTimer = 1.5f;
 	_uint		m_iRand = 0;
 	_float		m_fTarget_Distance;
-	_float		m_fWalkMoveTimer = 0.f;
+	_float		m_fRedayAttackTimer = 0.f;
+
 private:
 	_matrix m_StartMatrix;
 };

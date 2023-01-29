@@ -1,24 +1,27 @@
 #include "stdafx.h"
 
-#include "HawkChaseState.h"
+#include "SlimeChaseState.h"
 #include "GameInstance.h"
-#include "HawkIdleState.h"
+#include "SlimeIdleState.h"
 
-using namespace Hawk;
+using namespace Slime;
 
-CChaseState::CChaseState(CHawk* pIceWolf)
+CChaseState::CChaseState(CSlime* pSlime)
 {
-	m_pOwner = pIceWolf;
+	m_pOwner = pSlime;
+	
 }
 
-CHawkState * CChaseState::AI_Behaviour(_float fTimeDelta)
+CSlimeState * CChaseState::AI_Behaviour(_float fTimeDelta)
 {
 	
 	return nullptr;
 }
 
-CHawkState * CChaseState::Tick(_float fTimeDelta)
+CSlimeState * CChaseState::Tick(_float fTimeDelta)
 {
+
+
 	m_fTarget_Distance = Find_BattleTarget();
 
 
@@ -39,10 +42,9 @@ CHawkState * CChaseState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CHawkState * CChaseState::LateTick(_float fTimeDelta)
+CSlimeState * CChaseState::LateTick(_float fTimeDelta)
 {
 	
-
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 
@@ -50,17 +52,19 @@ CHawkState * CChaseState::LateTick(_float fTimeDelta)
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 
 	if (m_fTarget_Distance >= 8.f)
-		return new CIdleState(m_pOwner, CHawkState::FIELD_STATE_ID::STATE_TURN_R);
-	
+		//return new CIdleState(m_pOwner);
+
 
 	return nullptr;
 }
 
 void CChaseState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_IDLE;
+	m_eStateId = STATE_ID::STATE_MOVE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::MOVE_RUN);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::MOVE_WALK_F);
+
+
 }
 
 void CChaseState::Exit()

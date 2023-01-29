@@ -10,6 +10,7 @@ using namespace IceWolf;
 CBattle_IdleState::CBattle_IdleState(class CIce_Wolf* pIceWolf)
 {
 	m_pOwner = pIceWolf;
+
 }
 
 CIceWolfState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)

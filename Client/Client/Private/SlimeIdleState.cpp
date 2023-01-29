@@ -4,37 +4,32 @@
 #include "GameInstance.h"
 #include "SlimeWalkState.h"
 #include "SlimeBattle_RunState.h"
+#include "SlimeChaseState.h"
+#include "SlimeTurnR_State.h"
 
 using namespace Slime;
 
-CIdleState::CIdleState(CSlime* pSlime)
+CIdleState::CIdleState(CSlime* pSlime, FIELD_STATE_ID ePreState)
 {
 	m_pOwner = pSlime;
-	
+	m_ePreState_Id = ePreState;
 }
 
 CSlimeState * CIdleState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_Target();
-	
-
 	return nullptr;
 }
 
 CSlimeState * CIdleState::Tick(_float fTimeDelta)
 {
-	AI_Behaviour(fTimeDelta);
+	Find_Target();
 
-	m_pOwner->Check_Navigation(); // ÀÚÀ¯
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-
-	m_fRedayAttackTimer += fTimeDelta;
-
-	if (m_fRedayAttackTimer >= 2.f)
+	if (!m_bIsAnimationFinished)
 	{
-		return new CBattle_RunState(m_pOwner, STATE_IDLE);
 
+		m_pOwner->Check_Navigation();
 	}
 
 	
@@ -43,52 +38,41 @@ CSlimeState * CIdleState::Tick(_float fTimeDelta)
 
 CSlimeState * CIdleState::LateTick(_float fTimeDelta)
 {
-	
+	m_fIdleMoveTimer += fTimeDelta;
 
-
-
-	/*if (m_pTarget)
-		return new CBattle_RunState(m_pOwner);*/
-
-
-	//if (m_pTarget)
-	//{
-	//	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	//	m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-	//	return new CBattle_HowLingState(m_pOwner);
-
-
-
-	//	if (m_fIdleAttackTimer > 1.5f)
-	//	{
-	//		/*if (!m_bHasSpottedTarget)
-	//		return new CAggroState();
-	//		else
-	//		return new CAttackState();*/
-	//	}
-	//	else
-	//		m_fIdleAttackTimer += fTimeDelta;
-	//}
-
-	/*else
+	if (m_pTarget)
 	{
+		return new CChaseState(m_pOwner);
+	}
 
-		m_iRand = rand() % 3;
-		if (m_fIdleMoveTimer > 3.f && m_iRand == 0)
-			return new CTurnLeftState(m_pOwner);
+	else
+	{
+		if (m_fIdleMoveTimer > 1.5f)
+		{
+			switch (m_ePreState_Id)
+			{
+			case CSlimeState::FIELD_STATE_ID::FIELD_STATE_IDLE:
+				return new CWalkState(m_pOwner);
 
-		else if (m_fIdleMoveTimer > 3.f && m_iRand == 1)
-			return new CTurnRightState(m_pOwner);
+			case CSlimeState::FIELD_STATE_ID::STATE_WALK:
+				return new CTurnR_State(m_pOwner);
+				break;
 
-		else if (m_fIdleMoveTimer > 3.f && m_iRand == 2)
-			return new CWalkFrontState(m_pOwner);
+			case CSlimeState::FIELD_STATE_ID::STATE_TURN_R:
+				return new CWalkState(m_pOwner);
+				break;
 
-		else
-			m_fIdleMoveTimer += fTimeDelta;
+			//case CSlimeState::FIELD_STATE_ID::STATE_BRAVE:
+			//	return new CWalkState(m_pOwner);
+			default:
+				break;
+			}
 
-	}*/
-	
+		}
+
+	}
+
+
 
 	return nullptr;
 }

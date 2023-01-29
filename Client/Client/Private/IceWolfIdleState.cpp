@@ -27,9 +27,18 @@ CIceWolfState * CIdleState::Tick(_float fTimeDelta)
 {
 	Find_Target();
 
-	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
-	
-	m_pOwner->Check_Navigation(); // ÀÚÀ¯
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+
+	if (!m_bIsAnimationFinished)
+	{
+		_float fTranslationLength, fRotation;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &fRotation);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotation, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 
 	return nullptr;
 }
@@ -46,7 +55,7 @@ CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 	
 	else
 	{
-		if (m_fIdleMoveTimer > 3.f)
+		if (m_fIdleMoveTimer > 1.5f)
 		{
 			switch (m_ePreState_Id)
 			{

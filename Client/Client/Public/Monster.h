@@ -84,7 +84,7 @@ protected:
 	STATS					m_tStats;
 	_float					m_fAttackRadius = 0.5f;
 	_float					m_fAttack_BiteRadius = 5.f;
-	_float					m_fAggroRadius = 15.f;
+	_float					m_fAggroRadius = 8.f;
 	_float					m_fPatrolRadius = 5.f;
 	_float					m_fDistanceToTarget = 0.f;
 	_float					m_fTime_TakeDamageDeltaAcc = 0.f;

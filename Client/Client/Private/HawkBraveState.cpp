@@ -1,30 +1,30 @@
 #include "stdafx.h"
 
-#include "HawkWalkState.h"
+#include "HawkBraveState.h"
 #include "GameInstance.h"
 #include "HawkChaseState.h"
-#include "HawkTurnR_State.h"
+#include "HawkIdleState.h"
 
 using namespace Hawk;
 
-CWalkState::CWalkState(CHawk* pIceWolf)
+CBraveState::CBraveState(CHawk* pIceWolf)
 {
 	m_pOwner = pIceWolf;
 }
 
-CHawkState * CWalkState::AI_Behaviour(_float fTimeDelta)
+CHawkState * CBraveState::AI_Behaviour(_float fTimeDelta)
 {
 	
 	return nullptr;
 }
 
-CHawkState * CWalkState::Tick(_float fTimeDelta)
+CHawkState * CBraveState::Tick(_float fTimeDelta)
 {
-
 	Find_Target();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-
+	
+	
 	if (!m_bIsAnimationFinished)
 	{
 		_float fTranslationLength, fRotation;
@@ -36,35 +36,29 @@ CHawkState * CWalkState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f);
-	
-
 	return nullptr;
 }
 
-CHawkState * CWalkState::LateTick(_float fTimeDelta)
+CHawkState * CBraveState::LateTick(_float fTimeDelta)
 {
-	
+
 	if (m_pTarget)
 		return new CChaseState(m_pOwner);
 
-	m_fWalkMoveTimer += fTimeDelta;
-
-	if (m_fWalkMoveTimer > 1.5f)
-		return new CTurnR_State(m_pOwner);
-
+	if (m_bIsAnimationFinished)
+	{
+		return new CIdleState(m_pOwner, CHawkState::FIELD_STATE_ID::STATE_BRAVE);
+	}
 	return nullptr;
 }
 
-void CWalkState::Enter()
+void CBraveState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::MOVE_WALK_F);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_BRAVE);
 }
 
-void CWalkState::Exit()
+void CBraveState::Exit()
 {
-
+	
 }

@@ -1,25 +1,28 @@
 #include "stdafx.h"
 
-#include "HawkWalkState.h"
+#include "SlimeTurnR_State.h"
 #include "GameInstance.h"
-#include "HawkChaseState.h"
-#include "HawkTurnR_State.h"
+#include "SlimeIdleState.h"
+#include "SlimeChaseState.h"
 
-using namespace Hawk;
+using namespace Slime;
 
-CWalkState::CWalkState(CHawk* pIceWolf)
+CTurnR_State::CTurnR_State(CSlime* pSlime)
 {
-	m_pOwner = pIceWolf;
+	m_pOwner = pSlime;
+	
 }
 
-CHawkState * CWalkState::AI_Behaviour(_float fTimeDelta)
+CSlimeState * CTurnR_State::AI_Behaviour(_float fTimeDelta)
 {
 	
+
 	return nullptr;
 }
 
-CHawkState * CWalkState::Tick(_float fTimeDelta)
+CSlimeState * CTurnR_State::Tick(_float fTimeDelta)
 {
+
 
 	Find_Target();
 
@@ -35,36 +38,37 @@ CHawkState * CWalkState::Tick(_float fTimeDelta)
 
 		m_pOwner->Check_Navigation();
 	}
-
-
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f);
 	
+
 
 	return nullptr;
 }
 
-CHawkState * CWalkState::LateTick(_float fTimeDelta)
+CSlimeState * CTurnR_State::LateTick(_float fTimeDelta)
 {
-	
 	if (m_pTarget)
 		return new CChaseState(m_pOwner);
 
-	m_fWalkMoveTimer += fTimeDelta;
+	if (m_bIsAnimationFinished)
+	{
 
-	if (m_fWalkMoveTimer > 1.5f)
-		return new CTurnR_State(m_pOwner);
+		return new CIdleState(m_pOwner, CSlimeState::FIELD_STATE_ID::STATE_TURN_R);
+	}
+
 
 	return nullptr;
 }
 
-void CWalkState::Enter()
+void CTurnR_State::Enter()
 {
-	m_eStateId = STATE_ID::STATE_IDLE;
+	m_eStateId = STATE_ID::STATE_MOVE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::MOVE_WALK_F);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::TURN_R);
+
+
 }
 
-void CWalkState::Exit()
+void CTurnR_State::Exit()
 {
 
 }

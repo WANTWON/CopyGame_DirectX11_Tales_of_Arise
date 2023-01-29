@@ -172,7 +172,7 @@ private:
 
 private:
 	class CHawkState*  m_pHawkState = nullptr;
-
+		  _bool		   m_bDoneChangeState = false;
 public:
 	static CHawk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

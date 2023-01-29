@@ -32,7 +32,7 @@ HRESULT CSlime::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CSlimeState* pState = new CIdleState(this);
+	CSlimeState* pState = new CIdleState(this, CSlimeState::FIELD_STATE_ID::FIELD_STATE_IDLE);
 	m_pSlimeState = m_pSlimeState->ChangeState(m_pSlimeState, pState);
 
 	///* Set Binary */
