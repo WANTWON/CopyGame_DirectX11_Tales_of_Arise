@@ -590,6 +590,14 @@ _bool CGameInstance::isIn_WorldFrustum(_fvector vPosition, _float fRange)
 	return m_pFrustum->isIn_WorldFrustum(vPosition, fRange);
 }
 
+ID3D11ShaderResourceView * CGameInstance::Get_BackBufferCopySRV()
+{
+	if (nullptr == m_pTarget_Manager)
+		return nullptr;
+
+	return m_pTarget_Manager->Get_BackBufferCopySRV();
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::Get_Instance()->Destroy_Instance();

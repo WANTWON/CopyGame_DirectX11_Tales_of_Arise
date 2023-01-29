@@ -202,7 +202,7 @@ _int CBerserker::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 			}
 			else
 			{
-				if (false == m_bOnGoingHowLing | false == m_bOnGoingAnim)
+				if (false == m_bOnGoingHowLing || false == m_bOnGoingAnim)
 				{
 					m_tStats.m_fCurrentHp -= fDamage;
 

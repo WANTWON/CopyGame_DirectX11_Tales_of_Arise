@@ -4,7 +4,9 @@
 #include "GameInstance.h"
 #include "PlayerRunState.h"
 #include "PlayerAttackNormalState.h"
+
 #include "Effect.h"
+#include "EffectTexture.h"
 #include "PlayerJumpState.h"
 #include "PlayerSkillState.h"
 
@@ -41,9 +43,7 @@ CPlayerState * CIdleState::HandleInput()
 		return new CRunState(m_pOwner, DIR_STRAIGHT);
 	else if (pGameInstance->Key_Pressing(DIK_M))
 		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.01f);
-	/* Particle Test */
-	else if (pGameInstance->Key_Down(DIK_P))
-		CEffect::PlayEffect(TEXT("SparkTest.dat"), m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
 	/* Skill */
 	if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 	{

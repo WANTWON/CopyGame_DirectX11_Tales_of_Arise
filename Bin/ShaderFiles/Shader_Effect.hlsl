@@ -1,8 +1,13 @@
 
 #include "Client_Shader_Defines.hpp"
 
+uint g_iWinX, g_iWinY;
+
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_DiffuseTexture;
+
+/* For.Distortion */
+texture2D g_StrengthTexture;
 
 struct VS_IN
 {
@@ -50,7 +55,6 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	Out.vColor.a *= In.fAlpha;
 
 	return Out;
 }
@@ -67,12 +71,23 @@ PS_OUT PS_ALPHAMASK(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_DISTORTION(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+	Out.vColor.r = 1.f;
+
+	float4 vFilter = g_StrengthTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.r *= vFilter.r;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
-	pass Default
+	pass Default // 0
 	{
-		SetRasterizerState(RS_Default_NoCull);
-		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_Default, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -80,7 +95,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
-	pass AlphaMask
+	pass AlphaMask // 1
 	{
 		SetRasterizerState(RS_Default_NoCull);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -89,5 +104,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHAMASK();
+	}
+
+	pass Distortion // 2
+	{
+		SetRasterizerState(RS_Default_NoCull);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISTORTION();
 	}
 }

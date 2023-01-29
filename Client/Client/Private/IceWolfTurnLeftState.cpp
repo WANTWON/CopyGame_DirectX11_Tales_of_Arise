@@ -14,7 +14,7 @@ CTurnLeftState::CTurnLeftState(class CIce_Wolf* pIceWolf)
 
 CIceWolfState * CTurnLeftState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_Target();
+
 	return nullptr;
 }
 
@@ -23,7 +23,7 @@ CIceWolfState * CTurnLeftState::Tick(_float fTimeDelta)
 	m_pOwner->Check_Navigation();
 	Find_Target();
 
-	
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	
 
 	return nullptr;
@@ -31,37 +31,20 @@ CIceWolfState * CTurnLeftState::Tick(_float fTimeDelta)
 
 CIceWolfState * CTurnLeftState::LateTick(_float fTimeDelta)
 {
-	m_iRadian = rand() % 10;
 	
-
+	
 	if (m_pTarget)
 	{
-		_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-		//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
 		return new CChaseState(m_pOwner);
-
-
 	}
 
-	else if (m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())))
-	{
-		m_iRand = rand() % 2;
-		if (m_iRand == 0)
-		{
-			return new CWalkFrontState(m_pOwner);
-		}
-
-		else if (m_iRand == 1)
-		{
-			return new CIdleState(m_pOwner);
-		}
+	if (m_bIsAnimationFinished)
+	{	
+		
+		return new CIdleState(m_pOwner, STATE_TURN_L, STATE_TURN_L);
 	}
 
-	else
-	{
-		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * m_fRadian *-1.f);
-	}
+
 
 	return nullptr;
 }
@@ -76,7 +59,8 @@ void CTurnLeftState::Enter()
 
 void CTurnLeftState::Exit()
 {
-	//m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 2.f);
+	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
+	m_pOwner->Get_Model()->Reset();
 }
 
 

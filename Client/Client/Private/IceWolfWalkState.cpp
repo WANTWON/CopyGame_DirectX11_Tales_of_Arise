@@ -10,70 +10,99 @@
 
 using namespace IceWolf;
 
-CWalkFrontState::CWalkFrontState(CIce_Wolf* pIceWolf)	
+CWalkState::CWalkState(CIce_Wolf* pIceWolf, FIELD_STATE_ID ePreTurn)
 {
 	m_pOwner = pIceWolf;
+	m_ePreTurn_Id = ePreTurn;
 }
 
-CIceWolfState * CWalkFrontState::AI_Behaviour(_float fTimeDelta)
+CIceWolfState * CWalkState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_Target();
+	
 	return nullptr;
 }
 
-CIceWolfState * CWalkFrontState::Tick(_float fTimeDelta)
+CIceWolfState * CWalkState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+
+	Find_Target();
 	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	m_pOwner->Check_Navigation();
-
-	Find_Target();
+	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f);
 
 
 
 	return nullptr;
 }
 
-CIceWolfState * CWalkFrontState::LateTick(_float fTimeDelta)
+CIceWolfState * CWalkState::LateTick(_float fTimeDelta)
 {
-
-		if (m_pTarget)
-		{
-			_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-			m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-			return new CChaseState(m_pOwner);
-
-		}
-		else
-		{
-			m_iRand = rand() % 3;
-			if (m_fWalkMoveTimer > 3.f && m_iRand == 0)
-				return new CIdleState(m_pOwner);
-
-			else if (m_fWalkMoveTimer > 3.f && m_iRand == 1)
-				return new CTurnLeftState(m_pOwner);
-
-			else if (m_fWalkMoveTimer > 3.f && m_iRand == 2)
-				return new CTurnRightState(m_pOwner);
-			else
-				m_fWalkMoveTimer += fTimeDelta;
-		}
+	if (m_pTarget)
+		return new CChaseState(m_pOwner);
 	
+
+	m_fWalkMoveTimer += fTimeDelta;
+
+	if (m_fWalkMoveTimer > 1.5f)
+	{
+		if(STATE_TURN_L == m_ePreTurn_Id)
+			return new CTurnRightState(m_pOwner);
+
+		else if(STATE_TURN_R == m_ePreTurn_Id)
+			return new CTurnLeftState(m_pOwner);
+	}
+	//else
+	//{
+	//	return new CTurnLeftState(m_pOwner);
+	//		
+	//		/*if (m_fWalkMoveTimer > 3.f && m_iRand == 0)
+	//			return new CIdleState(m_pOwner);
+
+	//		else if (m_fWalkMoveTimer > 3.f && m_iRand == 1)
+	//			return new CTurnLeftState(m_pOwner);
+
+	//		else if (m_fWalkMoveTimer > 3.f && m_iRand == 2)
+	//			return new CTurnRightState(m_pOwner);
+	//		else
+	//			m_fWalkMoveTimer += fTimeDelta;*/
+	//}
+	//
+
+	//if (5.5f < m_fTarget_Distance)
+	//{
+	//	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 2.f);
+	//}
+
+	//else
+	//{
+	//	switch (m_ePreState_Id)
+	//	{
+	//	case STATE_DASH_SCRATCHES:
+	//		return new CBattle_Quadruple_ClawState(m_pOwner);
+	//		break;
+
+	//	case STATE_QUADRUPLE:
+	//		return new CBattle_DashStartState(m_pOwner);
+	//		break;
+
+	//	default:
+	//		break;
+	//	}
+	//}
 	
 	return nullptr;
 }
 
-void CWalkFrontState::Enter()
+void CWalkState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_MOVE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_MOVE_RUN);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_MOVE_WALK_F);
 }
 
-void CWalkFrontState::Exit()
+void CWalkState::Exit()
 {
-	m_fWalkMoveTimer = 0.f;
-	m_fWalkAttackTimer = 0.f;
+	m_pOwner->Get_Model()->Reset();
 }
 
