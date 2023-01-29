@@ -36,8 +36,6 @@ int CEffectTexture::Tick(_float fTimeDelta)
 	m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
 	RELEASE_INSTANCE(CGameInstance);
 
-	m_fTimer += fTimeDelta;
-
 	return OBJ_NOEVENT;
 }
 
@@ -66,16 +64,7 @@ HRESULT CEffectTexture::Render()
 	__super::Render();
 
 	if (m_tTextureEffectDesc.bIsDistortion)
-	{
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DistortionTexture", pGameInstance->Get_BackBufferCopySRV())))
-			return E_FAIL;
-
-		RELEASE_INSTANCE(CGameInstance);
-
 		m_pShaderCom->Begin(SHADER_DISTORTION);
-	}
 	else
 		m_pShaderCom->Begin(SHADER_ALPHAMASK);
 	
@@ -108,9 +97,6 @@ HRESULT CEffectTexture::Ready_Components(void * pArg)
 
 	if (m_tTextureEffectDesc.bIsDistortion)
 	{
-		/* For.Com_NoiseTexture */
-		if (FAILED(__super::Add_Components(TEXT("Com_NoiseTexture"), LEVEL_STATIC, TEXT("Distortion_Noise"), (CComponent**)&m_pNoiseTextureCom)))
-			return E_FAIL;
 		/* For.Com_StrengthTexture */
 		if (FAILED(__super::Add_Components(TEXT("Com_StrengthTexture"), LEVEL_STATIC, TEXT("Distortion_Strength"), (CComponent**)&m_pStrengthTextureCom)))
 			return E_FAIL;
@@ -126,30 +112,17 @@ HRESULT CEffectTexture::SetUp_ShaderResources()
 	__super::SetUp_ShaderResources();
 
 	if (m_tTextureEffectDesc.bIsDistortion)
-		SetUp_ShaderResources_Distortion();
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_StrengthTexture", m_pStrengthTextureCom->Get_SRV())))
+			return E_FAIL;
+	}
 	else
 	{
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV())))
 			return E_FAIL;
 	}
-	
+
 	return S_OK;
-}
-
-HRESULT CEffectTexture::SetUp_ShaderResources_Distortion()
-{
-	if (FAILED(m_pShaderCom->Set_RawValue("g_iWinX", &g_iWinSizeX, sizeof(_uint))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_iWinY", &g_iWinSizeY, sizeof(_uint))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_NoiseTexture", m_pNoiseTextureCom->Get_SRV())))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_StrengthTexture", m_pStrengthTextureCom->Get_SRV())))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fDistortionTimer", &m_fTimer, sizeof(_float))))
-		return E_FAIL;
 }
 
 CEffectTexture * CEffectTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -184,6 +157,5 @@ void CEffectTexture::Free()
 
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pNoiseTextureCom);
 	Safe_Release(m_pStrengthTextureCom);
 }
