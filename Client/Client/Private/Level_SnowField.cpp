@@ -50,8 +50,8 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
+		return E_FAIL;
 
 	if (!g_bUIMade)
 	{
@@ -62,6 +62,7 @@ HRESULT CLevel_SnowField::Initialize()
 
 
 	CPlayerManager::Get_Instance()->Set_BattleMode(false);
+
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_SNOWFIELD);
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
@@ -183,6 +184,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 
 HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
+
 	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
@@ -664,8 +666,6 @@ HRESULT CLevel_SnowField::Ready_Layer_DecoObject(const _tchar * pLayerTag)
 			return E_FAIL;
 	}
 	CloseHandle(hFile);
-
-	Safe_Release(pGameInstance);
 
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;

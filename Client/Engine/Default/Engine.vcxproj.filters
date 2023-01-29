@@ -475,5 +475,8 @@
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_Navigation.hlsl">
       <Filter>01.Utility\03.Components\02.VIBuffer\03.Navigation\Shader</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Client\Bin\ShaderFiles\Shader_PostProcessing.hlsl">
+      <Filter>01.Utility\03.Components\01.Renderer\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

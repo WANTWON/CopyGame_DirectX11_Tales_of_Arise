@@ -699,6 +699,9 @@
     <ClInclude Include="..\Public\SlimeTurnR_State.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1114,6 +1117,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\SlimeTurnR_State.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
