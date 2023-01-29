@@ -221,6 +221,8 @@ _bool CSlime::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_POISON_RAIN:
 	case DAMAGE_LARGE_B:
 	case DEAD:
+	case TURN_R:
+	case TURN_L:
 		return false;
 
 	}

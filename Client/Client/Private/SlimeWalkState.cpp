@@ -4,7 +4,7 @@
 #include "GameInstance.h"
 #include "SlimeChaseState.h"
 #include "SlimeTurnR_State.h"
-
+#include "SlimeIdleState.h"
 using namespace Slime;
 
 CWalkState::CWalkState(CSlime* pSlime)
@@ -24,15 +24,9 @@ CSlimeState * CWalkState::Tick(_float fTimeDelta)
 
 
 	Find_Target();
-
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-
-	if (!m_bIsAnimationFinished)
-	{
-		m_pOwner->Check_Navigation();
-	}
-	
-
+	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_pOwner->Check_Navigation();
+	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 
 	return nullptr;
 }
