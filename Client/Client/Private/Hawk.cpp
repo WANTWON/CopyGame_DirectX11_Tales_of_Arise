@@ -38,7 +38,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CHawkState* pState = new CBattle_IdleState(this);
+	CHawkState* pState = new CIdleState(this);
 	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 
 	///* Set Binary */
@@ -168,13 +168,14 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_GRAB_LOOP:
 	case SYMBOL_RUN:
 		return true;
-	
-	case	ATTACK_FLUTTER:
-	case	ATTACK_DASH:
-	case	ATTACK_PECK:
-	case	ATTACK_GRAB_END:
-	case	ATTACK_GRAB_START:
-	case	ATTACK_TORNADE:
+
+	case ATTACK_FLUTTER:
+	case ATTACK_DASH:
+	case ATTACK_PECK:
+	case ATTACK_GRAB_END:
+	case ATTACK_GRAB_START:
+	case ATTACK_TORNADE:
+	case TURN_R:
 		return false;
 	}
 

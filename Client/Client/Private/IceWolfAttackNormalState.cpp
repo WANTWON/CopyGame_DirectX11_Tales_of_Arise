@@ -26,7 +26,17 @@ CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
 	m_fTarget_Distance = Find_BattleTarget();
 
 	
+	if (!m_bIsAnimationFinished)
+	{
+		_float fTranslationLength;
+		_float fRotation;
 
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &fRotation);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotation, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 	return nullptr;
 }
 
@@ -64,17 +74,7 @@ CIceWolfState * CAttackNormalState::LateTick(_float fTimeDelta)
 
 
 	}
-		else
-		{
-			/*_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
-			m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());*/
-
-			m_pOwner->Check_Navigation();
-			
-
-			
-		}
 
 
 	return nullptr;
@@ -90,7 +90,7 @@ void CAttackNormalState::Enter()
 
 void CAttackNormalState::Exit()
 {
-	m_fIdleAttackTimer = 0.f;
+	m_pOwner->Get_Model()->Reset();
 	
 }
 

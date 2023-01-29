@@ -22,8 +22,8 @@ CIceWolfState * CBattle_IdleState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	
 	
-	//Find_BattleTarget();
-	//m_pOwner->Check_Navigation();
+	Find_BattleTarget();
+
 
 
 	return nullptr;
@@ -34,8 +34,16 @@ CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	srand((_uint)time(NULL));
 	m_iRand = rand() % 1;
 
-	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
+
+	if (false == m_bTargetSetting)
+	{
+		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+		m_bTargetSetting = true;
+	}
+
+	
 	
 	m_fRedayAttackTimer += fTimeDelta;
 

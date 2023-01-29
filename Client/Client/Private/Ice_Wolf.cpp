@@ -7,6 +7,7 @@
 #include "IceWolfBattle_DeadState.h"
 #include "IceWolfAttackNormalState.h"
 #include "IceWolfBattle_SomerSaultState.h"
+#include "IceWolfAttack_Elemental_Charge.h"
 
 using namespace IceWolf;
 
@@ -34,9 +35,10 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CIceWolfState* pState = new CBattle_IdleState(this);
+
+		CIceWolfState* pState = new CIdleState(this, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE, CIceWolfState::FIELD_STATE_ID::STATE_TURN_L);
+		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 	
-	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 
 	///* Set Binary */
 	//CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -48,10 +50,11 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
-	m_tStats.m_fMaxHp = 3;
+	m_tStats.m_fMaxHp = 3.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
-	m_tStats.m_fAttackPower = 10;
-
+	m_tStats.m_fAttackPower = 10.f;
+	m_tStats.m_fWalkSpeed = 0.05f;
+	m_tStats.m_fRunSpeed = 5.f;
 
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
@@ -135,6 +138,20 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
+
+	if (true == m_bBattleMode && false == m_bDoneChangeState)
+	{
+		CIceWolfState* pState = new CBattle_IdleState(this);
+		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+		m_bDoneChangeState = true;
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	{
+		CIceWolfState* pState = new CAttack_Elemental_Charge(this, CIceWolfState::STATE_ID::STATE_CHARGE_END);
+		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+	}
+	
 
 	__super::Tick(fTimeDelta);
 	AI_Behaviour(fTimeDelta);

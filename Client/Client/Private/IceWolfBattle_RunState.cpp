@@ -91,8 +91,8 @@ void CBattle_RunState::Enter()
 
 void CBattle_RunState::Exit()
 {
-
-
+	
+	m_pOwner->Get_Model()->Reset();
 
 }
 

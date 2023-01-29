@@ -183,6 +183,9 @@
     <ClInclude Include="..\Public\BerserkerBattle_WalkState.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
+    <ClInclude Include="..\Public\HawkChaseState.h" />
+    <ClInclude Include="..\Public\HawkTurnR_State.h" />
+    <ClInclude Include="..\Public\HawkWalkState.h" />
     <ClInclude Include="..\Public\IceWolfAttackBiteState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_BackStepState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_RunState.h" />
@@ -323,6 +326,9 @@
     <ClCompile Include="..\Private\BerserkerBattle_WalkState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
+    <ClCompile Include="..\Private\HawkChaseState.cpp" />
+    <ClCompile Include="..\Private\HawkTurnR_State.cpp" />
+    <ClCompile Include="..\Private\HawkWalkState.cpp" />
     <ClCompile Include="..\Private\IceWolfAttackBiteState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_RunState.cpp" />

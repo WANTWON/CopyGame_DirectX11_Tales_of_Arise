@@ -83,7 +83,11 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		}
 	}
 
-
+	
+	m_eCurLevel = CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+	
+	if (LEVEL_BATTLE == m_eCurLevel)
+		m_bBattleMode = true;
 	
 	
 
@@ -315,14 +319,14 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	{
 		m_tInfo.iCurrentHp = 0;
 		/*m_bDissolve = true;*/
-		return m_tInfo.iCurrentHp;
+		return _float(m_tInfo.iCurrentHp);
 	}
 
 
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
 
-	return m_tInfo.iCurrentHp;
+	return _float(m_tInfo.iCurrentHp);
 }
 
 void CMonster::Compute_CurrentIndex()
