@@ -36,7 +36,13 @@ public:
 	virtual CPlayerState* LateTick(_float fTimeDelta) PURE;
 
 	virtual void Enter() PURE;
-	virtual void Exit() { m_pOwner->Get_Model()->Reset(); }
+	virtual void Exit() 
+	{ 
+		m_pOwner->Get_Model()->Reset();
+
+		if (0 != m_iSkillEvent)
+			m_iSkillEvent = 0;
+	}
 
 	CPlayerState* ChangeState(CPlayerState* pCurrentState, CPlayerState* pNewState)
 	{

@@ -67,7 +67,10 @@ void CModel::Get_MoveTransformationMatrix(const char * pBoneName, _vector * pTra
 		// 이름 비교
 		if (!strcmp(pBoneName, pBone->Get_Name()))
 		{
-			_vector vecMoveTranslation = pBone->Get_Translation();
+			_vector vecMoveTranslation = pBone->Get_Translation(); 
+			if (m_bInterupted)
+				vecMoveTranslation = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+			
 			_float Rotation = pBone->Get_RotationRadian();
 
 			// 이동 값, 회전 값 복사
@@ -79,11 +82,9 @@ void CModel::Get_MoveTransformationMatrix(const char * pBoneName, _vector * pTra
 
 void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
 {
-	if (m_iCurrentAnimIndex != iAnimIndex)
-	{
-		m_iPreAnimIndex = m_iCurrentAnimIndex;
-		m_iCurrentAnimIndex = iAnimIndex;
-	}
+	m_iPreAnimIndex = m_iCurrentAnimIndex;
+	m_iCurrentAnimIndex = iAnimIndex;
+	m_bInterupted = true;
 }
 
 void CModel::Set_TimeReset()
@@ -312,7 +313,7 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
-	if (m_iCurrentAnimIndex != m_iPreAnimIndex)
+	if (m_bInterupted)
 	{	//TODO: ����ִ԰� ���� �ִ������Ӱ��� �������� �Լ� ȣ�� �� ��.
 		/*if (m_bInterupted)
 		{
@@ -325,7 +326,9 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 		{
 			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 
-			m_iPreAnimIndex = m_iCurrentAnimIndex;
+			//m_iPreAnimIndex = m_iCurrentAnimIndex;
+
+			m_bInterupted = false;
 		}
 	}
 	else

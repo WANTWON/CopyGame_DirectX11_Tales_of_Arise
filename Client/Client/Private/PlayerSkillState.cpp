@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "PlayerIdleState.h"
 #include "Weapon.h"
+#include "PlayerAttackNormalState.h"
 
 using namespace Player;
 
@@ -30,7 +31,7 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
 
-		//m_pOwner->Check_Navigation();
+		m_pOwner->Check_Navigation();
 	}
 
 	vector<EVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -48,12 +49,19 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					if (EVENT_STATE == pEvent.iEventType)
 					{
-						CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
-						RELEASE_INSTANCE(CGameInstance);
+						if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
+
+						if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
+
+						if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
+
+						getchar();
 					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK2:
@@ -61,12 +69,19 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					if (EVENT_STATE == pEvent.iEventType)
 					{
-						CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
-						RELEASE_INSTANCE(CGameInstance);
+						if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
+
+						if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
+
+						if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
+
+						getchar();
 					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK3:
@@ -74,12 +89,19 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					if (EVENT_STATE == pEvent.iEventType)
 					{
-						CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
-						RELEASE_INSTANCE(CGameInstance);
+						if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
+
+						if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
+
+						if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
+
+						getchar();
 					}
 					break;
 				}
@@ -95,19 +117,15 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 			{
 				switch (m_eStateId)
 				{
-				case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+				case Client::CPlayerState::STATE_SKILL_ATTACK1:
 					if (EVENT_COLLIDER == pEvent.iEventType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
-				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+				case Client::CPlayerState::STATE_SKILL_ATTACK2:
 					if (EVENT_COLLIDER == pEvent.iEventType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
-				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-					if (EVENT_COLLIDER == pEvent.iEventType)
-						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
-					break;
-				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+				case Client::CPlayerState::STATE_SKILL_ATTACK3:
 					if (EVENT_COLLIDER == pEvent.iEventType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
@@ -126,19 +144,22 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 CPlayerState * CSkillState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsStateEvent)
+		return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1);
+
+	if ((0 != m_iSkillEvent) && (floor(m_pOwner->Get_Info().fCurrentMp) > 0))
 	{
-		/*switch (m_eStateId)
+		switch (m_iSkillEvent)
 		{
-		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK2);
+		case 1:
+			return new CSkillState(m_pOwner, STATE_ID::STATE_SKILL_ATTACK1);
 			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK3);
+		case 2:
+			return new CSkillState(m_pOwner, STATE_ID::STATE_SKILL_ATTACK2);
 			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK4);
+		case 3:
+			return new CSkillState(m_pOwner, STATE_ID::STATE_SKILL_ATTACK3);
 			break;
-		}*/
+		}
 	}
 
 	if (m_bIsAnimationFinished)
