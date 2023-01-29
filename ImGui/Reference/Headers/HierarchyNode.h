@@ -72,6 +72,7 @@ private:
 	_vector m_vecTranslation;
 	_float m_fRotationRadian;
 	_matrix m_PreTransforamtionMatrix;
+	_matrix m_FirstTransformMatrix;
 
 private:
 	/* 루트 본 이동 값 제거, 루트 본 이동, 회전 행렬 저장 함수 */
