@@ -34,10 +34,12 @@ CHawkState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 {
 	AI_Behaviour(fTimeDelta);
 
-	m_pOwner->Check_Navigation(); // ÀÚÀ¯
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 
+		m_pOwner->Check_Navigation();
+	
 	return nullptr;
 }
 

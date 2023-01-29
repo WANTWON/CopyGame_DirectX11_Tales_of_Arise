@@ -17,9 +17,9 @@ public:
 	virtual void Exit() override;
 
 private:
-	_float m_fIdleMoveTimer = 0.f;
-	_float m_fIdleAttackTimer = 1.5f;
-	_uint  m_iRand = 0;
+	_float			m_fIdleMoveTimer = 0.f;
+	_float			m_fIdleAttackTimer = 1.5f;
+	_uint			m_iRand = 0;
 	FIELD_STATE_ID	m_ePreState_Id;
 	FIELD_STATE_ID	m_ePreTurn_Id;
 };

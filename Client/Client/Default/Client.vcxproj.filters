@@ -681,6 +681,24 @@
     <ClInclude Include="..\Public\PlayerJumpState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\HawkSitOnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkUpFlyState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBraveState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeBattle_IdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeChaseState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeTurnR_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\PlayerSkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
@@ -1081,6 +1099,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerJumpState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkSitOnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkUpFlyState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBraveState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeBattle_IdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeChaseState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeTurnR_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerSkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>

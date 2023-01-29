@@ -11,6 +11,8 @@
 #include "HawkBattle_GrabStartState.h"
 #include "HawkBattle_Damage_LargeB_State.h"
 #include "HawkBattle_DeadState.h"
+#include "HawkSitOnState.h"
+#include "HawkBattle_DashState.h"
 
 using namespace Hawk;
 
@@ -38,7 +40,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CHawkState* pState = new CIdleState(this);
+	CHawkState* pState = new CSitOnState(this);
 	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 
 	///* Set Binary */
@@ -105,6 +107,14 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
+	/* For.Com_Obb*/
+	CCollider::COLLIDERDESC ObbColliderDesc;
+	ZeroMemory(&ObbColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ObbColliderDesc.vScale = _float3(7.f, 3.5f, 3.f);
+	ObbColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ObbColliderDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -115,11 +125,38 @@ int CHawk::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	if (true == m_bBattleMode && false == m_bDoneChangeState)
+	{
+		CHawkState* pState = new CBattle_IdleState(this, CHawkState::STATE_ID::START_BATTLEMODE);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+		m_bDoneChangeState = true;
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	{
+		CHawkState* pState = new CBattle_DashState(this);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	{
+		CHawkState* pState = new CBattle_ChargeState(this);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	{
+		CHawkState* pState = new CBattle_Flying_BackState(this);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	}
+
+
 	__super::Tick(fTimeDelta);
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	return OBJ_NOEVENT;
 }
 
@@ -167,6 +204,8 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	case MOVE_RUN:
 	case ATTACK_GRAB_LOOP:
 	case SYMBOL_RUN:
+	case MOVE_WALK_F:
+	case SYMBOL_STOP:
 		return true;
 
 	case ATTACK_FLUTTER:
@@ -176,6 +215,9 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_GRAB_START:
 	case ATTACK_TORNADE:
 	case TURN_R:
+	case ATTACK_BRAVE:
+	case SYMBOL_DETECT_STOP:
+	case ATTACK_CHARGE:
 		return false;
 	}
 
