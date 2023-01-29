@@ -33,7 +33,18 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 
 	m_fDegreeToTarget = RadianToTarget();
 	
-	
+
+	if (!m_bIsAnimationFinished)
+	{
+		_float fTranslationLength;
+		_float fRotation;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &fRotation);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotation, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 	return nullptr;
 }
 
@@ -106,10 +117,7 @@ void CAttackBiteState::Enter()
 
 void CAttackBiteState::Exit()
 {
-	m_fIdleAttackTimer = 0.f;
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	//m_pOwner->Get_Transform()->Go_Straight(1.1f);
+	m_pOwner->Get_Model()->Reset();
 }
 
 

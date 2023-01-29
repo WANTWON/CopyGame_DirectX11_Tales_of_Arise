@@ -52,19 +52,21 @@ CIceWolfState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 	
 	if (m_bIsAnimationFinished)
 	{
-		switch (m_iRand)
-		{
-		case 0:
-			return new CBattle_RunState(m_pOwner);
-			break;
+		return new CBattle_RunState(m_pOwner);
 
-		case 1:
-			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_LOOP);
-			break;
+		//switch (m_iRand)
+		//{
+		//case 0:
+		//	
+		//	break;
 
-		default:
-			break;
-		}
+		////case 1:
+		////	return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_LOOP);
+		////	break;
+
+		//default:
+		//	break;
+		//}
 		
 	}
 
@@ -94,7 +96,7 @@ void CBattle_BackStepState::Enter()
 
 void CBattle_BackStepState::Exit()
 {
-	m_fRedayAttackTimer = 0.f;
+
 	
 }
 

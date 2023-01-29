@@ -9,6 +9,18 @@ BEGIN(Client)
 class CIceWolfState
 {
 public:
+	
+	enum FIELD_STATE_ID
+	{
+		FIELD_STATE_IDLE,
+		STATE_WALK,
+		STATE_TURN_L,
+		STATE_TURN_R,
+		STATE_HOWLING
+	};
+
+
+	
 	enum STATE_ID
 	{
 		STATE_IDLE,
@@ -22,7 +34,7 @@ public:
 		STATE_DEAD,
 		STATE_END
 	};
-
+	
 	
 
 	virtual ~CIceWolfState() {};

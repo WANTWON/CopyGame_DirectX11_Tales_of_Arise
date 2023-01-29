@@ -74,7 +74,7 @@ public: // Get & Set
 	_bool		Get_BattleMode = false;
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
 	void		Set_Dissolve() { m_bDissolve = true; }
-	
+	void		Set_BattleMode() { m_bBattleMode = true; }
 
 protected:
 	DMG_DIR Calculate_DmgDirection();
@@ -97,7 +97,11 @@ protected:
 	_bool					m_bMove = true;
 	_bool					m_bMakeEffect = false;
 	_bool					m_bTakeDamage = false;
-	
+	_bool					m_bBattleMode = false;
+	_uint					m_eCurLevel = LEVEL_END;
+
+
+
 	//For Move Time
 	DWORD m_dwDeathTime = GetTickCount();
 	DWORD m_dwAttackTime = GetTickCount();

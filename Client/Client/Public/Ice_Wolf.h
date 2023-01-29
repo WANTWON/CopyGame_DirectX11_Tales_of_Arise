@@ -119,8 +119,8 @@ private:
 
 private:
 	class CIceWolfState*  m_pIce_WolfState = nullptr;
-		  _float m_fSpeed = 3.f;
-
+				 _float   m_fSpeed = 3.f;
+				 _bool   m_bDoneChangeState = false;
 	
 
 public:

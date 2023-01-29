@@ -33,9 +33,9 @@ CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 	{
 		_float fTranslationLength, fRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &fRotation);
+	//	m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &fRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotation, m_pOwner->Get_Navigation());
+	//	m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -50,17 +50,19 @@ CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	
-	if (STATE_CHARGE_END != m_eStateId_Charge)
-	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
-	}
+	//if (STATE_CHARGE_END != m_eStateId_Charge)
+	//{
+	//	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+	//}
 
+	
+	
 	if (m_bIsAnimationFinished)
 	{
 		switch (m_eStateId_Charge)
 		{
-		case Client::CIceWolfState::STATE_CHARGE_START:
+		/*case Client::CIceWolfState::STATE_CHARGE_START:
 			
 			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_LOOP);
 			break;
@@ -70,9 +72,8 @@ CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_LOOP);
 		
 			else if (m_fTarget_Distance <= 3)
-			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
+			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);*/
 			
-
 		case Client::CIceWolfState::STATE_CHARGE_END:
 			if (m_iRand == 0)
 				return new CAttackBiteState(m_pOwner);
@@ -82,6 +83,7 @@ CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 			
 		}
 	}
+
 
 
 	
@@ -113,10 +115,7 @@ void CAttack_Elemental_Charge::Enter()
 
 void CAttack_Elemental_Charge::Exit()
 {
-	m_fIdleAttackTimer = 0.f;
-
-	//if(STATE_CHARGE_END == m_eStateId_Charge)
-	//m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
+	m_pOwner->Get_Model()->Reset();
 }
 
 
