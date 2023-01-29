@@ -21,8 +21,9 @@ HRESULT CHierarchyNode::Initialize(BINBONE tBone, CHierarchyNode* pParent)
 	/* m_TransformationMatrix : 이 뼈만의 상태. (부모기준으로 표현된) (부모의 상태를 제외된) */
 	m_TransformationMatrix = tBone.Transformation;
 	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix)));
-	// 이전 변환 행렬 저장
+	// 최초 변환, 이전 변환 행렬 저장
 	m_PreTransforamtionMatrix = XMLoadFloat4x4(&m_TransformationMatrix);
+	m_FirstTransformMatrix = m_PreTransforamtionMatrix;
 
 	/* m_CombinedTransformationMatrix : 이 뼈 + 부모의 상태. (원점기준으로 표현된) (부모의 상태를 포함한) */
 	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
@@ -103,13 +104,14 @@ void CHierarchyNode::Set_RootMotionMatrix(const char* pBoneName)
 		vAfterQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(AfterTransformMatrix));
 
 		// 쿼터니언 내적을 통한 두 쿼터니언 사이 각 구함
-		m_fRotationRadian = acosf(XMVectorGetX(XMQuaternionDot(vPreQuat, vAfterQuat))) * -2.f;
+		m_fRotationRadian = acosf(XMVectorGetX(XMQuaternionDot(vPreQuat, vAfterQuat))) * 2.f;
 
 		// 이전 변환 행렬 저장
 		m_PreTransforamtionMatrix = AfterTransformMatrix;
 
-		// 루트 본 이동 값 제거
-		AfterTransformMatrix = XMMatrixIdentity();
+		// 루트 본 이동, 회전 값 제거
+		AfterTransformMatrix = m_FirstTransformMatrix;
+		AfterTransformMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 		XMStoreFloat4x4(&m_TransformationMatrix, AfterTransformMatrix);
 	}
 }

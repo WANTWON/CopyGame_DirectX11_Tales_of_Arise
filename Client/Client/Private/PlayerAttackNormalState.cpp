@@ -50,8 +50,6 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					if (EVENT_STATE == pEvent.iEventType)
 					{
-						CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
@@ -64,8 +62,7 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 						else if (GetKeyState('F') < 0)
 							m_iSkillEvent = 3;
 
-
-						RELEASE_INSTANCE(CGameInstance);
+						getchar();
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
@@ -73,8 +70,6 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					if (EVENT_STATE == pEvent.iEventType)
 					{
-						CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
@@ -87,7 +82,7 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 						else if (GetKeyState('F') < 0)
 							m_iSkillEvent = 3;
 
-						RELEASE_INSTANCE(CGameInstance);
+						getchar();
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
@@ -95,8 +90,6 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					if (EVENT_STATE == pEvent.iEventType)
 					{
-						CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
@@ -109,7 +102,7 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 						else if (GetKeyState('F') < 0)
 							m_iSkillEvent = 3;
 
-						RELEASE_INSTANCE(CGameInstance);
+						getchar();
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK4:

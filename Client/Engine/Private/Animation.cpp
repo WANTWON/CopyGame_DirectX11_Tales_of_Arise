@@ -216,6 +216,11 @@ void CAnimation::Set_TimeReset()
 
 void CAnimation::Reset(void)
 {
+	for (auto& pChannel : m_Channels)
+	{
+		pChannel->Reset();
+	}
+
 	for (auto& Event : m_vecEvents)
 		Event.isPlay = false;
 
