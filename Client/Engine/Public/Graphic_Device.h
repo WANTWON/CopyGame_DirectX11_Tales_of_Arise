@@ -13,9 +13,6 @@ public:
 	virtual ~CGraphic_Device() = default;
 
 public:
-	ID3D11ShaderResourceView* Get_BackBufferSRV() { return m_pBackBufferSRV; }
-
-public:
 	HRESULT Ready_Graphic_Device(HWND hWnd, GRAPHIC_DESC::WINMODE WinMode, _uint iWinCX, _uint iWinCY, ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppDeviceContextOut);
 	HRESULT Clear_BackBuffer_View(_float4 vClearColor);
 	HRESULT Clear_DepthStencil_View();
@@ -32,7 +29,6 @@ private:
 
 	// ID3D11ShaderResourceView*
 	ID3D11RenderTargetView*		m_pBackBufferRTV = nullptr;
-	ID3D11ShaderResourceView*	m_pBackBufferSRV = nullptr;
 	ID3D11DepthStencilView*		m_pDepthStencilView = nullptr;
 
 private:

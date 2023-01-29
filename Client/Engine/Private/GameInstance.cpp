@@ -97,14 +97,6 @@ void CGameInstance::Clear(_uint iLevelIndex)
 	m_pObject_Manager->Clear(iLevelIndex);
 }
 
-ID3D11ShaderResourceView * CGameInstance::Get_BackBufferSRV()
-{
-	if (nullptr == m_pGraphic_Device)
-		return nullptr;
-
-	return m_pGraphic_Device->Get_BackBufferSRV();
-}
-
 HRESULT CGameInstance::Clear_BackBuffer_View(_float4 vClearColor)
 {
 	if (nullptr == m_pGraphic_Device)
@@ -596,6 +588,14 @@ _bool CGameInstance::isIn_WorldFrustum(_fvector vPosition, _float fRange)
 		return false;
 
 	return m_pFrustum->isIn_WorldFrustum(vPosition, fRange);
+}
+
+ID3D11ShaderResourceView * CGameInstance::Get_BackBufferCopySRV()
+{
+	if (nullptr == m_pTarget_Manager)
+		return nullptr;
+
+	return m_pTarget_Manager->Get_BackBufferCopySRV();
 }
 
 void CGameInstance::Release_Engine()

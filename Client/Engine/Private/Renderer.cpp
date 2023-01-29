@@ -28,9 +28,9 @@ HRESULT CRenderer::Initialize_Prototype()
 	_uint iNumViewports = 1;
 
 	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
-	/* 
+	/** 
 		Render Target Views
-	*/
+	**/
 	/* For.Target_Diffuse */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(1.f, 1.f, 1.f, 0.f))))
@@ -68,10 +68,6 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Specular"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
-	/* For.Target_Distortion */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_BackBufferSubsection"), ViewportDesc.Width, ViewportDesc.Height,
-		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
-		return E_FAIL;
 
 	/* For.Target_ShadowDepth */
 	_uint iShadowMapCX = 1280.f * 12.5f;
@@ -82,6 +78,15 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_ShadowDepth"), iShadowMapCX, iShadowMapCY,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(1.0f, 1.0f, 1.0f, 1.0f))))
+		return E_FAIL;
+
+	/* For.BackBufferCopy */
+	if (FAILED(m_pTarget_Manager->Ready_BackBufferCopyTexture(m_pDevice, m_pContext, ViewportDesc.Width, ViewportDesc.Height)))
+		return E_FAIL;
+
+	/* For.Target_BackBufferCopy */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_BackBufferCopy"), ViewportDesc.Width, ViewportDesc.Height,
+		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
 
 	/**
@@ -116,8 +121,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Blur_Vertical"), TEXT("Target_Blur_Vertical"))))
 		return E_FAIL;
 
-	/* For.MRT_Distortion*/
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Distortion"), TEXT("Target_BackBufferSubsection"))))
+	/* For.MRT_BackBufferCopy */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_BackBufferCopy"), TEXT("Target_BackBufferCopy"))))
 		return E_FAIL;
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
@@ -151,6 +156,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth"), 225.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow"), 375.f, 75.f, 150.f, 150.f)))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_BackBufferCopy"), 512.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 #endif
 
@@ -313,75 +320,6 @@ HRESULT CRenderer::Render_AlphaBlendLights()
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
 
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_AlphaBlend()
-{
-	m_GameObjects[RENDER_ALPHABLEND].sort([](CGameObject* pSour, CGameObject* pDest)
-	{
-		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
-	});
-
-	for (auto& pGameObject : m_GameObjects[RENDER_ALPHABLEND])
-	{
-		if (nullptr != pGameObject)
-		{
-			pGameObject->Render();
-			Safe_Release(pGameObject);
-		}
-	}
-
-	m_GameObjects[RENDER_ALPHABLEND].clear();
-
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_Distortion()
-{
-	/* If there are not Distortion Object return. */
-	if (m_GameObjects[RENDER_DISTORTION].empty())
-		return S_OK;
-	else
-	{
-		for (auto& pGameObject : m_GameObjects[RENDER_DISTORTION])
-		{
-			if (pGameObject)
-			{
-				pGameObject->Render();
-				Safe_Release(pGameObject);
-			}
-		}
-
-		m_GameObjects[RENDER_DISTORTION].clear();
-		
-		return S_OK;
-	}
-}
-
-HRESULT CRenderer::Render_UI()
-{
-	for (auto& pGameObject : m_GameObjects[RENDER_UI_BACK])
-	{
-		if (nullptr != pGameObject)
-		{
-			pGameObject->Render();
-			Safe_Release(pGameObject);
-		}
-	}
-
-	m_GameObjects[RENDER_UI_BACK].clear();
-
-	for (auto& pGameObject : m_GameObjects[RENDER_UI_FRONT])
-	{
-		if (nullptr != pGameObject)
-		{
-			pGameObject->Render();
-			Safe_Release(pGameObject);
-		}
-	}
-
-	m_GameObjects[RENDER_UI_FRONT].clear();
 	return S_OK;
 }
 
@@ -553,6 +491,55 @@ HRESULT CRenderer::Render_NonLight()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_AlphaBlend()
+{
+	m_GameObjects[RENDER_ALPHABLEND].sort([](CGameObject* pSour, CGameObject* pDest)
+	{
+		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
+	});
+
+	for (auto& pGameObject : m_GameObjects[RENDER_ALPHABLEND])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render();
+			Safe_Release(pGameObject);
+		}
+	}
+
+	m_GameObjects[RENDER_ALPHABLEND].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Distortion()
+{
+	/* If there are not Distortion Object return. */
+	if (m_GameObjects[RENDER_DISTORTION].empty())
+		return S_OK;
+	else
+	{
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+
+		for (auto& pGameObject : m_GameObjects[RENDER_DISTORTION])
+		{
+			if (pGameObject)
+			{
+				///* BackBufferCopy */
+				//if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_BackBufferCopy"))))
+				//	return E_FAIL;
+
+				pGameObject->Render();
+				Safe_Release(pGameObject);
+			}
+		}
+
+		m_GameObjects[RENDER_DISTORTION].clear();
+
+		return S_OK;
+	}
+}
+
 #ifdef _DEBUG
 HRESULT CRenderer::Render_Debug()
 {
@@ -596,11 +583,39 @@ HRESULT CRenderer::Render_Debug()
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_LightDepth"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;
+	/*	if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_BackBufferCopy"), m_pShader, m_pVIBuffer)))
+			return E_FAIL;*/
 	}
 
 	return S_OK;
 }
 #endif // _DEBUG
+
+HRESULT CRenderer::Render_UI()
+{
+	for (auto& pGameObject : m_GameObjects[RENDER_UI_BACK])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render();
+			Safe_Release(pGameObject);
+		}
+	}
+
+	m_GameObjects[RENDER_UI_BACK].clear();
+
+	for (auto& pGameObject : m_GameObjects[RENDER_UI_FRONT])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render();
+			Safe_Release(pGameObject);
+		}
+	}
+
+	m_GameObjects[RENDER_UI_FRONT].clear();
+	return S_OK;
+}
 
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

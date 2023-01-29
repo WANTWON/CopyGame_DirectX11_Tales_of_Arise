@@ -37,6 +37,7 @@ public:
 private:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
 	virtual HRESULT SetUp_ShaderResources() override;
+	HRESULT SetUp_ShaderResources_Distortion();
 
 private:
 	TEXTUREEFFECTDESC m_tTextureEffectDesc;
@@ -44,6 +45,10 @@ private:
 	/* Texture Effect */
 	CVIBuffer_Rect*	m_pVIBufferCom = nullptr;
 	CTexture* m_pTextureCom = nullptr;
+	CTexture* m_pNoiseTextureCom = nullptr;
+	CTexture* m_pStrengthTextureCom = nullptr;
+	
+	_float m_fTimer = 0.f;
 
 public:
 	static CEffectTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

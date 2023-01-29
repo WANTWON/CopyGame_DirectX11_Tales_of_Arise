@@ -361,39 +361,4 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_VERTICAL_BLUR();
 	}
-
-	// 6
-	pass Reflection
-	{
-		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
-
-	// 7
-	pass Refraction
-	{
-		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
-
-	/*pass Water
-	{
-		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
-
-		VertexShader = compile vs_5_0 VS_MAIN_WATER();
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN_WATER();
-	}*/
 }

@@ -31,11 +31,21 @@ int CEffectTexture::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	/* Billboard */
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
+	RELEASE_INSTANCE(CGameInstance);
+
+	m_fTimer += fTimeDelta;
+
 	return OBJ_NOEVENT;
 }
 
 void CEffectTexture::Late_Tick(_float fTimeDelta)
 {
+	if (!Check_IsinFrustum())
+		return;
+
 	if (m_pRendererCom)
 	{
 		if (m_tTextureEffectDesc.bIsDistortion)
@@ -43,7 +53,6 @@ void CEffectTexture::Late_Tick(_float fTimeDelta)
 		else
 		{
 			Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
-
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 		}
 	}
@@ -57,9 +66,18 @@ HRESULT CEffectTexture::Render()
 	__super::Render();
 
 	if (m_tTextureEffectDesc.bIsDistortion)
-		m_pShaderCom->Begin(0);
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DistortionTexture", pGameInstance->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		RELEASE_INSTANCE(CGameInstance);
+
+		m_pShaderCom->Begin(SHADER_DISTORTION);
+	}
 	else
-		m_pShaderCom->Begin(0);
+		m_pShaderCom->Begin(SHADER_ALPHAMASK);
 	
 	m_pVIBufferCom->Render();
 
@@ -87,6 +105,17 @@ HRESULT CEffectTexture::Ready_Components(void * pArg)
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, m_tTextureEffectDesc.wcPrototypeId, (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
+
+	if (m_tTextureEffectDesc.bIsDistortion)
+	{
+		/* For.Com_NoiseTexture */
+		if (FAILED(__super::Add_Components(TEXT("Com_NoiseTexture"), LEVEL_STATIC, TEXT("Distortion_Noise"), (CComponent**)&m_pNoiseTextureCom)))
+			return E_FAIL;
+		/* For.Com_StrengthTexture */
+		if (FAILED(__super::Add_Components(TEXT("Com_StrengthTexture"), LEVEL_STATIC, TEXT("Distortion_Strength"), (CComponent**)&m_pStrengthTextureCom)))
+			return E_FAIL;
+	}
+
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Effect"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
@@ -97,23 +126,30 @@ HRESULT CEffectTexture::SetUp_ShaderResources()
 	__super::SetUp_ShaderResources();
 
 	if (m_tTextureEffectDesc.bIsDistortion)
-	{
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	
-		ID3D11ShaderResourceView* pBackBufferSRV = pGameInstance->Get_BackBufferSRV();
-
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", pBackBufferSRV)))
-			return E_FAIL;
-
-		RELEASE_INSTANCE(CGameInstance);
-	}
+		SetUp_ShaderResources_Distortion();
 	else
 	{
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV())))
 			return E_FAIL;
 	}
 	
 	return S_OK;
+}
+
+HRESULT CEffectTexture::SetUp_ShaderResources_Distortion()
+{
+	if (FAILED(m_pShaderCom->Set_RawValue("g_iWinX", &g_iWinSizeX, sizeof(_uint))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_iWinY", &g_iWinSizeY, sizeof(_uint))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_NoiseTexture", m_pNoiseTextureCom->Get_SRV())))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_StrengthTexture", m_pStrengthTextureCom->Get_SRV())))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fDistortionTimer", &m_fTimer, sizeof(_float))))
+		return E_FAIL;
 }
 
 CEffectTexture * CEffectTexture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -148,4 +184,6 @@ void CEffectTexture::Free()
 
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pNoiseTextureCom);
+	Safe_Release(m_pStrengthTextureCom);
 }

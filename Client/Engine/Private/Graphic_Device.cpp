@@ -140,9 +140,6 @@ HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 
 	/* Back Buffer Render Target */
 	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV)))
-		return E_FAIL;	
-	/* Back Buffer Shader Resource View */
-	if (FAILED(m_pDevice->CreateShaderResourceView(pBackBufferTexture, nullptr, &m_pBackBufferSRV)))
 		return E_FAIL;
 
 	Safe_Release(pBackBufferTexture);
