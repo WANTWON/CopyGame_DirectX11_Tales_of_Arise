@@ -7,76 +7,78 @@
 #include "IceWolfTurnRightState.h"
 #include "IceWolfHowLingState.h"
 #include "IceWolfChaseState.h"
-#include "IceWolfAttack_Elemental_Charge.h"
-#include "IceWolfBattle_HowLingState.h"
+
 
 using namespace IceWolf;
 
-CIdleState::CIdleState(CIce_Wolf* pIceWolf)
+CIdleState::CIdleState(CIce_Wolf* pIceWolf, FIELD_STATE_ID ePreState, FIELD_STATE_ID ePreTurn)
 {
 	m_pOwner = pIceWolf;
+	m_ePreState_Id = ePreState;
+	m_ePreTurn_Id = ePreTurn;
 }
 
 CIceWolfState * CIdleState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_Target();
 	return nullptr;
 }
 
 CIceWolfState * CIdleState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Check_Navigation(); // 자유
 	Find_Target();
-
 
 	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	
-
+	m_pOwner->Check_Navigation(); // 자유
 
 	return nullptr;
 }
 
 CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 {
-	
+	m_fIdleMoveTimer += fTimeDelta;
 
 	if (m_pTarget)
 	{
-		_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-		//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-		return new CBattle_HowLingState(m_pOwner);
-
-
-
-		if (m_fIdleAttackTimer > 1.5f)
-		{
-			/*if (!m_bHasSpottedTarget)
-			return new CAggroState();
-			else
-			return new CAttackState();*/
-		}
-		else
-			m_fIdleAttackTimer += fTimeDelta;
+		return new CChaseState(m_pOwner);
 	}
 
-	/*else
+	
+	else
 	{
+		if (m_fIdleMoveTimer > 3.f)
+		{
+			switch (m_ePreState_Id)
+			{
+			case Client::CIceWolfState::STATE_IDLE:
+				return new CWalkState(m_pOwner, m_ePreTurn_Id);
+				break;
+			case Client::CIceWolfState::STATE_TURN_L:
+				return new CIdleState(m_pOwner, FIELD_STATE_IDLE, STATE_TURN_L);
+				break;
+			case Client::CIceWolfState::STATE_TURN_R:
+				return new CIdleState(m_pOwner, FIELD_STATE_IDLE, STATE_TURN_R);
+				break;
+			case Client::CIceWolfState::STATE_HOWLING:
+				break;
+			default:
+				break;
+			}
+		}
+	}
 
-		m_iRand = rand() % 3;
-		if (m_fIdleMoveTimer > 3.f && m_iRand == 0)
+		
+		/*if (m_fIdleMoveTimer > 3.f && m_iRand == 0)
 			return new CTurnLeftState(m_pOwner);
 
 		else if (m_fIdleMoveTimer > 3.f && m_iRand == 1)
 			return new CTurnRightState(m_pOwner);
 
 		else if (m_fIdleMoveTimer > 3.f && m_iRand == 2)
-			return new CWalkFrontState(m_pOwner);
+			
 
 		else
-			m_fIdleMoveTimer += fTimeDelta;
-
-	}*/
+			m_fIdleMoveTimer += fTimeDelta;*/
 
 	return nullptr;
 }
@@ -90,6 +92,5 @@ void CIdleState::Enter()
 
 void CIdleState::Exit()
 {
-	m_fIdleMoveTimer = 0.f;
-	m_fIdleAttackTimer = 0.f;
+
 }

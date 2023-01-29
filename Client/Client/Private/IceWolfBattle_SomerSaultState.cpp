@@ -32,6 +32,19 @@ CIceWolfState * CBattle_SomerSaultState::Tick(_float fTimeDelta)
 	m_pOwner->Check_Navigation();
 
 	m_fDegreeToTarget = RadianToTarget();
+
+
+	if (!m_bIsAnimationFinished)
+	{
+		_float fTranslationLength;
+		_vector vecRotation;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &vecRotation);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), vecRotation, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 	return nullptr;
 }
 
@@ -53,45 +66,24 @@ CIceWolfState * CBattle_SomerSaultState::LateTick(_float fTimeDelta)
 	
 	if (m_bIsAnimationFinished)
 	{
-		switch (m_iRand)
+		return new CBattle_RunState(m_pOwner);
+
+		/*switch (m_iRand)
 		{
 		case 0:
-			return new CAttack_Elemental_Charge(m_pOwner, STATE_CHARGE_LOOP);
+			return new CAttack_Elemental_Charge(m_pOwner, STATE_CHARGE_);
 			break;
 		case 1:
 			return new CBattle_RunState(m_pOwner);
 			break;
 		default:
 			break;
-		}
+		}*/
 		
 		
 	}
 
-	else
-	{
-		/*_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());*/
-
-		m_pOwner->Check_Navigation();
-	}
-	//if (21.5f <= m_fRedayAttackTimer)
-	//{
-	//	switch (m_iRand)
-	//	{
-	//	case 0:
-	//		return new CBattle_WalkState(m_pOwner);
-	//		break;
-
-	//	default:
-	//		break;
-	//	}
-	//}
-
-
-	//if (30 <= m_fDegreeToTarget)
-	//	return new CTurnLeftState(m_pOwner);
 	return nullptr;
 }
 
@@ -106,10 +98,10 @@ void CBattle_SomerSaultState::Enter()
 
 void CBattle_SomerSaultState::Exit()
 {
-	m_fRedayAttackTimer = 0.f;
+	
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	m_pOwner->Get_Transform()->Go_PosTarget(0.01f, vTargetPosition);
+	m_pOwner->Get_Model()->Reset();
 	
 }
 
