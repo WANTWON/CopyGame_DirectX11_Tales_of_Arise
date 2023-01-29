@@ -9,6 +9,16 @@ BEGIN(Client)
 class CBerserkerState
 {
 public:
+	enum FIELD_STATE_ID
+	{
+		FIELD_STATE_IDLE,
+		STATE_WALK,
+		STATE_TURN_L,
+		STATE_TURN_R,
+		STATE_CHASE,
+		STATE_HOWLING,
+	};
+
 	enum STATE_ID
 	{
 		STATE_IDLE,

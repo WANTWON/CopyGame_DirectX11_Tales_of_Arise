@@ -36,7 +36,7 @@ CBerserkerState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
 			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 2.f);
 		}
 			
-		else
+		/*else
 		{
 			switch (m_ePreState_Id)
 			{
@@ -51,7 +51,7 @@ CBerserkerState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
 			default:
 				break;
 			}
-		}
+		}*/
 	return nullptr;
 }
 

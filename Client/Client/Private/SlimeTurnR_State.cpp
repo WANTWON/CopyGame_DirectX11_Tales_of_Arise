@@ -27,8 +27,11 @@ CSlimeState * CTurnR_State::Tick(_float fTimeDelta)
 	Find_Target();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	
+	if(!m_bIsAnimationFinished)
+	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 
-	m_pOwner->Check_Navigation();
+	//m_pOwner->Check_Navigation();
 
 	//if (!m_bIsAnimationFinished)
 	//{

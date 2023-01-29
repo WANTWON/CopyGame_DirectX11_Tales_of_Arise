@@ -35,11 +35,11 @@ CBerserkerState * CBattle_WalkState::Tick(_float fTimeDelta)
 	
 	m_fRedayAngryTimer += fTimeDelta;
 
-	if (m_fRedayAngryTimer >= 5.5f)
+	/*if (m_fRedayAngryTimer >= 5.5f)
 	{
 		return new CBattle_HowLingState(m_pOwner);
 
-	}
+	}*/
 
 	return nullptr;
 }

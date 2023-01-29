@@ -702,6 +702,15 @@
     <ClInclude Include="..\Public\PlayerSkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BerserkerChaseState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerTurnR_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerHowLing_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1120,6 +1129,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerSkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerChaseState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerTurnR_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerHowLing_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

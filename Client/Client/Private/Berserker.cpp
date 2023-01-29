@@ -33,7 +33,7 @@ HRESULT CBerserker::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CBerserkerState* pState = new CBattle_IdleState(this);
+	CBerserkerState* pState = new CIdleState(this, CBerserkerState::FIELD_STATE_ID::FIELD_STATE_IDLE);
 	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
 
 	/* Set Binary */
@@ -168,7 +168,7 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	{
 	case MOVE_IDLE:
 	case MOVE_WALK_F:
-		
+	case MOVE_RUN:
 		return true;
 	
 	case ATTACK_DOUBLE_CLAW:
@@ -182,6 +182,7 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_HOWLING:
 	case ATTACK_QUADRUPLE_CLAW:
 	case ATTACK_POUNCING:
+	case TURN_R:
 		return false;
 	}
 

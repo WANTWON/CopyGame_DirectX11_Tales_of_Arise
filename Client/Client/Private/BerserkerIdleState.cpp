@@ -3,29 +3,34 @@
 #include "BerserkerIdleState.h"
 #include "GameInstance.h"
 #include "BerserkerBattle_HowLingState.h"
-
+#include "BerserkerChaseState.h"
+#include "BerserkerWalkState.h"
+#include "BerserkerHowLing_State.h"
 using namespace Berserker;
 
-CIdleState::CIdleState(CBerserker* pIceWolf)
+CIdleState::CIdleState(CBerserker* pIceWolf, FIELD_STATE_ID ePreState)
 {
 	m_pOwner = pIceWolf;
+	m_ePreState_Id = ePreState;
 }
 
 CBerserkerState * CIdleState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_Target();
+	
 	return nullptr;
 }
 
 CBerserkerState * CIdleState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Check_Navigation(); // ÀÚÀ¯
 	Find_Target();
 
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
-	
+	if (!m_bIsAnimationFinished)
+	{
 
+		m_pOwner->Check_Navigation();
+	}
 
 	return nullptr;
 }
@@ -34,30 +39,40 @@ CBerserkerState * CIdleState::LateTick(_float fTimeDelta)
 {
 	
 
-	/*if (m_pTarget)
+	m_fIdleMoveTimer += fTimeDelta;
+
+	if (m_pTarget)
 	{
-		_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-		return new CBattle_HowLingState(m_pOwner);
+		return new CChaseState(m_pOwner);
 	}
 
 	else
 	{
-		m_iRand = rand() % 3;
-		if (m_fIdleMoveTimer > 3.f && m_iRand == 0)
-			return new CTurnLeftState(m_pOwner);
+		if (m_fIdleMoveTimer > 1.5f)
+		{
+			switch (m_ePreState_Id)
+			{
+			case CBerserkerState::FIELD_STATE_ID::FIELD_STATE_IDLE:
+				return new CWalkState(m_pOwner);
 
-		else if (m_fIdleMoveTimer > 3.f && m_iRand == 1)
-			return new CTurnRightState(m_pOwner);
+			//case CBerserkerState::FIELD_STATE_ID::STATE_WALK:
+			//	return new CTrunR_State(m_pOwner);
+			//	break;
 
-		else if (m_fIdleMoveTimer > 3.f && m_iRand == 2)
-			return new CWalkFrontState(m_pOwner);
+			case CBerserkerState::FIELD_STATE_ID::STATE_TURN_R:
+				return new CHowLing_State(m_pOwner);
+				break;
 
-		else
-			m_fIdleMoveTimer += fTimeDelta;
+			//case CBerserkerState::FIELD_STATE_ID::STATE_CHASE:
+			//	return new CWalkState(m_pOwner);
+			default:
+				break;
+			}
 
-	}*/
+		}
+
+	}
+
 
 	return nullptr;
 }
@@ -66,11 +81,10 @@ void CIdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::SYMBOL_IDLE);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_IDLE);
 }
 
 void CIdleState::Exit()
 {
-	m_fIdleMoveTimer = 0.f;
-	m_fIdleAttackTimer = 0.f;
+
 }

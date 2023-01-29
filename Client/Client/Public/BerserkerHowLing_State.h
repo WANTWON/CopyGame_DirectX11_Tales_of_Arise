@@ -4,10 +4,10 @@
 
 BEGIN(Client)
 BEGIN(Berserker)
-class CWalkState : public CBerserkerState
+class CHowLing_State : public CBerserkerState
 {
 public:
-	CWalkState(class CBerserker* pIceWolf);
+	CHowLing_State(class CBerserker* pIceWolf);
 
 	virtual CBerserkerState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CBerserkerState* Tick(_float fTimeDelta) override;
