@@ -18,6 +18,7 @@ public:
 		STATE_GRAB_START,
 		STATE_GRAB_LOOP,
 		STATE_GRAB_END,
+		STATE_TAKE_DAMAGE,
 		STATE_END
 	};
 
@@ -132,7 +133,7 @@ protected:
 	_bool m_bHasSpottedTarget = false;
 	_bool m_bBattleMode = false;
 	_bool m_bBitePossible = false;
-
+	_float	m_fTimeDletaAcc = 0.f;
 	CHawk* m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
 };

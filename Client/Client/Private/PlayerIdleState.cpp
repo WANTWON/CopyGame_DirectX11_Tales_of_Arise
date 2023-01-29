@@ -7,6 +7,7 @@
 
 #include "Effect.h"
 #include "EffectTexture.h"
+#include "PlayerJumpState.h"
 
 using namespace Player;
 
@@ -20,7 +21,9 @@ CPlayerState * CIdleState::HandleInput()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-		return new CAttackNormalState(m_pOwner);
+		return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
+	else if (pGameInstance->Key_Down(DIK_LCONTROL))
+		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))

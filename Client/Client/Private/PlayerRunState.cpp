@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "PlayerIdleState.h"
 #include "PlayerAttackNormalState.h"
+#include "PlayerJumpState.h"
 
 using namespace Player;
 
@@ -18,23 +19,25 @@ CPlayerState * CRunState::HandleInput()
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-		return new CAttackNormalState(m_pOwner);
+		return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
+	else if (pGameInstance->Key_Down(DIK_LCONTROL))
+		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
+		m_eDirection = DIR_STRAIGHT_LEFT;
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT);
+		m_eDirection = DIR_STRAIGHT_RIGHT;
 	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_BACKWARD_LEFT);
+		m_eDirection = DIR_BACKWARD_LEFT;
 	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT);
+		m_eDirection = DIR_BACKWARD_RIGHT;
 	else if (pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_LEFT);
+		m_eDirection = DIR_LEFT;
 	else if (pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_RIGHT);
+		m_eDirection = DIR_RIGHT;
 	else if (pGameInstance->Key_Pressing(DIK_S))
-		return new CRunState(m_pOwner, DIR_BACKWARD);
+		m_eDirection = DIR_BACKWARD;
 	else if (pGameInstance->Key_Pressing(DIK_W))
-		return new CRunState(m_pOwner, DIR_STRAIGHT);
+		m_eDirection = DIR_STRAIGHT;
 	else
 		return new CIdleState(m_pOwner);
 
@@ -76,7 +79,6 @@ void CRunState::Enter()
 
 void CRunState::Exit()
 {
-	__super::Exit();
 }
 
 void CRunState::Move(_float fTimeDelta)

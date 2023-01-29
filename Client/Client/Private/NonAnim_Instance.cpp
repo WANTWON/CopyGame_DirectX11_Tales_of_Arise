@@ -65,7 +65,9 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+
+		if(IsRenderShadow())
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 
 #ifdef _DEBUG
 		if (m_pAABBCom != nullptr)
@@ -142,6 +144,15 @@ HRESULT CNonAnim_Instance::Render_ShadowDepth()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+_bool CNonAnim_Instance::IsRenderShadow()
+{
+	if (!strcmp(m_ModelDesc.pModeltag, "Dead_Grass") ||
+		!strcmp(m_ModelDesc.pModeltag, "SmallRock2"))
+		return false;
+		
+	return true;
 }
 
 

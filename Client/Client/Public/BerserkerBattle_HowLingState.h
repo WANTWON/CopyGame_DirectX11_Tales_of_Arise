@@ -21,6 +21,11 @@ private:
 	_float		m_fIdleAttackTimer = 1.5f;
 	_uint		m_iRand = 0;
 	_bool		m_bAnimFinish = false;
+	_bool	m_bIsAnimationFinished = false;
+
+private:
+	_matrix m_StartMatrix;
+
 };
 END
 END

@@ -23,7 +23,21 @@ HRESULT CWater::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, XMVectorSet(0.f, 1.f, 0.f, 1.f));
+	NONANIMDESC ModelDesc;
+
+	if (pArg != nullptr)
+		memcpy(&ModelDesc, pArg, sizeof(NONANIMDESC));
+
+	if (pArg != nullptr)
+	{
+		_vector vPosition = XMLoadFloat3(&ModelDesc.vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		Set_Scale(ModelDesc.vScale);
+
+		if (ModelDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
+	}
 
 	return S_OK;
 }
@@ -88,10 +102,7 @@ HRESULT CWater::Ready_Components(void *pArg)
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
-	/* For.Com_Navigation */
-	/*if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Navigation"), (CComponent**)&m_pNavigationCom)))
-		return E_FAIL;*/
-	/* For.Com_Model*/
+
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 

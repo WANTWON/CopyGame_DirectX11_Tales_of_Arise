@@ -3,6 +3,8 @@
 #include "SlimeState.h"
 #include "SlimeIdleState.h"
 #include "SlimeBattle_RunState.h"
+#include "SlimeBattle_TakeDamage_State.h"
+#include "SlimeBattle_DeadState.h"
 
 using namespace Slime;
 
@@ -43,7 +45,7 @@ HRESULT CSlime::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
-	m_tInfo.iMaxHp = 3;
+	m_tInfo.iMaxHp = 1;
 	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
 	m_tInfo.iDamage = 10;
 
@@ -70,7 +72,7 @@ HRESULT CSlime::Ready_Components(void * pArg)
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
-	TransformDesc.fSpeedPerSec = 3.f;
+	TransformDesc.fSpeedPerSec = 1.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -81,7 +83,11 @@ HRESULT CSlime::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Slime"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Slime"), (CComponent**)&m_pModelCom)))
+		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
 		return E_FAIL;
 
 	/* For.Com_Navigation */
@@ -95,7 +101,7 @@ HRESULT CSlime::Ready_Components(void * pArg)
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(1.1f, 1.1f, 1.1f);
 	ColliderDesc.vPosition = _float3(0.f, 0.3f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -129,49 +135,49 @@ void CSlime::Late_Tick(_float fTimeDelta)
 	LateTick_State(fTimeDelta);
 }
 
-HRESULT CSlime::Render()
-{
-	if (nullptr == m_pShaderCom ||
-		nullptr == m_pModelCom)
-		return E_FAIL;
-
-	if (FAILED(SetUp_ShaderResources()))
-		return E_FAIL;
-
-	if (FAILED(SetUp_ShaderID()))
-		return E_FAIL;
-
-	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
-	//
-	/*_bool bGlow = true;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-		return E_FAIL;*/
-	//
-	for (_uint i = 0; i < iNumMeshes; ++i)
-	{
-		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
-			return E_FAIL;
-
-		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
-			return E_FAIL;
-
-		//
-		/*if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
-			return E_FAIL;*/
-		//
-
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
-			return E_FAIL;
-	}
-
-	//
-	/*bGlow = false;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-		return E_FAIL;*/
-	//
-
-	return S_OK;
-}
+//HRESULT CSlime::Render()
+//{
+//	if (nullptr == m_pShaderCom ||
+//		nullptr == m_pModelCom)
+//		return E_FAIL;
+//
+//	if (FAILED(SetUp_ShaderResources()))
+//		return E_FAIL;
+//
+//	if (FAILED(SetUp_ShaderID()))
+//		return E_FAIL;
+//
+//	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+//	//
+//	_bool bGlow = true;
+//	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+//		return E_FAIL;
+//	
+//	for (_uint i = 0; i < iNumMeshes; ++i)
+//	{
+//		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+//			return E_FAIL;
+//
+//		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
+//			return E_FAIL;
+//
+//		//
+//		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
+//			return E_FAIL;
+//		//
+//
+//		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
+//			return E_FAIL;
+//	}
+//
+//	
+//	bGlow = false;
+//	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+//		return E_FAIL;
+//	
+//
+//	return S_OK;
+//}
 
 void CSlime::AI_Behavior(_float fTimeDelta)
 {
@@ -211,6 +217,10 @@ _bool CSlime::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_TACKLE:
 	case DOWN_F:
 	case ARISE_F:
+	case ATTACK_POISON_SHOT:
+	case ATTACK_POISON_RAIN:
+	case DAMAGE_LARGE_B:
+	case DEAD:
 		return false;
 
 	}
@@ -218,30 +228,41 @@ _bool CSlime::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_float CSlime::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CSlime::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-	//if (fDamage > 0.f)
-	//{
-	//		if (m_tStats.m_fCurrentHp - fDamage <= 0.f)
-	//		{
-	//			m_tStats.m_fCurrentHp = 0.f;
+	if (fDamage <= 0 || m_bDead)
+		return 0;
 
-	//			m_pModelCom->Set_TimeReset();
-	//			CHawkState* pState = new CBattle_DeadState(this);
-	//			m_pSlimeState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	//		}
-	//		else
-	//		{
-	//			m_tStats.m_fCurrentHp -= fDamage;
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
-	//			m_pModelCom->Set_TimeReset();
-	//			CHawkState* pState = new CBattle_Damage_LargeB_State(this);
-	//			m_pSlimeState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	//		}
+	if (iHp <= 0)
+	{
+		m_pModelCom->Set_TimeReset();
+		CSlimeState* pState = new CBattle_DeadState(this);
+		m_pSlimeState = m_pSlimeState->ChangeState(m_pSlimeState, pState);
 
-	//}
+		return 0;
+	}
 
-	return fDamage;
+	else
+	{
+		m_pModelCom->Set_TimeReset();
+		CSlimeState* pState = new CBattle_TakeDamage_State(this);
+		m_pSlimeState = m_pSlimeState->ChangeState(m_pSlimeState, pState);
+	}
+
+	return iHp;
+}
+
+HRESULT CSlime::SetUp_ShaderID()
+{
+	if (false == m_bDissolve)
+		m_eShaderID = SHADER_ANIMDEFAULT;
+
+	else
+		m_eShaderID = SHADER_ANIM_DISSLOVE;
+
+	return S_OK;
 }
 
 void CSlime::Check_Navigation()

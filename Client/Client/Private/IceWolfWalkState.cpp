@@ -60,7 +60,7 @@ CIceWolfState * CWalkFrontState::LateTick(_float fTimeDelta)
 				m_fWalkMoveTimer += fTimeDelta;
 		}
 	
-
+	
 	return nullptr;
 }
 
@@ -68,7 +68,7 @@ void CWalkFrontState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_MOVE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_MOVE_WALK_F);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_MOVE_RUN);
 }
 
 void CWalkFrontState::Exit()

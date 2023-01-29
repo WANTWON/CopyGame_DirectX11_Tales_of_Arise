@@ -11,6 +11,7 @@ _bool CAlphen::Is_AnimationLoop(_uint eAnimId)
 	{
 		case ANIM_IDLE:
 		case ANIM_RUN:
+		case ANIM_JUMP_LOOP:
 			return true;
 		default:
 			return false;
@@ -99,12 +100,12 @@ HRESULT CAlphen::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Alphen"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
-	/* For.Com_AABB */
+	/* For.Com_OBB */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
 	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
 		return E_FAIL;
 
 

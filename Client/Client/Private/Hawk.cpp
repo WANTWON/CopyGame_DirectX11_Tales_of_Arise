@@ -51,10 +51,9 @@ HRESULT CHawk::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
-	m_tInfo.iMaxHp = 3;
-	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
-	m_tInfo.iDamage = 10;
-
+	m_tStats.m_fMaxHp = 3;
+	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
+	m_tStats.m_fAttackPower = 10;
 
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
@@ -74,7 +73,7 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
-	TransformDesc.fSpeedPerSec = 3.f;
+	TransformDesc.fSpeedPerSec = 6.5f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -85,7 +84,11 @@ HRESULT CHawk::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_SNOWFIELD, TEXT("Hawk"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Hawk"), (CComponent**)&m_pModelCom)))
+		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
 		return E_FAIL;
 
 	/* For.Com_Navigation */
@@ -99,7 +102,7 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
 	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -160,52 +163,62 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
 	{
-		SYMBOL_IDLE,
-			MOVE_RUN,
-			SYMBOL_RUN;
+	case SYMBOL_IDLE:
+	case MOVE_RUN:
+	case ATTACK_GRAB_LOOP:
+	case SYMBOL_RUN:
 		return true;
 	
-		ATTACK_FLUTTER,
-		ATTACK_DASH,
-		ATTACK_PECK;
+	case	ATTACK_FLUTTER:
+	case	ATTACK_DASH:
+	case	ATTACK_PECK:
+	case	ATTACK_GRAB_END:
+	case	ATTACK_GRAB_START:
+	case	ATTACK_TORNADE:
 		return false;
 	}
 
 	return false;
 }
 
-_float CHawk::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CHawk::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-	if (fDamage > 0.f)
+
+		if (fDamage <= 0 || m_bDead)
+		return 0;
+
+		_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+
+	if (iHp <= 0)
 	{
-			if (m_tStats.m_fCurrentHp - fDamage <= 0.f)
-			{
-				m_tStats.m_fCurrentHp = 0.f;
-
-				m_pModelCom->Set_TimeReset();
-				CHawkState* pState = new CBattle_DeadState(this);
-				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-			}
-			else
-			{
-				m_tStats.m_fCurrentHp -= fDamage;
-
-				m_pModelCom->Set_TimeReset();
-				CHawkState* pState = new CBattle_Damage_LargeB_State(this);
-				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-			}
-
-	//else
-	//{
-	//	m_tStats.m_fCurrentHp -= fDamage;
-
-	//	m_pModelCom->Set_TimeReset();
-	//	CHawkState* pState = new CBattle_Damage_LargeB_State(DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION));
-	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	//}
+		m_pModelCom->Set_TimeReset();
+		CHawkState* pState = new CBattle_DeadState(this);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+		
+		
+		return 0;
+	}
+	else
+	{
+		m_pModelCom->Set_TimeReset();
+		CHawkState* pState = new CBattle_Damage_LargeB_State(this);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 	}
 
-	return fDamage;
+	return iHp;
+
+	
+}
+
+HRESULT CHawk::SetUp_ShaderID()
+{
+	if (false == m_bDissolve)
+		m_eShaderID = SHADER_ANIMDEFAULT;
+
+	else
+		m_eShaderID = SHADER_ANIM_DISSLOVE;
+
+	return S_OK;
 }
 
 void CHawk::Check_Navigation()

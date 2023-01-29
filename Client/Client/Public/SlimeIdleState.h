@@ -21,6 +21,7 @@ private:
 	_float		m_fIdleAttackTimer = 1.5f;
 	_uint		m_iRand = 0;
 	_float		m_fTarget_Distance;
+	_float		m_fRedayAttackTimer = 0.f;
 
 private:
 	_matrix m_StartMatrix;

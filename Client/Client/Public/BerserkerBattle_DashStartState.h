@@ -7,7 +7,7 @@ BEGIN(Berserker)
 class CBattle_DashStartState : public CBerserkerState
 {
 public:
-	CBattle_DashStartState(class CBerserker* pBerserker, STATE_ID eStateType);
+	CBattle_DashStartState(class CBerserker* pBerserker);
 
 	virtual CBerserkerState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CBerserkerState* Tick(_float fTimeDelta) override;
@@ -21,8 +21,10 @@ private:
 	_float		m_fIdleAttackTimer = 1.5f;
 	_float		m_fTarget_Distance;
 	_uint		m_iRand = 0;
+	_uint		m_iCollisionCount = 0;
 	_bool		m_bDonLookAt = false;
-
+	_bool		m_bTargetSetting = false;
+	_bool		m_bCollision = false;
 private:
 	_matrix m_StartMatrix;
 };

@@ -19,10 +19,10 @@ public:
 
 private:
 	_float		m_fTarget_Distance;
-	_uint		 m_iRand = 0;
+	_uint		m_iRand = 0;
 	_float		m_fIdleAttackTimer = 0.f;
 	_bool		m_bTargetSetting = false;
-
+	_bool		m_bAddGoDistance = false;
 private:
 	_matrix m_StartMatrix;
 };

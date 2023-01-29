@@ -26,7 +26,6 @@ HRESULT CNonAnim::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	//CPickingMgr::Get_Instance()->Add_PickingGroup(this);
 
 	if (pArg != nullptr)
 	{

@@ -45,6 +45,7 @@ public:
 	void Set_Picked();
 	void Save_Terrain(HANDLE hFile, _ulong* dwByte);
 	HRESULT Create_FilterTexture(_tchar* bmpPath = TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.bmp"));
+	HRESULT Load_FilterTexture(_tchar* bmpPath = TEXT("../../../Bin/Resources/Textures/Terrain/Newfilter.bmp"));
 	HRESULT Create_FirstFilterTexture();
 
 private:

@@ -9,7 +9,7 @@ class CHawk final : public CMonster
 public:
 	enum ANIM {
 
-		//ARI00,   //3Dºä¾î¿¡¼­ 1¹ø 
+		//ARI00,   //3Dï¿½ï¿½î¿¡ï¿½ï¿½ 1ï¿½ï¿½ 
 		//FLAPPING,
 		//ATTACK_ROTATION,
 		//ATTACK_ROTATION2,//4
@@ -17,7 +17,7 @@ public:
 		//ATTACK_CHARGE_ROTATION, //6
 		//FLYING_BACK,//7
 		//ATTACK_GRAB_START1, //8
-		//ATTACK_GRAB_START2, //9//½ºÅ¸Æ®·Î ¾²±â¿£ µ¿ÀÛÀÌ ³Ê¹« ÂªÀ½.
+		//ATTACK_GRAB_START2, //9//ï¿½ï¿½Å¸Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½â¿£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¹ï¿½ Âªï¿½ï¿½.
 		//REVOLVING_FLIGHT, //10
 		//ATTACK_GRAB_END,  //11
 		//ATTACK_GRAB_LOOP2, //12
@@ -56,30 +56,30 @@ public:
 		//DEAD3,
 		//DAMAGE_SMALL_B,
 		//DAMAGE_SMALL_F,
-		//DAMAGE_SMALL_L,//33 ÇÇ°Ý¸ð¼Ç 
-		//DAMAGE_SMALL_R,//34 ÇÇ°Ý¸ð¼Ç 
+		//DAMAGE_SMALL_L,//33 ï¿½Ç°Ý¸ï¿½ï¿½ 
+		//DAMAGE_SMALL_R,//34 ï¿½Ç°Ý¸ï¿½ï¿½ 
 		//DEAD, 
 		//FAST_FLAP_OF_WINGS,//47
 		//DOWN_B,//35 DEAD
 		//DOWN_F,//36 DEAD
 		//DOWN_UNIQUE,
-		//MOVE_IDLE,//38°øÁß¿¡¼­ ¸ØÃçÀÖ±â
-		//MOVE_RUN,//39»¡¸®³¯±â
-		//MOVE_WALK_B,//40ÃµÃµÈ÷ ³¯±â
-		//MOVE_WALK_F,//41ÃµÃµÈ÷ ³¯±â
+		//MOVE_IDLE,//38ï¿½ï¿½ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½
+		//MOVE_RUN,//39ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//MOVE_WALK_B,//40ÃµÃµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		//MOVE_WALK_F,//41ÃµÃµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		//TURN_L, //42
 		//TURN_POSE,
 		//TURN_R, //43
 		//SYMBOL_DETECT_IDLE,//44
-		//SYMBOL_DETECT_STOP,//45 ¾É¾ÆÀÖ´Ù ³¯¾Æ¿À¸£±â
+		//SYMBOL_DETECT_STOP,//45 ï¿½É¾ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½ï¿½
 		//SYMBOL_IDLE,
 		//SYMBOL_RUN,//47
 		//SYMBOL_STOP,//x
-		//SYMBOL_TURN_LEFT, //49xÁ¸ÀçÇÏÁö ¾ÊÀ½ 
-		//SYMBOL_TURN_POSE,//xÁ¸ÀçÇÏÁö ¾ÊÀ½ 
-		//SYMBOL_TURN_RIGHT,//xÁ¸ÀçÇÏÁö ¾ÊÀ½ . 50
+		//SYMBOL_TURN_LEFT, //49xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+		//SYMBOL_TURN_POSE,//xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+		//SYMBOL_TURN_RIGHT,//xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ . 50
 		//SYMBOL_WALK, 
-		//ADVENT, //xÁ¸ÀçÇÏÁö ¾ÊÀ½ 52 ¸Ö¸®¼­ µîÀå 
+		//ADVENT, //xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 52 ï¿½Ö¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 		ARISE_B,
 		ARISE_F,
 		ATTACK_BOMBING,
@@ -145,8 +145,10 @@ public:
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
-	virtual _float Take_Damage(float fDamage, CBaseObj* DamageCauser) override;
-	
+
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
+
+	HRESULT CHawk::SetUp_ShaderID();
 private:
 	CHawk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CHawk(const CHawk& rhs);
