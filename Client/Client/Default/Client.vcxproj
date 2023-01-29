@@ -257,6 +257,7 @@
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerRunState.h" />
     <ClInclude Include="..\Public\Sion.h" />
+    <ClInclude Include="..\Public\PlayerSkillState.h" />
     <ClInclude Include="..\Public\Slime.h" />
     <ClInclude Include="..\Public\SlimeBattle_Atk_TackleState.h" />
     <ClInclude Include="..\Public\SlimeBattle_DeadState.h" />
@@ -392,6 +393,7 @@
     <ClCompile Include="..\Private\PlayerManager.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />
     <ClCompile Include="..\Private\Sion.cpp" />
+    <ClCompile Include="..\Private\PlayerSkillState.cpp" />
     <ClCompile Include="..\Private\Slime.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_DeadState.cpp" />

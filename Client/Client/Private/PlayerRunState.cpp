@@ -5,6 +5,7 @@
 #include "PlayerIdleState.h"
 #include "PlayerAttackNormalState.h"
 #include "PlayerJumpState.h"
+#include "PlayerSkillState.h"
 
 using namespace Player;
 
@@ -41,6 +42,17 @@ CPlayerState * CRunState::HandleInput()
 	else
 		return new CIdleState(m_pOwner);
 
+	/* Skill */
+	if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+	{
+		if (pGameInstance->Key_Down(DIK_E))
+			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
+		else if (pGameInstance->Key_Down(DIK_R))
+			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
+		else if (pGameInstance->Key_Down(DIK_F))
+			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
+	}
+	
 	return nullptr;
 }
 

@@ -43,15 +43,11 @@ CPlayerState * CJumpState::HandleInput()
 
 CPlayerState * CJumpState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), nullptr);
-	
-
 	if (m_eStateType != STATETYPE_END)
-	{
 		Move(fTimeDelta);
-	}
+	
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 		
-
 	return nullptr;
 }
 
@@ -126,7 +122,6 @@ void CJumpState::Exit()
 
 _bool CJumpState::Check_JumpEnd()
 {
-	
 	_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
 	m_pOwner->Get_Navigation()->Compute_CurrentIndex_byXZ(vPosition);
 	m_fEndHeight = m_pOwner->Get_Navigation()->Compute_Height(vPosition, 0.f);

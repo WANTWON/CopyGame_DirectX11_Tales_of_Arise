@@ -21,6 +21,10 @@ public:
 		STATE_NORMAL_ATTACK1,
 		STATE_NORMAL_ATTACK2,
 		STATE_NORMAL_ATTACK3,
+		STATE_NORMAL_ATTACK4,
+		STATE_SKILL_ATTACK1,
+		STATE_SKILL_ATTACK2,
+		STATE_SKILL_ATTACK3,
 		STATE_END
 	};
 
@@ -55,5 +59,6 @@ protected:
 
 	_bool m_bIsAnimationFinished = false;
 	_bool m_bIsStateEvent = false;
+	_int m_iSkillEvent = 0;
 };
 END

@@ -95,8 +95,8 @@ void CHierarchyNode::Set_RootMotionMatrix(const char* pBoneName)
 	{
 		_matrix AfterTransformMatrix = XMLoadFloat4x4(&m_TransformationMatrix);
 
-		// 이전 Transformation에서 이후 Transformation까지 이동 변화량
-		m_fMoveTransformationLength = XMVectorGetX(XMVector4Length(AfterTransformMatrix.r[3] - m_PreTransforamtionMatrix.r[3]));
+		// 이전 Transformation에서 이후 Transformation까지 이동 변화 벡터
+		m_vecTranslation = AfterTransformMatrix.r[3] - m_PreTransforamtionMatrix.r[3];
 
 		_vector vPreQuat, vAfterQuat;
 		vPreQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(m_PreTransforamtionMatrix));

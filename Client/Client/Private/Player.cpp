@@ -114,7 +114,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			m_pRendererCom->Add_Debug(m_pNavigationCom);
 		__super::Late_Tick(fTimeDelta);
 #endif //_DEBUG
-
 	}
 
 	for (auto& pParts : m_Parts)
@@ -122,9 +121,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		if (pParts != nullptr)
 			pParts->Late_Tick(fTimeDelta);
 	}
-
-	Check_Navigation();
-	
 }
 
 HRESULT CPlayer::Render()
@@ -257,11 +253,11 @@ void CPlayer::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	//if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	//{
+	if (m_fWalkingHeight > XMVectorGetY(vPosition))
+	{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	//}
+	}
 }
 
 void CPlayer::Compute_CurrentIndex(LEVEL eLevel)

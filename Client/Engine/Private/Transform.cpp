@@ -256,7 +256,7 @@ bool CTransform::Sliding_Right(_float fTimeDelta, CNavigation * pNavigation, _fl
 	return true;
 }
 
-bool CTransform::Sliding_Anim(_float fMoveLength, _float fRotation, class CNavigation* pNavigation)
+bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigation* pNavigation)
 {
 	_matrix WorldMatrix = XMLoadFloat4x4(&m_WorldMatrix);
 
@@ -269,6 +269,8 @@ bool CTransform::Sliding_Anim(_float fMoveLength, _float fRotation, class CNavig
 
 	WorldMatrix = XMMatrixRotationQuaternion(XMQuaternionNormalize(XMQuaternionMultiply(vWorldRot, RotationQuat)));
 
+	_vector vTranslation = XMVector3TransformCoord(vecMove, XMMatrixRotationY(XMConvertToRadians(180.f)) * WorldMatrix);
+
 	WorldMatrix.r[0] = XMVector4Normalize(WorldMatrix.r[0]) * Get_Scale(CTransform::STATE_RIGHT);
 	WorldMatrix.r[1] = XMVector4Normalize(WorldMatrix.r[1]) * Get_Scale(CTransform::STATE_UP);
 	WorldMatrix.r[2] = XMVector4Normalize(WorldMatrix.r[2]) * Get_Scale(CTransform::STATE_LOOK);
@@ -278,8 +280,9 @@ bool CTransform::Sliding_Anim(_float fMoveLength, _float fRotation, class CNavig
 
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
 	
-	_vector		vAfterPosition = vPosition + (Get_State(CTransform::STATE_LOOK) * fMoveLength);
-	
+	_vector		vAfterPosition = vPosition + vTranslation;
+	vAfterPosition = XMVectorSetW(vAfterPosition, 1.f);
+
 	if (pNavigation)
 		pNavigation->Compute_CurrentIndex_byXZ(vAfterPosition);
 

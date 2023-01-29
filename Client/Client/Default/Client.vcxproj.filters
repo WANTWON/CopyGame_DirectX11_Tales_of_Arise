@@ -672,6 +672,9 @@
     <ClInclude Include="..\Public\PlayerJumpState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1059,6 +1062,9 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerJumpState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerSkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
   </ItemGroup>
