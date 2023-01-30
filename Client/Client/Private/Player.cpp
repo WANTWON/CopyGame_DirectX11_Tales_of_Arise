@@ -18,7 +18,6 @@ CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 CPlayer::CPlayer(const CPlayer & rhs)
 	: CBaseObj(rhs)
-	, gController(rhs.gController)
 {
 }
 
@@ -255,11 +254,11 @@ void CPlayer::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{
+	//if (m_fWalkingHeight > XMVectorGetY(vPosition))
+	//{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
+	//}
 }
 
 void CPlayer::Compute_CurrentIndex(LEVEL eLevel)
@@ -269,64 +268,38 @@ void CPlayer::Compute_CurrentIndex(LEVEL eLevel)
 
 HRESULT CPlayer::SetUp_Controller()
 {
-	CPhysX*		pPhysX = GET_INSTANCE(CPhysX);
-	PxCapsuleControllerDesc desc;
-	_vector Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_float3 fPos;
-	XMStoreFloat3(&fPos, Pos);
+	//CPhysX*		pPhysX = GET_INSTANCE(CPhysX);
+	//PxCapsuleControllerDesc desc;
+	//_vector Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	//_float3 fPos;
+	//XMStoreFloat3(&fPos, Pos);
 
-	//�������� ������ ��ǥ��
-	desc.position = PxExtendedVec3(XMVectorGetX(Pos), XMVectorGetY(Pos), -XMVectorGetZ(Pos));
-	desc.radius = 1.f;
-	desc.height = 2.f;
-	desc.stepOffset = 2.f;
-	desc.volumeGrowth = 1.f;
-	desc.slopeLimit = cosf(XMConvertToRadians(15.f));
-	desc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
-	desc.upDirection = PxVec3(0.f, 1.f, 0.f);
-	desc.contactOffset = 0.01f;
-	PxMaterial* pMeterial = pPhysX->Get_Physics()->createMaterial(0.5f, 0.5f, 0.5f);
-	desc.material = pMeterial;
-	desc.reportCallback = this;
-	desc.behaviorCallback = this;
-	desc.userData = this;
-	gController = (PxCapsuleController*)pPhysX->Get_ControllerManager()->createController(desc);
-	if (gController == nullptr)
-		return E_FAIL;
-	ControllerActor = gController->getActor();
-	
-	Px = gController->getActor();
+	////�������� ������ ��ǥ��
+	//desc.position = PxExtendedVec3(XMVectorGetX(Pos), XMVectorGetY(Pos), -XMVectorGetZ(Pos));
+	//desc.radius = 1.f;
+	//desc.height = 2.f;
+	//desc.stepOffset = 2.f;
+	//desc.volumeGrowth = 1.f;
+	//desc.slopeLimit = cosf(XMConvertToRadians(15.f));
+	//desc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
+	//desc.upDirection = PxVec3(0.f, 1.f, 0.f);
+	//desc.contactOffset = 0.01f;
+	//PxMaterial* pMeterial = pPhysX->Get_Physics()->createMaterial(0.5f, 0.5f, 0.5f);
+	//desc.material = pMeterial;
+	//desc.reportCallback = this;
+	//desc.behaviorCallback = this;
+	//desc.userData = this;
+	//gController = (PxCapsuleController*)pPhysX->Get_ControllerManager()->createController(desc);
+	//if (gController == nullptr)
+	//	return E_FAIL;
+	//ControllerActor = gController->getActor();
+	//
+	//Px = gController->getActor();
 
-	RELEASE_INSTANCE(CPhysX);
+	//RELEASE_INSTANCE(CPhysX);
 	return S_OK;
 }
 
-void CPlayer::onShapeHit(const PxControllerShapeHit & hit)
-{
-}
-
-void CPlayer::onControllerHit(const PxControllersHit & hit)
-{
-}
-
-void CPlayer::onObstacleHit(const PxControllerObstacleHit & hit)
-{
-}
-
-PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxShape & shape, const PxActor & actor)
-{
-	return PxControllerBehaviorFlags();
-}
-
-PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxController & controller)
-{
-	return PxControllerBehaviorFlags();
-}
-
-PxControllerBehaviorFlags CPlayer::getBehaviorFlags(const PxObstacle & obstacle)
-{
-	return PxControllerBehaviorFlags();
-}
 
 
 void CPlayer::Free()

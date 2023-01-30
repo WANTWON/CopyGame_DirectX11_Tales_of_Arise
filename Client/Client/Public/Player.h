@@ -12,9 +12,7 @@ END
 BEGIN(Client)
 class CPlayerState;
 class CAIState;
-class CPlayer abstract : public CBaseObj,
-	public PxUserControllerHitReport,
-	public PxControllerBehaviorCallback
+class CPlayer abstract : public CBaseObj
 {	
 public:
 	enum PARTS { PARTS_WEAPON, PARTS_END };
@@ -85,24 +83,6 @@ protected:
 
 protected:
 	HRESULT SetUp_Controller();
-	//캡슐 컨트롤러 충돌처리 함수
-	virtual void onShapeHit(const PxControllerShapeHit& hit) override;
-	virtual void onControllerHit(const PxControllersHit& hit) override;
-	virtual void onObstacleHit(const PxControllerObstacleHit& hit) override;
-	//캡슐 컨트롤러 충돌 방식 플래그
-	virtual PxControllerBehaviorFlags getBehaviorFlags(const PxShape& shape, const PxActor& actor)override;
-	virtual PxControllerBehaviorFlags getBehaviorFlags(const PxController& controller)override;
-	virtual PxControllerBehaviorFlags getBehaviorFlags(const PxObstacle& obstacle)override;
-
-
-	PxCapsuleController* gController = nullptr;// 캡슐 컨트롤서 포인터
-	PxRigidDynamic* ControllerActor = nullptr;// 캡슐 연동 엑터
-	//ControllerActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
-	 //->컨트롤러 액터 물리효과 받도록 만드는 함수
-	//(이때 컨트롤러의 움직이니 아닌 액터만 물리효과를 받기때문에 
-	//액터의 포지션으로 컨트롤러를 움직여줘야함;
-	_float fJump = 50.f;
-	PxRigidDynamic* Px = nullptr;//일반 물리 객체
 
 protected:
 	virtual HRESULT Ready_Parts() { return S_OK; };

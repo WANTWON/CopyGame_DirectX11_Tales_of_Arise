@@ -35,7 +35,7 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
@@ -48,7 +48,7 @@ HRESULT CLevel_SnowField::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
 		return E_FAIL;
@@ -163,7 +163,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 			return E_FAIL;
 
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 50.f, 22, 1.f));
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 
 		
