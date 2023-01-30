@@ -27,38 +27,31 @@ CBerserkerState * CBattle_Quadruple_ClawState::Tick(_float fTimeDelta)
 	m_fTarget_Distance = Find_BattleTarget();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
-
-
-	if (false == m_bTargetSetting)
+	if (!m_bIsAnimationFinished)
 	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_bTargetSetting = true;
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
 	}
+	
+
 
 	if (m_bIsAnimationFinished)
 	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-
 		if (m_fTarget_Distance > 6)
 			return new CBattle_Multiple_FireState(m_pOwner);
 
 		else
 			return new CBattle_PouncingState(m_pOwner);
 
-		
 	}
-	else
-	{
-//		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
-//		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
-	}
 
 
 	return nullptr;

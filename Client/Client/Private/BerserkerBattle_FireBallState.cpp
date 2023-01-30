@@ -28,9 +28,7 @@ CBerserkerState * CBattle_FireBallState::Tick(_float fTimeDelta)
 	m_fTarget_Distance = Find_BattleTarget();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())/*, "ABone"*/);
-
-	srand((_uint)time(NULL));
-	m_iRand = rand() % 1;
+;
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
@@ -40,7 +38,6 @@ CBerserkerState * CBattle_FireBallState::Tick(_float fTimeDelta)
 		//m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
 		m_bTargetSetting = true;
 	}
-
 
 
 	if (m_bIsAnimationFinished)
@@ -56,10 +53,6 @@ CBerserkerState * CBattle_FireBallState::Tick(_float fTimeDelta)
 	}
 	else
 	{
-	//	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-
-//		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
-
 		m_pOwner->Check_Navigation();
 	}
 

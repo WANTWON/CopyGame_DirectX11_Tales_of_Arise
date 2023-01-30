@@ -1,41 +1,38 @@
 #include "stdafx.h"
 
-#include "SlimeChaseState.h"
+#include "BerserkerChaseState.h"
+#include "BerserkerIdleState.h"
 #include "GameInstance.h"
-#include "SlimeIdleState.h"
 
-using namespace Slime;
 
-CChaseState::CChaseState(CSlime* pSlime)
+using namespace Berserker;
+
+CChaseState::CChaseState(CBerserker* pIceWolf)
 {
-	m_pOwner = pSlime;
-	
+	m_pOwner = pIceWolf;
 }
 
-CSlimeState * CChaseState::AI_Behaviour(_float fTimeDelta)
+CBerserkerState * CChaseState::AI_Behaviour(_float fTimeDelta)
 {
 	
 	return nullptr;
 }
 
-CSlimeState * CChaseState::Tick(_float fTimeDelta)
+CBerserkerState * CChaseState::Tick(_float fTimeDelta)
 {
-
-
 	m_fTarget_Distance = Find_BattleTarget();
 
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+
 	
-
-	//m_pOwner->Check_Navigation();
-
 	return nullptr;
 }
 
-CSlimeState * CChaseState::LateTick(_float fTimeDelta)
+CBerserkerState * CChaseState::LateTick(_float fTimeDelta)
 {
 	
+
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 
@@ -43,19 +40,16 @@ CSlimeState * CChaseState::LateTick(_float fTimeDelta)
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 
 	if (m_fTarget_Distance >= 8.f)
-		return new CIdleState(m_pOwner, CSlimeState::FIELD_STATE_ID::STATE_CHASE);
-
+		return new CIdleState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_CHASE);
 
 	return nullptr;
 }
 
 void CChaseState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_MOVE;
+	//m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::MOVE_RUN);
-
-
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_RUN);
 }
 
 void CChaseState::Exit()
