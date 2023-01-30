@@ -141,7 +141,9 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 void CUI_Dialogue::Late_Tick(_float fTimeDelta)
 {
-
+	int iii = sizeof(m_vCurrentDialogue[0][0]);
+	iii = sizeof(m_vCurrentDialogue[0][1]);
+	 iii = sizeof(m_vCurrentDialogue[0][0][1]);
 	if (m_btick)
 	{
 		if (m_fAlpha >= 0.5f && m_bfadein)
@@ -549,25 +551,62 @@ void CUI_Dialogue::Free()
 
 	Safe_Release(m_pTextureCom1);
 	Safe_Release(m_pTextureCom2);
-	for (int i = 0; i<m_vDialogue[0].size(); i++)
+	//for (int j = 0; j < m_vDialogue[j].size(); ++j)
+	//{
+	//	for (int i = 0; i<m_vDialogue[i].size(); ++i)
+	//	{
+	//		//	Safe_Delete(m_vDialogue[i]);
+
+
+	//		_tchar* temp = m_vDialogue[j][i];
+	//		delete[] temp;
+
+	//	}
+	//}
+
+	//
+	//for (int i = 0; i < m_vDialogue[1].size(); ++i)
+	//{
+	////	Safe_Delete(m_vDialogue[i]);
+	//	
+	//	_tchar* temp = m_vDialogue[1][i];
+	//	delete[] temp;
+	//}
+	////delete[] pszDialog;
+	//_uint size = m_vCurrentDialogue[0].size();
+	//size = m_vCurrentDialogue[0][0].size();
+	//size = m_vCurrentDialogue[0][1].size();
+	//size = m_vCurrentDialogue[1][0].size();
+	//size = m_vCurrentDialogue[1][1].size();
+	////size = m_vCurrentDialogue[1][1].size();
+
+	for (int i = 0; i < m_vCurrentDialogue.size(); ++i)
 	{
-	//	Safe_Delete(m_vDialogue[i]);
+		for (int j = 0; j <m_vCurrentDialogue[i].size(); ++j)
+		{
+			/*if (j == 2)
+				continue;*/
 
-
-		_tchar* temp = m_vDialogue[0][i];
-		delete[] temp;
+				vector<_tchar*> temp = m_vCurrentDialogue[i][j];
+				for (auto& iter : temp)
+				{
+					delete[] iter;
+				}
+				temp.clear();
+		}
+			
 
 	}
-	for (int i = 0; i < m_vDialogue[1].size(); i++)
-	{
-	//	Safe_Delete(m_vDialogue[i]);
-		
-		_tchar* temp = m_vDialogue[1][i];
-		delete[] temp;
-	}
-	//delete[] pszDialog;
+	//	m_vCurrentDialogue[i][j][k]
+
+
+
 
 	__super::Free();
-}
+
+
+	}
+	
+//}
 
 

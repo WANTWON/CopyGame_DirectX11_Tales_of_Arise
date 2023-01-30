@@ -320,7 +320,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		m_tInfo.fCurrentHp = 0;
 		/*m_bDissolve = true;*/
 
-		return _float(m_tInfo.iCurrentHp);
+		return _float(m_tInfo.fCurrentHp);
 
 	}
 
@@ -329,7 +329,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	m_dwHitTime = GetTickCount();
 
 
-	return _float(m_tInfo.iCurrentHp);
+	return _float(m_tInfo.fCurrentHp);
 
 }
 

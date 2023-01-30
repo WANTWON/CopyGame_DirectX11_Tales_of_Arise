@@ -79,42 +79,42 @@ void CUI_Manager::Set_UI_OpenType(UITYPE eUIType)
 
 
 
-void CUI_Manager::Read_TextFiles_for_dialogue()
-{
-	std::ifstream file("../../../Bin/test.txt");
-	if (file.is_open())
-	{
-		while (file.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			testvec.push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szFPS, sizeof(_tchar)*MAX_PATH);
-		}
-		file.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
+//void CUI_Manager::Read_TextFiles_for_dialogue()
+//{
+//	std::ifstream file("../../../Bin/test.txt");
+//	if (file.is_open())
+//	{
+//		while (file.getline(fuck, 256))
+//		{
+//			_tchar* pszDialog = new _tchar[MAX_PATH];
+//			testvec.push_back(pszDialog);
+//			ConverCtoWC(fuck);
+//			memcpy(pszDialog, m_szFPS, sizeof(_tchar)*MAX_PATH);
+//		}
+//		file.close();
+//	}
+//	else
+//	{
+//		std::cout << "Unable to open file\n";
+//	}
+//
+//
+//}
 
-
-}
-
-wchar_t * CUI_Manager::ConverCtoWC(char * str)
-{
-
-	//wchar_t형 변수 선언
-	wchar_t* pStr;
-	//멀티 바이트 크기 계산 길이 반환
-	int strSize = MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, NULL);
-	//wchar_t 메모리 할당
-	pStr = new WCHAR[MAX_PATH];
-	//형 변환
-	MultiByteToWideChar(CP_ACP, 0, str, strlen(str) + 1, m_szFPS, MAX_PATH);
-	return pStr;
-
-}
+//wchar_t * CUI_Manager::ConverCtoWC(char * str)
+//{
+//
+//	//wchar_t형 변수 선언
+//	wchar_t* pStr;
+//	//멀티 바이트 크기 계산 길이 반환
+//	int strSize = MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, NULL);
+//	//wchar_t 메모리 할당
+//	pStr = new WCHAR[MAX_PATH];
+//	//형 변환
+//	MultiByteToWideChar(CP_ACP, 0, str, strlen(str) + 1, m_szFPS, MAX_PATH);
+//	return pStr;
+//
+//}
 
 
 

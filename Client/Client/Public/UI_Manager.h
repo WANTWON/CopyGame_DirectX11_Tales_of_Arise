@@ -72,9 +72,9 @@ public: /*Getter Setter*/
 	void Set_StopTick(_bool onoff) { m_bStopTick = onoff; }
 	_bool Get_StopTick() { return m_bStopTick; }
 
-	void Read_TextFiles_for_dialogue();
+	//void Read_TextFiles_for_dialogue();
 
-	wchar_t* ConverCtoWC(char* str);
+	//wchar_t* ConverCtoWC(char* str);
 
 
 private:
