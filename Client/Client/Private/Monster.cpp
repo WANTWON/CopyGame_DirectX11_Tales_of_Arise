@@ -309,20 +309,20 @@ _float CMonster::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	m_tInfo.iCurrentHp -= (int)fDamage;
+	m_tInfo.fCurrentHp -= (int)fDamage;
 
-	if (m_tInfo.iCurrentHp <= 0)
+	if (m_tInfo.fCurrentHp <= 0)
 	{
-		m_tInfo.iCurrentHp = 0;
+		m_tInfo.fCurrentHp = 0;
 		/*m_bDissolve = true;*/
-		return m_tInfo.iCurrentHp;
+		return m_tInfo.fCurrentHp;
 	}
 
 
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
 
-	return m_tInfo.iCurrentHp;
+	return m_tInfo.fCurrentHp;
 }
 
 void CMonster::Compute_CurrentIndex()

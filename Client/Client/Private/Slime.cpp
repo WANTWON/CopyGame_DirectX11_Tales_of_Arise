@@ -43,8 +43,8 @@ HRESULT CSlime::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
-	m_tInfo.iMaxHp = 3;
-	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.fMaxHp = 3;
+	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
 	m_tInfo.iDamage = 10;
 
 

@@ -47,8 +47,9 @@
 #include "UI_Changebutton.h"
 #include "UI_LOCKON.h"
 #include "UI_MENU_Back.h"
-
+#include "UI_Dialogue.h"
 #include "UI_RuneEffect.h"
+#include "UI_Dialoguepopup.h"
 
 //Monster
 #include "Ice_Wolf.h"
@@ -257,6 +258,15 @@ HRESULT CLoader::Loading_ForPrototype()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MENU_BACK"),
 		CUI_MENU_Back::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Dialogue"),
+		CUI_Dialogue::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Dialoguepopup"),
+		CUI_Dialoguepopup::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 
 	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront"),
@@ -1160,7 +1170,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_charactername"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/charactername/charactername%d.dds"), 3))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/charactername/charactername%d.dds"), 4))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lockon"),
@@ -1228,7 +1238,13 @@ HRESULT CLoader::Loading_ForUITexture()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/lighteffect/light%d.dds"), 1))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dialoguebox"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/dialogue/maintextbox%d.dds"), 3))))
+		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sideportrait"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/dialogue/sideportrait%d.dds"), 4))))
+		return E_FAIL;
 	
 
 	

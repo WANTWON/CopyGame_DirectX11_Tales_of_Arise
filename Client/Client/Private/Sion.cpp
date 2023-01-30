@@ -39,8 +39,8 @@ HRESULT CSion::Initialize(void * pArg)
 
 	m_ePlayerID = SION;
 
-	m_tInfo.iMaxHp = 100;
-	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.fMaxHp = 100;
+	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
 	m_tInfo.iDamage = 100;
 
 	return S_OK;

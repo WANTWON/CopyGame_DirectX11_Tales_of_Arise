@@ -29,10 +29,10 @@ HRESULT CHP_Font::Initialize(void * pArg)
 	if (m_iIndex == CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1)
 		m_bforMainPlayer = true;
 
-	m_eShaderID = UI_EFFECTFADEOUT;
+	m_eShaderID = UI_BRIGHT;
 	m_fSize.x = 16.f;
 	m_fSize.y = 20.f;
-	m_fAlpha = 1.f;
+	m_fAlpha = 0.f;
 
 
 	CUI_RuneEffect::RUNEDESC desc;
@@ -104,26 +104,35 @@ HRESULT CHP_Font::Initialize(void * pArg)
 int CHP_Font::Tick(_float fTimeDelta)
 {
 	//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();
+
+	for (_uint i = 0; i < 4; ++i)
+		m_fbrightpos_hp[i] += 0.015f;
+
+	for (_uint i = 0; i < 4; ++i)
+	{
+		if (m_fbrightpos_hp[i] >= 3.f)
+			m_fbrightpos_hp[i] = 0.f;
+	}
 	
 	switch (m_iIndex)
 	{
 	case 0:
 		//if(m_bforMainPlayer)
-		m_iCurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
-		m_iCharactername = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
+		m_iCurrenthp = (_uint)CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
+		m_iCharactername = (_uint)CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
 			break;
 
 	case 1:
 		if (m_bforMainPlayer)
 		{
-			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
-			m_iCharactername = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
+			m_iCurrenthp =(_uint)CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
+			m_iCharactername = (_uint)CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
 		}
 			
 		else
 		{
-			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_Info().iCurrentHp;
-			m_iCharactername = CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_PlayerID();
+			m_iCurrenthp = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_Info().fCurrentHp;
+			m_iCharactername = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_PlayerID();
 		}
 		
 		
@@ -133,14 +142,14 @@ int CHP_Font::Tick(_float fTimeDelta)
 	case 2:
 		if (m_bforMainPlayer)
 		{
-			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
-			m_iCharactername = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
+			m_iCurrenthp = (_uint)CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
+			m_iCharactername = (_uint)CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
 		}
 
 		else
 		{
-			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_Info().iCurrentHp;
-			m_iCharactername = CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_PlayerID();
+			m_iCurrenthp = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_Info().fCurrentHp;
+			m_iCharactername = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_PlayerID();
 		}
 		/*else
 		{
@@ -152,14 +161,14 @@ int CHP_Font::Tick(_float fTimeDelta)
 	case 3:
 		if (m_bforMainPlayer)
 		{
-			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
-			m_iCharactername = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
+			m_iCurrenthp = (_uint)CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
+			m_iCharactername = (_uint)CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
 		}
 
 		else
 		{
-			m_iCurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_Info().iCurrentHp;
-			m_iCharactername = CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_PlayerID();
+			m_iCurrenthp = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_Info().fCurrentHp;
+			m_iCharactername = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_PlayerID();
 		}
 	/*	else
 		{
@@ -178,7 +187,7 @@ int CHP_Font::Tick(_float fTimeDelta)
 	if (m_fStart_timer > 0.5f || m_iIndex == 3)
 	{
 		if (m_bfadein)
-			m_fAlpha -= 0.01f;
+			m_fAlpha += 0.01f;
 
 
 		//if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
@@ -228,6 +237,10 @@ int CHP_Font::Tick(_float fTimeDelta)
 			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+
+			
+
+
 		}
 		else
 		{
@@ -237,7 +250,6 @@ int CHP_Font::Tick(_float fTimeDelta)
 			m_fPosition.x = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().x + 44.f;
 			m_fPosition.y = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().y + 31.f - (m_fCamDistance / 5.f);
 
-		}
 			if (m_fCamDistance > 20.f)
 			{
 				m_fNext = 14.f / m_fCamDistance * 20;
@@ -251,8 +263,11 @@ int CHP_Font::Tick(_float fTimeDelta)
 				m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 16.f);
 				m_pTransformCom->Set_Scale(CTransform::STATE_UP, 16.f);
 			}
-			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
 		}
+		
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	}
 		
 		return OBJ_NOEVENT;
 }
@@ -265,9 +280,9 @@ void CHP_Font::Late_Tick(_float fTimeDelta)
 
 	if (m_fStart_timer > 0.8f)
 	{
-		if (m_fAlpha <= 0.f)
+		if (m_fAlpha >= 1.f)
 		{
-			m_fAlpha = 0.f;
+			m_fAlpha = 1.f;
 			m_bfadein = false;
 		}
 
@@ -291,6 +306,8 @@ HRESULT CHP_Font::Render()
 		return E_FAIL;
 	if (m_iCurrenthp >= 1000)
 	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[0], sizeof(_float))))
+			return E_FAIL;
 		m_pShaderCom->Begin(m_eShaderID);
 
 		m_pVIBufferCom->Render();
@@ -298,6 +315,8 @@ HRESULT CHP_Font::Render()
 
 	if (m_iCurrenthp >= 100)
 	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[1], sizeof(_float))))
+			return E_FAIL;
 		m_itexnum = ((m_iCurrenthp % 1000) / 100);
 		if (m_bforMainPlayer)
 			m_fPosition.x += m_fNext;
@@ -317,6 +336,8 @@ HRESULT CHP_Font::Render()
 
 	if (m_iCurrenthp >= 10)
 	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[2], sizeof(_float))))
+			return E_FAIL;
 		m_itexnum = ((m_iCurrenthp % 100) / 10);
 
 	if (m_bforMainPlayer)
@@ -338,6 +359,8 @@ HRESULT CHP_Font::Render()
 
 	if (m_iCurrenthp >= 1)
 	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[3], sizeof(_float))))
+			return E_FAIL;
 		m_itexnum = m_iCurrenthp % 10;
 
 		if (m_bforMainPlayer)

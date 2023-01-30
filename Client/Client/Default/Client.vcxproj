@@ -256,6 +256,8 @@
     <ClInclude Include="..\Public\SlimeWalkState.h" />
     <ClInclude Include="..\Public\TreasureBox.h" />
     <ClInclude Include="..\Public\UI_Changebutton.h" />
+    <ClInclude Include="..\Public\UI_Dialogue.h" />
+    <ClInclude Include="..\Public\UI_Dialoguepopup.h" />
     <ClInclude Include="..\Public\UI_LOCKON.h" />
     <ClInclude Include="..\Public\UI_font_Damage_number.h" />
     <ClInclude Include="..\Public\UI_MENU_Back.h" />
@@ -378,6 +380,8 @@
     <ClCompile Include="..\Private\SlimeWalkState.cpp" />
     <ClCompile Include="..\Private\TreasureBox.cpp" />
     <ClCompile Include="..\Private\UI_Changebutton.cpp" />
+    <ClCompile Include="..\Private\UI_Dialogue.cpp" />
+    <ClCompile Include="..\Private\UI_Dialoguepopup.cpp" />
     <ClCompile Include="..\Private\UI_LOCKON.cpp" />
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Back.cpp" />

@@ -9,6 +9,7 @@
 #include "Collision_Manger.h"
 #include "PlayerManager.h"
 #include <time.h>
+#include "UI_Dialogue.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -60,6 +61,10 @@ void CMainApp::Tick(_float fTimeDelta)
 		m_pUI_Manager->Set_Mainmenuon(true);
 	/*if (m_pGameInstance->Key_Up(DIK_MINUS))
 		m_pUI_Manager->Set_UI_OpenType(CUI_Manager::UI_MAP);*/
+	if(m_pGameInstance->Key_Up(DIK_9))
+		dynamic_cast<CUI_Dialogue*>(m_pUI_Manager->Get_Dialogue())->Open_Dialogue(0);
+	else if (m_pGameInstance->Key_Up(DIK_0))
+		dynamic_cast<CUI_Dialogue*>(m_pUI_Manager->Get_Dialogue())->Open_Dialogue(1);
 
 	if (m_pUI_Manager->Get_UI_OpenType() == CUI_Manager::UI_INVEN && m_pGameInstance->Get_CurrentLevelIndex() != LEVEL_LOADING)
 		m_pUI_Manager->Tick_Inventory();

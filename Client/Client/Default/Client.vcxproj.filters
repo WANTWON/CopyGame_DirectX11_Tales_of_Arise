@@ -250,6 +250,15 @@
     <Filter Include="02.GameObjects\03.Effect\03.Instancing\Point">
       <UniqueIdentifier>{db7dbd70-3c60-4ea1-81f8-2062d9944113}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE">
+      <UniqueIdentifier>{6ffbc910-eef9-4bbb-87f2-9afea3e8af0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Main">
+      <UniqueIdentifier>{dc10f031-6181-47d6-8010-e8f0ac83c33a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Side">
+      <UniqueIdentifier>{20406238-19d5-42df-b70e-c1e0c1ee9cb4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -636,6 +645,12 @@
     <ClInclude Include="PlayerAttack2NormalState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Dialogue.h">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Dialoguepopup.h">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Side</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -988,6 +1003,12 @@
     </ClCompile>
     <ClCompile Include="PlayerAttack2NormalState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Dialogue.cpp">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Dialoguepopup.cpp">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Side</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
