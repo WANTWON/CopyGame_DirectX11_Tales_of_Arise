@@ -99,12 +99,16 @@ void CHierarchyNode::Set_RootMotionMatrix(const char* pBoneName)
 		// 이전 Transformation에서 이후 Transformation까지 이동 변화 벡터
 		m_vecTranslation = AfterTransformMatrix.r[3] - m_PreTransforamtionMatrix.r[3];
 
-		_vector vPreQuat, vAfterQuat;
-		vPreQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(m_PreTransforamtionMatrix));
-		vAfterQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(AfterTransformMatrix));
+		_vector vScale, vPos, vPreQuat, vAfterQuat;
+		XMMatrixDecompose(&vScale, &vPreQuat, &vPos, m_PreTransforamtionMatrix);
+		XMMatrixDecompose(&vScale, &vAfterQuat, &vPos, AfterTransformMatrix);
+
+		/*vPreQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(m_PreTransforamtionMatrix));
+		vAfterQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(AfterTransformMatrix));*/
 
 		// 쿼터니언 내적을 통한 두 쿼터니언 사이 각 구함
-		m_fRotationRadian = acosf(XMVectorGetX(XMQuaternionDot(vPreQuat, vAfterQuat))) * 2.f;
+		_vector vCos = XMQuaternionDot(vPreQuat, vAfterQuat);
+		m_fRotationRadian = acosf(XMVectorGetX(vCos)) * 2.f;
 
 		// 이전 변환 행렬 저장
 		m_PreTransforamtionMatrix = AfterTransformMatrix;

@@ -104,6 +104,14 @@ HRESULT CSlime::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
+	/* For.Com_OBB */
+	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ColliderDesc.vScale = _float3(7.f, 3.f, 3.f);
+	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -119,6 +127,7 @@ int CSlime::Tick(_float fTimeDelta)
 	Tick_State(fTimeDelta);
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return OBJ_NOEVENT;
 }
