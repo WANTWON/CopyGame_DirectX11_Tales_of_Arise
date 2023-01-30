@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Alphen.h"
 #include "Sion.h"
+#include "Weapon.h"
 
 BEGIN(Engine)
 class CModel;
@@ -35,7 +36,10 @@ public:
 	virtual CPlayerState* Tick(_float fTimeDelta) PURE;
 	virtual CPlayerState* LateTick(_float fTimeDelta) PURE;
 
-	virtual void Enter() PURE;
+	virtual void Enter()
+	{
+		m_bIsFly = m_pOwner->Get_IsFly();
+	}
 	virtual void Exit() 
 	{ 
 		m_pOwner->Get_Model()->Reset();
@@ -66,5 +70,7 @@ protected:
 	_bool m_bIsAnimationFinished = false;
 	_bool m_bIsStateEvent = false;
 	_int m_iSkillEvent = 0;
+
+	_bool m_bIsFly = false;
 };
 END

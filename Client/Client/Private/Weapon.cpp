@@ -15,6 +15,15 @@ CWeapon::CWeapon(const CWeapon & rhs)
 {
 }
 
+void CWeapon::Set_WeaponDesc(WEAPONDESC tWeaponDesc)
+{
+	Safe_Release(m_WeaponDesc.pSocket);
+
+	memcpy(&m_WeaponDesc, &tWeaponDesc, sizeof(WEAPONDESC));
+
+	Safe_AddRef(m_WeaponDesc.pSocket);
+}
+
 HRESULT CWeapon::Initialize_Prototype()
 {
 	return S_OK;

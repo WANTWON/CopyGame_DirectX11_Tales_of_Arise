@@ -19,7 +19,9 @@ CPlayerState * CJumpState::HandleInput()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
+	if (pGameInstance->Key_Down(DIMK_LBUTTON))
+		return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
+	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		m_eDirection = DIR_STRAIGHT_LEFT;
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
 		m_eDirection = DIR_STRAIGHT_RIGHT;
@@ -45,7 +47,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 {
 	if (m_eStateType != STATETYPE_END)
 		Move(fTimeDelta);
-	
+
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 		
 	return nullptr;
@@ -72,7 +74,11 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 
 void CJumpState::Enter()
 {
+	__super::Enter();
+
 	m_eStateId = STATE_ID::STATE_JUMP;
+
+	m_pOwner->Set_IsFly();
 
 	CPlayer::PLAYERID ePlayerID = m_pOwner->Get_PlayerID();
 
@@ -118,6 +124,8 @@ void CJumpState::Exit()
 {
 	if(m_eStateType == STATETYPE_END)
 		m_fTime = 0.f;
+
+	m_pOwner->Set_IsFly();
 }
 
 _bool CJumpState::Check_JumpEnd()
@@ -195,13 +203,11 @@ void CJumpState::Move(_float fTimeDelta)
 		m_fTime += 0.1f;
 		m_pOwner->Get_Transform()->Jump(m_fTime, 3.f, 1.0f, m_fStartHeight, m_fEndHeight);
 
-		if(m_eDirection != DIR_END)
+		if (m_eDirection != DIR_END)
+		{
 			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f);
-		
+		}
 	}
-		
-
-	
 
 	RELEASE_INSTANCE(CGameInstance);
 }

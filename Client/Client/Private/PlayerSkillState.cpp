@@ -2,7 +2,6 @@
 #include "..\Public\PlayerSkillState.h"
 #include "GameInstance.h"
 #include "PlayerIdleState.h"
-#include "Weapon.h"
 #include "PlayerAttackNormalState.h"
 
 using namespace Player;
@@ -170,6 +169,8 @@ CPlayerState * CSkillState::LateTick(_float fTimeDelta)
 
 void CSkillState::Enter(void)
 {
+	__super::Enter();
+
 	if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
 	{
 		switch (m_eStateId)

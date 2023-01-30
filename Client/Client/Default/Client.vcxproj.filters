@@ -333,9 +333,6 @@
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PlayerWalkState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\PlayerRunState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
@@ -784,9 +781,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PlayerWalkState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerRunState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>

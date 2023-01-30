@@ -37,6 +37,7 @@ private:
 public:
 	void On_Collider(void) { m_isCollider = true; }
 	void Off_Collider(void) { m_isCollider = false; }
+	void Set_WeaponDesc(WEAPONDESC tWeaponDesc); 
 
 public:
 	virtual HRESULT Initialize_Prototype();

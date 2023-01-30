@@ -8,7 +8,7 @@ BEGIN(Player)
 class CAttackNormalState final : public CPlayerState
 {
 public:
-	CAttackNormalState(class CPlayer* pPlayer, STATE_ID eStateType);
+	CAttackNormalState(class CPlayer* pPlayer, STATE_ID eStateType, _float fStartHeight = 0.f, _float fTime = 0.f);
 
 	virtual CPlayerState* HandleInput() override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -19,6 +19,9 @@ public:
 
 private:
 	_matrix m_StartMatrix;
+
+	_float m_fStartHeight = 0.f;
+	_float m_fTime = 0.f;
 };
 END
 END
