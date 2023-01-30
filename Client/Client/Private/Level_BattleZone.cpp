@@ -76,7 +76,7 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_INTERACT);
 		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_TRAP);
 		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MBULLET);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_ITEM);
+		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_TRIGGER);
 		pGameInstance->Set_DestinationLevel(eNextLevel);
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))

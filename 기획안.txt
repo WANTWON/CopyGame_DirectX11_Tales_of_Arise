@@ -84,3 +84,11 @@ UI : 정원 1 (메인, 로딩, 전투, 인벤토리, 스테이터스,, 맵)
 - 조이 : 이펙트 툴 저장, 불러오기로 끝내기
 - 혜연 : SNOW Field 만들기
 - 지훈 : 애니메이션 툴 만들기
+
+
+<4주차 목표 2/3>
+- 조이 : Alphen Sword Slash Effect(Normal Attack), Monster Hit Effect, Sion Bullet(NormalAttack)Effect
+- 정원 : 상호작용(아이템 줍기,채집 UI세팅) + Npc 대화 진행 + 퀘스트 창
+- 혜연 : Trigger, Npc, Montser 맵에 세팅하기 + 린웰 몬스터버전 전투 패턴
+- 석희 : 몬스터 패턴 다시 세팅 + Trigger 안에서만 돌아다니게 하기
+- 지훈 : Player(Aphen,Sion_ => 기본공격 + 지상3, 공중3 스킬, Hit,Dead 상태처리

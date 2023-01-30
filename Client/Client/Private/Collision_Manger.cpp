@@ -48,6 +48,10 @@ void CCollision_Manager::Clear_CollisionGroupExpect(COLLSIONGROUP CollisionGroup
 	}
 }
 
+void CCollision_Manager::Clear_AllCollisionGroup()
+{
+}
+
 _bool CCollision_Manager::CollisionwithGroup(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj** pOut)
 {
 	for (auto& iter : m_GameObjects[CollisionGroup])

@@ -14,8 +14,6 @@ BEGIN(Client)
 class CMonster abstract : public CBaseObj
 {
 public:
-	enum MONSTER_ID { ICE_WOLF, MONSTER_END };
-
 	enum DMG_DIR {FRONT, BACK, RIGHT, LEFT};
 
 	typedef struct tagCharacterStats

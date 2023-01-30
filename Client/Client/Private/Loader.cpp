@@ -2,23 +2,27 @@
 #include "Loader.h"
 
 #include "GameInstance.h"
-
-#include "UI_Portrait.h"
 #include "Camera_Dynamic.h"
-#include "EffectTexture.h"
-#include "EffectMesh.h"
-#include "ParticleSystem.h"
-#include "Particle_Rect.h"
-#include "Particle_Point.h"
-#include "UI_Screen.h"
 #include "Terrain.h"
-#include "Alphen.h"
-#include "Sion.h"
 #include "Weapon.h"
 #include "Sky.h"
 #include "Water.h"
 #include "NonAnim_Instance.h"
 #include "NonAnim.h"
+#include "Trigger.h"
+
+//Effect
+#include "EffectTexture.h"
+#include "EffectMesh.h"
+#include "ParticleSystem.h"
+#include "Particle_Rect.h"
+#include "Particle_Point.h"
+
+
+//Actor
+#include "Alphen.h"
+#include "Sion.h"
+
 
 //UI
 #include "UI_Portrait.h"
@@ -144,11 +148,15 @@ HRESULT CLoader::Loading_ForPrototype()
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 
+	/*For.Prototype_Trigger */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Trigger"),
+		CTrigger::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/*For.Prototype_NonAnim */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NonAnim"),
 		CNonAnim::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
 
 	/*For.Prototype_NonAnim */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NonAnim_Instance"),
@@ -511,14 +519,19 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/Sion.dat"))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Model_Sion */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NpcFemaleYoung"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NpcFemaleYoung/NpcFemaleYoung.dat"))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Model_Water_Plane*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Water/Plane.dat"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Alphen_Weapon01 */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1(R00)"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/SWO1(R00)/SWO1(R00).dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO01/SWO01.dat"))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Model_IceWolf*/
@@ -540,9 +553,6 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Slime"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Slime/Slime.dat"))))
 		return E_FAIL;
-
-
-
 #pragma endregion Model Loading
 
 #pragma region Navigation Loading
@@ -673,6 +683,7 @@ HRESULT CLoader::Loading_ForBattleLevel()
 
 	///NON ANIM 
 
+	
 	/*For.Prototype_Component_Model_Apple*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Apple"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Apple/Apple.dat"))))
@@ -1080,6 +1091,11 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("SlimPlant"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Plant/SlimPlant.dat"))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Crystal"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Crystal/Crystal.dat"))))
+		return E_FAIL;
+
 #pragma endregion Interact Object 
 
 
@@ -1166,8 +1182,6 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Tree1.dat",
 			"../../../Bin/Data/Field_Data/Tree.dat"))))
 		return E_FAIL;
-
-
 
 #pragma endregion Instancing
 
