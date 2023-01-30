@@ -247,6 +247,15 @@
     <Filter Include="02.GameObjects\03.Effect\03.Instancing\Point">
       <UniqueIdentifier>{db7dbd70-3c60-4ea1-81f8-2062d9944113}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE">
+      <UniqueIdentifier>{6ffbc910-eef9-4bbb-87f2-9afea3e8af0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Main">
+      <UniqueIdentifier>{dc10f031-6181-47d6-8010-e8f0ac83c33a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Side">
+      <UniqueIdentifier>{20406238-19d5-42df-b70e-c1e0c1ee9cb4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\01.Sion\Manager">
       <UniqueIdentifier>{575e09da-0184-48c0-89d5-0b9fc2716218}</UniqueIdentifier>
     </Filter>
@@ -681,6 +690,48 @@
     <ClInclude Include="..\Public\PlayerJumpState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Dialogue.h">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Dialoguepopup.h">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Side</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkSitOnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkUpFlyState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkBraveState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeBattle_IdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeChaseState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeTurnR_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerChaseState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerTurnR_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BerserkerHowLing_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeMagicEmitState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeAdventState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1078,6 +1129,48 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerJumpState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Dialogue.cpp">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Dialoguepopup.cpp">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Side</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkSitOnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkUpFlyState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkBraveState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeBattle_IdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeChaseState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeTurnR_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerChaseState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerTurnR_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerHowLing_State.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeMagicEmitState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeAdventState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

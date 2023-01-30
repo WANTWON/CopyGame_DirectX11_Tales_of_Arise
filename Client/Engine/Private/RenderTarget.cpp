@@ -1,4 +1,4 @@
-#include "..\Public\RenderTarget.h"
+#include "RenderTarget.h"
 #include "VIBuffer_Rect.h"
 #include "Shader.h"
 
@@ -8,16 +8,13 @@ CRenderTarget::CRenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
-
-
 }
-
 
 HRESULT CRenderTarget::Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4 * pColor)
 {
 	m_vClearColor = *pColor;
 
-	D3D11_TEXTURE2D_DESC	TextureDesc;
+	D3D11_TEXTURE2D_DESC TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
 	TextureDesc.Width = iSizeX;
@@ -48,7 +45,7 @@ HRESULT CRenderTarget::Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT eForma
 
 HRESULT CRenderTarget::Clear()
 {
-	if (nullptr == m_pContext)
+	if (!m_pContext)
 		return E_FAIL;
 
 	m_pContext->ClearRenderTargetView(m_pRTV, (_float*)&m_vClearColor);
@@ -62,14 +59,12 @@ HRESULT CRenderTarget::Bind_ShaderResource(CShader * pShader, const char * pCons
 }
 
 #ifdef _DEBUG
-
 HRESULT CRenderTarget::Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY)
 {
-	D3D11_VIEWPORT		ViewportDesc;
+	D3D11_VIEWPORT ViewportDesc;
 	ZeroMemory(&ViewportDesc, sizeof ViewportDesc);
 
-	_uint		iNumViewports = 1;
-
+	_uint iNumViewports = 1;
 	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
@@ -89,24 +84,21 @@ HRESULT CRenderTarget::Render_Debug(CShader* pShader, CVIBuffer_Rect * pVIBuffer
 {
 	if (FAILED(pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
 		return E_FAIL;
-
 	if (FAILED(pShader->Set_ShaderResourceView("g_DiffuseTexture", m_pSRV)))
 		return E_FAIL;
 
 	if (FAILED(pShader->Begin(0)))
 		return E_FAIL;
-
 	if (FAILED(pVIBuffer->Render()))
 		return E_FAIL;
 
 	return S_OK;
 }
-
 #endif // _DEBUG
 
 CRenderTarget * CRenderTarget::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4 * pColor)
 {
-	CRenderTarget*	pInstance = new CRenderTarget(pDevice, pContext);
+	CRenderTarget* pInstance = new CRenderTarget(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize(iSizeX, iSizeY, eFormat, pColor)))
 	{

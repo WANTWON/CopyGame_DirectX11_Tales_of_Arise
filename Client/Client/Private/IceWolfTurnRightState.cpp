@@ -21,11 +21,21 @@ CIceWolfState * CTurnRightState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CTurnRightState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Check_Navigation();
 	Find_Target();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 	
 	return nullptr;
 }
@@ -60,8 +70,8 @@ void CTurnRightState::Enter()
 
 void CTurnRightState::Exit()
 {
-	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
-	m_pOwner->Get_Model()->Reset();
+	//m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
+	//m_pOwner->Get_Model()->Reset();
 }
 
 

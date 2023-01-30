@@ -1,4 +1,4 @@
-#include "..\Public\Target_Manager.h"
+#include "Target_Manager.h"
 #include "RenderTarget.h"
 
 IMPLEMENT_SINGLETON(CTarget_Manager)
@@ -8,13 +8,81 @@ CTarget_Manager::CTarget_Manager()
 
 }
 
-HRESULT CTarget_Manager::Add_RenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _tchar * pTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4 * pColor)
+HRESULT CTarget_Manager::Ready_ShadowDepthStencilRenderTargetView(ID3D11Device * pDevice, _uint iWinCX, _uint iWinCY)
 {
-	if (nullptr != Find_RenderTarget(pTargetTag))
+	if (!pDevice)
 		return E_FAIL;
 
-	CRenderTarget*		pRenderTarget = CRenderTarget::Create(pDevice, pContext, iSizeX, iSizeY, eFormat, pColor);
-	if (nullptr == pRenderTarget)
+	ID3D11Texture2D* pDepthStencilTexture = nullptr;
+	D3D11_TEXTURE2D_DESC TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+	TextureDesc.Width = iWinCX;
+	TextureDesc.Height = iWinCY;
+	TextureDesc.MipLevels = 1;
+	TextureDesc.ArraySize = 1;
+	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	TextureDesc.SampleDesc.Quality = 0;
+	TextureDesc.SampleDesc.Count = 1;
+	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	TextureDesc.CPUAccessFlags = 0;
+	TextureDesc.MiscFlags = 0;
+
+	if (FAILED(pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture)))
+		return E_FAIL;
+	if (FAILED(pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pShadowDeptheStencil)))
+		return E_FAIL;
+
+	Safe_Release(pDepthStencilTexture);
+
+	return S_OK;
+}
+
+HRESULT CTarget_Manager::Ready_BackBufferCopyTexture(ID3D11Device * pDevice, ID3D11DeviceContext* pContext, _uint iWinCX, _uint iWinCY)
+{
+	if (!pDevice)
+		return E_FAIL;
+
+	/* Get Current Render Target (BackBuffer). */
+	ID3D11RenderTargetView* pBackBufferRTV = nullptr;
+	pContext->OMGetRenderTargets(1, &pBackBufferRTV, nullptr);
+
+	/* Get BackBuffer Render Target Description. */
+	D3D11_RENDER_TARGET_VIEW_DESC pBackBufferDesc;
+	pBackBufferRTV->GetDesc(&pBackBufferDesc);
+
+	/* Create the Texture where the copy of the BackBuffer will be copied to. */
+	D3D11_TEXTURE2D_DESC tBackBufferCopyDesc;
+	ZeroMemory(&tBackBufferCopyDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+	tBackBufferCopyDesc.Width = iWinCX;
+	tBackBufferCopyDesc.Height = iWinCY;
+	tBackBufferCopyDesc.MipLevels = 1;
+	tBackBufferCopyDesc.ArraySize = 1;
+	tBackBufferCopyDesc.Format = pBackBufferDesc.Format;
+	tBackBufferCopyDesc.SampleDesc.Quality = 0;
+	tBackBufferCopyDesc.SampleDesc.Count = 1;
+	tBackBufferCopyDesc.Usage = D3D11_USAGE_DEFAULT;
+	tBackBufferCopyDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	tBackBufferCopyDesc.CPUAccessFlags = 0;
+	tBackBufferCopyDesc.MiscFlags = 0;
+
+	if (FAILED(pDevice->CreateTexture2D(&tBackBufferCopyDesc, nullptr, &m_pBackBufferTextureCopy)))
+		return E_FAIL;
+
+	Safe_Release(pBackBufferRTV);
+
+	return S_OK;
+}
+
+HRESULT CTarget_Manager::Add_RenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _tchar * pTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4 * pColor)
+{
+	if (Find_RenderTarget(pTargetTag))
+		return E_FAIL;
+
+	CRenderTarget* pRenderTarget = CRenderTarget::Create(pDevice, pContext, iSizeX, iSizeY, eFormat, pColor);
+	if (!pRenderTarget)
 		return E_FAIL;
 
 	m_RenderTargets.emplace(pTargetTag, pRenderTarget);
@@ -24,19 +92,15 @@ HRESULT CTarget_Manager::Add_RenderTarget(ID3D11Device * pDevice, ID3D11DeviceCo
 
 HRESULT CTarget_Manager::Add_MRT(const _tchar * pMRTTag, const _tchar * pTargetTag)
 {
-	CRenderTarget*	pRenderTarget = Find_RenderTarget(pTargetTag);
-
-	if (nullptr == pRenderTarget)
+	CRenderTarget* pRenderTarget = Find_RenderTarget(pTargetTag);
+	if (!pRenderTarget)
 		return E_FAIL;
 
-	list<CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
-
-	if (nullptr == pMRTList)
+	list<CRenderTarget*>* pMRTList = Find_MRT(pMRTTag);
+	if (!pMRTList)
 	{
-		list<CRenderTarget*>		MRTList;
-
+		list<CRenderTarget*> MRTList;
 		MRTList.push_back(pRenderTarget);
-
 		m_MRTs.emplace(pMRTTag, MRTList);
 	}
 	else
@@ -44,21 +108,19 @@ HRESULT CTarget_Manager::Add_MRT(const _tchar * pMRTTag, const _tchar * pTargetT
 
 	Safe_AddRef(pRenderTarget);
 
-
 	return S_OK;
 }
 
 HRESULT CTarget_Manager::Begin_MRT(ID3D11DeviceContext* pContext, const _tchar * pMRTTag)
 {
-	list<CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
-	if (nullptr == pMRTList)
+	list<CRenderTarget*>* pMRTList = Find_MRT(pMRTTag);
+	if (!pMRTList)
 		return E_FAIL;
 
 	pContext->OMGetRenderTargets(1, &m_pOldRTV, &m_pOldDSV);
 
-	ID3D11RenderTargetView*		pRTVs[8] = { nullptr };
-
-	_uint		iNumRenderTargets = 0;
+	ID3D11RenderTargetView* pRTVs[8] = { nullptr };
+	_uint iNumRenderTargets = 0;
 
 	for (auto& pRenderTarget : *pMRTList)
 	{
@@ -73,15 +135,14 @@ HRESULT CTarget_Manager::Begin_MRT(ID3D11DeviceContext* pContext, const _tchar *
 
 HRESULT CTarget_Manager::Begin_ShadowMRT(ID3D11DeviceContext * pContext, const _tchar * pMRTTag)
 {
-	list<CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
-	if (nullptr == pMRTList)
+	list<CRenderTarget*>* pMRTList = Find_MRT(pMRTTag);
+	if (!pMRTList)
 		return E_FAIL;
 
 	pContext->OMGetRenderTargets(1, &m_pOldRTV, &m_pOldDSV);
 
-	ID3D11RenderTargetView*		pRTVs[8] = { nullptr };
-
-	_uint		iNumRenderTargets = 0;
+	ID3D11RenderTargetView* pRTVs[8] = { nullptr };
+	_uint iNumRenderTargets = 0;
 
 	for (auto& pRenderTarget : *pMRTList)
 	{
@@ -92,7 +153,7 @@ HRESULT CTarget_Manager::Begin_ShadowMRT(ID3D11DeviceContext * pContext, const _
 	pContext->ClearDepthStencilView(m_pShadowDeptheStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 	pContext->OMSetRenderTargets(iNumRenderTargets, pRTVs, m_pShadowDeptheStencil);
 
-	D3D11_VIEWPORT         ViewPortDesc;
+	D3D11_VIEWPORT ViewPortDesc;
 	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
 	ViewPortDesc.TopLeftX = 0;
 	ViewPortDesc.TopLeftY = 0;
@@ -113,7 +174,7 @@ HRESULT CTarget_Manager::End_MRT(ID3D11DeviceContext * pContext)
 	Safe_Release(m_pOldRTV);
 	Safe_Release(m_pOldDSV);
 
-	D3D11_VIEWPORT         ViewPortDesc;
+	D3D11_VIEWPORT ViewPortDesc;
 	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
 	ViewPortDesc.TopLeftX = 0;
 	ViewPortDesc.TopLeftY = 0;
@@ -128,55 +189,43 @@ HRESULT CTarget_Manager::End_MRT(ID3D11DeviceContext * pContext)
 
 HRESULT CTarget_Manager::Bind_ShaderResource(const _tchar * pTargetTag, CShader * pShader, const char * pConstantName)
 {
-	CRenderTarget*		pRenderTarget = Find_RenderTarget(pTargetTag);
+	CRenderTarget* pRenderTarget = Find_RenderTarget(pTargetTag);
 	if (nullptr == pRenderTarget)
 		return E_FAIL;
 
 	return pRenderTarget->Bind_ShaderResource(pShader, pConstantName);
 }
 
-HRESULT CTarget_Manager::Ready_ShadowDepthStencilRenderTargetView(ID3D11Device * pDevice, _uint iWinCX, _uint iWinCY)
+HRESULT CTarget_Manager::Copy_BackBufferTexture(ID3D11Device * pDevice, ID3D11DeviceContext* pContext)
 {
-	if (nullptr == pDevice)
+	/* Get Current Render Target (BackBuffer). */
+	ID3D11RenderTargetView* pBackBufferRTV = nullptr;
+	pContext->OMGetRenderTargets(1, &pBackBufferRTV, nullptr);
+
+	/* Get BackBuffer RenderTarget Texture. */
+	ID3D11Resource* pBackBufferResource = nullptr;
+	pBackBufferRTV->GetResource(&pBackBufferResource);
+
+	/* Copy the BackBuffer Texture into "m_pBackBufferTextureCopy". */
+	pContext->CopyResource(m_pBackBufferTextureCopy, pBackBufferResource);
+
+	Safe_Release(m_pBackBufferSRV);
+
+	/* Make a Shader Resource View based on the copied "m_pBackBufferTextureCopy". */
+	if (FAILED(pDevice->CreateShaderResourceView(m_pBackBufferTextureCopy, nullptr, &m_pBackBufferSRV)))
 		return E_FAIL;
 
-	ID3D11Texture2D*		pDepthStencilTexture = nullptr;
-
-	D3D11_TEXTURE2D_DESC	TextureDesc;
-	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
-
-	TextureDesc.Width = iWinCX;
-	TextureDesc.Height = iWinCY;
-	TextureDesc.MipLevels = 1;
-	TextureDesc.ArraySize = 1;
-	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	TextureDesc.SampleDesc.Quality = 0;
-	TextureDesc.SampleDesc.Count = 1;
-
-	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	TextureDesc.CPUAccessFlags = 0;
-	TextureDesc.MiscFlags = 0;
-
-	if (FAILED(pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture)))
-		return E_FAIL;
-
-
-	if (FAILED(pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pShadowDeptheStencil)))
-		return E_FAIL;
-
-	Safe_Release(pDepthStencilTexture);
+	Safe_Release(pBackBufferResource);
+	Safe_Release(pBackBufferRTV);
 
 	return S_OK;
 }
 
 #ifdef _DEBUG
-
 HRESULT CTarget_Manager::Ready_Debug(const _tchar * pTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
-	CRenderTarget*		pRenderTarget = Find_RenderTarget(pTargetTag);
-	if (nullptr == pRenderTarget)
+	CRenderTarget* pRenderTarget = Find_RenderTarget(pTargetTag);
+	if (!pRenderTarget)
 		return E_FAIL;
 
 	return pRenderTarget->Ready_Debug(fX, fY, fSizeX, fSizeY);
@@ -184,24 +233,21 @@ HRESULT CTarget_Manager::Ready_Debug(const _tchar * pTargetTag, _float fX, _floa
 
 HRESULT CTarget_Manager::Render_Debug(const _tchar * pMRTTag, class CShader* pShader, CVIBuffer_Rect * pVIBuffer)
 {
-	list<class CRenderTarget*>*		pMRTList = Find_MRT(pMRTTag);
+	list<class CRenderTarget*>* pMRTList = Find_MRT(pMRTTag);
 
 	for (auto& pTarget : *pMRTList)
 	{
-		if (nullptr != pTarget)
+		if (pTarget)
 			pTarget->Render_Debug(pShader, pVIBuffer);
-
 	}
 
 	return S_OK;
 }
-
 #endif // _DEBUG
-
 
 CRenderTarget * CTarget_Manager::Find_RenderTarget(const _tchar * pTargetTag)
 {
-	auto	iter = find_if(m_RenderTargets.begin(), m_RenderTargets.end(), CTag_Finder(pTargetTag));
+	auto iter = find_if(m_RenderTargets.begin(), m_RenderTargets.end(), CTag_Finder(pTargetTag));
 
 	if (iter == m_RenderTargets.end())
 		return nullptr;
@@ -211,7 +257,7 @@ CRenderTarget * CTarget_Manager::Find_RenderTarget(const _tchar * pTargetTag)
 
 list<class CRenderTarget*>* CTarget_Manager::Find_MRT(const _tchar * pMRTTag)
 {
-	auto	iter = find_if(m_MRTs.begin(), m_MRTs.end(), CTag_Finder(pMRTTag));
+	auto iter = find_if(m_MRTs.begin(), m_MRTs.end(), CTag_Finder(pMRTTag));
 
 	if (iter == m_MRTs.end())
 		return nullptr;
@@ -240,4 +286,6 @@ void CTarget_Manager::Free()
 
 	Safe_Release(m_pOldRTV);
 	Safe_Release(m_pOldDSV);
+	Safe_Release(m_pBackBufferTextureCopy);
+	Safe_Release(m_pBackBufferSRV);
 }

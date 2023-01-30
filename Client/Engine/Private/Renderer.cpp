@@ -7,6 +7,7 @@
 #include "Component.h"
 #include "PipeLine.h"
 #include "GameInstance.h"
+#include "Texture.h"
 
 CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -28,9 +29,9 @@ HRESULT CRenderer::Initialize_Prototype()
 	_uint iNumViewports = 1;
 
 	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
-	/* 
+	/** 
 		Render Target Views
-	*/
+	**/
 	/* For.Target_Diffuse */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Diffuse"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(1.f, 1.f, 1.f, 0.f))))
@@ -80,12 +81,12 @@ HRESULT CRenderer::Initialize_Prototype()
 		DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(1.0f, 1.0f, 1.0f, 1.0f))))
 		return E_FAIL;
 
-	/* For.Target_Reflection */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Reflection"), ViewportDesc.Width, ViewportDesc.Height,
-		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
+	/* For.BackBufferCopy */
+	if (FAILED(m_pTarget_Manager->Ready_BackBufferCopyTexture(m_pDevice, m_pContext, ViewportDesc.Width, ViewportDesc.Height)))
 		return E_FAIL;
-	/* For.Target_Refraction */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Refraction"), ViewportDesc.Width, ViewportDesc.Height,
+
+	/* For.Target_BackBufferCopy */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Distortion"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
 
@@ -121,20 +122,21 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Blur_Vertical"), TEXT("Target_Blur_Vertical"))))
 		return E_FAIL;
 
-	/* For.MRT_Reflection */
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Reflection"), TEXT("Target_Reflection"))))
-		return E_FAIL;
-	/* For.MRT_Refraction */
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Refraction"), TEXT("Target_Refraction"))))
+	/* For.MRT_BackBufferCopy */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Distortion"), TEXT("Target_Distortion"))))
 		return E_FAIL;
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (!m_pVIBuffer)
 		return E_FAIL;
 
-	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
-	if (!m_pShader)
+	m_pShaderDeferred = CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
+	if (!m_pShaderDeferred)
 		return E_FAIL;
+
+	m_pShaderPostProcessing = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_PostProcessing.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
+	if (!m_pShaderPostProcessing)
+		return E_FAIL;	
 
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH(ViewportDesc.Width, ViewportDesc.Height, 0.f, 1.f)));
@@ -152,21 +154,15 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Depth"), 75.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
-	//if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Ambient"), 75.f, 525.f, 150.f, 150.f)))
-	//	return E_FAIL;
-
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Shade"), 225.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Specular"), 225.f, 225.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth"), 225.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
-
-	//if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Reflection"), 375.f, 75.f, 150.f, 150.f)))
-		//return E_FAIL;
-	//if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Refraction"), 375.f, 225.f, 150.f, 150.f)))
-		//return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow"), 375.f, 75.f, 150.f, 150.f)))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Distortion"), 512.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 #endif
 
@@ -210,11 +206,11 @@ HRESULT CRenderer::Render_GameObjects()
 		return E_FAIL;
 	if (FAILED(Render_AlphaBlend()))
 		return E_FAIL;
+	if (FAILED(Render_Distortion()))
+		return E_FAIL;
 
-	/* Reflective Objects need to reflect the scene around them,
-	so the entire scene must be rendered before them. */
-	//if (FAILED(Render_Reflective())) /* and Refractive */
-	//	return E_FAIL;
+	if (FAILED(Render_PostProcessing()))
+		return E_FAIL;
 
 #ifdef _DEBUG	
 	Render_Debug();
@@ -335,6 +331,174 @@ HRESULT CRenderer::Render_AlphaBlendLights()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_Lights()
+{
+	if (nullptr == m_pTarget_Manager ||
+		nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	/* Target_Shader에 그린다. */
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_LightAcc"))))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Normal"), m_pShaderDeferred, "g_NormalTexture")))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderDeferred, "g_DepthTexture")))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Specular"), m_pShaderDeferred, "g_SpecularTexture")))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Ambient"), m_pShaderDeferred, "g_AmbientTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+
+	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
+
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_ProjMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_ViewMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_vCamPosition", &pPipeLine->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CPipeLine);
+
+	if (FAILED(m_pLight_Manager->Render_Lights(m_pShaderDeferred, m_pVIBuffer)))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Glow()
+{
+	/* If there are not Glow Object return. (Blurring process is expensive) */
+	if (m_GameObjects[RENDER_GLOW].empty())
+		return S_OK;
+	else
+	{
+		if (!m_pTarget_Manager)
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Glow"), m_pShaderDeferred, "g_GlowTexture")))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderDeferred->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderDeferred->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderDeferred->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+
+		/* Horizontal Blur */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Horizontal"))))
+			return E_FAIL;
+
+		m_pShaderDeferred->Begin(4);
+		m_pVIBuffer->Render();
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		/* Bind the Horizontally Blurred Image to the Glow Texture. */
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShaderDeferred, "g_GlowTexture")))
+			return E_FAIL;
+
+		/* Vertical Blur */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Vertical"))))
+			return E_FAIL;
+
+		m_pShaderDeferred->Begin(5);
+		m_pVIBuffer->Render();
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		/* Bind the Horizontally and Vertically Blurred Image to the Glow Texture. */
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShaderDeferred, "g_GlowTexture")))
+			return E_FAIL;
+
+		for (auto& pGameObject : m_GameObjects[RENDER_GLOW])
+		{
+			if (pGameObject)
+				Safe_Release(pGameObject);
+		}
+
+		m_GameObjects[RENDER_GLOW].clear();
+
+		return S_OK;
+	}
+}
+
+HRESULT CRenderer::Render_Blend()
+{
+	if (!m_pTarget_Manager)
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Diffuse"), m_pShaderDeferred, "g_DiffuseTexture")))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderDeferred, "g_DepthTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Shade"), m_pShaderDeferred, "g_ShadeTexture")))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Specular"), m_pShaderDeferred, "g_SpecularTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_ShadowDepth"), m_pShaderDeferred, "g_ShadowDepthTexture")))
+		return E_FAIL;
+
+	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
+
+	_float4x4 LightView = CLight_Manager::Get_Instance()->Get_ShadowLightView();
+
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_LightViewMatrix", &LightView, sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_LightProjMatrix", &CPipeLine::Get_Instance()->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_ViewMatrixInv", &CPipeLine::Get_Instance()->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_ProjMatrixInv", &CPipeLine::Get_Instance()->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CPipeLine);
+
+	m_pShaderDeferred->Begin(3);
+	m_pVIBuffer->Render();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_NonLight()
+{
+	for (auto& pGameObject : m_GameObjects[RENDER_NONLIGHT])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render();
+			Safe_Release(pGameObject);
+		}
+	}
+
+	m_GameObjects[RENDER_NONLIGHT].clear();
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_AlphaBlend()
 {
 	m_GameObjects[RENDER_ALPHABLEND].sort([](CGameObject* pSour, CGameObject* pDest)
@@ -356,43 +520,122 @@ HRESULT CRenderer::Render_AlphaBlend()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Reflective()
+HRESULT CRenderer::Render_Distortion()
 {
-	/* If there are not Reflective Object return. (Reflection/Refraction process is expensive) */
-	if (m_GameObjects[RENDER_REFLECTIVE].empty())
+	/* If there are not Distortion Object return. */
+	if (m_GameObjects[RENDER_DISTORTION].empty())
 		return S_OK;
 	else
 	{
-		if (!m_pTarget_Manager)
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Distortion"))))
 			return E_FAIL;
 
-		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-		if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-		if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-
-		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Reflection"))))
-			return E_FAIL;
-
-		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Refractive"))))
-			return E_FAIL;
-
-		for (auto& pGameObject : m_GameObjects[RENDER_REFLECTIVE])
+		for (auto& pGameObject : m_GameObjects[RENDER_DISTORTION])
 		{
-			if (nullptr != pGameObject)
+			if (pGameObject)
 			{
-				//pGameObject->Render();
+				pGameObject->Render();
 				Safe_Release(pGameObject);
 			}
 		}
 
-		m_GameObjects[RENDER_REFLECTIVE].clear();
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		return S_OK;
+	}
+}
+
+HRESULT CRenderer::Render_PostProcessing()
+{
+	if (!m_pTarget_Manager)
+		return E_FAIL;
+
+	if (m_GameObjects[RENDER_DISTORTION].empty())
+		return S_OK;
+	else
+	{
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (!m_pDistortionNoiseTexture)
+			m_pDistortionNoiseTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Distortion_Noise"));
+
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV());
+
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
+			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Distortion"), m_pShaderPostProcessing, "g_DistortionTexture")))
+			return E_FAIL;
+
+		m_fDistortionTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fDistortionTimer", &m_fDistortionTimer, sizeof(_float))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(0);
+		m_pVIBuffer->Render();
+
+		m_GameObjects[RENDER_DISTORTION].clear();
+
+		return S_OK;
+	}
+}
+
+#ifdef _DEBUG
+HRESULT CRenderer::Render_Debug()
+{
+	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == 1)
+	{
+		Debug_Clear();
+		return E_FAIL;
+	}
+
+	if (!m_pShaderDeferred || !m_pVIBuffer)
+		return E_FAIL;
+
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderDeferred->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+
+	for (auto& pComponent : m_DebugComponents)
+	{
+		if (m_bRenderComponentDebug)
+		{
+			if (nullptr != pComponent)
+				pComponent->Render();
+		}
+
+		Safe_Release(pComponent);
+	}
+
+	m_DebugComponents.clear();
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_TAB))
+		m_bRenderDebug = !m_bRenderDebug;
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_CAPSLOCK))
+		m_bRenderComponentDebug = !m_bRenderComponentDebug;
+
+	if (m_bRenderDebug)
+	{
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Deferred"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_LightAcc"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_LightDepth"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Distortion"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
 	}
 
 	return S_OK;
 }
+#endif // _DEBUG
 
 HRESULT CRenderer::Render_UI()
 {
@@ -420,223 +663,6 @@ HRESULT CRenderer::Render_UI()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Lights()
-{
-	if (nullptr == m_pTarget_Manager ||
-		nullptr == m_pLight_Manager)
-		return E_FAIL;
-
-	/* Target_Shader에 그린다. */
-	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_LightAcc"))))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Normal"), m_pShader, "g_NormalTexture")))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShader, "g_DepthTexture")))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Specular"), m_pShader, "g_SpecularTexture")))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Ambient"), m_pShader, "g_AmbientTexture")))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-
-	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
-
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrixInv", &pPipeLine->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &pPipeLine->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
-
-	RELEASE_INSTANCE(CPipeLine);
-
-	if (FAILED(m_pLight_Manager->Render_Lights(m_pShader, m_pVIBuffer)))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_Glow()
-{
-	/* If there are not Glow Object return. (Blurring process is expensive) */
-	if (m_GameObjects[RENDER_GLOW].empty())
-		return S_OK;
-	else
-	{
-		if (!m_pTarget_Manager)
-			return E_FAIL;
-
-		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Glow"), m_pShader, "g_GlowTexture")))
-			return E_FAIL;
-
-		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-		if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-		if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-
-		/* Horizontal Blur */
-		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Horizontal"))))
-			return E_FAIL;
-
-		m_pShader->Begin(4);
-		m_pVIBuffer->Render();
-
-		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-			return E_FAIL;
-
-		/* Bind the Horizontally Blurred Image to the Glow Texture. */
-		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShader, "g_GlowTexture")))
-			return E_FAIL;
-
-		/* Vertical Blur */
-		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Vertical"))))
-			return E_FAIL;
-
-		m_pShader->Begin(5);
-		m_pVIBuffer->Render();
-
-		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-			return E_FAIL;
-
-		/* Bind the Vertically Blurred Image to the Glow Texture. */
-		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShader, "g_GlowTexture")))
-			return E_FAIL;
-
-		for (auto& pGameObject : m_GameObjects[RENDER_GLOW])
-		{
-			if (pGameObject)
-				Safe_Release(pGameObject);
-		}
-
-		m_GameObjects[RENDER_GLOW].clear();
-
-		return S_OK;
-	}
-}
-
-HRESULT CRenderer::Render_Blend()
-{
-	if (!m_pTarget_Manager)
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture")))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShader, "g_DepthTexture")))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Shade"), m_pShader, "g_ShadeTexture")))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Specular"), m_pShader, "g_SpecularTexture")))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_ShadowDepth"), m_pShader, "g_ShadowDepthTexture")))
-		return E_FAIL;
-
-	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
-
-	_float4x4 LightView = CLight_Manager::Get_Instance()->Get_ShadowLightView();
-
-	if (FAILED(m_pShader->Set_RawValue("g_LightViewMatrix", &LightView, sizeof(_float4x4))))	
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_LightProjMatrix", &CPipeLine::Get_Instance()->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrixInv", &CPipeLine::Get_Instance()->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrixInv", &CPipeLine::Get_Instance()->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-
-	RELEASE_INSTANCE(CPipeLine);
-
-	m_pShader->Begin(3);
-	m_pVIBuffer->Render();
-
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_NonLight()
-{
-	for (auto& pGameObject : m_GameObjects[RENDER_NONLIGHT])
-	{
-		if (nullptr != pGameObject)
-		{
-			pGameObject->Render();
-			Safe_Release(pGameObject);
-		}
-	}
-
-	m_GameObjects[RENDER_NONLIGHT].clear();
-
-	return S_OK;
-}
-
-#ifdef _DEBUG
-HRESULT CRenderer::Render_Debug()
-{
-	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == 1)
-	{
-		Debug_Clear();
-		return E_FAIL;
-	}
-
-	if (!m_pShader || !m_pVIBuffer)
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-
-	for (auto& pComponent : m_DebugComponents)
-	{
-		if (m_bRenderComponentDebug)
-		{
-			if (nullptr != pComponent)
-				pComponent->Render();
-		}
-
-		Safe_Release(pComponent);
-	}
-
-	m_DebugComponents.clear();
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_TAB))
-		m_bRenderDebug = !m_bRenderDebug;
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_CAPSLOCK))
-		m_bRenderComponentDebug = !m_bRenderComponentDebug;
-
-	if (m_bRenderDebug)
-	{
-		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Deferred"), m_pShader, m_pVIBuffer)))
-			return E_FAIL;
-		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_LightAcc"), m_pShader, m_pVIBuffer)))
-			return E_FAIL;
-		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_LightDepth"), m_pShader, m_pVIBuffer)))
-			return E_FAIL;
-	}
-
-	return S_OK;
-}
-#endif // _DEBUG
-
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CRenderer*	pInstance = new CRenderer(pDevice, pContext);
@@ -662,8 +688,11 @@ void CRenderer::Free()
 	__super::Free();
 
 	Safe_Release(m_pVIBuffer);
-	Safe_Release(m_pShader);
+	Safe_Release(m_pShaderDeferred);
+	Safe_Release(m_pShaderPostProcessing);
 
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTarget_Manager);
+
+	Safe_Release(m_pDistortionNoiseTexture);
 }

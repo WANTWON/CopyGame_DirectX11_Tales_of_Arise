@@ -70,7 +70,9 @@ public:
 	void update_armor_inventory();
 
 	void use_HPrecover_item();
-
+	void RecoverPlayerHP(_uint index ){ m_fRecover_Power = m_PlayersMaxHP[index] - m_PlayersCurrentHP[index];}
+	void Fill_HP(_uint playerindex);
+	void check_HPrecover_item();
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
@@ -212,6 +214,20 @@ private:
 	_float m_fbrightpos_hpfont[9] = { 0.f , -0.5f, -1.f, -1.5f , -2.f , -2.5f, -3.f , -3.5f , -4.f };
 
 	_bool m_breverselerp = false;
+
+
+	_float m_PlayersCurrentHP[4] = { 0.f ,0.f , 0.f, 0.f };
+	_float m_PlayersMaxHP[4] = { 0.f , 0.f, 0.f, 0.f };
+	_float m_fRecover_Power = 0.f;
+	_bool m_brecover_finsh = false; // for ++ --
+	_bool m_brecover_effect = false;
+	_bool m_brecovring = false;   //for finish effect
+
+	_float m_fBluepower = 0.f;
+	_float m_fRecoverItempower = 0.f;
+
+	_float m_fRecoverFinish_HpbarEffectX = 0.f;
+//	_uint m_iRecoveringPlayer = 0;
 };
 
 END

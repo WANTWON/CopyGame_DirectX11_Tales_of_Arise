@@ -47,30 +47,6 @@ CBerserkerState * CBattle_IdleState::Tick(_float fTimeDelta)
 
 CBerserkerState * CBattle_IdleState::LateTick(_float fTimeDelta)
 {
-	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-
-	//if (false == m_bTargetSetting)
-	//{
-	//	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-
-	//	m_bTargetSetting = true;
-	//}
-	
-
-
-	/*m_iRand = rand() % 3;
-
-
-	if (m_fIdleAttackTimer > 3.f && m_iRand == 0)
-		return new CBattle_Double_CrowState(m_pOwner);
-
-	else if (m_fIdleAttackTimer > 3.f && m_iRand == 1)
-		return new CBattle_Double_ClawState(m_pOwner);
-
-	else if (m_fIdleAttackTimer > 3.f && m_iRand == 2)
-		return new CBattle_Shock_WaveState(m_pOwner);
-
-	else m_fIdleAttackTimer += fTimeDelta;*/
 
 	return nullptr;
 }
@@ -79,7 +55,7 @@ void CBattle_IdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::SYMBOL_IDLE);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_IDLE);
 }
 
 void CBattle_IdleState::Exit()

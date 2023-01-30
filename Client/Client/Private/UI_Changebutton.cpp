@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 
+
+
 CUI_Changebutton::CUI_Changebutton(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -20,7 +22,8 @@ HRESULT CUI_Changebutton::Initialize_Prototype()
 
 HRESULT CUI_Changebutton::Initialize(void * pArg)
 {
-	m_eShaderID = 0;
+
+	
 
 	m_fSize.x = 32;
 	m_fSize.y = 28.f;
@@ -39,6 +42,8 @@ HRESULT CUI_Changebutton::Initialize(void * pArg)
 
 int CUI_Changebutton::Tick(_float fTimeDelta)
 {
+
+	//std::mbstowcs;
 
 	if (m_bfadein)
 		m_fAlpha -= 0.04f; //»ý±æ¶§
@@ -100,7 +105,11 @@ HRESULT CUI_Changebutton::Render()
 	m_pVIBufferCom->Render();
 
 
+//	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), testvec[0], XMVectorSet(10.f, 0.f, 0.f, 1.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.6f);
 
+//	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), testvec[1], XMVectorSet(20.f, 0.f, 0.f, 1.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.6f);
+
+//	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), testvec[2], XMVectorSet(30.f, 0.f, 0.f, 1.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.6f);
 
 
 
@@ -173,6 +182,7 @@ CUI_Changebutton * CUI_Changebutton::Create(ID3D11Device * pDevice, ID3D11Device
 }
 
 
+
 CGameObject * CUI_Changebutton::Clone(void * pArg)
 {
 	CUI_Changebutton*	pInstance = new CUI_Changebutton(*this);
@@ -192,3 +202,5 @@ void CUI_Changebutton::Free()
 	Safe_Release(m_pTextureCom1);
 	__super::Free();
 }
+
+

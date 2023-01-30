@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 
+
 CMP_Guage::CMP_Guage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -48,6 +49,13 @@ HRESULT CMP_Guage::Initialize(void * pArg)
 
 int CMP_Guage::Tick(_float fTimeDelta)
 {
+	
+		
+
+		
+
+
+
 	m_fmaxmp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxMp;
 	m_fcurrentmp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentMp;
 	
@@ -354,7 +362,7 @@ HRESULT CMP_Guage::Render()
 
 	//////////////////////10번째마나
 
-		
+	
 	
 
 	return S_OK;

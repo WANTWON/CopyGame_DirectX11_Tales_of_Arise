@@ -53,6 +53,8 @@ private:
 
 	_uint m_iCharactername = 0;
 
+	_float m_fbrightpos_hp[4] = { 0.f , -0.5f, -1.f, -1.5f };
+
 };
 
 END

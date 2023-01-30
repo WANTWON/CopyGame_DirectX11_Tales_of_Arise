@@ -40,8 +40,8 @@ HRESULT CAlphen::Initialize(void * pArg)
 
 	m_ePlayerID = ALPHEN;
 
-	m_tInfo.iMaxHp = 5877;
-	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.fMaxHp = 5877;
+	m_tInfo.fCurrentHp = 1156.f;
 	m_tInfo.fMaxMp = 5.f;
 	m_tInfo.fCurrentMp = 2.3f;
 	m_tInfo.iDamage = 100;

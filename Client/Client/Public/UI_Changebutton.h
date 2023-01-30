@@ -33,6 +33,8 @@ public:
 public:
 	void moveleft() { m_fPosition.x -= 10.f; }
 
+	//wchar_t* CharToWChar(const char* pstrSrc);
+	
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
@@ -40,6 +42,8 @@ private:
 	_bool m_bfadeout = false;
 
 	_bool m_bmoveleft = true;
+
+	
 };
 
 END

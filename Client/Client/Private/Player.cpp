@@ -115,7 +115,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			m_pRendererCom->Add_Debug(m_pNavigationCom);
 		__super::Late_Tick(fTimeDelta);
 #endif //_DEBUG
-
 	}
 
 	for (auto& pParts : m_Parts)
@@ -124,8 +123,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			pParts->Late_Tick(fTimeDelta);
 	}
 
-//	Check_Navigation();
-	
 }
 
 HRESULT CPlayer::Render()
@@ -278,7 +275,7 @@ HRESULT CPlayer::SetUp_Controller()
 	_float3 fPos;
 	XMStoreFloat3(&fPos, Pos);
 
-	//ÇÇÁ÷½º´Â ¿À¸¥¼Õ ÁÂÇ¥°è
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½
 	desc.position = PxExtendedVec3(XMVectorGetX(Pos), XMVectorGetY(Pos), -XMVectorGetZ(Pos));
 	desc.radius = 1.f;
 	desc.height = 2.f;

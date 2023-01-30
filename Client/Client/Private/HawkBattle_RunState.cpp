@@ -8,13 +8,13 @@
 #include "HawkBattle_GrabStartState.h"
 #include "HawkBattle_RevolveState.h"
 #include "HawkBattle_PeckState.h"
-
+#include "HawkBattle_Flying_BackState.h"
 using namespace Hawk;
 
-CBattle_RunState::CBattle_RunState(CHawk* pHawk)
+CBattle_RunState::CBattle_RunState(CHawk* pHawk, STATE_ID ePreBattleState)
 {
-	m_pOwner = pHawk;
-	
+	m_pOwner          = pHawk;
+	m_ePreBattleState = ePreBattleState;
 }
 
 CHawkState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
@@ -27,10 +27,19 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 {
 	m_fTarget_Distance = Find_BattleTarget();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	m_pOwner->Check_Navigation();
+	
+	if (!m_bIsAnimationFinished)
+	{
+		/*_float fTranslationLength, fRotation;
 
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &fRotation);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotation, m_pOwner->Get_Navigation());*/
+
+		m_pOwner->Check_Navigation();
+	}
 	return nullptr;
 }
 
@@ -49,17 +58,21 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 		
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.1f );
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 	}
 	else
 	{
-		switch (m_iRand)
+		switch (m_ePreBattleState)
 		{
-		case 0:
+
+		case CHawkState::STATE_ID::STATE_DASH:
 			return new CBattle_PeckState(m_pOwner);
+
+		case CHawkState::STATE_ID::STATE_PECK:
+			return new CBattle_Flying_BackState(m_pOwner);
 			break;
 
-
+			
 		default:
 			break;
 		}
@@ -107,7 +120,6 @@ void CBattle_RunState::Enter()
 
 void CBattle_RunState::Exit()
 {
-	m_fIdleMoveTimer = 0.f;
-	m_fIdleAttackTimer = 0.f;
+
 	
 }

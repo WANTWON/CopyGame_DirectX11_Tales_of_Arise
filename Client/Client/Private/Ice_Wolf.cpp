@@ -50,11 +50,13 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
+
 	m_tStats.m_fMaxHp = 3.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
 	m_tStats.m_fRunSpeed = 5.f;
+
 
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
@@ -146,11 +148,11 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 		m_bDoneChangeState = true;
 	}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	{
-		CIceWolfState* pState = new CAttack_Elemental_Charge(this, CIceWolfState::STATE_ID::STATE_CHARGE_END);
-		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	//{
+	//	CIceWolfState* pState = new CAttack_Elemental_Charge(this, CIceWolfState::STATE_ID::STATE_CHARGE_END);
+	//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+	//}
 	
 
 	__super::Tick(fTimeDelta);
@@ -245,7 +247,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 		
 		
-		return 0.f;
+		return 0;
 	}
 	else
 	{

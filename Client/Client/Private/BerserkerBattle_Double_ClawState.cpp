@@ -21,10 +21,21 @@ CBerserkerState * CBattle_Double_ClawState::AI_Behaviour(_float fTimeDelta)
 
 CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 {
-	Find_BattleTarget();
+	//Find_BattleTarget();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 	return nullptr;
 }
 
@@ -35,14 +46,8 @@ CBerserkerState * CBattle_Double_ClawState::LateTick(_float fTimeDelta)
 	{	
 		return new CBattle_WalkState(m_pOwner);
 	}
-	else
-	{
-		/*_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());*/
-
-		m_pOwner->Check_Navigation();
-	}
+	
+	
 		
 	return nullptr;
 }

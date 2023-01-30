@@ -48,21 +48,21 @@ int CHPbar::Tick(_float fTimeDelta)
 	{
 	case 0:
 		//if(m_bforMainPlayer)
-		m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
-		m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iMaxHp;
+		m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
+		m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp;
 		break;
 
 	case 1:
 		if (m_bforMainPlayer)
 		{
-			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
-			m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iMaxHp;
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp;
 		}
 
 		else
 		{
-			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_Info().iCurrentHp;
-			m_fmaxhp = CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_Info().iMaxHp;
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_Info().fCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_AIPlayers()[0]->Get_Info().fMaxHp;
 		}
 
 		break;
@@ -70,14 +70,14 @@ int CHPbar::Tick(_float fTimeDelta)
 	case 2:
 		if (m_bforMainPlayer)
 		{
-			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
-			m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iMaxHp;
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp;
 		}
 
 		else
 		{
-			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_Info().iCurrentHp;
-			m_fmaxhp = CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_Info().iMaxHp;
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_Info().fCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_AIPlayers()[1]->Get_Info().fMaxHp;
 		}
 
 		break;
@@ -85,14 +85,14 @@ int CHPbar::Tick(_float fTimeDelta)
 	case 3:
 		if (m_bforMainPlayer)
 		{
-			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iCurrentHp;
-			m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().iMaxHp;
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp;
 		}
 
 		else
 		{
-			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_Info().iCurrentHp;
-			m_fmaxhp = CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_Info().iMaxHp;
+			m_fcurrenthp = CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_Info().fCurrentHp;
+			m_fmaxhp = CPlayerManager::Get_Instance()->Get_AIPlayers()[2]->Get_Info().fMaxHp;
 		}
 
 		break;

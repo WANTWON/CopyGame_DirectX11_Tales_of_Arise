@@ -1,5 +1,3 @@
-
-
 sampler LinearSampler = sampler_state
 {
 	Filter = MIN_MAG_MIP_LINEAR;

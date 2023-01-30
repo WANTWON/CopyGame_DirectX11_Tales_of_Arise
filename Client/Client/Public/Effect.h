@@ -79,6 +79,8 @@ protected:
 	vector<_float3> m_SizeCurves;
 	vector<_float3> m_AlphaCurves;
 
+	SHADER_EFFECT m_eShaderEffectPass = SHADER_EFFECT::SHADER_END;
+
 public:
 	virtual void Free() override;
 };

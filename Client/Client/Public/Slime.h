@@ -108,6 +108,9 @@ private:
 private:
 	class CSlimeState*  m_pSlimeState = nullptr;
 
+private:
+	_bool   m_bDoneChangeState = false;
+
 public:
 	static CSlime* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

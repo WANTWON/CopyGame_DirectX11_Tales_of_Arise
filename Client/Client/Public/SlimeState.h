@@ -9,6 +9,16 @@ BEGIN(Client)
 class CSlimeState
 {
 public:
+	enum FIELD_STATE_ID
+	{
+		FIELD_STATE_IDLE,
+		STATE_WALK,
+		STATE_TURN_R,
+		STATE_MAGICEMIT,
+		STATE_CHASE,
+		STATE_ADVENT,
+	};
+
 	enum STATE_ID
 	{
 		STATE_IDLE,

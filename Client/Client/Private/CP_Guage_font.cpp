@@ -37,7 +37,7 @@ HRESULT CCP_Guage_font::Initialize(void * pArg)
 		m_fPosition.y = 135;
 	}
 
-	
+
 
 	m_fAlpha = 0;
 
@@ -78,13 +78,13 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 		m_bsizedown = true;*/
 		/*m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);*/
-		//	m_bfadein = true;
-		//	m_fAlpha = 1;
+		//   m_bfadein = true;
+		//   m_fAlpha = 1;
 	}
 
 
 	//if (m_bsizedown)
-	//	sizedown();
+	//   sizedown();
 
 
 	switch (m_iIndex)
@@ -97,7 +97,7 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 		}
 		else
 		{
-		
+
 			m_itexnum = m_iCurrentcp / 100;
 			m_bRender = true;
 			break;
@@ -112,7 +112,7 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 		}
 		else
 		{
-		
+
 			m_itexnum = ((m_iCurrentcp % 100) / 10);
 			m_bRender = true;
 			break;
@@ -125,7 +125,7 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 		}
 		else
 		{
-		
+
 			m_itexnum = m_iCurrentcp % 10;
 			m_bRender = true;
 			break;
@@ -175,7 +175,7 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 
 
 	/*if (m_fSize.x <= 40.f || m_fSize.y <= 60.f)
-		m_bsizedown = false;*/
+	m_bsizedown = false;*/
 	/*m_fSize.x = 28.f;
 	m_fSize.y = 32.f;*/
 	if (m_iIndex < 3)
@@ -193,12 +193,12 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 		m_fPosition.x = 1070.f + (m_iIndex * 13);
 		m_fPosition.y = 300.f;
 	}
-	
+
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	/*if (m_iCurrenthit == 0)
-		m_itexnum = 0;*/
+	m_itexnum = 0;*/
 
 
 	return OBJ_NOEVENT;
@@ -212,7 +212,7 @@ void CCP_Guage_font::Late_Tick(_float fTimeDelta)
 		return;
 
 
-	/*	switch (m_iIndex)
+	/*   switch (m_iIndex)
 	{
 	case 0:
 
@@ -292,7 +292,7 @@ HRESULT CCP_Guage_font::SetUp_ShaderResources()
 
 CCP_Guage_font * CCP_Guage_font::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CCP_Guage_font*	pInstance = new CCP_Guage_font(pDevice, pContext);
+	CCP_Guage_font*   pInstance = new CCP_Guage_font(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -306,7 +306,7 @@ CCP_Guage_font * CCP_Guage_font::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 
 CGameObject * CCP_Guage_font::Clone(void * pArg)
 {
-	CCP_Guage_font*	pInstance = new CCP_Guage_font(*this);
+	CCP_Guage_font*   pInstance = new CCP_Guage_font(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

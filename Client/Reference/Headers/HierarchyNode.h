@@ -45,7 +45,7 @@ public:
 	CHierarchyNode* Get_Parent() { return m_pParent; }
 
 	// 루트노드 위한 함수들 - 이동 행렬, 회전 행렬 반환
-	_float Get_MoveTransformationLength(void) { return m_fMoveTransformationLength; }
+	_vector Get_Translation(void) { return m_vecTranslation; }
 	_float Get_RotationRadian(void) { return m_fRotationRadian; }
 
 public:
@@ -69,9 +69,10 @@ private:
 	_float4x4			m_CombinedTransformationMatrix;
 
 	/* 이동, 회전값 살리기 위한 매트릭스 */
-	_float m_fMoveTransformationLength;
+	_vector m_vecTranslation;
 	_float m_fRotationRadian;
 	_matrix m_PreTransforamtionMatrix;
+	_matrix m_FirstTransformMatrix;
 
 private:
 	/* 루트 본 이동 값 제거, 루트 본 이동, 회전 행렬 저장 함수 */
