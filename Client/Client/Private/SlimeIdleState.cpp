@@ -6,6 +6,8 @@
 #include "SlimeBattle_RunState.h"
 #include "SlimeChaseState.h"
 #include "SlimeTurnR_State.h"
+#include "SlimeMagicEmitState.h"
+#include "SlimeAdventState.h"
 
 using namespace Slime;
 
@@ -54,16 +56,26 @@ CSlimeState * CIdleState::LateTick(_float fTimeDelta)
 			case CSlimeState::FIELD_STATE_ID::FIELD_STATE_IDLE:
 				return new CWalkState(m_pOwner);
 
-			case CSlimeState::FIELD_STATE_ID::STATE_WALK:
-				return new CTurnR_State(m_pOwner);
-				break;
+			//case CSlimeState::FIELD_STATE_ID::STATE_WALK:
+			//	return new CTurnR_State(m_pOwner);
+			//	break;
 
 			case CSlimeState::FIELD_STATE_ID::STATE_TURN_R:
+				return new CMagicEmitState(m_pOwner);
+				break;
+
+			case CSlimeState::FIELD_STATE_ID::STATE_MAGICEMIT:
 				return new CWalkState(m_pOwner);
 				break;
 
-			//case CSlimeState::FIELD_STATE_ID::STATE_BRAVE:
-			//	return new CWalkState(m_pOwner);
+			case CSlimeState::FIELD_STATE_ID::STATE_CHASE:
+				return new CMagicEmitState(m_pOwner);
+				break;
+
+			case CSlimeState::FIELD_STATE_ID::STATE_ADVENT:
+				return new CWalkState(m_pOwner);
+				break;
+
 			default:
 				break;
 			}
@@ -81,7 +93,7 @@ void CIdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::SYMBOL_DETECT_IDLE);
 }
 
 void CIdleState::Exit()

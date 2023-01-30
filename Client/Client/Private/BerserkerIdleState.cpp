@@ -48,23 +48,25 @@ CBerserkerState * CIdleState::LateTick(_float fTimeDelta)
 
 	else
 	{
-		if (m_fIdleMoveTimer > 1.5f)
+		if (m_fIdleMoveTimer > 3.f)
 		{
 			switch (m_ePreState_Id)
 			{
 			case CBerserkerState::FIELD_STATE_ID::FIELD_STATE_IDLE:
-				return new CWalkState(m_pOwner);
-
-			//case CBerserkerState::FIELD_STATE_ID::STATE_WALK:
-			//	return new CTrunR_State(m_pOwner);
-			//	break;
-
-			case CBerserkerState::FIELD_STATE_ID::STATE_TURN_R:
-				return new CHowLing_State(m_pOwner);
+				return new CWalkState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_HOWLING);
 				break;
 
-			//case CBerserkerState::FIELD_STATE_ID::STATE_CHASE:
-			//	return new CWalkState(m_pOwner);
+			case CBerserkerState::FIELD_STATE_ID::STATE_TURN_R:
+				return new CWalkState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_TURN_R);
+				break;
+
+			case CBerserkerState::FIELD_STATE_ID::STATE_HOWLING:
+				return new CWalkState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_HOWLING);
+				break;
+
+			case CBerserkerState::FIELD_STATE_ID::STATE_CHASE:
+				return new CHowLing_State(m_pOwner);
+				break;
 			default:
 				break;
 			}

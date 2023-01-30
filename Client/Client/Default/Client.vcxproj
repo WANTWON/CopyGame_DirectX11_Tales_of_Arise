@@ -270,6 +270,7 @@
     <ClInclude Include="..\Public\Sion.h" />
     <ClInclude Include="..\Public\PlayerSkillState.h" />
     <ClInclude Include="..\Public\Slime.h" />
+    <ClInclude Include="..\Public\SlimeAdventState.h" />
     <ClInclude Include="..\Public\SlimeBattle_Atk_TackleState.h" />
     <ClInclude Include="..\Public\SlimeBattle_DeadState.h" />
     <ClInclude Include="..\Public\SlimeBattle_IdleState.h" />
@@ -279,6 +280,7 @@
     <ClInclude Include="..\Public\SlimeBattle_TakeDamage_State.h" />
     <ClInclude Include="..\Public\SlimeChaseState.h" />
     <ClInclude Include="..\Public\SlimeIdleState.h" />
+    <ClInclude Include="..\Public\SlimeMagicEmitState.h" />
     <ClInclude Include="..\Public\SlimeState.h" />
     <ClInclude Include="..\Public\SlimeTurnR_State.h" />
     <ClInclude Include="..\Public\SlimeWalkState.h" />
@@ -418,6 +420,7 @@
     <ClCompile Include="..\Private\Sion.cpp" />
     <ClCompile Include="..\Private\PlayerSkillState.cpp" />
     <ClCompile Include="..\Private\Slime.cpp" />
+    <ClCompile Include="..\Private\SlimeAdventState.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_DeadState.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_IdleState.cpp" />
@@ -427,6 +430,7 @@
     <ClCompile Include="..\Private\SlimeBattle_RunState.cpp" />
     <ClCompile Include="..\Private\SlimeChaseState.cpp" />
     <ClCompile Include="..\Private\SlimeIdleState.cpp" />
+    <ClCompile Include="..\Private\SlimeMagicEmitState.cpp" />
     <ClCompile Include="..\Private\SlimeTurnR_State.cpp" />
     <ClCompile Include="..\Private\SlimeWalkState.cpp" />
     <ClCompile Include="..\Private\TreasureBox.cpp" />

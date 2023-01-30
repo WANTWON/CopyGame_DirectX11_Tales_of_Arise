@@ -26,19 +26,8 @@ CBerserkerState * CTurnR_State::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
 	}
-
-
-
-
 
 	return nullptr;
 }
@@ -51,9 +40,20 @@ CBerserkerState * CTurnR_State::LateTick(_float fTimeDelta)
 
 	m_fWalkMoveTimer += fTimeDelta;
 
-	if (m_fWalkMoveTimer > 1.5f)
+	if (m_fWalkMoveTimer > 1.f)
 		return new CIdleState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_TURN_R);
 
+	else
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 	return nullptr;
 }
 
@@ -66,6 +66,5 @@ void CTurnR_State::Enter()
 
 void CTurnR_State::Exit()
 {
-	m_fIdleMoveTimer = 0.f;
-	m_fIdleAttackTimer = 0.f;
+
 }

@@ -6,6 +6,12 @@
 #include "BerserkerBattle_HowLingState.h"
 #include "BerserkerBattle_Damage_LargeB_State.h"
 #include "BerserkerBattle_DeadState.h"
+#include "BerserkerBattle_Double_ClawState.h"
+#include "BerserkerBattle_Double_CrowState.h"
+#include "BerserkerBattle_PouncingState.h"
+#include "BerserkerBattle_Quadruple_ClawState.h"
+#include "BerserkerBattle_DashStartState.h"
+#include "BerserkerBattle_Shock_WaveState.h"
 
 using namespace Berserker;
 
@@ -47,7 +53,7 @@ HRESULT CBerserker::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CGameInstance);
 
 
-	m_tStats.m_fMaxHp = 3;
+	m_tStats.m_fMaxHp = 1;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 
@@ -73,7 +79,7 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 	if(false == m_bOnAngry)
 		TransformDesc.fSpeedPerSec = 2.5f;
 	else
-		TransformDesc.fSpeedPerSec = 60.5f;
+		TransformDesc.fSpeedPerSec = 8.5f;
 
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
@@ -101,6 +107,16 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
+
+	/* For.Com_Obb*/
+	CCollider::COLLIDERDESC ObbColliderDesc;
+	ZeroMemory(&ObbColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ObbColliderDesc.vScale = _float3(7.f, 3.5f, 3.f);
+	ObbColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ObbColliderDesc)))
+		return E_FAIL;
+
+
 	/* For.Com_Navigation */
 	CNavigation::NAVIDESC NaviDesc;
 	ZeroMemory(&NaviDesc, sizeof NaviDesc);
@@ -120,6 +136,63 @@ int CBerserker::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	if (true == m_bBattleMode && false == m_bDoneChangeState)
+	{
+		CBerserkerState* pState = new CBattle_IdleState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+		m_bDoneChangeState = true;
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	{
+		CBerserkerState* pState = new CBattle_Double_CrowState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	{
+		CBerserkerState* pState = new CBattle_Double_ClawState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_H))
+	{
+		CBerserkerState* pState = new CBattle_Double_CrowState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	{
+		CBerserkerState* pState = new CBattle_Double_ClawState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_H))
+	{
+		CBerserkerState* pState = new CBattle_Quadruple_ClawState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	{
+		CBerserkerState* pState = new CBattle_DashStartState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_P))
+	{
+		CBerserkerState* pState = new CBattle_PouncingState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
+	{
+		CBerserkerState* pState = new CBattle_Shock_WaveState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
+
+	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	__super::Tick(fTimeDelta);
 	Tick_State(fTimeDelta);
 

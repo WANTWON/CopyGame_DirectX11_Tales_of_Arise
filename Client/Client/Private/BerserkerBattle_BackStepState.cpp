@@ -26,63 +26,30 @@ CBerserkerState * CBattle_BackStepState::Tick(_float fTimeDelta)
 {
 	Find_BattleTarget();
 
-	
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	if (false == m_bTargetSetting)
+	if (!m_bIsAnimationFinished)
 	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+		_vector vecTranslation;
+		_float fRotationRadian;
 
-		m_bTargetSetting = true;
-	}
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-	srand((_uint)time(NULL));
-	m_iRand = rand() % 1;
-	
-
-	if (m_bIsAnimationFinished)
-	{
-		switch (m_iRand)
-		{
-		case 0:
-			return new CBattle_RunState(m_pOwner, STATE_QUADRUPLE);
-			break;
-		
-		default:
-			break;
-		}
-	}
-
-	else
-	{
-	//	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-
-	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
-
 	}
 
 	
-
-		
-	
-
-
+	else if (m_bIsAnimationFinished)
+	{
+		return new CBattle_RunState(m_pOwner, STATE_QUADRUPLE);
+	}
 	return nullptr;
 }
 
 CBerserkerState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 {
-	
-	
-	
-	
-	
-
-	
 
 	return nullptr;
 }

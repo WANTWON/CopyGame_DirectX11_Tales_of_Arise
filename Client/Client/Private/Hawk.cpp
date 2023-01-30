@@ -132,23 +132,23 @@ int CHawk::Tick(_float fTimeDelta)
 		m_bDoneChangeState = true;
 	}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	{
-		CHawkState* pState = new CBattle_DashState(this);
-		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	//{
+	//	CHawkState* pState = new CBattle_DashState(this);
+	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	//}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	{
-		CHawkState* pState = new CBattle_ChargeState(this);
-		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	//{
+	//	CHawkState* pState = new CBattle_ChargeState(this);
+	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	//}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
-	{
-		CHawkState* pState = new CBattle_Flying_BackState(this);
-		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	//{
+	//	CHawkState* pState = new CBattle_Flying_BackState(this);
+	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	//}
 
 
 	__super::Tick(fTimeDelta);

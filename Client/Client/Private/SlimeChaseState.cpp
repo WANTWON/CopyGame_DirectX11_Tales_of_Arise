@@ -26,19 +26,9 @@ CSlimeState * CChaseState::Tick(_float fTimeDelta)
 
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	
 
-	if (!m_bIsAnimationFinished)
-	{
-		_vector vecTranslation;
-		_float fRotationRadian;
-
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
-	}
-
+	//m_pOwner->Check_Navigation();
 
 	return nullptr;
 }
@@ -53,7 +43,7 @@ CSlimeState * CChaseState::LateTick(_float fTimeDelta)
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 
 	if (m_fTarget_Distance >= 8.f)
-		//return new CIdleState(m_pOwner);
+		return new CIdleState(m_pOwner, CSlimeState::FIELD_STATE_ID::STATE_CHASE);
 
 
 	return nullptr;
@@ -63,7 +53,7 @@ void CChaseState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_MOVE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::MOVE_WALK_F);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::MOVE_RUN);
 
 
 }

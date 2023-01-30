@@ -5,11 +5,13 @@
 #include "GameInstance.h"
 #include "BerserkerChaseState.h"
 #include "BerserkerTurnR_State.h"
+#include "BerserkerHowLing_State.h"
 using namespace Berserker;
 
-CWalkState::CWalkState(CBerserker* pIceWolf)
+CWalkState::CWalkState(CBerserker* pBerserker, FIELD_STATE_ID ePreState)
 {
-	m_pOwner = pIceWolf;
+	m_pOwner = pBerserker;
+	m_ePreState_Id = ePreState;
 }
 
 CBerserkerState * CWalkState::AI_Behaviour(_float fTimeDelta)
@@ -24,19 +26,9 @@ CBerserkerState * CWalkState::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	if (!m_bIsAnimationFinished)
-	{
-		_vector vecTranslation;
-		_float fRotationRadian;
-
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
-	}
 
 
+	m_pOwner->Check_Navigation();
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f);
 
 	
@@ -53,8 +45,18 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 
 	m_fWalkMoveTimer += fTimeDelta;
 
-	if (m_fWalkMoveTimer > 1.5f)
-		return new CTurnR_State(m_pOwner);
+	if (m_fWalkMoveTimer > 3.f)
+		switch (m_ePreState_Id)
+		{
+		case CBerserkerState::FIELD_STATE_ID::STATE_TURN_R:
+			return new CHowLing_State(m_pOwner);
+
+		case CBerserkerState::FIELD_STATE_ID::STATE_HOWLING:
+			return new CTurnR_State(m_pOwner);
+
+		default:
+			break;
+		}
 
 	return nullptr;
 }

@@ -36,8 +36,8 @@ CBerserkerState * CHowLing_State::LateTick(_float fTimeDelta)
 
 	m_fWalkMoveTimer += fTimeDelta;
 
-	/*if (m_fWalkMoveTimer > 1.5f)
-		return new CIdleState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_HOWLING);*/
+	if (m_bIsAnimationFinished)
+		return new CIdleState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_HOWLING);
 
 	return nullptr;
 }

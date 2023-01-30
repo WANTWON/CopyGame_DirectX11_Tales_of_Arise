@@ -41,14 +41,6 @@ CBerserkerState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 CBerserkerState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 {
 	
-
-	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-
-
-	m_iRand = rand() % 3;
-
-
 	if(m_bIsAnimationFinished)
 	{
 		switch (m_eEmotion)
@@ -68,11 +60,17 @@ CBerserkerState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 
 	else
 	{
-//		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
 
-//		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Check_Navigation();
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+			//m_pOwner->Check_Navigation();
+		}
 	}
 
 
@@ -82,8 +80,8 @@ CBerserkerState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 
 	if (pBerserker_Stats.m_fCurrentHp <= 3 && false == m_bAngry)
 	{
-			
-			return new CBattle_HowLingState(m_pOwner);
+		m_bAngry = true;
+		return new CBattle_HowLingState(m_pOwner);
 	}
 	return nullptr;
 }

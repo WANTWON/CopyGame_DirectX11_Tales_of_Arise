@@ -711,6 +711,12 @@
     <ClInclude Include="..\Public\BerserkerHowLing_State.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SlimeMagicEmitState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SlimeAdventState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1138,6 +1144,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeMagicEmitState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SlimeAdventState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
