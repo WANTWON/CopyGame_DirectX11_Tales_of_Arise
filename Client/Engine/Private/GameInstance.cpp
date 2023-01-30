@@ -16,7 +16,9 @@ CGameInstance::CGameInstance()
 	, m_pTarget_Manager(CTarget_Manager::Get_Instance())
 	, m_pSound_Manager(CSound_Manager::Get_Instance())
 	, m_pPicking(CPicking::Get_Instance())
+	, m_pPhysX(CPhysX::Get_Instance())
 {	
+	Safe_AddRef(m_pPhysX);
 	Safe_AddRef(m_pPicking);
 	Safe_AddRef(m_pSound_Manager);
 	Safe_AddRef(m_pTarget_Manager);
@@ -62,6 +64,10 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 	if (FAILED(m_pComponent_Manager->Reserve_Container(iNumLevels)))
 		return E_FAIL;
 
+	///* 피직스 초기화 한다. */
+	if (FAILED(m_pPhysX->Initialize(GraphicDesc.hWnd, GraphicDesc.iWinSizeX, GraphicDesc.iWinSizeY, *ppDevice, *ppContext)))
+		return E_FAIL;
+
 	m_pFrustum->Initialize();
 		
 
@@ -78,6 +84,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pLevel_Manager->Tick(fTimeDelta);
 	m_pObject_Manager->Tick(fTimeDelta);
+
+	m_pPhysX->Tick(fTimeDelta);
 
 	m_pPipeLine->Update();
 	m_pPicking->Tick();
@@ -594,6 +602,8 @@ void CGameInstance::Release_Engine()
 {
 	CGameInstance::Get_Instance()->Destroy_Instance();
 
+	CPhysX::Get_Instance()->Destroy_Instance();
+
 	CLevel_Manager::Get_Instance()->Destroy_Instance();
 
 	CObject_Manager::Get_Instance()->Destroy_Instance();
@@ -623,6 +633,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {	
+	Safe_Release(m_pPhysX);
 	Safe_Release(m_pPicking);
 	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pTarget_Manager);
