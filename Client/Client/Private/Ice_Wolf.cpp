@@ -7,6 +7,7 @@
 #include "IceWolfBattle_DeadState.h"
 #include "IceWolfAttackNormalState.h"
 #include "IceWolfBattle_SomerSaultState.h"
+#include "IceWolfAttack_Elemental_Charge.h"
 
 using namespace IceWolf;
 
@@ -34,9 +35,10 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CIceWolfState* pState = new CBattle_IdleState(this);
+
+		CIceWolfState* pState = new CIdleState(this, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE, CIceWolfState::FIELD_STATE_ID::STATE_TURN_L);
+		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 	
-	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 
 	///* Set Binary */
 	//CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -48,9 +50,12 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
-	m_tInfo.fMaxHp = 1;
-	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
-	m_tInfo.iDamage = 10;
+
+	m_tStats.m_fMaxHp = 3.f;
+	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
+	m_tStats.m_fAttackPower = 10.f;
+	m_tStats.m_fWalkSpeed = 0.05f;
+	m_tStats.m_fRunSpeed = 5.f;
 
 
 	_vector vPosition = *(_vector*)pArg;
@@ -63,6 +68,8 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 HRESULT CIce_Wolf::Ready_Components(void * pArg)
 {
+	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
+
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
@@ -71,7 +78,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
-	TransformDesc.fSpeedPerSec = 3.f;
+	TransformDesc.fSpeedPerSec = 6.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
@@ -89,8 +96,16 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
 		return E_FAIL;
 
-	/* For.Com_SPHERE */
+	/* For.Com_OBB */
 	CCollider::COLLIDERDESC ColliderDesc;
+	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ColliderDesc.vScale = _float3(7.f, 3.f, 3.f);
+	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
+		return E_FAIL;
+
+	/* For.Com_SPHERE */
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
@@ -98,11 +113,21 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
-	/* For.Com_Navigation */
-	CNavigation::NAVIDESC NaviDesc;
-	ZeroMemory(&NaviDesc, sizeof NaviDesc);
-	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
-		return E_FAIL;
+
+	switch (iLevel)
+	{
+	case Client::LEVEL_SNOWFIELD:
+		/* For.Com_Navigation */
+		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom)))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_BATTLE:
+		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom)))
+			return E_FAIL;
+		break;
+	default:
+		break;
+	}
 
 
 
@@ -116,14 +141,27 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	if (true == m_bBattleMode && false == m_bDoneChangeState)
+	{
+		CIceWolfState* pState = new CBattle_IdleState(this);
+		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+		m_bDoneChangeState = true;
+	}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	//{
+	//	CIceWolfState* pState = new CAttack_Elemental_Charge(this, CIceWolfState::STATE_ID::STATE_CHARGE_END);
+	//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+	//}
+	
+
 	__super::Tick(fTimeDelta);
 	AI_Behaviour(fTimeDelta);
 
 	Tick_State(fTimeDelta);
-	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-		
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return OBJ_NOEVENT;
 }
@@ -173,8 +211,6 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	case ANIM_MOVE_IDLE:
 	case ANIM_MOVE_RUN:
 	case ANIM_MOVE_WALK_F:
-		
-	
 	
 		return true;
 
@@ -183,14 +219,13 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	case ANIM_TURN_R:
 	case ANIM_ATTACK_NORMAL:
 	case ANIM_ATTACK_ELEMENTAL_CHARGE_START:
-	
+	case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:
 	case ANIM_ATTACK_ELEMENTAL_CHARGE_END:
 	case ANIM_SYMBOL_DETECT_IDLE:
 	case ANIM_DAMAGE_AIR_LARGE_B:
 	case ANIM_DEAD:
 	case ANIM_ATTACK_STEP_BACK:
 	case ANIM_ATTACK_SOMERSAULT_END:
-	case ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP:
 	case ANIM_ATTACK_BITE:
 		return false;
 	}
@@ -198,7 +233,7 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_float CIce_Wolf::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
@@ -212,7 +247,7 @@ _float CIce_Wolf::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 		
 		
-		return 0.f;
+		return 0;
 	}
 	else
 	{

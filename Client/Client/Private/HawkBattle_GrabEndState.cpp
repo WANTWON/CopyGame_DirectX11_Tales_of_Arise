@@ -18,11 +18,7 @@ CBattle_GrabEndState::CBattle_GrabEndState(CHawk* pHawk)
 
 CHawkState * CBattle_GrabEndState::AI_Behaviour(_float fTimeDelta)
 {
-	m_fTarget_Distance = Find_BattleTarget();
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-	Find_BattleTarget();
+
 
 	return nullptr;
 }
@@ -34,18 +30,17 @@ CHawkState * CBattle_GrabEndState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 			
 
-	if (m_bIsAnimationFinished)
-	{
-	return new CBattle_RunState(m_pOwner);
-	}
+	//if (m_bIsAnimationFinished)
+	//	//return new CBattle_RunState(m_pOwner);
+	//
 
-	else
-	{
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
-		m_pOwner->Check_Navigation();
+	//else
+	//{
+	//	/*_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());*/
+	//	m_pOwner->Check_Navigation();
 
-	}
+	//}
 
 	return nullptr;
 }
@@ -80,7 +75,6 @@ void CBattle_GrabEndState::Enter()
 
 void CBattle_GrabEndState::Exit()
 {
-	m_fIdleMoveTimer = 0.f;
-	m_fIdleAttackTimer = 0.f;
+
 
 }

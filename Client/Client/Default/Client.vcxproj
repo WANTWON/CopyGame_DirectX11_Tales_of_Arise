@@ -114,7 +114,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../Reference/Librarys/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;DirectXTKd.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -130,14 +130,16 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Engine.lib;DirectXTK.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -150,7 +152,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../Public/;../../Reference/Headers/</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -158,7 +160,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../Reference/Librarys/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;DirectXTKd.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -172,7 +174,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_FireBallState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_Multiple_FireState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_PouncingState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_Quadruple_ClawState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_RunState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_WalkState.h" />
+    <ClInclude Include="..\Public\BerserkerChaseState.h" />
+    <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
+    <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
+    <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
+    <ClInclude Include="..\Public\HawkChaseState.h" />
+    <ClInclude Include="..\Public\HawkBraveState.h" />
+    <ClInclude Include="..\Public\HawkSitOnState.h" />
+    <ClInclude Include="..\Public\HawkTurnR_State.h" />
+    <ClInclude Include="..\Public\HawkUpFlyState.h" />
+    <ClInclude Include="..\Public\HawkWalkState.h" />
     <ClInclude Include="..\Public\IceWolfAttackBiteState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_BackStepState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_RunState.h" />
@@ -244,15 +263,26 @@
     <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
+    <ClInclude Include="..\Public\PlayerJumpState.h" />
     <ClInclude Include="..\Public\PlayerManager.h" />
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerRunState.h" />
     <ClInclude Include="..\Public\Sion.h" />
+    <ClInclude Include="..\Public\PlayerSkillState.h" />
     <ClInclude Include="..\Public\Slime.h" />
+    <ClInclude Include="..\Public\SlimeAdventState.h" />
     <ClInclude Include="..\Public\SlimeBattle_Atk_TackleState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_DeadState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_IdleState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_Poision_RainState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_Poision_ShotState.h" />
     <ClInclude Include="..\Public\SlimeBattle_RunState.h" />
+    <ClInclude Include="..\Public\SlimeBattle_TakeDamage_State.h" />
+    <ClInclude Include="..\Public\SlimeChaseState.h" />
     <ClInclude Include="..\Public\SlimeIdleState.h" />
+    <ClInclude Include="..\Public\SlimeMagicEmitState.h" />
     <ClInclude Include="..\Public\SlimeState.h" />
+    <ClInclude Include="..\Public\SlimeTurnR_State.h" />
     <ClInclude Include="..\Public\SlimeWalkState.h" />
     <ClInclude Include="..\Public\TreasureBox.h" />
     <ClInclude Include="..\Public\UI_Changebutton.h" />
@@ -295,14 +325,30 @@
     <ClInclude Include="..\public\Water.h" />
     <ClInclude Include="..\Public\UI_Skillbutton.h" />
     <ClInclude Include="..\Public\Weapon.h" />
-    <ClInclude Include="PlayerAttack2NormalState.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_FireBallState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_Multiple_FireState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_PouncingState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_Quadruple_ClawState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_RunState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_WalkState.cpp" />
+    <ClCompile Include="..\Private\BerserkerChaseState.cpp" />
+    <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
+    <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
+    <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
+    <ClCompile Include="..\Private\HawkChaseState.cpp" />
+    <ClCompile Include="..\Private\HawkBraveState.cpp" />
+    <ClCompile Include="..\Private\HawkSitOnState.cpp" />
+    <ClCompile Include="..\Private\HawkTurnR_State.cpp" />
+    <ClCompile Include="..\Private\HawkUpFlyState.cpp" />
+    <ClCompile Include="..\Private\HawkWalkState.cpp" />
     <ClCompile Include="..\Private\IceWolfAttackBiteState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_RunState.cpp" />
@@ -370,13 +416,24 @@
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
+    <ClCompile Include="..\Private\PlayerJumpState.cpp" />
     <ClCompile Include="..\Private\PlayerManager.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />
     <ClCompile Include="..\Private\Sion.cpp" />
+    <ClCompile Include="..\Private\PlayerSkillState.cpp" />
     <ClCompile Include="..\Private\Slime.cpp" />
+    <ClCompile Include="..\Private\SlimeAdventState.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_DeadState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_IdleState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_Poision_RainState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_Poision_ShotState.cpp" />
+    <ClCompile Include="..\Private\SlimeBattle_TakeDamage_State.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_RunState.cpp" />
+    <ClCompile Include="..\Private\SlimeChaseState.cpp" />
     <ClCompile Include="..\Private\SlimeIdleState.cpp" />
+    <ClCompile Include="..\Private\SlimeMagicEmitState.cpp" />
+    <ClCompile Include="..\Private\SlimeTurnR_State.cpp" />
     <ClCompile Include="..\Private\SlimeWalkState.cpp" />
     <ClCompile Include="..\Private\TreasureBox.cpp" />
     <ClCompile Include="..\Private\UI_Changebutton.cpp" />
@@ -418,7 +475,6 @@
     <ClCompile Include="..\private\Water.cpp" />
     <ClCompile Include="..\Private\UI_Skillbutton.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
-    <ClCompile Include="PlayerAttack2NormalState.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

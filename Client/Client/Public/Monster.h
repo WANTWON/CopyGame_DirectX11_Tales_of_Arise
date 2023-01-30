@@ -51,8 +51,9 @@ protected:
 	virtual HRESULT SetUp_ShaderResources();
 	virtual HRESULT SetUp_ShaderID();
 	virtual HRESULT Drop_Items();
-	virtual _float Take_Damage(float fDamage, CBaseObj* DamageCauser);
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser);
 	virtual void Compute_CurrentIndex();
+	
 
 protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr)	PURE;
@@ -73,7 +74,7 @@ public: // Get & Set
 	_bool		Get_BattleMode = false;
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
 	void		Set_Dissolve() { m_bDissolve = true; }
-	
+	void		Set_BattleMode() { m_bBattleMode = true; }
 
 protected:
 	DMG_DIR Calculate_DmgDirection();
@@ -83,7 +84,7 @@ protected:
 	STATS					m_tStats;
 	_float					m_fAttackRadius = 0.5f;
 	_float					m_fAttack_BiteRadius = 5.f;
-	_float					m_fAggroRadius = 15.f;
+	_float					m_fAggroRadius = 8.f;
 	_float					m_fPatrolRadius = 5.f;
 	_float					m_fDistanceToTarget = 0.f;
 	_float					m_fTime_TakeDamageDeltaAcc = 0.f;
@@ -96,7 +97,11 @@ protected:
 	_bool					m_bMove = true;
 	_bool					m_bMakeEffect = false;
 	_bool					m_bTakeDamage = false;
-	
+	_bool					m_bBattleMode = false;
+	_uint					m_eCurLevel = LEVEL_END;
+
+
+
 	//For Move Time
 	DWORD m_dwDeathTime = GetTickCount();
 	DWORD m_dwAttackTime = GetTickCount();

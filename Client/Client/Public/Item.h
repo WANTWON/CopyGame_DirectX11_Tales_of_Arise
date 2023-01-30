@@ -6,13 +6,12 @@ BEGIN(Client)
 class CItem final : public CInteractObject
 {
 public:
-	enum ITEMTYPE { APPLE, JEWEL, MUSHROOM, LETTUCE};
+	enum ITEMTYPE { APPLE, JEWEL, MUSHROOM, LETTUCE, PLANT, SLIMPLANT};
 
 	typedef struct ItemTag
 	{
 		ITEMTYPE etype = APPLE;
-		_vector  vPosition = {0.f,0.f,0.f,1.f};
-		_float3	 fScale = _float3(1.f, 1.f, 1.f);
+		NONANIMDESC ModelDesc;
 	}ITEMDESC;
 
 

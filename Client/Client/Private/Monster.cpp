@@ -83,7 +83,11 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		}
 	}
 
-
+	
+	m_eCurLevel = CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+	
+	if (LEVEL_BATTLE == m_eCurLevel)
+		m_bBattleMode = true;
 	
 	
 
@@ -304,7 +308,7 @@ void CMonster::Make_DeadEffect(CBaseObj * Target)
 }
 
 
-_float CMonster::Take_Damage(float fDamage, CBaseObj * DamageCauser)
+_int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
@@ -315,14 +319,18 @@ _float CMonster::Take_Damage(float fDamage, CBaseObj * DamageCauser)
 	{
 		m_tInfo.fCurrentHp = 0;
 		/*m_bDissolve = true;*/
-		return m_tInfo.fCurrentHp;
+
+		return _float(m_tInfo.iCurrentHp);
+
 	}
 
 
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
 
-	return m_tInfo.fCurrentHp;
+
+	return _float(m_tInfo.iCurrentHp);
+
 }
 
 void CMonster::Compute_CurrentIndex()

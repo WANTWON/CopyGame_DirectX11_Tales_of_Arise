@@ -7,6 +7,8 @@
 #include "IceWolfBattle_WalkState.h"
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfBattle_RunState.h"
+#include "IceWolfBattle_WalkState.h"
+#include "IceWolfAttack_Elemental_Charge.h"
 using namespace IceWolf;
 
 CBattle_BackStepState::CBattle_BackStepState(class CIce_Wolf* pIceWolf)
@@ -36,6 +38,7 @@ CIceWolfState * CBattle_BackStepState::Tick(_float fTimeDelta)
 
 CIceWolfState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 {
+	srand((_uint)time(NULL));
 	m_iRand = rand() % 2;
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -43,33 +46,35 @@ CIceWolfState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 	if (false == m_bTargetSetting)
 	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
+		
 		m_bTargetSetting = true;
 	}
 	
 	if (m_bIsAnimationFinished)
 	{
-		switch (m_iRand)
-		{
-		case 0:
-			return new CBattle_RunState(m_pOwner);
-			break;
+		return new CBattle_RunState(m_pOwner);
 
-		case 1:
-			return new CBattle_SomerSaultState(m_pOwner);
-			break;
+		//switch (m_iRand)
+		//{
+		//case 0:
+		//	
+		//	break;
 
-		default:
-			break;
-		}
+		////case 1:
+		////	return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_LOOP);
+		////	break;
+
+		//default:
+		//	break;
+		//}
 		
 	}
 
 	else
 	{
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+		/*_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());*/
 
 		m_pOwner->Check_Navigation();
 	}
@@ -91,7 +96,7 @@ void CBattle_BackStepState::Enter()
 
 void CBattle_BackStepState::Exit()
 {
-	m_fRedayAttackTimer = 0.f;
+
 	
 }
 

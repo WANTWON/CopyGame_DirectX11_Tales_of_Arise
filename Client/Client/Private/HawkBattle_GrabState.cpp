@@ -10,9 +10,10 @@
 
 using namespace Hawk;
 
-CBattle_GrabState::CBattle_GrabState(CHawk* pHawk)
+CBattle_GrabState::CBattle_GrabState(CHawk* pHawk, STATE_ID pState)
 {
 	m_pOwner = pHawk;
+	m_eGrapType = pState;
 	//m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
@@ -20,14 +21,7 @@ CHawkState * CBattle_GrabState::AI_Behaviour(_float fTimeDelta)
 {
 	
 	m_fTarget_Distance = Find_BattleTarget();
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-
-	if (6 < m_fTarget_Distance)
-	{
-		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-	}
-
+	
 	return nullptr;
 }
 
@@ -35,20 +29,10 @@ CHawkState * CBattle_GrabState::Tick(_float fTimeDelta)
 {
 	AI_Behaviour(fTimeDelta);
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	
-	if (m_bIsAnimationFinished)
-	{
-		return new CBattle_GrabStartState(m_pOwner);
-	}
 
-	else
-	{
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix);
-		m_pOwner->Check_Navigation();
-	}
+
 
 	//if (m_bIsAnimationFinished)
 	//{
@@ -87,35 +71,37 @@ CHawkState * CBattle_GrabState::LateTick(_float fTimeDelta)
 	Find_BattleTarget();
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
+
+
 	////1 . 콜라이더 업데이트를 해준다
 	CCollider* pCollider = m_pOwner->Get_Collider();
 	pCollider->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 	//
 	////2. 충돌체크
 
-	if (m_bIsAnimationFinished)
-	{
+
 		m_bCollision = pCollider->Collision(m_pTarget->Get_Collider());
+	
 		if (m_bCollision)
 			m_iCollisionCount = 1;
 
-		if (1 == m_iCollisionCount)
-		{
-			return new CBattle_GrabStartState(m_pOwner);
-		}
 
-		else
-		{
-			return new CBattle_IdleState(m_pOwner);
-		}
-
+	if (1 == m_iCollisionCount)
+	{
+		return new CBattle_GrabEndState(m_pOwner);
+		
 	}
+
+		
+
 
 	else
 	{
-		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
-		m_pOwner->Check_Navigation();
+
+		return new CBattle_GrabState(m_pOwner, STATE_ID::STATE_GRAB_LOOP);
+		//_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+		//m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+		//m_pOwner->Check_Navigation();
 	}
 
 
@@ -175,8 +161,13 @@ void CBattle_GrabState::Enter()
 
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_START2);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP);
 
+	if (m_eGrapType == STATE_ID::STATE_GRAB_LOOP)
+	{
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_GRAB_LOOP);
+		m_pOwner->Get_Model()->Play_Animation(1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	}
 	////
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 	////
@@ -186,10 +177,5 @@ void CBattle_GrabState::Enter()
 
 void CBattle_GrabState::Exit()
 {
-	m_fIdleMoveTimer = 0.f;
-	m_fIdleAttackTimer = 0.f;
-	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
-	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
-	m_pOwner->Check_Navigation();
+
 }

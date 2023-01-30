@@ -112,7 +112,7 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMo
 
 	SwapChain.SampleDesc.Quality = 0;
 	SwapChain.SampleDesc.Count = 1;
-	SwapChain.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	SwapChain.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
 	SwapChain.BufferCount = 1;
 	SwapChain.OutputWindow = hWnd;	
 	SwapChain.Windowed = eWinMode;
@@ -134,16 +134,13 @@ HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 	if (nullptr == m_pDevice)
 		return E_FAIL;
 
-	ID3D11Texture2D*		pBackBufferTexture = nullptr;
-
+	ID3D11Texture2D* pBackBufferTexture = nullptr;
 	if (FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBufferTexture)))
 		return E_FAIL;
 
-
-
-	/* ·»´õÅ¸°ÙÀ» »ý¼ºÇÑ´Ù. */
+	/* Back Buffer Render Target */
 	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV)))
-		return E_FAIL;	
+		return E_FAIL;
 
 	Safe_Release(pBackBufferTexture);
 

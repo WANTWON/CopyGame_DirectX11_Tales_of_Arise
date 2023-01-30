@@ -14,6 +14,7 @@ public:
 	typedef struct tagTextureEffectDescription
 	{
 		_tchar wcPrototypeId[MAX_PATH] = TEXT("");	/* "Spark.dds > Spark" */
+		_bool bIsDistortion = false;
 	} TEXTUREEFFECTDESC;
 
 public:
@@ -43,6 +44,7 @@ private:
 	/* Texture Effect */
 	CVIBuffer_Rect*	m_pVIBufferCom = nullptr;
 	CTexture* m_pTextureCom = nullptr;
+	CTexture* m_pStrengthTextureCom = nullptr;
 
 public:
 	static CEffectTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

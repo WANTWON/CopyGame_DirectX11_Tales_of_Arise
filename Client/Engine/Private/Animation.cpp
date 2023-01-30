@@ -214,10 +214,18 @@ void CAnimation::Set_TimeReset()
 	m_fCurrentTime = 0.f;
 }
 
-void CAnimation::Reset_Events(void)
+void CAnimation::Reset(void)
 {
+	for (auto& pChannel : m_Channels)
+	{
+		pChannel->Reset();
+	}
+
 	for (auto& Event : m_vecEvents)
 		Event.isPlay = false;
+
+	m_iTickPerSecondIndex = 0;
+	m_fCurrentTime = 0.f;
 }
 
 //void CAnimation::Get_AnimData(DATA_BINANIM * pAnimData)

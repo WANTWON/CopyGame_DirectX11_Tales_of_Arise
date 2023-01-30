@@ -60,28 +60,31 @@ vector<EVENT> CModel::Get_Events(void)
 	return m_Animations[m_iCurrentAnimIndex]->Get_Events();
 }
 
-_matrix CModel::Get_MoveTransformationMatrix(const char * pBoneName)
+void CModel::Get_MoveTransformationMatrix(const char * pBoneName, _vector * pTranslation, _float * pRotation)
 {
-	for (auto& Bone : m_Bones)
+	for (auto& pBone : m_Bones)
 	{
-		if (!strcmp(Bone->Get_Name(), pBoneName))
+		// 이름 비교
+		if (!strcmp(pBoneName, pBone->Get_Name()))
 		{
-			_matrix CombinedMatrix = Bone->Get_OffsetMatrix() * XMLoadFloat4x4(&Bone->Get_MoveTransformationMatrix()) * XMLoadFloat4x4(&m_PivotMatrix);
+			_vector vecMoveTranslation = pBone->Get_Translation(); 
+			if (m_bInterupted)
+				vecMoveTranslation = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+			
+			_float Rotation = pBone->Get_RotationRadian();
 
-			return CombinedMatrix;
+			// 이동 값, 회전 값 복사
+			memcpy(pTranslation, &vecMoveTranslation, sizeof(_vector));
+			memcpy(pRotation, &Rotation, sizeof(_vector));
 		}
 	}
-
-	return _matrix();
 }
 
 void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
 {
-	if (m_iCurrentAnimIndex != iAnimIndex)
-	{
-		m_iPreAnimIndex = m_iCurrentAnimIndex;
-		m_iCurrentAnimIndex = iAnimIndex;
-	}
+	m_iPreAnimIndex = m_iCurrentAnimIndex;
+	m_iCurrentAnimIndex = iAnimIndex;
+	m_bInterupted = true;
 }
 
 void CModel::Set_TimeReset()
@@ -89,9 +92,9 @@ void CModel::Set_TimeReset()
 	m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 }
 
-void CModel::Reset_Events(void)
+void CModel::Reset(void)
 {
-	m_Animations[m_iCurrentAnimIndex]->Reset_Events();
+	m_Animations[m_iCurrentAnimIndex]->Reset();
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
@@ -310,7 +313,7 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
-	if (m_iCurrentAnimIndex != m_iPreAnimIndex)
+	if (m_bInterupted)
 	{	//TODO: ����ִ԰� ���� �ִ������Ӱ��� �������� �Լ� ȣ�� �� ��.
 		/*if (m_bInterupted)
 		{
@@ -323,7 +326,9 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 		{
 			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
 
-			m_iPreAnimIndex = m_iCurrentAnimIndex;
+			//m_iPreAnimIndex = m_iCurrentAnimIndex;
+
+			m_bInterupted = false;
 		}
 	}
 	else

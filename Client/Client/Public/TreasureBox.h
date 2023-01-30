@@ -14,6 +14,15 @@ public:
 		Default,
 	};
 
+	typedef struct TreasureBoxTag
+	{
+		_uint eItemType = 0;
+		XMFLOAT3	vPosition = XMFLOAT3(0.f, 0.f, 0.f);
+		XMFLOAT3	vScale = XMFLOAT3(1.f, 1.f, 1.f);
+		XMFLOAT3	vRotation = XMFLOAT3(0.f, 0.f, 0.f);
+		float		m_fAngle = 0.f;
+	}BOXDESC;
+
 protected:
 	CTreasureBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTreasureBox(const CTreasureBox& rhs);
@@ -34,8 +43,7 @@ protected:
 	
 
 protected: /* For.Components */
-	//CModel*					m_pModelCom = nullptr;
-	//CTexture*				m_pDissolveTexture = nullptr;
+	BOXDESC					m_Boxtag;
 	_bool					m_bOpen = false;
 	_bool					m_bOpenFinish = false;
 

@@ -26,9 +26,7 @@ public:
 		XMStoreFloat4x4(&m_OffsetMatrix, OffsetMatrix);
 	}
 
-	void Set_TransformationMatrix(_fmatrix TransformationMatrix) {
-		XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix);
-	}
+	void Set_TransformationMatrix(_fmatrix TransformationMatrix);
 
 	_matrix Get_OffsetMatrix() const {
 		return XMLoadFloat4x4(&m_OffsetMatrix);
@@ -46,8 +44,9 @@ public:
 	// 추가
 	CHierarchyNode* Get_Parent() { return m_pParent; }
 
-	_float4x4 Get_MoveTransformationMatrix(void) { return m_MoveTransformationMatrix; }
-	_float4x4 Get_RotationTransformationMatrix(void) { return m_RotationTransformationMatrix; }
+	// 루트노드 위한 함수들 - 이동 행렬, 회전 행렬 반환
+	_vector Get_Translation(void) { return m_vecTranslation; }
+	_float Get_RotationRadian(void) { return m_fRotationRadian; }
 
 public:
 	HRESULT Initialize(BINBONE tBone, CHierarchyNode* pParent);
@@ -70,8 +69,14 @@ private:
 	_float4x4			m_CombinedTransformationMatrix;
 
 	/* 이동, 회전값 살리기 위한 매트릭스 */
-	_float4x4 m_MoveTransformationMatrix;
-	_float4x4 m_RotationTransformationMatrix;
+	_vector m_vecTranslation;
+	_float m_fRotationRadian;
+	_matrix m_PreTransforamtionMatrix;
+	_matrix m_FirstTransformMatrix;
+
+private:
+	/* 루트 본 이동 값 제거, 루트 본 이동, 회전 행렬 저장 함수 */
+	void Set_RootMotionMatrix(const char* pBoneName);
 
 public:
 	//static CHierarchyNode* Create(const aiNode* pNode, CHierarchyNode* pParent);

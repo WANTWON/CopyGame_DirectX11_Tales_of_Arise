@@ -17,7 +17,14 @@ public:
 		STATE_IDLE,
 		STATE_WALK,
 		STATE_RUN,
-		STATE_ATTACK,
+		STATE_JUMP,
+		STATE_NORMAL_ATTACK1,
+		STATE_NORMAL_ATTACK2,
+		STATE_NORMAL_ATTACK3,
+		STATE_NORMAL_ATTACK4,
+		STATE_SKILL_ATTACK1,
+		STATE_SKILL_ATTACK2,
+		STATE_SKILL_ATTACK3,
 		STATE_END
 	};
 
@@ -29,7 +36,13 @@ public:
 	virtual CPlayerState* LateTick(_float fTimeDelta) PURE;
 
 	virtual void Enter() PURE;
-	virtual void Exit() { m_pOwner->Get_Model()->Reset_Events(); }
+	virtual void Exit() 
+	{ 
+		m_pOwner->Get_Model()->Reset();
+
+		if (0 != m_iSkillEvent)
+			m_iSkillEvent = 0;
+	}
 
 	CPlayerState* ChangeState(CPlayerState* pCurrentState, CPlayerState* pNewState)
 	{
@@ -52,5 +65,6 @@ protected:
 
 	_bool m_bIsAnimationFinished = false;
 	_bool m_bIsStateEvent = false;
+	_int m_iSkillEvent = 0;
 };
 END

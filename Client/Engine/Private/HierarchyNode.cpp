@@ -4,6 +4,11 @@ CHierarchyNode::CHierarchyNode()
 {
 }
 
+void CHierarchyNode::Set_TransformationMatrix(_fmatrix TransformationMatrix)
+{
+	XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix);
+}
+
 HRESULT CHierarchyNode::Initialize(BINBONE tBone, CHierarchyNode* pParent)
 {
 	memcpy(&m_szName, tBone.szName, sizeof(char) * MAX_PATH);
@@ -16,6 +21,9 @@ HRESULT CHierarchyNode::Initialize(BINBONE tBone, CHierarchyNode* pParent)
 	/* m_TransformationMatrix : 이 뼈만의 상태. (부모기준으로 표현된) (부모의 상태를 제외된) */
 	m_TransformationMatrix = tBone.Transformation;
 	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix)));
+	// 최초 변환, 이전 변환 행렬 저장
+	m_PreTransforamtionMatrix = XMLoadFloat4x4(&m_TransformationMatrix);
+	m_FirstTransformMatrix = m_PreTransforamtionMatrix;
 
 	/* m_CombinedTransformationMatrix : 이 뼈 + 부모의 상태. (원점기준으로 표현된) (부모의 상태를 포함한) */
 	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
@@ -49,22 +57,7 @@ HRESULT CHierarchyNode::Bin_Initialize(DATA_BINNODE * pNode)
 
 void CHierarchyNode::Invalidate_CombinedTransformationmatrix(const char* pBoneName)
 {
-	if ((nullptr != pBoneName) && !strcmp(m_szName, pBoneName))
-	{
-		_matrix matBoneTransformation = XMLoadFloat4x4(&m_TransformationMatrix);
-
-		XMStoreFloat4x4(&m_MoveTransformationMatrix, XMMatrixTranslationFromVector(matBoneTransformation.r[3]));
-
-		matBoneTransformation.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-
-		XMStoreFloat4x4(&m_TransformationMatrix, matBoneTransformation);
-
-		matBoneTransformation.r[0] = XMVector4Normalize(matBoneTransformation.r[0]);
-		matBoneTransformation.r[1] = XMVector4Normalize(matBoneTransformation.r[1]);
-		matBoneTransformation.r[2] = XMVector4Normalize(matBoneTransformation.r[2]);
-
-		XMStoreFloat4x4(&m_RotationTransformationMatrix, matBoneTransformation);
-	}
+	Set_RootMotionMatrix(pBoneName);
 
 	if (nullptr != m_pParent)
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&m_pParent->m_CombinedTransformationMatrix));
@@ -95,6 +88,33 @@ void CHierarchyNode::Set_FindParent(CHierarchyNode * pNode)
 //	}
 //	return pInstance;	
 //}
+
+void CHierarchyNode::Set_RootMotionMatrix(const char* pBoneName)
+{
+	// 루트 본 이름 비교로 찾기
+	if ((nullptr != pBoneName) && !strcmp(m_szName, pBoneName))
+	{
+		_matrix AfterTransformMatrix = XMLoadFloat4x4(&m_TransformationMatrix);
+
+		// 이전 Transformation에서 이후 Transformation까지 이동 변화 벡터
+		m_vecTranslation = AfterTransformMatrix.r[3] - m_PreTransforamtionMatrix.r[3];
+
+		_vector vPreQuat, vAfterQuat;
+		vPreQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(m_PreTransforamtionMatrix));
+		vAfterQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(AfterTransformMatrix));
+
+		// 쿼터니언 내적을 통한 두 쿼터니언 사이 각 구함
+		m_fRotationRadian = acosf(XMVectorGetX(XMQuaternionDot(vPreQuat, vAfterQuat))) * 2.f;
+
+		// 이전 변환 행렬 저장
+		m_PreTransforamtionMatrix = AfterTransformMatrix;
+
+		// 루트 본 이동, 회전 값 제거
+		AfterTransformMatrix = m_FirstTransformMatrix;
+		AfterTransformMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+		XMStoreFloat4x4(&m_TransformationMatrix, AfterTransformMatrix);
+	}
+}
 
 CHierarchyNode * CHierarchyNode::Create(BINBONE tBone, CHierarchyNode * pParent)
 {

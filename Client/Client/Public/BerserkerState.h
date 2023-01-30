@@ -9,21 +9,40 @@ BEGIN(Client)
 class CBerserkerState
 {
 public:
+	enum FIELD_STATE_ID
+	{
+		FIELD_STATE_IDLE,
+		STATE_WALK,
+		STATE_TURN_L,
+		STATE_TURN_R,
+		STATE_CHASE,
+		STATE_HOWLING,
+	};
+
 	enum STATE_ID
 	{
 		STATE_IDLE,
 		STATE_MOVE,
+		STATE_CALM,
+		STATE_ANGRY,
+		STATE_CRAZY,
 		STATE_DISCOVER,
 		STATE_BATTLE,
 		STATE_DASH_START,
 		STATE_DASH_LOOP,
 		STATE_DASH_SCRATCHES,
+		STATE_QUADRUPLE,
 		STATE_HIT,
 		STATE_DEAD,
 		STATE_END
 	};
 
-	
+	enum EMOTION_STATE
+	{
+		EMO_CALM,
+		EMO_READY_ANGRY,
+		EMO_ANGRY
+	};
 
 	virtual ~CBerserkerState() {};
 	virtual CBerserkerState* AI_Behaviour(_float fTimeDelta) { return nullptr; };
@@ -52,6 +71,7 @@ public:
 	_bool Has_Aggro() { return m_pOwner->Get_Aggro(); }
 	void Reset_Target() { m_pTarget = nullptr; }
 	void Set_BattleMode() { m_bBattleMode = true; }
+	
 
 protected:
 	virtual void Find_Target(_bool bHasAggro = false)

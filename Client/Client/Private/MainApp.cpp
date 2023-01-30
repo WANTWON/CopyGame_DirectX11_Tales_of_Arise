@@ -23,6 +23,17 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Initialize()
 {
+
+	if (::AllocConsole() == TRUE)
+	{
+		FILE* nfp[3];
+		freopen_s(nfp + 0, "CONOUT$", "rb", stdin);
+		freopen_s(nfp + 1, "CONOUT$", "wb", stdout);
+		freopen_s(nfp + 2, "CONOUT$", "wb", stderr);
+		std::ios::sync_with_stdio();
+	}
+
+
 	srand(unsigned int(time(NULL)));
 
 	GRAPHIC_DESC		Graphic_Desc;
@@ -73,10 +84,9 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	m_pGameInstance->Tick_Engine(fTimeDelta);
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	m_fTimeAcc += fTimeDelta;
-#endif // _DEBUG
-
+//#endif // _DEBUG
 }
 
 HRESULT CMainApp::Render()
@@ -86,20 +96,20 @@ HRESULT CMainApp::Render()
 
 	m_pRenderer->Render_GameObjects();
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	++m_iNumRender;
 
 	if (m_fTimeAcc > 1.0f)
 	{
-		wsprintf(m_szFPS, TEXT("에프피에스 : %d"), m_iNumRender);
+		//wsprintf(m_szFPS, TEXT("에프피에스 : %d"), m_iNumRender);
 
-
+		cout << "FPS : "<< m_iNumRender << "\n" << endl;
 		m_fTimeAcc = 0.f;
 		m_iNumRender = 0;
 	}
 
-	m_pGameInstance->Render_Font(TEXT("Font_Nexon"), m_szFPS, XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.6f);
-#endif // _DEBUG
+	//m_pGameInstance->Render_Font(TEXT("Font_Nexon"), m_szFPS, XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.6f);
+//#endif // _DEBUG
 
 
 

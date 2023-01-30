@@ -31,18 +31,28 @@ int CEffectTexture::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	/* Billboard */
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
+	RELEASE_INSTANCE(CGameInstance);
+
 	return OBJ_NOEVENT;
 }
 
 void CEffectTexture::Late_Tick(_float fTimeDelta)
 {
+	if (!Check_IsinFrustum())
+		return;
+
 	if (m_pRendererCom)
 	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);			/* Non-Alphablend */
-		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);*/	/* Alphablend with Normals */
-		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);*/		/* Alphablend */
-
-		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+		if (m_tTextureEffectDesc.bIsDistortion)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_DISTORTION, this);
+		else
+		{
+			Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		}
 	}
 }
 
@@ -53,7 +63,11 @@ HRESULT CEffectTexture::Render()
 
 	__super::Render();
 
-	m_pShaderCom->Begin(0);
+	if (m_tTextureEffectDesc.bIsDistortion)
+		m_pShaderCom->Begin(SHADER_DISTORTION);
+	else
+		m_pShaderCom->Begin(SHADER_ALPHAMASK);
+	
 	m_pVIBufferCom->Render();
 
 	return S_OK;
@@ -80,8 +94,16 @@ HRESULT CEffectTexture::Ready_Components(void * pArg)
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, m_tTextureEffectDesc.wcPrototypeId, (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
+
+	if (m_tTextureEffectDesc.bIsDistortion)
+	{
+		/* For.Com_StrengthTexture */
+		if (FAILED(__super::Add_Components(TEXT("Com_StrengthTexture"), LEVEL_STATIC, TEXT("Distortion_Strength"), (CComponent**)&m_pStrengthTextureCom)))
+			return E_FAIL;
+	}
+
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Effect"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 }
 
@@ -89,8 +111,16 @@ HRESULT CEffectTexture::SetUp_ShaderResources()
 {
 	__super::SetUp_ShaderResources();
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
-		return E_FAIL;
+	if (m_tTextureEffectDesc.bIsDistortion)
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_StrengthTexture", m_pStrengthTextureCom->Get_SRV())))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV())))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -127,4 +157,5 @@ void CEffectTexture::Free()
 
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pStrengthTextureCom);
 }

@@ -170,7 +170,7 @@ PS_OUT PS_DISSOLVE(PS_IN In)
 
 technique11 DefaultTechnique
 {
-	pass Default
+	pass Default // 0
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -181,7 +181,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
-	pass DepthShadow
+	pass DepthShadow // 1
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -192,7 +192,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
 	}
 
-	pass Water
+	pass Water // 2
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -203,7 +203,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_WATER();
 	}
 
-	pass Dissolve
+	pass Dissolve // 3
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);

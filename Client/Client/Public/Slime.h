@@ -80,8 +80,9 @@ public:
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
-	virtual _float Take_Damage(float fDamage, CBaseObj* DamageCauser) override;
-	
+
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
+	virtual HRESULT SetUp_ShaderID() override;
 private:
 	CSlime(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CSlime(const CSlime& rhs);
@@ -92,7 +93,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
-	virtual HRESULT Render();
+	//virtual HRESULT Render();
 
 public: /*For.State*/
 	void AI_Behavior(_float fTimeDelta);
@@ -106,6 +107,9 @@ private:
 
 private:
 	class CSlimeState*  m_pSlimeState = nullptr;
+
+private:
+	_bool   m_bDoneChangeState = false;
 
 public:
 	static CSlime* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

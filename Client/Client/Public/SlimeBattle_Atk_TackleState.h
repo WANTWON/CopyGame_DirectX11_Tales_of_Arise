@@ -7,7 +7,7 @@ BEGIN(Slime)
 class CAtk_TackleState : public CSlimeState
 {
 public:
-	CAtk_TackleState(class CSlime* pSlime, STATE_ID eStateType);
+	CAtk_TackleState(class CSlime* pSlime);
 
 	virtual CSlimeState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CSlimeState* Tick(_float fTimeDelta) override;
@@ -21,7 +21,7 @@ private:
 	_float		m_fIdleAttackTimer = 1.5f;
 	_uint		m_iRand = 0;
 	_float		m_fTarget_Distance;
-	STATE_ID	m_eStateId_Charge = STATE_END;
+	STATE_ID	m_ePreState_Id;
 private:
 	_matrix m_StartMatrix;
 };
