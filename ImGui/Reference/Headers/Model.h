@@ -30,7 +30,7 @@ public:
 	vector<EVENT> Get_Events(void);
 
 	// 루트 본 이동, 회전 변화량 Get 함수
-	void Get_MoveTransformationMatrix(const char * pBoneName, _vector * pTranslation, _float * pRotation);
+	void Get_MoveTransformationMatrix(_vector * pTranslation, _vector * pRotation);
 
 public:
 	void Set_CurrentAnimIndex(_uint iAnimIndex);
@@ -86,10 +86,10 @@ private:
 private:
 	_uint								m_iNumAnimations = 0;
 	vector<class CAnimation*>			m_Animations;
-	_uint								m_iCurrentAnimIndex = 0;
+	_int								m_iCurrentAnimIndex = -1;
 
 	/*For. PreIndex*/
-	_uint								m_iPreAnimIndex = 0;
+	_int								m_iPreAnimIndex = -1;
 	
 	/*For. Lineared*/
 	_bool								m_bLinearFinished = false;

@@ -256,25 +256,27 @@ bool CTransform::Sliding_Right(_float fTimeDelta, CNavigation * pNavigation, _fl
 	return true;
 }
 
-bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigation* pNavigation)
+bool CTransform::Sliding_Anim(_vector vecMove, _vector vecRotation, class CNavigation* pNavigation)
 {
 	_matrix WorldMatrix = XMLoadFloat4x4(&m_WorldMatrix);
+	
+	_vector vScale, vRotQuat, vPos;
+	XMMatrixDecompose(&vScale, &vRotQuat, &vPos, WorldMatrix);
 
-	_vector vWorldPos = WorldMatrix.r[3];
-	WorldMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	_vector vAxis;
+	_float fRadian;
+	XMQuaternionToAxisAngle(&vAxis, &fRadian, vecRotation);
 
-	_vector vWorldRot = XMQuaternionNormalize(XMQuaternionRotationMatrix(WorldMatrix));
+	_vector RotationInWorld = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), (fRadian * -1.f));
 
-	_vector RotationQuat = XMQuaternionRotationAxis(WorldMatrix.r[1], (fRotation * -1.f));
-
-	WorldMatrix = XMMatrixRotationQuaternion(XMQuaternionNormalize(XMQuaternionMultiply(vWorldRot, RotationQuat)));
+	WorldMatrix = XMMatrixRotationQuaternion(XMQuaternionNormalize(XMQuaternionMultiply(vRotQuat, RotationInWorld)));
 
 	_vector vTranslation = XMVector3TransformCoord(vecMove, XMMatrixRotationY(XMConvertToRadians(180.f)) * WorldMatrix);
 
 	WorldMatrix.r[0] = XMVector4Normalize(WorldMatrix.r[0]) * Get_Scale(CTransform::STATE_RIGHT);
 	WorldMatrix.r[1] = XMVector4Normalize(WorldMatrix.r[1]) * Get_Scale(CTransform::STATE_UP);
 	WorldMatrix.r[2] = XMVector4Normalize(WorldMatrix.r[2]) * Get_Scale(CTransform::STATE_LOOK);
-	WorldMatrix.r[3] = vWorldPos;
+	WorldMatrix.r[3] = vPos;
 
 	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
 
@@ -308,7 +310,7 @@ bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigati
 void CTransform::Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight, _float fEndiHeight)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
-	float fPosY = fStartiHeight + fVelocity * fTimeDelta - (0.5f*fGravity*fTimeDelta*fTimeDelta);
+	float fPosY = fStartiHeight + fVelocity * fTimeDelta - (0.5f * fGravity * fTimeDelta * fTimeDelta);
 
 	vPosition = XMVectorSetY(vPosition, fPosY);
 	float y = XMVectorGetY(vPosition);

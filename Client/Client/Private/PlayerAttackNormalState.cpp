@@ -29,12 +29,11 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		_vector vecTranslation, vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -163,14 +162,14 @@ CPlayerState * CAttackNormalState::LateTick(_float fTimeDelta)
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK2);
+			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK2, m_fStartHeight, m_fTime);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK3);
+			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK3, m_fStartHeight, m_fTime);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			if (!m_bIsFly)
-				return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK4);
+				return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK4, m_fStartHeight, m_fTime);
 			break;
 		}
 	}

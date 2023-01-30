@@ -197,11 +197,11 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
 	//	return E_FAIL;
 	
-	//_vector vPosition = { 64.f, 0.f, 20.f, 1.f };
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-	//	return E_FAIL;
-
 	_vector vPosition = { 64.f, 0.f, 20.f, 1.f };
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
+		return E_FAIL;
+
+	vPosition = { 64.f, 0.f, 20.f, 1.f };
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
 		return E_FAIL;
 

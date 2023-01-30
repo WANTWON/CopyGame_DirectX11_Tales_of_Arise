@@ -20,12 +20,14 @@ private:
 
 public:
 	vector<EVENT> Get_Events(void) { return m_vecEvents; }
+	_vector Get_RootTranslation(void) const { return m_vPosition; }
+	_vector Get_RootRotation(void) const { return m_vRotation; }
 
 public:
 	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel, HANDLE hAddFile, _ulong* pdwAddByte);
 	HRESULT Bin_Initialize(DATA_BINANIM* pAIAnimation, class CModel* pModel); // 추가
-	_bool Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop);
-	_bool Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* NextAnim);
+	_bool Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop, const char* pRootName);
+	_bool Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* NextAnim, const char* pRootName);
 
 public:
 	vector<class CChannel*>	Get_Channels(void) { return m_Channels; }
@@ -64,7 +66,10 @@ private:
 	/* For. Animation Event */
 	vector<ANIMEVENT> m_vecAnimEvent;
 	vector<EVENT> m_vecEvents;
-
+	/* For. Root Motion */
+	_vector m_vRotation;
+	_vector m_vPosition;
+	
 //public: // For. Data 추가
 //	void Get_AnimData(DATA_BINANIM* pAnimData);
 

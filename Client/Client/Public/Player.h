@@ -50,7 +50,8 @@ public: /* Getter &  Setter */
 
 	/* 공중 판단 */
 	_bool			Get_IsFly(void) { return m_bIsFly; }
-	void			Set_IsFly(void) { m_bIsFly = !m_bIsFly; }
+	void			On_IsFly(void) { m_bIsFly = true; }
+	void			Off_IsFly(void) { m_bIsFly = false; }
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	

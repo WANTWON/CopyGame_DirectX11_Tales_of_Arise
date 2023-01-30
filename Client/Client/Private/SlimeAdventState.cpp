@@ -10,12 +10,12 @@ using namespace Slime;
 CAdventState::CAdventState(CSlime* pSlime)
 {
 	m_pOwner = pSlime;
-	
+
 }
 
 CSlimeState * CAdventState::AI_Behaviour(_float fTimeDelta)
 {
-	
+
 
 	return nullptr;
 }
@@ -28,18 +28,17 @@ CSlimeState * CAdventState::Tick(_float fTimeDelta)
 
 	//m_pOwner->Check_Navigation();
 
-	//if (!m_bIsAnimationFinished)
-	//{
-	//	_vector vecTranslation;
-	//	_float fRotationRadian;
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation, vecRotation;
 
-	//	m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-	//	m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
-	//	m_pOwner->Check_Navigation();
-	//}
-	//
+		m_pOwner->Check_Navigation();
+	}
+
 	return nullptr;
 }
 

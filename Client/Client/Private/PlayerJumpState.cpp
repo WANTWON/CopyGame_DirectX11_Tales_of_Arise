@@ -19,7 +19,7 @@ CPlayerState * CJumpState::HandleInput()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (pGameInstance->Key_Down(DIMK_LBUTTON))
+	if (GetKeyState(VK_LBUTTON) < 0)
 		return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		m_eDirection = DIR_STRAIGHT_LEFT;
@@ -78,7 +78,7 @@ void CJumpState::Enter()
 
 	m_eStateId = STATE_ID::STATE_JUMP;
 
-	m_pOwner->Set_IsFly();
+	m_pOwner->On_IsFly();
 
 	CPlayer::PLAYERID ePlayerID = m_pOwner->Get_PlayerID();
 
@@ -122,10 +122,12 @@ void CJumpState::Enter()
 
 void CJumpState::Exit()
 {
-	if(m_eStateType == STATETYPE_END)
+	if (m_eStateType == STATETYPE_END)
+	{
 		m_fTime = 0.f;
 
-	m_pOwner->Set_IsFly();
+		m_pOwner->Off_IsFly();
+	}
 }
 
 _bool CJumpState::Check_JumpEnd()
@@ -149,6 +151,8 @@ void CJumpState::Move(_float fTimeDelta)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	_matrix CameraMatrix = XMLoadFloat4x4(&pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW));
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	switch (m_eDirection)
 	{
@@ -204,10 +208,6 @@ void CJumpState::Move(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Jump(m_fTime, 3.f, 1.0f, m_fStartHeight, m_fEndHeight);
 
 		if (m_eDirection != DIR_END)
-		{
 			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f);
-		}
 	}
-
-	RELEASE_INSTANCE(CGameInstance);
 }
