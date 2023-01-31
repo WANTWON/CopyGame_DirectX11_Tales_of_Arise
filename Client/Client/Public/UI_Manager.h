@@ -53,6 +53,8 @@ public: /*Getter Setter*/
 
 	list<CUI_Base*>* Get_Itempopup_list() {return &m_pItempopup;}
 
+	void Erase_Itempopup_list(CUI_Base* point);
+
 	/*CUI_Dialogue* Get_Dialogue() { return m_pDialogue; }
 	CUI_Dialoguepopup* Get_Dialoguepopup() { return m_pDialoguepopup; }*/
 	CUI_Base*	 Get_Dialogue() { return m_pDialogue; }

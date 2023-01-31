@@ -508,7 +508,7 @@ wchar_t * CUI_Dialoguepopup::ConverCtoWC(char * str)
 	pStr = new WCHAR[MAX_PATH];
 	
 	//Çü º¯È¯
-	MultiByteToWideChar(CP_ACP, 0, str, strlen(str) + 1, m_szTXT, MAX_PATH);
+	MultiByteToWideChar(CP_ACP, 0, str, _uint(strlen(str) + 1), m_szTXT, MAX_PATH);
 	Safe_Delete_Array(pStr);
 	return pStr;
 

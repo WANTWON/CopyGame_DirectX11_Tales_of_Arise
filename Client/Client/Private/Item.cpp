@@ -75,7 +75,7 @@ void CItem::Late_Tick(_float fTimeDelta)
 	
 	if (m_bCollision)
 	{
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_E))
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_E)&&!m_bIsGain)
 		{
 			m_bIsGain = true;
 
@@ -112,13 +112,19 @@ void CItem::Late_Tick(_float fTimeDelta)
 				inv->push_back(itempointer);
 			else
 				delete(itempointer);
-
+			_uint index = 0;
 			CUI_Get_item_Popup::POPUPDESC testdesc;
 			ZeroMemory(&testdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
-			testdesc.iIndex = 0;
+			auto popup = CUI_Manager::Get_Instance()->Get_Itempopup_list();
+			for (auto iter : *popup)
+			{
+				if (!(iter->Get_Isdead()))
+					++index;
+			}
+			testdesc.iIndex = index;
 			testdesc.eName = ITEMNAME_APPLE;
 			testdesc.eType = ITEMTYPE_FRUIT;
-			testdesc.iCount = CUI_Manager::Get_Instance()->Get_Itempopup_list()->size();
+			//	testdesc.iCount =
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
 				return;
 

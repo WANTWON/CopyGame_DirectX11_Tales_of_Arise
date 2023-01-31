@@ -36,8 +36,8 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -56,8 +56,8 @@ HRESULT CLevel_SnowField::Initialize()
 
 		
 
-	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_Trigger(TEXT("Layer_Trigger"))))
 		return E_FAIL;

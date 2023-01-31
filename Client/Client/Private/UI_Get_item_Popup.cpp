@@ -49,6 +49,13 @@ HRESULT CUI_Get_item_Popup::Initialize(void * pArg)
 		case 3:
 			m_fIndexOffsetY = 160.f;
 			break;
+
+		case 4:
+			m_fIndexOffsetY = 160.f;
+			break;
+		case 5:
+			m_fIndexOffsetY = 200.f;
+			break;
 		}
 			
 
@@ -151,6 +158,7 @@ int CUI_Get_item_Popup::Tick(_float fTimeDelta)
 		m_fFadeY = -20.f;
 		m_fFade1Y = -20.f;
 		m_btick = false;
+		m_bIsdead = true;
 		return OBJ_DEAD;
 	}
 
@@ -373,7 +381,7 @@ CGameObject * CUI_Get_item_Popup::Clone(void * pArg)
 void CUI_Get_item_Popup::Free()
 {
 
-
+	//CUI_Manager::Get_Instance()->Erase_Itempopup_list(this);
 
 
 

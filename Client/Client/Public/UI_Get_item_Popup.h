@@ -33,6 +33,7 @@ public:
 public:
 	void moveleft() { m_fPosition.x -= 10.f; }
 
+	
 	//wchar_t* CharToWChar(const char* pstrSrc);
 
 
@@ -90,6 +91,8 @@ private:
 
 	_float m_fIndexOffsetY = 0.f;
 
+
+	
 
 public:
 	typedef struct tagitempopup
