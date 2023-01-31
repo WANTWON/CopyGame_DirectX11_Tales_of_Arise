@@ -72,7 +72,7 @@ int CUI_Get_item_Popup::Tick(_float fTimeDelta)
 		if (m_bfirstarrived)
 			timer += fTimeDelta;
 
-		if (timer > 5.f)
+		if (timer > 1.5f)
 		{
 
 
@@ -82,14 +82,14 @@ int CUI_Get_item_Popup::Tick(_float fTimeDelta)
 			m_fDietimer += fTimeDelta;
 			timer = 0.f;
 			m_bDeadtimeron = true;
-
+			m_bIsdead = true;
 		}
 
 		if (m_bDeadtimeron)
 		{
 			m_fDietimer += fTimeDelta;
 
-			if (m_fDietimer > 4.f)
+			if (m_fDietimer > 1.5f)
 			{
 				m_bfadeout = true;
 				m_bfirstarrived = false;
@@ -158,7 +158,7 @@ int CUI_Get_item_Popup::Tick(_float fTimeDelta)
 		m_fFadeY = -20.f;
 		m_fFade1Y = -20.f;
 		m_btick = false;
-		m_bIsdead = true;
+		
 		return OBJ_DEAD;
 	}
 
@@ -232,11 +232,11 @@ HRESULT CUI_Get_item_Popup::Render()
 
 
 
-	/*if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	m_fSize.x = 350.f;
-	m_fSize.y = 5.f;
+	m_fSize.x = 200.f;
+	m_fSize.y = 20.f;
 	m_fPosition.x = 1200.f - m_fFadeX;
 	m_fPosition.y = 400.f + m_fFadeY+ m_fIndexOffsetY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
@@ -244,13 +244,13 @@ HRESULT CUI_Get_item_Popup::Render()
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(1))))
-		return E_FAIL;*/
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_popupdesc.eName))))
+		return E_FAIL;
 
-	/*m_pShaderCom->Begin(UI_DIALOGUELINE);
+	m_pShaderCom->Begin(UI_ALPHASET);
 
 	m_pVIBufferCom->Render();
-*/
+
 
 
 	
@@ -289,7 +289,7 @@ HRESULT CUI_Get_item_Popup::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_charactername"), (CComponent**)&m_pTextureCom2)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Item_name"), (CComponent**)&m_pTextureCom2)))
 	return E_FAIL;
 
 
@@ -381,7 +381,7 @@ CGameObject * CUI_Get_item_Popup::Clone(void * pArg)
 void CUI_Get_item_Popup::Free()
 {
 
-	//CUI_Manager::Get_Instance()->Erase_Itempopup_list(this);
+	CUI_Manager::Get_Instance()->Erase_Itempopup_list(this);
 
 
 

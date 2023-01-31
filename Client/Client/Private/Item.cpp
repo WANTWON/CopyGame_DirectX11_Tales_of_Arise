@@ -4,6 +4,7 @@
 #include "Level_Manager.h"
 #include "PlayerManager.h"
 #include "UI_Get_item_Popup.h"
+#include "UI_InterectMsg.h"
 
 CItem::CItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CInteractObject(pDevice, pContext)
@@ -75,21 +76,39 @@ void CItem::Late_Tick(_float fTimeDelta)
 	
 	if (m_bCollision)
 	{
+		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Open_sysmsg(1);
+		m_bfirst = true;
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_E)&&!m_bIsGain)
 		{
 			m_bIsGain = true;
+
+			CUI_Get_item_Popup::POPUPDESC testdesc;
+			ZeroMemory(&testdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
+			
 
 			ITEMINFO*  itempointer = new  ITEMINFO;
 			switch (m_ItemDesc.etype)
 			{
 			case APPLE:
-				itempointer->eitemname = ITEMNAME_APPLE;
-				itempointer->eitemtype = ITEMTYPE_FRUIT;//(ITEM_TYPE)(rand() % 20);
+				testdesc.eName = itempointer->eitemname = ITEMNAME_APPLE;
+				testdesc.eType = itempointer->eitemtype = ITEMTYPE_FRUIT;//(ITEM_TYPE)(rand() % 20);
 				itempointer->icount = 1;
 				break;
 			case LETTUCE:
-				itempointer->eitemname = ITEMNAME_LETTUCE;
-				itempointer->eitemtype = ITEMTYPE_VEGITABLE;//(ITEM_TYPE)(rand() % 20);
+				testdesc.eName = itempointer->eitemname = ITEMNAME_LETTUCE;
+				testdesc.eType = itempointer->eitemtype = ITEMTYPE_VEGITABLE;//(ITEM_TYPE)(rand() % 20);
+				itempointer->icount = 1;
+				break;
+
+			case PLANT:
+				testdesc.eName = itempointer->eitemname = ITEMNAME_HERB;
+				testdesc.eType = itempointer->eitemtype = ITEMTYPE_MATERIAL;//(ITEM_TYPE)(rand() % 20);
+				itempointer->icount = 1;
+				break;
+
+			case SLIMPLANT:
+				testdesc.eName = itempointer->eitemname = ITEMNAME_SMALLHERB;
+				testdesc.eType = itempointer->eitemtype = ITEMTYPE_MATERIAL;//(ITEM_TYPE)(rand() % 20);
 				itempointer->icount = 1;
 				break;
 
@@ -113,17 +132,15 @@ void CItem::Late_Tick(_float fTimeDelta)
 			else
 				delete(itempointer);
 			_uint index = 0;
-			CUI_Get_item_Popup::POPUPDESC testdesc;
-			ZeroMemory(&testdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
-			auto popup = CUI_Manager::Get_Instance()->Get_Itempopup_list();
+			
+			/*auto popup = CUI_Manager::Get_Instance()->Get_Itempopup_list();
 			for (auto iter : *popup)
 			{
-				if (!(iter->Get_Isdead()))
+				if (iter->Get_Isdead() == false)
 					++index;
-			}
-			testdesc.iIndex = index;
-			testdesc.eName = ITEMNAME_APPLE;
-			testdesc.eType = ITEMTYPE_FRUIT;
+			}*/
+			testdesc.iIndex =(_uint)CUI_Manager::Get_Instance()->Get_Itempopup_list()->size();
+			
 			//	testdesc.iCount =
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
 				return;
@@ -133,6 +150,13 @@ void CItem::Late_Tick(_float fTimeDelta)
 		}
 			//CITEM::ITEMTYPE
 
+	}
+	
+	
+	if(m_bfirst && !m_bCollision)
+	{
+		m_bfirst = false;
+		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 	}
 		   //COLLIDE
 		

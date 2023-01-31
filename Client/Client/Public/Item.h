@@ -36,6 +36,8 @@ protected:
 private:
 	ITEMDESC	m_ItemDesc;
 	_bool		m_bIsGain = false;
+
+	_bool m_bfirst = false;
 	
 
 public:

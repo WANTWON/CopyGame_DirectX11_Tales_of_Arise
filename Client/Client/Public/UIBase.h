@@ -69,6 +69,7 @@ protected:
 
 	_bool m_bIsRender = false;
 	_bool m_bIsdead = false;
+	
 
 public:
 	virtual HRESULT Ready_Components(void * pArg = nullptr) = 0;

@@ -59,8 +59,10 @@ public: /*Getter Setter*/
 	CUI_Dialoguepopup* Get_Dialoguepopup() { return m_pDialoguepopup; }*/
 	CUI_Base*	 Get_Dialogue() { return m_pDialogue; }
 	CUI_Base*    Get_Dialoguepopup() { return m_pDialoguepopup; }
+	CUI_Base*    Get_System_msg() { return m_pSystemmsg; }
 	void Set_Dialogue(CUI_Base* pointer) { m_pDialogue = pointer; }
 	void Set_Dialoguepopup(CUI_Base* pointer) { m_pDialoguepopup = pointer; }
+	void Set_SystemMsg(CUI_Base* pointer) { m_pSystemmsg = pointer; }
 
 	
 	void PlusGald(_uint gald) { m_iGald += gald; }
@@ -99,6 +101,7 @@ private:
 
 	CUI_Base* m_pDialogue = nullptr;
 	CUI_Base* m_pDialoguepopup = nullptr;
+	CUI_Base* m_pSystemmsg = nullptr;
 
 	list<CUI_Base*>m_pItempopup;
 	//CUI_Base* m_pDialogue
