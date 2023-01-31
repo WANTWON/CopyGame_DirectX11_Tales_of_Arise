@@ -23,6 +23,7 @@
 #include "Alphen.h"
 #include "Sion.h"
 #include "FemaleYoung.h"
+#include "AiRinwell.h"
 
 
 //UI
@@ -149,6 +150,10 @@ HRESULT CLoader::Loading_ForPrototype()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
+		return E_FAIL;
+	/*For.Prototype_Trigger */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AiRinwell"),
+		CAiRinwell::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -551,6 +556,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	/* For.Prototype_Component_Model_Sion */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NpcFemaleYoung"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NpcFemaleYoung/NpcFemaleYoung.dat"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Model_Sion */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Rinwell"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Model_Water_Plane*/

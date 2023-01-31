@@ -230,6 +230,11 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vScale)))
 			//	return E_FAIL;
 		}
+		else if (!wcscmp(pModeltag, TEXT("Rinwell")))
+		{
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
+				return E_FAIL;
+		}
 
 	}
 	
