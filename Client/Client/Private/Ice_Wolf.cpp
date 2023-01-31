@@ -143,7 +143,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
+	if (CUI_Manager::Get_Instance()->Get_StopTick() /*|| !Check_IsinFrustum(2.f)*/)
 		return OBJ_NOEVENT;
 
 	if (m_bDead)
@@ -167,8 +167,9 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
+	if (CUI_Manager::Get_Instance()->Get_StopTick()/* || !Check_IsinFrustum(2.f)*/)
 		return;
+
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)

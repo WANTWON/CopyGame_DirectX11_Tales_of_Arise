@@ -106,10 +106,10 @@ HRESULT CAnimation::Bin_Initialize(DATA_BINANIM * pAIAnimation, CModel * pModel)
 	return S_OK;
 }
 
-_bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop, const char* pRootName)
+_bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop)
 {
 	//애니메이션 구간별 재생 속도 변화
-	_int iSize = m_ChangeTickTimes.size() - 1;
+	_int iSize = _int(m_ChangeTickTimes.size() - 1);
 	if ((iSize >= 0) && (m_iTickPerSecondIndex <= iSize))
 	{
 		if (m_ChangeTickTimes[m_iTickPerSecondIndex] <= m_fCurrentTime)
@@ -151,10 +151,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 		{
 			for (auto& pChannel : m_Channels)
 			{
-				if ((nullptr != pRootName) && !strcmp(pChannel->Get_Name(), pRootName))
-					pChannel->Invalidate_TransformationMatrix(m_fCurrentTime, &m_vRotation, &m_vPosition);
-				else
-					pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
+				pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
 			}
 
 			Set_TimeReset();
@@ -168,10 +165,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 
 	for (auto& pChannel : m_Channels)
 	{
-		if ((nullptr != pRootName) && !strcmp(pChannel->Get_Name(), pRootName))
-			pChannel->Invalidate_TransformationMatrix(m_fCurrentTime, &m_vRotation, &m_vPosition);
-		else
-			pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
+		pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
 	}
 
 	if (true == m_isFinished && true == isLoop)
@@ -180,29 +174,23 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 	return m_isFinished; //루프를 돌지 않고 애니메이션이 끝났을 때
 }
 
-_bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* PreAnim, const char* pRootName)
+_bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation * NextAnim)
 {
 	/* 현재 재생중인 시간. */
+	vector<CChannel*> NextAnimChannels = NextAnim->Get_Channels();
+
 	m_bLinearFinished = false;
 	m_fLinear_CurrentTime += fTimeDelta;
 
 	if (!m_bLinearFinished)
 	{
-		vector<CChannel*> PreAnimChannels = PreAnim->Get_Channels();
 		for (_uint i = 0; i < m_iNumChannels; ++i)
 		{
-			_bool isFinishInterpolation = false;
-
-			if ((nullptr != pRootName) && !strcmp(m_Channels[i]->Get_Name(), pRootName))
-				isFinishInterpolation = m_Channels[i]->Linear_Interpolation(PreAnimChannels[i]->Get_KeyFrameLinear(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration, &m_vRotation, &m_vPosition);
-			else
-				isFinishInterpolation = m_Channels[i]->Linear_Interpolation(PreAnimChannels[i]->Get_KeyFrameLinear(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration);
-			
-			if (isFinishInterpolation)
+			if (m_Channels[i]->Linear_Interpolation(NextAnimChannels[i]->Get_StartKeyFrame(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration))
 			{
 				m_fLinear_CurrentTime = 0.f;
 				m_bLinearFinished = true;
-				break;
+				m_Channels[i]->Reset();
 			}
 		}
 	}
