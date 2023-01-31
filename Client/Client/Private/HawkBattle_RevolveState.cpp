@@ -53,8 +53,8 @@ CHawkState * CBattle_RevolveState::Tick(_float fTimeDelta)
 						
 				}
 
-				else
-					return new CBattle_IdleState(m_pOwner);
+				/*else
+					return new CBattle_IdleState(m_pOwner);*/
 			}
 
 			else

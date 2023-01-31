@@ -134,7 +134,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (!m_pShaderDeferred)
 		return E_FAIL;
 
-	m_pShaderPostProcessing = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_PostProcessing.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
+	m_pShaderPostProcessing = CShader::Create(m_pDevice, m_pContext, TEXT("../../../Bin/ShaderFiles/Shader_PostProcessing.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
 	if (!m_pShaderPostProcessing)
 		return E_FAIL;	
 

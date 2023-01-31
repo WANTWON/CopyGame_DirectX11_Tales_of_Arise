@@ -18,9 +18,10 @@ public:
 	virtual void Exit() override;
 
 private:
-	_uint		m_iRand = 0;
-	_float		m_fRedayAttackTimer = 0.f;
-	_bool		m_bTargetSetting = false;
+	_uint			m_iRand = 0;
+	_float			m_fRedayAttackTimer = 0.f;
+	_bool			m_bTargetSetting = false;
+	
 };
 
 END

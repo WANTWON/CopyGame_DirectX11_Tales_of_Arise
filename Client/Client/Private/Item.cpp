@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Level_Manager.h"
 #include "PlayerManager.h"
+#include "UI_Get_item_Popup.h"
 
 CItem::CItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CInteractObject(pDevice, pContext)
@@ -74,13 +75,72 @@ void CItem::Late_Tick(_float fTimeDelta)
 	
 	if (m_bCollision)
 	{
-		m_bIsGain = true;
-		
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_E)&&!m_bIsGain)
+		{
+			m_bIsGain = true;
+
+			ITEMINFO*  itempointer = new  ITEMINFO;
+			switch (m_ItemDesc.etype)
+			{
+			case APPLE:
+				itempointer->eitemname = ITEMNAME_APPLE;
+				itempointer->eitemtype = ITEMTYPE_FRUIT;//(ITEM_TYPE)(rand() % 20);
+				itempointer->icount = 1;
+				break;
+			case LETTUCE:
+				itempointer->eitemname = ITEMNAME_LETTUCE;
+				itempointer->eitemtype = ITEMTYPE_VEGITABLE;//(ITEM_TYPE)(rand() % 20);
+				itempointer->icount = 1;
+				break;
+
+			}
+
+
+			vector<ITEMINFO*>* inv = CUI_Manager::Get_Instance()->Get_Inventory();
+			_bool bshouldpush = true;
+			for (auto& iter = inv->begin(); iter != inv->end(); ++iter)
+			{
+				if ((*iter)->eitemname == itempointer->eitemname)
+				{
+					(*iter)->icount += 1;
+					bshouldpush = false;
+					break;
+				}
+			}
+
+			if (bshouldpush)
+				inv->push_back(itempointer);
+			else
+				delete(itempointer);
+			_uint index = 0;
+			CUI_Get_item_Popup::POPUPDESC testdesc;
+			ZeroMemory(&testdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
+			auto popup = CUI_Manager::Get_Instance()->Get_Itempopup_list();
+			for (auto iter : *popup)
+			{
+				if (!(iter->Get_Isdead()))
+					++index;
+			}
+			testdesc.iIndex = index;
+			testdesc.eName = ITEMNAME_APPLE;
+			testdesc.eType = ITEMTYPE_FRUIT;
+			//	testdesc.iCount =
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
+				return;
+
+
+
+		}
+			//CITEM::ITEMTYPE
+
 	}
+		   //COLLIDE
+		
+	
 
 	if (m_bIsGain)
 	{
-		m_DissolveAlpha += fTimeDelta;
+		m_DissolveAlpha += fTimeDelta; //AFTER EAT
 
 		if (1 < m_DissolveAlpha)
 		{

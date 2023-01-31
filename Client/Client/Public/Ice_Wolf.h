@@ -22,14 +22,14 @@ public:
 		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_SIDEWALK_R_END,
 		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_SIDEWALK_R_LOOP,
 		//TO14_MTN_CHR_WOL_000_BTL_ATTACK_SIDEWALK_R_START,
-		
-		ANIM_ADVENT, 
-		ANIM_ARISE_B, 
+
+		ANIM_ADVENT,
+		ANIM_ARISE_B,
 		ANIM_ARISE_F,
-		
-		ANIM_ATTACK_BITE, 
-		ANIM_ATTACK_BREATH_LEFT, 
-		ANIM_ATTACK_ELEMENTAL_CHARGE_END, 
+
+		ANIM_ATTACK_BITE,
+		ANIM_ATTACK_BREATH_LEFT,
+		ANIM_ATTACK_ELEMENTAL_CHARGE_END,
 		ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP,
 		ANIM_ATTACK_ELEMENTAL_CHARGE_START,
 		ANIM_ATTACK_HOWLING, //9
@@ -40,7 +40,7 @@ public:
 		ANIM_ATTACK_STEP_BACK,
 
 		ANIM_DEAD,
-		ANIM_DOWN_B,ANIM_DOWN_F,
+		ANIM_DOWN_B, ANIM_DOWN_F,
 		ANIM_MOVE_IDLE,
 		ANIM_MOVE_RUN,
 		ANIM_MOVE_WALK_B,
@@ -78,7 +78,7 @@ public:
 		ANIM_SYMBOL_RUN,
 		ANIM_SYMBOL_STOP,
 		ANIM_SYMBOL_TURN_LEFT, //52
-		ANIM_SYMBOL_TURN_RIGHT, 
+		ANIM_SYMBOL_TURN_RIGHT,
 		ANIM_SYMBOL_WALK,
 	};
 
@@ -87,10 +87,10 @@ public:
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	CTransform* Get_Transform() { return m_pTransformCom; }
-	class CIceWolfState* Get_State() { return m_pIce_WolfState; }
-	void Set_PlayerState(class CIceWolfState* pPlayerState) { m_pIce_WolfState = pPlayerState; }
+	class CIceWolfState* Get_State() { return m_pState; }
+	void Set_PlayerState(class CIceWolfState* pPlayerState) { m_pState = pPlayerState; }
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
-	
+
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
@@ -111,6 +111,8 @@ public: /*For.State*/
 	void AI_Behavior(_float fTimeDelta);
 	void Tick_State(_float fTimeDelta);
 	void LateTick_State(_float fTimeDelta);
+
+
 		/*For Navigation*/
 	virtual void Check_Navigation() override;
 
@@ -118,9 +120,10 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 
 private:
-	class CIceWolfState*  m_pIce_WolfState = nullptr;
-				 _float   m_fSpeed = 3.f;
-				 _bool   m_bDoneChangeState = false;
+	class CIceWolfState*  m_pState = nullptr;
+
+	_float   m_fSpeed = 3.f;
+	_bool   m_bDoneChangeState = false;
 	
 
 public:

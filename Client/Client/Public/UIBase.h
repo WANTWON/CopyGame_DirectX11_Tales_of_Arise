@@ -22,7 +22,7 @@ public:
 	enum SHADERUI_ID { UI_ALPHADEFAULT, UI_ALPHABLEND, UI_PICKED, UI_ALPHASET, UI_SCREEN, UI_EFFECTFADEOUT,UI_HPBAR,UI_COMBOLINE,UI_GOLDEN, UI_CP_GUAGE,
 		UI_CP_GUAGE_BLACK,UI_MP_GUAGE, UI_COLOR_BLACK, UI_POTRAIT_DARK , UI_POTRAIT_READY, UI_POTRAIT_ALLBLUE, UI_RUNECOLOR,
 		UI_LOCKON_REVERSE ,UI_UVROT , UI_INVENICON, UI_INVENBACK,UI_MENULINE, UI_INVENTOPBOTTOM,UI_INVENTOPBOTTOMALPHA, UI_GALDBACK, UI_UVROTSTRONG,UI_ALPHAPORTRAIT,
-		UI_LIGHTEFFECT, UI_BRIGHT,
+		UI_LIGHTEFFECT, UI_BRIGHT,UI_BLUEHPBAR,UI_DIALOGUEBOX,UI_DIALOGUELINE,UI_DIALOGUECURSOR, UI_DIALOGUECURSORNONMOVE,
 		UI_EFFECTSCREEN ,UI_END };
 
 protected:
@@ -44,6 +44,7 @@ public:
 	void Set_Position(_float2 fPostion) { m_fPosition = fPostion; };
 	void Set_Scale(_float2 fScale) { m_fSize = fScale; };
 	void Set_Scale(_float3 vScale);
+	_bool Get_Isdead() { return m_bIsdead; }
 	void SetUp_BillBoard();
 
 	
@@ -67,6 +68,7 @@ protected:
 	_bool                   m_bisinLoading = false;
 
 	_bool m_bIsRender = false;
+	_bool m_bIsdead = false;
 
 public:
 	virtual HRESULT Ready_Components(void * pArg = nullptr) = 0;

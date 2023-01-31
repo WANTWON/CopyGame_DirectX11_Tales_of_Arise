@@ -6,6 +6,8 @@
 #include "Weapon.h"
 #include "Effect.h"
 #include "EffectMesh.h"
+#include "PlayerSkillState.h"
+
 
 using namespace Player;
 
@@ -26,12 +28,12 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_float fTranslationLength;
+		_vector vecTranslation;
 		_float fRotationRadian;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &fTranslationLength, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -51,26 +53,64 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					if (EVENT_STATE == pEvent.iEventType)
 					{
-						CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
-						RELEASE_INSTANCE(CGameInstance);
+						else if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
+						
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
+
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
+
+						getchar();
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+					if (EVENT_COLLIDER == pEvent.iEventType)
+						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					if (EVENT_STATE == pEvent.iEventType)
 					{
-						CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
-						RELEASE_INSTANCE(CGameInstance);
+						else if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
+
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
+
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
+
+						getchar();
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+					if (EVENT_COLLIDER == pEvent.iEventType)
+						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+					if (EVENT_STATE == pEvent.iEventType)
+					{
+						if (GetKeyState(VK_LBUTTON) < 0)
+							m_bIsStateEvent = true;
+
+						else if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
+
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
+
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
+
+						getchar();
+					}
+					break;
+				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+					if (EVENT_COLLIDER == pEvent.iEventType)
+						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					break;
 				}
 			}
@@ -90,8 +130,16 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+					if (EVENT_COLLIDER == pEvent.iEventType)
+						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+					if (EVENT_COLLIDER == pEvent.iEventType)
+						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
+					break;
+				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+					if (EVENT_COLLIDER == pEvent.iEventType)
+						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				}
 			}
@@ -107,6 +155,8 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 
 CPlayerState * CAttackNormalState::LateTick(_float fTimeDelta)
 {
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
 	if (m_bIsStateEvent)
 	{
 		switch (m_eStateId)
@@ -117,6 +167,29 @@ CPlayerState * CAttackNormalState::LateTick(_float fTimeDelta)
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK3);
 			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK4);
+			break;
+		}
+	}
+
+	if (0 != m_iSkillEvent)
+	{
+		/* Skill */
+		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+		{
+			switch (m_iSkillEvent)
+			{
+			case 1:
+				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
+				break;
+			case 2:
+				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
+				break;
+			case 3:
+				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
+				break;
+			}
 		}
 	}
 
@@ -141,6 +214,9 @@ void CAttackNormalState::Enter()
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_8);
 			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_6);
+			break;
 		}
 	}
 	else if (CPlayer::SION == m_pOwner->Get_PlayerID())
@@ -158,8 +234,6 @@ void CAttackNormalState::Enter()
 			break;
 		}
 	}
-
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CAttackNormalState::Exit()

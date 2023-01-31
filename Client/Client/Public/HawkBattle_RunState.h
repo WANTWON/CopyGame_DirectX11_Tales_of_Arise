@@ -7,7 +7,7 @@ BEGIN(Hawk)
 class CBattle_RunState : public CHawkState
 {
 public:
-	CBattle_RunState(class CHawk* pHawk);
+	CBattle_RunState(class CHawk* pHawk, STATE_ID ePreBattleState);
 
 	virtual CHawkState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CHawkState* Tick(_float fTimeDelta) override;
@@ -21,7 +21,7 @@ private:
 	_float		m_fIdleMoveTimer = 0.f;
 	_float		m_fIdleAttackTimer = 1.5f;
 	_float		m_fTarget_Distance;
-	
+	STATE_ID	m_ePreBattleState;
 private:
 	_matrix m_StartMatrix;
 };

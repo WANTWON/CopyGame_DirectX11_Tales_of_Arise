@@ -18,7 +18,7 @@ HRESULT CUI_Base::Initialize(void * pArg)
 		return E_FAIL;
 
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixTranspose(XMMatrixIdentity()));
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f)));
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH((_float)g_iWinSizeX,(_float)g_iWinSizeY, 0.f, 1.f)));
 
 
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);

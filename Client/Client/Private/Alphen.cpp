@@ -40,8 +40,8 @@ HRESULT CAlphen::Initialize(void * pArg)
 
 	m_ePlayerID = ALPHEN;
 
-	m_tInfo.iMaxHp = 5877;
-	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.fMaxHp = 5877;
+	m_tInfo.fCurrentHp = 1156.f;
 	m_tInfo.fMaxMp = 5.f;
 	m_tInfo.fCurrentMp = 2.3f;
 	m_tInfo.iDamage = 100;
@@ -63,7 +63,7 @@ HRESULT CAlphen::Ready_Parts()
 	WeaponDesc.pSocket = pSocket;
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
-	strcpy(WeaponDesc.pModeltag, "SWO1(R00)");
+	strcpy(WeaponDesc.pModeltag, "SWO1");
 	Safe_AddRef(pSocket);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

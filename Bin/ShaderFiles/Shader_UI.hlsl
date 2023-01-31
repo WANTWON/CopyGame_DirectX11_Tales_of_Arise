@@ -128,6 +128,8 @@ PS_OUT PS_HPbar(PS_IN In)
 {
 	PS_OUT      Out = (PS_OUT)0;
 
+	if (In.vTexUV.y > (1.4f - In.vTexUV.x) + (In.vTexUV.y))
+		discard;
 	if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
 		discard;
 	
@@ -147,7 +149,7 @@ PS_OUT PS_HPbar(PS_IN In)
 
 	float fGradientRadius = 0.5f;
 	float fGradientStrength = 0.2f;
-	float fLerp;
+	float  fLerp = 0.f;
 
 	/* First Lerp */
 	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
@@ -192,7 +194,7 @@ PS_OUT PS_COMBOLINE(PS_IN In)
 	float3 yellowRef = normalize(float3(.69f, .62f, .42f)); //텍스쳐색
 
 
-	float weight = dot(Out.vColor, yellowRef); //알파만들기
+	float weight = dot(Out.vColor.rgb, yellowRef); //알파만들기
 	Out.vColor.a = lerp(0, 1, weight);
 
 	Out.vColor.a = lerp(0, 1, saturate(weight));
@@ -266,26 +268,7 @@ PS_OUT PS_CPguageblack(PS_IN In)
 {
 	PS_OUT      Out = (PS_OUT)0;
 
-	//if (1 - g_fCurrentHp / g_fMaxHp > In.vTexUV.y)// && Out.vColor.r == 0 && Out.vColor.g == 0  && Out.vColor.b ==0)
-	//	discard;
-
-	/*float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-
-	if (origincolor.a > 0.4f)
-	{
-		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
-
-		float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
-
-		Out.vColor = lerpcolor;
-	}
-	else
-		*/
-
-
-
-	/*if (Out.vColor.a<0.1f)
-	discard;*/
+	
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	return Out;
 }
@@ -486,7 +469,7 @@ PS_OUT PS_INVENICON(PS_IN In)
 
 	float fGradientRadius = 0.6f;
 	float fGradientStrength = 0.25f;
-	float fLerp;
+	float fLerp = 0.f;
 
 	/* First Lerp */
 	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
@@ -727,7 +710,7 @@ PS_OUT PS_Bright(PS_IN In)
 
 	float fGradientRadius = 0.5f;
 	float fGradientStrength = 0.3f;
-	float fLerp;
+	float fLerp = 0.f;
 
 	/* First Lerp */
 	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
@@ -758,6 +741,143 @@ PS_OUT PS_Bright(PS_IN In)
 
 	
 }
+
+PS_OUT PS_HPbarBLUE(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+		discard;
+
+	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (origincolor.a > 0.4f)
+	{
+		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+		float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+
+		Out.vColor = lerpcolor;
+	}
+	else
+		Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+
+	float fGradientRadius = 0.5f;
+	float fGradientStrength = 0.2f;
+	float fLerp = 0.f;
+
+	/* First Lerp */
+	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
+	{
+		float fStart = g_fBright - fGradientRadius;
+		float fEnd = g_fBright;
+		float fInterpFactor = (In.vTexUV.x - fStart) / (fEnd - fStart);
+		fLerp = lerp(0, fGradientStrength, fInterpFactor);
+	}
+	/* Second Lerp */
+	else if (In.vTexUV.x > g_fBright && In.vTexUV.x < g_fBright + fGradientRadius)
+	{
+		float fStart = g_fBright;
+		float fEnd = g_fBright + fGradientRadius;
+		float fInterpFactor = (In.vTexUV.x - fStart) / (fEnd - fStart);
+		fLerp = lerp(fGradientStrength, 0, fInterpFactor);
+	}
+	Out.vColor.b = 1.f;
+	Out.vColor.r -= 0.13f;
+	Out.vColor.g += 0.05f;
+	//Out.vColor.g += 0.2f;
+	Out.vColor.rgb += fLerp;   //fLerpValue;
+
+
+	if (Out.vColor.a<0.3f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_Dialoguebox(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor.a = Out.vColor.g;
+
+	if (Out.vColor.r == 0)
+		discard;
+	
+
+	Out.vColor.rgb = 0.f;
+	Out.vColor.a *= g_fAlpha;
+
+
+	return Out;
+
+
+}
+PS_OUT PS_DialogueLINE(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+
+    Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = Out.vColor.r;
+
+	if (Out.vColor.r == 0)
+		discard;
+
+    float4 lerpcolor = lerp(float4(0.9019607843137255f, 0.8235294117647059f, 0.6588235294117647f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), Out.vColor);
+
+	Out.vColor.rgb = lerpcolor.rgb;
+	Out.vColor.a *= g_fAlpha;
+
+	return Out;
+}
+
+PS_OUT PS_DIALOGUECURSOR(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	if (1 - g_fCurrentHp / g_fMaxHp > In.vTexUV.y)
+		discard;
+
+	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	if (origincolor.r == 0)
+		discard;
+
+		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+		float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+
+		Out.vColor = lerpcolor;
+
+		Out.vColor.a *= g_fAlpha;
+
+	return Out;
+}
+PS_OUT PS_DIALOGUECURSORNOTMOVE(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+
+	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	if (origincolor.r == 0)
+		discard;
+
+	float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+	float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+
+	Out.vColor = lerpcolor;
+
+	Out.vColor.a *= g_fAlpha;
+
+	return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -1080,6 +1200,63 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_Bright();
 	}
+
+	pass BLUEHPBAR
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_HPbarBLUE();                //29
+	}
+
+	pass Dialoguebox
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_Dialoguebox();                //30
+	}
+
+	pass Dialogueline
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DialogueLINE();                //31
+	}
+	
+	pass PS_DIALOGUECURSOR
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DIALOGUECURSOR();                //32
+	}
+
+	pass PS_DIALOGUECURSORNONMOVE
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DIALOGUECURSORNOTMOVE();                //33
+	}
+	
+	
 	
 	
 	

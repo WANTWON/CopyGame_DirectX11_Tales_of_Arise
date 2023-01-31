@@ -14,6 +14,10 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	CPhysX*		pPhysX = GET_INSTANCE(CPhysX);
+	pPhysX->CreateScene();
+	RELEASE_INSTANCE(CPhysX);
+
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 

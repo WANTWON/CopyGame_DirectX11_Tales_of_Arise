@@ -11,6 +11,8 @@
 #include "HawkBattle_GrabStartState.h"
 #include "HawkBattle_Damage_LargeB_State.h"
 #include "HawkBattle_DeadState.h"
+#include "HawkSitOnState.h"
+#include "HawkBattle_DashState.h"
 
 using namespace Hawk;
 
@@ -38,26 +40,24 @@ HRESULT CHawk::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CHawkState* pState = new CIdleState(this);
+	CHawkState* pState = new CSitOnState(this);
 	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 
-	///* Set Binary */
-	//CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	//CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
-	//char cName[MAX_PATH];
-	//ZeroMemory(cName, sizeof(char) * MAX_PATH);
-	//pData_Manager->TCtoC(TEXT("Hawk"), cName);
-	//pData_Manager->Conv_Bin_Model(m_pModelCom, cName, CData_Manager::DATA_ANIM);
-	//RELEASE_INSTANCE(CData_Manager);
-	//RELEASE_INSTANCE(CGameInstance);
+	
+	m_eMonsterID = HAWK;
+
 
 	m_tStats.m_fMaxHp = 3;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 
+
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	
+	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
+	Check_NearTrigger();
+
 	return S_OK;
 }
 
@@ -105,28 +105,64 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
+	/* For.Com_Obb*/
+	CCollider::COLLIDERDESC ObbColliderDesc;
+	ZeroMemory(&ObbColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ObbColliderDesc.vScale = _float3(7.f, 3.5f, 3.f);
+	ObbColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ObbColliderDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 int CHawk::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
+
+	if (true == m_bBattleMode && false == m_bDoneChangeState)
+	{
+		CHawkState* pState = new CBattle_IdleState(this, CHawkState::STATE_ID::START_BATTLEMODE);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+		m_bDoneChangeState = true;
+	}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	//{
+	//	CHawkState* pState = new CBattle_DashState(this);
+	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	//{
+	//	CHawkState* pState = new CBattle_ChargeState(this);
+	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	//{
+	//	CHawkState* pState = new CBattle_Flying_BackState(this);
+	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	//}
+
 
 	__super::Tick(fTimeDelta);
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	return OBJ_NOEVENT;
 }
 
 void CHawk::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return;
+
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)
@@ -167,6 +203,8 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	case MOVE_RUN:
 	case ATTACK_GRAB_LOOP:
 	case SYMBOL_RUN:
+	case MOVE_WALK_F:
+	case SYMBOL_STOP:
 		return true;
 
 	case ATTACK_FLUTTER:
@@ -176,6 +214,9 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_GRAB_START:
 	case ATTACK_TORNADE:
 	case TURN_R:
+	case ATTACK_BRAVE:
+	case SYMBOL_DETECT_STOP:
+	case ATTACK_CHARGE:
 		return false;
 	}
 
@@ -227,11 +268,8 @@ void CHawk::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{
-		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
+	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
 CHawk * CHawk::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

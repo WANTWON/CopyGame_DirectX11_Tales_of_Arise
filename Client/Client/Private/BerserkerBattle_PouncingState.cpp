@@ -25,16 +25,22 @@ CBerserkerState * CBattle_PouncingState::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 
 	m_iRand = rand() % 2;
-
-	if (false == m_bTargetSetting)
-	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		
-		m_bTargetSetting = true;
-	}
 
 	if (m_bIsAnimationFinished)
 	{
@@ -43,15 +49,6 @@ CBerserkerState * CBattle_PouncingState::Tick(_float fTimeDelta)
 
 		else
 			return new CBattle_RunState(m_pOwner, STATE_ID::STATE_QUADRUPLE);
-	}
-	else
-	{
-	//	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-
-	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
-
 	}
 
 
@@ -70,7 +67,6 @@ void CBattle_PouncingState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_POUNCING);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CBattle_PouncingState::Exit()

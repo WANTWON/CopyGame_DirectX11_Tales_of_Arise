@@ -31,6 +31,8 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
+	// 캡슐 컨트롤러 만드는 함수 
+	
 
 public: /*For.State*/
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
@@ -39,7 +41,7 @@ private:
 	virtual HRESULT Ready_Parts() override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	HRESULT SetUp_ShaderResources();
-
+	
 public:
 	static CAlphen* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

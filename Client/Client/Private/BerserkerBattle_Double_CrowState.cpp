@@ -17,7 +17,7 @@ CBattle_Double_CrowState::CBattle_Double_CrowState(CBerserker* pBerserker)
 
 CBerserkerState * CBattle_Double_CrowState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_BattleTarget();
+	//Find_BattleTarget();
 	
 
 	return nullptr;
@@ -26,10 +26,19 @@ CBerserkerState * CBattle_Double_CrowState::AI_Behaviour(_float fTimeDelta)
 CBerserkerState * CBattle_Double_CrowState::Tick(_float fTimeDelta)
 {
 	
-
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	/*if (m_pTarget == nullptr)
-		return nullptr;*/
+	
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 	
 	return nullptr;
 }
@@ -44,15 +53,7 @@ CBerserkerState * CBattle_Double_CrowState::LateTick(_float fTimeDelta)
 		return new CBattle_WalkState(m_pOwner);
 	}
 
-	else
-	{
-		/*_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());*/
-
-		m_pOwner->Check_Navigation();
-		
-	}
+	
 
 	return nullptr;
 }
@@ -63,9 +64,7 @@ void CBattle_Double_CrowState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DOUBLE_CROW);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-
-
+	
 }
 
 void CBattle_Double_CrowState::Exit()

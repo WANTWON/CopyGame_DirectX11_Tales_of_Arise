@@ -52,6 +52,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	lstrcpy(m_szLoadingText, TEXT("Loading"));
 
 	_matrix PivotMatrix;
+
 	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Slash"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Slash.fbx", "../../../Bin/Bin_Data/Effect/Slash/", PivotMatrix))))
@@ -121,10 +122,154 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/SWO1(R01).fbx", "../../../Bin/Bin_Data/NonAnim/SWO1(R01)/", PivotMatrix))))
 		return E_FAIL;*/
 
+	///*For.Prototype_Component_Model_SWO1(R00)*/
+	//PivotMatrix = XMMatrixScaling(0.03f, 0.03f, 0.03f);
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO00"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO00/SWO0.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO00/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO01"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO01/SWO1.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO01/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO02"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO02/SWO2.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO02/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO03"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO03/SWO3.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO03/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO04"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO04/SWO4.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO04/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO05"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO05/SWO5.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO05/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO06"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO06/SWO6.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO06/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO07"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO07/SWO7.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO07/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO08"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO08/SWO8.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO08/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO09"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO09/SWO9.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO09/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO10"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO10/SWO10.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO10/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO11"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO11/SWO11.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO11/", PivotMatrix))))
+	//	return E_FAIL;
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO12"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO12/SWO12.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO12/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO13"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO13/SWO13.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO13/", PivotMatrix))))
+	//	return E_FAIL;
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO14"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO14/SWO14.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO14/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO15"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO15/SWO15.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO15/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO16"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO16/SWO16.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO16/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO17"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO17/SWO17.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO17/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO18"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO18/SWO18.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO18/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO19"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO19/SWO19.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO19/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO20"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO20/SWO20.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO20/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO21"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO21/SWO21.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO21/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO22"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO22/SWO22.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO22/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO23"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO23/SWO23.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO23/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO24"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO24/SWO24.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO24/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO25"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO25/SWO25.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO25/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO26"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO26/SWO26.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO26/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO27"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO27/SWO27.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO27/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO28"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO28/SWO28.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO28/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO29"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO29/SWO29.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO29/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO31"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO31/SWO31.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO31/", PivotMatrix))))
+	//	return E_FAIL;
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO32"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO32/SWO32.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO32/", PivotMatrix))))
+	//	return E_FAIL;
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO33"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO33/SWO33.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO33/", PivotMatrix))))
+	//	return E_FAIL;
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO100"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SWO(ARI)/SWO100/SWO100.fbx", "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO100/", PivotMatrix))))
+	//	return E_FAIL;
+
+
 	///*For.Prototype_Component_Model_IceWolf*/
 	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf"),
-	//CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Ice_Wolf.fbx","../../../Bin/Bin_Data/Anim/Ice_Wolf/", PivotMatrix))))
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ice_Wolf.fbx", "../../../Bin/Bin_Data/Anim/Ice_Wolf/", PivotMatrix))))
 	//	return E_FAIL;
 
 	///*For.Prototype_Component_Model_Hawk*/
@@ -162,13 +307,13 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SionHead.fbx", "../../../Bin/Bin_Data/Anim/Sion/", PivotMatrix))))
 		return E_FAIL;*/
 
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Fence"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Fence_001.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
-	//	return E_FAIL;
+		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Fence"),
+		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Fence_001.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+		//	return E_FAIL;
 
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("LightPillar"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/StreetLight_002.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
-	//	return E_FAIL;
+		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("LightPillar"),
+		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/StreetLight_002.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+		//	return E_FAIL;
 
 
 

@@ -5,6 +5,7 @@
 #include "SlimeBattle_RunState.h"
 #include "SlimeBattle_TakeDamage_State.h"
 #include "SlimeBattle_DeadState.h"
+#include "SlimeBattle_IdleState.h"
 
 using namespace Slime;
 
@@ -32,7 +33,7 @@ HRESULT CSlime::Initialize(void * pArg)
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	/* Set State */
-	CSlimeState* pState = new CIdleState(this);
+	CSlimeState* pState = new CIdleState(this, CSlimeState::FIELD_STATE_ID::FIELD_STATE_IDLE);
 	m_pSlimeState = m_pSlimeState->ChangeState(m_pSlimeState, pState);
 
 	///* Set Binary */
@@ -45,8 +46,10 @@ HRESULT CSlime::Initialize(void * pArg)
 	//RELEASE_INSTANCE(CData_Manager);
 	//RELEASE_INSTANCE(CGameInstance);
 
-	m_tInfo.iMaxHp = 1;
-	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+
+	m_tInfo.fMaxHp = 3;
+	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
+
 	m_tInfo.iDamage = 10;
 
 
@@ -56,6 +59,9 @@ HRESULT CSlime::Initialize(void * pArg)
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 2.0f);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, 2.0f);
 	m_pTransformCom->Set_Scale(CTransform::STATE_LOOK, 2.0f);
+
+	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
+	Check_NearTrigger();
 
 	return S_OK;
 }
@@ -113,6 +119,13 @@ int CSlime::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
+
+	if (true == m_bBattleMode && false == m_bDoneChangeState)
+	{
+		CSlimeState* pState = new CBattle_IdleState(this);
+		m_pSlimeState = m_pSlimeState->ChangeState(m_pSlimeState, pState);
+		m_bDoneChangeState = true;
+	}
 
 	__super::Tick(fTimeDelta);
 	AI_Behaviour(fTimeDelta);
@@ -221,6 +234,10 @@ _bool CSlime::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_POISON_RAIN:
 	case DAMAGE_LARGE_B:
 	case DEAD:
+	case TURN_R:
+	case TURN_L:
+	case MAGIC_EMIT:
+	case ADVENT:
 		return false;
 
 	}
@@ -270,11 +287,8 @@ void CSlime::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{
-		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
+	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
 CSlime * CSlime::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

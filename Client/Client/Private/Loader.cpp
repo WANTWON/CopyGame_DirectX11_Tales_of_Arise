@@ -2,23 +2,28 @@
 #include "Loader.h"
 
 #include "GameInstance.h"
-
-#include "UI_Portrait.h"
 #include "Camera_Dynamic.h"
-#include "EffectTexture.h"
-#include "EffectMesh.h"
-#include "ParticleSystem.h"
-#include "Particle_Rect.h"
-#include "Particle_Point.h"
-#include "UI_Screen.h"
 #include "Terrain.h"
-#include "Alphen.h"
-#include "Sion.h"
 #include "Weapon.h"
 #include "Sky.h"
 #include "Water.h"
 #include "NonAnim_Instance.h"
 #include "NonAnim.h"
+#include "Trigger.h"
+
+//Effect
+#include "EffectTexture.h"
+#include "EffectMesh.h"
+#include "ParticleSystem.h"
+#include "Particle_Rect.h"
+#include "Particle_Point.h"
+
+
+//Actor
+#include "Alphen.h"
+#include "Sion.h"
+#include "FemaleYoung.h"
+
 
 //UI
 #include "UI_Portrait.h"
@@ -47,8 +52,11 @@
 #include "UI_Changebutton.h"
 #include "UI_LOCKON.h"
 #include "UI_MENU_Back.h"
-
+#include "UI_Dialogue.h"
 #include "UI_RuneEffect.h"
+#include "UI_Dialoguepopup.h"
+#include "UI_InterectMsg.h"
+#include "UI_Get_item_Popup.h"
 
 //Monster
 #include "Ice_Wolf.h"
@@ -143,11 +151,21 @@ HRESULT CLoader::Loading_ForPrototype()
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 
+
+	/*For.Prototype_Trigger */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NpcFemale"),
+		CFemaleYoung::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_Trigger */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Trigger"),
+		CTrigger::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/*For.Prototype_NonAnim */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NonAnim"),
 		CNonAnim::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
 
 	/*For.Prototype_NonAnim */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NonAnim_Instance"),
@@ -257,6 +275,23 @@ HRESULT CLoader::Loading_ForPrototype()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MENU_BACK"),
 		CUI_MENU_Back::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Dialogue"),
+		CUI_Dialogue::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Dialoguepopup"),
+		CUI_Dialoguepopup::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"),
+		CUI_Get_item_Popup::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_INTERECTMSG"),
+		CUI_InterectMsg::Create(m_pDevice, m_pContext))))
+		return E_FAIL;*/
+
 
 
 	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront"),
@@ -513,14 +548,19 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/Sion.dat"))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Model_Sion */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NpcFemaleYoung"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NpcFemaleYoung/NpcFemaleYoung.dat"))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Model_Water_Plane*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Water/Plane.dat"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Alphen_Weapon01 */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1(R00)"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/SWO1(R00)/SWO1(R00).dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO01/SWO1.dat"))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Model_IceWolf*/
@@ -678,6 +718,7 @@ HRESULT CLoader::Loading_ForBattleLevel()
 
 	///NON ANIM 
 
+	
 	/*For.Prototype_Component_Model_Apple*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BATTLE, TEXT("Apple"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Apple/Apple.dat"))))
@@ -1085,6 +1126,11 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("SlimPlant"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Plant/SlimPlant.dat"))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Crystal"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Crystal/Crystal.dat"))))
+		return E_FAIL;
+
 #pragma endregion Interact Object 
 
 
@@ -1171,8 +1217,6 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Tree1.dat",
 			"../../../Bin/Data/Field_Data/Tree.dat"))))
 		return E_FAIL;
-
-
 
 #pragma endregion Instancing
 
@@ -1294,7 +1338,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_charactername"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/charactername/charactername%d.dds"), 3))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/charactername/charactername%d.dds"), 4))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lockon"),
@@ -1318,7 +1362,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Item_name"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/itemname/itemname%d.dds"), 10))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/itemname/itemname%d.dds"), 12))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENULINE"),
@@ -1330,7 +1374,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ITEMINFO"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/iteminfo/iteminfo%d.dds"), 10))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/iteminfo/iteminfo%d.dds"), 12))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENUGALD"),
@@ -1362,7 +1406,13 @@ HRESULT CLoader::Loading_ForUITexture()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/lighteffect/light%d.dds"), 1))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dialoguebox"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/dialogue/maintextbox%d.dds"), 3))))
+		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sideportrait"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/dialogue/sideportrait%d.dds"), 4))))
+		return E_FAIL;
 	
 
 	

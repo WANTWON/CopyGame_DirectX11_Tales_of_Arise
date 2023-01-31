@@ -21,12 +21,8 @@ CBerserkerState * CBattle_HowLingState::AI_Behaviour(_float fTimeDelta)
 CBerserkerState * CBattle_HowLingState::Tick(_float fTimeDelta)
 {
 
-
 	
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
-
-
 	return nullptr;
 }
 
@@ -42,14 +38,13 @@ CBerserkerState * CBattle_HowLingState::LateTick(_float fTimeDelta)
 
 	else
 	{
-//			_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-
-	//		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
-
 			m_pOwner->Check_Navigation();
-		
-		m_pOwner->Set_OnGoingHowling();
+
+			m_pOwner->Set_OnGoingHowling();
 	}
+
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	
 	return nullptr;
 }
 

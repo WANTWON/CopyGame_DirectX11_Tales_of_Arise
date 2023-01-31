@@ -26,20 +26,26 @@ CBerserkerState * CBattle_WalkState::AI_Behaviour(_float fTimeDelta)
 
 CBerserkerState * CBattle_WalkState::Tick(_float fTimeDelta)
 {
-	AI_Behaviour(fTimeDelta);
+	
 	m_fTarget_Distance = Find_BattleTarget();
 
-	m_pOwner->Check_Navigation();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	
-	m_fRedayAngryTimer += fTimeDelta;
+	//if (!m_bIsAnimationFinished)
+	//{
+	//	_vector vecTranslation;
+	//	_float fRotationRadian;
 
-	if (m_fRedayAngryTimer >= 5.5f)
-	{
-		return new CBattle_HowLingState(m_pOwner);
+	//	m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-	}
+	//	m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+	//	m_pOwner->Check_Navigation();
+	//}
+
+	m_pOwner->Check_Navigation();
+
 
 	return nullptr;
 }
@@ -47,22 +53,25 @@ CBerserkerState * CBattle_WalkState::Tick(_float fTimeDelta)
 CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 {
 
+
 	srand((_uint)time(NULL));
 	m_iRand = rand() % 2;
+	//if (m_pTarget == nullptr)
+	//	return nullptr;
 
 	if (m_pTarget == nullptr)
-		return nullptr;
+		return new CBattle_WalkState(m_pOwner);
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	if (3.5f < m_fTarget_Distance)
+	
+	if (4.5f < m_fTarget_Distance)
 	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *0.85);
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.1f);
 
-
-		
-		m_pOwner->Check_Navigation();
 	}
+
+
 
 	else
 	{

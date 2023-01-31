@@ -9,6 +9,16 @@ BEGIN(Client)
 class CBerserkerState
 {
 public:
+	enum FIELD_STATE_ID
+	{
+		FIELD_STATE_IDLE,
+		STATE_WALK,
+		STATE_TURN_L,
+		STATE_TURN_R,
+		STATE_CHASE,
+		STATE_HOWLING,
+	};
+
 	enum STATE_ID
 	{
 		STATE_IDLE,
@@ -101,17 +111,16 @@ protected:
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameObject);
-	/*	if (!pPlayer)
-			return;*/
+		//if (!pPlayer)
+		//	return;
 
-		
-		{
 			m_pTarget = pPlayer;
+
 			_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 			_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
 			_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
-			return fDistance;
+			
 
 			
 
@@ -122,9 +131,9 @@ protected:
 				
 				m_bBitePossible = true;
 
-				
 			}
-		}
+		
+			return fDistance;
 	}
 
 

@@ -8,6 +8,7 @@
 #include "Effect.h"
 #include "EffectTexture.h"
 #include "PlayerJumpState.h"
+#include "PlayerSkillState.h"
 
 using namespace Player;
 
@@ -42,23 +43,18 @@ CPlayerState * CIdleState::HandleInput()
 		return new CRunState(m_pOwner, DIR_STRAIGHT);
 	else if (pGameInstance->Key_Pressing(DIK_M))
 		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.01f);
-	/* Particle Test */
-	else if (pGameInstance->Key_Down(DIK_P))
-	{
-		//CEffect::PlayEffect(TEXT("SparkTest.dat"), m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-		CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc;
-		wcscpy_s(tTextureEffectDesc.wcPrototypeId, MAX_PATH, TEXT("Spark_00"));
-		tTextureEffectDesc.bIsDistortion = true;
-		CEffect* pEffect = nullptr;
 
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-		pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectTexture"), LEVEL_STATIC, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tTextureEffectDesc);
-		pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_TEXTURE);
-		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + XMVectorSet(0.f, 1.f, 0.f, 0.f);
-		pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
-		RELEASE_INSTANCE(CGameInstance);
+	/* Skill */
+	if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+	{
+	//	if (pGameInstance->Key_Down(DIK_E)) //change
+	//		return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
+		if (pGameInstance->Key_Down(DIK_R))
+			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
+		else if (pGameInstance->Key_Down(DIK_F))
+			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
 	}
-	
+
 	return nullptr;
 }
 

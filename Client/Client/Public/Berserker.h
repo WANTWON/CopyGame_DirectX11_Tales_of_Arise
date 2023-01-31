@@ -200,6 +200,7 @@ private:
 	_bool m_bOnGoingAnim = false;
 	_bool m_bOnGoingHowLing = false;
 	_bool m_bOnAngry = false;
+	_bool m_bDoneChangeState = false;
 public:
 	static CBerserker* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
