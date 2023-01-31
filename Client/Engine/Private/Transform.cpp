@@ -263,20 +263,16 @@ bool CTransform::Sliding_Anim(_vector vecMove, _vector vecRotation, class CNavig
 	_vector vScale, vRotQuat, vPos;
 	XMMatrixDecompose(&vScale, &vRotQuat, &vPos, WorldMatrix);
 
-	_vector vAxis;
-	_float fRadian;
-	XMQuaternionToAxisAngle(&vAxis, &fRadian, vecRotation);
-
-	_vector RotationInWorld = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), (fRadian * -1.f));
+	_vector RotationInWorld = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), (acosf(XMVectorGetX(vecRotation)) * 2.f));
 
 	WorldMatrix = XMMatrixRotationQuaternion(XMQuaternionNormalize(XMQuaternionMultiply(vRotQuat, RotationInWorld)));
-
-	_vector vTranslation = XMVector3TransformCoord(vecMove, XMMatrixRotationY(XMConvertToRadians(180.f)) * WorldMatrix);
 
 	WorldMatrix.r[0] = XMVector4Normalize(WorldMatrix.r[0]) * Get_Scale(CTransform::STATE_RIGHT);
 	WorldMatrix.r[1] = XMVector4Normalize(WorldMatrix.r[1]) * Get_Scale(CTransform::STATE_UP);
 	WorldMatrix.r[2] = XMVector4Normalize(WorldMatrix.r[2]) * Get_Scale(CTransform::STATE_LOOK);
 	WorldMatrix.r[3] = vPos;
+
+	_vector vTranslation = XMVector3TransformCoord(vecMove, XMMatrixRotationY(XMConvertToRadians(180.f)) * WorldMatrix);
 
 	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
 

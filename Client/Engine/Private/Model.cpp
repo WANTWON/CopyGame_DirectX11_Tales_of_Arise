@@ -56,26 +56,15 @@ CHierarchyNode * CModel::Get_BonePtr(const char * pBoneName) const
 	return *iter;
 }
 
-vector<EVENT> CModel::Get_Events(void)
+vector<ANIMEVENT> CModel::Get_Events(void)
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_Events();
 }
 
 void CModel::Get_MoveTransformationMatrix(_vector * pTranslation, _vector * pRotation)
 {
-	if (m_bInterupted)
-	{
-		memcpy(pTranslation, &m_Animations[m_iPreAnimIndex]->Get_RootTranslation(), sizeof(_vector));
-		memcpy(pRotation, &m_Animations[m_iPreAnimIndex]->Get_RootRotation(), sizeof(_vector));
-
-		if (m_iPreAnimIndex == m_iCurrentAnimIndex)
-			m_bInterupted = false;
-	}
-	else
-	{
-		memcpy(pTranslation, &m_Animations[m_iCurrentAnimIndex]->Get_RootTranslation(), sizeof(_vector));
-		memcpy(pRotation, &m_Animations[m_iCurrentAnimIndex]->Get_RootRotation(), sizeof(_vector));
-	}
+	memcpy(pTranslation, &m_Animations[m_iCurrentAnimIndex]->Get_RootTranslation(), sizeof(_vector));
+	memcpy(pRotation, &m_Animations[m_iCurrentAnimIndex]->Get_RootRotation(), sizeof(_vector));
 }
 
 void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
@@ -313,17 +302,15 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
-	if ((-1 != m_iPreAnimIndex) && (m_iCurrentAnimIndex != m_iPreAnimIndex))
+	if (m_iCurrentAnimIndex != m_iPreAnimIndex)
 	{	//TODO: ����ִ԰� ���� �ִ������Ӱ��� �������� �Լ� ȣ�� �� ��.
-		m_bInterupted = true;
-
-		m_bLinearFinished = m_Animations[m_iPreAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iCurrentAnimIndex], pBoneName);
+		m_bLinearFinished = m_Animations[m_iCurrentAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iPreAnimIndex], pBoneName);
 
 		if (m_bLinearFinished == true)
 		{
 			m_Animations[m_iPreAnimIndex]->Set_TimeReset();
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
-		}
+		} 
 	}
 	else
 	{

@@ -15,10 +15,11 @@ public:
 	HRESULT Bin_Initialize(DATA_BINCHANNEL* pAIChannel, class CModel* pModel); // Ãß°¡
 	void Invalidate_TransformationMatrix(_float fCurrentTime, _vector* pRotation = nullptr, _vector* pPosition = nullptr);
 	void Reset();
-	_bool Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime, _vector* pRotation = nullptr, _vector* pPosition = nullptr);
+	_bool Linear_Interpolation(KEYFRAME PreKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime, _vector* pRotation = nullptr, _vector* pPosition = nullptr);
 
 public: /*Get*/
 	KEYFRAME	Get_StartKeyFrame(void) { return m_KeyFrames[0]; }
+	KEYFRAME	Get_KeyFrameLinear(void) { return m_KeyFrame_Linear; }
 	vector<KEYFRAME> Get_KeyFrames(void) { return m_KeyFrames; }
 	const char* Get_Name() const { return m_szName; }
 

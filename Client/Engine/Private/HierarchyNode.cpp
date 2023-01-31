@@ -21,6 +21,7 @@ HRESULT CHierarchyNode::Initialize(BINBONE tBone, CHierarchyNode* pParent)
 	/* m_TransformationMatrix : 이 뼈만의 상태. (부모기준으로 표현된) (부모의 상태를 제외된) */
 	m_TransformationMatrix = tBone.Transformation;
 	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix)));
+	m_OriTransformationMatrix = m_TransformationMatrix;
 
 	/* m_CombinedTransformationMatrix : 이 뼈 + 부모의 상태. (원점기준으로 표현된) (부모의 상태를 포함한) */
 	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());

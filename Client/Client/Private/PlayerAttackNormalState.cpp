@@ -38,7 +38,7 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-	vector<EVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 	for (auto& pEvent : pEvents)
 	{
@@ -49,9 +49,9 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 				switch (m_eStateId)
 				{
 				case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (EVENT_STATE == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
@@ -69,9 +69,9 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (EVENT_STATE == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
@@ -89,9 +89,9 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (EVENT_STATE == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
@@ -109,7 +109,7 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					break;
 				}
@@ -126,19 +126,19 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 				switch (m_eStateId)
 				{
 				case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				}
