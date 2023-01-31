@@ -24,17 +24,12 @@ CBattle_IdleState::CBattle_IdleState(CHawk* pHawk, STATE_ID ePreBattleState)
 
 CHawkState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 {
-	
-	
-	
+
 	return nullptr;
 }
 
 CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
-	
-
-
 	Find_BattleTarget();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
@@ -62,9 +57,7 @@ CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	
 	m_fNextMotionTimer += fTimeDelta;
 
-	
-
-	if (m_fNextMotionTimer >= 0.5f)
+	if (m_fNextMotionTimer >= 3.5f)
 	{
 		switch (m_ePreBattleState)
 		{

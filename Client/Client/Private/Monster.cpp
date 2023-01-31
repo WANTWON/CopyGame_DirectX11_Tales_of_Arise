@@ -39,6 +39,7 @@ int CMonster::Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_bTakeDamage)
@@ -69,7 +70,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
 	{
-		Take_Damage(1.f, m_pTarget);
+		Take_Damage(1, m_pTarget);
 		m_bTakeDamage = true;
 	}
 
@@ -98,17 +99,6 @@ void CMonster::Late_Tick(_float fTimeDelta)
 			CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID);
 		}
 	}
-	
-
-
-#ifdef _DEBUG
-	if (m_pAABBCom != nullptr)
-		m_pRendererCom->Add_Debug(m_pAABBCom);
-	if (m_pOBBCom != nullptr)
-		m_pRendererCom->Add_Debug(m_pOBBCom);
-	if (m_pSPHERECom != nullptr)
-		m_pRendererCom->Add_Debug(m_pSPHERECom);
-#endif
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
 		m_bDead = true;
@@ -329,7 +319,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		m_tInfo.fCurrentHp = 0;
 		/*m_bDissolve = true;*/
 
-		return _float(m_tInfo.fCurrentHp);
+		return _int(m_tInfo.fCurrentHp);
 
 	}
 
@@ -338,13 +328,32 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	m_dwHitTime = GetTickCount();
 
 
-	return _float(m_tInfo.fCurrentHp);
+	return _int(m_tInfo.fCurrentHp);
 
 }
 
 void CMonster::Compute_CurrentIndex()
 {
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+}
+
+void CMonster::Check_NearTrigger()
+{
+	list<CGameObject*>* TriggerLIst = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_SNOWFIELD, TEXT("Layer_Trigger"));
+	if (TriggerLIst == nullptr)
+		return;
+
+	for (auto& iter : *TriggerLIst)
+	{
+		_vector vTriggerPos = dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_float fDIstance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - vTriggerPos));
+
+		if (m_fMinLengh > fDIstance)
+		{
+			m_fMinLengh = fDIstance;
+			m_pTrigger = dynamic_cast<CBaseObj*>(iter);
+		}
+	}
 }
 
 

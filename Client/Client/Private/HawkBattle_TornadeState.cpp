@@ -37,15 +37,16 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		_vector vecTranslation, vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
+
 
 		m_pOwner->Check_Navigation();
 	}
+	
 
 	return nullptr;
 }
@@ -60,30 +61,13 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	if (false == m_bTargetSetting)
-	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 		
-		m_bTargetSetting = true;
-	}
+
 
 	if (m_bIsAnimationFinished)
-	{
-		switch (m_iRand)
-		{
-		case 0:
-			//return new CBattle_RunState(m_pOwner, );
-			break;
-		case 1:
-			return new CBattle_DashState(m_pOwner);
-			break;
-
-		default:
-			break;
-		}
-
-
-	}
+		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_TORNADE);
+		
 
 
 
@@ -96,7 +80,7 @@ void CBattle_TornadeState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_TORNADE);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	
 }
 
 void CBattle_TornadeState::Exit()

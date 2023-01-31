@@ -37,13 +37,12 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		_vector vecTranslation, vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-		
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
+
 		m_pOwner->Check_Navigation();
 	}
 	return nullptr;
@@ -55,23 +54,12 @@ CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
 	m_iRand = rand() % 1;
 
 
-
-
 	if (m_bIsAnimationFinished)
-	{
-		switch (m_iRand)
-		{
-		case 0:
-			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_PECK);
-			break;
+		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_PECK);
+
+
+
 	
-
-		default:
-			break;
-		}
-
-
-	}
 
 
 	return nullptr;

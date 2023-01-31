@@ -10,6 +10,7 @@
 #include "PlayerManager.h"
 #include <time.h>
 #include "UI_Dialogue.h"
+#include "BattleManager.h"
 #include "UI_Dialoguepopup.h"
 
 CMainApp::CMainApp()
@@ -49,7 +50,7 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	if (FAILED(m_pDataManager->Init(m_pDevice, m_pContext)))
-		return E_FAIL;	// Ãß°¡
+		return E_FAIL;	// ï¿½ß°ï¿½
 
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
@@ -57,7 +58,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Open_Level(LEVEL_LOGO)))
 		return E_FAIL;
 
-	// MakeSpriteFont "ÆùÆ®ÀÌ¸§" /FontSize:32 /FastPack /CharacterRegion:0x0020-0x00FF /CharacterRegion:0x3131-0x3163 /CharacterRegion:0xAC00-0xD800 /DefaultCharacter:0xAC00 Ãâ·ÂÆÄÀÏÀÌ¸§.spritefont
+	// MakeSpriteFont "ï¿½ï¿½Æ®ï¿½Ì¸ï¿½" /FontSize:32 /FastPack /CharacterRegion:0x0020-0x00FF /CharacterRegion:0x3131-0x3163 /CharacterRegion:0xAC00-0xD800 /DefaultCharacter:0xAC00 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½.spritefont
 	if (FAILED(m_pGameInstance->Add_Fonts(m_pDevice, m_pContext, TEXT("Font_Nexon"), TEXT("../../../Bin/Resources/Fonts/130.spritefont"))))
 		return E_FAIL;
 
@@ -107,7 +108,7 @@ HRESULT CMainApp::Render()
 
 	if (m_fTimeAcc > 1.0f)
 	{
-		//wsprintf(m_szFPS, TEXT("¿¡ÇÁÇÇ¿¡½º : %d"), m_iNumRender);
+		//wsprintf(m_szFPS, TEXT("ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½ : %d"), m_iNumRender);
 
 		cout << "FPS : "<< m_iNumRender << "\n" << endl;
 		m_fTimeAcc = 0.f;
@@ -215,6 +216,7 @@ void CMainApp::Free()
 	CData_Manager::Get_Instance()->Destroy_Instance();
 	CCameraManager::Get_Instance()->Destroy_Instance();
 	CPlayerManager::Get_Instance()->Destroy_Instance();
+	CBattleManager::Get_Instance()->Destroy_Instance();
 
 }
 

@@ -47,6 +47,7 @@ public: /*Getter Setter */
 	void Set_Scale(STATE eState, _float fScale);
 	void Set_TransformDesc(const TRANSFORMDESC& TransformDesc ) {m_TransformDesc = TransformDesc;}
 	void Change_Speed(_float fSpeed) { m_TransformDesc.fSpeedPerSec = fSpeed; }
+	void Change_RotationPerSec(_float fRotationPerSec) { m_TransformDesc.fRotationPerSec = fRotationPerSec; }
 
 	_float Get_CurrentRotationX() { return m_fCurrentRotationX; }
 	_float Get_CurrentRotationY() { return m_fCurrentRotationY; }
@@ -70,7 +71,7 @@ public: /* Use Sliding */
 	bool Sliding_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _float fRadius = 1.f);
 
 public: /* Use Sliding while Animation */
-	bool Sliding_Anim(_vector vecMove, _float fRotation, class CNavigation* pNavigation = nullptr);
+	bool Sliding_Anim(_vector vecMove, _vector vecRotation, class CNavigation* pNavigation = nullptr);
 
 public:
 	void Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight, _float fEndiHeight);

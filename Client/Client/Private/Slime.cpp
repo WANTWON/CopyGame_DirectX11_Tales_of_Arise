@@ -60,6 +60,9 @@ HRESULT CSlime::Initialize(void * pArg)
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, 2.0f);
 	m_pTransformCom->Set_Scale(CTransform::STATE_LOOK, 2.0f);
 
+	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
+	Check_NearTrigger();
+
 	return S_OK;
 }
 
@@ -107,6 +110,14 @@ HRESULT CSlime::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
+	/* For.Com_OBB */
+	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ColliderDesc.vScale = _float3(7.f, 3.f, 3.f);
+	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -129,6 +140,7 @@ int CSlime::Tick(_float fTimeDelta)
 	Tick_State(fTimeDelta);
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return OBJ_NOEVENT;
 }
@@ -284,11 +296,8 @@ void CSlime::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{
-		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
+	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
 CSlime * CSlime::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

@@ -27,16 +27,14 @@ CHawkState * CWalkState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		_vector vecTranslation, vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
-
 
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f);
 	
@@ -52,7 +50,7 @@ CHawkState * CWalkState::LateTick(_float fTimeDelta)
 
 	m_fWalkMoveTimer += fTimeDelta;
 
-	if (m_fWalkMoveTimer > 1.5f)
+	if (m_fWalkMoveTimer > 5.5f)
 		return new CTurnR_State(m_pOwner);
 
 	return nullptr;

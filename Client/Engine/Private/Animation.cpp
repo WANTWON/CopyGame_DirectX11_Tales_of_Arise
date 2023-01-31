@@ -74,11 +74,6 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 			ReadFile(hAddFile, &tEvent, sizeof(ANIMEVENT), pdwAddByte, nullptr);
 
 			m_vecAnimEvent.push_back(tEvent);
-			
-			EVENT tCheckEvent;
-			tCheckEvent.isPlay = false;
-			tCheckEvent.iEventType = tEvent.eType;
-			m_vecEvents.push_back(tCheckEvent);
 		}
 	}
 	
@@ -111,7 +106,7 @@ HRESULT CAnimation::Bin_Initialize(DATA_BINANIM * pAIAnimation, CModel * pModel)
 	return S_OK;
 }
 
-_bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop)
+_bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop, const char* pRootName)
 {
 	//애니메이션 구간별 재생 속도 변화
 	_int iSize = m_ChangeTickTimes.size() - 1;
@@ -143,9 +138,9 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 	for (_int i = 0; i < m_vecAnimEvent.size(); ++i)
 	{
 		if (m_vecAnimEvent[i].fStartTime < m_fCurrentTime && m_vecAnimEvent[i].fEndTime > m_fCurrentTime)
-			m_vecEvents[i].isPlay = true;
+			m_vecAnimEvent[i].isPlay = true;
 		else
-			m_vecEvents[i].isPlay = false;
+			m_vecAnimEvent[i].isPlay = false;
 	}
 
 	if (m_fCurrentTime > m_fDuration)
@@ -156,7 +151,10 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 		{
 			for (auto& pChannel : m_Channels)
 			{
-				pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
+				if ((nullptr != pRootName) && !strcmp(pChannel->Get_Name(), pRootName))
+					pChannel->Invalidate_TransformationMatrix(m_fCurrentTime, &m_vRotation, &m_vPosition);
+				else
+					pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
 			}
 
 			Set_TimeReset();
@@ -170,7 +168,10 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 
 	for (auto& pChannel : m_Channels)
 	{
-		pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
+		if ((nullptr != pRootName) && !strcmp(pChannel->Get_Name(), pRootName))
+			pChannel->Invalidate_TransformationMatrix(m_fCurrentTime, &m_vRotation, &m_vPosition);
+		else
+			pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
 	}
 
 	if (true == m_isFinished && true == isLoop)
@@ -179,23 +180,29 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 	return m_isFinished; //루프를 돌지 않고 애니메이션이 끝났을 때
 }
 
-_bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation * NextAnim)
+_bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* PreAnim, const char* pRootName)
 {
 	/* 현재 재생중인 시간. */
-	vector<CChannel*> NextAnimChannels = NextAnim->Get_Channels();
-
 	m_bLinearFinished = false;
 	m_fLinear_CurrentTime += fTimeDelta;
 
 	if (!m_bLinearFinished)
 	{
+		vector<CChannel*> PreAnimChannels = PreAnim->Get_Channels();
 		for (_uint i = 0; i < m_iNumChannels; ++i)
 		{
-			if (m_Channels[i]->Linear_Interpolation(NextAnimChannels[i]->Get_StartKeyFrame(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration))
+			_bool isFinishInterpolation = false;
+
+			if ((nullptr != pRootName) && !strcmp(m_Channels[i]->Get_Name(), pRootName))
+				isFinishInterpolation = m_Channels[i]->Linear_Interpolation(PreAnimChannels[i]->Get_KeyFrameLinear(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration, &m_vRotation, &m_vPosition);
+			else
+				isFinishInterpolation = m_Channels[i]->Linear_Interpolation(PreAnimChannels[i]->Get_KeyFrameLinear(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration);
+			
+			if (isFinishInterpolation)
 			{
 				m_fLinear_CurrentTime = 0.f;
 				m_bLinearFinished = true;
-				m_Channels[i]->Reset();
+				break;
 			}
 		}
 	}
@@ -203,6 +210,78 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 		m_iTickPerSecondIndex = 0;
 
 	return m_bLinearFinished;
+}
+
+_bool CAnimation::Is_Keyframe(char * pChannelName, _uint iKeyframe)
+{
+	auto iter = find_if(m_Channels.begin(), m_Channels.end(), [&](CChannel* pChannel)
+	{
+		return !strcmp(pChannelName, pChannel->Get_ChannelName());
+	});
+
+	if (iter == m_Channels.end())
+		return false;
+	else
+	{
+		if ((*iter)->Get_CurrentKeyframe() == iKeyframe)
+			return true;
+		else
+			return false;
+	}
+}
+
+_bool CAnimation::Under_Keyframe(char * pChannelName, _uint iKeyframe)
+{
+	auto iter = find_if(m_Channels.begin(), m_Channels.end(), [&](CChannel* pChannel)
+	{
+		return !strcmp(pChannelName, pChannel->Get_ChannelName());
+	});
+
+	if (iter == m_Channels.end())
+		return false;
+	else
+	{
+		if ((*iter)->Get_CurrentKeyframe() < iKeyframe)
+			return true;
+		else
+			return false;
+	}
+}
+
+_bool CAnimation::Over_Keyframe(char * pChannelName, _uint iKeyframe)
+{
+	auto iter = find_if(m_Channels.begin(), m_Channels.end(), [&](CChannel* pChannel)
+	{
+		return !strcmp(pChannelName, pChannel->Get_ChannelName());
+	});
+
+	if (iter == m_Channels.end())
+		return false;
+	else
+	{
+		if ((*iter)->Get_CurrentKeyframe() > iKeyframe)
+			return true;
+		else
+			return false;
+	}
+}
+
+_bool CAnimation::Between_Keyframe(char * pChannelName, _uint iKeyframeLower, _uint iKeyframeUpper)
+{
+	auto iter = find_if(m_Channels.begin(), m_Channels.end(), [&](CChannel* pChannel)
+	{
+		return !strcmp(pChannelName, pChannel->Get_ChannelName());
+	});
+
+	if (iter == m_Channels.end())
+		return false;
+	else
+	{
+		if (((*iter)->Get_CurrentKeyframe() >= iKeyframeLower) && ((*iter)->Get_CurrentKeyframe() <= iKeyframeUpper))
+			return true;
+		else
+			return false;
+	}
 }
 
 void CAnimation::Set_TimeReset()
@@ -221,7 +300,7 @@ void CAnimation::Reset(void)
 		pChannel->Reset();
 	}
 
-	for (auto& Event : m_vecEvents)
+	for (auto& Event : m_vecAnimEvent)
 		Event.isPlay = false;
 
 	m_iTickPerSecondIndex = 0;

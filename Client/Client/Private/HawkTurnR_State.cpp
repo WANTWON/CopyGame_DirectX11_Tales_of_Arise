@@ -26,12 +26,11 @@ CHawkState * CTurnR_State::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		_vector vecTranslation, vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -47,7 +46,6 @@ CHawkState * CTurnR_State::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-
 		return new CIdleState(m_pOwner, CHawkState::FIELD_STATE_ID::STATE_TURN_R);
 	}
 	return nullptr;

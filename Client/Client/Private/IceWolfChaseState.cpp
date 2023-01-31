@@ -27,8 +27,6 @@ CIceWolfState * CChaseState::Tick(_float fTimeDelta)
 	
 	m_pOwner->Check_Navigation();
 
-	
-
 	return nullptr;
 }
 
@@ -40,7 +38,7 @@ CIceWolfState * CChaseState::LateTick(_float fTimeDelta)
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 
 	if (m_fTarget_Distance >= 15.f)
-		return new CIdleState(m_pOwner, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE, CIceWolfState::FIELD_STATE_ID::STATE_TURN_L);
+		return new CIdleState(m_pOwner, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE);
 	
 	return nullptr;
 }

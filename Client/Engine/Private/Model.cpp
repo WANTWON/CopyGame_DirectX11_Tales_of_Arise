@@ -26,6 +26,7 @@ CModel::CModel(const CModel & rhs)
 	, m_iNumAnimations(rhs.m_iNumAnimations)	// �߰�
 	//, m_DataMaterials(rhs.m_DataMaterials)	// �߰�
 	//, m_bIsBin(rhs.m_bIsBin)	// �߰�
+	, m_iPreAnimIndex(rhs.m_iPreAnimIndex)
 {
 	for (auto& pMeshContainer : rhs.m_Meshes)
 		m_Meshes.push_back((CMeshContainer*)pMeshContainer->Clone());
@@ -55,36 +56,44 @@ CHierarchyNode * CModel::Get_BonePtr(const char * pBoneName) const
 	return *iter;
 }
 
-vector<EVENT> CModel::Get_Events(void)
+vector<ANIMEVENT> CModel::Get_Events(void)
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_Events();
 }
 
-void CModel::Get_MoveTransformationMatrix(const char * pBoneName, _vector * pTranslation, _float * pRotation)
+void CModel::Get_MoveTransformationMatrix(_vector * pTranslation, _vector * pRotation)
 {
-	for (auto& pBone : m_Bones)
-	{
-		// 이름 비교
-		if (!strcmp(pBoneName, pBone->Get_Name()))
-		{
-			_vector vecMoveTranslation = pBone->Get_Translation(); 
-			if (m_bInterupted)
-				vecMoveTranslation = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-			
-			_float Rotation = pBone->Get_RotationRadian();
-
-			// 이동 값, 회전 값 복사
-			memcpy(pTranslation, &vecMoveTranslation, sizeof(_vector));
-			memcpy(pRotation, &Rotation, sizeof(_vector));
-		}
-	}
+	memcpy(pTranslation, &m_Animations[m_iCurrentAnimIndex]->Get_RootTranslation(), sizeof(_vector));
+	memcpy(pRotation, &m_Animations[m_iCurrentAnimIndex]->Get_RootRotation(), sizeof(_vector));
 }
 
 void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
 {
-	m_iPreAnimIndex = m_iCurrentAnimIndex;
-	m_iCurrentAnimIndex = iAnimIndex;
-	m_bInterupted = true;
+	if (m_iCurrentAnimIndex != iAnimIndex)
+	{
+		m_iPreAnimIndex = m_iCurrentAnimIndex;
+		m_iCurrentAnimIndex = iAnimIndex;
+	}
+}
+
+_bool CModel::Is_Keyframe(char * pChannelName, _uint iKeyframe)
+{
+	return m_Animations[m_iCurrentAnimIndex]->Is_Keyframe(pChannelName, iKeyframe);
+}
+
+_bool CModel::Under_Keyframe(char * pChannelName, _uint iKeyframe)
+{
+	return m_Animations[m_iCurrentAnimIndex]->Under_Keyframe(pChannelName, iKeyframe);
+}
+
+_bool CModel::Over_Keyframe(char * pChannelName, _uint iKeyframe)
+{
+	return m_Animations[m_iCurrentAnimIndex]->Over_Keyframe(pChannelName, iKeyframe);
+}
+
+_bool CModel::Between_Keyframe(char * pChannelName, _uint iKeyframeLower, _uint iKeyframeUpper)
+{
+	return m_Animations[m_iCurrentAnimIndex]->Between_Keyframe(pChannelName, iKeyframeLower, iKeyframeUpper);
 }
 
 void CModel::Set_TimeReset()
@@ -313,33 +322,25 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
-	if (m_bInterupted)
+	if (m_iCurrentAnimIndex != m_iPreAnimIndex)
 	{	//TODO: ����ִ԰� ���� �ִ������Ӱ��� �������� �Լ� ȣ�� �� ��.
-		/*if (m_bInterupted)
-		{
-			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
-			m_bInterupted = false;
-		}*/
-		m_bLinearFinished = m_Animations[m_iPreAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iCurrentAnimIndex]);
+		m_bLinearFinished = m_Animations[m_iCurrentAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iPreAnimIndex], pBoneName);
 
 		if (m_bLinearFinished == true)
 		{
-			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
-
-			//m_iPreAnimIndex = m_iCurrentAnimIndex;
-
-			m_bInterupted = false;
-		}
+			m_Animations[m_iPreAnimIndex]->Set_TimeReset();
+			m_iPreAnimIndex = m_iCurrentAnimIndex;
+		} 
 	}
 	else
 	{
 		/* ���� m_TransformationMatrix����� �����Ѵ�. */
-		if (m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(fTimeDelta, isLoop))
+		if (m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(fTimeDelta, isLoop, pBoneName))
 		{
 			for (auto& pBoneNode : m_Bones)
 			{
 				/* ���� m_CombinedTransformationMatrix����� �����Ѵ�. */
-				pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName);
+				pBoneNode->Invalidate_CombinedTransformationmatrix();
 			}
 			return true;
 		}
@@ -348,7 +349,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 	for (auto& pBoneNode : m_Bones)
 	{
 		/* ���� m_CombinedTransformationMatrix����� �����Ѵ�. */
-		pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName);
+		pBoneNode->Invalidate_CombinedTransformationmatrix();
 	}
 
 	return false;

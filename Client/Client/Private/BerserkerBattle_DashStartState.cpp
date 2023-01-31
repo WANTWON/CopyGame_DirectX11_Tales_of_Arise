@@ -32,19 +32,14 @@ CBerserkerState * CBattle_DashStartState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		_vector vecTranslation, vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
-
-
-
-	
 
 	return nullptr;
 }
@@ -52,29 +47,13 @@ CBerserkerState * CBattle_DashStartState::Tick(_float fTimeDelta)
 CBerserkerState * CBattle_DashStartState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
-	{
 		return new CBattle_FireBallState(m_pOwner);
 
-	}
 	return nullptr;
 }
 
 void CBattle_DashStartState::Enter()
 {
-
-	//switch (m_eStateId)
-	//{
-	//case STATE_DASH_START:
-	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_START);
-	//	break;
-	//case STATE_DASH_LOOP:
-	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_LOOP);
-	//	break;
-	//case STATE_DASH_SCRATCHES:
-	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_END);
-	//	break;
-	//}
-
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DASH_CLAW_END);
 
 }

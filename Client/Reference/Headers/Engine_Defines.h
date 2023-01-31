@@ -65,7 +65,6 @@ enum EVENTTYPE { EVENT_SOUND, EVENT_EFFECT, EVENT_COLLIDER, EVENT_STATE, EVENT_E
 
 using namespace physx;
 
-
 #ifdef _DEBUG
 
 #define _CRTDBG_MAP_ALLOC

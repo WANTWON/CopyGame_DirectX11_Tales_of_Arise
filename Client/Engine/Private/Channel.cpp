@@ -51,14 +51,15 @@ HRESULT CChannel::Bin_Initialize(DATA_BINCHANNEL * pAIChannel, CModel * pModel)
 	m_pBoneNode = pModel->Get_BonePtr(m_szName);
 	Safe_AddRef(m_pBoneNode);
 
+	m_KeyFrame_Linear = m_KeyFrames[0];
+
 	return S_OK;
 }
 
-void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
+void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime, _vector* pRotation, _vector* pPosition)
 {
 	/* 던져진 시간에 맞는 뼈의 상태를 만들거야. 
 	만들면 모델이 가지고 있는 뼈에 던질꺼야. */
-
 	_vector			vScale, vRotation, vPosition;
 
 	KEYFRAME		LastKeyframe = m_KeyFrames.back();
@@ -95,10 +96,22 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 		vPosition = XMVectorSetW(vPosition, 1.f);
 	}
 
+	_vector vTranslation = vPosition - XMLoadFloat3(&m_KeyFrame_Linear.vPosition);
+	_vector vChangeRot = XMQuaternionDot(XMQuaternionNormalize(XMLoadFloat4(&m_KeyFrame_Linear.vRotation)), vRotation);
+
 	/*Linear*/
 	XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
 	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
+
+	if ((nullptr != pRotation) && (nullptr != pPosition))
+	{
+		memcpy(pRotation, &vChangeRot, sizeof(_vector));
+		memcpy(pPosition, &vTranslation, sizeof(_vector));
+
+		vRotation = XMLoadFloat4(&m_KeyFrames[0].vRotation);
+		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	}
 
 	_matrix	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 
@@ -110,37 +123,48 @@ void CChannel::Reset()
 	m_iCurrentKeyFrameIndex = 0;
 }
 
-bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime)
+bool CChannel::Linear_Interpolation(KEYFRAME PreKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime, _vector* pRotation, _vector* pPosition)
 {
 	_vector			vScale, vRotation, vPosition;
 
 	if (fLinearCurrentTime >= fLinearTotalTime)
 		return true;
-
+		
 	_float		fRatio = fLinearCurrentTime / fLinearTotalTime;
-
 
 	_vector		vSourScale, vSourRotation, vSourPosition;
 	_vector		vDestScale, vDestRotation, vDestPosition;
 
-	vDestScale = XMLoadFloat3(&NextKeyFrame.vScale);
-	vDestRotation = XMLoadFloat4(&NextKeyFrame.vRotation);
-	vDestPosition = XMLoadFloat3(&NextKeyFrame.vPosition);
+	vDestScale = XMLoadFloat3(&m_KeyFrames[0].vScale);
+	vDestRotation = XMLoadFloat4(&m_KeyFrames[0].vRotation);
+	vDestPosition = XMLoadFloat3(&m_KeyFrames[0].vPosition);
 
-	vSourScale = XMLoadFloat3(&m_KeyFrame_Linear.vScale);
-	vSourRotation = XMLoadFloat4(&m_KeyFrame_Linear.vRotation);
-	vSourPosition = XMLoadFloat3(&m_KeyFrame_Linear.vPosition);
-
+	vSourScale = XMLoadFloat3(&PreKeyFrame.vScale);
+	vSourRotation = XMLoadFloat4(&PreKeyFrame.vRotation);
+	vSourPosition = XMLoadFloat3(&PreKeyFrame.vPosition);
 
 	vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
 	vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
 	vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
 	vPosition = XMVectorSetW(vPosition, 1.f);
 
+	_vector vTranslation = vPosition - XMLoadFloat3(&m_KeyFrame_Linear.vPosition);
+	_vector vChangeRot = XMQuaternionDot(XMQuaternionNormalize(XMLoadFloat4(&m_KeyFrame_Linear.vRotation)), vRotation);
 
 	XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
 	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
+
+	if ((nullptr != pRotation) && (nullptr != pPosition))
+	{
+		memcpy(pRotation, &vChangeRot, sizeof(_vector));
+		memcpy(pPosition, &vTranslation, sizeof(_vector));
+
+		_vector vScale, vRotQuat, vPos;
+		XMMatrixDecompose(&vScale, &vRotQuat, &vPos, XMLoadFloat4x4(&m_pBoneNode->Get_OriTransformationMatrix()));
+		vRotation = XMQuaternionNormalize(vRotQuat);
+		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	}
 
 	_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 

@@ -19,8 +19,7 @@ public:
 
 private:
 	_float m_fTimeDletaAcc = 0.f;
-	_float m_fTurnRightMoveTimer = 0.f;
-	_float m_fTurnRightAttackTimer = 1.5f;
+	_float m_fTurnRightTime = 0.f;
 	_uint  m_iRand = 0;
 	_uint  m_iRadian = 0;
 	_float m_fRadian = 0.f;

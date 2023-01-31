@@ -26,20 +26,16 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		_vector vecTranslation, vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
 
-	if (m_bIsAnimationFinished)
-	{
-		return new CBattle_RunState(m_pOwner, STATE_ID::STATE_DASH_SCRATCHES);
-	}
+
 
 
 
@@ -49,7 +45,10 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 CBerserkerState * CBattle_Shock_WaveState::LateTick(_float fTimeDelta)
 {
 	
-	
+	if (m_bIsAnimationFinished)
+	{
+		return new CBattle_RunState(m_pOwner, STATE_ID::STATE_DASH_SCRATCHES);
+	}
 
 	return nullptr;
 }

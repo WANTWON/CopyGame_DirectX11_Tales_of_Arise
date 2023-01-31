@@ -3,6 +3,7 @@
 #include "BaseObj.h"
 #include "GameInstance.h"
 #include "Cell.h"
+#include "BattleManager.h"
 
 BEGIN(Engine)
 class CModel;
@@ -57,7 +58,7 @@ protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr)	PURE;
 	virtual _bool Is_AnimationLoop(_uint eAnimId)			PURE;
 	virtual void Check_Navigation()							PURE;
-
+	void	Check_NearTrigger();
 	
 	
 public: // Get & Set
@@ -69,11 +70,10 @@ public: // Get & Set
 	_float		Get_AttackRadius() { return m_fAttackRadius; }
 	_float		Get_Attack_BiteRadius() { return m_fAttack_BiteRadius; }
 	STATS		Get_Stats() { return m_tStats; }
-	_bool		Get_BattleMode = false;
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
 	void		Set_Dissolve() { m_bDissolve = true; }
-	void		Set_BattleMode() { m_bBattleMode = true; }
-
+	CBaseObj*	Get_Trigger() { return m_pTrigger; }
+	
 protected:
 	DMG_DIR Calculate_DmgDirection();
 	_vector	Calculate_DirectionByPos();
@@ -82,7 +82,7 @@ protected:
 	STATS					m_tStats;
 	_float					m_fAttackRadius = 0.5f;
 	_float					m_fAttack_BiteRadius = 5.f;
-	_float					m_fAggroRadius = 8.f;
+	_float					m_fAggroRadius = 15.f;
 	_float					m_fPatrolRadius = 5.f;
 	_float					m_fDistanceToTarget = 0.f;
 	_float					m_fTime_TakeDamageDeltaAcc = 0.f;
@@ -98,6 +98,9 @@ protected:
 	_bool					m_bBattleMode = false;
 	_uint					m_eCurLevel = LEVEL_END;
 
+
+	_float m_fMinLengh = MAXDISTANCE;
+	CBaseObj* m_pTrigger = nullptr;
 
 
 	//For Move Time

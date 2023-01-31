@@ -6,26 +6,26 @@ BEGIN(Engine)
 
 class CAnimation final : public CBase
 {
-public:
-	typedef struct tagAnimationEvent
-	{
-		_float fStartTime;
-		_float fEndTime;
-		EVENTTYPE eType;
-	}ANIMEVENT;
-
 private:
 	CAnimation();
 	virtual ~CAnimation() = default;
 
 public:
-	vector<EVENT> Get_Events(void) { return m_vecEvents; }
+	vector<ANIMEVENT> Get_Events(void) { return m_vecAnimEvent; }
+	_vector Get_RootTranslation(void) const { return m_vPosition; }
+	_vector Get_RootRotation(void) const { return m_vRotation; }
 
 public:
 	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel, HANDLE hAddFile, _ulong* pdwAddByte);
 	HRESULT Bin_Initialize(DATA_BINANIM* pAIAnimation, class CModel* pModel); // 추가
-	_bool Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop);
-	_bool Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* NextAnim);
+
+	_bool Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop, const char* pRootName);
+	_bool Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* PreAnim, const char* pRootName);
+
+	_bool Is_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Under_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Over_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Between_Keyframe(char * pChannelName, _uint iKeyframeLower, _uint iKeyframeUpper);
 
 public:
 	vector<class CChannel*>	Get_Channels(void) { return m_Channels; }
@@ -63,8 +63,10 @@ private:
 	_int m_iTickPerSecondIndex = 0;
 	/* For. Animation Event */
 	vector<ANIMEVENT> m_vecAnimEvent;
-	vector<EVENT> m_vecEvents;
-
+	/* For. Root Motion */
+	_vector m_vRotation;
+	_vector m_vPosition;
+	
 //public: // For. Data 추가
 //	void Get_AnimData(DATA_BINANIM* pAnimData);
 

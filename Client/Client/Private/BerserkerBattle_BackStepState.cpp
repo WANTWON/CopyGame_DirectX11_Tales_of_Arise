@@ -30,26 +30,26 @@ CBerserkerState * CBattle_BackStepState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		_vector vecTranslation, vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
 
 	
-	else if (m_bIsAnimationFinished)
-	{
-		return new CBattle_RunState(m_pOwner, STATE_QUADRUPLE);
-	}
+
 	return nullptr;
 }
 
 CBerserkerState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 {
+	if (m_bIsAnimationFinished)
+	{
+		return new CBattle_RunState(m_pOwner, STATE_QUADRUPLE);
+	}
 
 	return nullptr;
 }
@@ -60,7 +60,6 @@ void CBattle_BackStepState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_STEP_BACK);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CBattle_BackStepState::Exit()

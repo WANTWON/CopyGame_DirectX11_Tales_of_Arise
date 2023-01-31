@@ -22,7 +22,6 @@ CHawkState * CBattle_DashState::AI_Behaviour(_float fTimeDelta)
 CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 {
 
-	
 	Find_BattleTarget();
 
 
@@ -30,12 +29,11 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		_vector vecTranslation, vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -55,25 +53,9 @@ CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 
 
 	if (m_bIsAnimationFinished)
-	{
-		switch (m_iRand)
-		{
-		/*case 0:
-			return new CBattle_BombingState(m_pOwner);
-			break;*/
+		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_DASH);
 
-		case 0:
-			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_DASH);
-			break;
-
-		case 1:
-			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_DASH);
-			break;
-
-		default:
-			break;
-		}
-	}
+	
 
 
 
@@ -87,7 +69,7 @@ void CBattle_DashState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_DASH);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	
 }
 
 void CBattle_DashState::Exit()

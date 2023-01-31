@@ -26,7 +26,7 @@ CBerserkerState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 
 CBerserkerState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
-	AI_Behaviour(fTimeDelta);
+	
 	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	
 	srand((_uint)time(NULL));
@@ -34,13 +34,9 @@ CBerserkerState * CBattle_IdleState::Tick(_float fTimeDelta)
 
 	m_fRedayAttackTimer += fTimeDelta;
 
-	if (m_fRedayAttackTimer >= 2.5f)
-	{
+	if (m_fRedayAttackTimer >= 3.f)
 		return new CBattle_WalkState(m_pOwner);
 			
-	}
-
-	
 
 	return nullptr;
 }

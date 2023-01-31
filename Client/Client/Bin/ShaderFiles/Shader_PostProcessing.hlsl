@@ -1,7 +1,6 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 texture2D g_BackBufferTexture;
-texture2D g_DepthTexture;
 texture2D g_DistortionTexture;
 texture2D g_DistortionNoiseTexture;
 float g_fDistortionTimer;
@@ -105,8 +104,9 @@ PS_OUT PS_DISTORTION(PS_IN In)
 	/* Distort */
 	if (vDistortionTexture.r > 0)
 	{
-		float2 vNoise = g_DistortionNoiseTexture.Sample(LinearSampler, In.vTexUV + g_fDistortionTimer * g_fDistortionSpeed);
-		float4 vNoisyTexture = g_BackBufferTexture.Sample(LinearSampler, vNoise);
+		float2 vNoise = g_DistortionNoiseTexture.Sample(LinearSampler, In.vTexUV * g_fDistortionSpeed + g_fDistortionTimer);
+		float2 vDistortedUV = In.vTexUV + vNoise.r * 0.1;
+		float4 vNoisyTexture = g_BackBufferTexture.Sample(LinearSampler, vDistortedUV);
 
 		Out.vColor = lerp(vBackBufferCopy, vNoisyTexture, vDistortionTexture.r);
 	}

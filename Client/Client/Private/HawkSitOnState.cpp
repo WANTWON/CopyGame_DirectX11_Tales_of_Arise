@@ -28,12 +28,11 @@ CHawkState * CSitOnState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		_vector vecTranslation, vecRotation;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix(&vecTranslation, &vecRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -44,7 +43,7 @@ CHawkState * CSitOnState::Tick(_float fTimeDelta)
 CHawkState * CSitOnState::LateTick(_float fTimeDelta)
 {
 
-	if (m_fTarget_Distance <= 15 )
+	if (m_fTarget_Distance <= 20 )
 		return new CUpFlyState(m_pOwner);
 
 	if (m_bIsAnimationFinished)

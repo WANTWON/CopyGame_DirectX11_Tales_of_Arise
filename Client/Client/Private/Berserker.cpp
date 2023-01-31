@@ -42,17 +42,17 @@ HRESULT CBerserker::Initialize(void * pArg)
 	CBerserkerState* pState = new CIdleState(this, CBerserkerState::FIELD_STATE_ID::FIELD_STATE_IDLE);
 	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
 
+	m_tStats.m_fMaxHp = 3;
+	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
+	m_tStats.m_fAttackPower = 10;
 	m_eMonsterID = BERSERKER;
-
-
-	m_tInfo.fMaxHp = 3;
-	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
-	m_tInfo.iDamage = 10;
 
 
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
+	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
+	Check_NearTrigger();
 
 	return S_OK;
 }
@@ -299,11 +299,8 @@ void CBerserker::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{
-		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
+	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
 CBerserker * CBerserker::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

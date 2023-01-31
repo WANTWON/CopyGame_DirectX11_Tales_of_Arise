@@ -51,7 +51,7 @@ CHawkState * CIdleState::LateTick(_float fTimeDelta)
 
 	else
 	{
-		if (m_fIdleMoveTimer > 2.5f)
+		if (m_fIdleMoveTimer > 5.f)
 		{
 			switch (m_ePreState_Id)
 			{

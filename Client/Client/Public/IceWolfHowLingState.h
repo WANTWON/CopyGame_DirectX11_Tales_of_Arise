@@ -17,8 +17,8 @@ public:
 	virtual void Exit() override;
 
 private:
-	_float m_fHowLingMoveTimer = 0.f;
-	_float m_fHowLingAttackTimer = 1.5f;
+	_float m_fHowLingTimeAcc = 0.f;
+	_float m_fHowlingTime = 0.f;
 	_uint  m_iRand = 0;
 
 };

@@ -39,17 +39,16 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
-
 HRESULT CGameObject::Add_Components(const _tchar * pComponentTag, _uint iLevelIndex, const _tchar * pPrototypeTag, CComponent** ppOut, void * pArg)
 {
-	if (nullptr != Find_Component(pComponentTag))
+	if (Find_Component(pComponentTag))
 		return E_FAIL;
 
-	CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	Safe_AddRef(pGameInstance);
 
-	CComponent*		pComponent = pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
-	if (nullptr == pComponent)
+	CComponent* pComponent = pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
+	if (!pComponent)
 		return E_FAIL;
 
 	m_Components.emplace(pComponentTag, pComponent);
@@ -57,9 +56,26 @@ HRESULT CGameObject::Add_Components(const _tchar * pComponentTag, _uint iLevelIn
 	*ppOut = pComponent;
 
 	Safe_AddRef(pComponent);
-
 	Safe_Release(pGameInstance);
 
+	return S_OK;
+}
+
+HRESULT CGameObject::Remove_Components(const _tchar * pComponentTag)
+{
+	if (!Find_Component(pComponentTag))
+		return S_OK;
+
+	for (auto& iter = m_Components.begin(); iter != m_Components.end(); iter++)
+	{
+		if (!wcscmp(iter->first, pComponentTag))
+		{
+			Safe_Release(iter->second);
+			m_Components.erase(iter);
+			break;
+		}
+	}
+	
 	return S_OK;
 }
 
@@ -74,7 +90,7 @@ void CGameObject::Compute_CamDistance(_fvector vWorldPos)
 
 CComponent * CGameObject::Find_Component(const _tchar * pComponentTag)
 {
-	auto	iter = find_if(m_Components.begin(), m_Components.end(), CTag_Finder(pComponentTag));
+	auto iter = find_if(m_Components.begin(), m_Components.end(), CTag_Finder(pComponentTag));
 	if (iter == m_Components.end())
 		return nullptr;
 

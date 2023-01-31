@@ -24,6 +24,8 @@ private:
 	_float m_fStartHeight = 0.f;
 	_float m_fEndHeight = 0.f;
 	_float m_fTime = 0.f;
+	_vector m_vecStartPos;
+	_vector m_vecChangePos;
 
 private:
 	DIRID m_eDirection = DIRID::DIR_END;
