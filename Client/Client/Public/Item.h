@@ -6,7 +6,7 @@ BEGIN(Client)
 class CItem final : public CInteractObject
 {
 public:
-	enum ITEMTYPE { APPLE, JEWEL, MUSHROOM, LETTUCE, PLANT, SLIMPLANT};
+	enum ITEMTYPE { APPLE, JEWEL, MUSHROOM, LETTUCE, PLANT, SLIMPLANT, BOX, CRYSTAL};
 
 	typedef struct ItemTag
 	{

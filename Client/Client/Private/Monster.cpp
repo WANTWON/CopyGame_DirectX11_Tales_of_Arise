@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Level_Manager.h"
 #include "CameraManager.h"
+#include "BattleManager.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBaseObj(pDevice, pContext)
@@ -89,6 +90,14 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	if (LEVEL_BATTLE == m_eCurLevel)
 		m_bBattleMode = true;
 	
+	if (LEVEL_SNOWFIELD == m_eCurLevel)
+	{
+		CCollider* pPlayerCollider =  CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Collider();
+		if (m_pSPHERECom->Collision(pPlayerCollider))
+		{
+			CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID);
+		}
+	}
 	
 
 
