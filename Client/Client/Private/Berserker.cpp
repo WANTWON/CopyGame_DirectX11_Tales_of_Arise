@@ -42,16 +42,7 @@ HRESULT CBerserker::Initialize(void * pArg)
 	CBerserkerState* pState = new CIdleState(this, CBerserkerState::FIELD_STATE_ID::FIELD_STATE_IDLE);
 	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
 
-	/* Set Binary */
-	//CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	//CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
-	//char cName[MAX_PATH];
-	//ZeroMemory(cName, sizeof(char) * MAX_PATH);
-	//pData_Manager->TCtoC(TEXT("Berserker"), cName);
-	//pData_Manager->Conv_Bin_Model(m_pModelCom, cName, CData_Manager::DATA_ANIM);
-	//RELEASE_INSTANCE(CData_Manager);
-	//RELEASE_INSTANCE(CGameInstance);
-
+	m_eMonsterID = BERSERKER;
 
 
 	m_tInfo.fMaxHp = 3;
@@ -130,13 +121,13 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 
 int CBerserker::Tick(_float fTimeDelta)
 {
-	AI_Behavior(fTimeDelta);
-
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return OBJ_NOEVENT;
 
 	if (m_bDead)
 		return OBJ_DEAD;
+
+	AI_Behavior(fTimeDelta);
 
 	if (true == m_bBattleMode && false == m_bDoneChangeState)
 	{

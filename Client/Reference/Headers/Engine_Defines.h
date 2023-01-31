@@ -55,6 +55,17 @@ using namespace std;
 
 enum EVENTTYPE { EVENT_SOUND, EVENT_EFFECT, EVENT_COLLIDER, EVENT_STATE, EVENT_END };
 
+/* for PhysX */
+#include <PhysX/PxPhysics.h>
+#include <PhysX/PxPhysicsAPI.h>
+#include <PhysX/PxConfig.h>
+
+#define PX_RELEASE(x)	if(x != nullptr)	{ x->release(); x = nullptr;	}
+#define PVD_HOST "127.0.0.1"
+
+using namespace physx;
+
+
 #ifdef _DEBUG
 
 #define _CRTDBG_MAP_ALLOC

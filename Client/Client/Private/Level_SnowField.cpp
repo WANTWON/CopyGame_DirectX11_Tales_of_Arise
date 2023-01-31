@@ -7,6 +7,7 @@
 #include "UI_RuneEffect.h"
 #include "Level_Loading.h"
 #include "PlayerManager.h"
+#include "BattleManager.h"
 
 #include "Item.h"
 #include "TreasureBox.h"
@@ -53,6 +54,15 @@ HRESULT CLevel_SnowField::Initialize()
 	/*if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
 		return E_FAIL;*/
 
+		
+
+	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Trigger(TEXT("Layer_Trigger"))))
+		return E_FAIL;
+
+
 	if (!g_bUIMade)
 	{
 		if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
@@ -79,23 +89,24 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_MINUS))
 	{
+		CBattleManager::Get_Instance()->Set_BattleMode(true, ICE_WOLF);
+	}
+
+
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
+	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
 		LEVEL eNextLevel = LEVEL_BATTLE;
 
 		CPlayerManager::Get_Instance()->Save_LastPosition();
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MONSTER);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_BLOCK);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_INTERACT);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_TRAP);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MBULLET);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_ITEM);
+		m_pCollision_Manager->Clear_AllCollisionGroup();
 		pGameInstance->Set_DestinationLevel(eNextLevel);
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
 			return;
-		Safe_Release(pGameInstance);
+		RELEASE_INSTANCE(CGameInstance);
 	}
 }
 
@@ -163,7 +174,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 			return E_FAIL;
 
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0.f, 22, 1.f));
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 
 		
@@ -177,36 +188,60 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 		pPlayer->Check_Navigation();
 	}
 
-	Safe_Release(pGameInstance);
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
 
 HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
+	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
 
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC ModelDesc;
 
-	//_vector vPosition = { 34, 0.f, 22, 1.f };
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-	//	return E_FAIL;
+	_uint iNum = 0;
 
-
-	//_vector vPosition = { 64.f, 0.f, 11.f, 1.f };
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-	//	return E_FAIL;
-	
-	//_vector vPosition = { 64.f, 0.f, 20.f, 1.f };
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
-	//	return E_FAIL;
-
-	_vector vPosition = { 64.f, 0.f, 20.f, 1.f };
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &vPosition)))
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Monster.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
 		return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+
+		if (!wcscmp(pModeltag, TEXT("Ice_Wolf")))
+		{
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Hawk")))
+		{
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Berserker")))
+		{
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Slime")))
+		{
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vScale)))
+				return E_FAIL;
+		}
+
+	}
+	
+	CloseHandle(hFile);
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -288,7 +323,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_SNOWFIELD, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -304,7 +339,7 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	
 
-	_uint numcreate = (CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
+	_int numcreate = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
 
 	for (int i = 0; i < numcreate; ++i)
 	{
@@ -318,13 +353,7 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	}
 
-	/*for (int i = 0; i < numcreate; ++i)
-	{
-		_uint number = i;
 
-		
-
-	}*/
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Comboline"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
@@ -422,7 +451,7 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	
 
-	Safe_Release(pGameInstance);
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -486,6 +515,24 @@ HRESULT CLevel_SnowField::Ready_Layer_Interact_Object(const _tchar * pLayerTag)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
 				return E_FAIL;
 		}
+		else if (!wcscmp(pModeltag, TEXT("Box")))
+		{
+			ItemDesc.etype = CItem::BOX;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Box3")))
+		{
+			ItemDesc.etype = CItem::BOX;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Crystal")))
+		{
+			ItemDesc.etype = CItem::CRYSTAL;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
 	}
 	CloseHandle(hFile);
 
@@ -509,7 +556,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Interact_Object(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 
-	Safe_Release(pGameInstance);
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -678,6 +725,40 @@ HRESULT CLevel_SnowField::Ready_Layer_DecoObject(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
 			return E_FAIL;
 	}
+	CloseHandle(hFile);
+
+	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_SnowField::Ready_Layer_Trigger(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC ModelDesc;
+
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Triggerbox.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trigger"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+		
+	}
+
 	CloseHandle(hFile);
 
 	RELEASE_INSTANCE(CGameInstance);

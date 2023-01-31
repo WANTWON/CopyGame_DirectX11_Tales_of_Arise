@@ -175,9 +175,6 @@
     <Filter Include="02.GameObjects\04.UI\02.UI_LOADING">
       <UniqueIdentifier>{9514bfa9-ed3c-4a7f-be3a-457b1311c64f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01.Actor\03.InteractObject">
-      <UniqueIdentifier>{302f8212-a864-4482-aa5e-a307b89d73e1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime">
       <UniqueIdentifier>{dccde0d2-f24a-4122-978b-fdd8e9f1741f}</UniqueIdentifier>
     </Filter>
@@ -186,15 +183,6 @@
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime\State\BattleStates">
       <UniqueIdentifier>{28ef28cc-fa93-4829-91e5-711f6d46ffc6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\01.Actor\03.InteractObject\00.Anim">
-      <UniqueIdentifier>{49efdc7b-f5f3-40bc-922a-f747181d9a8e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\01.Actor\03.InteractObject\00.Anim\TreasureBox">
-      <UniqueIdentifier>{18a4740f-1d68-4696-9b38-b0be268bd26d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\01.Actor\03.InteractObject\01.NonAnim">
-      <UniqueIdentifier>{08985868-cd3c-4867-8956-95cb13f47443}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates">
       <UniqueIdentifier>{27632710-1fc5-4f94-9ac7-fae665b2b920}</UniqueIdentifier>
@@ -264,6 +252,24 @@
     </Filter>
     <Filter Include="02.GameObjects\04.UI\14.UI_Get_Item_Popup">
       <UniqueIdentifier>{2cc9da08-0ce0-4403-a55d-221b3991f140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05.Trigger">
+      <UniqueIdentifier>{1cf13c0b-32b9-4f57-a58f-6ca396dc68a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\06.InteractObject">
+      <UniqueIdentifier>{302f8212-a864-4482-aa5e-a307b89d73e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\06.InteractObject\00.Anim">
+      <UniqueIdentifier>{49efdc7b-f5f3-40bc-922a-f747181d9a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\06.InteractObject\00.Anim\TreasureBox">
+      <UniqueIdentifier>{18a4740f-1d68-4696-9b38-b0be268bd26d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\06.InteractObject\01.NonAnim">
+      <UniqueIdentifier>{08985868-cd3c-4867-8956-95cb13f47443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.BattleManager">
+      <UniqueIdentifier>{f5d36acd-706d-46be-a4be-bad7eaead869}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -559,10 +565,10 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\InteractObject.h">
-      <Filter>02.GameObjects\01.Actor\03.InteractObject</Filter>
+      <Filter>02.GameObjects\06.InteractObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TreasureBox.h">
-      <Filter>02.GameObjects\01.Actor\03.InteractObject\00.Anim\TreasureBox</Filter>
+      <Filter>02.GameObjects\06.InteractObject\00.Anim\TreasureBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Slime.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime</Filter>
@@ -595,7 +601,7 @@
       <Filter>01.Levels\02.SnowField</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Item.h">
-      <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
+      <Filter>02.GameObjects\06.InteractObject\01.NonAnim</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IceWolfBattle_BackStepState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
@@ -743,6 +749,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_Get_item_Popup.h">
       <Filter>02.GameObjects\04.UI\14.UI_Get_Item_Popup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Trigger.h">
+      <Filter>02.GameObjects\05.Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BattleManager.h">
+      <Filter>06.BattleManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1017,10 +1029,10 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\InteractObject.cpp">
-      <Filter>02.GameObjects\01.Actor\03.InteractObject</Filter>
+      <Filter>02.GameObjects\06.InteractObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TreasureBox.cpp">
-      <Filter>02.GameObjects\01.Actor\03.InteractObject\00.Anim\TreasureBox</Filter>
+      <Filter>02.GameObjects\06.InteractObject\00.Anim\TreasureBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Slime.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime</Filter>
@@ -1047,7 +1059,7 @@
       <Filter>01.Levels\02.SnowField</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Item.cpp">
-      <Filter>02.GameObjects\01.Actor\03.InteractObject\01.NonAnim</Filter>
+      <Filter>02.GameObjects\06.InteractObject\01.NonAnim</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfBattle_BackStepState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
@@ -1189,6 +1201,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp">
       <Filter>02.GameObjects\04.UI\14.UI_Get_Item_Popup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Trigger.cpp">
+      <Filter>02.GameObjects\05.Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BattleManager.cpp">
+      <Filter>06.BattleManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

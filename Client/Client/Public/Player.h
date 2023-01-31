@@ -82,6 +82,9 @@ protected:
 	vector<class CGameObject*> m_Parts;
 
 protected:
+	HRESULT SetUp_Controller();
+
+protected:
 	virtual HRESULT Ready_Parts() { return S_OK; };
 	virtual HRESULT Ready_Components(void* pArg) PURE;
 	virtual HRESULT SetUp_ShaderResources();

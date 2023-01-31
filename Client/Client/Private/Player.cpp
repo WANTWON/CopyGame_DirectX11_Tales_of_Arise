@@ -36,7 +36,6 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
-
 	CAIState* pAIState = new AIPlayer::CIdleState(this);
 	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
@@ -47,6 +46,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pPlayerManager = CPlayerManager::Get_Instance();
 	Safe_AddRef(m_pPlayerManager);
+
 	return S_OK;
 }
 
@@ -78,7 +78,7 @@ int CPlayer::Tick(_float fTimeDelta)
 			pParts->Tick(fTimeDelta);
 	}
 		
-
+	
 	return OBJ_NOEVENT;
 }
 
@@ -121,6 +121,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		if (pParts != nullptr)
 			pParts->Late_Tick(fTimeDelta);
 	}
+
 }
 
 HRESULT CPlayer::Render()
@@ -253,17 +254,52 @@ void CPlayer::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{
+	//if (m_fWalkingHeight > XMVectorGetY(vPosition))
+	//{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
+	//}
 }
 
 void CPlayer::Compute_CurrentIndex(LEVEL eLevel)
 {
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 }
+
+HRESULT CPlayer::SetUp_Controller()
+{
+	//CPhysX*		pPhysX = GET_INSTANCE(CPhysX);
+	//PxCapsuleControllerDesc desc;
+	//_vector Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	//_float3 fPos;
+	//XMStoreFloat3(&fPos, Pos);
+
+	////�������� ������ ��ǥ��
+	//desc.position = PxExtendedVec3(XMVectorGetX(Pos), XMVectorGetY(Pos), -XMVectorGetZ(Pos));
+	//desc.radius = 1.f;
+	//desc.height = 2.f;
+	//desc.stepOffset = 2.f;
+	//desc.volumeGrowth = 1.f;
+	//desc.slopeLimit = cosf(XMConvertToRadians(15.f));
+	//desc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
+	//desc.upDirection = PxVec3(0.f, 1.f, 0.f);
+	//desc.contactOffset = 0.01f;
+	//PxMaterial* pMeterial = pPhysX->Get_Physics()->createMaterial(0.5f, 0.5f, 0.5f);
+	//desc.material = pMeterial;
+	//desc.reportCallback = this;
+	//desc.behaviorCallback = this;
+	//desc.userData = this;
+	//gController = (PxCapsuleController*)pPhysX->Get_ControllerManager()->createController(desc);
+	//if (gController == nullptr)
+	//	return E_FAIL;
+	//ControllerActor = gController->getActor();
+	//
+	//Px = gController->getActor();
+
+	//RELEASE_INSTANCE(CPhysX);
+	return S_OK;
+}
+
 
 
 void CPlayer::Free()

@@ -14,6 +14,8 @@
 #include "Target_Manager.h"
 #include "Sound_Manager.h"
 #include "Picking.h"
+#include "PhysX.h"
+
 BEGIN(Engine)
 
 class ENGINE_DLL CGameInstance final : public CBase
@@ -136,6 +138,7 @@ private:
 	CTarget_Manager*				m_pTarget_Manager = nullptr;
 	CSound_Manager*					m_pSound_Manager = nullptr;
 	CPicking*						m_pPicking = nullptr;
+	CPhysX*							m_pPhysX = nullptr;
 public:
 	virtual void Free() override;
 };

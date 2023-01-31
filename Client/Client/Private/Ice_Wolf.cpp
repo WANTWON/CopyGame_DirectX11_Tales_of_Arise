@@ -38,17 +38,9 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 		CIceWolfState* pState = new CIdleState(this, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE, CIceWolfState::FIELD_STATE_ID::STATE_TURN_L);
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
-	
 
-	///* Set Binary */
-	//CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	//CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
-	//char cName[MAX_PATH];
-	//ZeroMemory(cName, sizeof(char) * MAX_PATH);
-	//pData_Manager->TCtoC(TEXT("Ice_Wolf"), cName);
-	//pData_Manager->Conv_Bin_Model(m_pModelCom, cName, CData_Manager::DATA_ANIM);
-	//RELEASE_INSTANCE(CData_Manager);
-	//RELEASE_INSTANCE(CGameInstance);
+
+	m_eMonsterID = ICE_WOLF;
 
 
 	m_tStats.m_fMaxHp = 3.f;
@@ -136,8 +128,9 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return OBJ_NOEVENT;
+
 	if (m_bDead)
 		return OBJ_DEAD;
 
@@ -168,8 +161,8 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
-		return ;
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)
