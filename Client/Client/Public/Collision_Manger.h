@@ -34,6 +34,7 @@ public:
 	_bool	CollisionwithGroup(COLLSIONGROUP SourGroup, COLLSIONGROUP DestGroup, CBaseObj** outSour, CBaseObj** outDest);
 	void	CollisionwithBullet();
 	void	Update_Collider();
+	void	Update_ColliderGroup(COLLSIONGROUP SourGroup);
 
 public:
 	CCollider* Reuse_Collider(CCollider::TYPE eType, _uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg);

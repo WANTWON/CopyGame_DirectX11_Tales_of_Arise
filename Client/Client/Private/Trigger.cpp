@@ -30,6 +30,9 @@ HRESULT CTrigger::Initialize(void * pArg)
 		_vector vPosition = XMLoadFloat3(&m_ModelDesc.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		m_ModelDesc.vScale.x *= 3.f;
+		m_ModelDesc.vScale.y *= 3.f;
+		m_ModelDesc.vScale.z *= 3.f;
 		Set_Scale(m_ModelDesc.vScale);
 
 	}
@@ -49,6 +52,12 @@ int CTrigger::Tick(_float fTimeDelta)
 void CTrigger::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	if (Check_IsinFrustum(2.f) == false)
+		return;
+
+	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+
 }
 
 HRESULT CTrigger::Ready_Components(void * pArg)
@@ -77,6 +86,11 @@ HRESULT CTrigger::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CTrigger::SetUp_ShaderResources()
+{
 	return S_OK;
 }
 

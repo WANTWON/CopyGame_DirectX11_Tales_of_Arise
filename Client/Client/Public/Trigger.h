@@ -19,7 +19,7 @@ public:
 
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
-	virtual HRESULT SetUp_ShaderResources() { return S_OK; }
+	virtual HRESULT SetUp_ShaderResources();
 private:
 	NONANIMDESC m_ModelDesc;
 
