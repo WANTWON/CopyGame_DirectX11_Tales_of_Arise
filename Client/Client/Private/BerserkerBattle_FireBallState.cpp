@@ -28,17 +28,25 @@ CBerserkerState * CBattle_FireBallState::Tick(_float fTimeDelta)
 	m_fTarget_Distance = Find_BattleTarget();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())/*, "ABone"*/);
-;
 
+
+	m_pOwner->Check_Navigation();
+	
+
+
+	return nullptr;
+}
+
+CBerserkerState * CBattle_FireBallState::LateTick(_float fTimeDelta)
+{
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 	if (false == m_bTargetSetting)
 	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		//m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
+		
 		m_bTargetSetting = true;
 	}
-
 
 	if (m_bIsAnimationFinished)
 	{
@@ -51,17 +59,7 @@ CBerserkerState * CBattle_FireBallState::Tick(_float fTimeDelta)
 			return new CBattle_Shock_WaveState(m_pOwner);
 
 	}
-	else
-	{
-		m_pOwner->Check_Navigation();
-	}
 
-
-	return nullptr;
-}
-
-CBerserkerState * CBattle_FireBallState::LateTick(_float fTimeDelta)
-{
 	return nullptr;
 }
 
@@ -70,12 +68,9 @@ void CBattle_FireBallState::Enter()
 
 	m_eStateId = STATE_ID::STATE_ANGRY;
 
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_FIRE_BALL);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_FIRE_BALL);
 		
-	
-	////
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-	////
+
 }
 
 void CBattle_FireBallState::Exit()

@@ -29,40 +29,8 @@ CHawkState * CBattle_DeadState::AI_Behaviour(_float fTimeDelta)
 CHawkState * CBattle_DeadState::Tick(_float fTimeDelta)
 {
 
-
 	if (false == m_bDeadAnimFinish)
-	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-
-	}
-
-
-
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-
-	if (!m_bIsAnimationFinished)
-	{
-		_vector vecTranslation;
-		_float fRotationRadian;
-
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
-	}
-
-
-
-
-	//else
-	//{
-	////	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-
-	////	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
-
-	//	m_pOwner->Check_Navigation();
-	//}
 
 
 	return nullptr;
@@ -75,10 +43,6 @@ CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 
 		if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
 		{
-
-
-//			_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DEAD);
 			m_pOwner->Get_Model()->Play_Animation(2.55f, false);
 
@@ -115,7 +79,6 @@ void CBattle_DeadState::Enter()
 
 void CBattle_DeadState::Exit()
 {
-	m_fIdleMoveTimer = 0.f;
-	m_fIdleAttackTimer = 0.f;
+
 	
 }

@@ -66,7 +66,7 @@ CIceWolfState * CBattle_WalkState::LateTick(_float fTimeDelta)
 
 void CBattle_WalkState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_BATTLE;
+	//m_eStateId = STATE_ID::STATE_BATTLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_MOVE_WALK_F);
 

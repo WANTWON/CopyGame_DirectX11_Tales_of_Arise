@@ -244,6 +244,15 @@
     <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Side">
       <UniqueIdentifier>{20406238-19d5-42df-b70e-c1e0c1ee9cb4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\01.Sion\Manager">
+      <UniqueIdentifier>{575e09da-0184-48c0-89d5-0b9fc2716218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\13.UI_InterectMsg">
+      <UniqueIdentifier>{72548769-92f2-4bc4-ba4b-a28fa74a8a9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\14.UI_Get_Item_Popup">
+      <UniqueIdentifier>{2cc9da08-0ce0-4403-a55d-221b3991f140}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\05.Trigger">
       <UniqueIdentifier>{1cf13c0b-32b9-4f57-a58f-6ca396dc68a3}</UniqueIdentifier>
     </Filter>
@@ -741,6 +750,12 @@
     <ClInclude Include="..\Public\SlimeAdventState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_InterectMsg.h">
+      <Filter>02.GameObjects\04.UI\13.UI_InterectMsg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Get_item_Popup.h">
+      <Filter>02.GameObjects\04.UI\14.UI_Get_Item_Popup</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Trigger.h">
       <Filter>02.GameObjects\05.Trigger</Filter>
     </ClInclude>
@@ -1192,6 +1207,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\SlimeAdventState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_InterectMsg.cpp">
+      <Filter>02.GameObjects\04.UI\13.UI_InterectMsg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Get_item_Popup.cpp">
+      <Filter>02.GameObjects\04.UI\14.UI_Get_Item_Popup</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Trigger.cpp">
       <Filter>02.GameObjects\05.Trigger</Filter>

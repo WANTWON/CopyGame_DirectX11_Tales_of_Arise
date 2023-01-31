@@ -42,7 +42,7 @@ CSlimeState * CChaseState::LateTick(_float fTimeDelta)
 	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 
-	if (m_fTarget_Distance >= 8.f)
+	if (m_fTarget_Distance >= 15.f)
 		return new CIdleState(m_pOwner, CSlimeState::FIELD_STATE_ID::STATE_CHASE);
 
 

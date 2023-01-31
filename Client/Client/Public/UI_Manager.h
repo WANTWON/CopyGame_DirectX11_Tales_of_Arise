@@ -51,10 +51,16 @@ public: /*Getter Setter*/
 	vector<ITEMINFO*>* Get_Inventory_armor() { return &m_vInventory_armor; }
 	vector<ITEMINFO*>* Get_Inventory_else() { return &m_vInventory_else; }
 
+	list<CUI_Base*>* Get_Itempopup_list() {return &m_pItempopup;}
+
+	void Erase_Itempopup_list(CUI_Base* point);
+
 	/*CUI_Dialogue* Get_Dialogue() { return m_pDialogue; }
 	CUI_Dialoguepopup* Get_Dialoguepopup() { return m_pDialoguepopup; }*/
 	CUI_Base*	 Get_Dialogue() { return m_pDialogue; }
+	CUI_Base*    Get_Dialoguepopup() { return m_pDialoguepopup; }
 	void Set_Dialogue(CUI_Base* pointer) { m_pDialogue = pointer; }
+	void Set_Dialoguepopup(CUI_Base* pointer) { m_pDialoguepopup = pointer; }
 
 	
 	void PlusGald(_uint gald) { m_iGald += gald; }
@@ -92,6 +98,10 @@ private:
 	//INVEN_MAIN, INVEN_USABLE, INVEN_MATERIAL, INVEN_WEAPON, INVEN_ARMOR, INVEN_ELSE, INVEN_END
 
 	CUI_Base* m_pDialogue = nullptr;
+	CUI_Base* m_pDialoguepopup = nullptr;
+
+	list<CUI_Base*>m_pItempopup;
+	//CUI_Base* m_pDialogue
 //	CUI_Dialogue* m_pDialogue = nullptr;
 //	CUI_Dialoguepopup* m_pDialoguepopup = nullptr;
 	

@@ -78,7 +78,7 @@ void CBattle_Damage_LargeB_State::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DAMAGE_LARGE_F);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	
 }
 
 void CBattle_Damage_LargeB_State::Exit()

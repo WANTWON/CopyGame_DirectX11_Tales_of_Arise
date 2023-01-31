@@ -204,6 +204,8 @@
     <ClInclude Include="..\Public\Effect.h" />
     <ClInclude Include="..\Public\EffectMesh.h" />
     <ClInclude Include="..\Public\EffectTexture.h" />
+    <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
+    <ClInclude Include="..\Public\UI_InterectMsg.h" />
     <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Berserker.h" />
@@ -364,6 +366,8 @@
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\EffectMesh.cpp" />
     <ClCompile Include="..\Private\EffectTexture.cpp" />
+    <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
+    <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Berserker.cpp" />

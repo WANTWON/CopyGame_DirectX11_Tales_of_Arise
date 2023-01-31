@@ -5,6 +5,7 @@
 #include "UI_RuneEffect.h"
 #include "Player.h"
 #include "PlayerManager.h"
+#include "UI_Get_item_Popup.h"
 CHP_Font::CHP_Font(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -221,6 +222,27 @@ int CHP_Font::Tick(_float fTimeDelta)
 				return E_FAIL;
 		}*/
 
+		
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+		{
+			
+			CUI_Get_item_Popup::POPUPDESC testdesc;
+			ZeroMemory(&testdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
+			testdesc.iIndex = 0;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"),&testdesc)))
+				return E_FAIL;
+			testdesc.iIndex = 1;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
+				return E_FAIL;
+			testdesc.iIndex = 2;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
+				return E_FAIL;
+			testdesc.iIndex = 3;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
+				return E_FAIL;
+
+		}
+			
 
 		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
 			--m_iCurrenthp;

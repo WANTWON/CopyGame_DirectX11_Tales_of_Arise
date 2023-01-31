@@ -44,6 +44,7 @@ public:
 	void Set_Position(_float2 fPostion) { m_fPosition = fPostion; };
 	void Set_Scale(_float2 fScale) { m_fSize = fScale; };
 	void Set_Scale(_float3 vScale);
+	_bool Get_Isdead() { return m_bIsdead; }
 	void SetUp_BillBoard();
 
 	
@@ -67,6 +68,7 @@ protected:
 	_bool                   m_bisinLoading = false;
 
 	_bool m_bIsRender = false;
+	_bool m_bIsdead = false;
 
 public:
 	virtual HRESULT Ready_Components(void * pArg = nullptr) = 0;

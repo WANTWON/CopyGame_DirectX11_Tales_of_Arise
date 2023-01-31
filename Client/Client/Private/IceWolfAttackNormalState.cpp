@@ -3,6 +3,7 @@
 #include "IceWolfBattle_IdleState.h"
 #include "IceWolfBattle_BackStepState.h"
 #include "IceWolfBattle_SomerSaultState.h"
+#include "IceWolfBattle_RunState.h"
 
 using namespace IceWolf;
 
@@ -20,12 +21,7 @@ CIceWolfState * CAttackNormalState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	
-	m_fTarget_Distance = Find_BattleTarget();
-
-	
 	if (!m_bIsAnimationFinished)
 	{
 		_vector vecTranslation;
@@ -33,56 +29,35 @@ CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotation);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotation, m_pOwner->Get_Navigation());
-	
+
+	//	m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotation, m_pOwner->Get_Navigation());
+
 		m_pOwner->Check_Navigation();
 	}
+
 	return nullptr;
 }
 
 CIceWolfState * CAttackNormalState::LateTick(_float fTimeDelta)
 {
-	srand((_uint)time(NULL));
 	m_iRand = rand() % 2;
-
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-
-
-	if (false == m_bTargetSetting)
-	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		
-		m_bTargetSetting = true;
-	}
 
 	if (m_bIsAnimationFinished)
 	{
-		
-		switch (m_iRand)
-		{
-		case 0:
-			return new CBattle_SomerSaultState(m_pOwner);
-			break;
-
-		case 1:
+		if (m_iRand = 0)
 			return new CBattle_BackStepState(m_pOwner);
-			break;
-
-		default:
-			break;
-		}
-
-
+		else
+			return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_NORMAL_ATK);
 	}
+		
 
 
-
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	return nullptr;
 }
 
 void CAttackNormalState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_BATTLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_NORMAL);
 }
@@ -90,7 +65,7 @@ void CAttackNormalState::Enter()
 
 void CAttackNormalState::Exit()
 {
-	m_pOwner->Get_Model()->Reset();
+	
 	
 }
 
