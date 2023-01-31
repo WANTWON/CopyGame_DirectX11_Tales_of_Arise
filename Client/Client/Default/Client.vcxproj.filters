@@ -259,6 +259,12 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\01.Sion\Manager">
       <UniqueIdentifier>{575e09da-0184-48c0-89d5-0b9fc2716218}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\13.UI_InterectMsg">
+      <UniqueIdentifier>{72548769-92f2-4bc4-ba4b-a28fa74a8a9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\14.UI_Get_Item_Popup">
+      <UniqueIdentifier>{2cc9da08-0ce0-4403-a55d-221b3991f140}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -732,6 +738,12 @@
     <ClInclude Include="..\Public\SlimeAdventState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_InterectMsg.h">
+      <Filter>02.GameObjects\04.UI\13.UI_InterectMsg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Get_item_Popup.h">
+      <Filter>02.GameObjects\04.UI\14.UI_Get_Item_Popup</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1171,6 +1183,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\SlimeAdventState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_InterectMsg.cpp">
+      <Filter>02.GameObjects\04.UI\13.UI_InterectMsg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Get_item_Popup.cpp">
+      <Filter>02.GameObjects\04.UI\14.UI_Get_Item_Popup</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

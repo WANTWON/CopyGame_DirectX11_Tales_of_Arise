@@ -5,12 +5,12 @@
 
 BEGIN(Client)
 
-class CUI_Dialoguepopup final : public CUI_Base
+class CUI_InterectMsg final : public CUI_Base
 {
 private:
-	CUI_Dialoguepopup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUI_Dialoguepopup(const CUI_Dialoguepopup& rhs);
-	virtual ~CUI_Dialoguepopup() = default;
+	CUI_InterectMsg(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_InterectMsg(const CUI_InterectMsg& rhs);
+	virtual ~CUI_InterectMsg() = default;
 
 
 public:
@@ -26,21 +26,17 @@ private:
 
 
 public:
-	static CUI_Dialoguepopup* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CUI_InterectMsg* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 
 public:
-   void moveleft() { m_fPosition.x -= 10.f; }
+	void moveleft() { m_fPosition.x -= 10.f; }
 
 	//wchar_t* CharToWChar(const char* pstrSrc);
 
 public:
-	void Read_TextFiles_for_dialogue();
-
-	wchar_t* ConverCtoWC(char* str);
-
-	void Render_Fonts(_uint index);
+	
 
 	void Open_Dialogue(_uint index);//, _uint index1);l
 
@@ -59,16 +55,16 @@ private:
 	_float m_fFade1X = -50.f;
 	_float m_fFade1Y = -20.f;
 
-	
+
 
 	_float m_fFontsize = 0.9f;
 	_float m_fFontOffsetY = 35.f;
 
-	
+
 
 	_float2					m_fFontPos = { 0.f,0.f };
 	_float2                 m_fFontPos1 = { 0.f , 0.f };
-	
+
 	_float m_FontR, m_FontG, m_FontB = 0.f;
 
 	_tchar					m_szTXT[MAX_PATH] = TEXT("");
@@ -92,7 +88,7 @@ private:
 
 	_uint vectorsize = 0;
 
-	_bool m_btick = false;
+	_bool m_btick = true;
 
 
 };

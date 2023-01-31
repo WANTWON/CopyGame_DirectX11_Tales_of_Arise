@@ -5,12 +5,12 @@
 
 BEGIN(Client)
 
-class CUI_Dialoguepopup final : public CUI_Base
+class CUI_Get_item_Popup final : public CUI_Base
 {
 private:
-	CUI_Dialoguepopup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUI_Dialoguepopup(const CUI_Dialoguepopup& rhs);
-	virtual ~CUI_Dialoguepopup() = default;
+	CUI_Get_item_Popup(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Get_item_Popup(const CUI_Get_item_Popup& rhs);
+	virtual ~CUI_Get_item_Popup() = default;
 
 
 public:
@@ -26,29 +26,23 @@ private:
 
 
 public:
-	static CUI_Dialoguepopup* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CUI_Get_item_Popup* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 
 public:
-   void moveleft() { m_fPosition.x -= 10.f; }
+	void moveleft() { m_fPosition.x -= 10.f; }
 
 	//wchar_t* CharToWChar(const char* pstrSrc);
 
-public:
-	void Read_TextFiles_for_dialogue();
-
-	wchar_t* ConverCtoWC(char* str);
-
-	void Render_Fonts(_uint index);
 
 	void Open_Dialogue(_uint index);//, _uint index1);l
 
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
-	//CTexture*               m_pTextureCom2 = nullptr;
-	_bool m_bfadein = false;
+	CTexture*               m_pTextureCom2 = nullptr;
+	_bool m_bfadein = true;
 	_bool m_bfadein1 = false;
 	_bool m_bfadeout = false;
 
@@ -59,27 +53,27 @@ private:
 	_float m_fFade1X = -50.f;
 	_float m_fFade1Y = -20.f;
 
-	
+
 
 	_float m_fFontsize = 0.9f;
 	_float m_fFontOffsetY = 35.f;
 
-	
 
-	_float2					m_fFontPos = { 0.f,0.f };
+
+	/*_float2					m_fFontPos = { 0.f,0.f };
 	_float2                 m_fFontPos1 = { 0.f , 0.f };
-	
+
 	_float m_FontR, m_FontG, m_FontB = 0.f;
 
 	_tchar					m_szTXT[MAX_PATH] = TEXT("");
 	char fuck[256];
 	vector<_tchar*> m_vDialoguepopup[2];
 	vector<_tchar*> m_vDialoguepopup1[2];
-	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;
+	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;*/
 	_uint m_iDialogueindex = 0;
 
-	_uint m_iVectorIndex = 0;
-	_uint m_iVectorIndex1 = 1;
+	/*_uint m_iVectorIndex = 0;
+	_uint m_iVectorIndex1 = 1;*/
 
 	_bool m_bgoup = false;
 	_float m_fAlpha1 = 0.f;
@@ -92,9 +86,23 @@ private:
 
 	_uint vectorsize = 0;
 
-	_bool m_btick = false;
+	_bool m_btick = true;
+
+	_float m_fIndexOffsetY = 0.f;
 
 
+public:
+	typedef struct tagitempopup
+	{
+		//_float2 position = { 0.f,0.f };
+		_uint iIndex = 0;
+		_uint iCount = 0;
+		ITEM_NAME eName = ITEMNAME_END;
+	    ITEM_TYPE eType= ITEMTYPE_END;
+
+	}POPUPDESC;
+
+	POPUPDESC m_popupdesc;
 };
 
 END
