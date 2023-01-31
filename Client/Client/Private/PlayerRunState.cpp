@@ -45,7 +45,7 @@ CPlayerState * CRunState::HandleInput()
 	/* Skill */
 	if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 	{
-		if (pGameInstance->Key_Down(DIK_E))
+		if (pGameInstance->Key_Down(DIK_E))//stopstopstop
 			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
 		else if (pGameInstance->Key_Down(DIK_R))
 			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
@@ -85,6 +85,7 @@ void CRunState::Enter()
 		break;
 	case CPlayer::SION:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+
 		break;
 	default:
 		break;

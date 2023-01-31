@@ -7,6 +7,7 @@
 #include "CameraManager.h"
 #include "UI_RuneEffect.h"
 #include "Level_Loading.h"
+#include "BattleManager.h"
 
 CLevel_BattleZone::CLevel_BattleZone(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -63,7 +64,7 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_MINUS))
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
@@ -71,12 +72,7 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 		LEVEL eNextLevel = LEVEL_SNOWFIELD;
 
 		CPlayerManager::Get_Instance()->Save_LastPosition();
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MONSTER);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_BLOCK);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_INTERACT);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_TRAP);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_MBULLET);
-		m_pCollision_Manager->Clear_CollisionGroup(CCollision_Manager::COLLISION_ITEM);
+		m_pCollision_Manager->Clear_AllCollisionGroup();
 		pGameInstance->Set_DestinationLevel(eNextLevel);
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
@@ -92,16 +88,11 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 	SetWindowText(g_hWnd, TEXT("BattleZoneLevel"));
 
 
-	CBaseObj* pPlayer = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-	_float4		vLightEye, vLightAt;
+	_int iMonsterSize = (_int)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"))->size();
 
-	XMStoreFloat4(&vLightEye, pPlayer->Get_TransformState(CTransform::STATE_TRANSLATION));
-	vLightEye.y = 0.f;
-	vLightAt = vLightEye;
-	vLightEye.y += 50.f;
-	vLightEye.z += 50.f;
+	if (iMonsterSize == 0)
+		CBattleManager::Get_Instance()->Set_BattleMode(false);
 
-	CGameInstance::Get_Instance()->Set_ShadowLightView(vLightEye, vLightAt);
 
 }
 
@@ -149,41 +140,49 @@ HRESULT CLevel_BattleZone::Ready_Lights()
 
 HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 {
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
+	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC ModelDesc1;
+	NONANIMDESC ModelDesc2;
+	NONANIMDESC ModelDesc3;
+	NONANIMDESC ModelDesc4;
+
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/MonsterPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+
+	ReadFile(hFile, &(ModelDesc1), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(ModelDesc2), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(ModelDesc3), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(ModelDesc4), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+	CloseHandle(hFile);
+
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
+	pPlayer->Set_State(CTransform::STATE_TRANSLATION,  XMVectorSetW(XMLoadFloat3(& ModelDesc1.vPosition), 1.f) );
+	pPlayer->Change_Navigation(LEVEL_BATTLE);
+	pPlayer->Compute_CurrentIndex(LEVEL_BATTLE);
+	pPlayer->Check_Navigation();
+
+	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
+	_vector vPosition[3] = { XMVectorSetW(XMLoadFloat3(&ModelDesc2.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc3.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc4.vPosition), 1.f) };
+	_int i = 0;
+	for (auto& iter : pAIPlayers)
 	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Alphen"), LEVEL_STATIC, pLayerTag, nullptr)))
-			return E_FAIL;
-			
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0.f, 22, 1.f));
-		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, pLayerTag, nullptr)))
-			return E_FAIL;
-	}
-	else
-	{
-		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
-		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(64.f, 0.f, 64.f, 1.f));
-		pPlayer->Change_Navigation(LEVEL_BATTLE);
-		pPlayer->Compute_CurrentIndex(LEVEL_BATTLE);
-		pPlayer->Check_Navigation();
-
-		vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
-		_vector vPosition[3] = {{ 58.f, 0.f, 60.f, 1.f },{ 70.f, 0.f, 60.f, 1.f },{ 64.f, 0.f, 56.f, 1.f } };
-		_int i = 0;
-		for (auto& iter : pAIPlayers)
-		{
-			iter->Set_State(CTransform::STATE_TRANSLATION, vPosition[i]);
-			iter->Change_Navigation(LEVEL_BATTLE);
-			iter->Compute_CurrentIndex(LEVEL_BATTLE);
-			iter->Check_Navigation();
-			i++;
-		}
+		iter->Set_State(CTransform::STATE_TRANSLATION, vPosition[i]);
+		iter->Change_Navigation(LEVEL_BATTLE);
+		iter->Compute_CurrentIndex(LEVEL_BATTLE);
+		iter->Check_Navigation();
+		i++;
 	}
 
 	CPlayerManager::Get_Instance()->Set_BattleMode(true);
@@ -194,42 +193,60 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 
 HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
 
-	for (_uint i = 0; i < 1; ++i)
+	MONSTER_ID eMonsterID = CBattleManager::Get_Instance()->Get_MonsterType();
+
+	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC ModelDesc;
+
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/MonsterPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	int a = 0;
+
+	for (_uint i = 0; i < iNum; ++i)
 	{
-		_vector vPosition = { 48.f, 0.f, 48.f, 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_BATTLE, pLayerTag, &vPosition)))
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
 
-			return E_FAIL;
+
+		switch (eMonsterID)
+		{
+		case Client::ICE_WOLF:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_BATTLE, pLayerTag, &ModelDesc.vPosition)))
+				return E_FAIL;
+			break;
+		case Client::HAWK:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_BATTLE, pLayerTag, &ModelDesc.vPosition)))
+				return E_FAIL;
+			break;
+		case Client::BERSERKER:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_BATTLE, pLayerTag, &ModelDesc.vPosition)))
+				return E_FAIL;
+			break;
+		case Client::SLIME:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_BATTLE, pLayerTag, &ModelDesc.vPosition)))
+				return E_FAIL;
+			break;
+		default:
+			break;
+		}
+
 	}
 
-	//for (_uint i = 0; i < 1; ++i)
-	//{
-	//	_vector vPosition = { 51.f, 0.f, 51.f, 1.f };
-	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_BATTLE, pLayerTag, &vPosition)))
-	//		return E_FAIL;
-	//}
+	CloseHandle(hFile);
 
-	//for (_uint i = 0; i < 1; ++i)
-	//{
-	//	_vector vPosition = { 54.f, 0.f, 54.f, 1.f };
-	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_BATTLE, pLayerTag, &vPosition)))
-	//		return E_FAIL;
-	//}
-
-	//for (_uint i = 0; i < 1; ++i)
-	//{
-	//	_vector vPosition = { 48.f, 0.f, 48.f, 1.f };
-	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_BATTLE, pLayerTag, &vPosition)))
-	//		return E_FAIL;
-	//}
-
-
-
-	Safe_Release(pGameInstance);
-
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }

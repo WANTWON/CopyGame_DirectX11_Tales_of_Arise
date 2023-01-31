@@ -45,6 +45,9 @@ private:
 
 	_float m_fNext = 13.f;
 
+	
+	_tchar					m_szFPS[MAX_PATH] = TEXT("");
+
 
 	_float m_fcurrent_render_slot_mp = 0.f;
 

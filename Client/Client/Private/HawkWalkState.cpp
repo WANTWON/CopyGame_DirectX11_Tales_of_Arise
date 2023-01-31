@@ -36,7 +36,6 @@ CHawkState * CWalkState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f);
 	
 
@@ -51,7 +50,7 @@ CHawkState * CWalkState::LateTick(_float fTimeDelta)
 
 	m_fWalkMoveTimer += fTimeDelta;
 
-	if (m_fWalkMoveTimer > 1.5f)
+	if (m_fWalkMoveTimer > 5.5f)
 		return new CTurnR_State(m_pOwner);
 
 	return nullptr;

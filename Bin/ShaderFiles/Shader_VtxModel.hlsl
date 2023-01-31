@@ -13,6 +13,14 @@ float g_fDissolveAlpha;
 float4 g_WaterColorDeep = float4(.1f, .62f, .81f, 1.f);
 float4 g_WaterColorShallow = float4(.1, .63f, .81f, 1.f);
 
+float4 g_vColor;
+float g_fAlpha = 1.f;
+texture2D g_MaskTexture;
+texture2D g_NoiseTexture;
+float g_fNoiseSpeed;
+float g_fNoisePower;
+float g_fTimer = 0.f;
+
 
 struct VS_IN
 {
@@ -77,6 +85,11 @@ struct PS_OUT
 struct PS_OUT_SHADOW
 {
 	float4 vLightDepth : SV_TARGET0;
+};
+
+struct PS_EFFECT_OUT
+{
+	float4 vColor : SV_TARGET0;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -152,11 +165,7 @@ PS_OUT PS_DISSOLVE(PS_IN In)
 	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
 	vNormal = mul(vNormal, WorldMatrix);
 	
-
 	float4 vDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
-
-
-
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
@@ -164,6 +173,26 @@ PS_OUT PS_DISSOLVE(PS_IN In)
 	Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);
 	if (vDissolve.r < g_fDissolveAlpha)
 		discard;
+
+	return Out;
+}
+
+PS_EFFECT_OUT PS_SLASH(PS_IN In)
+{
+	PS_EFFECT_OUT Out = (PS_EFFECT_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	float2 vOffsettedUV = In.vTexUV + (g_fTimer * g_fNoiseSpeed);
+
+	float4 vNoise = g_NoiseTexture.Sample(LinearSampler, vOffsettedUV);
+	vNoise *= g_fNoisePower;
+	float4 vNoiseMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+	vNoise *= vNoiseMask;
+	vNoise *= g_fAlpha;
+
+	Out.vColor.a *= vNoise.r;
+	Out.vColor.rgb = g_vColor;
 
 	return Out;
 }
@@ -212,5 +241,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DISSOLVE();
+	}
+
+	pass Slash // 4
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_SLASH();
 	}
 }

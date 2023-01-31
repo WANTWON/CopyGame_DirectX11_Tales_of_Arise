@@ -39,6 +39,10 @@ public:
 	//	if (m_iNextAnimIndex != iAnimIndex) { m_bInterupted = true; }
 	//	m_iNextAnimIndex = iAnimIndex;
 	//}
+	_bool Is_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Under_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Over_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Between_Keyframe(char * pChannelName, _uint iKeyframeLower, _uint iKeyframeUpper);
 	void Set_TimeReset();
 	void Reset(void);
 

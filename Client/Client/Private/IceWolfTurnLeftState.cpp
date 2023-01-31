@@ -50,7 +50,7 @@ CIceWolfState * CTurnLeftState::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{	
 		
-		return new CIdleState(m_pOwner, STATE_TURN_L, STATE_TURN_L);
+		return new CIdleState(m_pOwner, STATE_TURN_L);
 	}
 
 

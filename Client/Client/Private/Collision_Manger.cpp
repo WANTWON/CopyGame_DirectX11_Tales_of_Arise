@@ -48,6 +48,17 @@ void CCollision_Manager::Clear_CollisionGroupExpect(COLLSIONGROUP CollisionGroup
 	}
 }
 
+void CCollision_Manager::Clear_AllCollisionGroup()
+{
+	for (_uint i = 0; i < COLLISION_END; ++i)
+	{
+		if (i == COLLISION_PLAYER)
+			continue;
+
+		m_GameObjects[i].clear();
+	}
+}
+
 _bool CCollision_Manager::CollisionwithGroup(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj** pOut)
 {
 	for (auto& iter : m_GameObjects[CollisionGroup])
@@ -150,6 +161,10 @@ void CCollision_Manager::Update_Collider()
 				iter->Update_Collider();
 		}
 	}
+}
+
+void CCollision_Manager::Update_ColliderGroup(COLLSIONGROUP SourGroup)
+{
 }
 
 CCollider * CCollision_Manager::Reuse_Collider(CCollider::TYPE eType, _uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg)

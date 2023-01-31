@@ -18,8 +18,14 @@ public:
 public:
 	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel, HANDLE hAddFile, _ulong* pdwAddByte);
 	HRESULT Bin_Initialize(DATA_BINANIM* pAIAnimation, class CModel* pModel); // Ãß°¡
+
 	_bool Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop, const char* pRootName);
 	_bool Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* PreAnim, const char* pRootName);
+
+	_bool Is_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Under_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Over_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Between_Keyframe(char * pChannelName, _uint iKeyframeLower, _uint iKeyframeUpper);
 
 public:
 	vector<class CChannel*>	Get_Channels(void) { return m_Channels; }

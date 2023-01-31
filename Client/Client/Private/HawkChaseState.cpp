@@ -35,7 +35,6 @@ CHawkState * CChaseState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-
 	return nullptr;
 }
 
@@ -49,7 +48,7 @@ CHawkState * CChaseState::LateTick(_float fTimeDelta)
 	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 
-	if (m_fTarget_Distance >= 8.f)
+	if (m_fTarget_Distance >= 15.f)
 		return new CIdleState(m_pOwner, CHawkState::FIELD_STATE_ID::STATE_TURN_R);
 	
 
@@ -58,7 +57,7 @@ CHawkState * CChaseState::LateTick(_float fTimeDelta)
 
 void CChaseState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_IDLE;
+	//m_eStateId = STATE_ID::STATE_IDLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::MOVE_RUN);
 }

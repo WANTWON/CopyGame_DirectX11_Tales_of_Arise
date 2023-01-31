@@ -11,6 +11,10 @@ private:
 	virtual ~CChannel() = default;
 
 public:
+	char* Get_ChannelName() { return m_szName; }
+	_uint Get_CurrentKeyframe() { return m_iCurrentKeyFrameIndex; }
+
+public:
 	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel);
 	HRESULT Bin_Initialize(DATA_BINCHANNEL* pAIChannel, class CModel* pModel); // Ãß°¡
 	void Invalidate_TransformationMatrix(_float fCurrentTime, _vector* pRotation = nullptr, _vector* pPosition = nullptr);

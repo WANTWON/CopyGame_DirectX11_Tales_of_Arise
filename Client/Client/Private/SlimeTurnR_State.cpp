@@ -34,6 +34,8 @@ CSlimeState * CTurnR_State::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), vecRotation, m_pOwner->Get_Navigation());
 
+		//m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * 0.15f);
+
 		m_pOwner->Check_Navigation();
 	}
 	

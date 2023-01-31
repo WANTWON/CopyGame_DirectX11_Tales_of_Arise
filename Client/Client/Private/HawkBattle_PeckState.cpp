@@ -54,23 +54,12 @@ CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
 	m_iRand = rand() % 1;
 
 
-
-
 	if (m_bIsAnimationFinished)
-	{
-		switch (m_iRand)
-		{
-		case 0:
-			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_PECK);
-			break;
+		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_PECK);
+
+
+
 	
-
-		default:
-			break;
-		}
-
-
-	}
 
 
 	return nullptr;

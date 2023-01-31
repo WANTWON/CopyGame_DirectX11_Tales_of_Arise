@@ -27,6 +27,8 @@ public:
 	HRESULT Ready_Layer_Interact_Object(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Instancing(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Trigger(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Npc(const _tchar* pLayerTag);
 
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;

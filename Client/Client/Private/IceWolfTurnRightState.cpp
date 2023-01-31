@@ -11,6 +11,9 @@ using namespace IceWolf;
 CTurnRightState::CTurnRightState(class CIce_Wolf* pIceWolf)
 {
 	m_pOwner = pIceWolf;
+
+	m_fTimeDletaAcc = 0.f;
+	m_fTurnRightTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CIceWolfState * CTurnRightState::AI_Behaviour(_float fTimeDelta)
@@ -43,16 +46,35 @@ CIceWolfState * CTurnRightState::LateTick(_float fTimeDelta)
 {
 	
 
-	if (m_pTarget)
+	/*if (m_pTarget)
 	{
 		return new CChaseState(m_pOwner);
-	}
+	}*/
+
+
+	m_fTimeDletaAcc += fTimeDelta;
+
+	if (m_fTimeDletaAcc > m_fTurnRightTime)
+		m_iRand = rand() % 4;
 
 	if (m_bIsAnimationFinished)
-	{
-		
-		return new CIdleState(m_pOwner, STATE_TURN_R, STATE_TURN_R);
-	}
+		switch (m_iRand)
+		{
+		case 0:
+			return new CWalkState(m_pOwner, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE);
+			break;
+		case 1:
+			return new CIdleState(m_pOwner, FIELD_STATE_ID::STATE_TURN);
+			break;
+		case 2:
+			return new CWalkState(m_pOwner, STATE_TURN);
+			break;
+		case 3:
+			return new CIdleState(m_pOwner, FIELD_STATE_ID::FIELD_STATE_IDLE);
+			break;
+		default:
+			break;
+		}
 	
 	
 
@@ -69,7 +91,7 @@ void CTurnRightState::Enter()
 
 void CTurnRightState::Exit()
 {
-	//m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
+	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
 	//m_pOwner->Get_Model()->Reset();
 }
 

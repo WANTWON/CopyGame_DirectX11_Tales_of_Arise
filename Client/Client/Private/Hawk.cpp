@@ -43,23 +43,21 @@ HRESULT CHawk::Initialize(void * pArg)
 	CHawkState* pState = new CSitOnState(this);
 	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 
-	///* Set Binary */
-	//CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	//CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
-	//char cName[MAX_PATH];
-	//ZeroMemory(cName, sizeof(char) * MAX_PATH);
-	//pData_Manager->TCtoC(TEXT("Hawk"), cName);
-	//pData_Manager->Conv_Bin_Model(m_pModelCom, cName, CData_Manager::DATA_ANIM);
-	//RELEASE_INSTANCE(CData_Manager);
-	//RELEASE_INSTANCE(CGameInstance);
+	
+	m_eMonsterID = HAWK;
+
 
 	m_tStats.m_fMaxHp = 3;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 
+
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	
+	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
+	Check_NearTrigger();
+
 	return S_OK;
 }
 
@@ -120,7 +118,7 @@ HRESULT CHawk::Ready_Components(void * pArg)
 
 int CHawk::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
@@ -162,8 +160,9 @@ int CHawk::Tick(_float fTimeDelta)
 
 void CHawk::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return;
+
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)
@@ -269,11 +268,8 @@ void CHawk::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{
-		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
+	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
 CHawk * CHawk::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

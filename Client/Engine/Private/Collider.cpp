@@ -117,6 +117,7 @@ void CCollider::Update(_fmatrix WorldMatrix)
 		break;
 	}
 }
+
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {

@@ -4,8 +4,11 @@
 #include "GameInstance.h"
 #include "PlayerIdleState.h"
 #include "Weapon.h"
+#include "Effect.h"
+#include "EffectMesh.h"
 #include "PlayerSkillState.h"
 #include "PlayerJumpState.h"
+
 
 using namespace Player;
 

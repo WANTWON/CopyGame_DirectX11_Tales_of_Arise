@@ -15,7 +15,7 @@ CBattle_Double_ClawState::CBattle_Double_ClawState(CBerserker* pBerserker)
 
 CBerserkerState * CBattle_Double_ClawState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_BattleTarget();
+	
 	return nullptr;
 }
 

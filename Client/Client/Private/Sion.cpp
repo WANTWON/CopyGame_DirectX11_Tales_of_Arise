@@ -39,8 +39,8 @@ HRESULT CSion::Initialize(void * pArg)
 
 	m_ePlayerID = SION;
 
-	m_tInfo.iMaxHp = 100;
-	m_tInfo.iCurrentHp = m_tInfo.iMaxHp;
+	m_tInfo.fMaxHp = 100;
+	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
 	m_tInfo.iDamage = 100;
 
 	return S_OK;
@@ -60,7 +60,7 @@ HRESULT CSion::Ready_Parts()
 	WeaponDesc.pSocket = pSocket;
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
-	strcpy(WeaponDesc.pModeltag, "SWO1(R00)");
+	strcpy(WeaponDesc.pModeltag, "SWO1");
 	Safe_AddRef(pSocket);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

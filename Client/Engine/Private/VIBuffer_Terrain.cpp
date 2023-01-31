@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "Picking.h"
 #include "Frustum.h"
+#include "PhysX.h"
 
 CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -655,7 +656,7 @@ HRESULT CVIBuffer_Terrain::Load_Prototype(HANDLE hFile, _ulong & dwByte, _bool b
 
 #pragma endregion
 
-
+#pragma region INDEXBUFFER
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
 
 	m_iIndicesByte = sizeof(FACEINDICES32);

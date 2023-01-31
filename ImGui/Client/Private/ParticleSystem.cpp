@@ -105,6 +105,8 @@ HRESULT CParticleSystem::SetUp_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
 		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vColor", &m_tParticleDesc.m_vColor, sizeof(_float3))))
+		return E_FAIL;
 
 	return S_OK;
 }

@@ -46,7 +46,6 @@ CHawkState * CTurnR_State::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-
 		return new CIdleState(m_pOwner, CHawkState::FIELD_STATE_ID::STATE_TURN_R);
 	}
 	return nullptr;

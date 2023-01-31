@@ -174,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\BattleManager.h" />
     <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_FireBallState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_Multiple_FireState.h" />
@@ -184,6 +185,7 @@
     <ClInclude Include="..\Public\BerserkerChaseState.h" />
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
+    <ClInclude Include="..\Public\FemaleYoung.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
     <ClInclude Include="..\Public\HawkChaseState.h" />
@@ -202,6 +204,8 @@
     <ClInclude Include="..\Public\Effect.h" />
     <ClInclude Include="..\Public\EffectMesh.h" />
     <ClInclude Include="..\Public\EffectTexture.h" />
+    <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
+    <ClInclude Include="..\Public\UI_InterectMsg.h" />
     <ClInclude Include="..\Public\Item.h" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Berserker.h" />
@@ -259,6 +263,7 @@
     <ClInclude Include="..\Public\Level_SnowField.h" />
     <ClInclude Include="..\Public\NonAnim.h" />
     <ClInclude Include="..\Public\NonAnim_Instance.h" />
+    <ClInclude Include="..\Public\Npc.h" />
     <ClInclude Include="..\Public\ParticleSystem.h" />
     <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
@@ -285,7 +290,10 @@
     <ClInclude Include="..\Public\SlimeTurnR_State.h" />
     <ClInclude Include="..\Public\SlimeWalkState.h" />
     <ClInclude Include="..\Public\TreasureBox.h" />
+    <ClInclude Include="..\Public\Trigger.h" />
     <ClInclude Include="..\Public\UI_Changebutton.h" />
+    <ClInclude Include="..\Public\UI_Dialogue.h" />
+    <ClInclude Include="..\Public\UI_Dialoguepopup.h" />
     <ClInclude Include="..\Public\UI_LOCKON.h" />
     <ClInclude Include="..\Public\UI_font_Damage_number.h" />
     <ClInclude Include="..\Public\UI_MENU_Back.h" />
@@ -328,6 +336,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\BattleManager.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_FireBallState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_Multiple_FireState.cpp" />
@@ -338,6 +347,7 @@
     <ClCompile Include="..\Private\BerserkerChaseState.cpp" />
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
+    <ClCompile Include="..\Private\FemaleYoung.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
     <ClCompile Include="..\Private\HawkChaseState.cpp" />
@@ -355,6 +365,8 @@
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\EffectMesh.cpp" />
     <ClCompile Include="..\Private\EffectTexture.cpp" />
+    <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
+    <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Berserker.cpp" />
@@ -409,6 +421,7 @@
     <ClCompile Include="..\Private\Level_SnowField.cpp" />
     <ClCompile Include="..\Private\NonAnim.cpp" />
     <ClCompile Include="..\Private\NonAnim_Instance.cpp" />
+    <ClCompile Include="..\Private\Npc.cpp" />
     <ClCompile Include="..\Private\ParticleSystem.cpp" />
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
@@ -433,7 +446,10 @@
     <ClCompile Include="..\Private\SlimeTurnR_State.cpp" />
     <ClCompile Include="..\Private\SlimeWalkState.cpp" />
     <ClCompile Include="..\Private\TreasureBox.cpp" />
+    <ClCompile Include="..\Private\Trigger.cpp" />
     <ClCompile Include="..\Private\UI_Changebutton.cpp" />
+    <ClCompile Include="..\Private\UI_Dialogue.cpp" />
+    <ClCompile Include="..\Private\UI_Dialoguepopup.cpp" />
     <ClCompile Include="..\Private\UI_LOCKON.cpp" />
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Back.cpp" />
