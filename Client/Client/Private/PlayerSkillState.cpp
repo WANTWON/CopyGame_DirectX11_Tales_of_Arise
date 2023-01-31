@@ -28,10 +28,11 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
+	else
+		m_pOwner->Check_Navigation();
+
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
