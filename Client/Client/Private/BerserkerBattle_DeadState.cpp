@@ -79,6 +79,5 @@ void CBattle_DeadState::Enter()
 
 void CBattle_DeadState::Exit()
 {
-	//m_fIdleMoveTimer = 0.f;
-	m_fIdleAttackTimer = 0.f;
+
 }

@@ -49,11 +49,11 @@ CIceWolfState * CTurnRightState::LateTick(_float fTimeDelta)
 		return new CChaseState(m_pOwner);
 	}
 
-	if (m_bIsAnimationFinished)
-	{
-		
-		return new CIdleState(m_pOwner, STATE_TURN_R, STATE_TURN_R);
-	}
+	//if (m_bIsAnimationFinished)
+	//{
+	//	
+	//	return new CIdleState(m_pOwner, STATE_TURN_R);
+	//}
 	
 	
 

@@ -22,16 +22,9 @@ CIceWolfState * CBattle_SomerSaultState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CBattle_SomerSaultState::Tick(_float fTimeDelta)
 {
-	Find_BattleTarget();
 	
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	
-	
-	Find_BattleTarget();
 	m_pOwner->Check_Navigation();
-
-	m_fDegreeToTarget = RadianToTarget();
 
 
 	if (!m_bIsAnimationFinished)
@@ -50,39 +43,12 @@ CIceWolfState * CBattle_SomerSaultState::Tick(_float fTimeDelta)
 
 CIceWolfState * CBattle_SomerSaultState::LateTick(_float fTimeDelta)
 {
-	m_iRand = rand() % 2;
-
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	
-	
-	if (false == m_bTargetSetting)
-	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		
-		
-		m_bTargetSetting = true;
-	}
-
 	
 	if (m_bIsAnimationFinished)
-	{
-		return new CBattle_RunState(m_pOwner);
+		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_SOMESAULT);
 
-		/*switch (m_iRand)
-		{
-		case 0:
-			return new CAttack_Elemental_Charge(m_pOwner, STATE_CHARGE_);
-			break;
-		case 1:
-			return new CBattle_RunState(m_pOwner);
-			break;
-		default:
-			break;
-		}*/
-		
-		
-	}
 
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	return nullptr;
 }
@@ -93,15 +59,12 @@ void CBattle_SomerSaultState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_SOMERSAULT_END);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
 }
 
 void CBattle_SomerSaultState::Exit()
 {
-	
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	m_pOwner->Get_Model()->Reset();
+
 	
 }
 

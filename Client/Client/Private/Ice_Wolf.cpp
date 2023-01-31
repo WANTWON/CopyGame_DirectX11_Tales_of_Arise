@@ -36,7 +36,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 	/* Set State */
 
-		CIceWolfState* pState = new CIdleState(this, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE, CIceWolfState::FIELD_STATE_ID::STATE_TURN_L);
+		CIceWolfState* pState = new CIdleState(this, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE);
 		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
 	
 
@@ -238,7 +238,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	_float iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
 	if (iHp <= 0)
 	{

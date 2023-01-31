@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\IceWolfHowLingState.h"
-
+#include "IceWolfChaseState.h"
+#include "IceWolfIdleState.h"
 
 using namespace IceWolf;
 
@@ -11,24 +12,29 @@ CHowLingState::CHowLingState(CIce_Wolf* pIceWolf)
 
 CIceWolfState * CHowLingState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_Target();
+	
 	return nullptr;
 }
 
 CIceWolfState * CHowLingState::Tick(_float fTimeDelta)
 {
-	m_pOwner->Check_Navigation();
+	Find_Target();
 
-	if (m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())))
-	{
-			//return new CWalkFrontState(m_pOwner);
-	}
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	return nullptr;
 }
 
 CIceWolfState * CHowLingState::LateTick(_float fTimeDelta)
 {
+	if (m_pTarget)
+		return new CChaseState(m_pOwner);
+
+	m_fWalkMoveTimer += fTimeDelta;
+
+	if (m_bIsAnimationFinished)
+		return new CIdleState(m_pOwner, CIceWolfState::FIELD_STATE_ID::STATE_HOWLING);
+
 	return nullptr;
 }
 

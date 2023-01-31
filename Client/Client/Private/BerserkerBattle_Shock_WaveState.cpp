@@ -36,10 +36,7 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-	if (m_bIsAnimationFinished)
-	{
-		return new CBattle_RunState(m_pOwner, STATE_ID::STATE_DASH_SCRATCHES);
-	}
+
 
 
 
@@ -49,7 +46,10 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 CBerserkerState * CBattle_Shock_WaveState::LateTick(_float fTimeDelta)
 {
 	
-	
+	if (m_bIsAnimationFinished)
+	{
+		return new CBattle_RunState(m_pOwner, STATE_ID::STATE_DASH_SCRATCHES);
+	}
 
 	return nullptr;
 }

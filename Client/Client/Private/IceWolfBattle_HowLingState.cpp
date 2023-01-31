@@ -42,24 +42,24 @@ CIceWolfState * CBattle_HowLingState::LateTick(_float fTimeDelta)
 		m_bTargetSetting = true;
 	}
 
-	
-	if (m_bIsAnimationFinished)
-	{
-		switch (m_iRand)
-		{
-		case 0:
-			return new CBattle_RunState(m_pOwner);
-			break;
+	//
+	//if (m_bIsAnimationFinished)
+	//{
+	//	switch (m_iRand)
+	//	{
+	//	case 0:
+	//		return new CBattle_RunState(m_pOwner);
+	//		break;
 
-		case 1:
-			return new CAttackBiteState(m_pOwner);
-			break;
+	//	case 1:
+	//		return new CAttackBiteState(m_pOwner);
+	//		break;
 
-		default:
-			break;
-		}
+	//	default:
+	//		break;
+	//	}
 
-	}
+	//}
 	
 
 	else
@@ -77,7 +77,7 @@ CIceWolfState * CBattle_HowLingState::LateTick(_float fTimeDelta)
 
 void CBattle_HowLingState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_BATTLE;
+	//m_eStateId = STATE_ID::STATE_BATTLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_HOWLING);
 

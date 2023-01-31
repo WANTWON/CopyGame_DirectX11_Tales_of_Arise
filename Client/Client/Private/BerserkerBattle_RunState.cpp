@@ -33,13 +33,17 @@ CBerserkerState * CBattle_RunState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	m_pOwner->Check_Navigation();
 
+	return nullptr;
+}
+
+CBerserkerState * CBattle_RunState::LateTick(_float fTimeDelta)
+{
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-
-	if (5.5f < m_fTarget_Distance)
+	if (8.5f < m_fTarget_Distance)
 	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 2.f);
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.4f);
 	}
 
 	else
@@ -59,11 +63,6 @@ CBerserkerState * CBattle_RunState::Tick(_float fTimeDelta)
 		}
 	}
 
-	return nullptr;
-}
-
-CBerserkerState * CBattle_RunState::LateTick(_float fTimeDelta)
-{
 
 	return nullptr;
 }

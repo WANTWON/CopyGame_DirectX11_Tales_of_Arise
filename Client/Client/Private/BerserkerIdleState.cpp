@@ -16,7 +16,6 @@ CIdleState::CIdleState(CBerserker* pIceWolf, FIELD_STATE_ID ePreState)
 
 CBerserkerState * CIdleState::AI_Behaviour(_float fTimeDelta)
 {
-	
 	return nullptr;
 }
 
@@ -27,18 +26,14 @@ CBerserkerState * CIdleState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
-	{
-
 		m_pOwner->Check_Navigation();
-	}
+	
 
 	return nullptr;
 }
 
 CBerserkerState * CIdleState::LateTick(_float fTimeDelta)
 {
-	
-
 	m_fIdleMoveTimer += fTimeDelta;
 
 	if (m_pTarget)
@@ -48,7 +43,7 @@ CBerserkerState * CIdleState::LateTick(_float fTimeDelta)
 
 	else
 	{
-		if (m_fIdleMoveTimer > 3.f)
+		if (m_fIdleMoveTimer > 5.f)
 		{
 			switch (m_ePreState_Id)
 			{
@@ -88,5 +83,5 @@ void CIdleState::Enter()
 
 void CIdleState::Exit()
 {
-
+	
 }

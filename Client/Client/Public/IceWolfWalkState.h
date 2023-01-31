@@ -7,7 +7,7 @@ BEGIN(IceWolf)
 class CWalkState final : public CIceWolfState
 {
 public:
-	CWalkState(class CIce_Wolf* pIceWolf, FIELD_STATE_ID ePreTurn);
+	CWalkState(class CIce_Wolf* pIceWolf, FIELD_STATE_ID ePreState);
 
 	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CIceWolfState* Tick(_float fTimeDelta) override;

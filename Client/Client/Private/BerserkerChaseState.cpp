@@ -25,7 +25,7 @@ CBerserkerState * CChaseState::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	
+	m_pOwner->Check_Navigation();
 	return nullptr;
 }
 
@@ -39,7 +39,7 @@ CBerserkerState * CChaseState::LateTick(_float fTimeDelta)
 	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 
-	if (m_fTarget_Distance >= 8.f)
+	if (m_fTarget_Distance >= 15.f)
 		return new CIdleState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_CHASE);
 
 	return nullptr;
@@ -54,5 +54,5 @@ void CChaseState::Enter()
 
 void CChaseState::Exit()
 {
-
+	
 }
