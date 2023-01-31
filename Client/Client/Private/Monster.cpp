@@ -39,6 +39,7 @@ int CMonster::Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_bTakeDamage)
@@ -98,17 +99,6 @@ void CMonster::Late_Tick(_float fTimeDelta)
 			CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID);
 		}
 	}
-	
-
-
-#ifdef _DEBUG
-	if (m_pAABBCom != nullptr)
-		m_pRendererCom->Add_Debug(m_pAABBCom);
-	if (m_pOBBCom != nullptr)
-		m_pRendererCom->Add_Debug(m_pOBBCom);
-	if (m_pSPHERECom != nullptr)
-		m_pRendererCom->Add_Debug(m_pSPHERECom);
-#endif
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
 		m_bDead = true;

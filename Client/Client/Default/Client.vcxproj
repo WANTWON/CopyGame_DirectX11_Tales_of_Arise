@@ -185,6 +185,7 @@
     <ClInclude Include="..\Public\BerserkerChaseState.h" />
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
+    <ClInclude Include="..\Public\FemaleYoung.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
     <ClInclude Include="..\Public\HawkChaseState.h" />
@@ -260,6 +261,7 @@
     <ClInclude Include="..\Public\Level_SnowField.h" />
     <ClInclude Include="..\Public\NonAnim.h" />
     <ClInclude Include="..\Public\NonAnim_Instance.h" />
+    <ClInclude Include="..\Public\Npc.h" />
     <ClInclude Include="..\Public\ParticleSystem.h" />
     <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
@@ -344,6 +346,7 @@
     <ClCompile Include="..\Private\BerserkerChaseState.cpp" />
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
+    <ClCompile Include="..\Private\FemaleYoung.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
     <ClCompile Include="..\Private\HawkChaseState.cpp" />
@@ -415,6 +418,7 @@
     <ClCompile Include="..\Private\Level_SnowField.cpp" />
     <ClCompile Include="..\Private\NonAnim.cpp" />
     <ClCompile Include="..\Private\NonAnim_Instance.cpp" />
+    <ClCompile Include="..\Private\Npc.cpp" />
     <ClCompile Include="..\Private\ParticleSystem.cpp" />
     <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />

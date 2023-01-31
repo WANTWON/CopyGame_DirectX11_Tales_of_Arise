@@ -22,6 +22,7 @@
 //Actor
 #include "Alphen.h"
 #include "Sion.h"
+#include "FemaleYoung.h"
 
 
 //UI
@@ -146,6 +147,12 @@ HRESULT CLoader::Loading_ForPrototype()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+
+	/*For.Prototype_Trigger */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NpcFemale"),
+		CFemaleYoung::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_Trigger */
@@ -531,7 +538,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 
 	/* For.Prototype_Component_Model_Alphen_Weapon01 */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO01/SWO01.dat"))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO01/SWO1.dat"))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Model_IceWolf*/

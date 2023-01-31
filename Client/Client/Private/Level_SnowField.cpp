@@ -45,9 +45,6 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact"))))
-		return E_FAIL;
-
 	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
 		return E_FAIL;
 
@@ -55,6 +52,9 @@ HRESULT CLevel_SnowField::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Trigger(TEXT("Layer_Trigger"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Npc(TEXT("Layer_Npc"))))
 		return E_FAIL;
 
 	if (!g_bUIMade)
@@ -753,6 +753,41 @@ HRESULT CLevel_SnowField::Ready_Layer_Trigger(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_SnowField::Ready_Layer_Npc(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC ModelDesc;
+
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NpcFemale"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+
+	}
+
+	CloseHandle(hFile);
+
+	RELEASE_INSTANCE(CGameInstance);
+
 	return S_OK;
 }
 

@@ -10,6 +10,7 @@
 #include "PlayerManager.h"
 #include <time.h>
 #include "UI_Dialogue.h"
+#include "BattleManager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -209,6 +210,7 @@ void CMainApp::Free()
 	CData_Manager::Get_Instance()->Destroy_Instance();
 	CCameraManager::Get_Instance()->Destroy_Instance();
 	CPlayerManager::Get_Instance()->Destroy_Instance();
+	CBattleManager::Get_Instance()->Destroy_Instance();
 
 }
 
