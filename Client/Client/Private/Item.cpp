@@ -88,6 +88,9 @@ void CItem::Late_Tick(_float fTimeDelta)
 				itempointer->icount = 1;
 				break;
 			case LETTUCE:
+				itempointer->eitemname = ITEMNAME_LETTUCE;
+				itempointer->eitemtype = ITEMTYPE_VEGITABLE;//(ITEM_TYPE)(rand() % 20);
+				itempointer->icount = 1;
 				break;
 
 			}
