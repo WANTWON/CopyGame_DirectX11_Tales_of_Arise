@@ -15,7 +15,9 @@ CIdleState::CIdleState(CIce_Wolf* pIceWolf, FIELD_STATE_ID ePreState)
 {
 	m_pOwner = pIceWolf;
 	m_ePreState_Id = ePreState;
-	
+
+	m_fIdleTimeAcc = 0;
+	m_fIdleTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CIceWolfState * CIdleState::AI_Behaviour(_float fTimeDelta)
@@ -25,12 +27,12 @@ CIceWolfState * CIdleState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CIdleState::Tick(_float fTimeDelta)
 {
-	Find_Target();
+//	Find_Target();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	if (!m_bIsAnimationFinished)
-		m_pOwner->Check_Navigation();
+	
+	m_pOwner->Check_Navigation();
 
 
 	return nullptr;
@@ -38,7 +40,9 @@ CIceWolfState * CIdleState::Tick(_float fTimeDelta)
 
 CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 {
-	m_fIdleMoveTimer += fTimeDelta;
+
+
+	m_fIdleTimeAcc += fTimeDelta;
 
 	if (m_pTarget)
 	{
@@ -46,22 +50,25 @@ CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 	}
 
 	
+
+
 	else
 	{
-		if (m_fIdleMoveTimer > 1.5f)
+		if (m_fIdleTimeAcc > m_fIdleTime)
 		{
-			switch (m_ePreState_Id)
+			
+			switch (rand()%4)
 			{
-			case Client::CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE:
+			case 0:
 				return new CWalkState(m_pOwner, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE);
 				break;
-			case Client::CIceWolfState::FIELD_STATE_ID::STATE_TURN_L:
+			case 1:
 				return new CIdleState(m_pOwner, FIELD_STATE_ID::STATE_TURN);
 				break;
-			case Client::CIceWolfState::STATE_TURN:
+			case 2:
 				return new CWalkState(m_pOwner, STATE_TURN);
 				break;
-			case Client::CIceWolfState::FIELD_STATE_ID::STATE_HOWLING:
+			case 3:
 				return new CIdleState(m_pOwner, FIELD_STATE_ID::FIELD_STATE_IDLE);
 				break;
 			default:
@@ -69,6 +76,41 @@ CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 			}
 		}
 	}
+
+
+
+
+
+
+
+
+
+
+	//원본코드
+	//else
+	//{
+	//	if (m_fIdleMoveTimer > 3.5f)
+	//	{
+	//		
+	//		switch (m_ePreState_Id)
+	//		{
+	//		case Client::CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE:
+	//			return new CWalkState(m_pOwner, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE);
+	//			break;
+	//		case Client::CIceWolfState::FIELD_STATE_ID::STATE_TURN_L:
+	//			return new CIdleState(m_pOwner, FIELD_STATE_ID::STATE_TURN);
+	//			break;
+	//		case Client::CIceWolfState::STATE_TURN:
+	//			return new CWalkState(m_pOwner, STATE_TURN);
+	//			break;
+	//		case Client::CIceWolfState::FIELD_STATE_ID::STATE_HOWLING:
+	//			return new CIdleState(m_pOwner, FIELD_STATE_ID::FIELD_STATE_IDLE);
+	//			break;
+	//		default:
+	//			break;
+	//		}
+	//	}
+	//}
 
 
 	return nullptr;

@@ -3,24 +3,25 @@
 #include "Player.h"
 #include "Ice_Wolf.h"
 #include "Client_Defines.h"
-
+#include "PlayerManager.h"
 
 BEGIN(Client)
 class CIceWolfState
 {
 public:
-	
+
 	enum FIELD_STATE_ID
 	{
 		FIELD_STATE_IDLE,
 		STATE_WALK,
 		STATE_TURN_L,
 		STATE_TURN,
+		STATE_TRIGGER_TURN,
 		STATE_HOWLING
 	};
 
 
-	
+
 	enum STATE_ID
 	{
 		START_BATTLE,
@@ -40,8 +41,8 @@ public:
 		STATE_DEAD,
 		STATE_END
 	};
-	
-	
+
+
 
 	virtual ~CIceWolfState() {};
 	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) { return nullptr; };
@@ -106,32 +107,20 @@ protected:
 
 	virtual _float Find_BattleTarget()
 	{
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameObject);
-	/*	if (!pPlayer)
-			return;*/
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 
-		
+		m_pTarget = pPlayer;
+		_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+		return fDistance;
+
+		if (fDistance < m_pOwner->Get_Attack_BiteRadius())
 		{
-			m_pTarget = pPlayer;
-			_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-			_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+			m_pOwner->Get_Transform()->Change_Speed(m_pOwner->Get_Stats().m_fRunSpeed);
 
-			_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
-			return fDistance;
-
-			
-
-			if (fDistance < m_pOwner->Get_Attack_BiteRadius())
-			{
-
-				m_pOwner->Get_Transform()->Change_Speed(m_pOwner->Get_Stats().m_fRunSpeed);
-				
-				m_bBitePossible = true;
-
-				
-			}
+			m_bBitePossible = true;
 		}
 	}
 
@@ -151,7 +140,7 @@ protected:
 	virtual _float RadianToTarget()
 	{
 		_float fWidth = 0.f, fHeight = 0.f, fDepth = 0.f;
-		
+
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameObject);
@@ -165,15 +154,15 @@ protected:
 		_vector vDistance = vPlayerPosition - vWolfPosition;
 		vDistance = XMVector4Normalize(vDistance);
 
-	/*	_float4 fPlayerPosition;
-		_float4 fWolfPosition;
+		/*	_float4 fPlayerPosition;
+			_float4 fWolfPosition;
 
 
-		XMStoreFloat4(&fPlayerPosition, vPlayerPosition);
-		XMStoreFloat4(&fWolfPosition, vWolfPosition);
-		*/
+			XMStoreFloat4(&fPlayerPosition, vPlayerPosition);
+			XMStoreFloat4(&fWolfPosition, vWolfPosition);
+			*/
 		_float DotValue = XMVectorGetX(XMVector3Dot(vDistance, vWolfLook));
-		
+
 
 		//fWidth  = fPlayerPosition.x - fWolfPosition.x;
 		//fHeight = fPlayerPosition.y - fWolfPosition.y;
@@ -185,16 +174,16 @@ protected:
 		_float fdegree = XMConvertToDegrees(fRadian);
 
 		return fdegree;
-		
+
 	}
-	
+
 
 
 
 protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
 	STATE_ID m_eStateId = STATE_END;
-	
+
 	_bool		m_bIsAnimationFinished = false;
 	_bool		m_bHasSpottedTarget = false;
 	_bool		m_bBattleMode = false;
@@ -204,6 +193,6 @@ protected:
 	_float		m_fDegreeToTarget;
 	CIce_Wolf* m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
-	
+
 };
 END

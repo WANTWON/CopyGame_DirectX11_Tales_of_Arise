@@ -2,12 +2,15 @@
 #include "..\Public\IceWolfHowLingState.h"
 #include "IceWolfChaseState.h"
 #include "IceWolfIdleState.h"
-
+#include "IceWolfWalkState.h"
 using namespace IceWolf;
 
 CHowLingState::CHowLingState(CIce_Wolf* pIceWolf)
 {
 	m_pOwner = pIceWolf;
+
+	m_fHowLingTimeAcc = 0.f;
+	m_fHowlingTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CIceWolfState * CHowLingState::AI_Behaviour(_float fTimeDelta)
@@ -30,10 +33,31 @@ CIceWolfState * CHowLingState::LateTick(_float fTimeDelta)
 	if (m_pTarget)
 		return new CChaseState(m_pOwner);
 
-	m_fWalkMoveTimer += fTimeDelta;
+
+	m_fHowLingTimeAcc += fTimeDelta;
+
+	if (m_fHowLingTimeAcc > m_fHowlingTime)
+		m_iRand = rand() % 4;
 
 	if (m_bIsAnimationFinished)
-		return new CIdleState(m_pOwner, CIceWolfState::FIELD_STATE_ID::STATE_HOWLING);
+		switch (m_iRand)
+			{
+			case 0:
+				return new CWalkState(m_pOwner, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE);
+				break;
+			case 1:
+				return new CIdleState(m_pOwner, FIELD_STATE_ID::STATE_TURN);
+				break;
+			case 2:
+				return new CWalkState(m_pOwner, STATE_TURN);
+				break;
+			case 3:
+				return new CIdleState(m_pOwner, FIELD_STATE_ID::FIELD_STATE_IDLE);
+				break;
+			default:
+				break;
+			}
+	
 
 	return nullptr;
 }

@@ -27,7 +27,7 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation();
 
-	m_fTarget_Distance = Find_BattleTarget();
+	//m_fTarget_Distance = Find_BattleTarget();
 
 	//m_fDegreeToTarget = RadianToTarget();
 	return nullptr;
@@ -35,47 +35,38 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 
 CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 {
-	if (m_pTarget == nullptr)
-		return nullptr;
+	//if (m_pTarget == nullptr)
+	//	return nullptr;
 
-	srand((_uint)time(NULL));
 	m_iRand = rand() % 2;
 	
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-
-	
-	if (4.5f < m_fTarget_Distance)
-	{
-		//m_pOwner->Set_Speed(5.f);
-		
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.1f);
-		
-	}
-	else
-	{
+	//if (4.5f < m_fTarget_Distance)
+	//{
+	//	//m_pOwner->Set_Speed(5.f);
+	//	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.1f);
+	//	
+	//}
+	//else
+	//{
 		switch (m_ePreState_Id)
 		{
 		case CIceWolfState::STATE_ID::START_BATTLE:
 			return new CAttackNormalState(m_pOwner);
 			break;
-	
 		case CIceWolfState::STATE_ID::STATE_BACKSTEP:
 			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
 			break;
-
-
 		case CIceWolfState::STATE_ID::STATE_ELEMENTAL_CHARGE:
 			if (m_iRand == 0)
 				return new CAttackBiteState(m_pOwner);
 			else
 				return new CAttackNormalState(m_pOwner);
 			break;
-
 		case CIceWolfState::STATE_ID::STATE_BITE:
 			return new CAttackNormalState(m_pOwner);
-
 		case CIceWolfState::STATE_ID::STATE_NORMAL_ATK:
 			if(m_iRand == 0)
 				return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
@@ -84,10 +75,8 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 		default:
 			break;
 		}
-	}
+	//}
 		
-
-
 	return nullptr;
 }
 

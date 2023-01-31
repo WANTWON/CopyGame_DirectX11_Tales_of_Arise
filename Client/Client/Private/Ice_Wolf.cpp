@@ -32,12 +32,20 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	/* Set State */
-
+	if (m_bBattleMode)
+	{
+		/*Set_Battle State*/
+		CIceWolfState* pBattleState = new CBattle_IdleState(this);
+		m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	}
+	else
+	{
+		/* Set State */
 		CIceWolfState* pState = new CIdleState(this, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE);
-		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
 
 
 	m_eMonsterID = ICE_WOLF;
@@ -53,6 +61,12 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
+	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
+	Check_NearTrigger();
+
+	//테스트 코드
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), 90.f);
+	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 	return S_OK;
 }
 
@@ -88,16 +102,17 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
 		return E_FAIL;
 
-	/* For.Com_OBB */
-	CCollider::COLLIDERDESC ColliderDesc;
-	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(7.f, 3.f, 3.f);
-	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
-		return E_FAIL;
+	///* For.Com_OBB */
+	//CCollider::COLLIDERDESC ColliderDesc;
+	//ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	//ColliderDesc.vScale = _float3(7.f, 3.f, 3.f);
+	//ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	//ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	//if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
+	//	return E_FAIL;
 
 	/* For.Com_SPHERE */
+	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
@@ -134,27 +149,18 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	if (true == m_bBattleMode && false == m_bDoneChangeState)
-	{
-		CIceWolfState* pState = new CBattle_IdleState(this);
-		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
-		m_bDoneChangeState = true;
-	}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	//{
-	//	CIceWolfState* pState = new CAttack_Elemental_Charge(this, CIceWolfState::STATE_ID::STATE_CHARGE_END);
-	//	m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
-	//}
-	
-
 	__super::Tick(fTimeDelta);
-	AI_Behaviour(fTimeDelta);
 
+	m_bBattleMode =  CBattleManager::Get_Instance()->Get_IsBattleMode();
+
+	
+	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
+
+
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	//m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return OBJ_NOEVENT;
 }
@@ -168,32 +174,38 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-
-	LateTick_State(fTimeDelta);
+	/*if (m_bBattleMode)
+	{
+		LateTick_BattleState(fTimeDelta);
+	}
+	else*/
+//	{
+		LateTick_State(fTimeDelta);
+//	}
 
 }
 
 void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 {
-	CIceWolfState* pNewState = m_pIce_WolfState->AI_Behaviour(fTimeDelta);
+	CIceWolfState* pNewState = m_pState->AI_Behaviour(fTimeDelta);
 	if (pNewState)
-		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
+		m_pState = m_pState->ChangeState(m_pState, pNewState);
 }
 
 
 void CIce_Wolf::Tick_State(_float fTimeDelta)
 {
-	CIceWolfState* pNewState = m_pIce_WolfState->Tick(fTimeDelta);
+	CIceWolfState* pNewState = m_pState->Tick(fTimeDelta);
 	if (pNewState)
-		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
+		m_pState = m_pState->ChangeState(m_pState, pNewState);
 	
 }
 
 void CIce_Wolf::LateTick_State(_float fTimeDelta)
 {
-	CIceWolfState* pNewState = m_pIce_WolfState->LateTick(fTimeDelta);
+	CIceWolfState* pNewState = m_pState->LateTick(fTimeDelta);
 	if (pNewState)
-		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pNewState);
+		m_pState = m_pState->ChangeState(m_pState, pNewState);
 }
 
 
@@ -237,8 +249,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	{
 		m_pModelCom->Set_TimeReset();
 		CIceWolfState* pState = new CBattle_DeadState(this/*DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION)*/);
-		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
-		
+		m_pState = m_pState->ChangeState(m_pState, pState);
 		
 		return 0;
 	}
@@ -246,7 +257,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	{
 		m_pModelCom->Set_TimeReset();
 		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
-		m_pIce_WolfState = m_pIce_WolfState->ChangeState(m_pIce_WolfState, pState);
+		m_pState = m_pState->ChangeState(m_pState, pState);
 	}
 
 	return iHp;
@@ -268,11 +279,9 @@ void CIce_Wolf::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
+	
 }
 
 CIce_Wolf * CIce_Wolf::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -305,5 +314,5 @@ void CIce_Wolf::Free()
 {
 	__super::Free();
 
-	Safe_Delete(m_pIce_WolfState);
+	Safe_Delete(m_pState);
 }

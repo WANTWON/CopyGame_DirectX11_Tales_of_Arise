@@ -54,6 +54,8 @@ namespace Client
 		STATETYPE_DEFAULT
 	};
 
+#define MAXDISTANCE 999999.f
+
 }
 
 #include <process.h>

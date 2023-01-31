@@ -22,19 +22,14 @@ CIceWolfState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	
-	
-	Find_BattleTarget();
-
-
-
 	return nullptr;
 }
 
 CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 {
-	srand((_uint)time(NULL));
 	m_iRand = rand() % 1;
 
+	Find_BattleTarget();
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 

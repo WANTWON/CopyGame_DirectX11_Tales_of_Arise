@@ -347,6 +347,25 @@ void CMonster::Compute_CurrentIndex()
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 }
 
+void CMonster::Check_NearTrigger()
+{
+	list<CGameObject*>* TriggerLIst = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_SNOWFIELD, TEXT("Layer_Trigger"));
+	if (TriggerLIst == nullptr)
+		return;
+
+	for (auto& iter : *TriggerLIst)
+	{
+		_vector vTriggerPos = dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_float fDIstance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - vTriggerPos));
+
+		if (m_fMinLengh > fDIstance)
+		{
+			m_fMinLengh = fDIstance;
+			m_pTrigger = dynamic_cast<CBaseObj*>(iter);
+		}
+	}
+}
+
 
 HRESULT CMonster::SetUp_ShaderResources()
 {
