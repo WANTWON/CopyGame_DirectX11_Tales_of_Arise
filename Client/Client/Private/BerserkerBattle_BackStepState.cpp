@@ -41,15 +41,16 @@ CBerserkerState * CBattle_BackStepState::Tick(_float fTimeDelta)
 	}
 
 	
-	else if (m_bIsAnimationFinished)
-	{
-		return new CBattle_RunState(m_pOwner, STATE_QUADRUPLE);
-	}
+
 	return nullptr;
 }
 
 CBerserkerState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 {
+	if (m_bIsAnimationFinished)
+	{
+		return new CBattle_RunState(m_pOwner, STATE_QUADRUPLE);
+	}
 
 	return nullptr;
 }
@@ -60,7 +61,6 @@ void CBattle_BackStepState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_STEP_BACK);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CBattle_BackStepState::Exit()

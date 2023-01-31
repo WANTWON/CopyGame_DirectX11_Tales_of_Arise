@@ -60,6 +60,9 @@ HRESULT CSlime::Initialize(void * pArg)
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, 2.0f);
 	m_pTransformCom->Set_Scale(CTransform::STATE_LOOK, 2.0f);
 
+	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
+	Check_NearTrigger();
+
 	return S_OK;
 }
 
@@ -284,11 +287,8 @@ void CSlime::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{
-		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
+	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
 CSlime * CSlime::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

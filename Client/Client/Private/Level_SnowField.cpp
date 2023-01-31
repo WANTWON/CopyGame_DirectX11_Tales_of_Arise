@@ -33,6 +33,9 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Trigger(TEXT("Layer_Trigger"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
@@ -59,8 +62,7 @@ HRESULT CLevel_SnowField::Initialize()
 	/*if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
 		return E_FAIL;*/
 
-	if (FAILED(Ready_Layer_Trigger(TEXT("Layer_Trigger"))))
-		return E_FAIL;
+	
 
 
 	if (!g_bUIMade)
@@ -223,18 +225,18 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 		}
 		else if (!wcscmp(pModeltag, TEXT("Hawk")))
 		{
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
-				return E_FAIL;
+			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+			//	return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Berserker")))
 		{
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
-				return E_FAIL;
+		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+			//	return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Slime")))
 		{
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vScale)))
-				return E_FAIL;
+			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vScale)))
+			//	return E_FAIL;
 		}
 
 	}

@@ -45,7 +45,7 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 
 	m_fWalkMoveTimer += fTimeDelta;
 
-	if (m_fWalkMoveTimer > 3.f)
+	if (m_fWalkMoveTimer > 6.5f)
 		switch (m_ePreState_Id)
 		{
 		case CBerserkerState::FIELD_STATE_ID::STATE_TURN_R:
@@ -70,6 +70,5 @@ void CWalkState::Enter()
 
 void CWalkState::Exit()
 {
-	m_fIdleMoveTimer = 0.f;
-	m_fIdleAttackTimer = 0.f;
+
 }

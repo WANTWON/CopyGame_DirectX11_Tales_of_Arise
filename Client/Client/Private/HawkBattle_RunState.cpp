@@ -9,6 +9,9 @@
 #include "HawkBattle_RevolveState.h"
 #include "HawkBattle_PeckState.h"
 #include "HawkBattle_Flying_BackState.h"
+#include "HawkBattle_TornadeState.h"
+#include "HawkBattle_DashState.h"
+
 using namespace Hawk;
 
 CBattle_RunState::CBattle_RunState(CHawk* pHawk, STATE_ID ePreBattleState)
@@ -32,12 +35,7 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 	
 	if (!m_bIsAnimationFinished)
 	{
-		/*_float fTranslationLength, fRotation;
-
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &fTranslationLength, &fRotation);
-
-		m_pOwner->Get_Transform()->Sliding_Anim((fTranslationLength * 0.01f), fRotation, m_pOwner->Get_Navigation());*/
-
+		
 		m_pOwner->Check_Navigation();
 	}
 	return nullptr;
@@ -69,9 +67,11 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 			return new CBattle_PeckState(m_pOwner);
 
 		case CHawkState::STATE_ID::STATE_PECK:
-			return new CBattle_Flying_BackState(m_pOwner);
+			return new CBattle_TornadeState(m_pOwner);
 			break;
 
+		case CHawkState::STATE_ID::STATE_TORNADE:
+			return new CBattle_DashState(m_pOwner);
 			
 		default:
 			break;

@@ -6,14 +6,20 @@
 #include "IceWolfTurnLeftState.h"
 #include "IceWolfTurnRightState.h"
 #include "IceWolfChaseState.h"
-
+#include "IceWolfHowLingState.h"
 
 using namespace IceWolf;
 
-CWalkState::CWalkState(CIce_Wolf* pIceWolf, FIELD_STATE_ID ePreTurn)
+CWalkState::CWalkState(CIce_Wolf* pIceWolf, FIELD_STATE_ID ePreState, _bool bTriggerTurn)
 {
 	m_pOwner = pIceWolf;
-	m_ePreTurn_Id = ePreTurn;
+	m_ePreState_Id = ePreState;
+	m_bTriggerTurn = bTriggerTurn;
+
+	m_fWalkMoveTimeAcc = 0;
+	m_fMoveTime = ((rand() % 10000) *0.001f )*((rand() % 100) * 0.01f);
+	
+	
 }
 
 CIceWolfState * CWalkState::AI_Behaviour(_float fTimeDelta)
@@ -24,85 +30,115 @@ CIceWolfState * CWalkState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CWalkState::Tick(_float fTimeDelta)
 {
-
-	Find_Target();
-	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	
+	
 	m_pOwner->Check_Navigation();
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f);
-
-
-
+	
+	
 	return nullptr;
 }
 
 CIceWolfState * CWalkState::LateTick(_float fTimeDelta)
 {
-	if (m_pTarget)
-		return new CChaseState(m_pOwner);
-	
 
-	m_fWalkMoveTimer += fTimeDelta;
+	//나의 트리거 박스랑 충돌안했을떄
+	CBaseObj* pTrigger = m_pOwner->Get_Trigger();
 
-	if (m_fWalkMoveTimer > 1.5f)
+	if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == false)
 	{
-		if(STATE_TURN_L == m_ePreTurn_Id)
-			return new CTurnRightState(m_pOwner);
+		//돌게하고
 
-		else if(STATE_TURN_R == m_ePreTurn_Id)
-			return new CTurnLeftState(m_pOwner);
+		if (m_bTriggerTurn)
+		return new CTurnRightState(m_pOwner);
+		
+		// 그 트리거 박스의 위치 방향으로 이동하는 상태를 세팅한다.
+		
+		else
+		{
+			_vector vPosition = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Transform()->LookAt(vPosition);
+		}
 	}
-	//else
-	//{
-	//	return new CTurnLeftState(m_pOwner);
-	//		
-	//		/*if (m_fWalkMoveTimer > 3.f && m_iRand == 0)
-	//			return new CIdleState(m_pOwner);
 
-	//		else if (m_fWalkMoveTimer > 3.f && m_iRand == 1)
-	//			return new CTurnLeftState(m_pOwner);
+	//테스트 코드 
+	else
+	{
+		m_fWalkMoveTimeAcc += fTimeDelta;
 
-	//		else if (m_fWalkMoveTimer > 3.f && m_iRand == 2)
-	//			return new CTurnRightState(m_pOwner);
-	//		else
-	//			m_fWalkMoveTimer += fTimeDelta;*/
-	//}
-	//
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
-	//if (5.5f < m_fTarget_Distance)
-	//{
-	//	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 2.f);
-	//}
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f, m_pOwner->Get_Navigation());
 
-	//else
-	//{
-	//	switch (m_ePreState_Id)
-	//	{
-	//	case STATE_DASH_SCRATCHES:
-	//		return new CBattle_Quadruple_ClawState(m_pOwner);
-	//		break;
+		if (m_pTarget)
+			return new CChaseState(m_pOwner);
 
-	//	case STATE_QUADRUPLE:
-	//		return new CBattle_DashStartState(m_pOwner);
-	//		break;
+		if (m_fWalkMoveTimeAcc > m_fMoveTime)
+		{
+			switch (rand() % 4)
+			{
+			case 0:
+				return new CTurnLeftState(m_pOwner);
 
-	//	default:
-	//		break;
-	//	}
-	//}
-	
+			case 1:				
+				return new CHowLingState(m_pOwner);
+			case 2:
+				return new CTurnLeftState(m_pOwner);
+			case 3:
+				return new CHowLingState(m_pOwner);
+		
+
+			default:
+				break;
+			}
+		}
+	}
+
+
+
+	//원본코드
+	/*else
+	{
+		m_fWalkMoveTimer += fTimeDelta;
+
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+		
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f, m_pOwner->Get_Navigation());
+
+		if (m_pTarget)
+			return new CChaseState(m_pOwner);
+
+		if (m_fWalkMoveTimer > 10.5f)
+		{
+			switch (m_ePreState_Id)
+			{
+			case CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE:
+				return new CTurnLeftState(m_pOwner);
+
+			case CIceWolfState::FIELD_STATE_ID::STATE_TURN:
+				return new CHowLingState(m_pOwner);
+
+			default:
+				break;
+			}
+		}
+	}*/
+
+
 	return nullptr;
 }
+
 
 void CWalkState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_MOVE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_MOVE_WALK_F);
+	
 }
 
 void CWalkState::Exit()
 {
-	m_pOwner->Get_Model()->Reset();
+	
 }
 
