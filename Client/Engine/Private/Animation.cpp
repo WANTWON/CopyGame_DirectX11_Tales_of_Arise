@@ -205,6 +205,78 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 	return m_bLinearFinished;
 }
 
+_bool CAnimation::Is_Keyframe(char * pChannelName, _uint iKeyframe)
+{
+	auto iter = find_if(m_Channels.begin(), m_Channels.end(), [&](CChannel* pChannel)
+	{
+		return !strcmp(pChannelName, pChannel->Get_ChannelName());
+	});
+
+	if (iter == m_Channels.end())
+		return false;
+	else
+	{
+		if ((*iter)->Get_CurrentKeyframe() == iKeyframe)
+			return true;
+		else
+			return false;
+	}
+}
+
+_bool CAnimation::Under_Keyframe(char * pChannelName, _uint iKeyframe)
+{
+	auto iter = find_if(m_Channels.begin(), m_Channels.end(), [&](CChannel* pChannel)
+	{
+		return !strcmp(pChannelName, pChannel->Get_ChannelName());
+	});
+
+	if (iter == m_Channels.end())
+		return false;
+	else
+	{
+		if ((*iter)->Get_CurrentKeyframe() < iKeyframe)
+			return true;
+		else
+			return false;
+	}
+}
+
+_bool CAnimation::Over_Keyframe(char * pChannelName, _uint iKeyframe)
+{
+	auto iter = find_if(m_Channels.begin(), m_Channels.end(), [&](CChannel* pChannel)
+	{
+		return !strcmp(pChannelName, pChannel->Get_ChannelName());
+	});
+
+	if (iter == m_Channels.end())
+		return false;
+	else
+	{
+		if ((*iter)->Get_CurrentKeyframe() > iKeyframe)
+			return true;
+		else
+			return false;
+	}
+}
+
+_bool CAnimation::Between_Keyframe(char * pChannelName, _uint iKeyframeLower, _uint iKeyframeUpper)
+{
+	auto iter = find_if(m_Channels.begin(), m_Channels.end(), [&](CChannel* pChannel)
+	{
+		return !strcmp(pChannelName, pChannel->Get_ChannelName());
+	});
+
+	if (iter == m_Channels.end())
+		return false;
+	else
+	{
+		if (((*iter)->Get_CurrentKeyframe() >= iKeyframeLower) && ((*iter)->Get_CurrentKeyframe() <= iKeyframeUpper))
+			return true;
+		else
+			return false;
+	}
+}
+
 void CAnimation::Set_TimeReset()
 {
 	for (auto& pChannel : m_Channels)

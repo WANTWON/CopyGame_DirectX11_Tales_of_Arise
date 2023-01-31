@@ -28,9 +28,9 @@ HRESULT CWeapon::Initialize(void * pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 0.1f);
-	m_pTransformCom->Set_Scale(CTransform::STATE_UP, 0.1f);
-	m_pTransformCom->Set_Scale(CTransform::STATE_LOOK, 0.1f);
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, .1f);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, .1f);
+	m_pTransformCom->Set_Scale(CTransform::STATE_LOOK, .1f);
 
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.0f));
 
@@ -132,7 +132,6 @@ HRESULT CWeapon::Ready_Components()
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
-	/* For.Com_Model*/
 	/* For.Com_Model*/
 	_tchar			szModeltag[MAX_PATH] = TEXT("");
 	MultiByteToWideChar(CP_ACP, 0, m_WeaponDesc.pModeltag, (int)strlen(m_WeaponDesc.pModeltag), szModeltag, MAX_PATH);

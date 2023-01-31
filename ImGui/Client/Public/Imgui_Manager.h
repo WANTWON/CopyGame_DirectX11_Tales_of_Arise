@@ -101,6 +101,10 @@ public:
 	_bool Save_Effect();
 	_bool Load_Effect();
 
+	void Show_TextureCustomization();
+	void Show_MeshCustomization();
+	void Show_ParticleCustomization();
+
 	void Set_Play(_bool bPlay) { m_bIsPlaying = bPlay; }
 
 public:
@@ -176,46 +180,48 @@ private:
 	_int									m_iLightType = 0;
 	LIGHTDESC								m_LightDesc;
 
-	/*
-	* For Effect
-	*/
-	enum TRANSFORM_TYPE { TRANS_SCALE, TRANS_ROTATION, TRANS_TRANSLATION, TRANS_END };
-
-	CEffect_Manager*						m_pEffectManager = nullptr;
-	vector<string>							m_SavedEffects;
-	_int									m_iSavedEffect;
-	string									m_sCurrentEffect;
+	/* For Effect */
+	/* Create */
+	CEffect_Manager* m_pEffectManager = nullptr;
+	vector<string> m_SavedEffects;
+	_int m_iSavedEffect; /* Selected Saved Effect. */
+	string m_sCurrentEffect; 
 	
-	/* Effect Resources (Texture, Meshes) */
-	list<string>							m_TextureNames;
-	list<string>							m_MeshNames;
-	string									m_sSelectedResource;
+	/* Add */
+	list<string> m_TextureNames;
+	list<string> m_MeshNames;
+	string m_sSelectedResource;
 
-	enum RESOURCE_TYPE { RESOURCE_TEXTURE, RESOURCE_MESH, RESOURCE_END };
-	RESOURCE_TYPE							m_eResourceType = RESOURCE_END;
+	string m_sSelectedEffect;
+	class CEffect* m_pSelectedEffect = nullptr;
+	class CTransform* m_pSelectedEffectTransform = nullptr;
+	enum EFFECT_TRANSFORM { TRANS_SCALE, TRANS_ROTATION, TRANS_TRANSLATION, TRANS_END };
+	EFFECT_TRANSFORM m_eCurrentTransformation = TRANS_END;
+	_float m_fX = 1.f, m_fY = 1.f, m_fZ = 1.f;
 
-	/* Instanced Effects */
-	string									m_sSelectedEffect;
-	class CEffect*							m_pSelectedEffect = nullptr;
-	
-	/* Effect Settings */
-	_bool									m_bIsPlaying = false;
-	vector<string>							m_Shaders = { "SHADER_DEFAULT", "SHADER_ALPHAMASK" };
-	string									m_sCurrentShader = "SHADER_DEFAULT";
+	/* Customize */
+	_bool m_bIsPlaying = false;
 
-	vector<string>							m_SpawnTypes = { "LOOP", "BURST" };
-	string									m_sCurrentSpawnType = "LOOP";
+	vector<string> m_SpawnTypes = { "LOOP", "BURST" };
+	string m_sCurrentSpawnType = "LOOP";
 
-	TRANSFORM_TYPE							m_eEffectTransformation = TRANS_SCALE;
-	class CTransform*						m_pEffectTransform = nullptr;
-	_bool									m_bBillboard = true;
+	vector<string> m_Shaders = { "SHADER_DEFAULT", "SHADER_ALPHAMASK" };
+	vector<string> m_ShadersMesh = { "SHADER_DEFAULT", "SHADER_ALPHAMASK" };
+	string m_sCurrentShader = m_Shaders[0];
+	string m_sCurrentShaderMesh = m_ShadersMesh[0];
 
-	_float									m_fCurveValue = 1.f, m_fCurveStart = 1.f, m_fCurveEnd = 1.f;
-	_uint									m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedAlphaCurve = 0;
+	_bool m_bBillboard = true;
 
-	CEffectTexture::TEXTUREEFFECTDESC		m_tTextureEffectDesc;
-	CEffectMesh::MESHEFFECTDESC				m_tMeshEffectDesc;
-	CParticleSystem::PARTICLEDESC			m_tParticleDesc;
+	CEffectTexture::TEXTUREEFFECTDESC m_tTextureEffectDesc;
+	CEffectMesh::MESHEFFECTDESC m_tMeshEffectDesc;
+	CParticleSystem::PARTICLEDESC m_tParticleDesc;
+
+	string m_sSelectedMaskTexture = "";
+	string m_sSelectedNoiseTexture = "";
+	string m_sSelectedDissolveTexture = "";
+
+	_float m_fCurveValue = 1.f, m_fCurveStart = 1.f, m_fCurveEnd = 1.f;
+	_uint m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedAlphaCurve = 0, m_iSelectedTurnVelocityCurve = 0, m_iSelectedNoisePowerCurve = 0;
 
 public:
 	virtual void Free() override;

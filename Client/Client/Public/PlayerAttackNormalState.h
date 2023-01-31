@@ -19,6 +19,8 @@ public:
 
 private:
 	_matrix m_StartMatrix;
+
+	_bool m_bEffectSlashSpawned = false;
 };
 END
 END

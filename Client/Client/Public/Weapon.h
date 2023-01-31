@@ -35,6 +35,8 @@ private:
 	virtual ~CWeapon() = default;
 
 public:
+	_float4x4 Get_CombinedWorldMatrix() { return m_CombinedWorldMatrix; }
+
 	void On_Collider(void) { m_isCollider = true; }
 	void Off_Collider(void) { m_isCollider = false; }
 
@@ -67,11 +69,9 @@ private:
 private:
 	_bool m_isCollider = false;
 
-
 public:
 	static CWeapon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 };
-
 END
