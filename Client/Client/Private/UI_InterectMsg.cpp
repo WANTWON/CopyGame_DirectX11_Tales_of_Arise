@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "PlayerManager.h"
 #include "Player.h"
+#include "UI_QuestStartScreen.h"
+#include "UI_QuestClear.h"
 
 
 
@@ -34,7 +36,7 @@ HRESULT CUI_InterectMsg::Initialize(void * pArg)
 	m_fAlpha = 0;
 
 	
-
+	CUI_Manager::Get_Instance()->Set_SystemMsg(this);
 
 	
 
@@ -46,6 +48,24 @@ HRESULT CUI_InterectMsg::Initialize(void * pArg)
 
 int CUI_InterectMsg::Tick(_float fTimeDelta)
 {
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_U))
+	{
+		if(FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, (TEXT("ssssss")))))
+			return OBJ_NOEVENT;
+	}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_T))
+	{
+		CUI_QuestClear::QUESTCLEARDESC cleardesc;
+		ZeroMemory(&cleardesc, sizeof(CUI_QuestClear::QUESTCLEARDESC));
+		cleardesc.eName1 = ITEMNAME_OMEGAELIXIR;
+		cleardesc.iGaingald = 700;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC,(TEXT("ssssss")),&cleardesc)))
+			return OBJ_NOEVENT;
+	}
+	
+
+
 	if (m_btick)
 	{
 
@@ -330,7 +350,7 @@ CGameObject * CUI_InterectMsg::Clone(void * pArg)
 		Safe_Release(pInstance);
 	}
 
-	CUI_Manager::Get_Instance()->Set_SystemMsg(pInstance);
+	
 
 	return pInstance;
 }
@@ -343,6 +363,7 @@ void CUI_InterectMsg::Free()
 
 
 	Safe_Release(m_pTextureCom1);
+	Safe_Release(m_pTextureCom2);
 	__super::Free();
 }
 
