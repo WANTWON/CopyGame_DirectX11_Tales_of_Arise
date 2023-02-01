@@ -29,6 +29,9 @@ namespace Client
 
 	enum MONSTER_ID { ICE_WOLF, HAWK, BERSERKER, SLIME, MONSTER_END };
 
+	enum MONSTER_ID { ICE_WOLF, HAWK, BERSERKER, SLIME, RINWELL, MONSTER_END };
+
+
 	typedef struct ObjectInfo
 	{
 		float fMaxHp;

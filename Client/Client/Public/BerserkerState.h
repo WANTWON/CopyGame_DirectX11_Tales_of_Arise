@@ -17,6 +17,7 @@ public:
 		STATE_TURN_R,
 		STATE_CHASE,
 		STATE_HOWLING,
+		FIELD_STATE_END
 	};
 
 	enum STATE_ID
@@ -157,11 +158,14 @@ protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
 	STATE_ID m_eStateId = STATE_END;
 	
-	_bool m_bIsAnimationFinished = false;
-	_bool m_bHasSpottedTarget = false;
-	_bool m_bBattleMode = false;
-	_bool m_bBitePossible = false;
-	
+	_bool	    m_bIsAnimationFinished = false;
+	_bool	    m_bHasSpottedTarget = false;
+	_bool	    m_bBattleMode = false;
+	_bool	    m_bBitePossible = false;
+	_bool		m_bTriggerTurn = false;
+	_float		m_fTimeDletaAcc = 0.f;
+
+
 	CBerserker* m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
 };

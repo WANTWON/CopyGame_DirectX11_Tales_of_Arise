@@ -3,7 +3,7 @@
 #include "BerserkerChaseState.h"
 #include "BerserkerIdleState.h"
 #include "GameInstance.h"
-
+#include "BerserkerWalkState.h"
 
 using namespace Berserker;
 
@@ -37,10 +37,10 @@ CBerserkerState * CChaseState::LateTick(_float fTimeDelta)
 
 
 	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.4f, m_pOwner->Get_Navigation());
 
 	if (m_fTarget_Distance >= 15.f)
-		return new CIdleState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_CHASE);
+		return new CWalkState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_CHASE);
 
 	return nullptr;
 }

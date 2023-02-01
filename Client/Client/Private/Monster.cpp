@@ -232,11 +232,9 @@ _vector CMonster::Calculate_DirectionByPos()
 
 void CMonster::Find_Target()
 {
-	if (!m_bIsAttacking && !m_bHit && !m_bDead)
+	if (!m_bDead)
 	{
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		CGameObject* pTarget = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pTarget);
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 
 		if (pPlayer)
 		{
@@ -247,17 +245,28 @@ void CMonster::Find_Target()
 				return;
 			}
 
-			if (pTarget)
-			{
-				CTransform* PlayerTransform = (CTransform*)pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
-				_vector vTargetPos = PlayerTransform->Get_State(CTransform::STATE_TRANSLATION);
-				m_fDistanceToTarget = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - vTargetPos));
-				m_pTarget = dynamic_cast<CBaseObj*>(pTarget);
-			}
-			else
-				m_pTarget = nullptr;
+			_vector vTargetPos = pPlayer->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fDistanceToTarget = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - vTargetPos));
+			m_pTarget = pPlayer;	
 		}
 	}
+}
+
+CBaseObj* CMonster::Find_MinDistance_Target()
+{
+	list<CGameObject*>* pPlayerList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	for (auto& iter : *pPlayerList)
+	{
+		_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		if (m_fMinLengh > fDistance)
+		{
+			m_fMinLengh = fDistance;
+			m_pTarget = dynamic_cast<CBaseObj*>(iter);
+		}
+	}
+
+	return m_pTarget;
 }
 
 HRESULT CMonster::Drop_Items()
@@ -312,23 +321,20 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	m_tInfo.fCurrentHp -= (int)fDamage;
+	m_tStats.m_fCurrentHp-= (int)fDamage;
 
-	if (m_tInfo.fCurrentHp <= 0)
+	if (m_tStats.m_fCurrentHp <= 0)
 	{
-		m_tInfo.fCurrentHp = 0;
-		/*m_bDissolve = true;*/
+		m_tStats.m_fCurrentHp = 0;
 
-		return _int(m_tInfo.fCurrentHp);
+		return _int(m_tStats.m_fCurrentHp);
 
 	}
-
 
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
 
-
-	return _int(m_tInfo.fCurrentHp);
+	return _int(m_tStats.m_fCurrentHp);
 
 }
 

@@ -30,9 +30,9 @@ HRESULT CTrigger::Initialize(void * pArg)
 		_vector vPosition = XMLoadFloat3(&m_ModelDesc.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-		m_ModelDesc.vScale.x *= 3.f;
-		m_ModelDesc.vScale.y *= 3.f;
-		m_ModelDesc.vScale.z *= 3.f;
+		m_ModelDesc.vScale.x *= 2.f;
+		m_ModelDesc.vScale.y *= 2.f;
+		m_ModelDesc.vScale.z *= 2.f;
 		Set_Scale(m_ModelDesc.vScale);
 
 	}

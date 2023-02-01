@@ -12,15 +12,13 @@ private:
 
 public:
 	vector<ANIMEVENT> Get_Events(void) { return m_vecAnimEvent; }
-	_vector Get_RootTranslation(void) const { return m_vPosition; }
-	_vector Get_RootRotation(void) const { return m_vRotation; }
 
 public:
 	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel, HANDLE hAddFile, _ulong* pdwAddByte);
 	HRESULT Bin_Initialize(DATA_BINANIM* pAIAnimation, class CModel* pModel); // 추가
 
-	_bool Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop, const char* pRootName);
-	_bool Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* PreAnim, const char* pRootName);
+	_bool Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop);
+	_bool Animation_Linear_Interpolation(_float fTimeDelta, CAnimation* NextAnim);
 
 	_bool Is_Keyframe(char* pChannelName, _uint iKeyframe);
 	_bool Under_Keyframe(char* pChannelName, _uint iKeyframe);
@@ -63,9 +61,6 @@ private:
 	_int m_iTickPerSecondIndex = 0;
 	/* For. Animation Event */
 	vector<ANIMEVENT> m_vecAnimEvent;
-	/* For. Root Motion */
-	_vector m_vRotation;
-	_vector m_vPosition;
 	
 //public: // For. Data 추가
 //	void Get_AnimData(DATA_BINANIM* pAnimData);

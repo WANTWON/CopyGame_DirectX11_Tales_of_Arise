@@ -6,12 +6,12 @@
 #include "Collision_Manger.h"
 
 CWeapon::CWeapon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CBaseObj(pDevice, pContext)
 {
 }
 
 CWeapon::CWeapon(const CWeapon & rhs)
-	: CGameObject(rhs)
+	: CBaseObj(rhs)
 {
 }
 
@@ -34,7 +34,7 @@ HRESULT CWeapon::Initialize(void * pArg)
 	if (nullptr != pArg)
 		memcpy(&m_WeaponDesc, pArg, sizeof(WEAPONDESC));
 
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, .1f);
@@ -69,23 +69,15 @@ int CWeapon::Tick(_float fTimeDelta)
 			ColliderDesc.vScale = _float3(0.25f, 0.25f, 3.f);
 			ColliderDesc.vPosition = _float3(0.f, 0.f, -2.f);
 
-			m_pOBBCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
-
+			m_pOBBCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+			m_pOBBCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+			pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
 		else
 			m_pOBBCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 	}
-	else if (nullptr != m_pOBBCom && !m_isCollider)
-	{
-		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
-
-		pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pOBBCom);
-
-		m_pOBBCom = nullptr;
-
-		RELEASE_INSTANCE(CCollision_Manager);
-	}
+	
 
 	return OBJ_NOEVENT;
 }
@@ -96,6 +88,18 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pOBBCom)
 		m_pRendererCom->Add_Debug(m_pOBBCom);
 #endif
+
+
+	if (nullptr != m_pOBBCom && !m_isCollider)
+	{
+		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+
+		pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pOBBCom);
+
+		m_pOBBCom = nullptr;
+		pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
+		RELEASE_INSTANCE(CCollision_Manager);
+	}
 }
 
 HRESULT CWeapon::Render()
@@ -121,7 +125,7 @@ HRESULT CWeapon::Render()
 	return S_OK;
 }
 
-HRESULT CWeapon::Ready_Components()
+HRESULT CWeapon::Ready_Components(void* pArg)
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))

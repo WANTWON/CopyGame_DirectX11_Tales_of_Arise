@@ -159,7 +159,7 @@ PS_EFFECT_OUT PS_SLASH(PS_IN In)
 	vNoise *= g_fAlpha;
 
 	Out.vColor.a *= vNoise.r;
-	Out.vColor.rgb = g_vColor;
+	Out.vColor.rgb = g_vColor.rgb;
 
 	return Out;
 }
@@ -210,7 +210,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_SYMBOL();
 	}
 
-	pass Slash
+	pass Effect
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);

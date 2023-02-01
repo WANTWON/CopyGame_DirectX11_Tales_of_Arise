@@ -35,6 +35,8 @@ HRESULT CTreasureBox::Initialize(void* pArg)
 	m_pModelCom->Set_CurrentAnimIndex(CTreasureBox::ANIM::Open2);
 	m_pModelCom->Play_Animation(0.3f, false);
 
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
+
 	if (pArg != nullptr)
 	{
 		_vector vPosition = XMLoadFloat3(&m_Boxtag.vPosition);
@@ -51,11 +53,12 @@ HRESULT CTreasureBox::Initialize(void* pArg)
 
 int CTreasureBox::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || Check_IsinFrustum(2.f) == false)
 		return OBJ_NOEVENT;
 	__super::Tick(fTimeDelta);
 
-	
+	if (m_bOpenFinish)
+		return OBJ_NOEVENT;
 	
 
 	if (m_bOpen)
@@ -63,11 +66,18 @@ int CTreasureBox::Tick(_float fTimeDelta)
 		m_bIsAnimationFinished = m_pModelCom->Play_Animation(fTimeDelta, false);
 
 		if (m_bIsAnimationFinished)
+		{
 			m_bOpen = false;
 			m_bOpenFinish = true;
+		}
+			
 	}
 	else
-		 m_pModelCom->Play_Animation(0.f, false);
+	{
+		m_pModelCom->Play_Animation(0.f, false);
+		m_bOpenFinish = false;
+	}
+		
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
@@ -76,13 +86,15 @@ int CTreasureBox::Tick(_float fTimeDelta)
 
 void CTreasureBox::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || Check_IsinFrustum(2.f) == false)
 		return ;
 	__super::Late_Tick(fTimeDelta);
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameObject);
+	if (m_bOpenFinish)
+		return;
+
+	
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (!pPlayer)
 		return;
 

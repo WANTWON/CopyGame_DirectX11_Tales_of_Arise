@@ -149,7 +149,10 @@ HRESULT CNonAnim_Instance::Render_ShadowDepth()
 _bool CNonAnim_Instance::IsRenderShadow()
 {
 	if (!strcmp(m_ModelDesc.pModeltag, "Dead_Grass") ||
-		!strcmp(m_ModelDesc.pModeltag, "SmallRock2"))
+		!strcmp(m_ModelDesc.pModeltag, "SmallRock2") || 
+		!strcmp(m_ModelDesc.pModeltag, "Bush") ||
+		!strcmp(m_ModelDesc.pModeltag, "Snow2") ||
+		!strcmp(m_ModelDesc.pModeltag, "Birch2"))
 		return false;
 		
 	return true;

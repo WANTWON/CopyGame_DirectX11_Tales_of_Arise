@@ -1,6 +1,6 @@
 #pragma once
-#include "InteractObject.h"
 
+#include "InteractObject.h"
 
 BEGIN(Client)
 class CItem final : public CInteractObject
@@ -14,7 +14,6 @@ public:
 		NONANIMDESC ModelDesc;
 	}ITEMDESC;
 
-
 protected:
 	CItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CItem(const CItem& rhs);
@@ -27,18 +26,26 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-
 protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual HRESULT SetUp_ShaderID() override;
 
 private:
+
 	ITEMDESC	m_ItemDesc;
 	_bool		m_bIsGain = false;
 
 	_bool m_bfirst = false;
 	
+
+	ITEMDESC m_ItemDesc;
+	_bool m_bIsGain = false;
+
+	class CEffect* m_pPickupFlares = nullptr;
+	class CEffect* m_pPickupFlash = nullptr;
+	class CEffect* m_pPickupParticles = nullptr;
+
 
 public:
 	static CItem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

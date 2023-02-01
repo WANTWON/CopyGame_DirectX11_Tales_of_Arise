@@ -283,6 +283,21 @@
     <Filter Include="02.GameObjects\04.UI\17.UI_Questmsg">
       <UniqueIdentifier>{deac9767-1123-4b86-844a-17ccdf932d4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell">
+      <UniqueIdentifier>{3790b313-d11b-494b-a379-654fc89c4d13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\02.Rinwell">
+      <UniqueIdentifier>{51a6850f-897b-49ff-8b0e-4e7881f875a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell\State">
+      <UniqueIdentifier>{60b42f74-e576-4698-a827-121bc87dd00d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell\State\States">
+      <UniqueIdentifier>{fcda322f-c561-40f9-9300-6cea08c83b67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates">
+      <UniqueIdentifier>{fe5a3fd8-4c7f-45e0-8e30-af0a81ec6505}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -421,9 +436,6 @@
       <Filter>02.GameObjects\04.UI\06.MP_Guage</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IceWolfTurnLeftState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\IceWolfTurnRightState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Water.h">
@@ -780,6 +792,15 @@
     <ClInclude Include="..\Public\UI_Questmsg.h">
       <Filter>02.GameObjects\04.UI\17.UI_Questmsg</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AiRinwell.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Rinwell.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -900,9 +921,6 @@
       <Filter>02.GameObjects\04.UI\06.MP_Guage</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfTurnLeftState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\IceWolfTurnRightState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Water.cpp">
@@ -1243,6 +1261,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Questmsg.cpp">
       <Filter>02.GameObjects\04.UI\17.UI_Questmsg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AiRinwell.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Rinwell.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

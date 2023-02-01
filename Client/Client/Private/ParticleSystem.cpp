@@ -37,7 +37,14 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	KillParticles();				/* Release old Particles. */
 	
 	EmitParticles(fTimeDelta);		/* Emit new Particles.	*/
+
+	// Billboard
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
+	RELEASE_INSTANCE(CGameInstance);
+
 	UpdateParticles(fTimeDelta);	/* Update Particles. */
+	SortParticles();				/* Sort Particles. */
 
 	UpdateBuffers();
 	
@@ -49,10 +56,9 @@ void CParticleSystem::Late_Tick(_float fTimeDelta)
 	if (m_pRendererCom)
 	{
 		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);*/		/* Non-Alphablend */
-		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);*/	/* Alphablend with Normals */
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);			/* Alphablend */
 
-		//Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+		/*Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));*/
 	}
 }
 
@@ -63,7 +69,7 @@ HRESULT CParticleSystem::Render()
 
 	__super::Render();
 
-	m_pShaderCom->Begin(m_eShaderID);
+	m_pShaderCom->Begin(SHADER_EFFECT::SHADER_ALPHAMASK);
 	RenderBuffers();
 
 	return S_OK;
@@ -99,6 +105,10 @@ HRESULT CParticleSystem::SetUp_ShaderResources()
 	__super::SetUp_ShaderResources();
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vColor", &m_tParticleDesc.m_vColor, sizeof(_float3))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlphaDiscard", &m_tParticleDesc.m_fAlphaDiscard, sizeof(_float))))
 		return E_FAIL;
 
 	return S_OK;
@@ -189,6 +199,9 @@ HRESULT CParticleSystem::InitializeBuffers()
 
 void CParticleSystem::EmitParticles(_float fTimeDelta)
 {
+	if (m_bStop)
+		return;
+
 	_bool bEmitParticle, bFound;
 	_float fPositionX, fPositionY, fPositionZ, fRed, fGreen, fBlue, fInitialAlpha, fAlpha, fInitialVelocity, fVelocity, fInitialSize, fSize;
 	_float3 vDirection;
@@ -233,7 +246,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 			fGreen = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 			fBlue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 
-			fInitialAlpha = 1.f;
+			fInitialAlpha = m_tParticleDesc.m_fAlpha;
 			fAlpha = fInitialAlpha;
 
 			fInitialVelocity = m_tParticleDesc.m_fParticleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleVelocityVariation;
@@ -328,7 +341,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 				fGreen = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 				fBlue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 
-				fInitialAlpha = 1.f;
+				fInitialAlpha = m_tParticleDesc.m_fAlpha;
 				fAlpha = fInitialAlpha;
 
 				fInitialVelocity = m_tParticleDesc.m_fParticleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleVelocityVariation;
@@ -419,6 +432,25 @@ void CParticleSystem::UpdateParticles(_float fTimeDelta)
 	}
 
 	return;
+}
+
+void CParticleSystem::SortParticles()
+{
+	sort(m_Particles, m_Particles + m_fCurrentParticleCount, [&](const ParticleType & pParticleSour, const ParticleType & pParticleDesc) {
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+		_vector vCameraPosition = XMLoadFloat4(&pGameInstance->Get_CamPosition());
+		RELEASE_INSTANCE(CGameInstance);
+
+		_matrix vParticleWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+
+		_vector vParticleWorldPositionSour = XMVector3TransformCoord(XMVectorSet(pParticleSour.fPositionX, pParticleSour.fPositionY, pParticleSour.fPositionZ, 1.f), vParticleWorldMatrix);
+		_vector vParticleWorldPositionDest = XMVector3TransformCoord(XMVectorSet(pParticleDesc.fPositionX, pParticleDesc.fPositionY, pParticleDesc.fPositionZ, 1.f), vParticleWorldMatrix);
+
+		_float fParticleSourDistance = XMVectorGetX(XMVector3Length(vCameraPosition - vParticleWorldPositionSour));
+		_float fParticleDestDistance = XMVectorGetX(XMVector3Length(vCameraPosition - vParticleWorldPositionDest));;
+
+		return fParticleSourDistance < fParticleDestDistance;
+	});
 }
 
 void CParticleSystem::VelocityLerp(_uint iParticleIndex)
@@ -545,6 +577,10 @@ void CParticleSystem::KillParticles()
 				m_Particles[j].fLife = m_Particles[j + 1].fLife;
 				m_Particles[j].bActive = m_Particles[j + 1].bActive;
 			}
+
+			/* If SpawnType is LOOP after removing the last Particle stop emitting. */
+			if (m_tParticleDesc.m_eSpawnType == 0 && m_fCurrentParticleCount == 0 && m_bStop)
+				m_bDead = true;
 
 			/* If SpawnType is BURST after removing the last Particle stop emitting. */
 			if (m_tParticleDesc.m_eSpawnType == 1 && m_fCurrentParticleCount == 0 && m_bDidBurst)

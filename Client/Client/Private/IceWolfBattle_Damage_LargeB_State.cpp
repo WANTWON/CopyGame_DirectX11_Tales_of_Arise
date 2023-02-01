@@ -5,12 +5,16 @@
 #include "IceWolfAttack_Elemental_Charge.h"
 #include "IceWolfBattle_BackStepState.h"
 #include "IceWolfBattle_SomerSaultState.h"
+#include "IceWolfAttackBiteState.h"
+#include "IceWolfBattle_RunState.h"
 
 using namespace IceWolf;
 
 CBattle_Damage_LargeB_State::CBattle_Damage_LargeB_State(class CIce_Wolf* pIceWolf)
 {
 	m_pOwner = pIceWolf;
+	m_fTimeDletaAcc = 0;
+	m_fCntChanceTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CIceWolfState * CBattle_Damage_LargeB_State::AI_Behaviour(_float fTimeDelta)
@@ -26,40 +30,22 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
-	
+	m_pOwner->Check_Navigation();
 	return nullptr;
 }
 
 CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 {
-	m_iRand = rand() % 2;
-	
+	m_fTimeDletaAcc += fTimeDelta;
+
+
+	if(m_fTimeDletaAcc > m_fCntChanceTime)
+	m_iRand = rand() % 3;
 	
 	if (m_bIsAnimationFinished)
-	{
-		switch (m_iRand)
-		{
-		case 0:
-			return new CBattle_BackStepState(m_pOwner);
-			break;
+		return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BE_DAMAGED);
+	
 
-		case 1:
-			return new CBattle_SomerSaultState(m_pOwner);
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	else
-	{
-//		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-
-	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
-	}
 	//switch (m_eDamageAnim)
 	//{
 	//case 0:
@@ -122,7 +108,7 @@ void CBattle_Damage_LargeB_State::Enter()
 {
 	m_iRand = rand() % 9;
 
-	m_eStateId = STATE_ID::STATE_HIT;
+	m_eStateId = STATE_ID::STATE_BE_DAMAGED;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
 	//switch (m_iRand)

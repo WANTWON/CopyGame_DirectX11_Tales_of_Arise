@@ -61,19 +61,31 @@ vector<ANIMEVENT> CModel::Get_Events(void)
 	return m_Animations[m_iCurrentAnimIndex]->Get_Events();
 }
 
-void CModel::Get_MoveTransformationMatrix(_vector * pTranslation, _vector * pRotation)
+void CModel::Get_MoveTransformationMatrix(const char * pBoneName, _vector * pTranslation, _float * pRotation)
 {
-	memcpy(pTranslation, &m_Animations[m_iCurrentAnimIndex]->Get_RootTranslation(), sizeof(_vector));
-	memcpy(pRotation, &m_Animations[m_iCurrentAnimIndex]->Get_RootRotation(), sizeof(_vector));
+	for (auto& pBone : m_Bones)
+	{
+		// 이름 비교
+		if (!strcmp(pBoneName, pBone->Get_Name()))
+		{
+			_vector vecMoveTranslation = pBone->Get_Translation();
+			if (m_bInterupted)
+				vecMoveTranslation = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+
+			_float Rotation = pBone->Get_RotationRadian();
+
+			// 이동 값, 회전 값 복사
+			memcpy(pTranslation, &vecMoveTranslation, sizeof(_vector));
+			memcpy(pRotation, &Rotation, sizeof(_vector));
+		}
+	}
 }
 
 void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
 {
-	if (m_iCurrentAnimIndex != iAnimIndex)
-	{
-		m_iPreAnimIndex = m_iCurrentAnimIndex;
-		m_iCurrentAnimIndex = iAnimIndex;
-	}
+	m_iPreAnimIndex = m_iCurrentAnimIndex;
+	m_iCurrentAnimIndex = iAnimIndex;
+	m_bInterupted = true;
 }
 
 _bool CModel::Is_Keyframe(char * pChannelName, _uint iKeyframe)
@@ -322,25 +334,33 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
-	if (m_iCurrentAnimIndex != m_iPreAnimIndex)
+	if (m_bInterupted)
 	{	//TODO: ����ִ԰� ���� �ִ������Ӱ��� �������� �Լ� ȣ�� �� ��.
-		m_bLinearFinished = m_Animations[m_iCurrentAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iPreAnimIndex], pBoneName);
+		/*if (m_bInterupted)
+		{
+		m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
+		m_bInterupted = false;
+		}*/
+		m_bLinearFinished = m_Animations[m_iPreAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iCurrentAnimIndex]);
 
 		if (m_bLinearFinished == true)
 		{
-			m_Animations[m_iPreAnimIndex]->Set_TimeReset();
-			m_iPreAnimIndex = m_iCurrentAnimIndex;
-		} 
+			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
+
+			//m_iPreAnimIndex = m_iCurrentAnimIndex;
+
+			m_bInterupted = false;
+		}
 	}
 	else
 	{
 		/* ���� m_TransformationMatrix����� �����Ѵ�. */
-		if (m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(fTimeDelta, isLoop, pBoneName))
+		if (m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(fTimeDelta, isLoop))
 		{
 			for (auto& pBoneNode : m_Bones)
 			{
 				/* ���� m_CombinedTransformationMatrix����� �����Ѵ�. */
-				pBoneNode->Invalidate_CombinedTransformationmatrix();
+				pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName, m_bInterupted);
 			}
 			return true;
 		}
@@ -349,7 +369,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 	for (auto& pBoneNode : m_Bones)
 	{
 		/* ���� m_CombinedTransformationMatrix����� �����Ѵ�. */
-		pBoneNode->Invalidate_CombinedTransformationmatrix();
+		pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName, m_bInterupted);
 	}
 
 	return false;
