@@ -21,7 +21,7 @@ CPlayerState * CRunState::HandleInput()
 
 	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
 		return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
-	else if (pGameInstance->Key_Down(DIK_LCONTROL))
+	else if (pGameInstance->Key_Down(DIK_LCONTROL) && !m_bIsFly)
 		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		m_eDirection = DIR_STRAIGHT_LEFT;
@@ -45,7 +45,7 @@ CPlayerState * CRunState::HandleInput()
 	/* Skill */
 	if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 	{
-		if (pGameInstance->Key_Down(DIK_E))
+		if (pGameInstance->Key_Down(DIK_E))//stopstopstop
 			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
 		else if (pGameInstance->Key_Down(DIK_R))
 			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
@@ -74,6 +74,8 @@ CPlayerState * CRunState::LateTick(_float fTimeDelta)
 
 void CRunState::Enter()
 {
+	__super::Enter();
+
 	m_eStateId = STATE_ID::STATE_RUN;
 
 	switch (m_pOwner->Get_PlayerID())

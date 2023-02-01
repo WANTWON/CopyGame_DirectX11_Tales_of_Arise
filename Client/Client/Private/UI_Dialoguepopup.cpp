@@ -49,88 +49,91 @@ HRESULT CUI_Dialoguepopup::Initialize(void * pArg)
 
 int CUI_Dialoguepopup::Tick(_float fTimeDelta)
 {
-
-
-	if (m_bfirstarrived)
-		timer += fTimeDelta;
-
-	if (timer > 5.f)
+	if (m_btick)
 	{
-		
-			
-		m_bfadein1 = true;
-		m_bgoup = true;     //++m_iDialogueindex;
-		m_bseconton = true;
-		m_fDietimer += fTimeDelta;
-		timer = 0.f;
-		m_bDeadtimeron = true;
-			
-	}
+		if (m_bfirstarrived)
+			timer += fTimeDelta;
 
-	if (m_bDeadtimeron)
-	{
-		m_fDietimer += fTimeDelta;
+		if (timer > 5.f)
+		{
 
-		if (m_fDietimer > 4.f)
+
+			m_bfadein1 = true;
+			m_bgoup = true;     //++m_iDialogueindex;
+			m_bseconton = true;
+			m_fDietimer += fTimeDelta;
+			timer = 0.f;
+			m_bDeadtimeron = true;
+
+		}
+
+		if (m_bDeadtimeron)
+		{
+			m_fDietimer += fTimeDelta;
+
+			if (m_fDietimer > 4.f)
+			{
+				m_bfadeout = true;
+				m_bfirstarrived = false;
+
+				m_fDietimer = 0.f;
+				m_bDeadtimeron = false;
+			}
+
+
+		}
+
+
+
+		if (m_bfadein)
+		{
+			m_fAlpha += 0.1f; //생길때
+			m_fFadeX += 2.f;
+			//m_bfirstarrived = true;
+		}
+		else if (m_bfadeout)
+		{
+			m_fAlpha -= 0.1f;
+			m_fAlpha1 -= 0.1f;
+			m_fFade1X -= 2.f;
+			m_fFadeX -= 2.f;
+
+		}
+
+		if (m_bfadein1)
+		{
+			m_fAlpha1 += 0.1f;
+			m_fFade1X += 2.f;
+		}
+
+		if (m_bgoup)
+		{
+			m_fFadeY -= 5.f;
+		}
+
+		if (m_fFadeY < -110.f)
+			m_bgoup = false;
+
+
+
+		//	m_fAlpha = 0.5f;
+
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
 		{
 			m_bfadeout = true;
-			m_bfirstarrived = false;
-
-			m_fDietimer = 0.f;
-			m_bDeadtimeron = false;
 		}
-		
-		
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 생겨질때
+		{
+			m_bfadein = true;
+		}
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_7)) // 생겨질때
+		{
+			m_bfadein = true;
+
+		}
 	}
 
 
-
-	if (m_bfadein)
-	{
-		m_fAlpha += 0.1f; //생길때
-		m_fFadeX += 2.f;
-		//m_bfirstarrived = true;
-	}
-	else if (m_bfadeout)
-	{
-		m_fAlpha -= 0.1f;
-		m_fAlpha1 -= 0.1f;
-		m_fFade1X -= 2.f;
-		m_fFadeX -= 2.f;
-
-	}
-
-	if (m_bfadein1)
-	{
-		m_fAlpha1 += 0.1f;
-		m_fFade1X += 2.f;
-	}
-	
-	if (m_bgoup)
-	{
-		m_fFadeY -= 5.f;
-	}
-
-	if (m_fFadeY < -110.f)
-		m_bgoup = false;
-
-
-
-	//	m_fAlpha = 0.5f;
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
-	{
-		m_bfadeout = true;
-	}
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 생겨질때
-	{
-		m_bfadein = true;
-	}
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_7)) // 생겨질때
-	{
-		m_bfadein = true;
-		
-	}
 
 
 
@@ -141,38 +144,43 @@ int CUI_Dialoguepopup::Tick(_float fTimeDelta)
 void CUI_Dialoguepopup::Late_Tick(_float fTimeDelta)
 {
 
-
-
-	if (m_fAlpha >= 1.f && m_bfadein)
+	if (m_btick)
 	{
-		m_fAlpha = 1.f;
-		m_bfadein = false;
-		m_bfirstarrived = true;
+		if (m_fAlpha >= 1.f && m_bfadein)
+		{
+			m_fAlpha = 1.f;
+			m_bfadein = false;
+			m_bfirstarrived = true;
+		}
+
+		if (m_fAlpha1 >= 1.f && m_bfadein1)
+		{
+			m_fAlpha1 = 1.f;
+			m_bfadein1 = false;
+		}
+
+		if (m_fAlpha <= 0.f && m_bfadeout)
+		{
+			m_fAlpha = 0.f;
+			m_bfadeout = false;
+			m_fAlpha1 = 0;
+			m_fFadeY = -20.f;
+			m_fFade1Y = -20.f;
+			m_btick = false;
+		}
+
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
 	}
 
-	if (m_fAlpha1 >= 1.f && m_bfadein1)
-	{
-		m_fAlpha1 = 1.f;
-		m_bfadein1 = false;
-	}
-
-	if (m_fAlpha <= 0.f && m_bfadeout)
-	{
-		m_fAlpha = 0.f;
-		m_bfadeout = false;
-		m_fAlpha1 = 0;
-		m_fFadeY = -20.f;
-		m_fFade1Y = -20.f;
-	}
-
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
+	
 
 }
 
 HRESULT CUI_Dialoguepopup::Render()
 {
-
+	if (!m_btick)
+		return S_OK;
 
 
 	if (nullptr == m_pShaderCom ||
@@ -307,9 +315,23 @@ HRESULT CUI_Dialoguepopup::Render()
 	m_fFontPos1.y = 670.f + m_fFade1Y;
 //	for (_uint i = 0; i < m_vDialoguepopup[index].size(); ++i)
 //	{
-CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vDialoguepopup[0][0], XMVectorSet(m_fFontPos.x, m_fFontPos.y, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha), m_fFontsize);
+//CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][index][i], XMVectorSet(m_fFontPos.x, m_fFontPos.y, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha), m_fFontsize);
 //	}
-CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vDialoguepopup[1][0], XMVectorSet(m_fFontPos1.x, m_fFontPos1.y, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha1*2.f), m_FontG*(m_fAlpha1*2.f), m_FontB*(m_fAlpha1*2.f), m_fAlpha1), m_fFontsize);
+//CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vDialoguepopup[1][0], XMVectorSet(m_fFontPos1.x, m_fFontPos1.y, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha1*2.f), m_FontG*(m_fAlpha1*2.f), m_FontB*(m_fAlpha1*2.f), m_fAlpha1), m_fFontsize);
+
+
+for (_uint i = 0; i < m_vCurrentDialogue[m_iVectorIndex][0].size(); ++i)
+{
+	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][0][i], XMVectorSet(m_fFontPos.x, m_fFontPos.y + (m_fFontOffsetY * (_float)i), 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
+}
+for (_uint i = 0; i < m_vCurrentDialogue[m_iVectorIndex][1].size(); ++i)
+{
+	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][1][i], XMVectorSet(m_fFontPos1.x, m_fFontPos1.y + (m_fFontOffsetY * (_float)i), 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha1*2.f), m_FontG*(m_fAlpha1*2.f), m_FontB*(m_fAlpha1*2.f), m_fAlpha1 * 2.f), m_fFontsize);
+}
+
+
+
+
 
 	/*m_fFontPos1.x = 500.f + m_fFade1X;
 	m_fFontPos1.y = 575.f + m_fFade1Y;*/
@@ -424,7 +446,54 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialogue()
 	{
 		std::cout << "Unable to open file\n";
 	}
+	
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialoguepopup[0]);
+	matrix.push_back(m_vDialoguepopup[1]);
 
+	m_vCurrentDialogue.push_back(matrix);
+
+	std::ifstream file2("../../../Bin/popup2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup1[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/popup3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup1[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix1;
+	matrix1.push_back(m_vDialoguepopup1[0]);
+	matrix1.push_back(m_vDialoguepopup1[1]);
+
+	m_vCurrentDialogue.push_back(matrix1);
 
 }
 
@@ -439,10 +508,24 @@ wchar_t * CUI_Dialoguepopup::ConverCtoWC(char * str)
 	pStr = new WCHAR[MAX_PATH];
 	
 	//형 변환
-	MultiByteToWideChar(CP_ACP, 0, str, strlen(str) + 1, m_szTXT, MAX_PATH);
+	MultiByteToWideChar(CP_ACP, 0, str, _uint(strlen(str) + 1), m_szTXT, MAX_PATH);
 	Safe_Delete_Array(pStr);
 	return pStr;
 
+}
+
+void CUI_Dialoguepopup::Open_Dialogue(_uint index )//, _uint index1)
+{
+	m_iVectorIndex = index;
+	m_btick = true;
+//	m_iVectorIndex1 = index1;
+
+	m_bfadein = true;
+	/*_uint test = 0;
+
+	for (auto vec : (m_vCurrentDialogue[index])) test++;
+
+	vectorsize = test;*/
 }
 
 void CUI_Dialoguepopup::Render_Fonts(_uint index)
@@ -508,29 +591,47 @@ CGameObject * CUI_Dialoguepopup::Clone(void * pArg)
 		Safe_Release(pInstance);
 	}
 
+	CUI_Manager::Get_Instance()->Set_Dialoguepopup(pInstance);
+
 	return pInstance;
 }
 
 void CUI_Dialoguepopup::Free()
 {
 
-	for (int i = 0; i<m_vDialoguepopup[0].size(); i++)
-	{
-	 
-	//	Safe_Delete(m_vDialoguepopup[0][i]);
+	//for (int i = 0; i<m_vDialoguepopup[0].size(); i++)
+	//{
+	// 
+	////	Safe_Delete(m_vDialoguepopup[0][i]);
 
-		_tchar* temp = m_vDialoguepopup[0][i];
-		delete[] temp;
+	//	_tchar* temp = m_vDialoguepopup[0][i];
+	//	delete[] temp;
+
+	//}
+	//for (int i = 0; i < m_vDialoguepopup[1].size(); i++)
+	//{
+	////	Safe_Delete(m_vDialoguepopup[1][i]);
+	//	_tchar* temp = m_vDialoguepopup[1][i];
+	//	delete[] temp;
+	//}
+
+	for (int i = 0; i < m_vCurrentDialogue.size(); ++i)
+	{
+		for (int j = 0; j <m_vCurrentDialogue[i].size(); ++j)
+		{
+			/*if (j == 2)
+			continue;*/
+
+			vector<_tchar*> temp = m_vCurrentDialogue[i][j];
+			for (auto& iter : temp)
+			{
+				delete[] iter;
+			}
+			temp.clear();
+		}
+
 
 	}
-	for (int i = 0; i < m_vDialoguepopup[1].size(); i++)
-	{
-	//	Safe_Delete(m_vDialoguepopup[1][i]);
-		_tchar* temp = m_vDialoguepopup[1][i];
-		delete[] temp;
-	}
-
-
 
 
 	Safe_Release(m_pTextureCom1);

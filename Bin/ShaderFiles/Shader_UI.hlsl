@@ -149,7 +149,7 @@ PS_OUT PS_HPbar(PS_IN In)
 
 	float fGradientRadius = 0.5f;
 	float fGradientStrength = 0.2f;
-	float fLerp;
+	float  fLerp = 0.f;
 
 	/* First Lerp */
 	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
@@ -194,7 +194,7 @@ PS_OUT PS_COMBOLINE(PS_IN In)
 	float3 yellowRef = normalize(float3(.69f, .62f, .42f)); //텍스쳐색
 
 
-	float weight = dot(Out.vColor, yellowRef); //알파만들기
+	float weight = dot(Out.vColor.rgb, yellowRef); //알파만들기
 	Out.vColor.a = lerp(0, 1, weight);
 
 	Out.vColor.a = lerp(0, 1, saturate(weight));
@@ -469,7 +469,7 @@ PS_OUT PS_INVENICON(PS_IN In)
 
 	float fGradientRadius = 0.6f;
 	float fGradientStrength = 0.25f;
-	float fLerp;
+	float fLerp = 0.f;
 
 	/* First Lerp */
 	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
@@ -710,7 +710,7 @@ PS_OUT PS_Bright(PS_IN In)
 
 	float fGradientRadius = 0.5f;
 	float fGradientStrength = 0.3f;
-	float fLerp;
+	float fLerp = 0.f;
 
 	/* First Lerp */
 	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
@@ -765,7 +765,7 @@ PS_OUT PS_HPbarBLUE(PS_IN In)
 
 	float fGradientRadius = 0.5f;
 	float fGradientStrength = 0.2f;
-	float fLerp;
+	float fLerp = 0.f;
 
 	/* First Lerp */
 	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)

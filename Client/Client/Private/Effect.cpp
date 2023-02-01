@@ -43,7 +43,7 @@ HRESULT CEffect::Render()
 	return S_OK;
 }
 
-void CEffect::PlayEffect(_tchar * wcEffectName, _vector vPosition)
+CEffect* CEffect::PlayEffect(_tchar * wcEffectName)
 {
 	/* Load Effect File. */
 	HANDLE hFileEffect = nullptr;
@@ -53,12 +53,13 @@ void CEffect::PlayEffect(_tchar * wcEffectName, _vector vPosition)
 	hFileEffect = CreateFile(LoadPathEffect, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	if (hFileEffect == INVALID_HANDLE_VALUE)
-		return;
+		return nullptr;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	DWORD dwByte = 0;
 	_uint iEffectsCount = 0;
+	CEffect* pEffect = nullptr;
 
 	/* Read how many Effects there are in this File. */
 	ReadFile(hFileEffect, &iEffectsCount, sizeof(_uint), &dwByte, nullptr);
@@ -81,7 +82,6 @@ void CEffect::PlayEffect(_tchar * wcEffectName, _vector vPosition)
 			CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc;
 			CEffectMesh::MESHEFFECTDESC tMeshEffectDesc;
 			CParticleSystem::PARTICLEDESC tParticleDesc;
-			CEffect* pEffect = nullptr;
 
 			/* Read Effect Type-specific Description. */
 			switch (eType)
@@ -120,8 +120,6 @@ void CEffect::PlayEffect(_tchar * wcEffectName, _vector vPosition)
 					break;
 				}
 			}
-
-			pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
 
 			/* Read how many Velocity Curves there are for this Effect. */
 			_uint iVelocityCurvesCount = 0;
@@ -167,12 +165,44 @@ void CEffect::PlayEffect(_tchar * wcEffectName, _vector vPosition)
 			}
 			if (!AlphaCurves.empty())
 				pEffect->Set_AlphaCurves(AlphaCurves);
+
+			/* Read how many Rotation Velocity Curves there are for this Effect. */
+			_uint iTurnVelocityCurvesCount = 0;
+			ReadFile(hFileEffect, &iTurnVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
+
+			/* Read Rotation Velocity Curves. */
+			vector<_float3> TurnVelocityCurves;
+			_float3 TurnVelocityCurve;
+			for (_uint j = 0; j < iTurnVelocityCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &TurnVelocityCurve, sizeof(_float3), &dwByte, nullptr);
+				TurnVelocityCurves.push_back(TurnVelocityCurve);
+			}
+			if (!TurnVelocityCurves.empty())
+				pEffect->Set_TurnVelocityCurves(TurnVelocityCurves);
+
+			/* Read how many Noise Power Curves there are for this Effect. */
+			_uint iNoisePowerCurvesCount = 0;
+			ReadFile(hFileEffect, &iNoisePowerCurvesCount, sizeof(_uint), &dwByte, nullptr);
+
+			/* Read Noise Power Curves. */
+			vector<_float3> NoisePowerCurves;
+			_float3 NoisePowerCurve;
+			for (_uint j = 0; j < iNoisePowerCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &NoisePowerCurve, sizeof(_float3), &dwByte, nullptr);
+				NoisePowerCurves.push_back(NoisePowerCurve);
+			}
+			if (!NoisePowerCurves.empty())
+				pEffect->Set_NoisePowerCurves(NoisePowerCurves);
 		}
 	}
 
 	RELEASE_INSTANCE(CGameInstance);
 
 	CloseHandle(hFileEffect);
+
+	return pEffect;
 }
 
 HRESULT CEffect::Ready_Components(void * pArg)
@@ -203,4 +233,8 @@ void CEffect::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTransformCom);
+
+	Safe_Release(m_pMaskTexture);
+	Safe_Release(m_pNoiseTexture);
+	Safe_Release(m_pDissolveTexture);
 }

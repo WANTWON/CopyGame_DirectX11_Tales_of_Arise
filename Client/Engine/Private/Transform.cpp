@@ -279,7 +279,7 @@ bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigati
 	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
 
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
-	
+
 	_vector		vAfterPosition = vPosition + vTranslation;
 	vAfterPosition = XMVectorSetW(vAfterPosition, 1.f);
 
@@ -292,14 +292,14 @@ bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigati
 		Set_State(CTransform::STATE_TRANSLATION, vAfterPosition);
 	/*else if (false == pNavigation->isMove(vAfterPosition))
 	{
-		_vector vNormal = XMVector3Normalize(pNavigation->Get_LastNormal());
-		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vNormal));
-		vNormal = vNormal * fDot * -1.f;
-		_vector vSliding = XMVector3Normalize(vLook + vNormal);
-		vPosition += vSliding * XMVectorGetX(XMVector4Length(vAfterPosition - vPosition));
-		if (true == pNavigation->isMove(vPosition + XMVector3Normalize(vLook) * fRadius))
-			Set_State(CTransform::STATE_TRANSLATION, vPosition);
-		return false;
+	_vector vNormal = XMVector3Normalize(pNavigation->Get_LastNormal());
+	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vNormal));
+	vNormal = vNormal * fDot * -1.f;
+	_vector vSliding = XMVector3Normalize(vLook + vNormal);
+	vPosition += vSliding * XMVectorGetX(XMVector4Length(vAfterPosition - vPosition));
+	if (true == pNavigation->isMove(vPosition + XMVector3Normalize(vLook) * fRadius))
+	Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	return false;
 	}*/
 
 	return true;
@@ -308,7 +308,7 @@ bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigati
 void CTransform::Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight, _float fEndiHeight)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
-	float fPosY = fStartiHeight + fVelocity * fTimeDelta - (0.5f*fGravity*fTimeDelta*fTimeDelta);
+	float fPosY = fStartiHeight + fVelocity * fTimeDelta - (0.5f * fGravity * fTimeDelta * fTimeDelta);
 
 	vPosition = XMVectorSetY(vPosition, fPosY);
 	float y = XMVectorGetY(vPosition);

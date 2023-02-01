@@ -42,6 +42,8 @@ public:
 
 	void Render_Fonts(_uint index);
 
+	void Open_Dialogue(_uint index);//, _uint index1);l
+
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
@@ -72,10 +74,12 @@ private:
 	_tchar					m_szTXT[MAX_PATH] = TEXT("");
 	char fuck[256];
 	vector<_tchar*> m_vDialoguepopup[2];
-
+	vector<_tchar*> m_vDialoguepopup1[2];
+	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;
 	_uint m_iDialogueindex = 0;
 
-
+	_uint m_iVectorIndex = 0;
+	_uint m_iVectorIndex1 = 1;
 
 	_bool m_bgoup = false;
 	_float m_fAlpha1 = 0.f;
@@ -85,6 +89,11 @@ private:
 	_float m_fDietimer = 0.f;
 	_bool m_bfirstarrived = false;
 	_bool m_bDeadtimeron = false;
+
+	_uint vectorsize = 0;
+
+	_bool m_btick = false;
+
 
 };
 

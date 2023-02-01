@@ -40,7 +40,6 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
 	/* Set State */
-
 	CPlayerState* pPlayerState = new Player::CIdleState(this);
 	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
 

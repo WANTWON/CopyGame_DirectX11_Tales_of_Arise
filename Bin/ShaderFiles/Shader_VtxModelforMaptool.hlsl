@@ -7,7 +7,13 @@ texture2D		g_DiffuseTexture;
 texture2D		g_NormalTexture;
 texture2D		g_SpecularTexture;
 
-
+float4 g_vColor;
+texture2D g_MaskTexture;
+texture2D g_NoiseTexture;
+texture2D g_DissolveTexture;
+float g_fNoiseSpeed;
+float g_fNoisePower;
+float g_fTimer = 0.f;
 
 struct VS_IN
 {
@@ -73,6 +79,11 @@ struct PS_OUT
 	vector		vLightDepth : SV_TARGET4;
 };
 
+struct PS_EFFECT_OUT
+{
+	float4 vColor : SV_TARGET0;
+};
+
 /* 이렇게 만들어진 픽셀을 PS_MAIN함수의 인자로 던진다. */
 /* 리턴하는 색은 Target0 == 장치에 0번째에 바인딩되어있는 렌더타겟(일반적으로 백버퍼)에 그린다. */
 /* 그래서 백버퍼에 색이 그려진다. */
@@ -101,8 +112,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 PS_OUT PS_PICKED(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
-
+	PS_OUT Out = (PS_OUT)0;
 
 	float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	float3 vNormal;
@@ -134,9 +144,25 @@ PS_OUT PS_SYMBOL(PS_IN In)
 	return Out;
 }
 
+PS_EFFECT_OUT PS_SLASH(PS_IN In)
+{
+	PS_EFFECT_OUT Out = (PS_EFFECT_OUT)0;
 
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
+	float2 vOffsettedUV = In.vTexUV + (g_fTimer * g_fNoiseSpeed);
 
+	float4 vNoise = g_NoiseTexture.Sample(LinearSampler, vOffsettedUV);
+	vNoise *= g_fNoisePower;
+	float4 vNoiseMask = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+	vNoise *= vNoiseMask;
+	vNoise *= g_fAlpha;
+
+	Out.vColor.a *= vNoise.r;
+	Out.vColor.rgb = g_vColor;
+
+	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -184,4 +210,14 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_SYMBOL();
 	}
 
+	pass Slash
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_SLASH();
+	}
 }

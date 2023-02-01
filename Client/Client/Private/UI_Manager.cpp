@@ -77,6 +77,17 @@ void CUI_Manager::Set_UI_OpenType(UITYPE eUIType)
 	
 }
 
+void CUI_Manager::Erase_Itempopup_list(CUI_Base * point)
+{
+
+	for (auto& iter = m_pItempopup.begin(); iter != m_pItempopup.end();)
+	{
+		if (*iter == point)
+			m_pItempopup.erase(iter);
+	}
+
+}
+
 
 
 //void CUI_Manager::Read_TextFiles_for_dialogue()

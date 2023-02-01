@@ -2,6 +2,7 @@
 
 #include "EffectMesh.h"
 #include "GameInstance.h"
+#include "Weapon.h"
 
 CEffectMesh::CEffectMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEffect(pDevice, pContext)
@@ -31,6 +32,46 @@ int CEffectMesh::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	if (m_fTimer >= m_tMeshEffectDesc.fLifetime)
+	{
+		m_bDead = true;
+		m_fTimer = 0.f;
+		m_pTransformCom->Set_Rotation(_float3(0.f, 0.f, 0.f));
+	}
+	else
+	{
+		if (m_pAttachObject)
+		{
+			_matrix mWorldMatrix;
+
+			CWeapon* pWeapon = dynamic_cast<CWeapon*>(m_pAttachObject);
+			if (pWeapon)
+				mWorldMatrix = XMLoadFloat4x4(&pWeapon->Get_CombinedWorldMatrix());
+			else
+			{
+				CTransform* pTransform = (CTransform*)m_pAttachObject->Find_Component(TEXT("Com_Transform"));
+				mWorldMatrix = pTransform->Get_WorldMatrix();
+			}
+
+			/*if (!wcscmp(m_wcEffectName, TEXT("Alphen_Attack_Normal.dat")))
+				Tick_Slash(fTimeDelta, mWorldMatrix);*/
+		}
+		
+		m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);
+
+		_vector vTurnAxis = XMVectorSet(m_tMeshEffectDesc.vTurn.x, m_tMeshEffectDesc.vTurn.y, m_tMeshEffectDesc.vTurn.z, 0.f);
+		if (!XMVector3Equal(vTurnAxis, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+			m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
+
+		VelocityLerp();
+		SizeLerp();
+		AlphaLerp();
+		TurnVelocityLerp();
+		NoisePowerLerp();
+
+		m_fTimer += fTimeDelta;
+	}
+
 	return OBJ_NOEVENT;
 }
 
@@ -38,10 +79,7 @@ void CEffectMesh::Late_Tick(_float fTimeDelta)
 {
 	if (m_pRendererCom)
 	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);			/* Non-Alphablend */
-		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);*/	/* Alphablend with Normals */
-		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);*/		/* Alphablend */
-
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 	}
 }
@@ -64,11 +102,154 @@ HRESULT CEffectMesh::Render()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_SpecularTexture", i, aiTextureType_SPECULAR)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 0)))
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 4)))
 			return E_FAIL;
 	}
 
 	return S_OK;
+}
+
+void CEffectMesh::Add_MaskTexture()
+{
+	if (wcscmp(m_tMeshEffectDesc.wcMaskTexture, TEXT("")))
+	{
+		Safe_Release(m_pMaskTexture);
+		Remove_Components(TEXT("Com_TextureMask"));
+
+		/* For.Com_TextureMask */
+		if (FAILED(__super::Add_Components(TEXT("Com_TextureMask"), LEVEL_STATIC, m_tMeshEffectDesc.wcMaskTexture, (CComponent**)&m_pMaskTexture)))
+			return;
+	}
+}
+
+void CEffectMesh::Add_NoiseTexture()
+{
+	if (wcscmp(m_tMeshEffectDesc.wcNoiseTexture, TEXT("")))
+	{
+		Safe_Release(m_pNoiseTexture);
+		Remove_Components(TEXT("Com_TextureNoise"));
+
+		/* For.Com_TextureNoise */
+		if (FAILED(__super::Add_Components(TEXT("Com_TextureNoise"), LEVEL_STATIC, m_tMeshEffectDesc.wcNoiseTexture, (CComponent**)&m_pNoiseTexture)))
+			return;
+	}
+}
+
+void CEffectMesh::Add_DissolveTexture()
+{
+	if (wcscmp(m_tMeshEffectDesc.wcDissolveTexture, TEXT("")))
+	{
+		Safe_Release(m_pDissolveTexture);
+		Remove_Components(TEXT("Com_TextureDissolve"));
+
+		/* For.Com_TextureDissolve */
+		if (FAILED(__super::Add_Components(TEXT("Com_TextureDissolve"), LEVEL_STATIC, m_tMeshEffectDesc.wcDissolveTexture, (CComponent**)&m_pDissolveTexture)))
+			return;
+	}
+}
+
+void CEffectMesh::VelocityLerp()
+{
+}
+
+void CEffectMesh::SizeLerp()
+{
+}
+
+void CEffectMesh::AlphaLerp()
+{
+	if (m_AlphaCurves.empty())
+		return;
+
+	/* 0 ~ 1 */
+	_float fCurrentLifeNormalized = m_fTimer / m_tMeshEffectDesc.fLifetime;
+
+	for (_float3& fAlphaCurve : m_AlphaCurves)
+	{
+		/* Break cause Curve should not start yet ('Y' is the Curve Start Time). */
+		if (fCurrentLifeNormalized < fAlphaCurve.y)
+			break;
+
+		/* Skip cause Curve has already been lerped through ('Z' is the Curve End Time). */
+		if (fCurrentLifeNormalized > fAlphaCurve.z)
+		{
+			m_tMeshEffectDesc.fAlphaInitial = fAlphaCurve.x;
+			continue;
+		}
+
+		_float fFactorDividend = (m_fTimer - (m_tMeshEffectDesc.fLifetime * fAlphaCurve.y));
+		_float fFactorDivisor = ((m_tMeshEffectDesc.fLifetime * fAlphaCurve.z) - (m_tMeshEffectDesc.fLifetime * fAlphaCurve.y));
+
+		_float fInterpFactor = fFactorDividend / fFactorDivisor;
+		_float fLerpAlpha = m_tMeshEffectDesc.fAlphaInitial + fInterpFactor * (fAlphaCurve.x - m_tMeshEffectDesc.fAlphaInitial);
+		m_tMeshEffectDesc.fAlpha = fLerpAlpha;
+
+		break;
+	}
+}
+
+void CEffectMesh::TurnVelocityLerp()
+{
+	if (m_TurnVelocityCurves.empty())
+		return;
+
+	/* 0 ~ 1 */
+	_float fCurrentLifeNormalized = m_fTimer / m_tMeshEffectDesc.fLifetime;
+
+	for (_float3& fTurnVelocityCurve : m_TurnVelocityCurves)
+	{
+		/* Break cause Curve should not start yet ('Y' is the Curve Start Time). */
+		if (fCurrentLifeNormalized < fTurnVelocityCurve.y)
+			break;
+
+		/* Skip cause Curve has already been lerped through ('Z' is the Curve End Time). */
+		if (fCurrentLifeNormalized > fTurnVelocityCurve.z)
+		{
+			m_tMeshEffectDesc.fTurnVelocityInitial = fTurnVelocityCurve.x;
+			continue;
+		}
+
+		_float fFactorDividend = (m_fTimer - (m_tMeshEffectDesc.fLifetime * fTurnVelocityCurve.y));
+		_float fFactorDivisor = ((m_tMeshEffectDesc.fLifetime * fTurnVelocityCurve.z) - (m_tMeshEffectDesc.fLifetime * fTurnVelocityCurve.y));
+
+		_float fInterpFactor = fFactorDividend / fFactorDivisor;
+		_float fLerpTurnVelocity = m_tMeshEffectDesc.fTurnVelocityInitial + fInterpFactor * (fTurnVelocityCurve.x - m_tMeshEffectDesc.fTurnVelocityInitial);
+		m_tMeshEffectDesc.fTurnVelocity = fLerpTurnVelocity;
+
+		break;
+	}
+}
+
+void CEffectMesh::NoisePowerLerp()
+{
+	if (m_NoisePowerCurves.empty())
+		return;
+
+	/* 0 ~ 1 */
+	_float fCurrentLifeNormalized = m_fTimer / m_tMeshEffectDesc.fLifetime;
+
+	for (_float3& fNoisePowerCurve : m_NoisePowerCurves)
+	{
+		/* Break cause Curve should not start yet ('Y' is the Curve Start Time). */
+		if (fCurrentLifeNormalized < fNoisePowerCurve.y)
+			break;
+
+		/* Skip cause Curve has already been lerped through ('Z' is the Curve End Time). */
+		if (fCurrentLifeNormalized > fNoisePowerCurve.z)
+		{
+			m_tMeshEffectDesc.fNoisePowerInitial = fNoisePowerCurve.x;
+			continue;
+		}
+
+		_float fFactorDividend = (m_fTimer - (m_tMeshEffectDesc.fLifetime * fNoisePowerCurve.y));
+		_float fFactorDivisor = ((m_tMeshEffectDesc.fLifetime * fNoisePowerCurve.z) - (m_tMeshEffectDesc.fLifetime * fNoisePowerCurve.y));
+
+		_float fInterpFactor = fFactorDividend / fFactorDivisor;
+		_float fLerpNoisePower = m_tMeshEffectDesc.fNoisePowerInitial + fInterpFactor * (fNoisePowerCurve.x - m_tMeshEffectDesc.fNoisePowerInitial);
+		m_tMeshEffectDesc.fNoisePower = fLerpNoisePower;
+
+		break;
+	}
 }
 
 HRESULT CEffectMesh::Ready_Components(void * pArg)
@@ -92,11 +273,48 @@ HRESULT CEffectMesh::Ready_Components(void * pArg)
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
+
+	if (wcscmp(m_tMeshEffectDesc.wcMaskTexture, TEXT("")))
+	{
+		/* For.Com_MaskTexture */
+		if (FAILED(__super::Add_Components(TEXT("Com_TextureMask"), LEVEL_STATIC, m_tMeshEffectDesc.wcMaskTexture, (CComponent**)&m_pMaskTexture)))
+			return E_FAIL;
+	}
+	if (wcscmp(m_tMeshEffectDesc.wcNoiseTexture, TEXT("")))
+	{
+		/* For.Com_NoiseTexture */
+		if (FAILED(__super::Add_Components(TEXT("Com_TextureNoise"), LEVEL_STATIC, m_tMeshEffectDesc.wcNoiseTexture, (CComponent**)&m_pNoiseTexture)))
+			return E_FAIL;
+	}
+	if (wcscmp(m_tMeshEffectDesc.wcDissolveTexture, TEXT("")))
+	{
+		/* For.Com_DissolveTexture */
+		if (FAILED(__super::Add_Components(TEXT("Com_TextureDissolve"), LEVEL_STATIC, m_tMeshEffectDesc.wcDissolveTexture, (CComponent**)&m_pDissolveTexture)))
+			return E_FAIL;
+	}
 }
 
 HRESULT CEffectMesh::SetUp_ShaderResources()
 {
 	__super::SetUp_ShaderResources();
+
+	if (m_pMaskTexture)
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_MaskTexture", m_pMaskTexture->Get_SRV())))
+			return E_FAIL;
+	if (m_pNoiseTexture)
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_NoiseTexture", m_pNoiseTexture->Get_SRV())))
+			return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vColor", &m_tMeshEffectDesc.vColor, sizeof(_float3))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_tMeshEffectDesc.fAlpha, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fNoiseSpeed", &m_tMeshEffectDesc.fNoiseSpeed, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fNoisePower", &m_tMeshEffectDesc.fNoisePower, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fTimer", &m_fTimer, sizeof(_float))))
+		return E_FAIL;
 
 	return S_OK;
 }

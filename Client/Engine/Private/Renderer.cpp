@@ -562,15 +562,17 @@ HRESULT CRenderer::Render_PostProcessing()
 		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
 			return E_FAIL;
 
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Distortion"), m_pShaderPostProcessing, "g_DistortionTexture")))
+			return E_FAIL;
+
 		if (!m_pDistortionNoiseTexture)
 			m_pDistortionNoiseTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Distortion_Noise"));
 
-		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
-		m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV());
-
-		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
-			return E_FAIL;
-		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Distortion"), m_pShaderPostProcessing, "g_DistortionTexture")))
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_DistortionNoiseTexture", m_pDistortionNoiseTexture->Get_SRV())))
 			return E_FAIL;
 
 		m_fDistortionTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));

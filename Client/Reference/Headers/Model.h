@@ -27,7 +27,7 @@ public:
 
 	_uint Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; }
 
-	vector<EVENT> Get_Events(void);
+	vector<ANIMEVENT> Get_Events(void);
 
 	// 루트 본 이동, 회전 변화량 Get 함수
 	void Get_MoveTransformationMatrix(const char * pBoneName, _vector * pTranslation, _float * pRotation);
@@ -39,6 +39,10 @@ public:
 	//	if (m_iNextAnimIndex != iAnimIndex) { m_bInterupted = true; }
 	//	m_iNextAnimIndex = iAnimIndex;
 	//}
+	_bool Is_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Under_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Over_Keyframe(char* pChannelName, _uint iKeyframe);
+	_bool Between_Keyframe(char * pChannelName, _uint iKeyframeLower, _uint iKeyframeUpper);
 	void Set_TimeReset();
 	void Reset(void);
 

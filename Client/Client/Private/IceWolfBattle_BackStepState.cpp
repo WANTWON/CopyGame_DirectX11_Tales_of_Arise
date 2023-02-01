@@ -23,15 +23,16 @@ CIceWolfState * CBattle_BackStepState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CBattle_BackStepState::Tick(_float fTimeDelta)
 {
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
 	{
 		_vector vecTranslation;
-		_float fRotation;
+		_float fRotationRadian;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotation);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotation, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -42,12 +43,9 @@ CIceWolfState * CBattle_BackStepState::Tick(_float fTimeDelta)
 
 CIceWolfState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 {
-
 	if (m_bIsAnimationFinished)
 		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_BACKSTEP);
 
-
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	return nullptr;
 }
 
@@ -56,9 +54,6 @@ void CBattle_BackStepState::Enter()
 	m_eStateId = STATE_ID::STATE_IDLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_STEP_BACK);
-
-	
-	
 }
 
 void CBattle_BackStepState::Exit()

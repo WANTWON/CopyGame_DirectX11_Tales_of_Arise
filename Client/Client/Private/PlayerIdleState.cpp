@@ -23,7 +23,7 @@ CPlayerState * CIdleState::HandleInput()
 
 	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
 		return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
-	else if (pGameInstance->Key_Down(DIK_LCONTROL))
+	else if (pGameInstance->Key_Down(DIK_LCONTROL) && !m_bIsFly)
 		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
@@ -41,15 +41,13 @@ CPlayerState * CIdleState::HandleInput()
 		return new CRunState(m_pOwner, DIR_BACKWARD);
 	else if (pGameInstance->Key_Pressing(DIK_W))
 		return new CRunState(m_pOwner, DIR_STRAIGHT);
-	else if (pGameInstance->Key_Pressing(DIK_M))
-		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.01f);
 
 	/* Skill */
 	if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 	{
-		if (pGameInstance->Key_Down(DIK_E))
-			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
-		else if (pGameInstance->Key_Down(DIK_R))
+	//	if (pGameInstance->Key_Down(DIK_E)) //change
+	//		return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
+		if (pGameInstance->Key_Down(DIK_R))
 			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
 		else if (pGameInstance->Key_Down(DIK_F))
 			return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
@@ -73,6 +71,22 @@ CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 
 void CIdleState::Enter()
 {
+	__super::Enter();
+
+	/*CWeapon::WEAPONDESC WeaponDesc;
+	ZeroMemory(&WeaponDesc, sizeof(CWeapon::WEAPONDESC));
+
+	CHierarchyNode* pSocket = m_pOwner->Get_Model()->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L_end");
+	if (nullptr == pSocket)
+		return;
+
+	WeaponDesc.pSocket = pSocket;
+	WeaponDesc.SocketPivotMatrix = m_pOwner->Get_Model()->Get_PivotFloat4x4();
+	WeaponDesc.pParentWorldMatrix = m_pOwner->Get_Transform()->Get_World4x4Ptr();
+	strcpy(WeaponDesc.pModeltag, "SWO1(R00)");
+
+	((CWeapon*)m_pOwner->Get_Parts(0))->Set_WeaponDesc(WeaponDesc);*/
+
 	m_eStateId = STATE_ID::STATE_IDLE;
 
 	switch (m_pOwner->Get_PlayerID())
@@ -86,7 +100,6 @@ void CIdleState::Enter()
 	default:
 		break;
 	}
-
 }
 
 void CIdleState::Exit()

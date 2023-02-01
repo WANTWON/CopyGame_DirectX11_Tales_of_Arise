@@ -13,7 +13,7 @@ using namespace Berserker;
 
 CBattle_WalkState::CBattle_WalkState(CBerserker* pBerserker)
 {
-	m_pOwner   = pBerserker;
+	m_pOwner = pBerserker;
 }
 
 CBerserkerState * CBattle_WalkState::AI_Behaviour(_float fTimeDelta)
@@ -31,18 +31,18 @@ CBerserkerState * CBattle_WalkState::Tick(_float fTimeDelta)
 
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
-	
-	//if (!m_bIsAnimationFinished)
-	//{
-	//	_vector vecTranslation;
-	//	_float fRotationRadian;
 
-	//	m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
 
-	//	m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-	//	m_pOwner->Check_Navigation();
-	//}
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
 
 	m_pOwner->Check_Navigation();
 
@@ -88,10 +88,10 @@ CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 		default:
 			break;
 		}
-		
+
 	}
 
-	
+
 
 	return nullptr;
 }

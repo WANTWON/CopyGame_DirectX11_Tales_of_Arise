@@ -2,7 +2,6 @@
 #include "..\Public\PlayerSkillState.h"
 #include "GameInstance.h"
 #include "PlayerIdleState.h"
-#include "Weapon.h"
 #include "PlayerAttackNormalState.h"
 
 using namespace Player;
@@ -30,11 +29,12 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
 	}
+	else
+		m_pOwner->Check_Navigation();
 
-	vector<EVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 	for (auto& pEvent : pEvents)
 	{
@@ -45,9 +45,9 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 				switch (m_eStateId)
 				{
 				case Client::CPlayerState::STATE_SKILL_ATTACK1:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (EVENT_STATE == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
@@ -65,9 +65,9 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK2:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (EVENT_STATE == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
@@ -85,9 +85,9 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK3:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (EVENT_STATE == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
@@ -118,15 +118,15 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 				switch (m_eStateId)
 				{
 				case Client::CPlayerState::STATE_SKILL_ATTACK1:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK2:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK3:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				}
@@ -170,6 +170,8 @@ CPlayerState * CSkillState::LateTick(_float fTimeDelta)
 
 void CSkillState::Enter(void)
 {
+	__super::Enter();
+
 	if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
 	{
 		switch (m_eStateId)

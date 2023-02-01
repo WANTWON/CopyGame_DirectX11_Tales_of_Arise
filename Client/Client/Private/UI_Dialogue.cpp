@@ -456,7 +456,7 @@ wchar_t * CUI_Dialogue::ConverCtoWC(char * str)
 	//wchar_t 메모리 할당
 	pStr = new WCHAR[MAX_PATH];
 	//형 변환
-	MultiByteToWideChar(CP_ACP, 0, str, strlen(str) + 1, m_szTXT, MAX_PATH);
+	MultiByteToWideChar(CP_ACP, 0, str, _uint(strlen(str) + 1), m_szTXT, MAX_PATH);
 	
 	Safe_Delete_Array(pStr);
 	return pStr;

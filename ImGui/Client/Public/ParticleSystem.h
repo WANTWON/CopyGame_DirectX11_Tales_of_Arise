@@ -16,6 +16,7 @@ public:
 		_tchar wcPrototypeId[MAX_PATH] = TEXT("");	/* "Spark.dds > Spark" */
 		_uint m_eSpawnType = 0;
 		_bool m_bBillboard = false;
+		_float3 m_vColor = _float3(0.f, 0.f, 0.f);
 		_int m_iMaxParticles = 1000.f;
 		_float m_fParticlesLifetime = 1.f;
 		_float m_fParticlesPerSecond = 1.f;

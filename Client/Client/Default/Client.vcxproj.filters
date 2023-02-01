@@ -244,8 +244,11 @@
     <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Side">
       <UniqueIdentifier>{20406238-19d5-42df-b70e-c1e0c1ee9cb4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01.Actor\00.Player\01.Sion\Manager">
-      <UniqueIdentifier>{575e09da-0184-48c0-89d5-0b9fc2716218}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\04.UI\13.UI_InterectMsg">
+      <UniqueIdentifier>{72548769-92f2-4bc4-ba4b-a28fa74a8a9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\14.UI_Get_Item_Popup">
+      <UniqueIdentifier>{2cc9da08-0ce0-4403-a55d-221b3991f140}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\05.Trigger">
       <UniqueIdentifier>{1cf13c0b-32b9-4f57-a58f-6ca396dc68a3}</UniqueIdentifier>
@@ -264,6 +267,15 @@
     </Filter>
     <Filter Include="06.BattleManager">
       <UniqueIdentifier>{f5d36acd-706d-46be-a4be-bad7eaead869}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Manager">
+      <UniqueIdentifier>{575e09da-0184-48c0-89d5-0b9fc2716218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\02.NPC\FemaleYoung">
+      <UniqueIdentifier>{ec4f57e9-3244-4a8c-b9e6-728d39635f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell">
+      <UniqueIdentifier>{3790b313-d11b-494b-a379-654fc89c4d13}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -347,9 +359,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\PlayerWalkState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerRunState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
@@ -631,7 +640,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerManager.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion\Manager</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sion.h">
       <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
@@ -738,6 +747,12 @@
     <ClInclude Include="..\Public\SlimeAdventState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_InterectMsg.h">
+      <Filter>02.GameObjects\04.UI\13.UI_InterectMsg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Get_item_Popup.h">
+      <Filter>02.GameObjects\04.UI\14.UI_Get_Item_Popup</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Trigger.h">
       <Filter>02.GameObjects\05.Trigger</Filter>
     </ClInclude>
@@ -749,6 +764,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\HawkTrigger_TurnState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Npc.h">
+      <Filter>02.GameObjects\01.Actor\02.NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FemaleYoung.h">
+      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AiRinwell.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -817,9 +841,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PlayerWalkState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerRunState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
@@ -1083,7 +1104,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerManager.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion\Manager</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sion.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
@@ -1190,6 +1211,12 @@
     <ClCompile Include="..\Private\SlimeAdventState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UI_InterectMsg.cpp">
+      <Filter>02.GameObjects\04.UI\13.UI_InterectMsg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Get_item_Popup.cpp">
+      <Filter>02.GameObjects\04.UI\14.UI_Get_Item_Popup</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Trigger.cpp">
       <Filter>02.GameObjects\05.Trigger</Filter>
     </ClCompile>
@@ -1201,6 +1228,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\HawkTrigger_TurnState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Npc.cpp">
+      <Filter>02.GameObjects\01.Actor\02.NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FemaleYoung.cpp">
+      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AiRinwell.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

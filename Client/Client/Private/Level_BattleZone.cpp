@@ -18,9 +18,12 @@ CLevel_BattleZone::CLevel_BattleZone(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 HRESULT CLevel_BattleZone::Initialize()
 {
+	MONSTER_ID eMonsterID = CBattleManager::Get_Instance()->Get_MonsterType();
+	CBattleManager::Get_Instance()->Set_BattleMode(true, eMonsterID);
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-
+	
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
@@ -56,7 +59,7 @@ HRESULT CLevel_BattleZone::Initialize()
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
-
+	
 	return S_OK;
 }
 
@@ -151,7 +154,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	_uint iNum = 0;
 
-	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/MonsterPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/PlayerPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 

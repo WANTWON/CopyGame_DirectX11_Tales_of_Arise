@@ -47,6 +47,7 @@ public: /*Getter Setter */
 	void Set_Scale(STATE eState, _float fScale);
 	void Set_TransformDesc(const TRANSFORMDESC& TransformDesc ) {m_TransformDesc = TransformDesc;}
 	void Change_Speed(_float fSpeed) { m_TransformDesc.fSpeedPerSec = fSpeed; }
+	void Change_RotationPerSec(_float fRotationPerSec) { m_TransformDesc.fRotationPerSec = fRotationPerSec; }
 
 	_float Get_CurrentRotationX() { return m_fCurrentRotationX; }
 	_float Get_CurrentRotationY() { return m_fCurrentRotationY; }

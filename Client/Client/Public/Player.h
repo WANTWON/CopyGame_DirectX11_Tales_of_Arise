@@ -16,8 +16,9 @@ class CPlayer abstract : public CBaseObj
 {	
 public:
 	enum PARTS { PARTS_WEAPON, PARTS_END };
-	enum SKILL {SKILL1, SKILL2, SKILL3, SKILL4, SKILL5, SKILL_END };
-	enum PLAYERID {ALPHEN, SION};
+	enum GROUNDSKILL { GROUND_SKILL1, GROUND_SKILL2, GROUND_SKILL3, GROUND_SKILL_END };
+	enum FLYSKILL { FLY_SKILL1, FLY_SKILL2, FLY_SKILL3, FLY_SKILL_END };
+	enum PLAYERID { ALPHEN, SION };
 
 protected:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -38,11 +39,19 @@ public: /* Getter &  Setter */
 	CTransform*		Get_Transform() { return m_pTransformCom; }
 	CNavigation*	Get_Navigation(void) { return m_pNavigationCom; }
 	CPlayerState*	Get_State() { return m_pPlayerState; }
-	_uint			Get_SkillAnimIndex(SKILL SkillIndex) { return m_eSkills[SkillIndex]; }
 	OBJINFO			Get_Info() { return m_tInfo; }
-	PLAYERID			Get_PlayerID() { return m_ePlayerID; }
+	PLAYERID		Get_PlayerID() { return m_ePlayerID; }
 	CGameObject*	Get_Parts(_int iIndex) { return m_Parts[iIndex]; }
 
+	/* 지상 스킬 */
+	_uint			Get_GroundSkillAnimIndex(GROUNDSKILL SkillIndex) { return m_eGroundSkills[SkillIndex]; }
+	/* 공중 스킬 */
+	_uint			Get_FlySkillAnimIndex(FLYSKILL SkillIndex) { return m_eFlySkills[SkillIndex]; }
+
+	/* 공중 판단 */
+	_bool			Get_IsFly(void) { return m_bIsFly; }
+	void			On_IsFly(void) { m_bIsFly = true; }
+	void			Off_IsFly(void) { m_bIsFly = false; }
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	
@@ -75,8 +84,12 @@ protected: /* for 4 Player */
 	PLAYERID			m_ePlayerID = ALPHEN;
 	CPlayerState*	m_pPlayerState = nullptr;
 	CAIState*		m_pAIState = nullptr;
-	_uint			m_eSkills[SKILL_END] = { 0 , 0 , 0, 0 , 0 };
 	CPlayerManager*	m_pPlayerManager = nullptr;
+	/* 스킬 */
+	_uint			m_eGroundSkills[GROUND_SKILL_END] = { GROUND_SKILL_END, };
+	_uint			m_eFlySkills[FLY_SKILL_END] = { FLY_SKILL_END, };
+	/* 공중 판단 변수*/
+	_bool			m_bIsFly = false;
 
 protected:
 	vector<class CGameObject*> m_Parts;
