@@ -61,6 +61,8 @@ HRESULT CRinwell::Ready_Parts()
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
 	strcpy(WeaponDesc.pModeltag, "SWO1");
+	WeaponDesc.pOwner = this;
+
 	Safe_AddRef(pSocket);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
