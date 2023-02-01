@@ -56,14 +56,14 @@ HRESULT CChannel::Bin_Initialize(DATA_BINCHANNEL * pAIChannel, CModel * pModel)
 
 void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 {
-	/* 던져진 시간에 맞는 뼈의 상태를 만들거야. 
+	/* 던져진 시간에 맞는 뼈의 상태를 만들거야.
 	만들면 모델이 가지고 있는 뼈에 던질꺼야. */
 
 	_vector			vScale, vRotation, vPosition;
 
 	KEYFRAME		LastKeyframe = m_KeyFrames.back();
 
-	if (fCurrentTime >= LastKeyframe.fTime)	
+	if (fCurrentTime >= LastKeyframe.fTime)
 	{
 		vScale = XMLoadFloat3(&LastKeyframe.vScale);
 		vRotation = XMLoadFloat4(&LastKeyframe.vRotation);
@@ -73,11 +73,11 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 	else
 	{
 		while (fCurrentTime >= m_KeyFrames[m_iCurrentKeyFrameIndex + 1].fTime)
-			++m_iCurrentKeyFrameIndex;			
+			++m_iCurrentKeyFrameIndex;
 
 		_vector		vSourScale, vSourRotation, vSourPosition;
 		_vector		vDestScale, vDestRotation, vDestPosition;
-		
+
 		vSourScale = XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex].vScale);
 		vSourRotation = XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrameIndex].vRotation);
 		vSourPosition = XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex].vPosition);
@@ -85,8 +85,8 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 		vDestScale = XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vScale);
 		vDestRotation = XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vRotation);
 		vDestPosition = XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vPosition);
-			
-		_float		fRatio = (fCurrentTime - m_KeyFrames[m_iCurrentKeyFrameIndex].fTime) / 
+
+		_float		fRatio = (fCurrentTime - m_KeyFrames[m_iCurrentKeyFrameIndex].fTime) /
 			(m_KeyFrames[m_iCurrentKeyFrameIndex + 1].fTime - m_KeyFrames[m_iCurrentKeyFrameIndex].fTime);
 
 		vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
@@ -105,6 +105,7 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 	m_pBoneNode->Set_TransformationMatrix(TransformationMatrix);
 }
 
+
 void CChannel::Reset()
 {
 	m_iCurrentKeyFrameIndex = 0;
@@ -119,7 +120,6 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 
 	_float		fRatio = fLinearCurrentTime / fLinearTotalTime;
 
-
 	_vector		vSourScale, vSourRotation, vSourPosition;
 	_vector		vDestScale, vDestRotation, vDestPosition;
 
@@ -129,14 +129,13 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 
 	vSourScale = XMLoadFloat3(&m_KeyFrame_Linear.vScale);
 	vSourRotation = XMLoadFloat4(&m_KeyFrame_Linear.vRotation);
-	vSourPosition = XMLoadFloat3(&m_KeyFrame_Linear.vPosition);
+	vSourPosition = XMLoadFloat3(&NextKeyFrame.vPosition); /*XMLoadFloat3(&m_KeyFrame_Linear.vPosition);*/
 
 
 	vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
 	vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
 	vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
 	vPosition = XMVectorSetW(vPosition, 1.f);
-
 
 	XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
@@ -148,6 +147,7 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 
 	return false;
 }
+
 
 void CChannel::Set_KeyFrame(_int iIndex, KEYFRAME KeyFrame)
 {

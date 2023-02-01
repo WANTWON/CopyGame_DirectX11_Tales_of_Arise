@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "BaseObj.h"
 
 
 BEGIN(Engine)
@@ -18,7 +18,7 @@ END
 
 BEGIN(Client)
 
-class CWeapon final : public CGameObject
+class CWeapon final : public CBaseObj
 {
 public:
 	typedef struct tagWeaponDesc
@@ -39,6 +39,7 @@ public:
 
 	void On_Collider(void) { m_isCollider = true; }
 	void Off_Collider(void) { m_isCollider = false; }
+	void Set_WeaponDesc(WEAPONDESC tWeaponDesc); 
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -63,7 +64,7 @@ private:
 
 
 private:
-	HRESULT Ready_Components();
+	virtual HRESULT Ready_Components(void* pArg);
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
 
 private:

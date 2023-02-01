@@ -319,9 +319,13 @@ namespace Engine
 		int iNumKeyFrames;
 	}BINCHANNEL;
 
-	typedef struct tagEvent
+	typedef struct tagAnimationEvent
 	{
-		bool isPlay;
-		int iEventType;
-	}EVENT;
+		enum EVENTTYPE { EVENT_SOUND, EVENT_EFFECT, EVENT_COLLIDER, EVENT_STATE, EVENT_END };
+
+		bool isPlay = false;
+		float fStartTime;
+		float fEndTime;
+		EVENTTYPE eType;
+	}ANIMEVENT;
 }

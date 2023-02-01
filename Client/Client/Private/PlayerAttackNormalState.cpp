@@ -7,14 +7,18 @@
 #include "Effect.h"
 #include "EffectMesh.h"
 #include "PlayerSkillState.h"
+#include "PlayerJumpState.h"
 
 
 using namespace Player;
 
-CAttackNormalState::CAttackNormalState(CPlayer* pPlayer, STATE_ID eStateType)
+CAttackNormalState::CAttackNormalState(CPlayer* pPlayer, STATE_ID eStateType, _float fStartHeight, _float fTime)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
+
+	m_fStartHeight = fStartHeight;
+	m_fTime = fTime;
 }
 
 CPlayerState * CAttackNormalState::HandleInput()
@@ -38,7 +42,7 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-	vector<EVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 	for (auto& pEvent : pEvents)
 	{
@@ -49,9 +53,9 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 				switch (m_eStateId)
 				{
 				case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (EVENT_STATE == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
@@ -69,9 +73,9 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (EVENT_STATE == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
@@ -89,9 +93,9 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (EVENT_STATE == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
@@ -109,7 +113,7 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 					}
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					break;
 				}
@@ -126,19 +130,19 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 				switch (m_eStateId)
 				{
 				case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-					if (EVENT_COLLIDER == pEvent.iEventType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
 				}
@@ -162,13 +166,14 @@ CPlayerState * CAttackNormalState::LateTick(_float fTimeDelta)
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK2);
+			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK2, m_fStartHeight, m_fTime);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK3);
+			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK3, m_fStartHeight, m_fTime);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-			return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK4);
+			if (!m_bIsFly)
+				return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK4, m_fStartHeight, m_fTime);
 			break;
 		}
 	}
@@ -194,44 +199,76 @@ CPlayerState * CAttackNormalState::LateTick(_float fTimeDelta)
 	}
 
 	if (m_bIsAnimationFinished)
-		return new CIdleState(m_pOwner);
+	{
+		if (m_bIsFly)
+			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime);
+		else
+			return new CIdleState(m_pOwner);
+	}
 
 	return nullptr;
 }
 
 void CAttackNormalState::Enter()
 {
+	__super::Enter();
+
 	if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
 	{
-		switch (m_eStateId)
+		if (m_bIsFly)
 		{
-		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_1);
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_8);
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_6);
-			break;
+			switch (m_eStateId)
+			{
+			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_0);
+				break;
+			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_1);
+				break;
+			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_2);
+				break;
+			}
+		}
+		else
+		{
+			switch (m_eStateId)
+			{
+			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
+				break;
+			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_1);
+				break;
+			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_8);
+				break;
+			case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_6);
+				break;
+			}
 		}
 	}
 	else if (CPlayer::SION == m_pOwner->Get_PlayerID())
 	{
-		switch (m_eStateId)
+		if (m_bIsFly)
 		{
-		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
-			break;
+
+		}
+		else
+		{
+			switch (m_eStateId)
+			{
+			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
+				break;
+			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
+				break;
+			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
+				break;
+			}
 		}
 	}
 }

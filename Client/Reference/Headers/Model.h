@@ -27,7 +27,7 @@ public:
 
 	_uint Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; }
 
-	vector<EVENT> Get_Events(void);
+	vector<ANIMEVENT> Get_Events(void);
 
 	// 루트 본 이동, 회전 변화량 Get 함수
 	void Get_MoveTransformationMatrix(const char * pBoneName, _vector * pTranslation, _float * pRotation);

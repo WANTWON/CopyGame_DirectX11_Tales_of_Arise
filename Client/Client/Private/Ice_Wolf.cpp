@@ -37,7 +37,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	if (m_bBattleMode)
 	{
 		/*Set_Battle State*/
-		CIceWolfState* pBattleState = new CBattle_IdleState(this);
+		CIceWolfState* pBattleState = new CBattle_IdleState(this, CIceWolfState::STATE_ID::START_BATTLE);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
 	else
@@ -64,7 +64,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
 	Check_NearTrigger();
 
-	//테스트 코드
+
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), 90.f);
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 	return S_OK;
@@ -143,7 +143,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
+	if (CUI_Manager::Get_Instance()->Get_StopTick() /*|| !Check_IsinFrustum(2.f)*/)
 		return OBJ_NOEVENT;
 
 	if (m_bDead)
@@ -167,8 +167,9 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
+	if (CUI_Manager::Get_Instance()->Get_StopTick()/* || !Check_IsinFrustum(2.f)*/)
 		return;
+
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)

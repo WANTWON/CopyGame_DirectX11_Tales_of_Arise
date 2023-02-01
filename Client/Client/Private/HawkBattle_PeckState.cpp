@@ -43,7 +43,7 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-		
+
 		m_pOwner->Check_Navigation();
 	}
 	return nullptr;

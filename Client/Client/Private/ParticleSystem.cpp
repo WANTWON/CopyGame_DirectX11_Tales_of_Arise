@@ -414,7 +414,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 void CParticleSystem::UpdateParticles(_float fTimeDelta)
 {
 	/* Each frame we update all the Particles by making them move using their Position, Velocity, and TimeDelta. */
-	for (_uint i = 0; i < m_fCurrentParticleCount; i++)
+	for (_int i = 0; i < m_fCurrentParticleCount; i++)
 	{
 		_float3 vPosition = _float3(m_Particles[i].fPositionX, m_Particles[i].fPositionY, m_Particles[i].fPositionZ);
 		_vector vNewPosition = XMVector3Normalize(XMLoadFloat3(&m_Particles[i].vDirection)) * m_Particles[i].fVelocity * fTimeDelta;
@@ -551,7 +551,7 @@ void CParticleSystem::AlphaLerp(_uint iParticleIndex)
 
 void CParticleSystem::KillParticles()
 {
-	for (_uint i = 0; i < m_tParticleDesc.m_iMaxParticles; i++)
+	for (_int i = 0; i < m_tParticleDesc.m_iMaxParticles; i++)
 	{
 		if ((m_Particles[i].bActive == true) && (m_Particles[i].fLife > m_tParticleDesc.m_fParticlesLifetime))
 		{
@@ -559,7 +559,7 @@ void CParticleSystem::KillParticles()
 			m_fCurrentParticleCount--;
 
 			/* Now shift all the live particles back up the array to erase the destroyed particle and keep the array sorted correctly. */
-			for (_uint j = i; j < m_tParticleDesc.m_iMaxParticles - 1; j++)
+			for (_int j = i; j < m_tParticleDesc.m_iMaxParticles - 1; j++)
 			{
 				m_Particles[j].fPositionX = m_Particles[j + 1].fPositionX;
 				m_Particles[j].fPositionY = m_Particles[j + 1].fPositionY;

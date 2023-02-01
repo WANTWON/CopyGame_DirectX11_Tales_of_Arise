@@ -55,9 +55,9 @@ HRESULT CHierarchyNode::Bin_Initialize(DATA_BINNODE * pNode)
 	return S_OK;
 }
 
-void CHierarchyNode::Invalidate_CombinedTransformationmatrix(const char* pBoneName)
+void CHierarchyNode::Invalidate_CombinedTransformationmatrix(const char* pBoneName, _bool isInterpolation)
 {
-	Set_RootMotionMatrix(pBoneName);
+	Set_RootMotionMatrix(pBoneName, isInterpolation);
 
 	if (nullptr != m_pParent)
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&m_pParent->m_CombinedTransformationMatrix));
@@ -89,7 +89,7 @@ void CHierarchyNode::Set_FindParent(CHierarchyNode * pNode)
 //	return pInstance;	
 //}
 
-void CHierarchyNode::Set_RootMotionMatrix(const char* pBoneName)
+void CHierarchyNode::Set_RootMotionMatrix(const char* pBoneName, _bool isInterpolation)
 {
 	// 루트 본 이름 비교로 찾기
 	if ((nullptr != pBoneName) && !strcmp(m_szName, pBoneName))
