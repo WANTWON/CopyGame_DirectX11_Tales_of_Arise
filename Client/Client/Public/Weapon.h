@@ -3,18 +3,14 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 
-
 BEGIN(Engine)
-
 class CShader;
 class CCollider;
 class CRenderer;
 class CTransform;
 class CModel;
 class CHierarchyNode;
-
 END
-
 
 BEGIN(Client)
 

@@ -175,6 +175,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Change_Navigation(LEVEL_BATTLE);
 	pPlayer->Compute_CurrentIndex(LEVEL_BATTLE);
 	pPlayer->Check_Navigation();
+	pPlayer->Change_Level(LEVEL_BATTLE);
 
 	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
 	_vector vPosition[3] = { XMVectorSetW(XMLoadFloat3(&ModelDesc2.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc3.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc4.vPosition), 1.f) };

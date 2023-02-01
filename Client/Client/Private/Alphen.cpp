@@ -55,6 +55,8 @@ HRESULT CAlphen::Ready_Parts()
 	m_Parts.resize(PARTS_END);
 
 	/* For.Weapon */
+	_uint iLevelIndex = CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+
 	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
 	if (nullptr == pSocket)
 		return E_FAIL;
@@ -120,6 +122,46 @@ HRESULT CAlphen::Ready_Components(void* pArg)
 	m_vecNavigations.push_back(m_pNavigationCom);
 
 	return S_OK;
+}
+
+void CAlphen::Change_Level(LEVEL eLevel)
+{
+	__super::Change_Level(eLevel);
+
+	if (nullptr != m_Parts[PARTS_WEAPON])
+	{
+		CWeapon::WEAPONDESC WeaponDesc;
+		ZeroMemory(&WeaponDesc, sizeof(CWeapon::WEAPONDESC));
+
+		CHierarchyNode* pSocket = nullptr; 
+
+		if (LEVEL_SNOWFIELD == eLevel)
+		{
+			pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L_end");
+			if (nullptr == pSocket)
+			{
+				ERR_MSG(TEXT("Failed to Get BonePtr"));
+				return;
+			}
+		}
+		else if (LEVEL_BATTLE == eLevel)
+		{
+			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
+			if (nullptr == pSocket)
+			{
+				ERR_MSG(TEXT("Failed to Get BonePtr"));
+				return;
+			}
+		}
+		
+		WeaponDesc.pSocket = pSocket;
+		WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
+		WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
+		strcpy(WeaponDesc.pModeltag, "SWO1");
+		Safe_AddRef(pSocket);
+
+		dynamic_cast<CWeapon*>(m_Parts[PARTS_WEAPON])->Set_WeaponDesc(WeaponDesc);
+	}
 }
 
 HRESULT CAlphen::SetUp_ShaderResources()
