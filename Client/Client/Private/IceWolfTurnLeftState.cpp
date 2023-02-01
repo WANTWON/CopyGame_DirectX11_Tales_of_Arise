@@ -2,7 +2,6 @@
 #include "..\Public\IceWolfTurnLeftState.h"
 #include "IceWolfIdleState.h"
 #include "IceWolfWalkState.h"
-#include "IceWolfTurnRightState.h"
 #include "IceWolfChaseState.h"
 
 using namespace IceWolf;
@@ -54,21 +53,33 @@ CIceWolfState * CTurnLeftState::LateTick(_float fTimeDelta)
 	{
 		return new CChaseState(m_pOwner);
 	}
-
 	else if (m_bIsAnimationFinished)
-		switch (m_iRand)
+	{
+		//나의 트리거 박스랑 충돌안했을떄
+		CBaseObj* pTrigger = m_pOwner->Get_Trigger();
+
+		if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == false)
+			return new CWalkState(m_pOwner, FIELD_STATE_END, true);
+		else
 		{
-		case 0:
-			return new CWalkState(m_pOwner, FIELD_STATE_END);
-		case 1:
-			return new CIdleState(m_pOwner);
-		case 2:
-			return new CWalkState(m_pOwner, FIELD_STATE_END);
-		case 3:
-			return new CIdleState(m_pOwner);
-		default:
-			break;
+			switch (m_iRand)
+			{
+			case 0:
+				return new CWalkState(m_pOwner, FIELD_STATE_END);
+			case 1:
+				return new CIdleState(m_pOwner);
+			case 2:
+				return new CWalkState(m_pOwner, FIELD_STATE_END);
+			case 3:
+				return new CIdleState(m_pOwner);
+			default:
+				break;
+			}
 		}
+
+
+	}
+		
 
 
 
@@ -79,8 +90,12 @@ void CTurnLeftState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_MOVE;
 
-	
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_TURN_LEFT);
+	if(rand()%2 == 0)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_TURN_LEFT);
+	else
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_TURN_RIGHT);
+
+
 }
 
 void CTurnLeftState::Exit()

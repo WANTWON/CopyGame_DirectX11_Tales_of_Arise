@@ -6,7 +6,6 @@
 #include "BerserkerChaseState.h"
 #include "BerserkerTurnR_State.h"
 #include "BerserkerHowLing_State.h"
-#include "BerserkerTrigger_TurnState.h"
 
 
 using namespace Berserker;
@@ -31,7 +30,7 @@ CBerserkerState * CWalkState::Tick(_float fTimeDelta)
 {
 	Find_Target();
 
-
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	m_pOwner->Check_Navigation();
 	
 	return nullptr;
@@ -47,7 +46,7 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 		//돌게하고
 
 		if (false == m_bTriggerTurn)
-			return new CTrigger_TurnState(m_pOwner);
+			return new CTurnR_State(m_pOwner);
 
 		// 그 트리거 박스의 위치 방향으로 이동하는 상태를 세팅한다.
 
@@ -55,7 +54,7 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 		{
 			_vector vPosition = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
-			m_pOwner->Get_Transform()->LookAt(vPosition);
+			//m_pOwner->Get_Transform()->LookAt(vPosition);
 			
 		}
 	}
@@ -66,7 +65,7 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 
 		m_fTimeDletaAcc += fTimeDelta;
 
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+		//m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
 

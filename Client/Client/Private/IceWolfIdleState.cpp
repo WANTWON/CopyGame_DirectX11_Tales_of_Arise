@@ -4,7 +4,6 @@
 #include "GameInstance.h"
 #include "IceWolfWalkState.h"
 #include "IceWolfTurnLeftState.h"
-#include "IceWolfTurnRightState.h"
 #include "IceWolfHowLingState.h"
 #include "IceWolfChaseState.h"
 

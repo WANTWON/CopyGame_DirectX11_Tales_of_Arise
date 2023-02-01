@@ -41,6 +41,7 @@ CHawkState * CTurnR_State::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
+
 	return nullptr;
 }
 
@@ -55,19 +56,28 @@ CHawkState * CTurnR_State::LateTick(_float fTimeDelta)
 		return new CChaseState(m_pOwner);
 
 	else if (m_bIsAnimationFinished)
-		switch (m_iRand)
+	{
+		//나의 트리거 박스랑 충돌안했을떄
+		CBaseObj* pTrigger = m_pOwner->Get_Trigger();
+
+		if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == false)
+			return new CWalkState(m_pOwner,true);
+		else
 		{
-		case 0:
-			return new CWalkState(m_pOwner);
-		case 1:
-			return new CIdleState(m_pOwner);
-		
-		
-		default:
-			break;
+			switch (m_iRand)
+			{
+			case 0:
+				return new CWalkState(m_pOwner);
+			case 1:
+				return new CIdleState(m_pOwner);
+			default:
+				break;
+			}
 		}
 
 
+	}
+		
 	return nullptr;
 }
 

@@ -185,7 +185,6 @@
     <ClInclude Include="..\Public\BerserkerBattle_WalkState.h" />
     <ClInclude Include="..\Public\BerserkerChaseState.h" />
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
-    <ClInclude Include="..\Public\BerserkerTrigger_TurnState.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
     <ClInclude Include="..\Public\FemaleYoung.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
@@ -193,7 +192,6 @@
     <ClInclude Include="..\Public\HawkChaseState.h" />
     <ClInclude Include="..\Public\HawkBraveState.h" />
     <ClInclude Include="..\Public\HawkSitOnState.h" />
-    <ClInclude Include="..\Public\HawkTrigger_TurnState.h" />
     <ClInclude Include="..\Public\HawkTurnR_State.h" />
     <ClInclude Include="..\Public\HawkUpFlyState.h" />
     <ClInclude Include="..\Public\HawkWalkState.h" />
@@ -258,7 +256,6 @@
     <ClInclude Include="..\public\IceWolfIdleState.h" />
     <ClInclude Include="..\Public\IceWolfState.h" />
     <ClInclude Include="..\Public\IceWolfTurnLeftState.h" />
-    <ClInclude Include="..\Public\IceWolfTurnRightState.h" />
     <ClInclude Include="..\public\IceWolfWalkState.h" />
     <ClInclude Include="..\Public\Ice_Wolf.h" />
     <ClInclude Include="..\Public\InteractObject.h" />
@@ -350,7 +347,6 @@
     <ClCompile Include="..\Private\BerserkerBattle_WalkState.cpp" />
     <ClCompile Include="..\Private\BerserkerChaseState.cpp" />
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
-    <ClCompile Include="..\Private\BerserkerTrigger_TurnState.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
     <ClCompile Include="..\Private\FemaleYoung.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
@@ -358,7 +354,6 @@
     <ClCompile Include="..\Private\HawkChaseState.cpp" />
     <ClCompile Include="..\Private\HawkBraveState.cpp" />
     <ClCompile Include="..\Private\HawkSitOnState.cpp" />
-    <ClCompile Include="..\Private\HawkTrigger_TurnState.cpp" />
     <ClCompile Include="..\Private\HawkTurnR_State.cpp" />
     <ClCompile Include="..\Private\HawkUpFlyState.cpp" />
     <ClCompile Include="..\Private\HawkWalkState.cpp" />
@@ -419,7 +414,6 @@
     <ClCompile Include="..\Private\IceWolfHowLingState.cpp" />
     <ClCompile Include="..\private\IceWolfIdleState.cpp" />
     <ClCompile Include="..\Private\IceWolfTurnLeftState.cpp" />
-    <ClCompile Include="..\Private\IceWolfTurnRightState.cpp" />
     <ClCompile Include="..\private\IceWolfWalkState.cpp" />
     <ClCompile Include="..\Private\Ice_Wolf.cpp" />
     <ClCompile Include="..\Private\InteractObject.cpp" />

@@ -417,9 +417,6 @@
     <ClInclude Include="..\Public\IceWolfTurnLeftState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\IceWolfTurnRightState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Water.h">
       <Filter>02.GameObjects\02.NonAnim\03.Water</Filter>
     </ClInclude>
@@ -759,12 +756,6 @@
     <ClInclude Include="..\Public\BattleManager.h">
       <Filter>06.BattleManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BerserkerTrigger_TurnState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\HawkTrigger_TurnState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Npc.h">
       <Filter>02.GameObjects\01.Actor\02.NPC</Filter>
     </ClInclude>
@@ -894,9 +885,6 @@
       <Filter>02.GameObjects\04.UI\06.MP_Guage</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfTurnLeftState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\IceWolfTurnRightState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Water.cpp">
@@ -1222,12 +1210,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\BattleManager.cpp">
       <Filter>06.BattleManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BerserkerTrigger_TurnState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\HawkTrigger_TurnState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Npc.cpp">
       <Filter>02.GameObjects\01.Actor\02.NPC</Filter>

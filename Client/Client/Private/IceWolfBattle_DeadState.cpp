@@ -15,7 +15,7 @@ CBattle_DeadState::CBattle_DeadState(class CIce_Wolf* pIceWolf)
 CIceWolfState * CBattle_DeadState::AI_Behaviour(_float fTimeDelta)
 {
 	Find_BattleTarget();
-	m_pOwner->Check_Navigation();
+	//m_pOwner->Check_Navigation();
 	return nullptr;
 }
 
@@ -36,21 +36,24 @@ CIceWolfState * CBattle_DeadState::LateTick(_float fTimeDelta)
 	
 
 
-	if(m_bIsAnimationFinished && false == m_bDeadAnimFinish)
+	if(m_bIsAnimationFinished /*&& false == m_bDeadAnimFinish*/)
 	{
 
 
 //		_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
-		m_pOwner->Get_Model()->Play_Animation(2.55f, false);
-		m_pOwner->Set_Dissolve();
+		/*m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
+		m_pOwner->Get_Model()->Play_Animation(2.55f, false);*/
+		//m_pOwner->Set_Dissolve();
 
 		m_bDeadAnimFinish = true;
 		
 		
 		//m_pOwner->Get_Model()->Play_Animation(2.5f, false);
 	}
+
+	if (m_bDeadAnimFinish)
+		m_pOwner->Set_Dissolve();
 
 	return nullptr;
 }
@@ -66,7 +69,6 @@ void CBattle_DeadState::Enter()
 
 void CBattle_DeadState::Exit()
 {
-	m_fIdleAttackTimer = 0.f;
 	
 }
 

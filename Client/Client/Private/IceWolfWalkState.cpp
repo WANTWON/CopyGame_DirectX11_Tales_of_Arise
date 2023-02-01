@@ -4,7 +4,6 @@
 #include "GameInstance.h"
 #include "IceWolfIdleState.h"
 #include "IceWolfTurnLeftState.h"
-#include "IceWolfTurnRightState.h"
 #include "IceWolfChaseState.h"
 #include "IceWolfHowLingState.h"
 
@@ -29,6 +28,7 @@ CIceWolfState * CWalkState::AI_Behaviour(_float fTimeDelta)
 CIceWolfState * CWalkState::Tick(_float fTimeDelta)
 {
 	Find_Target();
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	m_pOwner->Check_Navigation();
 	return nullptr;
 }
@@ -44,7 +44,7 @@ CIceWolfState * CWalkState::LateTick(_float fTimeDelta)
 		//돌게하고
 
 		if (false == m_bTriggerTurn)
-		return new CTurnRightState(m_pOwner);
+		return new CTurnLeftState(m_pOwner);
 		
 		// 그 트리거 박스의 위치 방향으로 이동하는 상태를 세팅한다.
 		
@@ -63,8 +63,6 @@ CIceWolfState * CWalkState::LateTick(_float fTimeDelta)
 		m_bTriggerTurn = false;
 
 		m_fTimeDletaAcc += fTimeDelta;
-
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f, m_pOwner->Get_Navigation());
 

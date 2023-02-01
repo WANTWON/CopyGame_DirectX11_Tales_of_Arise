@@ -60,18 +60,27 @@ CBerserkerState * CTurnR_State::LateTick(_float fTimeDelta)
 	}
 
 	else if (m_bIsAnimationFinished)
-		switch (m_iRand)
-		{
-		case 0:
-			return new CWalkState(m_pOwner, FIELD_STATE_END, false);
-		case 1:
-			return new CHowLing_State(m_pOwner);
-		/*case 2:
-			return new CHowLing_State(m_pOwner);*/
+	{
+		//나의 트리거 박스랑 충돌안했을떄
+		CBaseObj* pTrigger = m_pOwner->Get_Trigger();
 
-		default:
-			break;
+		if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == false)
+			return new CWalkState(m_pOwner, FIELD_STATE_END, true);
+		else
+		{
+			switch (m_iRand)
+			{
+			case 0:
+				return new CWalkState(m_pOwner, FIELD_STATE_END, false);
+			case 1:
+				return new CHowLing_State(m_pOwner);
+			default:
+				break;
+			}
 		}
+
+	}
+		
 
 
 

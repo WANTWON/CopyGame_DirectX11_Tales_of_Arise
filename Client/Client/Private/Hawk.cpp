@@ -144,12 +144,12 @@ HRESULT CHawk::Ready_Components(void * pArg)
 
 
 	///* For.Com_Obb*/
-	//CCollider::COLLIDERDESC ObbColliderDesc;
-	//ZeroMemory(&ObbColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	//ObbColliderDesc.vScale = _float3(7.f, 3.5f, 3.f);
-	//ObbColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
-	//if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ObbColliderDesc)))
-	//	return E_FAIL;
+	CCollider::COLLIDERDESC ObbColliderDesc;
+	ZeroMemory(&ObbColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ObbColliderDesc.vScale = _float3(7.f, 3.5f, 3.f);
+	ObbColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ObbColliderDesc)))
+		return E_FAIL;
 
 
 
@@ -170,7 +170,7 @@ int CHawk::Tick(_float fTimeDelta)
 	Tick_State(fTimeDelta);
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	//m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 
 	//if (true == m_bBattleMode && false == m_bDoneChangeState)

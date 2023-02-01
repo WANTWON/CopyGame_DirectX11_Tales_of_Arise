@@ -67,13 +67,11 @@ void CAttack_Elemental_Charge::Enter()
 		break;
 	}
 
-
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 
 void CAttack_Elemental_Charge::Exit()
 {
-	m_pOwner->Get_Model()->Reset();
+	
 }
 
 

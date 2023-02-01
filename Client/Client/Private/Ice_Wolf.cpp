@@ -37,7 +37,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	if (m_bBattleMode)
 	{
 		/*Set_Battle State*/
-		CIceWolfState* pBattleState = new CBattle_IdleState(this);
+		CIceWolfState* pBattleState = new CBattle_IdleState(this, CIceWolfState::STATE_ID::START_BATTLE);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
 	else

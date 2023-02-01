@@ -7,10 +7,10 @@
 
 using namespace IceWolf;
 
-CBattle_IdleState::CBattle_IdleState(class CIce_Wolf* pIceWolf)
+CBattle_IdleState::CBattle_IdleState(class CIce_Wolf* pIceWolf, STATE_ID ePreState)
 {
 	m_pOwner = pIceWolf;
-
+	m_ePreState = ePreState;
 }
 
 CIceWolfState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
@@ -20,15 +20,14 @@ CIceWolfState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 	return nullptr;
 }
 
 CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 {
-	m_iRand = rand() % 1;
-
+	
 	Find_BattleTarget();
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
@@ -42,8 +41,18 @@ CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	
 	m_fRedayAttackTimer += fTimeDelta;
 
-	if (m_fRedayAttackTimer >= 2.5f )
-		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::START_BATTLE);
+
+	if (CIceWolfState::STATE_ID::START_BATTLE == m_ePreState)
+	{
+		if (m_fRedayAttackTimer >= 3.5f)
+			return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::START_BATTLE);
+	}
+	//else if(CIceWolfState::STATE_ID::STATE_BATTLEING == m_ePreState)
+	//{
+	//	if (m_fRedayAttackTimer >= 0.1f)
+	//		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_IDLE);
+	//}
+
 		
 
 

@@ -215,16 +215,16 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
 				return E_FAIL;
 		}
-		else if (!wcscmp(pModeltag, TEXT("Hawk")))
+		/*else */if (!wcscmp(pModeltag, TEXT("Hawk")))
 		{
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
 				return E_FAIL;
 		}
-		else if (!wcscmp(pModeltag, TEXT("Berserker")))
-		{
-			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
-			//	return E_FAIL;
-		}
+		//else if (!wcscmp(pModeltag, TEXT("Berserker")))
+		//{
+		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+		//		return E_FAIL;
+		//}
 		else if (!wcscmp(pModeltag, TEXT("Slime")))
 		{
 			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vScale)))
