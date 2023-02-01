@@ -70,6 +70,7 @@ protected:
 	_float			m_fWalkingHeight = 0.f;
 	_float			m_fAlpha = 1.f;
 	_float			m_DissolveAlpha = 0.f;
+	_float			m_fRadius = 0.f;
 
 	OBJINFO  m_tInfo;
 

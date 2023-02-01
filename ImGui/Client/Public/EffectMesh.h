@@ -29,7 +29,6 @@ public:
 		_float fNoiseSpeed = 0.f;
 		_float fNoisePowerInitial = 0.f;
 		_float fNoisePower = 10.f;
-		
 	} MESHEFFECTDESC;
 
 public:

@@ -40,7 +40,13 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	if (m_bPlay)
 		EmitParticles(fTimeDelta);		/* Emit new Particles.	*/
 
+	// Billboard
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
+	RELEASE_INSTANCE(CGameInstance);
+
 	UpdateParticles(fTimeDelta);		/* Update Particles. */
+	SortParticles();					/* Sort Particles. */
 
 	UpdateBuffers();
 	
@@ -65,8 +71,6 @@ HRESULT CParticleSystem::Render()
 		return E_FAIL;
 
 	__super::Render();
-
-
 
 	m_pShaderCom->Begin(m_eShaderID);
 	RenderBuffers();
@@ -106,6 +110,8 @@ HRESULT CParticleSystem::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_vColor", &m_tParticleDesc.m_vColor, sizeof(_float3))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlphaDiscard", &m_tParticleDesc.m_fAlphaDiscard, sizeof(_float))))
 		return E_FAIL;
 
 	return S_OK;
@@ -240,7 +246,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 			fGreen = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 			fBlue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 
-			fInitialAlpha = 1.f;
+			fInitialAlpha = m_tParticleDesc.m_fAlpha;
 			fAlpha = fInitialAlpha;
 
 			fInitialVelocity = m_tParticleDesc.m_fParticleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleVelocityVariation;
@@ -335,7 +341,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 				fGreen = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 				fBlue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 
-				fInitialAlpha = 1.f;
+				fInitialAlpha = m_tParticleDesc.m_fAlpha;
 				fAlpha = fInitialAlpha;
 
 				fInitialVelocity = m_tParticleDesc.m_fParticleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleVelocityVariation;
@@ -426,6 +432,25 @@ void CParticleSystem::UpdateParticles(_float fTimeDelta)
 	}
 
 	return;
+}
+
+void CParticleSystem::SortParticles()
+{
+	sort(m_Particles, m_Particles + m_fCurrentParticleCount, [&](const ParticleType & pParticleSour, const ParticleType & pParticleDesc) {
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+		_vector vCameraPosition = XMLoadFloat4(&pGameInstance->Get_CamPosition());
+		RELEASE_INSTANCE(CGameInstance);
+
+		_matrix vParticleWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+
+		_vector vParticleWorldPositionSour = XMVector3TransformCoord(XMVectorSet(pParticleSour.fPositionX, pParticleSour.fPositionY, pParticleSour.fPositionZ, 1.f), vParticleWorldMatrix);
+		_vector vParticleWorldPositionDest = XMVector3TransformCoord(XMVectorSet(pParticleDesc.fPositionX, pParticleDesc.fPositionY, pParticleDesc.fPositionZ, 1.f), vParticleWorldMatrix);
+
+		_float fParticleSourDistance = XMVectorGetX(XMVector3Length(vCameraPosition - vParticleWorldPositionSour));
+		_float fParticleDestDistance = XMVectorGetX(XMVector3Length(vCameraPosition - vParticleWorldPositionDest));;
+
+		return fParticleSourDistance > fParticleDestDistance;
+	});
 }
 
 void CParticleSystem::VelocityLerp(_uint iParticleIndex)

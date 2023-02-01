@@ -386,6 +386,7 @@ void CUI_Get_item_Popup::Free()
 
 
 	Safe_Release(m_pTextureCom1);
+	Safe_Release(m_pTextureCom2);
 	__super::Free();
 }
 
