@@ -1,11 +1,9 @@
 #pragma once
-
-#include "Client_Defines.h"
-#include "Monster.h"
+#include "Player.h"
 
 BEGIN(Client)
-class CAiRinwell final : public CMonster
-{
+class CRinwell final : public CPlayer
+{	
 public:
 	enum ANIM {
 		BTL_ADVENT,
@@ -102,54 +100,25 @@ public:
 
 	};
 
-
-
-public:
-	CModel* Get_Model() { return m_pModelCom; }
-	CTransform* Get_Transform() { return m_pTransformCom; }
-	class CRinwellState* Get_State() { return m_pState; }
-	void Set_PlayerState(class CRinwellState* pPlayerState) { m_pState = pPlayerState; }
-	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
-
-public:
-	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
-	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
-	virtual HRESULT SetUp_ShaderID() override;
-
 private:
-	CAiRinwell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CAiRinwell(const CAiRinwell& rhs);
-	virtual ~CAiRinwell() = default;
+	CRinwell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CRinwell(const CRinwell& rhs);
+	virtual ~CRinwell() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
-	virtual int Tick(_float fTimeDelta);
-	virtual void Late_Tick(_float fTimeDelta);
 
 public: /*For.State*/
-	void AI_Behavior(_float fTimeDelta);
-	void Tick_State(_float fTimeDelta);
-	void LateTick_State(_float fTimeDelta);
-	void Field_Animation(_float fTimeDelta);
-
-
-		/*For Navigation*/
-	virtual void Check_Navigation() override;
+	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 
 private:
+	virtual HRESULT Ready_Parts() override;
 	virtual HRESULT Ready_Components(void* pArg) override;
-
-private:
-	class CRinwellState*  m_pState = nullptr;
-
-	_float   m_fSpeed = 3.f;
-	_uint	 m_eAnim = IDLE_CHARA;
-	_uint	 m_ePreAnim = IDLE_CHARA;
-	
+	HRESULT SetUp_ShaderResources();
 
 public:
-	static CAiRinwell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CRinwell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 };

@@ -32,6 +32,7 @@ public:
 
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
+	_bool				m_bNotCreate = false;
 
 public:
 	static CLevel_SnowField* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

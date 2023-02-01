@@ -74,7 +74,6 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 
 		LEVEL eNextLevel = LEVEL_SNOWFIELD;
 
-		CPlayerManager::Get_Instance()->Save_LastPosition();
 		m_pCollision_Manager->Clear_AllCollisionGroup();
 		pGameInstance->Set_DestinationLevel(eNextLevel);
 
@@ -240,6 +239,13 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		case Client::SLIME:
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_BATTLE, pLayerTag, &ModelDesc.vPosition)))
 				return E_FAIL;
+			break;
+		case Client::RINWELL:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
+				return E_FAIL;
+			CloseHandle(hFile);
+			RELEASE_INSTANCE(CGameInstance);
+			return S_OK;
 			break;
 		default:
 			break;
