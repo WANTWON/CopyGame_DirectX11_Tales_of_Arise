@@ -30,8 +30,7 @@ CIceWolfState * CHowLingState::Tick(_float fTimeDelta)
 
 CIceWolfState * CHowLingState::LateTick(_float fTimeDelta)
 {
-	if (m_pTarget)
-		return new CChaseState(m_pOwner);
+
 
 
 	m_fHowLingTimeAcc += fTimeDelta;
@@ -39,21 +38,21 @@ CIceWolfState * CHowLingState::LateTick(_float fTimeDelta)
 	if (m_fHowLingTimeAcc > m_fHowlingTime)
 		m_iRand = rand() % 4;
 
-	if (m_bIsAnimationFinished)
+
+	if (m_pTarget)
+		return new CChaseState(m_pOwner);
+
+	else if (m_bIsAnimationFinished)
 		switch (m_iRand)
 			{
 			case 0:
-				return new CWalkState(m_pOwner, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE);
-				break;
+				return new CWalkState(m_pOwner, FIELD_STATE_END);
 			case 1:
-				return new CIdleState(m_pOwner, FIELD_STATE_ID::STATE_TURN);
-				break;
+				return new CIdleState(m_pOwner);
 			case 2:
-				return new CWalkState(m_pOwner, STATE_TURN);
-				break;
+				return new CWalkState(m_pOwner, FIELD_STATE_END);
 			case 3:
-				return new CIdleState(m_pOwner, FIELD_STATE_ID::FIELD_STATE_IDLE);
-				break;
+				return new CIdleState(m_pOwner);
 			default:
 				break;
 			}

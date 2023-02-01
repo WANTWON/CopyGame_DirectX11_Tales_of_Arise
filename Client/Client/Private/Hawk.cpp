@@ -13,6 +13,7 @@
 #include "HawkBattle_DeadState.h"
 #include "HawkSitOnState.h"
 #include "HawkBattle_DashState.h"
+#include "HawkBattle_IdleState.h"
 
 using namespace Hawk;
 
@@ -37,13 +38,29 @@ HRESULT CHawk::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	/* Set State */
-	CHawkState* pState = new CSitOnState(this);
-	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 
-	
+	if (m_bBattleMode)
+	{
+		/*Set_Battle State*/
+		CHawkState* pState = new CBattle_IdleState(this, CHawkState::STATE_ID::START_BATTLEMODE);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	}
+	else
+	{
+		//테스트코드///
+		/* Set State */
+		CHawkState* pState = new CIdleState(this, CHawkState::FIELD_STATE_ID::FIELD_STATE_END);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+
+
+		//원본코드 //
+		///* Set State */
+		//CHawkState* pState = new CSitOnState(this);
+		//m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	}
+
 	m_eMonsterID = HAWK;
 
 
@@ -58,6 +75,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
 	Check_NearTrigger();
 
+	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 	return S_OK;
 }
 
@@ -65,6 +83,8 @@ HRESULT CHawk::Initialize(void * pArg)
 
 HRESULT CHawk::Ready_Components(void * pArg)
 {
+	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
+
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
@@ -91,27 +111,47 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
 		return E_FAIL;
 
-	/* For.Com_Navigation */
-	CNavigation::NAVIDESC NaviDesc;
-	ZeroMemory(&NaviDesc, sizeof NaviDesc);
-	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
-		return E_FAIL;
+	///* For.Com_Navigation */
+	//CNavigation::NAVIDESC NaviDesc;
+	//ZeroMemory(&NaviDesc, sizeof NaviDesc);
+	//if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+	//	return E_FAIL;
 
 	/* For.Com_Sphere */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
+	ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
 	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
-	/* For.Com_Obb*/
+
+
+	switch (iLevel)
+	{
+	case Client::LEVEL_SNOWFIELD:
+		/* For.Com_Navigation */
+		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom)))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_BATTLE:
+		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom)))
+			return E_FAIL;
+		break;
+	default:
+		break;
+	}
+
+
+	///* For.Com_Obb*/
 	CCollider::COLLIDERDESC ObbColliderDesc;
 	ZeroMemory(&ObbColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ObbColliderDesc.vScale = _float3(7.f, 3.5f, 3.f);
 	ObbColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ObbColliderDesc)))
 		return E_FAIL;
+
+
 
 	return S_OK;
 }
@@ -123,12 +163,22 @@ int CHawk::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	if (true == m_bBattleMode && false == m_bDoneChangeState)
-	{
-		CHawkState* pState = new CBattle_IdleState(this, CHawkState::STATE_ID::START_BATTLEMODE);
-		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-		m_bDoneChangeState = true;
-	}
+	__super::Tick(fTimeDelta);
+
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+	AI_Behaviour(fTimeDelta);
+	Tick_State(fTimeDelta);
+
+	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
+
+
+	//if (true == m_bBattleMode && false == m_bDoneChangeState)
+	//{
+	//	CHawkState* pState = new CBattle_IdleState(this, CHawkState::STATE_ID::START_BATTLEMODE);
+	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	//	m_bDoneChangeState = true;
+	//}
 
 	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
 	//{
@@ -149,12 +199,7 @@ int CHawk::Tick(_float fTimeDelta)
 	//}
 
 
-	__super::Tick(fTimeDelta);
-	AI_Behaviour(fTimeDelta);
-	Tick_State(fTimeDelta);
 
-	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	return OBJ_NOEVENT;
 }
 

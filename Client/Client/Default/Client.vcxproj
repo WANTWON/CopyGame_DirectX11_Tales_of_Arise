@@ -258,7 +258,6 @@
     <ClInclude Include="..\public\IceWolfIdleState.h" />
     <ClInclude Include="..\Public\IceWolfState.h" />
     <ClInclude Include="..\Public\IceWolfTurnLeftState.h" />
-    <ClInclude Include="..\Public\IceWolfTurnRightState.h" />
     <ClInclude Include="..\public\IceWolfWalkState.h" />
     <ClInclude Include="..\Public\Ice_Wolf.h" />
     <ClInclude Include="..\Public\InteractObject.h" />
@@ -418,7 +417,6 @@
     <ClCompile Include="..\Private\IceWolfHowLingState.cpp" />
     <ClCompile Include="..\private\IceWolfIdleState.cpp" />
     <ClCompile Include="..\Private\IceWolfTurnLeftState.cpp" />
-    <ClCompile Include="..\Private\IceWolfTurnRightState.cpp" />
     <ClCompile Include="..\private\IceWolfWalkState.cpp" />
     <ClCompile Include="..\Private\Ice_Wolf.cpp" />
     <ClCompile Include="..\Private\InteractObject.cpp" />

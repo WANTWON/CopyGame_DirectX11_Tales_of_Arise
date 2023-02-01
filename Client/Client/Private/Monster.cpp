@@ -304,14 +304,14 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	m_tInfo.fCurrentHp -= (int)fDamage;
+	m_tStats.m_fCurrentHp-= (int)fDamage;
 
-	if (m_tInfo.fCurrentHp <= 0)
+	if (m_tStats.m_fCurrentHp <= 0)
 	{
-		m_tInfo.fCurrentHp = 0;
+		m_tStats.m_fCurrentHp = 0;
 		/*m_bDissolve = true;*/
 
-		return _int(m_tInfo.fCurrentHp);
+		return _int(m_tStats.m_fCurrentHp);
 
 	}
 
@@ -320,7 +320,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	m_dwHitTime = GetTickCount();
 
 
-	return _int(m_tInfo.fCurrentHp);
+	return _int(m_tStats.m_fCurrentHp);
 
 }
 

@@ -429,9 +429,6 @@
     <ClInclude Include="..\Public\IceWolfTurnLeftState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\IceWolfTurnRightState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Water.h">
       <Filter>02.GameObjects\02.NonAnim\03.Water</Filter>
     </ClInclude>
@@ -906,9 +903,6 @@
       <Filter>02.GameObjects\04.UI\06.MP_Guage</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfTurnLeftState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\IceWolfTurnRightState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Water.cpp">

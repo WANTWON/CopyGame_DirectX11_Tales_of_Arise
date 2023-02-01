@@ -67,7 +67,7 @@ CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 	if (4.5f < m_fTarget_Distance)
 	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.1f);
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.1f, m_pOwner->Get_Navigation());
 
 	}
 
