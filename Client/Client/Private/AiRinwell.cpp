@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "AiRinwell.h"
+#include "RinwellMoveState.h"
 #include "RinwellState.h"
 
-//using namespace AiRinwell;
+using namespace AiRinwell;
 
 CAiRinwell::CAiRinwell(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMonster(pDevice, pContext)
@@ -30,18 +31,11 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
-
 	m_tStats.m_fMaxHp = 10.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
 	m_tStats.m_fRunSpeed = 5.f;
-
-	///* Set State */
-	//CRinwellState* pState = new CIdleState(this, CBerserkerState::FIELD_STATE_ID::FIELD_STATE_IDLE);
-	//m_pState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-
 
 	if (pArg != nullptr)
 	{
@@ -54,8 +48,24 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
 	}
 
+
+	if (m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode())
+	{
+		/* Set State */
+		CRinwellState* pState = new AiRinwell::CMoveState(this);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+		m_pModelCom->Set_CurrentAnimIndex(BTL_ADVENT);
+		m_eAnim = BTL_ADVENT;
+
+	}
+	else
+	{
+		m_pModelCom->Set_CurrentAnimIndex(IDLE_CHARA);
+	}
+
+	
+
 	m_eMonsterID = RINWELL;
-	m_pModelCom->Set_CurrentAnimIndex(IDLE_CHARA);
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 	return S_OK;
 }
@@ -139,7 +149,16 @@ int CAiRinwell::Tick(_float fTimeDelta)
 
 	if (m_bBattleMode)
 	{
-		m_pModelCom->Play_Animation(fTimeDelta, true);
+		if (m_bMotion_Finished)
+		{
+			AI_Behavior(fTimeDelta);
+			Tick_State(fTimeDelta);
+		}
+		else
+		{
+			Battle_Animation(fTimeDelta);
+		}
+	
 	}
 	else
 	{
@@ -156,15 +175,11 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 		return;
 	__super::Late_Tick(fTimeDelta);
 
-//	if (m_pRendererCom)
-//		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+	if (m_bBattleMode && m_bMotion_Finished)
+	{
+		LateTick_State(fTimeDelta);
+	}
 
-	//if (m_bBattleMode)
-	//{
-	//	LateTick_State(fTimeDelta);
-	//}
-
-		
 
 }
 
@@ -222,6 +237,17 @@ void CAiRinwell::Field_Animation(_float fTimeDelta)
 	}
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+}
+
+void CAiRinwell::Battle_Animation(_float fTimeDelta)
+{
+	_bool isAnimationFinised = m_pModelCom->Play_Animation(fTimeDelta, Is_AnimationLoop(m_eAnim), "TransN");
+
+	if (isAnimationFinised)
+	{
+		m_bMotion_Finished = true;
+		m_pModelCom->Set_CurrentAnimIndex(DASH);
+	}
 }
 
 
@@ -345,12 +371,13 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 		break;
 	case Client::CAiRinwell::BTL_JUMP:
 		break;
-	case Client::CAiRinwell::DASH:
+	
 		break;
 	case Client::CAiRinwell::DASH_BRAKE_000:
 		break;
 	case Client::CAiRinwell::DASH_BRAKE_001:
 		break;
+	case Client::CAiRinwell::DASH:
 	case Client::CAiRinwell::IDLE:
 	case Client::CAiRinwell::IDLE_CHARA:
 	case Client::CAiRinwell::RUN:
@@ -485,5 +512,7 @@ CGameObject * CAiRinwell::Clone(void * pArg)
 void CAiRinwell::Free()
 {
 	__super::Free();
+
+	Safe_Delete(m_pState);
 
 }
