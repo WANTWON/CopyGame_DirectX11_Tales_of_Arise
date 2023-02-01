@@ -8,6 +8,7 @@
 #include "IceWolfAttackNormalState.h"
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
+#include "IceWolfAttackBiteState.h"
 
 using namespace IceWolf;
 
@@ -37,7 +38,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	if (m_bBattleMode)
 	{
 		/*Set_Battle State*/
-		CIceWolfState* pBattleState = new CBattle_IdleState(this);
+		CIceWolfState* pBattleState = new CBattle_IdleState(this, CIceWolfState::STATE_ID::START_BATTLE);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
 	else
@@ -51,7 +52,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_eMonsterID = ICE_WOLF;
 
 
-	m_tStats.m_fMaxHp = 3.f;
+	m_tStats.m_fMaxHp = 100.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -64,9 +65,12 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
 	Check_NearTrigger();
 
-	//테스트 코드
+
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), 90.f);
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	m_fTimeDletaAcc = 0;
+	m_fCntChanceTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
 	return S_OK;
 }
 
@@ -143,6 +147,9 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
+	if (m_fTimeDletaAcc > m_fCntChanceTime)
+		m_iRand = rand() % 3;
+
 	if (CUI_Manager::Get_Instance()->Get_StopTick() /*|| !Check_IsinFrustum(2.f)*/)
 		return OBJ_NOEVENT;
 
@@ -241,6 +248,7 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 
 _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
+
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
@@ -256,9 +264,49 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	}
 	else
 	{
-		m_pModelCom->Set_TimeReset();
-		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
-		m_pState = m_pState->ChangeState(m_pState, pState);
+		m_iBeDamaged_Cnt++;
+
+		if (m_iBeDamaged_Cnt != 3)
+		{
+			switch (m_iRand)
+			{
+			case 0:
+			{
+				m_pModelCom->Set_TimeReset();
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+				break;
+			}
+			case 1:
+			{
+				m_pModelCom->Set_TimeReset();
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+				break;
+			}
+
+			case 2:
+			{
+				m_pModelCom->Set_TimeReset();
+				CIceWolfState* pState = new CAttackBiteState(this);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+				break;
+			}
+
+			default:
+				break;
+
+			}
+		}
+
+		else
+		{
+			m_pModelCom->Set_TimeReset();
+			CIceWolfState* pState = new CBattle_SomerSaultState(this);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+			m_iBeDamaged_Cnt = 0;
+		}
+
 	}
 
 	return iHp;

@@ -34,6 +34,8 @@ public:
 private:
 	_uint			m_iRand = 0;
 	_float			m_fIdleAttackTimer = 0.f;
+	_float			m_fCntChance= 0.f;
+	_float			m_fCntChanceTime = 0.f;
 	DAMAGE_ANIM		m_eDamageAnim = ANIM_DAMAGE_LARGE_B;
 
 private:

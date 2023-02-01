@@ -257,7 +257,7 @@ PS_OUT PS_HORIZONTAL_BLUR(PS_IN In)
 	PS_OUT Out = (PS_OUT)0;
 
 	float2 vTexUVOffset = 0;
-	float texelSizeX = g_fGlowRadius / g_fWinSizeX; /* Get the size of a Texel Horizontally. */
+	float texelSizeX = g_fGlowRadius /*1*/ / g_fWinSizeX; /* Get the size of a Texel Horizontally. */
 
 	for (int i = -WeightCount; i < WeightCount; ++i)
 	{
@@ -275,7 +275,7 @@ PS_OUT PS_VERTICAL_BLUR(PS_IN In)
 	PS_OUT Out = (PS_OUT)0;
 	
 	float2 vTexUVOffset = 0;				
-	float texelSizeY = g_fGlowRadius / g_fWinSizeY; /* Get the size of a Texel Vertically. */
+	float texelSizeY = g_fGlowRadius /*1*/ / g_fWinSizeY; /* Get the size of a Texel Vertically. */
 
 	for (int i = -WeightCount; i < WeightCount; ++i)
 	{

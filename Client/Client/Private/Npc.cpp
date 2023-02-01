@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 
 
+
 CNpc::CNpc(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
 {
@@ -63,6 +64,9 @@ void CNpc::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || Check_IsinFrustum(2.f) == false)
 		return;
 	__super::Late_Tick(fTimeDelta);
+
+	
+
 
 	if (nullptr != m_pRendererCom)
 	{

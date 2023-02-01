@@ -39,7 +39,9 @@ protected: /* For Component */
 	CModel*					m_pModelCom = nullptr;
 	CNavigation*			m_pNavigationCom = nullptr;
 	_bool	m_bIsFirst = true;
+	_bool  m_bCollision = false;
 
+	_bool m_bIsFirst_conversation = false;
 protected:
 	virtual HRESULT Ready_Components(void* pArg) PURE;
 	virtual HRESULT SetUp_ShaderResources();

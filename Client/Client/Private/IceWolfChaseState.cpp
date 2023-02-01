@@ -35,7 +35,7 @@ CIceWolfState * CChaseState::LateTick(_float fTimeDelta)
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
 
 	if (m_fTarget_Distance >= 15.f)
 		return new CIdleState(m_pOwner, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE);

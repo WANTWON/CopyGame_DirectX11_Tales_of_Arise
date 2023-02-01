@@ -4,12 +4,17 @@
 #include "GameInstance.h"
 #include "HawkChaseState.h"
 #include "HawkIdleState.h"
+#include "HawkWalkState.h"
 
 using namespace Hawk;
 
 CTurnR_State::CTurnR_State(CHawk* pIceWolf)
 {
 	m_pOwner = pIceWolf;
+
+	m_fTimeDletaAcc = 0;
+	m_fTurnR_Time = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
+	
 }
 
 CHawkState * CTurnR_State::AI_Behaviour(_float fTimeDelta)
@@ -36,19 +41,43 @@ CHawkState * CTurnR_State::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
+
 	return nullptr;
 }
 
 CHawkState * CTurnR_State::LateTick(_float fTimeDelta)
 {
+	m_fTimeDletaAcc += fTimeDelta;
+
+	if (m_fTimeDletaAcc > m_fTurnR_Time)
+		m_iRand = rand() % 2;
 
 	if (m_pTarget)
 		return new CChaseState(m_pOwner);
 
-	if (m_bIsAnimationFinished)
+	else if (m_bIsAnimationFinished)
 	{
-		return new CIdleState(m_pOwner, CHawkState::FIELD_STATE_ID::STATE_TURN_R);
+		//나의 트리거 박스랑 충돌안했을떄
+		CBaseObj* pTrigger = m_pOwner->Get_Trigger();
+
+		if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == false)
+			return new CWalkState(m_pOwner,true);
+		else
+		{
+			switch (m_iRand)
+			{
+			case 0:
+				return new CWalkState(m_pOwner);
+			case 1:
+				return new CIdleState(m_pOwner);
+			default:
+				break;
+			}
+		}
+
+
 	}
+		
 	return nullptr;
 }
 

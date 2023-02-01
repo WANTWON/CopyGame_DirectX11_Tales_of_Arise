@@ -17,6 +17,8 @@ public:
 		_uint m_eSpawnType = 0;
 		_bool m_bBillboard = false;
 		_float3 m_vColor = _float3(0.f, 0.f, 0.f);
+		_float m_fAlpha = 1.f;
+		_float m_fAlphaDiscard = 0.f;
 		_int m_iMaxParticles = 1000.f;
 		_float m_fParticlesLifetime = 1.f;
 		_float m_fParticlesPerSecond = 1.f;
@@ -81,6 +83,7 @@ private:
 
 	void EmitParticles(_float fTimeDelta);
 	void UpdateParticles(_float fTimeDelta);
+	void SortParticles();
 	
 	void VelocityLerp(_uint iParticleIndex);
 	void SizeLerp(_uint iParticleIndex);

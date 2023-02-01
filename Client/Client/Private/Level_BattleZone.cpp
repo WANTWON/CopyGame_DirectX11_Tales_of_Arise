@@ -48,10 +48,15 @@ HRESULT CLevel_BattleZone::Initialize()
 	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Battle_UI(TEXT("Layer_UI"))))
+		return E_FAIL;
+
+	
+
 	//if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
 	//	return E_FAIL;
 
-
+	
 
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
@@ -74,7 +79,6 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 
 		LEVEL eNextLevel = LEVEL_SNOWFIELD;
 
-		CPlayerManager::Get_Instance()->Save_LastPosition();
 		m_pCollision_Manager->Clear_AllCollisionGroup();
 		pGameInstance->Set_DestinationLevel(eNextLevel);
 
@@ -96,7 +100,7 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 	if (iMonsterSize == 0)
 		CBattleManager::Get_Instance()->Set_BattleMode(false);
 
-
+	CCollision_Manager::Get_Instance()->CollisionwithBullet();
 }
 
 HRESULT CLevel_BattleZone::Ready_Lights()
@@ -241,6 +245,13 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		case Client::SLIME:
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_BATTLE, pLayerTag, &ModelDesc.vPosition)))
 				return E_FAIL;
+			break;
+		case Client::RINWELL:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
+				return E_FAIL;
+			CloseHandle(hFile);
+			RELEASE_INSTANCE(CGameInstance);
+			return S_OK;
 			break;
 		default:
 			break;
@@ -452,6 +463,83 @@ HRESULT CLevel_BattleZone::Ready_Layer_DecoObject(const _tchar * pLayerTag)
 	Safe_Release(pGameInstance);
 
 	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
+{
+
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+
+	_int numcreate = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
+
+	for (int i = 0; i < numcreate; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar"), LEVEL_BATTLE, pLayerTag, &i)))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont"), LEVEL_BATTLE, pLayerTag, &i)))
+			return E_FAIL;
+
+	}
+
+
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Comboline"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Damagesfont"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_font"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	/*for (int i = 0; i < 6; ++i)
+	{
+	_uint number = i;
+
+	*/
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_fontnum"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MPguage"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitback"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_top"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_right"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_bottom"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_left"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_button"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_change_button"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_LOCKON"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	RELEASE_INSTANCE(CGameInstance);
+
 	return S_OK;
 }
 

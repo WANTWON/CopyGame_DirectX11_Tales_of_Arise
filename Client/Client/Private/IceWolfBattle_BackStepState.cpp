@@ -37,7 +37,7 @@ CIceWolfState * CBattle_BackStepState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-	m_fDegreeToTarget = RadianToTarget();
+	//m_fDegreeToTarget = RadianToTarget();
 	return nullptr;
 }
 
@@ -51,7 +51,7 @@ CIceWolfState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 
 void CBattle_BackStepState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_IDLE;
+	//m_eStateId = STATE_ID::STATE_IDLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_STEP_BACK);
 }

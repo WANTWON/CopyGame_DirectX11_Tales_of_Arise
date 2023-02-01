@@ -59,8 +59,10 @@ public: /*Getter Setter*/
 	CUI_Dialoguepopup* Get_Dialoguepopup() { return m_pDialoguepopup; }*/
 	CUI_Base*	 Get_Dialogue() { return m_pDialogue; }
 	CUI_Base*    Get_Dialoguepopup() { return m_pDialoguepopup; }
+	CUI_Base*    Get_System_msg() { return m_pSystemmsg; }
 	void Set_Dialogue(CUI_Base* pointer) { m_pDialogue = pointer; }
 	void Set_Dialoguepopup(CUI_Base* pointer) { m_pDialoguepopup = pointer; }
+	void Set_SystemMsg(CUI_Base* pointer) { m_pSystemmsg = pointer; }
 
 	
 	void PlusGald(_uint gald) { m_iGald += gald; }
@@ -78,6 +80,16 @@ public: /*Getter Setter*/
 	void Set_StopTick(_bool onoff) { m_bStopTick = onoff; }
 	_bool Get_StopTick() { return m_bStopTick; }
 
+	_uint Get_QuestIndex() { return m_iQuestIndex; }
+	_uint Get_Quest1_Lettuce() { return m_iQuest1_Lettuce; }
+	_uint Get_Quest1_Herb() { return m_iQuest1_Herb; }
+	
+	void Plus_Quest1_Lettuce() { ++m_iQuest1_Lettuce; }
+	void Plus_Quest1_Herb() { ++m_iQuest1_Herb; }
+	void Set_QuestIndex(_uint num) { m_iQuestIndex = num; }
+
+	_bool Get_QuestComplete(_uint num) { return m_bQuestComplete[num]; }
+	void Set_QuestComplete(_uint num, _bool tof) { m_bQuestComplete[num] = tof; }
 	//void Read_TextFiles_for_dialogue();
 
 	//wchar_t* ConverCtoWC(char* str);
@@ -99,6 +111,7 @@ private:
 
 	CUI_Base* m_pDialogue = nullptr;
 	CUI_Base* m_pDialoguepopup = nullptr;
+	CUI_Base* m_pSystemmsg = nullptr;
 
 	list<CUI_Base*>m_pItempopup;
 	//CUI_Base* m_pDialogue
@@ -111,14 +124,19 @@ private:
 
 	_bool m_bMainMenuon = false; 
 	_bool m_bStopTick = false;;
+
+	_uint m_iQuestIndex = 0; // que
+
+	_uint m_iQuest1_Lettuce = 0;
+	_uint m_iQuest1_Herb = 0;
+
+	_bool m_bQuestComplete[8] = { false,false, false, false, false, false, false, false };
 //private:
 //	_uint iplayer0_hp = 0;
 //	_uint iplayer1_hp = 0;
 //	_uint iplayer2_hp = 0;
 //	_uint iplayer3_hp = 0;
-	_tchar					m_szFPS[MAX_PATH] = TEXT("");
-	char fuck[256];
-	vector<_tchar*> testvec;
+	
 
 
 public:

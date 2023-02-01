@@ -39,8 +39,8 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -83,7 +83,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_MINUS))
 	{
-		CBattleManager::Get_Instance()->Set_BattleMode(true, ICE_WOLF);
+		CBattleManager::Get_Instance()->Set_BattleMode(true, RINWELL);
 	}
 
 
@@ -194,7 +194,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	NONANIMDESC ModelDesc;
-
+	vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
 	_uint iNum = 0;
 
 	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Monster.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -212,32 +212,68 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 		if (!wcscmp(pModeltag, TEXT("Ice_Wolf")))
 		{
+			for (auto& iter : vecFightedMonster)
+			{
+				if (iter == ICE_WOLF)
+					m_bNotCreate = true;
+			}
+			if (m_bNotCreate)
+				continue;
+
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
 				return E_FAIL;
 		}
-		else if (!wcscmp(pModeltag, TEXT("Hawk")))
+		/*else */if (!wcscmp(pModeltag, TEXT("Hawk")))
 		{
+			for (auto& iter : vecFightedMonster)
+			{
+				if (iter == HAWK)
+					m_bNotCreate = true;
+			}
+			if (m_bNotCreate)
+				continue;
 			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
 			//	return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Berserker")))
 		{
-		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
-			//	return E_FAIL;
+			for (auto& iter : vecFightedMonster)
+			{
+				if (iter == BERSERKER)
+					m_bNotCreate = true;
+			}
+			if (m_bNotCreate)
+				continue;
+			//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+				//	return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Slime")))
 		{
+			for (auto& iter : vecFightedMonster)
+			{
+				if (iter == SLIME)
+					m_bNotCreate = true;
+			}
+			if (m_bNotCreate)
+				continue;
 			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vScale)))
 			//	return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Rinwell")))
 		{
+			for (auto& iter : vecFightedMonster)
+			{
+				if (iter == RINWELL)
+					m_bNotCreate = true;
+			}
+			if (m_bNotCreate)
+				continue;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
 				return E_FAIL;
 		}
 
 	}
-	
+
 	CloseHandle(hFile);
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -276,7 +312,7 @@ HRESULT CLevel_SnowField::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	
+
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -336,9 +372,9 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI"), LEVEL_SNOWFIELD, pLayerTag)))
 		return E_FAIL;*/
 
-	
 
-	_int numcreate = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
+
+	/*_int numcreate = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
 
 	for (int i = 0; i < numcreate; ++i)
 	{
@@ -351,25 +387,28 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 			return E_FAIL;
 
 	}
-
-
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Comboline"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Damagesfont"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_font"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-
-	/*for (int i = 0; i < 6; ++i)
-	{
-		_uint number = i;
 */
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag)))
-			return E_FAIL;
+
+
+//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Comboline"), LEVEL_STATIC, pLayerTag)))
+//		return E_FAIL;
+//
+//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Damagesfont"), LEVEL_STATIC, pLayerTag)))
+//		return E_FAIL;
+//
+//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_font"), LEVEL_STATIC, pLayerTag)))
+//		return E_FAIL;
+//
+//	/*for (int i = 0; i < 6; ++i)
+//	{
+//		_uint number = i;
+//*/
+//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag)))
+//			return E_FAIL;
 	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
 
 	//}
 
@@ -378,10 +417,10 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	//	{
 	//		_uint number = i;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_fontnum"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_fontnum"), LEVEL_STATIC, pLayerTag)))
+	//	return E_FAIL;
 
-	//	}
+	////	}
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
@@ -390,15 +429,15 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	{
 		_uint number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_STATIC, pLayerTag,&i)))//, &i)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_STATIC, pLayerTag, &i)))//, &i)))
 			return E_FAIL;
 
 	}
 
 
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MPguage"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MPguage"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;*/
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar_World"), LEVEL_SNOWFIELD, pLayerTag)))
 		return E_FAIL;*/
 
@@ -432,9 +471,9 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_change_button"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
-*/
+
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_LOCKON"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MENU_BACK"), LEVEL_SNOWFIELD, pLayerTag)))
 		return E_FAIL;
@@ -445,10 +484,21 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Dialoguepopup"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_INTERECTMSG"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTMESSAGE"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+*/
+	
+	
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;*/
 
-	
+
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -755,7 +805,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Trigger(const _tchar * pLayerTag)
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trigger"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
 			return E_FAIL;
-		
+
 	}
 
 	CloseHandle(hFile);

@@ -65,7 +65,7 @@ private:
 
 	_tchar					m_szTXT[MAX_PATH] = TEXT("");
 	char fuck[256];
-	vector<_tchar*> m_vDialogue[2];  // m_vDialogue[0] m_vDialogue[1]
+	vector<_tchar*> m_vDialogue[7];  // m_vDialogue[0] m_vDialogue[1]
 
 	vector<_tchar*> m_vDialouge1[2];
 
