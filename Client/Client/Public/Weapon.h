@@ -3,13 +3,10 @@
 #include "Client_Defines.h"
 #include "BaseObj.h"
 
-
 BEGIN(Engine)
 class CModel;
 class CHierarchyNode;
-
 END
-
 
 BEGIN(Client)
 

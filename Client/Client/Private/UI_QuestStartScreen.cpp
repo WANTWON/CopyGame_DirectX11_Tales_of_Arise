@@ -559,8 +559,6 @@ void CUI_QuestStartScreen::Free()
 	Safe_Release(m_pTextureCom3);
 	Safe_Release(m_pTextureCom4);
 	Safe_Release(m_pTextureCom5);
-
-
 	__super::Free();
 }
 
