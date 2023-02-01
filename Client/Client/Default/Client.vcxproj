@@ -206,6 +206,8 @@
     <ClInclude Include="..\Public\EffectMesh.h" />
     <ClInclude Include="..\Public\EffectTexture.h" />
     <ClInclude Include="..\Public\Rinwell.h" />
+    <ClInclude Include="..\Public\RinwellAttackState.h" />
+    <ClInclude Include="..\Public\RinwellDamageState.h" />
     <ClInclude Include="..\Public\RinwellMoveState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
@@ -373,6 +375,8 @@
     <ClCompile Include="..\Private\EffectMesh.cpp" />
     <ClCompile Include="..\Private\EffectTexture.cpp" />
     <ClCompile Include="..\Private\Rinwell.cpp" />
+    <ClCompile Include="..\Private\RinwellAttackState.cpp" />
+    <ClCompile Include="..\Private\RinwellDamageState.cpp" />
     <ClCompile Include="..\Private\RinwellMoveState.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />

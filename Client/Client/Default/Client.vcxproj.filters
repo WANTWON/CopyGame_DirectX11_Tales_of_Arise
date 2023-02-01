@@ -801,6 +801,12 @@
     <ClInclude Include="..\Public\RinwellMoveState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RinwellAttackState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellDamageState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1269,6 +1275,12 @@
       <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\RinwellMoveState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellDamageState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>

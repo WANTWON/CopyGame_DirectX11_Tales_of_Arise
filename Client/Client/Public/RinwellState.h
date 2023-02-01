@@ -14,6 +14,8 @@ public:
 	{
 		STATE_IDLE,
 		STATE_MOVE,
+		STATE_ATTACK,
+		STATE_DAMAGE,
 	};
 
 	virtual ~CRinwellState() {};
@@ -44,12 +46,31 @@ public:
 	void Reset_Target() { m_pTarget = nullptr; }
 
 protected:
-	virtual _float Find_Target()
+	virtual _float Find_ActiveTarget()
 	{
 		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 
 		m_pTarget = pPlayer;
 		_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+		return fDistance;
+	}
+
+	virtual _float Find_Target(_uint Index)
+	{
+		
+		vector<CPlayer*> pPlayerList = CPlayerManager::Get_Instance()->Get_AIPlayers();
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		pPlayerList.push_back(pPlayer);
+
+		if (Index >= pPlayerList.size())
+			m_pTarget = pPlayer;
+		else
+			m_pTarget = pPlayerList[Index];
+
+		_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
 		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
