@@ -12,6 +12,7 @@
 #include "BerserkerBattle_Quadruple_ClawState.h"
 #include "BerserkerBattle_DashStartState.h"
 #include "BerserkerBattle_Shock_WaveState.h"
+#include "BerserkerWalkState.h"
 
 using namespace Berserker;
 
@@ -36,12 +37,22 @@ HRESULT CBerserker::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	/* Set State */
-	CBerserkerState* pState = new CIdleState(this, CBerserkerState::FIELD_STATE_ID::FIELD_STATE_IDLE);
-	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	if (m_bBattleMode)
+	{
+		/*Set_Battle State*/
+		CBerserkerState* pBattleState = new CBattle_IdleState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pBattleState);
+	}
+	else
+	{
+		/* Set State */
+		CBerserkerState* pState = new CWalkState(this, CBerserkerState::FIELD_STATE_ID::FIELD_STATE_END);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
 
+	
 	m_tStats.m_fMaxHp = 3;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
@@ -50,10 +61,15 @@ HRESULT CBerserker::Initialize(void * pArg)
 
 	_vector vPosition = *(_vector*)pArg;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	
+	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 2.0f);
+	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, 2.0f);
+	//m_pTransformCom->Set_Scale(CTransform::STATE_LOOK, 2.0f);
 
 	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
 	Check_NearTrigger();
 
+	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 	return S_OK;
 }
 
@@ -61,6 +77,8 @@ HRESULT CBerserker::Initialize(void * pArg)
 
 HRESULT CBerserker::Ready_Components(void * pArg)
 {
+	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
+
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
@@ -94,27 +112,43 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
+	ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 1.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 
-	/* For.Com_Obb*/
-	CCollider::COLLIDERDESC ObbColliderDesc;
-	ZeroMemory(&ObbColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ObbColliderDesc.vScale = _float3(7.f, 3.5f, 3.f);
-	ObbColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ObbColliderDesc)))
-		return E_FAIL;
+	///* For.Com_Obb*/
+	//CCollider::COLLIDERDESC ObbColliderDesc;
+	//ZeroMemory(&ObbColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	//ObbColliderDesc.vScale = _float3(7.f, 3.5f, 3.f);
+	//ObbColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
+	//if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ObbColliderDesc)))
+	//	return E_FAIL;
 
 
 	/* For.Com_Navigation */
-	CNavigation::NAVIDESC NaviDesc;
-	ZeroMemory(&NaviDesc, sizeof NaviDesc);
-	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
-		return E_FAIL;
+	switch (iLevel)
+	{
+	case Client::LEVEL_SNOWFIELD:
+		/* For.Com_Navigation */
+		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom)))
+			return E_FAIL;
+		break;
+	case Client::LEVEL_BATTLE:
+		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom)))
+			return E_FAIL;
+		break;
+	default:
+		break;
+	}
+
+	//이전코드
+	//CNavigation::NAVIDESC NaviDesc;
+	//ZeroMemory(&NaviDesc, sizeof NaviDesc);
+	//if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -127,14 +161,14 @@ int CBerserker::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	AI_Behavior(fTimeDelta);
 
-	if (true == m_bBattleMode && false == m_bDoneChangeState)
-	{
-		CBerserkerState* pState = new CBattle_IdleState(this);
-		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-		m_bDoneChangeState = true;
-	}
+
+	__super::Tick(fTimeDelta);
+
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+	AI_Behavior(fTimeDelta);
+	Tick_State(fTimeDelta);
+
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
 	{
@@ -185,9 +219,8 @@ int CBerserker::Tick(_float fTimeDelta)
 	}
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
-	__super::Tick(fTimeDelta);
-	Tick_State(fTimeDelta);
+	//m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
+
 
 	return OBJ_NOEVENT;
 }
@@ -257,30 +290,27 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 
 _int CBerserker::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-	if (fDamage > 0.f)
-	{
-			if (m_tStats.m_fCurrentHp - fDamage <= 0.f)
-			{
-				m_tStats.m_fCurrentHp = 0.f;
+	if (fDamage <= 0 || m_bDead)
+		return 0;
 
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+
+			if (iHp <= 0)
+			{
 				m_pModelCom->Set_TimeReset(); 
 				CBerserkerState* pState = new CBattle_DeadState(this);
 				m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+
+				return 0;
 			}
 			else
 			{
-				if (false == m_bOnGoingHowLing || false == m_bOnGoingAnim)
-				{
-					m_tStats.m_fCurrentHp -= fDamage;
-
 					m_pModelCom->Set_TimeReset();
 					CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, m_bOnAngry);
 					m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-				}
 			}
-	}
 
-	return fDamage;
+			return iHp;
 }
 
 HRESULT CBerserker::SetUp_ShaderID()

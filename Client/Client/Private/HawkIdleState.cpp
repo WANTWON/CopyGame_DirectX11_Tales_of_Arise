@@ -8,12 +8,16 @@
 #include "HawkBraveState.h"
 #include "HawkSitOnState.h"
 
+
 using namespace Hawk;
 \
 CIdleState::CIdleState(CHawk* pIceWolf, FIELD_STATE_ID ePreState)
 {
 	m_pOwner = pIceWolf;
 	m_ePreState_Id = ePreState;
+
+	m_fTimeDletaAcc = 0;
+	m_fIdleTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CHawkState * CIdleState::AI_Behaviour(_float fTimeDelta)
@@ -27,13 +31,11 @@ CHawkState * CIdleState::Tick(_float fTimeDelta)
 	
 	Find_Target();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
-	if (!m_bIsAnimationFinished)
-	{
 
-		m_pOwner->Check_Navigation();
-	}
+	m_pOwner->Check_Navigation();
+	
 
 
 
@@ -42,7 +44,9 @@ CHawkState * CIdleState::Tick(_float fTimeDelta)
 
 CHawkState * CIdleState::LateTick(_float fTimeDelta)
 {
-	m_fIdleMoveTimer += fTimeDelta;
+	
+
+	m_fTimeDletaAcc += fTimeDelta;
 
 	if (m_pTarget)
 	{
@@ -50,6 +54,38 @@ CHawkState * CIdleState::LateTick(_float fTimeDelta)
 	}
 
 	else
+	{
+		if (m_fTimeDletaAcc > m_fIdleTime)
+		{
+			switch (rand() % 3)
+			{
+			case 0:
+				return new CWalkState(m_pOwner);
+			case 1:
+				return new CIdleState(m_pOwner, FIELD_STATE_END);
+			case 2:
+				return new CTurnR_State(m_pOwner);
+	/*		case 3:
+				return new CTurnR_State(m_pOwner);*/
+			default:
+				break;
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	// 수정 전 코드 
+	/*else
 	{
 		if (m_fIdleMoveTimer > 5.f)
 		{
@@ -74,7 +110,7 @@ CHawkState * CIdleState::LateTick(_float fTimeDelta)
 
 		}
 			
-	}
+	}*/
 
 
 

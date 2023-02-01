@@ -10,6 +10,10 @@ using namespace IceWolf;
 CTurnLeftState::CTurnLeftState(class CIce_Wolf* pIceWolf)
 {
 	m_pOwner = pIceWolf;
+
+
+	m_fTimeDletaAcc = 0;
+	m_fTurnLeftTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CIceWolfState * CTurnLeftState::AI_Behaviour(_float fTimeDelta)
@@ -41,18 +45,30 @@ CIceWolfState * CTurnLeftState::Tick(_float fTimeDelta)
 
 CIceWolfState * CTurnLeftState::LateTick(_float fTimeDelta)
 {
-	
+	m_fTimeDletaAcc += fTimeDelta;
+
+	if (m_fTimeDletaAcc > m_fTurnLeftTime)
+		m_iRand = rand() % 4;
 	
 	if (m_pTarget)
 	{
 		return new CChaseState(m_pOwner);
 	}
 
-	if (m_bIsAnimationFinished)
-	{	
-		
-		return new CIdleState(m_pOwner, STATE_TURN_L);
-	}
+	else if (m_bIsAnimationFinished)
+		switch (m_iRand)
+		{
+		case 0:
+			return new CWalkState(m_pOwner, FIELD_STATE_END);
+		case 1:
+			return new CIdleState(m_pOwner);
+		case 2:
+			return new CWalkState(m_pOwner, FIELD_STATE_END);
+		case 3:
+			return new CIdleState(m_pOwner);
+		default:
+			break;
+		}
 
 
 

@@ -744,6 +744,12 @@
     <ClInclude Include="..\Public\BattleManager.h">
       <Filter>06.BattleManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BerserkerTrigger_TurnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HawkTrigger_TurnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1189,6 +1195,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\BattleManager.cpp">
       <Filter>06.BattleManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerTrigger_TurnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HawkTrigger_TurnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\FieldStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

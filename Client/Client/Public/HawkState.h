@@ -16,6 +16,7 @@ public:
 		STATE_TURN_L,
 		STATE_TURN_R,
 		STATE_BRAVE,
+		FIELD_STATE_END,
 	};
 
 	enum STATE_ID

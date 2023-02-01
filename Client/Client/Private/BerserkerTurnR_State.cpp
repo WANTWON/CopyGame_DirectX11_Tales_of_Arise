@@ -5,11 +5,17 @@
 #include "GameInstance.h"
 #include "BerserkerChaseState.h"
 #include "BerserkerTurnR_State.h"
+#include "BerserkerHowLing_State.h"
+#include "BerserkerWalkState.h"
+
 using namespace Berserker;
 
 CTurnR_State::CTurnR_State(CBerserker* pIceWolf)
 {
 	m_pOwner = pIceWolf;
+
+	m_fTimeDletaAcc = 0;
+	m_fTurnR_Time = ((rand() % 8000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CBerserkerState * CTurnR_State::AI_Behaviour(_float fTimeDelta)
@@ -24,13 +30,57 @@ CBerserkerState * CTurnR_State::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
+
 
 	return nullptr;
 }
 
 CBerserkerState * CTurnR_State::LateTick(_float fTimeDelta)
 {
+
+	m_fTimeDletaAcc += fTimeDelta;
+
+	if (m_fTimeDletaAcc > m_fTurnR_Time)
+		m_iRand = rand() % 2;
 	
+	if (m_pTarget)
+	{
+		return new CChaseState(m_pOwner);
+	}
+
+	else if (m_bIsAnimationFinished)
+		switch (m_iRand)
+		{
+		case 0:
+			return new CWalkState(m_pOwner, FIELD_STATE_END, false);
+		case 1:
+			return new CHowLing_State(m_pOwner);
+		/*case 2:
+			return new CHowLing_State(m_pOwner);*/
+
+		default:
+			break;
+		}
+
+
+
+
+
+
+	//이전코드 ///
+
+	/*
 	if (m_pTarget)
 		return new CChaseState(m_pOwner);
 
@@ -49,7 +99,7 @@ CBerserkerState * CTurnR_State::LateTick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
-	}
+	}*/
 	return nullptr;
 }
 

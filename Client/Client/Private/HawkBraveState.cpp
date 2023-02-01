@@ -4,12 +4,17 @@
 #include "GameInstance.h"
 #include "HawkChaseState.h"
 #include "HawkIdleState.h"
+#include "HawkWalkState.h"
 
 using namespace Hawk;
 
 CBraveState::CBraveState(CHawk* pIceWolf)
 {
 	m_pOwner = pIceWolf;
+
+	
+	m_fTimeDletaAcc = 0.f;
+	m_fBraveTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CHawkState * CBraveState::AI_Behaviour(_float fTimeDelta)
@@ -43,13 +48,27 @@ CHawkState * CBraveState::Tick(_float fTimeDelta)
 CHawkState * CBraveState::LateTick(_float fTimeDelta)
 {
 
+	m_fTimeDletaAcc += fTimeDelta;
+
+	if (
+		m_fTimeDletaAcc > m_fBraveTime)
+		m_iRand = rand() % 2;
+
+
 	if (m_pTarget)
 		return new CChaseState(m_pOwner);
 
-	if (m_bIsAnimationFinished)
-	{
-		return new CIdleState(m_pOwner, CHawkState::FIELD_STATE_ID::STATE_BRAVE);
-	}
+	else if (m_bIsAnimationFinished)
+		switch (m_iRand)
+		{
+		case 0:
+			return new CWalkState(m_pOwner);
+		case 1:
+			return new CIdleState(m_pOwner);
+
+		default:
+			break;
+		}
 	return nullptr;
 }
 
