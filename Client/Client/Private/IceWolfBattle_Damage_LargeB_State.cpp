@@ -34,7 +34,6 @@ CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 {
 	m_iRand = rand() % 2;
 	
-	
 	if (m_bIsAnimationFinished)
 	{
 		switch (m_iRand)

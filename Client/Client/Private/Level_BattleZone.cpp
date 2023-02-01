@@ -18,9 +18,12 @@ CLevel_BattleZone::CLevel_BattleZone(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 HRESULT CLevel_BattleZone::Initialize()
 {
+	MONSTER_ID eMonsterID = CBattleManager::Get_Instance()->Get_MonsterType();
+	CBattleManager::Get_Instance()->Set_BattleMode(true, eMonsterID);
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-
+	
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
@@ -56,7 +59,7 @@ HRESULT CLevel_BattleZone::Initialize()
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
-
+	
 	return S_OK;
 }
 
@@ -213,7 +216,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	int a = 0;
 
-	for (_uint i = 0; i < iNum; ++i)
+	for (_uint i = 0; i < iNum - 2; ++i)
 	{
 		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 		_tchar pModeltag[MAX_PATH];
