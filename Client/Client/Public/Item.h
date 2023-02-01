@@ -39,8 +39,6 @@ private:
 	_bool m_bfirst = false;
 	
 
-	ITEMDESC m_ItemDesc;
-	_bool m_bIsGain = false;
 
 	class CEffect* m_pPickupFlares = nullptr;
 	class CEffect* m_pPickupFlash = nullptr;

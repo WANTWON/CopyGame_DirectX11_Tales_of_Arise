@@ -172,8 +172,12 @@ int CUI_QuestClear::Tick(_float fTimeDelta)
 		CUI_Manager::Get_Instance()->PlusGald(5);
 		m_bUpgaldcount -= 5;
 
-		if(m_bUpgaldcount <= 0)
+		if (m_bUpgaldcount <= 0)
+		{
 			m_bDeadtimeron = true;
+			m_bGaldup = false;
+		}
+			
 	}
 
 
