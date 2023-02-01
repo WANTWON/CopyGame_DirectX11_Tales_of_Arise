@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Level_Manager.h"
 #include "CameraManager.h"
+#include "Effect.h"
 
 CInteractObject::CInteractObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBaseObj(pDevice, pContext)
@@ -133,9 +134,9 @@ HRESULT CInteractObject::Drop_Items()
 	int iRadomItem = rand() % 3;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
-
+	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();	
 	RELEASE_INSTANCE(CGameInstance);
+
 	return S_OK;
 }
 

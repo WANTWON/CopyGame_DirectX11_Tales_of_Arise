@@ -205,12 +205,12 @@ private:
 	vector<string> m_SpawnTypes = { "LOOP", "BURST" };
 	string m_sCurrentSpawnType = "LOOP";
 
-	vector<string> m_Shaders = { "SHADER_DEFAULT", "SHADER_ALPHAMASK" };
-	vector<string> m_ShadersMesh = { "SHADER_DEFAULT", "SHADER_ALPHAMASK" };
-	string m_sCurrentShader = m_Shaders[0];
+	vector<string> m_ShadersTexture = { "SHADER_DEFAULT", "-", "SHADER_ALPHAMASK" };
+	vector<string> m_ShadersMesh = { "SHADER_DEFAULT", "-", "-", "-", "SHADER_EFFECT" };
+	vector<string> m_ShadersParticle = { "SHADER_DEFAULT", "SHADER_ALPHAMASK", "SHADER_DISTORTION" };
+	string m_sCurrentShaderTexture = m_ShadersTexture[0];
 	string m_sCurrentShaderMesh = m_ShadersMesh[0];
-
-	_bool m_bBillboard = true;
+	string m_sCurrentShaderParticle = m_ShadersParticle[0];
 
 	CEffectTexture::TEXTUREEFFECTDESC m_tTextureEffectDesc;
 	CEffectMesh::MESHEFFECTDESC m_tMeshEffectDesc;
