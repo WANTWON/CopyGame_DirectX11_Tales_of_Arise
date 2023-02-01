@@ -252,6 +252,23 @@ void CMonster::Find_Target()
 	}
 }
 
+CBaseObj* CMonster::Find_MinDistance_Target()
+{
+	list<CGameObject*>* pPlayerList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	for (auto& iter : *pPlayerList)
+	{
+		_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		if (m_fMinLengh > fDistance)
+		{
+			m_fMinLengh = fDistance;
+			m_pTarget = dynamic_cast<CBaseObj*>(iter);
+		}
+	}
+
+	return m_pTarget;
+}
+
 HRESULT CMonster::Drop_Items()
 {
 	int iRadomItem = rand() % 3;
@@ -309,16 +326,13 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (m_tStats.m_fCurrentHp <= 0)
 	{
 		m_tStats.m_fCurrentHp = 0;
-		/*m_bDissolve = true;*/
 
 		return _int(m_tStats.m_fCurrentHp);
 
 	}
 
-
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
-
 
 	return _int(m_tStats.m_fCurrentHp);
 

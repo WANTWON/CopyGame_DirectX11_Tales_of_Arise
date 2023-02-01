@@ -11,6 +11,8 @@ CBattle_IdleState::CBattle_IdleState(class CIce_Wolf* pIceWolf, STATE_ID ePreSta
 {
 	m_pOwner = pIceWolf;
 	m_ePreState = ePreState;
+	m_fTimeDletaAcc = 0;
+	m_fIdleTime = ((rand() % 6000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CIceWolfState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
@@ -22,31 +24,32 @@ CIceWolfState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
+	Find_BattleTarget();
+
 	return nullptr;
 }
 
 CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 {
-	
-	Find_BattleTarget();
 	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-
-	if (false == m_bTargetSetting)
-	{
+	//if (false == m_bTargetSetting)
+	//{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_bTargetSetting = true;
-	}
+	/*	m_bTargetSetting = true;
+	}*/
 
-	
-	m_fRedayAttackTimer += fTimeDelta;
+	m_fTimeDletaAcc += fTimeDelta;
 
 
 	if (CIceWolfState::STATE_ID::START_BATTLE == m_ePreState)
 	{
-		if (m_fRedayAttackTimer >= 3.5f)
-			return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::START_BATTLE);
+		if (m_fTimeDletaAcc > m_fIdleTime)
+			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
 	}
+
+
+
 	//else if(CIceWolfState::STATE_ID::STATE_BATTLEING == m_ePreState)
 	//{
 	//	if (m_fRedayAttackTimer >= 0.1f)

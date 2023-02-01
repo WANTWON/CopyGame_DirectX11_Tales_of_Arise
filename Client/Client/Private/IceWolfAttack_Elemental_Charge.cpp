@@ -26,6 +26,7 @@ CIceWolfState * CAttack_Elemental_Charge::AI_Behaviour(_float fTimeDelta)
 CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_fTarget_Distance = Find_BattleTarget();
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -39,13 +40,35 @@ CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
+	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+	if (m_eStateId_Charge == STATE_ID::STATE_CHARGE_START)
+	{
+		_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	}
+
 	return nullptr;
 }
 
 CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
-		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_ELEMENTAL_CHARGE);
+	{
+		switch (m_eStateId_Charge)
+		{
+		case STATE_CHARGE_START:
+			return new CBattle_RunState(m_pOwner, STATE_ID::STATE_CHARGE_START);
+			
+		case STATE_CHARGE_END:
+			return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_CHARGE_END);
+
+		default:
+			break;
+		}
+	}
+
+		
 
 	return nullptr;
 }
@@ -59,7 +82,7 @@ void CAttack_Elemental_Charge::Enter()
 		break;
 
 	case STATE_CHARGE_LOOP:
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_ELEMENTAL_CHARGE_LOOP);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_MOVE_RUN);
 		break;
 
 	case STATE_CHARGE_END:

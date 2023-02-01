@@ -41,7 +41,6 @@ protected:
 
 protected:
 	HRESULT Add_Components(const _tchar* pComponentTag, _uint iLevelIndex, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg = nullptr);
-	//HRESULT Replace_Components(const _tchar* pComponentTag, _uint iLevelIndex, const _tchar* pPrototypeTag, CComponent** ppOut, void* pArg = nullptr);
 	HRESULT Remove_Components(const _tchar* pComponentTag);
 
 public:	

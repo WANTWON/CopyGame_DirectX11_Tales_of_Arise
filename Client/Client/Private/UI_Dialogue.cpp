@@ -102,14 +102,14 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 		//	m_fAlpha = 0.5f;
 
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
-		{
-			m_bfadeout = true;
-		}
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 생겨질때
-		{
-			m_bfadein = true;
-		}
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
+		//{
+		//	m_bfadeout = true;
+		//}
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 생겨질때
+		//{
+		//	m_bfadein = true;
+		//}
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_6)) // 생겨질때
 		{
 		
@@ -120,6 +120,18 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 				m_bfadeout = true;
 				
 				--m_iDialogueindex;
+
+				switch (m_iVectorIndex)
+				{
+				case 0:
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, (TEXT("ssssss")))))
+						return OBJ_NOEVENT;
+					CUI_Manager::Get_Instance()->Set_QuestIndex(1);
+					//CGame
+					break;
+				}
+				
+
 			}
 			
 			
@@ -396,11 +408,6 @@ void CUI_Dialogue::Read_TextFiles_for_dialogue()
 		std::cout << "Unable to open file\n";
 	}
 
-	vector<vector<_tchar*>> matrix;
-	matrix.push_back(m_vDialogue[0]);
-	matrix.push_back(m_vDialogue[1]);
-
-	m_vCurrentDialogue.push_back(matrix);
 	//m_vCurrentDialogue.
 	std::ifstream file2("../../../Bin/test2.txt");
 	if (file2.is_open())
@@ -408,7 +415,7 @@ void CUI_Dialogue::Read_TextFiles_for_dialogue()
 		while (file2.getline(fuck, 256))
 		{
 			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge1[0].push_back(pszDialog);
+			m_vDialogue[2].push_back(pszDialog);
 			ConverCtoWC(fuck);
 			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
 			//	Safe_Delete_Array(pszDialog);
@@ -426,7 +433,7 @@ void CUI_Dialogue::Read_TextFiles_for_dialogue()
 		while (file3.getline(fuck, 256))
 		{
 			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge1[1].push_back(pszDialog);
+			m_vDialogue[3].push_back(pszDialog);
 			ConverCtoWC(fuck);
 			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
 			//	Safe_Delete_Array(pszDialog);
@@ -437,11 +444,98 @@ void CUI_Dialogue::Read_TextFiles_for_dialogue()
 	{
 		std::cout << "Unable to open file\n";
 	}
-	vector<vector<_tchar*>> matrix1;
-	matrix1.push_back(m_vDialouge1[0]);
-	matrix1.push_back(m_vDialouge1[1]);
 
-	m_vCurrentDialogue.push_back(matrix1);
+	std::ifstream file4("../../../Bin/test4.txt");
+	if (file4.is_open())
+	{
+		while (file4.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue[4].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file4.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file5("../../../Bin/test5.txt");
+	if (file5.is_open())
+	{
+		while (file5.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue[5].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file5.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file6("../../../Bin/test6.txt");
+	if (file6.is_open())
+	{
+		while (file6.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue[6].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file6.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file7("../../../Bin/test7.txt");
+	if (file7.is_open())
+	{
+		while (file7.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue[7].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file7.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+
+
+
+	
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialogue[0]);
+	matrix.push_back(m_vDialogue[1]);
+	matrix.push_back(m_vDialogue[2]);
+	matrix.push_back(m_vDialogue[3]);
+	matrix.push_back(m_vDialogue[4]);
+	matrix.push_back(m_vDialogue[5]);
+	matrix.push_back(m_vDialogue[6]);
+	matrix.push_back(m_vDialogue[7]);
+
+	m_vCurrentDialogue.push_back(matrix);
 
 
 }

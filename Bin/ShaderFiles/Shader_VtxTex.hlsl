@@ -4,7 +4,15 @@
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D		g_DiffuseTexture;
 
-
+float3 g_vColor;
+float g_fAlpha;
+float g_fAlphaDiscard;
+texture2D g_MaskTexture;
+texture2D g_NoiseTexture;
+texture2D g_DissolveTexture;
+float g_fNoiseSpeed;
+float g_fNoisePower;
+float g_fTimer = 0.f;
 
 struct VS_IN
 {
@@ -70,9 +78,21 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_ALPHAMASK(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
 
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.gba = Out.vColor.r;
 
+	Out.vColor.rgb *= g_vColor; // Set Color
+	Out.vColor.a *= g_fAlpha;
 
+	if (Out.vColor.a < g_fAlphaDiscard) // Alpha Test
+		discard;
+
+	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -98,5 +118,14 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
+	pass Effect_AlphaMask
+	{
+		SetRasterizerState(RS_Default_NoCull);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
 
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALPHAMASK();
+	}
 }

@@ -19,7 +19,7 @@ public:
 
 private:
 	_uint		m_iRand = 0;
-	_float		m_fRandTime = 0.f;
+	_float		m_fRunTime = 0.f;
 	_float		m_fTarget_Distance;
 	_float		m_fIdleAttackTimer = 0.f;
 	_bool		m_bTargetSetting = false;

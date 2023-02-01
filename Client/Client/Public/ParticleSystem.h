@@ -16,6 +16,9 @@ public:
 		_tchar wcPrototypeId[MAX_PATH] = TEXT("");	/* "Spark.dds > Spark" */
 		_uint m_eSpawnType = 0;
 		_bool m_bBillboard = false;
+		_float3 m_vColor = _float3(0.f, 0.f, 0.f);
+		_float m_fAlpha = 1.f;
+		_float m_fAlphaDiscard = 0.f;
 		_int m_iMaxParticles = 1000.f;
 		_float m_fParticlesLifetime = 1.f;
 		_float m_fParticlesPerSecond = 1.f;
@@ -23,7 +26,7 @@ public:
 		_float m_fParticleDeviationY = 0.f;
 		_float m_fParticleDeviationZ = 0.f;
 		_float3 m_vParticleDirection = _float3(0.f, 0.f, 0.f);
-		_bool m_bRandomDirectionX = false; 
+		_bool m_bRandomDirectionX = false;
 		_bool m_bRandomDirectionY = false;
 		_bool m_bRandomDirectionZ = false;
 		_float m_fParticleVelocity = 1.f;
@@ -57,6 +60,7 @@ public: /* Getters & Setters */
 	virtual _tchar* Get_PrototypeId() { return m_tParticleDesc.wcPrototypeId; }
 	PARTICLEDESC Get_ParticleDesc() { return m_tParticleDesc; }
 	void Set_ParticleDesc(PARTICLEDESC tParticleDesc) { m_tParticleDesc = tParticleDesc; }
+	void Set_Stop(_bool bStop) { m_bStop = bStop; }
 
 public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -80,6 +84,7 @@ private:
 
 	void EmitParticles(_float fTimeDelta);
 	void UpdateParticles(_float fTimeDelta);
+	void SortParticles();
 	
 	void VelocityLerp(_uint iParticleIndex);
 	void SizeLerp(_uint iParticleIndex);
@@ -109,6 +114,8 @@ private:
 	ParticleType* m_Particles = nullptr; 
 
 	CTexture* m_pTextureCom = nullptr; 
+
+	_bool m_bStop = false;
 
 public:
 	static CParticleSystem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

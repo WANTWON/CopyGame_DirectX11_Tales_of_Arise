@@ -274,6 +274,15 @@
     <Filter Include="02.GameObjects\01.Actor\02.NPC\FemaleYoung">
       <UniqueIdentifier>{ec4f57e9-3244-4a8c-b9e6-728d39635f29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\15.UI_QuestStart">
+      <UniqueIdentifier>{a829f820-ba18-43fa-a651-8e9dbb119f23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\16.UI_QuestClear">
+      <UniqueIdentifier>{b71a7d2a-3773-49bf-918a-7926c806d95a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\17.UI_Questmsg">
+      <UniqueIdentifier>{deac9767-1123-4b86-844a-17ccdf932d4a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell">
       <UniqueIdentifier>{3790b313-d11b-494b-a379-654fc89c4d13}</UniqueIdentifier>
     </Filter>
@@ -771,6 +780,15 @@
     <ClInclude Include="..\Public\FemaleYoung.h">
       <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_QuestClear.h">
+      <Filter>02.GameObjects\04.UI\16.UI_QuestClear</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_QuestStartScreen.h">
+      <Filter>02.GameObjects\04.UI\15.UI_QuestStart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Questmsg.h">
+      <Filter>02.GameObjects\04.UI\17.UI_Questmsg</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AiRinwell.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell</Filter>
     </ClInclude>
@@ -1234,6 +1252,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\FemaleYoung.cpp">
       <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_QuestClear.cpp">
+      <Filter>02.GameObjects\04.UI\16.UI_QuestClear</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_QuestStartScreen.cpp">
+      <Filter>02.GameObjects\04.UI\15.UI_QuestStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Questmsg.cpp">
+      <Filter>02.GameObjects\04.UI\17.UI_Questmsg</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AiRinwell.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell</Filter>
