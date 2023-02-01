@@ -537,7 +537,8 @@ HRESULT CUI_QuestClear::Render()
 	m_pVIBufferCom->Render();
 
 	/////////////////////////////////////////////////////////////////////item type / name
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlphaGald, sizeof(_float))));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlphaGald, sizeof(_float))))
+		return E_FAIL;
 	m_fPosition.x = 1100.f;
 	m_fPosition.y = 60.f;
 	m_fSize.x = 300.f;
