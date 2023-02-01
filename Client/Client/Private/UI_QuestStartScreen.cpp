@@ -553,13 +553,16 @@ CGameObject * CUI_QuestStartScreen::Clone(void * pArg)
 
 void CUI_QuestStartScreen::Free()
 {
-
-
-
-
-
 	Safe_Release(m_pTextureCom1);
 	Safe_Release(m_pTextureCom2);
+	Safe_Release(m_pTextureCom3);
+	Safe_Release(m_pTextureCom4);
+	Safe_Release(m_pTextureCom5);
+
+
+
+
+	
 	__super::Free();
 }
 

@@ -801,6 +801,9 @@
     <ClInclude Include="..\Public\RinwellState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerCollectState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1267,6 +1270,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Rinwell.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerCollectState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

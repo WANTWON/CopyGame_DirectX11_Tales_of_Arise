@@ -9,6 +9,7 @@
 #include "EffectTexture.h"
 #include "PlayerJumpState.h"
 #include "PlayerSkillState.h"
+#include "PlayerCollectState.h"
 
 using namespace Player;
 
@@ -36,6 +37,11 @@ CPlayerState * CIdleState::HandleInput()
 			else if (pGameInstance->Key_Down(DIK_F))
 				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
 		}
+	}
+	else if (LEVEL_SNOWFIELD == m_pOwner->Get_Level())
+	{
+		if (pGameInstance->Key_Down(DIK_E))
+			return new CCollectState(m_pOwner);
 	}
 	
 	if (pGameInstance->Key_Down(DIK_LCONTROL) && !m_bIsFly)
