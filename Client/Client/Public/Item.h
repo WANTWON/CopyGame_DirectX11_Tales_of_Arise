@@ -37,6 +37,7 @@ private:
 
 	class CEffect* m_pPickupFlares = nullptr;
 	class CEffect* m_pPickupFlash = nullptr;
+	class CEffect* m_pPickupParticles = nullptr;
 
 public:
 	static CItem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

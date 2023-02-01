@@ -117,9 +117,13 @@ void CItem::Late_Tick(_float fTimeDelta)
 			CEffect* pEffect = CEffect::PlayEffect(TEXT("Pickup_Flash.dat"));
 			_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 			pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset);
-
 			if (pEffect)
 				m_pPickupFlash = pEffect;
+
+			pEffect = CEffect::PlayEffect(TEXT("Pickup_Particles.dat"));
+			pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset);
+			if(pEffect)
+				m_pPickupParticles = pEffect;
 
 			if (m_pPickupFlares)
 				((CParticleSystem*)m_pPickupFlares)->Set_Stop(true);
