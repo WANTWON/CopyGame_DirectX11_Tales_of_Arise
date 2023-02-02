@@ -149,7 +149,11 @@ protected:
 	_bool m_bBattleMode = false;
 	_bool m_bBitePossible = false;
 	_float	m_fTimeDletaAcc = 0.f;
+	_float	m_fRandTime;
 	CHawk* m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
+	CBaseObj*	m_pCurTarget = nullptr;
+	_vector		m_vCurTargetPos;
+
 };
 END

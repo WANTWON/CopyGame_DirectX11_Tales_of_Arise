@@ -356,7 +356,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	m_DamageCauser = DamageCauser;
+	m_pTarget = DamageCauser;
 
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 
