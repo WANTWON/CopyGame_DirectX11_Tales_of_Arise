@@ -51,6 +51,10 @@ int CMonster::Tick(_float fTimeDelta)
 		m_fTime_TakeDamageDeltaAcc = 0.f;
 	}
 
+	m_fTimeDletaAcc += fTimeDelta;
+
+
+
 	return OBJ_NOEVENT;
 }
 
@@ -102,6 +106,19 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
 		m_bDead = true;
+
+
+	//CBaseObj* pCollisionMonster = nullptr;
+	//if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionMonster))
+	//{
+
+	//	_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//	if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
+	//		vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
+	//	else
+	//		vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
+	//	m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
+	//}
 }
 
 HRESULT CMonster::Render()
@@ -265,8 +282,16 @@ CBaseObj* CMonster::Find_MinDistance_Target()
 			m_pTarget = dynamic_cast<CBaseObj*>(iter);
 		}
 	}
-
+	
 	return m_pTarget;
+}
+
+_float  CMonster::Target_Distance(CBaseObj* pTarget)
+{
+
+	_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
+
+	return fDistance;
 }
 
 HRESULT CMonster::Drop_Items()
@@ -320,6 +345,8 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
+
+	m_DamageCauser = DamageCauser;
 
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 
