@@ -90,6 +90,9 @@ public: /*Getter Setter*/
 
 	_bool Get_QuestComplete(_uint num) { return m_bQuestComplete[num]; }
 	void Set_QuestComplete(_uint num, _bool tof) { m_bQuestComplete[num] = tof; }
+
+	_uint Get_Dialogue_section() { return m_iDialogueSection;  }
+	void Set_Dialogue_section(_uint num) { m_iDialogueSection = num; }
 	//void Read_TextFiles_for_dialogue();
 
 	//wchar_t* ConverCtoWC(char* str);
@@ -131,6 +134,8 @@ private:
 	_uint m_iQuest1_Herb = 0;
 
 	_bool m_bQuestComplete[8] = { false,false, false, false, false, false, false, false };
+
+	_uint m_iDialogueSection = 0;
 //private:
 //	_uint iplayer0_hp = 0;
 //	_uint iplayer1_hp = 0;

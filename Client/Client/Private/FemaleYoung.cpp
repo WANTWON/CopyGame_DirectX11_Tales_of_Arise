@@ -65,7 +65,18 @@ void CFemaleYoung::Late_Tick(_float fTimeDelta)
 	   m_bIsFirst_conversation = true;
 
 	   if (CGameInstance::Get_Instance()->Key_Up(DIK_E))
-		   dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(0);
+	   {
+		   switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
+		   {
+		   case 0:
+			   dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(0);
+			   break;
+		   case 1:
+			   dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(1);
+			   break;
+		   }
+	   }
+		   
    }
 
    if (m_bIsFirst_conversation && !m_bCollision)

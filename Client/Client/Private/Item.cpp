@@ -165,6 +165,18 @@ void CItem::Late_Tick(_float fTimeDelta)
 				testdesc.eName = itempointer->eitemname = ITEMNAME_HERB;
 				testdesc.eType = itempointer->eitemtype = ITEMTYPE_MATERIAL;//(ITEM_TYPE)(rand() % 20);
 				itempointer->icount = 1;
+				if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 1 && CUI_Manager::Get_Instance()->Get_QuestComplete(0) == false)
+				{
+					CUI_Questmsg::QUESTMSGDESC questmsgdesc;
+					ZeroMemory(&questmsgdesc, sizeof(CUI_Questmsg::QUESTMSGDESC));
+					questmsgdesc.maxcount = 3;
+					questmsgdesc.eName = QUEST_HERB;
+					CUI_Manager::Get_Instance()->Plus_Quest1_Herb();
+					questmsgdesc.currentcount = CUI_Manager::Get_Instance()->Get_Quest1_Herb();
+
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTMESSAGE"), LEVEL_STATIC, TEXT("QMSG"), &questmsgdesc)))
+						return;
+				}
 				break;
 
 			case SLIMPLANT:
