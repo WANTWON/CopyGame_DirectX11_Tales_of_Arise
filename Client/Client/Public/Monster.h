@@ -43,6 +43,7 @@ public:
 	virtual void AI_Behaviour(_float fTimeDelta) { };
 	virtual void Find_Target();
 	virtual CBaseObj* Find_MinDistance_Target();
+	virtual _float Target_Distance(CBaseObj*);
 	virtual void Follow_Target(_float fTimeDelta) { };
 	virtual void Make_GetAttacked_Effect(CBaseObj* DamageCauser = nullptr);
 	virtual void Make_DeadEffect(CBaseObj* Target = nullptr);
@@ -75,7 +76,8 @@ public: // Get & Set
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
 	void		Set_Dissolve() { m_bDissolve = true; }
 	CBaseObj*	Get_Trigger() { return m_pTrigger; }
-	
+	CBaseObj*   Get_DamageCauser() { return m_DamageCauser; }
+
 protected:
 	DMG_DIR Calculate_DmgDirection();
 	_vector	Calculate_DirectionByPos();
@@ -91,6 +93,9 @@ protected:
 
 	_float					m_fAnimSpeed = 1.f;
 
+	_float					m_fTimeDletaAcc = 0.f;
+	_float					m_fCntChanceTime = 0.f;
+
 	_bool					m_bAggro = false;
 	_bool					m_bIsAttacking = false;
 	_bool					m_bHit = false;
@@ -99,7 +104,7 @@ protected:
 	_bool					m_bTakeDamage = false;
 	_bool					m_bBattleMode = false;
 	_uint					m_eCurLevel = LEVEL_END;
-
+	_uint					m_iRand = 0;
 
 	_float m_fMinLengh = MAXDISTANCE;
 	CBaseObj* m_pTrigger = nullptr;
@@ -127,7 +132,7 @@ protected: /* For.Components */
 	
 protected:
 	_bool		m_bDissolve = false;
-
+	CBaseObj*	m_DamageCauser = nullptr;
 
 public:
 	virtual void Free() override;

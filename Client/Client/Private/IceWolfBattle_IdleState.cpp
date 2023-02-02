@@ -7,12 +7,14 @@
 
 using namespace IceWolf;
 
-CBattle_IdleState::CBattle_IdleState(class CIce_Wolf* pIceWolf, STATE_ID ePreState)
+CBattle_IdleState::CBattle_IdleState(class CIce_Wolf* pIceWolf, STATE_ID ePreState, CBaseObj* pCurTarget)
 {
 	m_pOwner = pIceWolf;
 	m_ePreState = ePreState;
 	m_fTimeDletaAcc = 0;
-	m_fIdleTime = ((rand() % 6000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fIdleTime = ((rand() % 4000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
+	m_pCurTarget = pCurTarget;
+
 }
 
 CIceWolfState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
@@ -24,39 +26,50 @@ CIceWolfState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
-	Find_BattleTarget();
+	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+
+	if (pDamageCauser == nullptr)
+	{
+		if (m_pCurTarget == nullptr)
+		{
+			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+		else if (m_pCurTarget)
+		{
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+	}
+
+	else if (pDamageCauser != nullptr)
+	{
+		m_pCurTarget = pDamageCauser;
+
+		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
+	}
+
+
 
 	return nullptr;
 }
 
 CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 {
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	
 
-	//if (false == m_bTargetSetting)
-	//{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	/*	m_bTargetSetting = true;
-	}*/
+	m_pOwner->Check_Navigation();
+
+	
 
 	m_fTimeDletaAcc += fTimeDelta;
 
-
-	if (CIceWolfState::STATE_ID::START_BATTLE == m_ePreState)
-	{
-		if (m_fTimeDletaAcc > m_fIdleTime)
-			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
-	}
-
-
-
-	//else if(CIceWolfState::STATE_ID::STATE_BATTLEING == m_ePreState)
-	//{
-	//	if (m_fRedayAttackTimer >= 0.1f)
-	//		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_IDLE);
-	//}
-
-		
+	if(m_fTimeDletaAcc > m_fIdleTime)
+		return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START, m_pCurTarget);
 
 
 	return nullptr;

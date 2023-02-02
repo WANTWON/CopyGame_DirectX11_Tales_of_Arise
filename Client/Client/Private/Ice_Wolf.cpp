@@ -52,7 +52,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_eMonsterID = ICE_WOLF;
 
 
-	m_tStats.m_fMaxHp = 100.f;
+	m_tStats.m_fMaxHp = 1000.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -83,6 +83,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 	m_fTimeDletaAcc = 0;
 	m_fCntChanceTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
+	m_bDone_HitAnimState = false;
 	return S_OK;
 }
 
@@ -159,8 +160,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
-	if (m_fTimeDletaAcc > m_fCntChanceTime)
-		m_iRand = rand() % 3;
+
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick() /*|| !Check_IsinFrustum(2.f)*/)
 		return OBJ_NOEVENT;
@@ -181,6 +181,8 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	//m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
+	if (m_fTimeDletaAcc > m_fCntChanceTime)
+		m_iRand = rand() % 3;
 	return OBJ_NOEVENT;
 }
 
@@ -263,6 +265,7 @@ void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 
 void CIce_Wolf::Tick_State(_float fTimeDelta)
 {
+	
 	CIceWolfState* pNewState = m_pState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
@@ -322,13 +325,15 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		
 		return 0;
 	}
+
 	else
 	{
+
 		m_iBeDamaged_Cnt++;
 
-		if (m_iBeDamaged_Cnt != 3)
+		if (m_bSomeSauling == false)
 		{
-			switch (m_iRand)
+			switch (rand() % 3)
 			{
 			case 0:
 			{
@@ -357,16 +362,19 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 				break;
 
 			}
+
+			m_bDone_HitAnimState = true;
 		}
 
-		else
+		if(m_iBeDamaged_Cnt >= 3)
 		{
 			m_pModelCom->Set_TimeReset();
-			CIceWolfState* pState = new CBattle_SomerSaultState(this);
+			CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, true);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 			m_iBeDamaged_Cnt = 0;
-		}
+			m_bSomeSauling = true;
 
+		}
 	}
 
 	return iHp;

@@ -10,11 +10,12 @@
 
 using namespace IceWolf;
 
-CBattle_Damage_LargeB_State::CBattle_Damage_LargeB_State(class CIce_Wolf* pIceWolf)
+CBattle_Damage_LargeB_State::CBattle_Damage_LargeB_State(class CIce_Wolf* pIceWolf, _bool bThirdHit)
 {
 	m_pOwner = pIceWolf;
 	m_fTimeDletaAcc = 0;
 	m_fCntChanceTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
+	m_bThirdHit = bThirdHit;
 }
 
 CIceWolfState * CBattle_Damage_LargeB_State::AI_Behaviour(_float fTimeDelta)
@@ -43,9 +44,15 @@ CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 	m_iRand = rand() % 3;
 	
 	if (m_bIsAnimationFinished)
-		return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BE_DAMAGED);
-	
+	{
+		m_pOwner->Set_Done_HitAnimState();
 
+		if (m_bThirdHit)
+			return new CBattle_SomerSaultState(m_pOwner);
+
+		else
+			return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BE_DAMAGED);
+	}
 	//switch (m_eDamageAnim)
 	//{
 	//case 0:

@@ -90,6 +90,7 @@ public:
 	class CIceWolfState* Get_State() { return m_pState; }
 	void Set_PlayerState(class CIceWolfState* pPlayerState) { m_pState = pPlayerState; }
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
+	void Set_Done_HitAnimState() { m_bDone_HitAnimState = false; }
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
@@ -124,12 +125,10 @@ private:
 	class CIceWolfState*  m_pState = nullptr;
 
 	_float   m_fSpeed = 3.f;
-	_float   m_fTimeDletaAcc = 0.f;
-	_float   m_fCntChanceTime = 0.f;
-	_int	 m_iRand = 0;
-	_int	 m_iBeDamaged_Cnt = 0;
-	_bool   m_bDoneChangeState = false;
 	
+	_int	 m_iBeDamaged_Cnt = 0;
+	_bool   m_bDone_HitAnimState = false;
+	_bool	m_bSomeSauling = false;
 
 public:
 	static CIce_Wolf* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
