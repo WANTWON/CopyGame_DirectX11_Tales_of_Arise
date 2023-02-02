@@ -162,13 +162,17 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
+	if (m_bDead)
+	{
+		if (CBattleManager::Get_Instance()->Get_LackonMonster() == this)
+			CBattleManager::Get_Instance()->Set_LackonMonster(nullptr);
 
+		Check_AmILastMoster();
+		return OBJ_DEAD;
+	}
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick() /*|| !Check_IsinFrustum(2.f)*/)
 		return OBJ_NOEVENT;
-
-	if (m_bDead)
-		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
 

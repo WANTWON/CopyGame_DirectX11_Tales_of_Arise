@@ -87,6 +87,7 @@ public:/* Rotations */
 
 public:
 	void LookAt(_fvector vAt);
+	void LookDir(_fvector vDir);
 
 public:
 	void RoamingTurn(_matrix WorldMatrix, _float fRadian);

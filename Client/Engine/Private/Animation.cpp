@@ -196,7 +196,9 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 		}
 	}
 	else
+	{
 		m_iTickPerSecondIndex = 0;
+	}
 
 	return m_bLinearFinished;
 }

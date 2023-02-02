@@ -81,7 +81,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (m_bDissolve)
 	{
-		m_DissolveAlpha += fTimeDelta/* * 0.13*/;
+		m_DissolveAlpha += fTimeDelta*m_fDissolveOffset;
 
 		if (1 < m_DissolveAlpha)
 		{
@@ -232,6 +232,25 @@ _vector CMonster::Calculate_DirectionByPos()
 	return vTargetPos - vMyPos;
 }
 
+_bool CMonster::Check_AmILastMoster()
+{
+	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
+
+	if (pMonsterList->size() == 1)
+	{
+		if (pMonsterList->front() == this && m_bDissolve)
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLE_CLEAR);
+			pCamera->Set_TargetPosition(Get_TransformState(CTransform::STATE_TRANSLATION));
+			m_fDissolveOffset = 0.1f;
+			return true;
+		}
+			
+	}
+	return false;
+}
+
 void CMonster::Find_Target()
 {
 	if (!m_bDead)
@@ -338,11 +357,11 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (m_tStats.m_fCurrentHp <= 0)
 	{
 		m_tStats.m_fCurrentHp = 0;
-
 		return _int(m_tStats.m_fCurrentHp);
 
 	}
 
+	CBattleManager::Get_Instance()->Set_LackonMonster(this);
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
 

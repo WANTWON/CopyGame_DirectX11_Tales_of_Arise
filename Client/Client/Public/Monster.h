@@ -81,6 +81,7 @@ public: // Get & Set
 protected:
 	DMG_DIR Calculate_DmgDirection();
 	_vector	Calculate_DirectionByPos();
+	_bool	Check_AmILastMoster();
 	
 protected:
 	STATS					m_tStats;
@@ -133,6 +134,7 @@ protected: /* For.Components */
 protected:
 	_bool		m_bDissolve = false;
 	CBaseObj*	m_DamageCauser = nullptr;
+	_float		m_fDissolveOffset = 1.f;
 
 public:
 	virtual void Free() override;
