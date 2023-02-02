@@ -102,6 +102,10 @@ void CTreasureBox::Late_Tick(_float fTimeDelta)
 
 	if (m_bCollision)
 	{
+		//ui
+
+		//
+
 		m_bOpen = true;
 	}
 }

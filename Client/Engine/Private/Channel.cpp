@@ -129,17 +129,16 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 
 	vSourScale = XMLoadFloat3(&m_KeyFrame_Linear.vScale);
 	vSourRotation = XMLoadFloat4(&m_KeyFrame_Linear.vRotation);
-	vSourPosition = XMLoadFloat3(&NextKeyFrame.vPosition); /*XMLoadFloat3(&m_KeyFrame_Linear.vPosition);*/
-
+	vSourPosition = XMLoadFloat3(&m_KeyFrame_Linear.vPosition);
 
 	vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
 	vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
 	vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
 	vPosition = XMVectorSetW(vPosition, 1.f);
 
-	XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
+	/*XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
-	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
+	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);*/
 
 	_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 

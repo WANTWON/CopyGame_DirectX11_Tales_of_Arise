@@ -120,6 +120,11 @@ HRESULT CSion::Ready_Components(void* pArg)
 	return S_OK;
 }
 
+void CSion::Change_Level(LEVEL eLevel)
+{
+	__super::Change_Level(eLevel);
+}
+
 HRESULT CSion::SetUp_ShaderResources()
 {
 	if (nullptr == m_pShaderCom)

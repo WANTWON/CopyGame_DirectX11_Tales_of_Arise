@@ -206,7 +206,11 @@
     <ClInclude Include="..\Public\EffectMesh.h" />
     <ClInclude Include="..\Public\EffectTexture.h" />
     <ClInclude Include="..\Public\IceWolfBattle_TurnState.h" />
+    <ClInclude Include="..\Public\PlayerCollectState.h" />
     <ClInclude Include="..\Public\Rinwell.h" />
+    <ClInclude Include="..\Public\RinwellAttackState.h" />
+    <ClInclude Include="..\Public\RinwellDamageState.h" />
+    <ClInclude Include="..\Public\RinwellMoveState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
     <ClInclude Include="..\Public\UI_InterectMsg.h" />
@@ -314,6 +318,9 @@
     <ClInclude Include="..\Public\UI_Portraitfront_left.h" />
     <ClInclude Include="..\Public\UI_Portraitfront_right.h" />
     <ClInclude Include="..\Public\UI_Portraitfront_top.h" />
+    <ClInclude Include="..\Public\UI_QuestClear.h" />
+    <ClInclude Include="..\Public\UI_Questmsg.h" />
+    <ClInclude Include="..\Public\UI_QuestStartScreen.h" />
     <ClInclude Include="..\public\UI_RuneEffect.h" />
     <ClInclude Include="..\public\UI_Screen.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
@@ -370,7 +377,11 @@
     <ClCompile Include="..\Private\EffectMesh.cpp" />
     <ClCompile Include="..\Private\EffectTexture.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_TurnState.cpp" />
+    <ClCompile Include="..\Private\PlayerCollectState.cpp" />
     <ClCompile Include="..\Private\Rinwell.cpp" />
+    <ClCompile Include="..\Private\RinwellAttackState.cpp" />
+    <ClCompile Include="..\Private\RinwellDamageState.cpp" />
+    <ClCompile Include="..\Private\RinwellMoveState.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
@@ -472,6 +483,9 @@
     <ClCompile Include="..\Private\UI_Portraitfront_left.cpp" />
     <ClCompile Include="..\Private\UI_Portraitfront_right.cpp" />
     <ClCompile Include="..\Private\UI_Portraitfront_top.cpp" />
+    <ClCompile Include="..\Private\UI_QuestClear.cpp" />
+    <ClCompile Include="..\Private\UI_Questmsg.cpp" />
+    <ClCompile Include="..\Private\UI_QuestStartScreen.cpp" />
     <ClCompile Include="..\Private\UI_RuneEffect.cpp" />
     <ClCompile Include="..\private\UI_Screen.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />

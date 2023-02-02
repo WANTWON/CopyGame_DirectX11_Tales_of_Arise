@@ -59,8 +59,21 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_tStats.m_fRunSpeed = 5.f;
 
 
-	_vector vPosition = *(_vector*)pArg;
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	NONANIMDESC ModelDesc;
+	if (pArg != nullptr)
+		memcpy(&ModelDesc, pArg, sizeof(NONANIMDESC));
+
+	if (pArg != nullptr)
+	{
+		_vector vPosition = XMLoadFloat3(&ModelDesc.vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		Set_Scale(ModelDesc.vScale);
+
+		if (ModelDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
+	}
+
 
 	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
 	Check_NearTrigger();

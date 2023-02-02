@@ -5,6 +5,8 @@
 #include "Level_Manager.h"
 #include "PlayerManager.h"
 #include "UI_Get_item_Popup.h"
+#include "UI_InterectMsg.h"
+#include "UI_Questmsg.h"
 #include "Effect.h"
 #include "ParticleSystem.h"
 
@@ -110,10 +112,15 @@ void CItem::Late_Tick(_float fTimeDelta)
 	
 	if (m_bCollision)
 	{
+		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Open_sysmsg(1);
+		m_bfirst = true;
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_E)&&!m_bIsGain)
 		{
 			m_bIsGain = true;
 
+			CUI_Get_item_Popup::POPUPDESC testdesc;
+			ZeroMemory(&testdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
+			
 			CEffect* pEffect = CEffect::PlayEffect(TEXT("Pickup_Flash.dat"));
 			_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 			pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset);
@@ -132,13 +139,51 @@ void CItem::Late_Tick(_float fTimeDelta)
 			switch (m_ItemDesc.etype)
 			{
 			case APPLE:
-				itempointer->eitemname = ITEMNAME_APPLE;
-				itempointer->eitemtype = ITEMTYPE_FRUIT;//(ITEM_TYPE)(rand() % 20);
+				testdesc.eName = itempointer->eitemname = ITEMNAME_APPLE;
+				testdesc.eType = itempointer->eitemtype = ITEMTYPE_FRUIT;//(ITEM_TYPE)(rand() % 20);
 				itempointer->icount = 1;
 				break;
 			case LETTUCE:
-				itempointer->eitemname = ITEMNAME_LETTUCE;
-				itempointer->eitemtype = ITEMTYPE_VEGITABLE;//(ITEM_TYPE)(rand() % 20);
+				testdesc.eName = itempointer->eitemname = ITEMNAME_LETTUCE;
+				testdesc.eType = itempointer->eitemtype = ITEMTYPE_VEGITABLE;//(ITEM_TYPE)(rand() % 20);
+				itempointer->icount = 1;
+				if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 1 && CUI_Manager::Get_Instance()->Get_QuestComplete(0) == false)
+				{
+					CUI_Questmsg::QUESTMSGDESC questmsgdesc;
+					ZeroMemory(&questmsgdesc, sizeof(CUI_Questmsg::QUESTMSGDESC));
+					questmsgdesc.maxcount = 3;
+					questmsgdesc.eName = QUEST_LETTUCE;
+					CUI_Manager::Get_Instance()->Plus_Quest1_Lettuce();
+					questmsgdesc.currentcount = CUI_Manager::Get_Instance()->Get_Quest1_Lettuce();
+
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTMESSAGE"), LEVEL_STATIC, TEXT("QMSG"), &questmsgdesc)))
+						return;
+				}
+				break;
+
+			case PLANT:
+				testdesc.eName = itempointer->eitemname = ITEMNAME_HERB;
+				testdesc.eType = itempointer->eitemtype = ITEMTYPE_MATERIAL;//(ITEM_TYPE)(rand() % 20);
+				itempointer->icount = 1;
+				if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 1 && CUI_Manager::Get_Instance()->Get_QuestComplete(0) == false)
+				{
+					CUI_Questmsg::QUESTMSGDESC questmsgdesc;
+					ZeroMemory(&questmsgdesc, sizeof(CUI_Questmsg::QUESTMSGDESC));
+					questmsgdesc.maxcount = 3;
+					questmsgdesc.eName = QUEST_HERB;
+					CUI_Manager::Get_Instance()->Plus_Quest1_Herb();
+
+					questmsgdesc.currentcount = CUI_Manager::Get_Instance()->Get_Quest1_Herb();
+
+
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTMESSAGE"), LEVEL_STATIC, TEXT("QMSG"), &questmsgdesc)))
+						return;
+				}
+				break;
+
+			case SLIMPLANT:
+				testdesc.eName = itempointer->eitemname = ITEMNAME_SMALLHERB;
+				testdesc.eType = itempointer->eitemtype = ITEMTYPE_MATERIAL;//(ITEM_TYPE)(rand() % 20);
 				itempointer->icount = 1;
 				break;
 			}
@@ -160,17 +205,15 @@ void CItem::Late_Tick(_float fTimeDelta)
 			else
 				delete(itempointer);
 			_uint index = 0;
-			CUI_Get_item_Popup::POPUPDESC testdesc;
-			ZeroMemory(&testdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
-			auto popup = CUI_Manager::Get_Instance()->Get_Itempopup_list();
+			
+			/*auto popup = CUI_Manager::Get_Instance()->Get_Itempopup_list();
 			for (auto iter : *popup)
 			{
-				if (!(iter->Get_Isdead()))
+				if (iter->Get_Isdead() == false)
 					++index;
-			}
-			testdesc.iIndex = index;
-			testdesc.eName = ITEMNAME_APPLE;
-			testdesc.eType = ITEMTYPE_FRUIT;
+			}*/
+			testdesc.iIndex =(_uint)CUI_Manager::Get_Instance()->Get_Itempopup_list()->size();
+			
 			//	testdesc.iCount =
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
 				return;
@@ -180,6 +223,13 @@ void CItem::Late_Tick(_float fTimeDelta)
 		}
 			//CITEM::ITEMTYPE
 
+	}
+	
+	
+	if(m_bfirst && !m_bCollision)
+	{
+		m_bfirst = false;
+		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 	}
 		   //COLLIDE
 		
