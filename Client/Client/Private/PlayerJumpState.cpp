@@ -66,7 +66,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
-	//m_pOwner->Check_Navigation();
+	//m_pOwner->Check_Navigation_Jump();
 		
 	return nullptr;
 }
@@ -84,7 +84,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 		}
 	}
 
-	if(Check_JumpEnd())
+	if((CAlphen::ANIM::ANIM_JUMP_LOOP == m_pOwner->Get_Model()->Get_CurrentAnimIndex()) && Check_JumpEnd())
 		return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_END, m_fTime);
 
 	return nullptr;
@@ -160,7 +160,7 @@ _bool CJumpState::Check_JumpEnd()
 	m_pOwner->Get_Navigation()->Compute_CurrentIndex_byXZ(vPosition);
 	m_fEndHeight = m_pOwner->Get_Navigation()->Compute_Height(vPosition, 0.f);
 
-	if (m_fEndHeight > XMVectorGetY(vPosition))
+	if (m_fEndHeight + 1.f > XMVectorGetY(vPosition))
 	{
 		vPosition = XMVectorSetY(vPosition, m_fEndHeight);
 		m_pOwner->Set_State(CTransform::STATE_TRANSLATION, vPosition);
@@ -232,6 +232,6 @@ void CJumpState::Move(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Jump(m_fTime, 3.f, 1.0f, m_fStartHeight, m_fEndHeight);
 
 		if (m_eDirection != DIR_END)
-			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f);
 	}
 }
