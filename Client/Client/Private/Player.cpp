@@ -255,6 +255,18 @@ void CPlayer::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
+	/*if (m_fWalkingHeight > XMVectorGetY(vPosition))
+	{*/
+		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	//}
+}
+
+void CPlayer::Check_Navigation_Jump(void)
+{
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
+
 	if (m_fWalkingHeight > XMVectorGetY(vPosition))
 	{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
