@@ -6,6 +6,9 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "UI_Get_item_Popup.h"
+#include "Itemmsgbox.h"
+
 
 IMPLEMENT_SINGLETON(CUI_Manager)
 
@@ -87,6 +90,68 @@ void CUI_Manager::Erase_Itempopup_list(CUI_Base * point)
 		else
 			++iter;
 	}
+
+}
+
+void CUI_Manager::AddItem(ITEM_NAME name, ITEM_TYPE type , _bool popup , _bool msgbox , _uint count )
+{
+	
+
+
+
+	ITEMINFO*  itempointer = new  ITEMINFO;
+	itempointer->eitemname = name;
+	itempointer->eitemtype = type;//(ITEM_TYPE)(rand() % 20);
+	itempointer->icount = count;
+
+	if (popup)
+	{
+		CUI_Get_item_Popup::POPUPDESC popupdesc;
+		ZeroMemory(&popupdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
+		popupdesc.eName = name;
+		popupdesc.eType = type;
+		popupdesc.iIndex = (_uint)CUI_Manager::Get_Instance()->Get_Itempopup_list()->size();
+		
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &popupdesc)))
+			return;
+
+	}
+		
+
+	if (msgbox)
+	{
+		CItemmsgbox::MSGBOXDESC msgdesc;
+		ZeroMemory(&msgdesc, sizeof(CItemmsgbox::MSGBOXDESC));
+		msgdesc.eName = name;
+		msgdesc.eType = type;
+		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_itemmsgbox"), LEVEL_STATIC, (TEXT("ssssss")), &msgdesc);
+
+	}
+
+	vector<ITEMINFO*>* inv = CUI_Manager::Get_Instance()->Get_Inventory();
+
+
+	_bool bshouldpush = true;
+	for (auto& iter = inv->begin(); iter != inv->end(); ++iter)
+	{
+
+		if ((*iter)->eitemname == itempointer->eitemname)
+		{
+			(*iter)->icount += 1;
+			bshouldpush = false;
+			break;
+		}
+
+
+	}
+
+	//vector<People> *Ptr = new vector<People>(num_of_people);
+
+	if (bshouldpush)
+		inv->push_back(itempointer);
+	else
+		delete(itempointer);
+
 
 }
 

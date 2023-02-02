@@ -21,6 +21,12 @@ float g_fMaxHp;
 float4			g_PlayerProjPos;
 float2			g_TexUV;
 
+float g_UV_sizeX;   //가로 ;
+float g_UV_sizeY;   //세로;
+float2 g_MiddlePoint;
+
+
+
 
 
 struct VS_IN
@@ -1015,6 +1021,98 @@ PS_OUT PS_BRIGHTDialogueLINE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_OUTLINE(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	//vector Color_rgb;
+	//Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	//float fRight_Line = (g_MiddlePoint.x + (g_UV_sizeX*0.5f));
+	//float fUp_Line = (g_MiddlePoint.y - (g_UV_sizeY*0.5f));
+	//float fDown_Line = (g_MiddlePoint.y + (g_UV_sizeY*0.5f));
+	//float fLeft_Line = (g_MiddlePoint.x - (g_UV_sizeX*0.5f));
+
+	////float fRight_Line = In.vTexUV.x + (In.vTexUV.x *0.5f);
+	////float fUp_Line =   In.vTexUV.y + (In.vTexUV.y *0.5f);
+	////float fDown_Line = In.vTexUV.y - (In.vTexUV.y *0.5f);
+	////float fLeft_Line = In.vTexUV.x - (In.vTexUV.x *0.5f);
+
+
+	//if (fLeft_Line < g_MiddlePoint.x && g_MiddlePoint.x < fLeft_Line + 12.f ||
+	//	fRight_Line > g_MiddlePoint.x && g_MiddlePoint.x > fRight_Line - 12.f ||
+	//	fDown_Line > g_MiddlePoint.y&& g_MiddlePoint.y > fDown_Line - 12.f ||
+	//	fUp_Line < g_MiddlePoint.y && g_MiddlePoint.y < fUp_Line + 12.f)
+	//{
+	//	
+	//	Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	//	Out.vColor.a *= 0.5f;
+	//}
+	//else
+	//{
+	//	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//	//Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	//	Out.vColor.a *= 0.5f;
+	//}
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	if (In.vTexUV.x < 0.015f || In.vTexUV.x > 0.985f)
+		Out.vColor.rgb = 0.2f;// (0.2f, 0.2f, 0.2f,
+
+
+	if (In.vTexUV.y < 0.02f || In.vTexUV.y > 0.98f)
+		Out.vColor.rgb = 0.2f;
+
+		Out.vColor.a *= g_fAlpha;
+
+	return Out;
+}
+
+PS_OUT PS_OUTLINE2(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	//vector Color_rgb;
+	//Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	//float fRight_Line = (g_MiddlePoint.x + (g_UV_sizeX*0.5f));
+	//float fUp_Line = (g_MiddlePoint.y - (g_UV_sizeY*0.5f));
+	//float fDown_Line = (g_MiddlePoint.y + (g_UV_sizeY*0.5f));
+	//float fLeft_Line = (g_MiddlePoint.x - (g_UV_sizeX*0.5f));
+
+	////float fRight_Line = In.vTexUV.x + (In.vTexUV.x *0.5f);
+	////float fUp_Line =   In.vTexUV.y + (In.vTexUV.y *0.5f);
+	////float fDown_Line = In.vTexUV.y - (In.vTexUV.y *0.5f);
+	////float fLeft_Line = In.vTexUV.x - (In.vTexUV.x *0.5f);
+
+
+	//if (fLeft_Line < g_MiddlePoint.x && g_MiddlePoint.x < fLeft_Line + 12.f ||
+	//	fRight_Line > g_MiddlePoint.x && g_MiddlePoint.x > fRight_Line - 12.f ||
+	//	fDown_Line > g_MiddlePoint.y&& g_MiddlePoint.y > fDown_Line - 12.f ||
+	//	fUp_Line < g_MiddlePoint.y && g_MiddlePoint.y < fUp_Line + 12.f)
+	//{
+	//	
+	//	Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	//	Out.vColor.a *= 0.5f;
+	//}
+	//else
+	//{
+	//	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//	//Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	//	Out.vColor.a *= 0.5f;
+	//}
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	if (In.vTexUV.x < 0.01f || In.vTexUV.x > 0.99f)
+		Out.vColor.rgb = 0.2f;// (0.2f, 0.2f, 0.2f,
+
+
+	if (In.vTexUV.y < 0.04f || In.vTexUV.y > 0.96f)
+		Out.vColor.rgb = 0.2f;
+
+	Out.vColor.a *= g_fAlpha;
+
+	return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -1426,7 +1524,27 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_BRIGHTDialogueLINE();                //36
 	}
 
-	
+	pass OUTLINE
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_OUTLINE();                //37
+	}
+
+	pass OUTLINE2
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_OUTLINE2();                //38
+	}
 }
 
 
