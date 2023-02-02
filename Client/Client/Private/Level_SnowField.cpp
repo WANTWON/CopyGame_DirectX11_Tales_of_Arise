@@ -39,8 +39,8 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	/*if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -170,8 +170,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
-
-
+		pPlayer->Change_Level(LEVEL_SNOWFIELD);
 	}
 	else
 	{
@@ -180,6 +179,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 		pPlayer->Change_Navigation(LEVEL_SNOWFIELD);
 		pPlayer->Compute_CurrentIndex(LEVEL_SNOWFIELD);
 		pPlayer->Check_Navigation();
+		pPlayer->Change_Level(LEVEL_SNOWFIELD);
 	}
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -220,7 +220,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 			if (m_bNotCreate)
 				continue;
 
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
 				return E_FAIL;
 		}
 		/*else */if (!wcscmp(pModeltag, TEXT("Hawk")))

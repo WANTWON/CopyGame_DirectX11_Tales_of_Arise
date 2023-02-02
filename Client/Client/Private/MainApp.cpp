@@ -110,7 +110,7 @@ HRESULT CMainApp::Render()
 	{
 		//wsprintf(m_szFPS, TEXT("�����ǿ��� : %d"), m_iNumRender);
 
-		cout << "FPS : "<< m_iNumRender << "\n" << endl;
+		//cout << "FPS : "<< m_iNumRender << "\n" << endl;
 		m_fTimeAcc = 0.f;
 		m_iNumRender = 0;
 	}

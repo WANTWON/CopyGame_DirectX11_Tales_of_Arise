@@ -46,6 +46,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pPlayerManager = CPlayerManager::Get_Instance();
 	Safe_AddRef(m_pPlayerManager);
 
+	m_eLevel = LEVEL_END;
+
 	return S_OK;
 }
 
@@ -253,16 +255,25 @@ void CPlayer::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	//if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	//{
+	if (m_fWalkingHeight > XMVectorGetY(vPosition))
+	{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	//}
+	}
 }
 
 void CPlayer::Compute_CurrentIndex(LEVEL eLevel)
 {
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+}
+
+void CPlayer::Change_Level(LEVEL eLevel)
+{
+	m_eLevel = eLevel;
+
+	CPlayerState* pNewState = new Player::CIdleState(this);
+	if (pNewState)
+		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
 }
 
 HRESULT CPlayer::SetUp_Controller()

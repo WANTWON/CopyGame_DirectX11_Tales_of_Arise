@@ -61,7 +61,7 @@ namespace Client
 	};
 
 #define MAXDISTANCE 999999.f
-
+#define GET_PLUSMINUS (rand() %2 == 0? 1 : -1)
 }
 
 #include <process.h>

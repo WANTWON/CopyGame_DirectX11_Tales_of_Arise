@@ -172,7 +172,9 @@ void CItem::Late_Tick(_float fTimeDelta)
 					questmsgdesc.maxcount = 3;
 					questmsgdesc.eName = QUEST_HERB;
 					CUI_Manager::Get_Instance()->Plus_Quest1_Herb();
+
 					questmsgdesc.currentcount = CUI_Manager::Get_Instance()->Get_Quest1_Herb();
+
 
 					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTMESSAGE"), LEVEL_STATIC, TEXT("QMSG"), &questmsgdesc)))
 						return;
