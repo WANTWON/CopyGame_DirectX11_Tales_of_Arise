@@ -2917,7 +2917,7 @@ void CImgui_Manager::Set_Effect()
 				wstring wsEffectName = wstring(pEffect->Get_PrototypeId());
 				string sEffectName = string(wsEffectName.begin(), wsEffectName.end());
 
-				if (ImGui::Selectable(sEffectName.c_str(), m_sSelectedEffect == sEffectName))
+				if (ImGui::Selectable(sEffectName.c_str(), m_sSelectedEffect == sEffectName, ImGuiSelectableFlags_AllowItemOverlap, ImVec2(0, 22)))
 				{
 					m_sSelectedEffect = sEffectName;
 					m_pSelectedEffect = pEffect;
@@ -2952,6 +2952,9 @@ void CImgui_Manager::Set_Effect()
 
 					m_pSelectedEffectTransform = pTransform;
 				}
+				ImGui::SameLine();
+				ImGui::Checkbox("##EffectSelected", &pEffect->m_bIsSelected);
+				
 
 				if (m_sSelectedEffect == sEffectName)
 					ImGui::SetItemDefaultFocus();
@@ -2980,8 +2983,13 @@ void CImgui_Manager::Set_Effect()
 			if (m_pSelectedEffect)
 			{
 				m_bIsPlaying = !m_bIsPlaying;
-				m_pSelectedEffect->Set_Play(m_bIsPlaying);
 
+				for (auto& pEffect : m_pEffectManager->Get_InstancedEffects())
+				{
+					if (pEffect->m_bIsSelected)
+						pEffect->Set_Play(m_bIsPlaying);
+				}
+				
 				if (m_bIsPlaying)
 				{
 					switch (m_pSelectedEffect->Get_EffectType())
@@ -2994,6 +3002,11 @@ void CImgui_Manager::Set_Effect()
 						case CEffect::EFFECT_TYPE::TYPE_MESH:
 						{
 							((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDesc(m_tMeshEffectDesc);
+							break;
+						}
+						case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
+						{
+							((CParticleSystem*)m_pSelectedEffect)->ResetParticleSystem();
 							break;
 						}
 					}
@@ -3230,6 +3243,8 @@ _bool CImgui_Manager::Load_Effect()
 					m_tParticleDesc = tParticleDesc;
 					m_pEffectManager->Add_Effect(pEffect);
 					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_PARTICLE);
+
+					m_sCurrentSpawnType = m_SpawnTypes[m_tParticleDesc.m_eSpawnType];
 					break;
 				}
 			}

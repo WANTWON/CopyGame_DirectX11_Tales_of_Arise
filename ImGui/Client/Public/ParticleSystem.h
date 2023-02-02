@@ -62,6 +62,9 @@ public: /* Getters & Setters */
 	void Set_ParticleDesc(PARTICLEDESC tParticleDesc) { m_tParticleDesc = tParticleDesc; }
 
 public:
+	HRESULT ResetParticleSystem();
+
+public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CParticleSystem(const CParticleSystem& rhs);
 	virtual ~CParticleSystem() = default;

@@ -29,6 +29,8 @@ public:
 		_uint iAlphaCurvesCount = 0;
 	} EFFECTDESC;
 
+	_bool m_bIsSelected = true;
+
 public:
 	vector<_float3> Get_VelocityCurves() { return m_VelocityCurves; }
 	vector<_float3> Get_SizeCurves() { return m_SizeCurves; }

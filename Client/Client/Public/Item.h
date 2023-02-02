@@ -38,12 +38,8 @@ private:
 
 	_bool m_bfirst = false;
 	
-
-
-	class CEffect* m_pPickupFlares = nullptr;
-	class CEffect* m_pPickupFlash = nullptr;
-	class CEffect* m_pPickupParticles = nullptr;
-
+	vector<class CEffect*> m_pPickupFlares;
+	vector<class CEffect*> m_pGetItem;
 
 public:
 	static CItem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

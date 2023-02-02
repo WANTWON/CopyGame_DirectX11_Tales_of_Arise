@@ -57,7 +57,7 @@ void CParticleSystem::Late_Tick(_float fTimeDelta)
 	{
 		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);*/		/* Non-Alphablend */
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);			/* Alphablend */
-
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 		/*Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));*/
 	}
 }
@@ -71,6 +71,38 @@ HRESULT CParticleSystem::Render()
 
 	m_pShaderCom->Begin(SHADER_EFFECT::SHADER_ALPHAMASK);
 	RenderBuffers();
+
+	return S_OK;
+}
+
+HRESULT CParticleSystem::Render_Glow()
+{
+	if (!m_pVertexBuffer || !m_pShaderCom)
+		return E_FAIL;
+
+	__super::Render();
+
+	_bool bGlow = true;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+		return E_FAIL;
+
+	CTarget_Manager* pTargetManager = GET_INSTANCE(CTarget_Manager);
+	if (FAILED(pTargetManager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
+		return E_FAIL;
+	RELEASE_INSTANCE(CTarget_Manager);
+
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", m_pTextureCom->Get_SRV())))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(SHADER_EFFECT::SHADER_ALPHAMASK);
+	RenderBuffers();
+
+	if (!m_bDead)
+	{
+		_bool bGlow = false;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

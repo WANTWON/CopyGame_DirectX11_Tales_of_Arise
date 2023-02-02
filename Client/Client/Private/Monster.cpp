@@ -4,6 +4,7 @@
 #include "Level_Manager.h"
 #include "CameraManager.h"
 #include "BattleManager.h"
+#include "Effect.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBaseObj(pDevice, pContext)
@@ -293,17 +294,17 @@ HRESULT CMonster::Drop_Items()
 
 void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 {
-	if (m_bMakeEffect)
-		return;
+	/*if (m_bMakeEffect)
+		return;*/
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 
+	_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+	_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+	CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), vLocation);
 
-	//Setting Effect Struct
-	//And Add GameObject Effect
-
-	m_bMakeEffect = true;
+	/*m_bMakeEffect = true;*/
 
 	RELEASE_INSTANCE(CGameInstance);
 }
@@ -343,6 +344,8 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
+
+	Make_GetAttacked_Effect(DamageCauser);
 
 	return _int(m_tStats.m_fCurrentHp);
 
