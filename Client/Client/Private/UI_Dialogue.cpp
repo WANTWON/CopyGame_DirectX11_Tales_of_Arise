@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "UI_QuestClear.h"
 
 
 CUI_Dialogue::CUI_Dialogue(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -38,7 +39,9 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 
 	m_bfadein = true;
 
+
 	Read_TextFiles_for_dialogue();
+	Read_TextFiles_for_Quest1Clear();
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -129,6 +132,16 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					CUI_Manager::Get_Instance()->Set_QuestIndex(1);
 					//CGame
 					break;
+
+				case 1:
+					CUI_QuestClear::QUESTCLEARDESC cleardesc;
+					ZeroMemory(&cleardesc, sizeof(CUI_QuestClear::QUESTCLEARDESC));
+					cleardesc.eName1 = ITEMNAME_LEMONJELLY;
+					cleardesc.iGaingald = 700;
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC, (TEXT("ssss")), &cleardesc)))
+						return OBJ_NOEVENT;
+					CUI_Manager::Get_Instance()->Set_QuestComplete(0, true);
+
 				}
 				
 
@@ -538,6 +551,139 @@ void CUI_Dialogue::Read_TextFiles_for_dialogue()
 	m_vCurrentDialogue.push_back(matrix);
 
 
+}
+
+void CUI_Dialogue::Read_TextFiles_for_Quest1Clear()
+{
+	std::ifstream file("../../../Bin/quest1clear0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge1[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/quest1clear1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge1[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/quest1clear2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge1[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/quest1clear3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge1[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file4("../../../Bin/quest1clear4.txt");
+	if (file4.is_open())
+	{
+		while (file4.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge1[4].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file4.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file5("../../../Bin/quest1clear5.txt");
+	if (file5.is_open())
+	{
+		while (file5.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge1[5].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file5.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	
+
+
+
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialouge1[0]);
+	matrix.push_back(m_vDialouge1[1]);
+	matrix.push_back(m_vDialouge1[2]);
+	matrix.push_back(m_vDialouge1[3]);
+	matrix.push_back(m_vDialouge1[4]);
+	matrix.push_back(m_vDialouge1[5]);
+	
+
+	m_vCurrentDialogue.push_back(matrix);
 }
 
 wchar_t * CUI_Dialogue::ConverCtoWC(char * str)

@@ -31,7 +31,7 @@ CIceWolfState * CHowLingState::Tick(_float fTimeDelta)
 CIceWolfState * CHowLingState::LateTick(_float fTimeDelta)
 {
 
-
+	m_pOwner->Check_Navigation();
 
 	m_fHowLingTimeAcc += fTimeDelta;
 

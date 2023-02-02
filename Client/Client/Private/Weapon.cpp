@@ -47,8 +47,8 @@ HRESULT CWeapon::Initialize(void * pArg)
 
 int CWeapon::Tick(_float fTimeDelta)
 {
-	_matrix		SocketMatrix = m_WeaponDesc.pSocket->Get_OffsetMatrix() */* XMMatrix*/
-		m_WeaponDesc.pSocket->Get_CombinedTransformationMatrix() * 
+	_matrix		SocketMatrix = m_WeaponDesc.pSocket->Get_OffsetMatrix() * XMLoadFloat4x4(&m_WeaponDesc.RotationCorrectionMatrix) * 
+		m_WeaponDesc.pSocket->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_WeaponDesc.TranslationCorrectionMatrix) *
 		XMLoadFloat4x4(&m_WeaponDesc.SocketPivotMatrix) * XMLoadFloat4x4(m_WeaponDesc.pParentWorldMatrix);
 
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);

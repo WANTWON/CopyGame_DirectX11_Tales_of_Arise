@@ -37,6 +37,7 @@ public:
 
 public:
 	void Read_TextFiles_for_dialogue();
+	void Read_TextFiles_for_Quest1Clear();
 
 	wchar_t* ConverCtoWC(char* str);
 
@@ -65,9 +66,9 @@ private:
 
 	_tchar					m_szTXT[MAX_PATH] = TEXT("");
 	char fuck[256];
-	vector<_tchar*> m_vDialogue[7];  // m_vDialogue[0] m_vDialogue[1]
+	vector<_tchar*> m_vDialogue[8];  // m_vDialogue[0] m_vDialogue[1]
 
-	vector<_tchar*> m_vDialouge1[2];
+	vector<_tchar*> m_vDialouge1[7]; // quest 1 clear
 
 	
 

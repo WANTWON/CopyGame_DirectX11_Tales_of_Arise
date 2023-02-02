@@ -539,6 +539,7 @@ HRESULT CUI_QuestClear::Render()
 	/////////////////////////////////////////////////////////////////////item type / name
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlphaGald, sizeof(_float))))
 		return E_FAIL;
+
 	m_fPosition.x = 1100.f;
 	m_fPosition.y = 60.f;
 	m_fSize.x = 300.f;
@@ -917,6 +918,19 @@ void CUI_QuestClear::Free()
 
 	Safe_Release(m_pTextureCom1);
 	Safe_Release(m_pTextureCom2);
+	Safe_Release(m_pTextureCom3);
+	Safe_Release(m_pTextureCom4);
+	Safe_Release(m_pTextureCom5);
+	Safe_Release(m_pTextureCom6);
+	Safe_Release(m_pTextureCom7);
+	Safe_Release(m_pTextureCom8);
+	Safe_Release(m_pTextureCom9);
+		
+		
+		
+		
+		
+		
 	__super::Free();
 }
 

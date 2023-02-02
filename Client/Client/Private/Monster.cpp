@@ -51,6 +51,10 @@ int CMonster::Tick(_float fTimeDelta)
 		m_fTime_TakeDamageDeltaAcc = 0.f;
 	}
 
+	m_fTimeDletaAcc += fTimeDelta;
+
+
+
 	return OBJ_NOEVENT;
 }
 
@@ -103,6 +107,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
 		m_bDead = true;
 
+
 	CBaseObj* pCollisionMonster = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionMonster))
 	{
@@ -114,12 +119,12 @@ void CMonster::Late_Tick(_float fTimeDelta)
 			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
 		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
 	}
+
 }
 
 HRESULT CMonster::Render()
 {
-	if (nullptr == m_pShaderCom ||
-		nullptr == m_pModelCom)
+	if (!m_pShaderCom || !m_pModelCom)
 		return E_FAIL;
 
 	if (FAILED(SetUp_ShaderResources()))
@@ -129,15 +134,6 @@ HRESULT CMonster::Render()
 		return E_FAIL;
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
-	//
-	_bool bGlow = true;
-	if (false == m_bDead)
-	{
-
-		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-			return E_FAIL;
-	}
-	//
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
@@ -146,26 +142,9 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
 
-		//
-		if (false == m_bDead)
-		{
-			if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
-				return E_FAIL;
-		}
-		//
-
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
 			return E_FAIL;
 	}
-
-	//
-	if (false == m_bDead)
-	{
-		bGlow = false;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-			return E_FAIL;
-	}
-	//
 
 	return S_OK;
 }
@@ -287,8 +266,16 @@ CBaseObj* CMonster::Find_MinDistance_Target()
 			m_pTarget = dynamic_cast<CBaseObj*>(iter);
 		}
 	}
-
+	
 	return m_pTarget;
+}
+
+_float  CMonster::Target_Distance(CBaseObj* pTarget)
+{
+
+	_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
+
+	return fDistance;
 }
 
 HRESULT CMonster::Drop_Items()
@@ -343,7 +330,9 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	m_tStats.m_fCurrentHp -= (int)fDamage;
+	m_DamageCauser = DamageCauser;
+
+	m_tStats.m_fCurrentHp-= (int)fDamage;
 
 	if (m_tStats.m_fCurrentHp <= 0)
 	{

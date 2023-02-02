@@ -17,16 +17,8 @@ texture2D g_NormalTexture;
 texture2D g_DepthTexture;
 texture2D g_ShadeTexture;
 texture2D g_SpecularTexture;
-texture2D g_AmbientTexture;
 texture2D g_ShadowDepthTexture;
-texture2D g_GlowTexture;
-float g_fGlowRadius = 1.f;
-const float Weight[17] = { 0.0561, 0.1353, 0.278, 0.4868, 0.6534, 0.7261, 0.8253, 0.9231, 1, 0.9231, 0.8253, 0.7261, 0.6534, 0.4868, 0.278, 0.1353, 0.0561 };
-const float WeightSum = 9.1682;
-const int WeightCount = 8;
 
-float g_fWinSizeX = 1280.f;
-float g_fWinSizeY = 720.f;
 
 sampler LinearSampler = sampler_state
 {
@@ -143,7 +135,6 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
 	/* 0 ~ 1 => -1 ~ 1*/
 	vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
-	//vector vAmbientDesc = g_AmbientTexture.Sample(LinearSampler, In.vTexUV);
 
 	float fViewZ = vDepthDesc.y * 1000.f;
 
@@ -177,7 +168,6 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_POINT(PS_IN In)
 	/* 0 ~ 1 => -1 ~ 1*/
 	vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	vector vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
-	//vector vAmbientDesc = g_AmbientTexture.Sample(LinearSampler, In.vTexUV);
 
 	float fViewZ = vDepthDesc.y * 1000.f;
 
@@ -218,9 +208,8 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
 	vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
-	vector vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV);
 
-	Out.vColor = vDiffuse * vShade + vSpecular + vGlow;
+	Out.vColor = vDiffuse * vShade + vSpecular;
 
 	vector vDepthInfo = g_DepthTexture.Sample(DepthSampler, In.vTexUV);
 	float fViewZ = vDepthInfo.y * 1000.f;
@@ -249,42 +238,6 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	if (Out.vColor.a <= 0.f)
 		discard;
 
-	return Out;
-}
-
-PS_OUT PS_HORIZONTAL_BLUR(PS_IN In)
-{
-	PS_OUT Out = (PS_OUT)0;
-
-	float2 vTexUVOffset = 0;
-	float texelSizeX = g_fGlowRadius /*1*/ / g_fWinSizeX; /* Get the size of a Texel Horizontally. */
-
-	for (int i = -WeightCount; i < WeightCount; ++i)
-	{
-		vTexUVOffset = In.vTexUV + float2(texelSizeX * i, 0); /* Get the UV coordinates for the Offsetted Pixel. */
-		Out.vColor += Weight[WeightCount + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
-	}
-
-	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
-	Out.vColor.a = 0.f;
-	return Out;
-}
-
-PS_OUT PS_VERTICAL_BLUR(PS_IN In)
-{
-	PS_OUT Out = (PS_OUT)0;
-	
-	float2 vTexUVOffset = 0;				
-	float texelSizeY = g_fGlowRadius /*1*/ / g_fWinSizeY; /* Get the size of a Texel Vertically. */
-
-	for (int i = -WeightCount; i < WeightCount; ++i)
-	{
-		vTexUVOffset = In.vTexUV + float2(0, texelSizeY * i); /* Get the UV coordinates for the Offsetted Pixel. */
-		Out.vColor += Weight[WeightCount + i] * g_GlowTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
-	}
-
-	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
-	Out.vColor.a = 0.f;
 	return Out;
 }
 
@@ -336,29 +289,5 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_BLEND();
-	}
-
-	// 4
-	pass Horizontal_Blur
-	{
-		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_HORIZONTAL_BLUR();
-	}
-
-	// 5
-	pass Vertical_Blur
-	{
-		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_VERTICAL_BLUR();
 	}
 }

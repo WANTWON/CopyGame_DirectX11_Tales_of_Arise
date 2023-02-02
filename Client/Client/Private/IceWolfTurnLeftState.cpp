@@ -44,6 +44,8 @@ CIceWolfState * CTurnLeftState::Tick(_float fTimeDelta)
 
 CIceWolfState * CTurnLeftState::LateTick(_float fTimeDelta)
 {
+
+
 	m_fTimeDletaAcc += fTimeDelta;
 
 	if (m_fTimeDletaAcc > m_fTurnLeftTime)
@@ -91,9 +93,9 @@ void CTurnLeftState::Enter()
 	m_eStateId = STATE_ID::STATE_MOVE;
 
 	if(rand()%2 == 0)
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_TURN_LEFT);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_TURN_L);
 	else
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_TURN_RIGHT);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_TURN_R);
 
 
 }

@@ -4,6 +4,7 @@
 
 
 
+
 CUI_Questmsg::CUI_Questmsg(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -31,6 +32,18 @@ HRESULT CUI_Questmsg::Initialize(void * pArg)
 	m_fPosition.y = 600.f;
 	m_fAlpha = 0;
 
+	if (CUI_Manager::Get_Instance()->Get_Quest1_Herb() == 3 && CUI_Manager::Get_Instance()->Get_Quest1_Lettuce() == 3 &&
+		CUI_Manager::Get_Instance()->Get_QuestIndex() == 1)
+	{
+		CUI_Manager::Get_Instance()->Set_QuestComplete(0, true);
+	}
+
+
+
+	if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 1 && CUI_Manager::Get_Instance()->Get_QuestComplete(0))
+	{
+		CUI_Manager::Get_Instance()->Set_Dialogue_section(1);
+	}
 	//if(m_popupdesc.iIndex == 0)
 	/*switch (m_popupdesc.iIndex)
 	{

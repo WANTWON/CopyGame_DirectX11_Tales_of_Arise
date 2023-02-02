@@ -22,7 +22,7 @@ public:
 
 	};
 public:
-	CBattle_Damage_LargeB_State(class CIce_Wolf* pIceWolf);
+	CBattle_Damage_LargeB_State(class CIce_Wolf* pIceWolf, _bool bThirdHit = false);
 	
 	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CIceWolfState* Tick(_float fTimeDelta) override;
@@ -37,6 +37,7 @@ private:
 	_float			m_fCntChance= 0.f;
 	_float			m_fCntChanceTime = 0.f;
 	DAMAGE_ANIM		m_eDamageAnim = ANIM_DAMAGE_LARGE_B;
+	_bool			m_bThirdHit = false;
 
 private:
 	_matrix m_StartMatrix;

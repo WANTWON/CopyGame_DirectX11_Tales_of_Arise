@@ -45,8 +45,10 @@ CIceWolfState * CBattle_SomerSaultState::LateTick(_float fTimeDelta)
 {
 	
 	if (m_bIsAnimationFinished)
+	{	
+		m_pOwner->Set_Done_HitAnimState();
 		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_SOMESAULT);
-
+	}
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 

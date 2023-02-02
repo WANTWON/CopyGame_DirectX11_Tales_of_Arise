@@ -140,6 +140,8 @@ void CRunState::Move(_float fTimeDelta)
 
 	_matrix CameraMatrix = XMLoadFloat4x4(&pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW));
 
+	RELEASE_INSTANCE(CGameInstance);
+
 	switch (m_eDirection)
 	{
 	case DIR_STRAIGHT_LEFT:
@@ -169,7 +171,12 @@ void CRunState::Move(_float fTimeDelta)
 	}
 
 	CTransform* pPlayerTransform = m_pOwner->Get_Transform();
+
+	/*_vector vCameraScale, vCameraRotQuat, vCameraPos;
+	_vector vPlayerScale, vPlayerRotQuat, vPlayerPos;
 	
+	XMMatrixDecompose(&vCameraScale, &vCameraRotQuat, &vCameraPos, CameraMatrix);*/
+
 	_float4x4 CameraFloat;
 	XMStoreFloat4x4(&CameraFloat, CameraMatrix);
 
@@ -198,6 +205,4 @@ void CRunState::Move(_float fTimeDelta)
 		
 		m_pOwner->Get_Transform()->Sliding_Straight(fTime, m_pOwner->Get_Navigation());
 	}
-
-	RELEASE_INSTANCE(CGameInstance);
 }
