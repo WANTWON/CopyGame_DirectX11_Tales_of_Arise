@@ -220,7 +220,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 			if (m_bNotCreate)
 				continue;
 
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
 				return E_FAIL;
 		}
 		/*else */if (!wcscmp(pModeltag, TEXT("Hawk")))

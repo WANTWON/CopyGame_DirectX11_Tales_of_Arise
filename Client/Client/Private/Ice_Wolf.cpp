@@ -58,8 +58,20 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_tStats.m_fRunSpeed = 5.f;
 
 
-	_vector vPosition = *(_vector*)pArg;
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	NONANIMDESC ModelDesc;
+	if (pArg != nullptr)
+		memcpy(&ModelDesc, pArg, sizeof(NONANIMDESC));
+
+	if (pArg != nullptr)
+	{
+		_vector vPosition = XMLoadFloat3(&ModelDesc.vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		Set_Scale(ModelDesc.vScale);
+
+		if (ModelDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
+	}
 
 	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
 	Check_NearTrigger();
@@ -184,6 +196,54 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 		LateTick_State(fTimeDelta);
 //	}
 
+}
+
+HRESULT CIce_Wolf::Render_Glow()
+{
+	if (!m_pShaderCom || !m_pModelCom)
+		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	if (!m_bDead)
+	{
+		_bool bGlow = true;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+			return E_FAIL;
+
+		CTarget_Manager* pTargetManager = GET_INSTANCE(CTarget_Manager);
+		if (FAILED(pTargetManager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
+			return E_FAIL;
+		RELEASE_INSTANCE(CTarget_Manager);
+	}
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
+			return E_FAIL;
+
+		if (!m_bDead)
+		{
+			if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
+				return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
+			return E_FAIL;
+	}
+
+	if (!m_bDead)
+	{
+		_bool bGlow = false;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 void CIce_Wolf::AI_Behavior(_float fTimeDelta)
