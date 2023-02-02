@@ -43,8 +43,11 @@ HRESULT CEffect::Render()
 	return S_OK;
 }
 
-CEffect* CEffect::PlayEffect(_tchar * wcEffectName)
+vector<CEffect*> CEffect::PlayEffectAtLocation(_tchar * wcEffectName, _vector vLocation)
 {
+	vector<CEffect*> m_pEffects;
+	CEffect* pEffect = nullptr;
+
 	/* Load Effect File. */
 	HANDLE hFileEffect = nullptr;
 	_tchar LoadPathEffect[MAX_PATH] = TEXT("../../../Bin/Data/EffectData/");
@@ -53,13 +56,12 @@ CEffect* CEffect::PlayEffect(_tchar * wcEffectName)
 	hFileEffect = CreateFile(LoadPathEffect, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	if (hFileEffect == INVALID_HANDLE_VALUE)
-		return nullptr;
+		return m_pEffects;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	DWORD dwByte = 0;
 	_uint iEffectsCount = 0;
-	CEffect* pEffect = nullptr;
 
 	/* Read how many Effects there are in this File. */
 	ReadFile(hFileEffect, &iEffectsCount, sizeof(_uint), &dwByte, nullptr);
@@ -93,7 +95,7 @@ CEffect* CEffect::PlayEffect(_tchar * wcEffectName)
 					if (!dwByte)
 						break;
 
-					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectTexture"), LEVEL_STATIC, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tTextureEffectDesc);
+					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectTexture"), pGameInstance->Get_CurrentLevelIndex(), TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tTextureEffectDesc);
 					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_TEXTURE);
 					break;
 				}
@@ -104,7 +106,7 @@ CEffect* CEffect::PlayEffect(_tchar * wcEffectName)
 					if (!dwByte)
 						break;
 
-					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectMesh"), LEVEL_STATIC, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tMeshEffectDesc);
+					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectMesh"), pGameInstance->Get_CurrentLevelIndex(), TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tMeshEffectDesc);
 					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_MESH);
 					break;
 				}
@@ -115,7 +117,7 @@ CEffect* CEffect::PlayEffect(_tchar * wcEffectName)
 					if (!dwByte)
 						break;
 
-					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_ParticleSystem"), LEVEL_STATIC, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tParticleDesc);
+					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_ParticleSystem"), pGameInstance->Get_CurrentLevelIndex(), TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tParticleDesc);
 					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_PARTICLE);
 					break;
 				}
@@ -195,6 +197,12 @@ CEffect* CEffect::PlayEffect(_tchar * wcEffectName)
 			}
 			if (!NoisePowerCurves.empty())
 				pEffect->Set_NoisePowerCurves(NoisePowerCurves);
+
+			if (pEffect)
+			{
+				pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+				m_pEffects.push_back(pEffect);
+			}
 		}
 	}
 
@@ -202,7 +210,7 @@ CEffect* CEffect::PlayEffect(_tchar * wcEffectName)
 
 	CloseHandle(hFileEffect);
 
-	return pEffect;
+	return m_pEffects;
 }
 
 HRESULT CEffect::Ready_Components(void * pArg)

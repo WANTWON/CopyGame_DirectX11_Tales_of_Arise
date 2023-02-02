@@ -52,18 +52,16 @@ HRESULT CLevel_BattleZone::Initialize()
 		return E_FAIL;
 
 	
-
-	//if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
-	//	return E_FAIL;
-
 	
+	//가장 맨 처음에 생성된 몬스터를 라곤 타겟으로 설정함
+	CBattleManager::Get_Instance()->Set_LackonMonster(dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_BATTLE, TEXT("Layer_Monster"))));
 
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_BATTLE);
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
-	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
-	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
+	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
+	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) +  XMVectorSet(0.f, 20.f, -10.f, 0.f));
 	
 	return S_OK;
 }
@@ -101,6 +99,29 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		CBattleManager::Get_Instance()->Set_BattleMode(false);
 
 	CCollision_Manager::Get_Instance()->CollisionwithBullet();
+
+	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+	if (pLockOn == nullptr)
+	{
+		list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
+		if (pMonsterList == nullptr || pMonsterList->size() == 0)
+		{
+			CBattleManager::Get_Instance()->Set_LackonMonster(nullptr);
+			return;
+		}
+			
+
+
+		for (auto& iter : *pMonsterList)
+		{
+			_float fDistance = XMVectorGetX(XMVector3Length(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) - dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			if (m_fMinLength > fDistance)
+			{
+				m_fMinLength = fDistance;
+				CBattleManager::Get_Instance()->Set_LackonMonster(dynamic_cast<CBaseObj*>(iter));
+			}
+		}
+	}
 }
 
 HRESULT CLevel_BattleZone::Ready_Lights()
@@ -134,8 +155,8 @@ HRESULT CLevel_BattleZone::Ready_Lights()
 
 	_float4		vLightEye, vLightAt;
 
-	XMStoreFloat4(&vLightEye, XMVectorSet(36, 50, 70, 1.f));
-	XMStoreFloat4(&vLightAt, XMVectorSet(36, 0, 20, 1.f));
+	XMStoreFloat4(&vLightEye, XMVectorSet(64, 100, 100, 1.f));
+	XMStoreFloat4(&vLightAt, XMVectorSet(64, 0, 0, 1.f));
 
 	pGameInstance->Set_ShadowLightView(vLightEye, vLightAt);
 

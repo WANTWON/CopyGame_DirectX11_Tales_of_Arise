@@ -58,7 +58,7 @@ CPlayerState * CRunState::HandleInput()
 	else
 		return new CIdleState(m_pOwner);
 
-	if (pGameInstance->Key_Pressing(DIK_LSHIFT))
+	if ((LEVEL_BATTLE != m_pOwner->Get_Level()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
 		if (!m_bIsDash)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
@@ -108,7 +108,6 @@ void CRunState::Enter()
 			break;
 		case CPlayer::SION:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
-
 			break;
 		}
 	}
@@ -124,7 +123,6 @@ void CRunState::Enter()
 			break;
 		case CPlayer::SION:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
-
 			break;
 		}
 	}
@@ -139,6 +137,8 @@ void CRunState::Move(_float fTimeDelta)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	_matrix CameraMatrix = XMLoadFloat4x4(&pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW));
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	switch (m_eDirection)
 	{
@@ -169,13 +169,13 @@ void CRunState::Move(_float fTimeDelta)
 	}
 
 	CTransform* pPlayerTransform = m_pOwner->Get_Transform();
-	
+
 	_float4x4 CameraFloat;
 	XMStoreFloat4x4(&CameraFloat, CameraMatrix);
 
 	_float4x4 PlayerFloat = pPlayerTransform->Get_World4x4();
 
-	_vector vLook = XMVectorLerp(XMVectorSet(PlayerFloat.m[2][0], 0.f, PlayerFloat.m[2][2], 0.f), XMVectorSet(CameraFloat.m[2][0], 0.f, CameraFloat.m[2][2], 0.f), 0.35f);
+	_vector vLook = XMVectorLerp(XMVectorSet(PlayerFloat.m[2][0], 0.f, PlayerFloat.m[2][2], 0.f), XMVectorSet(CameraFloat.m[2][0], 0.f, CameraFloat.m[2][2], 0.f), 0.5f);
 	_float4 LookFloat;
 	XMStoreFloat4(&LookFloat, vLook);
 
@@ -186,18 +186,8 @@ void CRunState::Move(_float fTimeDelta)
 	pPlayerTransform->Set_State(CTransform::STATE_LOOK, XMVector4Normalize(vPlayerLook) * pPlayerTransform->Get_Scale(CTransform::STATE_LOOK));
 	pPlayerTransform->Set_State(CTransform::STATE_RIGHT, vRight);
 
-	_float fCos = XMVectorGetX(XMVector4Dot(pPlayerTransform->Get_State(CTransform::STATE_LOOK), vPlayerLook));
-
-	if (0.85f < fCos)
-	{
-		_float fTime = fTimeDelta;
-		if (m_bIsDash)
-			fTime *= 4.f;
-		else
-			fTime *= 2.f;
-		
-		m_pOwner->Get_Transform()->Sliding_Straight(fTime, m_pOwner->Get_Navigation());
-	}
-
-	RELEASE_INSTANCE(CGameInstance);
+	if (m_bIsDash)
+		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 4.f, m_pOwner->Get_Navigation());
+	else
+		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());
 }

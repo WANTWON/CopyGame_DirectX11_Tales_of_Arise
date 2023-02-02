@@ -21,7 +21,6 @@ float g_fNoiseSpeed;
 float g_fNoisePower;
 float g_fTimer = 0.f;
 
-
 struct VS_IN
 {
 	float3 vPosition : POSITION;
@@ -30,15 +29,12 @@ struct VS_IN
 	float3 vTangent : TANGENT;
 };
 
-
-
 struct VS_OUT
 {
 	float4 vPosition : SV_POSITION;
 	float3 vNormal : NORMAL;
 	float2 vTexUV : TEXCOORD0;
 	float4 vProjPos : TEXCOORD1;
-
 	float3 vTangent : TANGENT;
 	float3 vBinormal : BINORMAL;
 };
@@ -78,8 +74,6 @@ struct PS_OUT
 	float4 vDiffuse : SV_TARGET0;
 	float4 vNormal : SV_TARGET1;
 	float4 vDepth : SV_TARGET2;
-	float4 vGlow : SV_TARGET3;
-	float4 vAmbient : SV_TARGET4;
 };
 
 struct PS_OUT_SHADOW
@@ -107,7 +101,6 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
-	Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);
 
 	if (Out.vDiffuse.a <= 0.0f)
 		discard;
@@ -145,7 +138,6 @@ PS_OUT PS_WATER(PS_IN In)
 	Out.vNormal = vector(vLerpNormal * 0.5f + 0.5f, 0.f);
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
-	Out.vAmbient = float4(0.f, 0.f, 0.f, 0.f);
 
 	if (Out.vDiffuse.a <= .3f)
 		discard;
@@ -168,9 +160,10 @@ PS_OUT PS_DISSOLVE(PS_IN In)
 	float4 vDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vDiffuse.a = Out.vDiffuse.r;
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
-	Out.vAmbient = float4(1.f, 1.f, 1.f, 1.f);
+	
 	if (vDissolve.r < g_fDissolveAlpha)
 		discard;
 

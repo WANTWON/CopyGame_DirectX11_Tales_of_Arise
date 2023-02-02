@@ -171,10 +171,17 @@ CPlayerState * CSkillState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime);
+		if (CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_START == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_LOOP);
+		else if (CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_LOOP == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_END);
 		else
-			return new CIdleState(m_pOwner);
+		{
+			if (m_bIsFly)
+				return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime);
+			else
+				return new CIdleState(m_pOwner);
+		}
 	}
 		
 	return nullptr;

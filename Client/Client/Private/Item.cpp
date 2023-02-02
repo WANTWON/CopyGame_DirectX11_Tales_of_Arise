@@ -76,7 +76,7 @@ int CItem::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (!m_pPickupFlares)
+	if (m_pPickupFlares.empty())
 	{
 		switch (m_ItemDesc.etype)
 		{
@@ -86,12 +86,10 @@ int CItem::Tick(_float fTimeDelta)
 			case ITEMTYPE::PLANT:
 			case ITEMTYPE::MUSHROOM:
 			{
-				CEffect* pEffect = CEffect::PlayEffect(TEXT("Pickup_Flares.dat"));
-
 				_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
-				pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset);
+				_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
-				m_pPickupFlares = pEffect;
+				m_pPickupFlares = CEffect::PlayEffectAtLocation(TEXT("Pickup_Flares.dat"), vLocation);
 				break;
 			}
 		}
@@ -124,19 +122,20 @@ void CItem::Late_Tick(_float fTimeDelta)
 			m_bIsGain = true;
 
 			
-			CEffect* pEffect = CEffect::PlayEffect(TEXT("Pickup_Flash.dat"));
 			_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
-			pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset);
-			if (pEffect)
-				m_pPickupFlash = pEffect;
+			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
-			pEffect = CEffect::PlayEffect(TEXT("Pickup_Particles.dat"));
-			pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset);
-			if(pEffect)
-				m_pPickupParticles = pEffect;
+			m_pGetItem = CEffect::PlayEffectAtLocation(TEXT("Get_Item.dat"), vLocation);
 
-			if (m_pPickupFlares)
-				((CParticleSystem*)m_pPickupFlares)->Set_Stop(true);
+			if (!m_pPickupFlares.empty())
+			{
+				for (auto& pPickupFlare : m_pPickupFlares)
+				{
+					CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(pPickupFlare);
+					if (pPickupFlare)
+						pParticleSystem->Set_Stop(true);
+				}
+			}
 
 			//ITEMINFO*  itempointer = new  ITEMINFO;
 			switch (m_ItemDesc.etype)

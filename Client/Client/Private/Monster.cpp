@@ -5,7 +5,7 @@
 #include "CameraManager.h"
 #include "BattleManager.h"
 #include "DamageFont.h"
-
+#include "Effect.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBaseObj(pDevice, pContext)
@@ -53,6 +53,10 @@ int CMonster::Tick(_float fTimeDelta)
 		m_fTime_TakeDamageDeltaAcc = 0.f;
 	}
 
+	m_fTimeDletaAcc += fTimeDelta;
+
+
+
 	return OBJ_NOEVENT;
 }
 
@@ -72,13 +76,13 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
 	{
-		Take_Damage(113, m_pTarget);
+		Take_Damage(20, m_pTarget);
 		m_bTakeDamage = true;
 	}
 
 	if (m_bDissolve)
 	{
-		m_DissolveAlpha += fTimeDelta/* * 0.13*/;
+		m_DissolveAlpha += fTimeDelta*m_fDissolveOffset;
 
 		if (1 < m_DissolveAlpha)
 		{
@@ -104,12 +108,25 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
 		m_bDead = true;
+
+
+	CBaseObj* pCollisionMonster = nullptr;
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionMonster))
+	{
+
+		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+		if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
+			vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
+		else
+			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
+		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
+	}
+
 }
 
 HRESULT CMonster::Render()
 {
-	if (nullptr == m_pShaderCom ||
-		nullptr == m_pModelCom)
+	if (!m_pShaderCom || !m_pModelCom)
 		return E_FAIL;
 
 	if (FAILED(SetUp_ShaderResources()))
@@ -119,15 +136,6 @@ HRESULT CMonster::Render()
 		return E_FAIL;
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
-	//
-	_bool bGlow = true;
-	if (false == m_bDead)
-	{
-
-		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-			return E_FAIL;
-	}
-	//
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
@@ -136,26 +144,9 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
 
-		//
-		if (false == m_bDead)
-		{
-			if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
-				return E_FAIL;
-		}
-		//
-
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
 			return E_FAIL;
 	}
-
-	//
-	if (false == m_bDead)
-	{
-		bGlow = false;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-			return E_FAIL;
-	}
-	//
 
 	return S_OK;
 }
@@ -242,6 +233,25 @@ _vector CMonster::Calculate_DirectionByPos()
 	return vTargetPos - vMyPos;
 }
 
+_bool CMonster::Check_AmILastMoster()
+{
+	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
+
+	if (pMonsterList->size() == 1)
+	{
+		if (pMonsterList->front() == this && m_bDissolve)
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLE_CLEAR);
+			pCamera->Set_TargetPosition(Get_TransformState(CTransform::STATE_TRANSLATION));
+			m_fDissolveOffset = 0.1f;
+			return true;
+		}
+			
+	}
+	return false;
+}
+
 void CMonster::Find_Target()
 {
 	if (!m_bDead)
@@ -277,8 +287,16 @@ CBaseObj* CMonster::Find_MinDistance_Target()
 			m_pTarget = dynamic_cast<CBaseObj*>(iter);
 		}
 	}
-
+	
 	return m_pTarget;
+}
+
+_float  CMonster::Target_Distance(CBaseObj* pTarget)
+{
+
+	_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
+
+	return fDistance;
 }
 
 HRESULT CMonster::Drop_Items()
@@ -297,17 +315,17 @@ HRESULT CMonster::Drop_Items()
 
 void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 {
-	if (m_bMakeEffect)
-		return;
+	/*if (m_bMakeEffect)
+		return;*/
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 
+	_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+	_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+	CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), vLocation);
 
-	//Setting Effect Struct
-	//And Add GameObject Effect
-
-	m_bMakeEffect = true;
+	/*m_bMakeEffect = true;*/
 
 	RELEASE_INSTANCE(CGameInstance);
 }
@@ -333,18 +351,24 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	m_tStats.m_fCurrentHp -= (int)fDamage;
+	m_DamageCauser = DamageCauser;
+
+	m_tStats.m_fCurrentHp-= (int)fDamage;
 
 	if (m_tStats.m_fCurrentHp <= 0)
 	{
 		m_tStats.m_fCurrentHp = 0;
 
+
 		return _int(m_tStats.m_fCurrentHp);//dmgfont
+
 
 	}
 
+	CBattleManager::Get_Instance()->Set_LackonMonster(this);
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
+
 
 	CDamageFont::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
@@ -357,6 +381,9 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
 		return E_FAIL;
 	
+
+	Make_GetAttacked_Effect(DamageCauser);
+
 
 	return _int(m_tStats.m_fCurrentHp);
 

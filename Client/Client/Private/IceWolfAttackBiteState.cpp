@@ -48,8 +48,10 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 CIceWolfState * CAttackBiteState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
+	{
+		m_pOwner->Set_Done_HitAnimState();
 		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_BITE);
-	
+	}
 	return nullptr;
 }
 

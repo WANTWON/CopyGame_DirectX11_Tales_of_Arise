@@ -807,6 +807,9 @@
     <ClInclude Include="..\Public\RinwellState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_TurnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\RinwellMoveState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClInclude>
@@ -827,6 +830,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_Skillmessage.h">
       <Filter>02.GameObjects\04.UI\20.UI_Skillmessage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellPoseState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1295,6 +1301,9 @@
     <ClCompile Include="..\Private\Rinwell.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_TurnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\RinwellMoveState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClCompile>
@@ -1315,6 +1324,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Skillmessage.cpp">
       <Filter>02.GameObjects\04.UI\20.UI_Skillmessage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellPoseState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

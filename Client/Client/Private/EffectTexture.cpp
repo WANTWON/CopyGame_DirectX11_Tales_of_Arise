@@ -66,6 +66,7 @@ void CEffectTexture::Late_Tick(_float fTimeDelta)
 	if (m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 	}
 }
@@ -79,6 +80,41 @@ HRESULT CEffectTexture::Render()
 
 	m_pShaderCom->Begin(2);
 	m_pVIBufferCom->Render();
+
+	return S_OK;
+}
+
+HRESULT CEffectTexture::Render_Glow()
+{
+	if (!m_pShaderCom || !m_pVIBufferCom)
+		return E_FAIL;
+
+	__super::Render();
+
+	if (!m_bDead)
+	{
+		_bool bGlow = true;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+			return E_FAIL;
+
+		CTarget_Manager* pTargetManager = GET_INSTANCE(CTarget_Manager);
+		if (FAILED(pTargetManager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
+			return E_FAIL;
+		RELEASE_INSTANCE(CTarget_Manager);
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", m_pTextureCom->Get_SRV())))
+			return E_FAIL;
+	}
+
+	m_pShaderCom->Begin(2);
+	m_pVIBufferCom->Render();
+
+	if (!m_bDead)
+	{
+		_bool bGlow = false;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

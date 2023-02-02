@@ -200,6 +200,20 @@ HRESULT CParticleSystem::InitializeBuffers()
 	return S_OK;
 }
 
+HRESULT CParticleSystem::ResetParticleSystem()
+{
+	Safe_Release(m_pVertexBuffer);
+	Safe_Release(m_pIndexBuffer);
+
+	Safe_Delete_Array(m_Particles);
+	Safe_Delete_Array(m_Vertices);
+
+	InitializeParticleSystem();
+	InitializeBuffers();
+
+	return S_OK;
+}
+
 void CParticleSystem::EmitParticles(_float fTimeDelta)
 {
 	_bool bEmitParticle, bFound;
@@ -314,9 +328,6 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 	/* BURST (spawns once based on "m_iMaxParticles"). */
 	else
 	{
-		/* Increment the frame time. */
-		m_fAccumulatedTime += fTimeDelta;
-
 		if (m_fCurrentParticleCount == 0)
 		{
 			while (m_fCurrentParticleCount < (m_tParticleDesc.m_iMaxParticles - 1))

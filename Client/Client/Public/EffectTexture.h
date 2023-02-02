@@ -48,6 +48,7 @@ public:
 	virtual int Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_Glow() override;
 
 public:
 	virtual void Add_MaskTexture() override;

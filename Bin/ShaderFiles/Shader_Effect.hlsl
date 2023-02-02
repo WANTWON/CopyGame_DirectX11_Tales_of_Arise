@@ -16,6 +16,11 @@ float g_fNoiseSpeed;
 float g_fNoisePower;
 float g_fTimer = 0.f;
 
+texture2D g_DepthTexture;
+texture2D g_GlowTexture;
+bool g_bGlow = false;
+float4 g_GlowColor;
+
 /* For.Distortion */
 texture2D g_StrengthTexture;
 

@@ -2,6 +2,7 @@
 #include "AiRinwell.h"
 #include "RinwellMoveState.h"
 #include "RinwellState.h"
+#include "RinwellPoseState.h"
 #include "RinwellDamageState.h"
 
 using namespace AiRinwell;
@@ -32,7 +33,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_tStats.m_fMaxHp = 100.f;
+	m_tStats.m_fMaxHp = 150.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -53,15 +54,15 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 	if (m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
 		/* Set State */
-		CRinwellState* pState = new AiRinwell::CMoveState(this, STATETYPE_MAIN, 0);
+		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_BATTLESTART);
 		m_pState = m_pState->ChangeState(m_pState, pState);
-		m_pModelCom->Set_CurrentAnimIndex(BTL_ADVENT);
-		m_eAnim = BTL_ADVENT;
+		m_pTransformCom->LookAt(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	}
 	else
 	{
-		m_pModelCom->Set_CurrentAnimIndex(IDLE_CHARA);
+		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_IDLE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
 	}
 
 
@@ -132,36 +133,19 @@ HRESULT CAiRinwell::Ready_Components(void * pArg)
 
 int CAiRinwell::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
-		return OBJ_NOEVENT;
-
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	__super::Tick(fTimeDelta);
-
-	if (m_bDissolve)
-	{
-		m_pModelCom->Play_Animation(fTimeDelta, Is_AnimationLoop(m_eAnim), "TransN");
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f) || m_bDissolve)
 		return OBJ_NOEVENT;
-	}
 
+	__super::Tick(fTimeDelta);
 
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	if (m_bBattleMode && !m_bTakeDamage)
-	{
-		if (m_bMotion_Finished)
-		{
-			AI_Behavior(fTimeDelta);
-			Tick_State(fTimeDelta);
-		}
-		else
-			Battle_Animation(fTimeDelta);
-	}
-	else
-		Field_Animation(fTimeDelta);
-
+	AI_Behavior(fTimeDelta);
+	Tick_State(fTimeDelta);
+	
 	return OBJ_NOEVENT;
 }
 
@@ -172,7 +156,7 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 	
 	__super::Late_Tick(fTimeDelta);
 
-	if (m_bBattleMode && m_bMotion_Finished && !m_bDissolve)
+	if (!m_bDissolve)
 	{
 		LateTick_State(fTimeDelta);
 	}
@@ -202,38 +186,6 @@ void CAiRinwell::LateTick_State(_float fTimeDelta)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
 }
 
-void CAiRinwell::Field_Animation(_float fTimeDelta)
-{
-	Find_Target();
-
-	if (m_fDistanceToTarget < 10.f && !m_bAggro)
-	{
-		m_eAnim = BTL_ADVENT;
-		m_bAggro = true;
-	}
-
-	_bool isAnimationFinised = m_pModelCom->Play_Animation(fTimeDelta, Is_AnimationLoop(m_eAnim), "TransN");
-
-	if (isAnimationFinised)
-	{
-		m_eAnim = RUN;
-	}
-
-	if (m_eAnim == RUN)
-	{
-		m_pTransformCom->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-		m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
-		Check_Navigation();
-	}
-
-	if (m_eAnim != m_ePreAnim)
-	{
-		m_pModelCom->Set_CurrentAnimIndex(m_eAnim);
-		m_ePreAnim = m_eAnim;
-	}
-
-	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-}
 
 void CAiRinwell::Battle_Animation(_float fTimeDelta)
 {
@@ -280,124 +232,26 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 	case Client::CAiRinwell::BTL_DAMAGE_SMALL_L:
 	case Client::CAiRinwell::BTL_DAMAGE_SMALL_R:
 	case Client::CAiRinwell::BTL_DEAD:
-		return false;
-	case Client::CAiRinwell::BTL_ARISE_B:
-		break;
-	case Client::CAiRinwell::BTL_ARISE_F:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_BRAVE:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_DENGEKISYOUHEKI:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_DENZIHOU:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_FLASH:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_FUATU:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_FUZIN:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_HIEN:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_HOUDEN:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_HYOUROU:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_MIZUTAMARI_END:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_MIZUTAMARI_LOOP:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_MIZUTAMARI_START:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_SENKOU:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_STRIKE:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_STRIKE_AIR:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_SUIHOU:
-		break;
-	case Client::CAiRinwell::BTL_ATTACK_TUMUZIKAZE:
-		break;
-	case Client::CAiRinwell::BTL_DOWN_B:
-		break;
-	case Client::CAiRinwell::BTL_DOWN_F:
-		break;
-	case Client::CAiRinwell::BTL_FALL:
-		break;
-	case Client::CAiRinwell::BTL_GUARD_HIT:
-		break;
-	case Client::CAiRinwell::BTL_GUARD_LOOP:
-		break;
-	case Client::CAiRinwell::BTL_GUARD_START:
-		break;
-	case Client::CAiRinwell::BTL_ITEM:
-		break;
-	case Client::CAiRinwell::BTL_JUMP:
-		break;
-	case Client::CAiRinwell::BTL_GUARD_WALK_B:
-	case Client::CAiRinwell::BTL_GUARD_WALK_F:
-	case Client::CAiRinwell::BTL_GUARD_WALK_L:
-	case Client::CAiRinwell::BTL_GUARD_WALK_R:
-	case Client::CAiRinwell::DASH:
-	case Client::CAiRinwell::IDLE:
-	case Client::CAiRinwell::IDLE_CHARA:
-	case Client::CAiRinwell::RUN:
-		return true;
-	case Client::CAiRinwell::IDLE_TRANS_WALK:
-		break;
-	case Client::CAiRinwell::JUMP_LANDING:
-		break;
-	case Client::CAiRinwell::JUMP_LANDING_HIGH:
-		break;
-	case Client::CAiRinwell::JUMP_LOOP:
-		break;
-	case Client::CAiRinwell::JUMP_RUN_END:
-		break;
-	case Client::CAiRinwell::JUMP_RUN_LANDING:
-		break;
-	case Client::CAiRinwell::JUMP_RUN_LOOP:
-		break;
-	case Client::CAiRinwell::JUMP_RUN_START:
-		break;
-	case Client::CAiRinwell::JUMP_START:
-		break;
-	case Client::CAiRinwell::LADDER_DOWN_END:
-		break;
-	case Client::CAiRinwell::LADDER_DOWN_LOOP:
-		break;
-	case Client::CAiRinwell::LADDER_DOWN_START:
-		break;
-	case Client::CAiRinwell::LADDER_DOWN_TRANS_LADDER_IDLE:
-		break;
-	case Client::CAiRinwell::LADDER_IDLE:
-		break;
-	case Client::CAiRinwell::LADDER_TRANS_JUMP_RUN_LOOP:
-		break;
-	case Client::CAiRinwell::LADDER_UP_END:
-		break;
-	case Client::CAiRinwell::LADDER_UP_LOOP:
-		break;
-	case Client::CAiRinwell::LADDER_UP_START:
-		break;
-	case Client::CAiRinwell::LADDER_UP_TRANS_LADDER_IDLE:
-		break;
-	case Client::CAiRinwell::RUN_BRAKE_000:
-		break;
-	case Client::CAiRinwell::RUN_BRAKE_001:
-		break;
 	case Client::CAiRinwell::TOUCH_STAND:
-		break;
 	case Client::CAiRinwell::TREASURE_OPEN:
-		break;
-	case Client::CAiRinwell::WALK:
-		break;
 	case Client::CAiRinwell::WALK_TRANS_IDLE_000:
-		break;
 	case Client::CAiRinwell::WALK_TRANS_IDLE_001:
-		break;
-	default:
-		break;
+	case Client::CAiRinwell::RUN_BRAKE_000:
+	case Client::CAiRinwell::RUN_BRAKE_001:
+	case Client::CAiRinwell::BTL_ATTACK_BRAVE:
+	case Client::CAiRinwell::BTL_ATTACK_DENGEKISYOUHEKI:
+	case Client::CAiRinwell::BTL_ATTACK_DENZIHOU:
+	case Client::CAiRinwell::BTL_ATTACK_FLASH:
+	case Client::CAiRinwell::BTL_ATTACK_FUATU:
+	case Client::CAiRinwell::BTL_ATTACK_HIEN:
+	case Client::CAiRinwell::BTL_ATTACK_HOUDEN:
+	case Client::CAiRinwell::BTL_ATTACK_HYOUROU:
+	case Client::CAiRinwell::BTL_ATTACK_MIZUTAMARI_END:
+	case Client::CAiRinwell::BTL_STEP_AIR:
+	case Client::CAiRinwell::BTL_STEP_LAND_BACK:
+	case Client::CAiRinwell::BTL_STEP_LAND:
+	case Client::CAiRinwell::BTL_ATTACK_MAGIC_EMIT_AIR:
+		return false;
 	}
 
 	return true;
@@ -412,9 +266,9 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	if (iHp <= 0)
 	{
-		m_eAnim = BTL_DEAD;
 		m_bTakeDamage = true;
-		m_bDissolve = true;
+		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+		m_pState = m_pState->ChangeState(m_pState, pState);
 		return 0;
 	}
 	else
@@ -422,7 +276,7 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		m_pTarget = DamageCauser;
 		m_eDmg_Direction =  Calculate_DmgDirection();
 		m_bTakeDamage = true;
-		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction);
+		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 	}
 

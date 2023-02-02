@@ -13,9 +13,13 @@ public:
 	enum STATE_ID
 	{
 		STATE_IDLE,
+		STATE_AGGRO,
 		STATE_MOVE,
 		STATE_ATTACK,
 		STATE_DAMAGE,
+		STATE_DEAD,
+		STATE_HP50DOWN,
+		STATE_BATTLESTART
 	};
 
 	virtual ~CRinwellState() {};

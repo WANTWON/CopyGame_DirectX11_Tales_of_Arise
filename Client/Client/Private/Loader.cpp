@@ -542,7 +542,9 @@ HRESULT CLoader::Loading_ForStaticLevel()
 #pragma endregion Buffer Loading
 
 #pragma region Texture Loading
-	/*For.Prototype_Component_Texture_Spark */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Default_Particle"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Default_Particle.png"), 1))))
+		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Spark_00"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Spark_00.png"), 1))))
 		return E_FAIL;
@@ -558,6 +560,9 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Flash_00"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Flash_00.png"), 1))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Flash_01"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Flash_01.png"), 1))))
+		return E_FAIL;
 	/*For.Prototype_Component_Texture_Dissolve*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Dissolve_Texture.png"), 1))))
@@ -569,18 +574,6 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	/*For.Prototype_Component_Texture_Distortion_Strength*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Distortion_Strength"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Distortion_Strength.png"), 1))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Voronoi_Noise"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Voronoi_Noise.png"), 1))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Slash_Mask"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Slash_Mask.png"), 1))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Gradient"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Gradient.png"), 1))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Default_Particle"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Default_Particle.png"), 1))))
 		return E_FAIL;
 #pragma endregion Texture Loading
 
