@@ -8,7 +8,7 @@ BEGIN(IceWolf)
 class CBattle_IdleState : public CIceWolfState
 {
 public:
-	CBattle_IdleState(class CIce_Wolf* pIceWolf, STATE_ID ePreState);
+	CBattle_IdleState(class CIce_Wolf* pIceWolf, STATE_ID ePreState, CBaseObj* pCurTarget = nullptr);
 	
 	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CIceWolfState* Tick(_float fTimeDelta) override;
@@ -23,6 +23,8 @@ private:
 	_bool			m_bTargetSetting = false;
 	STATE_ID		m_ePreState;
 	_float			m_fIdleTime;
+
+
 };
 
 END

@@ -4,6 +4,7 @@
 #include "Monster.h"
 
 BEGIN(Client)
+class CRinwellState;
 class CAiRinwell final : public CMonster
 {
 public:
@@ -98,8 +99,19 @@ public:
 		TREASURE_OPEN,
 		WALK,
 		WALK_TRANS_IDLE_000,
-		WALK_TRANS_IDLE_001
+		WALK_TRANS_IDLE_001,
 
+		BTL_ATTACK_MAGIC_EMIT,
+		BTL_ATTACK_MAGIC_EMIT_AIR,
+		BTL_ATTACK_MAGIC_STACK,
+		BTL_MAGIC_EMIT,
+		BTL_MAGIC_END,
+		BTL_MAGIC_LOOP,
+		BTL_MAGIC_START,
+		BTL_MAGIC_WALK_B,
+		BTL_MAGIC_WALK_F,
+		BTL_MAGIC_WALK_L,
+		BTL_MOVE_WALK_R
 	};
 
 
@@ -132,6 +144,7 @@ public: /*For.State*/
 	void Tick_State(_float fTimeDelta);
 	void LateTick_State(_float fTimeDelta);
 	void Field_Animation(_float fTimeDelta);
+	void Battle_Animation(_float fTimeDelta);
 
 
 		/*For Navigation*/
@@ -146,6 +159,8 @@ private:
 	_float   m_fSpeed = 3.f;
 	_uint	 m_eAnim = IDLE_CHARA;
 	_uint	 m_ePreAnim = IDLE_CHARA;
+
+	_bool	m_bMotion_Finished = false;
 	
 
 public:

@@ -51,6 +51,10 @@ int CMonster::Tick(_float fTimeDelta)
 		m_fTime_TakeDamageDeltaAcc = 0.f;
 	}
 
+	m_fTimeDletaAcc += fTimeDelta;
+
+
+
 	return OBJ_NOEVENT;
 }
 
@@ -67,7 +71,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
-		
+
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
 	{
 		Take_Damage(1, m_pTarget);
@@ -85,15 +89,15 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		}
 	}
 
-	
+
 	m_eCurLevel = CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	
+
 	if (LEVEL_BATTLE == m_eCurLevel)
 		m_bBattleMode = true;
-	
+
 	if (LEVEL_SNOWFIELD == m_eCurLevel)
 	{
-		CCollider* pPlayerCollider =  CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Collider();
+		CCollider* pPlayerCollider = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Collider();
 		if (m_pSPHERECom->Collision(pPlayerCollider))
 		{
 			CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID);
@@ -102,12 +106,24 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
 		m_bDead = true;
+
+
+	//CBaseObj* pCollisionMonster = nullptr;
+	//if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionMonster))
+	//{
+
+	//	_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//	if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
+	//		vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
+	//	else
+	//		vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
+	//	m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
+	//}
 }
 
 HRESULT CMonster::Render()
 {
-	if (nullptr == m_pShaderCom ||
-		nullptr == m_pModelCom)
+	if (!m_pShaderCom || !m_pModelCom)
 		return E_FAIL;
 
 	if (FAILED(SetUp_ShaderResources()))
@@ -117,15 +133,6 @@ HRESULT CMonster::Render()
 		return E_FAIL;
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
-  //
-	_bool bGlow = true;
-	if (false == m_bDead)
-	{
-		
-		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-			return E_FAIL;
-	}
-//
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
@@ -134,26 +141,9 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
 
-		//
-		if (false == m_bDead)
-		{
-			if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
-				return E_FAIL;
-		}
-		//
-
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
 			return E_FAIL;
 	}
-
-	//
-	if (false == m_bDead)
-	{
-		bGlow = false;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-			return E_FAIL;
-	}
-	//
 
 	return S_OK;
 }
@@ -173,7 +163,7 @@ HRESULT CMonster::Render_ShadowDepth()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshContainers();
 
-	for(_uint i = 0; i < iNumMeshes; ++i)
+	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, SHADER_ANIMSHADOW)))
 			return S_OK;
@@ -188,32 +178,42 @@ HRESULT CMonster::Render_ShadowDepth()
 CMonster::DMG_DIR CMonster::Calculate_DmgDirection()
 {
 	if (m_pTarget == nullptr)
-		return FRONT; 
+		return FRONT;
 
 	// New Logic
-	_vector vLook = XMVector3Normalize( m_pTransformCom->Get_State(CTransform::STATE_LOOK));
-	_vector vTargetDir = XMVector3Normalize(dynamic_cast<CPlayer*>(m_pTarget)->Get_TransformState(CTransform::STATE_LOOK));
-
-	_vector fDot = XMVector3Dot(vTargetDir, vLook);
-	_float fAngleRadian = acos(XMVectorGetX(fDot));
-	_float fAngleDegree = XMConvertToDegrees(fAngleRadian);
-	_vector vCross = XMVector3Cross(vTargetDir, vLook);
+	_matrix matWorld = m_pTransformCom->Get_WorldMatrix();
+	_matrix matTargetWorld = dynamic_cast<CPlayer*>(m_pTarget)->Get_Transform()->Get_WorldMatrix();
 
 
-	if (XMVectorGetY(vCross) > 0.f)
+	_vector fLookDot = XMVector3Dot(matWorld.r[2], matTargetWorld.r[2]);
+	_vector fRightDot = XMVector3Dot(matWorld.r[0], matTargetWorld.r[0]);
+	_vector fLookRightDot = XMVector3Dot(matWorld.r[2], matTargetWorld.r[0]);
+
+	cout << XMVectorGetX(fLookDot) << endl;
+	if (XMVectorGetX(fLookDot) >= cos(45))
 	{
-		if (fAngleDegree > 0.f && fAngleDegree <= 90.f)
-			m_eDmg_Direction = BACK;
-		else if (fAngleDegree > 90.f && fAngleDegree <= 180.f)
-			m_eDmg_Direction = FRONT;
+		cout << "BACK" << endl;
+		
+		m_eDmg_Direction = BACK;
 	}
-	else
+	else if (XMVectorGetX(fLookDot) < cos(135))
 	{
-		if (fAngleDegree > 0.f && fAngleDegree <= 90.f)
-			m_eDmg_Direction = BACK;
-		else if (fAngleDegree > 90.f && fAngleDegree <= 180.f)
-			m_eDmg_Direction = FRONT;
+		cout << "FRONT" << endl;
+		m_eDmg_Direction = FRONT;
 	}
+	else if (XMVectorGetX(fLookRightDot) >= cos(45))
+	{
+		cout << "RIGHT" << endl;
+		m_eDmg_Direction = RIGHT;
+	}
+	else //if (XMVectorGetX(fLookRightDot) < cos(135))
+	{
+		cout << "LEFT" << endl;
+		m_eDmg_Direction = LEFT;
+	}
+		
+	
+
 
 	return m_eDmg_Direction;
 }
@@ -247,7 +247,7 @@ void CMonster::Find_Target()
 
 			_vector vTargetPos = pPlayer->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_fDistanceToTarget = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - vTargetPos));
-			m_pTarget = pPlayer;	
+			m_pTarget = pPlayer;
 		}
 	}
 }
@@ -265,8 +265,16 @@ CBaseObj* CMonster::Find_MinDistance_Target()
 			m_pTarget = dynamic_cast<CBaseObj*>(iter);
 		}
 	}
-
+	
 	return m_pTarget;
+}
+
+_float  CMonster::Target_Distance(CBaseObj* pTarget)
+{
+
+	_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
+
+	return fDistance;
 }
 
 HRESULT CMonster::Drop_Items()
@@ -290,7 +298,7 @@ void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-	
+
 
 	//Setting Effect Struct
 	//And Add GameObject Effect
@@ -309,7 +317,7 @@ void CMonster::Make_DeadEffect(CBaseObj * Target)
 
 	//Setting Effect Struct
 	//And Add GameObject Effect
-	
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	m_bMakeEffect = true;
@@ -320,6 +328,8 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
+
+	m_DamageCauser = DamageCauser;
 
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 

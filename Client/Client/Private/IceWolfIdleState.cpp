@@ -34,7 +34,7 @@ CIceWolfState * CIdleState::Tick(_float fTimeDelta)
 	{
 		_vector vecTranslation;
 		_float fRotationRadian;
-		m_pOwner->Check_Navigation();
+		//m_pOwner->Check_Navigation();
 	}
 
 	return nullptr;
@@ -43,6 +43,7 @@ CIceWolfState * CIdleState::Tick(_float fTimeDelta)
 CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 {
 
+	m_pOwner->Check_Navigation();
 
 	m_fTimeDletaAcc += fTimeDelta;
 

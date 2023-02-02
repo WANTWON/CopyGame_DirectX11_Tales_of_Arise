@@ -292,9 +292,6 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell\State">
       <UniqueIdentifier>{60b42f74-e576-4698-a827-121bc87dd00d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell\State\States">
-      <UniqueIdentifier>{fcda322f-c561-40f9-9300-6cea08c83b67}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates">
       <UniqueIdentifier>{fe5a3fd8-4c7f-45e0-8e30-af0a81ec6505}</UniqueIdentifier>
     </Filter>
@@ -801,6 +798,18 @@
     <ClInclude Include="..\Public\RinwellState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\IceWolfBattle_TurnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellMoveState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellAttackState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellDamageState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\PlayerCollectState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
@@ -1270,6 +1279,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Rinwell.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfBattle_TurnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellMoveState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellDamageState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerCollectState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>

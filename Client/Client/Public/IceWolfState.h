@@ -196,5 +196,9 @@ protected:
 	CIce_Wolf* m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
 
+	CBaseObj*	m_pOriginTarget = nullptr;
+	CBaseObj*	m_pCurTarget = nullptr;
+	_vector		m_vCurTargetPos;
+	
 };
 END
