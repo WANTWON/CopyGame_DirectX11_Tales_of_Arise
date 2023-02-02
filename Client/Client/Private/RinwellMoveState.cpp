@@ -29,9 +29,12 @@ CRinwellState * CMoveState::Tick(_float fTimeDelta)
 			_float fRotationRadian;
 			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-			LookAtPlayer(fTimeDelta);
+			
+			if (m_iChangeCount >= 5)
+				LookAtPlayer(fTimeDelta);
+
 			m_pOwner->Check_Navigation();
-	
+
 		}
 		break;
 	}
@@ -99,10 +102,6 @@ void CMoveState::Enter()
 
 void CMoveState::Exit()
 {
-	if (m_eStateType == STATETYPE_END)
-	{
-		
-	}
 }
 
 void CMoveState::Move(_float fTimeDelta)
@@ -122,7 +121,7 @@ void CMoveState::Move(_float fTimeDelta)
 		pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.03f);
 
 	m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta, m_pOwner->Get_Navigation());
-	
+	m_pOwner->Check_Navigation();
 
 }
 

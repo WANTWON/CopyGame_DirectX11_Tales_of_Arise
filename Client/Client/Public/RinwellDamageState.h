@@ -10,7 +10,7 @@ class CDamageState final : public CRinwellState
 	enum DMG_DIR { FRONT, BACK, RIGHT, LEFT };
 
 public:
-	CDamageState(class CAiRinwell* pPlayer, _uint eDir);
+	CDamageState(class CAiRinwell* pPlayer, _uint eDir, STATE_ID eStateID);
 
 	virtual CRinwellState* Tick(_float fTimeDelta) override;
 	virtual CRinwellState* LateTick(_float fTimeDelta);

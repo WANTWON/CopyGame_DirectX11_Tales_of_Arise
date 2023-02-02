@@ -16,6 +16,7 @@ public:
 		STATE_MOVE,
 		STATE_ATTACK,
 		STATE_DAMAGE,
+		STATE_DEAD,
 	};
 
 	virtual ~CRinwellState() {};
