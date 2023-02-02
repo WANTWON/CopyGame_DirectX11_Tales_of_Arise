@@ -171,7 +171,12 @@ void CRunState::Move(_float fTimeDelta)
 	}
 
 	CTransform* pPlayerTransform = m_pOwner->Get_Transform();
+
+	/*_vector vCameraScale, vCameraRotQuat, vCameraPos;
+	_vector vPlayerScale, vPlayerRotQuat, vPlayerPos;
 	
+	XMMatrixDecompose(&vCameraScale, &vCameraRotQuat, &vCameraPos, CameraMatrix);*/
+
 	_float4x4 CameraFloat;
 	XMStoreFloat4x4(&CameraFloat, CameraMatrix);
 
