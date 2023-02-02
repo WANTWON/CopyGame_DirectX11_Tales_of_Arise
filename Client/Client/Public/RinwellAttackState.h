@@ -20,7 +20,7 @@ private:
 	_vector m_vTargetPosition = {0.f,0.f,0.f,0.f};
 	_int	m_iChangeCount = 0;
 	_bool	m_ChangedDir = false;
-
+	_bool	m_bAirMove = false;
 };
 
 END

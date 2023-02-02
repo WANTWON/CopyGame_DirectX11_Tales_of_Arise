@@ -20,7 +20,8 @@ public:
 		const _float4x4*	pParentWorldMatrix;
 		char				pModeltag[MAX_PATH] = "";
 		CBaseObj*			pOwner = nullptr;
-
+		_float4x4			RotationCorrectionMatrix;
+		_float4x4			TranslationCorrectionMatrix;
 	}WEAPONDESC;
 private:
 	CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

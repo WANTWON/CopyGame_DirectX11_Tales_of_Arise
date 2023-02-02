@@ -75,7 +75,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
 	{
-		Take_Damage(1, m_pTarget);
+		Take_Damage(20, m_pTarget);
 		m_bTakeDamage = true;
 	}
 
@@ -109,17 +109,18 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		m_bDead = true;
 
 
-	//CBaseObj* pCollisionMonster = nullptr;
-	//if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionMonster))
-	//{
+	CBaseObj* pCollisionMonster = nullptr;
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionMonster))
+	{
 
-	//	_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//	if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
-	//		vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
-	//	else
-	//		vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
-	//	m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
-	//}
+		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+		if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
+			vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
+		else
+			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
+		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
+	}
+
 }
 
 HRESULT CMonster::Render()

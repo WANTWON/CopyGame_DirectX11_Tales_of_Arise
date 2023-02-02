@@ -211,6 +211,7 @@
     <ClInclude Include="..\Public\RinwellAttackState.h" />
     <ClInclude Include="..\Public\RinwellDamageState.h" />
     <ClInclude Include="..\Public\RinwellMoveState.h" />
+    <ClInclude Include="..\Public\RinwellPoseState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
     <ClInclude Include="..\Public\UI_InterectMsg.h" />
@@ -382,6 +383,7 @@
     <ClCompile Include="..\Private\RinwellAttackState.cpp" />
     <ClCompile Include="..\Private\RinwellDamageState.cpp" />
     <ClCompile Include="..\Private\RinwellMoveState.cpp" />
+    <ClCompile Include="..\Private\RinwellPoseState.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
