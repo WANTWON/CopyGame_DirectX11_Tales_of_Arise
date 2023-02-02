@@ -144,6 +144,9 @@ void CAlphen::Change_Level(LEVEL eLevel)
 				ERR_MSG(TEXT("Failed to Get BonePtr"));
 				return;
 			}
+
+			XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixRotationX(XMConvertToRadians(180.f)));
+			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 0.f));
 		}
 		else if (LEVEL_BATTLE == eLevel)
 		{
@@ -153,6 +156,9 @@ void CAlphen::Change_Level(LEVEL eLevel)
 				ERR_MSG(TEXT("Failed to Get BonePtr"));
 				return;
 			}
+
+			XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixIdentity());
+			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixIdentity());
 		}
 		
 		WeaponDesc.pSocket = pSocket;

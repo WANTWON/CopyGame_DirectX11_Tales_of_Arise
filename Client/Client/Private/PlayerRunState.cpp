@@ -140,6 +140,8 @@ void CRunState::Move(_float fTimeDelta)
 
 	_matrix CameraMatrix = XMLoadFloat4x4(&pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW));
 
+	RELEASE_INSTANCE(CGameInstance);
+
 	switch (m_eDirection)
 	{
 	case DIR_STRAIGHT_LEFT:
@@ -198,6 +200,4 @@ void CRunState::Move(_float fTimeDelta)
 		
 		m_pOwner->Get_Transform()->Sliding_Straight(fTime, m_pOwner->Get_Navigation());
 	}
-
-	RELEASE_INSTANCE(CGameInstance);
 }
