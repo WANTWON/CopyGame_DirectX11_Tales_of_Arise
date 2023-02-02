@@ -25,6 +25,8 @@ CRinwellState * CAttackState::Tick(_float fTimeDelta)
 		break;
 	}
 
+	m_pOwner->Check_Navigation();
+
 	return nullptr;
 }
 

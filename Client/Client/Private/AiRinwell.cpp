@@ -32,7 +32,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_tStats.m_fMaxHp = 100.f;
+	m_tStats.m_fMaxHp = 150.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -132,24 +132,17 @@ HRESULT CAiRinwell::Ready_Components(void * pArg)
 
 int CAiRinwell::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
-		return OBJ_NOEVENT;
-
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	__super::Tick(fTimeDelta);
-
-	if (m_bDissolve)
-	{
-		m_pModelCom->Play_Animation(fTimeDelta, Is_AnimationLoop(m_eAnim), "TransN");
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f) || m_bDissolve)
 		return OBJ_NOEVENT;
-	}
 
+	__super::Tick(fTimeDelta);
 
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	if (m_bBattleMode && !m_bTakeDamage)
+	if (m_bBattleMode)
 	{
 		if (m_bMotion_Finished)
 		{
@@ -280,6 +273,12 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 	case Client::CAiRinwell::BTL_DAMAGE_SMALL_L:
 	case Client::CAiRinwell::BTL_DAMAGE_SMALL_R:
 	case Client::CAiRinwell::BTL_DEAD:
+	case Client::CAiRinwell::TOUCH_STAND:
+	case Client::CAiRinwell::TREASURE_OPEN:
+	case Client::CAiRinwell::WALK_TRANS_IDLE_000:
+	case Client::CAiRinwell::WALK_TRANS_IDLE_001:
+	case Client::CAiRinwell::RUN_BRAKE_000:
+	case Client::CAiRinwell::RUN_BRAKE_001:
 		return false;
 	case Client::CAiRinwell::BTL_ARISE_B:
 		break;
@@ -382,21 +381,7 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 		break;
 	case Client::CAiRinwell::LADDER_UP_TRANS_LADDER_IDLE:
 		break;
-	case Client::CAiRinwell::RUN_BRAKE_000:
-		break;
-	case Client::CAiRinwell::RUN_BRAKE_001:
-		break;
-	case Client::CAiRinwell::TOUCH_STAND:
-		break;
-	case Client::CAiRinwell::TREASURE_OPEN:
-		break;
 	case Client::CAiRinwell::WALK:
-		break;
-	case Client::CAiRinwell::WALK_TRANS_IDLE_000:
-		break;
-	case Client::CAiRinwell::WALK_TRANS_IDLE_001:
-		break;
-	default:
 		break;
 	}
 
@@ -412,9 +397,9 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	if (iHp <= 0)
 	{
-		m_eAnim = BTL_DEAD;
 		m_bTakeDamage = true;
-		m_bDissolve = true;
+		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+		m_pState = m_pState->ChangeState(m_pState, pState);
 		return 0;
 	}
 	else
@@ -422,7 +407,7 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		m_pTarget = DamageCauser;
 		m_eDmg_Direction =  Calculate_DmgDirection();
 		m_bTakeDamage = true;
-		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction);
+		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 	}
 
