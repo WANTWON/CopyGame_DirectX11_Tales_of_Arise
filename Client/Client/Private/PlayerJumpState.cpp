@@ -232,6 +232,6 @@ void CJumpState::Move(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Jump(m_fTime, 3.f, 1.0f, m_fStartHeight, m_fEndHeight);
 
 		if (m_eDirection != DIR_END)
-			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f);
 	}
 }

@@ -74,7 +74,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
 	{
-		Take_Damage(1, m_pTarget);
+		Take_Damage(20, m_pTarget);
 		m_bTakeDamage = true;
 	}
 
