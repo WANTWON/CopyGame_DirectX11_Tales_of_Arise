@@ -16,7 +16,7 @@ CBattle_RunState::CBattle_RunState(class CIce_Wolf* pIceWolf, STATE_ID ePreState
 	m_pOwner = pIceWolf;
 	m_ePreState_Id = ePreState;
 	m_fTimeDletaAcc = 0;
-	m_fRandTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRunTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CIceWolfState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
@@ -32,41 +32,52 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 
 	m_fTarget_Distance = Find_BattleTarget();
 
+
 	//m_fDegreeToTarget = RadianToTarget();
 	return nullptr;
 }
 
 CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 {
-	//if (m_pTarget == nullptr)
-	//	return nullptr;
+	m_fTarget_Distance = Find_BattleTarget();
+	
+	/*if (m_pTarget == nullptr)
+		return nullptr;*/
+
+	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.1f);
 
 	m_fTimeDletaAcc += fTimeDelta;
 
-	//if (m_fTimeDletaAcc > m_fRandTime)
-	//	m_iRand = rand() % 6;
-	
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	
-	//if (m_ePreState_Id == CIceWolfState::STATE_ID::STATE_SOMESAULT)
-	//{
-	//	if (2.f < m_fTarget_Distance)
-	//	{
-	//		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	//		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.1f);
+		m_iRand = rand() % 4;
 
-	//	}
+	if (m_ePreState_Id == STATE_ID::STATE_CHARGE_START)
+	{
+		if (2.5f >= m_fTarget_Distance)
+			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
+	}
+	else
+	{
+		if (m_fTarget_Distance > 10.5f)
+			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
 
-	//	else
-	//		return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
-	//}
-		if (4.5f < m_fTarget_Distance)
+
+		if (m_fTarget_Distance <= 4.5f)
 		{
+			if (m_fTimeDletaAcc > m_fRunTime)
+				return new CAttackNormalState(m_pOwner);
+		}
+
+	}
+	///원본 코드 
+	/*if (4.5f < m_fTarget_Distance)
+	{
 			m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.1f);
 
-		}
+	}
 
 	else
 	{
@@ -89,9 +100,6 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 
 		case CIceWolfState::STATE_ID::STATE_ELEMENTAL_CHARGE:
 			return new CAttackNormalState(m_pOwner);
-
-	/*	case CIceWolfState::STATE_ID::STATE_IDLE:
-			return new CAttackNormalState(m_pOwner);*/
 			
 		case CIceWolfState::STATE_ID::STATE_SOMESAULT:
 			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
@@ -99,7 +107,7 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 		default:
 			break;
 		}
-	}
+	}*/
 
 
 

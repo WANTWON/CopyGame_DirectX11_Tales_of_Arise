@@ -80,10 +80,12 @@ void CUI_Manager::Set_UI_OpenType(UITYPE eUIType)
 void CUI_Manager::Erase_Itempopup_list(CUI_Base * point)
 {
 
-	for (auto& iter = m_pItempopup.begin(); iter != m_pItempopup.end();)
+	for (auto iter = m_pItempopup.begin(); iter != m_pItempopup.end();)
 	{
-		if (*iter == point)
-			m_pItempopup.erase(iter);
+		if ((*iter) == point)
+			iter = m_pItempopup.erase(iter);
+		else
+			++iter;
 	}
 
 }

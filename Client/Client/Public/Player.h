@@ -42,6 +42,7 @@ public: /* Getter &  Setter */
 	OBJINFO			Get_Info() { return m_tInfo; }
 	PLAYERID		Get_PlayerID() { return m_ePlayerID; }
 	CGameObject*	Get_Parts(_int iIndex) { return m_Parts[iIndex]; }
+	LEVEL			Get_Level(void) { return m_eLevel; }
 
 	/* 지상 스킬 */
 	_uint			Get_GroundSkillAnimIndex(GROUNDSKILL SkillIndex) { return m_eGroundSkills[SkillIndex]; }
@@ -54,7 +55,6 @@ public: /* Getter &  Setter */
 	void			Off_IsFly(void) { m_bIsFly = false; }
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
-	
 
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;
@@ -70,7 +70,8 @@ public: /*For.Navigation*/
 	void Check_Navigation();
 	void Compute_CurrentIndex(LEVEL eLevel);
 
-
+public:	/* For.Weapon */
+	virtual void Change_Level(LEVEL eLevel);
 
 protected: /* For Component */
 	CModel*					m_pModelCom = nullptr;
@@ -90,6 +91,8 @@ protected: /* for 4 Player */
 	_uint			m_eFlySkills[FLY_SKILL_END] = { FLY_SKILL_END, };
 	/* 공중 판단 변수*/
 	_bool			m_bIsFly = false;
+	/* 현재 레벨 변수 */
+	LEVEL			m_eLevel = LEVEL_END;
 
 protected:
 	vector<class CGameObject*> m_Parts;

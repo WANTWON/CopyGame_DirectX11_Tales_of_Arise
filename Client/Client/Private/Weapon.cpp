@@ -18,10 +18,9 @@ CWeapon::CWeapon(const CWeapon & rhs)
 void CWeapon::Set_WeaponDesc(WEAPONDESC tWeaponDesc)
 {
 	Safe_Release(m_WeaponDesc.pSocket);
+	m_WeaponDesc.pSocket = nullptr;
 
 	memcpy(&m_WeaponDesc, &tWeaponDesc, sizeof(WEAPONDESC));
-
-	Safe_AddRef(m_WeaponDesc.pSocket);
 }
 
 HRESULT CWeapon::Initialize_Prototype()
@@ -48,7 +47,7 @@ HRESULT CWeapon::Initialize(void * pArg)
 
 int CWeapon::Tick(_float fTimeDelta)
 {
-	_matrix		SocketMatrix = m_WeaponDesc.pSocket->Get_OffsetMatrix() * 
+	_matrix		SocketMatrix = m_WeaponDesc.pSocket->Get_OffsetMatrix() */* XMMatrix*/
 		m_WeaponDesc.pSocket->Get_CombinedTransformationMatrix() * 
 		XMLoadFloat4x4(&m_WeaponDesc.SocketPivotMatrix) * XMLoadFloat4x4(m_WeaponDesc.pParentWorldMatrix);
 
@@ -69,8 +68,10 @@ int CWeapon::Tick(_float fTimeDelta)
 			ColliderDesc.vScale = _float3(0.25f, 0.25f, 3.f);
 			ColliderDesc.vPosition = _float3(0.f, 0.f, -2.f);
 
-			m_pOBBCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+			m_pOBBCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+			m_pOBBCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 			pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
+
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
 		else
@@ -81,9 +82,8 @@ int CWeapon::Tick(_float fTimeDelta)
 		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
 		pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pOBBCom);
-
 		m_pOBBCom = nullptr;
-		pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
+
 		RELEASE_INSTANCE(CCollision_Manager);
 	}
 
@@ -96,6 +96,18 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pOBBCom)
 		m_pRendererCom->Add_Debug(m_pOBBCom);
 #endif
+
+
+	if (nullptr != m_pOBBCom && !m_isCollider)
+	{
+		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+
+		pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pOBBCom);
+
+		m_pOBBCom = nullptr;
+		pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
+		RELEASE_INSTANCE(CCollision_Manager);
+	}
 }
 
 HRESULT CWeapon::Render()

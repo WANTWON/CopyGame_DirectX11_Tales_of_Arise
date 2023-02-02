@@ -60,6 +60,7 @@ HRESULT CSion::Ready_Parts()
 	WeaponDesc.pSocket = pSocket;
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
+	WeaponDesc.pOwner = this;
 	strcpy(WeaponDesc.pModeltag, "SWO1");
 	Safe_AddRef(pSocket);
 
@@ -117,6 +118,11 @@ HRESULT CSion::Ready_Components(void* pArg)
 	m_vecNavigations.push_back(m_pNavigationCom);
 
 	return S_OK;
+}
+
+void CSion::Change_Level(LEVEL eLevel)
+{
+	__super::Change_Level(eLevel);
 }
 
 HRESULT CSion::SetUp_ShaderResources()

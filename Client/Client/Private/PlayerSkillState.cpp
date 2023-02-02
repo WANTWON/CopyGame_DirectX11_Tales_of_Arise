@@ -3,13 +3,17 @@
 #include "GameInstance.h"
 #include "PlayerIdleState.h"
 #include "PlayerAttackNormalState.h"
+#include "PlayerJumpState.h"
 
 using namespace Player;
 
-CSkillState::CSkillState(CPlayer * pPlayer, STATE_ID eStateType)
+CSkillState::CSkillState(CPlayer * pPlayer, STATE_ID eStateType, _float fStartHeight, _float fTime)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
+
+	m_fStartHeight = fStartHeight;
+	m_fTime = fTime;
 }
 
 CPlayerState * CSkillState::HandleInput(void)
@@ -33,6 +37,8 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 	else
 		m_pOwner->Check_Navigation();
 
+	if (m_bIsFly)
+		m_fTime += 0.1f;
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -163,8 +169,13 @@ CPlayerState * CSkillState::LateTick(_float fTimeDelta)
 	}
 
 	if (m_bIsAnimationFinished)
-		return new CIdleState(m_pOwner);
-
+	{
+		if (m_bIsFly)
+			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime);
+		else
+			return new CIdleState(m_pOwner);
+	}
+		
 	return nullptr;
 }
 
@@ -174,17 +185,35 @@ void CSkillState::Enter(void)
 
 	if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
 	{
-		switch (m_eStateId)
+		if (m_bIsFly)
 		{
-		case Client::CPlayerState::STATE_SKILL_ATTACK1:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
-			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK2:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
-			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK3:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_START);
-			break;
+			switch (m_eStateId)
+			{
+			case Client::CPlayerState::STATE_SKILL_ATTACK1:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_RYUUSEIZIN);
+				break;
+			case Client::CPlayerState::STATE_SKILL_ATTACK2:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_SENKUSYOUREPA);
+				break;
+			case Client::CPlayerState::STATE_SKILL_ATTACK3:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_START);
+				break;
+			}
+		}
+		else
+		{
+			switch (m_eStateId)
+			{
+			case Client::CPlayerState::STATE_SKILL_ATTACK1:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
+				break;
+			case Client::CPlayerState::STATE_SKILL_ATTACK2:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
+				break;
+			case Client::CPlayerState::STATE_SKILL_ATTACK3:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
+				break;
+			}
 		}
 	}
 	else if (CPlayer::SION == m_pOwner->Get_PlayerID())

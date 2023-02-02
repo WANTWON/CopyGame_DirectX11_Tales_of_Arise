@@ -74,10 +74,10 @@ void CMainApp::Tick(_float fTimeDelta)
 		m_pUI_Manager->Set_Mainmenuon(true);
 	/*if (m_pGameInstance->Key_Up(DIK_MINUS))
 		m_pUI_Manager->Set_UI_OpenType(CUI_Manager::UI_MAP);*/
-	if(m_pGameInstance->Key_Up(DIK_9))
-		dynamic_cast<CUI_Dialogue*>(m_pUI_Manager->Get_Dialogue())->Open_Dialogue(0);
-	else if (m_pGameInstance->Key_Up(DIK_0))
-		dynamic_cast<CUI_Dialogue*>(m_pUI_Manager->Get_Dialogue())->Open_Dialogue(1);
+	/*if(m_pGameInstance->Key_Up(DIK_9))
+		dynamic_cast<CUI_Dialogue*>(m_pUI_Manager->Get_Dialogue())->Open_Dialogue(0);*/
+	/*else if (m_pGameInstance->Key_Up(DIK_0))
+		dynamic_cast<CUI_Dialogue*>(m_pUI_Manager->Get_Dialogue())->Open_Dialogue(1);*/
 
 	if(m_pGameInstance->Key_Up(DIK_7))
 		dynamic_cast<CUI_Dialoguepopup*>(m_pUI_Manager->Get_Dialoguepopup())->Open_Dialogue(0);
@@ -110,7 +110,7 @@ HRESULT CMainApp::Render()
 	{
 		//wsprintf(m_szFPS, TEXT("�����ǿ��� : %d"), m_iNumRender);
 
-		cout << "FPS : "<< m_iNumRender << "\n" << endl;
+		//cout << "FPS : "<< m_iNumRender << "\n" << endl;
 		m_fTimeAcc = 0.f;
 		m_iNumRender = 0;
 	}

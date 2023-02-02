@@ -202,6 +202,8 @@ PS_OUT PS_COMBOLINE(PS_IN In)
 
 	Out.vColor.a -= g_fAlpha;
 
+	//Out.vColor.a = Out.vColor.rgb
+
 	return Out;
 }
 
@@ -617,6 +619,8 @@ PS_OUT PS_GALDBACK(PS_IN In)
 	/*if (Out.vColor.a <= 1.f)
 		discard;*/
 
+	Out.vColor.a *= g_fAlpha;
+
 	return Out;
 }
 
@@ -874,6 +878,139 @@ PS_OUT PS_DIALOGUECURSORNOTMOVE(PS_IN In)
 	Out.vColor = lerpcolor;
 
 	Out.vColor.a *= g_fAlpha;
+
+	return Out;
+}
+
+
+PS_OUT PS_ALPHATESTSET(PS_IN In)
+{
+//	PS_OUT		Out = (PS_OUT)0;
+//
+//	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+//	if(Out.vColor.r <= 0.f)
+//		discard;
+////	float2 vNewUv = In.vTexUV * 0.5f;
+//	float4 gradtexture = g_GradationTexture.Sample(LinearSampler, vNewUv);
+//	
+//	Out.vColor.a = gradtexture.a;
+//
+//	
+//
+//	/*if (Out.vColor.r <= 1.5f)
+//		discard;*/
+//	Out.vColor.a *= g_fAlpha;
+//
+//	return Out;
+
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	/*if (Out.vColor.a <= 0.3f)
+	discard;
+
+	if (Out.vColor.r == 0.f&&Out.vColor.g == 0.f&& Out.vColor.b ==0.f )
+	discard;
+
+	Out.vColor.r += 0.929f;
+	Out.vColor.g += 0.8f;
+	Out.vColor.b += 0.486f;*/
+//	float3 yellowRef = normalize(float3(.69f, .62f, .42f)); //텍스쳐색
+
+
+//	float weight = dot(Out.vColor.rgb, yellowRef); //알파만들기
+//	Out.vColor.a = lerp(0, 1, weight);
+
+	Out.vColor.a = Out.vColor.rgb;//lerp(0, 1, saturate(weight));
+
+
+	Out.vColor.a *= g_fAlpha;
+
+	return Out;
+}
+
+PS_OUT PS_BRIGHTFORBLACK(PS_IN In)
+{
+	
+
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	
+
+	Out.vColor.a = Out.vColor.rgb;
+
+
+	float fGradientRadius = 0.5f;
+	float fGradientStrength = 0.5f;
+	float fLerp = 0.f;
+
+	/* First Lerp */
+	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
+	{
+		float fStart = g_fBright - fGradientRadius;
+		float fEnd = g_fBright;
+		float fInterpFactor = (In.vTexUV.x - fStart) / (fEnd - fStart);
+		fLerp = lerp(0, fGradientStrength, fInterpFactor);
+	}
+	/* Second Lerp */
+	else if (In.vTexUV.x > g_fBright && In.vTexUV.x < g_fBright + fGradientRadius)
+	{
+		float fStart = g_fBright;
+		float fEnd = g_fBright + fGradientRadius;
+		float fInterpFactor = (In.vTexUV.x - fStart) / (fEnd - fStart);
+		fLerp = lerp(fGradientStrength, 0, fInterpFactor);
+	}
+
+	Out.vColor.rgb += fLerp;   //fLerpValue;
+
+
+	Out.vColor.a *= g_fAlpha;
+
+	return Out;
+}
+
+PS_OUT PS_BRIGHTDialogueLINE(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = Out.vColor.r;
+
+	if (Out.vColor.r == 0)
+		discard;
+
+	float4 lerpcolor = lerp(float4(0.9019607843137255f, 0.8235294117647059f, 0.6588235294117647f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), Out.vColor);
+
+	Out.vColor.rgb = lerpcolor.rgb;
+
+	float fGradientRadius = 0.5f;
+	float fGradientStrength = 0.3f;
+	float fLerp = 0.f;
+
+	/* First Lerp */
+	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
+	{
+		float fStart = g_fBright - fGradientRadius;
+		float fEnd = g_fBright;
+		float fInterpFactor = (In.vTexUV.x - fStart) / (fEnd - fStart);
+		fLerp = lerp(0, fGradientStrength, fInterpFactor);
+	}
+	/* Second Lerp */
+	else if (In.vTexUV.x > g_fBright && In.vTexUV.x < g_fBright + fGradientRadius)
+	{
+		float fStart = g_fBright;
+		float fEnd = g_fBright + fGradientRadius;
+		float fInterpFactor = (In.vTexUV.x - fStart) / (fEnd - fStart);
+		fLerp = lerp(fGradientStrength, 0, fInterpFactor);
+	}
+
+	Out.vColor.rgb += fLerp;   //fLerpValue;
+
+
+	Out.vColor.a *= g_fAlpha;
+	
 
 	return Out;
 }
@@ -1138,7 +1275,7 @@ technique11 DefaultTechnique
 	pass INVENTOPBOTTOMALPHA
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff); //23
 		SetDepthStencilState(DSS_Priority, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1149,7 +1286,7 @@ technique11 DefaultTechnique
 	pass GALDBACK
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);  //24
 		SetDepthStencilState(DSS_Priority, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1160,7 +1297,7 @@ technique11 DefaultTechnique
 	pass UVROTATIONSTRONG
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);  //25
 		SetDepthStencilState(DSS_Priority, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1171,7 +1308,7 @@ technique11 DefaultTechnique
 	pass USINGITEMPORTRAIT
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);  //26
 		SetDepthStencilState(DSS_Priority, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1182,7 +1319,7 @@ technique11 DefaultTechnique
 	pass LIGHTEFFECT
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);  //27
 		SetDepthStencilState(DSS_Priority, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1193,7 +1330,7 @@ technique11 DefaultTechnique
 	pass Bright
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff); //28
 		SetDepthStencilState(DSS_Priority, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -1234,7 +1371,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_DialogueLINE();                //31
 	}
 	
-	pass PS_DIALOGUECURSOR
+	pass DIALOGUECURSOR
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -1245,7 +1382,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_DIALOGUECURSOR();                //32
 	}
 
-	pass PS_DIALOGUECURSORNONMOVE
+	pass DIALOGUECURSORNONMOVE
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -1256,9 +1393,39 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_DIALOGUECURSORNOTMOVE();                //33
 	}
 	
+	pass ALPHASETTEST
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALPHATESTSET();                //34
+	}
 	
-	
-	
+	pass BRIGHTBLACK
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRIGHTFORBLACK();                //35
+	}
+
+	pass BRIGHTDialogueLine
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRIGHTDialogueLINE();                //36
+	}
+
 	
 }
 

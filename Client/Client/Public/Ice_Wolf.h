@@ -124,6 +124,10 @@ private:
 	class CIceWolfState*  m_pState = nullptr;
 
 	_float   m_fSpeed = 3.f;
+	_float   m_fTimeDletaAcc = 0.f;
+	_float   m_fCntChanceTime = 0.f;
+	_int	 m_iRand = 0;
+	_int	 m_iBeDamaged_Cnt = 0;
 	_bool   m_bDoneChangeState = false;
 	
 

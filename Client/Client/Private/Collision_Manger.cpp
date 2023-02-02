@@ -3,7 +3,7 @@
 #include "BaseObj.h"
 #include "Player.h"
 #include "Monster.h"
-
+#include "Weapon.h"
 
 IMPLEMENT_SINGLETON(CCollision_Manager);
 
@@ -139,15 +139,14 @@ void CCollision_Manager::CollisionwithBullet()
 	//	
 	//}
 
-	///* Monster가 Player Bullet에 충돌 했을 때*/
-	//CBaseObj* pMonster = nullptr;
-	//CBaseObj* pPlayerBullet = nullptr;
-	//if (CollisionwithGroup(COLLISION_MONSTER, COLLISION_PBULLET, &pMonster, &pPlayerBullet))
-	//{
-	//	CPlayer::ANIM ePlayerState = dynamic_cast<CPlayer*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")))->Get_AnimState();
-	//	if (ePlayerState == CPlayer::SLASH || ePlayerState == CPlayer::SLASH_HOLD_ED || ePlayerState == CPlayer::S_SLASH)
-	//		dynamic_cast<CMonster*>(pMonster)->Take_Damage(1, nullptr, pPlayerBullet);
-	//}
+	/* Monster가 Player Bullet에 충돌 했을 때*/
+	CBaseObj* pMonster = nullptr;
+	CBaseObj* pPlayerBullet = nullptr;
+	if (CollisionwithGroup(COLLISION_MONSTER, COLLISION_PBULLET, &pMonster, &pPlayerBullet))
+	{
+		CBaseObj* pPlayer =  dynamic_cast<CWeapon*>(pPlayerBullet)->Get_Owner();
+		dynamic_cast<CMonster*>(pMonster)->Take_Damage(20, pPlayer);
+	}
 }
 
 

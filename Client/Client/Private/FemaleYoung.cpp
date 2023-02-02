@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "..\Public\FemaleYoung.h"
 #include "GameInstance.h"
+#include "Player.h"
+//#include "Level_Manager.h"
+#include "PlayerManager.h"
+#include "UI_Manager.h"
+#include "UI_Dialogue.h"
+#include "UI_InterectMsg.h"
 
 CFemaleYoung::CFemaleYoung(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CNpc(pDevice, pContext)
@@ -38,14 +44,46 @@ int CFemaleYoung::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 	Tick_State(fTimeDelta);
 
-
+	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	return OBJ_NOEVENT;
 }
 
 void CFemaleYoung::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
-	LateTick_State(fTimeDelta);
+   LateTick_State(fTimeDelta);
+
+   CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+   if (!pPlayer)
+	   return;
+
+   m_bCollision = m_pOBBCom->Collision(pPlayer->Get_Collider());
+
+   if (m_bCollision)
+   {
+	   dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Open_sysmsg(2);
+	   m_bIsFirst_conversation = true;
+
+	   if (CGameInstance::Get_Instance()->Key_Up(DIK_E))
+	   {
+		   switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
+		   {
+		   case 0:
+			   dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(0);
+			   break;
+		   case 1:
+			   dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(1);
+			   break;
+		   }
+	   }
+		   
+   }
+
+   if (m_bIsFirst_conversation && !m_bCollision)
+   {
+	   m_bIsFirst_conversation = false;
+	   dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
+   }
 }
 
 

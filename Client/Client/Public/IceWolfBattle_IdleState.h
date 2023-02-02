@@ -22,6 +22,7 @@ private:
 	_float			m_fRedayAttackTimer = 0.f;
 	_bool			m_bTargetSetting = false;
 	STATE_ID		m_ePreState;
+	_float			m_fIdleTime;
 };
 
 END
