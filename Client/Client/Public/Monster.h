@@ -77,7 +77,7 @@ public: // Get & Set
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
 	void		Set_Dissolve() { m_bDissolve = true; }
 	CBaseObj*	Get_Trigger() { return m_pTrigger; }
-	CBaseObj*   Get_DamageCauser() { return m_DamageCauser; }
+	CBaseObj*   Get_DamageCauser() { return m_pTarget; }
 
 protected:
 	DMG_DIR Calculate_DmgDirection();
@@ -135,8 +135,8 @@ protected: /* For.Components */
 	
 protected:
 	_bool		m_bDissolve = false;
-	CBaseObj*	m_DamageCauser = nullptr;
 	_float		m_fDissolveOffset = 1.f;
+
 
 public:
 	virtual void Free() override;

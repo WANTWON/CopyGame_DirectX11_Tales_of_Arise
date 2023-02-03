@@ -7,6 +7,7 @@
 #include "BerserkerBattle_RunState.h"
 #include "BerserkerBattle_Multiple_FireState.h"
 #include "BerserkerBattle_PouncingState.h"
+#include "BerserkerBattle_Shock_WaveState.h"
 using namespace Berserker;
 
 CBattle_Quadruple_ClawState::CBattle_Quadruple_ClawState(CBerserker* pBerserker)
@@ -25,6 +26,7 @@ CBerserkerState * CBattle_Quadruple_ClawState::Tick(_float fTimeDelta)
 	
 	m_fTarget_Distance = Find_BattleTarget();
 
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 
 	if (!m_bIsAnimationFinished)
@@ -34,7 +36,7 @@ CBerserkerState * CBattle_Quadruple_ClawState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -45,18 +47,18 @@ CBerserkerState * CBattle_Quadruple_ClawState::Tick(_float fTimeDelta)
 
 CBerserkerState * CBattle_Quadruple_ClawState::LateTick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BATTLE);
 	
 
-	if (m_bIsAnimationFinished)
+	/*if (m_bIsAnimationFinished)
 	{
 		if (m_fTarget_Distance > 7)
 			return new CBattle_Multiple_FireState(m_pOwner);
 
 		else
-			return new CBattle_PouncingState(m_pOwner);
+			return new CBattle_Shock_WaveState(m_pOwner);
 
-	}
+	}*/
 
 	return nullptr;
 }

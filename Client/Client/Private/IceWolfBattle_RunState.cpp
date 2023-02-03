@@ -27,7 +27,7 @@ CIceWolfState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 
 	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
@@ -67,8 +67,8 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 
 CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 {
-	/*if (m_pTarget == nullptr)
-		return nullptr;*/
+	//if (m_pTarget == nullptr)
+	//	return nullptr;
 	m_pOwner->Check_Navigation();
 	
 
@@ -97,7 +97,7 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 					pMonSterTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.03f);
 
 				//m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
-				m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.1f, m_pOwner->Get_Navigation());
+				m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
 			}
 
 			else
@@ -117,10 +117,13 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 					pMonSterTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.03f);
 
 				//m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
-				m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.1f, m_pOwner->Get_Navigation());
+				m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
 			}
 		}
 	}
+	else if(m_ePreState_Id == STATE_ID::STATE_BE_DAMAGED)
+		return new CAttackBiteState(m_pOwner);
+
 	else
 	{
 		if (m_fTarget_Distance > 10.5f && false == m_bAttacknormal)
@@ -130,7 +133,7 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 				return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
 		}
 
-		else 
+		else
 		{
 			m_bAttacknormal = true;
 			////회전 코드 
@@ -147,136 +150,14 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 			if (fDot < 0.8f)
 				pMonSterTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.03f);
 
-			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.1f, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
 
 			if (m_fTarget_Distance <= 3.f)
 				return new CAttackNormalState(m_pOwner);
-		}
 
-		
-		
+		}
 	}
 
-
-
-	///원본 코드 
-	/*if (4.5f < m_fTarget_Distance)
-	{
-			m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.1f);
-
-	}
-
-	else
-	{
-		switch (m_ePreState_Id)
-		{
-
-		case CIceWolfState::STATE_ID::START_BATTLE:
-			return new CAttackNormalState(m_pOwner);
-			break;
-
-		case CIceWolfState::STATE_ID::STATE_NORMAL_ATK:
-			return new CBattle_BackStepState(m_pOwner);
-
-		case CIceWolfState::STATE_ID::STATE_BACKSTEP:
-			return new CAttackBiteState(m_pOwner);
-			break;
-
-		case CIceWolfState::STATE_ID::STATE_BITE:
-			return new CBattle_SomerSaultState(m_pOwner);
-
-		case CIceWolfState::STATE_ID::STATE_ELEMENTAL_CHARGE:
-			return new CAttackNormalState(m_pOwner);
-			
-		case CIceWolfState::STATE_ID::STATE_SOMESAULT:
-			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
-
-		default:
-			break;
-		}
-	}*/
-
-
-
-
-	//테스트코드
-	//else 
-	//{
-	//	if (4.7f < m_fTarget_Distance)
-	//	{
-	//		//m_pOwner->Set_Speed(5.f);
-	//		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	//		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.1f);
-
-	//	}
-
-	//	else
-	//	{
-	//		if (m_fTimeDletaAcc > m_fRandTime)
-	//		{
-	//			switch (rand() % 5)
-	//			{
-	//			case 0:
-	//				return new CAttackNormalState(m_pOwner);
-
-	//			case 1:
-	//				return new CBattle_BackStepState(m_pOwner);
-
-	//			case 2:
-	//				return new CAttackBiteState(m_pOwner);
-
-	//			case 3:
-	//				return new CBattle_SomerSaultState(m_pOwner);
-
-	//			case 4:
-	//				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BATTLEING);
-
-	//			default:
-	//				break;
-	//			}
-	//		}
-	//	}
-
-	//	int a = 0;
-
-
-
-
-
-
-		//원본코드 (늑대 3마리가 같은 동작을 반복)
-		/*else
-		{
-			switch (m_ePreState_Id)
-			{
-
-			case CIceWolfState::STATE_ID::START_BATTLE:
-				return new CAttackNormalState(m_pOwner);
-				break;
-
-			case CIceWolfState::STATE_ID::STATE_NORMAL_ATK:
-				return new CBattle_BackStepState(m_pOwner);
-
-			case CIceWolfState::STATE_ID::STATE_BACKSTEP:
-				return new CAttackBiteState(m_pOwner);
-				break;
-
-			case CIceWolfState::STATE_ID::STATE_BITE:
-				return new CBattle_SomerSaultState(m_pOwner);
-
-			case CIceWolfState::STATE_ID::STATE_ELEMENTAL_CHARGE:
-				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BATTLEING);
-
-			case CIceWolfState::STATE_ID::STATE_IDLE:
-				return new CAttackNormalState(m_pOwner);
-
-			default:
-				break;
-			}
-		}
-
-	}*/
 	return nullptr;
 }
 

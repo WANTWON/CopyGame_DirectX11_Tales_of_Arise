@@ -49,7 +49,7 @@ CBerserkerState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
 	{
-		return new CBattle_RunState(m_pOwner, STATE_QUADRUPLE);
+		return new CBattle_RunState(m_pOwner, STATE_ANGRY);
 	}
 
 	return nullptr;
