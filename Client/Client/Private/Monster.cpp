@@ -66,12 +66,10 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		return;
 	__super::Late_Tick(fTimeDelta);
 
-	if (Check_IsinFrustum(2.f) == false)
-		return;
-
 	if (nullptr != m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 	}
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
@@ -110,9 +108,6 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
 		m_bDead = true;
-
-
-	
 
 }
 
@@ -229,18 +224,32 @@ _bool CMonster::Check_AmILastMoster()
 {
 	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
 
-	if (pMonsterList->size() == 1)
+	_uint iMonsterSize = pMonsterList->size();
+	_uint iCheckIsDead = 0;
+
+	for (auto& iter : *pMonsterList)
 	{
-		if (pMonsterList->front() == this)
+		if (dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0 || iter->Get_Dead())
 		{
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-			pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLE_CLEAR);
 			pCamera->Set_TargetPosition(Get_TransformState(CTransform::STATE_TRANSLATION));
-			m_fDissolveOffset = 0.1f;
-			return true;
+			iCheckIsDead++;
 		}
-			
 	}
+
+
+	if ((iMonsterSize - iCheckIsDead) <= 0)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_TargetPosition(Get_TransformState(CTransform::STATE_TRANSLATION));
+		pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLE_CLEAR);
+		m_fDissolveOffset = 0.4f;
+		if(CUI_Manager::Get_Instance()->Get_LockOn() != nullptr)
+			CUI_Manager::Get_Instance()->Get_LockOn()->Set_Dead(true);
+		return true;
+		
+	}
+
 	return false;
 }
 
@@ -345,22 +354,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		return 0;
 
 	m_pTarget = DamageCauser;
-
 	m_tStats.m_fCurrentHp-= (int)fDamage;
-
-	if (m_tStats.m_fCurrentHp <= 0)
-	{
-		m_tStats.m_fCurrentHp = 0;
-		CBattleManager::Get_Instance()->Update_LockOn();
-		Check_AmILastMoster();
-
-		return _int(m_tStats.m_fCurrentHp);//dmgfont
-	}
-
-	CBattleManager::Get_Instance()->Set_LackonMonster(this);
-	m_bHit = true;
-	m_dwHitTime = GetTickCount();
-
 
 	CDamageFont::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
@@ -379,6 +373,19 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	Make_GetAttacked_Effect(DamageCauser);
 
+
+	if (m_tStats.m_fCurrentHp <= 0)
+	{
+		m_tStats.m_fCurrentHp = 0;
+		CBattleManager::Get_Instance()->Update_LockOn();
+		Check_AmILastMoster();
+
+		return _int(m_tStats.m_fCurrentHp);//dmgfont
+	}
+
+	CBattleManager::Get_Instance()->Set_LackonMonster(this);
+	m_bHit = true;
+	m_dwHitTime = GetTickCount();
 
 	return _int(m_tStats.m_fCurrentHp);
 

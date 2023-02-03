@@ -69,6 +69,7 @@ public: // Get & Set
 	MONSTER_ID	Get_MonsterID(void) { return m_eMonsterID; }
 	_bool		Get_Aggro(void) { return m_bAggro; }
 	_bool		Get_Hited(void) { return m_bHit; }
+	_bool		Get_Dissolve(void) { return m_bDissolve; }
 	_float		Get_AggroRadius() { return m_fAggroRadius; }
 	_float		Get_PatrolRadius() { return m_fPatrolRadius; }
 	_float		Get_AttackRadius() { return m_fAttackRadius; }

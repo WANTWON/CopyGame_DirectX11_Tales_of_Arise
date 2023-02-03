@@ -44,13 +44,22 @@ HRESULT CUI_LOCKON::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	CUI_Manager::Get_Instance()->Set_LockOn(this);
+
 	return S_OK;
 }
 
 int CUI_LOCKON::Tick(_float fTimeDelta)
 {
-	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
+	
+	if (m_bDead || CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
+	{
+		CUI_Manager::Get_Instance()->Set_LockOn(nullptr);
 		return OBJ_DEAD;
+	}
+		
+
+
 	/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
 	Compute_CamDistance(pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
