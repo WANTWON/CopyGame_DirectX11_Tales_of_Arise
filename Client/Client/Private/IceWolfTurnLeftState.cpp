@@ -11,7 +11,7 @@ CTurnLeftState::CTurnLeftState(class CIce_Wolf* pIceWolf)
 	m_pOwner = pIceWolf;
 
 
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fTurnLeftTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
@@ -46,9 +46,9 @@ CIceWolfState * CTurnLeftState::LateTick(_float fTimeDelta)
 {
 
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (m_fTimeDletaAcc > m_fTurnLeftTime)
+	if (m_fTimeDeltaAcc > m_fTurnLeftTime)
 		m_iRand = rand() % 4;
 	
 	if (m_pTarget)

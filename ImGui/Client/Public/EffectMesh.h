@@ -21,6 +21,7 @@ public:
 		_float fAlpha = 1.f;
 		_bool bGlow = false;
 		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
+		_float fGlowPower = 1.f;
 		_float fLifetime = 0.f;
 		_float3 vScaleInitial = _float3(1.f, 1.f, 1.f);
 		_float3 vScale = _float3(1.f, 1.f, 1.f);

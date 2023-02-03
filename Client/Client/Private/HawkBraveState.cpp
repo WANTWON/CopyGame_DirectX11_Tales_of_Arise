@@ -13,7 +13,7 @@ CBraveState::CBraveState(CHawk* pIceWolf)
 	m_pOwner = pIceWolf;
 
 	
-	m_fTimeDletaAcc = 0.f;
+	m_fTimeDeltaAcc = 0.f;
 	m_fBraveTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
@@ -48,10 +48,10 @@ CHawkState * CBraveState::Tick(_float fTimeDelta)
 CHawkState * CBraveState::LateTick(_float fTimeDelta)
 {
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
 	if (
-		m_fTimeDletaAcc > m_fBraveTime)
+		m_fTimeDeltaAcc > m_fBraveTime)
 		m_iRand = rand() % 2;
 
 

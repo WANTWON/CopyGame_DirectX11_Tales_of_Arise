@@ -41,7 +41,7 @@ CBerserkerState * CBattle_PouncingState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-	if (m_fTimeDletaAcc > m_fRandTime)
+	if (m_fTimeDeltaAcc > m_fRandTime)
 		m_iRand = rand() % 2;
 
 	return nullptr;
@@ -49,7 +49,7 @@ CBerserkerState * CBattle_PouncingState::Tick(_float fTimeDelta)
 
 CBerserkerState * CBattle_PouncingState::LateTick(_float fTimeDelta)
 {
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
 		if (m_bIsAnimationFinished)
 		{

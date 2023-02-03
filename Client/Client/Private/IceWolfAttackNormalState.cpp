@@ -11,7 +11,7 @@ using namespace IceWolf;
 CAttackNormalState::CAttackNormalState(class CIce_Wolf* pIceWolf)
 {
 	m_pOwner = pIceWolf;
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fRandTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 
 }
@@ -76,7 +76,7 @@ CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
 
 CIceWolfState * CAttackNormalState::LateTick(_float fTimeDelta)
 {
-	if (m_fTimeDletaAcc > m_fRandTime)
+	if (m_fTimeDeltaAcc > m_fRandTime)
 		m_iRand = rand() % 2;
 
 	

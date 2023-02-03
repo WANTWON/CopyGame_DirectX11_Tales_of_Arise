@@ -83,7 +83,7 @@ CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 	//	m_bTargetSetting = true;
 	//}
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
 
 	if (m_bIsAnimationFinished)

@@ -12,7 +12,7 @@ CHowLing_State::CHowLing_State(CBerserker* pIceWolf)
 {
 	m_pOwner = pIceWolf;
 
-	m_fTimeDletaAcc = 0.f;
+	m_fTimeDeltaAcc = 0.f;
 	m_fHowlingTime = ((rand() % 10000 + 5000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
@@ -36,10 +36,10 @@ CBerserkerState * CHowLing_State::LateTick(_float fTimeDelta)
 {
 	//수정코드 
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
 	
-	if (m_fTimeDletaAcc > m_fHowlingTime)
+	if (m_fTimeDeltaAcc > m_fHowlingTime)
 		m_iRand = rand() % 2;
 
 

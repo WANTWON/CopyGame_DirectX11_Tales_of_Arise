@@ -136,6 +136,8 @@ HRESULT CEffectMesh::Render_Glow()
 
 		if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &m_tMeshEffectDesc.vGlowColor, sizeof(_float3))))
 			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowPower", &m_tMeshEffectDesc.fGlowPower, sizeof(_float))))
+			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 5)))
 			return E_FAIL;
