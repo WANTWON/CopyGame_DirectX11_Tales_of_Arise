@@ -188,17 +188,21 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 		{
 			if (m_Channels[i]->Linear_Interpolation(NextAnimChannels[i]->Get_StartKeyFrame(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration))
 			{
-				m_fLinear_CurrentTime = 0.f;
 				m_bLinearFinished = true;
-				m_Channels[i]->Reset();
-				break;
+				//m_Channels[i]->Reset();
 			}
 		}
 	}
-	else
+	
+	if (m_bLinearFinished)
+	{
 		m_iTickPerSecondIndex = 0;
+		m_fLinear_CurrentTime = 0.f;
 
-	return m_bLinearFinished;
+		return true;
+	}
+	
+	return false;
 }
 
 _bool CAnimation::Is_Keyframe(char * pChannelName, _uint iKeyframe)
@@ -276,9 +280,8 @@ _bool CAnimation::Between_Keyframe(char * pChannelName, _uint iKeyframeLower, _u
 void CAnimation::Set_TimeReset()
 {
 	for (auto& pChannel : m_Channels)
-	{
 		pChannel->Reset();
-	}
+	
 	m_fCurrentTime = 0.f;
 }
 

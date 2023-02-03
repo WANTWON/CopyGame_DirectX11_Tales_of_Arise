@@ -336,16 +336,11 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 {
 	if (m_bInterupted)
 	{	//TODO: ����ִ԰� ���� �ִ������Ӱ��� �������� �Լ� ȣ�� �� ��.
-		/*if (m_bInterupted)
-		{
-		m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
-		m_bInterupted = false;
-		}*/
 		m_bLinearFinished = m_Animations[m_iPreAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iCurrentAnimIndex]);
 
 		if (m_bLinearFinished == true)
 		{
-			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
+			m_Animations[m_iPreAnimIndex]->Set_TimeReset();
 
 			//m_iPreAnimIndex = m_iCurrentAnimIndex;
 

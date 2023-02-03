@@ -29,6 +29,8 @@ HRESULT CChannel::Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel
 	m_pBoneNode = pModel->Get_BonePtr(m_szName);
 	Safe_AddRef(m_pBoneNode);
 
+	m_KeyFrame_Linear = m_KeyFrames[0];
+
 	return S_OK;
 }
 
@@ -95,8 +97,16 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 		vPosition = XMVectorSetW(vPosition, 1.f);
 	}
 
+	if (!strcmp(m_szName, "TransN"))
+	{
+		m_pBoneNode->Set_Translation(vPosition - XMLoadFloat3(&m_KeyFrame_Linear.vPosition));
+		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
+		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	}
+	else
+		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
+
 	/*Linear*/
-	XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
 	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
 
@@ -109,6 +119,8 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 void CChannel::Reset()
 {
 	m_iCurrentKeyFrameIndex = 0;
+
+	m_KeyFrame_Linear = m_KeyFrames[0];
 }
 
 bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime)
@@ -126,7 +138,7 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	vDestScale = XMLoadFloat3(&NextKeyFrame.vScale);
 	vDestRotation = XMLoadFloat4(&NextKeyFrame.vRotation);
 	vDestPosition = XMLoadFloat3(&NextKeyFrame.vPosition);
-
+	
 	vSourScale = XMLoadFloat3(&m_KeyFrame_Linear.vScale);
 	vSourRotation = XMLoadFloat4(&m_KeyFrame_Linear.vRotation);
 	vSourPosition = XMLoadFloat3(&m_KeyFrame_Linear.vPosition);
@@ -136,6 +148,9 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
 	vPosition = XMVectorSetW(vPosition, 1.f);
 
+	if (!strcmp(m_szName, "TransN"))
+		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	
 	/*XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
 	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);*/
