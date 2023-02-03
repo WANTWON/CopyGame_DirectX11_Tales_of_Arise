@@ -48,6 +48,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_eLevel = LEVEL_END;
 
+	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
+
 	return S_OK;
 }
 
@@ -111,8 +113,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
 #ifdef _DEBUG
-		if (m_pNavigationCom != nullptr && eMode == ACTIVE)
-			m_pRendererCom->Add_Debug(m_pNavigationCom);
+		m_pRendererCom->Add_Debug(m_pNavigationCom);
 		__super::Late_Tick(fTimeDelta);
 #endif //_DEBUG
 	}
@@ -255,11 +256,8 @@ void CPlayer::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	/*if (m_fWalkingHeight > XMVectorGetY(vPosition))
-	{*/
-		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	//}
+	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
 void CPlayer::Check_Navigation_Jump(void)
@@ -327,6 +325,9 @@ HRESULT CPlayer::SetUp_Controller()
 void CPlayer::Free()
 {
 	__super::Free();
+
+	CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
+
 
 	for (auto& pGameObject : m_Parts)
 		Safe_Release(pGameObject);

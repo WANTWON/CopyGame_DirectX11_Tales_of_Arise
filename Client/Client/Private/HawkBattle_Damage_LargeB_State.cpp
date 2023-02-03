@@ -35,39 +35,40 @@ CHawkState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 
-		m_pOwner->Check_Navigation();
+	m_pOwner->Check_Navigation();
 	
 	return nullptr;
 }
 
 CHawkState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 {
-	m_iRand = rand() % 3;
+	m_iRand = rand() % 1;
 
 
 	if (m_bIsAnimationFinished)
-	{
-		switch (m_iRand)
-		{
-		case 0:
-			return new CBattle_ChargeState(m_pOwner);
-			break;
+		return new CBattle_RunState(m_pOwner, STATE_END);
 
-		case 1:
-			return new CBattle_Flying_BackState(m_pOwner);
-			break;
+		//switch (m_iRand)
+		//{
+		////case 0:
+		////	return new CBattle_ChargeState(m_pOwner);
+		////	break;
 
-		case 2:
-			return new CBattle_BombingState(m_pOwner);
-			break;
+		////case 0:
+		////	return new CBattle_Flying_BackState(m_pOwner);
+		////	break;
 
-		default:
-			break;
-		}
-	}
+		////case 2:
+		////	return new CBattle_BombingState(m_pOwner);
+		////	break;
+		//	return new CBattle_RunState(m_pOwner, STATE_END);
+		//default:
+		//	break;
+		//}
+	
 
 	return nullptr;
 }

@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "UI_QuestStartScreen.h"
 #include "UI_QuestClear.h"
+#include "Itemmsgbox.h"
 
 
 
@@ -49,21 +50,25 @@ HRESULT CUI_InterectMsg::Initialize(void * pArg)
 int CUI_InterectMsg::Tick(_float fTimeDelta)
 {
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_U))
-	{
-		if(FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, (TEXT("ssssss")))))
-			return OBJ_NOEVENT;
-	}
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_T))
-	{
-		CUI_QuestClear::QUESTCLEARDESC cleardesc;
-		ZeroMemory(&cleardesc, sizeof(CUI_QuestClear::QUESTCLEARDESC));
-		cleardesc.eName1 = ITEMNAME_OMEGAELIXIR;
-		cleardesc.iGaingald = 700;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC,(TEXT("ssssss")),&cleardesc)))
-			return OBJ_NOEVENT;
-	}
-	
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_U))
+	//{
+	//	CItemmsgbox::MSGBOXDESC testdesc;
+	//	ZeroMemory(&testdesc, sizeof(CItemmsgbox::MSGBOXDESC));
+	//	testdesc.eName = ITEMNAME_GRAPEJELLY;
+	//	testdesc.eType = ITEMTYPE_ACCESSORIES;
+	//	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_itemmsgbox"), LEVEL_STATIC, (TEXT("ssssss")),&testdesc);
+	//	//	return OBJ_NOEVENT;
+	//}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_T))
+	//{
+	//	CUI_QuestClear::QUESTCLEARDESC cleardesc;
+	//	ZeroMemory(&cleardesc, sizeof(CUI_QuestClear::QUESTCLEARDESC));
+	//	cleardesc.eName1 = ITEMNAME_OMEGAELIXIR;
+	//	cleardesc.iGaingald = 700;
+	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC,(TEXT("ssssss")),&cleardesc)))
+	//		return OBJ_NOEVENT;
+	//}
+	//
 
 
 	if (m_btick)

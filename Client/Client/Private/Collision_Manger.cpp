@@ -63,7 +63,7 @@ _bool CCollision_Manager::CollisionwithGroup(COLLSIONGROUP CollisionGroup, CColl
 {
 	for (auto& iter : m_GameObjects[CollisionGroup])
 	{
-		if (iter == nullptr || iter->Get_Collider() == pCollider)
+		if (iter == nullptr|| iter->Check_IsinFrustum() == false || iter->Get_Collider() == pCollider)
 			continue;
 
 		CCollider* pTargetCollider = iter->Get_Collider();
@@ -145,7 +145,7 @@ void CCollision_Manager::CollisionwithBullet()
 	if (CollisionwithGroup(COLLISION_MONSTER, COLLISION_PBULLET, &pMonster, &pPlayerBullet))
 	{
 		CBaseObj* pPlayer =  dynamic_cast<CWeapon*>(pPlayerBullet)->Get_Owner();
-		dynamic_cast<CMonster*>(pMonster)->Take_Damage(20, pPlayer);
+		dynamic_cast<CMonster*>(pMonster)->Take_Damage(rand()%500 + 50, pPlayer);
 	}
 }
 

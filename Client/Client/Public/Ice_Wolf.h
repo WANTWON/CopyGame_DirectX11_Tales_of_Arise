@@ -91,6 +91,8 @@ public:
 	void Set_PlayerState(class CIceWolfState* pPlayerState) { m_pState = pPlayerState; }
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	void Set_Done_HitAnimState() { m_bDone_HitAnimState = false; }
+	void Set_OnGoingBite() { m_bOnGoing_Bite= true; }
+	void Set_FinishBite()  { m_bOnGoing_Bite = false; }
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
@@ -129,6 +131,7 @@ private:
 	_int	 m_iBeDamaged_Cnt = 0;
 	_bool   m_bDone_HitAnimState = false;
 	_bool	m_bSomeSauling = false;
+	_bool	m_bOnGoing_Bite = false;
 
 public:
 	static CIce_Wolf* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

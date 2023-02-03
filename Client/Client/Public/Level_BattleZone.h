@@ -31,6 +31,7 @@ public:
 
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
+	_float	   m_fMinLength = MAXDISTANCE;
 
 public:
 	static CLevel_BattleZone* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -28,8 +28,11 @@ HRESULT CUI_Portraitfront_bottom::Initialize(void * pArg)
 	m_fSize.x = 95.f;
 	m_fSize.y = 95.f;
 	m_fAlpha = 1;
-	m_itexnum = 3;
+	m_itexnum = 4;
 //	m_bfadein = true;
+
+	m_fCurrentBoost = 100.f;
+	m_fMaxBoost = 100.f;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -201,6 +204,14 @@ HRESULT CUI_Portraitfront_bottom::Render()
 
 		m_pVIBufferCom->Render();
 
+
+		/*m_fSize.x = 95.f;
+		m_fSize.y = 95.f;*/
+		/*_float alpha = 1.f;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+			return E_FAIL;*/
+		if(m_eShaderID != UI_POTRAIT_READY)
+		RenderBoostGuage();
 	}
 
 

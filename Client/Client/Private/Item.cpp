@@ -68,7 +68,11 @@ int CItem::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 	
 	if (m_bDead)
+	{
+		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 		return OBJ_DEAD;
+	}
+		
 
 	__super::Tick(fTimeDelta);
 
@@ -114,10 +118,9 @@ void CItem::Late_Tick(_float fTimeDelta)
 		m_bfirst = true;
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_E)&&!m_bIsGain)
 		{
+			dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();//¤·¤§
 			m_bIsGain = true;
 
-			CUI_Get_item_Popup::POPUPDESC testdesc;
-			ZeroMemory(&testdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
 			
 			_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
@@ -134,18 +137,15 @@ void CItem::Late_Tick(_float fTimeDelta)
 				}
 			}
 
-			ITEMINFO*  itempointer = new  ITEMINFO;
+			//ITEMINFO*  itempointer = new  ITEMINFO;
 			switch (m_ItemDesc.etype)
 			{
 			case APPLE:
-				testdesc.eName = itempointer->eitemname = ITEMNAME_APPLE;
-				testdesc.eType = itempointer->eitemtype = ITEMTYPE_FRUIT;//(ITEM_TYPE)(rand() % 20);
-				itempointer->icount = 1;
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_APPLE, ITEMTYPE_FRUIT,true , false);
 				break;
 			case LETTUCE:
-				testdesc.eName = itempointer->eitemname = ITEMNAME_LETTUCE;
-				testdesc.eType = itempointer->eitemtype = ITEMTYPE_VEGITABLE;//(ITEM_TYPE)(rand() % 20);
-				itempointer->icount = 1;
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LETTUCE, ITEMTYPE_VEGITABLE, true, false);
+				
 				if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 1 && CUI_Manager::Get_Instance()->Get_QuestComplete(0) == false)
 				{
 					CUI_Questmsg::QUESTMSGDESC questmsgdesc;
@@ -161,9 +161,8 @@ void CItem::Late_Tick(_float fTimeDelta)
 				break;
 
 			case PLANT:
-				testdesc.eName = itempointer->eitemname = ITEMNAME_HERB;
-				testdesc.eType = itempointer->eitemtype = ITEMTYPE_MATERIAL;//(ITEM_TYPE)(rand() % 20);
-				itempointer->icount = 1;
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_HERB, ITEMTYPE_MATERIAL, true, false);
+				
 				if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 1 && CUI_Manager::Get_Instance()->Get_QuestComplete(0) == false)
 				{
 					CUI_Questmsg::QUESTMSGDESC questmsgdesc;
@@ -181,46 +180,40 @@ void CItem::Late_Tick(_float fTimeDelta)
 				break;
 
 			case SLIMPLANT:
-				testdesc.eName = itempointer->eitemname = ITEMNAME_SMALLHERB;
-				testdesc.eType = itempointer->eitemtype = ITEMTYPE_MATERIAL;//(ITEM_TYPE)(rand() % 20);
-				itempointer->icount = 1;
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SMALLHERB, ITEMTYPE_MATERIAL, true, false);
 				break;
-			}
 
-			vector<ITEMINFO*>* inv = CUI_Manager::Get_Instance()->Get_Inventory();
-			_bool bshouldpush = true;
-			for (auto& iter = inv->begin(); iter != inv->end(); ++iter)
-			{
-				if ((*iter)->eitemname == itempointer->eitemname)
-				{
-					(*iter)->icount += 1;
-					bshouldpush = false;
-					break;
-				}
-			}
+			case MUSHROOM:
+			//	_uint random = rand() % 2;
+			//		if(random == 0)
+						CUI_Manager::Get_Instance()->AddItem(ITEMNAME_PYOGOMUSHROOM, ITEMTYPE_MATERIAL, true, false); 
+		//			else
+						CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SONG2MUSHROOM, ITEMTYPE_MATERIAL, true, false);
+				break;
 
-			if (bshouldpush)
-				inv->push_back(itempointer);
-			else
-				delete(itempointer);
-			_uint index = 0;
+			case BOX:
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_ARSORSWORD, ITEMTYPE_SWORD,false,true);
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_HWANGJELLY, ITEMTYPE_JELLY, true, false);
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
+				break;
+
+			case JEWEL:
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SALTROCK, ITEMTYPE_MATERIAL, true, false);
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SALTROCK, ITEMTYPE_MATERIAL, true, false);
+				CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SALTROCK, ITEMTYPE_MATERIAL, true, false);
+				break;
+
+				
+		//		CUI_Manager::Get_Instance()->AddItem(testdesc.eName, testdesc.eType);
+
 			
-			/*auto popup = CUI_Manager::Get_Instance()->Get_Itempopup_list();
-			for (auto iter : *popup)
-			{
-				if (iter->Get_Isdead() == false)
-					++index;
-			}*/
-			testdesc.iIndex =(_uint)CUI_Manager::Get_Instance()->Get_Itempopup_list()->size();
-			
-			//	testdesc.iCount =
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
-				return;
 
+			}
+			
 
 
 		}
-			//CITEM::ITEMTYPE
 
 	}
 	

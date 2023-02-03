@@ -14,6 +14,8 @@
 #include "HawkSitOnState.h"
 #include "HawkBattle_DashState.h"
 #include "HawkBattle_IdleState.h"
+#include "HawkBattle_TornadeState.h"
+#include "HawkBattle_PeckState.h"
 
 using namespace Hawk;
 
@@ -64,7 +66,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	m_eMonsterID = HAWK;
 
 
-	m_tStats.m_fMaxHp = 3;
+	m_tStats.m_fMaxHp = 200;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 
@@ -121,6 +123,7 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
+	//ColliderDesc.vScale = _float3(3.f, 3.f, 3.f); 지금 콜라이더 사이즈 6은 너무 큰데, 3으로 하면 피격이안됨
 	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
@@ -143,13 +146,13 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	}
 
 
-	///* For.Com_Obb*/
-	CCollider::COLLIDERDESC ObbColliderDesc;
-	ZeroMemory(&ObbColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ObbColliderDesc.vScale = _float3(7.f, 3.5f, 3.f);
-	ObbColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ObbColliderDesc)))
-		return E_FAIL;
+	/////* For.Com_Obb*/
+	//CCollider::COLLIDERDESC ObbColliderDesc;
+	//ZeroMemory(&ObbColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	//ObbColliderDesc.vScale = _float3(7.f, 3.5f, 3.f);
+	//ObbColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
+	//if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ObbColliderDesc)))
+	//	return E_FAIL;
 
 
 
@@ -170,7 +173,7 @@ int CHawk::Tick(_float fTimeDelta)
 	Tick_State(fTimeDelta);
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	//m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 
 	//if (true == m_bBattleMode && false == m_bDoneChangeState)
@@ -180,23 +183,23 @@ int CHawk::Tick(_float fTimeDelta)
 	//	m_bDoneChangeState = true;
 	//}
 
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	//{
-	//	CHawkState* pState = new CBattle_DashState(this);
-	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	//}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	{
+		CHawkState* pState = new CBattle_DashState(this);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	}
 
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	//{
-	//	CHawkState* pState = new CBattle_ChargeState(this);
-	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	//}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	{
+		CHawkState* pState = new CBattle_TornadeState(this);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	}
 
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
-	//{
-	//	CHawkState* pState = new CBattle_Flying_BackState(this);
-	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	//}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	{
+		CHawkState* pState = new CBattle_PeckState(this);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	}
 
 
 

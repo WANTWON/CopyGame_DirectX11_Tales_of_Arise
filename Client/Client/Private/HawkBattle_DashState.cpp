@@ -11,6 +11,9 @@ using namespace Hawk;
 CBattle_DashState::CBattle_DashState(CHawk* pHawk)
 {
 	m_pOwner = pHawk;
+	
+	m_fRandTime = ((rand() % 4000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
+	
 }
 
 CHawkState * CBattle_DashState::AI_Behaviour(_float fTimeDelta)
@@ -22,10 +25,40 @@ CHawkState * CBattle_DashState::AI_Behaviour(_float fTimeDelta)
 CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 {
 
-	Find_BattleTarget();
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.1f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+
+	if (pDamageCauser == nullptr)
+	{
+		if (m_pCurTarget == nullptr)
+		{
+			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+		else if (m_pCurTarget)
+		{
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+	}
+
+
+	else if (pDamageCauser != nullptr)
+	{
+		m_pCurTarget = pDamageCauser;
+
+		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
+	}
+
+
+
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -34,7 +67,7 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.02f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -44,17 +77,20 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 
 CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 {
-	if (m_pTarget == nullptr)
-		return nullptr;
+	//if (m_bTargetSetting)
+	//{
+	//	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
+	//	m_bTargetSetting = true;
+	//}
 
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-
-	srand((_uint)time(NULL));
-	m_iRand = rand() % 2;
+	m_fTimeDletaAcc += fTimeDelta;
 
 
 	if (m_bIsAnimationFinished)
+	{
 		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_DASH);
+	}
+		
 
 	
 

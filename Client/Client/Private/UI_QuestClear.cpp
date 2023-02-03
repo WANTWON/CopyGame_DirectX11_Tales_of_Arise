@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "PlayerManager.h"
 #include "Player.h"
+#include "UI_Dialoguepopup.h"
 
 
 
@@ -210,6 +211,8 @@ int CUI_QuestClear::Tick(_float fTimeDelta)
 
 	if (m_fDietimer > 2.f)
 	{
+		if(CUI_Manager::Get_Instance()->Get_QuestIndex() == 1)
+		dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(1, false, 0, 1);
 		return OBJ_DEAD;
 	}
 

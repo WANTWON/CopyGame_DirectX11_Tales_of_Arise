@@ -35,6 +35,8 @@ CBerserkerState * CBattle_DeadState::Tick(_float fTimeDelta)
 CBerserkerState * CBattle_DeadState::LateTick(_float fTimeDelta)
 {
 	
+	m_pOwner->Check_Navigation();
+
 	if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
 	{
 

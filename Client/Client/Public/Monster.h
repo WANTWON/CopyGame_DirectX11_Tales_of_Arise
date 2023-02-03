@@ -24,6 +24,7 @@ public:
 		_float m_fAttackPower = 10.f;
 		_float m_fWalkSpeed = 3.f;
 		_float m_fRunSpeed = 5.f;
+		_float m_fLockonSmashGuage = 0.f;
 	}STATS;
 
 protected:
@@ -48,6 +49,7 @@ public:
 	virtual void Make_GetAttacked_Effect(CBaseObj* DamageCauser = nullptr);
 	virtual void Make_DeadEffect(CBaseObj* Target = nullptr);
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser);
+	void	Collision_Object(_float fTimeDelta);
 
 protected:
 	virtual HRESULT SetUp_ShaderResources();
@@ -63,7 +65,6 @@ protected:
 	virtual void Check_Navigation()							PURE;
 	void	Check_NearTrigger();
 	
-	
 public: // Get & Set
 	MONSTER_ID	Get_MonsterID(void) { return m_eMonsterID; }
 	_bool		Get_Aggro(void) { return m_bAggro; }
@@ -76,11 +77,13 @@ public: // Get & Set
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
 	void		Set_Dissolve() { m_bDissolve = true; }
 	CBaseObj*	Get_Trigger() { return m_pTrigger; }
-	CBaseObj*   Get_DamageCauser() { return m_DamageCauser; }
+	CBaseObj*   Get_DamageCauser() { return m_pTarget; }
 
 protected:
 	DMG_DIR Calculate_DmgDirection();
 	_vector	Calculate_DirectionByPos();
+	_bool	Check_AmILastMoster();
+
 	
 protected:
 	STATS					m_tStats;
@@ -132,7 +135,8 @@ protected: /* For.Components */
 	
 protected:
 	_bool		m_bDissolve = false;
-	CBaseObj*	m_DamageCauser = nullptr;
+	_float		m_fDissolveOffset = 1.f;
+
 
 public:
 	virtual void Free() override;

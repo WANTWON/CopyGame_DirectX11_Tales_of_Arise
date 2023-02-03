@@ -354,7 +354,7 @@ CUI_Get_item_Popup * CUI_Get_item_Popup::Create(ID3D11Device * pDevice, ID3D11De
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CUI_Get_item_Popup"));
+		ERR_MSG(TEXT("Failed to Created : CUI_Skillmessage"));
 		Safe_Release(pInstance);
 	}
 
@@ -369,7 +369,7 @@ CGameObject * CUI_Get_item_Popup::Clone(void * pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CUI_Get_item_Popup"));
+		ERR_MSG(TEXT("Failed to Cloned : CUI_Skillmessage"));
 		Safe_Release(pInstance);
 	}
 

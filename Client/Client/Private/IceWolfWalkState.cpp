@@ -28,14 +28,15 @@ CIceWolfState * CWalkState::AI_Behaviour(_float fTimeDelta)
 CIceWolfState * CWalkState::Tick(_float fTimeDelta)
 {
 	Find_Target();
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	m_pOwner->Check_Navigation();
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *0.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	
 	
 	return nullptr;
 }
 
 CIceWolfState * CWalkState::LateTick(_float fTimeDelta)
 {
+	m_pOwner->Check_Navigation();
 
 	//나의 트리거 박스랑 충돌안했을떄
 	CBaseObj* pTrigger = m_pOwner->Get_Trigger();
@@ -52,7 +53,7 @@ CIceWolfState * CWalkState::LateTick(_float fTimeDelta)
 		else
 		{
 			_vector vPosition = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.5f, m_pOwner->Get_Navigation());
 			m_pOwner->Get_Transform()->LookAt(vPosition);
 			
 		}
@@ -65,7 +66,7 @@ CIceWolfState * CWalkState::LateTick(_float fTimeDelta)
 
 		m_fTimeDletaAcc += fTimeDelta;
 
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.6f, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.5f, m_pOwner->Get_Navigation());
 
 		if (m_pTarget)
 			return new CChaseState(m_pOwner);
