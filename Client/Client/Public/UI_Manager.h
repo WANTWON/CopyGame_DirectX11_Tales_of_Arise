@@ -7,6 +7,7 @@ BEGIN(Client)
 
 //class UI_Dialogue;
 class CUI_Base;
+class CUI_Get_item_Popup;
 class CUI_Manager final : public CBase
 {
 	DECLARE_SINGLETON(CUI_Manager)
@@ -60,9 +61,13 @@ public: /*Getter Setter*/
 	CUI_Base*	 Get_Dialogue() { return m_pDialogue; }
 	CUI_Base*    Get_Dialoguepopup() { return m_pDialoguepopup; }
 	CUI_Base*    Get_System_msg() { return m_pSystemmsg; }
+	CUI_Base*    Get_Skill_msg() { return m_pSkillmsg; }
 	void Set_Dialogue(CUI_Base* pointer) { m_pDialogue = pointer; }
 	void Set_Dialoguepopup(CUI_Base* pointer) { m_pDialoguepopup = pointer; }
 	void Set_SystemMsg(CUI_Base* pointer) { m_pSystemmsg = pointer; }
+	void Set_SkillMsg(CUI_Base* pointer) { m_pSkillmsg = pointer; }
+
+	void AddItem(ITEM_NAME name, ITEM_TYPE type , _bool popup, _bool msgbox, _uint count = 1);
 
 	
 	void PlusGald(_uint gald) { m_iGald += gald; }
@@ -115,6 +120,7 @@ private:
 	CUI_Base* m_pDialogue = nullptr;
 	CUI_Base* m_pDialoguepopup = nullptr;
 	CUI_Base* m_pSystemmsg = nullptr;
+	CUI_Base* m_pSkillmsg = nullptr;
 
 	list<CUI_Base*>m_pItempopup;
 	//CUI_Base* m_pDialogue

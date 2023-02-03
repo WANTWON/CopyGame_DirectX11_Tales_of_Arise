@@ -256,15 +256,15 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 				return E_FAIL;
 			break;
 		case Client::HAWK:
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_BATTLE, pLayerTag, &ModelDesc.vPosition)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
 				return E_FAIL;
 			break;
 		case Client::BERSERKER:
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_BATTLE, pLayerTag, &ModelDesc.vPosition)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
 				return E_FAIL;
 			break;
 		case Client::SLIME:
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_BATTLE, pLayerTag, &ModelDesc.vPosition)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
 				return E_FAIL;
 			break;
 		case Client::RINWELL:

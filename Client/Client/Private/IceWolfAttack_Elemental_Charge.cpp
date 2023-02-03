@@ -73,6 +73,13 @@ CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 		////회전 코드 
 		//CTransform* pMonSterTransform = m_pOwner->Get_Transform();
 
+
+	//if (m_eStateId_Charge == STATE_ID::STATE_CHARGE_START)
+	//{
+	//	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//	//m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	//}
+
 		//_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
 		//_vector vLook = XMVector3Normalize(pMonSterTransform->Get_State(CTransform::STATE_LOOK));
 
@@ -87,11 +94,14 @@ CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 
 	
 
+
 	return nullptr;
 }
 
 CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 {
+	/*if (m_pTarget == nullptr)
+		return nullptr;*/
 	m_fTimeDletaAcc += fTimeDelta;
 
 	if (m_bTargetSetting = false)

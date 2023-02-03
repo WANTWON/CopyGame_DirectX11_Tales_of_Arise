@@ -24,6 +24,7 @@ public:
 		_float m_fAttackPower = 10.f;
 		_float m_fWalkSpeed = 3.f;
 		_float m_fRunSpeed = 5.f;
+		_float m_fLockonSmashGuage = 0.f;
 	}STATS;
 
 protected:

@@ -105,6 +105,8 @@ void CUI_Portraitfront::Late_Tick(_float fTimeDelta)
 
 }
 
+
+
 HRESULT CUI_Portraitfront::Render()
 {
 	if (nullptr == m_pShaderCom ||
@@ -249,4 +251,28 @@ void CUI_Portraitfront::Free()
 
 	Safe_Release(m_pTextureCom1);
 	__super::Free();
+}
+
+HRESULT CUI_Portraitfront::RenderBoostGuage()
+{
+
+	m_pTransformCom->Set_Rotation({ 0.f,0.f,55.f });
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 64.f);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, 12.f);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x + 17.f - g_iWinSizeX * 0.5f, -m_fPosition.y - 23.f + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(5))))
+		return E_FAIL;
+	//m_fCurrentBoost = 50.f;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &m_fMaxBoost, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fCurrentBoost, sizeof(_float))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(UI_BOOSTGUAGE);
+
+	m_pVIBufferCom->Render();
+
+	m_pTransformCom->Set_Rotation({ 0.f,0.f,0.f });
 }

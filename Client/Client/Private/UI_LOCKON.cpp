@@ -3,7 +3,8 @@
 
 #include "GameInstance.h"
 #include "Player.h"
-
+#include "BattleManager.h"
+#include "Monster.h"
 CUI_LOCKON::CUI_LOCKON(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -103,13 +104,16 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 	{
 		m_fcurrentmp -= 0.1f;
 	}
+	//dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().x - 85.f;
+
+	m_fcurrentmp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
 
 	//m_pTransformCom->Turn({ 0.f,1.f,0.f,1.f }, 45.f);
 
+	_float2 lockonPos = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_ProjPosition();
 
-
-	m_fPosition.x = 550.f;
-	m_fPosition.y = 600.f;
+	m_fPosition.x = lockonPos.x;//550.f;
+	m_fPosition.y = lockonPos.y; //600.f;
 	m_fSize.x = 56.f;
 	m_fSize.y = 56.f;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);

@@ -4,6 +4,7 @@
 #include "Level_Manager.h"
 #include "CameraManager.h"
 #include "BattleManager.h"
+#include "DamageFont.h"
 #include "Effect.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -46,7 +47,7 @@ int CMonster::Tick(_float fTimeDelta)
 	if (m_bTakeDamage)
 		m_fTime_TakeDamageDeltaAcc += fTimeDelta;
 
-	if (3 <= m_fTime_TakeDamageDeltaAcc)
+	if (0.5f <= m_fTime_TakeDamageDeltaAcc)
 	{
 		m_bTakeDamage = false;
 		m_fTime_TakeDamageDeltaAcc = 0.f;
@@ -357,7 +358,10 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (m_tStats.m_fCurrentHp <= 0)
 	{
 		m_tStats.m_fCurrentHp = 0;
-		return _int(m_tStats.m_fCurrentHp);
+
+
+		return _int(m_tStats.m_fCurrentHp);//dmgfont
+
 
 	}
 
@@ -365,7 +369,24 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
 
+
+	CDamageFont::DMGDESC testdesc;
+	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
+	testdesc.iDamage = fDamage;
+	testdesc.pPointer = this;
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+		return E_FAIL;
+	m_tStats.m_fLockonSmashGuage += 0.01f;//m_stats.m_fLockonSmashGuage
+
+	if (m_tStats.m_fLockonSmashGuage >= 4.f)
+		m_tStats.m_fLockonSmashGuage = 4.f;
+
 	Make_GetAttacked_Effect(DamageCauser);
+
 
 	return _int(m_tStats.m_fCurrentHp);
 
