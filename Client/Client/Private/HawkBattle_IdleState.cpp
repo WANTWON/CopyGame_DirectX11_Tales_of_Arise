@@ -20,7 +20,7 @@ CBattle_IdleState::CBattle_IdleState(CHawk* pHawk, STATE_ID ePreBattleState, CBa
 {
 	m_pOwner = pHawk;
 	m_ePreBattleState = ePreBattleState;
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fRandTime = ((rand() % 4000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
 	m_pCurTarget = pCurTarget;
 }
@@ -82,9 +82,9 @@ CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	}*/
 
 	
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (m_fTimeDletaAcc > m_fRandTime)
+	if (m_fTimeDeltaAcc > m_fRandTime)
 	{
 		switch (m_ePreBattleState)
 		{

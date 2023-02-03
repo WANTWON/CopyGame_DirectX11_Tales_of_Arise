@@ -15,7 +15,7 @@ CIdleState::CIdleState(CIce_Wolf* pIceWolf, FIELD_STATE_ID ePreState)
 	m_pOwner = pIceWolf;
 	m_ePreState_Id = ePreState;
 
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fIdleTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
@@ -31,11 +31,7 @@ CIceWolfState * CIdleState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
-	{
-		_vector vecTranslation;
-		_float fRotationRadian;
-		//m_pOwner->Check_Navigation();
-	}
+		m_pOwner->Check_Navigation();
 
 	return nullptr;
 }
@@ -45,7 +41,7 @@ CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation();
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
 	if (m_pTarget)
 	{
@@ -54,7 +50,7 @@ CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 	
 	else
 	{
-		if (m_fTimeDletaAcc > m_fIdleTime)
+		if (m_fTimeDeltaAcc > m_fIdleTime)
 		{
 			switch (rand()%4)
 			{

@@ -38,7 +38,7 @@ CHawkState * CBattle_DeadState::Tick(_float fTimeDelta)
 
 CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 {
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 	
 
 		if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
@@ -56,11 +56,11 @@ CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 
 
 
-			if (m_fTimeDletaAcc >= 5 || fHawkPos.y <= 0)
+			if (m_fTimeDeltaAcc >= 5 || fHawkPos.y <= 0)
 			{
 			m_bDeadAnimFinish = true;
 			m_pOwner->Set_Dissolve();
-			m_fTimeDletaAcc = 0.f;
+			m_fTimeDeltaAcc = 0.f;
 			}
 
 		}

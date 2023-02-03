@@ -72,8 +72,8 @@ CBerserkerState * CBattle_RunState::LateTick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 
-	m_fTimeDletaAcc += fTimeDelta;
-	if (m_fTimeDletaAcc > m_fRandTime)
+	m_fTimeDeltaAcc += fTimeDelta;
+	if (m_fTimeDeltaAcc > m_fRandTime)
 		m_iRand = rand() % 4;
 
 	if (m_fTarget_Distance > 4.5f)

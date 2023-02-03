@@ -190,7 +190,7 @@ protected:
 	_bool		m_bHasSpottedTarget = false;
 	_bool		m_bBattleMode = false;
 	_bool		m_bBitePossible = false;
-	_float		m_fTimeDletaAcc = 0.f;
+	_float		m_fTimeDeltaAcc = 0.f;
 	_float		m_fTarget_Distance;
 	_float		m_fDegreeToTarget;
 	CIce_Wolf* m_pOwner = nullptr;

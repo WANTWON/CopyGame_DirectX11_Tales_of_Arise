@@ -4181,6 +4181,12 @@ void CImgui_Manager::Show_MeshCustomization()
 		if (pEffectMesh)
 			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 	}
+	if (ImGui::DragFloat("##MeshGlowPower", &m_tMeshEffectDesc.fGlowPower, 0.05f, 0, 1, "Glow Power: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
 	ImGui::NewLine();
 
 	_float3 vScale, vRotation, vTranslation;

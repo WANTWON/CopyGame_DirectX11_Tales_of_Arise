@@ -104,9 +104,9 @@ CBerserkerState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	if (m_pCurTarget == nullptr)
 		return nullptr;
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (m_fTimeDletaAcc > m_fRandTime)
+	if (m_fTimeDeltaAcc > m_fRandTime)
 		return new CBattle_WalkState(m_pOwner);
 
 

@@ -12,7 +12,6 @@
 #include "IceWolfBattle_HowLingState.h"
 #include "IceWolfBattle_RunState.h"
 
-
 using namespace IceWolf;
 
 CIce_Wolf::CIce_Wolf(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -25,7 +24,6 @@ CIce_Wolf::CIce_Wolf(const CIce_Wolf & rhs)
 {
 }
 
-
 HRESULT CIce_Wolf::Initialize_Prototype()
 {
 	return S_OK;
@@ -37,10 +35,9 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
-
 	if (m_bBattleMode)
 	{
-		/*Set_Battle State*/
+		/* Set_Battle State */
 		CIceWolfState* pBattleState = new CBattle_IdleState(this, CIceWolfState::STATE_ID::START_BATTLE);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
@@ -51,11 +48,9 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 		m_pState = m_pState->ChangeState(m_pState, pState);
 	}
 
-
 	m_eMonsterID = ICE_WOLF;
 
-
-	m_tStats.m_fMaxHp = 200.f;
+	m_tStats.m_fMaxHp = 2000.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -63,12 +58,11 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 	m_fRadius = 1.f;
 
-
 	NONANIMDESC ModelDesc;
-	if (pArg != nullptr)
+	if (pArg)
 		memcpy(&ModelDesc, pArg, sizeof(NONANIMDESC));
 
-	if (pArg != nullptr)
+	if (pArg)
 	{
 		_vector vPosition = XMLoadFloat3(&ModelDesc.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
@@ -79,59 +73,39 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
 	}
 
-	//���� ���ۺ��� Ʈ���� �ڽ� �����ϱ� , ���� ��Ʋ���϶��� Ʈ���� �ڽ��� ��� nullptr��
 	Check_NearTrigger();
-
 
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), 90.f);
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fCntChanceTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
 	m_bDone_HitAnimState = false;
 	return S_OK;
 }
 
-
-
 HRESULT CIce_Wolf::Ready_Components(void * pArg)
 {
-	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
-
-	/* For.Com_Renderer */
-	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
-		return E_FAIL;
-
-	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
-
 	TransformDesc.fSpeedPerSec = 6.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
+	/* For.Com_Transform */
 	if (FAILED(__super::Add_Components(TEXT("Com_Transform"), LEVEL_STATIC, TEXT("Prototype_Component_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
-
+	/* For.Com_Renderer */
+	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
-
 	/* For.Com_Model*/
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Ice_Wolf"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
-
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"), (CComponent**)&m_pDissolveTexture)))
 		return E_FAIL;
-
-	///* For.Com_OBB */
-	//CCollider::COLLIDERDESC ColliderDesc;
-	//ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	//ColliderDesc.vScale = _float3(7.f, 3.f, 3.f);
-	//ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	//ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	//if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
-	//	return E_FAIL;
 
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
@@ -142,7 +116,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
-
+	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
 	switch (iLevel)
 	{
 	case Client::LEVEL_SNOWFIELD:
@@ -158,8 +132,6 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 		break;
 	}
 
-
-
 	return S_OK;
 }
 
@@ -172,6 +144,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
+
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 
@@ -180,11 +153,11 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	
-	if (m_fTimeDletaAcc > m_fCntChanceTime)
+	if (m_fTimeDeltaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
 
 	return OBJ_NOEVENT;
@@ -194,6 +167,7 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
+
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
@@ -202,8 +176,7 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-		LateTick_State(fTimeDelta);
-
+	LateTick_State(fTimeDelta);
 }
 
 HRESULT CIce_Wolf::Render_Glow()
@@ -246,10 +219,8 @@ void CIce_Wolf::AI_Behavior(_float fTimeDelta)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
 }
 
-
 void CIce_Wolf::Tick_State(_float fTimeDelta)
 {
-	
 	CIceWolfState* pNewState = m_pState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
@@ -263,7 +234,6 @@ void CIce_Wolf::LateTick_State(_float fTimeDelta)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
 }
 
-
 _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
@@ -271,9 +241,7 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	case ANIM_MOVE_IDLE:
 	case ANIM_MOVE_RUN:
 	case ANIM_MOVE_WALK_F:
-	
 		return true;
-
 	case ANIM_TURN_L:
 	case ANIM_ATTACK_HOWLING:
 	case ANIM_TURN_R:
@@ -295,7 +263,6 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 
 _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-
 	if (fDamage <= 0 || m_bDead || m_bDissolve || m_tStats.m_fCurrentHp <= 0.f)
 		return 0; 
 
@@ -312,7 +279,6 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	else
 	{
-
 		m_iBeDamaged_Cnt++;
 
 		if (m_bOnGoing_Bite == false)
@@ -338,7 +304,6 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		}
 		else
 			return iHp;
-
 	}
 
 	return iHp;
@@ -346,11 +311,10 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 HRESULT CIce_Wolf::SetUp_ShaderID()
 {
-	if (false == m_bDissolve)
-		m_eShaderID = SHADER_ANIMDEFAULT;
-
-	else
+	if (m_bDissolve)
 		m_eShaderID = SHADER_ANIM_DISSOLVE;
+	else
+		m_eShaderID = SHADER_ANIMDEFAULT;
 
 	return S_OK;
 }
@@ -360,9 +324,8 @@ void CIce_Wolf::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	
+	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
 CIce_Wolf * CIce_Wolf::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
