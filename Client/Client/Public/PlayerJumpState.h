@@ -12,6 +12,7 @@ public:
 	virtual CPlayerState* HandleInput() override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
 	virtual CPlayerState* LateTick(_float fTimeDelta);
+	virtual CPlayerState* EventInput(void);
 
 	virtual void Enter() override;
 	virtual void Exit() override;
@@ -26,6 +27,7 @@ private:
 	_float m_fTime = 0.f;
 	_vector m_vecStartPos;
 	_vector m_vecChangePos;
+	_bool m_bIsJump = false;
 
 private:
 	DIRID m_eDirection = DIRID::DIR_END;
