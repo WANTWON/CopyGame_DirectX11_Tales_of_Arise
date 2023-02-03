@@ -16,7 +16,7 @@ CIdleState::CIdleState(CHawk* pIceWolf, FIELD_STATE_ID ePreState)
 	m_pOwner = pIceWolf;
 	m_ePreState_Id = ePreState;
 
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fIdleTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
@@ -46,7 +46,7 @@ CHawkState * CIdleState::LateTick(_float fTimeDelta)
 {
 	
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
 	if (m_pTarget)
 	{
@@ -55,7 +55,7 @@ CHawkState * CIdleState::LateTick(_float fTimeDelta)
 
 	else
 	{
-		if (m_fTimeDletaAcc > m_fIdleTime)
+		if (m_fTimeDeltaAcc > m_fIdleTime)
 		{
 			switch (rand() % 3)
 			{

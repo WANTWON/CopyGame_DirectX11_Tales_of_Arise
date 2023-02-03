@@ -11,7 +11,7 @@ CBattle_TurnState::CBattle_TurnState(class CIce_Wolf* pIceWolf, STATE_ID ePreSta
 {
 	m_pOwner = pIceWolf;
 	m_ePreState = ePreState;
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fIdleTime = ((rand() % 10000 +5000) *0.001f)*((rand() % 100) * 0.01f);
 
 	m_pCurTarget = pCurTarget;

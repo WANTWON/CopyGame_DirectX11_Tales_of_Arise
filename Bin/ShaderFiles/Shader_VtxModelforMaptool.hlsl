@@ -35,6 +35,7 @@ texture2D g_DissolveTexture;
 
 /* Glow */
 float3 g_vGlowColor;
+float g_fGlowPower;
 
 struct VS_IN
 {
@@ -209,10 +210,15 @@ PS_EFFECT_OUT PS_GLOW(PS_IN In)
 {
 	PS_EFFECT_OUT Out = (PS_EFFECT_OUT)0;
 
-	Out.vColor = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+	float2 vOffsettedUV = In.vTexUV;
+	vOffsettedUV.x += g_fMaskDirectionX * g_fMaskSpeed * g_fTimer;
+	vOffsettedUV.y += g_fMaskDirectionY * g_fMaskSpeed * g_fTimer;
+
+	Out.vColor = g_MaskTexture.Sample(LinearSampler, vOffsettedUV);
 	Out.vColor.gba = Out.vColor.r;
 
-	Out.vColor.rgb *= g_vGlowColor;
+	float3 vGlow = g_vGlowColor * g_fGlowPower;
+	Out.vColor.rgb *= vGlow;
 
 	if (Out.vColor.a == 0)
 		discard;

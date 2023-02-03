@@ -14,7 +14,7 @@ CTurnR_State::CTurnR_State(CBerserker* pIceWolf)
 {
 	m_pOwner = pIceWolf;
 
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fTurnR_Time = ((rand() % 8000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
@@ -50,9 +50,9 @@ CBerserkerState * CTurnR_State::LateTick(_float fTimeDelta)
 {
 
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (m_fTimeDletaAcc > m_fTurnR_Time)
+	if (m_fTimeDeltaAcc > m_fTurnR_Time)
 		m_iRand = rand() % 2;
 	
 	if (m_pTarget)

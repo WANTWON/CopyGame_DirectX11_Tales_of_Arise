@@ -83,9 +83,9 @@ CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 {
 
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (m_fTimeDletaAcc > m_fRandTime)
+	if (m_fTimeDeltaAcc > m_fRandTime)
 		m_iRand = rand() % 2;
 	//if (m_pTarget == nullptr)
 	//	return nullptr;
