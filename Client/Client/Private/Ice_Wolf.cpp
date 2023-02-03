@@ -9,6 +9,9 @@
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
 #include "IceWolfAttackBiteState.h"
+#include "IceWolfBattle_HowLingState.h"
+#include "IceWolfBattle_RunState.h"
+
 
 using namespace IceWolf;
 
@@ -52,7 +55,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_eMonsterID = ICE_WOLF;
 
 
-	m_tStats.m_fMaxHp = 10000.f;
+	m_tStats.m_fMaxHp = 200.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -76,7 +79,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
 	}
 
-	//»ý¼º ½ÃÀÛºÎÅÍ Æ®¸®°Å ¹Ú½º ¼¼ÆÃÇÏ±â , ¸¸¾à ¹èÆ²Á¸ÀÏ¶§´Â Æ®¸®°Å ¹Ú½º°¡ ¾ø¾î¼­ nullptrÀÓ
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ûºï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ , ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ²ï¿½ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î¼­ nullptrï¿½ï¿½
 	Check_NearTrigger();
 
 
@@ -163,38 +166,35 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
 	if (m_bDead)
-	{
-		if (CBattleManager::Get_Instance()->Get_LackonMonster() == this)
-			CBattleManager::Get_Instance()->Set_LackonMonster(nullptr);
-
-		Check_AmILastMoster();
 		return OBJ_DEAD;
-	}
+		
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick() /*|| !Check_IsinFrustum(2.f)*/)
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
-
-	m_bBattleMode =  CBattleManager::Get_Instance()->Get_IsBattleMode();
-
 	
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
-
+	m_fTimeDletaAcc += fTimeDelta;
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	//m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
-
+	
 	if (m_fTimeDletaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
+
 	return OBJ_NOEVENT;
 }
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick()/* || !Check_IsinFrustum(2.f)*/)
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
@@ -202,14 +202,7 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-	/*if (m_bBattleMode)
-	{
-		LateTick_BattleState(fTimeDelta);
-	}
-	else*/
-//	{
 		LateTick_State(fTimeDelta);
-//	}
 
 }
 
@@ -221,12 +214,12 @@ HRESULT CIce_Wolf::Render_Glow()
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
-	if (!m_bDead)
-	{
-		_bool bGlow = true;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
-			return E_FAIL;
-	}
+	_bool bUseDiffuseColor = true;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_bUseDiffuseColor", &bUseDiffuseColor, sizeof(_bool))))
+		return E_FAIL;
+	_float3 vGlowColor = _float3(1.f, 0.f, 0.f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &vGlowColor, sizeof(_float3))))
+		return E_FAIL;
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
 	for (_uint i = 0; i < iNumMeshes; ++i)
@@ -235,21 +228,11 @@ HRESULT CIce_Wolf::Render_Glow()
 			return E_FAIL;
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
-
-		if (!m_bDead)
-		{
-			if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
-				return E_FAIL;
-		}
-
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 3)))
+		
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
 			return E_FAIL;
-	}
 
-	if (!m_bDead)
-	{
-		_bool bGlow = false;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, SHADER_ANIM_GLOW)))
 			return E_FAIL;
 	}
 
@@ -313,15 +296,15 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 
-	if (fDamage <= 0 || m_bDead)
-		return 0;
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_tStats.m_fCurrentHp <= 0.f)
+		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
 	if (iHp <= 0)
 	{
 		m_pModelCom->Set_TimeReset();
-		CIceWolfState* pState = new CBattle_DeadState(this/*DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION)*/);
+		CIceWolfState* pState = new CBattle_DeadState(this);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 		
 		return 0;
@@ -332,50 +315,30 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 		m_iBeDamaged_Cnt++;
 
-		if (m_bSomeSauling == false)
+		if (m_bOnGoing_Bite == false)
 		{
-			switch (rand() % 3)
+			if (m_bSomeSauling == false)
 			{
-			case 0:
-			{
-				m_pModelCom->Set_TimeReset();
+				//m_pModelCom->Set_TimeReset();
 				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
 				m_pState = m_pState->ChangeState(m_pState, pState);
-				break;
+
+
 			}
-			case 1:
+			if (m_iBeDamaged_Cnt >= 3)
 			{
+
 				m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, true);
 				m_pState = m_pState->ChangeState(m_pState, pState);
-				break;
-			}
-
-			case 2:
-			{
-				m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CAttackBiteState(this);
-				m_pState = m_pState->ChangeState(m_pState, pState);
-				break;
-			}
-
-			default:
-				break;
+				m_iBeDamaged_Cnt = 0;
+				m_bSomeSauling = true;
 
 			}
-
-			m_bDone_HitAnimState = true;
 		}
+		else
+			return iHp;
 
-		if(m_iBeDamaged_Cnt >= 3)
-		{
-			m_pModelCom->Set_TimeReset();
-			CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, true);
-			m_pState = m_pState->ChangeState(m_pState, pState);
-			m_iBeDamaged_Cnt = 0;
-			m_bSomeSauling = true;
-
-		}
 	}
 
 	return iHp;
@@ -387,7 +350,7 @@ HRESULT CIce_Wolf::SetUp_ShaderID()
 		m_eShaderID = SHADER_ANIMDEFAULT;
 
 	else
-		m_eShaderID = SHADER_ANIM_DISSLOVE;
+		m_eShaderID = SHADER_ANIM_DISSOLVE;
 
 	return S_OK;
 }

@@ -283,19 +283,17 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 	{
 		_vector vLockOnPosition = pLockOnMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
 		_vector vRight = XMVector3Normalize(m_pTransform->Get_State(CTransform::STATE_RIGHT));
-		
-		_vector vCameraLockonDir = XMVector3Normalize(XMVectorSetY(vLockOnPosition - m_pTransform->Get_State(CTransform::STATE_TRANSLATION), 0.f));
-
-		_vector vTargetDir = XMVector3Normalize(vLockOnPosition - vPlayerPosition);
 		_vector vLook = XMVector3Normalize(m_pTransform->Get_State(CTransform::STATE_LOOK));
 		_vector vPlayerLook = m_pTarget->Get_TransformState(CTransform::STATE_LOOK);
 
+		_vector vCameraLockonDir = XMVector3Normalize(XMVectorSetY(vLockOnPosition - m_pTransform->Get_State(CTransform::STATE_TRANSLATION), 0.f));
+		_vector vPlayerLockonDir = XMVector3Normalize(vLockOnPosition - vPlayerPosition);
+
 		vLook = XMVectorSetY(vLook, 0.f);
-		vTargetDir = XMVectorSetY(vTargetDir, 0.f);
+		vPlayerLockonDir = XMVectorSetY(vPlayerLockonDir, 0.f);
 
-		_float fDot = XMVectorGetX(XMVector3Dot(vTargetDir, vLook));
+		_float fDot = XMVectorGetX(XMVector3Dot(vPlayerLockonDir, vLook));
 		_float fRightDot = XMVectorGetX(XMVector3Dot(vCameraLockonDir, vRight));
-
 
 		if (pLockOnMonster->Check_IsinFrustum() == false)
 			m_bTurn = true;
@@ -305,23 +303,15 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 			if (fDot < 0.8f)
 			{
 				if (fRightDot > 0.f)
-				{
-					m_fAngle -= 3.f;
-				}
+					m_fAngle -= (1 - fDot)*10.f;// 3.f;
 				else
-				{
-					m_fAngle += 3.f;
-				}
+					m_fAngle += (1 - fDot)*10.f;// 3.f;
 			}
 			else
-			{
 				m_bTurn = false;
-			}
 		}
-		vCenterPos = vPlayerPosition;
+		
 	}
-
-
 
 	vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 	_float fLength = 5.f; 
@@ -363,16 +353,16 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 
 void CCamera_Dynamic::BattleClear_Camera(_float fTimeDelta)
 {
-	m_fAngle += 0.01f;
+	m_fAngle += 0.05f;
 	if (m_fAngle >= 360.f)
 		m_fAngle = 0.f;
 
 	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
-	vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
-	_float fLength = 3.f; 
-	vCameraPosition = XMVectorSetX(vCameraPosition, (XMVectorGetX(m_fTargetPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
-	vCameraPosition = XMVectorSetZ(vCameraPosition, (XMVectorGetZ(m_fTargetPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
-	
+	_float fLength = 4.f; 
+	m_vNewPos = XMVectorSetX(m_vNewPos, (XMVectorGetX(m_fTargetPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
+	m_vNewPos = XMVectorSetZ(m_vNewPos, (XMVectorGetZ(m_fTargetPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
+	m_vNewPos = XMVectorSetY(m_vNewPos,  3.f);
+
 	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
 		m_bLerp = false;
 

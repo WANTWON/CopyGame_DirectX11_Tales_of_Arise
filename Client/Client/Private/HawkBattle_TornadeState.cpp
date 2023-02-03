@@ -17,6 +17,7 @@ CBattle_TornadeState::CBattle_TornadeState(CHawk* pHawk)
 {
 	m_pOwner = pHawk;
 	
+	m_fRandTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CHawkState * CBattle_TornadeState::AI_Behaviour(_float fTimeDelta)
@@ -31,9 +32,35 @@ CHawkState * CBattle_TornadeState::AI_Behaviour(_float fTimeDelta)
 CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 {
 
-	m_fTarget_Distance = Find_BattleTarget();
+	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	if (pDamageCauser == nullptr)
+	{
+		if (m_pCurTarget == nullptr)
+		{
+			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+		else if (m_pCurTarget)
+		{
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+	}
+
+	else if (pDamageCauser != nullptr)
+	{
+		m_pCurTarget = pDamageCauser;
+
+		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
+	}
+
+
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -47,29 +74,21 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 	
+	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 
 	return nullptr;
 }
 
 CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 {
-	if (m_pTarget == nullptr)
-		return nullptr;
-
-	srand((_uint)time(NULL));
-	m_iRand = rand() % 2;
-
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		
+	
 
 
 	if (m_bIsAnimationFinished)
-		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_TORNADE);
+			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_TORNADE);
+
 		
-
-
+	
 
 	return nullptr;
 }

@@ -67,7 +67,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	//m_pOwner->Check_Navigation_Jump();
-		
+
 	return nullptr;
 }
 
@@ -84,8 +84,11 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 		}
 	}
 
-	if((CAlphen::ANIM::ANIM_JUMP_LOOP == m_pOwner->Get_Model()->Get_CurrentAnimIndex()) && Check_JumpEnd())
-		return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_END, m_fTime);
+	if ((CAlphen::ANIM::ANIM_JUMP_LOOP == m_pOwner->Get_Model()->Get_CurrentAnimIndex()) && Check_JumpEnd())
+	{
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
+		m_eStateType = STATETYPE_END;
+	}
 
 	return nullptr;
 }
@@ -166,7 +169,7 @@ _bool CJumpState::Check_JumpEnd()
 		m_pOwner->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -206,32 +209,9 @@ void CJumpState::Move(_float fTimeDelta)
 		break;
 	}
 
-	CTransform* pPlayerTransform = m_pOwner->Get_Transform();
-	
-	_float4x4 CameraFloat;
-	XMStoreFloat4x4(&CameraFloat, CameraMatrix);
+	m_fTime += 0.1f;
+	m_pOwner->Get_Transform()->Jump(m_fTime, 3.f, 1.0f, m_fStartHeight, m_fEndHeight);
 
-	_float4x4 PlayerFloat = pPlayerTransform->Get_World4x4();
-
-	_vector vLook = XMVectorLerp(XMVectorSet(PlayerFloat.m[2][0], 0.f, PlayerFloat.m[2][2], 0.f), XMVectorSet(CameraFloat.m[2][0], 0.f, CameraFloat.m[2][2], 0.f), 0.35f);
-	_float4 LookFloat;
-	XMStoreFloat4(&LookFloat, vLook);
-
-	_vector vPlayerLook = XMVectorSet(LookFloat.x, PlayerFloat.m[2][1], LookFloat.z, 0.f);
-	
-	_vector vRight = XMVector4Normalize(XMVector3Cross(pPlayerTransform->Get_State(CTransform::STATE_UP), vPlayerLook)) * pPlayerTransform->Get_Scale(CTransform::STATE_RIGHT);
-
-	pPlayerTransform->Set_State(CTransform::STATE_LOOK, XMVector4Normalize(vPlayerLook) * pPlayerTransform->Get_Scale(CTransform::STATE_LOOK));
-	pPlayerTransform->Set_State(CTransform::STATE_RIGHT, vRight);
-
-	_float fCos = XMVectorGetX(XMVector4Dot(pPlayerTransform->Get_State(CTransform::STATE_LOOK), vPlayerLook));
-
-	if (0.85f < fCos)
-	{
-		m_fTime += 0.1f;
-		m_pOwner->Get_Transform()->Jump(m_fTime, 3.f, 1.0f, m_fStartHeight, m_fEndHeight);
-
-		if (m_eDirection != DIR_END)
-			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f);
-	}
+	if (m_eDirection != DIR_END)
+		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f);
 }

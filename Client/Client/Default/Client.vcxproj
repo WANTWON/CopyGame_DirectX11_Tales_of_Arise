@@ -182,6 +182,7 @@
     <ClInclude Include="..\Public\BerserkerBattle_PouncingState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_Quadruple_ClawState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_RunState.h" />
+    <ClInclude Include="..\Public\BerserkerBattle_TurnState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_WalkState.h" />
     <ClInclude Include="..\Public\BerserkerChaseState.h" />
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
@@ -359,6 +360,7 @@
     <ClCompile Include="..\Private\BerserkerBattle_PouncingState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_Quadruple_ClawState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_RunState.cpp" />
+    <ClCompile Include="..\Private\BerserkerBattle_TurnState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_WalkState.cpp" />
     <ClCompile Include="..\Private\BerserkerChaseState.cpp" />
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />

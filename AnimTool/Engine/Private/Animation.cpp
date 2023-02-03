@@ -235,6 +235,18 @@ void CAnimation::Change_Duration(_float fDuration)
 	for (auto& pChannel : m_Channels)
 		pChannel->ChangeKeyFrameTime(fDuration / m_fDuration);
 
+	for (_int i = 0; i < m_TickPerSeconds.size(); ++i)
+	{
+		m_TickPerSeconds[i] *= (fDuration / m_fDuration);
+		m_ChangeTickTimes[i] *= (fDuration / m_fDuration);
+	}
+
+	for (_int i = 0; i < m_vecAnimEvent.size(); ++i)
+	{
+		m_vecAnimEvent[i].fStartTime *= (fDuration / m_fDuration);
+		m_vecAnimEvent[i].fEndTime *= (fDuration / m_fDuration);
+	}
+
 	m_fDuration = fDuration;
 }
 

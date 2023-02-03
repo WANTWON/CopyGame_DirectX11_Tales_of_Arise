@@ -13,9 +13,10 @@
 
 using namespace IceWolf;
 
-CAttackBiteState::CAttackBiteState(class CIce_Wolf* pIceWolf)
+CAttackBiteState::CAttackBiteState(class CIce_Wolf* pIceWolf, CBaseObj* pCurTarget)
 {
 	m_pOwner = pIceWolf;
+	m_pCurTarget = pCurTarget;
 }
 
 CIceWolfState * CAttackBiteState::AI_Behaviour(_float fTimeDelta)
@@ -27,9 +28,40 @@ CIceWolfState * CAttackBiteState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 {
-	m_fDegreeToTarget = RadianToTarget();
+	//m_fDegreeToTarget = RadianToTarget();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+
+
+	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+
+	if (pDamageCauser == nullptr)
+	{
+		if (m_pCurTarget == nullptr)
+		{
+			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+		else if (m_pCurTarget)
+		{
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+	}
+
+
+	else if (pDamageCauser != nullptr)
+	{
+		m_pCurTarget = pDamageCauser;
+
+		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
+	}
+
+
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -38,7 +70,7 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.04f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -47,11 +79,23 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 
 CIceWolfState * CAttackBiteState::LateTick(_float fTimeDelta)
 {
+	if (m_bTargetSetting = false)
+	{
+		m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
+		m_bTargetSetting = true;
+	}
+
 	if (m_bIsAnimationFinished)
 	{
-		m_pOwner->Set_Done_HitAnimState();
+		//m_pOwner->Set_Done_HitAnimState();
+		m_pOwner->Set_FinishBite();
 		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_BITE);
 	}
+
+
+
+	else 
+		m_pOwner->Set_OnGoingBite();
 	return nullptr;
 }
 

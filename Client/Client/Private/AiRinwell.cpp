@@ -136,7 +136,9 @@ int CAiRinwell::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f) || m_bDissolve)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_bDissolve)
+		return OBJ_NOEVENT;
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
@@ -151,9 +153,10 @@ int CAiRinwell::Tick(_float fTimeDelta)
 
 void CAiRinwell::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
-	
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 	if (!m_bDissolve)
@@ -288,7 +291,7 @@ HRESULT CAiRinwell::SetUp_ShaderID()
 	if (false == m_bDissolve)
 		m_eShaderID = SHADER_ANIMDEFAULT;
 	else
-		m_eShaderID = SHADER_ANIM_DISSLOVE;
+		m_eShaderID = SHADER_ANIM_DISSOLVE;
 
 	return S_OK;
 }

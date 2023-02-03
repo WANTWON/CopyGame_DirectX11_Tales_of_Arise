@@ -819,6 +819,9 @@
     <ClInclude Include="..\Public\PlayerCollectState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_TurnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Itemmsgbox.h">
       <Filter>02.GameObjects\04.UI\18.UI_Get_ITem_Msgbox</Filter>
     </ClInclude>
@@ -1313,6 +1316,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerCollectState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_TurnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Itemmsgbox.cpp">
       <Filter>02.GameObjects\04.UI\18.UI_Get_ITem_Msgbox</Filter>

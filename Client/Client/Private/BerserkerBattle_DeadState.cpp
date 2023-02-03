@@ -25,7 +25,7 @@ CBerserkerState * CBattle_DeadState::Tick(_float fTimeDelta)
 
 
 	if(false == m_bDeadAnimFinish)
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta*2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 
 
@@ -35,6 +35,8 @@ CBerserkerState * CBattle_DeadState::Tick(_float fTimeDelta)
 CBerserkerState * CBattle_DeadState::LateTick(_float fTimeDelta)
 {
 	
+	m_pOwner->Check_Navigation();
+
 	if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
 	{
 

@@ -14,6 +14,7 @@ using namespace Berserker;
 CBattle_WalkState::CBattle_WalkState(CBerserker* pBerserker)
 {
 	m_pOwner = pBerserker;
+	m_fRandTime = ((rand() % 4000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CBerserkerState * CBattle_WalkState::AI_Behaviour(_float fTimeDelta)
@@ -27,10 +28,38 @@ CBerserkerState * CBattle_WalkState::AI_Behaviour(_float fTimeDelta)
 CBerserkerState * CBattle_WalkState::Tick(_float fTimeDelta)
 {
 	
-	m_fTarget_Distance = Find_BattleTarget();
+	//m_fTarget_Distance = Find_BattleTarget();
+
+	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+
+	if (pDamageCauser == nullptr)
+	{
+		if (m_pCurTarget == nullptr)
+		{
+			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+		else
+		{
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+	}
+	else
+	{
+		m_pCurTarget = pDamageCauser;
+		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
+	}
 
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	if (m_pCurTarget == nullptr)
+		return nullptr;
+
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.7f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -54,42 +83,30 @@ CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 {
 
 
-	srand((_uint)time(NULL));
-	m_iRand = rand() % 2;
+	m_fTimeDletaAcc += fTimeDelta;
+
+	if (m_fTimeDletaAcc > m_fRandTime)
+		m_iRand = rand() % 2;
 	//if (m_pTarget == nullptr)
 	//	return nullptr;
 
-	if (m_pTarget == nullptr)
-		return new CBattle_WalkState(m_pOwner);
+	/*if (m_pTarget == nullptr)
+		return new CBattle_WalkState(m_pOwner);*/
 
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	
 	if (4.5f < m_fTarget_Distance)
 	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.1f, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.2f, m_pOwner->Get_Navigation());
 
 	}
-
-
 
 	else
-	{
-		switch (m_iRand)
-		{
-		case 0:
-			return new CBattle_Double_ClawState(m_pOwner);
-			break;
-		case 1:
-			return new CBattle_Double_CrowState(m_pOwner);
-			break;
+		return new CBattle_Double_ClawState(m_pOwner);
+	
 
-
-		default:
-			break;
-		}
-
-	}
+	
 
 
 

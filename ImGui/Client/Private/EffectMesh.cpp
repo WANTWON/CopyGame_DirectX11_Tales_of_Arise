@@ -38,7 +38,6 @@ int CEffectMesh::Tick(_float fTimeDelta)
 		{
 			m_bPlay = false;
 			m_fTimer = 0.f;
-			m_pTransformCom->Set_Rotation(_float3(0.f, 0.f, 0.f));
 			CImgui_Manager::Get_Instance()->Set_Play(false);
 		}
 		else
@@ -49,15 +48,21 @@ int CEffectMesh::Tick(_float fTimeDelta)
 			if (!XMVector3Equal(vTurnAxis, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
 				m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
 
-			VelocityLerp();
-			SizeLerp();
+			ColorLerp();
+			ScaleLerp();
 			AlphaLerp();
 			TurnVelocityLerp();
 			NoisePowerLerp();
 
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
+
 			m_fTimer += fTimeDelta;
 		}
 	}
+	else
+		m_fTimer = 0.f;
 
 	return OBJ_NOEVENT;
 }
@@ -66,8 +71,12 @@ void CEffectMesh::Late_Tick(_float fTimeDelta)
 {
 	if (m_pRendererCom)
 	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+		
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		
+		if (m_tMeshEffectDesc.bGlow)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 	}
 }
 
@@ -82,7 +91,6 @@ HRESULT CEffectMesh::Render()
 	__super::Render();
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
-
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
@@ -92,7 +100,44 @@ HRESULT CEffectMesh::Render()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_SpecularTexture", i, aiTextureType_SPECULAR)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
+		if (m_pModelCom->Get_Materials()[i].pMaterials[aiTextureType_DIFFUSE])
+		{
+			_bool bDiffuse = true;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_bDiffuse", &bDiffuse, sizeof(_bool))))
+				return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 4)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CEffectMesh::Render_Glow()
+{
+	if (!m_bPlay)
+		return S_OK;
+
+	if (!m_pShaderCom || !m_pModelCom)
+		return E_FAIL;
+
+	__super::Render();
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_SpecularTexture", i, aiTextureType_SPECULAR)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &m_tMeshEffectDesc.vGlowColor, sizeof(_float3))))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 5)))
 			return E_FAIL;
 	}
 
@@ -125,25 +170,68 @@ void CEffectMesh::Add_NoiseTexture()
 	}
 }
 
-void CEffectMesh::Add_DissolveTexture()
+void CEffectMesh::ColorLerp()
 {
-	if (wcscmp(m_tMeshEffectDesc.wcDissolveTexture, TEXT("")))
-	{
-		Safe_Release(m_pDissolveTexture);
-		Remove_Components(TEXT("Com_TextureDissolve"));
+	if (m_ColorCurves.empty())
+		return;
 
-		/* For.Com_TextureDissolve */
-		if (FAILED(__super::Add_Components(TEXT("Com_TextureDissolve"), LEVEL_STATIC, m_tMeshEffectDesc.wcDissolveTexture, (CComponent**)&m_pDissolveTexture)))
-			return;
+	/* 0 ~ 1 */
+	_float fCurrentLifeNormalized = m_fTimer / m_tMeshEffectDesc.fLifetime;
+
+	for (array<_float, 5>& fColorCurve : m_ColorCurves)
+	{
+		/* Break cause Curve should not start yet ('Y' is the Curve Start Time). */
+		if (fCurrentLifeNormalized < fColorCurve[3])
+			break;
+
+		/* Skip cause Curve has already been lerped through ('Z' is the Curve End Time). */
+		if (fCurrentLifeNormalized > fColorCurve[4])
+		{
+			m_tMeshEffectDesc.vColorInitial = _float3(fColorCurve[0], fColorCurve[1], fColorCurve[2]);
+			continue;
+		}
+
+		_float fFactorDividend = (m_fTimer - (m_tMeshEffectDesc.fLifetime * fColorCurve[3]));
+		_float fFactorDivisor = ((m_tMeshEffectDesc.fLifetime * fColorCurve[4]) - (m_tMeshEffectDesc.fLifetime * fColorCurve[3]));
+
+		_float fInterpFactor = fFactorDividend / fFactorDivisor;
+		_vector fLerpColor = XMLoadFloat3(&m_tMeshEffectDesc.vColorInitial) + fInterpFactor * (XMLoadFloat3(&_float3(fColorCurve[0], fColorCurve[1], fColorCurve[2])) - XMLoadFloat3(&m_tMeshEffectDesc.vColorInitial));
+		XMStoreFloat3(&m_tMeshEffectDesc.vColor, fLerpColor);
+
+		break;
 	}
 }
 
-void CEffectMesh::VelocityLerp()
+void CEffectMesh::ScaleLerp()
 {
-}
+	if (m_ScaleCurves.empty())
+		return;
 
-void CEffectMesh::SizeLerp()
-{
+	/* 0 ~ 1 */
+	_float fCurrentLifeNormalized = m_fTimer / m_tMeshEffectDesc.fLifetime;
+
+	for (array<_float, 5>& fScaleCurve : m_ScaleCurves)
+	{
+		/* Break cause Curve should not start yet ('Y' is the Curve Start Time). */
+		if (fCurrentLifeNormalized < fScaleCurve[3])
+			break;
+
+		/* Skip cause Curve has already been lerped through ('Z' is the Curve End Time). */
+		if (fCurrentLifeNormalized > fScaleCurve[4])
+		{
+			m_tMeshEffectDesc.vScaleInitial = _float3(fScaleCurve[0], fScaleCurve[1], fScaleCurve[2]);
+			continue;
+		}
+
+		_float fFactorDividend = (m_fTimer - (m_tMeshEffectDesc.fLifetime * fScaleCurve[3]));
+		_float fFactorDivisor = ((m_tMeshEffectDesc.fLifetime * fScaleCurve[4]) - (m_tMeshEffectDesc.fLifetime * fScaleCurve[3]));
+
+		_float fInterpFactor = fFactorDividend / fFactorDivisor;
+		_vector fLerpScale = XMLoadFloat3(&m_tMeshEffectDesc.vScaleInitial) + fInterpFactor * (XMLoadFloat3(&_float3(fScaleCurve[0], fScaleCurve[1], fScaleCurve[2])) - XMLoadFloat3(&m_tMeshEffectDesc.vScaleInitial));
+		XMStoreFloat3(&m_tMeshEffectDesc.vScale, fLerpScale);
+
+		break;
+	}
 }
 
 void CEffectMesh::AlphaLerp()
@@ -276,35 +364,50 @@ HRESULT CEffectMesh::Ready_Components(void * pArg)
 		if (FAILED(__super::Add_Components(TEXT("Com_TextureNoise"), LEVEL_STATIC, m_tMeshEffectDesc.wcNoiseTexture, (CComponent**)&m_pNoiseTexture)))
 			return E_FAIL;
 	}
-	if (wcscmp(m_tMeshEffectDesc.wcDissolveTexture, TEXT("")))
-	{
-		/* For.Com_DissolveTexture */
-		if (FAILED(__super::Add_Components(TEXT("Com_TextureDissolve"), LEVEL_STATIC, m_tMeshEffectDesc.wcDissolveTexture, (CComponent**)&m_pDissolveTexture)))
-			return E_FAIL;
-	}
 }
 
 HRESULT CEffectMesh::SetUp_ShaderResources()
 {
 	__super::SetUp_ShaderResources();
 
-	if (m_pMaskTexture)
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_MaskTexture", m_pMaskTexture->Get_SRV())))
-			return E_FAIL;
-	if (m_pNoiseTexture)
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_NoiseTexture", m_pNoiseTexture->Get_SRV())))
-			return E_FAIL;
-	
 	if (FAILED(m_pShaderCom->Set_RawValue("g_vColor", &m_tMeshEffectDesc.vColor, sizeof(_float3))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_tMeshEffectDesc.fAlpha, sizeof(_float))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fNoiseSpeed", &m_tMeshEffectDesc.fNoiseSpeed, sizeof(_float))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fNoisePower", &m_tMeshEffectDesc.fNoisePower, sizeof(_float))))
-		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fTimer", &m_fTimer, sizeof(_float))))
 		return E_FAIL;
+
+	if (m_pMaskTexture)
+	{
+		_bool bMask = true;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bMask", &bMask, sizeof(_bool))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fMaskSpeed", &m_tMeshEffectDesc.fMaskSpeed, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fMaskDirectionX", &m_tMeshEffectDesc.fMaskDirectionX, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fMaskDirectionY", &m_tMeshEffectDesc.fMaskDirectionY, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_MaskTexture", m_pMaskTexture->Get_SRV())))
+			return E_FAIL;
+	}
+		
+	if (m_pNoiseTexture)
+	{
+		_bool bNoise = true;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bNoise", &bNoise, sizeof(_bool))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fNoiseSpeed", &m_tMeshEffectDesc.fNoiseSpeed, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fNoisePower", &m_tMeshEffectDesc.fNoisePower, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fNoiseDirectionX", &m_tMeshEffectDesc.fNoiseDirectionX, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fNoiseDirectionY", &m_tMeshEffectDesc.fNoiseDirectionY, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_NoiseTexture", m_pNoiseTexture->Get_SRV())))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

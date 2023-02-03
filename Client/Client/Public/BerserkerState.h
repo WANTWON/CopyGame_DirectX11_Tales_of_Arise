@@ -29,10 +29,12 @@ public:
 		STATE_CRAZY,
 		STATE_DISCOVER,
 		STATE_BATTLE,
-		STATE_DASH_START,
+		STATE_DASH_START, // ¸ø¾¸
 		STATE_DASH_LOOP,
-		STATE_DASH_SCRATCHES,
+		STATE_DASH_SCRATCHES, //¸ø ¾¸.
 		STATE_QUADRUPLE,
+		STATE_POUNCING,
+		STATE_FIREBALL,
 		STATE_HIT,
 		STATE_DEAD,
 		STATE_END
@@ -123,8 +125,6 @@ protected:
 			_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
 			
 
-			
-
 			if (fDistance < m_pOwner->Get_Attack_BiteRadius())
 			{
 
@@ -133,6 +133,9 @@ protected:
 				m_bBitePossible = true;
 
 			}
+
+			if (fDistance < -10000)
+				int a = 0;
 		
 			return fDistance;
 	}
@@ -150,8 +153,52 @@ protected:
 		return vPlayerPosition;
 	}
 
-	
+	_float Find_ToTargetCosign(_fvector vAt)
+	{
+		//_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
+		//_vector vLook = XMVector3Normalize(pMonSterTransform->Get_State(CTransform::STATE_LOOK));
 
+		_vector		vMonPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_vector		vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+
+
+		_vector		vTargetDir = XMVector3Normalize(vAt - vMonPos);
+		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		_vector		vRight = XMVector3Cross(vAxisY, vLook);
+		_vector		vUp = XMVector3Cross(vLook, vRight);
+
+	
+		_float fDot = XMVectorGetX(XMVector3Dot(vLook, vTargetDir));
+
+		//_float fRadian = acos(fDot);
+
+		return fDot;
+	}
+
+	_bool Find_ToTargetRightSide(_fvector vAt)
+	{
+		_vector		vMonPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_vector		vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		_vector		vRight = XMVector3Cross(vAxisY, vLook);
+		_vector		vUp = XMVector3Cross(vLook, vRight);
+
+		_vector		vTargetDir = XMVector3Normalize(vAt - vMonPos);
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vRight, vTargetDir));
+
+		if (fDot > 0)
+			return true;	//¿À¸¥ÂÊ 
+
+		else
+			return false;  
+		
+
+		return false;
+		
+	}
 
 
 protected:
@@ -163,7 +210,18 @@ protected:
 	_bool	    m_bBattleMode = false;
 	_bool	    m_bBitePossible = false;
 	_bool		m_bTriggerTurn = false;
+	_bool		m_bAngry = false;
+	_bool		m_bTarget_isRight = false;
+	
 	_float		m_fTimeDletaAcc = 0.f;
+	_float		m_fTarget_Distance;
+	_float		m_fRandTime;
+	_float		m_fTarget_Radian = 0.f;
+	_float		m_fTarget_Cosign = 0.f;
+	_float		m_fCosignTimeAcc;
+	_float		m_fCosign;
+	CBaseObj*	m_pCurTarget = nullptr;
+	_vector		m_vCurTargetPos;
 
 
 	CBerserker* m_pOwner = nullptr;

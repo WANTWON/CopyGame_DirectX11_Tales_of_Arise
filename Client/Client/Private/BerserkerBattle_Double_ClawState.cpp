@@ -23,7 +23,7 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 {
 	//Find_BattleTarget();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 	if (!m_bIsAnimationFinished)
 	{
@@ -32,10 +32,12 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
+
+
 	return nullptr;
 }
 
@@ -59,9 +61,6 @@ void CBattle_Double_ClawState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DOUBLE_CLAW);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-
-	
 }
 
 void CBattle_Double_ClawState::Exit()

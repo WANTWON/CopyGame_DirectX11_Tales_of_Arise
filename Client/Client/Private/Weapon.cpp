@@ -65,11 +65,11 @@ int CWeapon::Tick(_float fTimeDelta)
 
 			CCollider::COLLIDERDESC		ColliderDesc;
 
-			ColliderDesc.vScale = _float3(0.7f, 0.7f, 5.f);
+			ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
 
 			ColliderDesc.vPosition = _float3(0.f, 0.f, -2.f);
 
-			m_pOBBCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+			m_pOBBCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 			m_pOBBCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 			pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 
@@ -82,7 +82,7 @@ int CWeapon::Tick(_float fTimeDelta)
 	{
 		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
-		pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pOBBCom);
+		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pOBBCom);
 		m_pOBBCom = nullptr;
 
 		RELEASE_INSTANCE(CCollision_Manager);

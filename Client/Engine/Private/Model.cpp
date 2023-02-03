@@ -335,12 +335,12 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
 	if (m_bInterupted)
-	{	
+	{
 		m_bLinearFinished = m_Animations[m_iPreAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iCurrentAnimIndex]);
 	
 		if (m_bLinearFinished == true)
 		{
-			m_Animations[m_iCurrentAnimIndex]->Set_TimeReset();
+			m_Animations[m_iPreAnimIndex]->Set_TimeReset();
 
 			//m_iPreAnimIndex = m_iCurrentAnimIndex;
 
