@@ -35,6 +35,7 @@ HRESULT CUI_Portraitfront_top::Initialize(void * pArg)
 
 	m_fCurrentBoost = 70.f;
 	m_fMaxBoost = 100.f;
+	dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(2, true, 1, 0);
 	//m_bfadein = true;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -144,7 +145,7 @@ void CUI_Portraitfront_top::Late_Tick(_float fTimeDelta)
 	{
 		m_fAlpha = 0;
 		m_bfadein = false;
-		dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(2, true, 1, 0);
+		
 	}
 
 	if (m_fAlpha_p <= 0)
