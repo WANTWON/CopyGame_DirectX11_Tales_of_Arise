@@ -21,7 +21,7 @@ CBattle_Damage_LargeB_State::CBattle_Damage_LargeB_State(class CIce_Wolf* pIceWo
 
 CIceWolfState * CBattle_Damage_LargeB_State::AI_Behaviour(_float fTimeDelta)
 {
-	Find_BattleTarget();
+	//Find_BattleTarget();
 	m_pOwner->Check_Navigation();
 	return nullptr;
 }
@@ -32,12 +32,14 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
-	m_pOwner->Check_Navigation();
+	
 	return nullptr;
 }
 
 CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 {
+	m_pOwner->Check_Navigation();
+
 	m_fTimeDletaAcc += fTimeDelta;
 
 

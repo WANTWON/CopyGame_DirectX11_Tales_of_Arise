@@ -57,11 +57,12 @@ void CParticleSystem::Late_Tick(_float fTimeDelta)
 {
 	if (m_pRendererCom)
 	{
-		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);*/		/* Non-Alphablend */
-		/*m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);*/	/* Alphablend with Normals */
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);			/* Alphablend */
-
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+
+		if (m_tParticleDesc.m_bGlow)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 	}
 }
 
@@ -72,7 +73,20 @@ HRESULT CParticleSystem::Render()
 
 	__super::Render();
 
-	m_pShaderCom->Begin(m_eShaderID);
+	m_pShaderCom->Begin(1);
+	RenderBuffers();
+
+	return S_OK;
+}
+
+HRESULT CParticleSystem::Render_Glow()
+{
+	if (!m_pVertexBuffer || !m_pShaderCom)
+		return E_FAIL;
+
+	__super::Render();
+
+	m_pShaderCom->Begin(2);
 	RenderBuffers();
 
 	return S_OK;
@@ -109,10 +123,14 @@ HRESULT CParticleSystem::SetUp_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_vColor", &m_tParticleDesc.m_vColor, sizeof(_float3))))
-		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlphaDiscard", &m_tParticleDesc.m_fAlphaDiscard, sizeof(_float))))
 		return E_FAIL;
+
+	if (m_tParticleDesc.m_bGlow)
+	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &m_tParticleDesc.vGlowColor, sizeof(_float3))))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -218,6 +236,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 {
 	_bool bEmitParticle, bFound;
 	_float fPositionX, fPositionY, fPositionZ, fRed, fGreen, fBlue, fInitialAlpha, fAlpha, fInitialVelocity, fVelocity, fInitialSize, fSize;
+	_float3 vInitialColor;
 	_float3 vDirection;
 	_int iIndex, i, j;
 
@@ -256,9 +275,11 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 			if (m_tParticleDesc.m_bRandomDirectionZ)
 				vDirection.z = ((float)std::rand() / (float)RAND_MAX) * 2.0f - 1.0f; /* -1 ~ 1 */
 			
-			fRed = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-			fGreen = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-			fBlue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+			vInitialColor = m_tParticleDesc.m_vColor;
+
+			fRed = vInitialColor.x;
+			fGreen = vInitialColor.y;
+			fBlue = vInitialColor.z;
 
 			fInitialAlpha = m_tParticleDesc.m_fAlpha;
 			fAlpha = fInitialAlpha;
@@ -291,6 +312,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 				m_Particles[i].fPositionY = m_Particles[j].fPositionY;
 				m_Particles[i].fPositionZ = m_Particles[j].fPositionZ;
 				m_Particles[i].vDirection = m_Particles[j].vDirection;
+				m_Particles[i].vInitialColor = m_Particles[j].vInitialColor;
 				m_Particles[i].fRed = m_Particles[j].fRed;
 				m_Particles[i].fGreen = m_Particles[j].fGreen;
 				m_Particles[i].fBlue = m_Particles[j].fBlue;
@@ -312,6 +334,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 			m_Particles[iIndex].fPositionY = fPositionY;
 			m_Particles[iIndex].fPositionZ = fPositionZ;
 			m_Particles[iIndex].vDirection = vDirection;
+			m_Particles[iIndex].vInitialColor = vInitialColor;
 			m_Particles[iIndex].fRed = fRed;
 			m_Particles[iIndex].fGreen = fGreen;
 			m_Particles[iIndex].fBlue = fBlue;
@@ -348,9 +371,11 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 				if (m_tParticleDesc.m_bRandomDirectionZ)
 					vDirection.z = ((float)std::rand() / (float)RAND_MAX) * 2.0f - 1.0f; /* -1 ~ 1 */
 
-				fRed = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-				fGreen = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-				fBlue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+				vInitialColor = m_tParticleDesc.m_vColor;
+
+				fRed = vInitialColor.x;
+				fGreen = vInitialColor.y;
+				fBlue = vInitialColor.z;
 
 				fInitialAlpha = m_tParticleDesc.m_fAlpha;
 				fAlpha = fInitialAlpha;
@@ -383,6 +408,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 					m_Particles[i].fPositionY = m_Particles[j].fPositionY;
 					m_Particles[i].fPositionZ = m_Particles[j].fPositionZ;
 					m_Particles[i].vDirection = m_Particles[j].vDirection;
+					m_Particles[i].vInitialColor = m_Particles[j].vInitialColor;
 					m_Particles[i].fRed = m_Particles[j].fRed;
 					m_Particles[i].fGreen = m_Particles[j].fGreen;
 					m_Particles[i].fBlue = m_Particles[j].fBlue;
@@ -404,6 +430,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 				m_Particles[iIndex].fPositionY = fPositionY;
 				m_Particles[iIndex].fPositionZ = fPositionZ;
 				m_Particles[iIndex].vDirection = vDirection;
+				m_Particles[iIndex].vInitialColor = vInitialColor;
 				m_Particles[iIndex].fRed = fRed;
 				m_Particles[iIndex].fGreen = fGreen;
 				m_Particles[iIndex].fBlue = fBlue;
@@ -435,6 +462,7 @@ void CParticleSystem::UpdateParticles(_float fTimeDelta)
 		m_Particles[i].fPositionY = vPosition.y;
 		m_Particles[i].fPositionZ = vPosition.z;
 
+		ColorLerp(i);
 		VelocityLerp(i);
 		SizeLerp(i);
 		AlphaLerp(i);
@@ -462,6 +490,43 @@ void CParticleSystem::SortParticles()
 
 		return fParticleSourDistance > fParticleDestDistance;
 	});
+}
+
+void CParticleSystem::ColorLerp(_uint iParticleIndex)
+{
+	if (m_ColorCurves.empty())
+		return;
+
+	/* 0 ~ 1 */
+	_float fCurrentLifeNormalized = m_Particles[iParticleIndex].fLife / m_tParticleDesc.m_fParticlesLifetime;
+
+	for (array<_float, 5>& fColorCurve : m_ColorCurves)
+	{
+		/* Break cause Curve should not start yet ('Y' is the Curve Start Time). */
+		if (fCurrentLifeNormalized < fColorCurve[3])
+			break;
+
+		/* Skip cause Curve has already been lerped through ('Z' is the Curve End Time). */
+		if (fCurrentLifeNormalized > fColorCurve[4])
+		{
+			m_Particles[iParticleIndex].vInitialColor = _float3(fColorCurve[0], fColorCurve[1], fColorCurve[2]);
+			continue;
+		}
+
+		_float fFactorDividend = (m_Particles[iParticleIndex].fLife - (m_tParticleDesc.m_fParticlesLifetime * fColorCurve[3]));
+		_float fFactorDivisor = ((m_tParticleDesc.m_fParticlesLifetime * fColorCurve[4]) - (m_tParticleDesc.m_fParticlesLifetime * fColorCurve[3]));
+
+		_float fInterpFactor = fFactorDividend / fFactorDivisor;
+		_vector fLerpColor = XMLoadFloat3(&m_Particles[iParticleIndex].vInitialColor) + fInterpFactor * (XMLoadFloat3(&_float3(fColorCurve[0], fColorCurve[1], fColorCurve[2])) - XMLoadFloat3(&m_Particles[iParticleIndex].vInitialColor));
+		
+		_float3 vColor;
+		XMStoreFloat3(&vColor, fLerpColor);
+		m_Particles[iParticleIndex].fRed = vColor.x;
+		m_Particles[iParticleIndex].fGreen = vColor.y;
+		m_Particles[iParticleIndex].fBlue = vColor.z;
+
+		break;
+	}
 }
 
 void CParticleSystem::VelocityLerp(_uint iParticleIndex)
@@ -576,6 +641,7 @@ void CParticleSystem::KillParticles()
 				m_Particles[j].fPositionY = m_Particles[j + 1].fPositionY;
 				m_Particles[j].fPositionZ = m_Particles[j + 1].fPositionZ;
 				m_Particles[j].vDirection = m_Particles[j + 1].vDirection;
+				m_Particles[j].vInitialColor = m_Particles[j + 1].vInitialColor;
 				m_Particles[j].fRed = m_Particles[j + 1].fRed;
 				m_Particles[j].fGreen = m_Particles[j + 1].fGreen;
 				m_Particles[j].fBlue = m_Particles[j + 1].fBlue;
@@ -620,37 +686,37 @@ HRESULT CParticleSystem::UpdateBuffers()
 		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_Particles[i].fSize, m_Particles[i].fPositionY - m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(0.0f, 1.0f);
 		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
+		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
 		index++;
 		/* Top Left */
 		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_Particles[i].fSize, m_Particles[i].fPositionY + m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(0.0f, 0.0f);
 		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
+		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
 		index++;
 		/* Bottom Right */
 		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_Particles[i].fSize, m_Particles[i].fPositionY - m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(1.0f, 1.0f);
 		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
+		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
 		index++;
 		/* Bottom right. */
 		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_Particles[i].fSize, m_Particles[i].fPositionY - m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(1.0f, 1.0f);
 		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
+		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
 		index++;
 		/* Top left. */
 		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_Particles[i].fSize, m_Particles[i].fPositionY + m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(0.0f, 0.0f);
 		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
+		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
 		index++;
 		/* Top right. */
 		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_Particles[i].fSize, m_Particles[i].fPositionY + m_Particles[i].fSize, m_Particles[i].fPositionZ);
 		m_Vertices[index].vTexture = _float2(1.0f, 0.0f);
 		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float4(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue, 1.0f);
+		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
 		index++;
 	}
 

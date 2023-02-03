@@ -71,5 +71,4 @@ void CEffect::Free()
 
 	Safe_Release(m_pMaskTexture);
 	Safe_Release(m_pNoiseTexture);
-	Safe_Release(m_pDissolveTexture);
 }

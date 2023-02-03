@@ -31,7 +31,7 @@ CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	//m_fTarget_Distance = Find_BattleTarget();
 
-	/*CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
 	if (pDamageCauser == nullptr)
 	{
@@ -56,7 +56,7 @@ CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 
 		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
 		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
-	}*/
+	}
 
 	if (!m_bIsAnimationFinished)
 	{

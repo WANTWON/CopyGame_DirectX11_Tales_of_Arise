@@ -29,32 +29,32 @@ CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
 
 
 
-	/*CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+	//CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
-	if (pDamageCauser == nullptr)
-	{
-		if (m_pCurTarget == nullptr)
-		{
-			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+	//if (pDamageCauser == nullptr)
+	//{
+	//	if (m_pCurTarget == nullptr)
+	//	{
+	//		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
 
-			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-		}
+	//		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+	//	}
 
-		else if (m_pCurTarget)
-		{
-			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-		}
-	}
+	//	else if (m_pCurTarget)
+	//	{
+	//		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+	//	}
+	//}
 
-	else if (pDamageCauser != nullptr)
-	{
-		m_pCurTarget = pDamageCauser;
+	//else if (pDamageCauser != nullptr)
+	//{
+	//	m_pCurTarget = pDamageCauser;
 
-		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
-		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
-	}*/
+	//	m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//	m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
+	//}
 
 
 	if (!m_bIsAnimationFinished)
