@@ -68,6 +68,7 @@ public: /*For.State*/
 public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);
 	void Check_Navigation();
+	void Check_Navigation_Jump(void);
 	void Compute_CurrentIndex(LEVEL eLevel);
 
 public:	/* For.Weapon */

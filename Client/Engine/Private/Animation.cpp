@@ -191,11 +191,14 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 				m_fLinear_CurrentTime = 0.f;
 				m_bLinearFinished = true;
 				m_Channels[i]->Reset();
+				break;
 			}
 		}
 	}
 	else
+	{
 		m_iTickPerSecondIndex = 0;
+	}
 
 	return m_bLinearFinished;
 }

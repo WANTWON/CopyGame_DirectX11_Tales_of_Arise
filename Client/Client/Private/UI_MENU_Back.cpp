@@ -478,7 +478,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		itempointer->icount = 1;
 
 		vector<ITEMINFO*>* inv = CUI_Manager::Get_Instance()->Get_Inventory();
-		
+
 
 		_bool bshouldpush = true;
 		for (auto& iter = inv->begin(); iter != inv->end(); ++iter)
@@ -489,13 +489,13 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 				(*iter)->icount += 1;
 				bshouldpush = false;
 				break;
-		   }
+			}
 
 
 		}
-		
+
 		//vector<People> *Ptr = new vector<People>(num_of_people);
-		
+
 		if (bshouldpush)
 			inv->push_back(itempointer);
 		else

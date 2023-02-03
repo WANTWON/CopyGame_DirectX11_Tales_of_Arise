@@ -187,6 +187,7 @@
     <ClInclude Include="..\Public\BerserkerChaseState.h" />
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
+    <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\FemaleYoung.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
@@ -206,12 +207,14 @@
     <ClInclude Include="..\Public\Effect.h" />
     <ClInclude Include="..\Public\EffectMesh.h" />
     <ClInclude Include="..\Public\EffectTexture.h" />
+    <ClInclude Include="..\Public\Itemmsgbox.h" />
     <ClInclude Include="..\Public\IceWolfBattle_TurnState.h" />
     <ClInclude Include="..\Public\PlayerCollectState.h" />
     <ClInclude Include="..\Public\Rinwell.h" />
     <ClInclude Include="..\Public\RinwellAttackState.h" />
     <ClInclude Include="..\Public\RinwellDamageState.h" />
     <ClInclude Include="..\Public\RinwellMoveState.h" />
+    <ClInclude Include="..\Public\RinwellPoseState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
     <ClInclude Include="..\Public\UI_InterectMsg.h" />
@@ -338,6 +341,7 @@
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\UI_Portrait.h" />
+    <ClInclude Include="..\Public\UI_Skillmessage.h" />
     <ClInclude Include="..\public\Water.h" />
     <ClInclude Include="..\Public\UI_Skillbutton.h" />
     <ClInclude Include="..\Public\Weapon.h" />
@@ -360,6 +364,7 @@
     <ClCompile Include="..\Private\BerserkerChaseState.cpp" />
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
+    <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\FemaleYoung.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
@@ -378,12 +383,14 @@
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\EffectMesh.cpp" />
     <ClCompile Include="..\Private\EffectTexture.cpp" />
+    <ClCompile Include="..\Private\Itemmsgbox.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_TurnState.cpp" />
     <ClCompile Include="..\Private\PlayerCollectState.cpp" />
     <ClCompile Include="..\Private\Rinwell.cpp" />
     <ClCompile Include="..\Private\RinwellAttackState.cpp" />
     <ClCompile Include="..\Private\RinwellDamageState.cpp" />
     <ClCompile Include="..\Private\RinwellMoveState.cpp" />
+    <ClCompile Include="..\Private\RinwellPoseState.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />
@@ -503,6 +510,7 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\UI_Portrait.cpp" />
+    <ClCompile Include="..\Private\UI_Skillmessage.cpp" />
     <ClCompile Include="..\private\Water.cpp" />
     <ClCompile Include="..\Private\UI_Skillbutton.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />

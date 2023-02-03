@@ -127,9 +127,10 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 				switch (m_iVectorIndex)
 				{
 				case 0:
+					CUI_Manager::Get_Instance()->Set_QuestIndex(1);
 					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, (TEXT("ssssss")))))
 						return OBJ_NOEVENT;
-					CUI_Manager::Get_Instance()->Set_QuestIndex(1);
+					
 					//CGame
 					break;
 
@@ -140,6 +141,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					cleardesc.iGaingald = 700;
 					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC, (TEXT("ssss")), &cleardesc)))
 						return OBJ_NOEVENT;
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY,false,false);
 					CUI_Manager::Get_Instance()->Set_QuestComplete(0, true);
 
 				}

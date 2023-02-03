@@ -101,8 +101,13 @@ public:
 		WALK_TRANS_IDLE_000,
 		WALK_TRANS_IDLE_001,
 
-		BTL_ATTACK_MAGIC_EMIT,
+
+		BTL_STEP_AIR,
+		BTL_STEP_LAND,
+		BTL_STEP_LAND_BACK,
+
 		BTL_ATTACK_MAGIC_EMIT_AIR,
+		BTL_ATTACK_MAGIC_EMIT,
 		BTL_ATTACK_MAGIC_STACK,
 		BTL_MAGIC_EMIT,
 		BTL_MAGIC_END,
@@ -143,7 +148,6 @@ public: /*For.State*/
 	void AI_Behavior(_float fTimeDelta);
 	void Tick_State(_float fTimeDelta);
 	void LateTick_State(_float fTimeDelta);
-	void Field_Animation(_float fTimeDelta);
 	void Battle_Animation(_float fTimeDelta);
 
 

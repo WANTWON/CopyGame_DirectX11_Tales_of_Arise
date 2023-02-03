@@ -442,6 +442,21 @@ void CTransform::LookAt(_fvector vAt)
 	Set_State(STATE_LOOK, XMVector3Normalize(vLook) * Get_Scale(CTransform::STATE_LOOK));
 }
 
+void CTransform::LookDir(_fvector vDir)
+{
+	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
+
+	_vector		vLook = vDir;
+	_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector		vRight = XMVector3Cross(vAxisY, vLook);
+	_vector		vUp = XMVector3Cross(vLook, vRight);
+
+	Set_State(STATE_RIGHT, XMVector3Normalize(vRight) * Get_Scale(CTransform::STATE_RIGHT));
+	Set_State(STATE_UP, XMVector3Normalize(vUp) * Get_Scale(CTransform::STATE_UP));
+	Set_State(STATE_LOOK, XMVector3Normalize(vLook) * Get_Scale(CTransform::STATE_LOOK));
+}
+
 void CTransform::RoamingTurn(_matrix WorldMatrix, _float fRadian)
 {
 	_matrix		RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), fRadian);

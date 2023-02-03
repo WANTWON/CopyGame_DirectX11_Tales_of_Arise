@@ -14,6 +14,11 @@ float g_fNoiseSpeed;
 float g_fNoisePower;
 float g_fTimer = 0.f;
 
+texture2D g_DepthTexture;
+texture2D g_GlowTexture;
+bool g_bGlow = false;
+float4 g_GlowColor;
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
@@ -66,6 +71,11 @@ struct PS_OUT
 	float4		vColor : SV_TARGET0;
 };
 
+struct PS_OUT_GLOW
+{
+	float4 vGlow : SV_TARGET0;
+};
+
 /* 이렇게 만들어진 픽셀을 PS_MAIN함수의 인자로 던진다. */
 /* 리턴하는 색은 Target0 == 장치에 0번째에 바인딩되어있는 렌더타겟(일반적으로 백버퍼)에 그린다. */
 /* 그래서 백버퍼에 색이 그려진다. */
@@ -90,6 +100,24 @@ PS_OUT PS_ALPHAMASK(PS_IN In)
 
 	if (Out.vColor.a < g_fAlphaDiscard) // Alpha Test
 		discard;
+
+	return Out;
+}
+
+PS_OUT_GLOW PS_GLOW(PS_IN In)
+{
+	PS_OUT_GLOW Out = (PS_OUT_GLOW)0;
+
+	//float4 vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//float4 vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV) * g_bGlow;
+	//float4 vDepth = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
+	//float fDepth = vDepth.y * 1000.f;
+
+	//if (In.vProjPos.w > fDepth)
+	//	discard;
+
+	//if (Out.vGlow.r != 0 && Out.vGlow.g != 0 && Out.vGlow.b != 0)
+	//	Out.vGlow.rgb = float3(1.f, 1.f, 1.f) /*Out.vDiffuse.rgb * Out.vGlow.r;*/;
 
 	return Out;
 }
@@ -127,5 +155,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHAMASK();
+	}
+
+	pass Glow // 3
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_GLOW();
 	}
 }

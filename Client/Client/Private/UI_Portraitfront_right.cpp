@@ -31,6 +31,9 @@ HRESULT CUI_Portraitfront_right::Initialize(void * pArg)
 	m_itexnum = 2;
 //	m_bfadein = true;
 
+	m_fCurrentBoost = 40.f;
+	m_fMaxBoost = 100.f;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -197,6 +200,9 @@ HRESULT CUI_Portraitfront_right::Render()
 		m_pShaderCom->Begin(m_eShaderID);
 
 		m_pVIBufferCom->Render();
+
+		if (m_eShaderID != UI_POTRAIT_READY)
+			RenderBoostGuage();
 
 	}
 

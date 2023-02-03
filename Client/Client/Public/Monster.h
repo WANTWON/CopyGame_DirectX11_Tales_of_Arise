@@ -24,6 +24,7 @@ public:
 		_float m_fAttackPower = 10.f;
 		_float m_fWalkSpeed = 3.f;
 		_float m_fRunSpeed = 5.f;
+		_float m_fLockonSmashGuage = 0.f;
 	}STATS;
 
 protected:
@@ -81,6 +82,7 @@ public: // Get & Set
 protected:
 	DMG_DIR Calculate_DmgDirection();
 	_vector	Calculate_DirectionByPos();
+	_bool	Check_AmILastMoster();
 	
 protected:
 	STATS					m_tStats;
@@ -132,7 +134,8 @@ protected: /* For.Components */
 	
 protected:
 	_bool		m_bDissolve = false;
-	//CBaseObj*	m_DamageCauser = nullptr;
+	_float		m_fDissolveOffset = 1.f;
+
 
 public:
 	virtual void Free() override;

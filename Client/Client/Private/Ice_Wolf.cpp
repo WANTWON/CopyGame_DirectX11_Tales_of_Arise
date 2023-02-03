@@ -61,6 +61,8 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_tStats.m_fWalkSpeed = 0.05f;
 	m_tStats.m_fRunSpeed = 5.f;
 
+	m_fRadius = 1.f;
+
 
 	NONANIMDESC ModelDesc;
 	if (pArg != nullptr)
@@ -163,13 +165,17 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
+	if (m_bDead)
+	{
+		if (CBattleManager::Get_Instance()->Get_LackonMonster() == this)
+			CBattleManager::Get_Instance()->Set_LackonMonster(nullptr);
 
+		Check_AmILastMoster();
+		return OBJ_DEAD;
+	}
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return OBJ_NOEVENT;
-
-	if (m_bDead)
-		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
 
@@ -271,11 +277,6 @@ HRESULT CIce_Wolf::Render_Glow()
 		_bool bGlow = true;
 		if (FAILED(m_pShaderCom->Set_RawValue("g_bGlow", &bGlow, sizeof(_bool))))
 			return E_FAIL;
-
-		CTarget_Manager* pTargetManager = GET_INSTANCE(CTarget_Manager);
-		if (FAILED(pTargetManager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
-			return E_FAIL;
-		RELEASE_INSTANCE(CTarget_Manager);
 	}
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
@@ -292,7 +293,7 @@ HRESULT CIce_Wolf::Render_Glow()
 				return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 3)))
 			return E_FAIL;
 	}
 
