@@ -172,46 +172,24 @@ HRESULT CHawk::Ready_Components(void * pArg)
 
 int CHawk::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
-		return OBJ_NOEVENT;
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+	if(!Check_IsinFrustum(2.f) && !m_bBattleMode)
+		return OBJ_NOEVENT;
+	
+
 	__super::Tick(fTimeDelta);
 
-	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+	
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	//m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
-
-
-	//if (true == m_bBattleMode && false == m_bDoneChangeState)
-	//{
-	//	CHawkState* pState = new CBattle_IdleState(this, CHawkState::STATE_ID::START_BATTLEMODE);
-	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	//	m_bDoneChangeState = true;
-	//}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
-	{
-		CHawkState* pState = new CBattle_DashState(this);
-		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	{
-		CHawkState* pState = new CBattle_TornadeState(this);
-		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	{
-		CHawkState* pState = new CBattle_PeckState(this);
-		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	}
-
 
 
 	return OBJ_NOEVENT;
@@ -219,7 +197,9 @@ int CHawk::Tick(_float fTimeDelta)
 
 void CHawk::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
 	__super::Late_Tick(fTimeDelta);

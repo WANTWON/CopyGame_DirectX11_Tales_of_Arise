@@ -171,13 +171,14 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 
 int CBerserker::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
-		return OBJ_NOEVENT;
-
 	if (m_bDead)
 		return OBJ_DEAD;
 
 
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
+		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
 
@@ -186,60 +187,17 @@ int CBerserker::Tick(_float fTimeDelta)
 	Tick_State(fTimeDelta);
 
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
-	{
-		CBerserkerState* pState = new CBattle_RunState(this, CBerserkerState::STATE_ID::STATE_END);
-		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	{
-		CBerserkerState* pState = new CBattle_Double_ClawState(this);
-		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_H))
-	//{
-	//	CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, false);
-	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	//}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
-	{
-		CBerserkerState* pState = new CBattle_FireBallState(this);
-		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_H))
-	//{
-	//	CBerserkerState* pState = new CBattle_Quadruple_ClawState(this);
-	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	//}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_P))
-	{
-		CBerserkerState* pState = new CBattle_PouncingState(this);
-		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
-	{
-		CBerserkerState* pState = new CBattle_Shock_WaveState(this);
-		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	}
-
-
-
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	//m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
-
+	
 
 	return OBJ_NOEVENT;
 }
 
 void CBerserker::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon() || !Check_IsinFrustum(2.f))
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 	__super::Late_Tick(fTimeDelta);
 

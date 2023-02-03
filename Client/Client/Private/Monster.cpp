@@ -66,9 +66,6 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		return;
 	__super::Late_Tick(fTimeDelta);
 
-	if (Check_IsinFrustum(2.f) == false)
-		return;
-
 	if (nullptr != m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);

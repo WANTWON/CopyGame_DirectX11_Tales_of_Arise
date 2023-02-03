@@ -168,14 +168,14 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 		
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
-
-	m_bBattleMode =  CBattleManager::Get_Instance()->Get_IsBattleMode();
-
 	
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
@@ -183,64 +183,18 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	m_fTimeDletaAcc += fTimeDelta;
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	//m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
-
+	
 	if (m_fTimeDletaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
-
-
-
-
-	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
-	{
-		CIceWolfState* pState = new CAttack_Elemental_Charge(this, CIceWolfState::STATE_ID::STATE_END);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
-	{
-		CIceWolfState* pState = new CAttackBiteState(this);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_H))
-	{
-		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, false);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
-	{
-		CIceWolfState* pState = new CAttackNormalState(this);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	{
-		CIceWolfState* pState = new CBattle_SomerSaultState(this);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	{
-		CIceWolfState* pState = new CBattle_SomerSaultState(this);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_N))
-	{
-		CIceWolfState* pState = new CBattle_RunState(this, CIceWolfState::STATE_ID::STATE_END);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	}*/
-
-
 
 	return OBJ_NOEVENT;
 }
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
