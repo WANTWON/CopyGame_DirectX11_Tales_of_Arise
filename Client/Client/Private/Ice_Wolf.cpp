@@ -163,13 +163,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
 	if (m_bDead)
-	{
-		if (CBattleManager::Get_Instance()->Get_LackonMonster() == this)
-			CBattleManager::Get_Instance()->Set_LackonMonster(nullptr);
-
-		Check_AmILastMoster();
 		return OBJ_DEAD;
-	}
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick() /*|| !Check_IsinFrustum(2.f)*/)
 		return OBJ_NOEVENT;
@@ -313,13 +307,17 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 
-	if (fDamage <= 0 || m_bDead)
-		return 0;
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_tStats.m_fCurrentHp <= 0.f)
+		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
 	if (iHp <= 0)
 	{
+		if (CBattleManager::Get_Instance()->Get_LackonMonster() == this)
+			CBattleManager::Get_Instance()->Set_LackonMonster(nullptr);
+		Check_AmILastMoster();
+
 		m_pModelCom->Set_TimeReset();
 		CIceWolfState* pState = new CBattle_DeadState(this/*DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION)*/);
 		m_pState = m_pState->ChangeState(m_pState, pState);
