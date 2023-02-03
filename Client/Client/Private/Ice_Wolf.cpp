@@ -248,14 +248,7 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-	/*if (m_bBattleMode)
-	{
-		LateTick_BattleState(fTimeDelta);
-	}
-	else*/
-//	{
 		LateTick_State(fTimeDelta);
-//	}
 
 }
 

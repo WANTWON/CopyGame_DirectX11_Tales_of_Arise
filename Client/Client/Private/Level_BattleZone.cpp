@@ -119,6 +119,7 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 				CBattleManager::Get_Instance()->Set_LackonMonster(dynamic_cast<CBaseObj*>(iter));
 			}
 		}
+		m_fMinLength = MAXDISTANCE;
 	}
 }
 
@@ -153,7 +154,7 @@ HRESULT CLevel_BattleZone::Ready_Lights()
 
 	_float4		vLightEye, vLightAt;
 
-	XMStoreFloat4(&vLightEye, XMVectorSet(64, 100, 100, 1.f));
+	XMStoreFloat4(&vLightEye, XMVectorSet(64, 200, 200, 1.f));
 	XMStoreFloat4(&vLightAt, XMVectorSet(64, 0, 0, 1.f));
 
 	pGameInstance->Set_ShadowLightView(vLightEye, vLightAt);
@@ -213,7 +214,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 	}
 
 	CPlayerManager::Get_Instance()->Set_BattleMode(true);
-	Safe_Release(pGameInstance);
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -341,7 +342,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_BATTLE, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -479,8 +480,6 @@ HRESULT CLevel_BattleZone::Ready_Layer_DecoObject(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	Safe_Release(pGameInstance);
-
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
@@ -554,8 +553,6 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_LOCKON"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
-
-	Safe_Release(pGameInstance);
 
 	RELEASE_INSTANCE(CGameInstance);
 

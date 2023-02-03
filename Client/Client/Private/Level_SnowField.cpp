@@ -206,6 +206,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	for (_uint i = 0; i < iNum; ++i)
 	{
+		m_bNotCreate = false;
 		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 		_tchar pModeltag[MAX_PATH];
 		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
@@ -223,7 +224,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
 				return E_FAIL;
 		}
-		/*else */if (!wcscmp(pModeltag, TEXT("Hawk")))
+		else if (!wcscmp(pModeltag, TEXT("Hawk")))
 		{
 			for (auto& iter : vecFightedMonster)
 			{
@@ -232,7 +233,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 			} 
 			if (m_bNotCreate)
 				continue;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
 				return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Berserker")))
@@ -244,7 +245,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 			}
 			if (m_bNotCreate)
 				continue;
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vPosition)))
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
 					return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Slime")))

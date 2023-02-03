@@ -358,10 +358,10 @@ void CCamera_Dynamic::BattleClear_Camera(_float fTimeDelta)
 		m_fAngle = 0.f;
 
 	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
-	_float fLength = 3.f; 
+	_float fLength = 4.f; 
 	m_vNewPos = XMVectorSetX(m_vNewPos, (XMVectorGetX(m_fTargetPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
 	m_vNewPos = XMVectorSetZ(m_vNewPos, (XMVectorGetZ(m_fTargetPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
-	m_vNewPos = XMVectorSetY(m_vNewPos,  2.f);
+	m_vNewPos = XMVectorSetY(m_vNewPos,  3.f);
 
 	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
 		m_bLerp = false;

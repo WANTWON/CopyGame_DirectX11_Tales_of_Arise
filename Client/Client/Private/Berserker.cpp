@@ -63,9 +63,20 @@ HRESULT CBerserker::Initialize(void * pArg)
 	m_tStats.m_fAttackPower = 10;
 	m_eMonsterID = BERSERKER;
 
+	NONANIMDESC ModelDesc;
+	if (pArg != nullptr)
+		memcpy(&ModelDesc, pArg, sizeof(NONANIMDESC));
 
-	_vector vPosition = *(_vector*)pArg;
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	if (pArg != nullptr)
+	{
+		_vector vPosition = XMLoadFloat3(&ModelDesc.vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		Set_Scale(ModelDesc.vScale);
+
+		if (ModelDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
+	}
 	
 	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 2.0f);
 	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, 2.0f);
