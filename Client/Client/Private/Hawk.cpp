@@ -306,7 +306,7 @@ HRESULT CHawk::SetUp_ShaderID()
 		m_eShaderID = SHADER_ANIMDEFAULT;
 
 	else
-		m_eShaderID = SHADER_ANIM_DISSLOVE;
+		m_eShaderID = SHADER_ANIM_DISSOLVE;
 
 	return S_OK;
 }

@@ -123,40 +123,25 @@ vector<CEffect*> CEffect::PlayEffectAtLocation(_tchar * wcEffectName, _vector vL
 				}
 			}
 
-			/* Read how many Velocity Curves there are for this Effect. */
-			_uint iVelocityCurvesCount = 0;
-			ReadFile(hFileEffect, &iVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
-			/* Read Velocity Curves. */
-			vector<_float3> VelocityCurves;
-			_float3 VelocityCurve;
-			for (_uint j = 0; j < iVelocityCurvesCount; j++)
+			/* COLOR */
+			/* Read how many Color Curves there are for this Effect. */
+			_uint iColorCurvesCount = 0;
+			ReadFile(hFileEffect, &iColorCurvesCount, sizeof(_uint), &dwByte, nullptr);
+			/* Read Color Curves. */
+			vector<array<_float, 5>> ColorCurves;
+			array<_float, 5> ColorCurve;
+			for (_uint j = 0; j < iColorCurvesCount; j++)
 			{
-				ReadFile(hFileEffect, &VelocityCurve, sizeof(_float3), &dwByte, nullptr);
-				VelocityCurves.push_back(VelocityCurve);
+				ReadFile(hFileEffect, &ColorCurve, sizeof(array<_float, 5>), &dwByte, nullptr);
+				ColorCurves.push_back(ColorCurve);
 			}
-			if (!VelocityCurves.empty())
-				pEffect->Set_VelocityCurves(VelocityCurves);
+			if (!ColorCurves.empty())
+				pEffect->Set_ColorCurves(ColorCurves);
 
-			/* Read how many Size Curves there are for this Effect. */
-			_uint iSizeCurvesCount = 0;
-			ReadFile(hFileEffect, &iSizeCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
-			/* Read Size Curves. */
-			vector<_float3> SizeCurves;
-			_float3 SizeCurve;
-			for (_uint j = 0; j < iSizeCurvesCount; j++)
-			{
-				ReadFile(hFileEffect, &SizeCurve, sizeof(_float3), &dwByte, nullptr);
-				SizeCurves.push_back(SizeCurve);
-			}
-			if (!SizeCurves.empty())
-				pEffect->Set_SizeCurves(SizeCurves);
-
+			/* ALPHA */
 			/* Read how many Alpha Curves there are for this Effect. */
 			_uint iAlphaCurvesCount = 0;
 			ReadFile(hFileEffect, &iAlphaCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
 			/* Read Alpha Curves. */
 			vector<_float3> AlphaCurves;
 			_float3 AlphaCurve;
@@ -168,11 +153,56 @@ vector<CEffect*> CEffect::PlayEffectAtLocation(_tchar * wcEffectName, _vector vL
 			if (!AlphaCurves.empty())
 				pEffect->Set_AlphaCurves(AlphaCurves);
 
-			/* Read how many Rotation Velocity Curves there are for this Effect. */
+			/* SIZE */
+			/* Read how many Size Curves there are for this Effect. */
+			_uint iSizeCurvesCount = 0;
+			ReadFile(hFileEffect, &iSizeCurvesCount, sizeof(_uint), &dwByte, nullptr);
+			/* Read Size Curves. */
+			vector<_float3> SizeCurves;
+			_float3 SizeCurve;
+			for (_uint j = 0; j < iSizeCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &SizeCurve, sizeof(_float3), &dwByte, nullptr);
+				SizeCurves.push_back(SizeCurve);
+			}
+			if (!SizeCurves.empty())
+				pEffect->Set_SizeCurves(SizeCurves);
+
+			/* SCALE */
+			/* Read how many Scale Curves there are for this Effect. */
+			_uint iScaleCurvesCount = 0;
+			ReadFile(hFileEffect, &iScaleCurvesCount, sizeof(_uint), &dwByte, nullptr);
+			/* Read Scale Curves. */
+			vector<array<_float, 5>> ScaleCurves;
+			array<_float, 5> ScaleCurve;
+			for (_uint j = 0; j < iScaleCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &ScaleCurve, sizeof(array<_float, 5>), &dwByte, nullptr);
+				ScaleCurves.push_back(ScaleCurve);
+			}
+			if (!ScaleCurves.empty())
+				pEffect->Set_ScaleCurves(ScaleCurves);
+
+			/* VELOCITY */
+			/* Read how many Velocity Curves there are for this Effect. */
+			_uint iVelocityCurvesCount = 0;
+			ReadFile(hFileEffect, &iVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
+			/* Read Velocity Curves. */
+			vector<_float3> VelocityCurves;
+			_float3 VelocityCurve;
+			for (_uint j = 0; j < iVelocityCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &VelocityCurve, sizeof(_float3), &dwByte, nullptr);
+				VelocityCurves.push_back(VelocityCurve);
+			}
+			if (!VelocityCurves.empty())
+				pEffect->Set_VelocityCurves(VelocityCurves);
+
+			/* TURN VELOCITY */
+			/* Read how many Turn Velocity Curves there are for this Effect. */
 			_uint iTurnVelocityCurvesCount = 0;
 			ReadFile(hFileEffect, &iTurnVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
-			/* Read Rotation Velocity Curves. */
+			/* Read Turn Velocity Curves. */
 			vector<_float3> TurnVelocityCurves;
 			_float3 TurnVelocityCurve;
 			for (_uint j = 0; j < iTurnVelocityCurvesCount; j++)
@@ -183,10 +213,10 @@ vector<CEffect*> CEffect::PlayEffectAtLocation(_tchar * wcEffectName, _vector vL
 			if (!TurnVelocityCurves.empty())
 				pEffect->Set_TurnVelocityCurves(TurnVelocityCurves);
 
+			/* NOISE POWER */
 			/* Read how many Noise Power Curves there are for this Effect. */
 			_uint iNoisePowerCurvesCount = 0;
 			ReadFile(hFileEffect, &iNoisePowerCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
 			/* Read Noise Power Curves. */
 			vector<_float3> NoisePowerCurves;
 			_float3 NoisePowerCurve;
@@ -244,5 +274,4 @@ void CEffect::Free()
 
 	Safe_Release(m_pMaskTexture);
 	Safe_Release(m_pNoiseTexture);
-	Safe_Release(m_pDissolveTexture);
 }

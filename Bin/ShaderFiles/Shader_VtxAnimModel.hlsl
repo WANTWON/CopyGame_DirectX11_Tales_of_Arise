@@ -17,7 +17,7 @@ texture2D g_NormalTexture;
 /* Glow */
 texture2D g_GlowTexture;
 float4 g_vGlowColor;
-bool g_bGlow = false;
+bool g_bUseDiffuseColor;
 
 /* Dissolve */
 texture2D g_DissolveTexture;
@@ -165,16 +165,21 @@ PS_OUT_GLOW PS_GLOW(PS_IN In)
 {
 	PS_OUT_GLOW Out = (PS_OUT_GLOW)0;
 
-	float4 vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	float4 vGlowTexture = g_GlowTexture.Sample(LinearSampler, In.vTexUV) * g_bGlow;
+	Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV);
 
-	/* 1. Glow based on Glow Color */
-	if (vGlowTexture.r != 0 && vGlowTexture.g != 0 && vGlowTexture.b != 0 && vGlowTexture.a != 0)
-		Out.vGlow = vGlowTexture * g_vGlowColor;
+	if (g_bUseDiffuseColor)
+	{
+		float4 vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+		Out.vGlow = vDiffuse;
+	}
+	else
+	{
+		Out.vGlow.gba = Out.vGlow.r;
+		Out.vGlow.rgb *= g_vGlowColor;
+	}
 
-	/* 2. Glow based on Diffuse Color */
-	/*if (vGlow.r != 0 && vGlow.g != 0 && vGlow.b != 0 && vGlow.a != 0)
-		Out.vGlow = vGlowTexture * vDiffuse;*/
+	if (Out.vGlow.a == 0)
+		discard;
 
 	return Out;
 }
