@@ -80,7 +80,7 @@ private:
 
 	_uint vectorsize = 0;
 
-	_bool m_btick = true;
+	_bool m_btick = false;
 
 	_float m_fIndexOffsetY = 0.f;
 
