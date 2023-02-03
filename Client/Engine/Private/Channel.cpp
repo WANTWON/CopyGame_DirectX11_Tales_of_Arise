@@ -71,6 +71,13 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 		vRotation = XMLoadFloat4(&LastKeyframe.vRotation);
 		vPosition = XMLoadFloat3(&LastKeyframe.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
+
+		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
+		XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
+		XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
+		m_KeyFrame_Linear.fTime = fCurrentTime;
+
+		return;
 	}
 	else
 	{
@@ -109,6 +116,7 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 	/*Linear*/
 	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
 	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
+	m_KeyFrame_Linear.fTime = fCurrentTime;
 
 	_matrix	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 
@@ -120,7 +128,7 @@ void CChannel::Reset()
 {
 	m_iCurrentKeyFrameIndex = 0;
 
-	m_KeyFrame_Linear = m_KeyFrames[0];
+	//m_KeyFrame_Linear = m_KeyFrames[0];
 }
 
 bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime)
@@ -128,7 +136,10 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	_vector			vScale, vRotation, vPosition;
 
 	if (fLinearCurrentTime >= fLinearTotalTime)
+	{
+		m_KeyFrame_Linear = m_KeyFrames[0];
 		return true;
+	}
 		
 
 	_float		fRatio = fLinearCurrentTime / fLinearTotalTime;
@@ -140,6 +151,10 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	vDestRotation = XMLoadFloat4(&NextKeyFrame.vRotation);
 	vDestPosition = XMLoadFloat3(&NextKeyFrame.vPosition);
 	
+	/*vDestScale = XMLoadFloat3(&m_KeyFrame_Linear.vScale);
+	vDestRotation = XMLoadFloat4(&m_KeyFrame_Linear.vRotation);
+	vDestPosition = XMLoadFloat3(&m_KeyFrame_Linear.vPosition);*/
+
 	vSourScale = XMLoadFloat3(&m_KeyFrame_Linear.vScale);
 	vSourRotation = XMLoadFloat4(&m_KeyFrame_Linear.vRotation);
 	vSourPosition = XMLoadFloat3(&m_KeyFrame_Linear.vPosition);

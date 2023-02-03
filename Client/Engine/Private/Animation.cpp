@@ -180,7 +180,6 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 	vector<CChannel*> NextAnimChannels = NextAnim->Get_Channels();
 
 	m_bLinearFinished = false;
-	m_fLinear_CurrentTime += fTimeDelta;
 
 	if (!m_bLinearFinished)
 	{
@@ -192,6 +191,8 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 				//m_Channels[i]->Reset();
 			}
 		}
+
+		m_fLinear_CurrentTime += fTimeDelta;
 	}
 
 	if (m_bLinearFinished)
