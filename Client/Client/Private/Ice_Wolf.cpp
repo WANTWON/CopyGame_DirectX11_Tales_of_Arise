@@ -238,7 +238,7 @@ HRESULT CIce_Wolf::Render_Glow()
 				return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 3)))
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, SHADER_ANIM_GLOW)))
 			return E_FAIL;
 	}
 

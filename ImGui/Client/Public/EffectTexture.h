@@ -13,18 +13,22 @@ class CEffectTexture final : public CEffect
 public:
 	typedef struct tagTextureEffectDescription
 	{
+		_tchar wcPrototypeId[MAX_PATH] = TEXT("");
+
+		_float3 vColorInitial = _float3(1.f, 1.f, 1.f);
 		_float3 vColor = _float3(1.f, 1.f, 1.f);
 		_float fAlphaInitial = 1.f;
 		_float fAlpha = 1.f;
 		_float m_fAlphaDiscard = 0.f;
+
+		_bool m_bGlow = false;
+		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
+
+		_bool m_bDistortion = false;
+
 		_float fInitialSize = 1.f;
 		_float fSize = 1.f;
 		_float fLifetime = 0.f;
-
-		_tchar wcPrototypeId[MAX_PATH] = TEXT("");	/* "Spark.dds > Spark" */
-		_tchar wcMaskTexture[MAX_PATH] = TEXT("");
-		_tchar wcNoiseTexture[MAX_PATH] = TEXT("");
-		_tchar wcDissolveTexture[MAX_PATH] = TEXT("");
 
 		_float fNoiseSpeed = 0.f;
 		_float fNoisePowerInitial = 0.f;
@@ -48,16 +52,12 @@ public:
 	virtual int Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_Glow() override;
 
 public:
-	virtual void Add_MaskTexture() override;
-	virtual void Add_NoiseTexture() override;
-	virtual void Add_DissolveTexture() override;
-
-	void VelocityLerp();
+	void ColorLerp();
 	void SizeLerp();
 	void AlphaLerp();
-	void NoisePowerLerp();
 
 private:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;

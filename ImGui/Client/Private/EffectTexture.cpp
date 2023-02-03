@@ -43,10 +43,9 @@ int CEffectTexture::Tick(_float fTimeDelta)
 		}
 		else
 		{
-			VelocityLerp();
+			ColorLerp();
 			SizeLerp();
 			AlphaLerp();
-			NoisePowerLerp();
 
 			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tTextureEffectDesc.fSize);
 			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tTextureEffectDesc.fSize);
@@ -68,11 +67,12 @@ void CEffectTexture::Late_Tick(_float fTimeDelta)
 {
 	if (m_pRendererCom)
 	{
-		//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);		/* Non-Alphablend */
-		//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);	/* Alphablend with Normals */
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);			/* Alphablend */
-
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+
+		if (m_tTextureEffectDesc.m_bGlow)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 	}
 }
 
@@ -86,53 +86,61 @@ HRESULT CEffectTexture::Render()
 
 	__super::Render();
 
-	m_pShaderCom->Begin(m_eShaderID);
+	m_pShaderCom->Begin(2);
 	m_pVIBufferCom->Render();
 
 	return S_OK;
 }
 
-void CEffectTexture::Add_MaskTexture()
+HRESULT CEffectTexture::Render_Glow()
 {
-	if (wcscmp(m_tTextureEffectDesc.wcMaskTexture, TEXT("")))
-	{
-		Safe_Release(m_pMaskTexture);
-		Remove_Components(TEXT("Com_TextureMask"));
+	if (!m_bPlay)
+		return S_OK;
 
-		/* For.Com_TextureMask */
-		if (FAILED(__super::Add_Components(TEXT("Com_TextureMask"), LEVEL_STATIC, m_tTextureEffectDesc.wcMaskTexture, (CComponent**)&m_pMaskTexture)))
-			return;
-	}
+	if (!m_pShaderCom || !m_pVIBufferCom)
+		return E_FAIL;
+
+	__super::Render();
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &m_tTextureEffectDesc.vGlowColor, sizeof(_float3))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(3);
+	m_pVIBufferCom->Render();
+
+	return S_OK;
 }
 
-void CEffectTexture::Add_NoiseTexture()
+void CEffectTexture::ColorLerp()
 {
-	if (wcscmp(m_tTextureEffectDesc.wcNoiseTexture, TEXT("")))
+	if (m_ColorCurves.empty())
+		return;
+
+	/* 0 ~ 1 */
+	_float fCurrentLifeNormalized = m_fTimer / m_tTextureEffectDesc.fLifetime;
+
+	for (array<_float, 5>& fColorCurve : m_ColorCurves)
 	{
-		Safe_Release(m_pNoiseTexture);
-		Remove_Components(TEXT("Com_TextureNoise"));
+		/* Break cause Curve should not start yet ('Y' is the Curve Start Time). */
+		if (fCurrentLifeNormalized < fColorCurve[3])
+			break;
 
-		/* For.Com_TextureNoise */
-		if (FAILED(__super::Add_Components(TEXT("Com_TextureNoise"), LEVEL_STATIC, m_tTextureEffectDesc.wcNoiseTexture, (CComponent**)&m_pNoiseTexture)))
-			return;
+		/* Skip cause Curve has already been lerped through ('Z' is the Curve End Time). */
+		if (fCurrentLifeNormalized > fColorCurve[4])
+		{
+			m_tTextureEffectDesc.vColorInitial = _float3(fColorCurve[0], fColorCurve[1], fColorCurve[2]);
+			continue;
+		}
+
+		_float fFactorDividend = (m_fTimer - (m_tTextureEffectDesc.fLifetime * fColorCurve[3]));
+		_float fFactorDivisor = ((m_tTextureEffectDesc.fLifetime * fColorCurve[4]) - (m_tTextureEffectDesc.fLifetime * fColorCurve[3]));
+
+		_float fInterpFactor = fFactorDividend / fFactorDivisor;
+		_vector fLerpColor = XMLoadFloat3(&m_tTextureEffectDesc.vColorInitial) + fInterpFactor * (XMLoadFloat3(&_float3(fColorCurve[0], fColorCurve[1], fColorCurve[2])) - XMLoadFloat3(&m_tTextureEffectDesc.vColorInitial));
+		XMStoreFloat3(&m_tTextureEffectDesc.vColor, fLerpColor);
+
+		break;
 	}
-}
-
-void CEffectTexture::Add_DissolveTexture()
-{
-	if (wcscmp(m_tTextureEffectDesc.wcDissolveTexture, TEXT("")))
-	{
-		Safe_Release(m_pDissolveTexture);
-		Remove_Components(TEXT("Com_TextureDissolve"));
-
-		/* For.Com_TextureDissolve */
-		if (FAILED(__super::Add_Components(TEXT("Com_TextureDissolve"), LEVEL_STATIC, m_tTextureEffectDesc.wcDissolveTexture, (CComponent**)&m_pDissolveTexture)))
-			return;
-	}
-}
-
-void CEffectTexture::VelocityLerp()
-{
 }
 
 void CEffectTexture::SizeLerp()
@@ -199,38 +207,6 @@ void CEffectTexture::AlphaLerp()
 	}
 }
 
-void CEffectTexture::NoisePowerLerp()
-{
-	if (m_NoisePowerCurves.empty())
-		return;
-
-	/* 0 ~ 1 */
-	_float fCurrentLifeNormalized = m_fTimer / m_tTextureEffectDesc.fLifetime;
-
-	for (_float3& fNoisePowerCurve : m_NoisePowerCurves)
-	{
-		/* Break cause Curve should not start yet ('Y' is the Curve Start Time). */
-		if (fCurrentLifeNormalized < fNoisePowerCurve.y)
-			break;
-
-		/* Skip cause Curve has already been lerped through ('Z' is the Curve End Time). */
-		if (fCurrentLifeNormalized > fNoisePowerCurve.z)
-		{
-			m_tTextureEffectDesc.fNoisePowerInitial = fNoisePowerCurve.x;
-			continue;
-		}
-
-		_float fFactorDividend = (m_fTimer - (m_tTextureEffectDesc.fLifetime * fNoisePowerCurve.y));
-		_float fFactorDivisor = ((m_tTextureEffectDesc.fLifetime * fNoisePowerCurve.z) - (m_tTextureEffectDesc.fLifetime * fNoisePowerCurve.y));
-
-		_float fInterpFactor = fFactorDividend / fFactorDivisor;
-		_float fLerpNoisePower = m_tTextureEffectDesc.fNoisePowerInitial + fInterpFactor * (fNoisePowerCurve.x - m_tTextureEffectDesc.fNoisePowerInitial);
-		m_tTextureEffectDesc.fNoisePower = fLerpNoisePower;
-
-		break;
-	}
-}
-
 HRESULT CEffectTexture::Ready_Components(void * pArg)
 {
 	memcpy(&m_tTextureEffectDesc, (TEXTUREEFFECTDESC*)pArg, sizeof(TEXTUREEFFECTDESC));
@@ -255,25 +231,6 @@ HRESULT CEffectTexture::Ready_Components(void * pArg)
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
-
-	if (wcscmp(m_tTextureEffectDesc.wcMaskTexture, TEXT("")))
-	{
-		/* For.Com_MaskTexture */
-		if (FAILED(__super::Add_Components(TEXT("Com_TextureMask"), LEVEL_STATIC, m_tTextureEffectDesc.wcMaskTexture, (CComponent**)&m_pMaskTexture)))
-			return E_FAIL;
-	}
-	if (wcscmp(m_tTextureEffectDesc.wcNoiseTexture, TEXT("")))
-	{
-		/* For.Com_NoiseTexture */
-		if (FAILED(__super::Add_Components(TEXT("Com_TextureNoise"), LEVEL_STATIC, m_tTextureEffectDesc.wcNoiseTexture, (CComponent**)&m_pNoiseTexture)))
-			return E_FAIL;
-	}
-	if (wcscmp(m_tTextureEffectDesc.wcDissolveTexture, TEXT("")))
-	{
-		/* For.Com_DissolveTexture */
-		if (FAILED(__super::Add_Components(TEXT("Com_TextureDissolve"), LEVEL_STATIC, m_tTextureEffectDesc.wcDissolveTexture, (CComponent**)&m_pDissolveTexture)))
-			return E_FAIL;
-	}
 }
 
 HRESULT CEffectTexture::SetUp_ShaderResources()
@@ -282,19 +239,6 @@ HRESULT CEffectTexture::SetUp_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV())))
 		return E_FAIL;
-
-	if (m_pMaskTexture)
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_MaskTexture", m_pMaskTexture->Get_SRV())))
-			return E_FAIL;
-	if (m_pNoiseTexture)
-	{
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_NoiseTexture", m_pNoiseTexture->Get_SRV())))
-			return E_FAIL;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fNoiseSpeed", &m_tTextureEffectDesc.fNoiseSpeed, sizeof(_float))))
-			return E_FAIL;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fNoisePower", &m_tTextureEffectDesc.fNoisePower, sizeof(_float))))
-			return E_FAIL;
-	}
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_vColor", &m_tTextureEffectDesc.vColor, sizeof(_float3))))
 		return E_FAIL;

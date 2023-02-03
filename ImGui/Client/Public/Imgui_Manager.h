@@ -205,12 +205,12 @@ private:
 	vector<string> m_SpawnTypes = { "LOOP", "BURST" };
 	string m_sCurrentSpawnType = "LOOP";
 
-	vector<string> m_ShadersTexture = { "SHADER_DEFAULT", "-", "SHADER_ALPHAMASK" };
+	/*vector<string> m_ShadersTexture = { "SHADER_DEFAULT", "-", "SHADER_ALPHAMASK" };
 	vector<string> m_ShadersMesh = { "SHADER_DEFAULT", "-", "-", "-", "SHADER_EFFECT" };
 	vector<string> m_ShadersParticle = { "SHADER_DEFAULT", "SHADER_ALPHAMASK", "SHADER_DISTORTION" };
 	string m_sCurrentShaderTexture = m_ShadersTexture[0];
 	string m_sCurrentShaderMesh = m_ShadersMesh[0];
-	string m_sCurrentShaderParticle = m_ShadersParticle[0];
+	string m_sCurrentShaderParticle = m_ShadersParticle[0];*/
 
 	CEffectTexture::TEXTUREEFFECTDESC m_tTextureEffectDesc;
 	CEffectMesh::MESHEFFECTDESC m_tMeshEffectDesc;
@@ -218,10 +218,10 @@ private:
 
 	string m_sSelectedMaskTexture = "";
 	string m_sSelectedNoiseTexture = "";
-	string m_sSelectedDissolveTexture = "";
 
 	_float m_fCurveValue = 1.f, m_fCurveStart = 1.f, m_fCurveEnd = 1.f;
-	_uint m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedAlphaCurve = 0, m_iSelectedTurnVelocityCurve = 0, m_iSelectedNoisePowerCurve = 0;
+	_float m_fCurveRed = 1.f, m_fCurveGreen = 1.f, m_fCurveBlue = 1.f;
+	_uint m_iSelectedColorCurve = 0, m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedAlphaCurve = 0, m_iSelectedTurnVelocityCurve = 0, m_iSelectedNoisePowerCurve = 0;
 
 public:
 	virtual void Free() override;

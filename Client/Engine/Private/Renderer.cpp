@@ -484,11 +484,8 @@ HRESULT CRenderer::Render_Glow()
 		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 			return E_FAIL;
 
-		m_GameObjects[RENDER_GLOW].clear();
-
 		return S_OK;
 	}
-	
 }
 
 HRESULT CRenderer::Render_Distortion()

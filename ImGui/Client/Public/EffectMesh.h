@@ -12,21 +12,30 @@ class CEffectMesh final : public CEffect
 public:
 	typedef struct tagMeshEffectDescription
 	{
+		_tchar wcPrototypeId[MAX_PATH] = TEXT("");
+		_tchar wcMaskTexture[MAX_PATH] = TEXT("");
+		_tchar wcNoiseTexture[MAX_PATH] = TEXT("");
+
+		_float3 vColorInitial = _float3(1.f, 1.f, 1.f);
 		_float3 vColor = _float3(1.f, 1.f, 1.f);
 		_float fAlphaInitial = 1.f;
 		_float fAlpha = 1.f;
-		_float fLifetime = 0.f;
+		_bool bGlow = false;
+		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
 
+		_float fLifetime = 0.f;
 		_float3 vTurn = _float3(0.f, 0.f, 0.f);
 		_float fTurnVelocityInitial = 0.f;
 		_float fTurnVelocity = 0.f;
 
-		_tchar wcPrototypeId[MAX_PATH] = TEXT("");	/* "Spark.dds > Spark" */
-		_tchar wcMaskTexture[MAX_PATH] = TEXT("");
-		_tchar wcNoiseTexture[MAX_PATH] = TEXT("");
-		_tchar wcDissolveTexture[MAX_PATH] = TEXT("");
+		_float fMaskSpeed = 0.f;
+		_float fMaskDirectionX = 0.f;
+		_float fMaskDirectionY = 0.f;
 
 		_float fNoiseSpeed = 0.f;
+		_float fNoiseDirectionX = 0.f;
+		_float fNoiseDirectionY = 0.f;
+
 		_float fNoisePowerInitial = 0.f;
 		_float fNoisePower = 10.f;
 	} MESHEFFECTDESC;
@@ -48,13 +57,13 @@ public:
 	virtual int Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_Glow() override;
 
 public:
 	virtual void Add_MaskTexture() override;
 	virtual void Add_NoiseTexture() override;
-	virtual void Add_DissolveTexture() override;
 	
-	void VelocityLerp();
+	void ColorLerp();
 	void SizeLerp();
 	void AlphaLerp();
 	void TurnVelocityLerp();

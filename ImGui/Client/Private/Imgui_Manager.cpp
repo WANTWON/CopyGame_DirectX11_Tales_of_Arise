@@ -2319,6 +2319,77 @@ void CImgui_Manager::Draw_EffectModals()
 		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 		if (ImGui::BeginTabBar("CurveEditorTabBar", tab_bar_flags))
 		{
+			if (ImGui::BeginTabItem("Color Curves"))
+			{
+				if (ImGui::BeginTable("ColorCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				{
+					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("Color");
+					ImGui::TableSetupColumn("Start");
+					ImGui::TableSetupColumn("End");
+					ImGui::TableHeadersRow();
+
+					vector<array<_float, 5>> ColorCurves;
+
+					if (m_pSelectedEffect)
+						ColorCurves = m_pSelectedEffect->Get_ColorCurves();
+
+					for (_uint i = 0; i < ColorCurves.size(); i++)
+					{
+						ImGui::TableNextColumn();
+						string sColor = to_string(ColorCurves[i][0]) + ", " + to_string(ColorCurves[i][1]) + ", " + to_string(ColorCurves[i][2]);
+						if (ImGui::Selectable(sColor.c_str(), i == m_iSelectedVelocityCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Color */
+							m_iSelectedVelocityCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(ColorCurves[i][3]).c_str()); /* Start */
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(ColorCurves[i][4]).c_str()); /* End */
+					}
+
+					ImGui::EndTable();
+				}
+				if (ImGui::Button("Delete"))
+					if (m_pSelectedEffect->Get_ColorCurves().size() > m_iSelectedColorCurve)
+						m_pSelectedEffect->Remove_ColorCurve(m_iSelectedColorCurve);
+
+				ImGui::NewLine();
+
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##ColorCurveR", &m_fCurveRed, 0.05f, 0.f, 1.f, "R: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##ColorCurveG", &m_fCurveGreen, 0.05f, 0.f, 1.f, "G: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##ColorCurveB", &m_fCurveBlue, 0.05f, 0.f, 1.f, "B: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##ColorStart", &m_fCurveStart, 0.05f, 0.f, 1.f, "Start: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##ColorEnd", &m_fCurveEnd, 0.05f, 0.f, 1.f, "End: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+
+				if (ImGui::Button("Add"))
+				{
+					if (m_pSelectedEffect)
+						m_pSelectedEffect->Add_ColorCurve({ m_fCurveRed, m_fCurveGreen, m_fCurveBlue, m_fCurveStart, m_fCurveEnd });
+				}
+
+				ImGui::EndTabItem();
+			}
 			if (ImGui::BeginTabItem("Velocity Curves"))
 			{
 				if (ImGui::BeginTable("VelocityCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
@@ -2955,7 +3026,6 @@ void CImgui_Manager::Set_Effect()
 				ImGui::SameLine();
 				ImGui::Checkbox("##EffectSelected", &pEffect->m_bIsSelected);
 				
-
 				if (m_sSelectedEffect == sEffectName)
 					ImGui::SetItemDefaultFocus();
 			}
@@ -3191,18 +3261,6 @@ _bool CImgui_Manager::Load_Effect()
 					m_tTextureEffectDesc = tTextureEffectDesc;
 					m_pEffectManager->Add_Effect(pEffect);
 					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_TEXTURE);
-
-					wstring wsMaskTexture = wstring(m_tTextureEffectDesc.wcMaskTexture);
-					string sMaskTexture = string(wsMaskTexture.begin(), wsMaskTexture.end());
-					m_sSelectedMaskTexture = sMaskTexture;
-
-					wstring wsNoiseTexture = wstring(m_tTextureEffectDesc.wcNoiseTexture);
-					string sNoiseTexture = string(wsNoiseTexture.begin(), wsNoiseTexture.end());
-					m_sSelectedNoiseTexture = sNoiseTexture;
-
-					wstring wsDissolveTexture = wstring(m_tTextureEffectDesc.wcDissolveTexture);
-					string sDissolveTexture = string(wsDissolveTexture.begin(), wsDissolveTexture.end());
-					m_sSelectedDissolveTexture = sDissolveTexture;
 					break;
 				}
 				case CEffect::EFFECT_TYPE::TYPE_MESH:
@@ -3225,10 +3283,6 @@ _bool CImgui_Manager::Load_Effect()
 					wstring wsNoiseTexture = wstring(m_tMeshEffectDesc.wcNoiseTexture);
 					string sNoiseTexture = string(wsNoiseTexture.begin(), wsNoiseTexture.end());
 					m_sSelectedNoiseTexture = sNoiseTexture;
-
-					wstring wsDissolveTexture = wstring(m_tMeshEffectDesc.wcDissolveTexture);
-					string sDissolveTexture = string(wsDissolveTexture.begin(), wsDissolveTexture.end());
-					m_sSelectedDissolveTexture = sDissolveTexture;
 					break;
 				}
 				case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
@@ -3343,7 +3397,7 @@ void CImgui_Manager::Show_TextureCustomization()
 	ImGui::Text("Texture Customization");
 	ImGui::NewLine();
 
-	ImGui::Text("Shader");
+	/*ImGui::Text("Shader");
 	ImGui::SameLine();
 	if (ImGui::BeginCombo("##Shader", m_sCurrentShaderTexture.c_str()))
 	{
@@ -3363,7 +3417,7 @@ void CImgui_Manager::Show_TextureCustomization()
 		}
 		ImGui::EndCombo();
 	}
-	ImGui::NewLine();
+	ImGui::NewLine();*/
 
 	ImGui::Text("Color");
 	ImGui::SameLine();
@@ -3372,7 +3426,10 @@ void CImgui_Manager::Show_TextureCustomization()
 	{
 		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
 		if (pEffectTexture)
+		{
+			m_tTextureEffectDesc.vColorInitial = m_tTextureEffectDesc.vColor;
 			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
+		}
 	}
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(100.f);
@@ -3380,7 +3437,10 @@ void CImgui_Manager::Show_TextureCustomization()
 	{
 		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
 		if (pEffectTexture)
+		{
+			m_tTextureEffectDesc.vColorInitial = m_tTextureEffectDesc.vColor;
 			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
+		}
 	}
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(100.f);
@@ -3388,7 +3448,10 @@ void CImgui_Manager::Show_TextureCustomization()
 	{
 		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
 		if (pEffectTexture)
+		{
+			m_tTextureEffectDesc.vColorInitial = m_tTextureEffectDesc.vColor;
 			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
+		}
 	}
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(100.f);
@@ -3411,6 +3474,45 @@ void CImgui_Manager::Show_TextureCustomization()
 			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
 	}
 	ImGui::NewLine();
+
+	ImGui::Checkbox("Glow", &m_tTextureEffectDesc.m_bGlow);
+	{
+		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
+		if (pEffectTexture)
+			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##TextureGlowColorR", &m_tTextureEffectDesc.vGlowColor.x, 0.05f, 0, 1, "R: %.02f"))
+	{
+		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
+		if (pEffectTexture)
+			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##TextureGlowColorG", &m_tTextureEffectDesc.vGlowColor.y, 0.05f, 0, 1, "G: %.02f"))
+	{
+		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
+		if (pEffectTexture)
+			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##TextureGlowColorB", &m_tTextureEffectDesc.vGlowColor.z, 0.05f, 0, 1, "B: %.02f"))
+	{
+		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
+		if (pEffectTexture)
+			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
+	}
+	ImGui::Checkbox("Distortion", &m_tTextureEffectDesc.m_bDistortion);
+	{
+		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
+		if (pEffectTexture)
+			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
+	}
+	ImGui::NewLine();
+
 	ImGui::SetNextItemWidth(100.f);
 	if (ImGui::DragFloat("##TextureLifetime", &m_tTextureEffectDesc.fLifetime, 0.05f, 0, 0, "Lifetime: %.02f"))
 	{
@@ -3428,120 +3530,6 @@ void CImgui_Manager::Show_TextureCustomization()
 			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
 		}
 	}
-	ImGui::NewLine();
-
-	/* Pseudo Diffuse Map. */
-	ImGui::Text("Mask Texture");
-	ImGui::SameLine();
-	ImGui::SetNextItemWidth(200.f);
-	if (ImGui::BeginCombo("##MaskTexture", m_sSelectedMaskTexture.c_str()))
-	{
-		_uint iCounter = 0;
-		for (auto& iter = m_TextureNames.begin(); iter != m_TextureNames.end(); iter++)
-		{
-			if (ImGui::Selectable(iter->c_str(), iter->c_str() == m_sSelectedMaskTexture))
-			{
-				m_sSelectedMaskTexture = *iter;
-				wstring wsMaskTexture = wstring(m_sSelectedMaskTexture.begin(), m_sSelectedMaskTexture.end());
-
-				CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
-				if (pEffectTexture)
-				{
-					wcscpy_s(m_tTextureEffectDesc.wcMaskTexture, MAX_PATH, wsMaskTexture.c_str());
-					pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
-				}
-
-				m_pSelectedEffect->Add_MaskTexture();
-			}
-
-			if (iter->c_str() == m_sSelectedMaskTexture)
-				ImGui::SetItemDefaultFocus();
-
-			iCounter++;
-		}
-		ImGui::EndCombo();
-	}
-
-	ImGui::Text("Noise Texture");
-	ImGui::SameLine();
-	ImGui::SetNextItemWidth(200.f);
-	if (ImGui::BeginCombo("##NoiseTexture", m_sSelectedNoiseTexture.c_str()))
-	{
-		_uint iCounter = 0;
-		for (auto& iter = m_TextureNames.begin(); iter != m_TextureNames.end(); iter++)
-		{
-			if (ImGui::Selectable(iter->c_str(), iter->c_str() == m_sSelectedNoiseTexture))
-			{
-				m_sSelectedNoiseTexture = *iter;
-				wstring wsNoiseTexture = wstring(m_sSelectedNoiseTexture.begin(), m_sSelectedNoiseTexture.end());
-
-				CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
-				if (pEffectTexture)
-				{
-					wcscpy_s(m_tTextureEffectDesc.wcNoiseTexture, MAX_PATH, wsNoiseTexture.c_str());
-					pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
-				}
-
-				m_pSelectedEffect->Add_NoiseTexture();
-			}
-
-			if (iter->c_str() == m_sSelectedNoiseTexture)
-				ImGui::SetItemDefaultFocus();
-
-			iCounter++;
-		}
-		ImGui::EndCombo();
-	}
-	ImGui::SameLine();
-	ImGui::SetNextItemWidth(120.f);
-	if (ImGui::DragFloat("##NoiseSpeed", &m_tTextureEffectDesc.fNoiseSpeed, 0.05f, 0, 10, "Noise Speed: %.02f"))
-	{
-		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
-		if (pEffectTexture)
-			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
-	}
-	ImGui::SameLine();
-	ImGui::SetNextItemWidth(120.f);
-	if (ImGui::DragFloat("##NoisePower", &m_tTextureEffectDesc.fNoisePower, 0.05f, 0, 100, "Noise Power: %.02f"))
-	{
-		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
-		if (pEffectTexture)
-		{
-			m_tTextureEffectDesc.fNoisePowerInitial = m_tTextureEffectDesc.fNoisePower;
-			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
-		}
-	}
-
-	ImGui::Text("Dissolve Texture");
-	ImGui::SameLine();
-	ImGui::SetNextItemWidth(200.f);
-	if (ImGui::BeginCombo("##DissolveTexture", m_sSelectedDissolveTexture.c_str()))
-	{
-		_uint iCounter = 0;
-		for (auto& iter = m_TextureNames.begin(); iter != m_TextureNames.end(); iter++)
-		{
-			if (ImGui::Selectable(iter->c_str(), iter->c_str() == m_sSelectedDissolveTexture))
-			{
-				m_sSelectedDissolveTexture = *iter;
-				wstring wsDissolveTexture = wstring(m_sSelectedDissolveTexture.begin(), m_sSelectedDissolveTexture.end());
-
-				CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
-				if (pEffectTexture)
-				{
-					wcscpy_s(m_tTextureEffectDesc.wcDissolveTexture, MAX_PATH, wsDissolveTexture.c_str());
-					pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
-				}
-
-				m_pSelectedEffect->Add_DissolveTexture();
-			}
-
-			if (iter->c_str() == m_sSelectedDissolveTexture)
-				ImGui::SetItemDefaultFocus();
-
-			iCounter++;
-		}
-		ImGui::EndCombo();
-	}
 }
 
 void CImgui_Manager::Show_MeshCustomization()
@@ -3552,7 +3540,7 @@ void CImgui_Manager::Show_MeshCustomization()
 	ImGui::Text("Mesh Customization");
 	ImGui::NewLine();
 
-	ImGui::Text("Shader");
+	/*ImGui::Text("Shader");
 	ImGui::SameLine();
 	if (ImGui::BeginCombo("##Shader", m_sCurrentShaderMesh.c_str()))
 	{
@@ -3572,7 +3560,7 @@ void CImgui_Manager::Show_MeshCustomization()
 		}
 		ImGui::EndCombo();
 	}
-	ImGui::NewLine();
+	ImGui::NewLine();*/
 
 	ImGui::Text("Color");
 	ImGui::SameLine();
@@ -3581,7 +3569,10 @@ void CImgui_Manager::Show_MeshCustomization()
 	{
 		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
 		if (pEffectMesh)
+		{
+			m_tMeshEffectDesc.vColorInitial = m_tMeshEffectDesc.vColor;
 			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+		}
 	}
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(100.f);
@@ -3589,7 +3580,10 @@ void CImgui_Manager::Show_MeshCustomization()
 	{
 		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
 		if (pEffectMesh)
+		{
+			m_tMeshEffectDesc.vColorInitial = m_tMeshEffectDesc.vColor;
 			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+		}
 	}
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(100.f);
@@ -3597,7 +3591,10 @@ void CImgui_Manager::Show_MeshCustomization()
 	{
 		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
 		if (pEffectMesh)
+		{
+			m_tMeshEffectDesc.vColorInitial = m_tMeshEffectDesc.vColor;
 			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+		}
 	}
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(100.f);
@@ -3610,6 +3607,39 @@ void CImgui_Manager::Show_MeshCustomization()
 			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 		}
 	}
+	ImGui::NewLine();
+
+	ImGui::Checkbox("Glow", &m_tMeshEffectDesc.bGlow);
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##MeshGlowColorR", &m_tMeshEffectDesc.vGlowColor.x, 0.05f, 0, 1, "R: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##MeshGlowColorG", &m_tMeshEffectDesc.vGlowColor.y, 0.05f, 0, 1, "G: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##MeshGlowColorB", &m_tMeshEffectDesc.vGlowColor.z, 0.05f, 0, 1, "B: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
+	ImGui::NewLine();
 
 	_float3 vScale, vRotation, vTranslation;
 	if (ImGui::RadioButton("Scale", m_eCurrentTransformation == TRANS_SCALE))
@@ -3829,6 +3859,30 @@ void CImgui_Manager::Show_MeshCustomization()
 		}
 		ImGui::EndCombo();
 	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(120.f);
+	if (ImGui::DragFloat("##MaskSpeed", &m_tMeshEffectDesc.fMaskSpeed, 0.05f, 0, 10, "Mask Speed: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
+	ImGui::SetNextItemWidth(200.f);
+	if (ImGui::DragFloat("##MaskDirectionX", &m_tMeshEffectDesc.fMaskDirectionX, 0.05f, -1, 1, "Mask Direction X: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(200.f);
+	if (ImGui::DragFloat("##MaskDirectionY", &m_tMeshEffectDesc.fMaskDirectionY, 0.05f, -1, 1, "Mask Direction Y: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
+	ImGui::NewLine();
 
 	ImGui::Text("Noise Texture");
 	ImGui::SameLine();
@@ -3879,36 +3933,20 @@ void CImgui_Manager::Show_MeshCustomization()
 			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 		}
 	}
-
-	ImGui::Text("Dissolve Texture");
+	ImGui::SetNextItemWidth(200.f);
+	if (ImGui::DragFloat("##NoiseDirectionX", &m_tMeshEffectDesc.fNoiseDirectionX, 0.05f, -1, 1, "Noise Direction X: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(200.f);
-	if (ImGui::BeginCombo("##DissolveTexture", m_sSelectedDissolveTexture.c_str()))
+	if (ImGui::DragFloat("##NoiseDirectionY", &m_tMeshEffectDesc.fNoiseDirectionY, 0.05f, -1, 1, "Noise Direction Y: %.02f"))
 	{
-		_uint iCounter = 0;
-		for (auto& iter = m_TextureNames.begin(); iter != m_TextureNames.end(); iter++)
-		{
-			if (ImGui::Selectable(iter->c_str(), iter->c_str() == m_sSelectedDissolveTexture))
-			{
-				m_sSelectedDissolveTexture = *iter;
-				wstring wsDissolveTexture = wstring(m_sSelectedDissolveTexture.begin(), m_sSelectedDissolveTexture.end());
-
-				CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
-				if (pEffectMesh)
-				{
-					wcscpy_s(m_tMeshEffectDesc.wcDissolveTexture, MAX_PATH, wsDissolveTexture.c_str());
-					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
-				}
-
-				m_pSelectedEffect->Add_DissolveTexture();
-			}
-
-			if (iter->c_str() == m_sSelectedDissolveTexture)
-				ImGui::SetItemDefaultFocus();
-
-			iCounter++;
-		}
-		ImGui::EndCombo();
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 	}
 }
 
@@ -3920,7 +3958,7 @@ void CImgui_Manager::Show_ParticleCustomization()
 	ImGui::Text("Particles Customization");
 	ImGui::NewLine();
 
-	ImGui::Text("Shader");
+	/*ImGui::Text("Shader");
 	ImGui::SameLine();
 	if (ImGui::BeginCombo("##Shader", m_sCurrentShaderParticle.c_str()))
 	{
@@ -3940,7 +3978,7 @@ void CImgui_Manager::Show_ParticleCustomization()
 		}
 		ImGui::EndCombo();
 	}
-	ImGui::NewLine();
+	ImGui::NewLine();*/
 
 	ImGui::Text("Spawn Type");
 	ImGui::SameLine();
@@ -4011,7 +4049,37 @@ void CImgui_Manager::Show_ParticleCustomization()
 		if (pParticleSystem)
 			pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 	}
-
+	ImGui::NewLine();
+	ImGui::Checkbox("Glow", &m_tParticleDesc.m_bGlow);
+	{
+		CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+		if (pParticleSystem)
+			pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##ParticlesGlowColorR", &m_tParticleDesc.vGlowColor.x, 0.05f, 0, 1, "R: %.02f"))
+	{
+		CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+		if (pParticleSystem)
+			pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##ParticlesGlowColorG", &m_tParticleDesc.vGlowColor.y, 0.05f, 0, 1, "G: %.02f"))
+	{
+		CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+		if (pParticleSystem)
+			pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##ParticlesGlowColorB", &m_tParticleDesc.vGlowColor.z, 0.05f, 0, 1, "B: %.02f"))
+	{
+		CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+		if (pParticleSystem)
+			pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+	}
 	ImGui::NewLine();
 	if (ImGui::DragInt("##ParticlesNum", &m_tParticleDesc.m_iMaxParticles, 1, 0, 1000, "Max Particles: %d"))
 	{
