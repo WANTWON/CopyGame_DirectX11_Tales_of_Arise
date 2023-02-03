@@ -67,6 +67,7 @@ int CTreasureBox::Tick(_float fTimeDelta)
 
 		if (m_bIsAnimationFinished)
 		{
+			
 			m_bOpen = false;
 			m_bOpenFinish = true;
 		}
@@ -102,9 +103,13 @@ void CTreasureBox::Late_Tick(_float fTimeDelta)
 
 	if (m_bCollision)
 	{
-		//ui
-
-		//
+		if (!m_bOpen)
+		{
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_ARSORSWORD, ITEMTYPE_SWORD, false, true);
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_HWANGJELLY, ITEMTYPE_JELLY, true, false);
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
+		}
 
 		m_bOpen = true;
 	}

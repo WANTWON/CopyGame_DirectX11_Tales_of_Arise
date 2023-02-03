@@ -109,6 +109,8 @@ HRESULT CUI_Skillbutton::Render()
 
 	m_pVIBufferCom->Render();
 
+
+
 	m_fPosition.x = 1140.f;
 	m_fPosition.y = 610.f;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -135,7 +137,172 @@ HRESULT CUI_Skillbutton::Render()
 	m_pShaderCom->Begin(m_eShaderID);
 
 	m_pVIBufferCom->Render();
+
+
 		
+	_float alpha = m_fAlpha * 0.5f;
+
+	//m_fSize.x = 80.f;
+	//m_fSize.y = 40.f;
+	//m_fPosition.x = 1100.f;
+	//m_fPosition.y = 600.f;// +m_fFadeY + m_fIndexOffsetY;
+	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(0))))
+	//	return E_FAIL;
+	//m_pShaderCom->Begin(UI_DIALOGUEBOX);
+
+	//m_pVIBufferCom->Render();
+	alpha = 1.f;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+		return E_FAIL;
+
+	m_fSize.x = 150.f;
+	m_fSize.y = 2.5f;
+	m_fPosition.x = 1090.f;
+	m_fPosition.y = 580.f;// +m_fFadeY + m_fIndexOffsetY;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(1))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(UI_BRIGHTDIALOGUELINE);
+
+	m_pVIBufferCom->Render();
+
+	
+	m_fSize.x = 220.f;
+	m_fSize.y = 32.f;
+	m_fPosition.x = 1165.f;
+	m_fPosition.y = 570.f;// + m_fFadeY + m_fIndexOffsetY;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom3->Get_SRV(0))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(UI_ALPHASET);
+
+	m_pVIBufferCom->Render();
+
+	//_float alpha = m_fAlpha * 0.5f;
+
+	//m_fSize.x = 80.f;
+	//m_fSize.y = 40.f;
+	//m_fPosition.x = 1070.f;
+	//m_fPosition.y = 640.f;// +m_fFadeY + m_fIndexOffsetY;
+	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(0))))
+	//	return E_FAIL;
+	//m_pShaderCom->Begin(UI_DIALOGUEBOX);
+
+	//m_pVIBufferCom->Render();
+	//alpha = 1.f;
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+	//	return E_FAIL;
+
+	m_fSize.x = 150.f;
+	m_fSize.y = 2.5f;
+	m_fPosition.x = 1060.f;
+	m_fPosition.y = 620.f;// +m_fFadeY + m_fIndexOffsetY;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(1))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(UI_BRIGHTDIALOGUELINE);
+
+	m_pVIBufferCom->Render();
+
+
+	m_fSize.x = 220.f;
+	m_fSize.y = 32.f;
+	m_fPosition.x = 1135.f;
+	m_fPosition.y = 610.f;// + m_fFadeY + m_fIndexOffsetY;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom3->Get_SRV(1))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(UI_ALPHASET);
+
+	m_pVIBufferCom->Render();
+
+	////m_fSize.x = 80.f;
+	////m_fSize.y = 40.f;
+	////m_fPosition.x = 1100.f;
+	////m_fPosition.y = 680.f;// +m_fFadeY + m_fIndexOffsetY;
+	////m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	////m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	////m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	////if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	////	return E_FAIL;
+	////if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+	////	return E_FAIL;
+	////if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(0))))
+	////	return E_FAIL;
+	////m_pShaderCom->Begin(UI_DIALOGUEBOX);
+
+	////m_pVIBufferCom->Render();
+	alpha = 1.f;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+		return E_FAIL;
+
+	m_fSize.x = 150.f;
+	m_fSize.y = 2.5f;
+	m_fPosition.x = 1090.f;
+	m_fPosition.y = 660.f;// +m_fFadeY + m_fIndexOffsetY;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(1))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(UI_BRIGHTDIALOGUELINE);
+
+	m_pVIBufferCom->Render();
+
+
+	m_fSize.x = 220.f;
+	m_fSize.y = 32.f;
+	m_fPosition.x = 1165.f;
+	m_fPosition.y = 650.f;// + m_fFadeY + m_fIndexOffsetY;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom3->Get_SRV(3))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(UI_ALPHASET);
+
+	m_pVIBufferCom->Render();
+
 
 	
 
@@ -167,6 +334,14 @@ HRESULT CUI_Skillbutton::Ready_Components(void * pArg)
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_hpgrad"), (CComponent**)&m_pTextureCom1)))
 		return E_FAIL;
+
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Skillmsg"), (CComponent**)&m_pTextureCom2)))
+		return E_FAIL;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture3"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Skillname"), (CComponent**)&m_pTextureCom3)))
+		return E_FAIL;
+
+
+	
 
 	return S_OK;
 }
@@ -225,5 +400,8 @@ void CUI_Skillbutton::Free()
 {
 
 	Safe_Release(m_pTextureCom1);
+	Safe_Release(m_pTextureCom2);
+	Safe_Release(m_pTextureCom3);
+	
 	__super::Free();
 }

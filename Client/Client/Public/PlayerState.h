@@ -36,6 +36,7 @@ public:
 	virtual CPlayerState* HandleInput() { return nullptr; };
 	virtual CPlayerState* Tick(_float fTimeDelta) PURE;
 	virtual CPlayerState* LateTick(_float fTimeDelta) PURE;
+	virtual CPlayerState* EventInput(void) { return nullptr; }
 
 	virtual void Enter()
 	{

@@ -73,10 +73,10 @@ void CMainApp::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Up(DIK_ESCAPE) && !(m_pUI_Manager->Get_StopTick()))
 		m_pUI_Manager->Set_Mainmenuon(true);
 
-	if(m_pGameInstance->Key_Up(DIK_7))
+	/*if(m_pGameInstance->Key_Up(DIK_7))
 		dynamic_cast<CUI_Dialoguepopup*>(m_pUI_Manager->Get_Dialoguepopup())->Open_Dialogue(0 , false , 1 ,0);
 	else if (m_pGameInstance->Key_Up(DIK_8))
-		dynamic_cast<CUI_Dialoguepopup*>(m_pUI_Manager->Get_Dialoguepopup())->Open_Dialogue(1 , false , 0 , 1);
+		dynamic_cast<CUI_Dialoguepopup*>(m_pUI_Manager->Get_Dialoguepopup())->Open_Dialogue(1 , false , 0 , 1);*/
 
 	if (m_pUI_Manager->Get_UI_OpenType() == CUI_Manager::UI_INVEN && m_pGameInstance->Get_CurrentLevelIndex() != LEVEL_LOADING)
 		m_pUI_Manager->Tick_Inventory();
