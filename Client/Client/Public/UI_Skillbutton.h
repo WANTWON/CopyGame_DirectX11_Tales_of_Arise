@@ -36,6 +36,8 @@ public:
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
+	CTexture*				m_pTextureCom2 = nullptr;
+	CTexture*				m_pTextureCom3 = nullptr;
 	_bool m_bfadein = false;
 	_bool m_bfadeout = false;
 
