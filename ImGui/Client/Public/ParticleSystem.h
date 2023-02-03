@@ -13,12 +13,17 @@ class CParticleSystem : public CEffect
 public:
 	typedef struct tagParticleDesc
 	{
-		_tchar wcPrototypeId[MAX_PATH] = TEXT("");	/* "Spark.dds > Spark" */
+		_tchar wcPrototypeId[MAX_PATH] = TEXT("");
 		_uint m_eSpawnType = 0;
 		_bool m_bBillboard = false;
+		
 		_float3 m_vColor = _float3(0.f, 0.f, 0.f);
 		_float m_fAlpha = 1.f;
 		_float m_fAlphaDiscard = 0.f;
+
+		_bool m_bGlow = false;
+		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
+
 		_int m_iMaxParticles = 1000.f;
 		_float m_fParticlesLifetime = 1.f;
 		_float m_fParticlesPerSecond = 1.f;
@@ -40,6 +45,7 @@ private:
 	{
 		_float fPositionX = 0.f, fPositionY = 0.f, fPositionZ = 0.f;
 		_float3 vDirection = _float3(0.f, 0.f, 0.f);
+		_float3 vInitialColor = _float3(0.f, 0.f, 0.f);
 		_float fRed = 0.f, fGreen = 0.f, fBlue = 0.f;
 		_float fInitialAlpha = 0.f, fAlpha = 0.f;
 		_float fInitialVelocity = 0.f, fVelocity = 0.f;
@@ -53,13 +59,16 @@ private:
 		_float3 vPosition = _float3(0.f, 0.f, 0.f);
 		_float2 vTexture = _float2(0.f, 0.f);
 		_float fAlpha = 1.f;
-		_float4 vColor = _float4(0.f, 0.f, 0.f, 1.f);
+		_float3 vColor = _float3(0.f, 0.f, 0.f);
 	};
 
 public: /* Getters & Setters */
 	virtual _tchar* Get_PrototypeId() { return m_tParticleDesc.wcPrototypeId; }
 	PARTICLEDESC Get_ParticleDesc() { return m_tParticleDesc; }
 	void Set_ParticleDesc(PARTICLEDESC tParticleDesc) { m_tParticleDesc = tParticleDesc; }
+
+public:
+	HRESULT ResetParticleSystem();
 
 public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -72,6 +81,7 @@ public:
 	virtual int Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_Glow() override;
 
 private:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
@@ -85,6 +95,7 @@ private:
 	void UpdateParticles(_float fTimeDelta);
 	void SortParticles();
 	
+	void ColorLerp(_uint iParticleIndex);
 	void VelocityLerp(_uint iParticleIndex);
 	void SizeLerp(_uint iParticleIndex);
 	void AlphaLerp(_uint iParticleIndex);

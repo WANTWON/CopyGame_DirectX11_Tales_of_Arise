@@ -295,6 +295,15 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates">
       <UniqueIdentifier>{fe5a3fd8-4c7f-45e0-8e30-af0a81ec6505}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\18.UI_Get_ITem_Msgbox">
+      <UniqueIdentifier>{138176f1-65fa-4d81-b4a9-105025442d43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\20.UI_Skillmessage">
+      <UniqueIdentifier>{63887d41-ded8-442b-977a-cd8f1bb0561b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\19.UI_DamagaeFont">
+      <UniqueIdentifier>{9da4c663-4609-401f-8ccd-30adfd580c02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -458,9 +467,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_Portraitfront_right.h">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\UI_Portraitfront.h">
-      <Filter>02.GameObjects\04.UI\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Skillbutton.h">
       <Filter>02.GameObjects\04.UI\08.UI_SKillbutton</Filter>
@@ -813,6 +819,24 @@
     <ClInclude Include="..\Public\PlayerCollectState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BerserkerBattle_TurnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Itemmsgbox.h">
+      <Filter>02.GameObjects\04.UI\18.UI_Get_ITem_Msgbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DamageFont.h">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Skillmessage.h">
+      <Filter>02.GameObjects\04.UI\20.UI_Skillmessage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellPoseState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -958,9 +982,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Portraitfront_top.cpp">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UI_Portraitfront.cpp">
-      <Filter>02.GameObjects\04.UI\Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Skillbutton.cpp">
       <Filter>02.GameObjects\04.UI\08.UI_SKillbutton</Filter>
@@ -1294,6 +1315,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerCollectState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_TurnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Itemmsgbox.cpp">
+      <Filter>02.GameObjects\04.UI\18.UI_Get_ITem_Msgbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DamageFont.cpp">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Skillmessage.cpp">
+      <Filter>02.GameObjects\04.UI\20.UI_Skillmessage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellPoseState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

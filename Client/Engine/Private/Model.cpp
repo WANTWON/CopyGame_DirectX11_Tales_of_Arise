@@ -335,9 +335,9 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
 	if (m_bInterupted)
-	{	//TODO: ����ִ԰� ���� �ִ������Ӱ��� �������� �Լ� ȣ�� �� ��.
+	{
 		m_bLinearFinished = m_Animations[m_iPreAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iCurrentAnimIndex]);
-
+	
 		if (m_bLinearFinished == true)
 		{
 			m_Animations[m_iPreAnimIndex]->Set_TimeReset();
@@ -346,15 +346,14 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 
 			m_bInterupted = false;
 		}
+
 	}
 	else
 	{
-		/* ���� m_TransformationMatrix����� �����Ѵ�. */
 		if (m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(fTimeDelta, isLoop))
 		{
 			for (auto& pBoneNode : m_Bones)
 			{
-				/* ���� m_CombinedTransformationMatrix����� �����Ѵ�. */
 				pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName, m_bInterupted);
 			}
 			return true;
@@ -363,10 +362,10 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 
 	for (auto& pBoneNode : m_Bones)
 	{
-		/* ���� m_CombinedTransformationMatrix����� �����Ѵ�. */
 		pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName, m_bInterupted);
 	}
 
+	
 	return false;
 }
 

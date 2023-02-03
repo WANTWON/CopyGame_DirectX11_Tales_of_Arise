@@ -35,7 +35,9 @@ protected:
 	void moveright() { m_fPosition.x += 12.f; }
 //
 public:
-	void UpdateShaderID() { if (!m_bSmash)m_eShaderID = UI_POTRAIT_DARK; }
+	void UpdateShaderID() { if (m_fCurrentBoost >= m_fMaxBoost) m_bSmash = true; if (!m_bSmash)m_eShaderID = UI_POTRAIT_DARK; else if (m_bSmash)m_eShaderID = 0; }
+
+	HRESULT RenderBoostGuage();
 
 protected:
 	CTexture*				m_pTextureCom1 = nullptr;
@@ -54,6 +56,9 @@ protected:
 	_bool m_bbackoff = false;
 
 	_float m_fAlpha_p = 1.f;
+
+	_float m_fMaxBoost = 100.f;
+	_float m_fCurrentBoost = 20.f;
 
 	//_bool m_bminus = 
 

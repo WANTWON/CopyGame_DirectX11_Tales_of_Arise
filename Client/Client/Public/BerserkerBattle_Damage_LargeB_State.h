@@ -9,7 +9,7 @@ class CBattle_Damage_LargeB_State : public CBerserkerState
 
 
 public:
-	CBattle_Damage_LargeB_State(class CBerserker* pBerserker, _bool bOnAngry = false);
+	CBattle_Damage_LargeB_State(class CBerserker* pBerserker, _bool bAngry, _bool bBerserkerMode, _bool bEvadeChance = false);
 
 	virtual CBerserkerState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CBerserkerState* Tick(_float fTimeDelta) override;
@@ -23,9 +23,10 @@ private:
 	_float				m_fIdleAttackTimer = 1.5f;
 	_uint				m_iRand = 0;
 	_bool				m_bAnimFinish = false;
+	_bool				m_bBerserkerMode = false;
 	_bool				m_bAngry = false;
 	EMOTION_STATE	    m_eEmotion = EMO_CALM;
-	
+	_bool				m_bEvadeChance = false;
 private:
 	_matrix m_StartMatrix;
 };

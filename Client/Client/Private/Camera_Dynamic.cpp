@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "PlayerManager.h"
+#include "BattleManager.h"
 
 CCamera_Dynamic::CCamera_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
@@ -26,7 +27,7 @@ HRESULT CCamera_Dynamic::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(&((CAMERADESC_DERIVED*)pArg)->CameraDesc)))
 		return E_FAIL;
-	
+
 	m_vDistance = ((CAMERADESC_DERIVED*)pArg)->vDistance;
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&((CAMERADESC_DERIVED*)pArg)->InitPostion));
 	m_OriginPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
@@ -53,12 +54,18 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 
 	switch (m_eCamMode)
 	{
-		case Client::CCamera_Dynamic::CAM_PLAYER:
-			Player_Camera(fTimeDelta);
-			break; 
-		case Client::CCamera_Dynamic::CAM_DEBUG:
-			Debug_Camera(fTimeDelta);
-			break;
+	case Client::CCamera_Dynamic::CAM_PLAYER:
+		Player_Camera(fTimeDelta);
+		break;
+	case Client::CCamera_Dynamic::CAM_DEBUG:
+		Debug_Camera(fTimeDelta);
+		break;
+	case Client::CCamera_Dynamic::CAM_BATTLEZONE:
+		Battle_Camera(fTimeDelta);
+		break;
+	case Client::CCamera_Dynamic::CAM_BATTLE_CLEAR:
+		BattleClear_Camera(fTimeDelta);
+		break;
 	}
 
 	if (FAILED(Bind_OnPipeLine()))
@@ -89,6 +96,8 @@ void CCamera_Dynamic::Set_CamMode(CAMERAMODE _eCamMode)
 		m_ePreCamMode = m_eCamMode;
 
 	m_eCamMode = _eCamMode;
+	m_fAngle = 0.f;
+	m_fTime = 0.f;
 }
 
 void CCamera_Dynamic::Set_Position(_vector vPosition)
@@ -124,7 +133,7 @@ void CCamera_Dynamic::Debug_Camera(_float fTimeDelta)
 		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
 			m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
 	}
-	
+
 
 	RELEASE_INSTANCE(CGameInstance);
 }
@@ -132,27 +141,27 @@ void CCamera_Dynamic::Debug_Camera(_float fTimeDelta)
 void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	
+
 	//if (m_pTarget == nullptr)
-		m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-	
+	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+
 	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vDir = (vCameraPosition - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	m_lMouseWheel = pGameInstance->Get_DIMMoveState(DIMM_WHEEL);
-	if (m_lMouseWheel< 0)
+	if (m_lMouseWheel < 0)
 	{
-	//	XMVectorSetY(vCameraPosition, XMVectorGetY(vCameraPosition) + 0.3f);
-	//	XMVectorSetZ(vCameraPosition, XMVectorGetZ(vCameraPosition) - 0.5f);
+		//	XMVectorSetY(vCameraPosition, XMVectorGetY(vCameraPosition) + 0.3f);
+		//	XMVectorSetZ(vCameraPosition, XMVectorGetZ(vCameraPosition) - 0.5f);
 
-		/*if (m_vDistance.y >= 10.f)
-			m_vDistance.y = 10.f;*/
+			/*if (m_vDistance.y >= 10.f)
+				m_vDistance.y = 10.f;*/
 
-	/*	if (m_vDistance.z <= -20.f)
-			m_vDistance.z = -20.f;*/
+				/*	if (m_vDistance.z <= -20.f)
+						m_vDistance.z = -20.f;*/
 
 	}
-	else if (m_lMouseWheel> 0)
+	else if (m_lMouseWheel > 0)
 	{
 		/*m_vDistance.y -= 0.3f;
 		m_vDistance.z += 0.5f;
@@ -166,7 +175,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	}
 
 
-	
+
 	if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
 	{
 		m_bLerp = true;
@@ -200,7 +209,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 		m_bLerp = true;
 		if (YMouseMove > 0)
 		{
-			m_fCameraY += 0.3f;	
+			m_fCameraY += 0.3f;
 			m_fOffsetPosY -= 0.1f;
 		}
 		else if (YMouseMove < 0)
@@ -232,7 +241,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	{
 		m_fTime += fTimeDelta*0.3f;
 
-	 FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
 
 		if (m_fTime >= 1.f)
 			m_bLerp = false;
@@ -245,14 +254,136 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	}
 
 
-	
+
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 	m_pTransform->LookAt(vPlayerPosition);
-	
+
 
 
 
 	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	//if (m_pTarget == nullptr)
+	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+
+	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vDir = (vCameraPosition - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_vector vCenterPos = vPlayerPosition;
+
+	// 락온 몬스터가 있으면 항상 플레이어와 락온이 화면에 들어오게 하기
+	CBaseObj* pLockOnMonster = CBattleManager::Get_Instance()->Get_LackonMonster();
+	if (pLockOnMonster != nullptr)
+	{
+		_vector vLockOnPosition = pLockOnMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_vector vRight = XMVector3Normalize(m_pTransform->Get_State(CTransform::STATE_RIGHT));
+		_vector vLook = XMVector3Normalize(m_pTransform->Get_State(CTransform::STATE_LOOK));
+		_vector vPlayerLook = m_pTarget->Get_TransformState(CTransform::STATE_LOOK);
+
+		_vector vCameraLockonDir = XMVector3Normalize(XMVectorSetY(vLockOnPosition - m_pTransform->Get_State(CTransform::STATE_TRANSLATION), 0.f));
+		_vector vPlayerLockonDir = XMVector3Normalize(vLockOnPosition - vPlayerPosition);
+
+		vLook = XMVectorSetY(vLook, 0.f);
+		vPlayerLockonDir = XMVectorSetY(vPlayerLockonDir, 0.f);
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vPlayerLockonDir, vLook));
+		_float fRightDot = XMVectorGetX(XMVector3Dot(vCameraLockonDir, vRight));
+
+		if (pLockOnMonster->Check_IsinFrustum() == false)
+			m_bTurn = true;
+
+		if(m_bTurn)
+		{
+			if (fDot < 0.8f)
+			{
+				if (fRightDot > 0.f)
+					m_fAngle -= (1 - fDot)*10.f;// 3.f;
+				else
+					m_fAngle += (1 - fDot)*10.f;// 3.f;
+			}
+			else
+				m_bTurn = false;
+		}
+		
+	}
+
+	vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_float fLength = 5.f; 
+	vCameraPosition = XMVectorSetX(vCameraPosition, (XMVectorGetX(vCenterPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
+	vCameraPosition = XMVectorSetZ(vCameraPosition, (XMVectorGetZ(vCenterPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
+	m_vNewPos = vCameraPosition;
+
+
+	vCenterPos = XMVectorSetY(vCenterPos, XMVectorGetY(vCenterPos) + m_fOffsetPosY);
+	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vCenterPos) + m_fCameraY);
+
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+		m_bLerp = false;
+
+	_vector FinalPos = { 0.f,0.f,0.f,0.f };
+	if (m_bLerp)
+	{
+		m_fTime += fTimeDelta*0.3f;
+
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
+
+		if (m_fTime >= 1.f)
+			m_bLerp = false;
+	}
+	else
+	{
+		FinalPos = m_vNewPos;
+		m_fTime = 0.f;
+	}
+
+
+	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
+	m_pTransform->LookAt(vCenterPos);
+
+
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CCamera_Dynamic::BattleClear_Camera(_float fTimeDelta)
+{
+	m_fAngle += 0.05f;
+	if (m_fAngle >= 360.f)
+		m_fAngle = 0.f;
+
+	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_float fLength = 3.f; 
+	m_vNewPos = XMVectorSetX(m_vNewPos, (XMVectorGetX(m_fTargetPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
+	m_vNewPos = XMVectorSetZ(m_vNewPos, (XMVectorGetZ(m_fTargetPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
+	m_vNewPos = XMVectorSetY(m_vNewPos,  2.f);
+
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+		m_bLerp = false;
+
+	_vector FinalPos = { 0.f,0.f,0.f,0.f };
+	if (m_bLerp)
+	{
+		m_fTime += fTimeDelta*0.3f;
+
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime);
+		if (m_fTime >= 1.f)
+			m_bLerp = false;
+	}
+	else
+	{
+		FinalPos = m_vNewPos;
+		m_fTime = 0.f;
+	}
+
+	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
+	m_pTransform->LookAt(m_fTargetPos);
+
 }
 
 CCamera_Dynamic * CCamera_Dynamic::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

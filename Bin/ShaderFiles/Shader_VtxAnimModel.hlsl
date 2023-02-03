@@ -2,26 +2,28 @@
 #include "Client_Shader_Defines.hpp"
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D g_DiffuseTexture;
-texture2D g_NormalTexture;
-
-texture2D g_DepthTexture;
-texture2D g_GlowTexture;
-bool g_bGlow = false;
-float4 g_GlowColor;
-
-texture2D g_DissolveTexture;
-float g_fDissolveAlpha;
-float g_fAlpha = 1.f;
-float g_DissolveSize = 1.5f;
-vector g_DissolveColor = vector(1.f, 0.7f, 0.f, 1);
-vector g_vColor = vector(1.f, 1.f, 1.f, 1);
 
 float g_fMinRange = 5.f;
 float g_fMaxRange = 10.f;
 float4 g_PlayerPosition;
 
 matrix g_BoneMatrices[400];
+
+vector g_vColor = vector(1.f, 1.f, 1.f, 1);
+
+texture2D g_DiffuseTexture;
+texture2D g_NormalTexture;
+
+/* Glow */
+texture2D g_GlowTexture;
+float4 g_vGlowColor;
+bool g_bGlow = false;
+
+/* Dissolve */
+texture2D g_DissolveTexture;
+float g_fDissolveAlpha;
+float g_DissolveSize = 1.5f;
+vector g_DissolveColor = vector(1.f, 0.7f, 0.f, 1);
 
 struct VS_IN
 {
@@ -162,17 +164,17 @@ PS_OUT PS_DISSOLVE(PS_IN In)
 PS_OUT_GLOW PS_GLOW(PS_IN In)
 {
 	PS_OUT_GLOW Out = (PS_OUT_GLOW)0;
-	
-	float4 vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	float4 vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV) * g_bGlow;
-	float4 vDepth = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
-	float fDepth = vDepth.y * 1000.f;
-	
-	if (In.vProjPos.w > fDepth)
-		discard;
 
-	if (Out.vGlow.r != 0 && Out.vGlow.g != 0 && Out.vGlow.b != 0)
-		Out.vGlow.rgb = float3(1.f, 1.f, 1.f) /*Out.vDiffuse.rgb * Out.vGlow.r;*/;
+	float4 vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	float4 vGlowTexture = g_GlowTexture.Sample(LinearSampler, In.vTexUV) * g_bGlow;
+
+	/* 1. Glow based on Glow Color */
+	if (vGlowTexture.r != 0 && vGlowTexture.g != 0 && vGlowTexture.b != 0 && vGlowTexture.a != 0)
+		Out.vGlow = vGlowTexture * g_vGlowColor;
+
+	/* 2. Glow based on Diffuse Color */
+	/*if (vGlow.r != 0 && vGlow.g != 0 && vGlow.b != 0 && vGlow.a != 0)
+		Out.vGlow = vGlowTexture * vDiffuse;*/
 
 	return Out;
 }

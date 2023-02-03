@@ -129,6 +129,7 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 
 	if (fLinearCurrentTime >= fLinearTotalTime)
 		return true;
+		
 
 	_float		fRatio = fLinearCurrentTime / fLinearTotalTime;
 

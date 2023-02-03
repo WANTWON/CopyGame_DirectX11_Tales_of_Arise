@@ -56,7 +56,7 @@ public:
 	void Set_EffectName(_tchar* pEffectName) { wcscpy_s(m_wcEffectName, MAX_PATH, pEffectName); }
 	void Set_AttachObject(CGameObject* pGameObject) { m_pAttachObject = pGameObject; }
 
-	static CEffect* PlayEffect(_tchar* wcEffectName);
+	static vector<class CEffect*> PlayEffectAtLocation(_tchar* wcEffectName, _vector vLocation);
 
 public:
 	CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

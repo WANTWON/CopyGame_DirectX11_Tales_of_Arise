@@ -63,7 +63,7 @@ CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	
 
 	m_pOwner->Check_Navigation();
-
+	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 	
 
 	m_fTimeDletaAcc += fTimeDelta;

@@ -193,7 +193,7 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 			}
 		}
 	}
-	
+
 	if (m_bLinearFinished)
 	{
 		m_iTickPerSecondIndex = 0;

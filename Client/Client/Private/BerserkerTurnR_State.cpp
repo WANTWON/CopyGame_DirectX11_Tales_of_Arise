@@ -49,6 +49,7 @@ CBerserkerState * CTurnR_State::Tick(_float fTimeDelta)
 CBerserkerState * CTurnR_State::LateTick(_float fTimeDelta)
 {
 
+
 	m_fTimeDletaAcc += fTimeDelta;
 
 	if (m_fTimeDletaAcc > m_fTurnR_Time)

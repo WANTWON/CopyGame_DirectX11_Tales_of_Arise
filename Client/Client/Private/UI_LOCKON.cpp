@@ -3,7 +3,8 @@
 
 #include "GameInstance.h"
 #include "Player.h"
-
+#include "BattleManager.h"
+#include "Monster.h"
 CUI_LOCKON::CUI_LOCKON(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -48,7 +49,8 @@ HRESULT CUI_LOCKON::Initialize(void * pArg)
 
 int CUI_LOCKON::Tick(_float fTimeDelta)
 {
-
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
+		return OBJ_DEAD;
 	/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
 	Compute_CamDistance(pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
@@ -103,13 +105,16 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 	{
 		m_fcurrentmp -= 0.1f;
 	}
+	//dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().x - 85.f;
+
+	m_fcurrentmp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
 
 	//m_pTransformCom->Turn({ 0.f,1.f,0.f,1.f }, 45.f);
 
+	_float2 lockonPos = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_ProjPosition();
 
-
-	m_fPosition.x = 550.f;
-	m_fPosition.y = 600.f;
+	m_fPosition.x = lockonPos.x;//550.f;
+	m_fPosition.y = lockonPos.y; //600.f;
 	m_fSize.x = 56.f;
 	m_fSize.y = 56.f;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
@@ -121,6 +126,8 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 {
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
+		return;
 
 	m_fcurrent_render_slot_mp = m_fcurrentmp - (_uint)m_fcurrentmp;
 

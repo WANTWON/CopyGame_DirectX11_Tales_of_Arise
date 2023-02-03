@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "PlayerManager.h"
 #include "UI_Get_item_Popup.h"
+
 CHP_Font::CHP_Font(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -226,9 +227,8 @@ int CHP_Font::Tick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
 		{
 			
-			CUI_Get_item_Popup::POPUPDESC testdesc;
-			ZeroMemory(&testdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
-			testdesc.iIndex = 0;
+			
+			/*testdesc.iIndex = 0;
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"),&testdesc)))
 				return E_FAIL;
 			testdesc.iIndex = 1;
@@ -239,7 +239,7 @@ int CHP_Font::Tick(_float fTimeDelta)
 				return E_FAIL;
 			testdesc.iIndex = 3;
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
-				return E_FAIL;
+				return E_FAIL;*/
 
 		}
 			
@@ -407,8 +407,8 @@ HRESULT CHP_Font::Render()
 	{
 		m_fPosition.x = 1060.f;
 		m_fPosition.y = m_fnumberY - 34.f;
-		m_fSize.x = 44.f;
-		m_fSize.y = 32.f;
+		m_fSize.x = 38.f;
+		m_fSize.y = 26.f;
 		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));

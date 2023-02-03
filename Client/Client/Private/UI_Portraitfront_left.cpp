@@ -29,9 +29,11 @@ HRESULT CUI_Portraitfront_left::Initialize(void * pArg)
 	m_fSize.x = 95.f;
 	m_fSize.y = 95.f;
 	m_fAlpha = 1;
-	m_itexnum = 4;
+	m_itexnum = 2;
 
 	//m_bfadein = true;
+	m_fCurrentBoost = 30.f;
+	m_fMaxBoost = 100.f;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -88,20 +90,20 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 		
 
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
-	{
-		//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
-		//m_bmoveleft = true;
-		//m_bfadein = true;
-		m_fAlpha -= 0.01f;
-	}
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
-	{
-		//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
-		//m_bmoveleft = true;
-		//m_bfadein = true;
-		m_fAlpha += 0.01f;
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
+	//{
+	//	//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
+	//	//m_bmoveleft = true;
+	//	//m_bfadein = true;
+	//	m_fAlpha -= 0.01f;
+	//}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
+	//{
+	//	//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
+	//	//m_bmoveleft = true;
+	//	//m_bfadein = true;
+	//	m_fAlpha += 0.01f;
+	//}
 
 
 
@@ -165,13 +167,43 @@ HRESULT CUI_Portraitfront_left::Render()
 	if (FAILED(SetUp_ShaderID()))
 		return E_FAIL;
 
-	if (FAILED(SetUp_ShaderResources()))
-		return E_FAIL;
+	if (!m_bbackoff)
+	{
+		if (FAILED(SetUp_ShaderResources()))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_POTRAIT_READY);
 
-	m_pShaderCom->Begin(m_eShaderID);
+		m_pVIBufferCom->Render();
+	}
 
-	m_pVIBufferCom->Render();
 
+
+
+
+
+	if (m_bportraiton)
+	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha_p, sizeof(_float))))
+			return E_FAIL;
+
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+
+		if (m_eShaderID != UI_POTRAIT_READY)
+			RenderBoostGuage();
+
+	}
 
 
 	return S_OK;

@@ -16,7 +16,7 @@ using namespace Hawk;
 CBattle_PeckState::CBattle_PeckState(CHawk* pHawk)
 {
 	m_pOwner = pHawk;
-	
+	m_fRandTime = ((rand() % 3000 + 1000.f) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CHawkState * CBattle_PeckState::AI_Behaviour(_float fTimeDelta)
@@ -30,10 +30,37 @@ CHawkState * CBattle_PeckState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 {
+	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
+	if (pDamageCauser == nullptr)
+	{
+		if (m_pCurTarget == nullptr)
+		{
+			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+		else if (m_pCurTarget)
+		{
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+	}
+
+
+	else if (pDamageCauser != nullptr)
+	{
+		m_pCurTarget = pDamageCauser;
+
+		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
+	}
 
 	
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.3, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -51,13 +78,15 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
 {
-	srand((_uint)time(NULL));
-	m_iRand = rand() % 1;
 
+	//if (m_bTargetSetting)
+	//{
+	//	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
+	//	m_bTargetSetting = true;
+	//}
 
 	if (m_bIsAnimationFinished)
 		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_PECK);
-
 
 
 	
@@ -72,7 +101,7 @@ void CBattle_PeckState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_PECK);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	
 }
 
 void CBattle_PeckState::Exit()

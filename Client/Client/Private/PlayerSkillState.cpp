@@ -4,6 +4,7 @@
 #include "PlayerIdleState.h"
 #include "PlayerAttackNormalState.h"
 #include "PlayerJumpState.h"
+#include "UI_Skillmessage.h"
 
 using namespace Player;
 
@@ -209,12 +210,15 @@ void CSkillState::Enter(void)
 			{
 			case Client::CPlayerState::STATE_SKILL_ATTACK1:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_RYUUSEIZIN);
+				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(0);
 				break;
 			case Client::CPlayerState::STATE_SKILL_ATTACK2:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_SENKUSYOUREPA);
+				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(1);
 				break;
 			case Client::CPlayerState::STATE_SKILL_ATTACK3:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_START);
+				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(2);
 				break;
 			}
 		}
@@ -224,12 +228,15 @@ void CSkillState::Enter(void)
 			{
 			case Client::CPlayerState::STATE_SKILL_ATTACK1:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
+				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(3);
 				break;
 			case Client::CPlayerState::STATE_SKILL_ATTACK2:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
+				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(4);
 				break;
 			case Client::CPlayerState::STATE_SKILL_ATTACK3:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
+				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(5);
 				break;
 			}
 		}

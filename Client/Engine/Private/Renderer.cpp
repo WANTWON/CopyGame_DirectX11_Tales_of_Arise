@@ -486,7 +486,6 @@ HRESULT CRenderer::Render_Glow()
 
 		return S_OK;
 	}
-	
 }
 
 HRESULT CRenderer::Render_Distortion()

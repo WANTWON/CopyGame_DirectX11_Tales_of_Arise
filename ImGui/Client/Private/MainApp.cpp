@@ -72,7 +72,7 @@ HRESULT CMainApp::Render()
 	CImgui_Manager::Get_Instance()->Render();
 
 	
-	++m_iNumRender;
+	/*++m_iNumRender;
 
 	if (m_fTimeAcc > 1.0f)
 	{
@@ -83,7 +83,7 @@ HRESULT CMainApp::Render()
 		m_iNumRender = 0;
 	}
 
-	m_pGameInstance->Render_Font(TEXT("Font_Nexon"), m_szFPS, XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.6f);
+	m_pGameInstance->Render_Font(TEXT("Font_Nexon"), m_szFPS, XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.6f);*/
 
 	m_pGameInstance->Present();
 

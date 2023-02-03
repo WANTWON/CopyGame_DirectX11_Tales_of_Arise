@@ -8,7 +8,7 @@ BEGIN(IceWolf)
 class CAttackBiteState : public CIceWolfState
 {
 public:
-	CAttackBiteState(class CIce_Wolf* pIceWolf);
+	CAttackBiteState(class CIce_Wolf* pIceWolf, CBaseObj* pCurTarget = nullptr);
 	
 	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CIceWolfState* Tick(_float fTimeDelta) override;
