@@ -190,9 +190,6 @@ HRESULT CIce_Wolf::Render_Glow()
 	_bool bUseDiffuseColor = true;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_bUseDiffuseColor", &bUseDiffuseColor, sizeof(_bool))))
 		return E_FAIL;
-	_float3 vGlowColor = _float3(1.f, 0.f, 0.f);
-	if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &vGlowColor, sizeof(_float3))))
-		return E_FAIL;
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
 	for (_uint i = 0; i < iNumMeshes; ++i)
@@ -205,7 +202,7 @@ HRESULT CIce_Wolf::Render_Glow()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, SHADER_ANIM_GLOW)))
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_bDissolve ? SHADER_ANIM_GLOW_DISSOLVE : SHADER_ANIM_GLOW)))
 			return E_FAIL;
 	}
 
