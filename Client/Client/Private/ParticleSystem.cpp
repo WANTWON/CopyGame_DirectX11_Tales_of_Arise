@@ -84,7 +84,7 @@ HRESULT CParticleSystem::Render_Glow()
 
 	__super::Render();
 
-	m_pShaderCom->Begin(SHADER_EFFECT::SHADER_GLOW);
+	m_pShaderCom->Begin(SHADER_GLOW);
 	RenderBuffers();
 
 	return S_OK;

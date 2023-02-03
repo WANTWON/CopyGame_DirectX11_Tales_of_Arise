@@ -86,10 +86,10 @@ int CItem::Tick(_float fTimeDelta)
 			case ITEMTYPE::PLANT:
 			case ITEMTYPE::MUSHROOM:
 			{
-				/*_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+				_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 				_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
-				m_pPickupFlares = CEffect::PlayEffectAtLocation(TEXT("Pickup_Flares.dat"), vLocation);*/
+				m_pPickupFlares = CEffect::PlayEffectAtLocation(TEXT("Pickup_Flares.dat"), vLocation);
 				break;
 			}
 		}
@@ -120,12 +120,11 @@ void CItem::Late_Tick(_float fTimeDelta)
 		{
 			dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();//¤·¤§
 			m_bIsGain = true;
-
 			
 			/*_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
-			m_pGetItem = CEffect::PlayEffectAtLocation(TEXT("Get_Item.dat"), vLocation);
+			m_pGetItem = CEffect::PlayEffectAtLocation(TEXT("Get_Item.dat"), vLocation);*/
 
 			if (!m_pPickupFlares.empty())
 			{
@@ -135,7 +134,7 @@ void CItem::Late_Tick(_float fTimeDelta)
 					if (pPickupFlare)
 						pParticleSystem->Set_Stop(true);
 				}
-			}*/
+			}
 
 			//ITEMINFO*  itempointer = new  ITEMINFO;
 			switch (m_ItemDesc.etype)

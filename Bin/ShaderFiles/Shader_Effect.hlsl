@@ -15,7 +15,7 @@ float g_fNoisePower;
 float g_fTimer = 0.f;
 
 /* Glow*/
-float4 g_vGlowColor;
+float3 g_vGlowColor;
 
 /* Distortion */
 texture2D g_StrengthTexture;
@@ -143,7 +143,7 @@ technique11 DefaultTechnique
 	pass Glow // 2
 	{
 		SetRasterizerState(RS_Default_NoCull);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_Default, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
