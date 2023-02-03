@@ -37,12 +37,13 @@ public:
 
 public:
 	void Read_TextFiles_for_dialogue();
+	void Read_TextFiles_for_dialogue_first_battle();
 
 	wchar_t* ConverCtoWC(char* str);
 
 	void Render_Fonts(_uint index);
 
-	void Open_Dialogue(_uint index);//, _uint index1);l
+	void Open_Dialogue(_uint index , _bool isbattle , _uint who , _uint who1);//, _uint index1);l
 
 
 private:
@@ -63,8 +64,10 @@ private:
 
 	_float m_fFontsize = 0.9f;
 	_float m_fFontOffsetY = 35.f;
-
 	
+
+	_uint m_itexnum = 0;
+	_uint m_itexnum1 = 1;
 
 	_float2					m_fFontPos = { 0.f,0.f };
 	_float2                 m_fFontPos1 = { 0.f , 0.f };
@@ -75,6 +78,7 @@ private:
 	char fuck[256];
 	vector<_tchar*> m_vDialoguepopup[2];
 	vector<_tchar*> m_vDialoguepopup1[2];
+	vector<_tchar*> m_vDialoguepopup_firstbattle[2];
 	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;
 	_uint m_iDialogueindex = 0;
 
@@ -93,6 +97,8 @@ private:
 	_uint vectorsize = 0;
 
 	_bool m_btick = false;
+
+	_bool m_bIsbattle = false;
 
 
 };

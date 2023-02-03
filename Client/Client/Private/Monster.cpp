@@ -380,7 +380,10 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		return E_FAIL;
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
 		return E_FAIL;
-	
+	m_tStats.m_fLockonSmashGuage += 0.01f;//m_stats.m_fLockonSmashGuage
+
+	if (m_tStats.m_fLockonSmashGuage >= 4.f)
+		m_tStats.m_fLockonSmashGuage = 4.f;
 
 	Make_GetAttacked_Effect(DamageCauser);
 

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\UI_Portraitfront_top.h"
 #include "GameInstance.h"
+#include "UI_Dialoguepopup.h"
 
 CUI_Portraitfront_top::CUI_Portraitfront_top(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Portraitfront(pDevice, pContext)
@@ -31,6 +32,9 @@ HRESULT CUI_Portraitfront_top::Initialize(void * pArg)
 	m_fAlpha = 1;
 	m_itexnum = 1;
 
+
+	m_fCurrentBoost = 70.f;
+	m_fMaxBoost = 100.f;
 	//m_bfadein = true;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -140,6 +144,7 @@ void CUI_Portraitfront_top::Late_Tick(_float fTimeDelta)
 	{
 		m_fAlpha = 0;
 		m_bfadein = false;
+		dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(2, true, 1, 0);
 	}
 
 	if (m_fAlpha_p <= 0)
@@ -195,11 +200,11 @@ HRESULT CUI_Portraitfront_top::Render()
 
 		m_pVIBufferCom->Render();
 
+		if (m_eShaderID != UI_POTRAIT_READY)
+			RenderBoostGuage();
+
 	}
 
-
-
-	return S_OK;
 
 	
 

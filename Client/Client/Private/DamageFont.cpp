@@ -30,7 +30,7 @@ HRESULT CDamageFont::Initialize(void * pArg)
 	//m_fTargetPos = m_damagedesc.fposition;
 	m_iCurrentDamage = m_damagedesc.iDamage;
 	
-	m_fRandomOffset = { _float(rand() % 80)  , _float(rand() % 40) };
+	m_fRandomOffset = { _float(rand() % 80)  , _float(rand() % 55) };
 
 	_uint random = rand() % 2;
 

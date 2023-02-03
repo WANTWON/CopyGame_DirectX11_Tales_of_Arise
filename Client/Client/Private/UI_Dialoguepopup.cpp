@@ -40,6 +40,7 @@ HRESULT CUI_Dialoguepopup::Initialize(void * pArg)
 
 
 	Read_TextFiles_for_dialogue();
+	Read_TextFiles_for_dialogue_first_battle();
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -83,7 +84,7 @@ int CUI_Dialoguepopup::Tick(_float fTimeDelta)
 
 		}
 
-
+		
 
 		if (m_bfadein)
 		{
@@ -111,8 +112,18 @@ int CUI_Dialoguepopup::Tick(_float fTimeDelta)
 			m_fFadeY -= 5.f;
 		}
 
-		if (m_fFadeY < -110.f)
-			m_bgoup = false;
+		if (!m_bIsbattle)
+		{
+			if (m_fFadeY < -110.f)
+				m_bgoup = false;
+		}
+		else
+		{
+			if (m_fFadeY < -350.f)
+				m_bgoup = false;
+
+		}
+		
 
 
 
@@ -164,9 +175,21 @@ void CUI_Dialoguepopup::Late_Tick(_float fTimeDelta)
 			m_fAlpha = 0.f;
 			m_bfadeout = false;
 			m_fAlpha1 = 0;
-			m_fFadeY = -20.f;
-			m_fFade1Y = -20.f;
+			timer = 0.f;
+			m_fDietimer = 0.f;
+			m_bDeadtimeron = false;
 			m_btick = false;
+			if (!m_bIsbattle)
+			{
+				m_fFadeY = -20.f;
+				m_fFade1Y = -20.f;
+			}
+			else
+			{
+				m_fFadeY = -260.f;
+				m_fFade1Y = -260.f;
+			}
+			
 		}
 
 		if (nullptr != m_pRendererCom)
@@ -239,7 +262,7 @@ HRESULT CUI_Dialoguepopup::Render()
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(1))))
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(m_itexnum))))
 		return E_FAIL;
 
 	m_pShaderCom->Begin(UI_ALPHASET);
@@ -296,7 +319,7 @@ HRESULT CUI_Dialoguepopup::Render()
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 			return E_FAIL;
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(0))))
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(m_itexnum1))))
 			return E_FAIL;
 
 		m_pShaderCom->Begin(UI_ALPHASET);
@@ -319,7 +342,7 @@ HRESULT CUI_Dialoguepopup::Render()
 //	}
 //CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vDialoguepopup[1][0], XMVectorSet(m_fFontPos1.x, m_fFontPos1.y, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha1*2.f), m_FontG*(m_fAlpha1*2.f), m_FontB*(m_fAlpha1*2.f), m_fAlpha1), m_fFontsize);
 
-
+	m_fFontsize = 0.7f;
 for (_uint i = 0; i < m_vCurrentDialogue[m_iVectorIndex][0].size(); ++i)
 {
 	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][0][i], XMVectorSet(m_fFontPos.x, m_fFontPos.y + (m_fFontOffsetY * (_float)i), 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
@@ -495,6 +518,54 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialogue()
 
 	m_vCurrentDialogue.push_back(matrix1);
 
+
+
+}
+
+void CUI_Dialoguepopup::Read_TextFiles_for_dialogue_first_battle()
+{
+
+	std::ifstream file4("../../../Bin/firstbt0.txt");
+	if (file4.is_open())
+	{
+		while (file4.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_firstbattle[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file4.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file5("../../../Bin/firstbt1.txt");
+	if (file5.is_open())
+	{
+		while (file5.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_firstbattle[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file5.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix1;
+	matrix1.push_back(m_vDialoguepopup_firstbattle[0]);
+	matrix1.push_back(m_vDialoguepopup_firstbattle[1]);
+
+	m_vCurrentDialogue.push_back(matrix1);
 }
 
 wchar_t * CUI_Dialoguepopup::ConverCtoWC(char * str)
@@ -514,13 +585,27 @@ wchar_t * CUI_Dialoguepopup::ConverCtoWC(char * str)
 
 }
 
-void CUI_Dialoguepopup::Open_Dialogue(_uint index )//, _uint index1)
+void CUI_Dialoguepopup::Open_Dialogue(_uint index , _bool tof , _uint who , _uint who1)//, _uint index1)
 {
 	m_iVectorIndex = index;
+	m_bIsbattle = tof;
 	m_btick = true;
 //	m_iVectorIndex1 = index1;
-
+	if (m_bIsbattle)
+	{
+		m_fFadeY = -260.f;
+		m_fFade1Y = -260.f;
+	}
+	else
+	{
+		m_fFadeY = -20.f;
+		m_fFade1Y = -20.f;
+	}
+	
 	m_bfadein = true;
+	m_itexnum = who;
+	m_itexnum1 = who1;
+
 	/*_uint test = 0;
 
 	for (auto vec : (m_vCurrentDialogue[index])) test++;
@@ -530,7 +615,7 @@ void CUI_Dialoguepopup::Open_Dialogue(_uint index )//, _uint index1)
 
 void CUI_Dialoguepopup::Render_Fonts(_uint index)
 {
-	m_fFontsize = 0.8f;
+	m_fFontsize = 0.6f;
 	m_fFontOffsetY = 30.f;
 	switch (m_vDialoguepopup[index].size())
 	{

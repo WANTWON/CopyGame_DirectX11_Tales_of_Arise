@@ -1113,6 +1113,22 @@ PS_OUT PS_OUTLINE2(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_BoostGuage(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+		discard;
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	//Out.vColor.a *= -g_fAlpha;
+
+
+
+	return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -1545,6 +1561,19 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_OUTLINE2();                //38
 	}
+
+	pass BoostGuage
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BoostGuage();                //39
+	}
+
+	
 }
 
 

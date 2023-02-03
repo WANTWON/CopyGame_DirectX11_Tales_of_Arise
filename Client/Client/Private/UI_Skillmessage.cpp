@@ -78,10 +78,10 @@ int CUI_Skillmessage::Tick(_float fTimeDelta)
 
 	}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
+	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
 	{
 		m_bfadeout = true;
-	}
+	}*/
 
 	if (!m_btick)
 		return OBJ_NOEVENT;
@@ -152,6 +152,7 @@ int CUI_Skillmessage::Tick(_float fTimeDelta)
 
 			return OBJ_DEAD;
 		}*/
+		return OBJ_NOEVENT;
 }
 	
 

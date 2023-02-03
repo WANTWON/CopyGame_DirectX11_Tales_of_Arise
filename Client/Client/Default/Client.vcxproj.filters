@@ -468,9 +468,6 @@
     <ClInclude Include="..\Public\UI_Portraitfront_right.h">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI_Portraitfront.h">
-      <Filter>02.GameObjects\04.UI\Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_Skillbutton.h">
       <Filter>02.GameObjects\04.UI\08.UI_SKillbutton</Filter>
     </ClInclude>
@@ -834,6 +831,9 @@
     <ClInclude Include="..\Public\RinwellPoseState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -979,9 +979,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Portraitfront_top.cpp">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UI_Portraitfront.cpp">
-      <Filter>02.GameObjects\04.UI\Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Skillbutton.cpp">
       <Filter>02.GameObjects\04.UI\08.UI_SKillbutton</Filter>
@@ -1327,6 +1324,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\RinwellPoseState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
