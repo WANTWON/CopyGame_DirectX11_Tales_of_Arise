@@ -14,7 +14,7 @@ CBattle_DeadState::CBattle_DeadState(class CIce_Wolf* pIceWolf)
 
 CIceWolfState * CBattle_DeadState::AI_Behaviour(_float fTimeDelta)
 {
-	Find_BattleTarget();
+	//Find_BattleTarget();
 	//m_pOwner->Check_Navigation();
 	return nullptr;
 }
