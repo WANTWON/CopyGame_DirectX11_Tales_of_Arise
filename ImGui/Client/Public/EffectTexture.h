@@ -11,7 +11,7 @@ BEGIN(Client)
 class CEffectTexture final : public CEffect
 {
 public:
-	typedef struct tagTextureEffectDescription
+	typedef struct tagTextureEffectDesc
 	{
 		_tchar wcPrototypeId[MAX_PATH] = TEXT("");
 
@@ -20,16 +20,12 @@ public:
 		_float fAlphaInitial = 1.f;
 		_float fAlpha = 1.f;
 		_float m_fAlphaDiscard = 0.f;
-
 		_bool m_bGlow = false;
 		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
-
 		_bool m_bDistortion = false;
-
 		_float fInitialSize = 1.f;
 		_float fSize = 1.f;
 		_float fLifetime = 0.f;
-
 		_float fNoiseSpeed = 0.f;
 		_float fNoisePowerInitial = 0.f;
 		_float fNoisePower = 10.f;
@@ -40,6 +36,8 @@ public:
 
 	TEXTUREEFFECTDESC Get_TextureEffectDesc() { return m_tTextureEffectDesc; }
 	void Set_TextureEffectDesc(TEXTUREEFFECTDESC tTextureDesc) { m_tTextureEffectDesc = tTextureDesc; }
+	TEXTUREEFFECTDESC Get_TextureEffectDescTool() { return m_tTextureEffectDescTool; }
+	void Set_TextureEffectDescTool(TEXTUREEFFECTDESC tTextureDesc) { m_tTextureEffectDescTool = tTextureDesc; }
 
 public:
 	CEffectTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -65,6 +63,7 @@ private:
 
 private:
 	TEXTUREEFFECTDESC m_tTextureEffectDesc;
+	TEXTUREEFFECTDESC m_tTextureEffectDescTool;
 
 	/* Texture Effect */
 	CVIBuffer_Rect*	m_pVIBufferCom = nullptr;

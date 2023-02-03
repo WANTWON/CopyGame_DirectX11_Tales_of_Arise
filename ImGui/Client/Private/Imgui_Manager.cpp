@@ -3416,25 +3416,47 @@ void CImgui_Manager::Set_Effect()
 
 				if (ImGui::Selectable(sEffectName.c_str(), m_sSelectedEffect == sEffectName, ImGuiSelectableFlags_AllowItemOverlap, ImVec2(0, 22)))
 				{
+					if (m_pSelectedEffect)
+					{
+						/* Backup the Effect Description in the Effect Class. */
+						switch (m_pSelectedEffect->Get_EffectType())
+						{
+							case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+							{
+								((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDescTool(m_tTextureEffectDesc);
+								break;
+							}
+							case CEffect::EFFECT_TYPE::TYPE_MESH:
+							{
+								((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDescTool(m_tMeshEffectDesc);
+								break;
+							}
+						}
+					}
+
 					m_sSelectedEffect = sEffectName;
 					m_pSelectedEffect = pEffect;
 					m_bIsPlaying = false;
 
+					/* Fetch the Backed up Effect Description. */
 					switch (m_pSelectedEffect->Get_EffectType())
 					{
 						case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
 						{
+							m_tTextureEffectDesc = ((CEffectTexture*)m_pSelectedEffect)->Get_TextureEffectDescTool();
 							wcscpy_s(m_tTextureEffectDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
 							break;
 						}	
 						case CEffect::EFFECT_TYPE::TYPE_MESH:
 						{
+							m_tMeshEffectDesc = ((CEffectMesh*)m_pSelectedEffect)->Get_MeshEffectDescTool();
 							wcscpy_s(m_tMeshEffectDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
 							break;
 						}
 						case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
 						{
-							wcscpy_s(m_tParticleDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
+							m_tParticleDesc = ((CParticleSystem*)m_pSelectedEffect)->Get_ParticleDesc();
+							m_sCurrentSpawnType = m_SpawnTypes[m_tParticleDesc.m_eSpawnType];
 							break;
 						}
 					}
@@ -3450,8 +3472,10 @@ void CImgui_Manager::Set_Effect()
 					m_pSelectedEffectTransform = pTransform;
 				}
 				ImGui::SameLine();
-				ImGui::Checkbox("##EffectSelected", &pEffect->m_bIsSelected);
-				
+				ImGui::PushID(pEffect);
+				ImGui::Checkbox("Show", &pEffect->m_bIsSelected);
+				ImGui::PopID();
+
 				if (m_sSelectedEffect == sEffectName)
 					ImGui::SetItemDefaultFocus();
 			}
