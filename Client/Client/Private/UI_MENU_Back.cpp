@@ -6230,7 +6230,8 @@ HRESULT CUI_MENU_Back::Render_Questmenu()
 		return E_FAIL;
 	if (CUI_Manager::Get_Instance()->Get_QuestIndex() >= 1)
 	{
-		
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom21->Get_SRV(0))))
+			return E_FAIL;
 	}
 	else
 	{
