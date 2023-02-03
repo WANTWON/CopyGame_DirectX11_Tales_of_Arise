@@ -3590,6 +3590,22 @@ void CImgui_Manager::Set_Effect()
 
 _bool CImgui_Manager::Save_Effect()
 {
+	/* Backup the (selected) Effect Description in the Effect Class.
+	Since the backup gets done when selecting effects, it's possible that the current one is not back upped. */
+	switch (m_pSelectedEffect->Get_EffectType())
+	{
+		case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+		{
+			((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDescTool(m_tTextureEffectDesc);
+			break;
+		}
+		case CEffect::EFFECT_TYPE::TYPE_MESH:
+		{
+			((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDescTool(m_tMeshEffectDesc);
+			break;
+		}
+	}
+
 	wstring wsCurrentEffect = wstring(m_sCurrentEffect.begin(), m_sCurrentEffect.end());
 
 	/* Create Effect Data File */
@@ -3621,58 +3637,76 @@ _bool CImgui_Manager::Save_Effect()
 		{
 			case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
 			{
-				WriteFile(hFileEffect, &m_tTextureEffectDesc, sizeof(CEffectTexture::TEXTUREEFFECTDESC), &dwByte, nullptr);
+				CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc = ((CEffectTexture*)Effects[i])->Get_TextureEffectDescTool();
+				WriteFile(hFileEffect, &tTextureEffectDesc, sizeof(CEffectTexture::TEXTUREEFFECTDESC), &dwByte, nullptr);
 				break;
 			}
 			case CEffect::EFFECT_TYPE::TYPE_MESH:
 			{
-				WriteFile(hFileEffect, &m_tMeshEffectDesc, sizeof(CEffectMesh::MESHEFFECTDESC), &dwByte, nullptr);
+				CEffectMesh::MESHEFFECTDESC tMeshEffectDesc = ((CEffectMesh*)Effects[i])->Get_MeshEffectDescTool();
+				WriteFile(hFileEffect, &tMeshEffectDesc, sizeof(CEffectMesh::MESHEFFECTDESC), &dwByte, nullptr);
 				break;
 			}
 			case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
 			{
 				CParticleSystem::PARTICLEDESC tParticleDesc = static_cast<CParticleSystem*>(Effects[i])->Get_ParticleDesc();
-				WriteFile(hFileEffect, &m_tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
+				WriteFile(hFileEffect, &tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
 				break;
 			}
 		}
 
-		/* Write how many Velocity Curves there are for this Effect (needed when Loading). */
-		_uint iVelocityCurvesCount = (_uint)(Effects[i]->Get_VelocityCurves().size());
-		WriteFile(hFileEffect, &iVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
+		/* COLOR */
+		/* Write how many Color Curves there are for this Effect (needed when Loading). */
+		_uint iColorCurvesCount = (_uint)(Effects[i]->Get_ColorCurves().size());
+		WriteFile(hFileEffect, &iColorCurvesCount, sizeof(_uint), &dwByte, nullptr);
+		/* Write Color Curves. */
+		for (_uint j = 0; j < iColorCurvesCount; j++)
+			WriteFile(hFileEffect, &Effects[i]->Get_ColorCurves()[j], sizeof(array<_float, 5>), &dwByte, nullptr);
 
-		/* Write Velocity Curves. */
-		for (_uint j = 0; j < iVelocityCurvesCount; j++)
-			WriteFile(hFileEffect, &Effects[i]->Get_VelocityCurves()[j], sizeof(_float3), &dwByte, nullptr);
-
-		/* Write how many Size Curves there are for this Effect (needed when Loading). */
-		_uint iSizeCurvesCount = (_uint)(Effects[i]->Get_SizeCurves().size());
-		WriteFile(hFileEffect, &iSizeCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
-		/* Write Size Curves. */
-		for (_uint j = 0; j < iSizeCurvesCount; j++)
-			WriteFile(hFileEffect, &Effects[i]->Get_SizeCurves()[j], sizeof(_float3), &dwByte, nullptr);
-		
+		/* ALPHA */
 		/* Write how many Alpha Curves there are for this Effect (needed when Loading). */
 		_uint iAlphaCurvesCount = (_uint)(Effects[i]->Get_AlphaCurves().size());
 		WriteFile(hFileEffect, &iAlphaCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
 		/* Write Alpha Curves. */
 		for (_uint j = 0; j < iAlphaCurvesCount; j++)
 			WriteFile(hFileEffect, &Effects[i]->Get_AlphaCurves()[j], sizeof(_float3), &dwByte, nullptr);
 
-		/* Write how many Rotation Velocity Curves there are for this Effect (needed when Loading). */
+		/* SIZE */
+		/* Write how many Size Curves there are for this Effect (needed when Loading). */
+		_uint iSizeCurvesCount = (_uint)(Effects[i]->Get_SizeCurves().size());
+		WriteFile(hFileEffect, &iSizeCurvesCount, sizeof(_uint), &dwByte, nullptr);
+		/* Write Size Curves. */
+		for (_uint j = 0; j < iSizeCurvesCount; j++)
+			WriteFile(hFileEffect, &Effects[i]->Get_SizeCurves()[j], sizeof(_float3), &dwByte, nullptr);
+
+		/* SCALE */
+		/* Write how many Scale Curves there are for this Effect (needed when Loading). */
+		_uint iScaleCurvesCount = (_uint)(Effects[i]->Get_ScaleCurves().size());
+		WriteFile(hFileEffect, &iScaleCurvesCount, sizeof(_uint), &dwByte, nullptr);
+		/* Write Scale Curves. */
+		for (_uint j = 0; j < iScaleCurvesCount; j++)
+			WriteFile(hFileEffect, &Effects[i]->Get_ScaleCurves()[j], sizeof(array<_float, 5>), &dwByte, nullptr);
+
+		/* VELOCITY */
+		/* Write how many Velocity Curves there are for this Effect (needed when Loading). */
+		_uint iVelocityCurvesCount = (_uint)(Effects[i]->Get_VelocityCurves().size());
+		WriteFile(hFileEffect, &iVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
+		/* Write Velocity Curves. */
+		for (_uint j = 0; j < iVelocityCurvesCount; j++)
+			WriteFile(hFileEffect, &Effects[i]->Get_VelocityCurves()[j], sizeof(_float3), &dwByte, nullptr);
+
+		/* TURN VELOCITY */
+		/* Write how many Turn Velocity Curves there are for this Effect (needed when Loading). */
 		_uint iTurnVelocityCurvesCount = (_uint)(Effects[i]->Get_TurnVelocityCurves().size());
 		WriteFile(hFileEffect, &iTurnVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
-		/* Write Rotation Velocity Curves. */
+		/* Write Turn Velocity Curves. */
 		for (_uint j = 0; j < iTurnVelocityCurvesCount; j++)
 			WriteFile(hFileEffect, &Effects[i]->Get_TurnVelocityCurves()[j], sizeof(_float3), &dwByte, nullptr);
 
+		/* NOISE POWER */
 		/* Write how many Noise Power Curves there are for this Effect (needed when Loading). */
 		_uint iNoisePowerCurvesCount = (_uint)(Effects[i]->Get_NoisePowerCurves().size());
 		WriteFile(hFileEffect, &iNoisePowerCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
 		/* Write Noise Power Curves. */
 		for (_uint j = 0; j < iNoisePowerCurvesCount; j++)
 			WriteFile(hFileEffect, &Effects[i]->Get_NoisePowerCurves()[j], sizeof(_float3), &dwByte, nullptr);
@@ -3736,6 +3770,7 @@ _bool CImgui_Manager::Load_Effect()
 
 					m_tTextureEffectDesc = tTextureEffectDesc;
 					m_pEffectManager->Add_Effect(pEffect);
+					((CEffectTexture*)pEffect)->Set_TextureEffectDescTool(tTextureEffectDesc);
 					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_TEXTURE);
 					break;
 				}
@@ -3750,6 +3785,7 @@ _bool CImgui_Manager::Load_Effect()
 
 					m_tMeshEffectDesc = tMeshEffectDesc;
 					m_pEffectManager->Add_Effect(pEffect);
+					((CEffectMesh*)pEffect)->Set_MeshEffectDescTool(tMeshEffectDesc);
 					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_MESH);
 
 					wstring wsMaskTexture = wstring(m_tMeshEffectDesc.wcMaskTexture);
@@ -3779,40 +3815,25 @@ _bool CImgui_Manager::Load_Effect()
 				}
 			}
 
-			/* Read how many Velocity Curves there are for this Effect. */
-			_uint iVelocityCurvesCount = 0;
-			ReadFile(hFileEffect, &iVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
-			/* Read Velocity Curves. */
-			vector<_float3> VelocityCurves;
-			_float3 VelocityCurve;
-			for (_uint j = 0; j < iVelocityCurvesCount; j++)
+			/* COLOR */
+			/* Read how many Color Curves there are for this Effect. */
+			_uint iColorCurvesCount = 0;
+			ReadFile(hFileEffect, &iColorCurvesCount, sizeof(_uint), &dwByte, nullptr);
+			/* Read Color Curves. */
+			vector<array<_float, 5>> ColorCurves;
+			array<_float, 5> ColorCurve;
+			for (_uint j = 0; j < iColorCurvesCount; j++)
 			{
-				ReadFile(hFileEffect, &VelocityCurve, sizeof(_float3), &dwByte, nullptr);
-				VelocityCurves.push_back(VelocityCurve);
+				ReadFile(hFileEffect, &ColorCurve, sizeof(array<_float, 5>), &dwByte, nullptr);
+				ColorCurves.push_back(ColorCurve);
 			}
-			if (!VelocityCurves.empty())
-				pEffect->Set_VelocityCurves(VelocityCurves);
+			if (!ColorCurves.empty())
+				pEffect->Set_ColorCurves(ColorCurves);
 
-			/* Read how many Size Curves there are for this Effect. */
-			_uint iSizeCurvesCount = 0;
-			ReadFile(hFileEffect, &iSizeCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
-			/* Read Size Curves. */
-			vector<_float3> SizeCurves;
-			_float3 SizeCurve;
-			for (_uint j = 0; j < iSizeCurvesCount; j++)
-			{
-				ReadFile(hFileEffect, &SizeCurve, sizeof(_float3), &dwByte, nullptr);
-				SizeCurves.push_back(SizeCurve);
-			}
-			if (!SizeCurves.empty())
-				pEffect->Set_SizeCurves(SizeCurves);
-
+			/* ALPHA */
 			/* Read how many Alpha Curves there are for this Effect. */
 			_uint iAlphaCurvesCount = 0;
 			ReadFile(hFileEffect, &iAlphaCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
 			/* Read Alpha Curves. */
 			vector<_float3> AlphaCurves;
 			_float3 AlphaCurve;
@@ -3824,11 +3845,56 @@ _bool CImgui_Manager::Load_Effect()
 			if (!AlphaCurves.empty())
 				pEffect->Set_AlphaCurves(AlphaCurves);
 
-			/* Read how many Rotation Velocity Curves there are for this Effect. */
+			/* SIZE */
+			/* Read how many Size Curves there are for this Effect. */
+			_uint iSizeCurvesCount = 0;
+			ReadFile(hFileEffect, &iSizeCurvesCount, sizeof(_uint), &dwByte, nullptr);
+			/* Read Size Curves. */
+			vector<_float3> SizeCurves;
+			_float3 SizeCurve;
+			for (_uint j = 0; j < iSizeCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &SizeCurve, sizeof(_float3), &dwByte, nullptr);
+				SizeCurves.push_back(SizeCurve);
+			}
+			if (!SizeCurves.empty())
+				pEffect->Set_SizeCurves(SizeCurves);
+
+			/* SCALE */
+			/* Read how many Scale Curves there are for this Effect. */
+			_uint iScaleCurvesCount = 0;
+			ReadFile(hFileEffect, &iScaleCurvesCount, sizeof(_uint), &dwByte, nullptr);
+			/* Read Scale Curves. */
+			vector<array<_float, 5>> ScaleCurves;
+			array<_float, 5> ScaleCurve;
+			for (_uint j = 0; j < iScaleCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &ScaleCurve, sizeof(array<_float, 5>), &dwByte, nullptr);
+				ScaleCurves.push_back(ScaleCurve);
+			}
+			if (!ScaleCurves.empty())
+				pEffect->Set_ScaleCurves(ScaleCurves);
+
+			/* VELOCITY */
+			/* Read how many Velocity Curves there are for this Effect. */
+			_uint iVelocityCurvesCount = 0;
+			ReadFile(hFileEffect, &iVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
+			/* Read Velocity Curves. */
+			vector<_float3> VelocityCurves;
+			_float3 VelocityCurve;
+			for (_uint j = 0; j < iVelocityCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &VelocityCurve, sizeof(_float3), &dwByte, nullptr);
+				VelocityCurves.push_back(VelocityCurve);
+			}
+			if (!VelocityCurves.empty())
+				pEffect->Set_VelocityCurves(VelocityCurves);
+
+			/* TURN VELOCITY */
+			/* Read how many Turn Velocity Curves there are for this Effect. */
 			_uint iTurnVelocityCurvesCount = 0;
 			ReadFile(hFileEffect, &iTurnVelocityCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
-			/* Read Alpha Curves. */
+			/* Read Turn Velocity Curves. */
 			vector<_float3> TurnVelocityCurves;
 			_float3 TurnVelocityCurve;
 			for (_uint j = 0; j < iTurnVelocityCurvesCount; j++)
@@ -3839,10 +3905,10 @@ _bool CImgui_Manager::Load_Effect()
 			if (!TurnVelocityCurves.empty())
 				pEffect->Set_TurnVelocityCurves(TurnVelocityCurves);
 
+			/* NOISE POWER */
 			/* Read how many Noise Power Curves there are for this Effect. */
 			_uint iNoisePowerCurvesCount = 0;
 			ReadFile(hFileEffect, &iNoisePowerCurvesCount, sizeof(_uint), &dwByte, nullptr);
-
 			/* Read Noise Power Curves. */
 			vector<_float3> NoisePowerCurves;
 			_float3 NoisePowerCurve;
