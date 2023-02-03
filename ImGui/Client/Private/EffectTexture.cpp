@@ -59,6 +59,8 @@ int CEffectTexture::Tick(_float fTimeDelta)
 			m_fTimer += fTimeDelta;
 		}
 	}
+	else
+		m_fTimer = 0.f;
 
 	return S_OK;
 }

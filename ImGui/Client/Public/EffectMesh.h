@@ -24,6 +24,9 @@ public:
 		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
 
 		_float fLifetime = 0.f;
+
+		_float3 vScaleInitial = _float3(1.f, 1.f, 1.f);
+		_float3 vScale = _float3(1.f, 1.f, 1.f);
 		_float3 vTurn = _float3(0.f, 0.f, 0.f);
 		_float fTurnVelocityInitial = 0.f;
 		_float fTurnVelocity = 0.f;
@@ -64,8 +67,8 @@ public:
 	virtual void Add_NoiseTexture() override;
 	
 	void ColorLerp();
-	void SizeLerp();
 	void AlphaLerp();
+	void ScaleLerp();
 	void TurnVelocityLerp();
 	void NoisePowerLerp();
 

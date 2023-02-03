@@ -38,7 +38,6 @@ int CEffectMesh::Tick(_float fTimeDelta)
 		{
 			m_bPlay = false;
 			m_fTimer = 0.f;
-			m_pTransformCom->Set_Rotation(_float3(0.f, 0.f, 0.f));
 			CImgui_Manager::Get_Instance()->Set_Play(false);
 		}
 		else
@@ -50,14 +49,20 @@ int CEffectMesh::Tick(_float fTimeDelta)
 				m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
 
 			ColorLerp();
-			SizeLerp();
+			ScaleLerp();
 			AlphaLerp();
 			TurnVelocityLerp();
 			NoisePowerLerp();
 
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
+
 			m_fTimer += fTimeDelta;
 		}
 	}
+	else
+		m_fTimer = 0.f;
 
 	return OBJ_NOEVENT;
 }
@@ -197,8 +202,36 @@ void CEffectMesh::ColorLerp()
 	}
 }
 
-void CEffectMesh::SizeLerp()
+void CEffectMesh::ScaleLerp()
 {
+	if (m_ScaleCurves.empty())
+		return;
+
+	/* 0 ~ 1 */
+	_float fCurrentLifeNormalized = m_fTimer / m_tMeshEffectDesc.fLifetime;
+
+	for (array<_float, 5>& fScaleCurve : m_ScaleCurves)
+	{
+		/* Break cause Curve should not start yet ('Y' is the Curve Start Time). */
+		if (fCurrentLifeNormalized < fScaleCurve[3])
+			break;
+
+		/* Skip cause Curve has already been lerped through ('Z' is the Curve End Time). */
+		if (fCurrentLifeNormalized > fScaleCurve[4])
+		{
+			m_tMeshEffectDesc.vScaleInitial = _float3(fScaleCurve[0], fScaleCurve[1], fScaleCurve[2]);
+			continue;
+		}
+
+		_float fFactorDividend = (m_fTimer - (m_tMeshEffectDesc.fLifetime * fScaleCurve[3]));
+		_float fFactorDivisor = ((m_tMeshEffectDesc.fLifetime * fScaleCurve[4]) - (m_tMeshEffectDesc.fLifetime * fScaleCurve[3]));
+
+		_float fInterpFactor = fFactorDividend / fFactorDivisor;
+		_vector fLerpScale = XMLoadFloat3(&m_tMeshEffectDesc.vScaleInitial) + fInterpFactor * (XMLoadFloat3(&_float3(fScaleCurve[0], fScaleCurve[1], fScaleCurve[2])) - XMLoadFloat3(&m_tMeshEffectDesc.vScaleInitial));
+		XMStoreFloat3(&m_tMeshEffectDesc.vScale, fLerpScale);
+
+		break;
+	}
 }
 
 void CEffectMesh::AlphaLerp()
