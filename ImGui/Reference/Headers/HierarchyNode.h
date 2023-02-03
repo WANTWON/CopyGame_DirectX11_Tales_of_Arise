@@ -47,6 +47,7 @@ public:
 	// 루트노드 위한 함수들 - 이동 행렬, 회전 행렬 반환
 	_vector Get_Translation(void) { return m_vecTranslation; }
 	_float Get_RotationRadian(void) { return m_fRotationRadian; }
+	void Set_Translation(_vector vTranslation) { m_vecTranslation = vTranslation; }
 
 public:
 	HRESULT Initialize(BINBONE tBone, CHierarchyNode* pParent);

@@ -96,15 +96,6 @@ void CHierarchyNode::Set_RootMotionMatrix(const char* pBoneName, _bool isInterpo
 	{
 		_matrix AfterTransformMatrix = XMLoadFloat4x4(&m_TransformationMatrix);
 
-		if (!isInterpolation)
-		{
-			// 이전 Transformation에서 이후 Transformation까지 이동 변화 벡터
-			m_vecTranslation = AfterTransformMatrix.r[3] - m_PreTransforamtionMatrix.r[3];
-		}
-		else
-			m_vecTranslation = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-		
-
 		_vector vPreQuat, vAfterQuat;
 		vPreQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(m_PreTransforamtionMatrix));
 		vAfterQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(AfterTransformMatrix));
