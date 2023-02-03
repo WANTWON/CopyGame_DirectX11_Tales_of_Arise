@@ -48,6 +48,7 @@ public:
 	HRESULT Render_CP();
 	HRESULT Render_Mainbottombutton();
 	HRESULT Render_bottmline();
+	
 	HRESULT Render_Itembottombutton_useable();
 	HRESULT Render_Itembottombutton_default();
 	HRESULT Render_Inven_main();
@@ -73,6 +74,13 @@ public:
 	void RecoverPlayerHP(_uint index ){ m_fRecover_Power = m_PlayersMaxHP[index] - m_PlayersCurrentHP[index];}
 	void Fill_HP(_uint playerindex);
 	void check_HPrecover_item();
+
+	void Enter_Main_to_Another_Menu();
+
+	HRESULT Render_Questmenu();
+	HRESULT Render_bottmline_Quest();
+
+	void Return_to_MainMenu();
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
@@ -101,6 +109,12 @@ private:
 
 	CTexture*               m_pTextureCom19 = nullptr; //itemuseportrait
 	CTexture*               m_pTextureCom20 = nullptr; //lighteffect;
+	CTexture*               m_pTextureCom21 = nullptr; //lighteffect;
+	CTexture*               m_pTextureCom22 = nullptr; //lighteffect;
+	CTexture*               m_pTextureCom23 = nullptr; //lighteffect;
+	CTexture*               m_pTextureCom24 = nullptr; //lighteffect;
+	CTexture*               m_pTextureCom25 = nullptr; //lighteffect;
+	
 	
 	
 	_bool m_bfadein = false;
@@ -116,9 +130,11 @@ private:
 	_uint m_iCursor_inventory1 = 0;
 	_uint m_iCursor_itemuse = 0;
 
+	_uint m_iCursor_Quest = 0;
+
 	_bool m_bInventory1 = false;
 
-	enum Renderpase {MENU_MAIN , MENU_INVENTORY1 , MENU_END};
+	enum Renderpase {MENU_MAIN , MENU_INVENTORY1 , MENU_QUEST, MENU_END};
 	enum Inventorytype {INVEN_MAIN , INVEN_USABLE, INVEN_MATERIAL , INVEN_WEAPON , INVEN_ARMOR , INVEN_ELSE , INVEN_END};
 	_uint m_eInventory_type = INVEN_MAIN;
 	Renderpase m_etype = MENU_MAIN;
@@ -169,6 +185,7 @@ private:
 	_bool m_biconlastmove = false;
 	_float m_ficonposition1 = 600.f;
 	_float m_ficonposition2 = 600.f;
+	_float m_ficonposition3 = 600.f;
 
 	_uint m_igaldnum = 0;
 	_uint m_ihpnum = 0;
@@ -227,6 +244,11 @@ private:
 	_float m_fRecoverItempower = 0.f;
 
 	_float m_fRecoverFinish_HpbarEffectX = 0.f;
+
+	_bool m_bQuestInformation = false;
+	_bool m_bfadeout_quest = false;
+	_float m_fQuestAlpha = 0.f;
+	_bool m_bfadein_Quest = false;
 //	_uint m_iRecoveringPlayer = 0;
 };
 

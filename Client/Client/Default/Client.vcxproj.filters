@@ -837,6 +837,7 @@
     <ClInclude Include="..\Public\UI_Portraitfront.h">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_MENU_Quest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1334,6 +1335,7 @@
     <ClCompile Include="..\Private\UI_Portraitfront.cpp">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UI_MENU_Quest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
