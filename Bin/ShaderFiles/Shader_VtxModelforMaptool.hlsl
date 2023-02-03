@@ -268,7 +268,7 @@ technique11 DefaultTechnique
 
 	pass Effect // 4
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_Default_NoCull);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_Default, 0);
 
