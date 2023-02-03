@@ -57,6 +57,8 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
+						//EventInput();
+						
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
@@ -206,6 +208,11 @@ CPlayerState * CAttackNormalState::LateTick(_float fTimeDelta)
 			return new CIdleState(m_pOwner);
 	}
 
+	return nullptr;
+}
+
+CPlayerState * CAttackNormalState::EventInput(void)
+{
 	return nullptr;
 }
 
