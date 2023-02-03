@@ -164,8 +164,9 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 {
 	if (m_bDead)
 		return OBJ_DEAD;
+		
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick() /*|| !Check_IsinFrustum(2.f)*/)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
@@ -188,7 +189,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick()/* || !Check_IsinFrustum(2.f)*/)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return;
 
 	__super::Late_Tick(fTimeDelta);
@@ -314,12 +315,8 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	if (iHp <= 0)
 	{
-		if (CBattleManager::Get_Instance()->Get_LackonMonster() == this)
-			CBattleManager::Get_Instance()->Set_LackonMonster(nullptr);
-		Check_AmILastMoster();
-
 		m_pModelCom->Set_TimeReset();
-		CIceWolfState* pState = new CBattle_DeadState(this/*DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION)*/);
+		CIceWolfState* pState = new CBattle_DeadState(this);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 		
 		return 0;
@@ -336,14 +333,14 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 			{
 			case 0:
 			{
-				m_pModelCom->Set_TimeReset();
+				//m_pModelCom->Set_TimeReset();
 				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
 				m_pState = m_pState->ChangeState(m_pState, pState);
 				break;
 			}
 			case 1:
 			{
-				m_pModelCom->Set_TimeReset();
+				//m_pModelCom->Set_TimeReset();
 				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
 				m_pState = m_pState->ChangeState(m_pState, pState);
 				break;
@@ -351,7 +348,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 			case 2:
 			{
-				m_pModelCom->Set_TimeReset();
+				//m_pModelCom->Set_TimeReset();
 				CIceWolfState* pState = new CAttackBiteState(this);
 				m_pState = m_pState->ChangeState(m_pState, pState);
 				break;
@@ -367,7 +364,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 		if(m_iBeDamaged_Cnt >= 3)
 		{
-			m_pModelCom->Set_TimeReset();
+			//m_pModelCom->Set_TimeReset();
 			CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, true);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 			m_iBeDamaged_Cnt = 0;

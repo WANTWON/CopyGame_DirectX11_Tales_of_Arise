@@ -110,8 +110,6 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 			return;
 		}
 			
-
-
 		for (auto& iter : *pMonsterList)
 		{
 			_float fDistance = XMVectorGetX(XMVector3Length(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) - dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));

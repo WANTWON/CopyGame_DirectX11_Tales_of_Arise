@@ -49,6 +49,7 @@ public:
 	virtual void Make_GetAttacked_Effect(CBaseObj* DamageCauser = nullptr);
 	virtual void Make_DeadEffect(CBaseObj* Target = nullptr);
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser);
+	void	Collision_Object(_float fTimeDelta);
 
 protected:
 	virtual HRESULT SetUp_ShaderResources();
@@ -63,7 +64,6 @@ protected:
 	virtual _bool Is_AnimationLoop(_uint eAnimId)			PURE;
 	virtual void Check_Navigation()							PURE;
 	void	Check_NearTrigger();
-	
 	
 public: // Get & Set
 	MONSTER_ID	Get_MonsterID(void) { return m_eMonsterID; }
@@ -83,6 +83,7 @@ protected:
 	DMG_DIR Calculate_DmgDirection();
 	_vector	Calculate_DirectionByPos();
 	_bool	Check_AmILastMoster();
+
 	
 protected:
 	STATS					m_tStats;

@@ -30,7 +30,8 @@ public: /* Getter */
 public: /* For Lock On */
 	void Set_LackonMonster(CBaseObj* pMonster) { m_pLockon = pMonster; }
 	CBaseObj* Get_LackonMonster() { return m_pLockon; }
-	
+	void Update_LockOn();
+
 private:
 	_bool	   m_isBattleMode = false;
 	MONSTER_ID m_eMonsterType = MONSTER_END;

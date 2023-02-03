@@ -48,6 +48,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_eLevel = LEVEL_END;
 
+	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
+
 	return S_OK;
 }
 
@@ -327,6 +329,9 @@ HRESULT CPlayer::SetUp_Controller()
 void CPlayer::Free()
 {
 	__super::Free();
+
+	CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
+
 
 	for (auto& pGameObject : m_Parts)
 		Safe_Release(pGameObject);

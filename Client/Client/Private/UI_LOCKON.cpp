@@ -49,7 +49,8 @@ HRESULT CUI_LOCKON::Initialize(void * pArg)
 
 int CUI_LOCKON::Tick(_float fTimeDelta)
 {
-
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
+		return OBJ_DEAD;
 	/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
 	Compute_CamDistance(pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
@@ -125,6 +126,8 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 {
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
+		return;
 
 	m_fcurrent_render_slot_mp = m_fcurrentmp - (_uint)m_fcurrentmp;
 
