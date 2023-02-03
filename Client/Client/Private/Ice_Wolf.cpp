@@ -9,6 +9,9 @@
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
 #include "IceWolfAttackBiteState.h"
+#include "IceWolfBattle_HowLingState.h"
+#include "IceWolfBattle_RunState.h"
+
 
 using namespace IceWolf;
 
@@ -52,7 +55,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 	m_eMonsterID = ICE_WOLF;
 
 
-	m_tStats.m_fMaxHp = 100.f;
+	m_tStats.m_fMaxHp = 200.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -162,7 +165,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 {
 
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick() /*|| !Check_IsinFrustum(2.f)*/)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return OBJ_NOEVENT;
 
 	if (m_bDead)
@@ -176,19 +179,67 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
-
+	m_fTimeDletaAcc += fTimeDelta;
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	//m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	if (m_fTimeDletaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
+
+
+
+
+	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
+	{
+		CIceWolfState* pState = new CAttack_Elemental_Charge(this, CIceWolfState::STATE_ID::STATE_END);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
+	{
+		CIceWolfState* pState = new CAttackBiteState(this);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_H))
+	{
+		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, false);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	{
+		CIceWolfState* pState = new CAttackNormalState(this);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	{
+		CIceWolfState* pState = new CBattle_SomerSaultState(this);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	{
+		CIceWolfState* pState = new CBattle_SomerSaultState(this);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_N))
+	{
+		CIceWolfState* pState = new CBattle_RunState(this, CIceWolfState::STATE_ID::STATE_END);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}*/
+
+
+
 	return OBJ_NOEVENT;
 }
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick()/* || !Check_IsinFrustum(2.f)*/)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || !Check_IsinFrustum(2.f))
 		return;
 
 	__super::Late_Tick(fTimeDelta);
@@ -331,50 +382,30 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 		m_iBeDamaged_Cnt++;
 
-		if (m_bSomeSauling == false)
+		if (m_bOnGoing_Bite == false)
 		{
-			switch (rand() % 3)
-			{
-			case 0:
+			if (m_bSomeSauling == false)
 			{
 				m_pModelCom->Set_TimeReset();
 				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
 				m_pState = m_pState->ChangeState(m_pState, pState);
-				break;
+
+
 			}
-			case 1:
+
+			if (m_iBeDamaged_Cnt >= 3)
 			{
 				m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, true);
 				m_pState = m_pState->ChangeState(m_pState, pState);
-				break;
-			}
-
-			case 2:
-			{
-				m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CAttackBiteState(this);
-				m_pState = m_pState->ChangeState(m_pState, pState);
-				break;
-			}
-
-			default:
-				break;
+				m_iBeDamaged_Cnt = 0;
+				m_bSomeSauling = true;
 
 			}
-
-			m_bDone_HitAnimState = true;
 		}
 
-		if(m_iBeDamaged_Cnt >= 3)
-		{
-			m_pModelCom->Set_TimeReset();
-			CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, true);
-			m_pState = m_pState->ChangeState(m_pState, pState);
-			m_iBeDamaged_Cnt = 0;
-			m_bSomeSauling = true;
-
-		}
+		else
+			return iHp;
 	}
 
 	return iHp;

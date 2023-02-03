@@ -27,9 +27,9 @@ CIceWolfState * CAttackBiteState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 {
-	m_fDegreeToTarget = RadianToTarget();
+	//m_fDegreeToTarget = RadianToTarget();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -38,7 +38,7 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.04f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
 	}
@@ -49,9 +49,13 @@ CIceWolfState * CAttackBiteState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
 	{
-		m_pOwner->Set_Done_HitAnimState();
+		//m_pOwner->Set_Done_HitAnimState();
+		m_pOwner->Set_FinishBite();
 		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_BITE);
 	}
+
+	else 
+		m_pOwner->Set_OnGoingBite();
 	return nullptr;
 }
 

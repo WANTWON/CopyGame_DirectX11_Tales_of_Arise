@@ -267,6 +267,7 @@ CBaseObj* CMonster::Find_MinDistance_Target()
 		}
 	}
 	
+	m_fMinLengh = MAXDISTANCE;
 	return m_pTarget;
 }
 

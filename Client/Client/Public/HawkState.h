@@ -136,7 +136,7 @@ protected:
 		return vPlayerPosition;
 	}
 
-
+	
 
 
 
@@ -150,6 +150,7 @@ protected:
 	_bool m_bBitePossible = false;
 	_float	m_fTimeDletaAcc = 0.f;
 	_float	m_fRandTime;
+	_float m_fTarget_Distance = 0.f;
 	CHawk* m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
 	CBaseObj*	m_pCurTarget = nullptr;

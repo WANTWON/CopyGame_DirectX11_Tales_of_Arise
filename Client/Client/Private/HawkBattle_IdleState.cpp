@@ -33,7 +33,7 @@ CHawkState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
-	Find_BattleTarget();
+	//Find_BattleTarget();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
@@ -54,7 +54,9 @@ CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 		}
+
 	}
+
 
 	else if (pDamageCauser != nullptr)
 	{
@@ -89,11 +91,6 @@ CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 		case CHawkState::STATE_ID::START_BATTLEMODE:
 			return new CBattle_DashState(m_pOwner);
 			
-
-		case CHawkState::STATE_ID::STATE_PECK:
-			return new CBattle_Flying_BackState(m_pOwner);
-		
-
 		default:
 			break;
 		}

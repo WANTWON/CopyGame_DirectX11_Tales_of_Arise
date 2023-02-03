@@ -167,7 +167,8 @@ public:
 	void Set_FinishAnim() { m_bOnGoingAnim = false; }
 	void Set_OnGoingHowling() { m_bOnGoingHowLing = true; }
 	void Set_FinishHowling() { m_bOnGoingHowLing = false; }
-	void Set_OnAngry() { m_bOnAngry = true; }
+	void Set_OnBerserkerMode() { m_bBerserkerMode = true; }
+	
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
@@ -199,8 +200,9 @@ private:
 private:
 	_bool m_bOnGoingAnim = false;
 	_bool m_bOnGoingHowLing = false;
-	_bool m_bOnAngry = false;
+	_bool m_bBerserkerMode = false;
 	_bool m_bDoneChangeState = false;
+	_int  m_iBeDamaged_Cnt = 0;
 public:
 	static CBerserker* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

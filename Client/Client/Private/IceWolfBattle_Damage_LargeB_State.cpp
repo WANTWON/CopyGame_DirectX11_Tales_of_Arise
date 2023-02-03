@@ -7,6 +7,7 @@
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfAttackBiteState.h"
 #include "IceWolfBattle_RunState.h"
+#include "IceWolfAttackBiteState.h"
 
 using namespace IceWolf;
 
@@ -29,7 +30,7 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 {
 	AI_Behaviour(fTimeDelta);
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 	m_pOwner->Check_Navigation();
 	return nullptr;
@@ -51,7 +52,25 @@ CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 			return new CBattle_SomerSaultState(m_pOwner);
 
 		else
-			return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BE_DAMAGED);
+		{
+			switch (m_iRand)
+			{
+			case 0:
+				return new CBattle_RunState(m_pOwner, STATE_ID::STATE_END);
+				break;
+			case 1:
+				return new CBattle_RunState(m_pOwner, STATE_ID::STATE_END);
+				break;
+			case 2:
+				return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BE_DAMAGED);
+				break;
+
+			default:
+				break;
+			}
+			
+		}
+			
 	}
 	//switch (m_eDamageAnim)
 	//{

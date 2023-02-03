@@ -25,11 +25,11 @@ CBerserkerState * CBattle_Multiple_FireState::AI_Behaviour(_float fTimeDelta)
 
 CBerserkerState * CBattle_Multiple_FireState::Tick(_float fTimeDelta)
 {
-	m_fTarget_Distance = Find_BattleTarget();
+	/*m_fTarget_Distance = Find_BattleTarget();
 
 
 	
-	if (!m_bIsAnimationFinished)
+	if (!m_bIsAnimationFinished)*/
 		m_pOwner->Check_Navigation();
 	
 
@@ -39,26 +39,28 @@ CBerserkerState * CBattle_Multiple_FireState::Tick(_float fTimeDelta)
 
 CBerserkerState * CBattle_Multiple_FireState::LateTick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())/*, "ABone"*/);
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())/*, "ABone"*/);
 
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	if (false == m_bTargetSetting)
-	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		//m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
-		m_bTargetSetting = true;
-	}
+	//if (false == m_bTargetSetting)
+	//{
+	//	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+	//	//m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
+	//	m_bTargetSetting = true;
+	//}
 
 	if (m_bIsAnimationFinished)
 	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+
+		return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BATTLE);
+	/*	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 
 		if (m_fTarget_Distance > 7)
-			return new CBattle_RunState(m_pOwner, STATE_ID::STATE_QUADRUPLE);
+			return new CBattle_RunState(m_pOwner, STATE_ID::STATE_FIREBALL);
 
 		else
-			return new CBattle_Shock_WaveState(m_pOwner);
+			return new CBattle_Shock_WaveState(m_pOwner);*/
 
 	}
 
