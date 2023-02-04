@@ -43,7 +43,7 @@ HRESULT CEffect::Render()
 	return S_OK;
 }
 
-vector<CEffect*> CEffect::PlayEffectAtLocation(_tchar * wcEffectName, _vector vLocation)
+vector<CEffect*> CEffect::PlayEffectAtLocation(_tchar * wcEffectName, _matrix mWorldMatrix)
 {
 	vector<CEffect*> m_pEffects;
 	CEffect* pEffect = nullptr;
@@ -230,7 +230,7 @@ vector<CEffect*> CEffect::PlayEffectAtLocation(_tchar * wcEffectName, _vector vL
 
 			if (pEffect)
 			{
-				pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+				pEffect->Set_WorldPosition(mWorldMatrix);
 				m_pEffects.push_back(pEffect);
 			}
 		}

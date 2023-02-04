@@ -11,19 +11,20 @@
 #include "NonAnim.h"
 #include "Trigger.h"
 
-//Effect
+//Effect & Bullet
 #include "EffectTexture.h"
 #include "EffectMesh.h"
 #include "ParticleSystem.h"
 #include "Particle_Rect.h"
 #include "Particle_Point.h"
-
+#include "RinwellSkills.h"
 
 //Actor
 #include "Alphen.h"
 #include "Sion.h"
 #include "FemaleYoung.h"
 #include "AiRinwell.h"
+#include "Rinwell.h"
 
 
 //UI
@@ -157,11 +158,21 @@ HRESULT CLoader::Loading_ForPrototype()
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
 		return E_FAIL;
-	/*For.Prototype_Trigger */
+
+	/*For.Prototype_RinwellSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Rinwell"),
+		CRinwell::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_RinwellSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_RinwellSkills"),
+		CRinwellSkills::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_AiRinwell */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AiRinwell"),
 		CAiRinwell::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
 
 	/*For.Prototype_Trigger */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NpcFemale"),
@@ -566,6 +577,9 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Flash_01"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Flash_01.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Line"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line.png"), 1))))
 		return E_FAIL;
 	
 	/*For.Prototype_Component_Texture_Dissolve*/
@@ -1485,7 +1499,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_QUESTMENU"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/quest/questmenu%d.dds"), 3))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/quest/questmenu%d.dds"), 5))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_QUESTTODO"),

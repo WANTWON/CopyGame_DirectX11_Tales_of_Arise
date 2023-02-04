@@ -40,45 +40,65 @@ int CEffectMesh::Tick(_float fTimeDelta)
 
 	if (m_bPlay)
 	{
-		if (m_fTimer >= m_tMeshEffectDesc.fLifetime)
+		if (!m_bCanStart)
 		{
-			m_bPlay = false;
-			m_fTimer = 0.f;
-			CImgui_Manager::Get_Instance()->Set_Play(false);
+			if (m_tMeshEffectDesc.fStartAfter == 0)
+				m_bCanStart = true;
+			else
+			{
+				if (m_fTimer < m_tMeshEffectDesc.fStartAfter)
+					m_fTimer += fTimeDelta;
+				else
+				{
+					m_bCanStart = true;
+					m_fTimer = 0.f;
+				}
+			}
 		}
-		else
+
+		if (m_bCanStart)
 		{
-			m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);
+			if (m_fTimer >= m_tMeshEffectDesc.fLifetime)
+			{
+				m_bPlay = false;
+				m_bCanStart = false;
+				m_fTimer = 0.f;
+				CImgui_Manager::Get_Instance()->Set_Play(false);
+				Reset_Initial();
+			}
+			else
+			{
+				m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);
 
-			_vector vTurnAxis = XMVectorSet(m_tMeshEffectDesc.vTurn.x, m_tMeshEffectDesc.vTurn.y, m_tMeshEffectDesc.vTurn.z, 0.f);
-			if (!XMVector3Equal(vTurnAxis, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
-				m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
+				_vector vTurnAxis = XMVectorSet(m_tMeshEffectDesc.vTurn.x, m_tMeshEffectDesc.vTurn.y, m_tMeshEffectDesc.vTurn.z, 0.f);
+				if (!XMVector3Equal(vTurnAxis, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+					m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
 
-			ColorLerp();
-			ScaleLerp();
-			AlphaLerp();
-			TurnVelocityLerp();
-			NoisePowerLerp();
+				ColorLerp();
+				ScaleLerp();
+				AlphaLerp();
+				TurnVelocityLerp();
+				NoisePowerLerp();
 
-			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
-			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
-			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
+				m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+				m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
+				m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
 
-			m_fTimer += fTimeDelta;
+				m_fTimer += fTimeDelta;
+			}
 		}
 	}
 	else
-	{
 		m_fTimer = 0.f;
-
-		Reset_Initial();
-	}
 
 	return OBJ_NOEVENT;
 }
 
 void CEffectMesh::Late_Tick(_float fTimeDelta)
 {
+	if (!m_bPlay || !m_bCanStart)
+		return;
+
 	if (m_pRendererCom)
 	{
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
@@ -92,7 +112,7 @@ void CEffectMesh::Late_Tick(_float fTimeDelta)
 
 HRESULT CEffectMesh::Render()
 {
-	if (!m_bPlay)
+	if (!m_bPlay || !m_bCanStart)
 		return S_OK;
 
 	if (!m_pShaderCom || !m_pModelCom)
@@ -126,7 +146,7 @@ HRESULT CEffectMesh::Render()
 
 HRESULT CEffectMesh::Render_Glow()
 {
-	if (!m_bPlay)
+	if (!m_bPlay || !m_bCanStart)
 		return S_OK;
 
 	if (!m_pShaderCom || !m_pModelCom)
@@ -184,11 +204,7 @@ void CEffectMesh::Add_NoiseTexture()
 
 void CEffectMesh::Reset_Initial()
 {
-	m_tMeshEffectDesc.vColorInitial = _float3(1.f, 1.f, 1.f);
-	m_tMeshEffectDesc.fAlphaInitial = 1.f;
-	m_tMeshEffectDesc.vScaleInitial = _float3(1.f, 1.f, 1.f);
-	m_tMeshEffectDesc.fTurnVelocityInitial = 0.f;
-	m_tMeshEffectDesc.fNoisePowerInitial = 0.f;
+	m_tMeshEffectDesc = m_tMeshEffectDescTool;
 }
 
 void CEffectMesh::ColorLerp()

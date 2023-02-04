@@ -3409,12 +3409,22 @@ void CImgui_Manager::Set_Effect()
 		if (ImGui::BeginListBox("##Instanced Effect List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
 		{
 			vector<CEffect*> Effects = CEffect_Manager::Get_Instance()->Get_InstancedEffects();
-			for (CEffect* pEffect : Effects)
+			for (_uint i = 0; i < Effects.size(); i++)
 			{
-				wstring wsEffectName = wstring(pEffect->Get_PrototypeId());
+				_tchar wcEffectName[MAX_PATH];
+				wcscpy_s(wcEffectName, MAX_PATH, Effects[i]->Get_PrototypeId()); /* Copy the Effect PrototypeId to a local _tchar variable. */
+
+				_tchar wcCounter[MAX_PATH] = TEXT("_");
+				wsprintf(wcCounter, TEXT("_%d"), i); /* Cast the Counter to _tchar. */
+
+				wcscat_s(wcEffectName, MAX_PATH, wcCounter); /* Concatenate Effect Name and Counter. */
+
+				wstring wsEffectName = wstring(wcEffectName);
 				string sEffectName = string(wsEffectName.begin(), wsEffectName.end());
 
-				if (ImGui::Selectable(sEffectName.c_str(), m_sSelectedEffect == sEffectName, ImGuiSelectableFlags_AllowItemOverlap, ImVec2(0, 22)))
+				Effects[i]->Set_EffectName(wcEffectName); /* Set the Effect Name with the _*, so that the delete function can address it properly. */
+
+				if (ImGui::Selectable(sEffectName.c_str(), Effects[i] == m_pSelectedEffect, ImGuiSelectableFlags_AllowItemOverlap, ImVec2(0, 22)))
 				{
 					if (m_pSelectedEffect)
 					{
@@ -3435,7 +3445,7 @@ void CImgui_Manager::Set_Effect()
 					}
 
 					m_sSelectedEffect = sEffectName;
-					m_pSelectedEffect = pEffect;
+					m_pSelectedEffect = Effects[i];
 					m_bIsPlaying = false;
 
 					/* Fetch the Backed up Effect Description. */
@@ -3462,7 +3472,7 @@ void CImgui_Manager::Set_Effect()
 					}
 
 					// Set Transform of the Selected Effect
-					CComponent* pComponent = pEffect->Find_Component(TEXT("Com_Transform"));
+					CComponent* pComponent = Effects[i]->Find_Component(TEXT("Com_Transform"));
 					if (!pComponent)
 						return;
 					CTransform* pTransform = dynamic_cast<CTransform*>(pComponent);
@@ -3472,8 +3482,8 @@ void CImgui_Manager::Set_Effect()
 					m_pSelectedEffectTransform = pTransform;
 				}
 				ImGui::SameLine();
-				ImGui::PushID(pEffect);
-				ImGui::Checkbox("Show", &pEffect->m_bIsSelected);
+				ImGui::PushID(Effects[i]);
+				ImGui::Checkbox("Show", &Effects[i]->m_bIsSelected);
 				ImGui::PopID();
 
 				if (m_sSelectedEffect == sEffectName)
@@ -3488,6 +3498,7 @@ void CImgui_Manager::Set_Effect()
 			{
 				m_pEffectManager->Remove_Effect(m_pSelectedEffect);
 				m_pSelectedEffect = nullptr;
+				m_sSelectedEffect = "";
 			}
 		}
 
@@ -4063,6 +4074,13 @@ void CImgui_Manager::Show_TextureCustomization()
 			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
 	}
 	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##TextureStartAfter", &m_tTextureEffectDesc.fStartAfter, 0.05f, 0, 0, "Start After: %.02f"))
+	{
+		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
+		if (pEffectTexture)
+			pEffectTexture->Set_TextureEffectDesc(m_tTextureEffectDesc);
+	}
+	ImGui::SetNextItemWidth(100.f);
 	if (ImGui::DragFloat("##TextureSize", &m_tTextureEffectDesc.fSize, 0.05f, .1f, 100.f, "Size: %.02f"))
 	{
 		CEffectTexture* pEffectTexture = dynamic_cast<CEffectTexture*>(m_pSelectedEffect);
@@ -4434,6 +4452,13 @@ void CImgui_Manager::Show_MeshCustomization()
 		if (pEffectMesh)
 			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 	}
+	ImGui::SetNextItemWidth(100.f);
+	if (ImGui::DragFloat("##MeshStartAfter", &m_tMeshEffectDesc.fStartAfter, 0.05f, 0, 0, "Start After: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
 	ImGui::NewLine();
 
 	/* Pseudo Diffuse Map. */
@@ -4706,6 +4731,12 @@ void CImgui_Manager::Show_ParticleCustomization()
 	if (m_sCurrentSpawnType == "BURST")
 		ImGui::EndDisabled();
 	if (ImGui::DragFloat("##ParticlesLifetime", &m_tParticleDesc.m_fParticlesLifetime, 0.05f, 0, 0, "Particles Lifetime: %.02f"))
+	{
+		CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
+		if (pParticleSystem)
+			pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
+	}
+	if (ImGui::DragFloat("##ParticlesStartAfter", &m_tParticleDesc.m_fParticleStartAfter, 0.05f, 0, 0, "Particles Start After: %.02f"))
 	{
 		CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(m_pSelectedEffect);
 		if (pParticleSystem)

@@ -8,6 +8,7 @@
 #include "AIState.h"
 #include "AIIdleState.h"
 #include "PlayerCollectState.h"
+#include "AICheckState.h"
 
 using namespace Player;
 using namespace AIPlayer;
@@ -37,7 +38,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CAIState* pAIState = new AIPlayer::CIdleState(this);
+	CAIState* pAIState = new AIPlayer::CAICheckState(this , CAIState::STATE_IDLE);
 	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
 	/* Set State */
@@ -96,15 +97,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		LateTick_State(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-	{
 		LateTick_AIState(fTimeDelta);
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_ePlayerID == SION)
-			m_pPlayerManager->Set_ActivePlayer(this);
-	}
 		break;
 	case Client::UNVISIBLE:
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_ePlayerID == SION)
-			m_pPlayerManager->Set_ActivePlayer(this);
 		return;
 	}
 
@@ -248,10 +243,10 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 	switch (eLevel)
 	{
 	case Client::LEVEL_BATTLE:
-		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BattleNavigation")));
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BattleNavigation"), m_ePlayerID));
 		break;
 	case Client::LEVEL_SNOWFIELD:
-		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_FieldNavigation")));
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_FieldNavigation"), m_ePlayerID));
 		break;
 	}
 

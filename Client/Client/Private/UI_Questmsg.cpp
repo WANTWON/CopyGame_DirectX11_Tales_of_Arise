@@ -390,7 +390,7 @@ void CUI_Questmsg::Free()
 
 
 	Safe_Release(m_pTextureCom1);
-	
+	Safe_Release(m_pTextureCom2);
 	__super::Free();
 }
 

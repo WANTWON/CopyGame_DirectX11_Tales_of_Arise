@@ -87,7 +87,10 @@ void CMonster::Late_Tick(_float fTimeDelta)
 			_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
-			m_pDissolveParticles = CEffect::PlayEffectAtLocation(TEXT("Dissolve_Particles.dat"), vLocation);
+			_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+			mWorldMatrix.r[3] = vLocation;
+
+			m_pDissolveParticles = CEffect::PlayEffectAtLocation(TEXT("Dissolve_Particles.dat"), mWorldMatrix);
 		}
 			
 		if (m_bDissolve)
@@ -335,9 +338,13 @@ void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 
-	_vector vOffset = XMVectorSet(0.f, m_fRadius + 3.f, 0.f, 0.f);
+	_vector vOffset = XMVectorSet(0.f, m_fRadius + 1.5f, 0.f, 0.f);
 	_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
-	CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), vLocation);
+
+	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	mWorldMatrix.r[3] = vLocation;
+
+	CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
 
 	/*m_bMakeEffect = true;*/
 

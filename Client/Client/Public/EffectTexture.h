@@ -26,6 +26,7 @@ public:
 		_float fInitialSize = 1.f;
 		_float fSize = 1.f;
 		_float fLifetime = 0.f;
+		_float fStartAfter = 0.f;
 		_float fNoiseSpeed = 0.f;
 		_float fNoisePowerInitial = 0.f;
 		_float fNoisePower = 10.f;
@@ -36,6 +37,7 @@ public:
 
 	TEXTUREEFFECTDESC Get_TextureEffectDesc() { return m_tTextureEffectDesc; }
 	void Set_TextureEffectDesc(TEXTUREEFFECTDESC tTextureDesc) { m_tTextureEffectDesc = tTextureDesc; }
+	virtual void Set_WorldPosition(_matrix mWorldMatrix) override;
 
 public:
 	CEffectTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -67,6 +69,7 @@ private:
 	CTexture* m_pTextureCom = nullptr;
 
 	_float m_fTimer = 0.f;
+	_bool m_bCanStart = false;
 
 public:
 	static CEffectTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

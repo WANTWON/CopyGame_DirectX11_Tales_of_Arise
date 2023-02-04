@@ -21,7 +21,11 @@ public:
 		_float fAlpha = 1.f;
 		_bool bGlow = false;
 		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
+		_float fGlowPower = 1.f;
 		_float fLifetime = 0.f;
+		_float fStartAfter = 0.f;
+		_float3 vPosition = _float3(0.f, 0.f, 0.f);
+		_float3 vRotation = _float3(0.f, 0.f, 0.f);
 		_float3 vScaleInitial = _float3(1.f, 1.f, 1.f);
 		_float3 vScale = _float3(1.f, 1.f, 1.f);
 		_float3 vTurn = _float3(0.f, 0.f, 0.f);
@@ -42,6 +46,7 @@ public:
 
 	MESHEFFECTDESC Get_MeshEffectDesc() { return m_tMeshEffectDesc; }
 	void Set_Lifetime(_float fLifetime) { m_tMeshEffectDesc.fLifetime = fLifetime; }
+	virtual void Set_WorldPosition(_matrix mWorldMatrix) override;
 	
 public:
 	CEffectMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -77,6 +82,7 @@ private:
 	CModel* m_pModelCom = nullptr;
 
 	_float m_fTimer = 0.f;
+	_bool m_bCanStart = false;
 
 public:
 	static CEffectMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

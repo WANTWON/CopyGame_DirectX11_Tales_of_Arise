@@ -39,6 +39,7 @@ public:
 	virtual _tchar* Get_PrototypeId() PURE;
 	void Set_EffectType(EFFECT_TYPE eType) { m_eType = eType; }
 	void Set_ShaderId(_uint iShaderId) { m_eShaderID = iShaderId; }
+	virtual void Set_WorldPosition(_matrix mWorldMatrix) {};
 
 public:
 	void Add_ColorCurve(array<_float, 5> ColorCurve) { m_ColorCurves.push_back(ColorCurve); }
@@ -63,7 +64,7 @@ public:
 	void Set_EffectName(_tchar* pEffectName) { wcscpy_s(m_wcEffectName, MAX_PATH, pEffectName); }
 	void Set_AttachObject(CGameObject* pGameObject) { m_pAttachObject = pGameObject; }
 
-	static vector<class CEffect*> PlayEffectAtLocation(_tchar* wcEffectName, _vector vLocation);
+	static vector<class CEffect*> PlayEffectAtLocation(_tchar* wcEffectName, _matrix mWorldMatrix);
 
 public:
 	CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -97,7 +97,7 @@ void CImgui_Manager::ShowGui()
 	ImGui::SameLine();
 	if (ImGui::Button("Save Animation"))
 	{
-		_tchar pAnimationDataFilePath[MAX_PATH] = TEXT("../Bin/Resources/Binary/");
+		_tchar pAnimationDataFilePath[MAX_PATH] = TEXT("../../../Bin/Bin_Data/Anim/");
 
 		CPlayer::PLAYERDESC Pivot;
 		memcpy(&Pivot, &((CPlayer*)(pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Player")).front()))->Get_Pivot(), sizeof(CPlayer::PLAYERDESC));
@@ -109,6 +109,9 @@ void CImgui_Manager::ShowGui()
 			break;
 		case MODEL_ICEWOLF:
 			lstrcat(pAnimationDataFilePath, TEXT("Ice_Wolf/Ice_Wolf_Animation_Add.dat"));
+			break;
+		case MODEL_SION:
+			lstrcat(pAnimationDataFilePath, TEXT("Sion/Sion_Animation_Add.dat"));
 			break;
 		}
 
@@ -290,7 +293,7 @@ void CImgui_Manager::ShowGui()
 					pAnimItems[i] = new char[MAX_PATH];
 					strcpy_s(pAnimItems[i], sizeof(char) * MAX_PATH, ModelAnimations[i]->Get_Name());
 				}
-
+				ImGui::SetNextItemWidth(600.f);
 				if (ImGui::ListBox("Animation", &m_iAnimationChoice, pAnimItems, _int(ModelAnimations.size())))
 				{
 					((CPlayer*)pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Player")).front())->Set_AnimIndex(m_iAnimationChoice);

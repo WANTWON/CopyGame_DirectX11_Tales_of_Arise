@@ -174,7 +174,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\AIAttackNormalState.h" />
+    <ClInclude Include="..\Public\AICheckState.h" />
     <ClInclude Include="..\Public\AiRinwell.h" />
+    <ClInclude Include="..\Public\AIRunawayfromTarget.h" />
     <ClInclude Include="..\Public\BattleManager.h" />
     <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_FireBallState.h" />
@@ -187,6 +190,7 @@
     <ClInclude Include="..\Public\BerserkerChaseState.h" />
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
+    <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\FemaleYoung.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
@@ -215,6 +219,7 @@
     <ClInclude Include="..\Public\RinwellDamageState.h" />
     <ClInclude Include="..\Public\RinwellMoveState.h" />
     <ClInclude Include="..\Public\RinwellPoseState.h" />
+    <ClInclude Include="..\Public\RinwellSkills.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
     <ClInclude Include="..\Public\UI_InterectMsg.h" />
@@ -352,7 +357,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\AIAttackNormalState.cpp" />
+    <ClCompile Include="..\Private\AICheckState.cpp" />
     <ClCompile Include="..\Private\AiRinwell.cpp" />
+    <ClCompile Include="..\Private\AIRunawayfromTarget.cpp" />
     <ClCompile Include="..\Private\BattleManager.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_FireBallState.cpp" />
@@ -365,6 +373,7 @@
     <ClCompile Include="..\Private\BerserkerChaseState.cpp" />
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
+    <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\FemaleYoung.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
@@ -392,6 +401,7 @@
     <ClCompile Include="..\Private\RinwellDamageState.cpp" />
     <ClCompile Include="..\Private\RinwellMoveState.cpp" />
     <ClCompile Include="..\Private\RinwellPoseState.cpp" />
+    <ClCompile Include="..\Private\RinwellSkills.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />

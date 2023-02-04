@@ -23,6 +23,7 @@ public:
 		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
 		_int m_iMaxParticles = 1000.f;
 		_float m_fParticlesLifetime = 1.f;
+		_float m_fParticleStartAfter = 0.f;
 		_float m_fParticlesPerSecond = 1.f;
 		_float m_fParticleDeviationX = 0.f;
 		_float m_fParticleDeviationY = 0.f;
@@ -64,6 +65,7 @@ public: /* Getters & Setters */
 	PARTICLEDESC Get_ParticleDesc() { return m_tParticleDesc; }
 	void Set_ParticleDesc(PARTICLEDESC tParticleDesc) { m_tParticleDesc = tParticleDesc; }
 	void Set_Stop(_bool bStop) { m_bStop = bStop; }
+	virtual void Set_WorldPosition(_matrix mWorldMatrix) override;
 
 public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -106,6 +108,7 @@ private:
 
 	_int m_fCurrentParticleCount;
 	_float m_fAccumulatedTime;
+	_bool m_bCanStart = false;
 	_bool m_bDidBurst = false;
 
 	/* Buffer Properties. */

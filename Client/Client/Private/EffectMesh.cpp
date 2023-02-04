@@ -4,6 +4,21 @@
 #include "GameInstance.h"
 #include "Weapon.h"
 
+void CEffectMesh::Set_WorldPosition(_matrix mWorldMatrix)
+{
+	/* Effect Local Matrix */
+	_matrix mScaleMatrixLocal = XMMatrixScaling(m_tMeshEffectDesc.vScale.x, m_tMeshEffectDesc.vScale.y, m_tMeshEffectDesc.vScale.z);
+	_matrix mRotationMatrixLocal = XMMatrixRotationRollPitchYaw(XMConvertToRadians(m_tMeshEffectDesc.vRotation.x), XMConvertToRadians(m_tMeshEffectDesc.vRotation.y), XMConvertToRadians(m_tMeshEffectDesc.vRotation.z));
+	_matrix mTranslationMatrixLocal = XMMatrixTranslation(m_tMeshEffectDesc.vPosition.x, m_tMeshEffectDesc.vPosition.y, m_tMeshEffectDesc.vPosition.z);
+	
+	_matrix mLocalMatrix = XMMatrixMultiply(mScaleMatrixLocal, mRotationMatrixLocal);
+	mLocalMatrix = XMMatrixMultiply(mLocalMatrix, mTranslationMatrixLocal);
+
+	/* Effect World Matrix (combined with Owner WorldMatrix). */
+	_matrix mMatrix = XMMatrixMultiply(mLocalMatrix, mWorldMatrix);
+	m_pTransformCom->Set_WorldMatrix(mMatrix);
+}
+
 CEffectMesh::CEffectMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEffect(pDevice, pContext)
 {
@@ -12,6 +27,7 @@ CEffectMesh::CEffectMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEffectMesh::CEffectMesh(const CEffectMesh & rhs)
 	: CEffect(rhs)
 {
+	
 }
 
 HRESULT CEffectMesh::Initialize_Prototype()
@@ -24,6 +40,10 @@ HRESULT CEffectMesh::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	/*m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
+	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);*/
+	
 	return S_OK;
 }
 
@@ -32,31 +52,46 @@ int CEffectMesh::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	if (m_fTimer >= m_tMeshEffectDesc.fLifetime)
+	if (!m_bCanStart)
 	{
-		m_bDead = true;
-		m_fTimer = 0.f;
-		m_pTransformCom->Set_Rotation(_float3(0.f, 0.f, 0.f));
+		if (m_tMeshEffectDesc.fStartAfter == 0)
+			m_bCanStart = true;
+		else
+		{
+			if (m_fTimer < m_tMeshEffectDesc.fStartAfter)
+				m_fTimer += fTimeDelta;
+			else
+			{
+				m_bCanStart = true;
+				m_fTimer = 0.f;
+			}
+		}
 	}
-	else
+
+	if (m_bCanStart)
 	{
-		m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);
+		if (m_fTimer >= m_tMeshEffectDesc.fLifetime)
+			m_bDead = true;
+		else
+		{
+			m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);
 
-		_vector vTurnAxis = XMVectorSet(m_tMeshEffectDesc.vTurn.x, m_tMeshEffectDesc.vTurn.y, m_tMeshEffectDesc.vTurn.z, 0.f);
-		if (!XMVector3Equal(vTurnAxis, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
-			m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
+			_vector vTurnAxis = XMVectorSet(m_tMeshEffectDesc.vTurn.x, m_tMeshEffectDesc.vTurn.y, m_tMeshEffectDesc.vTurn.z, 0.f);
+			if (!XMVector3Equal(vTurnAxis, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+				m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
 
-		ColorLerp();
-		ScaleLerp();
-		AlphaLerp();
-		TurnVelocityLerp();
-		NoisePowerLerp();
+			ColorLerp();
+			ScaleLerp();
+			AlphaLerp();
+			TurnVelocityLerp();
+			NoisePowerLerp();
 
-		m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
-		m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
-		m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
 
-		m_fTimer += fTimeDelta;
+			m_fTimer += fTimeDelta;
+		}
 	}
 
 	return OBJ_NOEVENT;
@@ -64,6 +99,9 @@ int CEffectMesh::Tick(_float fTimeDelta)
 
 void CEffectMesh::Late_Tick(_float fTimeDelta)
 {
+	if (!m_bCanStart)
+		return;
+
 	if (m_pRendererCom)
 	{
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
@@ -77,6 +115,9 @@ void CEffectMesh::Late_Tick(_float fTimeDelta)
 
 HRESULT CEffectMesh::Render()
 {
+	if (!m_bCanStart)
+		return S_OK;
+
 	if (!m_pShaderCom || !m_pModelCom)
 		return E_FAIL;
 
@@ -108,6 +149,9 @@ HRESULT CEffectMesh::Render()
 
 HRESULT CEffectMesh::Render_Glow()
 {
+	if (!m_bCanStart)
+		return S_OK;
+
 	if (!m_pShaderCom || !m_pModelCom)
 		return E_FAIL;
 
@@ -124,6 +168,8 @@ HRESULT CEffectMesh::Render_Glow()
 			return E_FAIL;
 
 		if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &m_tMeshEffectDesc.vGlowColor, sizeof(_float3))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowPower", &m_tMeshEffectDesc.fGlowPower, sizeof(_float))))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, SHADER_NONANIM_GLOW)))

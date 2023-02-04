@@ -58,13 +58,13 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						//EventInput();
-						
+
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
 						else if (GetKeyState('E') < 0)
 							m_iSkillEvent = 1;
-						
+
 						else if (GetKeyState('R') < 0)
 							m_iSkillEvent = 2;
 
