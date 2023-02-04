@@ -65,6 +65,7 @@ public:
 	virtual void Add_MaskTexture() override;
 	virtual void Add_NoiseTexture() override;
 	
+	void Reset_Initial();
 	void ColorLerp();
 	void AlphaLerp();
 	void ScaleLerp();

@@ -60,7 +60,11 @@ int CEffectTexture::Tick(_float fTimeDelta)
 		}
 	}
 	else
+	{
 		m_fTimer = 0.f;
+
+		Reset_Initial();
+	}
 
 	return S_OK;
 }
@@ -111,6 +115,14 @@ HRESULT CEffectTexture::Render_Glow()
 	m_pVIBufferCom->Render();
 
 	return S_OK;
+}
+
+void CEffectTexture::Reset_Initial()
+{
+	m_tTextureEffectDesc.vColorInitial = _float3(1.f, 1.f, 1.f);
+	m_tTextureEffectDesc.fAlphaInitial = 1.f;
+	m_tTextureEffectDesc.fInitialSize = 1.f;
+	m_tTextureEffectDesc.fNoisePowerInitial = 0.f;
 }
 
 void CEffectTexture::ColorLerp()

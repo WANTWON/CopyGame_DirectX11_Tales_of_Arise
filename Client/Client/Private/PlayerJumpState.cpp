@@ -225,7 +225,12 @@ void CJumpState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
 				break;
 			}
-			break;
+		/*case CPlayer::SION:
+			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_JUMP);
+			else
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_START);
+			break;*/
 		}
 	}
 	else if (JUMP_RUN == m_eJumpType)	
@@ -266,6 +271,28 @@ void CJumpState::Enter()
 			}
 			break;
 		}
+		/*case CPlayer::SION:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LOOP);
+			break;
+		}
+		break;*/
+	/*case STATETYPE_END:
+		switch (ePlayerID)
+		{
+		case CPlayer::ALPHEN:
+			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
+			else
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
+			break;
+		case CPlayer::SION:
+			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
+			else
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LANDING);
+			break;
+		}
+		break;*/
 	}
 }
 

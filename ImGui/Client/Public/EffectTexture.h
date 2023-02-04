@@ -53,6 +53,7 @@ public:
 	virtual HRESULT Render_Glow() override;
 
 public:
+	void Reset_Initial();
 	void ColorLerp();
 	void SizeLerp();
 	void AlphaLerp();

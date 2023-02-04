@@ -5,6 +5,7 @@
 #include "PlayerAttackNormalState.h"
 #include "PlayerJumpState.h"
 #include "UI_Skillmessage.h"
+#include "Effect.h"
 
 using namespace Player;
 
