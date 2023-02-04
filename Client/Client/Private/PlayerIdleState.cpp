@@ -94,7 +94,10 @@ void CIdleState::Enter()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE);
 		break;
 	case CPlayer::SION:
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_IDLE);
+		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_IDLE_LONG);
+		else
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE);
 		break;
 	default:
 		break;
