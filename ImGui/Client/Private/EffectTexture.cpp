@@ -38,7 +38,7 @@ int CEffectTexture::Tick(_float fTimeDelta)
 		{
 			m_bPlay = false;
 			CImgui_Manager::Get_Instance()->Set_Play(false);
-
+			Reset_Initial();
 			m_fTimer = 0.f;
 		}
 		else
@@ -60,11 +60,7 @@ int CEffectTexture::Tick(_float fTimeDelta)
 		}
 	}
 	else
-	{
 		m_fTimer = 0.f;
-
-		Reset_Initial();
-	}
 
 	return S_OK;
 }
