@@ -202,9 +202,9 @@ CPlayerState * CAttackNormalState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (m_bIsFly)
+		/*if (m_bIsFly)
 			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime);
-		else
+		else*/
 			return new CIdleState(m_pOwner);
 	}
 

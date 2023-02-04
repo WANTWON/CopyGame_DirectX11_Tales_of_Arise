@@ -6,6 +6,7 @@
 #include "PlayerAttackNormalState.h"
 #include "PlayerJumpState.h"
 #include "PlayerSkillState.h"
+#include "PlayerCollectState.h"
 
 using namespace Player;
 
@@ -36,9 +37,14 @@ CPlayerState * CRunState::HandleInput()
 				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
 		}
 	}
+	else if (LEVEL_SNOWFIELD == m_pOwner->Get_Level())
+	{
+		if (pGameInstance->Key_Down(DIK_E))
+			return new CCollectState(m_pOwner);
+	}
 	
 	if (pGameInstance->Key_Down(DIK_LCONTROL) && !m_bIsFly)
-		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f);
+		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_IDLE);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		m_eDirection = DIR_STRAIGHT_LEFT;
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
@@ -107,7 +113,7 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
 			break;
 		case CPlayer::SION:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
 			break;
 		}
 	}
@@ -122,7 +128,7 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
 			break;
 		case CPlayer::SION:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
 			break;
 		}
 	}

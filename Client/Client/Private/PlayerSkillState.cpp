@@ -189,9 +189,9 @@ CPlayerState * CSkillState::LateTick(_float fTimeDelta)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_END);
 		else
 		{
-			if (m_bIsFly)
+			/*if (m_bIsFly)
 				return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime);
-			else
+			else*/
 				return new CIdleState(m_pOwner);
 		}
 	}

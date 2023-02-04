@@ -4,7 +4,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_DiffuseTexture;
 
-matrix g_BoneMatrices[264];
+matrix g_BoneMatrices[400];
 
 struct VS_IN
 {
