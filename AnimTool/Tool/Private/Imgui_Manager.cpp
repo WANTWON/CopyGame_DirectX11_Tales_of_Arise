@@ -290,7 +290,7 @@ void CImgui_Manager::ShowGui()
 					pAnimItems[i] = new char[MAX_PATH];
 					strcpy_s(pAnimItems[i], sizeof(char) * MAX_PATH, ModelAnimations[i]->Get_Name());
 				}
-
+				ImGui::SetNextItemWidth(600.f);
 				if (ImGui::ListBox("Animation", &m_iAnimationChoice, pAnimItems, _int(ModelAnimations.size())))
 				{
 					((CPlayer*)pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Player")).front())->Set_AnimIndex(m_iAnimationChoice);
