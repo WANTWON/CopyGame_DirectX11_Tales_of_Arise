@@ -322,7 +322,7 @@ namespace Engine
 
 	typedef struct tagAnimationEvent
 	{
-		enum EVENTTYPE { EVENT_SOUND, EVENT_EFFECT, EVENT_COLLIDER, EVENT_STATE, EVENT_END };
+		enum EVENTTYPE { EVENT_SOUND, EVENT_EFFECT, EVENT_COLLIDER, EVENT_STATE, EVENT_INPUT, EVENT_END };
 
 		bool isPlay = false;
 		float fStartTime;

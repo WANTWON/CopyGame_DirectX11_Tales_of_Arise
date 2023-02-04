@@ -136,9 +136,7 @@ bool CTransform::Sliding_Straight(_float fTimeDelta, CNavigation * pNavigation, 
 	vPosition += XMVector3Normalize(vLook) * m_TransformDesc.fSpeedPerSec * fTimeDelta;
 
 	if (pNavigation)
-	{
 		pNavigation->Compute_CurrentIndex_byXZ(vPosition);
-	}
 
 	if (nullptr == pNavigation)
 		Set_State(CTransform::STATE_TRANSLATION, vPosition);

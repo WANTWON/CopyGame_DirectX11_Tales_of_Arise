@@ -189,9 +189,9 @@ CPlayerState * CSkillState::LateTick(_float fTimeDelta)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_END);
 		else
 		{
-			if (m_bIsFly)
+			/*if (m_bIsFly)
 				return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime);
-			else
+			else*/
 				return new CIdleState(m_pOwner);
 		}
 	}
@@ -234,6 +234,7 @@ void CSkillState::Enter(void)
 			case Client::CPlayerState::STATE_SKILL_ATTACK2:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(4);
+				CEffect::PlayEffectAtLocation(TEXT("Akizame.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 				break;
 			case Client::CPlayerState::STATE_SKILL_ATTACK3:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);

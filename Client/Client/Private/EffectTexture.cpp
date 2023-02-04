@@ -3,6 +3,12 @@
 #include "EffectTexture.h"
 #include "GameInstance.h"
 
+void CEffectTexture::Set_WorldPosition(_matrix mWorldMatrix)
+{
+	_vector vPosition = (_vector)mWorldMatrix.r[3];
+	m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+}
+
 CEffectTexture::CEffectTexture(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEffect(pDevice, pContext)
 {
@@ -32,10 +38,7 @@ int CEffectTexture::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 
 	if (m_fTimer >= m_tTextureEffectDesc.fLifetime)
-	{
 		m_bDead = true;
-		m_fTimer = 0.f;
-	}
 	else
 	{
 		ColorLerp();

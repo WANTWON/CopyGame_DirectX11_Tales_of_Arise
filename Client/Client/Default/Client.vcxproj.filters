@@ -304,6 +304,12 @@
     <Filter Include="02.GameObjects\04.UI\19.UI_DamagaeFont">
       <UniqueIdentifier>{9da4c663-4609-401f-8ccd-30adfd580c02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07.Bullet">
+      <UniqueIdentifier>{24098752-2738-44e8-9fca-7fe530b25e25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\07.Bullet\RinwellSkills">
+      <UniqueIdentifier>{95130527-c921-4365-bf2b-0bc5199148b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -847,6 +853,9 @@
     <ClInclude Include="..\Public\AIRunawayfromTarget.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bullet.h">
+      <Filter>02.GameObjects\07.Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1353,6 +1362,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AIRunawayfromTarget.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet.cpp">
+      <Filter>02.GameObjects\07.Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

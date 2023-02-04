@@ -45,6 +45,7 @@ int CEffectMesh::Tick(_float fTimeDelta)
 			m_bPlay = false;
 			m_fTimer = 0.f;
 			CImgui_Manager::Get_Instance()->Set_Play(false);
+			Reset_Initial();
 		}
 		else
 		{
@@ -71,7 +72,7 @@ int CEffectMesh::Tick(_float fTimeDelta)
 	{
 		m_fTimer = 0.f;
 
-		Reset_Initial();
+		
 	}
 
 	return OBJ_NOEVENT;
@@ -184,11 +185,7 @@ void CEffectMesh::Add_NoiseTexture()
 
 void CEffectMesh::Reset_Initial()
 {
-	m_tMeshEffectDesc.vColorInitial = _float3(1.f, 1.f, 1.f);
-	m_tMeshEffectDesc.fAlphaInitial = 1.f;
-	m_tMeshEffectDesc.vScaleInitial = _float3(1.f, 1.f, 1.f);
-	m_tMeshEffectDesc.fTurnVelocityInitial = 0.f;
-	m_tMeshEffectDesc.fNoisePowerInitial = 0.f;
+	m_tMeshEffectDesc = m_tMeshEffectDescTool;
 }
 
 void CEffectMesh::ColorLerp()

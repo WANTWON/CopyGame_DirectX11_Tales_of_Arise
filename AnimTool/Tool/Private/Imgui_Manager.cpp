@@ -394,6 +394,9 @@ void CImgui_Manager::ShowGui()
 			
 			ImGui::DragFloat("Playing Time", &m_fAnimationTickTime, 0.05f, 0.f, m_fAnimationDuration);
 			ImGui::DragFloat("Playing TickPerSecond", &m_fAnimationTick, 0.05f, 0.f, 100.f);
+
+			_float fOriginalTickPerSecond = ChoiceModelAnimation->Get_OriginalTickPerSecond();
+			ImGui::InputFloat("Original TickPerSecond", &fOriginalTickPerSecond);
 			
 			if (ImGui::Button("Add"))
 				ChoiceModelAnimation->Add_TickPerSecond(m_fAnimationTickTime, m_fAnimationTick);
@@ -511,6 +514,9 @@ void CImgui_Manager::ShowGui()
 				case CAnimation::EVENT_STATE:
 					pEventType[i] = "EVENT_STATE";
 					break;
+				case CAnimation::EVENT_INPUT:
+					pEventType[i] = "EVENT_INPUT";
+					break;
 				}
 			}
 
@@ -538,8 +544,9 @@ void CImgui_Manager::ShowGui()
 			ImGui::RadioButton("Event_Effect", &m_iEventType, 1);
 			ImGui::SameLine();
 			ImGui::RadioButton("Event_Collider", &m_iEventType, 2);
-			ImGui::SameLine();
 			ImGui::RadioButton("Event_State", &m_iEventType, 3);
+			ImGui::SameLine();
+			ImGui::RadioButton("Event_Input", &m_iEventType, 4);
 
 			if (ImGui::Button("Add"))
 			{

@@ -43,6 +43,8 @@ public: /*Getter Setter */
 		WorldMatrix.r[eState] = vState;
 		XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);	
 	}
+
+	void Set_WorldMatrix(_matrix mWorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, mWorldMatrix); }
 	
 	void Set_Scale(STATE eState, _float fScale);
 	void Set_TransformDesc(const TRANSFORMDESC& TransformDesc ) {m_TransformDesc = TransformDesc;}
