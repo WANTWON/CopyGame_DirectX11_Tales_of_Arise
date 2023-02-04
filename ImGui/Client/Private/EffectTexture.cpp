@@ -34,29 +34,49 @@ int CEffectTexture::Tick(_float fTimeDelta)
 
 	if (m_bPlay)
 	{
-		if (m_fTimer >= m_tTextureEffectDesc.fLifetime)
+		if (!m_bCanStart)
 		{
-			m_bPlay = false;
-			CImgui_Manager::Get_Instance()->Set_Play(false);
-			Reset_Initial();
-			m_fTimer = 0.f;
+			if (m_tTextureEffectDesc.fStartAfter == 0)
+				m_bCanStart = true;
+			else
+			{
+				if (m_fTimer < m_tTextureEffectDesc.fStartAfter)
+					m_fTimer += fTimeDelta;
+				else
+				{
+					m_bCanStart = true;
+					m_fTimer = 0.f;
+				}
+			}
 		}
-		else
+
+		if (m_bCanStart)
 		{
-			ColorLerp();
-			SizeLerp();
-			AlphaLerp();
+			if (m_fTimer >= m_tTextureEffectDesc.fLifetime)
+			{
+				m_bPlay = false;
+				m_bCanStart = false;
+				CImgui_Manager::Get_Instance()->Set_Play(false);
+				Reset_Initial();
+				m_fTimer = 0.f;
+			}
+			else
+			{
+				ColorLerp();
+				SizeLerp();
+				AlphaLerp();
 
-			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tTextureEffectDesc.fSize);
-			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tTextureEffectDesc.fSize);
-			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tTextureEffectDesc.fSize);
+				m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tTextureEffectDesc.fSize);
+				m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tTextureEffectDesc.fSize);
+				m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tTextureEffectDesc.fSize);
 
-			// Billboard
-			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-			m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
-			RELEASE_INSTANCE(CGameInstance);
+				// Billboard
+				CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+				m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
+				RELEASE_INSTANCE(CGameInstance);
 
-			m_fTimer += fTimeDelta;
+				m_fTimer += fTimeDelta;
+			}
 		}
 	}
 	else
@@ -67,6 +87,9 @@ int CEffectTexture::Tick(_float fTimeDelta)
 
 void CEffectTexture::Late_Tick(_float fTimeDelta)
 {
+	if (!m_bPlay || !m_bCanStart)
+		return;
+
 	if (m_pRendererCom)
 	{
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
@@ -80,7 +103,7 @@ void CEffectTexture::Late_Tick(_float fTimeDelta)
 
 HRESULT CEffectTexture::Render()
 {
-	if (!m_bPlay)
+	if (!m_bPlay || !m_bCanStart)
 		return S_OK;
 
 	if (!m_pShaderCom || !m_pVIBufferCom)
@@ -96,7 +119,7 @@ HRESULT CEffectTexture::Render()
 
 HRESULT CEffectTexture::Render_Glow()
 {
-	if (!m_bPlay)
+	if (!m_bPlay || !m_bCanStart)
 		return S_OK;
 
 	if (!m_pShaderCom || !m_pVIBufferCom)

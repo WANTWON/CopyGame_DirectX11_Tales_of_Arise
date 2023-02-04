@@ -23,6 +23,7 @@ public:
 		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
 		_float fGlowPower = 1.f;
 		_float fLifetime = 0.f;
+		_float fStartAfter = 0.f;
 		_float3 vPosition = _float3(0.f, 0.f, 0.f);
 		_float3 vRotation = _float3(0.f, 0.f, 0.f);
 		_float3 vScaleInitial = _float3(1.f, 1.f, 1.f);
@@ -84,6 +85,7 @@ private:
 	CModel* m_pModelCom = nullptr;
 
 	_float m_fTimer = 0.f;
+	_bool m_bCanStart = false;
 
 public:
 	static CEffectMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
