@@ -44,6 +44,8 @@ protected:
 	STATE_ID m_eStateId = STATE_END;
 	CPlayer* m_pOwner = nullptr;
 
+	_float m_fTimer = 0.f;
+
 	_bool m_bIsAnimationFinished = false;
 };
 END

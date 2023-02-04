@@ -36,7 +36,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CAIState* pAIState = new AIPlayer::CIdleState(this);
+	CAIState* pAIState = new AIPlayer::CIdleState(this , CAIState::STATE_IDLE);
 	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
 	/* Set State */
