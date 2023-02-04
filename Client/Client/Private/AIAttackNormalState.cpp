@@ -37,21 +37,38 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 		break;
 
 
-	case 1:                               //sion
-		if (m_bIsAnimationFinished)
+	case 1:               //sion
+
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+		for (auto& pEvent : pEvents)
 		{
-
-			if (m_iCurrentAnimIndex == CSion::ANIM::BTL_ATTACK_NORMAL_4)
-				return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
-			else
+			if (pEvent.isPlay)
 			{
-				++m_iCurrentAnimIndex;
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+				{
+					m_bIsStateEvent = true;
+					
+				//	break;
+				//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+				}
 			}
-
 		}
+	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+			if (m_iCurrentAnimIndex == CSion::ANIM::BTL_ATTACK_NORMAL_4 && m_bIsAnimationFinished)
+				return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
+		
+		
 		break;
 	}
+
+	if (m_bIsStateEvent)
+	{
+		++m_iCurrentAnimIndex;
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+		m_bIsStateEvent = false;
+	}
+	
 
 	return nullptr;
 }
