@@ -95,15 +95,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		LateTick_State(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-	{
 		LateTick_AIState(fTimeDelta);
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_ePlayerID == SION)
-			m_pPlayerManager->Set_ActivePlayer(this);
-	}
 		break;
 	case Client::UNVISIBLE:
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_ePlayerID == SION)
-			m_pPlayerManager->Set_ActivePlayer(this);
 		return;
 	}
 
@@ -241,10 +235,10 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 	switch (eLevel)
 	{
 	case Client::LEVEL_BATTLE:
-		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BattleNavigation")));
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BattleNavigation"), m_ePlayerID));
 		break;
 	case Client::LEVEL_SNOWFIELD:
-		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_FieldNavigation")));
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_FieldNavigation"), m_ePlayerID));
 		break;
 	}
 

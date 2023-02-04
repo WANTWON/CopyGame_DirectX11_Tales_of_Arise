@@ -3,6 +3,8 @@
 #include "AIIdleState.h"
 #include "GameInstance.h"
 #include "Alphen.h"
+#include "Sion.h"
+#include "Rinwell.h"
 
 using namespace AIPlayer;
 
@@ -29,7 +31,20 @@ void CIdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
+	switch (m_pOwner->Get_PlayerID())
+	{
+	case CPlayer::ALPHEN:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_IDLE);
+		break;
+	case CPlayer::SION:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE);
+		break;
+	case CPlayer::RINWELL:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_LOOP);
+		break;
+	default:
+		break;
+	}
 }
 
 void CIdleState::Exit()
