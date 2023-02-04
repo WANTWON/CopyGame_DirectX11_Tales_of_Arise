@@ -115,10 +115,7 @@ HRESULT CEffectTexture::Render_Glow()
 
 void CEffectTexture::Reset_Initial()
 {
-	m_tTextureEffectDesc.vColorInitial = _float3(1.f, 1.f, 1.f);
-	m_tTextureEffectDesc.fAlphaInitial = 1.f;
-	m_tTextureEffectDesc.fInitialSize = 1.f;
-	m_tTextureEffectDesc.fNoisePowerInitial = 0.f;
+	m_tTextureEffectDesc = m_tTextureEffectDesc;
 }
 
 void CEffectTexture::ColorLerp()

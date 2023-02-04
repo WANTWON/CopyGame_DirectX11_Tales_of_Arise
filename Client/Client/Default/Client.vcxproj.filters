@@ -307,6 +307,9 @@
     <Filter Include="02.GameObjects\07.Bullet">
       <UniqueIdentifier>{24098752-2738-44e8-9fca-7fe530b25e25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07.Bullet\RinwellSkills">
+      <UniqueIdentifier>{95130527-c921-4365-bf2b-0bc5199148b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

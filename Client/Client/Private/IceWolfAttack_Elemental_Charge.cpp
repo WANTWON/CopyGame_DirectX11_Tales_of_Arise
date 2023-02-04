@@ -22,41 +22,25 @@ CAttack_Elemental_Charge::CAttack_Elemental_Charge(class CIce_Wolf* pIceWolf, ST
 
 CIceWolfState * CAttack_Elemental_Charge::AI_Behaviour(_float fTimeDelta)
 {
-
 	return nullptr;
 }
 
 CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	//m_fTarget_Distance = Find_BattleTarget();
 
 	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
 	if (pDamageCauser == nullptr)
 	{
 		if (m_pCurTarget == nullptr)
-		{
 			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
-
-			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-		}
-
-		else if (m_pCurTarget)
-		{
-			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-		}
 	}
-
-	else if (pDamageCauser != nullptr)
-	{
+	else
 		m_pCurTarget = pDamageCauser;
 
-		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
-		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
-	}
+	m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -64,13 +48,9 @@ CIceWolfState * CAttack_Elemental_Charge::Tick(_float fTimeDelta)
 		_float fRotationRadian;
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-
 		m_pOwner->Check_Navigation();
 	}
-
-
 
 	return nullptr;
 }
