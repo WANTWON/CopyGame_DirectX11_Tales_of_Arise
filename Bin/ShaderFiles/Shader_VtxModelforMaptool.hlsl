@@ -219,6 +219,22 @@ PS_EFFECT_OUT PS_GLOW(PS_IN In)
 
 	float3 vGlow = g_vGlowColor * g_fGlowPower;
 	Out.vColor.rgb *= vGlow;
+	Out.vColor.a *= g_fAlpha;
+
+	if (g_bNoise)
+	{
+		float2 vOffsettedUV = In.vTexUV;
+		vOffsettedUV.x += g_fNoiseDirectionX * g_fNoiseSpeed * g_fTimer;
+		vOffsettedUV.y += g_fNoiseDirectionY * g_fNoiseSpeed * g_fTimer;
+
+		float4 vNoiseTexture = g_NoiseTexture.Sample(LinearSampler, vOffsettedUV);
+
+		float lerpValue = 0.5f + (sin(g_fTimer * 5.0f) * 0.5f);
+		float vNoise = lerp(vNoiseTexture.r, vNoiseTexture.r * 1.5f, lerpValue);
+		vNoise *= g_fNoisePower;
+
+		Out.vColor.a *= vNoise;
+	}
 
 	if (Out.vColor.a == 0)
 		discard;

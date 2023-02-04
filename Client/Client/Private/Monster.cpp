@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "DamageFont.h"
 #include "Effect.h"
+#include "ParticleSystem.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBaseObj(pDevice, pContext)
@@ -79,14 +80,41 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		m_bTakeDamage = true;
 	}
 
-	if (m_bDissolve)
+	if (m_bGlowUp)
 	{
-		m_fDissolveTimer += fTimeDelta;
-
-		if (m_DissolveAlpha > 1)
+		if (m_pDissolveParticles.empty())
 		{
-			m_DissolveAlpha = 1.f;
-			m_bDead = true;
+			_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+
+			m_pDissolveParticles = CEffect::PlayEffectAtLocation(TEXT("Dissolve_Particles.dat"), vLocation);
+		}
+			
+		if (m_bDissolve)
+		{
+			if (m_fDissolveTimer > m_fDissolveLifespan)
+				m_bDead = true;
+			else
+				m_fDissolveTimer += fTimeDelta;
+		}
+		else
+		{
+			if (m_fGlowUpTimer > m_fGlowUpLifespan)
+			{
+				if (!m_pDissolveParticles.empty())
+				{
+					for (auto& pDissolveParticle : m_pDissolveParticles)
+					{
+						CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(pDissolveParticle);
+						if (pDissolveParticle)
+							pParticleSystem->Set_Stop(true);
+					}
+				}
+
+				m_bDissolve = true;
+			}
+			else
+				m_fGlowUpTimer += fTimeDelta;
 		}
 	}
 	else
@@ -446,7 +474,19 @@ HRESULT CMonster::SetUp_ShaderResources()
 	{
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DissolveTexture", m_pDissolveTexture->Get_SRV(0))))
 			return E_FAIL;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fDissolveAlpha", &m_DissolveAlpha, sizeof(_float))))
+		if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveTimer", &m_fDissolveTimer, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveLifespan", &m_fDissolveLifespan, sizeof(_float))))
+			return E_FAIL;
+		_float4 vDissolveColor = _float4(.85f, .9, 1.f, 1.f);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveColor", &vDissolveColor, sizeof(_float4))))
+			return E_FAIL;
+		_float4 vDissolveHighlight = _float4(.55f, .9, 1.f, 1.f);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveHighlight", &vDissolveHighlight, sizeof(_float4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowUpTimer", &m_fGlowUpTimer, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowUpLifespan", &m_fGlowUpLifespan, sizeof(_float))))
 			return E_FAIL;
 	}
 

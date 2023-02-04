@@ -570,7 +570,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	
 	/*For.Prototype_Component_Texture_Dissolve*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Dissolve.dds"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Dissolve.png"), 1))))
 		return E_FAIL;
 #pragma endregion Texture Loading
 

@@ -59,7 +59,7 @@ CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 			if (m_fTimeDeltaAcc >= 5 || fHawkPos.y <= 0)
 			{
 			m_bDeadAnimFinish = true;
-			m_pOwner->Set_Dissolve();
+			m_pOwner->Set_GlowUp();
 			m_fTimeDeltaAcc = 0.f;
 			}
 
