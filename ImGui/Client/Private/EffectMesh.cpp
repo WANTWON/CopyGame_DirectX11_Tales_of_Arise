@@ -24,6 +24,12 @@ HRESULT CEffectMesh::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
+	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
+	m_pTransformCom->Set_Rotation(m_tMeshEffectDesc.vRotation);
+	m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&m_tMeshEffectDesc.vPosition), 1.f));
+
 	return S_OK;
 }
 
