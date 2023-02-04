@@ -472,6 +472,11 @@ HRESULT CRenderer::Render_Glow()
 		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Glow"))))
 			return E_FAIL;
 
+		m_GameObjects[RENDER_GLOW].sort([](CGameObject* pSour, CGameObject* pDest)
+		{
+			return pSour->Get_CamDistance() > pDest->Get_CamDistance();
+		});
+
 		for (auto& pGameObject : m_GameObjects[RENDER_GLOW])
 		{
 			if (pGameObject)

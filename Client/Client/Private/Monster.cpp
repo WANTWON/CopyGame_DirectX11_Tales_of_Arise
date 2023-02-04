@@ -84,13 +84,13 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	{
 		if (m_pDissolveParticles.empty())
 		{
-			/*_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+			_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
 			_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 			mWorldMatrix.r[3] = vLocation;
 
-			m_pDissolveParticles = CEffect::PlayEffectAtLocation(TEXT("Dissolve_Particles.dat"), mWorldMatrix);*/
+			m_pDissolveParticles = CEffect::PlayEffectAtLocation(TEXT("Dissolve_Particles.dat"), mWorldMatrix);
 		}
 			
 		if (m_bDissolve)
