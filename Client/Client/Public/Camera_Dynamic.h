@@ -37,7 +37,7 @@ public:
 	void Set_CamMode(CAMERAMODE _eCamMode);
 	void Set_Position(_vector vPosition);
 	void Set_TargetPosition(_vector vPosition) { m_fTargetPos = vPosition; }
-	void Set_ZoomValue(_float fValue) { m_fZoom = fValue; }
+	void Set_Zoom(_bool type) { m_bZoom = type; }
 
 public:
 	void Debug_Camera(_float fTimeDelta);
@@ -53,7 +53,6 @@ private:
 	_float4			m_vDistance = _float4(0, 10, -10, 0.f);
 	_long			m_lMouseWheel = 0;
 	_vector			m_fTargetPos = { 0.f,0.f,0.f,0.f };
-	_float			m_fZoom = 0.f;
 	_float			m_fTime = 0.f;
 	_float			m_fOffsetPosY = 4.f;
 	_float			m_fAngle = 0.f;
@@ -70,8 +69,10 @@ private:
 	_bool			m_bStop = false;
 
 	_bool			m_bTurn = false;
+	_bool			m_bZoom = false;
 
 	_float			m_fCameraY = 5.f;
+	_float			m_fZoom = 0.f;
 
 public:
 	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
