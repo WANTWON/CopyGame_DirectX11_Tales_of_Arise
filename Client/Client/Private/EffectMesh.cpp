@@ -4,6 +4,21 @@
 #include "GameInstance.h"
 #include "Weapon.h"
 
+void CEffectMesh::Set_WorldPosition(_matrix mWorldMatrix)
+{
+	/* Effect Local Matrix */
+	_matrix mScaleMatrixLocal = XMMatrixScaling(m_tMeshEffectDesc.vScale.x, m_tMeshEffectDesc.vScale.y, m_tMeshEffectDesc.vScale.z);
+	_matrix mRotationMatrixLocal = XMMatrixRotationRollPitchYaw(XMConvertToRadians(m_tMeshEffectDesc.vRotation.x), XMConvertToRadians(m_tMeshEffectDesc.vRotation.y), XMConvertToRadians(m_tMeshEffectDesc.vRotation.z));
+	_matrix mTranslationMatrixLocal = XMMatrixTranslation(m_tMeshEffectDesc.vPosition.x, m_tMeshEffectDesc.vPosition.y, m_tMeshEffectDesc.vPosition.z);
+	
+	_matrix mLocalMatrix = XMMatrixMultiply(mScaleMatrixLocal, mRotationMatrixLocal);
+	mLocalMatrix = XMMatrixMultiply(mLocalMatrix, mTranslationMatrixLocal);
+
+	/* Effect World Matrix (combined with Owner WorldMatrix). */
+	_matrix mMatrix = XMMatrixMultiply(mLocalMatrix, mWorldMatrix);
+	m_pTransformCom->Set_WorldMatrix(mMatrix);
+}
+
 CEffectMesh::CEffectMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEffect(pDevice, pContext)
 {
@@ -12,6 +27,7 @@ CEffectMesh::CEffectMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEffectMesh::CEffectMesh(const CEffectMesh & rhs)
 	: CEffect(rhs)
 {
+	
 }
 
 HRESULT CEffectMesh::Initialize_Prototype()
@@ -24,6 +40,10 @@ HRESULT CEffectMesh::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	/*m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
+	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);*/
+	
 	return S_OK;
 }
 
@@ -33,11 +53,7 @@ int CEffectMesh::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 
 	if (m_fTimer >= m_tMeshEffectDesc.fLifetime)
-	{
 		m_bDead = true;
-		m_fTimer = 0.f;
-		m_pTransformCom->Set_Rotation(_float3(0.f, 0.f, 0.f));
-	}
 	else
 	{
 		m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);
@@ -124,6 +140,8 @@ HRESULT CEffectMesh::Render_Glow()
 			return E_FAIL;
 
 		if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &m_tMeshEffectDesc.vGlowColor, sizeof(_float3))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowPower", &m_tMeshEffectDesc.fGlowPower, sizeof(_float))))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, SHADER_NONANIM_GLOW)))
