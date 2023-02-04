@@ -40,9 +40,24 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	
-	
-	EmitParticles(fTimeDelta);		/* Emit new Particles.	*/
+	if (!m_bCanStart)
+	{
+		if (m_tParticleDesc.m_fParticleStartAfter == 0)
+			m_bCanStart = true;
+		else
+		{
+			if (m_fAccumulatedTime < m_tParticleDesc.m_fParticleStartAfter)
+				m_fAccumulatedTime += fTimeDelta;
+			else
+			{
+				m_bCanStart = true;
+				m_fAccumulatedTime = 0.f;
+			}
+		}
+	}
+
+	if (m_bCanStart)
+		EmitParticles(fTimeDelta); /* Emit new Particles. */
 
 	// Billboard
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

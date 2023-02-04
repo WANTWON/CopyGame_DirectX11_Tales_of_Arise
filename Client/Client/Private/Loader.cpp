@@ -11,19 +11,20 @@
 #include "NonAnim.h"
 #include "Trigger.h"
 
-//Effect
+//Effect & Bullet
 #include "EffectTexture.h"
 #include "EffectMesh.h"
 #include "ParticleSystem.h"
 #include "Particle_Rect.h"
 #include "Particle_Point.h"
-
+#include "RinwellSkills.h"
 
 //Actor
 #include "Alphen.h"
 #include "Sion.h"
 #include "FemaleYoung.h"
 #include "AiRinwell.h"
+#include "Rinwell.h"
 
 
 //UI
@@ -157,11 +158,21 @@ HRESULT CLoader::Loading_ForPrototype()
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
 		return E_FAIL;
-	/*For.Prototype_Trigger */
+
+	/*For.Prototype_RinwellSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Rinwell"),
+		CRinwell::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_RinwellSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_RinwellSkills"),
+		CRinwellSkills::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_AiRinwell */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AiRinwell"),
 		CAiRinwell::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
 
 	/*For.Prototype_Trigger */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NpcFemale"),

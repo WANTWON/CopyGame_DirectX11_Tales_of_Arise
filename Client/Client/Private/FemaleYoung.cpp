@@ -44,7 +44,7 @@ int CFemaleYoung::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 	Tick_State(fTimeDelta);
 
-	m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	return OBJ_NOEVENT;
 }
 
@@ -57,7 +57,7 @@ void CFemaleYoung::Late_Tick(_float fTimeDelta)
    if (!pPlayer)
 	   return;
 
-   m_bCollision = m_pOBBCom->Collision(pPlayer->Get_Collider());
+   m_bCollision = m_pSPHERECom->Collision(pPlayer->Get_Collider());
 
    if (m_bCollision)
    {
@@ -170,12 +170,13 @@ HRESULT CFemaleYoung::Ready_Components(void * pArg)
 		return E_FAIL;
 
 
-	/* For.Com_OBB */
+	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
-	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
+	ColliderDesc.vScale = _float3(4.f, 4.f, 4.f);
+	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	ColliderDesc.vPosition = _float3(0.f, 3.f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 	return S_OK;

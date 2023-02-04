@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RinwellAttackState.h"
 #include "RinwellMoveState.h"
+#include "RinwellSkills.h"
 
 using namespace AiRinwell;
 
@@ -83,6 +84,13 @@ void CAttackState::Enter()
 	Find_Target(rand()%4);
 	m_vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	//Shot Ice Rock
+	CBullet::BULLETDESC BulletDesc;
+	BulletDesc.eCollisionGroup = MONSTER;
+	BulletDesc.eBulletType = CRinwellSkills::PHOTON_FLASH;
+	BulletDesc.vInitPositon =  XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION),3.f) ;
+	BulletDesc.vTargetPosition = m_vTargetPosition;
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+		return;
 
 }
 

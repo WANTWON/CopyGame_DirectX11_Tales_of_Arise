@@ -3,6 +3,8 @@
 #include "AIIdleState.h"
 #include "GameInstance.h"
 #include "Alphen.h"
+#include "Sion.h"
+#include "Rinwell.h"
 #include "AIAttackNormalState.h"
 
 using namespace AIPlayer;
@@ -43,7 +45,22 @@ CAIState * CIdleState::LateTick(_float fTimeDelta)
 void CIdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
-	m_iCurrentAnimIndex = CSion::ANIM::IDLE;
+
+	switch (m_pOwner->Get_PlayerID())
+	{
+	case CPlayer::ALPHEN:
+		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_BATTLE_MOVE_IDLE;
+		break;
+	case CPlayer::SION:
+		m_iCurrentAnimIndex = CSion::ANIM::IDLE;
+		break;
+	case CPlayer::RINWELL:
+		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MAGIC_LOOP;
+		break;
+	default:
+		break;
+	}
+	
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 }
 

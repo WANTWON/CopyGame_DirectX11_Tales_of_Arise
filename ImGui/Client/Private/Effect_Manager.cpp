@@ -20,11 +20,11 @@ void CEffect_Manager::Remove_Effect(CEffect* pEffect)
 {
 	for (auto& iter = m_InstancedEffects.begin(); iter != m_InstancedEffects.end(); iter++)
 	{
-		if (!wcscmp((*iter)->Get_PrototypeId(), pEffect->Get_PrototypeId()))
+		if (!wcscmp((*iter)->Get_EffectName(), pEffect->Get_EffectName()))
 		{
 			pEffect->Set_Dead(true);
 			m_InstancedEffects.erase(iter);
-			
+
 			return;
 		}
 	}

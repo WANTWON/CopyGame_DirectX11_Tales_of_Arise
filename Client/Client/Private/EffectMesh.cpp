@@ -52,27 +52,46 @@ int CEffectMesh::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	if (m_fTimer >= m_tMeshEffectDesc.fLifetime)
-		m_bDead = true;
-	else
+	if (!m_bCanStart)
 	{
-		m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);
+		if (m_tMeshEffectDesc.fStartAfter == 0)
+			m_bCanStart = true;
+		else
+		{
+			if (m_fTimer < m_tMeshEffectDesc.fStartAfter)
+				m_fTimer += fTimeDelta;
+			else
+			{
+				m_bCanStart = true;
+				m_fTimer = 0.f;
+			}
+		}
+	}
 
-		_vector vTurnAxis = XMVectorSet(m_tMeshEffectDesc.vTurn.x, m_tMeshEffectDesc.vTurn.y, m_tMeshEffectDesc.vTurn.z, 0.f);
-		if (!XMVector3Equal(vTurnAxis, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
-			m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
+	if (m_bCanStart)
+	{
+		if (m_fTimer >= m_tMeshEffectDesc.fLifetime)
+			m_bDead = true;
+		else
+		{
+			m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);
 
-		ColorLerp();
-		ScaleLerp();
-		AlphaLerp();
-		TurnVelocityLerp();
-		NoisePowerLerp();
+			_vector vTurnAxis = XMVectorSet(m_tMeshEffectDesc.vTurn.x, m_tMeshEffectDesc.vTurn.y, m_tMeshEffectDesc.vTurn.z, 0.f);
+			if (!XMVector3Equal(vTurnAxis, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+				m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
 
-		m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
-		m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
-		m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
+			ColorLerp();
+			ScaleLerp();
+			AlphaLerp();
+			TurnVelocityLerp();
+			NoisePowerLerp();
 
-		m_fTimer += fTimeDelta;
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
+
+			m_fTimer += fTimeDelta;
+		}
 	}
 
 	return OBJ_NOEVENT;
@@ -80,6 +99,9 @@ int CEffectMesh::Tick(_float fTimeDelta)
 
 void CEffectMesh::Late_Tick(_float fTimeDelta)
 {
+	if (!m_bCanStart)
+		return;
+
 	if (m_pRendererCom)
 	{
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
@@ -93,6 +115,9 @@ void CEffectMesh::Late_Tick(_float fTimeDelta)
 
 HRESULT CEffectMesh::Render()
 {
+	if (!m_bCanStart)
+		return S_OK;
+
 	if (!m_pShaderCom || !m_pModelCom)
 		return E_FAIL;
 
@@ -124,6 +149,9 @@ HRESULT CEffectMesh::Render()
 
 HRESULT CEffectMesh::Render_Glow()
 {
+	if (!m_bCanStart)
+		return S_OK;
+
 	if (!m_pShaderCom || !m_pModelCom)
 		return E_FAIL;
 

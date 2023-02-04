@@ -37,24 +37,43 @@ int CEffectTexture::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	if (m_fTimer >= m_tTextureEffectDesc.fLifetime)
-		m_bDead = true;
-	else
+	if (!m_bCanStart)
 	{
-		ColorLerp();
-		SizeLerp();
-		AlphaLerp();
+		if (m_tTextureEffectDesc.fStartAfter == 0)
+			m_bCanStart = true;
+		else
+		{
+			if (m_fTimer < m_tTextureEffectDesc.fStartAfter)
+				m_fTimer += fTimeDelta;
+			else
+			{
+				m_bCanStart = true;
+				m_fTimer = 0.f;
+			}
+		}
+	}
 
-		m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tTextureEffectDesc.fSize);
-		m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tTextureEffectDesc.fSize);
-		m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tTextureEffectDesc.fSize);
+	if (m_bCanStart)
+	{
+		if (m_fTimer >= m_tTextureEffectDesc.fLifetime)
+			m_bDead = true;
+		else
+		{
+			ColorLerp();
+			SizeLerp();
+			AlphaLerp();
 
-		// Billboard
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-		m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
-		RELEASE_INSTANCE(CGameInstance);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tTextureEffectDesc.fSize);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tTextureEffectDesc.fSize);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tTextureEffectDesc.fSize);
 
-		m_fTimer += fTimeDelta;
+			// Billboard
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+			m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
+			RELEASE_INSTANCE(CGameInstance);
+
+			m_fTimer += fTimeDelta;
+		}
 	}
 
 	return OBJ_NOEVENT;
@@ -63,6 +82,9 @@ int CEffectTexture::Tick(_float fTimeDelta)
 void CEffectTexture::Late_Tick(_float fTimeDelta)
 {
 	if (!Check_IsinFrustum())
+		return;
+
+	if (!m_bCanStart)
 		return;
 
 	if (m_pRendererCom)
@@ -78,6 +100,9 @@ void CEffectTexture::Late_Tick(_float fTimeDelta)
 
 HRESULT CEffectTexture::Render()
 {
+	if (!m_bCanStart)
+		return S_OK;
+
 	if (!m_pShaderCom || !m_pVIBufferCom)
 		return E_FAIL;
 
@@ -91,6 +116,9 @@ HRESULT CEffectTexture::Render()
 
 HRESULT CEffectTexture::Render_Glow()
 {
+	if (!m_bCanStart)
+		return S_OK;
+
 	if (!m_pShaderCom || !m_pVIBufferCom)
 		return E_FAIL;
 
