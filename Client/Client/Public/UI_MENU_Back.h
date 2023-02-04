@@ -79,6 +79,7 @@ public:
 
 	HRESULT Render_Questmenu();
 	HRESULT Render_bottmline_Quest();
+	HRESULT Render_Quest1Rewards();
 
 	void Return_to_MainMenu();
 

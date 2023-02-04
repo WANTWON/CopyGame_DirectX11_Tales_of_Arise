@@ -5,10 +5,10 @@
 
 BEGIN(Client)
 BEGIN(AIPlayer)
-class CIdleState final : public CAIState
+class CAIRunawayfromTarget final : public CAIState
 {
 public:
-	CIdleState(class CPlayer* pPlayer, STATE_ID eStateType);
+	CAIRunawayfromTarget(class CPlayer* pPlayer, STATE_ID eStateType);
 
 	virtual CAIState* Tick(_float fTimeDelta) override;
 	virtual CAIState* LateTick(_float fTimeDelta) override;

@@ -663,9 +663,6 @@
     <ClInclude Include="..\Public\AIState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AIIdleState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PlayerManager.h">
       <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClInclude>
@@ -844,6 +841,18 @@
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MENU_Quest.h" />
+    <ClInclude Include="..\Public\AIIdleState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIAttackNormalState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AICheckState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIRunawayfromTarget.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObjects\07.Bullet</Filter>
     </ClInclude>
@@ -1348,6 +1357,15 @@
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_MENU_Quest.cpp" />
+    <ClCompile Include="..\Private\AIAttackNormalState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AICheckState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AIRunawayfromTarget.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Bullet.cpp">
       <Filter>02.GameObjects\07.Bullet</Filter>
     </ClCompile>
