@@ -311,6 +311,9 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f)/* * XMMatrixRotationY(XMConvertToRadians(180.0f))*/;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("RingVertical"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/RingVertical.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Akizame"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Akizame.fbx", "../../../Bin/Bin_Data/Effect/Akizame/", PivotMatrix))))
 		return E_FAIL;
 
 
