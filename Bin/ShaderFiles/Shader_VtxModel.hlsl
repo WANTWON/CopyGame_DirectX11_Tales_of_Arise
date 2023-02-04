@@ -34,7 +34,9 @@ texture2D g_DissolveTexture;
 
 /* Glow */
 float3 g_vGlowColor;
-float  g_fGlowPower;
+
+float g_fGlowPower;
+
 
 /* Water (https://www.youtube.com/watch?v=aVCfVs1oZSY&list=PLv8DnRaQOs5-ST_VDqgbbMRtzMtpK36Hy&index=38&t=1610s) */
 float g_fScrollingSpeed = .05f;
