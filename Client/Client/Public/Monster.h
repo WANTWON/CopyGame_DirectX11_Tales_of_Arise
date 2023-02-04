@@ -77,6 +77,7 @@ public: // Get & Set
 	_float Get_Attack_BiteRadius() { return m_fAttack_BiteRadius; }
 	STATS Get_Stats() { return m_tStats; }
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
+	void Set_GlowUp() { m_bGlowUp = true; }
 	void Set_Dissolve() { m_bDissolve = true; }
 	CBaseObj* Get_Trigger() { return m_pTrigger; }
 	CBaseObj* Get_DamageCauser() { return m_pTarget; }
@@ -132,9 +133,13 @@ protected: /* For.Components */
 	CTexture* m_pDissolveTexture = nullptr;
 	
 protected:
+	_bool m_bGlowUp = false; /* Used to increase Glow Power and spawn Diffuse Particles. */
+	_float m_fGlowUpTimer = 0.f;
+	_float m_fGlowUpLifespan = 2.f;
 	_bool m_bDissolve = false;
 	_float m_fDissolveTimer = 0.f;
-	_float m_fDissolveLifespan = 2.f;
+	_float m_fDissolveLifespan = 3.f;
+	vector<class CEffect*> m_pDissolveParticles;
 
 public:
 	virtual void Free() override;
