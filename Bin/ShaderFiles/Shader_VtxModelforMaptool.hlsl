@@ -219,6 +219,7 @@ PS_EFFECT_OUT PS_GLOW(PS_IN In)
 
 	float3 vGlow = g_vGlowColor * g_fGlowPower;
 	Out.vColor.rgb *= vGlow;
+	Out.vColor.a *= g_fAlpha;
 
 	if (Out.vColor.a == 0)
 		discard;
