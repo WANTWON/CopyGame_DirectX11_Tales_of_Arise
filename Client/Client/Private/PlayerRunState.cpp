@@ -72,8 +72,8 @@ CPlayerState * CRunState::HandleInput()
 		
 		m_bIsDash = true;
 
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>( CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_Zoom(true);
+		/*CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>( CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(true);*/
 	}
 	else
 	{
@@ -82,8 +82,8 @@ CPlayerState * CRunState::HandleInput()
 
 		m_bIsDash = false;
 
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_Zoom(false);
+		/*CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false);*/
 	}
 
 	return nullptr;
