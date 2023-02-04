@@ -42,6 +42,7 @@ public:
 protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
 	STATE_ID m_eStateId = STATE_END;
+	STATE_ID m_ePreStateID = STATE_END;
 	CPlayer* m_pOwner = nullptr;
 
 	_float m_fTimer = 0.f;

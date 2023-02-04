@@ -9,7 +9,7 @@ using namespace AIPlayer;
 
 CIdleState::CIdleState(CPlayer* pPlayer, STATE_ID eStateType)
 {
-	m_eStateId = eStateType;
+	m_ePreStateID = eStateType;
 	m_pOwner = pPlayer;
 }
 
@@ -28,7 +28,7 @@ CAIState * CIdleState::LateTick(_float fTimeDelta)
 {
 
 	if (m_fTimer > 3.f && m_bIsAnimationFinished)
-	return new CAIAttackNormalState(m_pOwner, STATE_ID::STATE_ATTACK);
+		return new CAIAttackNormalState(m_pOwner, STATE_ID::STATE_ATTACK);
 
 
 	return nullptr;
