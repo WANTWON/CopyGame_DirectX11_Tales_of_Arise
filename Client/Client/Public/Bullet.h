@@ -7,6 +7,7 @@ class CModel;
 END
 
 BEGIN(Client)
+class CEffect;
 class CBullet abstract : public CBaseObj
 {
 public:
@@ -18,7 +19,9 @@ public:
 		_float	   fStartTime = 0.f;
 		_float	   fDeadTime = 10.f;
 		_float	   fVelocity = 5.f;
+		_int	   iDamage = 20;
 		CBaseObj*  pTarget = nullptr;
+		CBaseObj*  pOwner = nullptr;
 
 	}BULLETDESC;
 
@@ -32,16 +35,17 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual HRESULT Render_ShadowDepth() override;
 
 protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr);
 	virtual HRESULT SetUp_ShaderResources();
 	virtual HRESULT SetUp_ShaderID();
+	virtual void Collision_Check();
 
 protected:
 	BULLETDESC m_BulletDesc;
 	CModel* m_pModelCom = nullptr;
+	vector<CEffect*> m_pEffects;
 
 
 public:

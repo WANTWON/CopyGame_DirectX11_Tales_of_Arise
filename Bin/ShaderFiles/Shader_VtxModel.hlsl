@@ -34,6 +34,7 @@ texture2D g_DissolveTexture;
 
 /* Glow */
 float3 g_vGlowColor;
+
 float g_fGlowPower;
 
 
