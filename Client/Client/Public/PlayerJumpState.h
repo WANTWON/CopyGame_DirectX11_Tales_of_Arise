@@ -7,11 +7,15 @@ BEGIN(Player)
 class CJumpState final : public CPlayerState
 {
 public:
-	CJumpState(class CPlayer* pPlayer, _float fStartHeight, STATETYPE eType, _float fTime);
+	enum JUMPTYPE { JUMP_IDLE, JUMP_RUN, JUMP_BATTLE, JUMP_END };
+
+public:
+	CJumpState(class CPlayer* pPlayer, _float fStartHeight, STATETYPE eType, _float fTime, JUMPTYPE eJumpType);
 
 	virtual CPlayerState* HandleInput() override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
 	virtual CPlayerState* LateTick(_float fTimeDelta);
+	virtual CPlayerState* EventInput(void);
 
 	virtual void Enter() override;
 	virtual void Exit() override;
@@ -26,9 +30,12 @@ private:
 	_float m_fTime = 0.f;
 	_vector m_vecStartPos;
 	_vector m_vecChangePos;
+	_bool m_bIsJump = false;
+	_bool m_bIsDrop = false;
 
 private:
 	DIRID m_eDirection = DIRID::DIR_END;
+	JUMPTYPE m_eJumpType = JUMP_END;
 };
 END
 END
