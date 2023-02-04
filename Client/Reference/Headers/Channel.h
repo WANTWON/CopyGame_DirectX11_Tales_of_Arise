@@ -17,9 +17,9 @@ public:
 public:
 	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel);
 	HRESULT Bin_Initialize(DATA_BINCHANNEL* pAIChannel, class CModel* pModel); // Ãß°¡
-	void Invalidate_TransformationMatrix(_float fCurrentTime);
+	void Invalidate_TransformationMatrix(_float fCurrentTime, const char* pBoneName);
 	void Reset();
-	_bool Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime);
+	_bool Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime, const char* pBoneName);
 
 public: /*Get*/
 	KEYFRAME	Get_StartKeyFrame(void) { return m_KeyFrames[0]; }

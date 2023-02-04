@@ -7,7 +7,7 @@ BEGIN(Player)
 class CJumpState final : public CPlayerState
 {
 public:
-	enum JUMPTYPE { JUMP_IDLE, JUMP_RUN, JUMP_END };
+	enum JUMPTYPE { JUMP_IDLE, JUMP_RUN, JUMP_BATTLE, JUMP_END };
 
 public:
 	CJumpState(class CPlayer* pPlayer, _float fStartHeight, STATETYPE eType, _float fTime, JUMPTYPE eJumpType);
@@ -31,6 +31,7 @@ private:
 	_vector m_vecStartPos;
 	_vector m_vecChangePos;
 	_bool m_bIsJump = false;
+	_bool m_bIsDrop = false;
 
 private:
 	DIRID m_eDirection = DIRID::DIR_END;

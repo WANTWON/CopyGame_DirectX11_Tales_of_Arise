@@ -95,15 +95,15 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 	/* For.Prototype_Component_Model_Sion */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sion"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/SionBody.dat"))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/Sion.dat"))))
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("Sion");
 
-	/* For.Prototype_Component_Model_SionHead(R00) */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SionHead"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Sion/SionHead.dat"))))
+	/* For.Prototype_Component_Model_SIOW(00) */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SIOW(00)"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/SIOW(00)/SIOW(00).dat"))))
 		return E_FAIL;
-	pImgui->m_WeaponObj.push_back("SionHead");
+	pImgui->m_WeaponObj.push_back("SIOW(00)");
 
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));

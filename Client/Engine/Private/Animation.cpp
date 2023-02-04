@@ -106,7 +106,7 @@ HRESULT CAnimation::Bin_Initialize(DATA_BINANIM * pAIAnimation, CModel * pModel)
 	return S_OK;
 }
 
-_bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop)
+_bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
 	//애니메이션 구간별 재생 속도 변화
 	_int iSize = _int(m_ChangeTickTimes.size() - 1);
@@ -151,7 +151,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 		{
 			for (auto& pChannel : m_Channels)
 			{
-				pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
+				pChannel->Invalidate_TransformationMatrix(m_fCurrentTime, pBoneName);
 			}
 
 			Set_TimeReset();
@@ -165,7 +165,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 
 	for (auto& pChannel : m_Channels)
 	{
-		pChannel->Invalidate_TransformationMatrix(m_fCurrentTime);
+		pChannel->Invalidate_TransformationMatrix(m_fCurrentTime, pBoneName);
 	}
 
 	if (true == m_isFinished && true == isLoop)
@@ -174,7 +174,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 	return m_isFinished; //루프를 돌지 않고 애니메이션이 끝났을 때
 }
 
-_bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation * NextAnim)
+_bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation * NextAnim, const char* pBoneName)
 {
 	/* 현재 재생중인 시간. */
 	vector<CChannel*> NextAnimChannels = NextAnim->Get_Channels();
@@ -185,7 +185,7 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 	{
 		for (_uint i = 0; i < m_iNumChannels; ++i)
 		{
-			if (m_Channels[i]->Linear_Interpolation(NextAnimChannels[i]->Get_StartKeyFrame(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration))
+			if (m_Channels[i]->Linear_Interpolation(NextAnimChannels[i]->Get_StartKeyFrame(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration, pBoneName))
 			{
 				m_bLinearFinished = true;
 				//m_Channels[i]->Reset();

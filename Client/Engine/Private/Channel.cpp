@@ -56,7 +56,7 @@ HRESULT CChannel::Bin_Initialize(DATA_BINCHANNEL * pAIChannel, CModel * pModel)
 	return S_OK;
 }
 
-void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
+void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime, const char* pBoneName)
 {
 	/* 던져진 시간에 맞는 뼈의 상태를 만들거야.
 	만들면 모델이 가지고 있는 뼈에 던질꺼야. */
@@ -104,7 +104,7 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime)
 		vPosition = XMVectorSetW(vPosition, 1.f);
 	}
 
-	if (!strcmp(m_szName, "TransN"))
+	if ((nullptr != pBoneName) && !strcmp(m_szName, pBoneName))
 	{
 		m_pBoneNode->Set_Translation(vPosition - XMLoadFloat3(&m_KeyFrame_Linear.vPosition));
 		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
@@ -131,7 +131,7 @@ void CChannel::Reset()
 	//m_KeyFrame_Linear = m_KeyFrames[0];
 }
 
-bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime)
+bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime, const char* pBoneName)
 {
 	_vector			vScale, vRotation, vPosition;
 
@@ -140,7 +140,6 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 		m_KeyFrame_Linear = m_KeyFrames[0];
 		return true;
 	}
-		
 
 	_float		fRatio = fLinearCurrentTime / fLinearTotalTime;
 
@@ -150,10 +149,6 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	vDestScale = XMLoadFloat3(&NextKeyFrame.vScale);
 	vDestRotation = XMLoadFloat4(&NextKeyFrame.vRotation);
 	vDestPosition = XMLoadFloat3(&NextKeyFrame.vPosition);
-	
-	/*vDestScale = XMLoadFloat3(&m_KeyFrame_Linear.vScale);
-	vDestRotation = XMLoadFloat4(&m_KeyFrame_Linear.vRotation);
-	vDestPosition = XMLoadFloat3(&m_KeyFrame_Linear.vPosition);*/
 
 	vSourScale = XMLoadFloat3(&m_KeyFrame_Linear.vScale);
 	vSourRotation = XMLoadFloat4(&m_KeyFrame_Linear.vRotation);
@@ -164,7 +159,7 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
 	vPosition = XMVectorSetW(vPosition, 1.f);
 
-	if (!strcmp(m_szName, "TransN"))
+	if ((nullptr != pBoneName) && !strcmp(m_szName, pBoneName))
 		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 	
 	/*XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);

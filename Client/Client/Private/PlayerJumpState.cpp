@@ -85,7 +85,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 		}
 	}
 
-	if ((m_eStateType != STATETYPE_END) && m_bIsJump)
+	if (m_bIsJump)
 		Move(fTimeDelta);
 
 	m_pOwner->Check_Navigation_Jump();
@@ -95,27 +95,38 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 {
-	/*if (m_bIsAnimationFinished)
-	{*/
-		switch (m_eStateType)
-		{
-		case STATETYPE_START:
+	switch (m_eStateType)
+	{
+	case STATETYPE_START:
+	{
+		if (m_bIsDrop || m_bIsAnimationFinished)
 		{
 			if (Check_JumpEnd())
-				return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_END, m_fTime, m_eJumpType);
+			{
+				m_eStateType = STATETYPE_END;
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
+			}
 			else
-				return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, m_eJumpType);
+			{
+				m_eStateType = STATETYPE_MAIN;
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
+			}
 		}
-		case STATETYPE_END:
+		break;
+	}
+	case STATETYPE_MAIN:
+		if (Check_JumpEnd())
+		{
+			m_eStateType = STATETYPE_END;
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
+		}
+		break;
+	case STATETYPE_END:
+		if (m_bIsAnimationFinished)
+		{
+			m_bIsJump = false;
 			return new CIdleState(m_pOwner);
 		}
-	//}
-
-	if ((CAlphen::ANIM::ANIM_JUMP_LOOP == m_pOwner->Get_Model()->Get_CurrentAnimIndex()) && Check_JumpEnd())
-	{
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
-		m_eStateType = STATETYPE_END;
-		m_bIsJump = false;
 	}
 
 	return nullptr;
@@ -217,16 +228,54 @@ void CJumpState::Enter()
 			break;
 		}
 	}
+	else if (JUMP_RUN == m_eJumpType)	
+	{
+		switch (m_eStateType)
+		{
+		case STATETYPE_START:
+			switch (ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_START);
+				break;
+			case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				break;
+			}
+			break;
+		case STATETYPE_MAIN:
+			switch (ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LOOP);
+				break;
+			case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				break;
+			}
+			break;
+		case STATETYPE_END:
+			switch (ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_END);
+				break;
+			case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				break;
+			}
+			break;
+		}
+	}
 }
 
 void CJumpState::Exit()
 {
-	if (m_eStateType == STATETYPE_END)
-	{
-		m_fTime = 0.f;
+	m_fTime = 0.f;
 
-		m_pOwner->Off_IsFly();
-	}
+	m_pOwner->Off_IsFly();
+
+	m_bIsDrop = false;
 }
 
 _bool CJumpState::Check_JumpEnd()
@@ -235,20 +284,28 @@ _bool CJumpState::Check_JumpEnd()
 	m_pOwner->Get_Navigation()->Compute_CurrentIndex_byXZ(vPosition);
 	m_fEndHeight = m_pOwner->Get_Navigation()->Compute_Height(vPosition, 0.f);
 
-	if (m_fEndHeight + 1.5f > XMVectorGetY(vPosition))
-	{
-		vPosition = XMVectorSetY(vPosition, m_fEndHeight);
-		m_pOwner->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	if (m_fEndHeight + 5.f > XMVectorGetY(vPosition))
 		return true;
-	}
 
 	return false;
 }
 
 void CJumpState::Move(_float fTimeDelta)
 {
+	_vector vPrePos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+
 	m_fTime += 0.1f;
 	m_pOwner->Get_Transform()->Jump(m_fTime, 5.f, 1.0f, m_fStartHeight, m_fEndHeight);
+
+	_vector vCurPos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+
+	_float4 fChangeHeight;
+	XMStoreFloat4(&fChangeHeight, (vCurPos - vPrePos));
+
+	if (0 > fChangeHeight.y)
+		m_bIsDrop = true;
+	else
+		m_bIsDrop = false;
 
 	/*if (m_eDirection != DIR_END)
 		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f, m_pOwner->Get_Navigation());*/
