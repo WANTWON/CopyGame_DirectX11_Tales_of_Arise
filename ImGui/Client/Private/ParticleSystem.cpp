@@ -38,8 +38,27 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	KillParticles();					/* Release old Particles. */
 
 	if (m_bPlay)
-		EmitParticles(fTimeDelta);		/* Emit new Particles.	*/
+	{
+		if (!m_bCanStart)
+		{
+			if (m_tParticleDesc.m_fParticleStartAfter == 0)
+				m_bCanStart = true;
+			else
+			{
+				if (m_fAccumulatedTime < m_tParticleDesc.m_fParticleStartAfter)
+					m_fAccumulatedTime += fTimeDelta;
+				else
+				{
+					m_bCanStart = true;
+					m_fAccumulatedTime = 0.f;
+				}
+			}
+		}
 
+		if (m_bCanStart)
+			EmitParticles(fTimeDelta); /* Emit new Particles. */
+	}
+		
 	// Billboard
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
@@ -655,10 +674,15 @@ void CParticleSystem::KillParticles()
 				m_Particles[j].bActive = m_Particles[j + 1].bActive;
 			}
 
+			/* If SpawnType is LOOP after removing the last Particle stop emitting. */
+			if (m_tParticleDesc.m_eSpawnType == 0 && m_fCurrentParticleCount == 0)
+				m_bCanStart = false;
+
 			/* If SpawnType is BURST after removing the last Particle stop emitting. */
 			if (m_tParticleDesc.m_eSpawnType == 1 && m_fCurrentParticleCount == 0 && m_bDidBurst)
 			{
 				m_bPlay = false;
+				m_bCanStart = false;
 				CImgui_Manager::Get_Instance()->Set_Play(false);
 			}
 		}

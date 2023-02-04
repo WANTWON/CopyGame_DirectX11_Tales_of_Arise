@@ -23,6 +23,7 @@ public:
 		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
 		_int m_iMaxParticles = 1000.f;
 		_float m_fParticlesLifetime = 1.f;
+		_float m_fParticleStartAfter = 0.f;
 		_float m_fParticlesPerSecond = 1.f;
 		_float m_fParticleDeviationX = 0.f;
 		_float m_fParticleDeviationY = 0.f;
@@ -107,6 +108,7 @@ private:
 
 	_int m_fCurrentParticleCount;
 	_float m_fAccumulatedTime;
+	_bool m_bCanStart = false;
 	_bool m_bDidBurst = false;
 
 	/* Buffer Properties. */
