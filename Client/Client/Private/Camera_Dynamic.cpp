@@ -151,19 +151,18 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	m_lMouseWheel = pGameInstance->Get_DIMMoveState(DIMM_WHEEL);
 	if (m_lMouseWheel < 0)
 	{
-		//	XMVectorSetY(vCameraPosition, XMVectorGetY(vCameraPosition) + 0.3f);
-		//	XMVectorSetZ(vCameraPosition, XMVectorGetZ(vCameraPosition) - 0.5f);
+			XMVectorSetY(vCameraPosition, XMVectorGetY(vCameraPosition) + 0.3f);
+			XMVectorSetZ(vCameraPosition, XMVectorGetZ(vCameraPosition) - 0.5f);
 
-			/*if (m_vDistance.y >= 10.f)
-				m_vDistance.y = 10.f;*/
-
-				/*	if (m_vDistance.z <= -20.f)
-						m_vDistance.z = -20.f;*/
+			if (m_vDistance.y >= 10.f)
+				m_vDistance.y = 10.f;
+			if (m_vDistance.z <= -20.f)
+				m_vDistance.z = -20.f;
 
 	}
 	else if (m_lMouseWheel > 0)
 	{
-		/*m_vDistance.y -= 0.3f;
+		m_vDistance.y -= 0.3f;
 		m_vDistance.z += 0.5f;
 
 
@@ -171,9 +170,22 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 			m_vDistance.y = 0.f;
 
 		if (m_vDistance.z >= -3.f)
-			m_vDistance.z = -3.f;*/
+			m_vDistance.z = -3.f;
 	}
 
+
+	if (m_bZoom)
+	{
+		m_fZoom -= 0.1f;
+		if (m_fZoom <= -3.f)
+			m_fZoom = -3.f;
+	}
+	else
+	{
+		m_fZoom += 0.1f;
+		if (m_fZoom >= 0.f)
+			m_fZoom = 0.f;
+	}
 
 
 	if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
@@ -233,6 +245,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	vPlayerPosition = XMVectorSetY(vPlayerPosition, XMVectorGetY(vPlayerPosition) + m_fOffsetPosY);
 	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vPlayerPosition) + m_fCameraY);
 
+
 	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
 		m_bLerp = false;
 
@@ -241,7 +254,8 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	{
 		m_fTime += fTimeDelta*0.3f;
 
-		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
+		_vector vDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos + vDir*m_fZoom), m_fTime); //_float4 저장 y올리기 
 
 		if (m_fTime >= 1.f)
 			m_bLerp = false;
