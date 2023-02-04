@@ -55,6 +55,7 @@ public: /* Getter &  Setter */
 	void			Off_IsFly(void) { m_bIsFly = false; }
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
+	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
 
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;

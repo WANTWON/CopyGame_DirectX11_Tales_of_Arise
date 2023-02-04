@@ -340,7 +340,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 	
 		if (m_bLinearFinished == true)
 		{
-			m_Animations[m_iPreAnimIndex]->Set_TimeReset();
+			//m_Animations[m_iPreAnimIndex]->Set_TimeReset();
 
 			//m_iPreAnimIndex = m_iCurrentAnimIndex;
 

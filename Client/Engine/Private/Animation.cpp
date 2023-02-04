@@ -188,7 +188,7 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 			if (m_Channels[i]->Linear_Interpolation(NextAnimChannels[i]->Get_StartKeyFrame(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration, pBoneName))
 			{
 				m_bLinearFinished = true;
-				//m_Channels[i]->Reset();
+				m_Channels[i]->Reset();
 			}
 		}
 

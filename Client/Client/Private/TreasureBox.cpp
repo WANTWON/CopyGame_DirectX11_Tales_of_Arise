@@ -103,15 +103,19 @@ void CTreasureBox::Late_Tick(_float fTimeDelta)
 
 	if (m_bCollision)
 	{
-		if (!m_bOpen)
-		{
-			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_ARSORSWORD, ITEMTYPE_SWORD, false, true);
-			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_HWANGJELLY, ITEMTYPE_JELLY, true, false);
-			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
-			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
-		}
+		if (GetKeyState('E') < 0)
+			pPlayer->Set_PlayerCollectState(this);
 
-		m_bOpen = true;
+		/*if (!m_bOpen)
+		{
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_ARSORSWORD, ITEMTYPE_SWORD, true, false);
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_HWANGJELLY, ITEMTYPE_JELLY, false, true);
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, false, true);
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, false, true);
+		}*/
+
+		if (m_bIsInteract)
+			m_bOpen = true;
 	}
 }
 

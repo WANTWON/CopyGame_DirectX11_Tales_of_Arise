@@ -128,7 +128,7 @@ void CChannel::Reset()
 {
 	m_iCurrentKeyFrameIndex = 0;
 
-	//m_KeyFrame_Linear = m_KeyFrames[0];
+	m_KeyFrame_Linear = m_KeyFrames[0];
 }
 
 bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime, const char* pBoneName)
@@ -136,10 +136,7 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	_vector			vScale, vRotation, vPosition;
 
 	if (fLinearCurrentTime >= fLinearTotalTime)
-	{
-		m_KeyFrame_Linear = m_KeyFrames[0];
 		return true;
-	}
 
 	_float		fRatio = fLinearCurrentTime / fLinearTotalTime;
 
