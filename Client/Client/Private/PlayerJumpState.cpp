@@ -9,12 +9,13 @@
 
 using namespace Player;
 
-CJumpState::CJumpState(CPlayer* pPlayer, _float fStartHeight, STATETYPE eType, _float fTime)
+CJumpState::CJumpState(CPlayer* pPlayer, _float fStartHeight, STATETYPE eType, _float fTime, JUMPTYPE eJumpType)
 {
 	m_pOwner = pPlayer;
 	m_fStartHeight = fStartHeight;
 	m_eStateType = eType;
 	m_fTime = fTime;
+	m_eJumpType = eJumpType;
 }
 
 CPlayerState * CJumpState::HandleInput()
@@ -38,7 +39,7 @@ CPlayerState * CJumpState::HandleInput()
 		}
 	}
 
-	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
+	/*if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		m_eDirection = DIR_STRAIGHT_LEFT;
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
 		m_eDirection = DIR_STRAIGHT_RIGHT;
@@ -55,7 +56,7 @@ CPlayerState * CJumpState::HandleInput()
 	else if (pGameInstance->Key_Pressing(DIK_W))
 		m_eDirection = DIR_STRAIGHT;
 	else
-		m_eDirection = DIR_END;
+		m_eDirection = DIR_END;*/
 
 	return nullptr;
 }
@@ -75,8 +76,6 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 			case CAlphen::ANIM::ANIM_JUMP_START:
 				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					m_bIsJump = true;
-				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
 				break;
 			case CAlphen::ANIM::ANIM_JUMP_LAND:
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -85,9 +84,6 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 			}
 		}
 	}
-
-	if (CAlphen::ANIM::ANIM_JUMP_START != m_pOwner->Get_Model()->Get_CurrentAnimIndex())
-		m_bIsJump = true;
 
 	if ((m_eStateType != STATETYPE_END) && m_bIsJump)
 		Move(fTimeDelta);
@@ -99,16 +95,21 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 {
-	if (m_bIsAnimationFinished)
-	{
+	/*if (m_bIsAnimationFinished)
+	{*/
 		switch (m_eStateType)
 		{
 		case STATETYPE_START:
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime);
+		{
+			if (Check_JumpEnd())
+				return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_END, m_fTime, m_eJumpType);
+			else
+				return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, m_eJumpType);
+		}
 		case STATETYPE_END:
 			return new CIdleState(m_pOwner);
 		}
-	}
+	//}
 
 	if ((CAlphen::ANIM::ANIM_JUMP_LOOP == m_pOwner->Get_Model()->Get_CurrentAnimIndex()) && Check_JumpEnd())
 	{
@@ -171,47 +172,50 @@ void CJumpState::Enter()
 
 	CPlayer::PLAYERID ePlayerID = m_pOwner->Get_PlayerID();
 
-	switch (m_eStateType)
+	if (JUMP_IDLE == m_eJumpType)
 	{
-	case STATETYPE_START:
-		switch (ePlayerID)
+		switch (m_eStateType)
 		{
-		case CPlayer::ALPHEN:
-			if (LEVEL_BATTLE == m_pOwner->Get_Level())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_JUMP);
-			else
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_START);
+		case STATETYPE_START:
+			switch (ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				if (LEVEL_BATTLE == m_pOwner->Get_Level())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_JUMP);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_START);
+				break;
+			case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				break;
+			}
 			break;
-		case CPlayer::SION:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+		case STATETYPE_MAIN:
+			switch (ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
+				break;
+			case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				break;
+			}
+			break;
+		case STATETYPE_END:
+			switch (ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				if (LEVEL_BATTLE == m_pOwner->Get_Level())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
+				break;
+			case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				break;
+			}
 			break;
 		}
-		break;
-	case STATETYPE_MAIN:
-		switch (ePlayerID)
-		{
-		case CPlayer::ALPHEN:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
-			break;
-		case CPlayer::SION:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
-			break;
-		}
-		break;
-	case STATETYPE_END:
-		switch (ePlayerID)
-		{
-		case CPlayer::ALPHEN:
-			if (LEVEL_BATTLE == m_pOwner->Get_Level())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
-			else
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
-			break;
-		case CPlayer::SION:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
-			break;
-		}
-		break;
 	}
 }
 
@@ -243,43 +247,9 @@ _bool CJumpState::Check_JumpEnd()
 
 void CJumpState::Move(_float fTimeDelta)
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	_matrix CameraMatrix = XMLoadFloat4x4(&pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW));
-
-	RELEASE_INSTANCE(CGameInstance);
-
-	switch (m_eDirection)
-	{
-	case DIR_STRAIGHT_LEFT:
-		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-45.f));
-		break;
-	case DIR_STRAIGHT_RIGHT:
-		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f));
-		break;
-	case DIR_BACKWARD_LEFT:
-		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-135.f));
-		break;
-	case DIR_BACKWARD_RIGHT:
-		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(135.f));
-		break;
-	case DIR_STRAIGHT:
-		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(0.f));
-		break;
-	case DIR_BACKWARD:
-		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
-		break;
-	case DIR_LEFT:
-		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-90.f));
-		break;
-	case DIR_RIGHT:
-		CameraMatrix *= XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
-		break;
-	}
-
 	m_fTime += 0.1f;
-	m_pOwner->Get_Transform()->Jump(m_fTime, 3.f, 1.0f, m_fStartHeight, m_fEndHeight);
+	m_pOwner->Get_Transform()->Jump(m_fTime, 5.f, 1.0f, m_fStartHeight, m_fEndHeight);
 
-	if (m_eDirection != DIR_END)
-		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f, m_pOwner->Get_Navigation());
+	/*if (m_eDirection != DIR_END)
+		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f, m_pOwner->Get_Navigation());*/
 }

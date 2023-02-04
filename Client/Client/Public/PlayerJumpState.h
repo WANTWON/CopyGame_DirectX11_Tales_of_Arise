@@ -7,7 +7,10 @@ BEGIN(Player)
 class CJumpState final : public CPlayerState
 {
 public:
-	CJumpState(class CPlayer* pPlayer, _float fStartHeight, STATETYPE eType, _float fTime);
+	enum JUMPTYPE { JUMP_IDLE, JUMP_RUN, JUMP_END };
+
+public:
+	CJumpState(class CPlayer* pPlayer, _float fStartHeight, STATETYPE eType, _float fTime, JUMPTYPE eJumpType);
 
 	virtual CPlayerState* HandleInput() override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -31,6 +34,7 @@ private:
 
 private:
 	DIRID m_eDirection = DIRID::DIR_END;
+	JUMPTYPE m_eJumpType = JUMP_END;
 };
 END
 END
