@@ -16,7 +16,7 @@ CWalkState::CWalkState(CBerserker* pBerserker, FIELD_STATE_ID ePreState, _bool b
 	m_ePreState_Id = ePreState;
 	
 	m_bTriggerTurn = bTriggerTurn;
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fMoveTime = ((rand() % 10000 + 6000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
@@ -65,7 +65,7 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 	{
 		//m_bTriggerTurn = false;
 
-		m_fTimeDletaAcc += fTimeDelta;
+		m_fTimeDeltaAcc += fTimeDelta;
 
 		//m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
@@ -74,7 +74,7 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 		if (m_pTarget)
 			return new CChaseState(m_pOwner);
 
-		else if (m_fTimeDletaAcc > m_fMoveTime)
+		else if (m_fTimeDeltaAcc > m_fMoveTime)
 		{
 			switch (rand() % 3)
 			{

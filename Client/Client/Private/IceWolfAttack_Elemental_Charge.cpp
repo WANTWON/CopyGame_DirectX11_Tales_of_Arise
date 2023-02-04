@@ -15,7 +15,7 @@ CAttack_Elemental_Charge::CAttack_Elemental_Charge(class CIce_Wolf* pIceWolf, ST
 	m_eStateId_Charge = eStateType;
 	m_pOwner = pIceWolf;
 	m_pCurTarget = pCurTarget;
-	m_fTimeDletaAcc = 0.f;
+	m_fTimeDeltaAcc = 0.f;
 	m_fRandTime = ((rand() % 3000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
 	
 }
@@ -79,7 +79,7 @@ CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 {
 	/*if (m_pTarget == nullptr)
 		return nullptr;*/
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
 	if (m_bTargetSetting = false)
 	{
@@ -99,11 +99,11 @@ CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 		}
 
 		
-		m_fTimeDletaAcc += fTimeDelta;
+		m_fTimeDeltaAcc += fTimeDelta;
 			
 			
 		case STATE_CHARGE_END:
-			if (m_fTimeDletaAcc > m_fRandTime)
+			if (m_fTimeDeltaAcc > m_fRandTime)
 			return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_CHARGE_END);
 
 		default:

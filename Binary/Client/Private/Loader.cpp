@@ -281,9 +281,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 	/*For.Prototype_Component_Model_Slime*/
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f)/* * XMMatrixRotationY(XMConvertToRadians(180.0f))*/;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Test"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Test.fbx", "../../../Bin/Bin_Data/Effect/Test/", PivotMatrix))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Akizame"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Akizame.fbx", "../../../Bin/Bin_Data/Effect/Akizame/", PivotMatrix))))
 		return E_FAIL;
+
 
 	///*For.Prototype_Component_Model_Alphen*/
 	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));

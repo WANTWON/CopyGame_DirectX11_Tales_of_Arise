@@ -82,8 +82,6 @@ public:
 		ANIM_SYMBOL_WALK,
 	};
 
-
-
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	CTransform* Get_Transform() { return m_pTransformCom; }
@@ -92,7 +90,7 @@ public:
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	void Set_Done_HitAnimState() { m_bDone_HitAnimState = false; }
 	void Set_OnGoingBite() { m_bOnGoing_Bite= true; }
-	void Set_FinishBite()  { m_bOnGoing_Bite = false; }
+	void Set_FinishBite() { m_bOnGoing_Bite = false; }
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
@@ -116,8 +114,7 @@ public: /*For.State*/
 	void Tick_State(_float fTimeDelta);
 	void LateTick_State(_float fTimeDelta);
 
-
-		/*For Navigation*/
+public:	/*For Navigation*/
 	virtual void Check_Navigation() override;
 
 private:
@@ -126,12 +123,12 @@ private:
 private:
 	class CIceWolfState*  m_pState = nullptr;
 
-	_float   m_fSpeed = 3.f;
+	_float m_fSpeed = 3.f;
 	
-	_int	 m_iBeDamaged_Cnt = 0;
-	_bool   m_bDone_HitAnimState = false;
-	_bool	m_bSomeSauling = false;
-	_bool	m_bOnGoing_Bite = false;
+	_int m_iBeDamaged_Cnt = 0;
+	_bool m_bDone_HitAnimState = false;
+	_bool m_bSomeSauling = false;
+	_bool m_bOnGoing_Bite = false;
 
 public:
 	static CIce_Wolf* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

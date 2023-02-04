@@ -21,7 +21,10 @@ public:
 		_float fAlpha = 1.f;
 		_bool bGlow = false;
 		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
+		_float fGlowPower = 1.f;
 		_float fLifetime = 0.f;
+		_float3 vPosition = _float3(0.f, 0.f, 0.f);
+		_float3 vRotation = _float3(0.f, 0.f, 0.f);
 		_float3 vScaleInitial = _float3(1.f, 1.f, 1.f);
 		_float3 vScale = _float3(1.f, 1.f, 1.f);
 		_float3 vTurn = _float3(0.f, 0.f, 0.f);

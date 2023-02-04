@@ -53,7 +53,7 @@ CIceWolfState * CBattle_DeadState::LateTick(_float fTimeDelta)
 	}
 
 	if (m_bDeadAnimFinish)
-		m_pOwner->Set_Dissolve();
+		m_pOwner->Set_GlowUp();
 
 	return nullptr;
 }

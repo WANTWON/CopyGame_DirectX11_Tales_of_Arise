@@ -213,7 +213,7 @@ protected:
 	_bool		m_bAngry = false;
 	_bool		m_bTarget_isRight = false;
 	
-	_float		m_fTimeDletaAcc = 0.f;
+	_float		m_fTimeDeltaAcc = 0.f;
 	_float		m_fTarget_Distance;
 	_float		m_fRandTime;
 	_float		m_fTarget_Radian = 0.f;
