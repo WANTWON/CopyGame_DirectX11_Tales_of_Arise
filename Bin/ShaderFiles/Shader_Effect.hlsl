@@ -98,6 +98,7 @@ PS_OUT PS_GLOW(PS_IN In)
 	Out.vColor.gba = Out.vColor.r;
 
 	Out.vColor.rgb *= g_vGlowColor;
+	Out.vColor.a *= In.fAlpha;
 
 	if (Out.vColor.a == 0)
 		discard;

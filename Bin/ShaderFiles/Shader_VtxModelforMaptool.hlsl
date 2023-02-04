@@ -219,7 +219,6 @@ PS_EFFECT_OUT PS_GLOW(PS_IN In)
 
 	float3 vGlow = g_vGlowColor * g_fGlowPower;
 	Out.vColor.rgb *= vGlow;
-	Out.vColor.a *= g_fAlpha;
 
 	if (g_bNoise)
 	{
@@ -235,6 +234,8 @@ PS_EFFECT_OUT PS_GLOW(PS_IN In)
 
 		Out.vColor.a *= vNoise;
 	}
+
+	Out.vColor.a *= g_fAlpha;
 
 	if (Out.vColor.a == 0)
 		discard;
@@ -302,7 +303,7 @@ technique11 DefaultTechnique
 	pass Glow // 5
 	{
 		SetRasterizerState(RS_Default_NoCull);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_Default, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
