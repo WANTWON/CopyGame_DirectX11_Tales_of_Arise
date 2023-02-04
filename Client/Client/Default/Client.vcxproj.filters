@@ -856,6 +856,9 @@
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObjects\07.Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RinwellSkills.h">
+      <Filter>02.GameObjects\07.Bullet\RinwellSkills</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1365,6 +1368,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bullet.cpp">
       <Filter>02.GameObjects\07.Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellSkills.cpp">
+      <Filter>02.GameObjects\07.Bullet\RinwellSkills</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,7 @@
 #include "PlayerJumpState.h"
 #include "PlayerSkillState.h"
 #include "PlayerCollectState.h"
+#include "CameraManager.h"
 
 using namespace Player;
 
@@ -70,6 +71,9 @@ CPlayerState * CRunState::HandleInput()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
 		
 		m_bIsDash = true;
+
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>( CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(true);
 	}
 	else
 	{
@@ -77,6 +81,9 @@ CPlayerState * CRunState::HandleInput()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
 
 		m_bIsDash = false;
+
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false);
 	}
 
 	return nullptr;

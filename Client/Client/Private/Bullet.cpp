@@ -28,10 +28,12 @@ HRESULT CBullet::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if(m_BulletDesc.eBulletType == PLAYER)
+	if(m_BulletDesc.eCollisionGroup == PLAYER)
 		CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
-	else if (m_BulletDesc.eBulletType == MONSTER)
+	else if (m_BulletDesc.eCollisionGroup == MONSTER)
 		CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, this);
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION,m_BulletDesc.vInitPositon);
 
 }
 
@@ -40,8 +42,16 @@ void CBullet::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 
+
 	if (m_pRendererCom)
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		__super::Late_Tick(fTimeDelta);
+	}
+
+	m_fTime += fTimeDelta;
+	if (m_fTime >= m_BulletDesc.fDeadTime)
+		m_bDeadEffect = true;
 
 	Collision_Check();
 }
@@ -122,7 +132,7 @@ HRESULT CBullet::SetUp_ShaderID()
 void CBullet::Collision_Check()
 {
 	CBaseObj* pCollisionTarget = nullptr;
-	if (m_BulletDesc.eBulletType == PLAYER)
+	if (m_BulletDesc.eCollisionGroup == PLAYER)
 	{
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
@@ -132,9 +142,9 @@ void CBullet::Collision_Check()
 	}
 	else
 	{
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
 		{
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			//dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
 			m_bDead = true;
 		}
 	}
@@ -150,9 +160,9 @@ void CBullet::Free()
 
 	m_pEffects.clear();
 
-	if (m_BulletDesc.eBulletType == PLAYER)
+	if (m_BulletDesc.eCollisionGroup == PLAYER)
 		CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
-	else if (m_BulletDesc.eBulletType == MONSTER)
+	else if (m_BulletDesc.eCollisionGroup == MONSTER)
 		CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, this);
 
 }

@@ -45,7 +45,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 //	return new CAICheckState(m_pOwner, m_eStateId);
 	if (m_fTimer > 1.5f)
 	{
-		if (Get_Target_Distance() <= 5.f)
+		if (Get_Target_Distance() <= 2.f)
 		{
 			return new CAIRunawayfromTarget(m_pOwner, STATE_RUN);
 		}
