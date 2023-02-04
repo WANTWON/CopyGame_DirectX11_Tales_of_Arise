@@ -98,8 +98,6 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 	if (iMonsterSize == 0)
 		CBattleManager::Get_Instance()->Set_BattleMode(false);
 
-	CCollision_Manager::Get_Instance()->CollisionwithBullet();
-
 	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
 	if (pLockOn == nullptr)
 	{

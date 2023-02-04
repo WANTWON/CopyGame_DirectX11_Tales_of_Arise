@@ -82,7 +82,7 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
-}
+} 
 
 unsigned int APIENTRY Thread_Main(void* pArg)
 {
@@ -123,6 +123,7 @@ HRESULT CLoader::Initialize(LEVEL eNextLevel)
 	return S_OK;
 }
 
+
 HRESULT CLoader::Loading_ForLogoLevel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -142,6 +143,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/* UI Loading */
 	lstrcpy(m_szLoadingText, TEXT("UI Loading"));
 	if (FAILED(Loading_ForUITexture()))
+		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Effect Loading"));
+	if (FAILED(Loading_ForEffect()))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Finished Loading"));
@@ -1519,6 +1524,32 @@ HRESULT CLoader::Loading_ForUITexture()
 	
 	
 	
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForEffect()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Sphere0"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Sphere/Sphere0.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_noise_SO_AlphaC02"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Aura/TO14_T_FX_noise_SO_AlphaC02.png"), 1))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("DotNoise_rm_01"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/DotNoise/DotNoise_rm_01.png"), 1))))
+		return E_FAIL;
+
+
+	RELEASE_INSTANCE(CGameInstance);
+
 	return S_OK;
 }
 
