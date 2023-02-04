@@ -304,6 +304,9 @@
     <Filter Include="02.GameObjects\04.UI\19.UI_DamagaeFont">
       <UniqueIdentifier>{9da4c663-4609-401f-8ccd-30adfd580c02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07.Bullet">
+      <UniqueIdentifier>{24098752-2738-44e8-9fca-7fe530b25e25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -838,6 +841,9 @@
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MENU_Quest.h" />
+    <ClInclude Include="..\Public\Bullet.h">
+      <Filter>02.GameObjects\07.Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1336,6 +1342,9 @@
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_MENU_Quest.cpp" />
+    <ClCompile Include="..\Private\Bullet.cpp">
+      <Filter>02.GameObjects\07.Bullet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

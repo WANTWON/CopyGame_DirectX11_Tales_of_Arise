@@ -88,8 +88,11 @@ int CItem::Tick(_float fTimeDelta)
 			{
 				_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 				_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+				
+				_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+				mWorldMatrix.r[3] = vLocation;
 
-				m_pPickupFlares = CEffect::PlayEffectAtLocation(TEXT("Pickup_Flares.dat"), vLocation);
+				m_pPickupFlares = CEffect::PlayEffectAtLocation(TEXT("Pickup_Flares.dat"), mWorldMatrix);
 				break;
 			}
 		}
@@ -124,7 +127,10 @@ void CItem::Late_Tick(_float fTimeDelta)
 			_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
-			m_pGetItem = CEffect::PlayEffectAtLocation(TEXT("Get_Item.dat"), vLocation);
+			_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+			mWorldMatrix.r[3] = vLocation;
+
+			m_pGetItem = CEffect::PlayEffectAtLocation(TEXT("Get_Item.dat"), mWorldMatrix);
 
 			if (!m_pPickupFlares.empty())
 			{

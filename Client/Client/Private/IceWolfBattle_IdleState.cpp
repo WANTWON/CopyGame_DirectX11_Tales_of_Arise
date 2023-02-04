@@ -11,7 +11,7 @@ CBattle_IdleState::CBattle_IdleState(class CIce_Wolf* pIceWolf, STATE_ID ePreSta
 {
 	m_pOwner = pIceWolf;
 	m_ePreState = ePreState;
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fIdleTime = ((rand() % 4000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
 	m_pCurTarget = pCurTarget;
 
@@ -66,9 +66,9 @@ CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 	
 
-	m_fTimeDletaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
-	if(m_fTimeDletaAcc > m_fIdleTime)
+	if(m_fTimeDeltaAcc > m_fIdleTime)
 		return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START, m_pCurTarget);
 
 

@@ -64,6 +64,7 @@ public: /* Getters & Setters */
 	PARTICLEDESC Get_ParticleDesc() { return m_tParticleDesc; }
 	void Set_ParticleDesc(PARTICLEDESC tParticleDesc) { m_tParticleDesc = tParticleDesc; }
 	void Set_Stop(_bool bStop) { m_bStop = bStop; }
+	virtual void Set_WorldPosition(_matrix mWorldMatrix) override;
 
 public:
 	CParticleSystem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

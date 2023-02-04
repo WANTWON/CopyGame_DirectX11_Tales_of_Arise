@@ -15,7 +15,7 @@ CWalkState::CWalkState(CIce_Wolf* pIceWolf, FIELD_STATE_ID ePreState, _bool bTri
 	m_ePreState_Id = ePreState;
 	m_bTriggerTurn = bTriggerTurn;
 
-	m_fTimeDletaAcc = 0;
+	m_fTimeDeltaAcc = 0;
 	m_fMoveTime = ((rand() % 10000) *0.001f )*((rand() % 100) * 0.01f);
 	
 }
@@ -64,14 +64,14 @@ CIceWolfState * CWalkState::LateTick(_float fTimeDelta)
 	{
 		m_bTriggerTurn = false;
 
-		m_fTimeDletaAcc += fTimeDelta;
+		m_fTimeDeltaAcc += fTimeDelta;
 
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.5f, m_pOwner->Get_Navigation());
 
 		if (m_pTarget)
 			return new CChaseState(m_pOwner);
 
-		else if (m_fTimeDletaAcc > m_fMoveTime)
+		else if (m_fTimeDeltaAcc > m_fMoveTime)
 		{
 			switch (rand() % 4)
 			{

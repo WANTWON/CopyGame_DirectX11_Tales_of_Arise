@@ -42,7 +42,7 @@ CSlimeState * CBattle_DeadState::LateTick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSlime::ANIM::DEAD);
 		m_pOwner->Get_Model()->Play_Animation(6.2f, false);
-		m_pOwner->Set_Dissolve();
+		m_pOwner->Set_GlowUp();
 
 		m_bDeadAnimFinish = true;
 

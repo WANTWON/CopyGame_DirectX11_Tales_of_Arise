@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CAnimation final : public CBase
 {
 public:
-	enum EVENTTYPE { EVENT_SOUND, EVENT_EFFECT, EVENT_COLLIDER, EVENT_STATE, EVENT_END };
+	enum EVENTTYPE { EVENT_SOUND, EVENT_EFFECT, EVENT_COLLIDER, EVENT_STATE, EVENT_INPUT, EVENT_END };
 
 public:
 	typedef struct tagAnimationEvent
@@ -37,6 +37,7 @@ public:
 	vector<_float> Get_ChangeTickTimes(void) const { return m_ChangeTickTimes; }
 	_float Get_CurrentTime(void) const { return m_fCurrentTime; }
 	vector<ANIMEVENT> Get_AnimEvents(void) const { return m_vecAnimEvent; }
+	_float Get_OriginalTickPerSecond(void) const { return m_fOriTickPerSecond; }
 
 	void Set_CurrentTime(_float fCurrentTime) { m_fCurrentTime = fCurrentTime; }
 	void Add_EventCall(ANIMEVENT eEvent) { m_vecAnimEvent.push_back(eEvent); }

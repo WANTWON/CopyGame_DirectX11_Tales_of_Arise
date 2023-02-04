@@ -36,6 +36,7 @@ public:
 
 	TEXTUREEFFECTDESC Get_TextureEffectDesc() { return m_tTextureEffectDesc; }
 	void Set_TextureEffectDesc(TEXTUREEFFECTDESC tTextureDesc) { m_tTextureEffectDesc = tTextureDesc; }
+	virtual void Set_WorldPosition(_matrix mWorldMatrix) override;
 
 public:
 	CEffectTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

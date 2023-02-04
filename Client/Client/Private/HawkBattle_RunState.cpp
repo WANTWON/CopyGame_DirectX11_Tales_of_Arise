@@ -89,8 +89,8 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
 
-		m_fTimeDletaAcc += fTimeDelta;
-		if (m_fTimeDletaAcc > m_fRandTime)
+		m_fTimeDeltaAcc += fTimeDelta;
+		if (m_fTimeDeltaAcc > m_fRandTime)
 			m_iRand = rand() % 3;
 
 	}
@@ -152,7 +152,7 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 	//}
 	//else
 	//{
-	//	if (m_fTimeDletaAcc > m_fRandTime)
+	//	if (m_fTimeDeltaAcc > m_fRandTime)
 	//	{
 	//		switch (m_ePreBattleState)
 	//		{

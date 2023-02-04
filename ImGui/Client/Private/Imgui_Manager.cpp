@@ -3409,9 +3409,17 @@ void CImgui_Manager::Set_Effect()
 		if (ImGui::BeginListBox("##Instanced Effect List", ImVec2(-FLT_MIN, ImGui::GetWindowHeight() / 6)))
 		{
 			vector<CEffect*> Effects = CEffect_Manager::Get_Instance()->Get_InstancedEffects();
-			for (CEffect* pEffect : Effects)
+			for (_uint i = 0; i < Effects.size(); i++)
 			{
-				wstring wsEffectName = wstring(pEffect->Get_PrototypeId());
+				_tchar wcEffectName[MAX_PATH];
+				wcscpy_s(wcEffectName, MAX_PATH, Effects[i]->Get_PrototypeId()); /* Copy the Effect PrototypeId to a local _tchar variable. */
+				
+				_tchar wcCounter[MAX_PATH] = TEXT("_");
+				wsprintf(wcCounter, TEXT("_%d"), i); /* Cast the Counter to _tchar. */
+
+				wcscat_s(wcEffectName, MAX_PATH, wcCounter); /* Concatenate Effect Name and Counter. */
+
+				wstring wsEffectName = wstring(wcEffectName);
 				string sEffectName = string(wsEffectName.begin(), wsEffectName.end());
 
 				if (ImGui::Selectable(sEffectName.c_str(), m_sSelectedEffect == sEffectName, ImGuiSelectableFlags_AllowItemOverlap, ImVec2(0, 22)))
@@ -3435,7 +3443,7 @@ void CImgui_Manager::Set_Effect()
 					}
 
 					m_sSelectedEffect = sEffectName;
-					m_pSelectedEffect = pEffect;
+					m_pSelectedEffect = Effects[i];
 					m_bIsPlaying = false;
 
 					/* Fetch the Backed up Effect Description. */
@@ -3462,7 +3470,7 @@ void CImgui_Manager::Set_Effect()
 					}
 
 					// Set Transform of the Selected Effect
-					CComponent* pComponent = pEffect->Find_Component(TEXT("Com_Transform"));
+					CComponent* pComponent = Effects[i]->Find_Component(TEXT("Com_Transform"));
 					if (!pComponent)
 						return;
 					CTransform* pTransform = dynamic_cast<CTransform*>(pComponent);
@@ -3472,8 +3480,8 @@ void CImgui_Manager::Set_Effect()
 					m_pSelectedEffectTransform = pTransform;
 				}
 				ImGui::SameLine();
-				ImGui::PushID(pEffect);
-				ImGui::Checkbox("Show", &pEffect->m_bIsSelected);
+				ImGui::PushID(Effects[i]);
+				ImGui::Checkbox("Show", &Effects[i]->m_bIsSelected);
 				ImGui::PopID();
 
 				if (m_sSelectedEffect == sEffectName)
@@ -4181,6 +4189,12 @@ void CImgui_Manager::Show_MeshCustomization()
 		if (pEffectMesh)
 			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 	}
+	if (ImGui::DragFloat("##MeshGlowPower", &m_tMeshEffectDesc.fGlowPower, 0.05f, 0, 1, "Glow Power: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
 	ImGui::NewLine();
 
 	_float3 vScale, vRotation, vTranslation;
@@ -4235,7 +4249,10 @@ void CImgui_Manager::Show_MeshCustomization()
 			{
 				m_tMeshEffectDesc.vScaleInitial.x = m_fX;
 				m_tMeshEffectDesc.vScale.x = m_fX;
-				m_pSelectedEffectTransform->Set_Scale(CTransform::STATE::STATE_RIGHT, m_fX);
+
+				CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+				if (pEffectMesh)
+					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 			}
 			break;
 		}
@@ -4243,21 +4260,31 @@ void CImgui_Manager::Show_MeshCustomization()
 		{
 			if (m_pSelectedEffectTransform)
 			{
-				_vector vRotationX = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+				m_tMeshEffectDesc.vRotation = _float3(m_fX, m_fY, m_fZ);
+
+				CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+				if (pEffectMesh)
+					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+
 				m_pSelectedEffectTransform->Set_Rotation(_float3(m_fX, m_fY, m_fZ));
 			}
-
 			break;
 		}
 		case TRANS_TRANSLATION:
 		{
 			if (m_pSelectedEffectTransform)
 			{
+				m_tMeshEffectDesc.vPosition = _float3(m_fX, m_fY, m_fZ);
+
+				CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+				if (pEffectMesh)
+					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+
 				XMStoreFloat3(&vTranslation, m_pSelectedEffectTransform->Get_State(CTransform::STATE::STATE_TRANSLATION));
 				_vector vNewTranslation = XMVectorSet(m_fX, vTranslation.y, vTranslation.z, 1.f);
+
 				m_pSelectedEffectTransform->Set_State(CTransform::STATE::STATE_TRANSLATION, vNewTranslation);
 			}
-
 			break;
 		}
 		}
@@ -4275,25 +4302,42 @@ void CImgui_Manager::Show_MeshCustomization()
 			{
 				m_tMeshEffectDesc.vScaleInitial.y = m_fY;
 				m_tMeshEffectDesc.vScale.y = m_fY;
-				m_pSelectedEffectTransform->Set_Scale(CTransform::STATE::STATE_UP, m_fY);
+
+				CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+				if (pEffectMesh)
+					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 			}
 			break;
 		}
 		case TRANS_ROTATION:
 		{
 			if (m_pSelectedEffectTransform)
+			{
+				m_tMeshEffectDesc.vRotation = _float3(m_fX, m_fY, m_fZ);
+
+				CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+				if (pEffectMesh)
+					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+
 				m_pSelectedEffectTransform->Set_Rotation(_float3(m_fX, m_fY, m_fZ));
+			}
 			break;
 		}
 		case TRANS_TRANSLATION:
 		{
 			if (m_pSelectedEffectTransform)
 			{
+				m_tMeshEffectDesc.vPosition = _float3(m_fX, m_fY, m_fZ);
+
+				CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+				if (pEffectMesh)
+					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+
 				XMStoreFloat3(&vTranslation, m_pSelectedEffectTransform->Get_State(CTransform::STATE::STATE_TRANSLATION));
 				_vector vNewTranslation = XMVectorSet(vTranslation.x, m_fY, vTranslation.z, 1.f);
+
 				m_pSelectedEffectTransform->Set_State(CTransform::STATE::STATE_TRANSLATION, vNewTranslation);
 			}
-
 			break;
 		}
 		}
@@ -4311,22 +4355,40 @@ void CImgui_Manager::Show_MeshCustomization()
 			{
 				m_tMeshEffectDesc.vScaleInitial.z = m_fZ;
 				m_tMeshEffectDesc.vScale.z = m_fZ;
-				m_pSelectedEffectTransform->Set_Scale(CTransform::STATE::STATE_LOOK, m_fZ);
+
+				CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+				if (pEffectMesh)
+					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 			}
 			break;
 		}
 		case TRANS_ROTATION:
 		{
 			if (m_pSelectedEffectTransform)
+			{
+				m_tMeshEffectDesc.vRotation = _float3(m_fX, m_fY, m_fZ);
+
+				CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+				if (pEffectMesh)
+					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+
 				m_pSelectedEffectTransform->Set_Rotation(_float3(m_fX, m_fY, m_fZ));
+			}
 			break;
 		}
 		case TRANS_TRANSLATION:
 		{
 			if (m_pSelectedEffectTransform)
 			{
+				m_tMeshEffectDesc.vPosition = _float3(m_fX, m_fY, m_fZ);
+
+				CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+				if (pEffectMesh)
+					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+
 				XMStoreFloat3(&vTranslation, m_pSelectedEffectTransform->Get_State(CTransform::STATE::STATE_TRANSLATION));
 				_vector vNewTranslation = XMVectorSet(vTranslation.x, vTranslation.y, m_fZ, 1.f);
+
 				m_pSelectedEffectTransform->Set_State(CTransform::STATE::STATE_TRANSLATION, vNewTranslation);
 			}
 			break;

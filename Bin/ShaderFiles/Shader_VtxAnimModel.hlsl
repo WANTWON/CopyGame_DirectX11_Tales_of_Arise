@@ -18,12 +18,15 @@ texture2D g_NormalTexture;
 texture2D g_GlowTexture;
 float4 g_vGlowColor;
 bool g_bUseDiffuseColor;
+float g_fGlowUpTimer;
+float g_fGlowUpLifespan;
 
 /* Dissolve */
 texture2D g_DissolveTexture;
-float g_fDissolveAlpha;
-float g_DissolveSize = 1.5f;
-vector g_DissolveColor = vector(1.f, 0.7f, 0.f, 1);
+float g_DissolveTimer;
+float g_DissolveLifespan;
+vector g_DissolveColor = vector(1.f, .95f, .6f, 1.f);
+vector g_DissolveHighlight = vector(.92f, .36f, .2f, 1);
 
 struct VS_IN
 {
@@ -141,22 +144,38 @@ PS_OUT_SHADOW PS_SHADOWDEPTH(PS_IN In)
 PS_OUT PS_DISSOLVE(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
+
 	float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	float3 vNormal;
-
-	vNormal = float3(vTextureNormal.x*2.f - 1.f, vTextureNormal.y*2.f - 1.f, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
+	vNormal = float3(vTextureNormal.x * 2.f - 1.f, vTextureNormal.y * 2.f - 1.f, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
 
 	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
 	vNormal = mul(vNormal, WorldMatrix);
-
-	float4 vDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 
-	if (vDissolve.r < g_fDissolveAlpha)
+	/* Dissolve with Highlight */
+	float dissolveFactor = lerp(0, 1, g_DissolveTimer / g_DissolveLifespan); /* If dissolveFactor:
+																			 == 0:	Should not Dissolve
+																			 == 1:	Should Dissolve Everything. */
+	float4 dissolveColor = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
+	dissolveColor.a = dissolveColor.y;
+	dissolveColor.yz = dissolveColor.x;
+
+	float dissolveValue = dissolveColor.r - dissolveFactor; /* If dissolveValue:
+															> .1:		No Dissolve
+															0 ~ .1f:	Highlight
+															<= 0:		Dissolve. */
+
+	if (dissolveValue <= 0)
 		discard;
+	else if (dissolveValue < .1f)
+	{
+		float3 lerpColor = lerp(g_DissolveColor, g_DissolveHighlight, dissolveValue / .1f);
+		Out.vDiffuse.rgb = lerpColor;
+	}
 
 	return Out;
 }
@@ -170,7 +189,8 @@ PS_OUT_GLOW PS_GLOW(PS_IN In)
 	if (g_bUseDiffuseColor)
 	{
 		float4 vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-		Out.vGlow = vDiffuse;
+		float4 vLerpGlow = lerp(vDiffuse, float4(1.f, 1.f, 1.f, 1.f), g_fGlowUpTimer / g_fGlowUpLifespan);
+		Out.vGlow = vLerpGlow;
 	}
 	else
 	{
@@ -180,6 +200,51 @@ PS_OUT_GLOW PS_GLOW(PS_IN In)
 
 	if (Out.vGlow.a == 0)
 		discard;
+
+	return Out;
+}
+
+PS_OUT_GLOW PS_GLOW_DIFFUSE(PS_IN In)
+{
+	PS_OUT_GLOW Out = (PS_OUT_GLOW)0;
+
+	Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (g_bUseDiffuseColor)
+	{
+		float4 vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+		float4 vLerpGlow = lerp(vDiffuse, float4(1.f, 1.f, 1.f, 1.f), g_fGlowUpTimer / g_fGlowUpLifespan);
+		Out.vGlow = vLerpGlow;
+	}
+	else
+	{
+		Out.vGlow.gba = Out.vGlow.r;
+		Out.vGlow.rgb *= g_vGlowColor;
+	}
+
+	if (Out.vGlow.a == 0)
+		discard;
+
+	/* Dissolve Glow with Highlight */
+	float dissolveFactor = lerp(0, 1, g_DissolveTimer / g_DissolveLifespan); /* If dissolveFactor:
+																			 == 0:	Should not Dissolve
+																			 == 1:	Should Dissolve Everything. */
+	float4 dissolveColor = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
+	dissolveColor.a = dissolveColor.y;
+	dissolveColor.yz = dissolveColor.x;
+
+	float dissolveValue = dissolveColor.r - dissolveFactor; /* If dissolveValue:
+															> .1:		No Dissolve
+															0 ~ .1f:	Highlight
+															<= 0:		Dissolve. */
+
+	if (dissolveValue <= 0)
+		discard;
+	else if (dissolveValue < .1f)
+	{
+		float3 lerpColor = lerp(g_DissolveColor, g_DissolveHighlight, dissolveValue / .1f);
+		Out.vGlow.rgb = lerpColor;
+	}
 
 	return Out;
 }
@@ -228,5 +293,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_GLOW();
+	}
+
+	pass Glow_Diffuse // 4
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_GLOW_DIFFUSE();
 	}
 }

@@ -36,7 +36,10 @@ public:
 	HRESULT Loading_ForLogoLevel();
 	HRESULT Loading_ForClient();
 
-	HRESULT Loading_ForGamePlayModel();
+	HRESULT Loading_ForMaptoolModel();
+	HRESULT Loading_ForActor();
+	HRESULT Loading_ForEffect();
+	HRESULT Loading_ForEffectTexture();
 
 private:
 	LEVEL					m_eNextLevel = LEVEL_END;

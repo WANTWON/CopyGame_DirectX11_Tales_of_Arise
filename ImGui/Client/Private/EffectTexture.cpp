@@ -38,7 +38,7 @@ int CEffectTexture::Tick(_float fTimeDelta)
 		{
 			m_bPlay = false;
 			CImgui_Manager::Get_Instance()->Set_Play(false);
-
+			Reset_Initial();
 			m_fTimer = 0.f;
 		}
 		else
@@ -111,6 +111,11 @@ HRESULT CEffectTexture::Render_Glow()
 	m_pVIBufferCom->Render();
 
 	return S_OK;
+}
+
+void CEffectTexture::Reset_Initial()
+{
+	m_tTextureEffectDesc = m_tTextureEffectDescTool;
 }
 
 void CEffectTexture::ColorLerp()

@@ -24,6 +24,12 @@ HRESULT CEffectMesh::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
+	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
+	m_pTransformCom->Set_Rotation(m_tMeshEffectDesc.vRotation);
+	m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&m_tMeshEffectDesc.vPosition), 1.f));
+
 	return S_OK;
 }
 
@@ -39,6 +45,7 @@ int CEffectMesh::Tick(_float fTimeDelta)
 			m_bPlay = false;
 			m_fTimer = 0.f;
 			CImgui_Manager::Get_Instance()->Set_Play(false);
+			Reset_Initial();
 		}
 		else
 		{
@@ -62,7 +69,11 @@ int CEffectMesh::Tick(_float fTimeDelta)
 		}
 	}
 	else
+	{
 		m_fTimer = 0.f;
+
+		
+	}
 
 	return OBJ_NOEVENT;
 }
@@ -136,6 +147,8 @@ HRESULT CEffectMesh::Render_Glow()
 
 		if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &m_tMeshEffectDesc.vGlowColor, sizeof(_float3))))
 			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowPower", &m_tMeshEffectDesc.fGlowPower, sizeof(_float))))
+			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 5)))
 			return E_FAIL;
@@ -168,6 +181,11 @@ void CEffectMesh::Add_NoiseTexture()
 		if (FAILED(__super::Add_Components(TEXT("Com_TextureNoise"), LEVEL_STATIC, m_tMeshEffectDesc.wcNoiseTexture, (CComponent**)&m_pNoiseTexture)))
 			return;
 	}
+}
+
+void CEffectMesh::Reset_Initial()
+{
+	m_tMeshEffectDesc = m_tMeshEffectDescTool;
 }
 
 void CEffectMesh::ColorLerp()
