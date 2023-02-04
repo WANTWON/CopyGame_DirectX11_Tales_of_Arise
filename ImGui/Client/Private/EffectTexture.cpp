@@ -115,7 +115,7 @@ HRESULT CEffectTexture::Render_Glow()
 
 void CEffectTexture::Reset_Initial()
 {
-	m_tTextureEffectDesc = m_tTextureEffectDesc;
+	m_tTextureEffectDesc = m_tTextureEffectDescTool;
 }
 
 void CEffectTexture::ColorLerp()

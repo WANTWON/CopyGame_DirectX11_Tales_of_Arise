@@ -3,6 +3,12 @@
 #include "ParticleSystem.h"
 #include "GameInstance.h"
 
+void CParticleSystem::Set_WorldPosition(_matrix mWorldMatrix)
+{
+	_vector vPosition = (_vector)mWorldMatrix.r[3];
+	m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+}
+
 CParticleSystem::CParticleSystem(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEffect(pDevice, pContext)
 {
@@ -34,7 +40,7 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	KillParticles();				/* Release old Particles. */
+	
 	
 	EmitParticles(fTimeDelta);		/* Emit new Particles.	*/
 
@@ -47,6 +53,8 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	SortParticles();				/* Sort Particles. */
 
 	UpdateBuffers();
+
+	KillParticles();				/* Release old Particles. */
 	
 	return OBJ_NOEVENT;
 }
