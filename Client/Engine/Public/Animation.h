@@ -29,6 +29,7 @@ public:
 	vector<class CChannel*>	Get_Channels(void) { return m_Channels; }
 	void	Set_TimeReset();
 	void Reset(void);
+	void Reset_ChannelKeyFrame(void);
 
 private:
 	char				m_szName[MAX_PATH] = "";
@@ -49,7 +50,7 @@ private:
 	_bool							m_isLoop = true;
 
 	/*For. Linear Time*/
-	_float m_fTotal_Linear_Duration = 0.4f; //1더하면
+	_float m_fTotal_Linear_Duration = 0.2f; //1더하면
 	_float m_fLinear_CurrentTime = 0.f;
 	_bool	m_bLinearFinished = false;
 

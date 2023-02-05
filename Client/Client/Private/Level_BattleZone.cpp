@@ -102,13 +102,7 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		CBattleManager::Get_Instance()->Set_BattleMode(false);
 
 	
-	
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_LALT))
-	{
-		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
-	}
-	else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LALT))
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_CAPSLOCK))
 	{
 		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
 		if (pLockOn != nullptr)
@@ -126,29 +120,11 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ROW);
 	}
-
-
-	//CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
-	//if (pLockOn == nullptr)
-	//{
-	//	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
-	//	if (pMonsterList == nullptr || pMonsterList->size() == 0)
-	//	{
-	//		CBattleManager::Get_Instance()->Set_LackonMonster(nullptr);
-	//		return;
-	//	}
-	//		
-	//	for (auto& iter : *pMonsterList)
-	//	{
-	//		_float fDistance = XMVectorGetX(XMVector3Length(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) - dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	//		if (m_fMinLength > fDistance)
-	//		{
-	//			m_fMinLength = fDistance;
-	//			CBattleManager::Get_Instance()->Set_LackonMonster(dynamic_cast<CBaseObj*>(iter));
-	//		}
-	//	}
-	//	m_fMinLength = MAXDISTANCE;
-	//}
+	else
+	{
+		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKOFF);
+	}
 }
 
 HRESULT CLevel_BattleZone::Ready_Lights()

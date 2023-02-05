@@ -69,6 +69,9 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 	case Client::CCamera_Dynamic::CAM_LOCKON:
 		LockOn_Camera(fTimeDelta);
 		break;
+	case Client::CCamera_Dynamic::CAM_LOCKOFF:
+		LockOff_Camera(fTimeDelta);
+		break;
 	}
 
 	if (FAILED(Bind_OnPipeLine()))
@@ -439,6 +442,55 @@ void CCamera_Dynamic::LockOn_Camera(_float fTimeDelta)
 
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 	m_pTransform->LookAt(m_vTargetPos);
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CCamera_Dynamic::LockOff_Camera(_float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	//if (m_pTarget == nullptr)
+	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+
+	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vDir = (vCameraPosition - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_vector vCenterPos = vPlayerPosition;
+
+	vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_float fLength = 5.f;
+	vCameraPosition = XMVectorSetX(vCameraPosition, (XMVectorGetX(vCenterPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
+	vCameraPosition = XMVectorSetZ(vCameraPosition, (XMVectorGetZ(vCenterPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
+	m_vNewPos = vCameraPosition;
+
+
+	vCenterPos = XMVectorSetY(vCenterPos, XMVectorGetY(vCenterPos) + m_fOffsetPosY);
+	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vCenterPos) + m_fCameraY);
+
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+		m_bLerp = false;
+
+	_vector FinalPos = { 0.f,0.f,0.f,0.f };
+	if (m_bLerp)
+	{
+		m_fTime += fTimeDelta*0.3f;
+
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
+
+		if (m_fTime >= 1.f)
+			m_bLerp = false;
+	}
+	else
+	{
+		FinalPos = m_vNewPos;
+		m_fTime = 0.f;
+		Set_CamMode(CAM_BATTLEZONE);
+	}
+
+
+	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 
 	RELEASE_INSTANCE(CGameInstance);
 }
