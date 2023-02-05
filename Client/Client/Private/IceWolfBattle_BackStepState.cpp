@@ -1,14 +1,12 @@
 #include "stdafx.h"
 #include "..\Public\IceWolfBattle_BackStepState.h"
-#include "IceWolfBattle_WalkState.h"
 #include "IceWolfAttackNormalState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
 #include "IceWolfBattle_IdleState.h"
-#include "IceWolfBattle_WalkState.h"
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfBattle_RunState.h"
-#include "IceWolfBattle_WalkState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
+
 using namespace IceWolf;
 
 CBattle_BackStepState::CBattle_BackStepState(class CIce_Wolf* pIceWolf)

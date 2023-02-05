@@ -42,14 +42,14 @@ int CUI_Skillbutton::Tick(_float fTimeDelta)
 
 	
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
+	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
 	{
 		m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
 		m_bmoveleft = true;
 		m_bfadein = true;
 		m_fAlpha = 1;
 	}
-
+*/
 	if (m_bfadein)
 		m_fAlpha -= 0.04f; //»ý±æ¶§
 	else if (m_bfadeout)

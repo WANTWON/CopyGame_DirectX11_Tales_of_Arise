@@ -60,17 +60,17 @@ HRESULT CUI_font_Hits_number::Initialize(void * pArg)
 
 int CUI_font_Hits_number::Tick(_float fTimeDelta)
 {
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_3))
-	{
-		m_iCurrenthit++; 
-		m_fSize.x = 75.f;
-		m_fSize.y = 80.f;
-		m_bsizedown = true;
-		/*m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);*/
-		//	m_bfadein = true;
-		//	m_fAlpha = 0;
-	}
+	//if (CGameInstance::Get_Instance()->Key_Pressing(DIK_3))
+	//{
+	//	m_iCurrenthit++; 
+	//	m_fSize.x = 75.f;
+	//	m_fSize.y = 80.f;
+	//	m_bsizedown = true;
+	//	/*m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	//	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);*/
+	//	//	m_bfadein = true;
+	//	//	m_fAlpha = 0;
+	//}
 	for (_uint i = 0; i < 3; ++i)
 		m_fbrightpos_hitfont[i] += 0.015f;
 
@@ -170,7 +170,7 @@ HRESULT CUI_font_Hits_number::Render()
 	}
 	
 
-	if (m_iCurrenthit >= 2)
+	if (m_iCurrenthit >= 1)
 	{
 		m_itexnum = m_iCurrenthit % 10;
 
@@ -269,6 +269,8 @@ CGameObject * CUI_font_Hits_number::Clone(void * pArg)
 		ERR_MSG(TEXT("Failed to Cloned : CUI_font_Hits_number"));
 		Safe_Release(pInstance);
 	}
+
+	CUI_Manager::Get_Instance()->Set_HitMsg(pInstance);
 
 	return pInstance;
 }

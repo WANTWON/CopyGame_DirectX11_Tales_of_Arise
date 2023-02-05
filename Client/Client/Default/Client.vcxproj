@@ -178,9 +178,11 @@
     <ClInclude Include="..\Public\AICheckState.h" />
     <ClInclude Include="..\Public\AiRinwell.h" />
     <ClInclude Include="..\Public\AIRunawayfromTarget.h" />
+    <ClInclude Include="..\Public\AI_Alphen_NormalAttackState.h" />
+    <ClInclude Include="..\Public\AI_Alphen_SkillAttackState.h" />
     <ClInclude Include="..\Public\AI_ChaseState.h" />
     <ClInclude Include="..\Public\AI_HitState.h" />
-    <ClInclude Include="..\Public\AI_Sion_BoostAttackState.h" />
+    <ClInclude Include="..\Public\AI_BoostAttackState.h" />
     <ClInclude Include="..\Public\BattleManager.h" />
     <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_FireBallState.h" />
@@ -217,6 +219,7 @@
     <ClInclude Include="..\Public\Itemmsgbox.h" />
     <ClInclude Include="..\Public\IceWolfBattle_TurnState.h" />
     <ClInclude Include="..\Public\PlayerCollectState.h" />
+    <ClInclude Include="..\Public\PlayerHitState.h" />
     <ClInclude Include="..\Public\Rinwell.h" />
     <ClInclude Include="..\Public\RinwellAttackState.h" />
     <ClInclude Include="..\Public\RinwellDamageState.h" />
@@ -267,10 +270,8 @@
     <ClInclude Include="..\Public\IceWolfAttackNormalState.h" />
     <ClInclude Include="..\Public\IceWolfAttack_Elemental_Charge.h" />
     <ClInclude Include="..\Public\IceWolfBattle_Damage_LargeB_State.h" />
-    <ClInclude Include="..\Public\IceWolfBattle_DeadState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_HowLingState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_IdleState.h" />
-    <ClInclude Include="..\Public\IceWolfBattle_WalkState.h" />
     <ClInclude Include="..\Public\IceWolfChaseState.h" />
     <ClInclude Include="..\Public\IceWolfHowLingState.h" />
     <ClInclude Include="..\public\IceWolfIdleState.h" />
@@ -365,9 +366,11 @@
     <ClCompile Include="..\Private\AICheckState.cpp" />
     <ClCompile Include="..\Private\AiRinwell.cpp" />
     <ClCompile Include="..\Private\AIRunawayfromTarget.cpp" />
+    <ClCompile Include="..\Private\AI_Alphen_NormalAttackState.cpp" />
+    <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp" />
     <ClCompile Include="..\Private\AI_ChaseState.cpp" />
     <ClCompile Include="..\Private\AI_HitState.cpp" />
-    <ClCompile Include="..\Private\AI_Sion_BoostAttackState.cpp" />
+    <ClCompile Include="..\Private\AI_BoostAttackState.cpp" />
     <ClCompile Include="..\Private\BattleManager.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_FireBallState.cpp" />
@@ -450,10 +453,8 @@
     <ClCompile Include="..\Private\IceWolfAttackNormalState.cpp" />
     <ClCompile Include="..\Private\IceWolfAttack_Elemental_Charge.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_Damage_LargeB_State.cpp" />
-    <ClCompile Include="..\Private\IceWolfBattle_DeadState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_HowLingState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_IdleState.cpp" />
-    <ClCompile Include="..\Private\IceWolfBattle_WalkState.cpp" />
     <ClCompile Include="..\Private\IceWolfChaseState.cpp" />
     <ClCompile Include="..\Private\IceWolfHowLingState.cpp" />
     <ClCompile Include="..\private\IceWolfIdleState.cpp" />
@@ -534,6 +535,7 @@
     <ClCompile Include="..\private\Water.cpp" />
     <ClCompile Include="..\Private\UI_Skillbutton.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
+    <ClCompile Include="..\Public\PlayerHitState.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

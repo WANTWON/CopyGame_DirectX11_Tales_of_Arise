@@ -31,6 +31,8 @@ public:
 	virtual void Free() override;
 
 public:
+	void sethit() {m_iCurrenthit++; m_fSize.x = 75.f;m_fSize.y = 80.f;m_bsizedown = true;}
+
 	void sizedown() { m_fSize.x -= 1.f;	m_fSize.y -= 1.f; }
 
 private:
@@ -46,6 +48,9 @@ private:
 	_bool m_bRender = true;
 
 	_float m_fbrightpos_hitfont[3] = { 0.f , -0.5f, -1.f };
+
+
+
 };
 
 END

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\IceWolfChaseState.h"
 #include "IceWolfHowLingState.h"
-#include "IceWolfBattle_WalkState.h"
 #include "IceWolfBattle_IdleState.h"
 #include "IceWolfIdleState.h"
 using namespace IceWolf;

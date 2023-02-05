@@ -67,7 +67,7 @@ HRESULT CUI_Skillmessage::Initialize(void * pArg)
 
 int CUI_Skillmessage::Tick(_float fTimeDelta)
 {
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
+	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
 	{
 		m_bfadein = true;
 		m_fAlpha = 0.f;
@@ -76,7 +76,7 @@ int CUI_Skillmessage::Tick(_float fTimeDelta)
 		timer = 0.f;
 
 
-	}
+	}*/
 
 	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
 	{
