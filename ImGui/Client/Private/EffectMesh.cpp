@@ -413,10 +413,10 @@ HRESULT CEffectMesh::SetUp_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fTimer", &m_fTimer, sizeof(_float))))
 		return E_FAIL;
-
+	_bool bMask = false;
 	if (m_pMaskTexture)
 	{
-		_bool bMask = true;
+		bMask = true;
 		if (FAILED(m_pShaderCom->Set_RawValue("g_bMask", &bMask, sizeof(_bool))))
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Set_RawValue("g_fMaskSpeed", &m_tMeshEffectDesc.fMaskSpeed, sizeof(_float))))
@@ -428,10 +428,14 @@ HRESULT CEffectMesh::SetUp_ShaderResources()
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_MaskTexture", m_pMaskTexture->Get_SRV())))
 			return E_FAIL;
 	}
+	else
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bMask", &bMask, sizeof(_bool))))
+			return E_FAIL;
 		
+	_bool bNoise = false;
 	if (m_pNoiseTexture)
 	{
-		_bool bNoise = true;
+		bNoise = true;
 		if (FAILED(m_pShaderCom->Set_RawValue("g_bNoise", &bNoise, sizeof(_bool))))
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Set_RawValue("g_fNoiseSpeed", &m_tMeshEffectDesc.fNoiseSpeed, sizeof(_float))))
@@ -445,6 +449,9 @@ HRESULT CEffectMesh::SetUp_ShaderResources()
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_NoiseTexture", m_pNoiseTexture->Get_SRV())))
 			return E_FAIL;
 	}
+	else
+		if (FAILED(m_pShaderCom->Set_RawValue("g_bNoise", &bNoise, sizeof(_bool))))
+			return E_FAIL;
 
 	return S_OK;
 }
