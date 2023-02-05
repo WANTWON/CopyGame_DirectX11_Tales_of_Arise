@@ -29,6 +29,7 @@ public:
 	vector<class CChannel*>	Get_Channels(void) { return m_Channels; }
 	void	Set_TimeReset();
 	void Reset(void);
+	void Reset_ChannelKeyFrame(void);
 
 private:
 	char				m_szName[MAX_PATH] = "";

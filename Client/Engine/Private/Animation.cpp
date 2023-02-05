@@ -300,6 +300,12 @@ void CAnimation::Reset(void)
 	m_fCurrentTime = 0.f;
 }
 
+void CAnimation::Reset_ChannelKeyFrame(void)
+{
+	for (auto& pChannel : m_Channels)
+		pChannel->Reset_Linear();
+}
+
 //void CAnimation::Get_AnimData(DATA_BINANIM * pAnimData)
 //{
 //	pAnimData->fDuration = m_fDuration;

@@ -38,11 +38,6 @@ CPlayerState * CIdleState::HandleInput()
 				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
 		}
 	}
-	else if (LEVEL_SNOWFIELD == m_pOwner->Get_Level())
-	{
-		if (pGameInstance->Key_Down(DIK_E))
-			return new CCollectState(m_pOwner);
-	}
 	
 	if (pGameInstance->Key_Down(DIK_LCONTROL) && !m_bIsFly)
 		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMPTYPE::JUMP_IDLE);

@@ -8,7 +8,7 @@
 #include "EffectMesh.h"
 #include "PlayerSkillState.h"
 #include "PlayerJumpState.h"
-
+#include "BattleManager.h"
 
 using namespace Player;
 
@@ -58,13 +58,13 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						//EventInput();
-						
+
 						if (GetKeyState(VK_LBUTTON) < 0)
 							m_bIsStateEvent = true;
 
 						else if (GetKeyState('E') < 0)
 							m_iSkillEvent = 1;
-						
+
 						else if (GetKeyState('R') < 0)
 							m_iSkillEvent = 2;
 
@@ -117,6 +117,7 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+
 					break;
 				}
 			}
@@ -278,6 +279,14 @@ void CAttackNormalState::Enter()
 			}
 		}
 	}
+
+	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
+
+	_vector vTargetPos = pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+	m_pOwner->Get_Transform()->LookAt(vTargetPos);
+
+	RELEASE_INSTANCE(CBattleManager);
 }
 
 void CAttackNormalState::Exit()

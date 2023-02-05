@@ -20,15 +20,6 @@ public:
 		TYPE_END
 	};
 
-	/* Struct used to Save/Load Data. */
-	typedef struct tagEffectDescription
-	{
-		EFFECT_TYPE eType = TYPE_END;
-		_uint iVelocityCurvesCount = 0;
-		_uint iSizeCurvesCount = 0;
-		_uint iAlphaCurvesCount = 0;
-	} EFFECTDESC;
-
 	_bool m_bIsSelected = true;
 
 public:
@@ -48,10 +39,12 @@ public:
 	void Set_NoisePowerCurves(vector<_float3> NoisePowerCurves) { m_NoisePowerCurves = NoisePowerCurves; }
 	EFFECT_TYPE Get_EffectType() { return m_eType; }
 	virtual _tchar* Get_PrototypeId() PURE;
+	_tchar* Get_EffectName() { return m_EffectName; }
 	_bool Get_Play() { return m_bPlay; }
 	void Set_EffectType(EFFECT_TYPE eType) { m_eType = eType; }
 	void Set_Play(_bool bPlay) { m_bPlay = bPlay; }
 	void Set_ShaderId(_uint iShaderId) { m_eShaderID = iShaderId; }
+	void Set_EffectName(_tchar* pEffectName) { wcscpy_s(m_EffectName, MAX_PATH, pEffectName); }
 
 public:
 	void Add_ColorCurve(array<_float, 5> ColorCurve) { m_ColorCurves.push_back(ColorCurve); }
@@ -105,6 +98,8 @@ protected:
 
 	CTexture* m_pMaskTexture = nullptr;
 	CTexture* m_pNoiseTexture = nullptr;
+
+	_tchar m_EffectName[MAX_PATH] = TEXT("");
 
 public:
 	virtual void Free() override;

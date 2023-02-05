@@ -30,6 +30,7 @@ HRESULT CChannel::Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel
 	Safe_AddRef(m_pBoneNode);
 
 	m_KeyFrame_Linear = m_KeyFrames[0];
+	m_vPrePos = XMVectorSetW(XMLoadFloat3(&m_KeyFrames[0].vPosition), 1.f);
 
 	return S_OK;
 }
@@ -106,9 +107,10 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime, const char* 
 
 	if ((nullptr != pBoneName) && !strcmp(m_szName, pBoneName))
 	{
-		m_pBoneNode->Set_Translation(vPosition - XMLoadFloat3(&m_KeyFrame_Linear.vPosition));
-		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
+		m_pBoneNode->Set_Translation(vPosition - m_vPrePos);
+		m_vPrePos = vPosition;
 		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	}
 	else
 		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
@@ -127,8 +129,7 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime, const char* 
 void CChannel::Reset()
 {
 	m_iCurrentKeyFrameIndex = 0;
-
-	//m_KeyFrame_Linear = m_KeyFrames[0];
+	m_vPrePos = XMVectorSetW(XMLoadFloat3(&m_KeyFrames[0].vPosition), 1.f);
 }
 
 bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime, const char* pBoneName)

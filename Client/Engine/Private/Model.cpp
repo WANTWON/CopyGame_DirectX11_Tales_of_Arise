@@ -344,9 +344,10 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 
 			//m_iPreAnimIndex = m_iCurrentAnimIndex;
 
+			m_Animations[m_iPreAnimIndex]->Reset_ChannelKeyFrame();
+
 			m_bInterupted = false;
 		}
-
 	}
 	else
 	{

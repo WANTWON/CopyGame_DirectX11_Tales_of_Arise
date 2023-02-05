@@ -7,6 +7,8 @@
 #include "PlayerJumpState.h"
 #include "PlayerSkillState.h"
 #include "PlayerCollectState.h"
+#include "CameraManager.h"
+#include "BattleManager.h"
 
 using namespace Player;
 
@@ -44,7 +46,7 @@ CPlayerState * CRunState::HandleInput()
 	}
 	
 	if (pGameInstance->Key_Down(DIK_LCONTROL) && !m_bIsFly)
-		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_IDLE);
+		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_RUN);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		m_eDirection = DIR_STRAIGHT_LEFT;
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
@@ -64,12 +66,19 @@ CPlayerState * CRunState::HandleInput()
 	else
 		return new CIdleState(m_pOwner);
 
-	if ((LEVEL_BATTLE != m_pOwner->Get_Level()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+	if ((LEVEL_SNOWFIELD == m_pOwner->Get_Level()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
 		if (!m_bIsDash)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
 		
 		m_bIsDash = true;
+
+
+		if (!CBattleManager::Get_Instance()->Get_IsBattleMode())
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(true);
+		}
 	}
 	else
 	{
@@ -77,6 +86,13 @@ CPlayerState * CRunState::HandleInput()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
 
 		m_bIsDash = false;
+
+
+		if (m_pOwner->Get_Level() == LEVEL_SNOWFIELD )
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(false);
+		}
 	}
 
 	return nullptr;

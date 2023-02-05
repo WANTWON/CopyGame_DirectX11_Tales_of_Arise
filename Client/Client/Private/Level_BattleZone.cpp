@@ -59,10 +59,11 @@ HRESULT CLevel_BattleZone::Initialize()
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_BATTLE);
-	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
-	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
-	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) +  XMVectorSet(0.f, 20.f, -10.f, 0.f));
+	m_pCamera = dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera());
+	m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
+	m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) +  XMVectorSet(0.f, 20.f, -10.f, 0.f));
 	
+
 	return S_OK;
 }
 
@@ -84,6 +85,8 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 			return;
 		Safe_Release(pGameInstance);
 	}
+
+	
 }
 
 void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
@@ -98,28 +101,29 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 	if (iMonsterSize == 0)
 		CBattleManager::Get_Instance()->Set_BattleMode(false);
 
-	CCollision_Manager::Get_Instance()->CollisionwithBullet();
-
-	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
-	if (pLockOn == nullptr)
+	
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_CAPSLOCK))
 	{
-		list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
-		if (pMonsterList == nullptr || pMonsterList->size() == 0)
+		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+		if (pLockOn != nullptr)
 		{
-			CBattleManager::Get_Instance()->Set_LackonMonster(nullptr);
-			return;
+			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKON);
+			m_pCamera->Set_TargetPosition(pLockOn->Get_TransformState(CTransform::STATE_TRANSLATION));
 		}
-			
-		for (auto& iter : *pMonsterList)
-		{
-			_float fDistance = XMVectorGetX(XMVector3Length(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) - dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
-			if (m_fMinLength > fDistance)
-			{
-				m_fMinLength = fDistance;
-				CBattleManager::Get_Instance()->Set_LackonMonster(dynamic_cast<CBaseObj*>(iter));
-			}
-		}
-		m_fMinLength = MAXDISTANCE;
+
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ROW);
+	}
+	else
+	{
+		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKOFF);
 	}
 }
 
@@ -554,9 +558,16 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_LOCKON"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Skillmsg"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+void CLevel_BattleZone::Check_LockOnMonster()
+{
 }
 
 CLevel_BattleZone * CLevel_BattleZone::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

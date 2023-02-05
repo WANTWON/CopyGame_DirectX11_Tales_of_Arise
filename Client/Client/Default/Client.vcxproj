@@ -174,7 +174,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\AIAttackNormalState.h" />
+    <ClInclude Include="..\Public\AICheckState.h" />
     <ClInclude Include="..\Public\AiRinwell.h" />
+    <ClInclude Include="..\Public\AIRunawayfromTarget.h" />
+    <ClInclude Include="..\Public\AI_ChaseState.h" />
+    <ClInclude Include="..\Public\AI_HitState.h" />
+    <ClInclude Include="..\Public\AI_Sion_BoostAttackState.h" />
     <ClInclude Include="..\Public\BattleManager.h" />
     <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_FireBallState.h" />
@@ -202,7 +208,7 @@
     <ClInclude Include="..\Public\IceWolfBattle_BackStepState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_RunState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_SomerSaultState.h" />
-    <ClInclude Include="..\Public\AIIdleState.h" />
+    <ClInclude Include="..\Public\AIDeadState.h" />
     <ClInclude Include="..\Public\AIState.h" />
     <ClInclude Include="..\Public\Alphen.h" />
     <ClInclude Include="..\Public\Effect.h" />
@@ -216,7 +222,9 @@
     <ClInclude Include="..\Public\RinwellDamageState.h" />
     <ClInclude Include="..\Public\RinwellMoveState.h" />
     <ClInclude Include="..\Public\RinwellPoseState.h" />
+    <ClInclude Include="..\Public\RinwellSkills.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
+    <ClInclude Include="..\Public\SionSkills.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
     <ClInclude Include="..\Public\UI_InterectMsg.h" />
     <ClInclude Include="..\Public\Item.h" />
@@ -353,7 +361,13 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\AIAttackNormalState.cpp" />
+    <ClCompile Include="..\Private\AICheckState.cpp" />
     <ClCompile Include="..\Private\AiRinwell.cpp" />
+    <ClCompile Include="..\Private\AIRunawayfromTarget.cpp" />
+    <ClCompile Include="..\Private\AI_ChaseState.cpp" />
+    <ClCompile Include="..\Private\AI_HitState.cpp" />
+    <ClCompile Include="..\Private\AI_Sion_BoostAttackState.cpp" />
     <ClCompile Include="..\Private\BattleManager.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_FireBallState.cpp" />
@@ -381,7 +395,7 @@
     <ClCompile Include="..\Private\IceWolfBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_RunState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_SomerSaultState.cpp" />
-    <ClCompile Include="..\Private\AIIdleState.cpp" />
+    <ClCompile Include="..\Private\AIDeadState.cpp" />
     <ClCompile Include="..\Private\Alphen.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\EffectMesh.cpp" />
@@ -394,6 +408,8 @@
     <ClCompile Include="..\Private\RinwellDamageState.cpp" />
     <ClCompile Include="..\Private\RinwellMoveState.cpp" />
     <ClCompile Include="..\Private\RinwellPoseState.cpp" />
+    <ClCompile Include="..\Private\RinwellSkills.cpp" />
+    <ClCompile Include="..\Private\SionSkills.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />

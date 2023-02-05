@@ -66,6 +66,12 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 	case Client::CCamera_Dynamic::CAM_BATTLE_CLEAR:
 		BattleClear_Camera(fTimeDelta);
 		break;
+	case Client::CCamera_Dynamic::CAM_LOCKON:
+		LockOn_Camera(fTimeDelta);
+		break;
+	case Client::CCamera_Dynamic::CAM_LOCKOFF:
+		LockOff_Camera(fTimeDelta);
+		break;
 	}
 
 	if (FAILED(Bind_OnPipeLine()))
@@ -98,6 +104,7 @@ void CCamera_Dynamic::Set_CamMode(CAMERAMODE _eCamMode)
 	m_eCamMode = _eCamMode;
 	m_fAngle = 0.f;
 	m_fTime = 0.f;
+	m_bLerp = true;
 }
 
 void CCamera_Dynamic::Set_Position(_vector vPosition)
@@ -151,19 +158,18 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	m_lMouseWheel = pGameInstance->Get_DIMMoveState(DIMM_WHEEL);
 	if (m_lMouseWheel < 0)
 	{
-		//	XMVectorSetY(vCameraPosition, XMVectorGetY(vCameraPosition) + 0.3f);
-		//	XMVectorSetZ(vCameraPosition, XMVectorGetZ(vCameraPosition) - 0.5f);
+			XMVectorSetY(vCameraPosition, XMVectorGetY(vCameraPosition) + 0.3f);
+			XMVectorSetZ(vCameraPosition, XMVectorGetZ(vCameraPosition) - 0.5f);
 
-			/*if (m_vDistance.y >= 10.f)
-				m_vDistance.y = 10.f;*/
-
-				/*	if (m_vDistance.z <= -20.f)
-						m_vDistance.z = -20.f;*/
+			if (m_vDistance.y >= 10.f)
+				m_vDistance.y = 10.f;
+			if (m_vDistance.z <= -20.f)
+				m_vDistance.z = -20.f;
 
 	}
 	else if (m_lMouseWheel > 0)
 	{
-		/*m_vDistance.y -= 0.3f;
+		m_vDistance.y -= 0.3f;
 		m_vDistance.z += 0.5f;
 
 
@@ -171,9 +177,22 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 			m_vDistance.y = 0.f;
 
 		if (m_vDistance.z >= -3.f)
-			m_vDistance.z = -3.f;*/
+			m_vDistance.z = -3.f;
 	}
 
+
+	if (m_bZoom)
+	{
+		m_fZoom -= 0.1f;
+		if (m_fZoom <= -3.f)
+			m_fZoom = -3.f;
+	}
+	else
+	{
+		m_fZoom += 0.1f;
+		if (m_fZoom >= 0.f)
+			m_fZoom = 0.f;
+	}
 
 
 	if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
@@ -233,6 +252,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	vPlayerPosition = XMVectorSetY(vPlayerPosition, XMVectorGetY(vPlayerPosition) + m_fOffsetPosY);
 	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vPlayerPosition) + m_fCameraY);
 
+
 	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
 		m_bLerp = false;
 
@@ -241,15 +261,16 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	{
 		m_fTime += fTimeDelta*0.3f;
 
-		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
+		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos + vZoomDir*m_fZoom), m_fTime); //_float4 저장 y올리기 
 
 		if (m_fTime >= 1.f)
 			m_bLerp = false;
 	}
 	else
 	{
-		FinalPos = m_vNewPos;
-
+		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = m_vNewPos + +vZoomDir*m_fZoom;
 		m_fTime = 0.f;
 	}
 
@@ -359,8 +380,8 @@ void CCamera_Dynamic::BattleClear_Camera(_float fTimeDelta)
 
 	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 	_float fLength = 4.f; 
-	m_vNewPos = XMVectorSetX(m_vNewPos, (XMVectorGetX(m_fTargetPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
-	m_vNewPos = XMVectorSetZ(m_vNewPos, (XMVectorGetZ(m_fTargetPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
+	m_vNewPos = XMVectorSetX(m_vNewPos, (XMVectorGetX(m_vTargetPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
+	m_vNewPos = XMVectorSetZ(m_vNewPos, (XMVectorGetZ(m_vTargetPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
 	m_vNewPos = XMVectorSetY(m_vNewPos,  3.f);
 
 	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
@@ -382,8 +403,96 @@ void CCamera_Dynamic::BattleClear_Camera(_float fTimeDelta)
 	}
 
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
-	m_pTransform->LookAt(m_fTargetPos);
+	m_pTransform->LookAt(m_vTargetPos);
 
+}
+
+void CCamera_Dynamic::LockOn_Camera(_float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vDir = XMVector3Normalize(m_vTargetPos - vCameraPosition);
+
+
+	vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_float fLength = 5.f;
+	m_vNewPos = m_vTargetPos - vDir*10.f;
+
+
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+		m_bLerp = false;
+	else
+		m_bLerp = true;
+
+	_vector FinalPos = { 0.f,0.f,0.f,0.f };
+	if (m_bLerp)
+	{
+		m_fTime += fTimeDelta*0.3f;
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
+
+		if (m_fTime >= 1.f)
+			m_bLerp = false;
+	}
+	else
+	{
+		FinalPos = m_vNewPos;
+		m_fTime = 0.f;
+	}
+
+	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
+	m_pTransform->LookAt(m_vTargetPos);
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CCamera_Dynamic::LockOff_Camera(_float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	//if (m_pTarget == nullptr)
+	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+
+	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vDir = (vCameraPosition - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_vector vCenterPos = vPlayerPosition;
+
+	vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_float fLength = 5.f;
+	vCameraPosition = XMVectorSetX(vCameraPosition, (XMVectorGetX(vCenterPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
+	vCameraPosition = XMVectorSetZ(vCameraPosition, (XMVectorGetZ(vCenterPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
+	m_vNewPos = vCameraPosition;
+
+
+	vCenterPos = XMVectorSetY(vCenterPos, XMVectorGetY(vCenterPos) + m_fOffsetPosY);
+	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vCenterPos) + m_fCameraY);
+
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+		m_bLerp = false;
+
+	_vector FinalPos = { 0.f,0.f,0.f,0.f };
+	if (m_bLerp)
+	{
+		m_fTime += fTimeDelta*0.3f;
+
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
+
+		if (m_fTime >= 1.f)
+			m_bLerp = false;
+	}
+	else
+	{
+		FinalPos = m_vNewPos;
+		m_fTime = 0.f;
+		Set_CamMode(CAM_BATTLEZONE);
+	}
+
+
+	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 CCamera_Dynamic * CCamera_Dynamic::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

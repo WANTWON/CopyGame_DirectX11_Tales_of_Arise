@@ -4,7 +4,7 @@
 #include "RinwellState.h"
 #include "RinwellPoseState.h"
 #include "RinwellDamageState.h"
-
+#include "CameraManager.h"
 using namespace AiRinwell;
 
 CAiRinwell::CAiRinwell(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -33,7 +33,9 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+
 	m_tStats.m_fMaxHp = 10000000.f;
+
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -136,6 +138,9 @@ int CAiRinwell::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return OBJ_NOEVENT;
+
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_bDissolve)
 		return OBJ_NOEVENT;
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
@@ -158,6 +163,9 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 	__super::Late_Tick(fTimeDelta);
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return;
 
 	if (!m_bDissolve)
 	{
@@ -267,6 +275,9 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
+
+
+
 	if (iHp <= 0)
 	{
 		m_bTakeDamage = true;
@@ -279,8 +290,13 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		m_pTarget = DamageCauser;
 		m_eDmg_Direction =  Calculate_DmgDirection();
 		m_bTakeDamage = true;
-		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
-		m_pState = m_pState->ChangeState(m_pState, pState);
+
+		if (fDamage > 100)
+		{
+			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+		}
+		
 	}
 
 	return iHp;

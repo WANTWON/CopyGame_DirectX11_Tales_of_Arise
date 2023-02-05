@@ -76,7 +76,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
 	{
-		Take_Damage(2000, m_pTarget);
+		Take_Damage(2000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 		m_bTakeDamage = true;
 	}
 
@@ -136,9 +136,6 @@ void CMonster::Late_Tick(_float fTimeDelta)
 			CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID);
 		}
 	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-		m_bDead = true;
 }
 
 HRESULT CMonster::Render()
@@ -338,7 +335,7 @@ void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 
-	_vector vOffset = XMVectorSet(0.f, m_fRadius + 3.f, 0.f, 0.f);
+	_vector vOffset = XMVectorSet(0.f, m_fRadius + 1.5f, 0.f, 0.f);
 	_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
 	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();

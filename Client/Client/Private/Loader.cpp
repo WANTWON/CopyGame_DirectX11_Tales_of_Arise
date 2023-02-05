@@ -11,19 +11,21 @@
 #include "NonAnim.h"
 #include "Trigger.h"
 
-//Effect
+//Effect & Bullet
 #include "EffectTexture.h"
 #include "EffectMesh.h"
 #include "ParticleSystem.h"
 #include "Particle_Rect.h"
 #include "Particle_Point.h"
-
+#include "RinwellSkills.h"
+#include "SionSkills.h"
 
 //Actor
 #include "Alphen.h"
 #include "Sion.h"
 #include "FemaleYoung.h"
 #include "AiRinwell.h"
+#include "Rinwell.h"
 
 
 //UI
@@ -81,7 +83,7 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
-}
+} 
 
 unsigned int APIENTRY Thread_Main(void* pArg)
 {
@@ -122,6 +124,7 @@ HRESULT CLoader::Initialize(LEVEL eNextLevel)
 	return S_OK;
 }
 
+
 HRESULT CLoader::Loading_ForLogoLevel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -143,6 +146,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	if (FAILED(Loading_ForUITexture()))
 		return E_FAIL;
 
+	lstrcpy(m_szLoadingText, TEXT("Effect Loading"));
+	if (FAILED(Loading_ForEffect()))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Finished Loading"));
 
 	m_isFinished = true;
@@ -157,11 +164,26 @@ HRESULT CLoader::Loading_ForPrototype()
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
 		return E_FAIL;
-	/*For.Prototype_Trigger */
+
+	/*For.Prototype_RinwellSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Rinwell"),
+		CRinwell::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_RinwellSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_RinwellSkills"),
+		CRinwellSkills::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_RinwellSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SionSkills"),
+		CSionSkills::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_AiRinwell */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AiRinwell"),
 		CAiRinwell::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
 
 	/*For.Prototype_Trigger */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NpcFemale"),
@@ -1488,7 +1510,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_QUESTMENU"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/quest/questmenu%d.dds"), 3))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/quest/questmenu%d.dds"), 5))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_QUESTTODO"),
@@ -1508,6 +1530,32 @@ HRESULT CLoader::Loading_ForUITexture()
 	
 	
 	
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForEffect()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Sphere0"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Sphere/Sphere0.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_noise_SO_AlphaC02"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Aura/TO14_T_FX_noise_SO_AlphaC02.png"), 1))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("DotNoise_rm_01"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/DotNoise/DotNoise_rm_01.png"), 1))))
+		return E_FAIL;
+
+
+	RELEASE_INSTANCE(CGameInstance);
+
 	return S_OK;
 }
 

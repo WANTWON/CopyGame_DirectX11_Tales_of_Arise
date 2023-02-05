@@ -9,11 +9,12 @@ _bool CRinwell::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
 	{
-		case IDLE:
-		case RUN:
-			return true;
-		default:
-			return false;
+	case IDLE:
+	case RUN:
+	case BTL_MAGIC_LOOP:
+		return true;
+	default:
+		return false;
 	}
 }
 
@@ -34,14 +35,19 @@ HRESULT CRinwell::Initialize_Prototype()
 
 HRESULT CRinwell::Initialize(void * pArg)
 {
+	m_ePlayerID = RINWELL;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_ePlayerID = SION;
-
-	m_tInfo.fMaxHp = 100;
+	m_tInfo.fMaxHp = 100000;
 	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
+
+	m_tInfo.fMaxMp = 5.f;
+	m_tInfo.fCurrentMp = 2.3f;
+
 	m_tInfo.iDamage = 100;
+	m_tInfo.fCurrentBoostGuage = 50.f;
 
 	return S_OK;
 }

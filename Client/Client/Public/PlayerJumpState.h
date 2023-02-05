@@ -32,6 +32,7 @@ private:
 	_vector m_vecChangePos;
 	_bool m_bIsJump = false;
 	_bool m_bIsDrop = false;
+	_bool m_bIsInput = false;
 
 private:
 	DIRID m_eDirection = DIRID::DIR_END;

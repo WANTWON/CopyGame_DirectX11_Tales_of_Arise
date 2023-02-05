@@ -86,7 +86,7 @@ int CItem::Tick(_float fTimeDelta)
 			case ITEMTYPE::PLANT:
 			case ITEMTYPE::MUSHROOM:
 			{
-				_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+				_vector vOffset = XMVectorSet(0.f, m_fRadius * 0.5f, 0.f, 0.f);
 				_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 				
 				_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -124,7 +124,7 @@ void CItem::Late_Tick(_float fTimeDelta)
 			dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();//¤·¤§
 			m_bIsGain = true;
 			
-			_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+			_vector vOffset = XMVectorSet(0.f, m_fRadius * 2, 0.f, 0.f);
 			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
 			_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -141,6 +141,8 @@ void CItem::Late_Tick(_float fTimeDelta)
 						pParticleSystem->Set_Stop(true);
 				}
 			}
+
+			pPlayer->Set_PlayerCollectState();
 
 			//ITEMINFO*  itempointer = new  ITEMINFO;
 			switch (m_ItemDesc.etype)

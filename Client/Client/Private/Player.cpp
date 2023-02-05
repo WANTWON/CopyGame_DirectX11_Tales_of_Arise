@@ -6,7 +6,14 @@
 #include "PlayerState.h"
 #include "PlayerIdleState.h"
 #include "AIState.h"
-#include "AIIdleState.h"
+#include "PlayerCollectState.h"
+#include "AICheckState.h"
+
+#include "CameraManager.h"
+#include "AI_HitState.h"
+#include "AIDeadState.h"
+#include "AI_Sion_BoostAttackState.h"
+
 
 using namespace Player;
 using namespace AIPlayer;
@@ -36,7 +43,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CAIState* pAIState = new AIPlayer::CIdleState(this);
+	CAIState* pAIState = new AIPlayer::CAICheckState(this , CAIState::STATE_IDLE);
 	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
 	/* Set State */
@@ -48,6 +55,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_eLevel = LEVEL_END;
 
+	m_pPlayerManager->Set_PlayerEnum(this, m_ePlayerID);
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
 
 	return S_OK;
@@ -55,7 +63,27 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
+	if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return OBJ_NOEVENT;
+
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	if (eMode == Client::AI_MODE && m_ePlayerID == SION)
+	{
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_2))
+		{
+			if (m_tInfo.fCurrentBoostGuage >= 100.f)
+			{
+				CAIState* pAIState = new AIPlayer::CAI_Sion_BoostAttack(this , CBattleManager::Get_Instance()->Get_LackonMonster());
+				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+
+			}
+		}
+	}
+
 
 	switch (eMode)
 	{
@@ -87,6 +115,12 @@ int CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
+	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
+		return;
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return;
+
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
 	switch (eMode)
@@ -95,15 +129,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		LateTick_State(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-	{
 		LateTick_AIState(fTimeDelta);
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_ePlayerID == SION)
-			m_pPlayerManager->Set_ActivePlayer(this);
-	}
 		break;
 	case Client::UNVISIBLE:
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_ePlayerID == SION)
-			m_pPlayerManager->Set_ActivePlayer(this);
 		return;
 	}
 
@@ -177,6 +205,69 @@ HRESULT CPlayer::Render_ShadowDepth()
 	return S_OK;
 }
 
+
+_int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
+{
+	if (fDamage <= 0 || m_bDead)
+		return 0;
+
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	m_tInfo.fCurrentHp -= (int)fDamage;
+
+	/*CDamageFont::DMGDESC testdesc;
+	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
+	testdesc.iDamage = fDamage;
+	testdesc.pPointer = this;
+
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+		return E_FAIL;*/
+
+	if (m_tInfo.fCurrentHp <= 0)
+	{
+		m_tInfo.fCurrentHp = 0;
+		switch (eMode)
+		{
+		case Client::ACTIVE:
+			/*CPlayerState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+			m_pPlayerState = m_pState->ChangeState(m_pState, pState);*/
+			break;
+		case Client::AI_MODE:
+			CAIState* pAIState = new AIPlayer::CDeadState(this);
+			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+			break;
+		}
+		return 0;
+	}
+	else
+	{
+		switch (eMode)
+		{
+		case Client::ACTIVE:
+			/*CPlayerState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+			m_pPlayerState = m_pState->ChangeState(m_pState, pState);*/
+			break;
+		case Client::AI_MODE:
+			CAIState* pAIState = new AIPlayer::CAI_HitState(this);
+			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+			break;
+
+		}
+	}
+
+	return (_uint)m_tInfo.fCurrentHp;
+}
+
+void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)
+{
+	CPlayerState* pPlayerState = new Player::CCollectState(this, pObject);
+	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+
+}
+
 void CPlayer::HandleInput()
 {
 	CPlayerState* pNewState = m_pPlayerState->HandleInput();
@@ -241,10 +332,10 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 	switch (eLevel)
 	{
 	case Client::LEVEL_BATTLE:
-		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BattleNavigation")));
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BattleNavigation"), m_ePlayerID));
 		break;
 	case Client::LEVEL_SNOWFIELD:
-		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_FieldNavigation")));
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_FieldNavigation"), m_ePlayerID));
 		break;
 	}
 
