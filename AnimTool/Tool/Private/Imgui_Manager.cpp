@@ -527,7 +527,7 @@ void CImgui_Manager::ShowGui()
 			{
 				m_fEventStartTime = AnimEventVector[m_iEventChoice].fStartTime;
 				m_fEventEndTime = AnimEventVector[m_iEventChoice].fEndTime;
-			}	
+			}
 			if (ImGui::ListBox("Event End", &m_iEventChoice, pEndTime, iAnimEvents))
 			{
 				m_fEventStartTime = AnimEventVector[m_iEventChoice].fStartTime;
@@ -542,6 +542,13 @@ void CImgui_Manager::ShowGui()
 			ImGui::DragFloat("Start Time", &m_fEventStartTime, 0.05f, 0.f, m_fAnimationDuration);
 			ImGui::DragFloat("End Time", &m_fEventEndTime, 0.05f, 0.f, m_fAnimationDuration);
 
+			static char szEventName[MAX_PATH] = "";
+			if (-1 != m_iEventChoice)
+				memcpy(szEventName, AnimEventVector[m_iEventChoice].szName, sizeof(char) * MAX_PATH);
+			
+			ImGui::SetNextItemWidth(175);
+			ImGui::InputText("##Event Tag", szEventName, MAX_PATH);
+
 			ImGui::RadioButton("Event_Sound", &m_iEventType, 0);
 			ImGui::SameLine();
 			ImGui::RadioButton("Event_Effect", &m_iEventType, 1);
@@ -551,6 +558,11 @@ void CImgui_Manager::ShowGui()
 			ImGui::SameLine();
 			ImGui::RadioButton("Event_Input", &m_iEventType, 4);
 
+			ImGui::Text("Event Name");
+			static char cEventName[MAX_PATH] = "";
+			ImGui::SetNextItemWidth(175);
+			ImGui::InputText("##InputEvent", cEventName, MAX_PATH);
+
 			if (ImGui::Button("Add"))
 			{
 				CAnimation::ANIMEVENT AnimEvent;
@@ -559,6 +571,7 @@ void CImgui_Manager::ShowGui()
 				AnimEvent.eType = (CAnimation::EVENTTYPE)m_iEventType;
 				AnimEvent.fStartTime = m_fEventStartTime;
 				AnimEvent.fEndTime = m_fEventEndTime;
+				memcpy(AnimEvent.szName, cEventName, sizeof(char) * MAX_PATH);
 
 				ChoiceModelAnimation->Add_Event(AnimEvent);
 			}
@@ -571,6 +584,7 @@ void CImgui_Manager::ShowGui()
 				AnimEvent.eType = (CAnimation::EVENTTYPE)m_iEventType;
 				AnimEvent.fStartTime = m_fEventStartTime;
 				AnimEvent.fEndTime = m_fEventEndTime;
+				memcpy(AnimEvent.szName, cEventName, sizeof(char) * MAX_PATH);
 
 				ChoiceModelAnimation->Fix_Event(m_iEventChoice, AnimEvent);
 			}

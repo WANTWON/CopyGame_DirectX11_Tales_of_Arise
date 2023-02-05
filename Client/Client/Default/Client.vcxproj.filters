@@ -841,6 +841,9 @@
     <ClInclude Include="..\Public\RinwellSkills.h">
       <Filter>02.GameObjects\07.Bullet\RinwellSkills</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerHitState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AI_ChaseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
@@ -1341,6 +1344,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\RinwellSkills.cpp">
       <Filter>02.GameObjects\07.Bullet\RinwellSkills</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\PlayerHitState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AI_ChaseState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
