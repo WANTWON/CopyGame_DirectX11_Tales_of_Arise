@@ -117,6 +117,7 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+
 					break;
 				}
 			}
