@@ -214,6 +214,7 @@
     <ClInclude Include="..\Public\Itemmsgbox.h" />
     <ClInclude Include="..\Public\IceWolfBattle_TurnState.h" />
     <ClInclude Include="..\Public\PlayerCollectState.h" />
+    <ClInclude Include="..\Public\PlayerHitState.h" />
     <ClInclude Include="..\Public\Rinwell.h" />
     <ClInclude Include="..\Public\RinwellAttackState.h" />
     <ClInclude Include="..\Public\RinwellDamageState.h" />
@@ -526,6 +527,7 @@
     <ClCompile Include="..\private\Water.cpp" />
     <ClCompile Include="..\Private\UI_Skillbutton.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
+    <ClCompile Include="..\Public\PlayerHitState.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
