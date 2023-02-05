@@ -2,7 +2,6 @@
 #include "HawkBattle_DashState.h"
 #include "HawkIdleState.h"
 #include "GameInstance.h"
-#include "HawkBattle_BombingState.h"
 #include "HawkBattle_RunState.h"
 #include "HawkBattle_TornadeState.h"
 
@@ -106,11 +105,10 @@ void CBattle_DashState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_DASH);
 
-	
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Dash.wav"), SOUND_VOICE, 0.4f);
 }
 
 void CBattle_DashState::Exit()
 {
-	
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

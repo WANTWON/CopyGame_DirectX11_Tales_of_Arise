@@ -510,12 +510,6 @@
     <ClInclude Include="..\Public\Hawk.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HawkBattle_BombingState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\HawkBattle_ChargeState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\HawkBattle_IdleState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClInclude>
@@ -527,9 +521,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Berserker.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BerserkerBattle_DashStartState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BerserkerBattle_Double_ClawState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
@@ -551,18 +542,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\BerserkerWalkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\HawkBattle_GrabState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\HawkBattle_GrabEndState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\HawkBattle_RevolveState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\HawkBattle_GrabStartState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\HawkBattle_RunState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
@@ -1056,12 +1035,6 @@
     <ClCompile Include="..\Private\Hawk.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\HawkBattle_BombingState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\HawkBattle_ChargeState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\HawkBattle_IdleState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClCompile>
@@ -1070,9 +1043,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Berserker.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BerserkerBattle_DashStartState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BerserkerBattle_Double_ClawState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
@@ -1094,18 +1064,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\BerserkerWalkState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\HawkBattle_GrabState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\HawkBattle_GrabEndState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\HawkBattle_RevolveState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\HawkBattle_GrabStartState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\HawkBattle_RunState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
@@ -1213,9 +1171,6 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BerserkerBattle_RunState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BerserkerBattle_WalkState.cpp">
@@ -1404,6 +1359,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BerserkerBattle_RunState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

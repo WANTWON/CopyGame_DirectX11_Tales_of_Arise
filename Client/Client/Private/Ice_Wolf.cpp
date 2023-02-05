@@ -10,7 +10,6 @@
 #include "IceWolfAttackBiteState.h"
 #include "IceWolfBattle_HowLingState.h"
 #include "IceWolfBattle_RunState.h"
-#include "CameraManager.h"
 
 using namespace IceWolf;
 
@@ -50,7 +49,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 	m_eMonsterID = ICE_WOLF;
 
-	m_tStats.m_fMaxHp = 2000.f;
+	m_tStats.m_fMaxHp = 500.f;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -110,7 +109,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
+	ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))

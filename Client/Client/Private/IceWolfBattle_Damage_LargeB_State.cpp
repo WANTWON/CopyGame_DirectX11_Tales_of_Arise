@@ -28,7 +28,7 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 		if(!m_bThirdHit)
 			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
-	case Client::CIceWolfState::STATE_END:
+	case Client::CIceWolfState::STATE_BE_DAMAGED:
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
 	default:
@@ -95,9 +95,11 @@ void CBattle_Damage_LargeB_State::Enter()
 	{
 	case Client::CIceWolfState::STATE_DEAD:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Dead.wav"), SOUND_VOICE, 0.4f);
 		break;
 	case Client::CIceWolfState::STATE_BE_DAMAGED:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Hit.wav"), SOUND_VOICE, 0.4f);
 		break;
 	}
 

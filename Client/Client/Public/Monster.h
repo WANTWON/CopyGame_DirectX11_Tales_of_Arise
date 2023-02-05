@@ -5,6 +5,7 @@
 #include "GameInstance.h"
 #include "Cell.h"
 #include "BattleManager.h"
+#include "CameraManager.h"
 
 BEGIN(Engine)
 class CModel;

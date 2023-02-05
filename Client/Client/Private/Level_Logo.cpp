@@ -21,6 +21,9 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LogoSong.wav"), SOUND_SYSTEM, 0.3f);
+	
 	return S_OK;
 }
 
@@ -33,8 +36,9 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("6_UI_Sys_Do_Start.wav"), SOUND_SYSTEM, 0.4f);
+		//CGameInstance::Get_Instance()->PlaySounds(TEXT("6_UI_Sys_Do_Start.wav"), SOUND_SYSTEM, 0.4f);
 
+		
 		pGameInstance->Set_DestinationLevel(LEVEL_SNOWFIELD);
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWFIELD))))
 			return;
@@ -82,5 +86,5 @@ void CLevel_Logo::Free()
 {
 	__super::Free();
 
-
+	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
 }

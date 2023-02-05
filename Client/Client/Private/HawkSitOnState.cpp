@@ -44,9 +44,8 @@ CHawkState * CSitOnState::Tick(_float fTimeDelta)
 CHawkState * CSitOnState::LateTick(_float fTimeDelta)
 {
 
-	if (m_fTarget_Distance <= 20 )
+	if (m_fTarget_Distance <= 10)
 		return new CUpFlyState(m_pOwner);
-
 	if (m_bIsAnimationFinished)
 	{
 		return new CSitOnState(m_pOwner);

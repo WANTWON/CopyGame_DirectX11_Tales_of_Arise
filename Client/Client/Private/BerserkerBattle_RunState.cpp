@@ -2,13 +2,11 @@
 
 #include "BerserkerBattle_RunState.h"
 #include "GameInstance.h"
-#include "BerserkerBattle_DashStartState.h"
 #include "BerserkerBattle_Double_CrowState.h"
 #include "BerserkerBattle_Double_ClawState.h"
 #include "BerserkerBattle_Shock_WaveState.h"
 #include "BerserkerBattle_BackStepState.h"
 #include "BerserkerBattle_Quadruple_ClawState.h"
-#include "BerserkerBattle_DashStartState.h"
 #include "BerserkerBattle_FireBallState.h"
 #include "BerserkerBattle_PouncingState.h"
 #include "BerserkerBattle_Multiple_FireState.h"

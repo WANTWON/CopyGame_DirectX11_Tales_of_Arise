@@ -67,10 +67,15 @@ void CHowLingState::Enter()
 
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_HOWLING);
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Howling1.wav"), SOUND_VOICE, 0.4f);
+
+
 }
 
 void CHowLingState::Exit()
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }
 
 

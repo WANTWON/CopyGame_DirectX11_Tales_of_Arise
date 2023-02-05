@@ -111,10 +111,13 @@ void CAttack_Elemental_Charge::Enter()
 		break;
 	}
 
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Chase.wav"), SOUND_VOICE, 0.4f);
+
 }
 
 void CAttack_Elemental_Charge::Exit()
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }
 
 
