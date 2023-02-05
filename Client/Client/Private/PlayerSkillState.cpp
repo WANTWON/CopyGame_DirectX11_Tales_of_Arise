@@ -82,6 +82,29 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 
 						getchar();
 					}
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					{
+						if (m_HienzinEndEffect.empty() && !m_HienzinStartEffect.empty())
+						{
+							_matrix mWorldMatrix = XMMatrixIdentity();
+							_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							vPosition += vLook * 2;
+
+							mWorldMatrix.r[3] = vPosition;
+							m_HienzinEndEffect = CEffect::PlayEffectAtLocation(TEXT("Hienzin_End.dat"), mWorldMatrix);
+						}
+						else if (m_HienzinStartEffect.empty())
+						{
+							_matrix mWorldMatrix = XMMatrixIdentity();
+							_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							vPosition += vLook * 2;
+
+							mWorldMatrix.r[3] = vPosition;
+							m_HienzinStartEffect = CEffect::PlayEffectAtLocation(TEXT("Hienzin_Start.dat"), mWorldMatrix);
+						}
+					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK2:
 					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
@@ -102,6 +125,14 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 
 						getchar();
 					}
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					{
+						if (m_AkizameEffect.empty())
+						{
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							m_AkizameEffect = CEffect::PlayEffectAtLocation(TEXT("Akizame.dat"), mWorldMatrix);
+						}
+					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK3:
 					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
@@ -121,6 +152,14 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 							m_iSkillEvent = 3;
 
 						getchar();
+					}
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					{
+						if (m_HousyutigakuzinEffect.empty())
+						{
+							_matrix mWorldMatrix;
+							//m_HousyutigakuzinEffect = CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin.dat"), mWorldMatrix);
+						}
 					}
 					break;
 				}
