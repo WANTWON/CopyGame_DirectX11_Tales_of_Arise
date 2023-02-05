@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "PlayerManager.h"
 #include "BattleManager.h"
+#include "Monster.h"
 
 CCamera_Dynamic::CCamera_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
@@ -414,10 +415,9 @@ void CCamera_Dynamic::LockOn_Camera(_float fTimeDelta)
 	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 	_vector vDir = XMVector3Normalize(m_vTargetPos - vCameraPosition);
 
-
 	vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 	_float fLength = 5.f;
-	m_vNewPos = m_vTargetPos - vDir*10.f;
+	m_vNewPos = XMVectorSetY(m_vTargetPos - vDir*10.f , 5.f);
 
 
 	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
@@ -469,7 +469,7 @@ void CCamera_Dynamic::LockOff_Camera(_float fTimeDelta)
 	vCenterPos = XMVectorSetY(vCenterPos, XMVectorGetY(vCenterPos) + m_fOffsetPosY);
 	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vCenterPos) + m_fCameraY);
 
-	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 3.f && m_fTime <= 0.2f)
 		m_bLerp = false;
 
 	_vector FinalPos = { 0.f,0.f,0.f,0.f };
@@ -493,6 +493,74 @@ void CCamera_Dynamic::LockOff_Camera(_float fTimeDelta)
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 
 	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CCamera_Dynamic::Change_LockOn(_uchar eKeyID)
+{
+	CBaseObj* pLockOnMonster = CBattleManager::Get_Instance()->Get_LackonMonster();
+	_vector vLockOnPosition = pLockOnMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+
+	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
+
+	for (auto& iter : *pMonsterList)
+	{
+		if (iter == pLockOnMonster)
+			continue;
+
+			
+			_vector vLook = XMVector3Normalize(m_pTransform->Get_State(CTransform::STATE_LOOK));
+			_vector vMonsterLook = dynamic_cast<CMonster*>(iter)->Get_TransformState(CTransform::STATE_LOOK);
+
+			_vector vCameraLockonDir = XMVector3Normalize(XMVectorSetY(vLockOnPosition - vCameraPosition, 0.f));
+			_vector vLockonDir = XMVector3Normalize(vLockOnPosition - dynamic_cast<CMonster*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+			vLook = XMVectorSetY(vLook, 0.f);
+			vLockonDir = XMVectorSetY(vLockonDir, 0.f);
+
+			_vector vMonsterRight = XMVector3Normalize(dynamic_cast<CMonster*>(iter)->Get_TransformState(CTransform::STATE_RIGHT));
+			_float fRightDot = XMVectorGetX(XMVector3Dot(vCameraLockonDir, vMonsterRight));
+
+		
+			if (fRightDot > 0.f)
+				vecRightMonster.push_back(dynamic_cast<CMonster*>(iter));
+			else
+				vecLeftMonster.push_back(dynamic_cast<CMonster*>(iter));
+
+	}
+
+
+	if (eKeyID == DIK_Z)
+	{
+		_float fMinDistance = MAXDISTANCE;
+		for (auto& iter : vecLeftMonster)
+		{
+			_float fDistance = XMVectorGetX(XMVector3Length(vLockOnPosition - iter->Get_TransformState(CTransform::STATE_TRANSLATION)));
+
+			if (fDistance < fMinDistance)
+			{
+				fMinDistance = fDistance;
+				CBattleManager::Get_Instance()->Set_LackonMonster(iter);
+			}
+		}
+	}
+	else if (eKeyID == DIK_X)
+	{
+		_float fMinDistance = MAXDISTANCE;
+		for (auto& iter : vecRightMonster)
+		{
+			_float fDistance = XMVectorGetX(XMVector3Length(vLockOnPosition - iter->Get_TransformState(CTransform::STATE_TRANSLATION)));
+
+			if (fDistance < fMinDistance)
+			{
+				fMinDistance = fDistance;
+				CBattleManager::Get_Instance()->Set_LackonMonster(iter);
+			}
+		}
+	}
+
+	vecLeftMonster.clear();
+	vecRightMonster.clear();
 }
 
 CCamera_Dynamic * CCamera_Dynamic::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

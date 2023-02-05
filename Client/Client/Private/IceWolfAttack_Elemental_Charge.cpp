@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\IceWolfAttack_Elemental_Charge.h"
 #include "IceWolfBattle_IdleState.h"
-#include "IceWolfBattle_WalkState.h"
-#include "IceWolfBattle_IdleState.h"
 #include "IceWolfAttackNormalState.h"
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfBattle_BackStepState.h"

@@ -119,7 +119,12 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
-			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ROW);
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_Z);
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_X))
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_X);
+
 	}
 	else
 	{
@@ -567,9 +572,6 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-void CLevel_BattleZone::Check_LockOnMonster()
-{
-}
 
 CLevel_BattleZone * CLevel_BattleZone::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

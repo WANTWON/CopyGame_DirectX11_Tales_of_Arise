@@ -12,7 +12,7 @@
 #include "CameraManager.h"
 #include "AI_HitState.h"
 #include "AIDeadState.h"
-#include "AI_Sion_BoostAttackState.h"
+#include "AI_BoostAttackState.h"
 
 
 using namespace Player;
@@ -77,7 +77,20 @@ int CPlayer::Tick(_float fTimeDelta)
 		{
 			if (m_tInfo.fCurrentBoostGuage >= 100.f)
 			{
-				CAIState* pAIState = new AIPlayer::CAI_Sion_BoostAttack(this , CBattleManager::Get_Instance()->Get_LackonMonster());
+				CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this , CBattleManager::Get_Instance()->Get_LackonMonster());
+				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+
+			}
+		}
+	}
+
+	if (eMode == Client::AI_MODE && m_ePlayerID == ALPHEN)
+	{
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
+		{
+			if (m_tInfo.fCurrentBoostGuage >= 100.f)
+			{
+				CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
 				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
 			}
@@ -152,6 +165,18 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			pParts->Late_Tick(fTimeDelta);
 	}
 
+	CBaseObj* pMonster = nullptr;
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pMonster))
+	{
+		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+		if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
+			vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
+		else
+			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
+
+		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
+	}
 }
 
 HRESULT CPlayer::Render()

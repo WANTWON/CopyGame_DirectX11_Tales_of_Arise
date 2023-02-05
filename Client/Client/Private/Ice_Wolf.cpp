@@ -4,7 +4,6 @@
 #include "IceWolfIdleState.h"
 #include "IceWolfBattle_IdleState.h"
 #include "IceWolfBattle_Damage_LargeB_State.h"
-#include "IceWolfBattle_DeadState.h"
 #include "IceWolfAttackNormalState.h"
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
@@ -275,7 +274,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (iHp <= 0)
 	{
 		m_pModelCom->Set_TimeReset();
-		CIceWolfState* pState = new CBattle_DeadState(this);
+		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 		
 		return 0;
@@ -289,7 +288,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 			if (m_bSomeSauling == false)
 			{
 				//m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
 				m_pState = m_pState->ChangeState(m_pState, pState);
 
 
@@ -298,7 +297,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 			{
 
 				m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, true);
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED, true);
 				m_pState = m_pState->ChangeState(m_pState, pState);
 				m_iBeDamaged_Cnt = 0;
 				m_bSomeSauling = true;

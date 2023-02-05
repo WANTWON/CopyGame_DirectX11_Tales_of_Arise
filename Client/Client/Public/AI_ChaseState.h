@@ -16,6 +16,8 @@ public:
 	virtual void Exit() override;
 
 	void ChaseTarget(_float timedelta);
+	
+	
 
 private:
 	_bool m_bStopRunning = false;
