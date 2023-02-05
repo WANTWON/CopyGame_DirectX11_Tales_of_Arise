@@ -76,7 +76,8 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 
 	m_fTimer += fTimeDelta;
 
-	
+	if (m_pTarget == nullptr)
+		return nullptr;
 
 
 	if (m_fTimer > 1.2f)
