@@ -31,7 +31,7 @@ HRESULT CUI_Portraitfront_right::Initialize(void * pArg)
 	m_itexnum = 2;
 //	m_bfadein = true;
 
-	m_fCurrentBoost = 40.f;
+//	m_fCurrentBoost = 40.f;
 	m_fMaxBoost = 100.f;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -42,6 +42,10 @@ HRESULT CUI_Portraitfront_right::Initialize(void * pArg)
 
 int CUI_Portraitfront_right::Tick(_float fTimeDelta)
 {
+	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_Info().fCurrentBoostGuage;
+
+	//CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->
+
 	if (m_bfirst == false)
 	{
 		m_fAlpha_p -= 0.05f;

@@ -32,7 +32,7 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() override;
-
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
 
 public: /* Getter &  Setter */
 	CModel*			Get_Model() { return m_pModelCom; }
@@ -55,6 +55,7 @@ public: /* Getter &  Setter */
 	void			Off_IsFly(void) { m_bIsFly = false; }
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
+	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
 
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;

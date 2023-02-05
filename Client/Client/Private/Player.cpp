@@ -6,7 +6,10 @@
 #include "PlayerState.h"
 #include "PlayerIdleState.h"
 #include "AIState.h"
+#include "PlayerCollectState.h"
 #include "AICheckState.h"
+#include "AI_HitState.h"
+#include "AIDeadState.h"
 
 using namespace Player;
 using namespace AIPlayer;
@@ -169,6 +172,69 @@ HRESULT CPlayer::Render_ShadowDepth()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+
+_int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
+{
+	if (fDamage <= 0 || m_bDead)
+		return 0;
+
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	m_tInfo.fCurrentHp -= (int)fDamage;
+
+	/*CDamageFont::DMGDESC testdesc;
+	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
+	testdesc.iDamage = fDamage;
+	testdesc.pPointer = this;
+
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+		return E_FAIL;*/
+
+	if (m_tInfo.fCurrentHp <= 0)
+	{
+		m_tInfo.fCurrentHp = 0;
+		switch (eMode)
+		{
+		case Client::ACTIVE:
+			/*CPlayerState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+			m_pPlayerState = m_pState->ChangeState(m_pState, pState);*/
+			break;
+		case Client::AI_MODE:
+			CAIState* pAIState = new AIPlayer::CDeadState(this);
+			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+			break;
+		}
+		return 0;
+	}
+	else
+	{
+		switch (eMode)
+		{
+		case Client::ACTIVE:
+			/*CPlayerState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+			m_pPlayerState = m_pState->ChangeState(m_pState, pState);*/
+			break;
+		case Client::AI_MODE:
+			CAIState* pAIState = new AIPlayer::CAI_HitState(this);
+			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+			break;
+
+		}
+	}
+
+	return m_tInfo.fCurrentHp;
+}
+
+void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)
+{
+	CPlayerState* pPlayerState = new Player::CCollectState(this, pObject);
+	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+
 }
 
 void CPlayer::HandleInput()

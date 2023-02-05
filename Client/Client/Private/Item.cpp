@@ -142,6 +142,8 @@ void CItem::Late_Tick(_float fTimeDelta)
 				}
 			}
 
+			pPlayer->Set_PlayerCollectState();
+
 			//ITEMINFO*  itempointer = new  ITEMINFO;
 			switch (m_ItemDesc.etype)
 			{

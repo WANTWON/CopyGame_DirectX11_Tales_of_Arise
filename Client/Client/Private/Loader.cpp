@@ -18,6 +18,7 @@
 #include "Particle_Rect.h"
 #include "Particle_Point.h"
 #include "RinwellSkills.h"
+#include "SionSkills.h"
 
 //Actor
 #include "Alphen.h"
@@ -167,6 +168,11 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_RinwellSkills */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_RinwellSkills"),
 		CRinwellSkills::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_RinwellSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SionSkills"),
+		CSionSkills::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_AiRinwell */

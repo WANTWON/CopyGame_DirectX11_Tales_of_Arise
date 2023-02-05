@@ -41,6 +41,7 @@ namespace Client
 		float fMaxMp;
 		float fCurrentMp;
 		int iDamage;
+		float fCurrentBoostGuage;
 
 	}OBJINFO;
 

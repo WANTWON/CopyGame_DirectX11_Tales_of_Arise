@@ -18,6 +18,7 @@ public:
 
 private:
 	_bool m_bIsStateEvent = false;
+	_float m_fEventStart = -1.f;
 };
 END
 END

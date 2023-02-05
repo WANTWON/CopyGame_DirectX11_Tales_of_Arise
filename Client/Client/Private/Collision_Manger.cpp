@@ -140,13 +140,13 @@ void CCollision_Manager::CollisionwithBullet()
 	//}
 
 	/* Monster가 Player Bullet에 충돌 했을 때*/
-	CBaseObj* pMonster = nullptr;
+	/*CBaseObj* pMonster = nullptr;
 	CBaseObj* pPlayerBullet = nullptr;
 	if (CollisionwithGroup(COLLISION_MONSTER, COLLISION_PBULLET, &pMonster, &pPlayerBullet))
 	{
 		CBaseObj* pPlayer =  dynamic_cast<CWeapon*>(pPlayerBullet)->Get_Owner();
 		dynamic_cast<CMonster*>(pMonster)->Take_Damage(rand()%500 + 50, pPlayer);
-	}
+	}*/
 }
 
 
