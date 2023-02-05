@@ -17,6 +17,9 @@ protected:
 	virtual ~CInteractObject() = default;
 
 public:
+	void Set_Interact(void) { m_bIsInteract = true; }
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual int Tick(_float fTimeDelta) override;
@@ -33,14 +36,13 @@ protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr)	PURE;
 	virtual _bool Is_AnimationLoop(_uint eAnimId)			PURE;
 	
-protected:
-
 protected: /* For.Components */
 	CModel*					m_pModelCom = nullptr;
 	CTexture*				m_pDissolveTexture = nullptr;
 	_uint					m_iCollisiongCount = 0;
 	_bool					m_bCollision = false;
 	_bool					m_bIsAnimationFinished = false;
+	_bool					m_bIsInteract = false;
 	
 public:
 	virtual void Free() override;

@@ -6,6 +6,8 @@
 #include "PlayerState.h"
 #include "PlayerIdleState.h"
 #include "AIState.h"
+#include "AIIdleState.h"
+#include "PlayerCollectState.h"
 #include "AICheckState.h"
 
 using namespace Player;
@@ -169,6 +171,12 @@ HRESULT CPlayer::Render_ShadowDepth()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)
+{
+	CPlayerState* pPlayerState = new Player::CCollectState(this, pObject);
+	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
 }
 
 void CPlayer::HandleInput()
