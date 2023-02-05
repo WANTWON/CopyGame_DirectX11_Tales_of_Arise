@@ -2,7 +2,6 @@
 
 #include "BerserkerBattle_Shock_WaveState.h"
 #include "GameInstance.h"
-#include "BerserkerBattle_DashStartState.h"
 #include "BerserkerBattle_IdleState.h"
 #include "BerserkerBattle_RunState.h"
 #include "BerserkerBattle_Multiple_FireState.h"
@@ -76,7 +75,7 @@ void CBattle_Shock_WaveState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_SHOCK_WAVE);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_ShockWave.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CBattle_Shock_WaveState::Exit()

@@ -2,7 +2,6 @@
 
 #include "BerserkerBattle_PouncingState.h"
 #include "GameInstance.h"
-#include "BerserkerBattle_DashStartState.h"
 #include "BerserkerBattle_IdleState.h"
 #include "BerserkerBattle_RunState.h"
 #include "BerserkerBattle_Multiple_FireState.h"
@@ -66,6 +65,7 @@ void CBattle_PouncingState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_POUNCING);
 
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Pouncing.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CBattle_PouncingState::Exit()

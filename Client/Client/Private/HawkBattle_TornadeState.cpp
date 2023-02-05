@@ -2,11 +2,6 @@
 #include "HawkBattle_TornadeState.h"
 #include "HawkIdleState.h"
 #include "GameInstance.h"
-#include "HawkBattle_BombingState.h"
-#include "HawkBattle_ChargeState.h"
-#include "HawkBattle_GrabState.h"
-#include "HawkBattle_GrabStartState.h"
-#include "HawkBattle_RevolveState.h"
 #include "HawkBattle_RunState.h"
 #include "HawkBattle_Flying_BackState.h"
 #include "HawkBattle_DashState.h"
@@ -99,10 +94,10 @@ void CBattle_TornadeState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_TORNADE);
 
-	
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Tornade.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CBattle_TornadeState::Exit()
 {
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

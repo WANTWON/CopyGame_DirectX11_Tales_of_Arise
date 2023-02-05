@@ -2,16 +2,10 @@
 #include "HawkBattle_Damage_LargeB_State.h"
 #include "HawkIdleState.h"
 #include "GameInstance.h"
-#include "HawkBattle_BombingState.h"
-#include "HawkBattle_ChargeState.h"
-#include "HawkBattle_GrabState.h"
-#include "HawkBattle_GrabStartState.h"
-#include "HawkBattle_RevolveState.h"
+
 #include "HawkBattle_RunState.h"
 #include "HawkBattle_Flying_BackState.h"
-#include "HawkBattle_ChargeState.h"
 #include "HawkBattle_Flying_BackState.h"
-#include "HawkBattle_BombingState.h"
 
 using namespace Hawk;
 
@@ -79,11 +73,11 @@ void CBattle_Damage_LargeB_State::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DAMAGE_LARGE_F);
 
-	
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Hit.wav"), SOUND_VOICE, 0.4f);
 }
 
 void CBattle_Damage_LargeB_State::Exit()
 {
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 	
 }

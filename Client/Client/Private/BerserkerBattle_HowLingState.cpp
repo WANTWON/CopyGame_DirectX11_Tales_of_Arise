@@ -2,7 +2,6 @@
 
 #include "BerserkerBattle_HowLingState.h"
 #include "GameInstance.h"
-#include "BerserkerBattle_DashStartState.h"
 #include "BerserkerBattle_RunState.h"
 
 using namespace Berserker;
@@ -23,6 +22,9 @@ CBerserkerState * CBattle_HowLingState::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
+	m_fTimeDeltaAcc += fTimeDelta;
+
+
 	return nullptr;
 }
 
@@ -45,8 +47,7 @@ CBerserkerState * CBattle_HowLingState::LateTick(_float fTimeDelta)
 			m_pOwner->Set_OnGoingHowling();
 	}
 
-	
-	
+
 	return nullptr;
 }
 
@@ -56,10 +57,10 @@ void CBattle_HowLingState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_HOWLING);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Howling.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CBattle_HowLingState::Exit()
 {
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

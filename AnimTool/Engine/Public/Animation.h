@@ -16,7 +16,16 @@ public:
 		_float fStartTime;
 		_float fEndTime;
 		EVENTTYPE eType;
+		char szName[MAX_PATH];
 	}ANIMEVENT;
+
+	typedef struct tagLoadEvent
+	{
+		_bool isPlay = false;
+		_float fStartTime;
+		_float fEndTime;
+		EVENTTYPE eType;
+	}LOADEVENT;
 
 private:
 	CAnimation();

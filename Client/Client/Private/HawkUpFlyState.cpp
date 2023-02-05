@@ -21,7 +21,7 @@ CHawkState * CUpFlyState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CUpFlyState::Tick(_float fTimeDelta)
 {
-	
+	Find_Target();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
@@ -37,6 +37,8 @@ CHawkState * CUpFlyState::Tick(_float fTimeDelta)
 
 		m_pOwner->Check_Navigation();
 	}
+
+
 
 	return nullptr;
 }
@@ -59,6 +61,8 @@ void CUpFlyState::Enter()
 	m_eStateId = STATE_ID::STATE_MOVE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::SYMBOL_DETECT_STOP);
+
+	
 }
 
 void CUpFlyState::Exit()

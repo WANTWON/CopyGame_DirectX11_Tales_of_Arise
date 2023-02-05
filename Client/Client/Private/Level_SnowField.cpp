@@ -73,12 +73,17 @@ HRESULT CLevel_SnowField::Initialize()
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
 
+	CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
+
+	//CGameInstance::Get_Instance()->PlaySounds(TEXT("SnowFiledSong.wav"), SOUND_SYSTEM, 0.4f);
+
 	return S_OK;
 }
 
 void CLevel_SnowField::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
 
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_MINUS))
@@ -879,4 +884,7 @@ void CLevel_SnowField::Free()
 	__super::Free();
 
 	Safe_Release(m_pCollision_Manager);
+
+	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
+
 }
