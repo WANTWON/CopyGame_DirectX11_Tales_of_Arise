@@ -122,16 +122,19 @@ CAIState * CAI_Alphen_NormalAttackState::LateTick(_float fTimeDelta)
 		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0: //Client::CAIState::STATE_NORMAL_ATTACK1:
 			__super::Exit();
 			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_1;
+			m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 			break;
 		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
 			__super::Exit();
 			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_8;
+			m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 			break;
 		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
 			__super::Exit();
 			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_6;
+			m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 			break;
 		}
@@ -152,7 +155,7 @@ void CAI_Alphen_NormalAttackState::Enter()
 
 	m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_0;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-
+	m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 }
 

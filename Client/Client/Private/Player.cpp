@@ -12,7 +12,7 @@
 #include "CameraManager.h"
 #include "AI_HitState.h"
 #include "AIDeadState.h"
-#include "AI_Sion_BoostAttackState.h"
+#include "AI_BoostAttackState.h"
 
 
 using namespace Player;
@@ -77,7 +77,20 @@ int CPlayer::Tick(_float fTimeDelta)
 		{
 			if (m_tInfo.fCurrentBoostGuage >= 100.f)
 			{
-				CAIState* pAIState = new AIPlayer::CAI_Sion_BoostAttack(this , CBattleManager::Get_Instance()->Get_LackonMonster());
+				CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this , CBattleManager::Get_Instance()->Get_LackonMonster());
+				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+
+			}
+		}
+	}
+
+	if (eMode == Client::AI_MODE && m_ePlayerID == ALPHEN)
+	{
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
+		{
+			if (m_tInfo.fCurrentBoostGuage >= 100.f)
+			{
+				CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
 				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
 			}

@@ -66,6 +66,8 @@ protected:
 	_bool m_bIsStateEvent = false;
 	CBaseObj* m_pTarget = nullptr;
 
+	_bool m_bLookatOnetime = true;
+
 	
 };
 END

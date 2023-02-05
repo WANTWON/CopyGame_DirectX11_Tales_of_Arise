@@ -871,10 +871,13 @@
     <ClInclude Include="..\Public\AI_ChaseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AI_Sion_BoostAttackState.h">
+    <ClInclude Include="..\Public\AI_Alphen_NormalAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AI_Alphen_NormalAttackState.h">
+    <ClInclude Include="..\Public\AI_Alphen_SkillAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_BoostAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1399,10 +1402,13 @@
     <ClCompile Include="..\Private\AI_ChaseState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AI_Sion_BoostAttackState.cpp">
+    <ClCompile Include="..\Private\AI_Alphen_NormalAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AI_Alphen_NormalAttackState.cpp">
+    <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
   </ItemGroup>
