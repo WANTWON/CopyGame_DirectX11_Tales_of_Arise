@@ -6,6 +6,8 @@
 #include "PlayerState.h"
 #include "PlayerIdleState.h"
 #include "AIState.h"
+#include "AIIdleState.h"
+#include "PlayerCollectState.h"
 #include "AICheckState.h"
 #include "AI_HitState.h"
 #include "AIDeadState.h"
@@ -173,6 +175,7 @@ HRESULT CPlayer::Render_ShadowDepth()
 	return S_OK;
 }
 
+
 _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 	if (fDamage <= 0 || m_bDead )
@@ -226,6 +229,12 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	}
 
 	return m_tInfo.fCurrentHp;
+
+void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)
+{
+	CPlayerState* pPlayerState = new Player::CCollectState(this, pObject);
+	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+
 }
 
 void CPlayer::HandleInput()
