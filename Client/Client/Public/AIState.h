@@ -63,6 +63,7 @@ protected:
 
 	_bool m_bIsAnimationFinished = false;
 	_bool m_bRangerRunaway = false;
+	_bool m_bIsStateEvent = false;
 	CBaseObj* m_pTarget = nullptr;
 
 	

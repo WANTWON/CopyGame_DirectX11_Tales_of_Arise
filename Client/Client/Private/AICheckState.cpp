@@ -7,6 +7,7 @@
 #include "Rinwell.h"
 #include "AI_ChaseState.h"
 #include "AI_Sion_BoostAttackState.h"
+#include "AI_Alphen_NormalAttackState.h"
 
 using namespace AIPlayer;
 
@@ -59,7 +60,9 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 		switch (m_eCurrentPlayerID)
 		{
 		case CPlayer::ALPHEN:
-
+			/*if(Get_Target_Distance() >= 2.f)
+			return new CAI_ChaseState(m_pOwner, STATE_RUN, m_eCurrentPlayerID, m_pTarget);*/
+			return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
 
 			break;
 
@@ -102,7 +105,7 @@ void CAICheckState::Enter()
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
-		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_BATTLE_MOVE_IDLE;
+		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_IDLE;
 		break;
 	case CPlayer::SION:
 		m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_IDLE;
