@@ -258,7 +258,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		}
 	}
 
-	return m_tInfo.fCurrentHp;
+	return (_uint)m_tInfo.fCurrentHp;
 }
 
 void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)

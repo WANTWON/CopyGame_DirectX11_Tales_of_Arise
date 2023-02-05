@@ -275,4 +275,6 @@ HRESULT CUI_Portraitfront::RenderBoostGuage()
 	m_pVIBufferCom->Render();
 
 	m_pTransformCom->Set_Rotation({ 0.f,0.f,0.f });
+
+	return S_OK;
 }
