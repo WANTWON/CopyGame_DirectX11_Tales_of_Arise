@@ -19,6 +19,7 @@ public:
 	HRESULT Bin_Initialize(DATA_BINCHANNEL* pAIChannel, class CModel* pModel); // Ãß°¡
 	void Invalidate_TransformationMatrix(_float fCurrentTime, const char* pBoneName);
 	void Reset();
+	void Reset_Linear(void) { m_KeyFrame_Linear = m_KeyFrames[0]; }
 	_bool Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrentTime, _float fLinearTotalTime, const char* pBoneName);
 
 public: /*Get*/
@@ -41,6 +42,8 @@ private:
 
 	_uint					m_iCurrentKeyFrameIndex = 0;
 	KEYFRAME				m_KeyFrame_Linear;
+
+	_vector					m_vPrePos;
 
 //public: // For. Data
 //	void Get_ChannelData(DATA_BINCHANNEL* pChannelData);
