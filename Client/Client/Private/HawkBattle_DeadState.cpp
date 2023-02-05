@@ -68,9 +68,10 @@ void CBattle_DeadState::Enter()
 	m_eStateId = STATE_ID::STATE_TAKE_DAMAGE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DEAD);
-
+	m_pOwner->Set_Dead();
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Dead.wav"), SOUND_VOICE, 1.0f);
+	
 }
 
 void CBattle_DeadState::Exit()

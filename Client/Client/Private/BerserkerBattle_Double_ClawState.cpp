@@ -35,6 +35,8 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
 
 		m_pOwner->Check_Navigation();
+
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Double_Claw2.wav"), SOUND_VOICE, 1.0f);
 	}
 
 
@@ -61,9 +63,10 @@ void CBattle_Double_ClawState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DOUBLE_CLAW);
 
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Double_Claw.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CBattle_Double_ClawState::Exit()
 {
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

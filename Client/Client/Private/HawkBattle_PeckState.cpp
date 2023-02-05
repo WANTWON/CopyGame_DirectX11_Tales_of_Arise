@@ -96,11 +96,10 @@ void CBattle_PeckState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_PECK);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Peck.wav"), SOUND_VOICE, 1.0f);
+	
 }
 
 void CBattle_PeckState::Exit()
 {
-	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
-	
+
 }

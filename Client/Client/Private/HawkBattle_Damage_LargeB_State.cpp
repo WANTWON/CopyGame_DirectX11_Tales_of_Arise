@@ -73,7 +73,7 @@ void CBattle_Damage_LargeB_State::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DAMAGE_LARGE_F);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Hit.wav"), SOUND_VOICE, 1.0f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Hit.wav"), SOUND_VOICE, 0.4f);
 }
 
 void CBattle_Damage_LargeB_State::Exit()

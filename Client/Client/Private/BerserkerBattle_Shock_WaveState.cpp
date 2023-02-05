@@ -75,7 +75,7 @@ void CBattle_Shock_WaveState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_SHOCK_WAVE);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_ShockWave.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CBattle_Shock_WaveState::Exit()

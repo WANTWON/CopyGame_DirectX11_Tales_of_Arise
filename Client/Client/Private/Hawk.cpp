@@ -266,22 +266,26 @@ _int CHawk::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 		_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
-	if (iHp <= 0)
-	{
-		m_pModelCom->Set_TimeReset();
-		CHawkState* pState = new CBattle_DeadState(this);
-		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-		
-		
-		return 0;
-	}
-	else
-	{
-		m_pModelCom->Set_TimeReset();
-		CHawkState* pState = new CBattle_Damage_LargeB_State(this);
-		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	}
+		if (m_bDead == false)
+		{
+			if (iHp <= 0)
+			{
+				m_pModelCom->Set_TimeReset();
+				CHawkState* pState = new CBattle_DeadState(this);
+				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 
+
+				return 0;
+			}
+
+			else
+			{
+				m_pModelCom->Set_TimeReset();
+				CHawkState* pState = new CBattle_Damage_LargeB_State(this);
+				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+			}
+
+		}
 	return iHp;
 
 	

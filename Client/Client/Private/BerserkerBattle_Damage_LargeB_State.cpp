@@ -134,11 +134,11 @@ void CBattle_Damage_LargeB_State::Enter()
 
 */
 
-
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Hit.wav"), SOUND_VOICE, 1.0f);
 
 }
 
 void CBattle_Damage_LargeB_State::Exit()
 {
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

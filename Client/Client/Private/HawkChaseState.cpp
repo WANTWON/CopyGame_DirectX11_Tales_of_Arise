@@ -51,7 +51,6 @@ CHawkState * CChaseState::LateTick(_float fTimeDelta)
 
 	if (m_fTarget_Distance >= 15.f)
 		return new CIdleState(m_pOwner, CHawkState::FIELD_STATE_ID::STATE_TURN_R);
-	
 
 	return nullptr;
 }

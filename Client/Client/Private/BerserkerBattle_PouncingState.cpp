@@ -65,6 +65,7 @@ void CBattle_PouncingState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_POUNCING);
 
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Pouncing.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CBattle_PouncingState::Exit()

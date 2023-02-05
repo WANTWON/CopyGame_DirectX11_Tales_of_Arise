@@ -74,6 +74,7 @@ HRESULT CLevel_SnowField::Initialize()
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
+
 	//CGameInstance::Get_Instance()->PlaySounds(TEXT("SnowFiledSong.wav"), SOUND_SYSTEM, 0.4f);
 
 	return S_OK;

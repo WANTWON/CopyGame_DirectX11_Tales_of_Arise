@@ -95,9 +95,11 @@ void CBattle_Damage_LargeB_State::Enter()
 	{
 	case Client::CIceWolfState::STATE_DEAD:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Dead.wav"), SOUND_VOICE, 0.4f);
 		break;
 	case Client::CIceWolfState::STATE_BE_DAMAGED:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Hit.wav"), SOUND_VOICE, 0.4f);
 		break;
 	}
 
