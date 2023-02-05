@@ -285,7 +285,7 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 		_vector vPlayerLook = m_pTarget->Get_TransformState(CTransform::STATE_LOOK);
 
 		_vector vCameraLockonDir = XMVector3Normalize(XMVectorSetY(vLockOnPosition - m_pTransform->Get_State(CTransform::STATE_TRANSLATION), 0.f));
-		_vector vPlayerLockonDir = XMVector3Normalize(vLockOnPosition - vPlayerPosition);
+		_vector vPlayerLockonDir = XMVector3Normalize(XMVectorSetY(vLockOnPosition - vPlayerPosition, 0.f));
 
 		vLook = XMVectorSetY(vLook, 0.f);
 		vPlayerLockonDir = XMVectorSetY(vPlayerLockonDir, 0.f);
@@ -301,12 +301,12 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 
 		if(m_bTurn)
 		{
-			if (fDot < 0.7f)
+			if (fDot < 0.8f)
 			{
 				if (fRightDot > 0.f)
-					m_fAngle -= (1 - fDot)*7.f;// 3.f;
+					m_fAngle -= (1 - fDot)*10.f;// 3.f;
 				else
-					m_fAngle += (1 - fDot)*7.f;// 3.f;
+					m_fAngle += (1 - fDot)*10.f;// 3.f;
 			}
 			else
 				m_bTurn = false;
