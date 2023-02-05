@@ -42,7 +42,7 @@ HRESULT CUI_Portraitfront_right::Initialize(void * pArg)
 
 int CUI_Portraitfront_right::Tick(_float fTimeDelta)
 {
-	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_Info().fCurrentBoostGuage;
+	
 
 	//CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->
 

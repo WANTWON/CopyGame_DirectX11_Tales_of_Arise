@@ -6,6 +6,7 @@
 #include "AIRunawayfromTarget.h"
 #include "Rinwell.h"
 #include "AI_ChaseState.h"
+#include "AI_Sion_BoostAttackState.h"
 
 using namespace AIPlayer;
 
@@ -63,6 +64,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 			break;
 
 		case CPlayer::SION:
+			//return new CAI_Sion_BoostAttack(m_pOwner);
 			if (Get_Target_Distance() >= 20.f)
 			{
 				return new CAI_ChaseState(m_pOwner, STATE_RUN, m_eCurrentPlayerID , m_pTarget);

@@ -10,6 +10,7 @@
 #include "AICheckState.h"
 #include "AI_HitState.h"
 #include "AIDeadState.h"
+#include "AI_Sion_BoostAttackState.h"
 
 using namespace Player;
 using namespace AIPlayer;
@@ -59,6 +60,20 @@ HRESULT CPlayer::Initialize(void * pArg)
 int CPlayer::Tick(_float fTimeDelta)
 {
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	if (eMode == Client::AI_MODE && m_ePlayerID == SION)
+	{
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_2))
+		{
+			if (m_tInfo.fCurrentBoostGuage >= 100.f)
+			{
+				CAIState* pAIState = new AIPlayer::CAI_Sion_BoostAttack(this , CBattleManager::Get_Instance()->Get_LackonMonster());
+				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+
+			}
+		}
+	}
+
 
 	switch (eMode)
 	{
