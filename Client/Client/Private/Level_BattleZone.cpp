@@ -63,6 +63,7 @@ HRESULT CLevel_BattleZone::Initialize()
 	m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
 	m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) +  XMVectorSet(0.f, 20.f, -10.f, 0.f));
 	
+	//CGameInstance::Get_Instance()->PlaySounds(TEXT("SnowBattleFieldSong.wav"), SOUND_SYSTEM, 0.4f);
 
 	return S_OK;
 }
@@ -588,4 +589,6 @@ void CLevel_BattleZone::Free()
 	__super::Free();
 
 	Safe_Release(m_pCollision_Manager);
+
+	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
 }

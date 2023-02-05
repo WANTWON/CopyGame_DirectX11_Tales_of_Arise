@@ -73,6 +73,8 @@ CIceWolfState * CAttackBiteState::LateTick(_float fTimeDelta)
 		//m_pOwner->Set_Done_HitAnimState();
 		m_pOwner->Set_FinishBite();
 		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_BITE);
+		CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Bite_End.wav"), SOUND_VOICE, 0.4f);
 	}
 
 
@@ -88,13 +90,13 @@ void CAttackBiteState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_BITE);
 
-	
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Bite_Start.wav"), SOUND_VOICE, 0.4f);
 }
 
 
 void CAttackBiteState::Exit()
 {
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }
 
 

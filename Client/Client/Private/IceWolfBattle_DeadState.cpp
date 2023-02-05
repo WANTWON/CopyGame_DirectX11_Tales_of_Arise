@@ -64,12 +64,12 @@ void CBattle_DeadState::Enter()
 	
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Dead.wav"), SOUND_VOICE, 0.4f);
 }
 
 void CBattle_DeadState::Exit()
 {
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }
 
 

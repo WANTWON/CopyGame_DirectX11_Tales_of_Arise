@@ -86,9 +86,11 @@ void CTurnR_State::Enter()
 	m_eStateId = STATE_ID::STATE_MOVE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::TURN_R);
+
+	//CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Turn.wav"), SOUND_VOICE, 0.4f);
 }
 
 void CTurnR_State::Exit()
 {
-	
+	//CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

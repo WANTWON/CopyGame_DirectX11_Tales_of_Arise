@@ -171,12 +171,12 @@ void CBattle_Damage_LargeB_State::Enter()
 	//default:
 	//	break;
 	//}
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Hit.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CBattle_Damage_LargeB_State::Exit()
 {
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }
 
 

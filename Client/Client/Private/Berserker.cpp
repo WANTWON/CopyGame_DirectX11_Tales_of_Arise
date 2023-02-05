@@ -10,7 +10,6 @@
 #include "BerserkerBattle_Double_CrowState.h"
 #include "BerserkerBattle_PouncingState.h"
 #include "BerserkerBattle_Quadruple_ClawState.h"
-#include "BerserkerBattle_DashStartState.h"
 #include "BerserkerBattle_Shock_WaveState.h"
 #include "BerserkerWalkState.h"
 #include "BerserkerBattle_TurnState.h"
