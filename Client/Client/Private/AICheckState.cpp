@@ -70,6 +70,10 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 
 CAIState * CAICheckState::LateTick(_float fTimeDelta)
 {
+
+	if (m_pTarget == nullptr)
+		return nullptr;
+
 	m_fTimer += fTimeDelta;
 
 	

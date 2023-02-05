@@ -43,13 +43,13 @@ int CUI_Combo_font_Hits::Tick(_float fTimeDelta)
 	if(m_bmoveleft)
 	moveleft();
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
+	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
 	{
 		m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
 		m_bmoveleft = true;
 		m_bfadein = true;
 		m_fAlpha = 0;
-	}
+	}*/
 
 	if (m_bfadein)
 		m_fAlpha += 0.03f; //»ý±æ¶§
@@ -174,6 +174,8 @@ CGameObject * CUI_Combo_font_Hits::Clone(void * pArg)
 		ERR_MSG(TEXT("Failed to Cloned : CUI_Combo_font_Hits"));
 		Safe_Release(pInstance);
 	}
+
+	CUI_Manager::Get_Instance()->Set_Hitfont(pInstance);
 
 	return pInstance;
 }

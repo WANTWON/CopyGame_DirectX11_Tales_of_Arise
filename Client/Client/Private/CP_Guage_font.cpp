@@ -70,17 +70,17 @@ HRESULT CCP_Guage_font::Initialize(void * pArg)
 
 int CCP_Guage_font::Tick(_float fTimeDelta)
 {
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
-	{
-		m_iCurrentcp++;
-		/*m_fSize.x = 55.f;
-		m_fSize.y = 75.f;
-		m_bsizedown = true;*/
-		/*m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);*/
-		//   m_bfadein = true;
-		//   m_fAlpha = 1;
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
+	//{
+	//	m_iCurrentcp++;
+	//	/*m_fSize.x = 55.f;
+	//	m_fSize.y = 75.f;
+	//	m_bsizedown = true;*/
+	//	/*m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	//	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);*/
+	//	//   m_bfadein = true;
+	//	//   m_fAlpha = 1;
+	//}
 
 
 	//if (m_bsizedown)
