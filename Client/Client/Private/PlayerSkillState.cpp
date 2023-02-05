@@ -6,6 +6,7 @@
 #include "PlayerJumpState.h"
 #include "UI_Skillmessage.h"
 #include "Effect.h"
+#include "EffectMesh.h"
 #include "BattleManager.h"
 
 using namespace Player;
@@ -88,25 +89,39 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 					}
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
-						if (m_HienzinEndEffect.empty() && !m_HienzinStartEffect.empty())
+						if (m_bHienzin)
 						{
-							_matrix mWorldMatrix = XMMatrixIdentity();
-							_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
 							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							
+							_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+
 							vPosition += vLook * 2;
+							vPosition += vOffset;
 
 							mWorldMatrix.r[3] = vPosition;
-							m_HienzinEndEffect = CEffect::PlayEffectAtLocation(TEXT("Hienzin_End.dat"), mWorldMatrix);
+							m_Hienzin = CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+
+							for (auto& pMesh : m_Hienzin)
+								((CEffectMesh*)pMesh)->LookAt(m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
 						}
-						else if (m_HienzinStartEffect.empty())
+						else if (m_Hienzin.empty() && !m_bHienzin)
 						{
-							_matrix mWorldMatrix = XMMatrixIdentity();
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+						
 							_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
 							vPosition += vLook * 2;
 
 							mWorldMatrix.r[3] = vPosition;
-							m_HienzinStartEffect = CEffect::PlayEffectAtLocation(TEXT("Hienzin_Start.dat"), mWorldMatrix);
+							m_Hienzin = CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+
+							for (auto& pMesh : m_Hienzin)
+								((CEffectMesh*)pMesh)->LookAt(m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+							m_bHienzin = true;
 						}
 					}
 					break;
