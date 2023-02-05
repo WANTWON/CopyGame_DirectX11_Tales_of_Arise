@@ -30,7 +30,7 @@ public:
 	void	Clear_CollisionGroupExpect(COLLSIONGROUP CollisionGroup);
 	void	Clear_AllCollisionGroup();
 public:
-	_bool	CollisionwithGroup(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj** pOut = nullptr);
+	_bool	CollisionwithGroup(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj** pOut = nullptr, COLLIDERTYPE eType = COLLIDER_END);
 	_bool	CollisionwithGroup(COLLSIONGROUP SourGroup, COLLSIONGROUP DestGroup, CBaseObj** outSour, CBaseObj** outDest);
 	void	CollisionwithBullet();
 	void	Update_Collider();

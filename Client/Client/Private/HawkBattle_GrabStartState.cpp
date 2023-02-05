@@ -36,6 +36,7 @@ CHawkState * CBattle_GrabStartState::Tick(_float fTimeDelta)
 	
 	if (false == m_bTargetSetting)
 	{
+		vTargetPosition = XMVectorSetY(vTargetPosition, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 		m_pOwner->Get_Transform()->Go_PosTarget(fTimeDelta, vTargetPosition);
 		m_bTargetSetting = true;
