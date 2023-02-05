@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Data_Manager.h"
 #include "Collision_Manger.h"
+#include "Monster.h"
 
 CWeapon::CWeapon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -59,7 +60,7 @@ int CWeapon::Tick(_float fTimeDelta)
 
 	if (m_isCollider)
 	{
-		if (nullptr == m_pOBBCom)
+		if (nullptr == m_pSPHERECom)
 		{
 			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
@@ -69,21 +70,24 @@ int CWeapon::Tick(_float fTimeDelta)
 
 			ColliderDesc.vPosition = _float3(0.f, 0.f, -2.f);
 
-			m_pOBBCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
-			m_pOBBCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+			m_pSPHERECom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 			pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
 		else
-			m_pOBBCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+		{
+			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+		}
+			
 	}
-	else if (nullptr != m_pOBBCom && !m_isCollider)
+	else if (nullptr != m_pSPHERECom && !m_isCollider)
 	{
 		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
-		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pOBBCom);
-		m_pOBBCom = nullptr;
+		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSPHERECom);
+		m_pSPHERECom = nullptr;
 
 		RELEASE_INSTANCE(CCollision_Manager);
 	}
@@ -94,21 +98,34 @@ int CWeapon::Tick(_float fTimeDelta)
 void CWeapon::Late_Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	if (nullptr != m_pOBBCom)
-		m_pRendererCom->Add_Debug(m_pOBBCom);
+	if (nullptr != m_pSPHERECom)
+		m_pRendererCom->Add_Debug(m_pSPHERECom);
 #endif
 
 
-	if (nullptr != m_pOBBCom && !m_isCollider)
+	if (nullptr != m_pSPHERECom)
+	{
+		CBaseObj* pCollisionTarget = nullptr;
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+		{
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
+		}
+	}
+
+
+	if (nullptr != m_pSPHERECom && !m_isCollider)
 	{
 		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
-		pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pOBBCom);
+		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSPHERECom);
 
-		m_pOBBCom = nullptr;
+		m_pSPHERECom = nullptr;
 		pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 		RELEASE_INSTANCE(CCollision_Manager);
 	}
+
+
+	
 }
 
 HRESULT CWeapon::Render()

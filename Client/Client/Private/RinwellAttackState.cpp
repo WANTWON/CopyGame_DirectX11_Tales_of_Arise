@@ -94,6 +94,7 @@ void CAttackState::Enter()
 
 }
 
+
 void CAttackState::Exit()
 {
 	if (m_eStateType == STATETYPE_END)

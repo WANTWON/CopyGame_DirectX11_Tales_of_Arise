@@ -3,7 +3,9 @@
 #include "GameInstance.h"
 #include "Alphen.h"
 #include "AICheckState.h"
-#include "AIIdleState.h"
+#include "AIDeadState.h"
+#include "Bullet.h"
+#include "SionSkills.h"
 
 using namespace AIPlayer;
 
@@ -24,7 +26,16 @@ CAIState * CAIAttackNormalState::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()) , "TransN");
 
-	m_pOwner->Check_Navigation();
+
+	/*if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Check_Navigation();
+	}*/
 
 	return nullptr;
 }
@@ -33,11 +44,11 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 {
 	switch (m_eCurrentPlayerID)
 	{
-	case 0:                      //alphen
+	case CPlayer::ALPHEN  :                     //alphen
 		break;
 
 
-	case 1:               //sion
+	case CPlayer::SION   :            //sion
 
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -47,11 +58,32 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 			{
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
-					m_bIsStateEvent = true;
+
 					
-				//	break;
-				//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+					m_bIsStateEvent = true;
+		
 				}
+				else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				{
+					if ((m_fEventStart != pEvent.fStartTime))
+					{
+						//if (pEvent.fStartTime == 10)
+						//{
+							CBullet::BULLETDESC BulletDesc;
+							BulletDesc.eCollisionGroup = PLAYER;
+							BulletDesc.fVelocity = 100.f;
+							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
+							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
+							BulletDesc.vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+								return nullptr;
+							//m_fEventStart
+						//}
+							m_fEventStart = pEvent.fStartTime;
+						
+					}
+				}
+			
 			}
 		}
 	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
@@ -62,11 +94,28 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 		break;
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 	if (m_bIsStateEvent)
 	{
+		__super::Exit();
 		++m_iCurrentAnimIndex;
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 		m_bIsStateEvent = false;
+
+		m_fEventStart = -1.f;
+
 	}
 	
 
@@ -78,6 +127,7 @@ void CAIAttackNormalState::Enter()
 	m_eStateId = STATE_ID::STATE_ATTACK;
 	m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_NORMAL_0;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+
 
 
 }

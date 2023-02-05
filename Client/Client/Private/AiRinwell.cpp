@@ -269,6 +269,9 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
+
+
+
 	if (iHp <= 0)
 	{
 		m_bTakeDamage = true;

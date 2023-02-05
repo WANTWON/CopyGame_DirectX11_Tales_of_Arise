@@ -60,7 +60,7 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 			m_iChangeCount++;
 			m_ChangedDir = true;
 
-			if (m_iChangeCount >= 5)
+			if (m_iChangeCount >= 3)
 				return new CMoveState(m_pOwner, STATETYPE_END, m_iChangeCount);
 			else
 				return new CMoveState(m_pOwner, STATETYPE_MAIN, m_iChangeCount);
