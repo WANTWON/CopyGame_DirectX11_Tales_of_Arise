@@ -2,6 +2,8 @@
 #pragma once
 
 #include "UIBase.h"
+#include "PlayerManager.h"
+#include "Player.h"
 
 
 BEGIN(Client)

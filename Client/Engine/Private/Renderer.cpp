@@ -641,9 +641,9 @@ HRESULT CRenderer::Render_Debug()
 
 	m_DebugComponents.clear();
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_TAB))
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_BACKSPACE))
 		m_bRenderDebug = !m_bRenderDebug;
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_CAPSLOCK))
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_EQUALS))
 		m_bRenderComponentDebug = !m_bRenderComponentDebug;
 
 	if (m_bRenderDebug)

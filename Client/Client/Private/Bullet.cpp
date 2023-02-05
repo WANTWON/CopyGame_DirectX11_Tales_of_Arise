@@ -144,7 +144,7 @@ void CBullet::Collision_Check()
 	{
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
 		{
-			//dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
 			m_bDead = true;
 		}
 	}
@@ -158,6 +158,10 @@ void CBullet::Free()
 
 	Safe_Release(m_pModelCom);
 
+	for (auto& iter : m_pEffects)
+	{
+		iter->Set_Dead(true);
+	}
 	m_pEffects.clear();
 
 	if (m_BulletDesc.eCollisionGroup == PLAYER)

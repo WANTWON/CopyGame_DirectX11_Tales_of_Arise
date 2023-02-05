@@ -8,6 +8,7 @@
 #include "PlayerSkillState.h"
 #include "PlayerCollectState.h"
 #include "CameraManager.h"
+#include "BattleManager.h"
 
 using namespace Player;
 
@@ -44,7 +45,7 @@ CPlayerState * CRunState::HandleInput()
 			return new CCollectState(m_pOwner);
 	}
 	
-	if (pGameInstance->Key_Down(DIK_LCONTROL) && !m_bIsFly)
+	if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_RUN);
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		m_eDirection = DIR_STRAIGHT_LEFT;
@@ -65,15 +66,19 @@ CPlayerState * CRunState::HandleInput()
 	else
 		return new CIdleState(m_pOwner);
 
-	if ((LEVEL_BATTLE != m_pOwner->Get_Level()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+	if ((LEVEL_SNOWFIELD == m_pOwner->Get_Level()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
 		if (!m_bIsDash)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
 		
 		m_bIsDash = true;
 
-		/*CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>( CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_Zoom(true);*/
+
+		if (!CBattleManager::Get_Instance()->Get_IsBattleMode())
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(true);
+		}
 	}
 	else
 	{
@@ -82,8 +87,12 @@ CPlayerState * CRunState::HandleInput()
 
 		m_bIsDash = false;
 
-		/*CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_Zoom(false);*/
+
+		if (m_pOwner->Get_Level() == LEVEL_SNOWFIELD )
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(false);
+		}
 	}
 
 	return nullptr;
@@ -91,7 +100,7 @@ CPlayerState * CRunState::HandleInput()
 
 CPlayerState * CRunState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta , m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	
 	Move(fTimeDelta);
 

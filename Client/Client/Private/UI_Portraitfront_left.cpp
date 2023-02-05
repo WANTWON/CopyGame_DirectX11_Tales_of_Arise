@@ -43,6 +43,10 @@ HRESULT CUI_Portraitfront_left::Initialize(void * pArg)
 
 int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 {
+
+
+	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_Info().fCurrentBoostGuage;
+
 	if (m_bfirst == false)
 	{
 		m_fAlpha_p -= 0.05f;
@@ -90,20 +94,7 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 		
 
 
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
-	//{
-	//	//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
-	//	//m_bmoveleft = true;
-	//	//m_bfadein = true;
-	//	m_fAlpha -= 0.01f;
-	//}
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
-	//{
-	//	//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
-	//	//m_bmoveleft = true;
-	//	//m_bfadein = true;
-	//	m_fAlpha += 0.01f;
-	//}
+	
 
 
 

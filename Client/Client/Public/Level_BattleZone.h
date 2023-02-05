@@ -4,6 +4,7 @@
 #include "Level.h"
 
 BEGIN(Client)
+class CCamera_Dynamic;
 class CCollision_Manager;
 class CLevel_BattleZone final : public CLevel
 {
@@ -28,9 +29,9 @@ public:
 	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Battle_UI(const _tchar* pLayerTag);
 
-
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
+	CCamera_Dynamic*	m_pCamera = nullptr;
 	_float	   m_fMinLength = MAXDISTANCE;
 
 public:

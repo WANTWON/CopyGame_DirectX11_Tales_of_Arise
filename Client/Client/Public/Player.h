@@ -18,7 +18,7 @@ public:
 	enum PARTS { PARTS_WEAPON, PARTS_END };
 	enum GROUNDSKILL { GROUND_SKILL1, GROUND_SKILL2, GROUND_SKILL3, GROUND_SKILL_END };
 	enum FLYSKILL { FLY_SKILL1, FLY_SKILL2, FLY_SKILL3, FLY_SKILL_END };
-	enum PLAYERID { ALPHEN, SION, RINWELL };
+	enum PLAYERID { ALPHEN, SION, RINWELL, LAW };
 
 protected:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -32,7 +32,7 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() override;
-
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
 
 public: /* Getter &  Setter */
 	CModel*			Get_Model() { return m_pModelCom; }

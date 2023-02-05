@@ -12,6 +12,9 @@ public:
 		STATE_WALK,
 		STATE_RUN,
 		STATE_ATTACK,
+		STATE_BOOSTATTACK,
+		STATE_DEAD,
+		STATE_HIT,
 		STATE_END
 	};
 
@@ -59,6 +62,12 @@ protected:
 	_float m_fTimer = 0.f;
 
 	_bool m_bIsAnimationFinished = false;
+	_bool m_bRangerRunaway = false;
+	_bool m_bIsStateEvent = false;
 	CBaseObj* m_pTarget = nullptr;
+
+	_bool m_bLookatOnetime = true;
+
+	
 };
 END

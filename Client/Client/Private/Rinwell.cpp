@@ -40,9 +40,6 @@ HRESULT CRinwell::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-
-	m_ePlayerID = SION;
-
 	m_tInfo.fMaxHp = 100000;
 	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
 
@@ -50,6 +47,7 @@ HRESULT CRinwell::Initialize(void * pArg)
 	m_tInfo.fCurrentMp = 2.3f;
 
 	m_tInfo.iDamage = 100;
+	m_tInfo.fCurrentBoostGuage = 50.f;
 
 	return S_OK;
 }

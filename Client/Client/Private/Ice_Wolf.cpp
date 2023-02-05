@@ -4,13 +4,13 @@
 #include "IceWolfIdleState.h"
 #include "IceWolfBattle_IdleState.h"
 #include "IceWolfBattle_Damage_LargeB_State.h"
-#include "IceWolfBattle_DeadState.h"
 #include "IceWolfAttackNormalState.h"
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
 #include "IceWolfAttackBiteState.h"
 #include "IceWolfBattle_HowLingState.h"
 #include "IceWolfBattle_RunState.h"
+#include "CameraManager.h"
 
 using namespace IceWolf;
 
@@ -140,6 +140,9 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 		
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return OBJ_NOEVENT;
+
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
@@ -175,6 +178,9 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return;
 
 	LateTick_State(fTimeDelta);
 }
@@ -268,12 +274,11 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (iHp <= 0)
 	{
 		m_pModelCom->Set_TimeReset();
-		CIceWolfState* pState = new CBattle_DeadState(this);
+		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 		
 		return 0;
 	}
-
 	else
 	{
 		m_iBeDamaged_Cnt++;
@@ -283,7 +288,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 			if (m_bSomeSauling == false)
 			{
 				//m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this);
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
 				m_pState = m_pState->ChangeState(m_pState, pState);
 
 
@@ -292,7 +297,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 			{
 
 				m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, true);
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED, true);
 				m_pState = m_pState->ChangeState(m_pState, pState);
 				m_iBeDamaged_Cnt = 0;
 				m_bSomeSauling = true;

@@ -13,8 +13,15 @@ _bool CSion::Is_AnimationLoop(_uint eAnimId)
 		return true;
 		break;
 	case ANIM::BTL_MOVE_RUN:
+		return true;
+		break;
 	case ANIM::BTL_MOVE_IDLE:
-			return true;
+		return true;
+		break;
+	case ANIM::BTL_DEAD:
+		return false;
+		break;
+
 		default:
 			return false;
 	}
@@ -42,11 +49,12 @@ HRESULT CSion::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_tInfo.fMaxHp = 5877;
-	m_tInfo.fCurrentHp = 1156.f;
+	m_tInfo.fMaxHp = 80.f;
+	m_tInfo.fCurrentHp = 80.f;
 	m_tInfo.fMaxMp = 5.f;
 	m_tInfo.fCurrentMp = 2.3f;
 	m_tInfo.iDamage = 100;
+	m_tInfo.fCurrentBoostGuage = 100.f;
 
 	return S_OK;
 }

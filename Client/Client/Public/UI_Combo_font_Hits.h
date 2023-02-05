@@ -31,6 +31,7 @@ public:
 	virtual void Free() override;
 
 public:
+	void sethit() { m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;m_bmoveleft = true;m_bfadein = true;m_fAlpha = 0; }
 	void moveleft() { m_fPosition.x -= 10.f; }
 
 private:

@@ -31,7 +31,7 @@ HRESULT CUI_Portraitfront_right::Initialize(void * pArg)
 	m_itexnum = 2;
 //	m_bfadein = true;
 
-	m_fCurrentBoost = 40.f;
+//	m_fCurrentBoost = 40.f;
 	m_fMaxBoost = 100.f;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -42,6 +42,10 @@ HRESULT CUI_Portraitfront_right::Initialize(void * pArg)
 
 int CUI_Portraitfront_right::Tick(_float fTimeDelta)
 {
+	
+
+	//CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->
+
 	if (m_bfirst == false)
 	{
 		m_fAlpha_p -= 0.05f;
@@ -90,20 +94,7 @@ int CUI_Portraitfront_right::Tick(_float fTimeDelta)
 	/*if (m_bmoveleft)
 	moveleft();*/
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
-	{
-		//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
-		//m_bmoveleft = true;
-		//m_bfadein = true;
-		m_fAlpha -= 0.01f;
-	}
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
-	{
-		//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
-		//m_bmoveleft = true;
-		//m_bfadein = true;
-		m_fAlpha += 0.01f;
-	}
+	
 
 
 

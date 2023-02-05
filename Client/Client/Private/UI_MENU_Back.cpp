@@ -6634,6 +6634,8 @@ HRESULT CUI_MENU_Back::Render_Quest1Rewards()
 	m_pShaderCom->Begin(UI_BRIGHT);
 
 	m_pVIBufferCom->Render();
+
+	return S_OK;
 }
 
 void CUI_MENU_Back::Return_to_MainMenu()

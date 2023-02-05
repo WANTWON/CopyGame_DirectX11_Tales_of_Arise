@@ -310,6 +310,9 @@
     <Filter Include="02.GameObjects\07.Bullet\RinwellSkills">
       <UniqueIdentifier>{95130527-c921-4365-bf2b-0bc5199148b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07.Bullet\SionSkills">
+      <UniqueIdentifier>{e9eea2cc-e505-4eb7-ae86-b1cd995bfc80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -489,9 +492,6 @@
     <ClInclude Include="..\Public\IceWolfAttackNormalState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\IceWolfBattle_WalkState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\IceWolfAttack_Elemental_Charge.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClInclude>
@@ -577,9 +577,6 @@
       <Filter>02.GameObjects\04.UI\10.UI_MENU</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IceWolfBattle_Damage_LargeB_State.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\IceWolfBattle_DeadState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BerserkerBattle_Damage_LargeB_State.h">
@@ -841,9 +838,6 @@
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MENU_Quest.h" />
-    <ClInclude Include="..\Public\AIIdleState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\AIAttackNormalState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
@@ -856,11 +850,32 @@
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObjects\07.Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SionSkills.h">
+      <Filter>02.GameObjects\07.Bullet\SionSkills</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIDeadState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_HitState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\RinwellSkills.h">
       <Filter>02.GameObjects\07.Bullet\RinwellSkills</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerHitState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_ChaseState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_Alphen_NormalAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_Alphen_SkillAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_BoostAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1023,9 +1038,6 @@
     <ClCompile Include="..\Private\IceWolfAttackNormalState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\IceWolfBattle_WalkState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\IceWolfAttack_Elemental_Charge.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClCompile>
@@ -1110,9 +1122,6 @@
     <ClCompile Include="..\Private\IceWolfBattle_Damage_LargeB_State.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\IceWolfBattle_DeadState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\BerserkerBattle_Damage_LargeB_State.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClCompile>
@@ -1181,9 +1190,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Alphen.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\00.Alphen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\AIIdleState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerManager.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
@@ -1372,11 +1378,32 @@
     <ClCompile Include="..\Private\Bullet.cpp">
       <Filter>02.GameObjects\07.Bullet</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\SionSkills.cpp">
+      <Filter>02.GameObjects\07.Bullet\SionSkills</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AIDeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_HitState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\RinwellSkills.cpp">
       <Filter>02.GameObjects\07.Bullet\RinwellSkills</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\PlayerHitState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_ChaseState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Alphen_NormalAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

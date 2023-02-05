@@ -3460,6 +3460,15 @@ void CImgui_Manager::Set_Effect()
 						case CEffect::EFFECT_TYPE::TYPE_MESH:
 						{
 							m_tMeshEffectDesc = ((CEffectMesh*)m_pSelectedEffect)->Get_MeshEffectDescTool();
+
+							wstring wsMaskTexture = wstring(m_tMeshEffectDesc.wcMaskTexture);
+							string sMaskTexture = string(wsMaskTexture.begin(), wsMaskTexture.end());
+							m_sSelectedMaskTexture = sMaskTexture;
+
+							wstring wsNoiseTexture = wstring(m_tMeshEffectDesc.wcNoiseTexture);
+							string sNoiseTexture = string(wsNoiseTexture.begin(), wsNoiseTexture.end());
+							m_sSelectedNoiseTexture = sNoiseTexture;
+
 							wcscpy_s(m_tMeshEffectDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
 							break;
 						}
@@ -4480,9 +4489,8 @@ void CImgui_Manager::Show_MeshCustomization()
 				{
 					wcscpy_s(m_tMeshEffectDesc.wcMaskTexture, MAX_PATH, wsMaskTexture.c_str());
 					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+					m_pSelectedEffect->Add_MaskTexture();
 				}
-
-				m_pSelectedEffect->Add_MaskTexture();
 			}
 
 			if (iter->c_str() == m_sSelectedMaskTexture)
@@ -4535,9 +4543,8 @@ void CImgui_Manager::Show_MeshCustomization()
 				{
 					wcscpy_s(m_tMeshEffectDesc.wcNoiseTexture, MAX_PATH, wsNoiseTexture.c_str());
 					pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+					m_pSelectedEffect->Add_NoiseTexture();
 				}
-	
-				m_pSelectedEffect->Add_NoiseTexture();
 			}
 
 			if (iter->c_str() == m_sSelectedNoiseTexture)

@@ -2,7 +2,7 @@
 #include "..\Public\UI_Portraitfront_top.h"
 #include "GameInstance.h"
 #include "UI_Dialoguepopup.h"
-
+#include "BattleManager.h"
 CUI_Portraitfront_top::CUI_Portraitfront_top(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Portraitfront(pDevice, pContext)
 {
@@ -33,7 +33,7 @@ HRESULT CUI_Portraitfront_top::Initialize(void * pArg)
 	m_itexnum = 1;
 
 
-	m_fCurrentBoost = 70.f;
+	
 	m_fMaxBoost = 100.f;
 	dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(2, true, 1, 0);
 	//m_bfadein = true;
@@ -46,6 +46,8 @@ HRESULT CUI_Portraitfront_top::Initialize(void * pArg)
 
 int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 {
+	//CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->
+	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->Get_Info().fCurrentBoostGuage;
 	if (m_bfirst == false)
 	{
 		m_fAlpha_p -= 0.05f;
@@ -92,20 +94,7 @@ int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 	}
 
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
-	{
-		//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
-		//m_bmoveleft = true;
-		//m_bfadein = true;
-		m_fAlpha -= 0.01f;
-	}
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
-	{
-		//m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
-		//m_bmoveleft = true;
-		//m_bfadein = true;
-		m_fAlpha += 0.01f;
-	}
+
 
 
 

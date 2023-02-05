@@ -20,6 +20,15 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 {
 	__super::Initialize(pArg);
 
+
+	_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+	_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+
+	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	mWorldMatrix.r[3] = vLocation;
+
+	m_pEffects = CEffect::PlayEffectAtLocation(TEXT("PhotonFlashBall.dat"), mWorldMatrix);
+	
 	return S_OK;
 }
 
@@ -37,8 +46,6 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 		Tick_PhotonFlash(fTimeDelta);
 		break;
 	}
-
-
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return OBJ_NOEVENT;
@@ -47,6 +54,9 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 void CRinwellSkills::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	if (XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) <= 0)
+		m_bDead = true;
 }
 
 HRESULT CRinwellSkills::Ready_Components(void * pArg)
@@ -59,7 +69,7 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(4.f, 4.f, 4.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 3.f, 0.f);
+	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
@@ -74,7 +84,14 @@ void CRinwellSkills::Tick_PhotonFlash(_float fTimeDelta)
 		m_bDead = true;
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta, m_BulletDesc.vTargetPosition);
-	//m_pTransformCom->Go_Straight(fTimeDelta);
+
+	for (auto& iter : m_pEffects)
+	{
+		iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+
+
+	
 	return;
 }
 
