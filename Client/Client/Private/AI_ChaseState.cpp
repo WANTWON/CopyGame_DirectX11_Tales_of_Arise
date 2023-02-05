@@ -18,7 +18,7 @@ CAI_ChaseState::CAI_ChaseState(CPlayer* pPlayer, STATE_ID eStateType, _uint play
 
 CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 {
-
+	m_fTimer += fTimeDelta;
 	
 	if (m_bStopRunning)
 	{
@@ -37,9 +37,11 @@ CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 	else
 	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
 	}
 
-	m_fTimer += fTimeDelta;
+	
 
 	//m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
@@ -53,8 +55,8 @@ CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 	}*/
 
 
-	m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
+	
+	
 //	ChaseTarget(fTimeDelta);
 	//if(!m_bStopRunning)
 	//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
