@@ -3,6 +3,7 @@
 #include "RinwellState.h"
 
 BEGIN(Client)
+class CEffect;
 BEGIN(AiRinwell)
 
 class CAttackState final : public CRinwellState
@@ -21,6 +22,8 @@ private:
 	_int	m_iChangeCount = 0;
 	_bool	m_ChangedDir = false;
 	_bool	m_bAirMove = false;
+	vector<CEffect*> m_pEffects;
+	vector<CEffect*> m_pBlastEffects;
 };
 
 END

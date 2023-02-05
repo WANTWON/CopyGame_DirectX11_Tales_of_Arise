@@ -272,8 +272,6 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 
 	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vDir = (vCameraPosition - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
 	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	_vector vCenterPos = vPlayerPosition;
 
