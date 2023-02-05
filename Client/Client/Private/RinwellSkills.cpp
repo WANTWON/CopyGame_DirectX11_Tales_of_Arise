@@ -54,6 +54,9 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 void CRinwellSkills::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+
+
 }
 
 HRESULT CRinwellSkills::Ready_Components(void * pArg)

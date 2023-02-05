@@ -73,12 +73,12 @@ CPlayerState * CRunState::HandleInput()
 		
 		m_bIsDash = true;
 
+
 		if (!CBattleManager::Get_Instance()->Get_IsBattleMode())
 		{
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(true);
 		}
-		
 	}
 	else
 	{
@@ -87,12 +87,12 @@ CPlayerState * CRunState::HandleInput()
 
 		m_bIsDash = false;
 
+
 		if (m_pOwner->Get_Level() == LEVEL_SNOWFIELD )
 		{
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(false);
 		}
-		
 	}
 
 	return nullptr;
