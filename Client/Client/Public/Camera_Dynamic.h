@@ -7,7 +7,7 @@ BEGIN(Engine)
 END
 
 BEGIN(Client)
-
+class CMonster;
 class CCamera_Dynamic final : public CCamera
 {
 public:
@@ -50,6 +50,9 @@ public:
 	void BattleClear_Camera(_float fTimeDelta);
 	void LockOn_Camera(_float fTimeDelta);
 	void LockOff_Camera(_float fTimeDelta);
+	
+public:
+	void Change_LockOn(_uchar eKeyID);
 
 private:
 	class CBaseObj*	m_pTarget = nullptr;
@@ -79,6 +82,10 @@ private:
 
 	_float			m_fCameraY = 5.f;
 	_float			m_fZoom = 0.f;
+
+private:
+	vector<CMonster*> vecRightMonster;
+	vector<CMonster*> vecLeftMonster;
 
 public:
 	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

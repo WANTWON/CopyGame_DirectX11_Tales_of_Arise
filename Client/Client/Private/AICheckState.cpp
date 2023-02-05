@@ -23,6 +23,10 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 {
 	//if(m_ePreStateID =
 
+	if (m_pTarget == nullptr)
+		return nullptr;
+
+
 	m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
 	if (m_bLookatOnetime)
