@@ -11,6 +11,7 @@
 #include "IceWolfAttackBiteState.h"
 #include "IceWolfBattle_HowLingState.h"
 #include "IceWolfBattle_RunState.h"
+#include "CameraManager.h"
 
 using namespace IceWolf;
 
@@ -140,6 +141,9 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 		
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return OBJ_NOEVENT;
+
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
@@ -175,6 +179,9 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return;
 
 	LateTick_State(fTimeDelta);
 }
@@ -273,7 +280,6 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		
 		return 0;
 	}
-
 	else
 	{
 		m_iBeDamaged_Cnt++;

@@ -33,7 +33,7 @@ public:
 public:
 	HRESULT Initialize(LEVEL eNextLevel);
 
-	
+	HRESULT Loading_ForEffect();
 	HRESULT Loading_ForLogoLevel();
 	HRESULT Loading_ForPrototype();
 	HRESULT Loading_ForStaticLevel();

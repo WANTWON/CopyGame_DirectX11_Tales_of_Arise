@@ -1,13 +1,13 @@
 #pragma once
 #include "BaseObj.h"
 #include "GameInstance.h"
+#include "Effect.h"
 
 BEGIN(Engine)
 class CModel;
 END
 
 BEGIN(Client)
-class CEffect;
 class CBullet abstract : public CBaseObj
 {
 public:
