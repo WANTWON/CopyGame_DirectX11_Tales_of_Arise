@@ -43,6 +43,41 @@ void CPlayerManager::Set_ActivePlayer(CPlayer * pPlayer)
 	}
 }
 
+void CPlayerManager::Set_ActivePlayer(_uint iIndex)
+{
+	list<CGameObject*>* pPlayerLists = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player"));
+	_uint index = iIndex;
+
+	if (iIndex >= pPlayerLists->size())
+		index = ALPHEN;
+
+	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+	if (iLevel == LEVEL_LOADING)
+		iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
+
+	if (m_pActivePlayer != nullptr && !m_bBattleMode)
+	{
+		_vector vPosition = m_pActivePlayer->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_pActivePlayer = m_AllPlayers[index];
+		m_pActivePlayer->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	}
+	else
+		m_pActivePlayer = m_AllPlayers[index];
+
+	m_pActivePlayer->Change_Navigation(iLevel);
+	m_pActivePlayer->Compute_CurrentIndex(iLevel);
+	m_pActivePlayer->Check_Navigation();
+
+
+	m_pAIPlayers.clear();
+	for (auto& iter : *pPlayerLists)
+	{
+		if (iter == m_pActivePlayer)
+			continue;
+		m_pAIPlayers.push_back(dynamic_cast<CPlayer*>(iter));
+	}
+}
+
 void CPlayerManager::Save_LastPosition()
 {
 	m_vLastPos = m_pActivePlayer->Get_TransformState(CTransform::STATE_TRANSLATION);

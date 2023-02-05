@@ -20,6 +20,15 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 {
 	__super::Initialize(pArg);
 
+
+	_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+	_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+
+	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	mWorldMatrix.r[3] = vLocation;
+
+	m_pEffects = CEffect::PlayEffectAtLocation(TEXT("PhotonFlashBall.dat"), mWorldMatrix);
+	
 	return S_OK;
 }
 
@@ -37,8 +46,6 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 		Tick_PhotonFlash(fTimeDelta);
 		break;
 	}
-
-
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return OBJ_NOEVENT;
@@ -78,6 +85,12 @@ void CRinwellSkills::Tick_PhotonFlash(_float fTimeDelta)
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta, m_BulletDesc.vTargetPosition);
 	//m_pTransformCom->Go_Straight(fTimeDelta);
+
+	for (auto& iter : m_pEffects)
+	{
+		iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+
 	return;
 }
 
@@ -110,4 +123,9 @@ CGameObject * CRinwellSkills::Clone(void * pArg)
 void CRinwellSkills::Free()
 {
 	__super::Free();
+
+	for (auto& iter : m_pEffects)
+	{
+		iter->Set_Dead(true);
+	}
 }

@@ -8,6 +8,7 @@
 #include "PlayerSkillState.h"
 #include "PlayerCollectState.h"
 #include "CameraManager.h"
+#include "BattleManager.h"
 
 using namespace Player;
 
@@ -65,7 +66,7 @@ CPlayerState * CRunState::HandleInput()
 	else
 		return new CIdleState(m_pOwner);
 
-	if ((LEVEL_BATTLE != m_pOwner->Get_Level()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+	if ((LEVEL_SNOWFIELD == m_pOwner->Get_Level()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
 		if (!m_bIsDash)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
@@ -73,12 +74,11 @@ CPlayerState * CRunState::HandleInput()
 		m_bIsDash = true;
 
 
-		//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>( CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_Zoom(true);
-
-		/*CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>( CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_Zoom(true);*/
-
+		if (!CBattleManager::Get_Instance()->Get_IsBattleMode())
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(true);
+		}
 	}
 	else
 	{
@@ -88,12 +88,11 @@ CPlayerState * CRunState::HandleInput()
 		m_bIsDash = false;
 
 
-		//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_Zoom(false);
-
-		/*CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_Zoom(false);*/
-
+		if (m_pOwner->Get_Level() == LEVEL_SNOWFIELD )
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(false);
+		}
 	}
 
 	return nullptr;

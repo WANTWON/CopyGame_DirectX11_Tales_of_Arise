@@ -8,9 +8,12 @@
 #include "AIState.h"
 #include "PlayerCollectState.h"
 #include "AICheckState.h"
+
+#include "CameraManager.h"
 #include "AI_HitState.h"
 #include "AIDeadState.h"
 #include "AI_Sion_BoostAttackState.h"
+
 
 using namespace Player;
 using namespace AIPlayer;
@@ -52,6 +55,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_eLevel = LEVEL_END;
 
+	m_pPlayerManager->Set_PlayerEnum(this, m_ePlayerID);
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
 
 	return S_OK;
@@ -59,6 +63,12 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
+	if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return OBJ_NOEVENT;
+
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
 	if (eMode == Client::AI_MODE && m_ePlayerID == SION)
@@ -105,6 +115,12 @@ int CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
+	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
+		return;
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return;
+
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
 	switch (eMode)
