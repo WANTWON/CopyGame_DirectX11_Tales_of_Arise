@@ -99,11 +99,18 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 		{
 			ANIMEVENT tEvent;
 			ReadFile(hAddFile, &tEvent, sizeof(ANIMEVENT), pdwAddByte, nullptr);
+			/*LOADEVENT tLoadEvent;
+			ReadFile(hAddFile, &tLoadEvent, sizeof(LOADEVENT), pdwAddByte, nullptr);
 
-			/*tEvent.isPlay = false;
+			tEvent.isPlay = tLoadEvent.isPlay;
+			tEvent.fStartTime = tLoadEvent.fStartTime;
+			tEvent.fEndTime = tLoadEvent.fEndTime;
+			tEvent.eType = tLoadEvent.eType;*/
+			/*ReadFile(hAddFile, &tEvent.isPlay, sizeof(_bool), pdwAddByte, nullptr);
 			ReadFile(hAddFile, &tEvent.fStartTime, sizeof(_float), pdwAddByte, nullptr);
 			ReadFile(hAddFile, &tEvent.fEndTime, sizeof(_float), pdwAddByte, nullptr);
-			ReadFile(hAddFile, &tEvent.eType, sizeof(EVENTTYPE), pdwAddByte, nullptr);*/
+			ReadFile(hAddFile, &tEvent.eType, sizeof(EVENTTYPE), pdwAddByte, nullptr);
+			*///memcpy(&tEvent.szName, "", sizeof(char) * MAX_PATH);
 
 			m_vecAnimEvent.push_back(tEvent);
 		}

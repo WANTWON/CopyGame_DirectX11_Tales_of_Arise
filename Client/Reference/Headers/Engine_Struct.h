@@ -328,5 +328,6 @@ namespace Engine
 		float fStartTime;
 		float fEndTime;
 		EVENTTYPE eType;
+		char szName[MAX_PATH];
 	}ANIMEVENT;
 }

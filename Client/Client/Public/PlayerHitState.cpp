@@ -32,7 +32,6 @@ void CHitState::Enter()
 	switch (m_pOwner->Get_PlayerID())
 	{
 	case CPlayer::ALPHEN:
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANim_)
 		break;
 	case CPlayer::SION:
 		break;
