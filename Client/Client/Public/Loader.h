@@ -33,14 +33,14 @@ public:
 public:
 	HRESULT Initialize(LEVEL eNextLevel);
 
-	HRESULT Loading_ForEffect();
 	HRESULT Loading_ForLogoLevel();
 	HRESULT Loading_ForPrototype();
 	HRESULT Loading_ForStaticLevel();
 	HRESULT Loading_ForBattleLevel();
 	HRESULT Loading_ForSnowFieldLevel();
 	HRESULT Loading_ForUITexture();
-	
+	HRESULT Loading_ForEffect();
+
 private:
 	LEVEL					m_eNextLevel = LEVEL_END;
 	_bool					m_isFinished = false;

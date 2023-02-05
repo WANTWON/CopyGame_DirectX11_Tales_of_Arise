@@ -13,7 +13,7 @@ class CCamera_Dynamic final : public CCamera
 public:
 
 	enum CAMERAMODE {CAM_DEBUG, CAM_PLAYER,
-		CAM_BATTLEZONE, CAM_BATTLE_CLEAR, CAM_LOCKON,
+		CAM_BATTLEZONE, CAM_BATTLE_CLEAR, CAM_LOCKON, CAM_LOCKOFF,
 		CAM_END};
 	
 	typedef struct tagCameraDesc_Derived
@@ -49,6 +49,7 @@ public:
 	void Battle_Camera(_float fTimeDelta);
 	void BattleClear_Camera(_float fTimeDelta);
 	void LockOn_Camera(_float fTimeDelta);
+	void LockOff_Camera(_float fTimeDelta);
 
 private:
 	class CBaseObj*	m_pTarget = nullptr;
