@@ -188,7 +188,7 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 			if (m_Channels[i]->Linear_Interpolation(NextAnimChannels[i]->Get_StartKeyFrame(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration, pBoneName))
 			{
 				m_bLinearFinished = true;
-				m_Channels[i]->Reset();
+				//m_Channels[i]->Reset();
 			}
 		}
 
@@ -298,6 +298,12 @@ void CAnimation::Reset(void)
 
 	m_iTickPerSecondIndex = 0;
 	m_fCurrentTime = 0.f;
+}
+
+void CAnimation::Reset_ChannelKeyFrame(void)
+{
+	for (auto& pChannel : m_Channels)
+		pChannel->Reset_Linear();
 }
 
 //void CAnimation::Get_AnimData(DATA_BINANIM * pAnimData)

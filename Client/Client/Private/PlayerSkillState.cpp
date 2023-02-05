@@ -6,6 +6,7 @@
 #include "PlayerJumpState.h"
 #include "UI_Skillmessage.h"
 #include "Effect.h"
+#include "BattleManager.h"
 
 using namespace Player;
 
@@ -43,7 +44,10 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 
 			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+			if (CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
+				m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
+			else
+				m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
 		}
 		else
 			m_pOwner->Check_Navigation();
@@ -257,6 +261,14 @@ void CSkillState::Enter(void)
 			break;
 		}
 	}
+
+	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
+
+	_vector vTargetPos = pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+	m_pOwner->Get_Transform()->LookAt(vTargetPos);
+
+	RELEASE_INSTANCE(CBattleManager);
 }
 
 void CSkillState::Exit(void)
