@@ -158,6 +158,10 @@ void CBullet::Free()
 
 	Safe_Release(m_pModelCom);
 
+	for (auto& iter : m_pEffects)
+	{
+		iter->Set_Dead(true);
+	}
 	m_pEffects.clear();
 
 	if (m_BulletDesc.eCollisionGroup == PLAYER)

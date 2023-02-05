@@ -12,6 +12,7 @@
 #include "CameraManager.h"
 #include "AI_HitState.h"
 #include "AIDeadState.h"
+#include "AI_Sion_BoostAttackState.h"
 
 
 using namespace Player;
@@ -69,6 +70,20 @@ int CPlayer::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	if (eMode == Client::AI_MODE && m_ePlayerID == SION)
+	{
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_2))
+		{
+			if (m_tInfo.fCurrentBoostGuage >= 100.f)
+			{
+				CAIState* pAIState = new AIPlayer::CAI_Sion_BoostAttack(this , CBattleManager::Get_Instance()->Get_LackonMonster());
+				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+
+			}
+		}
+	}
+
 
 	switch (eMode)
 	{
@@ -243,7 +258,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		}
 	}
 
-	return m_tInfo.fCurrentHp;
+	return (_uint)m_tInfo.fCurrentHp;
 }
 
 void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)

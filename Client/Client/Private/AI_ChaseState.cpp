@@ -6,6 +6,7 @@
 #include "AIAttackNormalState.h"
 #include "AICheckState.h"
 
+
 using namespace AIPlayer;
 
 CAI_ChaseState::CAI_ChaseState(CPlayer* pPlayer, STATE_ID eStateType, _uint playerid , CBaseObj* pTarget)

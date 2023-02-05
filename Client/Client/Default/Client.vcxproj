@@ -180,6 +180,7 @@
     <ClInclude Include="..\Public\AIRunawayfromTarget.h" />
     <ClInclude Include="..\Public\AI_ChaseState.h" />
     <ClInclude Include="..\Public\AI_HitState.h" />
+    <ClInclude Include="..\Public\AI_Sion_BoostAttackState.h" />
     <ClInclude Include="..\Public\BattleManager.h" />
     <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_FireBallState.h" />
@@ -366,6 +367,7 @@
     <ClCompile Include="..\Private\AIRunawayfromTarget.cpp" />
     <ClCompile Include="..\Private\AI_ChaseState.cpp" />
     <ClCompile Include="..\Private\AI_HitState.cpp" />
+    <ClCompile Include="..\Private\AI_Sion_BoostAttackState.cpp" />
     <ClCompile Include="..\Private\BattleManager.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_FireBallState.cpp" />
