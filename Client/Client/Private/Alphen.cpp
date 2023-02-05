@@ -35,10 +35,10 @@ HRESULT CAlphen::Initialize_Prototype()
 
 HRESULT CAlphen::Initialize(void * pArg)
 {
+	m_ePlayerID = ALPHEN;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
-	m_ePlayerID = ALPHEN;
 
 	m_tInfo.fMaxHp = 5877;
 	m_tInfo.fCurrentHp = 1156.f;

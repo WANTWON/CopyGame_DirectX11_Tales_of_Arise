@@ -76,7 +76,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
 	{
-		Take_Damage(2000, m_pTarget);
+		Take_Damage(2000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 		m_bTakeDamage = true;
 	}
 
@@ -136,9 +136,6 @@ void CMonster::Late_Tick(_float fTimeDelta)
 			CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID);
 		}
 	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-		m_bDead = true;
 }
 
 HRESULT CMonster::Render()

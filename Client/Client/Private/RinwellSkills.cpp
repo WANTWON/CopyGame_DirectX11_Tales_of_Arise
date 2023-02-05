@@ -82,6 +82,12 @@ void CRinwellSkills::Tick_PhotonFlash(_float fTimeDelta)
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta, m_BulletDesc.vTargetPosition);
 	//m_pTransformCom->Go_Straight(fTimeDelta);
+
+	for (auto& iter : m_pEffects)
+	{
+		iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+
 	return;
 }
 
@@ -114,4 +120,9 @@ CGameObject * CRinwellSkills::Clone(void * pArg)
 void CRinwellSkills::Free()
 {
 	__super::Free();
+
+	for (auto& iter : m_pEffects)
+	{
+		iter->Set_Dead(true);
+	}
 }
