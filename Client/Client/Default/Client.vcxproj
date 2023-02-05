@@ -267,10 +267,8 @@
     <ClInclude Include="..\Public\IceWolfAttackNormalState.h" />
     <ClInclude Include="..\Public\IceWolfAttack_Elemental_Charge.h" />
     <ClInclude Include="..\Public\IceWolfBattle_Damage_LargeB_State.h" />
-    <ClInclude Include="..\Public\IceWolfBattle_DeadState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_HowLingState.h" />
     <ClInclude Include="..\Public\IceWolfBattle_IdleState.h" />
-    <ClInclude Include="..\Public\IceWolfBattle_WalkState.h" />
     <ClInclude Include="..\Public\IceWolfChaseState.h" />
     <ClInclude Include="..\Public\IceWolfHowLingState.h" />
     <ClInclude Include="..\public\IceWolfIdleState.h" />
@@ -450,10 +448,8 @@
     <ClCompile Include="..\Private\IceWolfAttackNormalState.cpp" />
     <ClCompile Include="..\Private\IceWolfAttack_Elemental_Charge.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_Damage_LargeB_State.cpp" />
-    <ClCompile Include="..\Private\IceWolfBattle_DeadState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_HowLingState.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_IdleState.cpp" />
-    <ClCompile Include="..\Private\IceWolfBattle_WalkState.cpp" />
     <ClCompile Include="..\Private\IceWolfChaseState.cpp" />
     <ClCompile Include="..\Private\IceWolfHowLingState.cpp" />
     <ClCompile Include="..\private\IceWolfIdleState.cpp" />

@@ -492,9 +492,6 @@
     <ClInclude Include="..\Public\IceWolfAttackNormalState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\IceWolfBattle_WalkState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\IceWolfAttack_Elemental_Charge.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClInclude>
@@ -580,9 +577,6 @@
       <Filter>02.GameObjects\04.UI\10.UI_MENU</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IceWolfBattle_Damage_LargeB_State.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\IceWolfBattle_DeadState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BerserkerBattle_Damage_LargeB_State.h">
@@ -1035,9 +1029,6 @@
     <ClCompile Include="..\Private\IceWolfAttackNormalState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\IceWolfBattle_WalkState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\IceWolfAttack_Elemental_Charge.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClCompile>
@@ -1120,9 +1111,6 @@
       <Filter>02.GameObjects\04.UI\10.UI_MENU</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfBattle_Damage_LargeB_State.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\IceWolfBattle_DeadState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BerserkerBattle_Damage_LargeB_State.cpp">
