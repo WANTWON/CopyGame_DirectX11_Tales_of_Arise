@@ -152,6 +152,18 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			pParts->Late_Tick(fTimeDelta);
 	}
 
+	CBaseObj* pMonster = nullptr;
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pMonster))
+	{
+		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+		if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
+			vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
+		else
+			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
+
+		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
+	}
 }
 
 HRESULT CPlayer::Render()
