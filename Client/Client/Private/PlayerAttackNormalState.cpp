@@ -8,7 +8,7 @@
 #include "EffectMesh.h"
 #include "PlayerSkillState.h"
 #include "PlayerJumpState.h"
-
+#include "BattleManager.h"
 
 using namespace Player;
 
@@ -278,6 +278,14 @@ void CAttackNormalState::Enter()
 			}
 		}
 	}
+
+	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
+
+	_vector vTargetPos = pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+	m_pOwner->Get_Transform()->LookAt(vTargetPos);
+
+	RELEASE_INSTANCE(CBattleManager);
 }
 
 void CAttackNormalState::Exit()
