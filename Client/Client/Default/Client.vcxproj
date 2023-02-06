@@ -222,6 +222,7 @@
     <ClInclude Include="..\Public\IceWolfBattle_TurnState.h" />
     <ClInclude Include="..\Public\PlayerChaseState.h" />
     <ClInclude Include="..\Public\PlayerCollectState.h" />
+    <ClInclude Include="..\Public\PlayerDeadState.h" />
     <ClInclude Include="..\Public\PlayerHitState.h" />
     <ClInclude Include="..\Public\Rinwell.h" />
     <ClInclude Include="..\Public\RinwellAttackState.h" />
@@ -229,6 +230,7 @@
     <ClInclude Include="..\Public\RinwellMoveState.h" />
     <ClInclude Include="..\Public\RinwellPoseState.h" />
     <ClInclude Include="..\Public\RinwellSkills.h" />
+    <ClInclude Include="..\Public\RinwellSkillState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\SionSkills.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
@@ -405,12 +407,14 @@
     <ClCompile Include="..\Private\IceWolfBattle_TurnState.cpp" />
     <ClCompile Include="..\Private\PlayerChaseState.cpp" />
     <ClCompile Include="..\Private\PlayerCollectState.cpp" />
+    <ClCompile Include="..\Private\PlayerDeadState.cpp" />
     <ClCompile Include="..\Private\Rinwell.cpp" />
     <ClCompile Include="..\Private\RinwellAttackState.cpp" />
     <ClCompile Include="..\Private\RinwellDamageState.cpp" />
     <ClCompile Include="..\Private\RinwellMoveState.cpp" />
     <ClCompile Include="..\Private\RinwellPoseState.cpp" />
     <ClCompile Include="..\Private\RinwellSkills.cpp" />
+    <ClCompile Include="..\Private\RinwellSkillState.cpp" />
     <ClCompile Include="..\Private\SionSkills.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />

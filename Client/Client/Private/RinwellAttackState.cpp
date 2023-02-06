@@ -67,7 +67,7 @@ void CAttackState::Enter()
 	case Client::STATETYPE_START:
 	{
 		_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
-		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize( XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
