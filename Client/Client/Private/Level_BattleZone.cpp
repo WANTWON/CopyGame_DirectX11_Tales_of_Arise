@@ -65,6 +65,8 @@ HRESULT CLevel_BattleZone::Initialize()
 	
 	//CGameInstance::Get_Instance()->PlaySounds(TEXT("SnowBattleFieldSong.wav"), SOUND_SYSTEM, 0.4f);
 //	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowBattleFieldSong.wav"), 0.4f);
+
+	
 	return S_OK;
 }
 

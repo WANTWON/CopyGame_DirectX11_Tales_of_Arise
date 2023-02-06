@@ -36,9 +36,28 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 
 		m_pOwner->Check_Navigation();
 
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Double_Claw2.wav"), SOUND_VOICE, 1.0f);
+		
 	}
 
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay)
+		{
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+				if (m_fSoundStart != pEvent.fStartTime)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Double_Claw.wav"), SOUND_VOICE, 0.4f);
+					m_fSoundStart = pEvent.fStartTime;
+				}
+			}
+		}
+	}
+
+	
 
 	return nullptr;
 }
@@ -63,10 +82,12 @@ void CBattle_Double_ClawState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_DOUBLE_CLAW);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Double_Claw.wav"), SOUND_VOICE, 1.0f);
+	m_fSoundStart = -1.f;
 }
 
 void CBattle_Double_ClawState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+
+	
 }

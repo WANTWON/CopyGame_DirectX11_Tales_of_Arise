@@ -185,7 +185,12 @@ int CBerserker::Tick(_float fTimeDelta)
 	AI_Behavior(fTimeDelta);
 	Tick_State(fTimeDelta);
 
-
+	
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	{
+		CBerserkerState* pState = new CBattle_Multiple_FireState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	
 

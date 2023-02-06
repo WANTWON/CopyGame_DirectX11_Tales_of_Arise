@@ -217,6 +217,18 @@ HRESULT CPlayer::Ready_Components(void)
 		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sion"), (CComponent**)&m_pModelCom)))
 			return E_FAIL;
 		break;
+
+	case MODEL_BERSERKER:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Berserker"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
+
+	case MODEL_HAWK:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Hawk"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
+
+		
 	}
 
 	return S_OK;
