@@ -2,11 +2,6 @@
 #include "HawkBattle_PeckState.h"
 #include "HawkIdleState.h"
 #include "GameInstance.h"
-#include "HawkBattle_BombingState.h"
-#include "HawkBattle_ChargeState.h"
-#include "HawkBattle_GrabState.h"
-#include "HawkBattle_GrabStartState.h"
-#include "HawkBattle_RevolveState.h"
 #include "HawkBattle_RunState.h"
 #include "HawkBattle_Flying_BackState.h"
 #include "HawkBattle_IdleState.h"
@@ -107,5 +102,4 @@ void CBattle_PeckState::Enter()
 void CBattle_PeckState::Exit()
 {
 
-	
 }

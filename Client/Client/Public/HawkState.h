@@ -34,6 +34,7 @@ public:
 		STATE_DASH,
 		STATE_PECK,
 		STATE_TORNADE,
+		STATE_DEAD,
 		STATE_END
 	};
 

@@ -70,7 +70,7 @@ public:
 	CTransform* Get_Transform() { return m_pTransformCom; }
 	class CHawkState* Get_State() { return m_pHawkState; }
 	void Set_PlayerState(class CHawkState* pHawkState) { m_pHawkState = pHawkState; }
-
+	void Set_Dead() { m_bDead = true; }
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 
@@ -101,6 +101,7 @@ private:
 private:
 	class CHawkState*  m_pHawkState = nullptr;
 		  _bool		   m_bDoneChangeState = false;
+		  _bool		   m_bDead = false;
 public:
 	static CHawk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

@@ -282,9 +282,18 @@ void CAttackNormalState::Enter()
 
 	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
 
-	_vector vTargetPos = pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_float4 fTargetPos;
+	XMStoreFloat4(&fTargetPos, pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	m_pOwner->Get_Transform()->LookAt(vTargetPos);
+	fTargetPos.y = m_pOwner->Get_Transform()->Get_World4x4().m[3][1];
+
+	_vector		vLook = XMLoadFloat4(&fTargetPos) - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector		vRight = XMVector3Cross(vAxisY, vLook);
+	
+	m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_RIGHT));
+	m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_LOOK));
 
 	RELEASE_INSTANCE(CBattleManager);
 }

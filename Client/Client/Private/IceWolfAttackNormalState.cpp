@@ -98,12 +98,14 @@ CIceWolfState * CAttackNormalState::LateTick(_float fTimeDelta)
 void CAttackNormalState::Enter()
 {
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_NORMAL);
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Attack.wav"), SOUND_VOICE, 0.4f);
 }
 
 
 void CAttackNormalState::Exit()
 {
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }
 
 

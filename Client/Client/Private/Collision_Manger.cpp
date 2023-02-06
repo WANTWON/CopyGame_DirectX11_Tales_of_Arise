@@ -59,14 +59,31 @@ void CCollision_Manager::Clear_AllCollisionGroup()
 	}
 }
 
-_bool CCollision_Manager::CollisionwithGroup(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj** pOut)
+_bool CCollision_Manager::CollisionwithGroup(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj** pOut, COLLIDERTYPE eType)
 {
 	for (auto& iter : m_GameObjects[CollisionGroup])
 	{
 		if (iter == nullptr|| iter->Check_IsinFrustum() == false || iter->Get_Collider() == pCollider)
 			continue;
 
-		CCollider* pTargetCollider = iter->Get_Collider();
+		CCollider* pTargetCollider = nullptr;
+
+		switch (eType)
+		{
+		case Client::CCollision_Manager::COLLIDER_AABB:
+			pTargetCollider = iter->Get_ABBCollider();
+			break;
+		case Client::CCollision_Manager::COLLIDER_OBB:
+			pTargetCollider = iter->Get_OBBCollider();
+			break;
+		case Client::CCollision_Manager::COLLIDER_SPHERE:
+			pTargetCollider = iter->Get_SPHERECollider();
+			break;
+		case Client::CCollision_Manager::COLLIDER_END:
+			pTargetCollider = iter->Get_Collider();
+			break;
+		}
+
 
 		if (pCollider->Collision(pTargetCollider))
 		{

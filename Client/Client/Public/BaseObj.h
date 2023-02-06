@@ -44,6 +44,9 @@ public: /* Getter Setter */
 	void		Set_State(CTransform::STATE eState, _fvector vState);
 	void		Set_Scale(_float3 vScale);
 	CCollider*	Get_Collider();
+	CCollider*	Get_ABBCollider() { return m_pAABBCom; };
+	CCollider*	Get_OBBCollider() { return m_pOBBCom; };
+	CCollider*	Get_SPHERECollider() { return m_pSPHERECom; };
 	_bool		Get_IsSocket() { return m_bSocket; }
 	
 protected:

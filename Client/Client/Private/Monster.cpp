@@ -39,6 +39,8 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 
+	if(CGameInstance::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BATTLE)
+		CBattleManager::Get_Instance()->Add_Monster(this);
 	return S_OK;
 }
 
@@ -416,6 +418,10 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 void CMonster::Collision_Object(_float fTimeDelta)
 {
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return;
+
 	CBaseObj* pCollisionMonster = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionMonster))
 	{

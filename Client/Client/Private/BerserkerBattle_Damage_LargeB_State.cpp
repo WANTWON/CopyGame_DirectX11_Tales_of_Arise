@@ -2,7 +2,6 @@
 
 #include "BerserkerBattle_Damage_LargeB_State.h"
 #include "GameInstance.h"
-#include "BerserkerBattle_DashStartState.h"
 #include "BerserkerBattle_Double_CrowState.h"
 #include "BerserkerBattle_Double_ClawState.h"
 #include "BerserkerBattle_Shock_WaveState.h"
@@ -135,11 +134,11 @@ void CBattle_Damage_LargeB_State::Enter()
 
 */
 
-
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Hit.wav"), SOUND_VOICE, 1.0f);
 
 }
 
 void CBattle_Damage_LargeB_State::Exit()
 {
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

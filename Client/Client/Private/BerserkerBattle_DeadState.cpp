@@ -2,7 +2,6 @@
 
 #include "BerserkerBattle_DeadState.h"
 #include "GameInstance.h"
-#include "BerserkerBattle_DashStartState.h"
 #include "BerserkerBattle_Double_CrowState.h"
 #include "BerserkerBattle_Double_ClawState.h"
 #include "BerserkerBattle_Shock_WaveState.h"
@@ -75,11 +74,11 @@ void CBattle_DeadState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DEAD);
 
-	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 	
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Dead.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CBattle_DeadState::Exit()
 {
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

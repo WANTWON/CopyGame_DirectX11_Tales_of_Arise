@@ -55,6 +55,9 @@ CHawkState * CTurnR_State::LateTick(_float fTimeDelta)
 	if (m_pTarget)
 		return new CChaseState(m_pOwner);
 
+	/*if (m_fTarget_Distance <= 10)
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Chase.wav"), SOUND_VOICE, 0.4f);*/
+
 	else if (m_bIsAnimationFinished)
 	{
 		//나의 트리거 박스랑 충돌안했을떄
@@ -86,9 +89,10 @@ void CTurnR_State::Enter()
 	m_eStateId = STATE_ID::STATE_MOVE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::TURN_R);
+
+	
 }
 
 void CTurnR_State::Exit()
 {
-	
 }

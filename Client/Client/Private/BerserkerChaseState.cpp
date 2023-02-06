@@ -50,9 +50,11 @@ void CChaseState::Enter()
 	//m_eStateId = STATE_ID::STATE_IDLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_RUN);
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Chase.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CChaseState::Exit()
 {
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

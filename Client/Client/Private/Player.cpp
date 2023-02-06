@@ -131,10 +131,23 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
 		return;
 
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	if (nullptr != m_pRendererCom && eMode != UNVISIBLE)
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
+#ifdef _DEBUG
+		m_pRendererCom->Add_Debug(m_pNavigationCom);
+		__super::Late_Tick(fTimeDelta);
+#endif //_DEBUG
+	}
+
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
-	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	
 
 	switch (eMode)
 	{
@@ -148,16 +161,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		return;
 	}
 
-	if (nullptr != m_pRendererCom)
-	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
-#ifdef _DEBUG
-		m_pRendererCom->Add_Debug(m_pNavigationCom);
-		__super::Late_Tick(fTimeDelta);
-#endif //_DEBUG
-	}
+
 
 	for (auto& pParts : m_Parts)
 	{
