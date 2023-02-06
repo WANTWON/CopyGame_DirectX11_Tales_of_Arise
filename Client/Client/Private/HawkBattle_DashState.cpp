@@ -71,6 +71,24 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
+
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay && m_bAnimFinish == false)
+		{
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Dash.wav"), SOUND_VOICE, 0.6f);
+				m_bAnimFinish = true;
+
+			}
+		}
+	}
+
+
 	return nullptr;
 }
 
@@ -105,7 +123,7 @@ void CBattle_DashState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_DASH);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Dash.wav"), SOUND_VOICE, 0.4f);
+	
 }
 
 void CBattle_DashState::Exit()

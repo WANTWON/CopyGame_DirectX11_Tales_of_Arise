@@ -41,6 +41,23 @@ CBerserkerState * CBattle_Quadruple_ClawState::Tick(_float fTimeDelta)
 	}
 	
 
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	//for (auto& pEvent : pEvents)
+	//{
+	//	if (pEvent.isPlay && m_fEventSound_Count < 5.f)
+	//	{
+
+	//		if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+	//		{
+	//			CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Double_Claw.wav"), SOUND_VOICE, 1.0f);
+	//			m_bAnimFinish = true;
+
+	//			m_fEventSound_Count++;
+	//		}
+	//	}
+	//}
+
 	return nullptr;
 }
 

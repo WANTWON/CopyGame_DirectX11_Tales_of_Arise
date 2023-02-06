@@ -14,6 +14,7 @@ public:
 
 	enum CAMERAMODE {CAM_DEBUG, CAM_PLAYER,
 		CAM_BATTLEZONE, CAM_BATTLE_CLEAR, CAM_LOCKON, CAM_LOCKOFF,
+		CAM_AIBOOSTON, CAM_AIBOOSTOFF,
 		CAM_END};
 	
 	typedef struct tagCameraDesc_Derived
@@ -36,6 +37,7 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	void Set_Target(class CBaseObj* pTarget) { m_pTarget = pTarget; }
 	void Set_CamMode(CAMERAMODE _eCamMode);
 	void Set_Position(_vector vPosition);
 	void Set_TargetPosition(_vector vPosition) { m_vTargetPos = vPosition; }
@@ -51,6 +53,8 @@ public:
 	void LockOn_Camera(_float fTimeDelta);
 	void LockOff_Camera(_float fTimeDelta);
 
+	void AIBoostOn_Camera(_float fTimeDelta);
+	void AIBoostOff_Camera(_float fTimeDelta);
 
 	void Change_LockOn(_uchar eKeyID);
 
@@ -62,6 +66,7 @@ private:
 	_vector			m_vDistance = { 0.f,0.f,0.f,0.f };
 	_long			m_lMouseWheel = 0;
 	_vector			m_vTargetPos = { 0.f,0.f,0.f,0.f };
+	_vector			m_vLasrDirwithPlayer = { 0.f,0.f,0.f,0.f };
 	_float			m_fTime = 0.f;
 	_float			m_fOffsetPosY = 4.f;
 	_float			m_fAngle = 0.f;

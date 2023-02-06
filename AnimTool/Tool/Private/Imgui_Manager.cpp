@@ -113,6 +113,14 @@ void CImgui_Manager::ShowGui()
 		case MODEL_SION:
 			lstrcat(pAnimationDataFilePath, TEXT("Sion/Sion_Animation_Add.dat"));
 			break;
+
+		case MODEL_BERSERKER:
+			lstrcat(pAnimationDataFilePath, TEXT("Berserker/Berserker_Animation_Add.dat"));
+			break;
+			
+		case MODEL_HAWK:
+			lstrcat(pAnimationDataFilePath, TEXT("Hawk/Hawk_Animation_Add.dat"));
+			break;
 		}
 
 		CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));

@@ -6,6 +6,7 @@
 #include "PlayerAttackNormalState.h"
 #include "PlayerSkillState.h"
 #include "PlayerRunState.h"
+#include "PlayerHitState.h"
 
 using namespace Player;
 
@@ -109,6 +110,9 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 {
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
+		return new CHitState(m_pOwner);
+
 	switch (m_eStateType)
 	{
 	case STATETYPE_START:

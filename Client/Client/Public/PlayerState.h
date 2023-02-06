@@ -29,6 +29,7 @@ public:
 		STATE_COLLECT,
 		STATE_HIT,
 		STATE_DEAD,
+		STATE_CHASE,
 		STATE_END
 	};
 

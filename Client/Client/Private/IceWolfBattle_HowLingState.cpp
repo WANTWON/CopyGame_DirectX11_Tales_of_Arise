@@ -25,6 +25,9 @@ CIceWolfState * CBattle_HowLingState::Tick(_float fTimeDelta)
 	Find_BattleTarget();
 	m_pOwner->Check_Navigation();
 
+
+
+
 	return nullptr;
 }
 

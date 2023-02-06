@@ -75,7 +75,7 @@ void CBattle_DeadState::Enter()
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DEAD);
 
 	
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Dead.wav"), SOUND_VOICE, 1.0f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Dead.wav"), SOUND_VOICE, 0.5f);
 }
 
 void CBattle_DeadState::Exit()

@@ -73,7 +73,7 @@ HRESULT CLevel_SnowField::Initialize()
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
 
 	//CGameInstance::Get_Instance()->PlaySounds(TEXT("SnowFiledSong.wav"), SOUND_SYSTEM, 0.4f);
 
@@ -881,6 +881,8 @@ CLevel_SnowField * CLevel_SnowField::Create(ID3D11Device* pDevice, ID3D11DeviceC
 
 void CLevel_SnowField::Free()
 {
+	
+
 	__super::Free();
 
 	Safe_Release(m_pCollision_Manager);

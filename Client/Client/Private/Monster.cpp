@@ -446,7 +446,7 @@ void CMonster::Collision_Object(_float fTimeDelta)
 		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
 	}
 
-	CBaseObj* pPlayer = nullptr;
+	/*CBaseObj* pPlayer = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionMonster))
 	{
 		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -457,7 +457,7 @@ void CMonster::Collision_Object(_float fTimeDelta)
 			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
 
 		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
-	}
+	}*/
 }
 
 void CMonster::Compute_CurrentIndex()
