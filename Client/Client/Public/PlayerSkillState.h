@@ -20,10 +20,10 @@ private:
 	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
 
-	vector<CEffect*> m_Hienzin;
-	_bool m_bHienzin = false;
-	vector<CEffect*> m_AkizameEffect;
-	vector<CEffect*> m_HousyutigakuzinEffect;
+	_bool m_bHienzinFirstEffect = false;
+	_bool m_bHienzinSecondEffect = false;
+	_bool m_bAkizameEffect = false;
+	_bool m_bHousyutigakuzinEffect = false;
 };
 END
 END

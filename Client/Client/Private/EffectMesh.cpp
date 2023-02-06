@@ -24,21 +24,21 @@ void CEffectMesh::LookAt(_vector vTarget)
 	/* Billboard. */
 	m_pTransformCom->LookAt(vTarget);
 
-	/* Remove Translation from World Matrix. */
-	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
-	
-	_vector mReset = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-	_vector mTranslation = mWorldMatrix.r[3];
-	mWorldMatrix.r[3] = mReset;
+	///* Remove Translation from World Matrix. */
+	//_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	//
+	//_vector mReset = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	//_vector mTranslation = mWorldMatrix.r[3];
+	//mWorldMatrix.r[3] = mReset;
 
-	/* Apply Rotation to World Matrix. */
-	_matrix mRotationMatrixLocal = XMMatrixRotationRollPitchYaw(XMConvertToRadians(m_tMeshEffectDesc.vRotation.x), XMConvertToRadians(m_tMeshEffectDesc.vRotation.y), XMConvertToRadians(m_tMeshEffectDesc.vRotation.z));
-	mWorldMatrix = XMMatrixMultiply(mWorldMatrix, mRotationMatrixLocal);
+	///* Apply Rotation to World Matrix. */
+	//_matrix mRotationMatrixLocal = XMMatrixRotationRollPitchYaw(XMConvertToRadians(m_tMeshEffectDesc.vRotation.x), XMConvertToRadians(m_tMeshEffectDesc.vRotation.y), XMConvertToRadians(m_tMeshEffectDesc.vRotation.z));
+	//mWorldMatrix = XMMatrixMultiply(mWorldMatrix, mRotationMatrixLocal);
 
-	/* Re-apply Translation. */
-	mWorldMatrix.r[3] = mTranslation;
+	///* Re-apply Translation. */
+	//mWorldMatrix.r[3] = mTranslation;
 
-	m_pTransformCom->Set_WorldMatrix(mWorldMatrix);
+	//m_pTransformCom->Set_WorldMatrix(mWorldMatrix);
 }
 
 CEffectMesh::CEffectMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

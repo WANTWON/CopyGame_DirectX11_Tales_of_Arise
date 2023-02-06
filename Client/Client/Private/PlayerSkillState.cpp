@@ -89,39 +89,51 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 					}
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
-						if (m_bHienzin)
+						if (!strcmp(pEvent.szName, "Hienzin_1"))
 						{
-							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							if (!m_bHienzinFirstEffect)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
-							_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							
-							_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+								_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+								_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
-							vPosition += vLook * 2;
-							vPosition += vOffset;
+								_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
 
-							mWorldMatrix.r[3] = vPosition;
-							m_Hienzin = CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+								vPosition += vLook * 2;
+								vPosition += vOffset;
 
-							for (auto& pMesh : m_Hienzin)
-								((CEffectMesh*)pMesh)->LookAt(m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+								mWorldMatrix.r[3] = vPosition;
+								vector<CEffect*> pEffects = CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+
+								for (auto& pMesh : pEffects)
+									((CEffectMesh*)pMesh)->Get_Transform()->LookAt(m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+								m_bHienzinFirstEffect = true;
+							}
 						}
-						else if (m_Hienzin.empty() && !m_bHienzin)
+						else if (!strcmp(pEvent.szName, "Hienzin_2"))
 						{
-							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-						
-							_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
-							vPosition += vLook * 2;
+							if (!m_bHienzinSecondEffect)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-							mWorldMatrix.r[3] = vPosition;
-							m_Hienzin = CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+								_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+								_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
-							for (auto& pMesh : m_Hienzin)
-								((CEffectMesh*)pMesh)->LookAt(m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+								_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
 
-							m_bHienzin = true;
+								vPosition += vLook * 2;
+								vPosition += vOffset;
+
+								mWorldMatrix.r[3] = vPosition;
+								vector<CEffect*> pEffects = CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+
+								for (auto& pMesh : pEffects)
+									((CEffectMesh*)pMesh)->Get_Transform()->LookAt(m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+								m_bHienzinSecondEffect = true;
+							}
 						}
 					}
 					break;
@@ -146,10 +158,12 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 					}
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
-						if (m_AkizameEffect.empty())
+						if (!m_bAkizameEffect)
 						{
 							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-							m_AkizameEffect = CEffect::PlayEffectAtLocation(TEXT("Akizame.dat"), mWorldMatrix);
+							CEffect::PlayEffectAtLocation(TEXT("Akizame.dat"), mWorldMatrix);
+
+							m_bAkizameEffect = true;
 						}
 					}
 					break;
@@ -174,10 +188,12 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 					}
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
-						if (m_HousyutigakuzinEffect.empty())
+						if (!m_bHousyutigakuzinEffect)
 						{
 							_matrix mWorldMatrix;
-							//m_HousyutigakuzinEffect = CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin.dat"), mWorldMatrix);
+							//CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin.dat"), mWorldMatrix);
+
+							m_bHousyutigakuzinEffect = true;
 						}
 					}
 					break;
