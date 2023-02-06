@@ -39,11 +39,17 @@ CPlayerState * CIdleState::HandleInput()
 			else if (pGameInstance->Key_Down(DIK_F))
 				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
 		}
+
+		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
+			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMPTYPE::JUMP_BATTLE);
+	}
+	else
+	{
+		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
+			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMPTYPE::JUMP_IDLE);
 	}
 	
-	if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
-		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMPTYPE::JUMP_IDLE);
-	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
+	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));

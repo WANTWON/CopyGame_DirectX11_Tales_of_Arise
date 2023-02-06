@@ -33,23 +33,27 @@ CPlayerState * CRunState::HandleInput()
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 		{
-			if (pGameInstance->Key_Down(DIK_E))//stopstopstop
+			if (pGameInstance->Key_Down(DIK_E))
 				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
 			else if (pGameInstance->Key_Down(DIK_R))
 				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
 			else if (pGameInstance->Key_Down(DIK_F))
 				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
 		}
+
+		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
+			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_BATTLE);
 	}
 	else if (LEVEL_SNOWFIELD == m_pOwner->Get_Level())
 	{
 		if (pGameInstance->Key_Down(DIK_E))
 			return new CCollectState(m_pOwner);
+
+		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
+			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_RUN);
 	}
 	
-	if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
-		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_RUN);
-	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
+	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		m_eDirection = DIR_STRAIGHT_LEFT;
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
 		m_eDirection = DIR_STRAIGHT_RIGHT;
