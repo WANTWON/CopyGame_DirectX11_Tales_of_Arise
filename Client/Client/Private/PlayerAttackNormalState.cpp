@@ -283,7 +283,8 @@ void CAttackNormalState::Enter()
 	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
 
 	_float4 fTargetPos;
-	XMStoreFloat4(&fTargetPos, pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION));
+	if (pBattleMgr->Get_LackonMonster())
+		XMStoreFloat4(&fTargetPos, pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	fTargetPos.y = m_pOwner->Get_Transform()->Get_World4x4().m[3][1];
 
