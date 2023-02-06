@@ -304,7 +304,7 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 		_float fDot = XMVectorGetX(XMVector3Dot(vPlayerLockonDir, vLook));
 		_float fRightDot = XMVectorGetX(XMVector3Dot(vCameraLockonDir, vRight));
 
-		if (pLockOnMonster->Check_IsinFrustum() == false)
+		if (pLockOnMonster->Check_IsinBattleZoneFrustum() == false)
 			m_bTurn = true;
 
 		if(m_bTurn)

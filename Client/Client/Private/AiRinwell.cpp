@@ -252,8 +252,8 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 	case Client::CAiRinwell::BTL_ATTACK_BRAVE:
 	case Client::CAiRinwell::BTL_ATTACK_DENGEKISYOUHEKI:
 	case Client::CAiRinwell::BTL_ATTACK_DENZIHOU:
-	case Client::CAiRinwell::BTL_ATTACK_FLASH:
-	case Client::CAiRinwell::BTL_ATTACK_FUATU:
+	case Client::CAiRinwell::BTL_ATTACK_PHOTONFLASH:
+	case Client::CAiRinwell::BTL_ATTACK_GALEFORCE:
 	case Client::CAiRinwell::BTL_ATTACK_HIEN:
 	case Client::CAiRinwell::BTL_ATTACK_HOUDEN:
 	case Client::CAiRinwell::BTL_ATTACK_HYOUROU:

@@ -34,6 +34,7 @@ public:
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) { return 0; };
 	void Update_Collider();
 	_bool Check_IsinFrustum(_float fOffset = 0);
+	_bool Check_IsinBattleZoneFrustum(_float fOffset = 0);
 	void  SetUp_BillBoard();
 
 public: /* Getter Setter */

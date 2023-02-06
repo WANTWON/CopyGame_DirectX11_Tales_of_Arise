@@ -15,8 +15,8 @@ public:
 		BTL_ATTACK_BRAVE,
 		BTL_ATTACK_DENGEKISYOUHEKI,
 		BTL_ATTACK_DENZIHOU,
-		BTL_ATTACK_FLASH,
-		BTL_ATTACK_FUATU,
+		BTL_ATTACK_PHOTONFLASH,
+		BTL_ATTACK_GALEFORCE,
 		BTL_ATTACK_FUZIN,
 		BTL_ATTACK_HIEN,
 		BTL_ATTACK_HOUDEN,
@@ -120,13 +120,23 @@ public:
 	};
 
 
+	enum SKILL_TYPE
+	{
+		PHOTONFLASH,
+		GALEFORCE,
+		CROSSBLADE,
+		AIR_DUST,
+		SKILL_END
+	};
 
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	CTransform* Get_Transform() { return m_pTransformCom; }
 	class CRinwellState* Get_State() { return m_pState; }
+	_uint Get_SkillIndex() { return m_eSkillIndex; }
 	void Set_PlayerState(class CRinwellState* pPlayerState) { m_pState = pPlayerState; }
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
+	void Set_SkillIndex(_uint iIndex) { m_eSkillIndex = iIndex; }
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
@@ -165,7 +175,7 @@ private:
 	_uint	 m_ePreAnim = IDLE_CHARA;
 
 	_bool	m_bMotion_Finished = false;
-	
+	_uint	 m_eSkillIndex = PHOTONFLASH;
 
 public:
 	static CAiRinwell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
