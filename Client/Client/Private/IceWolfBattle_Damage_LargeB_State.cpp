@@ -95,7 +95,8 @@ void CBattle_Damage_LargeB_State::Enter()
 	{
 	case Client::CIceWolfState::STATE_DEAD:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
-		if (!m_bDeadSound)
+		
+		if (!m_bDeadSound && !m_bThirdHit)
 		{
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Dead.wav"), SOUND_VOICE, 0.4f);
 			m_bDeadSound = true;
@@ -119,7 +120,7 @@ void CBattle_Damage_LargeB_State::Enter()
 
 void CBattle_Damage_LargeB_State::Exit()
 {
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }
 
 
