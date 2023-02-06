@@ -196,7 +196,9 @@
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
     <ClInclude Include="..\Public\Bullet.h" />
+    <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
+    <ClInclude Include="..\Public\Damagefont_Critical.h" />
     <ClInclude Include="..\Public\FemaleYoung.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
@@ -377,7 +379,9 @@
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
+    <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
+    <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
     <ClCompile Include="..\Private\FemaleYoung.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />

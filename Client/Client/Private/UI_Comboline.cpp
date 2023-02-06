@@ -27,9 +27,9 @@ HRESULT CUI_Comboline::Initialize(void * pArg)
 	m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f + 50;
 	m_fPosition.y = 200.f;
 
-	m_fAlpha = 0.275f;
+	m_fAlpha = 1.f;
 
-	m_bfadein = true;
+	m_bfadein = false;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -41,13 +41,52 @@ int CUI_Comboline::Tick(_float fTimeDelta)
 {
 
 	//if(CGameInstance::Get_Instance()->Key_Up(DIK_3))
+	m_fDietimer += fTimeDelta;
 
+	if (m_fDietimer > 5.f)
+		m_bfadeout = true;
 	
 
-	if(m_bfadein)
-	m_fAlpha -= 0.03f; //생길때
-	else if(m_bfadeout)
-	m_fAlpha += 0.0483f;
+	if (m_bfadein)
+	{
+		m_fAlpha -= 0.04; //생길때
+		m_fOffsetX -= 10.f;
+
+		if (m_fOffsetX <= -160.f)
+		{
+			m_fOffsetX = -160.f;
+			m_fAlpha = 0.275f;
+			m_bfadein = false;
+		}
+			
+
+	}
+
+
+
+	if (m_bfadeout)
+	{
+		m_fAlpha += 0.04; //생길때
+		m_fOffsetX += 10.f;
+
+		if (m_fOffsetX >= 0.f)
+		{
+			m_fOffsetX = 0.f;
+			m_fAlpha = 1.f;
+		//	m_bfadeout = false;
+		}
+	}
+	
+
+
+	//else if (m_bfadeout)
+	//{
+	////	m_fdietimer += fTimeDelta;
+
+	//	//if(m_fdietimer > 0.8f)
+	//		m_fAlpha += 0.0483f;
+	//}
+	
 	
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
@@ -60,7 +99,7 @@ int CUI_Comboline::Tick(_float fTimeDelta)
 
 	m_fSize.x = 350.f;
 	m_fSize.y = 70.f;
-	m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f + 55 ;
+	m_fPosition.x = 1345.f + m_fOffsetX;
 	m_fPosition.y = 150.f;
 
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
@@ -74,11 +113,14 @@ void CUI_Comboline::Late_Tick(_float fTimeDelta)
 
 
 
-	if (m_fAlpha < 0.275f)
+	/*if (m_fAlpha < 0.275f)
 	{
 		m_fAlpha = 0.275f;
 		m_bfadein = false;
-	}
+	}*/
+
+	
+
 		
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
@@ -164,10 +206,27 @@ CGameObject * CUI_Comboline::Clone(void * pArg)
 		Safe_Release(pInstance);
 	}
 
+	
+
+	CUI_Manager::Get_Instance()->Set_comboline(pInstance);
+
 	return pInstance;
 }
 
 void CUI_Comboline::Free()
 {
 	__super::Free();
+}
+
+void CUI_Comboline::setline()
+{
+
+	m_fDietimer = 0.f;
+	if (m_bfadeout)
+	{
+		m_bfadein = true;
+		m_bfadeout = false;
+		m_fOffsetX = 0.f;
+	}
+
 }
