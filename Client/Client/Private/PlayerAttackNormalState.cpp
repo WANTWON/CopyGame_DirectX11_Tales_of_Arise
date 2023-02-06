@@ -16,7 +16,7 @@ CAttackNormalState::CAttackNormalState(CPlayer* pPlayer, STATE_ID eStateType, _f
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
-
+	 
 	m_fStartHeight = fStartHeight;
 	m_fTime = fTime;
 }
@@ -221,6 +221,8 @@ void CAttackNormalState::Enter()
 {
 	__super::Enter();
 
+
+
 	if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
 	{
 		if (m_bIsFly)
@@ -282,19 +284,24 @@ void CAttackNormalState::Enter()
 
 	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
 
-	_float4 fTargetPos;
-	XMStoreFloat4(&fTargetPos, pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION));
+	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
 
-	fTargetPos.y = m_pOwner->Get_Transform()->Get_World4x4().m[3][1];
+	if (nullptr != pTarget)
+	{
+		_float4 fTargetPos;
+		XMStoreFloat4(&fTargetPos, pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	_vector		vLook = XMLoadFloat4(&fTargetPos) - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
-	_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+		fTargetPos.y = m_pOwner->Get_Transform()->Get_World4x4().m[3][1];
 
-	_vector		vRight = XMVector3Cross(vAxisY, vLook);
+		_vector		vLook = XMLoadFloat4(&fTargetPos) - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		_vector		vRight = XMVector3Cross(vAxisY, vLook);
+
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_RIGHT));
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_LOOK));
+	}
 	
-	m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_RIGHT));
-	m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_LOOK));
-
 	RELEASE_INSTANCE(CBattleManager);
 }
 

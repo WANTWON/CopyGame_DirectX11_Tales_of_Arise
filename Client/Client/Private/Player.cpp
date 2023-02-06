@@ -115,6 +115,8 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	if (nullptr != m_pOBBCom)
 		m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if (nullptr != m_pSPHERECom)
+		m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	for (auto& pParts : m_Parts)
 	{
@@ -161,8 +163,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		return;
 	}
 
-
-
 	for (auto& pParts : m_Parts)
 	{
 		if (pParts != nullptr)
@@ -170,16 +170,20 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 
 	CBaseObj* pMonster = nullptr;
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pMonster))
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pMonster))
 	{
 		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-		if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
-			vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
-		else
-			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
+		_float fRadiusSum = m_pSPHERECom->Get_SphereRadius() + pMonster->Get_SPHERECollider()->Get_SphereRadius();
+		
+		_float fCollDistance = fRadiusSum - XMVectorGetX(XMVector4Length(vDirection));
 
-		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
+		if (fCollDistance > 0)
+		{
+			vDirection = XMVector4Normalize(vDirection) * fCollDistance;
+
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, (m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + vDirection));
+		}
 	}
 }
 

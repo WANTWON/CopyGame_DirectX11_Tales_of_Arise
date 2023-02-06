@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "PlayerRunState.h"
 #include "PlayerAttackNormalState.h"
+#include "PlayerChaseState.h"
+#include "PlayerHitState.h"
 
 #include "Effect.h"
 #include "EffectTexture.h"
@@ -25,7 +27,7 @@ CPlayerState * CIdleState::HandleInput()
 	if (LEVEL_BATTLE == m_pOwner->Get_Level())
 	{
 		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
+			return new CPlayerChaseState(m_pOwner, STATE_CHASE);
 
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
@@ -71,6 +73,9 @@ CPlayerState * CIdleState::Tick(_float fTimeDelta)
 
 CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 {
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
+		return new CHitState(m_pOwner);
+
 	return nullptr;
 }
 
