@@ -66,7 +66,7 @@ private:
 	_vector			m_vDistance = { 0.f,0.f,0.f,0.f };
 	_long			m_lMouseWheel = 0;
 	_vector			m_vTargetPos = { 0.f,0.f,0.f,0.f };
-	_vector			m_vLastPos = { 0.f,0.f,0.f,0.f };
+	_vector			m_vLasrDirwithPlayer = { 0.f,0.f,0.f,0.f };
 	_float			m_fTime = 0.f;
 	_float			m_fOffsetPosY = 4.f;
 	_float			m_fAngle = 0.f;
