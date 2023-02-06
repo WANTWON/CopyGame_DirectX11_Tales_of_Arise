@@ -121,6 +121,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 		{
 			if (Check_JumpEnd())
 			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 0.4f);
 				m_eStateType = STATETYPE_END;
 				if (JUMP_IDLE == m_eJumpType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
@@ -140,7 +141,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 	}
 	case STATETYPE_MAIN:
 		if (Check_JumpEnd())
-		{
+		{CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 0.4f);
 			m_eStateType = STATETYPE_END;
 			if (JUMP_IDLE == m_eJumpType)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
@@ -293,6 +294,8 @@ void CJumpState::Enter()
 			break;
 		}
 	}
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_JumpStart.wav"), SOUND_FOOT, 0.4f);
 }
 
 void CJumpState::Exit()
@@ -302,6 +305,8 @@ void CJumpState::Exit()
 	m_pOwner->Off_IsFly();
 
 	m_bIsDrop = false;
+
+	CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
 }
 
 _bool CJumpState::Check_JumpEnd()
