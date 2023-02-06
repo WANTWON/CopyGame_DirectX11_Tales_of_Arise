@@ -71,31 +71,11 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
-	if (eMode == Client::AI_MODE && m_ePlayerID == SION)
-	{
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_2))
-		{
-			if (m_tInfo.fCurrentBoostGuage >= 100.f)
-			{
-				CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this , CBattleManager::Get_Instance()->Get_LackonMonster());
-				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
-			}
-		}
-	}
-
-	if (eMode == Client::AI_MODE && m_ePlayerID == ALPHEN)
-	{
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
-		{
-			if (m_tInfo.fCurrentBoostGuage >= 100.f)
-			{
-				CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-
-			}
-		}
-	}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
+		Play_AISkill(ALPHEN);
+	else if(CGameInstance::Get_Instance()->Key_Up(DIK_2))
+		Play_AISkill(SION);
 
 
 	switch (eMode)
@@ -294,6 +274,35 @@ void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)
 {
 	CPlayerState* pPlayerState = new Player::CCollectState(this, pObject);
 	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+
+}
+
+void CPlayer::Play_AISkill(PLAYERID ePlayer)
+{
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	if (m_tInfo.fCurrentBoostGuage < 100.f || eMode != Client::AI_MODE)
+		return;
+	switch (ePlayer)
+	{
+	case Client::CPlayer::ALPHEN:
+	{
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+	case Client::CPlayer::SION:
+	{
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+	case Client::CPlayer::RINWELL:
+		break;
+	case Client::CPlayer::LAW:
+		break;
+	default:
+		break;
+	}
 
 }
 

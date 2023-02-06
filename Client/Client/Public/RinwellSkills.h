@@ -23,7 +23,7 @@ protected:
 
 private:
 	void Tick_PhotonFlash(_float fTimeDelta);
-
+	vector<CEffect*> m_pDeadEffects;
 
 public:
 	static CRinwellSkills* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
