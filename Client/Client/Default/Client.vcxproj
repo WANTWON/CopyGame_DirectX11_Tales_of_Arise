@@ -220,6 +220,7 @@
     <ClInclude Include="..\Public\IceWolfBattle_TurnState.h" />
     <ClInclude Include="..\Public\PlayerChaseState.h" />
     <ClInclude Include="..\Public\PlayerCollectState.h" />
+    <ClInclude Include="..\Public\PlayerDeadState.h" />
     <ClInclude Include="..\Public\PlayerHitState.h" />
     <ClInclude Include="..\Public\Rinwell.h" />
     <ClInclude Include="..\Public\RinwellAttackState.h" />
@@ -401,6 +402,7 @@
     <ClCompile Include="..\Private\IceWolfBattle_TurnState.cpp" />
     <ClCompile Include="..\Private\PlayerChaseState.cpp" />
     <ClCompile Include="..\Private\PlayerCollectState.cpp" />
+    <ClCompile Include="..\Private\PlayerDeadState.cpp" />
     <ClCompile Include="..\Private\Rinwell.cpp" />
     <ClCompile Include="..\Private\RinwellAttackState.cpp" />
     <ClCompile Include="..\Private\RinwellDamageState.cpp" />
