@@ -205,6 +205,8 @@ void CMainApp::Free()
 	Safe_Release(m_pUI_Manager);
 	Safe_Release(m_pDataManager);
 
+	
+
 	CUI_Manager::Get_Instance()->Destroy_Instance();
 	CCollision_Manager::Get_Instance()->Destroy_Instance();
 	CData_Manager::Get_Instance()->Destroy_Instance();

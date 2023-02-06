@@ -64,6 +64,7 @@ int CTreasureBox::Tick(_float fTimeDelta)
 	if (m_bOpen)
 	{
 		m_bIsAnimationFinished = m_pModelCom->Play_Animation(fTimeDelta, false);
+		m_fTimeDeltaAcc += fTimeDelta;
 
 		if (m_bIsAnimationFinished)
 		{
@@ -71,7 +72,9 @@ int CTreasureBox::Tick(_float fTimeDelta)
 			m_bOpen = false;
 			m_bOpenFinish = true;
 		}
-			
+		if (m_fTimeDeltaAcc > 0.02f)
+			CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
+
 	}
 	else
 	{
@@ -115,7 +118,23 @@ void CTreasureBox::Late_Tick(_float fTimeDelta)
 		}*/
 
 		if (m_bIsInteract)
+		{
 			m_bOpen = true;
+			
+			//Sound
+
+			_bool m_bSoundStart = false;
+
+			if (!m_bSoundStart)
+			{
+
+
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("BoxOpen.wav"), SOUND_OBJECT, 0.4f);
+				m_bSoundStart = true;
+			}
+
+			
+		}
 	}
 }
 
@@ -218,7 +237,6 @@ CGameObject * CTreasureBox::Clone(void * pArg)
 void CTreasureBox::Free()
 {
 	__super::Free();
-
 }
 
 HRESULT CTreasureBox::Ready_Components(void * pArg)

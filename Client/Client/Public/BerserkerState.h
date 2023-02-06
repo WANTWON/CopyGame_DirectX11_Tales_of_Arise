@@ -212,7 +212,9 @@ protected:
 	_bool		m_bTriggerTurn = false;
 	_bool		m_bAngry = false;
 	_bool		m_bTarget_isRight = false;
-	
+	_bool		m_bFisrtSound = false;
+	_bool		m_bSecondSound = false;
+
 	_float		m_fTimeDeltaAcc = 0.f;
 	_float		m_fTarget_Distance;
 	_float		m_fRandTime;
@@ -220,6 +222,8 @@ protected:
 	_float		m_fTarget_Cosign = 0.f;
 	_float		m_fCosignTimeAcc;
 	_float		m_fCosign;
+	_float		m_fEventSound_Count = 0.f;
+	_float		m_fSoundStart = -1.f;
 	CBaseObj*	m_pCurTarget = nullptr;
 	_vector		m_vCurTargetPos;
 

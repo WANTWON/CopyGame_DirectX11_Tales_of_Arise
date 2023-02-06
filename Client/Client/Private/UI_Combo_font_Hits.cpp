@@ -30,7 +30,7 @@ HRESULT CUI_Combo_font_Hits::Initialize(void * pArg)
 
 	m_fAlpha = 0;
 
-	m_bfadein = true;
+	//m_bfadein = true;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -43,6 +43,13 @@ int CUI_Combo_font_Hits::Tick(_float fTimeDelta)
 	if(m_bmoveleft)
 	moveleft();
 
+	if (m_bmoveright)
+		moveright();
+
+
+	m_fDietimer += fTimeDelta;
+	if (m_fDietimer > 5.f)
+		m_bfadeout = true;
 	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
 	{
 		m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
@@ -54,12 +61,19 @@ int CUI_Combo_font_Hits::Tick(_float fTimeDelta)
 	if (m_bfadein)
 		m_fAlpha += 0.03f; //생길때
 	else if (m_bfadeout)
+	{
+
+
 		m_fAlpha -= 0.0483f;
+		m_bmoveright = true;
+	}
+		
 
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
 	{
 		m_bfadeout = true;
+		m_bmoveright = true;
 	}
 
 
@@ -78,8 +92,24 @@ int CUI_Combo_font_Hits::Tick(_float fTimeDelta)
 
 void CUI_Combo_font_Hits::Late_Tick(_float fTimeDelta)
 {
-	if(m_fPosition.x <= 1200.f)
-	m_bmoveleft = false;
+	
+
+	if (m_fPosition.x <= 1200.f)
+	{
+		m_bmoveleft = false;
+		m_fPosition.x = 1200.f;
+
+	}
+	
+
+	if (m_fPosition.x >= 1360.f)
+	{
+		m_bmoveright = false;
+		m_fPosition.x = 1360.f;
+	//	m_bisCombo = false;
+	}
+		
+
 
 	if (m_fAlpha >= 1)
 	{
@@ -177,6 +207,8 @@ CGameObject * CUI_Combo_font_Hits::Clone(void * pArg)
 
 	CUI_Manager::Get_Instance()->Set_Hitfont(pInstance);
 
+	
+
 	return pInstance;
 }
 
@@ -185,4 +217,17 @@ void CUI_Combo_font_Hits::Free()
 
 	Safe_Release(m_pTextureCom1);
 	__super::Free();
+}
+
+void CUI_Combo_font_Hits::sethit()
+{
+	m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
+	m_bmoveleft = true;
+	m_bfadein = true;
+	m_fAlpha = 0;
+	m_fDietimer = 0.f;
+	m_bfadeout = false; 
+
+//	m_bisCombo
+	
 }

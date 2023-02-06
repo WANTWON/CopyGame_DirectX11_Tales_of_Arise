@@ -856,11 +856,20 @@
     <ClInclude Include="..\Public\AI_BoostAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Damagefont_Critical.h">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CriticalFont.h">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\PlayerChaseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\RinwellSkillState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerDeadState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1369,11 +1378,20 @@
     <ClCompile Include="..\Private\BerserkerBattle_RunState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Damagefont_Critical.cpp">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CriticalFont.cpp">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\PlayerChaseState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\RinwellSkillState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerDeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

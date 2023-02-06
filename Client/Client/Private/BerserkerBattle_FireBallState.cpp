@@ -33,6 +33,20 @@ CBerserkerState * CBattle_FireBallState::Tick(_float fTimeDelta)
 	m_pOwner->Check_Navigation();
 	
 
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay && m_bFisrtSound == false)
+		{
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_FireBall.wav"), SOUND_VOICE, 0.4f);
+				m_bFisrtSound = true;
+			}
+		}
+	}
 
 	return nullptr;
 }
@@ -55,6 +69,8 @@ CBerserkerState * CBattle_FireBallState::LateTick(_float fTimeDelta)
 
 	}
 
+
+
 	return nullptr;
 }
 
@@ -70,5 +86,5 @@ void CBattle_FireBallState::Enter()
 
 void CBattle_FireBallState::Exit()
 {
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

@@ -22,7 +22,7 @@ HRESULT CLevel_Logo::Initialize()
 		return E_FAIL;
 
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LogoSong.wav"), SOUND_SYSTEM, 0.3f);
+	//CGameInstance::Get_Instance()->PlaySounds(TEXT("LogoSong.wav"), SOUND_SYSTEM, 0.3f);
 	
 	return S_OK;
 }

@@ -8,6 +8,7 @@
 #include "AIState.h"
 #include "PlayerCollectState.h"
 #include "AICheckState.h"
+#include "PlayerDeadState.h"
 
 #include "CameraManager.h"
 #include "AI_HitState.h"
@@ -74,9 +75,16 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
 		Play_AISkill(ALPHEN);
-	else if(CGameInstance::Get_Instance()->Key_Up(DIK_2))
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2))
 		Play_AISkill(SION);
-
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_8))
+	{
+		m_tInfo.fCurrentHp += 100.f;
+		CPlayerState* pState = new CIdleState(this);
+		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+	}
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
+		Take_Damage(m_tInfo.fCurrentHp, nullptr);
 
 	switch (eMode)
 	{
@@ -129,8 +137,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
-	
-
 	switch (eMode)
 	{
 	case Client::ACTIVE:
@@ -152,7 +158,10 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	CBaseObj* pMonster = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pMonster))
 	{
-		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		_vector vMonsterPos = pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+		
+		_vector vDirection = vPlayerPos - vMonsterPos;
 
 		_float fRadiusSum = m_pSPHERECom->Get_SphereRadius() + pMonster->Get_SPHERECollider()->Get_SphereRadius();
 		
@@ -160,9 +169,23 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 		if (fCollDistance > 0)
 		{
-			vDirection = XMVector4Normalize(vDirection) * fCollDistance;
+			_vector vCross = XMVector3Cross(XMVector4Normalize(pMonster->Get_TransformState(CTransform::STATE_LOOK)), XMVector4Normalize(vDirection));
+			_float4 fCross;
+			XMStoreFloat4(&fCross, vCross);
 
-			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, (m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + vDirection));
+			_vector vNewDir;
+			if (-0.5f > fCross.y)
+				vNewDir = XMVector4Transform(vDirection, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(3.f)));
+			else if (0.5f < fCross.y)
+				vNewDir = XMVector4Transform(vDirection, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-3.f)));
+			else
+				vNewDir = vDirection;
+
+			_vector vNewPos = vMonsterPos + (XMVector4Normalize(vNewDir) * fRadiusSum);
+		
+			_vector vLerpPos = XMVectorLerp(vPlayerPos, vNewPos, 0.5f);
+
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
 		}
 	}
 }
@@ -241,15 +264,18 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	if (m_tInfo.fCurrentHp <= 0)
 	{
+		CPlayerState* pState = nullptr;
+		CAIState* pAIState = nullptr;
+
 		m_tInfo.fCurrentHp = 0;
 		switch (eMode)
 		{
 		case Client::ACTIVE:
-			/*CPlayerState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
-			m_pPlayerState = m_pState->ChangeState(m_pState, pState);*/
+			pState = new CPlayerDeadState(this, CPlayerState::STATE_DEAD);
+			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 			break;
 		case Client::AI_MODE:
-			CAIState* pAIState = new AIPlayer::CDeadState(this);
+			pAIState = new AIPlayer::CDeadState(this);
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 			break;
 		}

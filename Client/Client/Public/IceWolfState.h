@@ -190,6 +190,7 @@ protected:
 	_bool		m_bHasSpottedTarget = false;
 	_bool		m_bBattleMode = false;
 	_bool		m_bBitePossible = false;
+	_bool		m_bAnimFinish = false;
 	_float		m_fTimeDeltaAcc = 0.f;
 	_float		m_fTarget_Distance;
 	_float		m_fDegreeToTarget;

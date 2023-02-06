@@ -55,6 +55,23 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 
 		m_pOwner->Check_Navigation();
 	}
+
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay && m_bAnimFinish == false)
+		{
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Bite_Start.wav"), SOUND_VOICE, 0.6f);
+				m_bAnimFinish = true;
+
+			}
+		}
+	}
+
 	return nullptr;
 }
 
@@ -88,7 +105,7 @@ void CAttackBiteState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_BITE);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Bite_Start.wav"), SOUND_VOICE, 0.4f);
+
 }
 
 

@@ -25,6 +25,23 @@ CIceWolfState * CHowLingState::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
+
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay && m_bAnimFinish == false)
+		{
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Howling2.wav"), SOUND_VOICE, 0.3f);
+				m_bAnimFinish = true;
+
+			}
+		}
+	}
+
 	return nullptr;
 }
 
@@ -68,7 +85,7 @@ void CHowLingState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_HOWLING);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Howling1.wav"), SOUND_VOICE, 0.4f);
+
 
 
 }

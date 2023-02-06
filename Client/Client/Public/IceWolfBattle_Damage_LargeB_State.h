@@ -38,6 +38,7 @@ private:
 	DAMAGE_ANIM		m_eDamageAnim = ANIM_DAMAGE_LARGE_B;
 	_bool			m_bThirdHit = false;
 	_bool			m_bDeadAnimFinish = false;
+	_bool			m_bDeadSound = false;
 private:
 	_matrix m_StartMatrix;
 };

@@ -68,7 +68,30 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 		m_pOwner->Check_Navigation();
 	}
+
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay)
+		{
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+
+				if (!m_bFisrtSound)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Peck.wav"), SOUND_VOICE, 0.4f);
+					m_bFisrtSound = true;
+				}
+
+			}
+		}
+	}
+
+
 	return nullptr;
+
 }
 
 CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
@@ -95,11 +118,10 @@ void CBattle_PeckState::Enter()
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_PECK);
-
 	
 }
 
 void CBattle_PeckState::Exit()
 {
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }
