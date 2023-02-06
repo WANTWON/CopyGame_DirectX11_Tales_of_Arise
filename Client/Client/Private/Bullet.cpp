@@ -33,7 +33,7 @@ HRESULT CBullet::Initialize(void * pArg)
 	else if (m_BulletDesc.eCollisionGroup == MONSTER)
 		CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, this);
 
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION,m_BulletDesc.vInitPositon);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.vInitPositon);
 
 }
 

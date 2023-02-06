@@ -14,6 +14,7 @@
 #include "VIBuffer_Rect_Instance.h"
 #include "VIBuffer_Point_Instance.h"
 #include "VIBuffer_Point.h"
+#include "VIBuffer_Trail.h"
 
 BEGIN(Engine)
 

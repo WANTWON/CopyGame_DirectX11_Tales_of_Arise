@@ -307,6 +307,8 @@ void CImgui_Manager::ShowGui()
 					((CPlayer*)pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Player")).front())->Set_AnimIndex(m_iAnimationChoice);
 
 					m_fAnimationDuration = ModelAnimations[m_iAnimationChoice]->Get_Duration();
+
+					m_iEventChoice = -1;
 				}
 					
 

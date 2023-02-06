@@ -9,6 +9,8 @@
 #include "PlayerCollectState.h"
 #include "CameraManager.h"
 #include "BattleManager.h"
+#include "PlayerChaseState.h"
+#include "PlayerHitState.h"
 
 using namespace Player;
 
@@ -26,7 +28,7 @@ CPlayerState * CRunState::HandleInput()
 	if (LEVEL_BATTLE == m_pOwner->Get_Level())
 	{
 		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
+			return new CPlayerChaseState(m_pOwner, STATE_CHASE);
 
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
@@ -100,8 +102,8 @@ CPlayerState * CRunState::HandleInput()
 
 CPlayerState * CRunState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta , m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
-	
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+
 	Move(fTimeDelta);
 
 	m_pOwner->Check_Navigation();
@@ -111,6 +113,9 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 
 CPlayerState * CRunState::LateTick(_float fTimeDelta)
 {
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
+		return new CHitState(m_pOwner);
+
 	return nullptr;
 }
 

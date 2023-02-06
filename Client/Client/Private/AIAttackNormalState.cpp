@@ -44,10 +44,6 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 {
 	switch (m_eCurrentPlayerID)
 	{
-	case CPlayer::ALPHEN  :                     //alphen
-		break;
-
-
 	case CPlayer::SION   :            //sion
 
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -67,8 +63,6 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						//if (pEvent.fStartTime == 10)
-						//{
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = PLAYER;
 							BulletDesc.fVelocity = 100.f;
@@ -77,8 +71,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 							BulletDesc.vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
-							//m_fEventStart
-						//}
+							
 							m_fEventStart = pEvent.fStartTime;
 						
 					}
@@ -86,7 +79,6 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 			
 			}
 		}
-	//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 			if (m_iCurrentAnimIndex == CSion::ANIM::BTL_ATTACK_NORMAL_4 && m_bIsAnimationFinished)
 				return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
 		

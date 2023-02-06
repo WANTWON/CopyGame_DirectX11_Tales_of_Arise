@@ -71,31 +71,11 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
-	if (eMode == Client::AI_MODE && m_ePlayerID == SION)
-	{
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_2))
-		{
-			if (m_tInfo.fCurrentBoostGuage >= 100.f)
-			{
-				CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this , CBattleManager::Get_Instance()->Get_LackonMonster());
-				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
-			}
-		}
-	}
-
-	if (eMode == Client::AI_MODE && m_ePlayerID == ALPHEN)
-	{
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
-		{
-			if (m_tInfo.fCurrentBoostGuage >= 100.f)
-			{
-				CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-
-			}
-		}
-	}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
+		Play_AISkill(ALPHEN);
+	else if(CGameInstance::Get_Instance()->Key_Up(DIK_2))
+		Play_AISkill(SION);
 
 
 	switch (eMode)
@@ -115,6 +95,8 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	if (nullptr != m_pOBBCom)
 		m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if (nullptr != m_pSPHERECom)
+		m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	for (auto& pParts : m_Parts)
 	{
@@ -131,10 +113,23 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
 		return;
 
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	if (nullptr != m_pRendererCom && eMode != UNVISIBLE)
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
+#ifdef _DEBUG
+		m_pRendererCom->Add_Debug(m_pNavigationCom);
+		__super::Late_Tick(fTimeDelta);
+#endif //_DEBUG
+	}
+
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
-	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	
 
 	switch (eMode)
 	{
@@ -148,17 +143,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		return;
 	}
 
-	if (nullptr != m_pRendererCom)
-	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
-#ifdef _DEBUG
-		m_pRendererCom->Add_Debug(m_pNavigationCom);
-		__super::Late_Tick(fTimeDelta);
-#endif //_DEBUG
-	}
-
 	for (auto& pParts : m_Parts)
 	{
 		if (pParts != nullptr)
@@ -166,16 +150,20 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 
 	CBaseObj* pMonster = nullptr;
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pMonster))
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pMonster))
 	{
 		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-		if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
-			vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
-		else
-			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
+		_float fRadiusSum = m_pSPHERECom->Get_SphereRadius() + pMonster->Get_SPHERECollider()->Get_SphereRadius();
+		
+		_float fCollDistance = fRadiusSum - XMVectorGetX(XMVector4Length(vDirection));
 
-		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
+		if (fCollDistance > 0)
+		{
+			vDirection = XMVector4Normalize(vDirection) * fCollDistance;
+
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, (m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + vDirection));
+		}
 	}
 }
 
@@ -290,6 +278,35 @@ void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)
 {
 	CPlayerState* pPlayerState = new Player::CCollectState(this, pObject);
 	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+
+}
+
+void CPlayer::Play_AISkill(PLAYERID ePlayer)
+{
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	if (m_tInfo.fCurrentBoostGuage < 100.f || eMode != Client::AI_MODE)
+		return;
+	switch (ePlayer)
+	{
+	case Client::CPlayer::ALPHEN:
+	{
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+	case Client::CPlayer::SION:
+	{
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+	case Client::CPlayer::RINWELL:
+		break;
+	case Client::CPlayer::LAW:
+		break;
+	default:
+		break;
+	}
 
 }
 

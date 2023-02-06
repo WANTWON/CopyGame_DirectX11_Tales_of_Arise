@@ -83,6 +83,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	
 	//생성 시작부터 트리거 박스 세팅하기 , 만약 배틀존일때는 트리거 박스가 없어서 nullptr임
 	Check_NearTrigger();
+	Set_Scale(_float3(0.7f,0.7f,0.7f));
 
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 	return S_OK;
@@ -178,6 +179,8 @@ int CHawk::Tick(_float fTimeDelta)
 	if(!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 	
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
 
@@ -202,6 +205,9 @@ void CHawk::Late_Tick(_float fTimeDelta)
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return;
 
 	LateTick_State(fTimeDelta);
 }
@@ -305,7 +311,10 @@ HRESULT CHawk::SetUp_ShaderID()
 void CHawk::Check_Navigation()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
+	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 2.f);
+	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD)
+		m_fWalkingHeight -= 2.f;
+	
 
 	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);

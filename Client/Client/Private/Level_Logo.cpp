@@ -46,7 +46,8 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		Safe_Release(pGameInstance);
 	}
 
-
+	if (CGameInstance::Get_Instance()->Key_Down(DIK_ESCAPE))
+		CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
 }
 
 void CLevel_Logo::Late_Tick(_float fTimeDelta)

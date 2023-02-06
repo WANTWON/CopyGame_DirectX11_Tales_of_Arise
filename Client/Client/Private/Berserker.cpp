@@ -179,6 +179,9 @@ int CBerserker::Tick(_float fTimeDelta)
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return OBJ_NOEVENT;
+
 	__super::Tick(fTimeDelta);
 
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
@@ -207,6 +210,9 @@ void CBerserker::Late_Tick(_float fTimeDelta)
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
+	//if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	//	return;
 
 	LateTick_State(fTimeDelta);
 }

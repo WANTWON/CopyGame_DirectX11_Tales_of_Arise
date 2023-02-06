@@ -200,6 +200,7 @@
     <ClInclude Include="..\Public\PickingMgr.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Terrain_Manager.h" />
+    <ClInclude Include="..\Public\Trail.h" />
     <ClInclude Include="..\Public\TreasureBox.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="..\Private\PickingMgr.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Terrain_Manager.cpp" />
+    <ClCompile Include="..\Private\Trail.cpp" />
     <ClCompile Include="..\Private\TreasureBox.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">

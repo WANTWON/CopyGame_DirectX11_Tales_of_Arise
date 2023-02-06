@@ -86,7 +86,7 @@ int CEffectMesh::Tick(_float fTimeDelta)
 			TurnVelocityLerp();
 			NoisePowerLerp();
 
-			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT,m_tMeshEffectDesc.vScale.x);
 			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
 			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
 

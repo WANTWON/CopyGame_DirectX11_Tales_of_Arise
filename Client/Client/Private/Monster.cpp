@@ -39,6 +39,8 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 
+	if(CGameInstance::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BATTLE)
+		CBattleManager::Get_Instance()->Add_Monster(this);
 	return S_OK;
 }
 
@@ -416,6 +418,10 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 void CMonster::Collision_Object(_float fTimeDelta)
 {
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return;
+
 	CBaseObj* pCollisionMonster = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionMonster))
 	{
@@ -429,7 +435,7 @@ void CMonster::Collision_Object(_float fTimeDelta)
 		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
 	}
 
-	CBaseObj* pPlayer = nullptr;
+	/*CBaseObj* pPlayer = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionMonster))
 	{
 		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -440,7 +446,7 @@ void CMonster::Collision_Object(_float fTimeDelta)
 			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
 
 		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
-	}
+	}*/
 }
 
 void CMonster::Compute_CurrentIndex()

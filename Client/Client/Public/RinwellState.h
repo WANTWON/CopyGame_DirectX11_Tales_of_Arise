@@ -69,7 +69,7 @@ protected:
 		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		pPlayerList.push_back(pPlayer);
 
-		if (Index >= pPlayerList.size())
+		if (Index >= pPlayerList.size() || pPlayerList[Index]->Get_Dead())
 			m_pTarget = pPlayer;
 		else
 			m_pTarget = pPlayerList[Index];
