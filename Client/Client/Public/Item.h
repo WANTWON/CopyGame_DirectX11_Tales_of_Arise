@@ -37,7 +37,8 @@ private:
 	_bool		m_bIsGain = false;
 
 	_bool m_bfirst = false;
-	
+	_float m_fTimeDeltaAcc = 0.f;
+
 	vector<class CEffect*> m_pPickupFlares;
 	vector<class CEffect*> m_pGetItem;
 
