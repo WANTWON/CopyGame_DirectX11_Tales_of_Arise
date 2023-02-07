@@ -234,14 +234,20 @@ void CSkillState::Enter(void)
 			case Client::CPlayerState::STATE_SKILL_ATTACK1:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(3);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_E.wav"), SOUND_EFFECT, 0.6f);
+				//이 스킬 이펙트 소리는 Player_Weapon쪽에 있음. 여기서 이펙트 소리 넣으면, 애님이랑 타이밍이 안맞음. 
 				break;
 			case Client::CPlayerState::STATE_SKILL_ATTACK2:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(4);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.6f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R.wav"), SOUND_EFFECT, 0.6f);
 				break;
 			case Client::CPlayerState::STATE_SKILL_ATTACK3:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(5);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_EFFECT, 0.6f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.6f);
 				break;
 			}
 		}
@@ -274,4 +280,5 @@ void CSkillState::Enter(void)
 void CSkillState::Exit(void)
 {
 	__super::Exit();
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }

@@ -121,7 +121,8 @@ public: /* For.Frustum */
 
 public: /* For.Target_Manager */
 	ID3D11ShaderResourceView* Get_BackBufferCopySRV();
-	
+	HRESULT Bind_RenderTarget_SRV(const _tchar* pTargetTag, class CShader* pShader, const char* pConstantName);
+
 public:
 	static void Release_Engine();
 
