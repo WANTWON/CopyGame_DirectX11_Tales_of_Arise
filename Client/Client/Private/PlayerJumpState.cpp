@@ -87,6 +87,16 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						CPlayerState* pEventInput = EventInput();
+
+						_bool m_bSoundStart = false;
+
+						if (!m_bSoundStart)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
+							m_bSoundStart = true;
+						}
+
+
 						if (nullptr != pEventInput)
 							return pEventInput;
 					}
@@ -121,7 +131,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 		{
 			if (Check_JumpEnd())
 			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 0.4f);
+				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
 				m_eStateType = STATETYPE_END;
 				if (JUMP_IDLE == m_eJumpType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
@@ -141,7 +151,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 	}
 	case STATETYPE_MAIN:
 		if (Check_JumpEnd())
-		{CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 0.4f);
+		{//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
 			m_eStateType = STATETYPE_END;
 			if (JUMP_IDLE == m_eJumpType)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
@@ -333,8 +343,13 @@ void CJumpState::Move(_float fTimeDelta)
 	_float4 fChangeHeight;
 	XMStoreFloat4(&fChangeHeight, (vCurPos - vPrePos));
 
+
+
+
 	if (0 > fChangeHeight.y)
+	{
 		m_bIsDrop = true;
+	}
 	else
 		m_bIsDrop = false;
 
