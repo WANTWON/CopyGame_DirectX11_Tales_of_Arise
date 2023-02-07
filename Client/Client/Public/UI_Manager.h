@@ -67,6 +67,12 @@ public: /*Getter Setter*/
 	CUI_Base*    Get_HitMsg() { return m_pHitmsg; }
 	CUI_Base*    Get_Hitfont() { return m_pHitfont; }
 
+	CUI_Base*    Get_DMGNUM() { return m_pDamagenumber; }
+	CUI_Base*    Get_DMGfont() { return m_pDamages; }
+	CUI_Base*    Get_Comboline() { return m_pComboline; }
+
+	
+		
 
 	void Set_Dialogue(CUI_Base* pointer) { m_pDialogue = pointer; }
 	void Set_Dialoguepopup(CUI_Base* pointer) { m_pDialoguepopup = pointer; }
@@ -75,6 +81,12 @@ public: /*Getter Setter*/
 	void Set_LockOn(CUI_Base* pointer) { m_pLockOn = pointer; }
 	void Set_HitMsg(CUI_Base* pointer) { m_pHitmsg = pointer; }
 	void Set_Hitfont(CUI_Base* pointer) { m_pHitfont = pointer; }
+
+	void Set_Damagenumber(CUI_Base* pointer) { m_pDamagenumber = pointer; }
+	void Set_Damages(CUI_Base* pointer) { m_pDamages = pointer; }
+	void Set_comboline(CUI_Base* pointer) { m_pComboline = pointer; }
+
+
 
 	void AddItem(ITEM_NAME name, ITEM_TYPE type , _bool popup, _bool msgbox, _uint count = 1);
 
@@ -137,6 +149,10 @@ private:
 	CUI_Base* m_pLockOn = nullptr;
 	CUI_Base* m_pHitmsg = nullptr;
 	CUI_Base* m_pHitfont = nullptr;
+
+	CUI_Base* m_pDamagenumber = nullptr;
+	CUI_Base* m_pDamages = nullptr;
+	CUI_Base* m_pComboline = nullptr;
 
 	list<CUI_Base*>m_pItempopup;
 	//CUI_Base* m_pDialogue

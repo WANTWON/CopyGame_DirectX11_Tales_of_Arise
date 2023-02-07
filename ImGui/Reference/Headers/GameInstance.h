@@ -117,6 +117,7 @@ public: /* For Picking */
 
 public: /* For.Frustum */
 	_bool isIn_WorldFrustum(_fvector vPosition, _float fRange = 0.f);
+	_bool isIn_BattleWorldFrustum(_fvector vPosition, _float fRange = 0.f);
 
 public: /* For.Target_Manager */
 	ID3D11ShaderResourceView* Get_BackBufferCopySRV();

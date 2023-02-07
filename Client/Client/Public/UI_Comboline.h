@@ -30,12 +30,20 @@ public:
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 
+public:
+	void setline();
+
 
 	//void moveleft() { m_fPosition.x -= 10.f; }
 
 private:
 	_bool m_bfadein = false;
 	_bool m_bfadeout = false;
+
+	_float m_fdietimer = false;
+
+	_float m_fOffsetX = 0.f;
+	_float m_fDietimer = 0.f;
 
 
 };

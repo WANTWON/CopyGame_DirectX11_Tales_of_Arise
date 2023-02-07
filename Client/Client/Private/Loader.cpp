@@ -66,6 +66,8 @@
 #include "Itemmsgbox.h"
 #include "DamageFont.h"
 #include "UI_Skillmessage.h"
+#include "Damagefont_Critical.h"
+#include "CriticalFont.h"
 
 //Monster
 #include "Ice_Wolf.h"
@@ -345,9 +347,19 @@ HRESULT CLoader::Loading_ForPrototype()
 		CDamageFont::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Damagefont_Critical"),
+		CDamagefont_Critical::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Critical"),
+		CCriticalFont::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Skillmsg"),
 		CUI_Skillmessage::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+
 	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_QUESTSTART"),
 		CUI_QuestStart::Create(m_pDevice, m_pContext))))
 		return E_FAIL;*/
@@ -1489,6 +1501,10 @@ HRESULT CLoader::Loading_ForUITexture()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/quest/questdirection%d.dds"), 1))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SpecialDamagefont"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/specialdamage/specialdamage%d.dds"), 2))))
+		return E_FAIL;
+
 
 	
 	
@@ -1509,6 +1525,10 @@ HRESULT CLoader::Loading_ForEffect()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Sphere0"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Sphere/Sphere0.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CylinderWind"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/CylinderWind.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ring_Ak1"),

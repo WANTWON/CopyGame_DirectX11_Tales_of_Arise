@@ -64,6 +64,14 @@ _bool CBaseObj::Check_IsinFrustum(_float fOffset)
 	return CGameInstance::Get_Instance()->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), fCullingRadius + fOffset);
 }
 
+_bool CBaseObj::Check_IsinBattleZoneFrustum(_float fOffset)
+{
+	_float3 vScale = Get_Scale();
+	_float fCullingRadius = max(max(vScale.x, vScale.y), vScale.z);
+
+	return CGameInstance::Get_Instance()->isIn_BattleWorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), fCullingRadius + fOffset);
+}
+
 void CBaseObj::SetUp_BillBoard()
 {
 	_float4x4 ViewMatrix;

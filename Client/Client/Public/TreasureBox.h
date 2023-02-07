@@ -46,7 +46,7 @@ protected: /* For.Components */
 	BOXDESC					m_Boxtag;
 	_bool					m_bOpen = false;
 	_bool					m_bOpenFinish = false;
-
+	_float					m_fTimeDeltaAcc = 0.f;
 public:
 	static CTreasureBox* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

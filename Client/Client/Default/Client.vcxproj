@@ -196,7 +196,9 @@
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
     <ClInclude Include="..\Public\Bullet.h" />
+    <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
+    <ClInclude Include="..\Public\Damagefont_Critical.h" />
     <ClInclude Include="..\Public\FemaleYoung.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
@@ -228,6 +230,7 @@
     <ClInclude Include="..\Public\RinwellMoveState.h" />
     <ClInclude Include="..\Public\RinwellPoseState.h" />
     <ClInclude Include="..\Public\RinwellSkills.h" />
+    <ClInclude Include="..\Public\RinwellSkillState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\SionSkills.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
@@ -379,7 +382,9 @@
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
+    <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
+    <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
     <ClCompile Include="..\Private\FemaleYoung.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
@@ -409,6 +414,7 @@
     <ClCompile Include="..\Private\RinwellMoveState.cpp" />
     <ClCompile Include="..\Private\RinwellPoseState.cpp" />
     <ClCompile Include="..\Private\RinwellSkills.cpp" />
+    <ClCompile Include="..\Private\RinwellSkillState.cpp" />
     <ClCompile Include="..\Private\SionSkills.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />

@@ -31,6 +31,9 @@ public:
 	virtual void Free() override;
 
 public:
+	void updatedmg() {m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;m_bmoveleft = true; m_bfadein = true;	m_fAlpha = 0; m_fDietimer = 0.f;
+	m_bfadeout = false;}
+
 	void moveleft() { m_fPosition.x -= 10.f; }
 
 
@@ -40,6 +43,8 @@ private:
 	_bool m_bfadeout = false;
 
 	_bool m_bmoveleft = true;
+
+	_float m_fDietimer = 0.f;
 };
 
 END

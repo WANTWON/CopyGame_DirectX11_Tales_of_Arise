@@ -35,7 +35,7 @@ CIceWolfState * CHowLingState::Tick(_float fTimeDelta)
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Howling2.wav"), SOUND_VOICE, 0.3f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Howling2.wav"), SOUND_VOICE, 0.1f);
 				m_bAnimFinish = true;
 
 			}
