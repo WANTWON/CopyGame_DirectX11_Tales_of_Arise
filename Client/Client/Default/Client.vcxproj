@@ -199,7 +199,8 @@
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
-    <ClInclude Include="..\Public\FemaleYoung.h" />
+    <ClInclude Include="..\Public\PlayerCreater.h" />
+    <ClInclude Include="..\Public\SnowFieldNpc.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
     <ClInclude Include="..\Public\HawkChaseState.h" />
@@ -386,7 +387,8 @@
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
-    <ClCompile Include="..\Private\FemaleYoung.cpp" />
+    <ClCompile Include="..\Private\PlayerCreater.cpp" />
+    <ClCompile Include="..\Private\SnowFieldNpc.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
     <ClCompile Include="..\Private\HawkChaseState.cpp" />

@@ -62,7 +62,7 @@ public:
 	HRESULT RenderShadow(class CShader* pShader, _uint iMeshIndex, _uint iLevelIndex,  _uint iPassIndex = 0);
 	HRESULT Set_AnimationReset();
 	_bool Picking(CTransform * pTransform, _float3 * pOut);
-	void Update(void);
+	void Update(_float fRadius = 3.f);
 
 //private:
 //	const aiScene*				m_pAIScene = nullptr;

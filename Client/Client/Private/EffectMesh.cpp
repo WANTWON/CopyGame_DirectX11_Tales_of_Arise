@@ -411,6 +411,8 @@ HRESULT CEffectMesh::SetUp_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fTimer", &m_fTimer, sizeof(_float))))
 		return E_FAIL;
+	if (FAILED(CGameInstance::Get_Instance()->Bind_RenderTarget_SRV(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
+		return E_FAIL;
 
 	if (m_pMaskTexture)
 	{

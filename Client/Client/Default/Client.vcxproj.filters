@@ -316,6 +316,15 @@
     <Filter Include="02.GameObjects\04.UI\21.UI_MonsterHpbar">
       <UniqueIdentifier>{a01f582d-f206-4fdd-bd78-f981127f3768}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\00.Loading\MonsterCreater">
+      <UniqueIdentifier>{5bcaa77d-721e-4fc7-841e-7f13d7ee45ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\00.Loading\PlayerCreater">
+      <UniqueIdentifier>{bc605024-7388-4a57-849b-4070f0b98949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\00.Loading\NpcCreater">
+      <UniqueIdentifier>{c22c4171-edd3-48cc-bd99-d99a21c94602}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -765,9 +774,6 @@
     <ClInclude Include="..\Public\Npc.h">
       <Filter>02.GameObjects\01.Actor\02.NPC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\FemaleYoung.h">
-      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_QuestClear.h">
       <Filter>02.GameObjects\04.UI\16.UI_QuestClear</Filter>
     </ClInclude>
@@ -876,6 +882,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\PlayerDeadState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SnowFieldNpc.h">
+      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerCreater.h">
+      <Filter>01.Levels\00.Loading\PlayerCreater</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1290,9 +1302,6 @@
     <ClCompile Include="..\Private\Npc.cpp">
       <Filter>02.GameObjects\01.Actor\02.NPC</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\FemaleYoung.cpp">
-      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UI_QuestClear.cpp">
       <Filter>02.GameObjects\04.UI\16.UI_QuestClear</Filter>
     </ClCompile>
@@ -1401,6 +1410,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerDeadState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SnowFieldNpc.cpp">
+      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerCreater.cpp">
+      <Filter>01.Levels\00.Loading\PlayerCreater</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
