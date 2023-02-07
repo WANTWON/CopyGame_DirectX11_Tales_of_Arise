@@ -14,6 +14,30 @@ CBattleManager::CBattleManager()
 }
 
 
+CBaseObj * CBattleManager::Get_MinDistance_Monster(_vector vPosition)
+{
+	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+
+	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
+	
+	CBaseObj* pTarget = nullptr;
+	_float fMinDistance = MAXDISTANCE;
+	for (auto& iter : *pMonsterList)
+	{
+		if (dynamic_cast<CMonster*>(iter)->Get_Dissolve() || dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0)
+			continue;
+		
+		_float fDistance = XMVectorGetX(XMVector3Length(vPosition - dynamic_cast<CMonster*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
+
+		if (fDistance < fMinDistance)
+		{
+			fMinDistance = fDistance;
+			pTarget = dynamic_cast<CBaseObj*>(iter);
+		}
+	}
+	return pTarget;
+}
+
 void CBattleManager::Update_LockOn()
 {
 	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();

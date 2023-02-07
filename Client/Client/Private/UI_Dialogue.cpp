@@ -42,6 +42,7 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 
 	Read_TextFiles_for_dialogue();
 	Read_TextFiles_for_Quest1Clear();
+	Read_TextFiles_for_Quest2Strat();
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -235,27 +236,27 @@ HRESULT CUI_Dialogue::Render()
 
 	m_pVIBufferCom->Render();
 
-	m_fSize.x = 44.f;
-	m_fSize.y = 28.f;
-	m_fPosition.x = 430.f;
-	m_fPosition.y = 545.f + m_fFade;
+	//m_fSize.x = 44.f;
+	//m_fSize.y = 28.f;
+	//m_fPosition.x = 430.f;
+	//m_fPosition.y = 545.f + m_fFade;
 	_float alpha = m_fAlpha * 2.f;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
-		return E_FAIL;
-	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(0))))
-		return E_FAIL;
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+	//	return E_FAIL;
+	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(0))))
+	//	return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos, sizeof(_float))))
-		return E_FAIL;
-	/*if (FAILED(m_pShaderCom->Set_RawValue("g_fBrightlerp", &m_fbrightlerp, sizeof(_float))))
-	return E_FAIL;*/
-	m_pShaderCom->Begin(UI_BRIGHT);
-	m_pVIBufferCom->Render();
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos, sizeof(_float))))
+	//	return E_FAIL;
+	///*if (FAILED(m_pShaderCom->Set_RawValue("g_fBrightlerp", &m_fbrightlerp, sizeof(_float))))
+	//return E_FAIL;*/
+	//m_pShaderCom->Begin(UI_BRIGHT);
+	//m_pVIBufferCom->Render();
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
@@ -688,6 +689,94 @@ void CUI_Dialogue::Read_TextFiles_for_Quest1Clear()
 	m_vCurrentDialogue.push_back(matrix);
 }
 
+void CUI_Dialogue::Read_TextFiles_for_Quest2Strat()
+{
+	std::ifstream file("../../../Bin/quest2start0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge2[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/quest2start1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge2[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/quest2start2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge2[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/quest2start3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge2[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialouge2[0]);
+	matrix.push_back(m_vDialouge2[1]);
+	matrix.push_back(m_vDialouge2[2]);
+	matrix.push_back(m_vDialouge2[3]);
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
 wchar_t * CUI_Dialogue::ConverCtoWC(char * str)
 {
 
@@ -729,11 +818,14 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 
 	}
 
-	for (_uint i = 0; i < m_vCurrentDialogue[m_iVectorIndex][index].size(); ++i)
+	for (_uint i = 0; i < m_vCurrentDialogue[m_iVectorIndex][index].size()-1; ++i)
 	{
 		CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][index][i], XMVectorSet(m_fFontPos.x, m_fFontPos.y + (m_fFontOffsetY * (_float)i), 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
 	}
 
+	
+	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size()-1], XMVectorSet(390.f, 535.f+m_fFade, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
+	
 	/*CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vDialogue[index][0], XMVectorSet(m_fFontPos.x, m_fFontPos.y, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
 	if (m_vDialogue[index].size() == 1)
 		return;

@@ -27,6 +27,7 @@ public: /* Getter */
 	MONSTER_ID Get_MonsterType() { return m_eMonsterType; }
 	vector<MONSTER_ID> Get_FightedMonster() { return m_FightedMonster; }
 	vector<CBaseObj*> Get_AllMonster() { return m_AllMonster; }
+	CBaseObj* Get_MinDistance_Monster(_vector vPosition);
 
 public: /* For Lock On */
 	void Set_LackonMonster(CBaseObj* pMonster) { m_pLockon = pMonster; }
