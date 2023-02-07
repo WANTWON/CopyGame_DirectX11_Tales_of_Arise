@@ -36,7 +36,7 @@ public:
 
 	HRESULT Cloning_ForPlayer();
 	HRESULT Cloning_ForNpc();
-	HRESULT Cloning_ForMonster(_int iIndex);
+	HRESULT Cloning_ForMonster();
 	HRESULT Cloning_ForNonAnim();
 
 

@@ -65,7 +65,7 @@ HRESULT CSion::Ready_Parts()
 	m_Parts.resize(PARTS_END);
 
 	/* For.Weapon */
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 	if (nullptr == pSocket)
 		return E_FAIL;
 

@@ -19,6 +19,7 @@ public:
 private:
 	_bool m_bIsStateEvent = false;
 	_float m_fEventStart = -1.f;
+	_float m_fReloadTimeDelta = 0.f;
 };
 END
 END

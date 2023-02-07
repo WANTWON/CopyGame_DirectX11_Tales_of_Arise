@@ -72,7 +72,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 					{
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = PLAYER;
-							BulletDesc.fVelocity = 100.f;
+							BulletDesc.fVelocity = 20.f;
 							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 							if (m_pTarget != nullptr)
@@ -84,12 +84,32 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
-							
+							//รั น฿ป็ 
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 1.0f);
 							m_fEventStart = pEvent.fStartTime;
-						
+							
 					}
 				}
-			
+				
+				else if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					m_fReloadTimeDelta += fTimeDelta;
+
+					_bool m_bSoundStart = false;
+
+						if (!m_bSoundStart)
+						{
+							if (m_fReloadTimeDelta > 0.005f)
+								CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_EFFECT, 1.0f);
+							m_bSoundStart = true;
+
+						}
+				}
+
+
+				
 			}
 		}
 			if (m_iCurrentAnimIndex == CSion::ANIM::BTL_ATTACK_NORMAL_4 && m_bIsAnimationFinished)
@@ -140,4 +160,5 @@ void CAIAttackNormalState::Enter()
 void CAIAttackNormalState::Exit()
 {
 	__super::Exit();
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
