@@ -109,7 +109,9 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
 			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("HitSound2.wav"), SOUND_EFFECT, 0.4f);
 		}
+
 	}
 
 
@@ -260,6 +262,7 @@ void CWeapon::Free()
 {
 	__super::Free();
 
+	
 	Safe_Release(m_WeaponDesc.pSocket);
 
 	Safe_Release(m_pAABBCom);
@@ -270,4 +273,5 @@ void CWeapon::Free()
 	Safe_Release(m_pShaderCom);	
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pRendererCom);
+
 }

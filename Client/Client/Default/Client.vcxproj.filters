@@ -871,6 +871,12 @@
     <ClInclude Include="..\Public\UI_Monster_HPbar.h">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RinwellSkillState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerDeadState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1389,6 +1395,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Monster_HPbar.cpp">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerDeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

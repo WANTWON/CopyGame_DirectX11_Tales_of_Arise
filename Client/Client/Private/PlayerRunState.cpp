@@ -108,6 +108,8 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation();
 
+	
+
 	return nullptr;
 }
 
@@ -153,10 +155,13 @@ void CRunState::Enter()
 			break;
 		}
 	}
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_RunSound.wav"), SOUND_FOOT, 0.4f);
 }
 
 void CRunState::Exit()
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
 }
 
 void CRunState::Move(_float fTimeDelta)

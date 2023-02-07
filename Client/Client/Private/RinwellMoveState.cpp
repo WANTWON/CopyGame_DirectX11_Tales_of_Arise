@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RinwellMoveState.h"
 #include "RinwellAttackState.h"
+#include "RinwellSkillState.h"
 
 using namespace AiRinwell;
 
@@ -70,7 +71,22 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 	case Client::STATETYPE_END:
 	{
 		if (m_bIsAnimationFinished)
-			return new CAttackState(m_pOwner, STATETYPE_START);
+		{
+			_uint iSkillIndex = m_pOwner->Get_SkillIndex();
+			switch (iSkillIndex)
+			{
+			case PHOTONFLASH:
+				iSkillIndex++;
+				m_pOwner->Set_SkillIndex(iSkillIndex);
+				return new CAttackState(m_pOwner, STATETYPE_START);
+			case GALEFORCE:
+				iSkillIndex++;
+				if (iSkillIndex == SKILL_END)
+					iSkillIndex = PHOTONFLASH;
+				m_pOwner->Set_SkillIndex(iSkillIndex);
+				return new CSkillState(m_pOwner, GALEFORCE);
+			}
+		}		
 		break;
 	}
 	default:

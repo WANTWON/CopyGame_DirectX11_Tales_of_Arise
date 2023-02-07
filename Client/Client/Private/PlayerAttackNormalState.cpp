@@ -246,15 +246,19 @@ void CAttackNormalState::Enter()
 			{
 			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack1_Test1.wav"), SOUND_EFFECT, 1.0f);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_1);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack2_Test1.wav"), SOUND_EFFECT, 1.0f);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_8);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack3.wav"), SOUND_EFFECT, 0.4f);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_6);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack4.wav"), SOUND_EFFECT, 0.4f);
 				break;
 			}
 		}

@@ -598,6 +598,14 @@ _bool CGameInstance::isIn_WorldFrustum(_fvector vPosition, _float fRange)
 	return m_pFrustum->isIn_WorldFrustum(vPosition, fRange);
 }
 
+_bool CGameInstance::isIn_BattleWorldFrustum(_fvector vPosition, _float fRange)
+{
+	if (nullptr == m_pFrustum)
+		return false;
+
+	return m_pFrustum->isIn_BattleWorldFrustum(vPosition, fRange);
+}
+
 ID3D11ShaderResourceView * CGameInstance::Get_BackBufferCopySRV()
 {
 	if (nullptr == m_pTarget_Manager)
