@@ -88,13 +88,13 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 					{
 						CPlayerState* pEventInput = EventInput();
 
-						_bool m_bSoundStart = false;
+						//_bool m_bSoundStart = false;
 
-						if (!m_bSoundStart)
-						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
-							m_bSoundStart = true;
-						}
+						//if (!m_bSoundStart)
+						//{
+						//	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
+						//	m_bSoundStart = true;
+						//}
 
 
 						if (nullptr != pEventInput)
