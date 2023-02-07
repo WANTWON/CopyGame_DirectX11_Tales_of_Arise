@@ -98,6 +98,11 @@ HRESULT CLevel_SnowField::Initialize()
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
 
+	Safe_Release(m_pPlayerLoader);
+	Safe_Release(m_pMonsterLoader1);
+	Safe_Release(m_pNpcLoader);
+	Safe_Release(m_pNonAnimLoader);
+
 	return S_OK;
 }
 
@@ -936,12 +941,6 @@ void CLevel_SnowField::Free()
 	__super::Free();
 
 	Safe_Release(m_pCollision_Manager);
-	Safe_Release(m_pPlayerLoader);
-	Safe_Release(m_pMonsterLoader1);
-	Safe_Release(m_pNpcLoader);
-	Safe_Release(m_pNonAnimLoader);
-
-
 	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
 
 }
