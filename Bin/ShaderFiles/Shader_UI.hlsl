@@ -1363,6 +1363,7 @@ PS_OUT PS_BOSSHPBARFULL(PS_IN In)
 	Out.vColor.rgb += fLerp;   //fLerpValue;
 	Out.vColor.r += 0.05f;
 	Out.vColor.b -= 0.2f;
+	Out.vColor.g -= 0.05f;
 
 	if (Out.vColor.a<0.3f)
 		discard;
@@ -1376,7 +1377,8 @@ PS_OUT PS_BOSSBACKBLACK(PS_IN In)
 
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-
+	if (Out.vColor.a < 0.5f)
+		discard;
 	Out.vColor.a = 0.5f;
 
 
