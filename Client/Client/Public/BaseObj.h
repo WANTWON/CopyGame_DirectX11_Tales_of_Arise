@@ -48,6 +48,7 @@ public: /* Getter Setter */
 	CCollider*	Get_OBBCollider() { return m_pOBBCom; };
 	CCollider*	Get_SPHERECollider() { return m_pSPHERECom; };
 	_bool		Get_IsSocket() { return m_bSocket; }
+	CTransform*		Get_Transform() { return m_pTransformCom; }
 	
 protected:
 	virtual HRESULT Ready_Components(void* pArg) = 0;

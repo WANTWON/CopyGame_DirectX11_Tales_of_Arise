@@ -36,7 +36,6 @@ public:
 
 public: /* Getter &  Setter */
 	CModel*			Get_Model() { return m_pModelCom; }
-	CTransform*		Get_Transform() { return m_pTransformCom; }
 	CNavigation*	Get_Navigation(void) { return m_pNavigationCom; }
 	CPlayerState*	Get_State() { return m_pPlayerState; }
 	OBJINFO			Get_Info() { return m_tInfo; }

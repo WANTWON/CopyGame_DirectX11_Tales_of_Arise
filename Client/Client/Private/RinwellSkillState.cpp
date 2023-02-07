@@ -60,10 +60,10 @@ void CSkillState::Enter()
 		CBullet::BULLETDESC BulletDesc;
 		BulletDesc.eCollisionGroup = MONSTER;
 		BulletDesc.eBulletType = CRinwellSkills::GALE_FORCE;
-		BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
-		BulletDesc.vTargetPosition = m_vTargetPosition;
 		BulletDesc.vTargetDir = XMVector3Normalize(m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
 		BulletDesc.fVelocity = 10.f;
+		BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + BulletDesc.vTargetDir*2.f;
+		BulletDesc.vTargetPosition = m_vTargetPosition;
 		BulletDesc.fDeadTime = 2.f;
 		BulletDesc.pOwner = m_pOwner;
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))

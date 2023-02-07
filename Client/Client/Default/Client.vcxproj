@@ -317,6 +317,7 @@
     <ClInclude Include="..\Public\UI_font_Damage_number.h" />
     <ClInclude Include="..\Public\UI_MENU_Back.h" />
     <ClInclude Include="..\Public\UI_MENU_Quest.h" />
+    <ClInclude Include="..\Public\UI_Monster_HPbar.h" />
     <ClInclude Include="..\Public\UI_Portraitback.h" />
     <ClInclude Include="..\Public\ScreenFadeEffect.h" />
     <ClInclude Include="..\Public\UI_Comboline.h" />
@@ -495,6 +496,7 @@
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Back.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Quest.cpp" />
+    <ClCompile Include="..\Private\UI_Monster_HPbar.cpp" />
     <ClCompile Include="..\Private\UI_Portraitback.cpp" />
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp" />
     <ClCompile Include="..\Private\UI_Comboline.cpp" />
