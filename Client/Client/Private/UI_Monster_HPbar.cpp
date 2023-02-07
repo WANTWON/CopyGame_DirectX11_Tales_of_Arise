@@ -182,7 +182,7 @@ HRESULT CUI_Monster_HPbar::Render()
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GradationTexture", m_pTextureCom1->Get_SRV(0))))
 		return E_FAIL;
 	m_eShaderID = UI_HPBAR;
-	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr);
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 	return S_OK;
 	Compute_CamDistance(dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_TransformState(CTransform::STATE_TRANSLATION));
 	m_fPosition.x = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_ProjPosition().x;

@@ -49,7 +49,7 @@ int CUI_Comboline::Tick(_float fTimeDelta)
 
 	if (m_bfadein)
 	{
-		m_fAlpha -= 0.04; //생길때
+		m_fAlpha -= 0.04f; //생길때
 		m_fOffsetX -= 10.f;
 
 		if (m_fOffsetX <= -160.f)
@@ -66,7 +66,7 @@ int CUI_Comboline::Tick(_float fTimeDelta)
 
 	if (m_bfadeout)
 	{
-		m_fAlpha += 0.04; //생길때
+		m_fAlpha += 0.04f; //생길때
 		m_fOffsetX += 10.f;
 
 		if (m_fOffsetX >= 0.f)
