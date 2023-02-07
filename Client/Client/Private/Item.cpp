@@ -54,7 +54,7 @@ HRESULT CItem::Initialize(void* pArg)
 		case ITEMTYPE::PLANT:
 		case ITEMTYPE::MUSHROOM:
 		{
-			m_fRadius = 1.f;
+			m_fRadius = 2.f;
 			break;
 		}
 	}

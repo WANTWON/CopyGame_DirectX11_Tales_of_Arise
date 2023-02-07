@@ -163,6 +163,12 @@ void CBullet::Free()
 	}
 	m_pEffects.clear();
 
+	for (auto& iter : m_pDeadEffects)
+	{
+		iter->Set_Dead(true);
+	}
+	m_pDeadEffects.clear();
+
 	if (m_BulletDesc.eCollisionGroup == PLAYER)
 		CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 	else if (m_BulletDesc.eCollisionGroup == MONSTER)

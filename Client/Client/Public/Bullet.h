@@ -52,6 +52,7 @@ protected:
 	BULLETDESC m_BulletDesc;
 	CModel* m_pModelCom = nullptr;
 	vector<CEffect*> m_pEffects;
+	vector<CEffect*> m_pDeadEffects;
 
 	_float	m_fTime = 0;
 	_bool	m_bDeadEffect = false;
