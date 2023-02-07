@@ -522,7 +522,8 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_INTERECTMSG"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
 	
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Skillmsg"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;*/
