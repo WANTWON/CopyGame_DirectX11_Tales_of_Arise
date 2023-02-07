@@ -190,15 +190,21 @@ _bool CCollider::Collision(CCollider * pTargetCollider)
 
 	if (TYPE_SPHERE == m_eType)
 	{
-		if (isnan(pTargetCollider->m_pOBB[BOUNDING_WORLD]->Center.x))
-			return false;
-
 		if (TYPE_AABB == pTargetCollider->m_eType)
 			m_isCollision = m_pSphere[BOUNDING_WORLD]->Intersects(*pTargetCollider->m_pAABB[BOUNDING_WORLD]);
 		if (TYPE_OBB == pTargetCollider->m_eType)
+		{
+
+			if (isnan(pTargetCollider->m_pOBB[BOUNDING_WORLD]->Center.x))
+				return false;
+
 			m_isCollision = m_pSphere[BOUNDING_WORLD]->Intersects(*pTargetCollider->m_pOBB[BOUNDING_WORLD]);
+		}
+			
 		if (TYPE_SPHERE == pTargetCollider->m_eType)
 			m_isCollision = m_pSphere[BOUNDING_WORLD]->Intersects(*pTargetCollider->m_pSphere[BOUNDING_WORLD]);
+
+			
 	}
 
 
