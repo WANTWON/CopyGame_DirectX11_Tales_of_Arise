@@ -46,14 +46,43 @@ HRESULT CScreenFadeEffect::Initialize(void * pArg)
 
 int CScreenFadeEffect::Tick(_float fTimeDelta)
 {
-
-	scaler += 0.0529411764705882f;
-
 	m_ftimer += fTimeDelta;
 
 
 	
-	if (m_ftimer > 0.05f)
+
+
+
+	if (m_ftimer > 1.f)
+	{
+		scaler += 0.0529411764705882f;
+
+		speed = 0.032f;
+		//time = 0.f;
+		time += fTimeDelta;
+
+
+		if (time > 0.6f)
+		{
+			scaler = 0.1f;
+			time = 0.f;
+			return OBJ_DEAD;
+		}
+
+
+		
+
+
+		m_fSize.x = g_iWinSizeX;
+		m_fSize.y = g_iWinSizeY;
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		return OBJ_NOEVENT;
+	}
+	
+	/*if (m_ftimer > 0.05f)
 	{
 		if(m_bin)
 			m_fAlpha += 0.035f;
@@ -62,39 +91,27 @@ int CScreenFadeEffect::Tick(_float fTimeDelta)
 
 
 		m_ftimer = 0.f;
-	}
-
-	
-
-	speed = 0.032f;
-	//time = 0.f;
-	if (time > 0.6f)
-	{
-		scaler = 0.1f;
-		time = 0.f;
-	}
-		
-
-	time += fTimeDelta;
-
-
-	m_fSize.x = g_iWinSizeX;
-	m_fSize.y = g_iWinSizeY;
-	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	}*/
 
 	return OBJ_NOEVENT;
+
+	
 }
 
 void CScreenFadeEffect::Late_Tick(_float fTimeDelta)
 {
-	
-	__super::Late_Tick(fTimeDelta);
+	if (m_ftimer > 1.f)
+	{
+
+		__super::Late_Tick(fTimeDelta);
+	}
 }
 
 HRESULT CScreenFadeEffect::Render()
 {
+	if (m_ftimer < 1.f)
+		return S_OK;
+	
 
 
 	if (FAILED(SetUp_ShaderResources()))
