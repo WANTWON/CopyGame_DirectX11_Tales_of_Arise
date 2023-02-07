@@ -313,6 +313,9 @@
     <Filter Include="02.GameObjects\07.Bullet\SionSkills">
       <UniqueIdentifier>{e9eea2cc-e505-4eb7-ae86-b1cd995bfc80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\21.UI_MonsterHpbar">
+      <UniqueIdentifier>{a01f582d-f206-4fdd-bd78-f981127f3768}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -865,6 +868,9 @@
     <ClInclude Include="..\Public\PlayerChaseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Monster_HPbar.h">
+      <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1380,6 +1386,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerChaseState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Monster_HPbar.cpp">
+      <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -25,6 +25,18 @@ float g_UV_sizeX;   //가로 ;
 float g_UV_sizeY;   //세로;
 float2 g_MiddlePoint;
 
+float2 g_UVSpriteValue;
+float g_SpriteCurTime;
+float g_SpriteSpeed;
+bool g_SpriteLoop = true;
+
+float2 g_WinXY;
+
+
+//= (int)g_UVSpriteValue.x * (int)g_UVSpriteValue.y;
+//g_SpriteCurTime / g_SpriteSpeed;
+
+
 
 
 
@@ -1144,7 +1156,119 @@ PS_OUT PS_TODOCOMPLETE(PS_IN In)
 }
 
 
+//PS_OUT PS_BATTLESTART(PS_IN In)
+//{
+//	PS_OUT      Out = (PS_OUT)0;
+//
+//
+//	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, float2(In.vTexUV.x*0.25f,In.vTexUV.y+0.25f));
+//
+//	Out.vColor.a = Out.vColor.rgb;
+//
+//	float origina = Out.vColor.r;
+//
+//	Out.vColor.rgb = float3(0.7019607843137255f, 0.1764705882352941f, 0.f);
+//
+//	Out.vColor.g += 0.3f * origina;
+//
+//
+//
+//
+//
+//	return Out;
+//}
 
+PS_OUT PS_BATTLESTART(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	int TotalIndex = (int)g_UVSpriteValue.x * (int)g_UVSpriteValue.y;
+	int CurIndex = g_SpriteCurTime / g_SpriteSpeed;
+
+	if (g_SpriteLoop && CurIndex >= TotalIndex - 1)
+	{
+		CurIndex = 0;
+	}
+	else if (CurIndex >= TotalIndex - 1)
+	{
+		CurIndex = TotalIndex - 1;
+	}
+
+	//UV가로세로 개수
+	int SpriteU = (int)g_UVSpriteValue.x;
+	int SpriteV = (int)g_UVSpriteValue.y;
+
+	//밸류당 UV
+	float ValueX = 1.f / SpriteU;
+	float ValueY = 1.f / SpriteV;
+
+	//현재 인덱스의 XY
+	float CurX = CurIndex % SpriteU;
+	float CurY = CurIndex / SpriteU;
+
+	float2 NewUV = float2((In.vTexUV.x * ValueX) + (ValueX * CurX), (In.vTexUV.y * ValueY) + (ValueY * CurY));
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, NewUV);
+
+	Out.vColor.a = Out.vColor.rgb;
+
+	float origina = Out.vColor.r;
+
+	Out.vColor.rgb = float3(0.9843137254901961f, 0.3607843137254902f, 0.f);// * 1.3f;
+
+	Out.vColor.g += 0.3f * origina;
+
+
+
+
+
+	return Out;
+}
+
+
+PS_OUT PS_PROGRESSBAR(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+	float4 DiffuseTexture = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//float duration = 500.f;
+
+	float progress = g_fCurrentHp / g_fMaxHp;
+
+	float innerRadius = 0.12f;
+	float outerRadius = 0.18f;
+
+	float middleRadius = 0.5f * (innerRadius + outerRadius);
+	float halfWidth = 0.5f * (outerRadius - innerRadius);
+
+	float2 pos = In.vTexUV.xy - 0.5f * g_WinXY.xy;
+	//float2 pos = In.vTexUV.xy;
+	float radius = length(pos.xy);
+
+	float fr = halfWidth - abs(radius - middleRadius) + 1.f;
+	/*if(fr < 0.0)
+	discard;*/
+	fr = saturate(fr);
+
+	float angle = degrees(atan2(pos.x, pos.y) + 0.f) + 180.f;
+	float fa = radians(angle - progress * 360.f) * radius + 1.f;
+
+	fa = saturate(fa);
+	if (fa != 1.f)
+		discard;
+	vector color = vector(0.f, 0.f, 0.f, 1);
+	vector col = lerp(color, DiffuseTexture, fa);
+	//   col.a *= fr;
+
+	//col = col * col2;//DiffuseTexture;
+
+	Out.vColor = col;
+
+	return Out;
+
+
+
+//	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -1600,6 +1724,28 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_TODOCOMPLETE();                //40
 	}
 
+	pass BATTLESTART
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BATTLESTART();                //41
+	}
+	
+	pass PROGRESSBAR
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_PROGRESSBAR();                //41
+	}
+	
 	
 }
 

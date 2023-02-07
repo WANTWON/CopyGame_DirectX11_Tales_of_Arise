@@ -79,8 +79,7 @@ HRESULT CUI_Base::Render()
 		if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
 			return E_FAIL;
 	}
-
-
+	
 
 	if (nullptr == m_pShaderCom ||
 		nullptr == m_pVIBufferCom)
