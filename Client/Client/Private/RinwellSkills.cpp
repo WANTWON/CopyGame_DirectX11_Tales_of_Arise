@@ -29,16 +29,28 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 	case PHOTON_FLASH:
 		vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
-		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("PhotonFlashBall.dat"), mWorldMatrix);
 		break;
 	case GALE_FORCE:
 		vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
-		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("GaleForce.dat"), mWorldMatrix);
+
+		vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("GaleForceParticle.dat"), mWorldMatrix);
+
+		vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pBlast2Effects = CEffect::PlayEffectAtLocation(TEXT("GaleForceParticle2.dat"), mWorldMatrix);
 		break;
 	default:
 		break;
@@ -118,7 +130,7 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 	case GALE_FORCE:
 		ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-		ColliderDesc.vPosition = _float3(0.f, 0.f, 5.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 1.f);
 		break;
 	}
 
