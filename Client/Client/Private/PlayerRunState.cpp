@@ -151,7 +151,7 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
 			break;
 		case CPlayer::SION:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
 			break;
 		}
 	}
