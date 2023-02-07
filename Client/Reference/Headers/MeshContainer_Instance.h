@@ -24,7 +24,7 @@ public:
 
 public:
 	HRESULT SetUp_Bones(HANDLE hFile, _ulong* pdwByte, class CModel* pModel);
-	void Tick(void);
+	void Tick(_float fRaius = 3.f);
 
 private:
 	char m_szName[MAX_PATH] = "";

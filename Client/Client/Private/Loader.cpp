@@ -23,7 +23,7 @@
 //Actor
 #include "Alphen.h"
 #include "Sion.h"
-#include "FemaleYoung.h"
+#include "SnowFieldNpc.h"
 #include "AiRinwell.h"
 #include "Rinwell.h"
 
@@ -189,8 +189,8 @@ HRESULT CLoader::Loading_ForPrototype()
 		return E_FAIL;
 
 	/*For.Prototype_Trigger */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NpcFemale"),
-		CFemaleYoung::Create(m_pDevice, m_pContext))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SnowFieldNpc"),
+		CSnowFieldNpc::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_Trigger */
@@ -600,6 +600,19 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NpcFemaleYoung/NpcFemaleYoung.dat"))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NPC_NMM_GLD"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NPC_NMM_Gld/NPC_NMM_GLD.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NPC_NMO_DOK"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NPC_NMO_Dok/NPC_NMO_DOK.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NPC_NMY_PLC"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NPC_NMY_Plc/NPC_NMY_PLC.dat"))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Model_Sion */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Rinwell"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
@@ -961,7 +974,7 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 
 	/*For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_SnowDark.dds"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_SnowPlane3.dds"), 1))))
 		return E_FAIL;
 
 
@@ -1013,10 +1026,6 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Torch"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Torch.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Snow"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Snow.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("WoodShielf"),
@@ -1244,6 +1253,12 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Astrik/Snow2.dat",
 			"../../../Bin/Data/Field_Data/Snow.dat"))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Snow1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Astrik/Snow.dat",
+			"../../../Bin/Data/Field_Data/Snow1.dat"))))
+		return E_FAIL;
+
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Stalagmite5"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Astrik/Stalagmite5.dat",

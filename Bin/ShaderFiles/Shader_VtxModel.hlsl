@@ -5,6 +5,7 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
+texture2D g_DepthTexture;
 
 float4 g_vColor;
 float g_fAlpha = 1.f;
@@ -42,8 +43,8 @@ float g_fGlowPower;
 float g_fScrollingSpeed = .05f;
 float g_fScrollingTimer;
 float g_fDissolveAlpha;
-float4 g_WaterColorDeep = float4(.1f, .62f, .81f, 1.f);
-float4 g_WaterColorShallow = float4(.1, .63f, .81f, 1.f);
+float4 g_WaterColorDeep = float4(0.3f, 0.3f, 0.8f, 1.f);
+float4 g_WaterColorShallow = float4(0.3f, 0.3f, 0.8f, 1.f);
 
 struct VS_IN
 {
@@ -108,6 +109,7 @@ struct PS_OUT_SHADOW
 struct PS_EFFECT_OUT
 {
 	float4 vColor : SV_TARGET0;
+	float4 vDepth : SV_TARGET2;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -272,6 +274,24 @@ PS_EFFECT_OUT PS_GLOW(PS_IN In)
 	}
 
 	if (Out.vColor.a == 0)
+		discard;
+
+
+	float2	vUV;
+
+	vUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	vUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+	vector	vDepthDesc = g_DepthTexture.Sample(LinearSampler, vUV);
+
+	float	fViewZ = In.vProjPos.w;
+	float	fOldViewZ = vDepthDesc.y*1000.f;
+
+	Out.vColor.a = Out.vColor.a * (fOldViewZ - fViewZ);
+
+	Out.vColor.a *= g_fAlpha;
+
+	if (Out.vColor.a <= 0.00f)
 		discard;
 
 	return Out;
