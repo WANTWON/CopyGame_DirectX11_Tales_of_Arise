@@ -8,6 +8,9 @@
 #include "Alphen.h"
 #include "AICheckState.h"
 #include "CameraManager.h"
+#include "Effect.h"
+#include "Bullet.h"
+#include "SionSkills.h"
 
 using namespace AIPlayer;
 
@@ -35,6 +38,23 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
+		m_fTime += fTimeDelta;
+		if (!m_bBullet && m_eCurrentPlayerID == CPlayer::SION && m_fTime > 2.f)
+		{
+			_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+			CBullet::BULLETDESC BulletDesc;
+			BulletDesc.eCollisionGroup = PLAYER;
+			BulletDesc.fDeadTime = 3.5f;
+			BulletDesc.eBulletType = CSionSkills::BOOST;
+			BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook*2.f;
+			BulletDesc.pOwner = m_pOwner;
+			BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+				return nullptr;
+
+			m_bBullet = true;
+		}
 		_vector vecTranslation;
 		_float fRotationRadian;
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
@@ -70,10 +90,16 @@ void CAI_BoostAttack::Enter()
 		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_STRIKE;
 		break;
 	case CPlayer::SION:
-		m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE_AIR;
+		m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
+
+		_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset +  XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK))* 2;
+		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_Boost.dat"), mWorldMatrix);
 	}
 	//m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
-	
+
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)
 	{

@@ -17,6 +17,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual int Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
+	virtual void Collision_Check() override;
 	void Dead_Effect();
 
 protected:
@@ -27,7 +28,6 @@ private:
 	void Tick_GaleForce(_float fTimeDelta);
 
 private:
-	vector<CEffect*> m_pDeadEffects;
 	vector<CEffect*> m_pBlastEffects;
 	vector<CEffect*> m_pBlast2Effects;
 

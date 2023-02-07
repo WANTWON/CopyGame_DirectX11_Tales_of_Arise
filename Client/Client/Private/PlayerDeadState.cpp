@@ -56,6 +56,7 @@ void CPlayerDeadState::Enter()
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DEAD);
 		break;
 	case CPlayer::SION:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DEAD);
 		break;
 	}
 }

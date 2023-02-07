@@ -37,7 +37,6 @@ private:
 	class CPlayerCreater*	m_pPlayerLoader = nullptr;
 	class CPlayerCreater*	m_pMonsterLoader1 = nullptr;
 	class CPlayerCreater*	m_pNpcLoader = nullptr;
-	class CPlayerCreater*	m_pNonAnimLoader = nullptr;
 
 public:
 	static CLevel_SnowField* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

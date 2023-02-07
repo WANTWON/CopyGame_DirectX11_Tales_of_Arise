@@ -185,7 +185,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		
 			_vector vLerpPos = XMVectorLerp(vPlayerPos, vNewPos, 0.5f);
 
-			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
+			if (true == m_pNavigationCom->isMove(vLerpPos))
+				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
+			
 		}
 	}
 }

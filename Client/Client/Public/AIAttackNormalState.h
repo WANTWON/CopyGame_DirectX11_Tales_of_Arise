@@ -4,6 +4,7 @@
 #include "Sion.h"
 
 BEGIN(Client)
+class CEffect;
 BEGIN(AIPlayer)
 class CAIAttackNormalState final : public CAIState
 {
@@ -20,6 +21,7 @@ private:
 	_bool m_bIsStateEvent = false;
 	_float m_fEventStart = -1.f;
 	_float m_fReloadTimeDelta = 0.f;
+	vector<CEffect*> m_pEffects;
 };
 END
 END

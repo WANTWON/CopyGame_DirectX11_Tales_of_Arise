@@ -54,7 +54,7 @@ CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 			m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 		}
 		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta*2.f, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta, m_pOwner->Get_Navigation());
 	}
 
 	

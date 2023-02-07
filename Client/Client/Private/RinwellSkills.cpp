@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\RinwellSkills.h"
+#include "Monster.h"
+#include "Player.h"
 
 CRinwellSkills::CRinwellSkills(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBullet(pDevice, pContext)
@@ -94,6 +96,29 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 		m_bDead = true;
 }
 
+void CRinwellSkills::Collision_Check()
+{
+	CBaseObj* pCollisionTarget = nullptr;
+	switch (m_BulletDesc.eBulletType)
+	{
+	case PHOTON_FLASH:
+		__super::Collision_Check();
+		break;
+	case GALE_FORCE:
+		if (m_BulletDesc.eCollisionGroup == PLAYER)
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		}
+		else
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		}
+		break;
+	}
+}
+
 void CRinwellSkills::Dead_Effect()
 {
 	switch (m_BulletDesc.eBulletType)
@@ -107,6 +132,7 @@ void CRinwellSkills::Dead_Effect()
 		m_pDeadEffects = CEffect::PlayEffectAtLocation(TEXT("PhotonFlashDead.dat"), mWorldMatrix);
 		break;
 	}
+
 		
 	}
 }

@@ -45,7 +45,7 @@ void CHitState::Enter()
 		if (m_bIsFly)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_AIR_LARGE_B);
 		else
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_LARGE_B);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DAMAGE_LARGE_B);
 		break;
 	case CPlayer::SION:
 		break;
