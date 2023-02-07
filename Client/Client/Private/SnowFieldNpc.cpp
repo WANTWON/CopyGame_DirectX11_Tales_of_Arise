@@ -160,6 +160,21 @@ void CSnowFieldNpc::Talk_with_Npc()
 		}
 		break;
 	case MAN_OLD:
+
+		switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
+		{
+		case 3:
+			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(3);
+			break;
+		case 4:
+			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(4);
+			break;
+		
+
+		}
+		break;
+
+
 		break;
 	case MAN_GLD:
 		break;

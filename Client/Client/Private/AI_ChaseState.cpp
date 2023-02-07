@@ -17,6 +17,11 @@ CAI_ChaseState::CAI_ChaseState(CPlayer* pPlayer, STATE_ID eStateType, _uint play
 	//m_ePreStateID = eStateType;
 	m_pOwner = pPlayer;
 	m_eCurrentPlayerID = playerid;
+	if (nullptr == pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
 	m_pTarget = pTarget;
 }
 
@@ -42,6 +47,12 @@ CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 	else
 	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+		if (nullptr == m_pTarget)
+		{
+			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		}
 		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta*2.f, m_pOwner->Get_Navigation());
 	}
@@ -117,6 +128,12 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 
 		if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 		{
+			if (nullptr == m_pTarget)
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			}
+
 			switch (rand() % 4)
 			{
 			case 0:

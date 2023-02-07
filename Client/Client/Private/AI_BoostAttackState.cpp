@@ -16,6 +16,11 @@ CAI_BoostAttack::CAI_BoostAttack(CPlayer* pPlayer , CBaseObj* pTarget)
 	//m_ePreStateID = eStateType;
 	m_pOwner = pPlayer;
 	m_eCurrentPlayerID = m_pOwner->Get_PlayerID();
+	if (nullptr == pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
 	m_pTarget = pTarget;
 }
 
@@ -70,6 +75,13 @@ void CAI_BoostAttack::Enter()
 	//m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
 	
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+	if (nullptr == m_pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+	else
 	m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	CCamera_Dynamic* pCamera =  dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());

@@ -60,9 +60,12 @@ int CUI_Monster_HPbar::Tick(_float fTimeDelta)
 			m_fbrightpos_hp[i] = 0.f;
 	}
 
-		
-	m_fcurrenthp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fCurrentHp;
-	m_fmaxhp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fMaxHp;
+	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+	{
+		m_fcurrenthp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fCurrentHp;
+		m_fmaxhp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fMaxHp;
+
+	}
 
 	
 		

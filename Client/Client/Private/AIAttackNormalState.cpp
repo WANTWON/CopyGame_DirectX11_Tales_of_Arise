@@ -14,6 +14,12 @@ CAIAttackNormalState::CAIAttackNormalState(CPlayer* pPlayer , STATE_ID eStateTyp
 {
 	m_ePreStateID = eStateType;
 	m_pOwner = pPlayer;
+	if (nullptr == pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
+	else
 	m_pTarget = pTarget;
 	
 }
