@@ -80,7 +80,12 @@ public:
 	HRESULT Render_Questmenu();
 	HRESULT Render_bottmline_Quest();
 	HRESULT Render_Quest1Rewards();
+	HRESULT Render_Quest2Rewards();
+	HRESULT Render_Quest3Rewards();
 
+	HRESULT Render_Quest1TODO();
+	HRESULT Render_Quest2TODO();
+	HRESULT Render_Quest3TODO();
 	void Return_to_MainMenu();
 
 private:
@@ -88,7 +93,7 @@ private:
 	CTexture*				m_pTextureCom2 = nullptr;
 	CTexture*			    m_pTextureCom3 = nullptr;
 	CTexture*               m_pTextureCom4 = nullptr;
-	CTexture*               m_pTextureCom5 = nullptr;
+	CTexture*               m_pTextureCom5 = nullptr; // number
 
 	CTexture*               m_pTextureCom6 = nullptr;  // line 
 	CTexture*               m_pTextureCom7 = nullptr;  // itemicon

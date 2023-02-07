@@ -131,6 +131,7 @@ private:
 	_float m_fTimer = 0.f;
 	_uint m_igaldnum = 0;
 
+	_uint m_iQuestindex = 0;
 
 
 public:
@@ -142,6 +143,7 @@ public:
 			ITEM_NAME eName1 = ITEMNAME_END;
 			ITEM_NAME eName2 = ITEMNAME_END;
 			ITEM_NAME eName3 = ITEMNAME_END;
+			ITEM_TYPE eType1 = ITEMTYPE_END;
 			//	ITEM_TYPE eType = ITEMTYPE_END;
 
 		}QUESTCLEARDESC;

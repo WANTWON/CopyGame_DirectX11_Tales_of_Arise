@@ -44,6 +44,10 @@ HRESULT CUI_Questmsg::Initialize(void * pArg)
 	{
 		CUI_Manager::Get_Instance()->Set_Dialogue_section(1);
 	}
+
+	
+
+
 	//if(m_popupdesc.iIndex == 0)
 	/*switch (m_popupdesc.iIndex)
 	{
