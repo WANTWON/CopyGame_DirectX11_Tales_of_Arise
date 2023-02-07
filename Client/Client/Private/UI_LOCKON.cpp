@@ -122,6 +122,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 		return OBJ_NOEVENT;
 
+	if(nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	m_fcurrentmp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
 
 	//m_pTransformCom->Turn({ 0.f,1.f,0.f,1.f }, 45.f);

@@ -42,6 +42,7 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 
 	Read_TextFiles_for_dialogue();
 	Read_TextFiles_for_Quest1Clear();
+	Read_TextFiles_for_Quest2Strat();
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -684,6 +685,94 @@ void CUI_Dialogue::Read_TextFiles_for_Quest1Clear()
 	matrix.push_back(m_vDialouge1[4]);
 	matrix.push_back(m_vDialouge1[5]);
 	
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
+void CUI_Dialogue::Read_TextFiles_for_Quest2Strat()
+{
+	std::ifstream file("../../../Bin/quest2start0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge2[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/quest2start1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge2[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/quest2start2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge2[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/quest2start3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge2[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialouge2[0]);
+	matrix.push_back(m_vDialouge2[1]);
+	matrix.push_back(m_vDialouge2[2]);
+	matrix.push_back(m_vDialouge2[3]);
+
 
 	m_vCurrentDialogue.push_back(matrix);
 }

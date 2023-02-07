@@ -211,8 +211,13 @@ int CUI_QuestClear::Tick(_float fTimeDelta)
 
 	if (m_fDietimer > 2.f)
 	{
-		if(CUI_Manager::Get_Instance()->Get_QuestIndex() == 1)
-		dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(1, false, 0, 1);
+		if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 1)
+		{
+			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(1, false, 0, 1); //popup
+
+			CUI_Manager::Get_Instance()->Set_Dialogue_section(2); //after quest 1 clear
+		}
+		
 		return OBJ_DEAD;
 	}
 
