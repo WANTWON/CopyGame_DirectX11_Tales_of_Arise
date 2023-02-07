@@ -28,7 +28,7 @@ HRESULT CUI_Portraitfront_bottom::Initialize(void * pArg)
 	m_fSize.x = 95.f;
 	m_fSize.y = 95.f;
 	m_fAlpha = 1;
-	m_itexnum = 4;
+	m_itexnum = 3;
 //	m_bfadein = true;
 
 	m_fCurrentBoost = 100.f;

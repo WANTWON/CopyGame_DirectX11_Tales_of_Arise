@@ -68,6 +68,7 @@
 #include "UI_Skillmessage.h"
 #include "Damagefont_Critical.h"
 #include "CriticalFont.h"
+#include "UI_Monster_HPbar.h"
 
 //Monster
 #include "Ice_Wolf.h"
@@ -357,6 +358,10 @@ HRESULT CLoader::Loading_ForPrototype()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Skillmsg"),
 		CUI_Skillmessage::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MonsterHP"),
+		CUI_Monster_HPbar::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -1505,6 +1510,14 @@ HRESULT CLoader::Loading_ForUITexture()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/specialdamage/specialdamage%d.dds"), 2))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Monstername"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/monstername/monstername%d.dds"), 5))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Battlestart"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/battlestart/battlestart%d.dds"), 2))))
+		return E_FAIL;
+
 
 	
 	
@@ -1577,7 +1590,10 @@ HRESULT CLoader::Loading_ForEffect()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_Common_RainbowFlare01"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Ring/TO14_T_FX_Common_RainbowFlare01.dds"), 1))))
 		return E_FAIL;
-
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_Cloud_ny_01"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Smoke/TO14_T_FX_Cloud_ny_01.png"), 1))))
+		return E_FAIL;
+	
 	/*For.Effect*/
 	/* Effect Textures */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Particle_Horizontal"),

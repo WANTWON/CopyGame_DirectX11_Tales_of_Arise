@@ -28,6 +28,8 @@ private:
 
 private:
 	vector<CEffect*> m_pDeadEffects;
+	vector<CEffect*> m_pBlastEffects;
+	vector<CEffect*> m_pBlast2Effects;
 
 public:
 	static CRinwellSkills* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
