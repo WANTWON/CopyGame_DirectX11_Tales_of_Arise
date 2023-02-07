@@ -6,6 +6,7 @@
 #include "AIDeadState.h"
 #include "Bullet.h"
 #include "SionSkills.h"
+#include "Monster.h"
 
 using namespace AIPlayer;
 
@@ -68,7 +69,13 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 							BulletDesc.fVelocity = 100.f;
 							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
-							BulletDesc.vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+							if (m_pTarget != nullptr)
+								BulletDesc.vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+							else if (m_pTarget == nullptr)
+							BulletDesc.vTargetPosition = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+							(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+
+
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
 							

@@ -382,6 +382,9 @@ PS_OUT PS_ALLBLUE(PS_IN In)
 	Out.vColor.r = 0.0589019607843137f;
 	Out.vColor.g = 0.942708f;
 	Out.vColor.b = 0.83441f;
+	if (Out.vColor.a < 0.2f)
+		discard;
+	Out.vColor.a = 1.f;
 
 	return Out;
 }
@@ -1249,7 +1252,7 @@ PS_OUT PS_PROGRESSBAR(PS_IN In)
 	discard;*/
 	fr = saturate(fr);
 
-	float angle = degrees(atan2(pos.x, pos.y) + 0.f) + 180.f;
+	float angle = degrees(atan2(-pos.x, pos.y) + 0.f) + 180.f;
 	float fa = radians(angle - progress * 360.f) * radius + 1.f;
 
 	fa = saturate(fa);
@@ -1262,6 +1265,11 @@ PS_OUT PS_PROGRESSBAR(PS_IN In)
 	//col = col * col2;//DiffuseTexture;
 
 	Out.vColor = col;
+
+	if (Out.vColor.a < 0.2f)
+		discard;
+
+	Out.vColor.a += 0.6f;
 
 	return Out;
 
@@ -1743,7 +1751,7 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_PROGRESSBAR();                //41
+		PixelShader = compile ps_5_0 PS_PROGRESSBAR();                //42
 	}
 	
 	
