@@ -36,8 +36,6 @@ private:
 private:
 	class CPlayerCreater*	m_pPlayerLoader = nullptr;
 	class CPlayerCreater*	m_pMonsterLoader1 = nullptr;
-	class CPlayerCreater*	m_pMonsterLoader2 = nullptr;
-	class CPlayerCreater*	m_pMonsterLoader3 = nullptr;
 	class CPlayerCreater*	m_pNpcLoader = nullptr;
 	class CPlayerCreater*	m_pNonAnimLoader = nullptr;
 

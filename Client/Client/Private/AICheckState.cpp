@@ -25,8 +25,8 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 
 	m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
-	//if (m_pTarget == nullptr)
-	//	return nullptr;
+	if (m_pTarget == nullptr)
+		return nullptr;
 
 	if (m_bLookatOnetime)
 	{
@@ -69,8 +69,8 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 
 CAIState * CAICheckState::LateTick(_float fTimeDelta)
 {
-	//if (m_pTarget == nullptr)
-	//	return nullptr;
+	if (m_pTarget == nullptr)
+		return nullptr;
 
 	m_fTimer += fTimeDelta;
 

@@ -268,10 +268,11 @@ void CSkillState::Enter(void)
 		}
 	}
 
+	_vector vTargetPos = { 0.f,0.f,0.f,1.f };
 	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
-
-	_vector vTargetPos = pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION);
-
+	if (pBattleMgr->Get_LackonMonster() != nullptr)
+		_vector vTargetPos = pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION);
+	
 	m_pOwner->Get_Transform()->LookAt(vTargetPos);
 
 	RELEASE_INSTANCE(CBattleManager);

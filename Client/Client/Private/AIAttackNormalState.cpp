@@ -65,7 +65,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 					{
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = PLAYER;
-							BulletDesc.fVelocity = 100.f;
+							BulletDesc.fVelocity = 20.f;
 							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 							BulletDesc.vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);

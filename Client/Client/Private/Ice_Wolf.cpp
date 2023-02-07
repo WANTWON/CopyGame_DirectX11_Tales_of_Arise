@@ -111,7 +111,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	ColliderDesc.vPosition = _float3(0.f, 2.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 

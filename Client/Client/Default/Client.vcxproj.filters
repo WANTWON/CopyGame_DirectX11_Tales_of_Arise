@@ -316,14 +316,8 @@
     <Filter Include="02.GameObjects\04.UI\21.UI_MonsterHpbar">
       <UniqueIdentifier>{a01f582d-f206-4fdd-bd78-f981127f3768}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\00.Loading\MonsterCreater">
-      <UniqueIdentifier>{5bcaa77d-721e-4fc7-841e-7f13d7ee45ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\00.Loading\PlayerCreater">
       <UniqueIdentifier>{bc605024-7388-4a57-849b-4070f0b98949}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Levels\00.Loading\NpcCreater">
-      <UniqueIdentifier>{c22c4171-edd3-48cc-bd99-d99a21c94602}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -35,65 +35,31 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-//	if (FAILED(Ready_Layer_Trigger(TEXT("Layer_Trigger"))))
-	//	return E_FAIL;
-
 	cout << " Player Clone start" << endl;
 	m_pPlayerLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER);
 	if (nullptr == m_pPlayerLoader)
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
-	//	return E_FAIL;
-
 	cout << " Monster Group1 Clone start" << endl;
 	m_pMonsterLoader1 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER1);
 	if (nullptr == m_pMonsterLoader1)
 		return E_FAIL;
-	cout << " Monster Group2 Clone start" << endl;
-	m_pMonsterLoader2 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER2);
-	if (nullptr == m_pMonsterLoader2)
-		return E_FAIL;
-	cout << " Monster Group3 Clone start" << endl;
-	m_pMonsterLoader3 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER3);
-	if (nullptr == m_pMonsterLoader3)
-		return E_FAIL;
-
-	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-	//	return E_FAIL;
 
 	cout << " NonAnim Clone start" << endl;
 	m_pNonAnimLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_NONANIM);
 	if (nullptr == m_pNonAnimLoader)
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-	//	return E_FAIL;
-
-	//if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
-	//	return E_FAIL;
-
-//	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
-//		return E_FAIL;
-
-//	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
-//		return E_FAIL;
-
 	cout << " Npc Clone start" << endl;
 	m_pNpcLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_NPC);
 	if (nullptr == m_pNpcLoader)
 		return E_FAIL;
-	//if (FAILED(Ready_Layer_Npc(TEXT("Layer_Npc"))))
-	//	return E_FAIL;
-
-	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
-
-	//CGameInstance::Get_Instance()->PlaySounds(TEXT("SnowFiledSong.wav"), SOUND_SYSTEM, 0.4f);
+	
 
 	DWORD dwTime = GetTickCount();
 	while (false == m_pPlayerLoader->Get_Finished() || 
 		false == m_pNpcLoader->Get_Finished() ||
-		false == m_pMonsterLoader1->Get_Finished() || false == m_pMonsterLoader2->Get_Finished() || false == m_pMonsterLoader3->Get_Finished() ||
+		false == m_pMonsterLoader1->Get_Finished() ||
 		false == m_pNonAnimLoader->Get_Finished() )
 	{
 		if (dwTime + 1000 < GetTickCount())
@@ -108,12 +74,7 @@ HRESULT CLevel_SnowField::Initialize()
 
 			if (m_pMonsterLoader1->Get_Finished() == true)
 				cout << "Finished Monster Grounp1 Clone" << endl;
-			
-			if (m_pMonsterLoader2->Get_Finished() == true)
-				cout << "Finished Monster Grounp2 Clone" << endl;
-
-			if (m_pMonsterLoader3->Get_Finished() == true)
-				cout << "Finished Monster Grounp3 Clone" << endl;
+		
 
 			if (m_pNonAnimLoader->Get_Finished() == true)
 				cout << "Finished NonAnim Clone" << endl;
@@ -977,8 +938,6 @@ void CLevel_SnowField::Free()
 	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pPlayerLoader);
 	Safe_Release(m_pMonsterLoader1);
-	Safe_Release(m_pMonsterLoader2);
-	Safe_Release(m_pMonsterLoader3);
 	Safe_Release(m_pNpcLoader);
 	Safe_Release(m_pNonAnimLoader);
 
