@@ -32,7 +32,22 @@ CBerserkerState * CBattle_Multiple_FireState::Tick(_float fTimeDelta)
 	if (!m_bIsAnimationFinished)*/
 		m_pOwner->Check_Navigation();
 	
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					if (m_fSoundStart != pEvent.fStartTime)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Multiple_Fire.wav"), SOUND_VOICE, 0.1f);
+						m_fSoundStart = pEvent.fStartTime;
+					}
+				}
+			}
+		}
 
 	return nullptr;
 }
@@ -72,11 +87,14 @@ void CBattle_Multiple_FireState::Enter()
 
 	m_eStateId = STATE_ID::STATE_ANGRY;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_FIRE_BALL);
-		
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_MULTIPLE_FIRE_B);
+	
+	m_fSoundStart = -1.f;
+
+	
 }
 
 void CBattle_Multiple_FireState::Exit()
 {
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

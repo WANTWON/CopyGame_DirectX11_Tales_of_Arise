@@ -71,6 +71,27 @@ CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
 
 	}
 
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay)
+		{
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+
+				if (!m_bAnimFinish)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Attack.wav"), SOUND_VOICE, 0.4f);
+					m_bAnimFinish = true;
+				}
+
+			}
+		}
+	}
+
+
 	return nullptr;
 }
 
@@ -99,7 +120,7 @@ void CAttackNormalState::Enter()
 {
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_NORMAL);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Attack.wav"), SOUND_VOICE, 0.4f);
+
 }
 
 

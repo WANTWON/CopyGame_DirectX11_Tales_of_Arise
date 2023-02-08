@@ -106,7 +106,7 @@ int CEffectMesh::Tick(_float fTimeDelta)
 			TurnVelocityLerp();
 			NoisePowerLerp();
 
-			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT,m_tMeshEffectDesc.vScale.x);
 			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
 			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
 
@@ -430,6 +430,8 @@ HRESULT CEffectMesh::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_tMeshEffectDesc.fAlpha, sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fTimer", &m_fTimer, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(CGameInstance::Get_Instance()->Bind_RenderTarget_SRV(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
 		return E_FAIL;
 
 	if (m_pMaskTexture)

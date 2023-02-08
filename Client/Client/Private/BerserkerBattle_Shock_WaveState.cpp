@@ -39,7 +39,21 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 	}
 
 
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay && m_bAnimFinish == false)
+		{
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_ShockWave.wav"), SOUND_VOICE, 0.4f);
+				m_bAnimFinish = true;
+
+			}
+		}
+	}
 
 
 	return nullptr;
@@ -75,10 +89,10 @@ void CBattle_Shock_WaveState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_SHOCK_WAVE);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_ShockWave.wav"), SOUND_VOICE, 1.0f);
+	
 }
 
 void CBattle_Shock_WaveState::Exit()
 {
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

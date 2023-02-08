@@ -34,6 +34,7 @@ public:
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) { return 0; };
 	void Update_Collider();
 	_bool Check_IsinFrustum(_float fOffset = 0);
+	_bool Check_IsinBattleZoneFrustum(_float fOffset = 0);
 	void  SetUp_BillBoard();
 
 public: /* Getter Setter */
@@ -48,6 +49,7 @@ public: /* Getter Setter */
 	CCollider*	Get_OBBCollider() { return m_pOBBCom; };
 	CCollider*	Get_SPHERECollider() { return m_pSPHERECom; };
 	_bool		Get_IsSocket() { return m_bSocket; }
+	CTransform*		Get_Transform() { return m_pTransformCom; }
 	
 protected:
 	virtual HRESULT Ready_Components(void* pArg) = 0;

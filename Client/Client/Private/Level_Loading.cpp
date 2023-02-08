@@ -27,6 +27,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 	if (nullptr == m_pLoader)
 		return E_FAIL;
 
+	CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
+
 	return S_OK;
 }
 
@@ -94,4 +96,5 @@ void CLevel_Loading::Free()
 	__super::Free();
 
 	Safe_Release(m_pLoader);
+
 }

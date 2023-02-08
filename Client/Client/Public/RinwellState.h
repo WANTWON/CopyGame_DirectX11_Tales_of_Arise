@@ -22,6 +22,14 @@ public:
 		STATE_BATTLESTART
 	};
 
+
+	enum SKILL_TYPE
+	{
+		PHOTONFLASH,
+		GALEFORCE,
+		SKILL_END
+	};
+
 	virtual ~CRinwellState() {};
 	virtual CRinwellState* AI_Behaviour(_float fTimeDelta) { return nullptr; };
 	virtual CRinwellState* Tick(_float fTimeDelta) PURE;
@@ -69,7 +77,7 @@ protected:
 		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		pPlayerList.push_back(pPlayer);
 
-		if (Index >= pPlayerList.size())
+		if (Index >= pPlayerList.size() || pPlayerList[Index]->Get_Dead())
 			m_pTarget = pPlayer;
 		else
 			m_pTarget = pPlayerList[Index];
@@ -116,9 +124,9 @@ protected:
 
 
 protected:
-	STATETYPE m_eStateType = STATETYPE_DEFAULT;
-	STATE_ID m_eStateId = STATE_IDLE;
-
+	STATETYPE	m_eStateType = STATETYPE_DEFAULT;
+	STATE_ID	m_eStateId = STATE_IDLE;
+	_uint		m_eSkillType = SKILL_END;
 	_bool		m_bIsAnimationFinished = false;
 	_float		m_fTarget_Distance;
 	class CAiRinwell* m_pOwner = nullptr;

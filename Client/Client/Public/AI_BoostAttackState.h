@@ -3,6 +3,7 @@
 #include "AIState.h"
 
 BEGIN(Client)
+class CEffect;
 BEGIN(AIPlayer)
 class CAI_BoostAttack final : public CAIState
 {
@@ -14,6 +15,12 @@ public:
 
 	virtual void Enter() override;
 	virtual void Exit() override;
+
+private:
+	vector<CEffect*> m_pEffects;
+
+	_float m_fTime = 0.f;
+	_bool  m_bBullet = false;
 };
 END
 END

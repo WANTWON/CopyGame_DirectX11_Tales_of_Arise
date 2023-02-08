@@ -47,6 +47,13 @@ public:
 private:
 	SCREENFADE_DESC m_ScreenEffectdesc;
 
+	/*_uint Spritex = 0;
+	_uint Spritey = 0;*/
+	_float2 Sprite = { 4.f,4.f };
+	_float speed = 0.f;
+	_float time = 0.f;
+
+	_float scaler = 0.5f;
 
 public:
 	static CScreenFadeEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

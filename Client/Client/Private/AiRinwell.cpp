@@ -34,7 +34,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 		return E_FAIL;
 
 
-	m_tStats.m_fMaxHp = 10000000.f;
+	m_tStats.m_fMaxHp = 10000.f;
 
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
@@ -252,8 +252,8 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 	case Client::CAiRinwell::BTL_ATTACK_BRAVE:
 	case Client::CAiRinwell::BTL_ATTACK_DENGEKISYOUHEKI:
 	case Client::CAiRinwell::BTL_ATTACK_DENZIHOU:
-	case Client::CAiRinwell::BTL_ATTACK_FLASH:
-	case Client::CAiRinwell::BTL_ATTACK_FUATU:
+	case Client::CAiRinwell::BTL_ATTACK_PHOTONFLASH:
+	case Client::CAiRinwell::BTL_ATTACK_GALEFORCE:
 	case Client::CAiRinwell::BTL_ATTACK_HIEN:
 	case Client::CAiRinwell::BTL_ATTACK_HOUDEN:
 	case Client::CAiRinwell::BTL_ATTACK_HYOUROU:

@@ -27,28 +27,10 @@ HRESULT CUI_font_Damage_number::Initialize(void * pArg)
 	m_fSize.y = 32.f;
 	m_fPosition.x = 1030.f;
 	m_fPosition.y = 165.f;
+	
 
 	m_fAlpha = 0;
-	/*if (m_iYIndex == 0)
-	{
-		
-	}*/
-	/*if (m_iYIndex == 1)
-	{
-		m_fPosition.x = 1180.f + (m_iIndex * 14);
-		m_fPosition.y = 415;
-	}
-	if (m_iYIndex == 2)
-	{
-		m_fPosition.x = 1180.f + (m_iIndex * 14);
-		m_fPosition.y = 475;
-	}
-	if (m_iYIndex == 3)
-	{
-		m_fPosition.x = 1180.f + (m_iIndex * 14);
-		m_fPosition.y = 535;
-	}
-	*/
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -57,11 +39,47 @@ HRESULT CUI_font_Damage_number::Initialize(void * pArg)
 
 int CUI_font_Damage_number::Tick(_float fTimeDelta)
 {
-	/*m_fBright += 0.02f;
 
-	if (m_fBright >= 2.f)
-		m_fBright = 0.f;
-*/
+	m_fDietimer += fTimeDelta;
+	if (m_fDietimer > 5.f)
+		m_bfadeout = true;
+
+
+	if (m_bfadein)
+	{
+		m_fOffsetX += 10.f;
+		m_fAlpha += 0.05f;
+
+		if (m_fOffsetX >= 160.f)
+		{
+			m_fAlpha = 1.f;
+			m_fOffsetX = 160.f;
+			m_bfadein = false;
+		}
+
+	}
+
+
+
+
+	if (m_bfadeout)
+	{
+		m_fOffsetX -= 10.f;
+		m_fAlpha -= 0.05f;
+		if (m_fOffsetX <= 0.f)
+		{
+			m_fAlpha = 0.f;
+			m_fOffsetX = 160.f;
+			m_bfadeout = false;
+			m_iCurrentDamage = 0;
+		}
+	}
+
+
+	
+
+	
+
 	for (_uint i = 0; i < 6; ++i)
 		m_fbrightpos_damagefont[i] += 0.015f;
 
@@ -71,107 +89,10 @@ int CUI_font_Damage_number::Tick(_float fTimeDelta)
 			m_fbrightpos_damagefont[i] = 0.f;
 	}
 
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_3))
-	{
-		m_iCurrentDamage += 111;
-		m_fSize.x = 36.f;
-		m_fSize.y = 40.f;
-		m_bsizedown = true;
-		/*m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);*/
-	//	m_bfadein = true;
-	//	m_fAlpha = 1;
-	}
-
-	m_fAlpha = 1.f;
+	
 	if (m_bsizedown)
 		sizedown();
 
-	/*switch (m_iIndex)
-	{
-	case 0:
-		if (m_iCurrentDamage < 100000)
-		{
-			m_bRender = false;
-			return OBJ_NOEVENT;
-		}
-		else
-		{
-			m_itexnum = m_iCurrentDamage / 100000;
-			m_bRender = true;
-			break;
-
-		}
-		
-	case 1:
-		if (m_iCurrentDamage < 10000)
-		{
-			m_bRender = false;
-			return OBJ_NOEVENT;
-		}
-		else
-		{
-			m_itexnum = ((m_iCurrentDamage % 100000) / 10000);
-			m_bRender = true;
-			break;
-		}
-	case 2:
-		if (m_iCurrentDamage < 1000)
-		{
-			m_bRender = false;
-			return OBJ_NOEVENT;
-		}
-		else
-		{
-			m_itexnum = ((m_iCurrentDamage % 10000) / 1000);
-			m_bRender = true;
-			break;
-		}
-	case 3:
-		if (m_iCurrentDamage < 100)
-		{
-			m_bRender = false;
-			return OBJ_NOEVENT;
-		}
-		else
-		{
-			m_itexnum = ((m_iCurrentDamage % 1000) / 100);
-			m_bRender = true;
-			break;
-		}
-			
-		
-
-	case 4:
-		if (m_iCurrentDamage < 10)
-		{
-			m_bRender = false;
-			return OBJ_NOEVENT;
-		}
-		else
-		{
-			m_itexnum = ((m_iCurrentDamage % 100) / 10);
-			m_bRender = true;
-			break;
-		}
-			
-
-		
-	case 5:
-		if (m_iCurrentDamage <= 0)
-		{
-			m_bRender = false;
-			return OBJ_NOEVENT;
-		}
-		else
-			{
-			m_itexnum = m_iCurrentDamage % 10;
-			m_bRender = true;
-		    break;
-			}
-	    
-	
-	}*/
 	
 	
 
@@ -180,7 +101,7 @@ int CUI_font_Damage_number::Tick(_float fTimeDelta)
 		m_bsizedown = false;
 	/*m_fSize.x = 28.f;
 	m_fSize.y = 32.f;*/
-	m_fPosition.x = 1030.f;
+	m_fPosition.x = 1290.f - m_fOffsetX;
 	m_fPosition.y = 165.f;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
@@ -236,7 +157,7 @@ HRESULT CUI_font_Damage_number::Render()
 
 		m_pVIBufferCom->Render();
 	}
-	m_fPosition.x += 20.f;
+	m_fPosition.x = 1210.f - m_fOffsetX;
 	if (m_iCurrentDamage >= 10000)
 	{
 		m_itexnum = ((m_iCurrentDamage % 100000) / 10000);
@@ -255,7 +176,7 @@ HRESULT CUI_font_Damage_number::Render()
 
 		m_pVIBufferCom->Render();
 	}
-	m_fPosition.x += 20.f;
+	m_fPosition.x = 1230.f - m_fOffsetX;
 	if(m_iCurrentDamage >= 1000)
 	{
 		m_itexnum = ((m_iCurrentDamage % 10000) / 1000);
@@ -274,7 +195,7 @@ HRESULT CUI_font_Damage_number::Render()
 
 		m_pVIBufferCom->Render();
 	}
-	m_fPosition.x += 20.f;
+	m_fPosition.x = 1250.f - m_fOffsetX;
 	if (m_iCurrentDamage >= 100)
 	{
 		m_itexnum = ((m_iCurrentDamage % 1000) / 100);
@@ -293,7 +214,7 @@ HRESULT CUI_font_Damage_number::Render()
 
 		m_pVIBufferCom->Render();
 	}
-	m_fPosition.x += 20.f;
+	m_fPosition.x = 1270.f - m_fOffsetX;
 	if (m_iCurrentDamage >= 10)
 	{
 		m_itexnum = ((m_iCurrentDamage % 100) / 10);
@@ -313,7 +234,7 @@ HRESULT CUI_font_Damage_number::Render()
 		m_pVIBufferCom->Render();
 	}
 
-	m_fPosition.x += 20.f;
+	m_fPosition.x = 1290.f - m_fOffsetX;
 	if (m_iCurrentDamage > 0)
 	{
 		m_itexnum = (m_iCurrentDamage % 10);
@@ -415,6 +336,9 @@ CGameObject * CUI_font_Damage_number::Clone(void * pArg)
 		Safe_Release(pInstance);
 	}
 
+
+	CUI_Manager::Get_Instance()->Set_Damagenumber(pInstance);
+
 	return pInstance;
 }
 
@@ -423,4 +347,28 @@ void CUI_font_Damage_number::Free()
 
 	Safe_Release(m_pTextureCom1);
 	__super::Free();
+}
+
+void CUI_font_Damage_number::updatedamage(_uint damage)
+{
+
+	m_iCurrentDamage += damage;
+	m_fDietimer = 0.f;
+	if (!m_bfadeout)
+	{
+		m_fSize.x = 36.f;
+		m_fSize.y = 40.f;
+		m_bsizedown = true;
+	//	m_fDietimer = 0.f;
+	}
+	else
+	{
+	//	m_fDietimer = 0.f;
+		m_bfadein = true;
+		m_bfadeout = false;
+		m_fOffsetX = 0.f;
+	}
+
+
+
 }

@@ -100,10 +100,19 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 
 	if (iMonsterSize == 0)
 		CBattleManager::Get_Instance()->Set_BattleMode(false);
-
-
+	if (CGameInstance::Get_Instance()->Key_Down(DIK_CAPSLOCK))
+	{
+		CUI_RuneEffect::RUNEDESC desc;
+		desc.position.x = 80.f;
+		desc.position.y = 35.f;
+		desc.m_etype = 1;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
+			return;
+	}
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_CAPSLOCK))
 	{
+		
+
 		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
 		if (pLockOn != nullptr)
 		{
@@ -120,9 +129,27 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
-			 dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_Z);
+		{
+			CUI_RuneEffect::RUNEDESC desc;
+			desc.position.x = 100.f;
+			desc.position.y = 100.f;
+			desc.m_etype = 1;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
+				return;
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_Z);
+		}
+			
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_X))
+		{
+			CUI_RuneEffect::RUNEDESC desc;
+			desc.position.x = 100.f;
+			desc.position.y = 100.f;
+			desc.m_etype = 1;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
+				return;
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_X);
+		}
+			
 
 	}
 	else
@@ -565,6 +592,14 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Skillmsg"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MonsterHP"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
 
 	RELEASE_INSTANCE(CGameInstance);
 

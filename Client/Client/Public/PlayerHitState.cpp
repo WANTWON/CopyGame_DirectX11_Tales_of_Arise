@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PlayerHitState.h"
+#include "PlayerIdleState.h"
 
 using namespace Player;
 
@@ -15,11 +16,20 @@ CPlayerState * CHitState::HandleInput()
 
 CPlayerState * CHitState::Tick(_float fTimeDelta)
 {
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_pOwner->Check_Navigation();
+
 	return nullptr;
 }
 
 CPlayerState * CHitState::LateTick(_float fTimeDelta)
 {
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
+		return new CHitState(m_pOwner);
+
+	if (m_bIsAnimationFinished)
+		return new CIdleState(m_pOwner);
+	
 	return nullptr;
 }
 
@@ -32,6 +42,10 @@ void CHitState::Enter()
 	switch (m_pOwner->Get_PlayerID())
 	{
 	case CPlayer::ALPHEN:
+		if (m_bIsFly)
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_AIR_LARGE_B);
+		else
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DAMAGE_LARGE_B);
 		break;
 	case CPlayer::SION:
 		break;

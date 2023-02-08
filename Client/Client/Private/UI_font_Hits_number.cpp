@@ -60,6 +60,43 @@ HRESULT CUI_font_Hits_number::Initialize(void * pArg)
 
 int CUI_font_Hits_number::Tick(_float fTimeDelta)
 {
+
+	
+
+	m_fDietimer += fTimeDelta;
+	if (m_fDietimer > 5.f)
+		m_bfadeout = true;
+
+
+	if (m_bfadein)
+	{
+		m_fOffsetX += 10.f;
+		m_fAlpha += 0.05f;
+
+		if (m_fOffsetX >= 160.f)
+		{
+			m_fAlpha = 1.f;
+			m_fOffsetX = 160.f;
+			m_bfadein = false;
+		}
+
+	}
+
+
+
+
+	if (m_bfadeout)
+	{
+		m_fOffsetX -= 10.f;
+		m_fAlpha -= 0.05f;
+		if (m_fOffsetX <= 0.f)
+		{
+			m_fAlpha = 0.f;
+			m_fOffsetX = 160.f;
+			m_bfadeout = false;
+			m_iCurrenthit = 0;
+		}
+	}
 	//if (CGameInstance::Get_Instance()->Key_Pressing(DIK_3))
 	//{
 	//	m_iCurrenthit++; 
@@ -89,7 +126,8 @@ int CUI_font_Hits_number::Tick(_float fTimeDelta)
 		m_bsizedown = false;
 	/*m_fSize.x = 28.f;
 	m_fSize.y = 32.f;*/
-	m_fPosition.x = 1060.f;
+	m_fPosition.x = 1220.f -m_fOffsetX;
+	//m_fPosition.x = 1360.f ;
 	//m_fPosition.y = 120.f;
 	
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
@@ -154,7 +192,7 @@ HRESULT CUI_font_Hits_number::Render()
 	{
 		m_itexnum = ((m_iCurrenthit % 100) / 10);
 
-		m_fPosition.x = 1100.f;
+		m_fPosition.x = 1260.f - m_fOffsetX;
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
@@ -174,7 +212,7 @@ HRESULT CUI_font_Hits_number::Render()
 	{
 		m_itexnum = m_iCurrenthit % 10;
 
-		m_fPosition.x = 1140.f;
+		m_fPosition.x = 1300.f - m_fOffsetX;
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
@@ -279,4 +317,29 @@ void CUI_font_Hits_number::Free()
 {
 	Safe_Release(m_pTextureCom1);
 	__super::Free();
+}
+
+void CUI_font_Hits_number::sethit()
+{
+	m_iCurrenthit++;
+	m_fDietimer = 0.f;
+	if (!m_bfadeout)
+	{
+		
+		m_fSize.x = 75.f;
+		m_fSize.y = 80.f;
+		m_bsizedown = true;
+		
+	}
+	 
+	else
+	{
+//		m_fDietimer = 0.f;
+		m_bfadein = true;
+		m_bfadeout = false;
+		m_fOffsetX = 0.f;
+	}
+	//if()
+	
+
 }

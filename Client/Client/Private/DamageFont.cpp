@@ -28,6 +28,7 @@ HRESULT CDamageFont::Initialize(void * pArg)
 		memcpy(&m_damagedesc, pArg, sizeof(DMGDESC));
 
 	//m_fTargetPos = m_damagedesc.fposition;
+	m_fTargetPos = m_damagedesc.pPointer->Get_ProjPosition();
 	m_iCurrentDamage = m_damagedesc.iDamage;
 	
 	m_fRandomOffset = { _float(rand() % 80)  , _float(rand() % 55) };
@@ -186,14 +187,19 @@ int CDamageFont::Tick(_float fTimeDelta)
 	m_fSize.y = 30.f * m_fScaler;
 	if (m_bplusminus)
 	{
-		m_fPosition.x = m_damagedesc.pPointer->Get_ProjPosition().x + m_fRandomOffset.x;
-		m_fPosition.y = m_damagedesc.pPointer->Get_ProjPosition().y - m_fRandomOffset.y - m_fYFadeout - 40.f;;
+		m_fPosition.x = m_fTargetPos.x + m_fRandomOffset.x;
+		m_fPosition.y = m_fTargetPos.y - m_fRandomOffset.y - m_fYFadeout - 40.f;
+		//	m_fPosition.x = m_damagedesc.pPointer->Get_ProjPosition().x + m_fRandomOffset.x;
+		//	m_fPosition.y = m_damagedesc.pPointer->Get_ProjPosition().y - m_fRandomOffset.y - m_fYFadeout - 40.f;
 	}
 	else
 	{
-		m_fPosition.x = m_damagedesc.pPointer->Get_ProjPosition().x - m_fRandomOffset.x;
-		m_fPosition.y = m_damagedesc.pPointer->Get_ProjPosition().y - m_fRandomOffset.y - m_fYFadeout - 40.f;;
-	//	m_fPosition.x = m_damagedesc.pPointer->Get_ProjPosition().y - m_fRandomOffset.y - m_fYFadeout - 40.f;;
+		m_fPosition.x = m_fTargetPos.x - m_fRandomOffset.x;
+		m_fPosition.y = m_fTargetPos.y - m_fRandomOffset.y - m_fYFadeout - 40.f;
+
+		//		m_fPosition.x = m_damagedesc.pPointer->Get_ProjPosition().x - m_fRandomOffset.x;
+		//		m_fPosition.y = m_damagedesc.pPointer->Get_ProjPosition().y - m_fRandomOffset.y - m_fYFadeout - 40.f;
+		//	m_fPosition.x = m_damagedesc.pPointer->Get_ProjPosition().y - m_fRandomOffset.y - m_fYFadeout - 40.f;;
 	}
 	//m_fPosition.x = m_damagedesc.pPointer->Get_ProjPosition().x;
 	//m_fPosition.y = m_fPosition.y - m_fYFadeout - 40.f;

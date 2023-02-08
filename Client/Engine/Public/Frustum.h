@@ -23,13 +23,24 @@ public:
 	_bool isIn_WorldFrustum(_fvector vPosition, _float fRange ) const ;
 	_bool isIn_LocalFrustum(_fvector vPosition, _float fRange) const ;
 
+	/* 배틀존스페이스절두체 안에 있니?? */
+	_bool isIn_BattleWorldFrustum(_fvector vPosition, _float fRange) const;
+	_bool isIn_BattleLocalFrustum(_fvector vPosition, _float fRange) const;
+
 private:
 	_float3				m_vOriginalPoints[8];
 	_float3				m_vWorldPoints[8];
 
-	
 	_float4				m_WorldPlane[6];
 	_float4				m_LocalPlane[6];
+
+
+	_float3				m_vBattleZoneOriginalPoints[8];
+	_float3				m_vBattleZoneWorldPoints[8];
+
+	_float4				m_BattleZoneWorldPlane[6];
+	_float4				m_BattleZoneLocalPlane[6];
+
 
 private:
 	void Make_Plane(_In_ const _float3* pPoints, _Out_ _float4* pPlanes);

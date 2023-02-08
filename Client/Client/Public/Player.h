@@ -36,7 +36,6 @@ public:
 
 public: /* Getter &  Setter */
 	CModel*			Get_Model() { return m_pModelCom; }
-	CTransform*		Get_Transform() { return m_pTransformCom; }
 	CNavigation*	Get_Navigation(void) { return m_pNavigationCom; }
 	CPlayerState*	Get_State() { return m_pPlayerState; }
 	OBJINFO			Get_Info() { return m_tInfo; }
@@ -56,6 +55,7 @@ public: /* Getter &  Setter */
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
+	void Play_AISkill(PLAYERID ePlayer);
 
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;

@@ -31,15 +31,20 @@ public:
 	virtual void Free() override;
 
 public:
-	void sethit() { m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;m_bmoveleft = true;m_bfadein = true;m_fAlpha = 0; }
+	void sethit();
 	void moveleft() { m_fPosition.x -= 10.f; }
+	void moveright() { m_fPosition.x += 10.f; }
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
 	_bool m_bfadein = false;
 	_bool m_bfadeout = false;
 
-	_bool m_bmoveleft = true;
+	_bool m_bmoveleft = false;
+	_bool m_bmoveright = false;
+	_float m_fDietimer = 0.f;
+
+	_bool m_bisCombo = false;
 };
 
 END

@@ -57,7 +57,7 @@ HRESULT CBerserker::Initialize(void * pArg)
 	}
 
 	
-	m_tStats.m_fMaxHp = 200;
+	m_tStats.m_fMaxHp = 2500;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 	m_eMonsterID = BERSERKER;
@@ -188,7 +188,12 @@ int CBerserker::Tick(_float fTimeDelta)
 	AI_Behavior(fTimeDelta);
 	Tick_State(fTimeDelta);
 
-
+	
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	{
+		CBerserkerState* pState = new CBattle_Multiple_FireState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	
 

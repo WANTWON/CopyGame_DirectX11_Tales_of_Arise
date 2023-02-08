@@ -54,7 +54,7 @@ HRESULT CItem::Initialize(void* pArg)
 		case ITEMTYPE::PLANT:
 		case ITEMTYPE::MUSHROOM:
 		{
-			m_fRadius = 1.f;
+			m_fRadius = 2.f;
 			break;
 		}
 	}
@@ -73,6 +73,7 @@ int CItem::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 		
+	
 
 	__super::Tick(fTimeDelta);
 
@@ -218,7 +219,22 @@ void CItem::Late_Tick(_float fTimeDelta)
 
 			}
 			
+			m_fTimeDeltaAcc += fTimeDelta;
 
+			_bool m_bSoundStart = false;
+
+			if (m_bIsGain)
+			{
+				if (!m_bSoundStart)
+				{
+					if (m_fTimeDeltaAcc > 0.04f)
+						CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
+
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("ItemGain.wav"), SOUND_OBJECT, 0.4f);
+					m_bSoundStart = true;
+
+				}
+			}
 
 		}
 
@@ -242,8 +258,13 @@ void CItem::Late_Tick(_float fTimeDelta)
 		{
 			m_DissolveAlpha = 1.f;
 			m_bDead = true;
+			
 		}
+
+
+		
 	}
+
 }
 
 HRESULT CItem::Render()
@@ -340,4 +361,6 @@ CGameObject * CItem::Clone(void * pArg)
 void CItem::Free()
 {
 	__super::Free();
+
+	
 }

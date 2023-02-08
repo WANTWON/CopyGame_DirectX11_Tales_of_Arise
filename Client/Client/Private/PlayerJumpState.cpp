@@ -6,6 +6,7 @@
 #include "PlayerAttackNormalState.h"
 #include "PlayerSkillState.h"
 #include "PlayerRunState.h"
+#include "PlayerHitState.h"
 
 using namespace Player;
 
@@ -86,6 +87,16 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						CPlayerState* pEventInput = EventInput();
+
+						//_bool m_bSoundStart = false;
+
+						//if (!m_bSoundStart)
+						//{
+						//	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
+						//	m_bSoundStart = true;
+						//}
+
+
 						if (nullptr != pEventInput)
 							return pEventInput;
 					}
@@ -109,6 +120,9 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 {
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
+		return new CHitState(m_pOwner);
+
 	switch (m_eStateType)
 	{
 	case STATETYPE_START:
@@ -117,6 +131,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 		{
 			if (Check_JumpEnd())
 			{
+				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
 				m_eStateType = STATETYPE_END;
 				if (JUMP_IDLE == m_eJumpType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
@@ -220,7 +235,10 @@ void CJumpState::Enter()
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_START);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				if (LEVEL_BATTLE == m_pOwner->Get_Level())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_JUMP);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_START);
 				break;
 			}
 			break;
@@ -231,7 +249,7 @@ void CJumpState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LOOP);
 				break;
 			}
 			break;
@@ -245,7 +263,10 @@ void CJumpState::Enter()
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				if (LEVEL_BATTLE == m_pOwner->Get_Level())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LANDING);
 				break;
 			}
 		}
@@ -261,7 +282,7 @@ void CJumpState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_START);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_START);
 				break;
 			}
 			break;
@@ -272,7 +293,7 @@ void CJumpState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LOOP);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_LOOP);
 				break;
 			}
 			break;
@@ -283,12 +304,14 @@ void CJumpState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_END);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_END);
 				break;
 			}
 			break;
 		}
 	}
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_JumpStart.wav"), SOUND_FOOT, 0.4f);
 }
 
 void CJumpState::Exit()
@@ -298,6 +321,8 @@ void CJumpState::Exit()
 	m_pOwner->Off_IsFly();
 
 	m_bIsDrop = false;
+
+	CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
 }
 
 _bool CJumpState::Check_JumpEnd()
@@ -324,8 +349,13 @@ void CJumpState::Move(_float fTimeDelta)
 	_float4 fChangeHeight;
 	XMStoreFloat4(&fChangeHeight, (vCurPos - vPrePos));
 
+
+
+
 	if (0 > fChangeHeight.y)
+	{
 		m_bIsDrop = true;
+	}
 	else
 		m_bIsDrop = false;
 

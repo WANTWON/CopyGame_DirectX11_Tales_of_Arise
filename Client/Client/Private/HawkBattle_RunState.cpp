@@ -85,6 +85,7 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
 
 		m_fTimeDeltaAcc += fTimeDelta;
+
 		if (m_fTimeDeltaAcc > m_fRandTime)
 			m_iRand = rand() % 3;
 
@@ -93,17 +94,15 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 	{
 		switch (m_iRand)
 		{
-		case /*CHawkState::STATE_ID::STATE_DASH*/0:
+		case 0:
 			return new CBattle_PeckState(m_pOwner);
 
-		case /*CHawkState::STATE_ID::STATE_PECK*/1:
+		case 1:
 			return new CBattle_TornadeState(m_pOwner);
 					
 		case 2:
 			return new CBattle_DashState(m_pOwner);
 
-				//case CHawkState::STATE_ID::STATE_TORNADE:
-				//	return new CBattle_DashState(m_pOwner);
 
 		default:
 			break;

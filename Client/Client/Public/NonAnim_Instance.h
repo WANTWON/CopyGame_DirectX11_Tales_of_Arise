@@ -12,7 +12,7 @@ BEGIN(Client)
 class CNonAnim_Instance : public CBaseObj
 {
 public:
-	enum SHADER_INSTANCEID {DEFAULT, SHADOW};
+	enum SHADER_INSTANCEID {DEFAULT, SNOW, SHADOW};
 protected:
 	CNonAnim_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CNonAnim_Instance(const CNonAnim_Instance& rhs);
@@ -31,12 +31,14 @@ public:
 
 private:
 	_bool IsRenderShadow();
+	_float Check_CullingRadius();
 
 protected:
 	CModel*					m_pModelCom = nullptr;
 	CTexture*				m_pFogtexture = nullptr;
 	NONANIMDESC				m_ModelDesc;
 	_float					m_fAlpha = 1.f;
+	_float					m_fRadius = 3.f;
 
 
 protected:

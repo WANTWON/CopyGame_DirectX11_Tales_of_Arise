@@ -25,6 +25,18 @@ float g_UV_sizeX;   //가로 ;
 float g_UV_sizeY;   //세로;
 float2 g_MiddlePoint;
 
+float2 g_UVSpriteValue;
+float g_SpriteCurTime;
+float g_SpriteSpeed;
+bool g_SpriteLoop = true;
+
+float2 g_WinXY;
+
+
+//= (int)g_UVSpriteValue.x * (int)g_UVSpriteValue.y;
+//g_SpriteCurTime / g_SpriteSpeed;
+
+
 
 
 
@@ -370,6 +382,9 @@ PS_OUT PS_ALLBLUE(PS_IN In)
 	Out.vColor.r = 0.0589019607843137f;
 	Out.vColor.g = 0.942708f;
 	Out.vColor.b = 0.83441f;
+	if (Out.vColor.a < 0.2f)
+		discard;
+	Out.vColor.a = 1.f;
 
 	return Out;
 }
@@ -1146,6 +1161,248 @@ PS_OUT PS_TODOCOMPLETE(PS_IN In)
 
 
 
+PS_OUT PS_BATTLESTART(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	int TotalIndex = (int)g_UVSpriteValue.x * (int)g_UVSpriteValue.y;
+	int CurIndex = g_SpriteCurTime / g_SpriteSpeed;
+
+	if (g_SpriteLoop && CurIndex >= TotalIndex - 1)
+	{
+		CurIndex = 0;
+	}
+	else if (CurIndex >= TotalIndex - 1)
+	{
+		CurIndex = TotalIndex - 1;
+	}
+
+	//UV가로세로 개수
+	int SpriteU = (int)g_UVSpriteValue.x;
+	int SpriteV = (int)g_UVSpriteValue.y;
+
+	//밸류당 UV
+	float ValueX = 1.f / SpriteU;
+	float ValueY = 1.f / SpriteV;
+
+	//현재 인덱스의 XY
+	float CurX = CurIndex % SpriteU;
+	float CurY = CurIndex / SpriteU;
+
+	float2 NewUV = float2((In.vTexUV.x * ValueX) + (ValueX * CurX), (In.vTexUV.y * ValueY) + (ValueY * CurY));
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, NewUV);
+
+	Out.vColor.a = Out.vColor.rgb;
+
+	float origina = Out.vColor.r;
+
+	Out.vColor.rgb = float3(0.9843137254901961f, 0.3607843137254902f, 0.f);// * 1.3f;
+
+	Out.vColor.g += 0.3f * origina;
+
+
+
+
+
+	return Out;
+}
+
+
+PS_OUT PS_PROGRESSBAR(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+	float4 DiffuseTexture = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//float duration = 500.f;
+
+	float progress = g_fCurrentHp / g_fMaxHp;
+
+	float innerRadius = 0.12f;
+	float outerRadius = 0.18f;
+
+	float middleRadius = 0.5f * (innerRadius + outerRadius);
+	float halfWidth = 0.5f * (outerRadius - innerRadius);
+
+	float2 pos = In.vTexUV.xy - 0.5f * g_WinXY.xy;
+	//float2 pos = In.vTexUV.xy;
+	float radius = length(pos.xy);
+
+	float fr = halfWidth - abs(radius - middleRadius) + 1.f;
+	/*if(fr < 0.0)
+	discard;*/
+	fr = saturate(fr);
+
+	float angle = degrees(atan2(-pos.x, pos.y) + 0.f) + 180.f;
+	float fa = radians(angle - progress * 360.f) * radius + 1.f;
+
+	fa = saturate(fa);
+	if (fa != 1.f)
+		discard;
+	vector color = vector(0.f, 0.f, 0.f, 1);
+	vector col = lerp(color, DiffuseTexture, fa);
+	//   col.a *= fr;
+
+	//col = col * col2;//DiffuseTexture;
+
+	Out.vColor = col;
+
+	if (Out.vColor.a < 0.2f)
+		discard;
+
+	Out.vColor.a += 0.6f;
+
+	return Out;
+
+
+
+//	return Out;
+}
+
+
+
+PS_OUT PS_BOSSHPBAR(PS_IN In)
+{
+
+	PS_OUT      Out = (PS_OUT)0;
+
+	if (In.vTexUV.y > (1.4f - In.vTexUV.x) + (In.vTexUV.y))
+		discard;
+	if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+		discard;
+
+	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (origincolor.a > 0.4f)
+	{
+		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+		float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+
+		Out.vColor = lerpcolor;
+	}
+	else
+		Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+
+	float fGradientRadius = 0.5f;
+	float fGradientStrength = 0.2f;
+	float  fLerp = 0.f;
+
+	/* First Lerp */
+	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
+	{
+		float fStart = g_fBright - fGradientRadius;
+		float fEnd = g_fBright;
+		float fInterpFactor = (In.vTexUV.x - fStart) / (fEnd - fStart);
+		fLerp = lerp(0, fGradientStrength, fInterpFactor);
+	}
+	/* Second Lerp */
+	else if (In.vTexUV.x > g_fBright && In.vTexUV.x < g_fBright + fGradientRadius)
+	{
+		float fStart = g_fBright;
+		float fEnd = g_fBright + fGradientRadius;
+		float fInterpFactor = (In.vTexUV.x - fStart) / (fEnd - fStart);
+		fLerp = lerp(fGradientStrength, 0, fInterpFactor);
+	}
+
+	Out.vColor.rgb += fLerp;   //fLerpValue;
+
+	Out.vColor.r += 0.1f;
+	Out.vColor.b -= 0.2f;
+
+	if (Out.vColor.a<0.3f)
+		discard;
+
+	return Out;
+
+	
+}
+
+PS_OUT PS_BOSSHPBARFULL(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	if (In.vTexUV.y > (1.4f - In.vTexUV.x) + (In.vTexUV.y))
+		discard;
+
+	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (origincolor.a > 0.4f)
+	{
+		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+		float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+
+		Out.vColor = lerpcolor;
+	}
+	else
+		Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+
+	float fGradientRadius = 0.5f;
+	float fGradientStrength = 0.2f;
+	float  fLerp = 0.f;
+
+	/* First Lerp */
+	if (In.vTexUV.x > g_fBright - fGradientRadius && In.vTexUV.x < g_fBright)
+	{
+		float fStart = g_fBright - fGradientRadius;
+		float fEnd = g_fBright;
+		float fInterpFactor = (In.vTexUV.x - fStart) / (fEnd - fStart);
+		fLerp = lerp(0, fGradientStrength, fInterpFactor);
+	}
+	/* Second Lerp */
+	else if (In.vTexUV.x > g_fBright && In.vTexUV.x < g_fBright + fGradientRadius)
+	{
+		float fStart = g_fBright;
+		float fEnd = g_fBright + fGradientRadius;
+		float fInterpFactor = (In.vTexUV.x - fStart) / (fEnd - fStart);
+		fLerp = lerp(fGradientStrength, 0, fInterpFactor);
+	}
+
+	Out.vColor.rgb += fLerp;   //fLerpValue;
+	Out.vColor.r += 0.05f;
+	Out.vColor.b -= 0.2f;
+	Out.vColor.g -= 0.05f;
+
+	if (Out.vColor.a<0.3f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_BOSSBACKBLACK(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	if (Out.vColor.a < 0.5f)
+		discard;
+	Out.vColor.a = 0.5f;
+
+
+
+	return Out;
+}
+
+PS_OUT PS_BOSSBACKWHITE(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	if (Out.vColor.a < 0.5f)
+		discard;
+
+	Out.vColor.rgb = float3(0.9686274509803922f, 0.8705882352941176f, 0.6823529411764706f);
+	Out.vColor.a = 0.5f;
+
+
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default
@@ -1598,6 +1855,72 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_TODOCOMPLETE();                //40
+	}
+
+	pass BATTLESTART
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BATTLESTART();                //41
+	}
+	
+	pass PROGRESSBAR
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_PROGRESSBAR();                //42
+	}
+
+	pass BOSSHP
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BOSSHPBAR();                //43
+	}
+
+	pass BOSSHPFULL
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BOSSHPBARFULL();                //44
+	}
+
+	pass BOSSHPBBLACK
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BOSSBACKBLACK();                //44
+	}
+
+	pass BOSSHPBWHITE
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_BOSSBACKWHITE();                //44
 	}
 
 	

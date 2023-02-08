@@ -3,7 +3,7 @@
 
 BEGIN(Client)
 class CSion final : public CPlayer
-{	
+{
 public:
 	enum ANIM {
 		BTL_ADVENT,
@@ -106,7 +106,15 @@ public:
 		TREASURE_OPEN,
 		WALK,
 		WALK_TRANS_IDLE_000,
-		WALK_TRANS_IDLE_001
+		WALK_TRANS_IDLE_001,
+
+
+		BTL_STEP_AIR,
+		BTL_STEP_LAND,
+		BTL_STEP_LAND_BACK,
+		SYS_DOOR_OPEN_HAND_RIGHT,
+		SYS_RUN
+
 	};
 
 private:

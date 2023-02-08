@@ -102,7 +102,7 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext *
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
 
-	
+
 	/* Effect Tool */
 	Read_EffectsData();
 
@@ -445,7 +445,7 @@ void CImgui_Manager::Set_TrasureBox()
 
 		ImGui::Text("Selected Index : "); ImGui::SameLine();  ImGui::Text("%d", m_iTreasureIndex);
 		CTreasureBox* pTreasureBox = m_pModel_Manager->Get_TreasureBox(m_iTreasureIndex);
-		
+
 
 		if (pTreasureBox != nullptr)
 		{
@@ -475,7 +475,7 @@ void CImgui_Manager::Set_TrasureBox()
 		ImGui::DragFloat("##PositionY", &m_vPickedObjPos.y, 0.01f, -10, 10);
 
 		ImGui::NewLine();
-	
+
 
 		const char* TypeList[] = { "Item1", "Item2","Item3","Item4", "Item5", "Item6", "Item7" };
 		ImGui::Combo("ItemType", &m_ItemType, TypeList, IM_ARRAYSIZE(TypeList));
@@ -499,9 +499,9 @@ void CImgui_Manager::Set_TrasureBox()
 
 		if (pTreasureBox != nullptr)
 		{
-			CTreasureBox::BOXTAG BoxDesc; 
+			CTreasureBox::BOXTAG BoxDesc;
 			BoxDesc.vPosition = m_vPickedObjPos;
-			BoxDesc.vScale = m_InitDesc.vScale; 
+			BoxDesc.vScale = m_InitDesc.vScale;
 			BoxDesc.vRotation = m_InitDesc.vRotation;
 			BoxDesc.m_fAngle = m_InitDesc.m_fAngle;
 			m_vPickedObjPos = BoxDesc.vPosition;
@@ -561,7 +561,7 @@ void CImgui_Manager::Set_TrasureBox()
 		delete LayerTag;
 	}
 
-	
+
 }
 
 void CImgui_Manager::Save_TrasureBox()
@@ -593,7 +593,7 @@ void CImgui_Manager::Save_TrasureBox()
 		_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 		m_TempLayerTags.push_back(LayerTag);
 		m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	
+
 		iNum = m_pModel_Manager->Get_TreasureBoxSize();
 
 		hFile = CreateFile(OFN.lpstrFile, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);;
@@ -603,7 +603,7 @@ void CImgui_Manager::Save_TrasureBox()
 		/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
 		WriteFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-		for (_int i =0; i< iNum; ++i)
+		for (_int i = 0; i < iNum; ++i)
 		{
 			TreasureBoxDesc = m_pModel_Manager->Get_TreasureBox(i)->Get_BoxDesc();
 			WriteFile(hFile, &TreasureBoxDesc, sizeof(CTreasureBox::BOXTAG), &dwByte, nullptr);
@@ -657,7 +657,7 @@ void CImgui_Manager::Load_TrasureBox()
 		{
 			ReadFile(hFile, &(ModelDesc), sizeof(CTreasureBox::BOXTAG), &dwByte, nullptr);
 			m_pModel_Manager->Add_TreasureBox(LayerTag, &ModelDesc);
-			
+
 		}
 		CloseHandle(hFile);
 	}
@@ -854,7 +854,7 @@ void CImgui_Manager::Set_Navigation()
 			m_pNavigation_Manager->Erase_Cell();
 		if (ImGui::Button("All_Clear Cell"))
 			m_pNavigation_Manager->Clear_Cells();
-		
+
 
 
 		ImGui::CollapsingHeader("Setting Cell Type");
@@ -873,7 +873,7 @@ void CImgui_Manager::Set_Navigation()
 			m_pNavigation_Manager->Set_CellType((CCell::CELLTYPE)m_iCellType);
 
 
-		
+
 		if (ImGui::Button("Save Navigation"))
 		{
 			Save_Navigation();
@@ -918,7 +918,7 @@ void CImgui_Manager::Set_Navigation()
 
 			m_iCellIndex = m_pNavigation_Manager->Get_CurrentCellIndex();
 		}
-		
+
 	}
 
 	m_pNavigation_Manager->Render();
@@ -1012,12 +1012,12 @@ void CImgui_Manager::Load_Navigation()
 		if (0 == hFile)
 			return;
 
-		
+
 
 		/* 타일의 개수 받아오기 */
 		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-		for(int i =0; i< iNum; ++i)
+		for (int i = 0; i < iNum; ++i)
 		{
 			ReadFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
 			ReadFile(hFile, &eCelltype, sizeof(CCell::CELLTYPE), &dwByte, nullptr);
@@ -1090,7 +1090,7 @@ void CImgui_Manager::Set_Terrain_Map()
 
 	m_pTerrain_Manager->Set_TerrainDesc(&TerrainDesc);
 
-	if (m_PickingType == PICKING_TERRAIN_TRANSFORM )
+	if (m_PickingType == PICKING_TERRAIN_TRANSFORM)
 	{
 		if (CGameInstance::Get_Instance()->Mouse_Down(DIMK_LBUTTON))
 			CPickingMgr::Get_Instance()->Picking();
@@ -1121,7 +1121,7 @@ void CImgui_Manager::Set_Object_Map()
 	ImGui::Text("Position"); ImGui::SameLine();
 	ImGui::InputFloat3("##1", Position);
 
-	static _float OffsetPos [3] = { m_vfOffset.x , m_vfOffset.y, m_vfOffset.z };
+	static _float OffsetPos[3] = { m_vfOffset.x , m_vfOffset.y, m_vfOffset.z };
 	ImGui::Text("Offset"); ImGui::SameLine();
 	ImGui::InputFloat3("##1", Position);
 	m_vfOffset = _float3(OffsetPos[0], OffsetPos[1], OffsetPos[2]);
@@ -1265,13 +1265,13 @@ void CImgui_Manager::Load_Terrain()
 
 		/* 타일의 개수 받아오기 */
 		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-	
-		for (int i = 0; i< iNum; ++i)
+
+		for (int i = 0; i < iNum; ++i)
 		{
 			_tchar			szFullPath[MAX_PATH] = TEXT("Prototype_Component_VIBuffer_Terrain_Load");
 
-			if(pGameInstance->Check_Prototype(LEVEL_STATIC, szFullPath) == S_OK)
-				pGameInstance->Add_Prototype(LEVEL_STATIC, szFullPath, m_pTerrain_Manager->Create_Terrain(m_pDevice,m_pContext , hFile, dwByte));
+			if (pGameInstance->Check_Prototype(LEVEL_STATIC, szFullPath) == S_OK)
+				pGameInstance->Add_Prototype(LEVEL_STATIC, szFullPath, m_pTerrain_Manager->Create_Terrain(m_pDevice, m_pContext, hFile, dwByte));
 			pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), szFullPath);
 		}
 		CloseHandle(hFile);
@@ -1325,13 +1325,13 @@ void CImgui_Manager::Set_HeightMap()
 		if (TerrainTags.size() != 0)
 			WideCharToMultiByte(CP_ACP, 0, TerrainTags[selected], MAX_PATH, szLayertag, MAX_PATH, NULL, NULL);
 		ImGui::Text("Selected :"); ImGui::SameLine();  ImGui::Text(szLayertag);
-		
-			
-			if (ImGui::Button("Load_Bmp"))
-			{
-				m_pTerrain_Manager->Create_Terrain(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TerrainTags[selected]);
-			}
-			
+
+
+		if (ImGui::Button("Load_Bmp"))
+		{
+			m_pTerrain_Manager->Create_Terrain(LEVEL_GAMEPLAY, TEXT("Layer_Terrain"), TerrainTags[selected]);
+		}
+
 
 		ImGui::EndChild();
 		ImGui::EndGroup();
@@ -1350,8 +1350,8 @@ void CImgui_Manager::Set_Brush()
 	static char FilePath[MAX_PATH] = "";
 	WideCharToMultiByte(CP_ACP, 0, m_pBmpFilePath, MAX_PATH, FilePath, MAX_PATH, NULL, NULL);
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "BmpPath"); ImGui::SameLine();
-	if(ImGui::InputText("##BmpPath", FilePath, MAX_PATH))
-	MultiByteToWideChar(CP_ACP, 0, FilePath, MAX_PATH, m_pBmpFilePath, MAX_PATH); ImGui::SameLine();
+	if (ImGui::InputText("##BmpPath", FilePath, MAX_PATH))
+		MultiByteToWideChar(CP_ACP, 0, FilePath, MAX_PATH, m_pBmpFilePath, MAX_PATH); ImGui::SameLine();
 
 	if (ImGui::Button("Update"))
 		m_bUpdateTerrain = true;
@@ -1362,7 +1362,7 @@ void CImgui_Manager::Set_Brush()
 	ImGui::RadioButton("##GREEN", &m_eBrushType, 1);
 	ImGui::TextColored(ImVec4(0.5f, 0.7f, 1.0f, 1.0f), "blue"); ImGui::SameLine();
 	ImGui::RadioButton("##BLUE", &m_eBrushType, 2);
-		
+
 
 	if (m_PickingType == PICKING_TERRAIN_BRUSH)
 	{
@@ -1441,7 +1441,7 @@ void CImgui_Manager::ShowPickedObj()
 		m_vPickedObjPos = _float3(0.f, 0.f, 0.f);
 		m_vPickedObjScale = _float3(1.f, 1.f, 1.f);
 		m_fRotAngle = 0.f;
- 	}
+	}
 
 
 	ImGui::NewLine();
@@ -1525,8 +1525,26 @@ void CImgui_Manager::Show_PopupBox()
 		{
 			m_iCreatedSelected = 0;
 			pPickingMgr->Set_PickedObj(nullptr);
-			pPickedObj->Set_Dead(true);
 			m_pModel_Manager->Out_CreatedModel(pNonAnim);
+			pPickedObj->Set_Dead(true);
+			pPickingMgr->Out_PickingGroup(pNonAnim);
+
+			_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
+			m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+			list<CGameObject*>* plistClone = CGameInstance::Get_Instance()->Get_ObjectList(m_iCurrentLevel, LayerTag);
+			if (nullptr == plistClone || plistClone->size() == 0)
+			{
+				delete LayerTag;
+				return;
+			}
+
+			for (auto& iter : *plistClone)
+			{
+				if (iter == pNonAnim)
+				{
+					delete LayerTag;
+				}
+			}
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::SetItemDefaultFocus();
@@ -1671,7 +1689,7 @@ void CImgui_Manager::Show_ModelList()
 					m_TempLayerTags.push_back(LayerTag);
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("Revert")) 
+				if (ImGui::Button("Revert"))
 				{
 					_tchar* LayerTag = StringToTCHAR(m_stLayerTags[m_iSeletecLayerNum]);
 					m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
@@ -1793,10 +1811,10 @@ void CImgui_Manager::Show_CurrentModelList()
 		char szLayertag[MAX_PATH] = "";
 		if (vecCreatedModel.size() != 0)
 		{
-			if(vecCreatedModel[m_iCreatedSelected] != nullptr)
+			if (vecCreatedModel[m_iCreatedSelected] != nullptr)
 				strcpy_s(szLayertag, MAX_PATH, vecCreatedModel[m_iCreatedSelected]->Get_Modeltag());
 		}
-			
+
 		ImGui::Text(szLayertag);
 		ImGui::Separator();
 		if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
@@ -1847,7 +1865,7 @@ void CImgui_Manager::Set_Camera()
 	{
 		ImGui::BeginChild("left pane", ImVec2(150, 0), true);
 
-		if ((int)m_pCamera_Manager->Get_CameraSize()!= 0)
+		if ((int)m_pCamera_Manager->Get_CameraSize() != 0)
 		{
 			for (int i = 0; i < m_pCamera_Manager->Get_CameraSize();)
 			{
@@ -1882,15 +1900,15 @@ void CImgui_Manager::Set_Camera()
 		m_pCamera_Manager->Set_CilckedCamIndex(m_iCameraIndex);
 		CNonAnim* pCurrentCam = m_pCamera_Manager->Get_CurrentCam();
 
-	
-		static float fCamPositionX  = m_fCamPosition.x ;
-		static float fCamPositionY = m_fCamPosition.y ;
-		static float fCamPositionZ = m_fCamPosition.z ;
-		
+
+		static float fCamPositionX = m_fCamPosition.x;
+		static float fCamPositionY = m_fCamPosition.y;
+		static float fCamPositionZ = m_fCamPosition.z;
+
 
 		if (pCurrentCam != nullptr)
 		{
-			_vector vCamPos =  pCurrentCam->Get_Position();
+			_vector vCamPos = pCurrentCam->Get_Position();
 			fCamPositionX = XMVectorGetX(vCamPos);
 			fCamPositionY = XMVectorGetY(vCamPos);
 			fCamPositionZ = XMVectorGetZ(vCamPos);
@@ -1898,7 +1916,7 @@ void CImgui_Manager::Set_Camera()
 		}
 
 
-		ImGui::Text("CamPositionXYZ");  
+		ImGui::Text("CamPositionXYZ");
 		ImGui::DragFloat("CamPosX", &fCamPositionX, 0.01f);
 		ImGui::DragFloat("CamPosY", &fCamPositionY, 0.01f);
 		ImGui::DragFloat("CamPosZ", &fCamPositionZ, 0.01f);
@@ -1912,7 +1930,7 @@ void CImgui_Manager::Set_Camera()
 			m_pCamera_Manager->Out_CreatedCamera(pCurrentCam);
 			pCurrentCam->Set_Dead(true);
 		}
-			
+
 		if (ImGui::Button("All_Clear Camera"))
 			m_pCamera_Manager->Clear_Camreras();
 
@@ -1933,12 +1951,12 @@ void CImgui_Manager::Set_Camera()
 
 	if (m_bMakeCamera && CGameInstance::Get_Instance()->Key_Up(DIK_X))
 	{
-		
+
 		if (FAILED(m_pCamera_Manager->Add_Camera()))
 			return;
 		XMStoreFloat3(&m_fCamPosition, m_pCamera_Manager->Get_LastCam()->Get_Position());
 	}
-	
+
 }
 
 void CImgui_Manager::Save_Camera()
@@ -1981,7 +1999,7 @@ void CImgui_Manager::Save_Camera()
 
 		for (auto& iter : *plistClone)
 		{
-			
+
 			XMStoreFloat3(&vPosition, dynamic_cast<CBaseObj*>(iter)->Get_Position());
 			WriteFile(hFile, &vPosition, sizeof(_float3), &dwByte, nullptr);
 
@@ -2027,7 +2045,7 @@ void CImgui_Manager::Load_Camera()
 		/* 타일의 개수 받아오기 */
 		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-		for (int i = 0; i< iNum; ++i)
+		for (int i = 0; i < iNum; ++i)
 		{
 			ReadFile(hFile, &vPosition, sizeof(_float3), &dwByte, nullptr);
 			if (0 == dwByte)
@@ -2078,8 +2096,8 @@ void CImgui_Manager::Set_Light()
 		ImGui::CollapsingHeader("Show Current Light");
 
 		ImGui::Text("Selected Index : "); ImGui::SameLine();  ImGui::Text("%d", m_iLightIndex);
-		
-		
+
+
 		static float fPositionX = m_LightDesc.vPosition.x;
 		static float fPositionY = m_LightDesc.vPosition.y;
 		static float fPositionZ = m_LightDesc.vPosition.z;
@@ -2104,8 +2122,8 @@ void CImgui_Manager::Set_Light()
 		ImGui::DragFloat("LightPosY", &LightDesc.vPosition.y, 0.01f);
 		ImGui::DragFloat("LightPosZ", &LightDesc.vPosition.z, 0.01f);
 		m_LightDesc.vPosition = LightDesc.vPosition;
-		
-		
+
+
 		static float vDiffuse[4]{ LightDesc.vDiffuse.x,  LightDesc.vDiffuse.y, LightDesc.vDiffuse.z , LightDesc.vDiffuse.w };
 		vDiffuse[0] = LightDesc.vDiffuse.x;
 		vDiffuse[1] = LightDesc.vDiffuse.y;
@@ -2114,9 +2132,9 @@ void CImgui_Manager::Set_Light()
 		ImGui::DragFloat4("Diffuse", vDiffuse, 0.01f, 0.f, 1.f);
 		LightDesc.vDiffuse = _float4(vDiffuse[0], vDiffuse[1], vDiffuse[2], vDiffuse[3]);
 		m_LightDesc.vDiffuse = _float4(vDiffuse[0], vDiffuse[1], vDiffuse[2], vDiffuse[3]);
-		
 
-		
+
+
 		static float vAmbient[4]{ LightDesc.vAmbient.x,  LightDesc.vAmbient.y, LightDesc.vAmbient.z , LightDesc.vAmbient.w };
 		vAmbient[0] = LightDesc.vAmbient.x;
 		vAmbient[1] = LightDesc.vAmbient.y;
@@ -2126,19 +2144,19 @@ void CImgui_Manager::Set_Light()
 		LightDesc.vAmbient = _float4(vAmbient[0], vAmbient[1], vAmbient[2], vAmbient[3]);
 		m_LightDesc.vAmbient = _float4(vAmbient[0], vAmbient[1], vAmbient[2], vAmbient[3]);
 
-		
+
 		static float vSpecular[4]{ LightDesc.vSpecular.x,  LightDesc.vSpecular.y, LightDesc.vSpecular.z , LightDesc.vSpecular.w };
-		vSpecular[0] =LightDesc.vSpecular.x;
-		vSpecular[1] =LightDesc.vSpecular.y;
-		vSpecular[2] =LightDesc.vSpecular.z;
-		vSpecular[3] =LightDesc.vSpecular.w;
+		vSpecular[0] = LightDesc.vSpecular.x;
+		vSpecular[1] = LightDesc.vSpecular.y;
+		vSpecular[2] = LightDesc.vSpecular.z;
+		vSpecular[3] = LightDesc.vSpecular.w;
 		ImGui::DragFloat4("Specular", vSpecular, 0.01f, 0.f, 1.f);
 		LightDesc.vSpecular = _float4(vSpecular[0], vSpecular[1], vSpecular[2], vSpecular[3]);
 		m_LightDesc.vSpecular = _float4(vSpecular[0], vSpecular[1], vSpecular[2], vSpecular[3]);
 
 		if (m_LightDesc.eType == LIGHTDESC::TYPE_DIRECTIONAL)
 		{
-			static float vDirection[4]{ LightDesc.vDirection.x,  LightDesc.vDirection.y, LightDesc.vDirection.z , LightDesc.vDirection.w};
+			static float vDirection[4]{ LightDesc.vDirection.x,  LightDesc.vDirection.y, LightDesc.vDirection.z , LightDesc.vDirection.w };
 			vDirection[0] = LightDesc.vDirection.x;
 			vDirection[1] = LightDesc.vDirection.y;
 			vDirection[2] = LightDesc.vDirection.z;
@@ -2160,7 +2178,7 @@ void CImgui_Manager::Set_Light()
 			CGameInstance::Get_Instance()->Set_LightDesc(m_iLightIndex, &m_LightDesc);
 		}
 
-		
+
 		if (ImGui::Button("Add Light"))
 		{
 			if (FAILED(CGameInstance::Get_Instance()->Add_Light(m_pDevice, m_pContext, m_LightDesc)))
@@ -2273,7 +2291,7 @@ void CImgui_Manager::Load_Light()
 		/* 타일의 개수 받아오기 */
 		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-		for (int i = 0; i< iNum; ++i)
+		for (int i = 0; i < iNum; ++i)
 		{
 			ReadFile(hFile, &LightDesc, sizeof(LIGHTDESC), &dwByte, nullptr);
 			if (0 == dwByte)
@@ -2301,7 +2319,7 @@ void CImgui_Manager::Draw_EffectModals()
 
 		_float fButtonSize = 100.f;
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2) - (fButtonSize / 2));
-		
+
 		if (ImGui::Button("Got it!", ImVec2(fButtonSize, 0)))
 			ImGui::CloseCurrentPopup();
 
@@ -2506,14 +2524,14 @@ void CImgui_Manager::Draw_EffectModals()
 
 				ImGui::EndTabItem();
 			}
-			
+
 			ImGui::EndTabBar();
 		}
 
 		ImGui::NewLine();
 		if (ImGui::Button("Done"))
 			ImGui::CloseCurrentPopup();
-	
+
 		ImGui::SetItemDefaultFocus();
 		ImGui::EndPopup();
 	}
@@ -3296,14 +3314,14 @@ void CImgui_Manager::Set_Effect()
 		ImGui::Text("Current Effect:");
 		ImGui::SameLine();
 		ImGui::Text(m_sCurrentEffect.c_str());
-		
+
 		if (ImGui::Button("Save Effect"))
 			Save_Effect();
 
 		ImGui::NewLine();
 	}
 #pragma endregion Create
-	
+
 #pragma region Add
 	if (ImGui::CollapsingHeader("Add"))
 	{
@@ -3431,16 +3449,16 @@ void CImgui_Manager::Set_Effect()
 						/* Backup the Effect Description in the Effect Class. */
 						switch (m_pSelectedEffect->Get_EffectType())
 						{
-							case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
-							{
-								((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDescTool(m_tTextureEffectDesc);
-								break;
-							}
-							case CEffect::EFFECT_TYPE::TYPE_MESH:
-							{
-								((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDescTool(m_tMeshEffectDesc);
-								break;
-							}
+						case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+						{
+							((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDescTool(m_tTextureEffectDesc);
+							break;
+						}
+						case CEffect::EFFECT_TYPE::TYPE_MESH:
+						{
+							((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDescTool(m_tMeshEffectDesc);
+							break;
+						}
 						}
 					}
 
@@ -3451,33 +3469,33 @@ void CImgui_Manager::Set_Effect()
 					/* Fetch the Backed up Effect Description. */
 					switch (m_pSelectedEffect->Get_EffectType())
 					{
-						case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
-						{
-							m_tTextureEffectDesc = ((CEffectTexture*)m_pSelectedEffect)->Get_TextureEffectDescTool();
-							wcscpy_s(m_tTextureEffectDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
-							break;
-						}	
-						case CEffect::EFFECT_TYPE::TYPE_MESH:
-						{
-							m_tMeshEffectDesc = ((CEffectMesh*)m_pSelectedEffect)->Get_MeshEffectDescTool();
+					case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+					{
+						m_tTextureEffectDesc = ((CEffectTexture*)m_pSelectedEffect)->Get_TextureEffectDescTool();
+						wcscpy_s(m_tTextureEffectDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
+						break;
+					}
+					case CEffect::EFFECT_TYPE::TYPE_MESH:
+					{
+						m_tMeshEffectDesc = ((CEffectMesh*)m_pSelectedEffect)->Get_MeshEffectDescTool();
 
-							wstring wsMaskTexture = wstring(m_tMeshEffectDesc.wcMaskTexture);
-							string sMaskTexture = string(wsMaskTexture.begin(), wsMaskTexture.end());
-							m_sSelectedMaskTexture = sMaskTexture;
+						wstring wsMaskTexture = wstring(m_tMeshEffectDesc.wcMaskTexture);
+						string sMaskTexture = string(wsMaskTexture.begin(), wsMaskTexture.end());
+						m_sSelectedMaskTexture = sMaskTexture;
 
-							wstring wsNoiseTexture = wstring(m_tMeshEffectDesc.wcNoiseTexture);
-							string sNoiseTexture = string(wsNoiseTexture.begin(), wsNoiseTexture.end());
-							m_sSelectedNoiseTexture = sNoiseTexture;
+						wstring wsNoiseTexture = wstring(m_tMeshEffectDesc.wcNoiseTexture);
+						string sNoiseTexture = string(wsNoiseTexture.begin(), wsNoiseTexture.end());
+						m_sSelectedNoiseTexture = sNoiseTexture;
 
-							wcscpy_s(m_tMeshEffectDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
-							break;
-						}
-						case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
-						{
-							m_tParticleDesc = ((CParticleSystem*)m_pSelectedEffect)->Get_ParticleDesc();
-							m_sCurrentSpawnType = m_SpawnTypes[m_tParticleDesc.m_eSpawnType];
-							break;
-						}
+						wcscpy_s(m_tMeshEffectDesc.wcPrototypeId, MAX_PATH, m_pSelectedEffect->Get_PrototypeId());
+						break;
+					}
+					case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
+					{
+						m_tParticleDesc = ((CParticleSystem*)m_pSelectedEffect)->Get_ParticleDesc();
+						m_sCurrentSpawnType = m_SpawnTypes[m_tParticleDesc.m_eSpawnType];
+						break;
+					}
 					}
 
 					// Set Transform of the Selected Effect
@@ -3529,77 +3547,77 @@ void CImgui_Manager::Set_Effect()
 					if (pEffect->m_bIsSelected)
 						pEffect->Set_Play(m_bIsPlaying);
 				}
-				
+
 				if (m_bIsPlaying)
 				{
 					switch (m_pSelectedEffect->Get_EffectType())
 					{
-						case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
-						{
-							((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDesc(m_tTextureEffectDesc);
-							break;
-						}
-						case CEffect::EFFECT_TYPE::TYPE_MESH:
-						{
-							((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDesc(m_tMeshEffectDesc);
-							break;
-						}
-						case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
-						{
-							((CParticleSystem*)m_pSelectedEffect)->ResetParticleSystem();
-							break;
-						}
+					case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+					{
+						((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDesc(m_tTextureEffectDesc);
+						break;
+					}
+					case CEffect::EFFECT_TYPE::TYPE_MESH:
+					{
+						((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDesc(m_tMeshEffectDesc);
+						break;
+					}
+					case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
+					{
+						((CParticleSystem*)m_pSelectedEffect)->ResetParticleSystem();
+						break;
+					}
 					}
 				}
 			}
 		}
-		
+
 		if (m_pSelectedEffect)
 		{
 			switch (m_pSelectedEffect->Get_EffectType())
 			{
-				case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+			case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+			{
+				Show_TextureCustomization();
+
+				ImGui::NewLine();
+				ImGui::Separator();
+
+				if (ImGui::Button("Curve Editor", ImVec2(100, 0)))
 				{
-					Show_TextureCustomization();
-
-					ImGui::NewLine();
-					ImGui::Separator();
-					
-					if (ImGui::Button("Curve Editor", ImVec2(100, 0)))
-					{
-						if (m_pSelectedEffect)
-							ImGui::OpenPopup("Texture Curve Editor");
-					}
-					break;
+					if (m_pSelectedEffect)
+						ImGui::OpenPopup("Texture Curve Editor");
 				}
-				case CEffect::EFFECT_TYPE::TYPE_MESH:
+				break;
+			}
+			case CEffect::EFFECT_TYPE::TYPE_MESH:
+			{
+				Show_MeshCustomization();
+
+				ImGui::NewLine();
+				ImGui::Separator();
+
+				if (ImGui::Button("Curve Editor", ImVec2(100, 0)))
 				{
-					Show_MeshCustomization();
-
-					ImGui::NewLine();
-					ImGui::Separator();
-
-					if (ImGui::Button("Curve Editor", ImVec2(100, 0)))
-					{
-						if (m_pSelectedEffect)
-							ImGui::OpenPopup("Mesh Curve Editor");
-					}
-					break;
+					if (m_pSelectedEffect)
+						ImGui::OpenPopup("Mesh Curve Editor");
 				}
-				case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
+				break;
+			}
+			case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
+			{
+				Show_ParticleCustomization();
+
+				ImGui::NewLine();
+				ImGui::Separator();
+
+				if (ImGui::Button("Curve Editor", ImVec2(100, 0)))
 				{
-					Show_ParticleCustomization();
-
-					ImGui::NewLine();
-					ImGui::Separator();
-
-					if (ImGui::Button("Curve Editor", ImVec2(100, 0)))
-					{
-						if (m_pSelectedEffect)
-							ImGui::OpenPopup("Particle Curve Editor");
-					}
-					break;
+					if (m_pSelectedEffect)
+						ImGui::OpenPopup("Particle Curve Editor");
 				}
+				break;
+			}
 			}
 		}
 	}
@@ -3614,16 +3632,16 @@ _bool CImgui_Manager::Save_Effect()
 	Since the backup gets done when selecting effects, it's possible that the current one is not back upped. */
 	switch (m_pSelectedEffect->Get_EffectType())
 	{
-		case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
-		{
-			((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDescTool(m_tTextureEffectDesc);
-			break;
-		}
-		case CEffect::EFFECT_TYPE::TYPE_MESH:
-		{
-			((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDescTool(m_tMeshEffectDesc);
-			break;
-		}
+	case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+	{
+		((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDescTool(m_tTextureEffectDesc);
+		break;
+	}
+	case CEffect::EFFECT_TYPE::TYPE_MESH:
+	{
+		((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDescTool(m_tMeshEffectDesc);
+		break;
+	}
 	}
 
 	wstring wsCurrentEffect = wstring(m_sCurrentEffect.begin(), m_sCurrentEffect.end());
@@ -3655,24 +3673,24 @@ _bool CImgui_Manager::Save_Effect()
 		/* Write Effect Type-specific Description. */
 		switch (Effects[i]->Get_EffectType())
 		{
-			case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
-			{
-				CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc = ((CEffectTexture*)Effects[i])->Get_TextureEffectDescTool();
-				WriteFile(hFileEffect, &tTextureEffectDesc, sizeof(CEffectTexture::TEXTUREEFFECTDESC), &dwByte, nullptr);
-				break;
-			}
-			case CEffect::EFFECT_TYPE::TYPE_MESH:
-			{
-				CEffectMesh::MESHEFFECTDESC tMeshEffectDesc = ((CEffectMesh*)Effects[i])->Get_MeshEffectDescTool();
-				WriteFile(hFileEffect, &tMeshEffectDesc, sizeof(CEffectMesh::MESHEFFECTDESC), &dwByte, nullptr);
-				break;
-			}
-			case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
-			{
-				CParticleSystem::PARTICLEDESC tParticleDesc = static_cast<CParticleSystem*>(Effects[i])->Get_ParticleDesc();
-				WriteFile(hFileEffect, &tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
-				break;
-			}
+		case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+		{
+			CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc = ((CEffectTexture*)Effects[i])->Get_TextureEffectDescTool();
+			WriteFile(hFileEffect, &tTextureEffectDesc, sizeof(CEffectTexture::TEXTUREEFFECTDESC), &dwByte, nullptr);
+			break;
+		}
+		case CEffect::EFFECT_TYPE::TYPE_MESH:
+		{
+			CEffectMesh::MESHEFFECTDESC tMeshEffectDesc = ((CEffectMesh*)Effects[i])->Get_MeshEffectDescTool();
+			WriteFile(hFileEffect, &tMeshEffectDesc, sizeof(CEffectMesh::MESHEFFECTDESC), &dwByte, nullptr);
+			break;
+		}
+		case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
+		{
+			CParticleSystem::PARTICLEDESC tParticleDesc = static_cast<CParticleSystem*>(Effects[i])->Get_ParticleDesc();
+			WriteFile(hFileEffect, &tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
+			break;
+		}
 		}
 
 		/* COLOR */
@@ -3779,60 +3797,60 @@ _bool CImgui_Manager::Load_Effect()
 			/* Read Effect Type-specific Description. */
 			switch (eType)
 			{
-				case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
-				{
-					ReadFile(hFileEffect, &tTextureEffectDesc, sizeof(CEffectTexture::TEXTUREEFFECTDESC), &dwByte, nullptr);
+			case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+			{
+				ReadFile(hFileEffect, &tTextureEffectDesc, sizeof(CEffectTexture::TEXTUREEFFECTDESC), &dwByte, nullptr);
 
-					if (!dwByte)
-						break;
-
-					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectTexture"), LEVEL_GAMEPLAY, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tTextureEffectDesc);
-
-					m_tTextureEffectDesc = tTextureEffectDesc;
-					m_pEffectManager->Add_Effect(pEffect);
-					((CEffectTexture*)pEffect)->Set_TextureEffectDescTool(tTextureEffectDesc);
-					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_TEXTURE);
+				if (!dwByte)
 					break;
-				}
-				case CEffect::EFFECT_TYPE::TYPE_MESH:
-				{
-					ReadFile(hFileEffect, &tMeshEffectDesc, sizeof(CEffectMesh::MESHEFFECTDESC), &dwByte, nullptr);
 
-					if (!dwByte)
-						break;
+				pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectTexture"), LEVEL_GAMEPLAY, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tTextureEffectDesc);
 
-					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectMesh"), LEVEL_GAMEPLAY, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tMeshEffectDesc);
+				m_tTextureEffectDesc = tTextureEffectDesc;
+				m_pEffectManager->Add_Effect(pEffect);
+				((CEffectTexture*)pEffect)->Set_TextureEffectDescTool(tTextureEffectDesc);
+				pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_TEXTURE);
+				break;
+			}
+			case CEffect::EFFECT_TYPE::TYPE_MESH:
+			{
+				ReadFile(hFileEffect, &tMeshEffectDesc, sizeof(CEffectMesh::MESHEFFECTDESC), &dwByte, nullptr);
 
-					m_tMeshEffectDesc = tMeshEffectDesc;
-					m_pEffectManager->Add_Effect(pEffect);
-					((CEffectMesh*)pEffect)->Set_MeshEffectDescTool(tMeshEffectDesc);
-					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_MESH);
-
-					wstring wsMaskTexture = wstring(m_tMeshEffectDesc.wcMaskTexture);
-					string sMaskTexture = string(wsMaskTexture.begin(), wsMaskTexture.end());
-					m_sSelectedMaskTexture = sMaskTexture;
-
-					wstring wsNoiseTexture = wstring(m_tMeshEffectDesc.wcNoiseTexture);
-					string sNoiseTexture = string(wsNoiseTexture.begin(), wsNoiseTexture.end());
-					m_sSelectedNoiseTexture = sNoiseTexture;
+				if (!dwByte)
 					break;
-				}
-				case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
-				{
-					ReadFile(hFileEffect, &tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
 
-					if (!dwByte)
-						break;
+				pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectMesh"), LEVEL_GAMEPLAY, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tMeshEffectDesc);
 
-					pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tParticleDesc);
+				m_tMeshEffectDesc = tMeshEffectDesc;
+				m_pEffectManager->Add_Effect(pEffect);
+				((CEffectMesh*)pEffect)->Set_MeshEffectDescTool(tMeshEffectDesc);
+				pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_MESH);
 
-					m_tParticleDesc = tParticleDesc;
-					m_pEffectManager->Add_Effect(pEffect);
-					pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_PARTICLE);
+				wstring wsMaskTexture = wstring(m_tMeshEffectDesc.wcMaskTexture);
+				string sMaskTexture = string(wsMaskTexture.begin(), wsMaskTexture.end());
+				m_sSelectedMaskTexture = sMaskTexture;
 
-					m_sCurrentSpawnType = m_SpawnTypes[m_tParticleDesc.m_eSpawnType];
+				wstring wsNoiseTexture = wstring(m_tMeshEffectDesc.wcNoiseTexture);
+				string sNoiseTexture = string(wsNoiseTexture.begin(), wsNoiseTexture.end());
+				m_sSelectedNoiseTexture = sNoiseTexture;
+				break;
+			}
+			case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
+			{
+				ReadFile(hFileEffect, &tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
+
+				if (!dwByte)
 					break;
-				}
+
+				pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_ParticleSystem"), LEVEL_GAMEPLAY, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tParticleDesc);
+
+				m_tParticleDesc = tParticleDesc;
+				m_pEffectManager->Add_Effect(pEffect);
+				pEffect->Set_EffectType(CEffect::EFFECT_TYPE::TYPE_PARTICLE);
+
+				m_sCurrentSpawnType = m_SpawnTypes[m_tParticleDesc.m_eSpawnType];
+				break;
+			}
 			}
 
 			/* COLOR */
@@ -4450,7 +4468,7 @@ void CImgui_Manager::Show_MeshCustomization()
 			m_tMeshEffectDesc.fTurnVelocityInitial = m_tMeshEffectDesc.fTurnVelocity;
 			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 		}
-			
+
 	}
 	ImGui::NewLine();
 
@@ -4560,7 +4578,7 @@ void CImgui_Manager::Show_MeshCustomization()
 	{
 		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
 		if (pEffectMesh)
-			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);	
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
 	}
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(120.f);
@@ -4861,7 +4879,7 @@ void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLa
 	m_InitDesc.vPosition.y += m_vfOffset.y;
 	m_InitDesc.vPosition.z += m_vfOffset.z;
 	m_pModel_Manager->Set_InitModelDesc(m_InitDesc);
-	
+
 	_matrix			PivotMatrix = XMMatrixIdentity();
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 	m_pModel_Manager->Create_Model(iLevel, pPrototypeTag, pLayerTag, m_pDevice, m_pContext, CModel::TYPE_NONANIM, PivotMatrix, bCreatePrototype);

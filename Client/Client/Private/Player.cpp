@@ -8,6 +8,7 @@
 #include "AIState.h"
 #include "PlayerCollectState.h"
 #include "AICheckState.h"
+#include "PlayerDeadState.h"
 
 #include "CameraManager.h"
 #include "AI_HitState.h"
@@ -71,32 +72,19 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
-	if (eMode == Client::AI_MODE && m_ePlayerID == SION)
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
+		Play_AISkill(ALPHEN);
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2))
+		Play_AISkill(SION);
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_8))
 	{
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_2))
-		{
-			if (m_tInfo.fCurrentBoostGuage >= 100.f)
-			{
-				CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this , CBattleManager::Get_Instance()->Get_LackonMonster());
-				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-
-			}
-		}
+		m_tInfo.fCurrentHp += 100.f;
+		CPlayerState* pState = new CIdleState(this);
+		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 	}
-
-	if (eMode == Client::AI_MODE && m_ePlayerID == ALPHEN)
-	{
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
-		{
-			if (m_tInfo.fCurrentBoostGuage >= 100.f)
-			{
-				CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-
-			}
-		}
-	}
-
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
+		Take_Damage(m_tInfo.fCurrentHp, nullptr);
 
 	switch (eMode)
 	{
@@ -115,6 +103,8 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	if (nullptr != m_pOBBCom)
 		m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if (nullptr != m_pSPHERECom)
+		m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	for (auto& pParts : m_Parts)
 	{
@@ -147,8 +137,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
-	
-
 	switch (eMode)
 	{
 	case Client::ACTIVE:
@@ -161,8 +149,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		return;
 	}
 
-
-
 	for (auto& pParts : m_Parts)
 	{
 		if (pParts != nullptr)
@@ -170,16 +156,39 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 
 	CBaseObj* pMonster = nullptr;
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pMonster))
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pMonster))
 	{
-		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		_vector vMonsterPos = pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+		
+		_vector vDirection = vPlayerPos - vMonsterPos;
 
-		if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
-			vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
-		else
-			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
+		_float fRadiusSum = m_pSPHERECom->Get_SphereRadius() + pMonster->Get_SPHERECollider()->Get_SphereRadius();
+		
+		_float fCollDistance = fRadiusSum - XMVectorGetX(XMVector4Length(vDirection));
 
-		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
+		if (fCollDistance > 0)
+		{
+			_vector vCross = XMVector3Cross(XMVector4Normalize(pMonster->Get_TransformState(CTransform::STATE_LOOK)), XMVector4Normalize(vDirection));
+			_float4 fCross;
+			XMStoreFloat4(&fCross, vCross);
+
+			_vector vNewDir;
+			if (-0.5f > fCross.y)
+				vNewDir = XMVector4Transform(vDirection, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(3.f)));
+			else if (0.5f < fCross.y)
+				vNewDir = XMVector4Transform(vDirection, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-3.f)));
+			else
+				vNewDir = vDirection;
+
+			_vector vNewPos = vMonsterPos + (XMVector4Normalize(vNewDir) * fRadiusSum);
+		
+			_vector vLerpPos = XMVectorLerp(vPlayerPos, vNewPos, 0.5f);
+
+			if (true == m_pNavigationCom->isMove(vLerpPos))
+				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
+			
+		}
 	}
 }
 
@@ -257,15 +266,18 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	if (m_tInfo.fCurrentHp <= 0)
 	{
+		CPlayerState* pState = nullptr;
+		CAIState* pAIState = nullptr;
+
 		m_tInfo.fCurrentHp = 0;
 		switch (eMode)
 		{
 		case Client::ACTIVE:
-			/*CPlayerState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
-			m_pPlayerState = m_pState->ChangeState(m_pState, pState);*/
+			pState = new CPlayerDeadState(this, CPlayerState::STATE_DEAD);
+			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 			break;
 		case Client::AI_MODE:
-			CAIState* pAIState = new AIPlayer::CDeadState(this);
+			pAIState = new AIPlayer::CDeadState(this);
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 			break;
 		}
@@ -294,6 +306,35 @@ void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)
 {
 	CPlayerState* pPlayerState = new Player::CCollectState(this, pObject);
 	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+
+}
+
+void CPlayer::Play_AISkill(PLAYERID ePlayer)
+{
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	if (m_tInfo.fCurrentBoostGuage < 100.f || eMode != Client::AI_MODE)
+		return;
+	switch (ePlayer)
+	{
+	case Client::CPlayer::ALPHEN:
+	{
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+	case Client::CPlayer::SION:
+	{
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+	case Client::CPlayer::RINWELL:
+		break;
+	case Client::CPlayer::LAW:
+		break;
+	default:
+		break;
+	}
 
 }
 
