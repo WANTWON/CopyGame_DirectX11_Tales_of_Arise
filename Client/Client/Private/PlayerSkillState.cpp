@@ -33,7 +33,6 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 
 		m_pOwner->Check_Navigation();
 	}
-		
 	else
 	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
@@ -106,9 +105,6 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 								mWorldMatrix.r[3] = vPosition;
 								vector<CEffect*> pEffects = CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
 
-								for (auto& pMesh : pEffects)
-									((CEffectMesh*)pMesh)->Get_Transform()->LookAt(m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-
 								m_bHienzinFirstEffect = true;
 							}
 						}
@@ -128,9 +124,6 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 
 								mWorldMatrix.r[3] = vPosition;
 								vector<CEffect*> pEffects = CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
-
-								for (auto& pMesh : pEffects)
-									((CEffectMesh*)pMesh)->Get_Transform()->LookAt(m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
 
 								m_bHienzinSecondEffect = true;
 							}
@@ -188,12 +181,33 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 					}
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
-						if (!m_bHousyutigakuzinEffect)
+						if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
 						{
-							_matrix mWorldMatrix;
-							//CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin.dat"), mWorldMatrix);
+							if (!m_bHousyutigakuzinFirstEffect)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-							m_bHousyutigakuzinEffect = true;
+								_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+								_vector vPosition = mWorldMatrix.r[3];
+								vPosition += XMVectorSet(0.f, 4.f, 0.f, 0.f);
+								vPosition += vLook * 2;
+
+								mWorldMatrix.r[3] = vPosition;
+								m_HousyutigakuzinStart = CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_Start.dat"), mWorldMatrix);
+
+								m_bHousyutigakuzinFirstEffect = true;
+							}
+						}
+
+						if (!strcmp(pEvent.szName, "Housyutigakuzin_2"))
+						{
+							if (!m_bHousyutigakuzinSecondEffect)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_End.dat"), mWorldMatrix);
+
+								m_bHousyutigakuzinSecondEffect = true;
+							}
 						}
 					}
 					break;
@@ -236,6 +250,20 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 
 CPlayerState * CSkillState::LateTick(_float fTimeDelta)
 {
+	if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN)
+	{
+		for (auto& pEffect : m_HousyutigakuzinStart)
+		{
+			if (pEffect)
+			{
+				if (pEffect->Get_PreDead())
+					pEffect = nullptr;
+				else
+					pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+			}
+		}
+	}
+
 	if (m_bIsStateEvent)
 		return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1);
 
@@ -344,4 +372,9 @@ void CSkillState::Enter(void)
 void CSkillState::Exit(void)
 {
 	__super::Exit();
+}
+
+void CSkillState::CallbackFunction(_uint iIndex)
+{
+	m_HousyutigakuzinStart[iIndex] = nullptr;
 }

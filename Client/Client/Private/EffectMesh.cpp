@@ -69,6 +69,8 @@ int CEffectMesh::Tick(_float fTimeDelta)
 {
 	if (m_bDead)
 		return OBJ_DEAD;
+	else if (m_bPreDead)
+		m_bDead = true;
 
 	if (!m_bCanStart)
 	{
@@ -89,7 +91,7 @@ int CEffectMesh::Tick(_float fTimeDelta)
 	if (m_bCanStart)
 	{
 		if (m_fTimer >= m_tMeshEffectDesc.fLifetime)
-			m_bDead = true;
+			m_bPreDead = true;
 		else
 		{
 			m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);

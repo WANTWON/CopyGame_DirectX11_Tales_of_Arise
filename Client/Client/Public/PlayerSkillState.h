@@ -23,7 +23,11 @@ private:
 	_bool m_bHienzinFirstEffect = false;
 	_bool m_bHienzinSecondEffect = false;
 	_bool m_bAkizameEffect = false;
-	_bool m_bHousyutigakuzinEffect = false;
+	_bool m_bHousyutigakuzinFirstEffect = false;
+	_bool m_bHousyutigakuzinSecondEffect = false;
+
+	vector<CEffect*> m_HousyutigakuzinStart;
+	void CallbackFunction(_uint iIndex);
 };
 END
 END
