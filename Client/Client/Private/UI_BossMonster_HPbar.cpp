@@ -260,7 +260,8 @@ HRESULT CUI_BossMonster_HPbar::Render()
 
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
 			return E_FAIL;
-
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[0], sizeof(_float))))
+				return E_FAIL;
 		m_fSize.x = 190.f;
 		m_fSize.y = 22.0f;
 		m_fPosition.x = 380.f;
@@ -284,7 +285,8 @@ HRESULT CUI_BossMonster_HPbar::Render()
 		m_pVIBufferCom->Render();
 
 		
-
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[1], sizeof(_float))))
+			return E_FAIL;
 		m_fPosition.x += 180.f;
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
@@ -308,7 +310,8 @@ HRESULT CUI_BossMonster_HPbar::Render()
 		
 		}
 		
-
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[2], sizeof(_float))))
+			return E_FAIL;
 		m_fPosition.x += 180.f;
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
@@ -335,7 +338,8 @@ HRESULT CUI_BossMonster_HPbar::Render()
 			m_pVIBufferCom->Render();
 		}
 		
-
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[3], sizeof(_float))))
+			return E_FAIL;
 		m_fPosition.x += 180.f;
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))

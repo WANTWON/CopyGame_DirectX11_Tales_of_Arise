@@ -340,7 +340,7 @@ HRESULT CUI_Dialogue::Render()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	m_fFontPos.x = 500.f;
+	m_fFontPos.x = 465.f;
 	//m_fFontPos.y = 575.f + m_fFade;
 	
 	Render_Fonts(m_iDialogueindex);
@@ -970,7 +970,7 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	/*_uint test = 0;
 	_uint test2 = sizeof(m_vDialogue);
 	for (auto vec : m_vDialogue) test++;*/
-	m_fFontsize = 0.8f;
+	m_fFontsize = 0.75f;
 	m_fFontOffsetY = 30.f;
 	switch (m_vCurrentDialogue[m_iVectorIndex][index].size())
 	{
@@ -978,13 +978,13 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 		return;
 		break;
 	case 1:
-		m_fFontPos.y = 605.f + m_fFade;
+		m_fFontPos.y = 595.f + m_fFade;
 		break;
 	case 2:
-		m_fFontPos.y = 590.f + m_fFade; 
+		m_fFontPos.y = 580.f + m_fFade; 
 		break;
 	case 3:
-		m_fFontPos.y = 575.f + m_fFade;
+		m_fFontPos.y = 565.f + m_fFade;
 		break;
 
 	}

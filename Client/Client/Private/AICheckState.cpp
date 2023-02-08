@@ -77,7 +77,7 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 //	}
 	
 
-	
+		m_pOwner->Check_Navigation();
 
 	return nullptr;
 }
