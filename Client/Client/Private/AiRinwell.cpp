@@ -136,7 +136,11 @@ HRESULT CAiRinwell::Ready_Components(void * pArg)
 int CAiRinwell::Tick(_float fTimeDelta)
 {
 	if (m_bDead)
+	{
+		CBattleManager::Get_Instance()->Set_BossMonster(nullptr);
 		return OBJ_DEAD;
+	}
+	
 
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
@@ -166,6 +170,9 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
+
+	if (m_pRendererCom && m_bGlowUp)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
 	if (!m_bDissolve)
 	{
