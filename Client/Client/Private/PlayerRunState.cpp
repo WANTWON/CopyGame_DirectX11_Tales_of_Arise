@@ -21,6 +21,7 @@ CRunState::CRunState(CPlayer* pPlayer, DIRID eDir, _bool isDash)
 	, m_bIsDash(isDash)
 {
 	m_pOwner = pPlayer;
+	m_ePlayerID = m_pOwner->Get_PlayerID();
 }
 
 CPlayerState * CRunState::HandleInput()
@@ -29,25 +30,38 @@ CPlayerState * CRunState::HandleInput()
 
 	if (LEVEL_BATTLE == m_pOwner->Get_Level())
 	{
-		if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+		switch (m_ePlayerID)
 		{
+		case CPlayer::ALPHEN:
+		case CPlayer::LAW:
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
 				return new CCloseChaseState(m_pOwner, STATE_CHASE);
+		case CPlayer::SION:
+		case CPlayer::RINWELL:
+			//for Sion State//
+			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+				//return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
+				break;
 		}
-		else if (CPlayer::SION == m_pOwner->Get_PlayerID() || CPlayer::RINWELL == m_pOwner->Get_PlayerID())
-			return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
-
+	
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 		{
-			if (pGameInstance->Key_Down(DIK_E))
-				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
-			else if (pGameInstance->Key_Down(DIK_R))
-				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
-			else if (pGameInstance->Key_Down(DIK_F))
-				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
+			switch (m_ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				if (pGameInstance->Key_Down(DIK_E))
+					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
+				else if (pGameInstance->Key_Down(DIK_R))
+					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
+				else if (pGameInstance->Key_Down(DIK_F))
+					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
+				break;
+			case CPlayer::SION:
+				//for Sion State//
+				break;
+			}	
 		}
-
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_BATTLE);
 	}
@@ -169,7 +183,10 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
 			break;
 		case CPlayer::SION:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
+			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
+			else
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
 			break;
 		}
 	}

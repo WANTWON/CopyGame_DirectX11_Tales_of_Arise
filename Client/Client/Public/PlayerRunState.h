@@ -22,6 +22,7 @@ private:
 private:
 	DIRID m_eDirection = DIRID::DIR_END;
 	_bool m_bIsDash = false;
+	
 };
 END
 END
