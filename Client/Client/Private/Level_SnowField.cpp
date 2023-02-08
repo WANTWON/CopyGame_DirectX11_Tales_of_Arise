@@ -958,7 +958,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Test(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 	RELEASE_INSTANCE(CGameInstance);
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 CLevel_SnowField * CLevel_SnowField::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

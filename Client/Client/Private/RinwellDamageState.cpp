@@ -36,6 +36,7 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 		if (m_eStateId == STATE_DEAD)
 		{
 			m_pOwner->Set_Dissolve();
+			m_pOwner->Set_GlowUp();
 			return  nullptr;
 		}
 	}

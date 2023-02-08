@@ -39,23 +39,9 @@ CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 
 		if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
 		{
-			
-
-			//m_pOwner->Get_Transform()->Go_Up(fTimeDelta * -1.f);
-
-			//_vector vHawkPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
-			//_float4 fHawkPos;
-
-			//XMStoreFloat4(&fHawkPos, vHawkPos);
-
-
-
-			//if (m_fTimeDeltaAcc >= 5 || fHawkPos.y <= 0)
-			//{
 			m_bDeadAnimFinish = true;
 			m_pOwner->Set_GlowUp();
 			m_fTimeDeltaAcc = 0.f;
-			//}
 
 		}
 
@@ -67,7 +53,6 @@ void CBattle_DeadState::Enter()
 	m_eStateId = STATE_ID::STATE_DEAD;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DEAD);
-	m_pOwner->Set_Dead();
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Dead.wav"), SOUND_VOICE, 1.0f);
 	
