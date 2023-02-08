@@ -122,6 +122,3 @@ void CBattle_Damage_LargeB_State::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }
-
-
-
