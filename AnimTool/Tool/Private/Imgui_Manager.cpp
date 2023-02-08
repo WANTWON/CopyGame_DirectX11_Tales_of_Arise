@@ -144,10 +144,6 @@ void CImgui_Manager::ShowGui()
 				_int ChangeTimesSize = ChangeTimes.size();
 				_int EventsSize = AnimEvent.size();
 
-				char AnimName[MAX_PATH];
-				memcpy(AnimName, Animation->Get_Name(), sizeof(char) * MAX_PATH);
-				WriteFile(hFile, &AnimName, sizeof(char) * MAX_PATH, &dwByte, nullptr);
-
 				_float fDuration = Animation->Get_Duration();
 				WriteFile(hFile, &fDuration, sizeof(_float), &dwByte, nullptr);
 

@@ -303,10 +303,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	return E_FAIL;
 
 
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Plane_Flash"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Plane_Flash.fbx", "../../../Bin/Bin_Data/Effect/Plane/", PivotMatrix))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Hurricane4"),

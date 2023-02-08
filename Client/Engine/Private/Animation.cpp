@@ -32,8 +32,6 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 
 	if (INVALID_HANDLE_VALUE != hAddFile)
 	{
-		char szName[MAX_PATH];
-		ReadFile(hAddFile, &szName, sizeof(char) * MAX_PATH, pdwAddByte, nullptr);
 		ReadFile(hAddFile, &m_fDuration, sizeof(_float), pdwAddByte, nullptr);
 
 		for (_uint i = 0; i < m_iNumChannels; ++i)
