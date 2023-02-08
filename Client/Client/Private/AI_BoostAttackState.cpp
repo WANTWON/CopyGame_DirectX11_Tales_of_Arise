@@ -15,7 +15,7 @@
 
 using namespace AIPlayer;
 
-CAI_BoostAttack::CAI_BoostAttack(CPlayer* pPlayer , CBaseObj* pTarget)
+CAI_BoostAttack::CAI_BoostAttack(CPlayer* pPlayer, CBaseObj* pTarget)
 {
 	//m_ePreStateID = eStateType;
 	m_pOwner = pPlayer;
@@ -61,7 +61,7 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
-	
+
 
 
 
@@ -74,10 +74,14 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 
 CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 {
-
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
 
 	if (m_bIsAnimationFinished)
-	return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
 
 	return nullptr;
 }
@@ -94,7 +98,7 @@ void CAI_BoostAttack::Enter()
 		m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
 
 		_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
-		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset +  XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK))* 2;
+		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)) * 2;
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_Boost.dat"), mWorldMatrix);
@@ -109,9 +113,9 @@ void CAI_BoostAttack::Enter()
 		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	else
-	m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CCamera_Dynamic* pCamera =  dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
 	pCamera->Set_Target(m_pOwner);
 
@@ -127,9 +131,12 @@ void CAI_BoostAttack::Exit()
 	{
 		for (auto& iter : m_pEffects)
 		{
-			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
 			if (iter != nullptr)
-				pParticleSystem->Set_Stop(true);
+			{
+				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+				if (pParticleSystem != nullptr)
+					pParticleSystem->Set_Stop(true);
+			}
 		}
 	}
 

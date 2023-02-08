@@ -47,6 +47,7 @@ HRESULT CSionSkills::Initialize(void * pArg)
 
 int CSionSkills::Tick(_float fTimeDelta)
 {
+
 	
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
@@ -77,6 +78,12 @@ int CSionSkills::Tick(_float fTimeDelta)
 void CSionSkills::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
 }
 
 void CSionSkills::Collision_Check()
