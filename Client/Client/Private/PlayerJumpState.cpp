@@ -1,11 +1,12 @@
 #include "stdafx.h"
 
-#include "PlayerJumpState.h"
 #include "GameInstance.h"
+
 #include "PlayerIdleState.h"
+#include "PlayerRunState.h"
+#include "PlayerJumpState.h"
 #include "PlayerAttackNormalState.h"
 #include "PlayerSkillState.h"
-#include "PlayerRunState.h"
 #include "PlayerHitState.h"
 
 using namespace Player;
@@ -86,9 +87,16 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 				case CAlphen::ANIM::ANIM_JUMP_LAND:
 					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
-						CPlayerState* pEventInput = EventInput();
-						if (nullptr != pEventInput)
-							return pEventInput;
+						_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+						m_pOwner->Get_Navigation()->Compute_CurrentIndex_byXZ(vPosition);
+						m_fEndHeight = m_pOwner->Get_Navigation()->Compute_Height(vPosition, 0.f);
+
+						if (m_fEndHeight >= XMVectorGetY(vPosition))
+						{
+							CPlayerState* pEventInput = EventInput();  
+							if (nullptr != pEventInput)
+								return pEventInput;
+						}
 					}
 					break;
 				}
@@ -345,7 +353,8 @@ void CJumpState::Exit()
 {
 	m_fTime = 0.f;
 
-	m_pOwner->Off_IsFly();
+	if (STATETYPE_END == m_eStateType)
+		m_pOwner->Off_IsFly();
 
 	m_bIsDrop = false;
 

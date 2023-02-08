@@ -1,16 +1,18 @@
 #include "stdafx.h"
 
-#include "PlayerRunState.h"
 #include "GameInstance.h"
+#include "CameraManager.h"
+#include "BattleManager.h"
+
 #include "PlayerIdleState.h"
+#include "PlayerRunState.h"
 #include "PlayerAttackNormalState.h"
 #include "PlayerJumpState.h"
 #include "PlayerSkillState.h"
 #include "PlayerCollectState.h"
-#include "CameraManager.h"
-#include "BattleManager.h"
-#include "PlayerChaseState.h"
 #include "PlayerHitState.h"
+
+#include "CloseChaseState.h"
 
 using namespace Player;
 
@@ -27,8 +29,13 @@ CPlayerState * CRunState::HandleInput()
 
 	if (LEVEL_BATTLE == m_pOwner->Get_Level())
 	{
-		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			return new CPlayerChaseState(m_pOwner, STATE_CHASE);
+		if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+		{
+			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+				return new CCloseChaseState(m_pOwner, STATE_CHASE);
+		}
+		else if (CPlayer::SION == m_pOwner->Get_PlayerID() || CPlayer::RINWELL == m_pOwner->Get_PlayerID())
+			return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
 
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
@@ -75,10 +82,14 @@ CPlayerState * CRunState::HandleInput()
 	if ((LEVEL_SNOWFIELD == m_pOwner->Get_Level()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
 		if (!m_bIsDash)
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
+		{
+			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
+			else if (CPlayer::SION == m_pOwner->Get_PlayerID())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
+		}	
 		
 		m_bIsDash = true;
-
 
 		if (!CBattleManager::Get_Instance()->Get_IsBattleMode())
 		{
@@ -89,12 +100,16 @@ CPlayerState * CRunState::HandleInput()
 	else
 	{
 		if (m_bIsDash)
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
+		{
+			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
+			else if (CPlayer::SION == m_pOwner->Get_PlayerID())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
+		}
 
 		m_bIsDash = false;
 
-
-		if (m_pOwner->Get_Level() == LEVEL_SNOWFIELD )
+		if (m_pOwner->Get_Level() == LEVEL_SNOWFIELD)
 		{
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(false);
@@ -111,8 +126,6 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 	Move(fTimeDelta);
 
 	m_pOwner->Check_Navigation();
-
-	
 
 	return nullptr;
 }
@@ -140,7 +153,8 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
 			break;
 		case CPlayer::SION:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
+			if (LEVEL_BATTLE != m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
 			break;
 		}
 	}
@@ -155,7 +169,7 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
 			break;
 		case CPlayer::SION:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
 			break;
 		}
 	}

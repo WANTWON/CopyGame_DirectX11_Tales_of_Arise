@@ -4,7 +4,6 @@
 #include "GameInstance.h"
 #include "PlayerRunState.h"
 #include "PlayerAttackNormalState.h"
-#include "PlayerChaseState.h"
 #include "PlayerHitState.h"
 
 #include "Effect.h"
@@ -12,6 +11,8 @@
 #include "PlayerJumpState.h"
 #include "PlayerSkillState.h"
 #include "PlayerCollectState.h"
+
+#include "CloseChaseState.h"
 
 using namespace Player;
 
@@ -26,8 +27,13 @@ CPlayerState * CIdleState::HandleInput()
 
 	if (LEVEL_BATTLE == m_pOwner->Get_Level())
 	{
-		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			return new CPlayerChaseState(m_pOwner, STATE_CHASE);
+		if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+		{
+			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+				return new CCloseChaseState(m_pOwner, STATE_CHASE);
+		}
+		else if (CPlayer::SION == m_pOwner->Get_PlayerID() || CPlayer::RINWELL == m_pOwner->Get_PlayerID())
+			return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
 
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
@@ -45,6 +51,9 @@ CPlayerState * CIdleState::HandleInput()
 	}
 	else
 	{
+		if (pGameInstance->Key_Down(DIK_E))
+			return new CCollectState(m_pOwner);
+
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMPTYPE::JUMP_IDLE);
 	}
@@ -101,9 +110,11 @@ void CIdleState::Enter()
 		break;
 	case CPlayer::SION:
 		if (LEVEL_BATTLE == m_pOwner->Get_Level())
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_IDLE_LONG);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_IDLE);
 		else
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE);
+		break;
+	case CPlayer::RINWELL:
 		break;
 	default:
 		break;

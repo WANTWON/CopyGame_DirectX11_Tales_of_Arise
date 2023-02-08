@@ -615,6 +615,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO01/SWO1.dat"))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Model_Sion_Weapon01 */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SIOW(00)"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/SIOW(00)/SIOW(00).dat"))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Model_IceWolf*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ice_Wolf"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
