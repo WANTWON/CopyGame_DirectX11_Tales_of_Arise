@@ -9,6 +9,7 @@
 #include "PlayerSkillState.h"
 #include "PlayerJumpState.h"
 #include "BattleManager.h"
+#include "SionSkills.h"
 
 using namespace Player;
 
@@ -19,6 +20,9 @@ CAttackNormalState::CAttackNormalState(CPlayer* pPlayer, STATE_ID eStateType, _f
 	 
 	m_fStartHeight = fStartHeight;
 	m_fTime = fTime;
+
+	if (m_fStartHeight != 0.f)
+		m_pOwner->On_IsFly();
 }
 
 CPlayerState * CAttackNormalState::HandleInput()
@@ -39,7 +43,8 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 
-		m_pOwner->Check_Navigation();
+		if (!m_bIsFly)
+			m_pOwner->Check_Navigation();
 	}
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -123,7 +128,84 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 			}
 			else if (CPlayer::SION == m_pOwner->Get_PlayerID())
 			{
+				switch (m_eStateId)
+				{
+				case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					{
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.fVelocity = 100.f;
+						BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
+						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
+						BulletDesc.vTargetPosition = (CBattleManager::Get_Instance()->Get_LackonMonster())->Get_TransformState(CTransform::STATE_TRANSLATION);
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+					}
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+					{
+						//EventInput();
 
+						if (GetKeyState(VK_LBUTTON) < 0)
+							m_bIsStateEvent = true;
+
+						else if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
+
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
+
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
+
+						getchar();
+					}
+					break;
+				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					{
+
+					}
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+					{
+						if (GetKeyState(VK_LBUTTON) < 0)
+							m_bIsStateEvent = true;
+
+						else if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
+
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
+
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
+
+						getchar();
+					}
+					break;
+				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					{
+
+					}
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+					{
+						if (GetKeyState(VK_LBUTTON) < 0)
+							m_bIsStateEvent = true;
+
+						else if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
+
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
+
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
+
+						getchar();
+					}
+					break;
+				}
 			}
 		}
 		else
@@ -203,9 +285,9 @@ CPlayerState * CAttackNormalState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		/*if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime);
-		else*/
+		if (m_bIsFly)
+			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
+		else
 			return new CIdleState(m_pOwner);
 	}
 
@@ -220,8 +302,6 @@ CPlayerState * CAttackNormalState::EventInput(void)
 void CAttackNormalState::Enter()
 {
 	__super::Enter();
-
-
 
 	if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
 	{
@@ -267,7 +347,18 @@ void CAttackNormalState::Enter()
 	{
 		if (m_bIsFly)
 		{
-
+			switch (m_eStateId)
+			{
+			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_0);
+				break;
+			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_1);
+				break;
+			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_2);
+				break;
+			}
 		}
 		else
 		{
@@ -280,7 +371,7 @@ void CAttackNormalState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_1);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_2);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_3);
 				break;
 			}
 		}

@@ -65,7 +65,7 @@ HRESULT CSion::Ready_Parts()
 	m_Parts.resize(PARTS_END);
 
 	/* For.Weapon */
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("thumb_03_R");
 	if (nullptr == pSocket)
 		return E_FAIL;
 
@@ -74,7 +74,7 @@ HRESULT CSion::Ready_Parts()
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
 	WeaponDesc.pOwner = this;
-	strcpy(WeaponDesc.pModeltag, "SWO1");
+	strcpy(WeaponDesc.pModeltag, "SIOW(00)");
 	Safe_AddRef(pSocket);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

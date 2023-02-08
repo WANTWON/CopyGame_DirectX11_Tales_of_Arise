@@ -4,7 +4,6 @@
 #include "GameInstance.h"
 #include "PlayerRunState.h"
 #include "PlayerAttackNormalState.h"
-#include "PlayerChaseState.h"
 #include "PlayerHitState.h"
 
 #include "Effect.h"
@@ -12,6 +11,8 @@
 #include "PlayerJumpState.h"
 #include "PlayerSkillState.h"
 #include "PlayerCollectState.h"
+
+#include "CloseChaseState.h"
 
 using namespace Player;
 
@@ -26,8 +27,13 @@ CPlayerState * CIdleState::HandleInput()
 
 	if (LEVEL_BATTLE == m_pOwner->Get_Level())
 	{
-		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			return new CPlayerChaseState(m_pOwner, STATE_CHASE);
+		if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+		{
+			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+				return new CCloseChaseState(m_pOwner, STATE_CHASE);
+		}
+		else if (CPlayer::SION == m_pOwner->Get_PlayerID() || CPlayer::RINWELL == m_pOwner->Get_PlayerID())
+			return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
 
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
@@ -39,11 +45,20 @@ CPlayerState * CIdleState::HandleInput()
 			else if (pGameInstance->Key_Down(DIK_F))
 				return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
 		}
+
+		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
+			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMPTYPE::JUMP_BATTLE);
+	}
+	else
+	{
+		if (pGameInstance->Key_Down(DIK_E))
+			return new CCollectState(m_pOwner);
+
+		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
+			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMPTYPE::JUMP_IDLE);
 	}
 	
-	if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
-		return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMPTYPE::JUMP_IDLE);
-	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
+	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
 		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
@@ -98,6 +113,8 @@ void CIdleState::Enter()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_IDLE);
 		else
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE);
+		break;
+	case CPlayer::RINWELL:
 		break;
 	default:
 		break;
