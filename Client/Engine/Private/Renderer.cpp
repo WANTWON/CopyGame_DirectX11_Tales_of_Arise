@@ -78,6 +78,11 @@ HRESULT CRenderer::Initialize_Prototype()
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
 
+	/* For.Target_Glow_UI */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Glow_UI"), ViewportDesc.Width, ViewportDesc.Height,
+		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
+		return E_FAIL;
+
 	/* For.Target_Blur_Horizontal */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Blur_Horizontal"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
@@ -122,6 +127,10 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Distortion"), TEXT("Target_Distortion"))))
 		return E_FAIL;
 
+	/* For.MRT_Glow_UI */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Glow_UI"), TEXT("Target_Glow_UI"))))
+		return E_FAIL;
+
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (!m_pVIBuffer)
 		return E_FAIL;
@@ -158,7 +167,9 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow"), 375.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Distortion"), 512.f, 75.f, 150.f, 150.f)))
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Distortion"), 375.f, 225.f, 150.f, 150.f)))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow_UI"), 525.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 #endif
 
@@ -221,6 +232,14 @@ HRESULT CRenderer::Render_GameObjects()
 #endif // _DEBUG
 
 	if (FAILED(Render_UI()))
+		return E_FAIL;
+
+	/* UI Post Processing Renders */
+	if (FAILED(Render_UI_Glow()))
+		return E_FAIL;
+
+	/* UI Post Processing Blend */
+	if (FAILED(Render_UI_PostProcessing()))
 		return E_FAIL;
 
 	return S_OK;
@@ -658,6 +677,8 @@ HRESULT CRenderer::Render_Debug()
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Distortion"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Glow_UI"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
 	}
 
 	return S_OK;
@@ -688,6 +709,78 @@ HRESULT CRenderer::Render_UI()
 
 	m_GameObjects[RENDER_UI_FRONT].clear();
 	return S_OK;
+}
+
+HRESULT CRenderer::Render_UI_Glow()
+{
+	/* If there are not Distortion Object return. */
+	if (m_GameObjects[RENDER_UI_GLOW].empty())
+		return S_OK;
+	else
+	{
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Glow_UI"))))
+			return E_FAIL;
+
+		for (auto& pGameObject : m_GameObjects[RENDER_UI_GLOW])
+		{
+			if (pGameObject)
+			{
+				pGameObject->Render_Glow();
+				Safe_Release(pGameObject);
+			}
+		}
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		return S_OK;
+	}
+}
+
+HRESULT CRenderer::Render_UI_PostProcessing()
+{
+	if (!m_GameObjects[RENDER_UI_GLOW].empty())
+	{
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Glow_UI"), m_pShaderPostProcessing, "g_GlowTexture")))
+			return E_FAIL;
+
+		/* Horizontal Blur */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Horizontal"))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(1);
+		m_pVIBuffer->Render();
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		/* Bind the Horizontally Blurred Image to the Glow Texture. */
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShaderPostProcessing, "g_GlowTexture")))
+			return E_FAIL;
+
+		/* Vertical Blur */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Vertical"))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(2);
+		m_pVIBuffer->Render();
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		/* Bind the Horizontally and Vertically Blurred Image to the Glow Texture. */
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShaderPostProcessing, "g_GlowTexture")))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(0);
+		m_pVIBuffer->Render();
+
+		m_GameObjects[RENDER_UI_GLOW].clear();
+	}
 }
 
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
