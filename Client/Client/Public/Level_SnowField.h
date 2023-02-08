@@ -30,6 +30,9 @@ public:
 	HRESULT Ready_Layer_Trigger(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Npc(const _tchar* pLayerTag);
 
+public:
+	HRESULT Ready_Layer_Test(const _tchar* pLayerTag);
+
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
 
