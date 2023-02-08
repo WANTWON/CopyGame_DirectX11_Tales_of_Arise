@@ -11,6 +11,7 @@
 #include "Effect.h"
 #include "Bullet.h"
 #include "SionSkills.h"
+#include "ParticleSystem.h"
 
 using namespace AIPlayer;
 
@@ -120,6 +121,17 @@ void CAI_BoostAttack::Exit()
 {
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+
+
+	if (!m_pEffects.empty())
+	{
+		for (auto& iter : m_pEffects)
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+			if (iter != nullptr)
+				pParticleSystem->Set_Stop(true);
+		}
+	}
 
 	__super::Exit();
 }

@@ -2,6 +2,7 @@
 #include "..\Public\SionSkills.h"
 #include "Monster.h"
 #include "ParticleSystem.h"
+
 CSionSkills::CSionSkills(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBullet(pDevice, pContext)
 {
@@ -46,6 +47,7 @@ HRESULT CSionSkills::Initialize(void * pArg)
 
 int CSionSkills::Tick(_float fTimeDelta)
 {
+	
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 
@@ -107,7 +109,20 @@ void CSionSkills::Dead_Effect()
 	}
 	case BOOST:
 	{
+		if (!m_pEffects.empty())
+		{
+			for (auto& iter : m_pEffects)
+			{
+				if (iter != nullptr)
+				{
+					CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+					if (pParticleSystem != nullptr)
+						pParticleSystem->Set_Stop(true);
 
+				}
+					
+			}
+		}
 		break;
 	}
 
