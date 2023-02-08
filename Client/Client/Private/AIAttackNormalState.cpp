@@ -78,7 +78,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
-							//ÃÑ ¹ß»ç 
+							//ÃÑ ¹ß»ç »ç¿îµå
 							CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 1.0f);
 							m_fEventStart = pEvent.fStartTime;
 							
