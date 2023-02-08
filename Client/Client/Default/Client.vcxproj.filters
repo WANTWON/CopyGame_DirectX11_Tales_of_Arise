@@ -331,6 +331,15 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion">
       <UniqueIdentifier>{dd8b27f6-7a4b-4892-bc10-3d8930a862eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\00.Loading\MonsterCreater">
+      <UniqueIdentifier>{5bcaa77d-721e-4fc7-841e-7f13d7ee45ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\00.Loading\PlayerCreater">
+      <UniqueIdentifier>{bc605024-7388-4a57-849b-4070f0b98949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\00.Loading\NpcCreater">
+      <UniqueIdentifier>{c22c4171-edd3-48cc-bd99-d99a21c94602}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -777,9 +786,6 @@
     <ClInclude Include="..\Public\Npc.h">
       <Filter>02.GameObjects\01.Actor\02.NPC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\FemaleYoung.h">
-      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_QuestClear.h">
       <Filter>02.GameObjects\04.UI\16.UI_QuestClear</Filter>
     </ClInclude>
@@ -894,6 +900,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\PlayerSkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SnowFieldNpc.h">
+      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerCreater.h">
+      <Filter>01.Levels\00.Loading\PlayerCreater</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_BossMonster_HPbar.h">
+      <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1305,9 +1320,6 @@
     <ClCompile Include="..\Private\Npc.cpp">
       <Filter>02.GameObjects\01.Actor\02.NPC</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\FemaleYoung.cpp">
-      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UI_QuestClear.cpp">
       <Filter>02.GameObjects\04.UI\16.UI_QuestClear</Filter>
     </ClCompile>
@@ -1422,6 +1434,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerSkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SnowFieldNpc.cpp">
+      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerCreater.cpp">
+      <Filter>01.Levels\00.Loading\PlayerCreater</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp">
+      <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

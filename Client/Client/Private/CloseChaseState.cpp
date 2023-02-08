@@ -103,6 +103,9 @@ void CCloseChaseState::Enter()
 	case CPlayer::ALPHEN:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_RUN);
 		break;
+	case CPlayer::SION:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
+		break;
 	}
 
 	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);

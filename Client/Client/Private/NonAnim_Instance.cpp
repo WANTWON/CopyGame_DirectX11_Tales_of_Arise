@@ -58,7 +58,9 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 		return;
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	m_pModelCom->Update();
+	m_fRadius = Check_CullingRadius();
+
+	m_pModelCom->Update(m_fRadius);
 
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 
@@ -158,6 +160,12 @@ _bool CNonAnim_Instance::IsRenderShadow()
 	return true;
 }
 
+_float CNonAnim_Instance::Check_CullingRadius()
+{
+
+	return 3.f;
+}
+
 
 HRESULT CNonAnim_Instance::Ready_Components(void* pArg)
 {
@@ -215,8 +223,11 @@ HRESULT CNonAnim_Instance::SetUp_ShaderResources()
 
 HRESULT CNonAnim_Instance::SetUp_ShaderID()
 {
-	
-
+	if (!strcmp(m_ModelDesc.pModeltag, "Snow1") ||
+		!strcmp(m_ModelDesc.pModeltag, "Snow2"))
+		m_eShaderID =  SNOW;
+	else
+		m_eShaderID = DEFAULT;
 	return S_OK;
 }
 

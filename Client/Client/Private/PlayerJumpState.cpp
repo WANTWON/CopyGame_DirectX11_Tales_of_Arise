@@ -97,6 +97,10 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 							if (nullptr != pEventInput)
 								return pEventInput;
 						}
+
+						CPlayerState* pEventInput = EventInput();
+						if (nullptr != pEventInput)
+							return pEventInput;
 					}
 					break;
 				}
@@ -129,7 +133,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 		{
 			if (Check_JumpEnd())
 			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 0.4f);
+				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
 				m_eStateType = STATETYPE_END;
 				if (JUMP_IDLE == m_eJumpType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
@@ -151,7 +155,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 	}
 	case STATETYPE_MAIN:
 		if (Check_JumpEnd())
-		{CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 0.4f);
+		{
 			m_eStateType = STATETYPE_END;
 			if (JUMP_IDLE == m_eJumpType)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
@@ -237,7 +241,10 @@ void CJumpState::Enter()
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_START);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				if (LEVEL_BATTLE == m_pOwner->Get_Level())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_JUMP);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_START);
 				break;
 			}
 			break;
@@ -248,7 +255,7 @@ void CJumpState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LOOP);
 				break;
 			}
 			break;
@@ -262,7 +269,10 @@ void CJumpState::Enter()
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				if (LEVEL_BATTLE == m_pOwner->Get_Level())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LANDING);
 				break;
 			}
 		}
@@ -278,7 +288,7 @@ void CJumpState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_START);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_START);
 				break;
 			}
 			break;
@@ -289,7 +299,7 @@ void CJumpState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LOOP);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_LOOP);
 				break;
 			}
 			break;
@@ -300,7 +310,7 @@ void CJumpState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_END);
 				break;
 			case CPlayer::SION:
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::ANIM_ATTACK_KAGEROU_END);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_END);
 				break;
 			}
 			break;
@@ -385,8 +395,13 @@ void CJumpState::Move(_float fTimeDelta)
 	_float4 fChangeHeight;
 	XMStoreFloat4(&fChangeHeight, (vCurPos - vPrePos));
 
+
+
+
 	if (0 > fChangeHeight.y)
+	{
 		m_bIsDrop = true;
+	}
 	else
 		m_bIsDrop = false;
 

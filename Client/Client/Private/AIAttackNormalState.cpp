@@ -6,6 +6,7 @@
 #include "AIDeadState.h"
 #include "Bullet.h"
 #include "SionSkills.h"
+#include "Monster.h"
 
 using namespace AIPlayer;
 
@@ -13,6 +14,12 @@ CAIAttackNormalState::CAIAttackNormalState(CPlayer* pPlayer , STATE_ID eStateTyp
 {
 	m_ePreStateID = eStateType;
 	m_pOwner = pPlayer;
+	if (nullptr == pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
+	else
 	m_pTarget = pTarget;
 	
 }
@@ -22,7 +29,7 @@ CAIState * CAIAttackNormalState::Tick(_float fTimeDelta)
 	//if (m_pTarget == nullptr)
 	//	m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
-	//m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()) , "TransN");
 
@@ -37,6 +44,7 @@ CAIState * CAIAttackNormalState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}*/
 
+	m_pOwner->Check_Navigation();
 	return nullptr;
 }
 
@@ -65,18 +73,51 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 					{
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = PLAYER;
-							BulletDesc.fVelocity = 100.f;
+							BulletDesc.fVelocity = 20.f;
 							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
-							BulletDesc.vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+							if (m_pTarget != nullptr)
+								BulletDesc.vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+							else if (m_pTarget == nullptr)
+							BulletDesc.vTargetPosition = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+							(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+							BulletDesc.pOwner = m_pOwner;
+							BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
-							
+							//รั น฿ป็ 
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 1.0f);
 							m_fEventStart = pEvent.fStartTime;
-						
+
+							_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+							_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir*2;
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = vLocation;
+							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
+							
 					}
 				}
-			
+				
+				else if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					m_fReloadTimeDelta += fTimeDelta;
+
+					_bool m_bSoundStart = false;
+
+						if (!m_bSoundStart)
+						{
+							if (m_fReloadTimeDelta > 0.005f)
+								CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_EFFECT, 1.0f);
+							m_bSoundStart = true;
+
+						}
+				}
+
+
+				
 			}
 		}
 			if (m_iCurrentAnimIndex == CSion::ANIM::BTL_ATTACK_NORMAL_4 && m_bIsAnimationFinished)
@@ -119,6 +160,14 @@ void CAIAttackNormalState::Enter()
 	m_eStateId = STATE_ID::STATE_ATTACK;
 	m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_NORMAL_0;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+	if (nullptr == m_pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+	else
+		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 
 
@@ -127,4 +176,5 @@ void CAIAttackNormalState::Enter()
 void CAIAttackNormalState::Exit()
 {
 	__super::Exit();
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }

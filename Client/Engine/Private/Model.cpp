@@ -440,12 +440,12 @@ _bool CModel::Picking(CTransform * pTransform, _float3 * pOut)
 	return false;
 }
 
-void CModel::Update(void)
+void CModel::Update(_float fRadius)
 {
 	if (TYPE_NONANIM_INSTANCE == m_eModelType)
 	{
 		for (auto& pInstanceMesh : m_InstanceMeshes)
-			pInstanceMesh->Tick();
+			pInstanceMesh->Tick(fRadius);
 	}
 }
 

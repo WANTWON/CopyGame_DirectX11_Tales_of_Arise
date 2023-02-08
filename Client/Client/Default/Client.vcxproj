@@ -201,7 +201,8 @@
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
-    <ClInclude Include="..\Public\FemaleYoung.h" />
+    <ClInclude Include="..\Public\PlayerCreater.h" />
+    <ClInclude Include="..\Public\SnowFieldNpc.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
     <ClInclude Include="..\Public\HawkChaseState.h" />
@@ -234,6 +235,7 @@
     <ClInclude Include="..\Public\RinwellSkillState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\SionSkills.h" />
+    <ClInclude Include="..\Public\UI_BossMonster_HPbar.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
     <ClInclude Include="..\Public\UI_InterectMsg.h" />
     <ClInclude Include="..\Public\Item.h" />
@@ -389,7 +391,8 @@
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
-    <ClCompile Include="..\Private\FemaleYoung.cpp" />
+    <ClCompile Include="..\Private\PlayerCreater.cpp" />
+    <ClCompile Include="..\Private\SnowFieldNpc.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
     <ClCompile Include="..\Private\HawkChaseState.cpp" />
@@ -419,6 +422,7 @@
     <ClCompile Include="..\Private\RinwellSkills.cpp" />
     <ClCompile Include="..\Private\RinwellSkillState.cpp" />
     <ClCompile Include="..\Private\SionSkills.cpp" />
+    <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />

@@ -24,10 +24,9 @@ HRESULT CNpc::Initialize_Prototype()
 
 HRESULT CNpc::Initialize(void * pArg)
 {
-	NONANIMDESC ModelDesc;
 
 	if (pArg != nullptr)
-		memcpy(&ModelDesc, pArg, sizeof(NONANIMDESC));
+		memcpy(&m_NpcDesc, pArg, sizeof(NPCDESC));
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -37,13 +36,13 @@ HRESULT CNpc::Initialize(void * pArg)
 
 	if (pArg != nullptr)
 	{
-		_vector vPosition = XMLoadFloat3(&ModelDesc.vPosition);
+		_vector vPosition = XMLoadFloat3(&m_NpcDesc.Modeldesc.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-		Set_Scale(ModelDesc.vScale);
+		Set_Scale(m_NpcDesc.Modeldesc.vScale);
 
-		if (ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
+		if (m_NpcDesc.Modeldesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMLoadFloat3(&m_NpcDesc.Modeldesc.vRotation), XMConvertToRadians(m_NpcDesc.Modeldesc.m_fAngle));
 	}
 
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_INTERACT, this);

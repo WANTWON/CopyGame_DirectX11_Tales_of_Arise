@@ -45,6 +45,9 @@ HRESULT CUI_Monster_HPbar::Initialize(void * pArg)
 
 int CUI_Monster_HPbar::Tick(_float fTimeDelta)
 {
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
+		return OBJ_NOEVENT;
+
 
 	m_iMonstername = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_MonsterID();
 
@@ -57,9 +60,12 @@ int CUI_Monster_HPbar::Tick(_float fTimeDelta)
 			m_fbrightpos_hp[i] = 0.f;
 	}
 
-		
-	m_fcurrenthp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fCurrentHp;
-	m_fmaxhp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fMaxHp;
+	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+	{
+		m_fcurrenthp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fCurrentHp;
+		m_fmaxhp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fMaxHp;
+
+	}
 
 	
 		
@@ -181,11 +187,22 @@ HRESULT CUI_Monster_HPbar::Render()
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GradationTexture", m_pTextureCom1->Get_SRV(0))))
 		return E_FAIL;
 	m_eShaderID = UI_HPBAR;
+
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+	{
+		Compute_CamDistance(dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_TransformState(CTransform::STATE_TRANSLATION));
+		m_fPosition.x = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_ProjPosition().x;
+		m_fPosition.y = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_ProjPosition().y + 20.f - (m_fCamDistance / 5.f);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+	}
+
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
+	return S_OK;
 	Compute_CamDistance(dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_TransformState(CTransform::STATE_TRANSLATION));
 	m_fPosition.x = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_ProjPosition().x;
 	m_fPosition.y = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_ProjPosition().y + 20.f - (m_fCamDistance / 5.f);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-
 
 
 	if (m_fCamDistance > 20.f)

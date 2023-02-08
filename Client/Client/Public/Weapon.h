@@ -56,7 +56,16 @@ private:
 
 private:
 	_bool m_isCollider = false;
+	_bool m_bSoundStart = false;
+	_float m_fTimeDeltaAcc = 0.f;
+	_float m_fSkillF_TimeDelta = 0.f;
+	_float m_fHitTimeDeltaAcc = 0.f;
+	_float m_fNormalAttack1TimeDelta = 0.f;
+	_float m_fNormalAttack2TimeDelta = 0.f;
+	_float m_fNormalAttack3TimeDelta = 0.f;
+	_float m_fNormalAttack4TimeDelta = 0.f;
 
+	_float m_fSoundStopTimeDelta = 0.f;
 
 public:
 	static CWeapon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

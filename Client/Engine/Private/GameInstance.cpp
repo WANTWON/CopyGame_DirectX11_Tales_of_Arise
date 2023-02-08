@@ -614,6 +614,14 @@ ID3D11ShaderResourceView * CGameInstance::Get_BackBufferCopySRV()
 	return m_pTarget_Manager->Get_BackBufferCopySRV();
 }
 
+HRESULT CGameInstance::Bind_RenderTarget_SRV(const _tchar * pTargetTag, CShader * pShader, const char * pConstantName)
+{
+	if (nullptr == m_pTarget_Manager)
+		return E_FAIL;
+
+	return m_pTarget_Manager->Bind_ShaderResource(pTargetTag, pShader, pConstantName);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::Get_Instance()->Destroy_Instance();

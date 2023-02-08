@@ -5,6 +5,8 @@
 #include "Data_Manager.h"
 #include "Collision_Manger.h"
 #include "Monster.h"
+#include "Player.h"
+#include "PlayerState.h"
 
 CWeapon::CWeapon(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -105,11 +107,71 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pSPHERECom)
 	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameObject);
+
+		CPlayerState* pPlayerState = pPlayer->Get_State();
+		CPlayerState::STATE_ID ePlayerState = pPlayerState->Get_StateId();
+
 		CBaseObj* pCollisionTarget = nullptr;
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
 			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
-			//CGameInstance::Get_Instance()->PlaySounds(TEXT("HitSound2.wav"), SOUND_EFFECT, 0.4f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("HitSound.wav"), SOUND_EFFECT, 0.4f);
+			/*m_fHitTimeDeltaAcc += fTimeDelta;
+
+		
+			_bool bSoundStart = false;
+			if (!bSoundStart)
+			{
+				if (m_fHitTimeDeltaAcc >= 0.042f)
+				{
+					CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+					m_fHitTimeDeltaAcc = 0.f;
+				}
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("HitSound2.wav"), SOUND_EFFECT, 0.4f);
+				bSoundStart = true;
+			}*/
+		
+
+			//SkillSound 
+			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK1)
+			{
+				m_fTimeDeltaAcc += 0.4f;
+				_bool bSoundStart = false;
+				if (!bSoundStart)
+				{
+					if (m_fTimeDeltaAcc > 0.04f)
+					{
+						CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+						m_fTimeDeltaAcc = 0.f;
+					}
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.4f);
+					bSoundStart = true;
+				}
+			}
+		}
+		
+		else
+		{
+
+
+			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK1)
+			{
+				m_fTimeDeltaAcc += 0.4f;
+				_bool bSoundStart = false;
+				if (!bSoundStart)
+				{
+					if (m_fTimeDeltaAcc > 0.04f)
+					{
+						CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+						m_fTimeDeltaAcc = 0.f;
+					}
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.4f);
+					bSoundStart = true;
+				}
+			}
 		}
 
 	}
