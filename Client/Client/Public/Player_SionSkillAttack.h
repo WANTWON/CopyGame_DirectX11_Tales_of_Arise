@@ -26,6 +26,9 @@ private:
 	_bool m_bHousyutigakuzinFirstEffect = false;
 	_bool m_bHousyutigakuzinSecondEffect = false;
 
+	_bool m_bBulletMade = false;
+	vector<CEffect*> m_pBlastEffect;
+
 	vector<CEffect*> m_HousyutigakuzinStart;
 	void CallbackFunction(_uint iIndex);
 };

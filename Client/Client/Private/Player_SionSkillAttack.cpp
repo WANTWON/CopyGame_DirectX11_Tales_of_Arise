@@ -11,6 +11,7 @@
 #include "Bullet.h"
 #include "SionSkills.h"
 #include "Monster.h"
+#include "ParticleSystem.h"
 
 
 using namespace Player;
@@ -57,6 +58,21 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 			m_pOwner->Check_Navigation();
 	}
 
+	if (!m_pBlastEffect.empty())
+	{
+		for (auto& iter : m_pBlastEffect)
+		{
+			if (iter != nullptr && iter->Get_PreDead())
+				iter = nullptr;
+
+			if (iter != nullptr)
+			{
+				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+				if (pParticleSystem != nullptr)
+					pParticleSystem->Set_Stop(true);
+			}
+		}
+	}
 
 	if (m_bIsFly)
 		m_fTime += 0.1f;
@@ -92,35 +108,33 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK2:
-					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !m_bBulletMade)
 					{
-						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE));
+						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE))
 						{
-							CBaseObj * pTarget = nullptr;
+							CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+							if (pTarget == nullptr)
+								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+							
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = PLAYER;
 							BulletDesc.fVelocity = 1.f;
-							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
-							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
-							if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
-							{
-								pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-							}
-							else
-							{
-								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-								(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-							}
+							BulletDesc.eBulletType = CSionSkills::GRAVITY;
+							BulletDesc.iDamage = 200.f;
+							BulletDesc.fDeadTime = 10.f;
 							if (pTarget != nullptr)
+							{
 								BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-							else if (pTarget == nullptr)
-								BulletDesc.vTargetPosition = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-								(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+							}	
+							else 
+								BulletDesc.vTargetDir = XMVector3Normalize( m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
+							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*2.f);
 							BulletDesc.pOwner = m_pOwner;
-							BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
-
+							
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
+							m_bBulletMade = true;
 						}
 					}
 					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -244,8 +258,18 @@ void CPlayer_SionSkillAttack::Enter(void)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
 				break;
 			case Client::CPlayerState::STATE_SKILL_ATTACK2:
+			{
+				/* Make Effect */
+				_vector vOffset = { 0.f,3.f,0.f,0.f };
+				_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				mWorldMatrix.r[3] = vLocation + vOffset;
+				m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GravitasField.dat"), mWorldMatrix);
+
+
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
 				break;
+			}
 			case Client::CPlayerState::STATE_SKILL_ATTACK3:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_BRAVE);
 				break;

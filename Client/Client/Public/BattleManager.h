@@ -30,6 +30,8 @@ public: /* Getter */
 	vector<CBaseObj*> Get_AllMonster() { return m_AllMonster; }
 	CBaseObj* Get_MinDistance_Monster(_vector vPosition);
 
+	_bool IsAllMonsterDead();
+
 public: /* For Lock On */
 	void Set_LackonMonster(CBaseObj* pMonster) { m_pLockon = pMonster; }
 	void Set_BossMonster(CBaseObj* pMonster) { m_pBoss = pMonster; }
