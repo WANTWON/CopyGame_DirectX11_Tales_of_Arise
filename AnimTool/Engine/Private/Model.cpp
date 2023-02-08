@@ -172,8 +172,21 @@ HRESULT CModel::Initialize(void * pArg)
 		for (auto& pMeshContainer : m_Meshes)
 			pMeshContainer->SetUp_Bones_Binary(hFile, &dwByte, this);
 
-		if (FAILED(Create_Animations_Binary(hFile, &dwByte, szTAddFullPath)))
+		if (FAILED(Create_Animations_Binary(hFile, &dwByte/*, szTAddFullPath*/)))
 			return E_FAIL;
+
+		_ulong dwAddByte = 0;
+		HANDLE hAddFile = CreateFile(szTAddFullPath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		if (0 == hAddFile)
+			return S_OK;
+		else
+		{
+			if (FAILED(Add_Animations(hAddFile, &dwAddByte)))
+				return E_FAIL;
+		}
+		
+		CloseHandle(hAddFile);
+		
 
 		CloseHandle(hFile);
 	}
@@ -545,26 +558,59 @@ HRESULT CModel::Create_Animations(void)
 	return S_OK;
 }
 
-HRESULT CModel::Create_Animations_Binary(HANDLE hFile, _ulong * pdwByte, const _tchar* pAddDataFilePath)
+HRESULT CModel::Create_Animations_Binary(HANDLE hFile, _ulong * pdwByte/*, const _tchar* pAddDataFilePath*/)
 {
 	if (nullptr == hFile)
 		return E_FAIL;
 
 	ReadFile(hFile, &m_iNumAnimations, sizeof(_uint), pdwByte, nullptr);
 
-	_ulong dwAddByte = 0;
-	HANDLE hAddFile = CreateFile(pAddDataFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	/*_ulong dwAddByte = 0;
+	HANDLE hAddFile = CreateFile(pAddDataFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);*/
 
 	for (_uint i = 0; i < m_iNumAnimations; ++i)
 	{
-		CAnimation* pAnimation = CAnimation::Create(hFile, pdwByte, this, hAddFile, &dwAddByte);
+		CAnimation* pAnimation = CAnimation::Create(hFile, pdwByte, this/*, hAddFile, &dwAddByte*/);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
 		m_Animations.push_back(pAnimation);
 	}
 
-	CloseHandle(hAddFile);
+	//CloseHandle(hAddFile);
+
+	return S_OK;
+}
+
+HRESULT CModel::Add_Animations(HANDLE hFile, _ulong * pdwByte)
+{
+	while (true)
+	{
+		char AnimName[MAX_PATH];
+		ReadFile(hFile, &AnimName, sizeof(char) * MAX_PATH, pdwByte, nullptr);
+
+		_int i = 0;
+		_bool isIn = false;
+
+		for (i; i < m_Animations.size(); ++i)
+		{
+			if (!strcmp(AnimName, m_Animations[i]->Get_Name()))
+			{
+				m_Animations[i]->Animation_Add(hFile, pdwByte);
+				isIn = true;
+				break;
+			}
+		}
+
+		if (i == (m_Animations.size() - 1))
+		{
+			if (!isIn)
+				return E_FAIL;
+			break;
+		}
+		else if (0 == (*pdwByte))
+			break;
+	}
 
 	return S_OK;
 }

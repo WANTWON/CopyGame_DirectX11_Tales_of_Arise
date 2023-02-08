@@ -5,7 +5,7 @@
 #include "PlayerJumpState.h"
 #include "PlayerRunState.h"
 #include "PlayerHitState.h"
-#include "PlayerAttackNormalState.h"
+#include "AlphenAttackState.h"
 
 using namespace Player;
 
@@ -81,7 +81,7 @@ CPlayerState * CCloseChaseState::LateTick(_float fTimeDelta)
 		{
 		case CPlayer::ALPHEN:
 			if (4.5f > XMVectorGetX(XMVector4Length(vToTargetDir)))
-				return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
+				return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
 			break;
 		}
 	}

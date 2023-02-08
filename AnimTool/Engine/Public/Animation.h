@@ -33,8 +33,9 @@ private:
 
 public:
 	HRESULT Initialize(class CModel* pModel, aiAnimation* pAIAnimation, _bool bLoop);
-	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel, HANDLE hAddFile, _ulong* pdwAddByte, _bool bLoop);
+	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel/*, HANDLE hAddFile, _ulong* pdwAddByte*/, _bool bLoop);
 	void Invalidate_TransformationMatrix(_float fTimeDelta, vector<EVENTTYPE>* pEventTypeVector = nullptr);
+	HRESULT Animation_Add(HANDLE hFile, _ulong* pdwByte);
 
 public:
 	const char* Get_Name(void) const { return m_szName; }
@@ -86,7 +87,7 @@ private:
 
 public:
 	static CAnimation* Create(class CModel* pModel, aiAnimation* pAIAnimation, _bool bLoop = true);
-	static CAnimation* Create(HANDLE hFile, _ulong* pdwByte, class CModel* pModel, HANDLE hAddFile, _ulong* pdwAddByte, _bool bLoop = true);
+	static CAnimation* Create(HANDLE hFile, _ulong* pdwByte, class CModel* pModel/*, HANDLE hAddFile, _ulong* pdwAddByte*/, _bool bLoop = true);
 	virtual void Free(void) override;
 };
 

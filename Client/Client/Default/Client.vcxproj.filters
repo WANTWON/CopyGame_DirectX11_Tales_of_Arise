@@ -910,6 +910,9 @@
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AlphenSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1443,6 +1446,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AlphenSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

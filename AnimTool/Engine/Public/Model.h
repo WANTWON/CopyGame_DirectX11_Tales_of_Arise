@@ -95,7 +95,8 @@ private:
 	HRESULT Create_HierarchyNodes(const aiNode* pNode, CHierarchyNode* pParent = nullptr);
 	HRESULT Create_HierarchyNodes_Binary(HANDLE hFile, _ulong* pdwByte, CHierarchyNode* pParent = nullptr);
 	HRESULT Create_Animations(void);
-	HRESULT Create_Animations_Binary(HANDLE hFile, _ulong* pdwByte, const _tchar* pAddDataFilePath = nullptr);
+	HRESULT Create_Animations_Binary(HANDLE hFile, _ulong* pdwByte/*, const _tchar* pAddDataFilePath*/);
+	HRESULT Add_Animations(HANDLE hFile, _ulong* pdwByte);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eModelType, const char* pModelFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());

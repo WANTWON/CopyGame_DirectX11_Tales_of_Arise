@@ -144,6 +144,10 @@ void CImgui_Manager::ShowGui()
 				_int ChangeTimesSize = ChangeTimes.size();
 				_int EventsSize = AnimEvent.size();
 
+				char AnimName[MAX_PATH];
+				memcpy(AnimName, Animation->Get_Name(), sizeof(char) * MAX_PATH);
+				WriteFile(hFile, &AnimName, sizeof(char) * MAX_PATH, &dwByte, nullptr);
+
 				_float fDuration = Animation->Get_Duration();
 				WriteFile(hFile, &fDuration, sizeof(_float), &dwByte, nullptr);
 
@@ -606,6 +610,7 @@ void CImgui_Manager::ShowGui()
 				m_fEventStartTime = 0.f;
 				m_fEventEndTime = 0.f;
 				m_iEventType = CAnimation::EVENTTYPE::EVENT_END;
+				m_iEventChoice = -1;
 			}
 
 			for (_int i = 0; i < iAnimEvents; ++i)

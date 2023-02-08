@@ -75,6 +75,7 @@ protected:
 	_bool m_bIsAnimationFinished = false;
 	_bool m_bIsStateEvent = false;
 	_int m_iSkillEvent = 0;
+
 	// 공중인지 판단하는 변수
 	_bool m_bIsFly = false;
 };
