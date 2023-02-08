@@ -133,7 +133,7 @@ int CMP_Guage::Tick(_float fTimeDelta)
 void CMP_Guage::Late_Tick(_float fTimeDelta)
 {
 
-	m_fcurrent_render_slot_mp = m_fcurrentmp - m_fcurrentmp;
+	m_fcurrent_render_slot_mp = m_fcurrentmp - (_uint)m_fcurrentmp;
 
 	__super::Late_Tick(fTimeDelta);
 

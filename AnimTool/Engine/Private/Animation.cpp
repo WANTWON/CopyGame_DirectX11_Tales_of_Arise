@@ -57,7 +57,7 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 
 	m_isLoop = bLoop;
 
-	if (INVALID_HANDLE_VALUE != hAddFile)
+	if (INVALID_HANDLE_VALUE != hAddFile && (pdwAddByte != 0))
 	{
 		ReadFile(hAddFile, &m_fDuration, sizeof(_float), pdwAddByte, nullptr);
 

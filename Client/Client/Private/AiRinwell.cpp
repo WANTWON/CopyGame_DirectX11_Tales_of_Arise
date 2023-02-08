@@ -34,7 +34,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 		return E_FAIL;
 
 
-	m_tStats.m_fMaxHp = 999999.f;
+	m_tStats.m_fMaxHp = 10000.f;
 
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
@@ -59,7 +59,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_BATTLESTART);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 		m_pTransformCom->LookAt(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION));
-
+		CBattleManager::Get_Instance()->Set_BossMonster(this);
 	}
 	else
 	{

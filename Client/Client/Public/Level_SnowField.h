@@ -30,16 +30,16 @@ public:
 	HRESULT Ready_Layer_Trigger(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Npc(const _tchar* pLayerTag);
 
+public:
+	HRESULT Ready_Layer_Test(const _tchar* pLayerTag);
+
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
 
 private:
 	class CPlayerCreater*	m_pPlayerLoader = nullptr;
 	class CPlayerCreater*	m_pMonsterLoader1 = nullptr;
-	class CPlayerCreater*	m_pMonsterLoader2 = nullptr;
-	class CPlayerCreater*	m_pMonsterLoader3 = nullptr;
 	class CPlayerCreater*	m_pNpcLoader = nullptr;
-	class CPlayerCreater*	m_pNonAnimLoader = nullptr;
 
 public:
 	static CLevel_SnowField* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

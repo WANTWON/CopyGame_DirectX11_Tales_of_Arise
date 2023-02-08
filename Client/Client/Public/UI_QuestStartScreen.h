@@ -112,6 +112,8 @@ private:
 
 	_float m_fTimer = 0.f;
 
+	_uint m_iQuestindex = 0;
+
 };
 
 END

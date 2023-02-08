@@ -47,7 +47,8 @@ public:
 	MESHEFFECTDESC Get_MeshEffectDesc() { return m_tMeshEffectDesc; }
 	void Set_Lifetime(_float fLifetime) { m_tMeshEffectDesc.fLifetime = fLifetime; }
 	virtual void Set_WorldPosition(_matrix mWorldMatrix) override;
-	
+	void LookAt(_vector vTarget);
+
 public:
 	CEffectMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CEffectMesh(const CEffectMesh& rhs);

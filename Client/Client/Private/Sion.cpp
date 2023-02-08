@@ -10,20 +10,12 @@ _bool CSion::Is_AnimationLoop(_uint eAnimId)
 	switch ((ANIM)eAnimId)
 	{
 	case ANIM::IDLE:
-		return true;
-		break;
-	case ANIM::BTL_MOVE_RUN:
-		return true;
-		break;
 	case ANIM::BTL_MOVE_IDLE:
+	case ANIM::BTL_MOVE_RUN:
+	case ANIM::SYS_RUN:
 		return true;
-		break;
-	case ANIM::BTL_DEAD:
+	default:
 		return false;
-		break;
-
-		default:
-			return false;
 	}
 }
 
@@ -65,7 +57,7 @@ HRESULT CSion::Ready_Parts()
 	m_Parts.resize(PARTS_END);
 
 	/* For.Weapon */
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("thumb_03_R");
 	if (nullptr == pSocket)
 		return E_FAIL;
 
@@ -74,7 +66,7 @@ HRESULT CSion::Ready_Parts()
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
 	WeaponDesc.pOwner = this;
-	strcpy(WeaponDesc.pModeltag, "SWO1");
+	strcpy(WeaponDesc.pModeltag, "SIOW(00)");
 	Safe_AddRef(pSocket);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

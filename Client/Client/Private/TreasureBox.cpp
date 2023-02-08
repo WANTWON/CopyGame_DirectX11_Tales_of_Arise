@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Level_Manager.h"
 #include "CameraManager.h"
+#include "UI_InterectMsg.h"
 
 CTreasureBox::CTreasureBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CInteractObject(pDevice, pContext)
@@ -71,6 +72,10 @@ int CTreasureBox::Tick(_float fTimeDelta)
 			
 			m_bOpen = false;
 			m_bOpenFinish = true;
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_OMEGAELIXIR, ITEMTYPE_POTION, true, true);
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_HWANGJELLY, ITEMTYPE_JELLY, true, false);
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY, true, false);
+			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
 		}
 		if (m_fTimeDeltaAcc > 0.02f)
 			CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
@@ -80,6 +85,7 @@ int CTreasureBox::Tick(_float fTimeDelta)
 	{
 		m_pModelCom->Play_Animation(0.f, false);
 		m_bOpenFinish = false;
+		
 	}
 		
 
@@ -108,7 +114,8 @@ void CTreasureBox::Late_Tick(_float fTimeDelta)
 	{
 		if (GetKeyState('E') < 0)
 			pPlayer->Set_PlayerCollectState(this);
-
+		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Open_sysmsg(1);
+		
 		/*if (!m_bOpen)
 		{
 			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_ARSORSWORD, ITEMTYPE_SWORD, true, false);
@@ -136,6 +143,7 @@ void CTreasureBox::Late_Tick(_float fTimeDelta)
 			
 		}
 	}
+	dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 }
 
 HRESULT CTreasureBox::Render()

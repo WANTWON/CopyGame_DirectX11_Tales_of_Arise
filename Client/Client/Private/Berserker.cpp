@@ -57,7 +57,7 @@ HRESULT CBerserker::Initialize(void * pArg)
 	}
 
 	
-	m_tStats.m_fMaxHp = 200;
+	m_tStats.m_fMaxHp = 2500;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 	m_eMonsterID = BERSERKER;

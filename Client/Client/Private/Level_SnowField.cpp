@@ -35,66 +35,44 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-//	if (FAILED(Ready_Layer_Trigger(TEXT("Layer_Trigger"))))
-	//	return E_FAIL;
-
 	cout << " Player Clone start" << endl;
 	m_pPlayerLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER);
 	if (nullptr == m_pPlayerLoader)
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
-	//	return E_FAIL;
-
 	cout << " Monster Group1 Clone start" << endl;
 	m_pMonsterLoader1 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER1);
 	if (nullptr == m_pMonsterLoader1)
 		return E_FAIL;
-	cout << " Monster Group2 Clone start" << endl;
-	m_pMonsterLoader2 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER2);
-	if (nullptr == m_pMonsterLoader2)
-		return E_FAIL;
-	cout << " Monster Group3 Clone start" << endl;
-	m_pMonsterLoader3 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER3);
-	if (nullptr == m_pMonsterLoader3)
-		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-	//	return E_FAIL;
-
-	cout << " NonAnim Clone start" << endl;
-	m_pNonAnimLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_NONANIM);
-	if (nullptr == m_pNonAnimLoader)
-		return E_FAIL;
-
-	//if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-	//	return E_FAIL;
-
-	//if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
-	//	return E_FAIL;
-
-//	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
-//		return E_FAIL;
-
-//	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Interact_Object"))))
-//		return E_FAIL;
 
 	cout << " Npc Clone start" << endl;
 	m_pNpcLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_NPC);
 	if (nullptr == m_pNpcLoader)
 		return E_FAIL;
-	//if (FAILED(Ready_Layer_Npc(TEXT("Layer_Npc"))))
-	//	return E_FAIL;
 
-	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Backgorund"))))
+		return E_FAIL;
 
-	//CGameInstance::Get_Instance()->PlaySounds(TEXT("SnowFiledSong.wav"), SOUND_SYSTEM, 0.4f);
+	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Backgorund"))))
+		return E_FAIL;
+	
+	if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
+		return E_FAIL;
+
+
+	//Test
+	if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
+		return E_FAIL;
+	//Test
 
 	DWORD dwTime = GetTickCount();
 	while (false == m_pPlayerLoader->Get_Finished() || 
 		false == m_pNpcLoader->Get_Finished() ||
-		false == m_pMonsterLoader1->Get_Finished() || false == m_pMonsterLoader2->Get_Finished() || false == m_pMonsterLoader3->Get_Finished() ||
-		false == m_pNonAnimLoader->Get_Finished() )
+		false == m_pMonsterLoader1->Get_Finished())
 	{
 		if (dwTime + 1000 < GetTickCount())
 		{
@@ -108,15 +86,6 @@ HRESULT CLevel_SnowField::Initialize()
 
 			if (m_pMonsterLoader1->Get_Finished() == true)
 				cout << "Finished Monster Grounp1 Clone" << endl;
-			
-			if (m_pMonsterLoader2->Get_Finished() == true)
-				cout << "Finished Monster Grounp2 Clone" << endl;
-
-			if (m_pMonsterLoader3->Get_Finished() == true)
-				cout << "Finished Monster Grounp3 Clone" << endl;
-
-			if (m_pNonAnimLoader->Get_Finished() == true)
-				cout << "Finished NonAnim Clone" << endl;
 
 			dwTime = GetTickCount();
 		}
@@ -136,6 +105,10 @@ HRESULT CLevel_SnowField::Initialize()
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
+
+	Safe_Release(m_pPlayerLoader);
+	Safe_Release(m_pMonsterLoader1);
+	Safe_Release(m_pNpcLoader);
 
 	return S_OK;
 }
@@ -229,8 +202,8 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Alphen"), LEVEL_STATIC, pLayerTag, nullptr)))
 			return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, pLayerTag, nullptr)))
-			return E_FAIL;
+		/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, pLayerTag, nullptr)))
+			return E_FAIL;*/
 
 		//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, pLayerTag, nullptr)))
 		//	return E_FAIL;
@@ -556,7 +529,8 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_INTERECTMSG"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
 	
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Skillmsg"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;*/
@@ -955,6 +929,39 @@ HRESULT CLevel_SnowField::Ready_Layer_Npc(const _tchar * pLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_SnowField::Ready_Layer_Test(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC  ModelDesc;
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Boss.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+
+		if (!wcscmp(pModeltag, TEXT("Astral_Doubt")))
+		{
+			//여기서 몬스터 생성하세요
+		}
+	}
+
+	CloseHandle(hFile);
+
+	RELEASE_INSTANCE(CGameInstance);
+	return E_NOTIMPL;
+}
+
 CLevel_SnowField * CLevel_SnowField::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CLevel_SnowField*	pInstance = new CLevel_SnowField(pDevice, pContext);
@@ -975,14 +982,6 @@ void CLevel_SnowField::Free()
 	__super::Free();
 
 	Safe_Release(m_pCollision_Manager);
-	Safe_Release(m_pPlayerLoader);
-	Safe_Release(m_pMonsterLoader1);
-	Safe_Release(m_pMonsterLoader2);
-	Safe_Release(m_pMonsterLoader3);
-	Safe_Release(m_pNpcLoader);
-	Safe_Release(m_pNonAnimLoader);
-
-
 	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
 
 }

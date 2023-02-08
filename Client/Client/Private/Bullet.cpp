@@ -159,9 +159,17 @@ void CBullet::Free()
 
 	for (auto& iter : m_pEffects)
 	{
-		iter->Set_Dead(true);
+		if(iter != nullptr)
+			iter->Set_Dead(true);
 	}
 	m_pEffects.clear();
+
+	for (auto& iter : m_pDeadEffects)
+	{
+		if (iter != nullptr)
+			iter->Set_Dead(true);
+	}
+	m_pDeadEffects.clear();
 
 	if (m_BulletDesc.eCollisionGroup == PLAYER)
 		CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);

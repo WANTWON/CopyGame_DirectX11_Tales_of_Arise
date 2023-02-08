@@ -42,8 +42,9 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 
 	Read_TextFiles_for_dialogue();
 	Read_TextFiles_for_Quest1Clear();
-	Read_TextFiles_for_Quest2Strat();
-
+	Read_TextFiles_for_Quest2Strat(); 
+	Read_TextFiles_for_Quest2Clear();
+	Read_TextFiles_for_Quest3Start();
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -124,7 +125,8 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 				m_bfadeout = true;
 				
 				--m_iDialogueindex;
-
+				CUI_QuestClear::QUESTCLEARDESC cleardesc;
+				ZeroMemory(&cleardesc, sizeof(CUI_QuestClear::QUESTCLEARDESC));
 				switch (m_iVectorIndex)
 				{
 				case 0:
@@ -136,14 +138,43 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					break;
 
 				case 1:
-					CUI_QuestClear::QUESTCLEARDESC cleardesc;
-					ZeroMemory(&cleardesc, sizeof(CUI_QuestClear::QUESTCLEARDESC));
+					
 					cleardesc.eName1 = ITEMNAME_LEMONJELLY;
+					cleardesc.eType1 = ITEMTYPE_JELLY;
 					cleardesc.iGaingald = 700;
 					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC, (TEXT("ssss")), &cleardesc)))
 						return OBJ_NOEVENT;
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY,false,false);
 					CUI_Manager::Get_Instance()->Set_QuestComplete(0, true);
+					break;
+
+				case 2:
+					CUI_Manager::Get_Instance()->Set_QuestIndex(2);
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, (TEXT("ssssss")))))
+						return OBJ_NOEVENT;
+
+					break;
+
+				case 3:
+
+					cleardesc.eName1 = ITEMNAME_PYOGOMUSHROOM;
+					cleardesc.eType1 = ITEMTYPE_MATERIAL;
+					cleardesc.iGaingald = 100;
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC, (TEXT("ssss")), &cleardesc)))
+						return OBJ_NOEVENT;
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY, false, false);
+					CUI_Manager::Get_Instance()->Set_QuestComplete(1, true);
+					break;
+
+				case 4:
+
+					CUI_Manager::Get_Instance()->Set_QuestIndex(3);
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, (TEXT("ssssss")))))
+						return OBJ_NOEVENT;
+
+					break;
+
+
 
 				}
 				
@@ -309,7 +340,7 @@ HRESULT CUI_Dialogue::Render()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	m_fFontPos.x = 500.f;
+	m_fFontPos.x = 465.f;
 	//m_fFontPos.y = 575.f + m_fFade;
 	
 	Render_Fonts(m_iDialogueindex);
@@ -777,6 +808,146 @@ void CUI_Dialogue::Read_TextFiles_for_Quest2Strat()
 	m_vCurrentDialogue.push_back(matrix);
 }
 
+void CUI_Dialogue::Read_TextFiles_for_Quest2Clear()
+{
+	std::ifstream file("../../../Bin/quest2clear0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge3[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/quest2clear1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge3[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialouge3[0]);
+	matrix.push_back(m_vDialouge3[1]);
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
+void CUI_Dialogue::Read_TextFiles_for_Quest3Start()
+{
+	std::ifstream file("../../../Bin/quest3start0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge4[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/quest3start1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge4[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/quest3start2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge4[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/quest3start3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge4[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialouge4[0]);
+	matrix.push_back(m_vDialouge4[1]);
+	matrix.push_back(m_vDialouge4[2]);
+	matrix.push_back(m_vDialouge4[3]);
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
 wchar_t * CUI_Dialogue::ConverCtoWC(char * str)
 {
 
@@ -799,7 +970,7 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	/*_uint test = 0;
 	_uint test2 = sizeof(m_vDialogue);
 	for (auto vec : m_vDialogue) test++;*/
-	m_fFontsize = 0.8f;
+	m_fFontsize = 0.75f;
 	m_fFontOffsetY = 30.f;
 	switch (m_vCurrentDialogue[m_iVectorIndex][index].size())
 	{
@@ -807,13 +978,13 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 		return;
 		break;
 	case 1:
-		m_fFontPos.y = 605.f + m_fFade;
+		m_fFontPos.y = 595.f + m_fFade;
 		break;
 	case 2:
-		m_fFontPos.y = 590.f + m_fFade; 
+		m_fFontPos.y = 580.f + m_fFade; 
 		break;
 	case 3:
-		m_fFontPos.y = 575.f + m_fFade;
+		m_fFontPos.y = 565.f + m_fFade;
 		break;
 
 	}

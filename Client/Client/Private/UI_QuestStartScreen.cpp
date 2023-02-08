@@ -43,6 +43,8 @@ HRESULT CUI_QuestStartScreen::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_iQuestindex = CUI_Manager::Get_Instance()->Get_QuestIndex();
+
 	return S_OK;
 }
 
@@ -158,6 +160,12 @@ int CUI_QuestStartScreen::Tick(_float fTimeDelta)
 	{
 		if(CUI_Manager::Get_Instance()->Get_QuestIndex() == 1)
 		dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(0, false, 1, 0); //first popup
+
+
+		if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 2)
+			CUI_Manager::Get_Instance()->Set_Dialogue_section(3);
+
+
 		return OBJ_DEAD;
 	}
 	
@@ -331,7 +339,7 @@ HRESULT CUI_QuestStartScreen::Render()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom5->Get_SRV(0))))
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom5->Get_SRV(m_iQuestindex-1))))
 		return E_FAIL;
 	if (m_bDeadtimeron)
 	{

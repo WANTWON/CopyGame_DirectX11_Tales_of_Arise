@@ -14,13 +14,21 @@ CAI_Alphen_NormalAttackState::CAI_Alphen_NormalAttackState(CPlayer* pPlayer, STA
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
+	if (nullptr == pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
 	m_pTarget = pTarget;
+	
 	//m_fStartHeight = fStartHeight;
 	//m_fTime = fTime;
 }
 
 CAIState * CAI_Alphen_NormalAttackState::Tick(_float fTimeDelta)
 {
+	
+
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	if (!m_bIsAnimationFinished)
@@ -122,18 +130,40 @@ CAIState * CAI_Alphen_NormalAttackState::LateTick(_float fTimeDelta)
 		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0: //Client::CAIState::STATE_NORMAL_ATTACK1:
 			__super::Exit();
 			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_1;
+			if (nullptr == m_pTarget)
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+				m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			}
+			else
 			m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 			break;
 		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
 			__super::Exit();
 			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_8;
+			if (nullptr == m_pTarget)
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+				m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			}
+			else
 			m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 			break;
 		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
 			__super::Exit();
 			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_6;
+			if (nullptr == m_pTarget)
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+				m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			}
+			else
 			m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 			break;
@@ -155,6 +185,13 @@ void CAI_Alphen_NormalAttackState::Enter()
 
 	m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_0;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+	if (nullptr == m_pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+	else
 	m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 }

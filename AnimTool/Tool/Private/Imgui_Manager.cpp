@@ -553,7 +553,7 @@ void CImgui_Manager::ShowGui()
 			ImGui::DragFloat("End Time", &m_fEventEndTime, 0.05f, 0.f, m_fAnimationDuration);
 
 			static char szEventName[MAX_PATH] = "";
-			if (-1 != m_iEventChoice)
+			if (-1 != m_iEventChoice && m_iEventChoice < AnimEventVector.size())
 				memcpy(szEventName, AnimEventVector[m_iEventChoice].szName, sizeof(char) * MAX_PATH);
 			
 			ImGui::SetNextItemWidth(175);

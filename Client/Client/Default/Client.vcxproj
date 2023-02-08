@@ -183,6 +183,7 @@
     <ClInclude Include="..\Public\AI_ChaseState.h" />
     <ClInclude Include="..\Public\AI_HitState.h" />
     <ClInclude Include="..\Public\AI_BoostAttackState.h" />
+    <ClInclude Include="..\Public\AlphenAttackState.h" />
     <ClInclude Include="..\Public\BattleManager.h" />
     <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_FireBallState.h" />
@@ -196,6 +197,7 @@
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
     <ClInclude Include="..\Public\Bullet.h" />
+    <ClInclude Include="..\Public\CloseChaseState.h" />
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
@@ -221,7 +223,6 @@
     <ClInclude Include="..\Public\EffectTexture.h" />
     <ClInclude Include="..\Public\Itemmsgbox.h" />
     <ClInclude Include="..\Public\IceWolfBattle_TurnState.h" />
-    <ClInclude Include="..\Public\PlayerChaseState.h" />
     <ClInclude Include="..\Public\PlayerCollectState.h" />
     <ClInclude Include="..\Public\PlayerDeadState.h" />
     <ClInclude Include="..\Public\PlayerHitState.h" />
@@ -234,6 +235,7 @@
     <ClInclude Include="..\Public\RinwellSkillState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\SionSkills.h" />
+    <ClInclude Include="..\Public\UI_BossMonster_HPbar.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
     <ClInclude Include="..\Public\UI_InterectMsg.h" />
     <ClInclude Include="..\Public\Item.h" />
@@ -371,6 +373,7 @@
     <ClCompile Include="..\Private\AI_ChaseState.cpp" />
     <ClCompile Include="..\Private\AI_HitState.cpp" />
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp" />
+    <ClCompile Include="..\Private\AlphenAttackState.cpp" />
     <ClCompile Include="..\Private\BattleManager.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_FireBallState.cpp" />
@@ -384,6 +387,7 @@
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
+    <ClCompile Include="..\Private\CloseChaseState.cpp" />
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
@@ -408,7 +412,6 @@
     <ClCompile Include="..\Private\EffectTexture.cpp" />
     <ClCompile Include="..\Private\Itemmsgbox.cpp" />
     <ClCompile Include="..\Private\IceWolfBattle_TurnState.cpp" />
-    <ClCompile Include="..\Private\PlayerChaseState.cpp" />
     <ClCompile Include="..\Private\PlayerCollectState.cpp" />
     <ClCompile Include="..\Private\PlayerDeadState.cpp" />
     <ClCompile Include="..\Private\Rinwell.cpp" />
@@ -419,6 +422,7 @@
     <ClCompile Include="..\Private\RinwellSkills.cpp" />
     <ClCompile Include="..\Private\RinwellSkillState.cpp" />
     <ClCompile Include="..\Private\SionSkills.cpp" />
+    <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />

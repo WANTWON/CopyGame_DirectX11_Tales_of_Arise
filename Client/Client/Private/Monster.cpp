@@ -139,7 +139,10 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		CCollider* pPlayerCollider = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Collider();
 		if (m_pSPHERECom->Collision(pPlayerCollider))
 		{
-			CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID);
+			if(m_eMonsterID == RINWELL)
+				CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID, true);
+			else
+				CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID);
 		}
 	}
 }
@@ -433,7 +436,7 @@ void CMonster::Collision_Object(_float fTimeDelta)
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
-	CBaseObj* pCollisionMonster = nullptr;
+	/*CBaseObj* pCollisionMonster = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionMonster))
 	{
 		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -444,7 +447,7 @@ void CMonster::Collision_Object(_float fTimeDelta)
 			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
 
 		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
-	}
+	}*/
 
 	/*CBaseObj* pPlayer = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionMonster))

@@ -29,13 +29,7 @@ unsigned int APIENTRY Thread_Clone(void* pArg)
 		pLoader->Cloning_ForPlayer();
 		break;
 	case CLONE_MONSTER1:
-		pLoader->Cloning_ForMonster(0);
-		break;
-	case CLONE_MONSTER2:
-		pLoader->Cloning_ForMonster(1);
-		break;
-	case CLONE_MONSTER3:
-		pLoader->Cloning_ForMonster(2);
+		pLoader->Cloning_ForMonster();
 		break;
 	case CLONE_NPC:
 		pLoader->Cloning_ForNpc();
@@ -164,7 +158,7 @@ HRESULT CPlayerCreater::Cloning_ForNpc()
 	return S_OK;
 }
 
-HRESULT CPlayerCreater::Cloning_ForMonster(_int iIndex)
+HRESULT CPlayerCreater::Cloning_ForMonster()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
@@ -210,7 +204,7 @@ HRESULT CPlayerCreater::Cloning_ForMonster(_int iIndex)
 	/* 타일의 개수 받아오기 */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-	for (_uint i = iIndex; i < iNum; i+=3)
+	for (_uint i = 0; i < iNum; i++)
 	{
 		_bool m_bNotCreate = false;
 		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
