@@ -46,7 +46,7 @@ void CPlayerHandle::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	_matrix SocketMatrix = m_tHandleDesc.pSocket->Get_OffsetMatrix() *
+	_matrix SocketMatrix = /*m_tHandleDesc.pSocket->Get_OffsetMatrix() **/
 		m_tHandleDesc.pSocket->Get_CombinedTransformationMatrix() *
 		XMLoadFloat4x4(&m_tHandleDesc.SocketPivotMatrix) * XMLoadFloat4x4(m_tHandleDesc.pParentWorldMatrix);
 

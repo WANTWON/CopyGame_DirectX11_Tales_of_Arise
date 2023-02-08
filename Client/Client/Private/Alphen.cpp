@@ -58,7 +58,7 @@ HRESULT CAlphen::Ready_Parts()
 	/* For.Weapon */
 	_uint iLevelIndex = CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 	if (nullptr == pSocket)
 		return E_FAIL;
 
@@ -67,7 +67,7 @@ HRESULT CAlphen::Ready_Parts()
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
 	WeaponDesc.pOwner = this;
-	strcpy(WeaponDesc.pModeltag, "SWO1");
+	strcpy(WeaponDesc.pModeltag, "SWO2");
 	Safe_AddRef(pSocket);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -146,7 +146,7 @@ void CAlphen::Change_Level(LEVEL eLevel)
 
 		if (LEVEL_SNOWFIELD == eLevel)
 		{
-			pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L_end");
+			pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L");
 			if (nullptr == pSocket)
 			{
 				ERR_MSG(TEXT("Failed to Get BonePtr"));

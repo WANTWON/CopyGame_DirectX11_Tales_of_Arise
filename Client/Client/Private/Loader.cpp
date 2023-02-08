@@ -628,8 +628,8 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Alphen_Weapon01 */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO1"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO01/SWO1.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SWO2"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO2(R00)/SWO2(R00).dat"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Sion_Weapon01 */
