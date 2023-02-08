@@ -316,6 +316,21 @@
     <Filter Include="02.GameObjects\04.UI\21.UI_MonsterHpbar">
       <UniqueIdentifier>{a01f582d-f206-4fdd-bd78-f981127f3768}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged">
+      <UniqueIdentifier>{0945f79c-4a84-481f-bc64-f518388989f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged">
+      <UniqueIdentifier>{5bc88bf1-0d87-4bbd-9650-d7d5be2fd349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen">
+      <UniqueIdentifier>{8517139d-c0cc-4f07-b90d-51dcf08ef326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Rinwell">
+      <UniqueIdentifier>{159bed3a-30b2-4bf5-8cf2-c7c5283bbe51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion">
+      <UniqueIdentifier>{dd8b27f6-7a4b-4892-bc10-3d8930a862eb}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Levels\00.Loading\MonsterCreater">
       <UniqueIdentifier>{5bcaa77d-721e-4fc7-841e-7f13d7ee45ef}</UniqueIdentifier>
     </Filter>
@@ -741,9 +756,6 @@
     <ClInclude Include="..\Public\SlimeTurnR_State.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerSkillState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\BerserkerChaseState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClInclude>
@@ -871,9 +883,6 @@
     <ClInclude Include="..\Public\CriticalFont.h">
       <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerChaseState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_Monster_HPbar.h">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
     </ClInclude>
@@ -882,6 +891,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\PlayerDeadState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CloseChaseState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AlphenAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SnowFieldNpc.h">
       <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
@@ -1272,9 +1290,6 @@
     <ClCompile Include="..\Private\SlimeTurnR_State.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Slime\State\CommonStates</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerSkillState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\BerserkerChaseState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClCompile>
@@ -1408,9 +1423,6 @@
     <ClCompile Include="..\Private\CriticalFont.cpp">
       <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerChaseState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UI_Monster_HPbar.cpp">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
     </ClCompile>
@@ -1419,6 +1431,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerDeadState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CloseChaseState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AlphenAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SnowFieldNpc.cpp">
       <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
