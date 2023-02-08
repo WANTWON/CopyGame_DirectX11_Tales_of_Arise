@@ -288,10 +288,7 @@ void CAttackNormalState::Enter()
 
 	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
 
-	_float4 fTargetPos;
-	if (pBattleMgr->Get_LackonMonster())
-		XMStoreFloat4(&fTargetPos, pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION));
-
+	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
 
 	if (nullptr != pTarget)
 	{
