@@ -67,6 +67,8 @@ public:
 		return pCurrentState;
 	}
 
+
+
 protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
 	STATE_ID m_eStateId = STATE_END;
@@ -77,5 +79,6 @@ protected:
 	_int m_iSkillEvent = 0;
 	// 공중인지 판단하는 변수
 	_bool m_bIsFly = false;
+	_uint m_ePlayerID = 0;
 };
 END

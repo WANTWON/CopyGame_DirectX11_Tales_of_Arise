@@ -39,6 +39,8 @@ int CParticleSystem::Tick(_float fTimeDelta)
 {
 	if (m_bDead)
 		return OBJ_DEAD;
+	else if (m_bPreDead)
+		m_bDead = true;
 
 	if (!m_bCanStart)
 	{
@@ -670,11 +672,11 @@ void CParticleSystem::KillParticles()
 
 			/* If SpawnType is LOOP after removing the last Particle stop emitting. */
 			if (m_tParticleDesc.m_eSpawnType == 0 && m_fCurrentParticleCount == 0 && m_bStop)
-				m_bDead = true;
+				m_bPreDead = true;
 
 			/* If SpawnType is BURST after removing the last Particle stop emitting. */
 			if (m_tParticleDesc.m_eSpawnType == 1 && m_fCurrentParticleCount == 0 && m_bDidBurst)
-				m_bDead = true;
+				m_bPreDead = true;
 		}
 	}
 

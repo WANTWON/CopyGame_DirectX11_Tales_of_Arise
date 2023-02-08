@@ -70,7 +70,7 @@ void CCollectState::Enter(void)
 		if (nullptr == m_pObject)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_DOOR_OPEN_HAND_RIGHT);
 		else
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_OPEN_TREASURE);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::TREASURE_OPEN);
 		break;
 	}
 }

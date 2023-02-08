@@ -64,7 +64,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
-	if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
+	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+	if(m_eLevel == LEVEL_LOADING)
 		return OBJ_NOEVENT;
 
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)

@@ -43,9 +43,19 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 	/*if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 		return OBJ_NOEVENT;*/
 
+	if (CBattleManager::Get_Instance()->Get_BossMonster() == nullptr)
+		return OBJ_DEAD;
+	else
+	{
+		m_iMonstername = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_MonsterID();
 
-	//m_iMonstername = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_MonsterID();
-	m_iMonstername = 0;
+
+		m_fcurrenthp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_Stats().m_fCurrentHp;
+		m_fmaxhp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_Stats().m_fMaxHp;
+	}
+
+	
+	//m_iMonstername = 0;
 	for (_uint i = 0; i < 6; ++i)
 		m_fbrightpos_hp[i] += 0.015f;
 
@@ -66,14 +76,14 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 
 
 
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_J))
+	/*if (CGameInstance::Get_Instance()->Key_Pressing(DIK_J))
 	{
 		m_fcurrenthp += 100.f;
 	}
 	else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
 	{
 		m_fcurrenthp -= 100.f;
-	}
+	}*/
 
 
 	if (m_fmaxhp * 0.75f < m_fcurrenthp)
@@ -100,13 +110,7 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 
 
 
-	m_fSize.x = 200.0f;
-	m_fSize.y = 22.0f;
-	m_fPosition.x = 100.f;
-	m_fPosition.y = 30.f;
-	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	
 
 
 
@@ -181,6 +185,15 @@ HRESULT CUI_BossMonster_HPbar::Render()
 		return E_FAIL;
 
 
+	
+
+	m_fSize.x = 220.0f;
+	m_fSize.y = 22.0f;
+	m_fPosition.x = 400.f;
+	m_fPosition.y = 40.f;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
@@ -188,34 +201,7 @@ HRESULT CUI_BossMonster_HPbar::Render()
 
 	m_pVIBufferCom->Render();
 
-	/*switch (m_iHPbarindex)
-	{
-	case 4:
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &m_fHPbarvalue[0], sizeof(_float))))
-			return E_FAIL;
-
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fHPcurbarvalue[0], sizeof(_float))))
-			return E_FAIL;
-		break;
-	case 3:
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &m_fHPbarvalue[0], sizeof(_float))))
-			return E_FAIL;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fHPcurbarvalue[1], sizeof(_float))))
-			return E_FAIL;
-		break;
-	case 2:
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &m_fHPbarvalue[0], sizeof(_float))))
-			return E_FAIL;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fHPcurbarvalue[2], sizeof(_float))))
-			return E_FAIL;
-		break;
-	case 1:
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &m_fHPbarvalue[0], sizeof(_float))))
-			return E_FAIL;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fHPcurbarvalue[3], sizeof(_float))))
-			return E_FAIL;
-		break;
-	}*/
+	
 	
 	_float maxbar = m_fmaxhp * 0.25f;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &maxbar, sizeof(_float))))
@@ -223,7 +209,7 @@ HRESULT CUI_BossMonster_HPbar::Render()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fCurrentbar, sizeof(_float))))
 		return E_FAIL;
 
-	;
+	
 	
 	
 

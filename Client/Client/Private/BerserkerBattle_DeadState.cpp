@@ -38,32 +38,11 @@ CBerserkerState * CBattle_DeadState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
 	{
-
-
-		
-		m_pOwner->Get_Model()->Play_Animation(4.5f, false);
-		
-		//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DEAD);
-		
-		m_StartPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
-
 		m_bDeadAnimFinish = true;
-
-
-		//m_pOwner->Get_Model()->Play_Animation(2.5f, false);
-	}
-
-	else
-	{
-		/*_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
-		m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());*/
-	}
-
-	if (m_bDeadAnimFinish)
-	{
-		m_pOwner->Set_State(CTransform::STATE_TRANSLATION, m_StartPos);
 		m_pOwner->Set_GlowUp();
+
 	}
+
 	return nullptr;
 
 }

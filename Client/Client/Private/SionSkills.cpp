@@ -84,6 +84,18 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 		if (iter != nullptr && iter->Get_PreDead())
 			iter = nullptr;
 	}
+
+	switch (m_BulletDesc.eBulletType)
+	{
+	case NORMALATTACK:
+		break;
+	case BOOST:
+		if (m_fTime >= m_BulletDesc.fDeadTime)
+			m_bDead = true;
+		break;
+	}
+
+	
 }
 
 void CSionSkills::Collision_Check()
@@ -116,6 +128,12 @@ void CSionSkills::Dead_Effect()
 	}
 	case BOOST:
 	{
+		for (auto& iter : m_pEffects)
+		{
+			if (iter != nullptr && iter->Get_PreDead())
+				iter = nullptr;
+		}
+
 		if (!m_pEffects.empty())
 		{
 			for (auto& iter : m_pEffects)
@@ -188,8 +206,12 @@ void CSionSkills::Tick_BoostAttack(_float fTimeDelta)
 {
 	m_fTime += fTimeDelta;
 
-	if (m_fTime >= m_BulletDesc.fDeadTime)
-		m_bDead = true;
+
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
 }
 
 CSionSkills * CSionSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
