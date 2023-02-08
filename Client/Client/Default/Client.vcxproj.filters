@@ -910,6 +910,7 @@
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1450,6 +1451,7 @@
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

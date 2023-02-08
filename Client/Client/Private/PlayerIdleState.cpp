@@ -13,6 +13,7 @@
 #include "PlayerCollectState.h"
 
 #include "CloseChaseState.h"
+#include "Player_SionNormalAttack_State.h"
 
 using namespace Player;
 
@@ -36,7 +37,7 @@ CPlayerState * CIdleState::HandleInput()
 		else if (CPlayer::SION == m_pOwner->Get_PlayerID() || CPlayer::RINWELL == m_pOwner->Get_PlayerID())
 		{
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-				return new CAttackNormalState(m_pOwner, STATE_NORMAL_ATTACK1);
+				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
 		}
 			
 
