@@ -45,6 +45,8 @@ public: /*Getter Setter*/
 	_uint Get_Arrived_Count() { return iPortrait_Arrived_Count; }
 	void plus_Arrived_Count() { ++iPortrait_Arrived_Count; }
 
+	void ReSet_Arrived_Count() { iPortrait_Arrived_Count = 0; }
+
 	vector<ITEMINFO*>* Get_Inventory() { return &m_vInventory; }
 	vector<ITEMINFO*>* Get_Inventory_useable() { return &m_vInventory_useable; }
 	vector<ITEMINFO*>* Get_Inventory_material() { return &m_vInventory_material; }
