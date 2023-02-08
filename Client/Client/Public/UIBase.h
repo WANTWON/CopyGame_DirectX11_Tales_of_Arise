@@ -26,7 +26,9 @@ public:
 		UI_LIGHTEFFECT, UI_BRIGHT, UI_BLUEHPBAR, UI_DIALOGUEBOX, UI_DIALOGUELINE, UI_DIALOGUECURSOR, UI_DIALOGUECURSORNONMOVE, UI_ALPHATESTSET,
 		UI_BRIGHTBLACK, UI_BRIGHTDIALOGUELINE, UI_OUTLINE, UI_OUTLINE2, UI_BOOSTGUAGE, UI_TODOCOMPLETE, UI_BATTLESTART, UI_PROGRESSBAR,UI_BOSSHP,
 		UI_BOSSHPFULL,UI_BOSSHPBACKBLACK, UI_BOSSHPBACKWHITE,
-		UI_EFFECTSCREEN ,UI_END };
+		UI_EFFECTSCREEN, 
+		UI_GLOW, 
+		UI_END };
 
 protected:
 	CUI_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -59,11 +61,14 @@ protected:
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
 
+	CTexture*				m_pTextureGlowCom = nullptr;
+
 protected:
 	_float2					m_fPosition, m_fSize;
 	_float4x4				m_ViewMatrix, m_ProjMatrix;
 	_uint					m_eShaderID = UI_ALPHADEFAULT;
 	_float					m_fAlpha = 1.f;
+	_float					m_fGlowPower = 1.f;
 
 
 	_float3			m_vScale = _float3(1.f, 1.f, 1.f);
