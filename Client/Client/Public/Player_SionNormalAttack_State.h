@@ -19,6 +19,8 @@ public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
+	
+
 private:
 	_matrix m_StartMatrix;
 
