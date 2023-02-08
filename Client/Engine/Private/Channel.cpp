@@ -138,7 +138,7 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 
 	if (fLinearCurrentTime >= fLinearTotalTime)
 	{
-		m_KeyFrame_Linear = m_KeyFrames[0];
+		//m_KeyFrame_Linear = m_KeyFrames[0];
 		return true;
 	}
 
