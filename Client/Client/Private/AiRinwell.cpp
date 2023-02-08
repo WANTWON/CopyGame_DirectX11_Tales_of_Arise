@@ -59,7 +59,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_BATTLESTART);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 		m_pTransformCom->LookAt(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION));
-
+		CBattleManager::Get_Instance()->Set_BossMonster(this);
 	}
 	else
 	{

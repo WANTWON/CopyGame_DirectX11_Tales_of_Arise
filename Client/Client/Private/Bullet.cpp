@@ -159,13 +159,15 @@ void CBullet::Free()
 
 	for (auto& iter : m_pEffects)
 	{
-		iter->Set_Dead(true);
+		if(iter != nullptr)
+			iter->Set_Dead(true);
 	}
 	m_pEffects.clear();
 
 	for (auto& iter : m_pDeadEffects)
 	{
-		iter->Set_Dead(true);
+		if (iter != nullptr)
+			iter->Set_Dead(true);
 	}
 	m_pDeadEffects.clear();
 
