@@ -45,7 +45,7 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 			_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
 			CBullet::BULLETDESC BulletDesc;
 			BulletDesc.eCollisionGroup = PLAYER;
-			BulletDesc.fDeadTime = 3.5f;
+			BulletDesc.fDeadTime = 5.f;
 			BulletDesc.eBulletType = CSionSkills::BOOST;
 			BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook*2.f;
 			BulletDesc.pOwner = m_pOwner;

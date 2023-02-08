@@ -36,6 +36,8 @@ int CEffectTexture::Tick(_float fTimeDelta)
 {
 	if (m_bDead)
 		return OBJ_DEAD;
+	else if (m_bPreDead)
+		m_bDead = true;
 
 	if (!m_bCanStart)
 	{
@@ -56,7 +58,7 @@ int CEffectTexture::Tick(_float fTimeDelta)
 	if (m_bCanStart)
 	{
 		if (m_fTimer >= m_tTextureEffectDesc.fLifetime)
-			m_bDead = true;
+			m_bPreDead = true;
 		else
 		{
 			ColorLerp();
