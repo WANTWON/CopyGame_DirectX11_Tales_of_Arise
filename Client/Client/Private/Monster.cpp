@@ -56,7 +56,7 @@ int CMonster::Tick(_float fTimeDelta)
 	if (m_bTakeDamage)
 		m_fTime_TakeDamageDeltaAcc += fTimeDelta;
 
-	if (0.1f <= m_fTime_TakeDamageDeltaAcc)
+	if (0.2f <= m_fTime_TakeDamageDeltaAcc)
 	{
 		m_bTakeDamage = false;
 		m_fTime_TakeDamageDeltaAcc = 0.f;

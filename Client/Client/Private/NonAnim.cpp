@@ -59,7 +59,11 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	if (Check_IsinFrustum(20.f) == false)
+
+	_float fRadius = 3.f;
+
+
+	if (Check_IsinFrustum(fRadius) == false)
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return;

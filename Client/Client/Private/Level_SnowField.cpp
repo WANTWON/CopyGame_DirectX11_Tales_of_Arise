@@ -121,7 +121,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_MINUS))
 	{
-		CBattleManager::Get_Instance()->Set_BattleMode(true, RINWELL);
+		CBattleManager::Get_Instance()->Set_BattleMode(true, RINWELL, true);
 	}
 
 
@@ -529,8 +529,7 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_INTERECTMSG"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
+	
 	
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Skillmsg"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;*/
@@ -959,7 +958,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Test(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 	RELEASE_INSTANCE(CGameInstance);
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 CLevel_SnowField * CLevel_SnowField::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
