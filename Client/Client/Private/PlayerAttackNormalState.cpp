@@ -135,10 +135,11 @@ CPlayerState * CAttackNormalState::Tick(_float fTimeDelta)
 					{
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.fVelocity = 100.f;
+						BulletDesc.fVelocity = 20.f;
 						BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 						BulletDesc.vTargetPosition = (CBattleManager::Get_Instance()->Get_LackonMonster())->Get_TransformState(CTransform::STATE_TRANSLATION);
+						BulletDesc.pOwner = m_pOwner;
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 					}
