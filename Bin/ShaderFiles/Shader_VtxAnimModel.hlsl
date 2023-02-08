@@ -204,7 +204,7 @@ PS_OUT_GLOW PS_GLOW(PS_IN In)
 	return Out;
 }
 
-PS_OUT_GLOW PS_GLOW_DIFFUSE(PS_IN In)
+PS_OUT_GLOW PS_GLOW_DISSOLVE(PS_IN In)
 {
 	PS_OUT_GLOW Out = (PS_OUT_GLOW)0;
 
@@ -295,7 +295,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_GLOW();
 	}
 
-	pass Glow_Diffuse // 4
+	pass Glow_Dissolve // 4
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -303,6 +303,6 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_GLOW_DIFFUSE();
+		PixelShader = compile ps_5_0 PS_GLOW_DISSOLVE();
 	}
 }

@@ -143,15 +143,21 @@ void CUI_Portraitfront_top::Late_Tick(_float fTimeDelta)
 	}
 
 
-	if (nullptr != m_pRendererCom)
+	if (m_pRendererCom)
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
 
+		if (m_fCurrentBoost >= 100.f)
+		{
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_GLOW, this);
+			m_fGlowTimer += fTimeDelta;
+		}
+	}
 }
 
 HRESULT CUI_Portraitfront_top::Render()
 {
-	if (nullptr == m_pShaderCom ||
-		nullptr == m_pVIBufferCom)
+	if (!m_pShaderCom || !m_pVIBufferCom)
 		return E_FAIL;
 
 	if (FAILED(SetUp_ShaderID()))
@@ -166,11 +172,6 @@ HRESULT CUI_Portraitfront_top::Render()
 		m_pVIBufferCom->Render();
 	}
 
-
-
-
-
-
 	if (m_bportraiton)
 	{
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
@@ -182,21 +183,56 @@ HRESULT CUI_Portraitfront_top::Render()
 
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
 			return E_FAIL;
-
 		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha_p, sizeof(_float))))
 			return E_FAIL;
 
 		m_pShaderCom->Begin(m_eShaderID);
-
 		m_pVIBufferCom->Render();
 
 		if (m_eShaderID != UI_POTRAIT_READY)
 			RenderBoostGuage();
-
 	}
 
 
-	
+	return S_OK;
+}
+
+HRESULT CUI_Portraitfront_top::Render_Glow()
+{
+	if (!m_bportraiton)
+		return S_OK;
+
+	if (!m_pShaderCom || !m_pVIBufferCom)
+		return E_FAIL;
+
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", m_pTextureGlowCom->Get_SRV(0))))
+		return E_FAIL;
+
+	_float3 vColor = _float3(1.f, 1.f, 1.f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &vColor, sizeof(_float3))))
+		return E_FAIL;
+
+	_bool bUseDiffuseColor = false;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_bUseDiffuseColor", &bUseDiffuseColor, sizeof(_bool))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowTimer", &m_fGlowTimer, sizeof(_float))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(UI_GLOW);
+
+	m_pVIBufferCom->Render();
 
 	return S_OK;
 }
@@ -217,6 +253,10 @@ HRESULT CUI_Portraitfront_top::Ready_Components(void * pArg)
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portrait_front"), (CComponent**)&m_pTextureCom)))
+		return E_FAIL;
+
+	/* For.Com_TextureGlow */
+	if (FAILED(__super::Add_Components(TEXT("Com_TextureGlow"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portrait_Glow"), (CComponent**)&m_pTextureGlowCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */

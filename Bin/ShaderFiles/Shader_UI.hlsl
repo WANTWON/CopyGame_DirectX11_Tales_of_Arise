@@ -37,7 +37,11 @@ float2 g_WinXY;
 //g_SpriteCurTime / g_SpriteSpeed;
 
 
-
+/* Glow */
+texture2D g_GlowTexture;
+float4 g_vGlowColor;
+bool g_bUseDiffuseColor;
+float g_fGlowTimer;
 
 
 
@@ -1403,6 +1407,38 @@ PS_OUT PS_BOSSBACKWHITE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EFFECTSCREEN(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	return Out;
+}
+
+PS_OUT PS_UI_GLOW(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	Out.vColor = g_GlowTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (g_bUseDiffuseColor)
+	{
+		float4 vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+		Out.vColor = vDiffuse;
+	}
+	else
+	{
+		Out.vColor.a = Out.vColor.r;
+		Out.vColor.rgb *= g_vGlowColor;
+
+		Out.vColor *=  min(cos(g_fGlowTimer * 4) + 1.2f, 1.f);
+	}
+
+	if (Out.vColor.a == 0)
+		discard;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default
@@ -1909,7 +1945,7 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_BOSSBACKBLACK();                //44
+		PixelShader = compile ps_5_0 PS_BOSSBACKBLACK();                //45
 	}
 
 	pass BOSSHPBWHITE
@@ -1920,10 +1956,28 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_BOSSBACKWHITE();                //44
+		PixelShader = compile ps_5_0 PS_BOSSBACKWHITE();                //46
 	}
 
-	
+	pass UI_EFFECTSCREEN
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_EFFECTSCREEN();                //47
+	}
+
+	pass UI_GLOW // 48
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_UI_GLOW();
+	}
 }
-
-
