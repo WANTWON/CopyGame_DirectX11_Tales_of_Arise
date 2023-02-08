@@ -272,11 +272,11 @@ CPlayerState * CJumpState::EventInput(void)
 			{
 			case CPlayer::ALPHEN:
 				if (pGameInstance->Key_Down(DIK_E))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1, m_fStartHeight, m_fTime);
+					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
 				else if (pGameInstance->Key_Down(DIK_R))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2, m_fStartHeight, m_fTime);
+					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
 				else if (pGameInstance->Key_Down(DIK_F))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3, m_fStartHeight, m_fTime);
+					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
 				break;
 			case CPlayer::SION:
 				//for Sion State//
@@ -410,7 +410,7 @@ void CJumpState::Enter()
 
 void CJumpState::Exit()
 {
-	//m_fTime = 0.f;
+	m_fTime = 0.f;
 
 	if (STATETYPE_END == m_eStateType)
 		m_pOwner->Off_IsFly();

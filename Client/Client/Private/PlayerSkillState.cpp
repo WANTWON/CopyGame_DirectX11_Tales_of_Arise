@@ -52,6 +52,10 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 		else
 			m_pOwner->Check_Navigation();
 	}
+		
+
+	if (m_bIsFly)
+		m_fTime += 0.1f;
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -287,9 +291,9 @@ CPlayerState * CSkillState::LateTick(_float fTimeDelta)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_END);
 		else
 		{
-			if (m_bIsFly)
-				return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
-			else
+			/*if (m_bIsFly)
+				return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime);
+			else*/
 				return new CIdleState(m_pOwner);
 		}
 	}
@@ -316,7 +320,7 @@ void CSkillState::Enter(void)
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(1);
 				break;
 			case Client::CPlayerState::STATE_SKILL_ATTACK3:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_ENGETU);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_START);
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(2);
 				break;
 			}
@@ -362,25 +366,12 @@ void CSkillState::Enter(void)
 		}
 	}
 
+	_vector vTargetPos = { 0.f,0.f,0.f,1.f };
 	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
-
-	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
-
-	if (nullptr != pTarget)
-	{
-		_float4 fTargetPos;
-		XMStoreFloat4(&fTargetPos, pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
-		fTargetPos.y = m_pOwner->Get_Transform()->Get_World4x4().m[3][1];
-
-		_vector		vLook = XMLoadFloat4(&fTargetPos) - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
-		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-		_vector		vRight = XMVector3Cross(vAxisY, vLook);
-
-		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_RIGHT));
-		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_LOOK));
-	}
+	if (pBattleMgr->Get_LackonMonster() != nullptr)
+		_vector vTargetPos = pBattleMgr->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION);
+	
+	m_pOwner->Get_Transform()->LookAt(vTargetPos);
 
 	RELEASE_INSTANCE(CBattleManager);
 }
