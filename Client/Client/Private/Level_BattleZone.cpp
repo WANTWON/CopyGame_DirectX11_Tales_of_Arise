@@ -284,6 +284,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Change_Navigation(LEVEL_BATTLE);
 		iter->Compute_CurrentIndex(LEVEL_BATTLE);
 		iter->Check_Navigation();
+		iter->Change_Level(LEVEL_BATTLE);
 		i++;
 	}
 

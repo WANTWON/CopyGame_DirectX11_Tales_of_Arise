@@ -36,7 +36,7 @@ CPlayerState * CRunState::HandleInput()
 		{
 		case CPlayer::ALPHEN:
 		case CPlayer::LAW:
-			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+			if (pGameInstance->Mouse_Down(DIMK_LBUTTON) || pGameInstance->Key_Down(DIK_E) || pGameInstance->Key_Down(DIK_R) || pGameInstance->Key_Down(DIK_F))
 				return new CCloseChaseState(m_pOwner, STATE_CHASE);
 		case CPlayer::SION:
 		case CPlayer::RINWELL:
@@ -51,14 +51,6 @@ CPlayerState * CRunState::HandleInput()
 		{
 			switch (m_ePlayerID)
 			{
-			case CPlayer::ALPHEN:
-				if (pGameInstance->Key_Down(DIK_E))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
-				else if (pGameInstance->Key_Down(DIK_R))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
-				else if (pGameInstance->Key_Down(DIK_F))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
-				break;
 			case CPlayer::SION:
 				if (pGameInstance->Key_Down(DIK_E))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK1);
