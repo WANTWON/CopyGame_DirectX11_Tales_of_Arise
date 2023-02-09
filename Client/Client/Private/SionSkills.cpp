@@ -34,6 +34,13 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalbullet.dat"), mWorldMatrix);
 		break;
+	case GLACIA:
+		vLocation = m_BulletDesc.vInitPositon;
+		//mWorldMatrix.r[]
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+
+
+
 	case BOOST:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
@@ -90,6 +97,8 @@ int CSionSkills::Tick(_float fTimeDelta)
 	case NORMALATTACK:
 		Tick_NormalAttack(fTimeDelta);
 		break;
+	case GLACIA:
+		Tick_GlaciaAttack(fTimeDelta);
 	case BOOST:
 	case GRAVITY_DEAD:
 		Tick_BoostAttack(fTimeDelta);
@@ -251,6 +260,10 @@ HRESULT CSionSkills::Ready_Components(void * pArg)
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 15.f);
 		break;
+	case GLACIA:
+		ColliderDesc.vScale = _float3(2.f, 2.f, 2.f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	case GRAVITY_DEAD:
 	case GRAVITY:
 		ColliderDesc.vScale = _float3(10.f, 10.f, 10.f);
@@ -280,6 +293,14 @@ void CSionSkills::Tick_NormalAttack(_float fTimeDelta)
 		iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	return;
+}
+
+void CSionSkills::Tick_GlaciaAttack(_float fTimeDelta)
+{
+	if (m_bDeadEffect)
+		m_bDead = true;
+
+	m_pTransformCom->Go_PosTarget(fTimeDelta, m_BulletDesc.vTargetPosition);
 }
 
 void CSionSkills::Tick_BoostAttack(_float fTimeDelta)
