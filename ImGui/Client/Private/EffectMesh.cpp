@@ -68,12 +68,6 @@ int CEffectMesh::Tick(_float fTimeDelta)
 			}
 			else
 			{
-				m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);
-
-				_vector vTurnAxis = XMVectorSet(m_tMeshEffectDesc.vTurn.x, m_tMeshEffectDesc.vTurn.y, m_tMeshEffectDesc.vTurn.z, 0.f);
-				if (!XMVector3Equal(vTurnAxis, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
-					m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
-
 				ColorLerp();
 				ScaleLerp();
 				AlphaLerp();
@@ -83,6 +77,12 @@ int CEffectMesh::Tick(_float fTimeDelta)
 				m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
 				m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
 				m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);
+
+				m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);
+
+				_vector vTurnAxis = XMVectorSet(m_tMeshEffectDesc.vTurn.x, m_tMeshEffectDesc.vTurn.y, m_tMeshEffectDesc.vTurn.z, 0.f);
+				if (!XMVector3Equal(vTurnAxis, XMVectorSet(0.f, 0.f, 0.f, 0.f)))
+					m_pTransformCom->Turn(vTurnAxis, fTimeDelta);
 
 				m_fTimer += fTimeDelta;
 			}

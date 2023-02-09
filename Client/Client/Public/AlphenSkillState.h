@@ -22,13 +22,25 @@ private:
 	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
 
+	/* Effects */
+	/* E */
 	_bool m_bHienzinFirstEffect = false;
 	_bool m_bHienzinSecondEffect = false;
+
+	/* R */
 	_bool m_bAkizameEffect = false;
+	_bool m_bSenkusyourepaParticle = false;
+	_bool m_bSenkusyourepaFirstEffect = false;
+	_bool m_bSenkusyourepaSecondEffect = false;
+
+	/* F */
 	_bool m_bHousyutigakuzinFirstEffect = false;
 	_bool m_bHousyutigakuzinSecondEffect = false;
+	_bool m_bEngetuFirstEffect = false;
+	_bool m_bEngetuSecondEffect = false;
 
 	vector<CEffect*> m_HousyutigakuzinStart;
+	vector<CEffect*> m_SenkusyourepaParticles;
 
 private:
 	void CallbackFunction(_uint iIndex);

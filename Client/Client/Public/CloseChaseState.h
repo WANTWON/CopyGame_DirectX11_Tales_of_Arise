@@ -8,7 +8,7 @@ BEGIN(Player)
 class CCloseChaseState final : public CPlayerState
 {
 public:
-	CCloseChaseState(class CPlayer* pPlayer, STATE_ID eStateType);
+	CCloseChaseState(class CPlayer* pPlayer, STATE_ID eStateType, STATE_ID eNextStateType);
 	
 	virtual CPlayerState* HandleInput() override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -20,6 +20,7 @@ public:
 
 private:
 	CBaseObj* m_pTarget = nullptr;
+	STATE_ID m_eNextState = STATE_END;
 };
 
 END

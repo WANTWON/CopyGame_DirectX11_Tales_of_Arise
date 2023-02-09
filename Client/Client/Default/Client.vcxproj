@@ -290,7 +290,6 @@
     <ClInclude Include="..\Public\NonAnim_Instance.h" />
     <ClInclude Include="..\Public\Npc.h" />
     <ClInclude Include="..\Public\ParticleSystem.h" />
-    <ClInclude Include="..\public\PlayerAttackNormalState.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\PlayerIdleState.h" />
     <ClInclude Include="..\Public\PlayerJumpState.h" />
@@ -298,7 +297,6 @@
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerRunState.h" />
     <ClInclude Include="..\Public\Sion.h" />
-    <ClInclude Include="..\Public\PlayerSkillState.h" />
     <ClInclude Include="..\Public\Slime.h" />
     <ClInclude Include="..\Public\SlimeAdventState.h" />
     <ClInclude Include="..\Public\SlimeBattle_Atk_TackleState.h" />
@@ -477,14 +475,12 @@
     <ClCompile Include="..\Private\NonAnim_Instance.cpp" />
     <ClCompile Include="..\Private\Npc.cpp" />
     <ClCompile Include="..\Private\ParticleSystem.cpp" />
-    <ClCompile Include="..\private\PlayerAttackNormalState.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\PlayerIdleState.cpp" />
     <ClCompile Include="..\Private\PlayerJumpState.cpp" />
     <ClCompile Include="..\Private\PlayerManager.cpp" />
     <ClCompile Include="..\private\PlayerRunState.cpp" />
     <ClCompile Include="..\Private\Sion.cpp" />
-    <ClCompile Include="..\Private\PlayerSkillState.cpp" />
     <ClCompile Include="..\Private\Slime.cpp" />
     <ClCompile Include="..\Private\SlimeAdventState.cpp" />
     <ClCompile Include="..\Private\SlimeBattle_Atk_TackleState.cpp" />

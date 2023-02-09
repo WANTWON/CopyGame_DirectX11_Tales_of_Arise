@@ -6,9 +6,7 @@
 
 #include "PlayerIdleState.h"
 #include "PlayerRunState.h"
-#include "PlayerAttackNormalState.h"
 #include "PlayerJumpState.h"
-#include "PlayerSkillState.h"
 #include "PlayerCollectState.h"
 #include "PlayerHitState.h"
 #include "Player_SionNormalAttack_State.h"
@@ -36,8 +34,14 @@ CPlayerState * CRunState::HandleInput()
 		{
 		case CPlayer::ALPHEN:
 		case CPlayer::LAW:
-			if (pGameInstance->Mouse_Down(DIMK_LBUTTON) || pGameInstance->Key_Down(DIK_E) || pGameInstance->Key_Down(DIK_R) || pGameInstance->Key_Down(DIK_F))
-				return new CCloseChaseState(m_pOwner, STATE_CHASE);
+			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_NORMAL_ATTACK1);
+			if (pGameInstance->Key_Down(DIK_E))
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_E);
+			if (pGameInstance->Key_Down(DIK_R))
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_R);
+			if(pGameInstance->Key_Down(DIK_F))
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_F);
 		case CPlayer::SION:
 		case CPlayer::RINWELL:
 			//for Sion State//
@@ -52,12 +56,17 @@ CPlayerState * CRunState::HandleInput()
 			switch (m_ePlayerID)
 			{
 			case CPlayer::SION:
-				if (pGameInstance->Key_Down(DIK_E))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK1);
+		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK4);
+		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK5);
+				else if (pGameInstance->Key_Down(DIK_E))
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E);
 				else if (pGameInstance->Key_Down(DIK_R))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK2);
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 				else if (pGameInstance->Key_Down(DIK_F))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK3);
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
+				
 				break;
 			}	
 		}

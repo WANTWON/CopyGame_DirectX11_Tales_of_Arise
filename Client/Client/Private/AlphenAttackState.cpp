@@ -110,17 +110,17 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 		if (GetKeyState('E') < 0)
 		{
 			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK1, m_fStartHeight, m_fTime);
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
 		}
 		else if (GetKeyState('R') < 0)
 		{
 			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK2, m_fStartHeight, m_fTime);
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
 		}
 		else if (GetKeyState('F') < 0)
 		{
 			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK3, m_fStartHeight, m_fTime);
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 		}
 	}
 	else
@@ -128,17 +128,17 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 		if (GetKeyState('E') < 0)
 		{
 			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK1);
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
 		}
 		else if (GetKeyState('R') < 0)
 		{
 			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK2);
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 		}
 		else if (GetKeyState('F') < 0)
 		{
 			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK3);
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
 		}
 	}
 
