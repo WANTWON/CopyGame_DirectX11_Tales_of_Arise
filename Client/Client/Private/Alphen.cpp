@@ -58,7 +58,7 @@ HRESULT CAlphen::Ready_Parts()
 	/* For.Weapon */
 	_uint iLevelIndex = CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 	if (nullptr == pSocket)
 		return E_FAIL;
 
@@ -146,7 +146,7 @@ void CAlphen::Change_Level(LEVEL eLevel)
 
 		if (LEVEL_SNOWFIELD == eLevel)
 		{
-			pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L_end");
+			pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L");
 			if (nullptr == pSocket)
 			{
 				ERR_MSG(TEXT("Failed to Get BonePtr"));
@@ -154,11 +154,11 @@ void CAlphen::Change_Level(LEVEL eLevel)
 			}
 
 			XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixRotationX(XMConvertToRadians(180.f)));
-			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 0.f));
+			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 50.f));
 		}
 		else if (LEVEL_BATTLE == eLevel)
 		{
-			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
+			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 			if (nullptr == pSocket)
 			{
 				ERR_MSG(TEXT("Failed to Get BonePtr"));
