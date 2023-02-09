@@ -33,31 +33,22 @@ CPlayerState * CPlayer_SionSkillAttack::HandleInput(void)
 
 CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 {
-	/*if (CAlphen::ANIM::ANIM_: == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
-	{
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
-		m_pOwner->Check_Navigation();
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+
+		if (CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
+		else
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 	else
-	{*/
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-
-		if (!m_bIsAnimationFinished)
-		{
-			_vector vecTranslation;
-			_float fRotationRadian;
-
-			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-
-			if (CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
-				m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
-			else
-				m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
-		}
-		else
-			m_pOwner->Check_Navigation();
-//	}
+		m_pOwner->Check_Navigation_Jump();
 
 	if (!m_pBlastEffect.empty())
 	{
@@ -120,7 +111,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 						}
 					}
 				}
-				
+
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 					if (GetKeyState(VK_LBUTTON) < 0)
@@ -190,9 +181,9 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 			case Client::CPlayerState::STATE_SKILL_ATTACK3:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
-					
+
 				}
-			
+
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 					if (GetKeyState(VK_LBUTTON) < 0)
@@ -223,7 +214,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 CPlayerState * CPlayer_SionSkillAttack::LateTick(_float fTimeDelta)
 {
-	
+
 
 	if (m_bIsStateEvent)
 		return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1);

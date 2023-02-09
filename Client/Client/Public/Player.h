@@ -53,6 +53,11 @@ public: /* Getter &  Setter */
 	void			On_IsFly(void) { m_bIsFly = true; }
 	void			Off_IsFly(void) { m_bIsFly = false; }
 
+	/* 저스트 회피 판단 */
+	_bool			Get_IsJustDodge(void) { return m_bIsJustDodge; }
+	void			On_JustDodge(void) { m_bIsJustDodge = true; }
+	void			Off_JustDodge(void) { m_bIsJustDodge = false; }
+
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
 	void Play_AISkill(PLAYERID ePlayer);
@@ -95,6 +100,8 @@ protected: /* for 4 Player */
 	_bool			m_bIsFly = false;
 	/* 현재 레벨 변수 */
 	LEVEL			m_eLevel = LEVEL_END;
+	/* 저스트 회피 판단 변수 */
+	_bool			m_bIsJustDodge = false;
 
 protected:
 	vector<class CGameObject*> m_Parts;

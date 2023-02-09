@@ -919,6 +919,9 @@
     <ClInclude Include="..\Public\PlayerSkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerDodgeState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1466,6 +1469,9 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerDodgeState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
   </ItemGroup>

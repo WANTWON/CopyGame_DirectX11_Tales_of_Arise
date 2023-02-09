@@ -203,6 +203,7 @@
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
+    <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
     <ClInclude Include="..\Public\SnowFieldNpc.h" />
@@ -396,6 +397,7 @@
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
+    <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />
     <ClCompile Include="..\Private\SnowFieldNpc.cpp" />

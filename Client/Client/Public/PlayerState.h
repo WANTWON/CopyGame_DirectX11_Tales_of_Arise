@@ -31,6 +31,7 @@ public:
 		STATE_HIT,
 		STATE_DEAD,
 		STATE_CHASE,
+		STATE_DODGE,
 		STATE_END
 	};
 
