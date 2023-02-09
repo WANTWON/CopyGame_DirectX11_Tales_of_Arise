@@ -373,22 +373,16 @@ HRESULT CSionSkills::Ready_Components(void * pArg)
 			return E_FAIL;
 		break;
 
-	case AQUALUINA:
+	case AQUA_LUINA:
 		ColliderDesc.vScale = _float3(0.5f, 6.f, 0.5f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
+			return E_FAIL;
 		
 	}
 
 
-	if (m_BulletDesc.eBulletType)
-	{
-		if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
-			return E_FAIL;
-	}
-	
 
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
-		return E_FAIL;
 
 
 
