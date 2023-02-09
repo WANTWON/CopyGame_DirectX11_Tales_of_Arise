@@ -154,11 +154,11 @@ void CAlphen::Change_Level(LEVEL eLevel)
 			}
 
 			XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixRotationX(XMConvertToRadians(180.f)));
-			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 0.f));
+			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 45.f));
 		}
 		else if (LEVEL_BATTLE == eLevel)
 		{
-			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R_end");
+			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 			if (nullptr == pSocket)
 			{
 				ERR_MSG(TEXT("Failed to Get BonePtr"));
@@ -172,7 +172,7 @@ void CAlphen::Change_Level(LEVEL eLevel)
 		WeaponDesc.pSocket = pSocket;
 		WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 		WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
-		strcpy(WeaponDesc.pModeltag, "SWO1");
+		strcpy(WeaponDesc.pModeltag, "SWO2");
 		Safe_AddRef(pSocket);
 
 		dynamic_cast<CWeapon*>(m_Parts[PARTS_WEAPON])->Set_WeaponDesc(WeaponDesc);
