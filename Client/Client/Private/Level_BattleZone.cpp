@@ -349,6 +349,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 			RELEASE_INSTANCE(CGameInstance);
 			return S_OK;
 		}
+
 		case Client::ASTRAL_DOUBT:
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
 				return E_FAIL;
