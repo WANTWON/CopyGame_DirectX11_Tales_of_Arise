@@ -59,7 +59,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 			{
 				switch (m_eStateId)
 				{
-				case Client::CPlayerState::STATE_SKILL_ATTACK1:
+				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 					if (m_bIsFly)
 					{
 
@@ -91,7 +91,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						}
 					}
 					break;
-				case Client::CPlayerState::STATE_SKILL_ATTACK2:
+				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 					if (m_bIsFly)
 					{
 
@@ -107,7 +107,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						}
 					}
 					break;
-				case Client::CPlayerState::STATE_SKILL_ATTACK3:
+				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 					if (m_bIsFly)
 					{
 
@@ -190,19 +190,19 @@ CPlayerState * CAlphenSkillState::EventInput(void)
 		if (GetKeyState('E') < 0)
 		{
 			m_pOwner->Get_Model()->Reset();
-			m_eStateId = STATE_SKILL_ATTACK1;
+			m_eStateId = STATE_SKILL_ATTACK_E;
 			Enter();
 		}
 		else if (GetKeyState('R') < 0)
 		{
 			m_pOwner->Get_Model()->Reset();
-			m_eStateId = STATE_SKILL_ATTACK2;
+			m_eStateId = STATE_SKILL_ATTACK_R;
 			Enter();
 		}
 		else if (GetKeyState('F') < 0)
 		{
 			m_pOwner->Get_Model()->Reset();
-			m_eStateId = STATE_SKILL_ATTACK3;
+			m_eStateId = STATE_SKILL_ATTACK_F;
 			Enter();
 		}
 	}
@@ -248,15 +248,15 @@ void CAlphenSkillState::Enter(void)
 	{
 		switch (m_eStateId)
 		{
-		case Client::CPlayerState::STATE_SKILL_ATTACK1:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_RYUUSEIZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(0);
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK2:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_SENKUSYOUREPA);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(1);
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK3:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_ENGETU);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(2);
 			break;
@@ -266,19 +266,19 @@ void CAlphenSkillState::Enter(void)
 	{
 		switch (m_eStateId)
 		{
-		case Client::CPlayerState::STATE_SKILL_ATTACK1:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(3);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_E.wav"), SOUND_EFFECT, 0.6f);
 			//이 스킬 이펙트 소리는 Player_Weapon쪽에 있음. 여기서 이펙트 소리 넣으면, 애님이랑 타이밍이 안맞음. 
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK2:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(4);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.6f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R.wav"), SOUND_EFFECT, 0.6f);
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK3:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(5);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_EFFECT, 0.6f);

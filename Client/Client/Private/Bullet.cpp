@@ -35,6 +35,7 @@ HRESULT CBullet::Initialize(void * pArg)
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.vInitPositon);
 
+	return S_OK;
 }
 
 void CBullet::Late_Tick(_float fTimeDelta)
