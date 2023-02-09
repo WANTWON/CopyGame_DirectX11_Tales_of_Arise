@@ -26,6 +26,8 @@ private:
 	/* E */
 	_bool m_bHienzinFirstEffect = false;
 	_bool m_bHienzinSecondEffect = false;
+	_bool m_bRyuuseizinFirstEffect = false;
+	_bool m_bRyuuseizinSecondEffect = false;
 
 	/* R */
 	_bool m_bAkizameEffect = false;

@@ -65,32 +65,56 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 					if (m_bIsFly)
 					{
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
+						if (!strcmp(pEvent.szName, "Ryuuseizin_1"))
+						{
+							if (!m_bRyuuseizinFirstEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_1.dat"), mWorldMatrix);
+
+								m_bRyuuseizinFirstEffect = true;
+							}
+						}
+						else if (!strcmp(pEvent.szName, "Ryuuseizin_2"))
+						{
+							if (!m_bRyuuseizinSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_2.dat"), mWorldMatrix);
+
+								m_bRyuuseizinSecondEffect = true;
+							}
+						}
 					}
 					else
 					{
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-
 						_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
 						_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
 						_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
-
 						vPosition += vLook * 2;
 						vPosition += vOffset;
 
 						mWorldMatrix.r[3] = vPosition;
-						vector<CEffect*> pEffects = CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
 
 						if (!strcmp(pEvent.szName, "Hienzin_1"))
 						{
 							if (!m_bHienzinFirstEffect)
+							{							
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+
 								m_bHienzinFirstEffect = true;
+							}
 						}
 						else if (!strcmp(pEvent.szName, "Hienzin_2"))
 						{
 							if (!m_bHienzinSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+
 								m_bHienzinSecondEffect = true;
+							}
 						}
 					}
 					break;
