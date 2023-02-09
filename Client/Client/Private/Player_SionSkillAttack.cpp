@@ -95,8 +95,8 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 		}
 	}
 
-	/*if (m_bIsFly)
-		m_fTime += 0.1f;*/
+	if (m_bIsFly)
+		m_fTime += fTimeDelta;
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -372,12 +372,11 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = PLAYER;
-							BulletDesc.eBulletType = CSionSkills::GLACIA;
-							BulletDesc.iDamage = 200;
-							BulletDesc.fDeadTime = 10.f;
-
-
+							BulletDesc.eBulletType = CSionSkills::AQUA_LUINA;
+							if (pTarget != nullptr)
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+							
 						
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
