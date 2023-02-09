@@ -9,6 +9,7 @@
 #include "PlayerCollectState.h"
 #include "AICheckState.h"
 #include "PlayerDeadState.h"
+#include "PlayerHitState.h"
 
 #include "CameraManager.h"
 #include "AI_HitState.h"
@@ -247,7 +248,7 @@ HRESULT CPlayer::Render_ShadowDepth()
 
 _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-	if (fDamage <= 0 || m_bDead)
+	if (fDamage <= 0 || m_bDead || m_bIsJustDodge)
 		return 0;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
@@ -286,14 +287,17 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	}
 	else
 	{
+		CPlayerState* pState = nullptr;
+		CAIState* pAIState = nullptr;
+
 		switch (eMode)
 		{
 		case Client::ACTIVE:
-			/*CPlayerState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
-			m_pPlayerState = m_pState->ChangeState(m_pState, pState);*/
+			pState = new CHitState(this);
+			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 			break;
 		case Client::AI_MODE:
-			CAIState* pAIState = new AIPlayer::CAI_HitState(this);
+			pAIState = new AIPlayer::CAI_HitState(this);
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 			break;
 

@@ -43,8 +43,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
-
-	if (m_bIsFly)
+	else if (m_bIsFly)
 		m_fTime += fTimeDelta;
 		
 	m_pOwner->Check_Navigation_Jump();
@@ -56,7 +55,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		if (pEvent.isPlay)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+ 				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
