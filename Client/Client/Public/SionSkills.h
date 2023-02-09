@@ -8,7 +8,7 @@ public:
 
 
 
-	enum TYPE { NORMALATTACK, BOOST, GRAVITY, GRAVITY_DEAD, MAGNA_RAY, TRESVENTOS,AQUA_LUINA, GLACIA };
+	enum TYPE { NORMALATTACK, BOOST, GRAVITY, GRAVITY_DEAD, MAGNA_RAY, TRESVENTOS,AQUA_LUINA, AQUA_LUINA_BULLET, GLACIA };
 
 
 
@@ -34,6 +34,8 @@ private:
 	void Tick_BoostAttack(_float fTimeDelta);
 	void Tick_GravityAttack(_float fTimeDelta);
 	void Tick_TresVentos(_float fTimeDelta);
+	void Tick_AQUA_LUINA(_float fTimeDelta);
+	void Tick_AQUA_LUINA_BULLET(_float fTimeDelta);
 
 private:
 	vector<CEffect*> m_pBlastEffect;
@@ -43,6 +45,10 @@ public:
 	static CSionSkills* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
+
+private:
+	_uint bulletcount = 30;
+	_float m_fAquaTImer = 0.f;
 
 };
 

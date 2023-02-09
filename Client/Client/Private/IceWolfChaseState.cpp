@@ -49,7 +49,7 @@ void CChaseState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_SYMBOL_RUN);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Chase.wav"), SOUND_VOICE, 0.4f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Chase.wav"), SOUND_VOICE, 0.1f);
 }
 
 void CChaseState::Exit()
