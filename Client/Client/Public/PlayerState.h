@@ -23,6 +23,7 @@ public:
 		STATE_NORMAL_ATTACK2,
 		STATE_NORMAL_ATTACK3,
 		STATE_NORMAL_ATTACK4,
+		STATE_NORMAL_ATTACK5,
 		STATE_SKILL_ATTACK1,
 		STATE_SKILL_ATTACK2,
 		STATE_SKILL_ATTACK3,
@@ -67,6 +68,8 @@ public:
 		return pCurrentState;
 	}
 
+
+
 protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
 	STATE_ID m_eStateId = STATE_END;
@@ -78,5 +81,6 @@ protected:
 
 	// 공중인지 판단하는 변수
 	_bool m_bIsFly = false;
+	_uint m_ePlayerID = 0;
 };
 END

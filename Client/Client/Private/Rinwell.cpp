@@ -12,6 +12,7 @@ _bool CRinwell::Is_AnimationLoop(_uint eAnimId)
 	case IDLE:
 	case RUN:
 	case BTL_MAGIC_LOOP:
+
 		return true;
 	default:
 		return false;

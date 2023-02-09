@@ -7,6 +7,7 @@ using namespace Player;
 CHitState::CHitState(CPlayer * pPlayer)
 {
 	m_pOwner = pPlayer;
+	m_ePlayerID = m_pOwner->Get_PlayerID();
 }
 
 CPlayerState * CHitState::HandleInput()
@@ -39,14 +40,14 @@ void CHitState::Enter()
 
 	m_eStateId = STATE_ID::STATE_HIT;
 
-	switch (m_pOwner->Get_PlayerID())
+	switch (m_ePlayerID)
 	{
 	case CPlayer::ALPHEN:
 		if (m_bIsFly)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_AIR_LARGE_B);
 		else
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_LARGE_B);
-			break;
+		break;
 	case CPlayer::SION:
 		if (m_bIsFly)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DAMAGE_AIR_LARGE_B);

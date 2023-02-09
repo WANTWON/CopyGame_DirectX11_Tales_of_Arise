@@ -61,6 +61,7 @@ protected:
 
 	_float m_fMaxBoost = 100.f;
 	_float m_fCurrentBoost = 20.f;
+	_float m_fGlowTimer = 0.f;
 
 	//_bool m_bminus = 
 

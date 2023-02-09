@@ -19,7 +19,12 @@ CLevel_BattleZone::CLevel_BattleZone(ID3D11Device* pDevice, ID3D11DeviceContext*
 HRESULT CLevel_BattleZone::Initialize()
 {
 	MONSTER_ID eMonsterID = CBattleManager::Get_Instance()->Get_MonsterType();
-	CBattleManager::Get_Instance()->Set_BattleMode(true, eMonsterID);
+
+	if(eMonsterID == RINWELL)
+		CBattleManager::Get_Instance()->Set_BattleMode(true, eMonsterID, true);
+	else
+		CBattleManager::Get_Instance()->Set_BattleMode(true, eMonsterID);
+
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -73,6 +78,8 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 	{
+		CUI_Manager::Get_Instance()->ReSet_Arrived_Count();
+
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
@@ -600,6 +607,12 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
 
+
+	if (CBattleManager::Get_Instance()->Get_IsBossBattle())
+	{
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_BATTLE, pLayerTag)))
+			return E_FAIL;
+	}
 
 	RELEASE_INSTANCE(CGameInstance);
 

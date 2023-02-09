@@ -19,6 +19,28 @@ void CEffectMesh::Set_WorldPosition(_matrix mWorldMatrix)
 	m_pTransformCom->Set_WorldMatrix(mMatrix);
 }
 
+void CEffectMesh::LookAt(_vector vTarget)
+{
+	/* Billboard. */
+	m_pTransformCom->LookAt(vTarget);
+
+	///* Remove Translation from World Matrix. */
+	//_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	//
+	//_vector mReset = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	//_vector mTranslation = mWorldMatrix.r[3];
+	//mWorldMatrix.r[3] = mReset;
+
+	///* Apply Rotation to World Matrix. */
+	//_matrix mRotationMatrixLocal = XMMatrixRotationRollPitchYaw(XMConvertToRadians(m_tMeshEffectDesc.vRotation.x), XMConvertToRadians(m_tMeshEffectDesc.vRotation.y), XMConvertToRadians(m_tMeshEffectDesc.vRotation.z));
+	//mWorldMatrix = XMMatrixMultiply(mWorldMatrix, mRotationMatrixLocal);
+
+	///* Re-apply Translation. */
+	//mWorldMatrix.r[3] = mTranslation;
+
+	//m_pTransformCom->Set_WorldMatrix(mWorldMatrix);
+}
+
 CEffectMesh::CEffectMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEffect(pDevice, pContext)
 {
@@ -39,10 +61,6 @@ HRESULT CEffectMesh::Initialize(void * pArg)
 {
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
-
-	/*m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT, m_tMeshEffectDesc.vScale.x);
-	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
-	m_pTransformCom->Set_Scale(CTransform::STATE::STATE_LOOK, m_tMeshEffectDesc.vScale.z);*/
 	
 	return S_OK;
 }
@@ -51,6 +69,8 @@ int CEffectMesh::Tick(_float fTimeDelta)
 {
 	if (m_bDead)
 		return OBJ_DEAD;
+	else if (m_bPreDead)
+		m_bDead = true;
 
 	if (!m_bCanStart)
 	{
@@ -71,7 +91,7 @@ int CEffectMesh::Tick(_float fTimeDelta)
 	if (m_bCanStart)
 	{
 		if (m_fTimer >= m_tMeshEffectDesc.fLifetime)
-			m_bDead = true;
+			m_bPreDead = true;
 		else
 		{
 			m_pTransformCom->Change_RotationPerSec(m_tMeshEffectDesc.fTurnVelocity);

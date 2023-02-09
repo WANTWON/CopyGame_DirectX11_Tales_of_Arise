@@ -87,6 +87,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
+	virtual HRESULT Render_Glow() override;
 
 public: /*For.State*/
 	void AI_Behavior(_float fTimeDelta);
@@ -101,7 +102,6 @@ private:
 private:
 	class CHawkState*  m_pHawkState = nullptr;
 		  _bool		   m_bDoneChangeState = false;
-		  _bool		   m_bDead = false;
 public:
 	static CHawk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

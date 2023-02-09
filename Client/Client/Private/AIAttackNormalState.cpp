@@ -26,8 +26,8 @@ CAIAttackNormalState::CAIAttackNormalState(CPlayer* pPlayer , STATE_ID eStateTyp
 
 CAIState * CAIAttackNormalState::Tick(_float fTimeDelta)
 {
-	//if (m_pTarget == nullptr)
-	//	m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+	if (m_pTarget == nullptr)
+		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
 	
 

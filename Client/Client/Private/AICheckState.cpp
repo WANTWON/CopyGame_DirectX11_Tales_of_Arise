@@ -21,6 +21,7 @@ CAICheckState::CAICheckState(CPlayer* pPlayer, STATE_ID eStateType)
 
 CAIState * CAICheckState::Tick(_float fTimeDelta)
 {
+	
 	//if(m_ePreStateID =
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())

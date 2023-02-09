@@ -913,6 +913,12 @@
     <ClInclude Include="..\Public\AlphenSkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_SionNormalAttack_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SionSkillAttack.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1411,6 +1417,12 @@
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\BerserkerBattle_RunState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClCompile>
@@ -1449,6 +1461,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\AlphenSkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SionSkillAttack.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

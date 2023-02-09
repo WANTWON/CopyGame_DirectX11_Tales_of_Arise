@@ -14,6 +14,14 @@ CBattleManager::CBattleManager()
 }
 
 
+void CBattleManager::Set_BattleMode(_bool type, MONSTER_ID eMonsterType, _bool IsBossBattle)
+{
+	 m_isBattleMode = type; 
+	 m_eMonsterType = eMonsterType; 
+	 m_FightedMonster.push_back(eMonsterType);
+	 m_bIsBossBattle = IsBossBattle;
+}
+
 CBaseObj * CBattleManager::Get_MinDistance_Monster(_vector vPosition)
 {
 	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -36,6 +44,15 @@ CBaseObj * CBattleManager::Get_MinDistance_Monster(_vector vPosition)
 		}
 	}
 	return pTarget;
+}
+
+_bool CBattleManager::IsAllMonsterDead()
+{
+	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
+	if (pMonsterList == nullptr || pMonsterList->size() <= 0)
+		return true;
+	
+	return false;
 }
 
 void CBattleManager::Update_LockOn()

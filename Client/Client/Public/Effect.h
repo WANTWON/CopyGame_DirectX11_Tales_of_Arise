@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseObj.h"
+#include "PlayerSkillState.h"
 
 BEGIN(Engine)
 class CVIBuffer_Rect;
@@ -40,6 +41,7 @@ public:
 	void Set_EffectType(EFFECT_TYPE eType) { m_eType = eType; }
 	void Set_ShaderId(_uint iShaderId) { m_eShaderID = iShaderId; }
 	virtual void Set_WorldPosition(_matrix mWorldMatrix) {};
+	
 
 public:
 	void Add_ColorCurve(array<_float, 5> ColorCurve) { m_ColorCurves.push_back(ColorCurve); }
@@ -64,6 +66,7 @@ public:
 	void Set_EffectName(_tchar* pEffectName) { wcscpy_s(m_wcEffectName, MAX_PATH, pEffectName); }
 	void Set_AttachObject(CGameObject* pGameObject) { m_pAttachObject = pGameObject; }
 
+	_bool Get_PreDead() { return m_bPreDead; }
 	static vector<class CEffect*> PlayEffectAtLocation(_tchar* wcEffectName, _matrix mWorldMatrix);
 
 public:
@@ -80,7 +83,7 @@ public:
 
 protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
-	virtual HRESULT SetUp_ShaderResources() override; 
+	virtual HRESULT SetUp_ShaderResources() override;
 
 protected:
 	EFFECT_TYPE m_eType = TYPE_END;
@@ -101,6 +104,8 @@ protected:
 	CGameObject* m_pAttachObject = nullptr;
 
 	_tchar m_wcEffectName[MAX_PATH] = TEXT("");
+
+	_bool m_bPreDead = false;
 
 public:
 	virtual void Free() override;

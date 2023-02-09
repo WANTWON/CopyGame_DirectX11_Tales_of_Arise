@@ -39,6 +39,7 @@ public:
 
 public: /* Getter Setter */
 	_float3		Get_Scale() { return m_vScale; };
+	CTransform* Get_Transform() { return m_pTransformCom; }
 	_vector		Get_TransformState(CTransform::STATE eState);
 	_float2		Get_ProjPosition();
 	void		Set_State(CTransform::STATE eState, _fvector vState);
@@ -48,7 +49,6 @@ public: /* Getter Setter */
 	CCollider*	Get_OBBCollider() { return m_pOBBCom; };
 	CCollider*	Get_SPHERECollider() { return m_pSPHERECom; };
 	_bool		Get_IsSocket() { return m_bSocket; }
-	CTransform*		Get_Transform() { return m_pTransformCom; }
 	
 protected:
 	virtual HRESULT Ready_Components(void* pArg) = 0;
