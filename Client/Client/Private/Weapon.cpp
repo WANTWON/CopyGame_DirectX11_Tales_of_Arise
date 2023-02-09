@@ -58,7 +58,7 @@ int CWeapon::Tick(_float fTimeDelta)
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
-	XMStoreFloat4x4(&m_CombinedWorldMatrix, /*m_pTransformCom->Get_WorldMatrix() * */SocketMatrix);
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, SocketMatrix);
 
 	if (m_isCollider)
 	{

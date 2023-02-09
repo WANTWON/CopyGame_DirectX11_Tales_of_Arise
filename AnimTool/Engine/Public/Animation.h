@@ -35,7 +35,7 @@ public:
 	HRESULT Initialize(class CModel* pModel, aiAnimation* pAIAnimation, _bool bLoop);
 	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel, HANDLE hAddFile, _ulong* pdwAddByte, _bool bLoop);
 	void Invalidate_TransformationMatrix(_float fTimeDelta, vector<EVENTTYPE>* pEventTypeVector = nullptr);
-
+	
 public:
 	const char* Get_Name(void) const { return m_szName; }
 	vector<class CChannel*> Get_Channels(void) const { return m_Channels; }

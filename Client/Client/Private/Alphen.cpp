@@ -67,7 +67,7 @@ HRESULT CAlphen::Ready_Parts()
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
 	WeaponDesc.pOwner = this;
-	strcpy(WeaponDesc.pModeltag, "SWO1");
+	strcpy(WeaponDesc.pModeltag, "SWO2");
 	Safe_AddRef(pSocket);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -155,6 +155,7 @@ void CAlphen::Change_Level(LEVEL eLevel)
 
 			XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixRotationX(XMConvertToRadians(180.f)));
 			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 50.f));
+
 		}
 		else if (LEVEL_BATTLE == eLevel)
 		{
@@ -172,7 +173,7 @@ void CAlphen::Change_Level(LEVEL eLevel)
 		WeaponDesc.pSocket = pSocket;
 		WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 		WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
-		strcpy(WeaponDesc.pModeltag, "SWO1");
+		strcpy(WeaponDesc.pModeltag, "SWO2");
 		Safe_AddRef(pSocket);
 
 		dynamic_cast<CWeapon*>(m_Parts[PARTS_WEAPON])->Set_WeaponDesc(WeaponDesc);
