@@ -174,7 +174,27 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 				case Client::CPlayerState::STATE_SKILL_ATTACK3:
 					if (m_bIsFly)
 					{
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
+						if (!strcmp(pEvent.szName, "Engetu_1"))
+						{
+							if (!m_bEngetuFirstEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Engetu.dat"), mWorldMatrix);
+								
+								m_bEngetuFirstEffect = true;
+							}
+						}
+
+						if (!strcmp(pEvent.szName, "Engetu_2"))
+						{
+							if (!m_bEngetuSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Engetu.dat"), mWorldMatrix);
+
+								m_bEngetuSecondEffect = true;
+							}
+						}
 					}
 					else
 					{
