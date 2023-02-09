@@ -8,7 +8,7 @@
 
 using namespace Hawk;
 
-CTurnR_State::CTurnR_State(CHawk* pIceWolf)
+CTurn_State::CTurn_State(CHawk* pIceWolf)
 {
 	m_pOwner = pIceWolf;
 
@@ -17,13 +17,13 @@ CTurnR_State::CTurnR_State(CHawk* pIceWolf)
 	
 }
 
-CHawkState * CTurnR_State::AI_Behaviour(_float fTimeDelta)
+CHawkState * CTurn_State::AI_Behaviour(_float fTimeDelta)
 {
 	
 	return nullptr;
 }
 
-CHawkState * CTurnR_State::Tick(_float fTimeDelta)
+CHawkState * CTurn_State::Tick(_float fTimeDelta)
 {
 	Find_Target();
 
@@ -45,7 +45,7 @@ CHawkState * CTurnR_State::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CHawkState * CTurnR_State::LateTick(_float fTimeDelta)
+CHawkState * CTurn_State::LateTick(_float fTimeDelta)
 {
 	m_fTimeDeltaAcc += fTimeDelta;
 
@@ -84,7 +84,7 @@ CHawkState * CTurnR_State::LateTick(_float fTimeDelta)
 	return nullptr;
 }
 
-void CTurnR_State::Enter()
+void CTurn_State::Enter()
 {
 	m_eStateId = STATE_ID::STATE_MOVE;
 
@@ -93,6 +93,6 @@ void CTurnR_State::Enter()
 	
 }
 
-void CTurnR_State::Exit()
+void CTurn_State::Exit()
 {
 }

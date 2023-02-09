@@ -121,6 +121,10 @@ void CImgui_Manager::ShowGui()
 		case MODEL_HAWK:
 			lstrcat(pAnimationDataFilePath, TEXT("Hawk/Hawk_Animation_Add.dat"));
 			break;
+
+		case MODEL_ASTRAL_DOUBT:
+			lstrcat(pAnimationDataFilePath, TEXT("Astral_Doubt/Hawk_Animation_Add.dat"));
+			break;
 		}
 
 		CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));

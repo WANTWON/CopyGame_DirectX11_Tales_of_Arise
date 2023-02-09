@@ -64,7 +64,7 @@ CHawkState * CIdleState::LateTick(_float fTimeDelta)
 			case 1:
 				return new CIdleState(m_pOwner, FIELD_STATE_END);
 			case 2:
-				return new CTurnR_State(m_pOwner);
+				return new CTurn_State(m_pOwner);
 	/*		case 3:
 				return new CTurnR_State(m_pOwner);*/
 			default:

@@ -427,7 +427,7 @@ void CTransform::Set_RotationY(_float fAngleY)
 
 void CTransform::LookAt(_fvector vAt)
 {
-	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
+	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION); 
 
 	_vector		vLook = vAt - vPosition;
 	_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);

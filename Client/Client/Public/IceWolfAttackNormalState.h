@@ -8,7 +8,7 @@ BEGIN(IceWolf)
 class CAttackNormalState : public CIceWolfState
 {
 public:
-	CAttackNormalState(class CIce_Wolf* pIceWolf);
+	CAttackNormalState(class CIce_Wolf* pIceWolf, STATE_ID ePreState);
 	
 	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CIceWolfState* Tick(_float fTimeDelta) override;
@@ -23,6 +23,8 @@ private:
 	_float		m_fRandTime = 0.f;
 	_bool		m_bTargetSetting = false;
 	_bool		m_bAddGoDistance = false;
+	STATE_ID	m_ePreState;
+
 private:
 	_matrix m_StartMatrix;
 };

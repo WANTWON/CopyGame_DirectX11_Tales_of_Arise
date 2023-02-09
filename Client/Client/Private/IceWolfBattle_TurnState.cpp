@@ -77,18 +77,18 @@ CIceWolfState * CBattle_TurnState::LateTick(_float fTimeDelta)
 {
 
 
-	if (m_bIsAnimationFinished)
-	{
-		if (m_fTarget_Distance > 10.5f)
-			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
+	//if (m_bIsAnimationFinished)
+	//{
+	//	if (m_fTarget_Distance > 10.5f)
+	//		return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
 
 
-		else if (m_fTarget_Distance <= 4.5f)
-			return new CAttackNormalState(m_pOwner);
+	//	else if (m_fTarget_Distance <= 4.5f)
+	//		return new CAttackNormalState(m_pOwner);
 
-		/*else
-			return new CBattle_RunState(m_pOwner, STATE_END);*/
-	}
+	//	/*else
+	//		return new CBattle_RunState(m_pOwner, STATE_END);*/
+	//}
 
 
 

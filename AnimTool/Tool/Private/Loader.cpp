@@ -118,6 +118,13 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("Hawk");
 
+	/* For.Prototype_Component_Model_Astral_Doubt */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Astral_Doubt"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Astral_Doubt/Astral_Doubt.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Astral_Doubt");
+
+
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));
 	/* For.Prototype_Component_Shader_VtxNorTex*/

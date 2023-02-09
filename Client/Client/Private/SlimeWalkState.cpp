@@ -41,7 +41,7 @@ CSlimeState * CWalkState::LateTick(_float fTimeDelta)
 	m_fWalkMoveTimer += fTimeDelta;
 
 	if (m_fWalkMoveTimer > 1.5f)
-		return new CTurnR_State(m_pOwner);
+		return new CTurn_State(m_pOwner);
 
 
 
