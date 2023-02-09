@@ -88,7 +88,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						//รั น฿ป็ 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 0.07f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 0.13f);
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -154,7 +154,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						//รั น฿ป็ 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 0.07f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 0.13f);
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -218,7 +218,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						//รั น฿ป็ 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 0.07f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 0.13f);
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -286,7 +286,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						//รั น฿ป็ 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 0.07f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 0.13f);
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
