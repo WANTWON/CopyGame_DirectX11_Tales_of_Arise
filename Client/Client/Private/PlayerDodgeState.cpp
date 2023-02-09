@@ -168,7 +168,10 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		if (pEvent.isPlay)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+			{
 				m_pOwner->On_JustDodge();
+				break;
+			}
 		}
 		else
 			m_pOwner->Off_JustDodge();
