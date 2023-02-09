@@ -28,6 +28,8 @@ public:
 
 		CBaseObj*  pTarget = nullptr;
 		CBaseObj*  pOwner = nullptr;
+		_float offsetX = 0.f;
+		_float offsetZ = 0.f;
 
 	}BULLETDESC;
 

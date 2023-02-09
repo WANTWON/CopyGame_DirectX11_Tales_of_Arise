@@ -81,7 +81,8 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 	}
 
 	if (m_bIsFly)
-		m_fTime += 0.1f;
+m_fTime += fTimeDelta;
+
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -355,14 +356,15 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 						if (pTarget == nullptr)
 							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 
-						CBullet::BULLETDESC BulletDesc;
-						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.eBulletType = CSionSkills::GLACIA;
-						BulletDesc.iDamage = 200;
-						BulletDesc.fDeadTime = 10.f;
+							CBullet::BULLETDESC BulletDesc;
+							BulletDesc.eCollisionGroup = PLAYER;
+							BulletDesc.eBulletType = CSionSkills::AQUA_LUINA;
+							if (pTarget != nullptr)
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
+							
+						
 
-						BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
 
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
@@ -496,7 +498,9 @@ void CPlayer_SionSkillAttack::Enter(void)
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GravitasField.dat"), mWorldMatrix);
 
 
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE); // ม฿ทย
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Gravity_Force.wav"), SOUND_EFFECT, 0.5f);
+
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
@@ -540,7 +544,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 void CPlayer_SionSkillAttack::Exit(void)
 {
 	__super::Exit();
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	
 }
 
 void CPlayer_SionSkillAttack::CallbackFunction(_uint iIndex)

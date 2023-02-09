@@ -87,7 +87,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
 							//총 발사 사운드
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 1.0f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT_SION, 0.07f);
 							m_fEventStart = pEvent.fStartTime;
 
 							_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -96,6 +96,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 							mWorldMatrix.r[3] = vLocation;
 							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
 							
+							m_bSoundStart = false;
 					}
 				}
 				
@@ -103,15 +104,16 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 				{
 					m_fReloadTimeDelta += fTimeDelta;
 
-					_bool m_bSoundStart = false;
-
+					
+					CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
 						if (!m_bSoundStart)
 						{
-							if (m_fReloadTimeDelta > 0.005f)
-								CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_EFFECT, 1.0f);
+							/*if (m_fReloadTimeDelta > 0.005f)
+								CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);*/
+							
 							m_bSoundStart = true;
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_EFFECT, 0.1f);
+							
 
 						}
 				}
