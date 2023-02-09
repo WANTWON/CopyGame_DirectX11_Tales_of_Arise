@@ -110,6 +110,7 @@ int CSionSkills::Tick(_float fTimeDelta)
 
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return OBJ_NOEVENT;
 }
@@ -270,7 +271,19 @@ HRESULT CSionSkills::Ready_Components(void * pArg)
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 		break;
+
+	case AQUALUINA:
+		ColliderDesc.vScale = _float3(0.5f, 6.f, 0.5f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		
 	}
+
+	if (m_BulletDesc.eBulletType)
+	{
+		if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
+			return E_FAIL;
+	}
+	
 
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
