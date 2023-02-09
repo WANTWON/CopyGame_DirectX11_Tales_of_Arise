@@ -87,11 +87,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("Ice_Wolf");
 
-	/* For.Prototype_Component_Model_SWO1(R00) */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SWO1(R00)"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/SWO1(R00)/SWO1(R00).dat"))))
+	/* For.Prototype_Component_Model_SWO2(R00) */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SWO2(R00)"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO2(R00)/SWO2(R00).dat"))))
 		return E_FAIL;
-	pImgui->m_WeaponObj.push_back("SWO1(R00)");
+	pImgui->m_WeaponObj.push_back("SWO2(R00)");
 
 	/* For.Prototype_Component_Model_Sion */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sion"),

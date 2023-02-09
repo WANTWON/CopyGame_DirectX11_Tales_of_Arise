@@ -50,7 +50,7 @@ HRESULT CWeapon::Initialize(void * pArg)
 
 int CWeapon::Tick(_float fTimeDelta)
 {
-	_matrix		SocketMatrix = m_WeaponDesc.pSocket->Get_OffsetMatrix() * XMLoadFloat4x4(&m_WeaponDesc.RotationCorrectionMatrix) * 
+	_matrix		SocketMatrix = XMLoadFloat4x4(&m_WeaponDesc.RotationCorrectionMatrix) * 
 		m_WeaponDesc.pSocket->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_WeaponDesc.TranslationCorrectionMatrix) *
 		XMLoadFloat4x4(&m_WeaponDesc.SocketPivotMatrix) * XMLoadFloat4x4(m_WeaponDesc.pParentWorldMatrix);
 
@@ -58,7 +58,7 @@ int CWeapon::Tick(_float fTimeDelta)
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
-	XMStoreFloat4x4(&m_CombinedWorldMatrix, /*m_pTransformCom->Get_WorldMatrix() * */SocketMatrix);
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, SocketMatrix);
 
 	if (m_isCollider)
 	{
