@@ -40,6 +40,8 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 
 		if (!m_bIsFly)
 			m_pOwner->Check_Navigation();
+		else
+			m_pOwner->Check_Navigation_Jump();
 	}
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -94,8 +96,7 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 			m_eStateId = STATE_NORMAL_ATTACK3;
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-			if (!m_bIsFly)
-				m_eStateId = STATE_NORMAL_ATTACK4;
+			m_eStateId = STATE_NORMAL_ATTACK4;
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 			return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1);

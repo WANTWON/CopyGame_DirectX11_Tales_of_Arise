@@ -429,7 +429,7 @@ void CJumpState::Exit()
 {
 	if (STATETYPE_END == m_eStateType)
 	{
-		m_pOwner->Off_IsFly();
+ 		m_pOwner->Off_IsFly();
 		m_fTime = 0.f;
 	}
 	m_bIsDrop = false;
@@ -454,15 +454,12 @@ void CJumpState::Move(_float fTimeDelta)
 	_vector vPrePos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 
 	m_fTime += 0.1f;
-	m_pOwner->Get_Transform()->Jump(m_fTime, 5.f, 2.0f, m_fStartHeight, m_fEndHeight);
+	m_pOwner->Get_Transform()->Jump(m_fTime, 9.f, 5.f, m_fStartHeight, m_fEndHeight);
 
 	_vector vCurPos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 
 	_float4 fChangeHeight;
 	XMStoreFloat4(&fChangeHeight, (vCurPos - vPrePos));
-
-
-
 
 	if (0 > fChangeHeight.y)
 		m_bIsDrop = true;

@@ -43,6 +43,9 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
+
+	if (m_bIsFly)
+		m_fTime += fTimeDelta;
 		
 	m_pOwner->Check_Navigation_Jump();
 
