@@ -7,6 +7,7 @@
 #include "UI_Skillmessage.h"
 #include "Effect.h"
 #include "EffectMesh.h"
+#include "ParticleSystem.h"
 #include "BattleManager.h"
 
 using namespace Player;
@@ -151,12 +152,82 @@ CPlayerState * CSkillState::Tick(_float fTimeDelta)
 					}
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
-						if (!m_bAkizameEffect)
+						if (m_bIsFly)
 						{
-							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-							CEffect::PlayEffectAtLocation(TEXT("Akizame.dat"), mWorldMatrix);
+							if (!strcmp(pEvent.szName, "Senkusyourepa_Particles"))
+							{
+								if (!m_bSenkusyourepaParticle)
+								{
+									_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-							m_bAkizameEffect = true;
+									_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+									_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+									
+									vPosition += vOffset;
+									mWorldMatrix.r[3] = vPosition;
+									
+									m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Particles.dat"), mWorldMatrix);
+
+									m_bSenkusyourepaParticle = true;
+								}
+							}
+							else if (!strcmp(pEvent.szName, "Senkusyourepa_1"))
+							{
+								if (!m_bSenkusyourepaFirstEffect)
+								{
+									/* Destroy Particles first. */
+									if (!m_SenkusyourepaParticles.empty())
+									{
+										for (auto& iter : m_SenkusyourepaParticles)
+										{
+											if (iter)
+											{
+												CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+												if (pParticleSystem != nullptr)
+													pParticleSystem->Set_Stop(true);
+											}
+										}
+									}
+
+									/* Then Spawn Effect*/
+									_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+									m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_1.dat"), mWorldMatrix);
+
+									m_bSenkusyourepaFirstEffect = true;
+								}
+							}
+							else if (!strcmp(pEvent.szName, "Senkusyourepa_2"))
+							{
+								if (!m_bSenkusyourepaSecondEffect)
+								{
+									/* Spawn Effect Particles */
+									_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+									_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+									_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+
+									vPosition += vOffset;
+									mWorldMatrix.r[3] = vPosition;
+
+									m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Explosion_Particles.dat"), mWorldMatrix);
+
+									/* Then Spawn Effect*/
+									mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+									m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_2.dat"), mWorldMatrix);
+
+									m_bSenkusyourepaSecondEffect = true;
+								}
+							}
+						}
+						else
+						{
+							if (!m_bAkizameEffect)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								CEffect::PlayEffectAtLocation(TEXT("Akizame.dat"), mWorldMatrix);
+
+								m_bAkizameEffect = true;
+							}
 						}
 					}
 					break;
@@ -380,9 +451,4 @@ void CSkillState::Exit(void)
 {
 	__super::Exit();
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-}
-
-void CSkillState::CallbackFunction(_uint iIndex)
-{
-	m_HousyutigakuzinStart[iIndex] = nullptr;
 }
