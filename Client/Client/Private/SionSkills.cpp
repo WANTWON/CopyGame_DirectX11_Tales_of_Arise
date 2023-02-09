@@ -131,10 +131,6 @@ int CSionSkills::Tick(_float fTimeDelta)
 	}
 
 
-
-	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
-
 #ifdef _DEBUG
 	if (m_pAABBCom != nullptr)
 		m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
