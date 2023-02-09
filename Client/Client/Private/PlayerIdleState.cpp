@@ -33,7 +33,7 @@ CPlayerState * CIdleState::HandleInput()
 		if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
 		{
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-				return new CCloseChaseState(m_pOwner, STATE_CHASE);
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_NORMAL_ATTACK1);
 		}
 		else if (CPlayer::SION == m_pOwner->Get_PlayerID() || CPlayer::RINWELL == m_pOwner->Get_PlayerID())
 		{
@@ -41,15 +41,18 @@ CPlayerState * CIdleState::HandleInput()
 				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
 		}
 			
-
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 		{
 			switch (m_ePlayerID)
 			{
 			case CPlayer::ALPHEN:
-				if (pGameInstance->Key_Down(DIK_E) || pGameInstance->Key_Down(DIK_R) || pGameInstance->Key_Down(DIK_F))
-					return new CCloseChaseState(m_pOwner, STATE_CHASE);
+				if (pGameInstance->Key_Down(DIK_E))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK1);
+				if (pGameInstance->Key_Down(DIK_R))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK2);
+				if (pGameInstance->Key_Down(DIK_F))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK3);
 				break;
 			case CPlayer::SION:
 				if (pGameInstance->Key_Down(DIK_E))
