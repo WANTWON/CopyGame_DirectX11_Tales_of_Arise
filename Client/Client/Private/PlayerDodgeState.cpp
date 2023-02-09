@@ -72,19 +72,19 @@ CPlayerState * CDodgeState::HandleInput(void)
 				{
 				case CPlayer::ALPHEN:
 					if (pGameInstance->Key_Down(DIK_E))
-						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK1, m_fStartHeight, m_fTime);
+						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
 					if (pGameInstance->Key_Down(DIK_R))
-						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK2, m_fStartHeight, m_fTime);
+						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
 					if (pGameInstance->Key_Down(DIK_F))
-						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK3, m_fStartHeight, m_fTime);
+						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 					break;
 				case CPlayer::SION:
 					if (pGameInstance->Key_Down(DIK_E))
-						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK1, m_fStartHeight, m_fTime);
+						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
 					else if (pGameInstance->Key_Down(DIK_R))
-						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK2, m_fStartHeight, m_fTime);
+						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
 					else if (pGameInstance->Key_Down(DIK_F))
-						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK3, m_fStartHeight, m_fTime);
+						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 					break;
 				}
 			}
@@ -94,19 +94,19 @@ CPlayerState * CDodgeState::HandleInput(void)
 				{
 				case CPlayer::ALPHEN:
 					if (pGameInstance->Key_Down(DIK_E))
-						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK1);
+						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
 					if (pGameInstance->Key_Down(DIK_R))
-						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK2);
+						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 					if (pGameInstance->Key_Down(DIK_F))
-						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK3);
+						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
 					break;
 				case CPlayer::SION:
 					if (pGameInstance->Key_Down(DIK_E))
-						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK1);
+						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E);
 					else if (pGameInstance->Key_Down(DIK_R))
-						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK2);
+						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 					else if (pGameInstance->Key_Down(DIK_F))
-						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK3);
+						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
 					break;
 				}
 			}
