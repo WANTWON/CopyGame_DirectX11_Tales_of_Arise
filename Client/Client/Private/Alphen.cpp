@@ -154,7 +154,8 @@ void CAlphen::Change_Level(LEVEL eLevel)
 			}
 
 			XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixRotationX(XMConvertToRadians(180.f)));
-			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 45.f));
+			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 50.f));
+
 		}
 		else if (LEVEL_BATTLE == eLevel)
 		{
