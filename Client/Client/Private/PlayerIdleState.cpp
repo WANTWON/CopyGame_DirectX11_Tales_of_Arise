@@ -9,10 +9,10 @@
 #include "Effect.h"
 #include "EffectTexture.h"
 #include "PlayerJumpState.h"
-#include "PlayerSkillState.h"
 #include "PlayerCollectState.h"
 
 #include "CloseChaseState.h"
+
 #include "Player_SionNormalAttack_State.h"
 #include "Player_SionSkillAttack.h"
 
@@ -48,12 +48,8 @@ CPlayerState * CIdleState::HandleInput()
 			switch (m_ePlayerID)
 			{
 			case CPlayer::ALPHEN:
-				if (pGameInstance->Key_Down(DIK_E))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
-				else if (pGameInstance->Key_Down(DIK_R))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
-				else if (pGameInstance->Key_Down(DIK_F))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
+				if (pGameInstance->Key_Down(DIK_E) || pGameInstance->Key_Down(DIK_R) || pGameInstance->Key_Down(DIK_F))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE);
 				break;
 			case CPlayer::SION:
 				if (pGameInstance->Key_Down(DIK_E))
