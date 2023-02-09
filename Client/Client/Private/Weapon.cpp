@@ -26,6 +26,38 @@ void CWeapon::Set_WeaponDesc(WEAPONDESC tWeaponDesc)
 	memcpy(&m_WeaponDesc, &tWeaponDesc, sizeof(WEAPONDESC));
 }
 
+void CWeapon::Collision_Immediate()
+{
+	/*if (nullptr == m_pSPHERECom)
+	{
+		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+
+		CCollider::COLLIDERDESC		ColliderDesc;
+
+		ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
+
+		ColliderDesc.vPosition = _float3(0.f, 0.f, -2.f);
+
+		m_pSPHERECom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+		m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+		pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
+
+		RELEASE_INSTANCE(CCollision_Manager);
+	}
+	else
+		m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+
+	else if (nullptr != m_pSPHERECom && !m_isCollider)
+	{
+		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+
+		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSPHERECom);
+		m_pSPHERECom = nullptr;
+
+		RELEASE_INSTANCE(CCollision_Manager);
+	}*/
+}
+
 HRESULT CWeapon::Initialize_Prototype()
 {
 	return S_OK;
@@ -50,7 +82,7 @@ HRESULT CWeapon::Initialize(void * pArg)
 
 int CWeapon::Tick(_float fTimeDelta)
 {
-	_matrix		SocketMatrix = XMLoadFloat4x4(&m_WeaponDesc.RotationCorrectionMatrix) * 
+	_matrix		SocketMatrix = XMLoadFloat4x4(&m_WeaponDesc.RotationCorrectionMatrix) *
 		m_WeaponDesc.pSocket->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_WeaponDesc.TranslationCorrectionMatrix) *
 		XMLoadFloat4x4(&m_WeaponDesc.SocketPivotMatrix) * XMLoadFloat4x4(m_WeaponDesc.pParentWorldMatrix);
 
@@ -79,10 +111,7 @@ int CWeapon::Tick(_float fTimeDelta)
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
 		else
-		{
 			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
-		}
-			
 	}
 	else if (nullptr != m_pSPHERECom && !m_isCollider)
 	{
@@ -99,9 +128,6 @@ int CWeapon::Tick(_float fTimeDelta)
 
 void CWeapon::Late_Tick(_float fTimeDelta)
 {
-
-
-
 	if (nullptr != m_pSPHERECom)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -116,10 +142,10 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 		{
 			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeTest1.wav"), SOUND_EFFECT, 0.4f);
-			
+
 			/*m_fHitTimeDeltaAcc += fTimeDelta;
 
-		
+
 			_bool bSoundStart = false;
 			if (!bSoundStart)
 			{
@@ -131,7 +157,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 				CGameInstance::Get_Instance()->PlaySounds(TEXT("HitSound2.wav"), SOUND_EFFECT, 0.4f);
 				bSoundStart = true;
 			}*/
-		
+
 
 			//SkillSound 
 			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK_E)
@@ -150,7 +176,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 				}
 			}
 		}
-		
+
 		else
 		{
 
@@ -190,7 +216,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pSPHERECom)
 		m_pRendererCom->Add_Debug(m_pSPHERECom);
 #endif
-	
+
 }
 
 HRESULT CWeapon::Render()
@@ -276,7 +302,7 @@ HRESULT CWeapon::SetUp_ShaderResources()
 		return E_FAIL;
 
 	_float4x4		WorldMatrix;
-	XMStoreFloat4x4(&WorldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_CombinedWorldMatrix)));	
+	XMStoreFloat4x4(&WorldMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_CombinedWorldMatrix)));
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &WorldMatrix, sizeof(_float4x4))))
 		return E_FAIL;
@@ -325,7 +351,7 @@ void CWeapon::Free()
 {
 	__super::Free();
 
-	
+
 	Safe_Release(m_WeaponDesc.pSocket);
 
 	Safe_Release(m_pAABBCom);
@@ -333,7 +359,7 @@ void CWeapon::Free()
 	Safe_Release(m_pSPHERECom);
 
 	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pShaderCom);	
+	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pRendererCom);
 

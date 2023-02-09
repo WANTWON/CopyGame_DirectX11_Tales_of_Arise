@@ -1359,6 +1359,9 @@ HRESULT CLoader::Loading_ForEffect()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("RingVertical"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Ring/RingVertical.dat"))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ring_Warp"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Ring/Ring_Warp.dat"))))
+		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cylinder1"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/Cylinder1.dat"))))
@@ -1428,6 +1431,9 @@ HRESULT CLoader::Loading_ForEffect()
 #pragma region Texture
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Gradient"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Gradation/Gradient.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_Common_Pattern_03_M"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Aura/TO14_T_FX_Common_Pattern_03_M.png"), 1))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_Common_Pattern_07_M"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Aura/TO14_T_FX_Common_Pattern_07_M.png"), 1))))
