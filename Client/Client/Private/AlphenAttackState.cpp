@@ -1,12 +1,237 @@
 #include "stdafx.h"
 #include "..\Public\AlphenAttackState.h"
 
+#include "GameInstance.h"
+#include "BattleManager.h"
 
-AlphenAttackState::AlphenAttackState()
+#include "PlayerIdleState.h"
+#include "PlayerJumpState.h"
+#include "PlayerRunState.h"
+#include "AlphenSkillState.h"
+
+using namespace Player;
+
+CAlphenAttackState::CAlphenAttackState(CPlayer * pPlayer, STATE_ID eStateType, _float fStartHeight, _float fTime)
 {
+	m_eStateId = eStateType;
+	m_pOwner = pPlayer;
+
+	m_fStartHeight = fStartHeight;
+	m_fTime = fTime;
 }
 
-
-AlphenAttackState::~AlphenAttackState()
+CPlayerState * CAlphenAttackState::HandleInput()
 {
+	return nullptr;
+}
+
+CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
+{
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		if (!m_bIsFly)
+			m_pOwner->Check_Navigation();
+	}
+
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay)
+		{
+			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+				EventInput();
+			break;
+		}
+		else
+		{
+			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
+		}
+	}
+
+	return nullptr;
+}
+
+CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	if (m_bIsAnimationFinished)
+	{
+		if (m_bIsFly)
+			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
+		else
+			return new CIdleState(m_pOwner);
+	}
+
+	return nullptr;
+}
+
+CPlayerState * CAlphenAttackState::EventInput(void)
+{
+	if (GetKeyState(VK_LBUTTON) < 0)
+	{
+		m_pOwner->Get_Model()->Reset();
+
+		switch (m_eStateId)
+		{
+		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+			m_eStateId = STATE_NORMAL_ATTACK2;
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+			m_eStateId = STATE_NORMAL_ATTACK3;
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+			if (!m_bIsFly)
+				m_eStateId = STATE_NORMAL_ATTACK4;
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+			return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
+			break;
+		}
+
+		Enter();
+	}
+
+	if (m_bIsFly)
+	{
+		if (GetKeyState('E') < 0)
+		{
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK1, m_fStartHeight, m_fTime);
+		}
+		else if (GetKeyState('R') < 0)
+		{
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK2, m_fStartHeight, m_fTime);
+		}
+		else if (GetKeyState('F') < 0)
+		{
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK3, m_fStartHeight, m_fTime);
+		}
+	}
+	else
+	{
+		if (GetKeyState('E') < 0)
+		{
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK1);
+		}
+		else if (GetKeyState('R') < 0)
+		{
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK2);
+		}
+		else if (GetKeyState('F') < 0)
+		{
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK3);
+		}
+	}
+
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
+		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
+		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
+		return new CRunState(m_pOwner, DIR_BACKWARD_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
+		return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_A))
+		return new CRunState(m_pOwner, DIR_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_D))
+		return new CRunState(m_pOwner, DIR_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_S))
+		return new CRunState(m_pOwner, DIR_BACKWARD, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_W))
+		return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+
+	return nullptr;
+}
+
+void CAlphenAttackState::Enter()
+{
+	__super::Enter();
+
+	if (m_bIsFly)
+	{
+		switch (m_eStateId)
+		{
+		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_0);
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_1);
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_2);
+			break;
+		}
+	}
+	else
+	{
+		switch (m_eStateId)
+		{
+		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack1.wav"), SOUND_EFFECT, 1.0f);
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_1);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack2.wav"), SOUND_EFFECT, 1.0f);
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_8);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack3.wav"), SOUND_EFFECT, 1.0f);
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_6);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack4.wav"), SOUND_EFFECT, 1.0f);
+			break;
+		}
+	}
+
+	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
+
+	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
+
+	if (nullptr != pTarget)
+	{
+		_float4 fTargetPos;
+		XMStoreFloat4(&fTargetPos, pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+		fTargetPos.y = m_pOwner->Get_Transform()->Get_World4x4().m[3][1];
+
+		_vector		vLook = XMLoadFloat4(&fTargetPos) - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		_vector		vRight = XMVector3Cross(vAxisY, vLook);
+
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_RIGHT));
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_LOOK));
+	}
+
+	RELEASE_INSTANCE(CBattleManager);
+}
+
+void CAlphenAttackState::Exit()
+{
+	__super::Exit();
+
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }

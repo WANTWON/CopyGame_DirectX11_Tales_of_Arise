@@ -910,6 +910,15 @@
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AlphenSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SionNormalAttack_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_SionSkillAttack.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1449,6 +1458,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AlphenSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SionSkillAttack.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

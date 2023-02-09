@@ -184,6 +184,7 @@
     <ClInclude Include="..\Public\AI_HitState.h" />
     <ClInclude Include="..\Public\AI_BoostAttackState.h" />
     <ClInclude Include="..\Public\AlphenAttackState.h" />
+    <ClInclude Include="..\Public\AlphenSkillState.h" />
     <ClInclude Include="..\Public\BattleManager.h" />
     <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h" />
     <ClInclude Include="..\Public\BerserkerBattle_FireBallState.h" />
@@ -202,6 +203,8 @@
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
+    <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
+    <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
     <ClInclude Include="..\Public\SnowFieldNpc.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
@@ -374,6 +377,7 @@
     <ClCompile Include="..\Private\AI_HitState.cpp" />
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp" />
     <ClCompile Include="..\Private\AlphenAttackState.cpp" />
+    <ClCompile Include="..\Private\AlphenSkillState.cpp" />
     <ClCompile Include="..\Private\BattleManager.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_FireBallState.cpp" />
@@ -392,6 +396,8 @@
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
+    <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
+    <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />
     <ClCompile Include="..\Private\SnowFieldNpc.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />

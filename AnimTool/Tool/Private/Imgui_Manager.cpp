@@ -606,6 +606,7 @@ void CImgui_Manager::ShowGui()
 				m_fEventStartTime = 0.f;
 				m_fEventEndTime = 0.f;
 				m_iEventType = CAnimation::EVENTTYPE::EVENT_END;
+				m_iEventChoice = -1;
 			}
 
 			for (_int i = 0; i < iAnimEvents; ++i)
