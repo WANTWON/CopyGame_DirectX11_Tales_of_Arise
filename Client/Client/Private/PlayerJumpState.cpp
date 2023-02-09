@@ -457,7 +457,7 @@ void CJumpState::Move(_float fTimeDelta)
 	_vector vPrePos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 
 	m_fTime += 0.1f;
-	m_pOwner->Get_Transform()->Jump(m_fTime, 10.f, 6.f, m_fStartHeight, m_fEndHeight);
+	m_pOwner->Get_Transform()->Jump(m_fTime, 7.5f, 4.5f, m_fStartHeight, m_fEndHeight);
 
 	_vector vCurPos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 
