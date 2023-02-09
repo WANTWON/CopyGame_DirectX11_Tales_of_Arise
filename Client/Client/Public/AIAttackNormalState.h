@@ -19,6 +19,7 @@ public:
 
 private:
 	_bool m_bIsStateEvent = false;
+	_bool m_bSoundStart = false;
 	_float m_fEventStart = -1.f;
 	_float m_fReloadTimeDelta = 0.f;
 	vector<CEffect*> m_pEffects;

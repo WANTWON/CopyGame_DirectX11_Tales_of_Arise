@@ -268,6 +268,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Gravity_Force.wav"), SOUND_EFFECT, 0.5f);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK3:
@@ -303,7 +304,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 void CPlayer_SionSkillAttack::Exit(void)
 {
 	__super::Exit();
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	
 }
 
 void CPlayer_SionSkillAttack::CallbackFunction(_uint iIndex)

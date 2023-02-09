@@ -140,6 +140,29 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation();
 
+
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay)
+		{
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+
+				//CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
+				if (!m_bSoundStart)
+				{
+					m_bSoundStart = true;
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Run1.wav"), SOUND_EFFECT, 0.5f);
+				}
+			}
+
+		}
+
+	}
+
 	return nullptr;
 }
 
@@ -164,6 +187,8 @@ void CRunState::Enter()
 		case CPlayer::ALPHEN:
 			if (LEVEL_BATTLE != m_pOwner->Get_Level())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
+			CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::SION:
 			if (LEVEL_BATTLE != m_pOwner->Get_Level())
@@ -180,6 +205,8 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_RUN);
 			else
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
+			CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_RunSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::SION:
 			if (LEVEL_BATTLE == m_pOwner->Get_Level())
@@ -190,7 +217,6 @@ void CRunState::Enter()
 		}
 	}
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_RunSound.wav"), SOUND_FOOT, 0.4f);
 }
 
 void CRunState::Exit()

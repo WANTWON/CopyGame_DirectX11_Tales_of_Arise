@@ -66,7 +66,7 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Bite_Start.wav"), SOUND_VOICE, 0.6f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Bite_Start.wav"), SOUND_VOICE, 0.2f);
 				m_bAnimFinish = true;
 
 			}
