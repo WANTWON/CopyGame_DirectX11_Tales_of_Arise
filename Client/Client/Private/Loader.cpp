@@ -470,10 +470,10 @@ HRESULT CLoader::Loading_ForPrototype()
 		CSlime::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/*For.Prototype_GameObject_Boss_AstralDoubt*/
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AstralDoubt"),
-		CAstralDoubt::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	///*For.Prototype_GameObject_Boss_AstralDoubt*/
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AstralDoubt"),
+	//	CAstralDoubt::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 
 
 
