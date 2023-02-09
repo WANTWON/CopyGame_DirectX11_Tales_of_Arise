@@ -314,10 +314,43 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Hurricane4.fbx", "../../../Bin/Bin_Data/Effect/Water/", PivotMatrix))))
 	//	return E_FAIL;
 
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f)/* * XMMatrixRotationY(XMConvertToRadians(180.0f))*/;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ring_Warp"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ring_Warp.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
+		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Spiral_tk_05"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Spiral_tk_05.fbx", "../../../Bin/Bin_Data/Effect/Spiral/", PivotMatrix))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Spiral_su_02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Spiral_su_02.fbx", "../../../Bin/Bin_Data/Effect/Spiral/", PivotMatrix))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Pipe_is_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Pipe_is_01.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ring_hn_03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ring_hn_03.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ring_hn_02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ring_hn_02.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
+		return E_FAIL;*/
+
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sion"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Sion.fbx", "../../../Bin/Bin_Data/Anim/Sion/", PivotMatrix))))
+		return E_FAIL;*/
+
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sion"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Sion.fbx", "../../../Bin/Bin_Data/Anim/Sion/", PivotMatrix))))
+	//	return E_FAIL;
+
+
 	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sion"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Sion.fbx", "../../../Bin/Bin_Data/Anim/Sion/", PivotMatrix))))
 		return E_FAIL;*/
+
 
 	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Hurricane3"),
@@ -351,10 +384,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Spiral_ny05.fbx", "../../../Bin/Bin_Data/Effect/Spiral/", PivotMatrix))))
 	//	return E_FAIL;
 
-
 	/*For.Prototype_Component_Model_Alphen*/
 	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Alphen"),
+
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Alphen.fbx", "../../../Bin/Bin_Data/Anim/Alphen/", PivotMatrix))))
 		return E_FAIL;*/
 	///*For.Prototype_Component_Model_Alphen*/

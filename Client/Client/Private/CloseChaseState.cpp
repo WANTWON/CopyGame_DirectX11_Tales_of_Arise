@@ -78,14 +78,14 @@ CPlayerState * CCloseChaseState::LateTick(_float fTimeDelta)
 				case Client::CPlayerState::STATE_NORMAL_ATTACK1:
 					return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
 					break;
-				case Client::CPlayerState::STATE_SKILL_ATTACK1:
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK1);
+				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
 					break;
-				case Client::CPlayerState::STATE_SKILL_ATTACK2:
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK2);
+				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 					break;
-				case Client::CPlayerState::STATE_SKILL_ATTACK3:
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK3);
+				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
 					break;
 				}
 			}

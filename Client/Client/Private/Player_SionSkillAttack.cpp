@@ -2,7 +2,6 @@
 #include "..\Public\Player_SionSkillAttack.h"
 #include "GameInstance.h"
 #include "PlayerIdleState.h"
-#include "PlayerAttackNormalState.h"
 #include "PlayerJumpState.h"
 #include "UI_Skillmessage.h"
 #include "Effect.h"
@@ -12,6 +11,7 @@
 #include "SionSkills.h"
 #include "Monster.h"
 #include "ParticleSystem.h"
+#include "Player_SionNormalAttack_State.h"
 
 
 using namespace Player;
@@ -34,21 +34,35 @@ CPlayerState * CPlayer_SionSkillAttack::HandleInput(void)
 CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-
-	if (!m_bIsAnimationFinished)
+	if (CSion::ANIM::BTL_ATTACK_TRESVENTOS)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-		if (CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
-		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+		}
+		else
+			m_pOwner->Check_Navigation_Jump();
 	}
 	else
-		m_pOwner->Check_Navigation_Jump();
+	{
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+		}
+		else
+			m_pOwner->Check_Navigation();
+	}
+
 
 	if (!m_pBlastEffect.empty())
 	{
@@ -66,8 +80,8 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 		}
 	}
 
-	/*if (m_bIsFly)
-		m_fTime += 0.1f;*/
+	if (m_bIsFly)
+		m_fTime += 0.1f;
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -78,12 +92,12 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 			switch (m_eStateId)
 			{
-			case Client::CPlayerState::STATE_SKILL_ATTACK1:
+			case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_TRIPLE_STAR))
+						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_MAGNARAY))
 						{
 							CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 							if (pTarget == nullptr)
@@ -92,22 +106,45 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = PLAYER;
 							BulletDesc.fVelocity = 1.f;
-							BulletDesc.eBulletType = CSionSkills::GRAVITY;
-							BulletDesc.iDamage = 200;
-							BulletDesc.fDeadTime = 10.f;
-							if (pTarget != nullptr)
-							{
-								BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
-							}
-							else
-								BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
-							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*2.f);
+							BulletDesc.eBulletType = CSionSkills::MAGNA_RAY;
+							BulletDesc.iDamage = 150;
+							BulletDesc.fDeadTime = 2.f;
+							BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
+							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*4.f);
 							BulletDesc.pOwner = m_pOwner;
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
 							m_fEventStart = pEvent.fStartTime;
+						}
+
+						else if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_TRESVENTOS))
+						{
+
+							_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+							_vector vRight = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_RIGHT));
+							_vector vPostion = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+							CBullet::BULLETDESC BulletDesc;
+							BulletDesc.eCollisionGroup = PLAYER;
+							BulletDesc.eBulletType = CSionSkills::TRESVENTOS;
+							BulletDesc.vInitPositon = XMVectorSetY(vPostion, XMVectorGetY(vPostion) + 3.f) + vLook*2.f;
+							if (m_iCount == 0)
+								BulletDesc.vInitPositon -= vRight*2.f;
+							if (m_iCount == 1)
+								BulletDesc.vInitPositon += vRight*2.f;
+
+							BulletDesc.pOwner = m_pOwner;
+							BulletDesc.fVelocity = 5.f;
+							CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+							if (pTarget == nullptr)
+								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+							BulletDesc.vTargetDir = vLook;
+							BulletDesc.pTarget = pTarget;
+
+							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+								return nullptr;
+							m_fEventStart = pEvent.fStartTime;
+							m_iCount++;
 						}
 					}
 				}
@@ -126,11 +163,17 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 					if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
 
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
 					getchar();
 				}
 
 				break;
-			case Client::CPlayerState::STATE_SKILL_ATTACK2:
+			case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !m_bBulletMade)
 				{
 					if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE))
@@ -148,6 +191,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 						if (pTarget != nullptr)
 						{
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+							//BulletDesc.vTargetPosition
 							BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 						}
 						else
@@ -174,11 +218,17 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 					if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
 
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
 					getchar();
 				}
 
 				break;
-			case Client::CPlayerState::STATE_SKILL_ATTACK3:
+			case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
 
@@ -197,6 +247,152 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 					if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
+					getchar();
+				}
+
+				break;
+
+			case Client::CPlayerState::STATE_SKILL_ATTACK4:
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				{
+					if ((m_fEventStart != pEvent.fStartTime))
+					{
+						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+						if (pTarget == nullptr)
+							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.fVelocity = 2.f;
+						BulletDesc.eBulletType = CSionSkills::GLACIA;
+						BulletDesc.iDamage = 200;
+						BulletDesc.fDeadTime = 10.f;
+
+
+						BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						BulletDesc.vTargetPosition.m128_f32[2] += 6.f;
+
+
+						BulletDesc.vInitPositon = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						BulletDesc.vInitPositon.m128_f32[2] += 6.f;
+
+						// +vOffset;
+						BulletDesc.vInitPositon.m128_f32[1] = 15.f;
+						BulletDesc.pOwner = m_pOwner;
+
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						if (pTarget != nullptr)
+						{
+
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							BulletDesc.vTargetPosition.m128_f32[0] += 6.f;
+						}
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						if (pTarget != nullptr)
+						{
+
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							BulletDesc.vTargetPosition.m128_f32[0] -= 12.f;
+						}
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						if (pTarget != nullptr)
+						{
+							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
+							BulletDesc.vTargetPosition.m128_f32[2] -= 12.f;
+						}
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+						m_fEventStart = pEvent.fStartTime;
+					}
+				}
+
+				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+				{
+					if (GetKeyState(VK_LBUTTON) < 0)
+						m_bIsStateEvent = true;
+
+					if (GetKeyState('E') < 0)
+						m_iSkillEvent = 1;
+
+					if (GetKeyState('R') < 0)
+						m_iSkillEvent = 2;
+
+					if (GetKeyState('F') < 0)
+						m_iSkillEvent = 3;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
+					getchar();
+				}
+
+				break;
+
+			case Client::CPlayerState::STATE_SKILL_ATTACK5:
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				{
+
+					if ((m_fEventStart != pEvent.fStartTime))
+					{
+						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+						if (pTarget == nullptr)
+							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.eBulletType = CSionSkills::GLACIA;
+						BulletDesc.iDamage = 200;
+						BulletDesc.fDeadTime = 10.f;
+
+
+						BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+
+						m_fEventStart = pEvent.fStartTime;
+
+					}
+				}
+
+				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+				{
+					if (GetKeyState(VK_LBUTTON) < 0)
+						m_bIsStateEvent = true;
+
+					if (GetKeyState('E') < 0)
+						m_iSkillEvent = 1;
+
+					if (GetKeyState('R') < 0)
+						m_iSkillEvent = 2;
+
+					if (GetKeyState('F') < 0)
+						m_iSkillEvent = 3;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
 
 					getchar();
 				}
@@ -217,20 +413,26 @@ CPlayerState * CPlayer_SionSkillAttack::LateTick(_float fTimeDelta)
 
 
 	if (m_bIsStateEvent)
-		return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1);
+		return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1);
 
 	if ((0 != m_iSkillEvent) && (floor(m_pOwner->Get_Info().fCurrentMp) > 0))
 	{
 		switch (m_iSkillEvent)
 		{
 		case 1:
-			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK1);
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK_E);
 			break;
 		case 2:
-			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK2);
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK_R);
 			break;
 		case 3:
-			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK3);
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK_F);
+			break;
+		case 4:
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK4);
+			break;
+		case 5:
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK5);
 			break;
 		}
 	}
@@ -256,13 +458,13 @@ void CPlayer_SionSkillAttack::Enter(void)
 	{
 		switch (m_eStateId)
 		{
-		case Client::CPlayerState::STATE_SKILL_ATTACK1:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_TRIPLE_STAR);
+		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_TRESVENTOS);
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK2:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
+			//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK3:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			//				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
 			break;
 		}
@@ -271,10 +473,20 @@ void CPlayer_SionSkillAttack::Enter(void)
 	{
 		switch (m_eStateId)
 		{
-		case Client::CPlayerState::STATE_SKILL_ATTACK1:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+		{
+			/* Make Effect */
+			_vector vOffset = { 0.f,3.f,0.f,0.f };
+			_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+			_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
+			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+			mWorldMatrix.r[3] = vLocation + vOffset + vLook*2.f;
+			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayStart.dat"), mWorldMatrix);
+
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MAGNARAY);//마그나
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK2:
+		}
+		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 		{
 			/* Make Effect */
 			_vector vOffset = { 0.f,3.f,0.f,0.f };
@@ -284,11 +496,19 @@ void CPlayer_SionSkillAttack::Enter(void)
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GravitasField.dat"), mWorldMatrix);
 
 
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE); // 중력
 			break;
 		}
-		case Client::CPlayerState::STATE_SKILL_ATTACK3:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_BRAVE);
+		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_BRAVE); // 메테오
+			break;
+
+		case Client::CPlayerState::STATE_SKILL_ATTACK4:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT); //얼음떨구기
+			break;
+
+		case Client::CPlayerState::STATE_SKILL_ATTACK5:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); // 비가우수수
 			break;
 		}
 	}

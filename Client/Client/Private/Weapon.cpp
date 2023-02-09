@@ -99,10 +99,7 @@ int CWeapon::Tick(_float fTimeDelta)
 
 void CWeapon::Late_Tick(_float fTimeDelta)
 {
-#ifdef _DEBUG
-	if (nullptr != m_pSPHERECom)
-		m_pRendererCom->Add_Debug(m_pSPHERECom);
-#endif
+
 
 
 	if (nullptr != m_pSPHERECom)
@@ -136,7 +133,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 		
 
 			//SkillSound 
-			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK1)
+			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK_E)
 			{
 				m_fTimeDeltaAcc += 0.4f;
 				_bool bSoundStart = false;
@@ -157,7 +154,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 		{
 
 
-			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK1)
+			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK_E)
 			{
 				m_fTimeDeltaAcc += 0.4f;
 				_bool bSoundStart = false;
@@ -188,7 +185,10 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 		RELEASE_INSTANCE(CCollision_Manager);
 	}
 
-
+#ifdef _DEBUG
+	if (nullptr != m_pSPHERECom)
+		m_pRendererCom->Add_Debug(m_pSPHERECom);
+#endif
 	
 }
 

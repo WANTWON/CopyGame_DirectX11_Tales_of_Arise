@@ -5,7 +5,6 @@
 #include "Weapon.h"
 //#include "Effect.h"
 #include "EffectMesh.h"
-#include "PlayerSkillState.h"
 #include "PlayerJumpState.h"
 #include "BattleManager.h"
 #include "SionSkills.h"
@@ -115,6 +114,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 					else if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
 
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
 					getchar();
 				}
 				break;
@@ -172,6 +177,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
 
 					getchar();
 				}
@@ -235,6 +246,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 					else if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
 
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
 					getchar();
 				}
 				break;
@@ -296,6 +313,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
 
 					getchar();
 				}
@@ -360,6 +383,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 					else if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
 
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
 					getchar();
 				}
 				break;
@@ -406,13 +435,19 @@ CPlayerState * CPlayer_SionNormalAttack_State::LateTick(_float fTimeDelta)
 			switch (m_iSkillEvent)
 			{
 			case 1:
-				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK1);
+				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E);
 				break;
 			case 2:
-				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK2);
+				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 				break;
 			case 3:
-				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK3);
+				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
+				break;
+			case 4:
+				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK4);
+				break;
+			case 5:
+				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK5);
 				break;
 			}
 		}

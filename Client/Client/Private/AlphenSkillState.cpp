@@ -4,6 +4,7 @@
 #include "BattleManager.h"
 #include "UI_Skillmessage.h"
 #include "Effect.h"
+#include "ParticleSystem.h"
 
 #include "AlphenAttackState.h"
 #include "PlayerIdleState.h"
@@ -62,7 +63,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 			{
 				switch (m_eStateId)
 				{
-				case Client::CPlayerState::STATE_SKILL_ATTACK1:
+				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 					if (m_bIsFly)
 					{
 
@@ -94,10 +95,73 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						}
 					}
 					break;
-				case Client::CPlayerState::STATE_SKILL_ATTACK2:
+				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 					if (m_bIsFly)
 					{
+						if (!strcmp(pEvent.szName, "Senkusyourepa_Particles"))
+						{
+							if (!m_bSenkusyourepaParticle)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
+								_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+
+								vPosition += vOffset;
+								mWorldMatrix.r[3] = vPosition;
+
+								m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Particles.dat"), mWorldMatrix);
+
+								m_bSenkusyourepaParticle = true;
+							}
+						}
+						else if (!strcmp(pEvent.szName, "Senkusyourepa_1"))
+						{
+							if (!m_bSenkusyourepaFirstEffect)
+							{
+								/* Destroy Particles first. */
+								if (!m_SenkusyourepaParticles.empty())
+								{
+									for (auto& iter : m_SenkusyourepaParticles)
+									{
+										if (iter)
+										{
+											CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+											if (pParticleSystem != nullptr)
+												pParticleSystem->Set_Stop(true);
+										}
+									}
+								}
+
+								/* Then Spawn Effect*/
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_1.dat"), mWorldMatrix);
+
+								m_bSenkusyourepaFirstEffect = true;
+							}
+						}
+						else if (!strcmp(pEvent.szName, "Senkusyourepa_2"))
+						{
+							if (!m_bSenkusyourepaSecondEffect)
+							{
+								/* Spawn Effect Particles */
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+								_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+
+								vPosition += vOffset;
+								mWorldMatrix.r[3] = vPosition;
+
+								m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Explosion_Particles.dat"), mWorldMatrix);
+
+								/* Then Spawn Effect*/
+								mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_2.dat"), mWorldMatrix);
+
+								m_bSenkusyourepaSecondEffect = true;
+							}
+						}
 					}
 					else
 					{
@@ -110,10 +174,30 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						}
 					}
 					break;
-				case Client::CPlayerState::STATE_SKILL_ATTACK3:
+				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 					if (m_bIsFly)
 					{
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
+						if (!strcmp(pEvent.szName, "Engetu_1"))
+						{
+							if (!m_bEngetuFirstEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Engetu.dat"), mWorldMatrix);
+								
+								m_bEngetuFirstEffect = true;
+							}
+						}
+
+						if (!strcmp(pEvent.szName, "Engetu_2"))
+						{
+							if (!m_bEngetuSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Engetu.dat"), mWorldMatrix);
+
+								m_bEngetuSecondEffect = true;
+							}
+						}
 					}
 					else
 					{
@@ -193,19 +277,19 @@ CPlayerState * CAlphenSkillState::EventInput(void)
 		if (GetKeyState('E') < 0)
 		{
 			m_pOwner->Get_Model()->Reset();
-			m_eStateId = STATE_SKILL_ATTACK1;
+			m_eStateId = STATE_SKILL_ATTACK_E;
 			Enter();
 		}
 		else if (GetKeyState('R') < 0)
 		{
 			m_pOwner->Get_Model()->Reset();
-			m_eStateId = STATE_SKILL_ATTACK2;
+			m_eStateId = STATE_SKILL_ATTACK_R;
 			Enter();
 		}
 		else if (GetKeyState('F') < 0)
 		{
 			m_pOwner->Get_Model()->Reset();
-			m_eStateId = STATE_SKILL_ATTACK3;
+			m_eStateId = STATE_SKILL_ATTACK_F;
 			Enter();
 		}
 	}
@@ -251,15 +335,15 @@ void CAlphenSkillState::Enter(void)
 	{
 		switch (m_eStateId)
 		{
-		case Client::CPlayerState::STATE_SKILL_ATTACK1:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_RYUUSEIZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(0);
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK2:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_SENKUSYOUREPA);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(1);
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK3:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_ENGETU);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(2);
 			break;
@@ -269,19 +353,19 @@ void CAlphenSkillState::Enter(void)
 	{
 		switch (m_eStateId)
 		{
-		case Client::CPlayerState::STATE_SKILL_ATTACK1:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(3);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_E.wav"), SOUND_EFFECT, 0.6f);
 			//이 스킬 이펙트 소리는 Player_Weapon쪽에 있음. 여기서 이펙트 소리 넣으면, 애님이랑 타이밍이 안맞음. 
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK2:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(4);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.6f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R.wav"), SOUND_EFFECT, 0.6f);
 			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK3:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(5);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_EFFECT, 0.6f);

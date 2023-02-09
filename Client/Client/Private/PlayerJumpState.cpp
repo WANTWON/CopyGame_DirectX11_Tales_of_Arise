@@ -5,8 +5,6 @@
 #include "PlayerIdleState.h"
 #include "PlayerRunState.h"
 #include "PlayerJumpState.h"
-#include "PlayerAttackNormalState.h"
-#include "PlayerSkillState.h"
 #include "PlayerHitState.h"
 #include "Player_SionNormalAttack_State.h"
 #include "Player_SionSkillAttack.h"
@@ -50,19 +48,19 @@ CPlayerState * CJumpState::HandleInput()
 			{
 			case CPlayer::ALPHEN:
 				if (pGameInstance->Key_Down(DIK_E))
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK1, m_fStartHeight, m_fTime);
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
 				else if (pGameInstance->Key_Down(DIK_R))
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK2, m_fStartHeight, m_fTime);
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
 				else if (pGameInstance->Key_Down(DIK_F))
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK3, m_fStartHeight, m_fTime);
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 				break;
 			case CPlayer::SION:
 				if (pGameInstance->Key_Down(DIK_E))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK1, m_fStartHeight, m_fTime);
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
 				else if (pGameInstance->Key_Down(DIK_R))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK2, m_fStartHeight, m_fTime);
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
 				else if (pGameInstance->Key_Down(DIK_F))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK3, m_fStartHeight, m_fTime);
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 				break;
 			}
 
@@ -283,19 +281,24 @@ CPlayerState * CJumpState::EventInput(void)
 			{
 			case CPlayer::ALPHEN:
 				if (pGameInstance->Key_Down(DIK_E))
-					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK1);
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_E);
 				else if (pGameInstance->Key_Down(DIK_R))
-					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK2);
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_R);
 				else if (pGameInstance->Key_Down(DIK_F))
-					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK3);
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_F);
 				break;
 			case CPlayer::SION:
-				if (pGameInstance->Key_Down(DIK_E))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK1);
+				if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK4);
+				if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK5);
+				else if (pGameInstance->Key_Down(DIK_E))
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E);
 				else if (pGameInstance->Key_Down(DIK_R))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK2);
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 				else if (pGameInstance->Key_Down(DIK_F))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK3);
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
+				
 				break;
 			}
 			
