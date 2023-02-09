@@ -110,12 +110,20 @@ HRESULT CLevel_SnowField::Initialize()
 	Safe_Release(m_pMonsterLoader1);
 	Safe_Release(m_pNpcLoader);
 
+	g_fSoundVolume = 0.f;
+	CGameInstance::Get_Instance()->StopAll();
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
 	return S_OK;
 }
 
 void CLevel_SnowField::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	g_fSoundVolume += 0.001f;
+	if (g_fSoundVolume >= 0.3f)
+		g_fSoundVolume = 0.3f;
+	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 
 
 
