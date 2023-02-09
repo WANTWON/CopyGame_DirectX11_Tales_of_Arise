@@ -9,6 +9,7 @@
 #include "IceWolfBattle_HowLingState.h"
 #include "IceWolfBattle_RunState.h"
 
+
 using namespace IceWolf;
 
 CAttackBiteState::CAttackBiteState(class CIce_Wolf* pIceWolf, CBaseObj* pCurTarget)
@@ -28,7 +29,7 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 {
 	//m_fDegreeToTarget = RadianToTarget();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.9, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 
 	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
@@ -77,17 +78,34 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 
 CIceWolfState * CAttackBiteState::LateTick(_float fTimeDelta)
 {
-	if (m_bTargetSetting = false)
+	//if (m_bTargetSetting = false)
+	//{
+	//	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
+	//	m_bTargetSetting = true;
+	//}
+
+	if (m_pCurTarget == nullptr)
 	{
-		m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
-		m_bTargetSetting = true;
+		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 	}
+
+	m_b_IsTargetInFront = Is_TargetInFront(m_vCurTargetPos);
 
 	if (m_bIsAnimationFinished)
 	{
 		//m_pOwner->Set_Done_HitAnimState();
 		m_pOwner->Set_FinishBite();
-		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_BITE);
+
+		if (m_b_IsTargetInFront)
+			return new CBattle_SomerSaultState(m_pOwner);
+			
+		else
+			return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_BITE);
+
+		
 		CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Bite_End.wav"), SOUND_VOICE, 0.4f);
 	}

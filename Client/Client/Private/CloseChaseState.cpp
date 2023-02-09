@@ -6,13 +6,15 @@
 #include "PlayerRunState.h"
 #include "PlayerHitState.h"
 #include "AlphenAttackState.h"
+#include "AlphenSkillState.h"
 
 using namespace Player;
 
-CCloseChaseState::CCloseChaseState(CPlayer * pPlayer, STATE_ID eStateType)
+CCloseChaseState::CCloseChaseState(CPlayer * pPlayer, STATE_ID eStateType, STATE_ID eNextStateType)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
+	m_eNextState = eNextStateType;
 }
 
 CPlayerState * CCloseChaseState::HandleInput()
@@ -45,18 +47,7 @@ CPlayerState * CCloseChaseState::Tick(_float fTimeDelta)
 {
 	if (nullptr != m_pTarget)
 	{
-		_float4 fTargetPos;
-		XMStoreFloat4(&fTargetPos, m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
-		fTargetPos.y = m_pOwner->Get_Transform()->Get_World4x4().m[3][1];
-
-		_vector		vLook = XMLoadFloat4(&fTargetPos) - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
-		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-		_vector		vRight = XMVector3Cross(vAxisY, vLook);
-
-		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_RIGHT));
-		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_LOOK));
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());
 	}
@@ -81,7 +72,23 @@ CPlayerState * CCloseChaseState::LateTick(_float fTimeDelta)
 		{
 		case CPlayer::ALPHEN:
 			if (4.5f > XMVectorGetX(XMVector4Length(vToTargetDir)))
-				return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
+			{
+				switch (m_eNextState)
+				{
+				case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+					return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
+					break;
+				case Client::CPlayerState::STATE_SKILL_ATTACK1:
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK1);
+					break;
+				case Client::CPlayerState::STATE_SKILL_ATTACK2:
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK2);
+					break;
+				case Client::CPlayerState::STATE_SKILL_ATTACK3:
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK3);
+					break;
+				}
+			}
 			break;
 		}
 	}

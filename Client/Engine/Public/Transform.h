@@ -74,6 +74,7 @@ public: /* Use Sliding */
 
 public: /* Use Sliding while Animation */
 	bool Sliding_Anim(_vector vecMove, _float fRotation, class CNavigation* pNavigation = nullptr);
+	bool Sliding_Anim_To_Target(_vector vAt, _vector vecMove, _float fRotation, class CNavigation* pNavigation = nullptr);
 
 public:
 	void Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight, _float fEndiHeight);

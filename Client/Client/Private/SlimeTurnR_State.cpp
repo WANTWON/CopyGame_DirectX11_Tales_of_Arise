@@ -7,20 +7,20 @@
 
 using namespace Slime;
 
-CTurnR_State::CTurnR_State(CSlime* pSlime)
+CTurn_State::CTurn_State(CSlime* pSlime)
 {
 	m_pOwner = pSlime;
 	
 }
 
-CSlimeState * CTurnR_State::AI_Behaviour(_float fTimeDelta)
+CSlimeState * CTurn_State::AI_Behaviour(_float fTimeDelta)
 {
 	
 
 	return nullptr;
 }
 
-CSlimeState * CTurnR_State::Tick(_float fTimeDelta)
+CSlimeState * CTurn_State::Tick(_float fTimeDelta)
 {
 	Find_Target();
 
@@ -41,7 +41,7 @@ CSlimeState * CTurnR_State::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CSlimeState * CTurnR_State::LateTick(_float fTimeDelta)
+CSlimeState * CTurn_State::LateTick(_float fTimeDelta)
 {
 	if (m_pTarget)
 		return new CChaseState(m_pOwner);
@@ -55,7 +55,7 @@ CSlimeState * CTurnR_State::LateTick(_float fTimeDelta)
 	return nullptr;
 }
 
-void CTurnR_State::Enter()
+void CTurn_State::Enter()
 {
 	m_eStateId = STATE_ID::STATE_MOVE;
 
@@ -64,7 +64,7 @@ void CTurnR_State::Enter()
 
 }
 
-void CTurnR_State::Exit()
+void CTurn_State::Exit()
 {
 
 }

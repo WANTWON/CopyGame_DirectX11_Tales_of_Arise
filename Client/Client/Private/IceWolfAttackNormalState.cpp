@@ -5,15 +5,17 @@
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfBattle_RunState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
+#include "IceWolfAttackBiteState.h"
+#include "IceWolfBattle_SomerSaultState.h"
 
 using namespace IceWolf;
 
-CAttackNormalState::CAttackNormalState(class CIce_Wolf* pIceWolf)
+CAttackNormalState::CAttackNormalState(class CIce_Wolf* pIceWolf, STATE_ID ePreState)
 {
 	m_pOwner = pIceWolf;
 	m_fTimeDeltaAcc = 0;
 	m_fRandTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
-
+	m_ePreState = ePreState;
 }
 
 CIceWolfState * CAttackNormalState::AI_Behaviour(_float fTimeDelta)
@@ -97,22 +99,64 @@ CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
 
 CIceWolfState * CAttackNormalState::LateTick(_float fTimeDelta)
 {
+	m_fTimeDeltaAcc += fTimeDelta;
+
 	if (m_fTimeDeltaAcc > m_fRandTime)
 		m_iRand = rand() % 2;
 
 	
 
+	//if (m_bIsAnimationFinished)
+	//{
+	//	if (m_fTarget_Distance > 10.5f)
+	//		return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
+
+
+	//	else
+	//		return new CBattle_RunState(m_pOwner, STATE_END);
+
+	//}
+
+	if (m_pCurTarget == nullptr)
+	{
+		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+	}
+
+	_bool bIsTargetInsight = false;
+	bIsTargetInsight = Is_TargetInSight(m_vCurTargetPos, 30.f);
+	m_b_IsTargetInFront = Is_TargetInFront(m_vCurTargetPos);
+
+
 	if (m_bIsAnimationFinished)
 	{
-		if (m_fTarget_Distance > 10.5f)
-			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
-
+		if (m_ePreState == STATE_ID::STATE_BACKSTEP && bIsTargetInsight)
+			return new CAttackBiteState(m_pOwner);
 
 		else
-			return new CBattle_RunState(m_pOwner, STATE_END);
+		{
+			if (m_b_IsTargetInFront)
+			{
+				switch (m_iRand)
+				{
+				case 0:
+					return new CBattle_BackStepState(m_pOwner);
 
+				case 1:
+					return new CBattle_SomerSaultState(m_pOwner);
+
+				default:
+					break;
+				}
+			}
+
+			else
+				return new CAttack_Elemental_Charge(m_pOwner, STATE_CHARGE_START);
+		}
 	}
-	
+
 	return nullptr;
 }
 

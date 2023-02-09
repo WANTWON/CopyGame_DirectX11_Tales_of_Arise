@@ -228,6 +228,10 @@ HRESULT CPlayer::Ready_Components(void)
 			return E_FAIL;
 		break;
 
+	case MODEL_ASTRAL_DOUBT:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Astral_Doubt"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
 		
 	}
 
