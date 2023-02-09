@@ -41,35 +41,37 @@ int CParticleSystem::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	else if (m_bPreDead)
 		m_bDead = true;
-
-	if (!m_bCanStart)
+	else
 	{
-		if (m_tParticleDesc.m_fParticleStartAfter == 0)
-			m_bCanStart = true;
-		else
+		if (!m_bCanStart)
 		{
-			if (m_fAccumulatedTime < m_tParticleDesc.m_fParticleStartAfter)
-				m_fAccumulatedTime += fTimeDelta;
+			if (m_tParticleDesc.m_fParticleStartAfter == 0)
+				m_bCanStart = true;
 			else
 			{
-				m_bCanStart = true;
-				m_fAccumulatedTime = 0.f;
+				if (m_fAccumulatedTime < m_tParticleDesc.m_fParticleStartAfter)
+					m_fAccumulatedTime += fTimeDelta;
+				else
+				{
+					m_bCanStart = true;
+					m_fAccumulatedTime = 0.f;
+				}
 			}
 		}
+
+		if (m_bCanStart)
+			EmitParticles(fTimeDelta); /* Emit new Particles. */
+
+									   // Billboard
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+		m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
+		RELEASE_INSTANCE(CGameInstance);
+
+		UpdateParticles(fTimeDelta);	/* Update Particles. */
+		SortParticles();				/* Sort Particles. */
+
+		UpdateBuffers();
 	}
-
-	if (m_bCanStart)
-		EmitParticles(fTimeDelta); /* Emit new Particles. */
-
-	// Billboard
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
-	RELEASE_INSTANCE(CGameInstance);
-
-	UpdateParticles(fTimeDelta);	/* Update Particles. */
-	SortParticles();				/* Sort Particles. */
-
-	UpdateBuffers();
 
 	KillParticles();				/* Release old Particles. */
 	

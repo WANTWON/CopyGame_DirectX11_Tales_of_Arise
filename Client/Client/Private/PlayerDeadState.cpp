@@ -38,6 +38,9 @@ CPlayerState * CPlayerDeadState::Tick(_float fTimeDelta)
 
 CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 {
+	if (m_bIsAnimationFinished)
+		m_bIsStop = true;
+
 	return nullptr;
 }
 

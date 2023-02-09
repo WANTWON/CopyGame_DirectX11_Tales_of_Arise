@@ -312,7 +312,7 @@ HRESULT CItem::Ready_Components(void * pArg)
 	/* For.Com_Model*/
 	_tchar szModeltag[MAX_PATH] = TEXT("");
 	MultiByteToWideChar(CP_ACP, 0, m_ItemDesc.ModelDesc.pModeltag, (int)strlen(m_ItemDesc.ModelDesc.pModeltag), szModeltag, MAX_PATH);
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), iLevel, szModeltag, (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, szModeltag, (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	return S_OK;
