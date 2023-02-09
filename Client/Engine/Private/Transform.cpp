@@ -263,7 +263,7 @@ bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigati
 
 	_vector vWorldRot = XMQuaternionNormalize(XMQuaternionRotationMatrix(WorldMatrix));
 
-	_vector RotationQuat = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f)/*WorldMatrix.r[1]*/, (fRotation * -1.f));
+	_vector RotationQuat = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), (fRotation * -1.f));
 
 	WorldMatrix = XMMatrixRotationQuaternion(XMQuaternionNormalize(XMQuaternionMultiply(vWorldRot, RotationQuat)));
 
@@ -453,6 +453,17 @@ void CTransform::LookDir(_fvector vDir)
 	Set_State(STATE_RIGHT, XMVector3Normalize(vRight) * Get_Scale(CTransform::STATE_RIGHT));
 	Set_State(STATE_UP, XMVector3Normalize(vUp) * Get_Scale(CTransform::STATE_UP));
 	Set_State(STATE_LOOK, XMVector3Normalize(vLook) * Get_Scale(CTransform::STATE_LOOK));
+}
+
+void CTransform::LookAtExceptY(_fvector vAt)
+{
+	_vector		vLook = XMVectorSetY(vAt, m_WorldMatrix.m[3][1]) - Get_State(STATE_TRANSLATION);
+	_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector		vRight = XMVector3Cross(vAxisY, vLook);
+
+	Set_State(STATE_RIGHT, XMVector3Normalize(vRight) * Get_Scale(STATE_RIGHT));
+	Set_State(STATE_LOOK, XMVector3Normalize(vLook) * Get_Scale(STATE_LOOK));
 }
 
 void CTransform::RoamingTurn(_matrix WorldMatrix, _float fRadian)

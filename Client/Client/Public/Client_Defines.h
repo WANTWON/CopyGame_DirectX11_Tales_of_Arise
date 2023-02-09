@@ -75,5 +75,6 @@ namespace Client
 extern HWND			g_hWnd;
 extern HINSTANCE	g_hInst;
 extern bool		g_bUIMade;
+extern float	g_fSoundVolume;
 
 using namespace Client;

@@ -59,7 +59,10 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 
 	if (INVALID_HANDLE_VALUE != hAddFile && (pdwAddByte != 0))
 	{
-		ReadFile(hAddFile, &m_fDuration, sizeof(_float), pdwAddByte, nullptr);
+		_bool isReadDuration = ReadFile(hAddFile, &m_fDuration, sizeof(_float), pdwAddByte, nullptr);
+
+		if (isReadDuration && (0 == (*pdwAddByte)))
+			return S_OK;
 
 		for (_uint i = 0; i < m_iNumChannels; ++i)
 		{
@@ -308,3 +311,4 @@ void CAnimation::Free(void)
 
 	m_Channels.clear();
 }
+

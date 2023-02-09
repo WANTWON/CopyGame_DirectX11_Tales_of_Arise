@@ -4,6 +4,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 texture2D g_DiffuseTexture;
+texture2D		g_DepthTexture;
 
 float3 g_vColor;
 float g_fAlpha;
@@ -24,6 +25,7 @@ struct VS_OUT
 {
 	float4 vPosition : SV_POSITION;
 	float2 vTexUV : TEXCOORD0;
+	float4		vProjPos : TEXCOORD1;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -36,6 +38,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
 	Out.vTexUV = In.vTexUV;
+	Out.vProjPos = Out.vPosition;
 
 	return Out;
 }
@@ -44,6 +47,7 @@ struct PS_IN
 {
 	float4 vPosition : SV_POSITION;
 	float2 vTexUV : TEXCOORD0;
+	float4		vProjPos : TEXCOORD1;
 };
 
 struct PS_OUT
@@ -71,6 +75,18 @@ PS_OUT PS_EFFECT(PS_IN In)
 
 	if (Out.vColor.a <= g_fAlphaDiscard) // Alpha Test
 		discard;
+
+	//float2	vUV;
+
+	//vUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	//vUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+	//vector	vDepthDesc = g_DepthTexture.Sample(LinearSampler, vUV);
+
+	//float	fViewZ = In.vProjPos.w;
+	//float	fOldViewZ = vDepthDesc.y*1000.f;
+
+	//Out.vColor.a = Out.vColor.a * (fOldViewZ - fViewZ);
 
 	return Out;
 }

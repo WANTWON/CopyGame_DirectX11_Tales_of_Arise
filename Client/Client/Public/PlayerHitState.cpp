@@ -44,9 +44,9 @@ void CHitState::Enter()
 	{
 	case CPlayer::ALPHEN:
 		if (m_bIsFly)
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_AIR_LARGE_B);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_AIR_SMALL_B);
 		else
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_LARGE_B);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_SMALL_B);
 		break;
 	case CPlayer::SION:
 		if (m_bIsFly)
