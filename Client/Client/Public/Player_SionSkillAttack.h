@@ -31,6 +31,8 @@ private:
 
 	vector<CEffect*> m_HousyutigakuzinStart;
 	void CallbackFunction(_uint iIndex);
+
+	_float m_fEventStart = -1.f;
 };
 END
 END

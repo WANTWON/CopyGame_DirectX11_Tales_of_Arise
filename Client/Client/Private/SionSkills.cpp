@@ -215,7 +215,7 @@ void CSionSkills::Dead_Effect()
 		BulletDesc.eCollisionGroup = PLAYER;
 		BulletDesc.fVelocity = 1.f;
 		BulletDesc.eBulletType = CSionSkills::GRAVITY_DEAD;
-		BulletDesc.iDamage = 300.f;
+		BulletDesc.iDamage = 300;
 		BulletDesc.fDeadTime = 1.f;
 		BulletDesc.vInitPositon = Get_TransformState(CTransform::STATE_TRANSLATION);
 		BulletDesc.pOwner = m_BulletDesc.pOwner;

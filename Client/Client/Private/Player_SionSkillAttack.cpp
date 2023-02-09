@@ -30,16 +30,17 @@ CPlayerState * CPlayer_SionSkillAttack::HandleInput(void)
 	return nullptr;
 }
 
+
 CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 {
-	if (CAlphen::ANIM::ANIM_ATTACK_HITENSYUOUKU_LOOP == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
+	/*if (CAlphen::ANIM::ANIM_: == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
 	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
 		m_pOwner->Check_Navigation();
 	}
 	else
-	{
+	{*/
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 		if (!m_bIsAnimationFinished)
@@ -56,7 +57,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 		}
 		else
 			m_pOwner->Check_Navigation();
-	}
+//	}
 
 	if (!m_pBlastEffect.empty())
 	{
@@ -74,8 +75,8 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 		}
 	}
 
-	if (m_bIsFly)
-		m_fTime += 0.1f;
+	/*if (m_bIsFly)
+		m_fTime += 0.1f;*/
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -88,7 +89,38 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 			{
 			case Client::CPlayerState::STATE_SKILL_ATTACK1:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+				{
+					if ((m_fEventStart != pEvent.fStartTime))
+					{
+						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_TRIPLE_STAR))
+						{
+							CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+							if (pTarget == nullptr)
+								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+
+							CBullet::BULLETDESC BulletDesc;
+							BulletDesc.eCollisionGroup = PLAYER;
+							BulletDesc.fVelocity = 1.f;
+							BulletDesc.eBulletType = CSionSkills::GRAVITY;
+							BulletDesc.iDamage = 200;
+							BulletDesc.fDeadTime = 10.f;
+							if (pTarget != nullptr)
+							{
+								BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+							}
+							else
+								BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
+							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*2.f);
+							BulletDesc.pOwner = m_pOwner;
+
+							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+								return nullptr;
+							m_fEventStart = pEvent.fStartTime;
+						}
+					}
+				}
+				
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 					if (GetKeyState(VK_LBUTTON) < 0)
@@ -119,17 +151,8 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.fVelocity = 1.f;
-
-						BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
-						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
-
-
-						BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
-						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*2.f);
-						BulletDesc.pOwner = m_pOwner;
-
 						BulletDesc.eBulletType = CSionSkills::GRAVITY;
-						BulletDesc.iDamage = 200.f;
+						BulletDesc.iDamage = 200;
 						BulletDesc.fDeadTime = 10.f;
 						if (pTarget != nullptr)
 						{
@@ -141,22 +164,11 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*2.f);
 						BulletDesc.pOwner = m_pOwner;
 
-
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						m_bBulletMade = true;
 					}
-
-
-
-
-
-
 				}
-
-
-				}
-
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 					if (GetKeyState(VK_LBUTTON) < 0)
@@ -177,7 +189,10 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 				break;
 			case Client::CPlayerState::STATE_SKILL_ATTACK3:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+				{
+					
+				}
+			
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 					if (GetKeyState(VK_LBUTTON) < 0)
@@ -199,19 +214,10 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 			}
 		}
 
-
-
 	}
 
 
 
-
-
-
-
-
-		
-	}
 	return nullptr;
 }
 
