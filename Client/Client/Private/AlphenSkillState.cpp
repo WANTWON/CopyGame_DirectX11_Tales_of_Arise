@@ -43,6 +43,9 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
+
+	if (m_bIsFly)
+		m_fTime += fTimeDelta;
 		
 	m_pOwner->Check_Navigation_Jump();
 
@@ -384,7 +387,7 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(4);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.6f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R.wav"), SOUND_EFFECT, 0.6f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R_Test2.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);

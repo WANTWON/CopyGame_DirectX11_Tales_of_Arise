@@ -85,7 +85,7 @@ CIceWolfState * CAttackNormalState::Tick(_float fTimeDelta)
 
 				if (!m_bAnimFinish)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Attack.wav"), SOUND_VOICE, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Attack.wav"), SOUND_VOICE, 0.2f);
 					m_bAnimFinish = true;
 				}
 

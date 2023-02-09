@@ -28,6 +28,7 @@ private:
 	_float m_fTime = 0.f;
 
 	_bool m_bEffectSlashSpawned = false;
+	_bool m_bSoundStart = false;
 	vector<CEffect*> m_pEffects;
 
 	_float m_fEventStart = 1.f;

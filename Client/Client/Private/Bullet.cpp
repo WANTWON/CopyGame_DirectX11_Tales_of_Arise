@@ -132,6 +132,7 @@ HRESULT CBullet::SetUp_ShaderID()
 void CBullet::Collision_Check()
 {
 	CBaseObj* pCollisionTarget = nullptr;
+
 	if (m_BulletDesc.eCollisionGroup == PLAYER)
 	{
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))

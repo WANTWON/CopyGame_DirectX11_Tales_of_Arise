@@ -93,6 +93,19 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		m_pSmoke = CEffect::PlayEffectAtLocation(TEXT("TresVentosSmoke.dat"), mWorldMatrix);
 		m_pTransformCom->LookDir(m_BulletDesc.vTargetDir);
 		break;
+
+	case AQUA_LUINA:
+		vLocation = m_BulletDesc.vTargetPosition;
+		//mWorldMatrix.r[]
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+		break;
+	case AQUA_LUINA_BULLET:
+		vLocation = m_BulletDesc.vTargetPosition;
+		vLocation.m128_f32[1] += 3.f;
+		//mWorldMatrix.r[]
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+		break;
+		
 	}
 
 	return S_OK;
@@ -128,6 +141,16 @@ int CSionSkills::Tick(_float fTimeDelta)
 	case TRESVENTOS:
 		Tick_TresVentos(fTimeDelta);
 		break;
+	case AQUA_LUINA:
+		Tick_AQUA_LUINA(fTimeDelta);
+		break;
+
+	case AQUA_LUINA_BULLET:
+		Tick_AQUA_LUINA_BULLET(fTimeDelta);
+		break;
+
+
+
 	}
 
 
@@ -179,6 +202,13 @@ void CSionSkills::Collision_Check()
 	case NORMALATTACK:
 	case GRAVITY_DEAD:
 		__super::Collision_Check();
+		break;
+	case AQUA_LUINA_BULLET:
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
+		{
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			m_bDead = true;
+		}
 		break;
 	case BOOST:
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
@@ -370,10 +400,21 @@ HRESULT CSionSkills::Ready_Components(void * pArg)
 		break;
 
 	case AQUA_LUINA:
-		ColliderDesc.vScale = _float3(0.5f, 6.f, 0.5f);
+		ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 		if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
 			return E_FAIL;
+		break;
+
+	case AQUA_LUINA_BULLET:
+			ColliderDesc.vScale = _float3(0.5f, 6.f, 0.5f);
+			ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+			if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
+				return E_FAIL;
+			break;
+
+
+
 		
 	}
 
@@ -518,6 +559,41 @@ void CSionSkills::Tick_TresVentos(_float fTimeDelta)
 		}
 
 	}
+}
+
+void CSionSkills::Tick_AQUA_LUINA(_float fTimeDelta)
+{
+	m_fAquaTImer += fTimeDelta;
+
+	if (bulletcount <= 0)
+		m_bDead = true;
+	
+	if (m_fAquaTImer > 0.2f)
+	{
+		float offsetx = (_float)(rand() % 100 - 5) / 10;
+		float offsetz = (_float)(rand() % 100 - 5) / 10;
+		CBullet::BULLETDESC BulletDesc;
+		_vector vLocation = { 0.f,0.f,0.f,0.f };
+		BulletDesc.iDamage = rand() % 150 + 1;
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		BulletDesc.vTargetPosition.m128_f32[0] += offsetx;
+		BulletDesc.vTargetPosition.m128_f32[2] += offsetz;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.eBulletType = CSionSkills::AQUA_LUINA_BULLET;
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+		--bulletcount;
+		m_fAquaTImer = 0.f;
+	}
+	
+}
+
+void CSionSkills::Tick_AQUA_LUINA_BULLET(_float fTimeDelta)
+{
+	m_fAquaTImer += fTimeDelta;
+	if (m_fAquaTImer > 0.5f)
+		m_bDead = true;
 }
 
 CSionSkills * CSionSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
