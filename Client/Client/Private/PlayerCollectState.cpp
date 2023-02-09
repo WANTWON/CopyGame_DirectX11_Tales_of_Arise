@@ -30,7 +30,7 @@ CPlayerState * CCollectState::Tick(_float fTimeDelta)
 		{
 			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
 			{
-				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 				{
 					if (nullptr != m_pObject)
 						m_pObject->Set_Interact();

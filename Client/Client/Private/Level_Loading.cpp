@@ -27,14 +27,18 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 	if (nullptr == m_pLoader)
 		return E_FAIL;
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
-
 	return S_OK;
 }
 
 void CLevel_Loading::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	//g_fSoundVolume -= 0.03f;
+	//if (g_fSoundVolume <= 0.f)
+	//	g_fSoundVolume = 0.f;
+
+	//CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 
 	if (true == m_pLoader->Get_Finished())
 	{

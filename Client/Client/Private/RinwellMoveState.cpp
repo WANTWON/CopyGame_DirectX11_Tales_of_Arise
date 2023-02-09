@@ -157,7 +157,7 @@ void CMoveState::Move(_float fTimeDelta)
 		else
 		{
 			if (!m_bIsAnimationFinished)
-				m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 5, m_pOwner->Get_Navigation());
+				m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 5, m_pOwner->Get_Navigation()); 
 		}
 	}
 	else

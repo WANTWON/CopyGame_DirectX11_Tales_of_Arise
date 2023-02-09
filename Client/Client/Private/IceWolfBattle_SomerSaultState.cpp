@@ -22,8 +22,6 @@ CIceWolfState * CBattle_SomerSaultState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-
-
 	if (!m_bIsAnimationFinished)
 	{
 		_vector vecTranslation;

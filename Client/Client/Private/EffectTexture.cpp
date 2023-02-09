@@ -263,6 +263,9 @@ HRESULT CEffectTexture::SetUp_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV())))
 		return E_FAIL;
+	if (FAILED(CGameInstance::Get_Instance()->Bind_RenderTarget_SRV(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
+		return E_FAIL;
+
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_vColor", &m_tTextureEffectDesc.vColor, sizeof(_float3))))
 		return E_FAIL;

@@ -65,8 +65,8 @@ HRESULT CLevel_SnowField::Initialize()
 
 
 	//Test
-	if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
+	//	return E_FAIL;
 	//Test
 
 	DWORD dwTime = GetTickCount();
@@ -110,12 +110,20 @@ HRESULT CLevel_SnowField::Initialize()
 	Safe_Release(m_pMonsterLoader1);
 	Safe_Release(m_pNpcLoader);
 
+	g_fSoundVolume = 0.f;
+	CGameInstance::Get_Instance()->StopAll();
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
 	return S_OK;
 }
 
 void CLevel_SnowField::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	g_fSoundVolume += 0.001f;
+	if (g_fSoundVolume >= 0.3f)
+		g_fSoundVolume = 0.3f;
+	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 
 
 
@@ -949,10 +957,12 @@ HRESULT CLevel_SnowField::Ready_Layer_Test(const _tchar * pLayerTag)
 		_tchar pModeltag[MAX_PATH];
 		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
 
-		if (!wcscmp(pModeltag, TEXT("Astral_Doubt")))
-		{
-			//여기서 몬스터 생성하세요
-		}
+		//if (!wcscmp(pModeltag, TEXT("Astral_Doubt")))
+		//{
+		//	//여기서 몬스터 생성하세요
+		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
+		//		return E_FAIL;
+		//}
 	}
 
 	CloseHandle(hFile);

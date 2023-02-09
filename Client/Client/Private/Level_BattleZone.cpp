@@ -68,6 +68,27 @@ HRESULT CLevel_BattleZone::Initialize()
 	m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
 	m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, -10.f, 0.f));
 
+	g_fSoundVolume = 0.f;
+	CGameInstance::Get_Instance()->StopAll();
+	
+	switch (eMonsterID)
+	{
+	case Client::ICE_WOLF:
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgm0.wav"), g_fSoundVolume);
+		break;
+	case Client::HAWK:
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgm1.wav"), g_fSoundVolume);
+		break;
+	case Client::BERSERKER:
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgm2.wav"), g_fSoundVolume);
+		break;
+	case Client::RINWELL:
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
+		break;
+	default:
+		break;
+	}
+
 
 	return S_OK;
 }
@@ -75,6 +96,16 @@ HRESULT CLevel_BattleZone::Initialize()
 void CLevel_BattleZone::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
+	{
+		g_fSoundVolume += 0.001f;
+		if (g_fSoundVolume >= 0.2f)
+			g_fSoundVolume = 0.2f;
+	}
+	
+	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
+
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 	{
@@ -253,6 +284,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Change_Navigation(LEVEL_BATTLE);
 		iter->Compute_CurrentIndex(LEVEL_BATTLE);
 		iter->Check_Navigation();
+		iter->Change_Level(LEVEL_BATTLE);
 		i++;
 	}
 
@@ -312,6 +344,11 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		case Client::RINWELL:
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
 				return E_FAIL;
+		case Client::ASTRAL_DOUBT:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
+				return E_FAIL;
+			break;
+
 			CloseHandle(hFile);
 			RELEASE_INSTANCE(CGameInstance);
 			return S_OK;

@@ -398,6 +398,10 @@ void CCamera_Dynamic::LockOn_Camera(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	g_fSoundVolume -= 0.01f;
+	if (g_fSoundVolume <= 0.08f)
+		g_fSoundVolume = 0.08f;
+
 	_vector vPosition = m_vTargetPos - m_vDistance ;
 
 	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - vPosition)) <= 0.2f && m_fTime <= 0.2f)

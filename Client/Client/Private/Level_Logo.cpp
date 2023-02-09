@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 
+float g_fSoundVolume = 0.0f;
+
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -22,7 +24,7 @@ HRESULT CLevel_Logo::Initialize()
 		return E_FAIL;
 
 
-	//CGameInstance::Get_Instance()->PlaySounds(TEXT("LogoSong.wav"), SOUND_SYSTEM, 0.3f);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("LogoSong.wav"), g_fSoundVolume);
 	
 	return S_OK;
 }
@@ -30,13 +32,18 @@ HRESULT CLevel_Logo::Initialize()
 void CLevel_Logo::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);	
+	g_fSoundVolume += 0.001f;
+	if (g_fSoundVolume >= 0.2f)
+		g_fSoundVolume = 0.2f;
+	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
+
 
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
-		//CGameInstance::Get_Instance()->PlaySounds(TEXT("6_UI_Sys_Do_Start.wav"), SOUND_SYSTEM, 0.4f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("6_UI_Sys_Do_Start.wav"), SOUND_SYSTEM, 0.4f);
 
 		
 		pGameInstance->Set_DestinationLevel(LEVEL_SNOWFIELD);
@@ -46,8 +53,6 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		Safe_Release(pGameInstance);
 	}
 
-	if (CGameInstance::Get_Instance()->Key_Down(DIK_ESCAPE))
-		CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
 }
 
 void CLevel_Logo::Late_Tick(_float fTimeDelta)
@@ -87,5 +92,4 @@ void CLevel_Logo::Free()
 {
 	__super::Free();
 
-	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
 }

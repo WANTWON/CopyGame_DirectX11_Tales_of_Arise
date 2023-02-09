@@ -70,6 +70,9 @@ void CMainApp::Tick(_float fTimeDelta)
 	if (nullptr == m_pGameInstance)
 		return;
 
+	if (m_pGameInstance->Key_Up(DIK_BACKSLASH))
+		g_fSoundVolume = 0.f;
+
 	if (m_pGameInstance->Key_Up(DIK_ESCAPE) && !(m_pUI_Manager->Get_StopTick()))
 		m_pUI_Manager->Set_Mainmenuon(true);
 

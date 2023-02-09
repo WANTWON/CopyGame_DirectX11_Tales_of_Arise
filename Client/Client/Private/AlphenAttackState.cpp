@@ -51,7 +51,7 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
-				EventInput();
+				return EventInput();
 			break;
 		}
 		else
@@ -181,6 +181,9 @@ void CAlphenAttackState::Enter()
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_2);
 			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_3);
+			break;
 		}
 	}
 	else
@@ -211,20 +214,7 @@ void CAlphenAttackState::Enter()
 	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
 
 	if (nullptr != pTarget)
-	{
-		_float4 fTargetPos;
-		XMStoreFloat4(&fTargetPos, pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
-		fTargetPos.y = m_pOwner->Get_Transform()->Get_World4x4().m[3][1];
-
-		_vector		vLook = XMLoadFloat4(&fTargetPos) - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
-		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-		_vector		vRight = XMVector3Cross(vAxisY, vLook);
-
-		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_RIGHT));
-		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_LOOK));
-	}
+		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	RELEASE_INSTANCE(CBattleManager);
 }

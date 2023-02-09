@@ -5,7 +5,7 @@ BEGIN(Client)
 class CSionSkills final : public CBullet
 {
 public:
-	enum TYPE { NORMALATTACK, BOOST, GRAVITY };
+	enum TYPE { NORMALATTACK, BOOST, GRAVITY, GRAVITY_DEAD };
 
 public:
 	CSionSkills(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

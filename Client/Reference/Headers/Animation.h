@@ -50,7 +50,7 @@ private:
 	_bool							m_isLoop = true;
 
 	/*For. Linear Time*/
-	_float m_fTotal_Linear_Duration = 0.2f; //1더하면
+	_float m_fTotal_Linear_Duration = 0.1f; //1더하면
 	_float m_fLinear_CurrentTime = 0.f;
 	_bool	m_bLinearFinished = false;
 

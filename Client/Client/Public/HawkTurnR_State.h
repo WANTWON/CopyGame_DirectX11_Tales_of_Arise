@@ -4,10 +4,10 @@
 
 BEGIN(Client)
 BEGIN(Hawk)
-class CTurnR_State : public CHawkState
+class CTurn_State : public CHawkState
 {
 public:
-	CTurnR_State(class CHawk* pIceWolf);
+	CTurn_State(class CHawk* pIceWolf);
 
 	virtual CHawkState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CHawkState* Tick(_float fTimeDelta) override;

@@ -33,7 +33,7 @@ namespace Client
 
 	//enum MONSTER_ID { ICE_WOLF, HAWK, BERSERKER, SLIME, MONSTER_END };
 
-	enum MONSTER_ID { ICE_WOLF, HAWK, BERSERKER, SLIME, RINWELL, MONSTER_END };
+	enum MONSTER_ID { ICE_WOLF, HAWK, BERSERKER, SLIME, RINWELL, ASTRAL_DOUBT,MONSTER_END };
 
 
 	typedef struct ObjectInfo
@@ -75,5 +75,6 @@ namespace Client
 extern HWND			g_hWnd;
 extern HINSTANCE	g_hInst;
 extern bool		g_bUIMade;
+extern float	g_fSoundVolume;
 
 using namespace Client;
