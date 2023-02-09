@@ -7,11 +7,14 @@
 #include "IceWolfBattle_RunState.h"
 #include "IceWolfAttack_Elemental_Charge.h"
 
+
 using namespace IceWolf;
 
 CBattle_BackStepState::CBattle_BackStepState(class CIce_Wolf* pIceWolf)
 {
 	m_pOwner = pIceWolf;
+	m_fTimeDeltaAcc = 0;
+	m_iRandTime = ((rand() % 1500) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CIceWolfState * CBattle_BackStepState::AI_Behaviour(_float fTimeDelta)
@@ -35,15 +38,31 @@ CIceWolfState * CBattle_BackStepState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-	//m_fDegreeToTarget = RadianToTarget();
 	return nullptr;
 }
 
 CIceWolfState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 {
-	if (m_bIsAnimationFinished)
-		return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_BACKSTEP);
+	m_fTimeDeltaAcc += fTimeDelta;
+	
+	if (m_fTimeDeltaAcc >= m_iRandTime)
+		m_iRand = rand() % 2;
 
+	if (m_bIsAnimationFinished)
+	{
+		switch (m_iRand)
+		{
+		case 0:
+			return new CAttack_Elemental_Charge(m_pOwner, CIceWolfState::STATE_ID::STATE_CHARGE_START);
+
+		case 1:
+			return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_BACKSTEP);
+			
+		default:
+			break;
+		}
+		
+	}
 	return nullptr;
 }
 

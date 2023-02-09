@@ -45,7 +45,7 @@ CHawkState * CWalkState::LateTick(_float fTimeDelta)
 		//돌게하고
 
 		if (false == m_bTriggerTurn)
-			return new CTurnR_State(m_pOwner);
+			return new CTurn_State(m_pOwner);
 
 		// 그 트리거 박스의 위치 방향으로 이동하는 상태를 세팅한다.
 
@@ -77,7 +77,7 @@ CHawkState * CWalkState::LateTick(_float fTimeDelta)
 			case 0:
 				return new CIdleState(m_pOwner);
 			case 1:
-				return new CTurnR_State(m_pOwner);
+				return new CTurn_State(m_pOwner);
 			case 2:
 				return new CBraveState(m_pOwner);
 

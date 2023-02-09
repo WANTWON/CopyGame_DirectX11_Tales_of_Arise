@@ -155,9 +155,6 @@ protected:
 
 	_float Find_ToTargetCosign(_fvector vAt)
 	{
-		//_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
-		//_vector vLook = XMVector3Normalize(pMonSterTransform->Get_State(CTransform::STATE_LOOK));
-
 		_vector		vMonPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
 		_vector		vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
 

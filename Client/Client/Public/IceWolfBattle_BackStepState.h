@@ -21,6 +21,8 @@ private:
 	_uint		m_iRand = 0;
 	_float		m_fRedayAttackTimer = 0.f;
 	_bool		m_bTargetSetting = false;
+	_float		m_iRandTime = 0.f;
+	
 
 private:
 	_matrix m_StartMatrix;

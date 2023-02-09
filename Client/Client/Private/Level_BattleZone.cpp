@@ -284,6 +284,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Change_Navigation(LEVEL_BATTLE);
 		iter->Compute_CurrentIndex(LEVEL_BATTLE);
 		iter->Check_Navigation();
+		iter->Change_Level(LEVEL_BATTLE);
 		i++;
 	}
 
@@ -343,6 +344,11 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		case Client::RINWELL:
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
 				return E_FAIL;
+		case Client::ASTRAL_DOUBT:
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
+				return E_FAIL;
+			break;
+
 			CloseHandle(hFile);
 			RELEASE_INSTANCE(CGameInstance);
 			return S_OK;

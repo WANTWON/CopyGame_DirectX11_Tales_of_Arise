@@ -3292,7 +3292,7 @@ void CImgui_Manager::Set_Effect()
 		ImGui::Separator();
 		ImGui::Text("Saved Effects");
 
-		if (ImGui::BeginListBox("##SavedEffects", ImVec2(-FLT_MIN, 4 * ImGui::GetTextLineHeightWithSpacing())))
+		if (ImGui::BeginListBox("##SavedEffects", ImVec2(-FLT_MIN, 10 * ImGui::GetTextLineHeightWithSpacing())))
 		{
 			for (int i = 0; i < m_SavedEffects.size(); i++)
 			{

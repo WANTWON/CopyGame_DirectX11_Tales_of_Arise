@@ -4,10 +4,10 @@
 
 BEGIN(Client)
 BEGIN(Slime)
-class CTurnR_State : public CSlimeState
+class CTurn_State : public CSlimeState
 {
 public:
-	CTurnR_State(class CSlime* pIceWolf);
+	CTurn_State(class CSlime* pIceWolf);
 
 	virtual CSlimeState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CSlimeState* Tick(_float fTimeDelta) override;

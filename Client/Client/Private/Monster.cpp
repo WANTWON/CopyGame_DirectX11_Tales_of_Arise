@@ -134,7 +134,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	if (LEVEL_BATTLE == m_eCurLevel)
 		m_bBattleMode = true;
 
-	if (LEVEL_SNOWFIELD == m_eCurLevel)
+	if (LEVEL_SNOWFIELD == m_eCurLevel && m_eMonsterID != ASTRAL_DOUBT)
 	{
 		CCollider* pPlayerCollider = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Collider();
 		if (m_pSPHERECom->Collision(pPlayerCollider))

@@ -65,7 +65,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						CBaseObj * pTarget = nullptr;
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.fVelocity = 20.f;
+						BulletDesc.fVelocity = 40.f;
 						BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 						if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
@@ -115,6 +115,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 					else if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
 
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
 					getchar();
 				}
 				break;
@@ -126,7 +132,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						CBaseObj * pTarget = nullptr;
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.fVelocity = 20.f;
+						BulletDesc.fVelocity = 40.f;
 						BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 						if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
@@ -172,6 +178,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
 
 					getchar();
 				}
@@ -184,7 +196,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						CBaseObj * pTarget = nullptr;
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.fVelocity = 20.f;
+						BulletDesc.fVelocity = 40.f;
 						BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 						if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
@@ -234,6 +246,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
 
 					getchar();
 				}
@@ -246,7 +264,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						CBaseObj * pTarget = nullptr;
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.fVelocity = 20.f;
+						BulletDesc.fVelocity = 40.f;
 						BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 						if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
@@ -296,6 +314,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
 
 					getchar();
 				}
@@ -309,7 +333,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						CBaseObj * pTarget = nullptr;
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.fVelocity = 20.f;
+						BulletDesc.fVelocity = 40.f;
 						BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 						if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
@@ -359,6 +383,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
 
 					getchar();
 				}
@@ -413,6 +443,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::LateTick(_float fTimeDelta)
 				break;
 			case 3:
 				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK3);
+				break;
+			case 4:
+				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK4);
+				break;
+			case 5:
+				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK5);
 				break;
 			}
 		}

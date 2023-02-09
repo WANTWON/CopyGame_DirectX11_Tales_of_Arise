@@ -75,6 +75,7 @@
 #include "Berserker.h"
 #include "Hawk.h"
 #include "Slime.h"
+#include "AstralDoubt.h"
 
 //InteractObject
 #include "TreasureBox.h"
@@ -469,6 +470,11 @@ HRESULT CLoader::Loading_ForPrototype()
 		CSlime::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	///*For.Prototype_GameObject_Boss_AstralDoubt*/
+	//if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AstralDoubt"),
+	//	CAstralDoubt::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
 
 
 	//InteractObject
@@ -716,7 +722,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;
 
 
-	/*For.Prototype_Component_Model_Slime*/
+	/*For.Prototype_Component_Model_Astral_Doubbt*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Astral_Doubt"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Astral_Doubt/Astral_Doubt.dat"))))
 		return E_FAIL;

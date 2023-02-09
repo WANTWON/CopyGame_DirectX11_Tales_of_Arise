@@ -37,7 +37,13 @@ CPlayerState * CRunState::HandleInput()
 		case CPlayer::ALPHEN:
 		case CPlayer::LAW:
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-				return new CCloseChaseState(m_pOwner, STATE_CHASE);
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_NORMAL_ATTACK1);
+			if (pGameInstance->Key_Down(DIK_E))
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK1);
+			if (pGameInstance->Key_Down(DIK_R))
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK2);
+			if(pGameInstance->Key_Down(DIK_F))
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK3);
 		case CPlayer::SION:
 		case CPlayer::RINWELL:
 			//for Sion State//
@@ -51,21 +57,18 @@ CPlayerState * CRunState::HandleInput()
 		{
 			switch (m_ePlayerID)
 			{
-			case CPlayer::ALPHEN:
-				if (pGameInstance->Key_Down(DIK_E))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK1);
-				else if (pGameInstance->Key_Down(DIK_R))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK2);
-				else if (pGameInstance->Key_Down(DIK_F))
-					return new CSkillState(m_pOwner, STATE_SKILL_ATTACK3);
-				break;
 			case CPlayer::SION:
-				if (pGameInstance->Key_Down(DIK_E))
+		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK4);
+		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK5);
+				else if (pGameInstance->Key_Down(DIK_E))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK1);
 				else if (pGameInstance->Key_Down(DIK_R))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK2);
 				else if (pGameInstance->Key_Down(DIK_F))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK3);
+				
 				break;
 			}	
 		}
