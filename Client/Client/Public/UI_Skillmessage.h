@@ -40,6 +40,21 @@ public:
 	void Skillmsg_on(_uint index);//, _uint index1);l
 
 
+	enum SKILLNAME {
+		SKILLNAME_CHOOSAWOO,
+		SKILLNAME_BEEYEONIN,
+		SKILLNAME_BOONGSUPGEEAKJIN,
+		SKILLNAME_SUMGONGSANGEULPA,
+		SKILLNAME_YOUSEONGJIN,
+		SKILLNAME_ONEWALL,
+		SKILLNAME_GRAVITY,
+		SKILLNAME_MAGNARAY,
+		SKILLNAME_EXPLODE,
+		SKILLNAME_AQUARUINA,
+		SKILLNAME_GLACIA,
+		SKILLNAME_TRESVENTUS
+	};
+
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
 	CTexture*               m_pTextureCom2 = nullptr;
@@ -57,6 +72,7 @@ private:
     //3À¯¼ºÁø
 	//4ºØ½ÀÁö¾ÇÁø
 	//5
+	
 
 
 

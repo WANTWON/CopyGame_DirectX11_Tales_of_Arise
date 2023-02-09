@@ -42,6 +42,15 @@ private:
 	_bool m_bfadeout = false;
 
 	_bool m_bmoveleft = true;
-};
+
+	_uint m_iSkill1name1 = 0;
+	_uint m_iSkill1name2 = 0;
+	_uint m_iSkill1name3 = 0;
+
+	_bool m_bSkill1non = true;
+	_bool m_bSkill2non = true;
+	_bool m_bSkill3non = true;
+
+}; 
 
 END
