@@ -5,7 +5,6 @@
 #include "Weapon.h"
 //#include "Effect.h"
 #include "EffectMesh.h"
-#include "PlayerSkillState.h"
 #include "PlayerJumpState.h"
 #include "BattleManager.h"
 #include "SionSkills.h"
@@ -436,13 +435,13 @@ CPlayerState * CPlayer_SionNormalAttack_State::LateTick(_float fTimeDelta)
 			switch (m_iSkillEvent)
 			{
 			case 1:
-				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK1);
+				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E);
 				break;
 			case 2:
-				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK2);
+				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 				break;
 			case 3:
-				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK3);
+				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
 				break;
 			case 4:
 				return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK4);

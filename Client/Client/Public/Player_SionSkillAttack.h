@@ -33,6 +33,8 @@ private:
 	void CallbackFunction(_uint iIndex);
 
 	_float m_fEventStart = -1.f;
+
+	_uint m_iCount = 0;
 };
 END
 END
