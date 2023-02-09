@@ -90,6 +90,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 			case Client::CPlayerState::STATE_SKILL_ATTACK1:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
+					
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
 						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_TRIPLE_STAR))
@@ -118,6 +119,22 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 								return nullptr;
 							m_fEventStart = pEvent.fStartTime;
 						}
+
+						else if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_MGNARAY))
+						{
+							_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+							CBullet::BULLETDESC BulletDesc;
+							BulletDesc.eCollisionGroup = PLAYER;
+							BulletDesc.fDeadTime = 5.f;
+							BulletDesc.eBulletType = CSionSkills::BOOST;
+							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook*2.f;
+							BulletDesc.pOwner = m_pOwner;
+							BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+
+							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+								return nullptr;
+							m_fEventStart = pEvent.fStartTime;
+						}
 					}
 				}
 				
@@ -134,6 +151,12 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 					if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
 
 					getchar();
 				}
@@ -183,6 +206,12 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 					if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
 
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
 					getchar();
 				}
 
@@ -206,6 +235,74 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 					if (GetKeyState('F') < 0)
 						m_iSkillEvent = 3;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
+					getchar();
+				}
+
+				break;
+
+			case Client::CPlayerState::STATE_SKILL_ATTACK4:
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				{
+
+				}
+
+				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+				{
+					if (GetKeyState(VK_LBUTTON) < 0)
+						m_bIsStateEvent = true;
+
+					if (GetKeyState('E') < 0)
+						m_iSkillEvent = 1;
+
+					if (GetKeyState('R') < 0)
+						m_iSkillEvent = 2;
+
+					if (GetKeyState('F') < 0)
+						m_iSkillEvent = 3;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
+
+					getchar();
+				}
+
+				break;
+
+			case Client::CPlayerState::STATE_SKILL_ATTACK5:
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				{
+
+				}
+
+				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+				{
+					if (GetKeyState(VK_LBUTTON) < 0)
+						m_bIsStateEvent = true;
+
+					if (GetKeyState('E') < 0)
+						m_iSkillEvent = 1;
+
+					if (GetKeyState('R') < 0)
+						m_iSkillEvent = 2;
+
+					if (GetKeyState('F') < 0)
+						m_iSkillEvent = 3;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+						m_iSkillEvent = 4;
+
+					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+						m_iSkillEvent = 5;
 
 					getchar();
 				}
@@ -241,6 +338,12 @@ CPlayerState * CPlayer_SionSkillAttack::LateTick(_float fTimeDelta)
 		case 3:
 			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK3);
 			break;
+		case 4:
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK4);
+			break;
+		case 5:
+			return new CPlayer_SionSkillAttack(m_pOwner, STATE_ID::STATE_SKILL_ATTACK5);
+			break;
 		}
 	}
 
@@ -269,7 +372,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_TRIPLE_STAR);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK2:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+		//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK3:
 			//				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
@@ -281,23 +384,31 @@ void CPlayer_SionSkillAttack::Enter(void)
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK1:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MGNARAY);//마그나
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK2:
 		{
 			/* Make Effect */
 			_vector vOffset = { 0.f,3.f,0.f,0.f };
-			_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+			_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION); 
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			mWorldMatrix.r[3] = vLocation + vOffset;
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GravitasField.dat"), mWorldMatrix);
 
 
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE); // 중력
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK3:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_BRAVE);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_BRAVE); // 메테오
+			break;
+
+		case Client::CPlayerState::STATE_SKILL_ATTACK4:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT); //얼음떨구기
+			break;
+
+		case Client::CPlayerState::STATE_SKILL_ATTACK5:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); // 비가우수수
 			break;
 		}
 	}
