@@ -122,40 +122,22 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
-							/*if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
-							{
-								pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-							}
-							else
-							{
-								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-								(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-							}
+							
 
-							BulletDesc.eBulletType = CSionSkills::GRAVITY;
-							BulletDesc.iDamage = 200.f;
-							BulletDesc.fDeadTime = 10.f;
-
-							if (pTarget != nullptr)
-							{
-								BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-
-							else if (pTarget == nullptr)
-								BulletDesc.vTargetPosition = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-								(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);*/
-
-								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
-							}	
-							else 
-								BulletDesc.vTargetDir = XMVector3Normalize( m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
+							BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
 							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*2.f);
 							BulletDesc.pOwner = m_pOwner;
-							
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
 							m_bBulletMade = true;
-						}
+						}	
+					
+							
+							
+							
+							
 					}
+					
 					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					{
 						if (GetKeyState(VK_LBUTTON) < 0)
@@ -207,19 +189,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 CPlayerState * CPlayer_SionSkillAttack::LateTick(_float fTimeDelta)
 {
-	/*if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN)
-	{
-		for (auto& pEffect : m_HousyutigakuzinStart)
-		{
-			if (pEffect)
-			{
-				if (pEffect->Get_PreDead())
-					pEffect = nullptr;
-				else
-					pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-			}
-		}
-	}*/
+	
 
 	if (m_bIsStateEvent)
 		return new CAttackNormalState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1);
