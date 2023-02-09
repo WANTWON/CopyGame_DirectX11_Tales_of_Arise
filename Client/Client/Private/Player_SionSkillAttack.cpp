@@ -546,8 +546,3 @@ void CPlayer_SionSkillAttack::Exit(void)
 	__super::Exit();
 	
 }
-
-void CPlayer_SionSkillAttack::CallbackFunction(_uint iIndex)
-{
-	m_HousyutigakuzinStart[iIndex] = nullptr;
-}

@@ -355,6 +355,8 @@ void CAlphenSkillState::Enter(void)
 {
 	__super::Enter();
 
+	Reset_Skill();
+
 	if (m_bIsFly)
 	{
 		switch (m_eStateId)
@@ -414,7 +416,26 @@ void CAlphenSkillState::Exit(void)
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
-void CAlphenSkillState::CallbackFunction(_uint iIndex)
+void CAlphenSkillState::Reset_Skill()
 {
-	m_HousyutigakuzinStart[iIndex] = nullptr;
+	/* E */
+	m_bHienzinFirstEffect = false;
+	m_bHienzinSecondEffect = false;
+	m_bRyuuseizinFirstEffect = false;
+	m_bRyuuseizinSecondEffect = false;
+
+	/* R */
+	m_bAkizameEffect = false;
+	m_bSenkusyourepaParticle = false;
+	m_bSenkusyourepaFirstEffect = false;
+	m_bSenkusyourepaSecondEffect = false;
+
+	/* F */
+	m_bHousyutigakuzinFirstEffect = false;
+	m_bHousyutigakuzinSecondEffect = false;
+	m_bEngetuFirstEffect = false;
+	m_bEngetuSecondEffect = false;
+
+	m_HousyutigakuzinStart.clear();
+	m_SenkusyourepaParticles.clear();
 }
