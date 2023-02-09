@@ -102,7 +102,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 							BulletDesc.fVelocity = 1.f;
 							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
-							if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+							/*if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 							{
 								pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 							}
@@ -115,7 +115,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 								BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 							else if (pTarget == nullptr)
 								BulletDesc.vTargetPosition = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-								(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+								(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);*/
 							BulletDesc.pOwner = m_pOwner;
 							BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
