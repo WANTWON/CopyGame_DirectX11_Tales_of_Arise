@@ -5,7 +5,7 @@ BEGIN(Client)
 class CSionSkills final : public CBullet
 {
 public:
-	enum TYPE { NORMALATTACK, BOOST, GRAVITY, GRAVITY_DEAD };
+	enum TYPE { NORMALATTACK, BOOST, GRAVITY,GLACIA,GRAVITY_DEAD };
 
 public:
 	CSionSkills(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -25,6 +25,7 @@ protected:
 
 private:
 	void Tick_NormalAttack(_float fTimeDelta);
+	void Tick_GlaciaAttack(_float fTimeDelta);
 	void Tick_BoostAttack(_float fTimeDelta);
 	void Tick_GravityAttack(_float fTimeDelta);
 
