@@ -11,8 +11,6 @@ CPlayerManager::CPlayerManager()
 {
 }
 
-
-
 void CPlayerManager::Set_ActivePlayer(CPlayer * pPlayer)
 {
 	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
