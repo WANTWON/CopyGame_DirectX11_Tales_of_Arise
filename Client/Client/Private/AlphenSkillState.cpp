@@ -43,8 +43,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
-
-	if (m_bIsFly)
+	else if (m_bIsFly)
 		m_fTime += fTimeDelta;
 		
 	m_pOwner->Check_Navigation_Jump();
@@ -56,7 +55,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		if (pEvent.isPlay)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+ 				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
@@ -66,32 +65,56 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 					if (m_bIsFly)
 					{
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
+						if (!strcmp(pEvent.szName, "Ryuuseizin_1"))
+						{
+							if (!m_bRyuuseizinFirstEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_1.dat"), mWorldMatrix);
+
+								m_bRyuuseizinFirstEffect = true;
+							}
+						}
+						else if (!strcmp(pEvent.szName, "Ryuuseizin_2"))
+						{
+							if (!m_bRyuuseizinSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_2.dat"), mWorldMatrix);
+
+								m_bRyuuseizinSecondEffect = true;
+							}
+						}
 					}
 					else
 					{
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-
 						_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
 						_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
 						_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
-
 						vPosition += vLook * 2;
 						vPosition += vOffset;
 
 						mWorldMatrix.r[3] = vPosition;
-						vector<CEffect*> pEffects = CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
 
 						if (!strcmp(pEvent.szName, "Hienzin_1"))
 						{
 							if (!m_bHienzinFirstEffect)
+							{							
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+
 								m_bHienzinFirstEffect = true;
+							}
 						}
 						else if (!strcmp(pEvent.szName, "Hienzin_2"))
 						{
 							if (!m_bHienzinSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+
 								m_bHienzinSecondEffect = true;
+							}
 						}
 					}
 					break;
@@ -331,21 +354,23 @@ void CAlphenSkillState::Enter(void)
 {
 	__super::Enter();
 
+	Reset_Skill();
+
 	if (m_bIsFly)
 	{
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_RYUUSEIZIN);
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(0);
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YOUSEONGJIN);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_SENKUSYOUREPA);
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(1);
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SUMGONGSANGEULPA);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_ENGETU);
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(2);
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ONEWALL);
 			break;
 		}
 	}
@@ -355,19 +380,19 @@ void CAlphenSkillState::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(3);
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_E.wav"), SOUND_EFFECT, 0.6f);
 			//이 스킬 이펙트 소리는 Player_Weapon쪽에 있음. 여기서 이펙트 소리 넣으면, 애님이랑 타이밍이 안맞음. 
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(4);
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOOSAWOO);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.6f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R_Test2.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(5);
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BOONGSUPGEEAKJIN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_EFFECT, 0.6f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.6f);
 			break;
@@ -390,7 +415,26 @@ void CAlphenSkillState::Exit(void)
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
-void CAlphenSkillState::CallbackFunction(_uint iIndex)
+void CAlphenSkillState::Reset_Skill()
 {
-	m_HousyutigakuzinStart[iIndex] = nullptr;
+	/* E */
+	m_bHienzinFirstEffect = false;
+	m_bHienzinSecondEffect = false;
+	m_bRyuuseizinFirstEffect = false;
+	m_bRyuuseizinSecondEffect = false;
+
+	/* R */
+	m_bAkizameEffect = false;
+	m_bSenkusyourepaParticle = false;
+	m_bSenkusyourepaFirstEffect = false;
+	m_bSenkusyourepaSecondEffect = false;
+
+	/* F */
+	m_bHousyutigakuzinFirstEffect = false;
+	m_bHousyutigakuzinSecondEffect = false;
+	m_bEngetuFirstEffect = false;
+	m_bEngetuSecondEffect = false;
+
+	m_HousyutigakuzinStart.clear();
+	m_SenkusyourepaParticles.clear();
 }

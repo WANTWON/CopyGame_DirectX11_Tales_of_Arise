@@ -32,6 +32,9 @@ CPlayerState * CPlayer_SionNormalAttack_State::HandleInput()
 
 CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 {
+	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+		return nullptr;
+
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	if (!m_bIsAnimationFinished)

@@ -24,6 +24,9 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 	
 	//if(m_ePreStateID =
 
+	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+		return nullptr;
+
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
 		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -31,7 +34,7 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 	else
 	{
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 	}
 
 	if (m_pTarget == nullptr)
@@ -43,10 +46,10 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 		{
 			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-			m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 		}
 		else
-		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 		m_bLookatOnetime = false;
 	}
 	
@@ -112,7 +115,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				{
 					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 				}
 				else
 					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -127,7 +130,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				{
 					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 				}
 				else
 					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -149,7 +152,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				{
 					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 				}
 				else
 					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -162,7 +165,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				{
 					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 				}
 				else
 					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -176,7 +179,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				{
 					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 				}
 				else
 					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -193,7 +196,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				{
 					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 				}
 				else
 					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -259,7 +262,7 @@ CAIState * CAICheckState::RandomAttackChoose()
 		{
 			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-			m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 		}
 		else
 			m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
