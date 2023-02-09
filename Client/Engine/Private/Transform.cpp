@@ -303,6 +303,55 @@ bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigati
 	return true;
 }
 
+bool CTransform::Sliding_Anim_To_Target(_vector vAt, _vector vecMove, _float fRotation, CNavigation * pNavigation)
+{
+	_matrix WorldMatrix = XMLoadFloat4x4(&m_WorldMatrix);
+
+	_vector vWorldPos = WorldMatrix.r[3];
+	WorldMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+
+	_vector vWorldRot = XMQuaternionNormalize(XMQuaternionRotationMatrix(WorldMatrix));
+
+	_vector RotationQuat = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), (fRotation * -1.f));
+
+	WorldMatrix = XMMatrixRotationQuaternion(XMQuaternionNormalize(XMQuaternionMultiply(vWorldRot, RotationQuat)));
+
+	_vector vTranslation = XMVector3TransformCoord(vecMove, XMMatrixRotationY(XMConvertToRadians(180.f)) * WorldMatrix);
+
+	WorldMatrix.r[0] = XMVector4Normalize(WorldMatrix.r[0]) * Get_Scale(CTransform::STATE_RIGHT);
+	WorldMatrix.r[1] = XMVector4Normalize(WorldMatrix.r[1]) * Get_Scale(CTransform::STATE_UP);
+	WorldMatrix.r[2] = XMVector4Normalize(WorldMatrix.r[2]) * Get_Scale(CTransform::STATE_LOOK);
+	WorldMatrix.r[3] = vWorldPos;
+
+	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
+
+	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
+
+	_vector		vAfterPosition = vPosition + vTranslation;
+	vAfterPosition = XMVectorSetW(vAfterPosition, 1.f);
+
+	if (pNavigation)
+		pNavigation->Compute_CurrentIndex_byXZ(vAfterPosition);
+
+	if (nullptr == pNavigation)
+		Set_State(CTransform::STATE_TRANSLATION, vAfterPosition);
+	else if (true == pNavigation->isMove(vAfterPosition))
+		Set_State(CTransform::STATE_TRANSLATION, vAfterPosition);
+	/*else if (false == pNavigation->isMove(vAfterPosition))
+	{
+	_vector vNormal = XMVector3Normalize(pNavigation->Get_LastNormal());
+	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vNormal));
+	vNormal = vNormal * fDot * -1.f;
+	_vector vSliding = XMVector3Normalize(vLook + vNormal);
+	vPosition += vSliding * XMVectorGetX(XMVector4Length(vAfterPosition - vPosition));
+	if (true == pNavigation->isMove(vPosition + XMVector3Normalize(vLook) * fRadius))
+	Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	return false;
+	}*/
+
+	return true;
+}
+
 void CTransform::Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight, _float fEndiHeight)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
