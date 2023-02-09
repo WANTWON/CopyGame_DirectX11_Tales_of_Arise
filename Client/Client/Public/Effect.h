@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BaseObj.h"
-#include "PlayerSkillState.h"
+
 
 BEGIN(Engine)
 class CVIBuffer_Rect;

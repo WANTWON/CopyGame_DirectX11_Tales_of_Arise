@@ -456,9 +456,6 @@
     <ClInclude Include="..\Public\Ice_Wolf.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PlayerAttackNormalState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\IceWolfState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State</Filter>
     </ClInclude>
@@ -916,9 +913,6 @@
     <ClInclude Include="..\Public\Player_SionSkillAttack.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerSkillState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1019,9 +1013,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ice_Wolf.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PlayerAttackNormalState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\private\IceWolfIdleState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\States</Filter>
@@ -1464,9 +1455,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\PlayerSkillState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
