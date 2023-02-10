@@ -28,7 +28,7 @@ public:
 public:
 	const char* Get_Modeltag() { return m_ModelDesc.pModeltag; }
 	const NONANIMDESC Get_ModelDesc() {return m_ModelDesc;}
-
+	_float Check_CullingRadius();
 protected:
 	CModel*					m_pModelCom = nullptr;
 	CTexture*				m_pFogtexture = nullptr;

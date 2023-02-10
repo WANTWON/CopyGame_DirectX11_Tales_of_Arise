@@ -455,7 +455,7 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 void CAI_Sion_SkillState::Enter()
 {
 	//__super::Enter();
-
+	m_bBulletMake = false;
 	//m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_0;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)
