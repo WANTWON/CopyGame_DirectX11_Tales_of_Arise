@@ -58,7 +58,9 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 				{
 					case CPlayer::ALPHEN:
 					{
-						if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+						if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+							m_bIsStateEvent = true;
+						else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 						{
 							if (!strcmp(pEvent.szName, "Alphen_Strike_1"))
 							{

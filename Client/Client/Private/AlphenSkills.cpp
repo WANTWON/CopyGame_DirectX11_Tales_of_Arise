@@ -65,8 +65,9 @@ int CAlphenSkills::Tick(_float fTimeDelta)
 	switch (m_BulletDesc.eBulletType)
 	{
 		case STRIKE_1:
+		case STRIKE_2:
 		{
-			Tick_Strike_1(fTimeDelta);
+			Tick_Strike(fTimeDelta);
 			break;
 		}
 	}
@@ -173,19 +174,7 @@ HRESULT CAlphenSkills::Ready_Components(void * pArg)
 
 	return S_OK;
 }
-
-void CAlphenSkills::Tick_Strike_1(_float fTimeDelta)
-{
-	m_fTime += fTimeDelta;
-
-	for (auto& iter : m_pEffects)
-	{
-		if (iter != nullptr && iter->Get_PreDead())
-			iter = nullptr;
-	}
-}
-
-void CAlphenSkills::Tick_Strike_2(_float fTimeDelta)
+void CAlphenSkills::Tick_Strike(_float fTimeDelta)
 {
 	m_fTime += fTimeDelta;
 

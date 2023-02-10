@@ -24,8 +24,7 @@ protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
 
 private:
-	void Tick_Strike_1(_float fTimeDelta);
-	void Tick_Strike_2(_float fTimeDelta);
+	void Tick_Strike(_float fTimeDelta);
 
 private:
 	vector<CEffect*> m_pBlastEffect;
