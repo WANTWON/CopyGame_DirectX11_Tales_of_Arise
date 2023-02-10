@@ -10,7 +10,7 @@ public:
 
 	enum TYPE { NORMALATTACK, BOOST, GRAVITY, GRAVITY_DEAD, 
 		MAGNA_RAY, TRESVENTOS,AQUA_LUINA, 
-		AQUA_LUINA_BULLET, GLACIA, GLACIA_DEAD };
+		AQUA_LUINA_BULLET, GLACIA, GLACIA_DEAD, EXPLOSION };
 
 
 
@@ -38,6 +38,7 @@ private:
 	void Tick_TresVentos(_float fTimeDelta);
 	void Tick_AQUA_LUINA(_float fTimeDelta);
 	void Tick_AQUA_LUINA_BULLET(_float fTimeDelta);
+	void Tick_Explosion(_float fTimeDelta);
 
 private:
 	vector<CEffect*> m_pBlastEffect;
@@ -53,6 +54,9 @@ private:
 	_int bulletcount = 40;
 	_float m_fAquaTImer = 0.f;
 	_bool m_bMadeSmoke = false;
+
+	_float m_fExplosionGroundTimer = 0.f;
+
 
 };
 
