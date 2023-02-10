@@ -17,7 +17,7 @@ CBattle_RunState::CBattle_RunState(class CIce_Wolf* pIceWolf, STATE_ID ePreState
 	m_pOwner = pIceWolf;
 	m_ePreState_Id = ePreState;
 	m_fTimeDeltaAcc = 0;
-	m_fRandTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 	m_pCurTarget = pCurTarget;
 }
 

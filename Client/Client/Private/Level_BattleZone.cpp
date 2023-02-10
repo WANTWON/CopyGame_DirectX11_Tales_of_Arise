@@ -159,9 +159,23 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
+		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
+			if (!m_bZumIn)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
+				m_bZumIn = true;
+			}
+		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
+		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
+			if (!m_bZumIn)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
+				m_bZumIn = true;
+			}
+		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))

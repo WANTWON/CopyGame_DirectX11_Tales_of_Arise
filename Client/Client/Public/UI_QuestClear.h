@@ -125,6 +125,7 @@ private:
 	_bool m_bPlusgald = false;
 
 	_bool m_bGaldup = false;
+	_bool m_bQuestClear = false;
 
 	_uint m_bUpgaldcount = 0;
 

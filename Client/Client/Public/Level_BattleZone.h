@@ -33,6 +33,7 @@ private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
 	CCamera_Dynamic*	m_pCamera = nullptr;
 	_float	   m_fMinLength = MAXDISTANCE;
+	_bool	   m_bZumIn = false;
 
 public:
 	static CLevel_BattleZone* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

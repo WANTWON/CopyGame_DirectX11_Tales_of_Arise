@@ -23,6 +23,7 @@ private:
 	DIRID m_eDirection = DIRID::DIR_END;
 	_bool m_bIsDash = false;
 	_bool m_bSoundStart = false;
+	_uint m_iRunSoundCount = 0;
 	
 };
 END
