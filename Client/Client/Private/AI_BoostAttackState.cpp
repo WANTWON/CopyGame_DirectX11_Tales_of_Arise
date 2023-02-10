@@ -173,6 +173,8 @@ void CAI_BoostAttack::Enter()
 	case CPlayer::ALPHEN:
 		CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->Set_BoostGuage(0);
 		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_STRIKE;
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Booster_Fix2.wav"), SOUND_EFFECT, 0.5f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Booster.wav"), SOUND_EFFECT, 0.5f);
 		break;
 	case CPlayer::SION:
 		CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Set_BoostGuage(0);
@@ -183,7 +185,10 @@ void CAI_BoostAttack::Enter()
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_Boost.dat"), mWorldMatrix);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Booster.wav"), SOUND_EFFECT, 0.5f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Booster.wav"), SOUND_EFFECT, 0.5f);
 	}
+
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)
@@ -214,6 +219,6 @@ void CAI_BoostAttack::Exit()
 			}
 		}
 	}
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	__super::Exit();
 }
