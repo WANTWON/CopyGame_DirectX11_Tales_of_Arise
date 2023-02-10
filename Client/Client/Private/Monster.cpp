@@ -385,7 +385,9 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (m_pTarget != nullptr)
 	{
 		if (dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() <= 100.f)
-			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 0.5f);
+
+			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 3.f);
+
 	}
 	
 
@@ -445,7 +447,7 @@ void CMonster::Collision_Object(_float fTimeDelta)
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
-	/*CBaseObj* pCollisionMonster = nullptr;
+	CBaseObj* pCollisionMonster = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionMonster))
 	{
 		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -455,8 +457,8 @@ void CMonster::Collision_Object(_float fTimeDelta)
 		else
 			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
 
-		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
-	}*/
+		m_pTransformCom->Go_PosDir(fTimeDelta*0.5f, vDirection, m_pNavigationCom);
+	}
 
 	/*CBaseObj* pPlayer = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionMonster))

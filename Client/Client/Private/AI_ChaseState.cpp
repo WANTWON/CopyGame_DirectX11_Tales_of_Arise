@@ -112,12 +112,11 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 	else
 	{
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 	}
 
 	if (m_pTarget == nullptr)
 		return nullptr;
-
 
 	if (!m_bStopRunning)
 	{

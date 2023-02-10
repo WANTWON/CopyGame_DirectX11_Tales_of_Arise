@@ -141,13 +141,20 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 		CBaseObj* pCollisionTarget = nullptr;
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
+
+			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
+
+
+
 
 			if (!m_bSoundStart)
 			{
 				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.4f);
 				m_bSoundStart = true;
 			}
+
 			/*m_fHitTimeDeltaAcc += fTimeDelta;
 
 

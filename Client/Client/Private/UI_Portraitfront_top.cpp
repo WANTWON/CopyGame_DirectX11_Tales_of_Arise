@@ -35,7 +35,7 @@ HRESULT CUI_Portraitfront_top::Initialize(void * pArg)
 
 	
 	m_fMaxBoost = 100.f;
-	dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(2, true, 1, 0);
+	
 	//m_bfadein = true;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -46,8 +46,63 @@ HRESULT CUI_Portraitfront_top::Initialize(void * pArg)
 
 int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 {
+	if(m_fCurrentBoost <= 10)
+		m_bfirstglow = true;
+
+	if (m_fCurrentBoost >= 100.f)
+	{
+		m_bbigger = true;
+	}
+	else
+		m_bfirstglow = true;
+	/*else
+	{
+		
+	}*/
+
+	if (m_bbigger && m_bfirstglow)
+	{
+		m_fGlowScaleOffset += 0.3f;
+		m_fGlowAlpha -= 0.0125f;
+
+		if (m_fGlowScaleOffset >= 8.f)
+		{
+			m_fGlowAlpha = 1.f;
+			m_fGlowScaleOffset = 1.f;
+			m_fBoostGuageMax = false;
+			m_bfirstglow = false;
+		}
+	}
+
+	/*if (m_fPrevBoostGuage < 100.f)
+		m_bbigger = true;
+
+	if (m_fPrevBoostGuage >= 100.f&& m_bbigger)
+	{
+		m_fBoostGuageMax = true;
+		m_fPrevBoostGuage = 0.f;
+		m_bbigger = false;
+	}
+
+	if (m_fBoostGuageMax == true)
+	{
+		m_fGlowScaleOffset += 0.2f;
+		m_fGlowAlpha -= 0.0125f;
+
+		if (m_fGlowScaleOffset >= 8.f)
+		{
+			m_fGlowAlpha = 1.f;
+			m_fGlowScaleOffset = 1.f;
+			m_fBoostGuageMax = false;
+		}
+	}*/
+
 	//CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->
 	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->Get_Info().fCurrentBoostGuage;
+	if (m_fBoostGuageMax == false)
+	{
+		m_fPrevBoostGuage = m_fCurrentBoost;
+	}
 	if (m_bfirst == false)
 	{
 		m_fAlpha_p -= 0.05f;
@@ -62,7 +117,15 @@ int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 		//UpdateShaderID();
 		if (m_bfirst1 && CUI_Manager::Get_Instance()->Get_Arrived_Count() == 4)
 		{
-			UpdateShaderID();
+			if (m_fCurrentBoost >= 100)
+				m_bSmash = true;
+			else
+				m_bSmash = false;
+			
+			if (!m_bSmash)
+				m_eShaderID = UI_POTRAIT_DARK;
+			
+			else if (m_bSmash)m_eShaderID = 0;
 			m_bfirst1 = false;
 			m_fAlpha = 0;
 		}
@@ -205,8 +268,8 @@ HRESULT CUI_Portraitfront_top::Render_Glow()
 	if (!m_pShaderCom || !m_pVIBufferCom)
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x * m_fGlowScaleOffset);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y * m_fGlowScaleOffset);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
@@ -228,6 +291,9 @@ HRESULT CUI_Portraitfront_top::Render_Glow()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowTimer", &m_fGlowTimer, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fGlowAlpha, sizeof(_float))))
 		return E_FAIL;
 
 	m_pShaderCom->Begin(UI_GLOW);

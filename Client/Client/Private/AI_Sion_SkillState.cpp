@@ -9,6 +9,7 @@
 #include "UI_Skillmessage.h"
 #include "Bullet.h"
 #include "SionSkills.h"
+#include "AIAttackNormalState.h"
 
 
 
@@ -187,7 +188,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
-					if ((m_fEventStart != pEvent.fStartTime))
+					if ((m_fEventStart != pEvent.fStartTime) && !m_bBulletMake)
 					{
 						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 						if (pTarget == nullptr)
@@ -207,7 +208,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 
-
+						m_bBulletMake = true;
 						m_fEventStart = pEvent.fStartTime;
 
 					}
@@ -365,7 +366,7 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 
 		if (Get_Target_Distance() >= 5.f)
 		{
-			switch (rand() % 5)
+			switch (rand() % 10)
 			{
 			case 0: //Client::CAIState::STATE_NORMAL_ATTACK1:
 				__super::Exit();
@@ -438,6 +439,9 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
 				break;
 
+			default:
+				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+
 
 			}
 		}
@@ -451,7 +455,7 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 void CAI_Sion_SkillState::Enter()
 {
 	//__super::Enter();
-
+	m_bBulletMake = false;
 	//m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_0;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)

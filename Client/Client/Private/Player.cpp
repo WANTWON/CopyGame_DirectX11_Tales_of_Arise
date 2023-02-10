@@ -75,12 +75,13 @@ int CPlayer::Tick(_float fTimeDelta)
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(ALPHEN);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2))
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(SION);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_8))
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
 	{
+		CUI_Manager::Get_Instance()->MinusCP(10);
 		m_tInfo.fCurrentHp += 100.f;
 		CPlayerState* pState = new CIdleState(this);
 		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
@@ -157,39 +158,46 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			pParts->Late_Tick(fTimeDelta);
 	}
 
-	CBaseObj* pMonster = nullptr;
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pMonster))
+	if ((ALPHEN == m_ePlayerID) && CPlayerState::STATE_SKILL_ATTACK_F == m_pPlayerState->Get_StateId() && !m_bIsFly)
 	{
-		_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-		_vector vMonsterPos = pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
-		
-		_vector vDirection = vPlayerPos - vMonsterPos;
-
-		_float fRadiusSum = m_pSPHERECom->Get_SphereRadius() + pMonster->Get_SPHERECollider()->Get_SphereRadius();
-		
-		_float fCollDistance = fRadiusSum - XMVectorGetX(XMVector4Length(vDirection));
-
-		if (fCollDistance > 0)
+		int a = 10;
+	}
+	else
+	{
+		CBaseObj* pMonster = nullptr;
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pMonster))
 		{
-			_vector vCross = XMVector3Cross(XMVector4Normalize(pMonster->Get_TransformState(CTransform::STATE_LOOK)), XMVector4Normalize(vDirection));
-			_float4 fCross;
-			XMStoreFloat4(&fCross, vCross);
+			_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			_vector vMonsterPos = pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-			_vector vNewDir;
-			if (-0.5f > fCross.y)
-				vNewDir = XMVector4Transform(vDirection, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(3.f)));
-			else if (0.5f < fCross.y)
-				vNewDir = XMVector4Transform(vDirection, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-3.f)));
-			else
-				vNewDir = vDirection;
+			_vector vDirection = vPlayerPos - vMonsterPos;
 
-			_vector vNewPos = vMonsterPos + (XMVector4Normalize(vNewDir) * fRadiusSum);
-		
-			_vector vLerpPos = XMVectorLerp(vPlayerPos, vNewPos, 0.5f);
+			_float fRadiusSum = m_pSPHERECom->Get_SphereRadius() + pMonster->Get_SPHERECollider()->Get_SphereRadius();
 
-			if (true == m_pNavigationCom->isMove(vLerpPos))
-				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
-			
+			_float fCollDistance = fRadiusSum - XMVectorGetX(XMVector4Length(vDirection));
+
+			if (fCollDistance > 0)
+			{
+				_vector vCross = XMVector3Cross(XMVector4Normalize(pMonster->Get_TransformState(CTransform::STATE_LOOK)), XMVector4Normalize(vDirection));
+				_float4 fCross;
+				XMStoreFloat4(&fCross, vCross);
+
+				_vector vNewDir;
+				if (-0.5f > fCross.y)
+					vNewDir = XMVector4Transform(vDirection, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(3.f)));
+				else if (0.5f < fCross.y)
+					vNewDir = XMVector4Transform(vDirection, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-3.f)));
+				else
+					vNewDir = vDirection;
+
+				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vNewDir) * fRadiusSum);
+
+				_vector vLerpPos = XMVectorLerp(vPlayerPos, vNewPos, 0.5f);
+
+				if (true == m_pNavigationCom->isMove(vLerpPos))
+					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
+
+			}
 		}
 	}
 }

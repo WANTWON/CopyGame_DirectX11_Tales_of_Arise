@@ -70,6 +70,9 @@ HRESULT CCP_Guage_font::Initialize(void * pArg)
 
 int CCP_Guage_font::Tick(_float fTimeDelta)
 {
+	m_iMaxcp = CUI_Manager::Get_Instance()->Get_MAXCP();
+	m_iCurrentcp = CUI_Manager::Get_Instance()->Get_CP();
+
 	//if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
 	//{
 	//	m_iCurrentcp++;

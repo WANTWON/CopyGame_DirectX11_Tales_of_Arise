@@ -85,7 +85,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	return E_FAIL;
 
 	/*For.Prototype_Component_Model_Desert_CliffRock*/
-	/*PivotMatrix = XMMatrixScaling(0.27f, 0.27f, 0.27f);
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/CliffRock.fbx", "../../../Bin/Bin_Data/NonAnim/CliffRock/", PivotMatrix))))
@@ -102,7 +102,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock4"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/CliffRock4.fbx", "../../../Bin/Bin_Data/NonAnim/CliffRock/", PivotMatrix))))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	//_matrix PivotMatrix;
 
@@ -316,6 +316,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ring_nm_03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ring_nm_03.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice0"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ice0.fbx", "../../../Bin/Bin_Data/Effect/Ice/", PivotMatrix))))
 		return E_FAIL;
@@ -324,7 +328,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice2"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ice2.fbx", "../../../Bin/Bin_Data/Effect/Ice/", PivotMatrix))))
-		return E_FAIL;
+		return E_FAIL;*/
 	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Spiral_tk_05"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Spiral_tk_05.fbx", "../../../Bin/Bin_Data/Effect/Spiral/", PivotMatrix))))
 		return E_FAIL;
@@ -404,6 +408,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 	/*For.Prototype_Component_Model_SIOW(O0)*/
 	PivotMatrix = XMMatrixScaling(0.03f, 0.03f, 0.03f)/* * XMMatrixRotationX(XMConvertToRadians(180.f))*//* * XMMatrixRotationZ(XMConvertToRadians(90.f))*/ * XMMatrixRotationX(XMConvertToRadians(270.f));
+	//PivotMatrix.r[0] *= -1.f;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SIOW"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SIOW(00).fbx", "../../../Bin/Bin_Data/NonAnim/SIOW(00)/", PivotMatrix))))
 		return E_FAIL;

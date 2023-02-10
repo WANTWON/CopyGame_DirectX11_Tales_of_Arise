@@ -60,8 +60,7 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 		return;
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	_float fRadius = 3.f;
-
+	_float fRadius = Check_CullingRadius();
 
 	if (Check_IsinFrustum(fRadius) == false)
 	{
@@ -151,6 +150,20 @@ HRESULT CNonAnim::Render_ShadowDepth()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+_float CNonAnim::Check_CullingRadius()
+{
+	if (!strcmp(m_ModelDesc.pModeltag, "CliffRock") ||
+		!strcmp(m_ModelDesc.pModeltag, "CliffRock2") ||
+		!strcmp(m_ModelDesc.pModeltag, "CliffRock3") ||
+		!strcmp(m_ModelDesc.pModeltag, "CliffRock4") )
+		return 20.f;
+	else if (!strcmp(m_ModelDesc.pModeltag, "CommonBridge"))
+		return 50.f;
+		
+
+	return 3.f;
 }
 
 

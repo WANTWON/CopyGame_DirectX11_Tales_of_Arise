@@ -95,17 +95,86 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 			case CAlphen::ANIM::ANIM_ATTACK_HIENZIN:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+					_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+					_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
+					_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+					vPosition += vLook * 2;
+					vPosition += vOffset;
+
+					mWorldMatrix.r[3] = vPosition;
+
+					if (!strcmp(pEvent.szName, "Hienzin_1"))
+					{
+						if (!m_bHienzinFirstEffect)
+						{
+							CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+
+							m_bHienzinFirstEffect = true;
+						}
+					}
+					else if (!strcmp(pEvent.szName, "Hienzin_2"))
+					{
+						if (!m_bHienzinSecondEffect)
+						{
+							CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+
+							m_bHienzinSecondEffect = true;
+						}
+					}
+				}
 				break;
 			case CAlphen::ANIM::ANIM_ATTACK_AKIZAME:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					if (!m_bAkizameEffect)
+					{
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Akizame.dat"), mWorldMatrix);
 
+						m_bAkizameEffect = true;
+					}
+				}
+				
 				break;
 			case CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
+					if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
+					{
+						if (!m_bHousyutigakuzinFirstEffect)
+						{
+							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							_vector vPosition = mWorldMatrix.r[3];
+							vPosition += XMVectorSet(0.f, 4.f, 0.f, 0.f);
+							vPosition += vLook * 2;
+
+							mWorldMatrix.r[3] = vPosition;
+							m_HousyutigakuzinStart = CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_Start.dat"), mWorldMatrix);
+
+							m_bHousyutigakuzinFirstEffect = true;
+						}
+					}
+
+					if (!strcmp(pEvent.szName, "Housyutigakuzin_2"))
+					{
+						if (!m_bHousyutigakuzinSecondEffect)
+						{
+							CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_End.dat"), mWorldMatrix);
+
+							m_bHousyutigakuzinSecondEffect = true;
+						}
+					}
+				}
 				break;
 			}
 
@@ -136,6 +205,20 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 
 CAIState * CAI_Alphen_SkillAttackState::LateTick(_float fTimeDelta)
 {
+	if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN)
+	{
+		for (auto& pEffect : m_HousyutigakuzinStart)
+		{
+			if (pEffect)
+			{
+				if (pEffect->Get_PreDead())
+					pEffect = nullptr;
+				else
+					pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+			}
+		}
+	}
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (m_bIsAnimationFinished)
@@ -199,6 +282,8 @@ void CAI_Alphen_SkillAttackState::Enter()
 {
 	//__super::Enter();
 
+	Reset_Skill();
+
 	//m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_0;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)
@@ -228,4 +313,20 @@ void CAI_Alphen_SkillAttackState::Enter()
 void CAI_Alphen_SkillAttackState::Exit()
 {
 	__super::Exit();
+}
+
+void CAI_Alphen_SkillAttackState::Reset_Skill()
+{
+	/* E */
+	m_bHienzinFirstEffect = false;
+	m_bHienzinSecondEffect = false;
+
+	/* R */
+	m_bAkizameEffect = false;
+
+	/* F */
+	m_bHousyutigakuzinFirstEffect = false;
+	m_bHousyutigakuzinSecondEffect = false;
+
+	m_HousyutigakuzinStart.clear();
 }
