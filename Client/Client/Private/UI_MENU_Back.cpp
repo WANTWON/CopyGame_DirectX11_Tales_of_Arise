@@ -133,11 +133,11 @@ int CUI_MENU_Back::Tick(_float fTimeDelta)
 			m_fMainAlpha = 0.f;
 			m_fbackfadeout = false;
 			_uint index = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1;
-			for (_uint i = 0; i < index; ++i)
-			{
-				CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Set_HP(m_PlayersCurrentHP[i]);
-				//CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp = m_PlayersMaxHP[i];
-			}
+		for (_uint i = 0; i < index; ++i)
+		{
+			CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Set_HP(m_PlayersCurrentHP[i]);
+			//CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp = m_PlayersMaxHP[i];
+		}
 			CUI_Manager::Get_Instance()->Set_Mainmenuon(false);
 		}
 

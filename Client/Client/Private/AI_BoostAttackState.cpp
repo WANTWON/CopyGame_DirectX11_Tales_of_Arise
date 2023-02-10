@@ -53,31 +53,47 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		m_fTime += fTimeDelta;
-		if (!m_bBullet && m_eCurrentPlayerID == CPlayer::SION && m_fTime > 2.f)
-		{
-			_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
-			CBullet::BULLETDESC BulletDesc;
-			BulletDesc.eCollisionGroup = PLAYER;
-			BulletDesc.fDeadTime = 5.f;
-			BulletDesc.eBulletType = CSionSkills::BOOST;
-			BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook*2.f;
-			BulletDesc.pOwner = m_pOwner;
-			BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
-
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-				return nullptr;
-
-			m_bBullet = true;
-		}
+		//m_fTime += fTimeDelta;
 		_vector vecTranslation;
 		_float fRotationRadian;
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay)
+		{
+			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+			{
 
 
+				m_bIsStateEvent = true;
+
+			}
+			else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+			{
+				if ((m_fEventStart != pEvent.fStartTime))
+				{
+					_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+					CBullet::BULLETDESC BulletDesc;
+					BulletDesc.eCollisionGroup = PLAYER;
+					BulletDesc.fDeadTime = 5.f;
+					BulletDesc.eBulletType = CSionSkills::BOOST;
+					BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook*2.f;
+					BulletDesc.pOwner = m_pOwner;
+					BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+						return nullptr;
+
+					m_fEventStart = pEvent.fStartTime;
+				}
+			}
+		}
+	}
 
 	m_pOwner->Check_Navigation();
 
@@ -88,6 +104,14 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 
 CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 {
+
+	if (m_bIsStateEvent)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+	}
+
+
 	for (auto& iter : m_pEffects)
 	{
 		if (iter != nullptr && iter->Get_PreDead())
@@ -137,8 +161,7 @@ void CAI_BoostAttack::Enter()
 
 void CAI_BoostAttack::Exit()
 {
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+	
 
 
 	if (!m_pEffects.empty())
