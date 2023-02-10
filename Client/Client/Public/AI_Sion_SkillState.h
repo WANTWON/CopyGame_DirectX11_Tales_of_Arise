@@ -26,6 +26,7 @@ private:
 
 	_bool m_bEffectSlashSpawned = false;
 	_bool m_bIsStateEvent = false;
+	_bool m_bBulletMake = false;
 	vector<CEffect*> m_pBlastEffect;
 	vector<CEffect*> m_pSmokeEffect;
 };

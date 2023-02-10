@@ -240,9 +240,9 @@ m_fTime += fTimeDelta;
 
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.fVelocity = 2.f;
+						BulletDesc.fVelocity = 1.f;
 						BulletDesc.eBulletType = CSionSkills::EXPLOSION;
-						BulletDesc.iDamage = 300 + rand() % 10;
+						BulletDesc.iDamage = 300 + rand() % 99;
 						
 						BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 						BulletDesc.vInitPositon = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);

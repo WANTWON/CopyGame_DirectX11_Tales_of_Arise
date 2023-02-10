@@ -111,8 +111,15 @@ HRESULT CSionSkills::Initialize(void * pArg)
 	case EXPLOSION:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
+		
+		mWorldMatrix.r[3] = vLocation + vOffset;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ExplosionBall.dat"), mWorldMatrix);
+		break;
+	case EXPLOSIONGROUND:
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ExplosionGround.dat"), mWorldMatrix);
 		break;
 		
 	}
@@ -198,6 +205,7 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 	case MAGNA_RAY:
 	case GRAVITY:
 	case AQUA_LUINA_BULLET:
+	case EXPLOSIONGROUND:
 		if (m_fTime >= m_BulletDesc.fDeadTime)
 			m_bDead = true;
 		break;
@@ -225,14 +233,20 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 		{
 			m_fExplosionGroundTimer += fTimeDelta;
 
-			if (m_fExplosionGroundTimer > 2.f)
+			if (m_fExplosionGroundTimer > 5.f)
 			{
 				m_fExplosionGroundTimer = 0.f;
-				_vector vLocation = m_BulletDesc.vTargetPosition;
-				_matrix mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
-				_vector vDir = XMVectorSetY(XMVector3Normalize(vLocation - XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition())), 0.f);
-				mWorldMatrix.r[3] = vLocation;
-				m_pSmoke = CEffect::PlayEffectAtLocation(TEXT("ExplosionGround.dat"), mWorldMatrix);
+				CBullet::BULLETDESC BulletDesc;
+				_vector vLocation = { 0.f,0.f,0.f,0.f };
+				BulletDesc.iDamage = rand() % 150 + 1;
+				BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+				BulletDesc.eCollisionGroup = PLAYER;
+				BulletDesc.pOwner = m_BulletDesc.pOwner;
+				BulletDesc.eBulletType = CSionSkills::EXPLOSIONGROUND;
+				BulletDesc.fDeadTime = 0.5f;
+
+				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+					return;
 			}
 			
 		}
@@ -528,7 +542,7 @@ HRESULT CSionSkills::Ready_Components(void * pArg)
 	case EXPLOSION:
 		ColliderDesc.vScale = _float3(20.f, 20.f, 20.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-		if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
+		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 			return E_FAIL;
 		break;
 
@@ -727,6 +741,19 @@ void CSionSkills::Tick_Explosion(_float fTimeDelta)
 		m_bDead = true;
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta, m_BulletDesc.vTargetPosition);
+
+
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+
+		if (iter != nullptr)
+		{
+			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+		}
+
+	}
 }
 
 CSionSkills * CSionSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
