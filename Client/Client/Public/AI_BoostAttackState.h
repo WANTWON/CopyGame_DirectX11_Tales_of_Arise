@@ -21,6 +21,7 @@ private:
 
 	_float m_fTime = 0.f;
 	_bool  m_bBullet = false;
+	_float m_fEventStart = -1.f;
 };
 END
 END

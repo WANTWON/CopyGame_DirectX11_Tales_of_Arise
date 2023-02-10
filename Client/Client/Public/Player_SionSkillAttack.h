@@ -20,20 +20,11 @@ private:
 	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
 
-	_bool m_bHienzinFirstEffect = false;
-	_bool m_bHienzinSecondEffect = false;
-	_bool m_bAkizameEffect = false;
-	_bool m_bHousyutigakuzinFirstEffect = false;
-	_bool m_bHousyutigakuzinSecondEffect = false;
-
 	_bool m_bBulletMade = false;
 	vector<CEffect*> m_pBlastEffect;
-
-	vector<CEffect*> m_HousyutigakuzinStart;
-	void CallbackFunction(_uint iIndex);
+	vector<CEffect*> m_pSmokeEffect;
 
 	_float m_fEventStart = -1.f;
-
 	_uint m_iCount = 0;
 };
 END

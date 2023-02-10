@@ -122,7 +122,10 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 						{
 							CPlayerState* pEventInput = EventInput();  
 							if (nullptr != pEventInput)
+							{
+								m_pOwner->Off_IsFly();
 								return pEventInput;
+							}
 						}
 					}
 					break;
@@ -273,7 +276,6 @@ CPlayerState * CJumpState::EventInput(void)
 			}
 		}
 			
-
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 		{
@@ -429,9 +431,10 @@ void CJumpState::Exit()
 {
 	if (STATETYPE_END == m_eStateType)
 	{
- 		m_pOwner->Off_IsFly();
+		m_pOwner->Off_IsFly();
 		m_fTime = 0.f;
 	}
+	
 	m_bIsDrop = false;
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
@@ -454,7 +457,7 @@ void CJumpState::Move(_float fTimeDelta)
 	_vector vPrePos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 
 	m_fTime += 0.1f;
-	m_pOwner->Get_Transform()->Jump(m_fTime, 9.f, 5.f, m_fStartHeight, m_fEndHeight);
+	m_pOwner->Get_Transform()->Jump(m_fTime, 7.5f, 4.5f, m_fStartHeight, m_fEndHeight);
 
 	_vector vCurPos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 
@@ -463,10 +466,11 @@ void CJumpState::Move(_float fTimeDelta)
 
 	if (0 > fChangeHeight.y)
 		m_bIsDrop = true;
-
 	else
 		m_bIsDrop = false;
 
 	if ((JUMP_IDLE != m_eJumpType) && (m_eDirection != DIR_END))
+	{
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 3.f);
+	}
 }

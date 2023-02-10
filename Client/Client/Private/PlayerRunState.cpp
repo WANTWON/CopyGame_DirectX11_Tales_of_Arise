@@ -9,6 +9,7 @@
 #include "PlayerJumpState.h"
 #include "PlayerCollectState.h"
 #include "PlayerHitState.h"
+#include "PlayerDodgeState.h"
 #include "Player_SionNormalAttack_State.h"
 #include "Player_SionSkillAttack.h"
 
@@ -72,6 +73,25 @@ CPlayerState * CRunState::HandleInput()
 		}
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_BATTLE);
+
+		if (pGameInstance->Key_Down(DIK_LSHIFT))
+		{
+			switch (m_eDirection)
+			{
+			case Client::DIR_STRAIGHT:
+			case Client::DIR_LEFT:
+			case Client::DIR_RIGHT:
+			case Client::DIR_STRAIGHT_LEFT:
+			case Client::DIR_STRAIGHT_RIGHT:
+				return new CDodgeState(m_pOwner, DIR_STRAIGHT);
+				break;
+			case Client::DIR_BACKWARD_LEFT:
+			case Client::DIR_BACKWARD_RIGHT:
+			case Client::DIR_BACKWARD:
+				return new CDodgeState(m_pOwner, DIR_STRAIGHT/*DIR_BACKWARD*/);
+				break;
+			}
+		}
 	}
 	else if (LEVEL_SNOWFIELD == m_pOwner->Get_Level())
 	{

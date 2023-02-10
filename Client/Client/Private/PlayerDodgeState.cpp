@@ -168,7 +168,10 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		if (pEvent.isPlay)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+			{
 				m_pOwner->On_JustDodge();
+				break;
+			}
 		}
 		else
 			m_pOwner->Off_JustDodge();
@@ -222,7 +225,27 @@ void CDodgeState::Enter(void)
 		}
 		break;
 	case CPlayer::SION:
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE);
+		if (m_bIsFly)
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_AIR);
+
+		else
+		{
+			switch (m_eDirection)
+			{
+			case Client::DIR_STRAIGHT:
+			case Client::DIR_LEFT:
+			case Client::DIR_RIGHT:
+			case Client::DIR_STRAIGHT_LEFT:
+			case Client::DIR_STRAIGHT_RIGHT:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_LAND);
+				break;
+			case Client::DIR_BACKWARD:
+			case Client::DIR_BACKWARD_LEFT:
+			case Client::DIR_BACKWARD_RIGHT:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_LAND_BACK);
+				break;
+			}
+		}
 		break;
 	case CPlayer::RINWELL:
 		break;

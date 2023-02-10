@@ -28,7 +28,7 @@ HRESULT CUI_BossMonster_HPbar::Initialize(void * pArg)
 	m_fSize.y = 22.0f;
 	m_fPosition.x = 100.f;
 	m_fPosition.y = 100.f;
-	m_fNext = 11.f;
+	m_fNext = 13.f;
 
 
 	m_eShaderID = UI_HPBAR;
@@ -343,38 +343,38 @@ HRESULT CUI_BossMonster_HPbar::Render()
 		
 
 
+		
+		m_eShaderID = UI_BRIGHT;
+		m_fSize.x = 20.0f;
+		m_fSize.y = 20.0f;
+		m_fPosition.x = 850.f;
+		m_fPosition.y = 80.f;
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 
-		//m_eShaderID = UI_BRIGHT;
-		//m_fSize.x = 16.0f;
-		//m_fSize.y = 16.0f;
-		//m_fPosition.x = 54.f;
-		//m_fPosition.y = 65.f;
-		//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-		//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-
-		//RenderCurrenthpfont();
-
-
-		//m_fPosition.x += m_fNext;
-		//if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[0], sizeof(_float))))
-		//	return E_FAIL;
-		//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-
-		//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-		//	return E_FAIL;
-
-		//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(10))))
-		//	return E_FAIL;
-		//m_pShaderCom->Begin(m_eShaderID);
-
-		//m_pVIBufferCom->Render();
-
-		////return S_OK;
-
-		//RenderMaxhpfont();
+		RenderCurrenthpfont();
 
 
-		/////////////////////////////////////////////
+		m_fPosition.x += m_fNext;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[0], sizeof(_float))))
+			return E_FAIL;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(10))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+
+		//return S_OK;
+
+		RenderMaxhpfont();
+
+
+		///////////////////////////////////////////
 	
 
 	

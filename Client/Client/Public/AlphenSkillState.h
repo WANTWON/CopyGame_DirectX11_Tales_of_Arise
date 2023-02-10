@@ -19,6 +19,9 @@ public:
 	virtual void Exit(void) override;
 
 private:
+	void Reset_Skill();
+
+private:
 	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
 
@@ -26,6 +29,8 @@ private:
 	/* E */
 	_bool m_bHienzinFirstEffect = false;
 	_bool m_bHienzinSecondEffect = false;
+	_bool m_bRyuuseizinFirstEffect = false;
+	_bool m_bRyuuseizinSecondEffect = false;
 
 	/* R */
 	_bool m_bAkizameEffect = false;
@@ -41,10 +46,6 @@ private:
 
 	vector<CEffect*> m_HousyutigakuzinStart;
 	vector<CEffect*> m_SenkusyourepaParticles;
-
-private:
-	void CallbackFunction(_uint iIndex);
 };
-
 END
 END

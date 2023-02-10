@@ -38,7 +38,6 @@ public: /* Getter &  Setter */
 	CModel*			Get_Model() { return m_pModelCom; }
 	CNavigation*	Get_Navigation(void) { return m_pNavigationCom; }
 	CPlayerState*	Get_State() { return m_pPlayerState; }
-	OBJINFO			Get_Info() { return m_tInfo; }
 	PLAYERID		Get_PlayerID() { return m_ePlayerID; }
 	CGameObject*	Get_Parts(_int iIndex) { return m_Parts[iIndex]; }
 	LEVEL			Get_Level(void) { return m_eLevel; }
@@ -62,6 +61,8 @@ public: /* Getter &  Setter */
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
 	void Play_AISkill(PLAYERID ePlayer);
 
+  
+
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;
 	void			HandleInput();
@@ -69,6 +70,9 @@ public: /*For.State*/
 	void			Tick_AIState(_float fTimeDelta);
 	void			LateTick_State(_float fTimeDelta);
 	void			LateTick_AIState(_float fTimeDelta);
+
+	void Set_BoostGuage(_float boostguage) { m_tInfo.fCurrentBoostGuage = boostguage; }
+	_float Get_BoostGuage() { return m_tInfo.fCurrentBoostGuage; }
 
 
 public: /*For.Navigation*/
@@ -88,7 +92,6 @@ protected: /* For Component */
 	
 
 protected: /* for 4 Player */
-	OBJINFO			m_tInfo;
 	PLAYERID			m_ePlayerID = ALPHEN;
 	CPlayerState*	m_pPlayerState = nullptr;
 	CAIState*		m_pAIState = nullptr;

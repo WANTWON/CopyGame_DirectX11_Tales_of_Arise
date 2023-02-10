@@ -31,8 +31,8 @@ HRESULT CUI_Portraitfront_bottom::Initialize(void * pArg)
 	m_itexnum = 3;
 //	m_bfadein = true;
 
-	m_fCurrentBoost = 100.f;
-	m_fMaxBoost = 100.f;
+	m_fCurrentBoost = 10.f;
+//	m_fMaxBoost = 100.f;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
