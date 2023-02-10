@@ -21,7 +21,7 @@ public:
 	virtual void Exit() override;
 
 private:
-	_bool Check_JumpEnd();
+	_bool Check_JumpEnd(_float fOffset);
 
 private:
 	void Move(_float fTimeDelta);
