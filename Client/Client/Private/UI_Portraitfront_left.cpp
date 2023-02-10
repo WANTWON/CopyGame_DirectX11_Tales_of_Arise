@@ -45,7 +45,7 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 {
 
 
-//	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_Info().fCurrentBoostGuage;
+	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_Info().fCurrentBoostGuage;
 
 	if (m_bfirst == false)
 	{

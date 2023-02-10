@@ -49,7 +49,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 	m_eMonsterID = ICE_WOLF;
 
-	m_tStats.m_fMaxHp = 10000;
+	m_tStats.m_fMaxHp = 100000;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;

@@ -340,6 +340,9 @@
     <Filter Include="01.Levels\00.Loading\NpcCreater">
       <UniqueIdentifier>{c22c4171-edd3-48cc-bd99-d99a21c94602}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07.Bullet\AlphenSkills">
+      <UniqueIdentifier>{7aa964f0-2600-4445-b958-d323d28ae920}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -913,11 +916,14 @@
     <ClInclude Include="..\Public\Player_SionSkillAttack.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerSkillState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PlayerDodgeState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AlphenSkills.h">
+      <Filter>02.GameObjects\07.Bullet\AlphenSkills</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_Sion_SkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1462,11 +1468,14 @@
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerSkillState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\PlayerDodgeState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AlphenSkills.cpp">
+      <Filter>02.GameObjects\07.Bullet\AlphenSkills</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Sion_SkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

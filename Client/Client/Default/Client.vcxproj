@@ -183,7 +183,9 @@
     <ClInclude Include="..\Public\AI_ChaseState.h" />
     <ClInclude Include="..\Public\AI_HitState.h" />
     <ClInclude Include="..\Public\AI_BoostAttackState.h" />
+    <ClInclude Include="..\Public\AI_Sion_SkillState.h" />
     <ClInclude Include="..\Public\AlphenAttackState.h" />
+    <ClInclude Include="..\public\AlphenSkills.h" />
     <ClInclude Include="..\Public\AlphenSkillState.h" />
     <ClInclude Include="..\Public\BattleManager.h" />
     <ClInclude Include="..\Public\BerserkerBattle_BackStepState.h" />
@@ -375,7 +377,9 @@
     <ClCompile Include="..\Private\AI_ChaseState.cpp" />
     <ClCompile Include="..\Private\AI_HitState.cpp" />
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp" />
+    <ClCompile Include="..\Private\AI_Sion_SkillState.cpp" />
     <ClCompile Include="..\Private\AlphenAttackState.cpp" />
+    <ClCompile Include="..\private\AlphenSkills.cpp" />
     <ClCompile Include="..\Private\AlphenSkillState.cpp" />
     <ClCompile Include="..\Private\BattleManager.cpp" />
     <ClCompile Include="..\Private\BerserkerBattle_BackStepState.cpp" />

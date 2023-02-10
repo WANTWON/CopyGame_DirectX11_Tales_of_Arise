@@ -34,6 +34,8 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 {
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
+		return nullptr;
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
@@ -64,6 +66,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
+
 						CBaseObj * pTarget = nullptr;
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;

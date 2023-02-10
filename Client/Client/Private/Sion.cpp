@@ -46,7 +46,7 @@ HRESULT CSion::Initialize(void * pArg)
 	m_tInfo.fMaxMp = 5.f;
 	m_tInfo.fCurrentMp = 2.3f;
 	m_tInfo.iDamage = 100;
-	m_tInfo.fCurrentBoostGuage = 100.f;
+	m_tInfo.fCurrentBoostGuage = 20.f;
 
 	return S_OK;
 }
