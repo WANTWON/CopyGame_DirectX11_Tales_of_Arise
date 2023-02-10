@@ -61,6 +61,8 @@ public: /* Getter &  Setter */
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
 	void Play_AISkill(PLAYERID ePlayer);
 
+  
+
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;
 	void			HandleInput();
@@ -68,6 +70,9 @@ public: /*For.State*/
 	void			Tick_AIState(_float fTimeDelta);
 	void			LateTick_State(_float fTimeDelta);
 	void			LateTick_AIState(_float fTimeDelta);
+
+	void Set_BoostGuage(_float boostguage) { m_tInfo.fCurrentBoostGuage = boostguage; }
+	_float Get_BoostGuage() { return m_tInfo.fCurrentBoostGuage; }
 
 
 public: /*For.Navigation*/

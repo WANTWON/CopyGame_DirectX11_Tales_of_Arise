@@ -380,6 +380,14 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	m_pTarget = DamageCauser;
 	m_tStats.m_fCurrentHp-= (int)fDamage;
+	
+
+	if (m_pTarget != nullptr)
+	{
+		if (dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() <= 100.f)
+			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 0.5f);
+	}
+	
 
 	CDamageFont::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
@@ -408,6 +416,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		return E_FAIL;
 
 	m_tStats.m_fLockonSmashGuage += 0.01f;
+	
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
 		m_tStats.m_fLockonSmashGuage = 4.f;
