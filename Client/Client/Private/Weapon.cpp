@@ -115,7 +115,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
 			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeTest1.wav"), SOUND_EFFECT, 0.4f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound_2.wav"), SOUND_EFFECT, 0.4f);
 			
 			/*m_fHitTimeDeltaAcc += fTimeDelta;
 

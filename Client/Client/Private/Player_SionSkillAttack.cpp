@@ -460,6 +460,8 @@ void CPlayer_SionSkillAttack::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_TRESVENTOS);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Fix.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Jump_E.wav"), SOUND_EFFECT, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
@@ -484,6 +486,8 @@ void CPlayer_SionSkillAttack::Enter(void)
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayStart.dat"), mWorldMatrix);
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MAGNARAY);//¸¶±×³ª
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_EFFECT, 0.5f);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
@@ -497,8 +501,8 @@ void CPlayer_SionSkillAttack::Enter(void)
 
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Gravity_Force.wav"), SOUND_EFFECT, 0.5f);
-
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_R.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_R.wav"), SOUND_EFFECT, 0.5f);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
@@ -542,7 +546,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 void CPlayer_SionSkillAttack::Exit(void)
 {
 	__super::Exit();
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
 void CPlayer_SionSkillAttack::CallbackFunction(_uint iIndex)
