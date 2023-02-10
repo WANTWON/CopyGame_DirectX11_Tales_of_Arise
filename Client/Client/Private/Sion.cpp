@@ -57,7 +57,7 @@ HRESULT CSion::Ready_Parts()
 	m_Parts.resize(PARTS_END);
 
 	/* For.Weapon */
-	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("thumb_03_R");
+	CHierarchyNode* pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 	if (nullptr == pSocket)
 		return E_FAIL;
 
@@ -135,6 +135,50 @@ HRESULT CSion::Ready_Components(void* pArg)
 void CSion::Change_Level(LEVEL eLevel)
 {
 	__super::Change_Level(eLevel);
+
+	if (nullptr != m_Parts[PARTS_WEAPON])
+	{
+		CWeapon::WEAPONDESC WeaponDesc;
+		ZeroMemory(&WeaponDesc, sizeof(CWeapon::WEAPONDESC));
+
+		CHierarchyNode* pSocket = nullptr;
+
+		if (LEVEL_SNOWFIELD == eLevel)
+		{
+			pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L");
+			if (nullptr == pSocket)
+			{
+				ERR_MSG(TEXT("Failed to Get BonePtr"));
+				return;
+			}
+
+			XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixRotationX(XMConvertToRadians(180.f)));
+			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 50.f));
+
+		}
+		else if (LEVEL_BATTLE == eLevel)
+		{
+			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
+			if (nullptr == pSocket)
+			{
+				ERR_MSG(TEXT("Failed to Get BonePtr"));
+				return;
+			}
+
+			_matrix RotationMatrix = XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixRotationY(XMConvertToRadians(90.f));
+			XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, RotationMatrix);
+			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixIdentity());
+		}
+
+		WeaponDesc.pSocket = pSocket;
+		WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
+		WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
+		WeaponDesc.pOwner = this;
+		strcpy(WeaponDesc.pModeltag, "SIOW(00)");
+		Safe_AddRef(pSocket);
+
+		dynamic_cast<CWeapon*>(m_Parts[PARTS_WEAPON])->Set_WeaponDesc(WeaponDesc);
+	}
 }
 
 HRESULT CSion::SetUp_ShaderResources()

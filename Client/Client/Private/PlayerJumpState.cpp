@@ -67,7 +67,23 @@ CPlayerState * CJumpState::HandleInput()
 		}
 
 		if (pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fStartHeight, m_fTime);
+		{
+			switch (m_eDirection)
+			{
+			case Client::DIR_STRAIGHT:
+			case Client::DIR_LEFT:
+			case Client::DIR_RIGHT:
+			case Client::DIR_STRAIGHT_LEFT:
+			case Client::DIR_STRAIGHT_RIGHT:
+				return new CDodgeState(m_pOwner, DIR_STRAIGHT);
+				break;
+			case Client::DIR_BACKWARD_LEFT:
+			case Client::DIR_BACKWARD_RIGHT:
+			case Client::DIR_BACKWARD:
+				return new CDodgeState(m_pOwner, DIR_STRAIGHT/*DIR_BACKWARD*/);
+				break;
+			}
+		}
 	}
 
 	if (JUMP_RUN == m_eJumpType)
@@ -165,7 +181,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
 				if (JUMP_IDLE == m_eJumpType)
 				{
-					if (Check_JumpEnd(4.f))
+					if (Check_JumpEnd(0.f))
 					{
 						m_eStateType = STATETYPE_END;
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
