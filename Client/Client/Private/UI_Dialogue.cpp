@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include "UI_QuestClear.h"
+#include "UI_Dialoguepopup.h"
 
 
 CUI_Dialogue::CUI_Dialogue(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -56,6 +57,25 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 
 int CUI_Dialogue::Tick(_float fTimeDelta)
 {
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_HOME))
+	{
+		CUI_QuestClear::QUESTCLEARDESC garr;
+		ZeroMemory(&garr, sizeof(CUI_QuestClear::QUESTCLEARDESC));
+		garr.eName1 = ITEMNAME_REDSAGE;
+		garr.eType1 = ITEMTYPE_LEAVES;
+		garr.iGaingald = 777;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC, (TEXT("ssss")), &garr)))
+			return OBJ_NOEVENT;
+		//CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY, false, false);
+		//CUI_Manager::Get_Instance()->Set_QuestComplete(0, true);
+	}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_PGUP))
+	{
+		dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(2, true, 1, 0);
+	}
+		
+		
 
 	//m_vCurrentDialouge = m_vDialogue;
 	if (m_btick)
@@ -975,7 +995,7 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	for (auto vec : m_vDialogue) test++;*/
 	m_fFontsize = 0.75f;
 	m_fFontOffsetY = 30.f;
-	switch (m_vCurrentDialogue[m_iVectorIndex][index].size())
+	switch (m_vCurrentDialogue[m_iVectorIndex][index].size()-1)
 	{
 	case 0:
 		return;
@@ -987,7 +1007,7 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 		m_fFontPos.y = 580.f + m_fFade; 
 		break;
 	case 3:
-		m_fFontPos.y = 565.f + m_fFade;
+		m_fFontPos.y = 570.f + m_fFade;
 		break;
 
 	}

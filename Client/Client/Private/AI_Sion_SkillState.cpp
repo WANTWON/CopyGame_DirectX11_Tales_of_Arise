@@ -9,6 +9,7 @@
 #include "UI_Skillmessage.h"
 #include "Bullet.h"
 #include "SionSkills.h"
+#include "AIAttackNormalState.h"
 
 
 
@@ -365,7 +366,7 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 
 		if (Get_Target_Distance() >= 5.f)
 		{
-			switch (rand() % 5)
+			switch (rand() % 10)
 			{
 			case 0: //Client::CAIState::STATE_NORMAL_ATTACK1:
 				__super::Exit();
@@ -437,6 +438,9 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
 				break;
+
+			default:
+				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 
 
 			}

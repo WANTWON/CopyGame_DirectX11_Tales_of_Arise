@@ -35,7 +35,7 @@ HRESULT CUI_Portraitfront_top::Initialize(void * pArg)
 
 	
 	m_fMaxBoost = 100.f;
-	dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(2, true, 1, 0);
+	
 	//m_bfadein = true;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -117,7 +117,15 @@ int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 		//UpdateShaderID();
 		if (m_bfirst1 && CUI_Manager::Get_Instance()->Get_Arrived_Count() == 4)
 		{
-			UpdateShaderID();
+			if (m_fCurrentBoost >= 100)
+				m_bSmash = true;
+			else
+				m_bSmash = false;
+			
+			if (!m_bSmash)
+				m_eShaderID = UI_POTRAIT_DARK;
+			
+			else if (m_bSmash)m_eShaderID = 0;
 			m_bfirst1 = false;
 			m_fAlpha = 0;
 		}

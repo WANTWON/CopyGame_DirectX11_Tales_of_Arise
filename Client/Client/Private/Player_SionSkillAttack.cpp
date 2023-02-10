@@ -299,12 +299,12 @@ m_fTime += fTimeDelta;
 						BulletDesc.fDeadTime = 5.f;
 
 
-						BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-						BulletDesc.vTargetPosition.m128_f32[2] += 3.f;
+						/*BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						BulletDesc.vTargetPosition.m128_f32[2] += 3.f;*/
 
 
 						BulletDesc.vInitPositon = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-						BulletDesc.vInitPositon.m128_f32[2] += 3.f;
+						/*BulletDesc.vInitPositon.m128_f32[2] += 3.f;*/
 
 						// +vOffset;
 						BulletDesc.vInitPositon.m128_f32[1] = 8.f;
@@ -325,8 +325,6 @@ m_fTime += fTimeDelta;
 							m_bBulletMade = true;
 						}
 
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-							return nullptr;
 
 						if (pTarget != nullptr)
 						{
@@ -348,9 +346,37 @@ m_fTime += fTimeDelta;
 
 						if (pTarget != nullptr)
 						{
+
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							BulletDesc.vTargetPosition.m128_f32[0] += 1.5f;
+							BulletDesc.vTargetPosition.m128_f32[2] += 3.f;
+						}
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						if (pTarget != nullptr)
+						{
+							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
+							BulletDesc.vTargetPosition.m128_f32[0] += 1.5f;
+						}
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						if (pTarget != nullptr)
+						{
 							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
 							BulletDesc.vTargetPosition.m128_f32[2] -= 6.f;
+						}
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						if (pTarget != nullptr)
+						{
+							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
+							BulletDesc.vTargetPosition.m128_f32[0] -= 1.5f;
 						}
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
