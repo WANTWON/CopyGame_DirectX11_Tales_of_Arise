@@ -57,19 +57,19 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	if (!m_bIsAnimationFinished)
-	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+	//if (!m_bIsAnimationFinished)
+	//{
+	//	_vector vecTranslation;
+	//	_float fRotationRadian;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+	//	m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+	//	m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 
-		m_pOwner->Check_Navigation();
-	}
+	//	m_pOwner->Check_Navigation();
+	//}
 	
-	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
+	m_pOwner->Get_Transform()->LookAt(XMVectorSetY(m_vCurTargetPos, 2.f));
 
 	return nullptr;
 }

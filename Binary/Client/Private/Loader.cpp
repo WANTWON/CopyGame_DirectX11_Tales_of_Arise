@@ -85,7 +85,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	return E_FAIL;
 
 	/*For.Prototype_Component_Model_Desert_CliffRock*/
-	/*PivotMatrix = XMMatrixScaling(0.27f, 0.27f, 0.27f);
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/CliffRock.fbx", "../../../Bin/Bin_Data/NonAnim/CliffRock/", PivotMatrix))))
@@ -102,7 +102,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock4"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/CliffRock4.fbx", "../../../Bin/Bin_Data/NonAnim/CliffRock/", PivotMatrix))))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	//_matrix PivotMatrix;
 
