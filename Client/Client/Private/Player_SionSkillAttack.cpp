@@ -232,7 +232,29 @@ m_fTime += fTimeDelta;
 			case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
+					if ((m_fEventStart != pEvent.fStartTime) && !m_bBulletMade)
+					{
+						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+						if (pTarget == nullptr)
+							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.fVelocity = 1.f;
+						BulletDesc.eBulletType = CSionSkills::EXPLOSION;
+						BulletDesc.iDamage = 300 + rand() % 99;
+						
+						BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						BulletDesc.vInitPositon = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						BulletDesc.vInitPositon.m128_f32[1] = 8.f;
+						BulletDesc.pOwner = m_pOwner;
+
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						m_bBulletMade = true;
+						m_fEventStart = pEvent.fStartTime;
+					}
 				}
 
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -362,7 +384,7 @@ m_fTime += fTimeDelta;
 				break;
 
 			case Client::CPlayerState::STATE_SKILL_ATTACK5:
-				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !m_bBulletMade)
 				{
 
 					if ((m_fEventStart != pEvent.fStartTime))
@@ -379,18 +401,15 @@ m_fTime += fTimeDelta;
 							BulletDesc.pOwner = m_pOwner;
 							
 						
-
-
-
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 
-
+						m_bBulletMade = true;
 						m_fEventStart = pEvent.fStartTime;
+
 
 					}
 				}
-
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 					if (GetKeyState(VK_LBUTTON) < 0)

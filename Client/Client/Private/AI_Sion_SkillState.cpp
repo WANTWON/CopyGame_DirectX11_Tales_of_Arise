@@ -187,7 +187,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
-					if ((m_fEventStart != pEvent.fStartTime))
+					if ((m_fEventStart != pEvent.fStartTime) && !m_bBulletMake)
 					{
 						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 						if (pTarget == nullptr)
@@ -207,7 +207,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 
-
+						m_bBulletMake = true;
 						m_fEventStart = pEvent.fStartTime;
 
 					}
