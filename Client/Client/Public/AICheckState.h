@@ -21,6 +21,7 @@ private:
 
 public:
 	CAIState* RandomAttackChoose();
+	CAIState* RandomAttackChoose_Sion();
 
 };
 END
