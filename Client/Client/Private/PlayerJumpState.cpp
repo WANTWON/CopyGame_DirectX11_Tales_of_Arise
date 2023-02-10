@@ -138,7 +138,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 						if (m_fEndHeight >= XMVectorGetY(vPosition))
 						{
-							CPlayerState* pEventInput = EventInput();  
+							CPlayerState* pEventInput = EventInput();
 							if (nullptr != pEventInput)
 							{
 								m_pOwner->Off_IsFly();
@@ -173,7 +173,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 	{
 	case STATETYPE_START:
 	{
-		if (m_bIsDrop || m_bIsAnimationFinished)
+		if (m_bIsDrop)
 		{
 			switch (m_ePlayerID)
 			{
@@ -181,18 +181,34 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
 				if (JUMP_IDLE == m_eJumpType)
 				{
-					if (Check_JumpEnd(0.f))
+					if (Check_JumpEnd(2.f))
 					{
 						m_eStateType = STATETYPE_END;
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
 					}
-				}	
+					else
+					{
+						if (m_bIsAnimationFinished)
+						{
+							m_eStateType = STATETYPE_MAIN;
+							m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
+						}
+					}
+				}
 				else if (JUMP_RUN == m_eJumpType)
 				{
 					if (Check_JumpEnd(0.f))
 					{
 						m_eStateType = STATETYPE_END;
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LAND);
+					}
+					else
+					{
+						if (m_bIsAnimationFinished)
+						{
+							m_eStateType = STATETYPE_MAIN;
+							m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LOOP);
+						}
 					}
 				}
 				else if (JUMP_BATTLE == m_eJumpType)
@@ -201,6 +217,14 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 					{
 						m_eStateType = STATETYPE_END;
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
+					}
+					else
+					{
+						if (m_bIsAnimationFinished)
+						{
+							m_eStateType = STATETYPE_MAIN;
+							m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
+						}
 					}
 				}
 				break;
@@ -218,7 +242,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 			default:
 				break;
 			}
-			
+
 			//else
 			//{
 			//	switch (m_ePlayerID)
@@ -244,10 +268,47 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 			//	
 			//}
 		}
+		else if (m_bIsAnimationFinished)
+		{
+			switch (m_ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
+				if (JUMP_IDLE == m_eJumpType)
+				{
+					m_eStateType = STATETYPE_MAIN;
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
+				}
+				else if (JUMP_RUN == m_eJumpType)
+				{
+					m_eStateType = STATETYPE_MAIN;
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LOOP);
+				}
+				else if (JUMP_BATTLE == m_eJumpType)
+				{
+					m_eStateType = STATETYPE_MAIN;
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
+				}
+				break;
+			case CPlayer::SION:
+				//for Sion State//
+				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
+				m_eStateType = STATETYPE_END;
+				if (JUMP_IDLE == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LANDING);
+				else if (JUMP_RUN == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_LANDING);
+				else if (JUMP_BATTLE == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
+				break;
+			default:
+				break;
+			}
+		}
 		break;
 	}
 	case STATETYPE_MAIN:
-		if (Check_JumpEnd(4.f))
+		if (Check_JumpEnd(2.f))
 		{
 			switch (m_ePlayerID)
 			{
@@ -273,7 +334,6 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 			default:
 				break;
 			}
-			
 		}
 		break;
 	case STATETYPE_END:
@@ -308,7 +368,7 @@ CPlayerState * CJumpState::EventInput(void)
 				break;
 			}
 		}
-			
+
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 		{
@@ -333,10 +393,10 @@ CPlayerState * CJumpState::EventInput(void)
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 				else if (pGameInstance->Key_Down(DIK_F))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
-				
+
 				break;
 			}
-			
+
 		}
 	}
 
@@ -412,7 +472,7 @@ void CJumpState::Enter()
 			break;
 		}
 	}
-	else if (JUMP_RUN == m_eJumpType)	
+	else if (JUMP_RUN == m_eJumpType)
 	{
 		switch (m_ePlayerID)
 		{
@@ -439,7 +499,7 @@ void CJumpState::Enter()
 		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
-			if(m_eStateType == STATETYPE_START)
+			if (m_eStateType == STATETYPE_START)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_JUMP);
 			else if (m_eStateType == STATETYPE_MAIN)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
@@ -467,7 +527,7 @@ void CJumpState::Exit()
 		m_pOwner->Off_IsFly();
 		m_fTime = 0.f;
 	}
-	
+
 	m_bIsDrop = false;
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
@@ -487,7 +547,7 @@ _bool CJumpState::Check_JumpEnd(_float fOffset)
 
 void CJumpState::Move(_float fTimeDelta)
 {
-   	_vector vPrePos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vPrePos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 
 	m_fTime += 0.1f;
 	m_pOwner->Get_Transform()->Jump(m_fTime, 3.f, 1.f, m_fStartHeight, m_fEndHeight);
