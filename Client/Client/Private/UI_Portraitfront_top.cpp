@@ -46,22 +46,47 @@ HRESULT CUI_Portraitfront_top::Initialize(void * pArg)
 
 int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 {
+	if(m_fCurrentBoost <= 10)
+		m_bfirstglow = true;
 
-	/*if (m_fCurrentBoost >= 100.f)
+	if (m_fCurrentBoost >= 100.f)
+	{
+		m_bbigger = true;
+	}
+	else
+		m_bfirstglow = true;
+	/*else
 	{
 		
 	}*/
-	
 
-	if (m_fPrevBoostGuage >= 100.f)
+	if (m_bbigger && m_bfirstglow)
+	{
+		m_fGlowScaleOffset += 0.3f;
+		m_fGlowAlpha -= 0.0125f;
+
+		if (m_fGlowScaleOffset >= 8.f)
+		{
+			m_fGlowAlpha = 1.f;
+			m_fGlowScaleOffset = 1.f;
+			m_fBoostGuageMax = false;
+			m_bfirstglow = false;
+		}
+	}
+
+	/*if (m_fPrevBoostGuage < 100.f)
+		m_bbigger = true;
+
+	if (m_fPrevBoostGuage >= 100.f&& m_bbigger)
 	{
 		m_fBoostGuageMax = true;
 		m_fPrevBoostGuage = 0.f;
+		m_bbigger = false;
 	}
 
 	if (m_fBoostGuageMax == true)
 	{
-		m_fGlowScaleOffset += 0.1f;
+		m_fGlowScaleOffset += 0.2f;
 		m_fGlowAlpha -= 0.0125f;
 
 		if (m_fGlowScaleOffset >= 8.f)
@@ -70,7 +95,7 @@ int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 			m_fGlowScaleOffset = 1.f;
 			m_fBoostGuageMax = false;
 		}
-	}
+	}*/
 
 	//CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->
 	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->Get_Info().fCurrentBoostGuage;

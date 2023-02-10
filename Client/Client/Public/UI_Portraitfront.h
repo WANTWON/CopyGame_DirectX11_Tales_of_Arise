@@ -37,7 +37,7 @@ protected:
 	void moveright() { m_fPosition.x += 12.f; }
 //
 public:
-	void UpdateShaderID() { if (m_fCurrentBoost >= m_fMaxBoost) m_bSmash = true; if (!m_bSmash)m_eShaderID = UI_POTRAIT_DARK; else if (m_bSmash)m_eShaderID = 0; }
+	void UpdateShaderID() { if (m_fCurrentBoost >= 100) m_bSmash = true; if (!m_bSmash)m_eShaderID = UI_POTRAIT_DARK; else if (m_bSmash)m_eShaderID = 0; }
 
 	HRESULT RenderBoostGuage();
 
@@ -68,7 +68,9 @@ protected:
 
 	_float m_fPrevBoostGuage = 0.f;
 	_float m_fGlowAlpha = 1.f;
-	//_bool m_bminus = 
+
+	_bool m_bbigger = true;
+	_bool m_bfirstglow = true;	//_bool m_bminus = 
 
 	/*_float m_fPlayer1_Alpha = 0.f;
 	_float m_fPlayer2_Alpha = 0.f;
