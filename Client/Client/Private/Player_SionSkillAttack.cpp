@@ -575,9 +575,3 @@ void CPlayer_SionSkillAttack::Exit(void)
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
-
-void CPlayer_SionSkillAttack::CallbackFunction(_uint iIndex)
-{
-	m_HousyutigakuzinStart[iIndex] = nullptr;
-
-}
