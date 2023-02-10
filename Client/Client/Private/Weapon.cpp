@@ -151,7 +151,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 			if (!m_bSoundStart)
 			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.4f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.2f);
 				m_bSoundStart = true;
 			}
 
@@ -183,7 +183,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 					//	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 					//	m_fTimeDeltaAcc = 0.f;
 					//}
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
 					bSoundStart = true;
 				}
 			}
@@ -204,7 +204,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 						CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 						m_fTimeDeltaAcc = 0.f;
 					}
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
 					bSoundStart = true;
 				}
 			}

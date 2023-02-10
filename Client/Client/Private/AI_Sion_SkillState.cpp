@@ -68,9 +68,8 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 		_float fRotationRadian;
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-
-		
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Check_Navigation();
 	}
 	else
 		m_pOwner->Check_Navigation();

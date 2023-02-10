@@ -104,7 +104,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 							m_fEventStart = pEvent.fStartTime;
 
 							_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
-							_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir*2;
+							_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir*3;
 							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 							mWorldMatrix.r[3] = vLocation;
 							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
