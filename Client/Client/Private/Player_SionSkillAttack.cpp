@@ -362,7 +362,7 @@ m_fTime += fTimeDelta;
 				break;
 
 			case Client::CPlayerState::STATE_SKILL_ATTACK5:
-				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !m_bBulletMade)
 				{
 
 					if ((m_fEventStart != pEvent.fStartTime))
@@ -379,18 +379,15 @@ m_fTime += fTimeDelta;
 							BulletDesc.pOwner = m_pOwner;
 							
 						
-
-
-
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 
-
+						m_bBulletMade = true;
 						m_fEventStart = pEvent.fStartTime;
+
 
 					}
 				}
-
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 					if (GetKeyState(VK_LBUTTON) < 0)

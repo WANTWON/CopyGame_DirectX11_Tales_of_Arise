@@ -634,15 +634,15 @@ void CSionSkills::Tick_TresVentos(_float fTimeDelta)
 
 void CSionSkills::Tick_AQUA_LUINA(_float fTimeDelta)
 {
+	if (m_bDead == true)
+		return;
+
 	m_fAquaTImer += fTimeDelta;
 
-	if (bulletcount <= 0)
-		m_bDead = true;
-	
-	if (m_fAquaTImer > 0.2f)
-	{
-		float offsetx = (_float)(rand() % 100)*(rand()%2 == 0 ? 1.f : -1.f) / 10;
-		float offsetz = (_float)(rand() % 100)*(rand() % 2 == 0 ? 1.f : -1.f) / 10;
+	//if (m_fAquaTImer > 0.1f)
+	//{
+		float offsetx = (_float)(rand() % 70)*(rand()%2 == 0 ? 1.f : -1.f) / 10;
+		float offsetz = (_float)(rand() % 70)*(rand() % 2 == 0 ? 1.f : -1.f) / 10;
 		CBullet::BULLETDESC BulletDesc;
 		_vector vLocation = { 0.f,0.f,0.f,0.f };
 		BulletDesc.iDamage = rand() % 150 + 1;
@@ -656,9 +656,12 @@ void CSionSkills::Tick_AQUA_LUINA(_float fTimeDelta)
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
-		bulletcount -= 3;
+		bulletcount -= 1;
 		m_fAquaTImer = 0.f;
-	}
+
+		if (bulletcount <= 0)
+			m_bDead = true;
+	//}
 	
 }
 

@@ -297,7 +297,7 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 _int CHawk::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 
-		if (fDamage <= 0 || m_bDead)
+		if (fDamage <= 0 || m_bDead || m_bTakeDamage)
 		return 0;
 
 		_int iHp = __super::Take_Damage(fDamage, DamageCauser);

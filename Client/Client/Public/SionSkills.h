@@ -50,7 +50,7 @@ public:
 	virtual void Free() override;
 
 private:
-	_uint bulletcount = 30;
+	_int bulletcount = 40;
 	_float m_fAquaTImer = 0.f;
 	_bool m_bMadeSmoke = false;
 
