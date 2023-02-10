@@ -63,6 +63,11 @@ protected:
 	_float m_fCurrentBoost = 20.f;
 	_float m_fGlowTimer = 0.f;
 
+	_float m_fGlowScaleOffset = 1.f;
+	_bool m_fBoostGuageMax = false;
+
+	_float m_fPrevBoostGuage = 0.f;
+	_float m_fGlowAlpha = 1.f;
 	//_bool m_bminus = 
 
 	/*_float m_fPlayer1_Alpha = 0.f;

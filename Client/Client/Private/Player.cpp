@@ -79,8 +79,9 @@ int CPlayer::Tick(_float fTimeDelta)
 		Play_AISkill(ALPHEN);
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(SION);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_8))
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
 	{
+		CUI_Manager::Get_Instance()->MinusCP(10);
 		m_tInfo.fCurrentHp += 100.f;
 		CPlayerState* pState = new CIdleState(this);
 		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);

@@ -1433,8 +1433,11 @@ PS_OUT PS_UI_GLOW(PS_IN In)
 		Out.vColor *=  min(cos(g_fGlowTimer * 4) + 1.2f, 1.f);
 	}
 
+	Out.vColor.a *= g_fAlpha;
 	if (Out.vColor.a == 0)
 		discard;
+
+	
 
 	return Out;
 }

@@ -44,8 +44,32 @@ HRESULT CUI_Portraitfront_left::Initialize(void * pArg)
 int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 {
 
+	if (m_fPrevBoostGuage >= 100.f)
+	{
+		m_fBoostGuageMax = true;
+		m_fPrevBoostGuage = 0.f;
+	}
 
-	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_Info().fCurrentBoostGuage;
+	if (m_fBoostGuageMax == true)
+	{
+		m_fGlowScaleOffset += 0.1f;
+		m_fGlowAlpha -= 0.0125f;
+
+		if (m_fGlowScaleOffset >= 8.f)
+		{
+			m_fGlowAlpha = 1.f;
+			m_fGlowScaleOffset = 1.f;
+			m_fBoostGuageMax = false;
+		}
+	}
+
+	//CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->
+	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->Get_Info().fCurrentBoostGuage;
+	if (m_fBoostGuageMax == false)
+	{
+		m_fPrevBoostGuage = m_fCurrentBoost;
+	}
+	
 
 	if (m_bfirst == false)
 	{
@@ -238,6 +262,9 @@ HRESULT CUI_Portraitfront_left::Render_Glow()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowTimer", &m_fGlowTimer, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fGlowAlpha, sizeof(_float))))
 		return E_FAIL;
 
 	m_pShaderCom->Begin(UI_GLOW);

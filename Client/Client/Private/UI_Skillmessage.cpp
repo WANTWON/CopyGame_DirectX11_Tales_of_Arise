@@ -256,7 +256,7 @@ HRESULT CUI_Skillmessage::Render()
 
 	m_fSize.x = 240.f;
 	m_fSize.y = 26.f;
-	m_fPosition.x = 670.f - m_fFadeX;
+	m_fPosition.x = 700.f - m_fFadeX;
 	m_fPosition.y = 120.f;// + m_fFadeY + m_fIndexOffsetY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
