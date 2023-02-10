@@ -316,8 +316,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f)/* * XMMatrixRotationY(XMConvertToRadians(180.0f))*/;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ring_Warp"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ring_Warp.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ring_nm_03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ring_nm_03.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
 		return E_FAIL;
 	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Spiral_tk_05"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Spiral_tk_05.fbx", "../../../Bin/Bin_Data/Effect/Spiral/", PivotMatrix))))
@@ -397,10 +397,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	return E_FAIL;
 
 	/*For.Prototype_Component_Model_SIOW(O0)*/
-	PivotMatrix = XMMatrixScaling(0.03f, 0.03f, 0.03f)/* * XMMatrixRotationX(XMConvertToRadians(180.f))*//* * XMMatrixRotationZ(XMConvertToRadians(90.f))*/ * XMMatrixRotationX(XMConvertToRadians(270.f));
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SIOW"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SIOW(00).fbx", "../../../Bin/Bin_Data/NonAnim/SIOW(00)/", PivotMatrix))))
-		return E_FAIL;
+	//PivotMatrix = XMMatrixScaling(0.03f, 0.03f, 0.03f)/* * XMMatrixRotationX(XMConvertToRadians(180.f))*//* * XMMatrixRotationZ(XMConvertToRadians(90.f))*/ * XMMatrixRotationX(XMConvertToRadians(270.f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SIOW"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SIOW(00).fbx", "../../../Bin/Bin_Data/NonAnim/SIOW(00)/", PivotMatrix))))
+	//	return E_FAIL;
 
 	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SionHead"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SionHead.fbx", "../../../Bin/Bin_Data/Anim/Sion/", PivotMatrix))))
