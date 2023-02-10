@@ -22,6 +22,7 @@ private:
 
 	_bool m_bBulletMade = false;
 	vector<CEffect*> m_pBlastEffect;
+	vector<CEffect*> m_pSmokeEffect;
 
 	_float m_fEventStart = -1.f;
 	_uint m_iCount = 0;

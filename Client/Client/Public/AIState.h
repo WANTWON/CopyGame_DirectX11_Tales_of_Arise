@@ -50,6 +50,8 @@ public:
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 		}
 
+		if (nullptr == m_pTarget)
+			return 5.f;
 		_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 

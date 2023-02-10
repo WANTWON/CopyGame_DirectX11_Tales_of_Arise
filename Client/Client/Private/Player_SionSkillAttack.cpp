@@ -273,20 +273,35 @@ m_fTime += fTimeDelta;
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.fVelocity = 2.f;
 						BulletDesc.eBulletType = CSionSkills::GLACIA;
-						BulletDesc.iDamage = 200;
-						BulletDesc.fDeadTime = 10.f;
+						BulletDesc.iDamage = 70 + rand()%10;
+						BulletDesc.fDeadTime = 5.f;
 
 
 						BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-						BulletDesc.vTargetPosition.m128_f32[2] += 6.f;
+						BulletDesc.vTargetPosition.m128_f32[2] += 3.f;
 
 
 						BulletDesc.vInitPositon = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-						BulletDesc.vInitPositon.m128_f32[2] += 6.f;
+						BulletDesc.vInitPositon.m128_f32[2] += 3.f;
 
 						// +vOffset;
-						BulletDesc.vInitPositon.m128_f32[1] = 15.f;
+						BulletDesc.vInitPositon.m128_f32[1] = 8.f;
 						BulletDesc.pOwner = m_pOwner;
+
+						if (!m_bBulletMade)
+						{
+							/* Make Effect */
+							_vector vOffset = { 0.f,0.f,0.f,0.f };
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = BulletDesc.vInitPositon;
+							m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GlacioStart.dat"), mWorldMatrix);
+
+							/*_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - BulletDesc.vInitPositon);
+							mWorldMatrix.r[3] = BulletDesc.vInitPositon - vCamDir*1.5f;
+							m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("GlacioStartSmoke.dat"), mWorldMatrix);
+*/
+							m_bBulletMade = true;
+						}
 
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
@@ -295,7 +310,7 @@ m_fTime += fTimeDelta;
 						{
 
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							BulletDesc.vTargetPosition.m128_f32[0] += 6.f;
+							BulletDesc.vTargetPosition.m128_f32[0] += 3.f;
 						}
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
@@ -304,7 +319,7 @@ m_fTime += fTimeDelta;
 						{
 
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							BulletDesc.vTargetPosition.m128_f32[0] -= 12.f;
+							BulletDesc.vTargetPosition.m128_f32[0] -= 6.f;
 						}
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
@@ -313,7 +328,7 @@ m_fTime += fTimeDelta;
 						{
 							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
-							BulletDesc.vTargetPosition.m128_f32[2] -= 12.f;
+							BulletDesc.vTargetPosition.m128_f32[2] -= 6.f;
 						}
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
@@ -361,7 +376,7 @@ m_fTime += fTimeDelta;
 							BulletDesc.eBulletType = CSionSkills::AQUA_LUINA;
 							if (pTarget != nullptr)
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-
+							BulletDesc.pOwner = m_pOwner;
 							
 						
 
@@ -462,6 +477,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_TRESVENTOS);
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
@@ -486,6 +502,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayStart.dat"), mWorldMatrix);
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MAGNARAY);//마그나
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_MAGNARAY);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
@@ -500,19 +517,23 @@ void CPlayer_SionSkillAttack::Enter(void)
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Gravity_Force.wav"), SOUND_EFFECT, 0.5f);
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GRAVITY);
 
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_BRAVE); // 메테오
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_EXPLODE);
 			break;
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT); //얼음떨구기
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
 			break;
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK5:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); // 비가우수수
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
 			break;
 		}
 	}

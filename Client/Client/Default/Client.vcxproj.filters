@@ -922,6 +922,9 @@
     <ClInclude Include="..\public\AlphenSkills.h">
       <Filter>02.GameObjects\07.Bullet\AlphenSkills</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AI_Sion_SkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1470,6 +1473,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AlphenSkills.cpp">
       <Filter>02.GameObjects\07.Bullet\AlphenSkills</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Sion_SkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

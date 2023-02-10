@@ -49,7 +49,9 @@ public: /* Getter Setter */
 	CCollider*	Get_OBBCollider() { return m_pOBBCom; };
 	CCollider*	Get_SPHERECollider() { return m_pSPHERECom; };
 	_bool		Get_IsSocket() { return m_bSocket; }
-	
+	OBJINFO			Get_Info() { return m_tInfo; }
+	void			Set_Info(OBJINFO tInfo) { memcpy(&m_tInfo, &tInfo, sizeof(OBJINFO)); }
+	void            Set_HP(_float hp) { m_tInfo.fCurrentHp = hp; }
 protected:
 	virtual HRESULT Ready_Components(void* pArg) = 0;
 	virtual HRESULT SetUp_ShaderID() { return S_OK; };

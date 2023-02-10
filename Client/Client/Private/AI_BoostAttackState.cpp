@@ -30,11 +30,25 @@ CAI_BoostAttack::CAI_BoostAttack(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 {
+	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+		return nullptr;
+
+	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+	{
+		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+	}
+	else
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
+
+	if (m_pTarget == nullptr)
+		return nullptr;
+
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 	if (!m_bIsAnimationFinished)
 	{
-		m_fTime += fTimeDelta;
-
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 		for (auto& pEvent : pEvents)
 		{
@@ -44,79 +58,78 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 				{
 					case CPlayer::ALPHEN:
 					{
-						if (!strcmp(pEvent.szName, "Alphen_Strike_1"))
+						if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 						{
-							if (!m_bAlphenStrike_1)
+							if (!strcmp(pEvent.szName, "Alphen_Strike_1"))
 							{
-								_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+								if (!m_bAlphenStrike_1)
+								{
+									_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
 
-								CBullet::BULLETDESC BulletDesc;
-								BulletDesc.eCollisionGroup = PLAYER;
-								BulletDesc.fDeadTime = 3.f;
-								BulletDesc.eBulletType = CAlphenSkills::STRIKE_1;
-								BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
-								BulletDesc.pOwner = m_pOwner;
-								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+									CBullet::BULLETDESC BulletDesc;
+									BulletDesc.eCollisionGroup = PLAYER;
+									BulletDesc.fDeadTime = 3.f;
+									BulletDesc.eBulletType = CAlphenSkills::STRIKE_1;
+									BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
+									BulletDesc.pOwner = m_pOwner;
+									BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
-								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-									return nullptr;
+									if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+										return nullptr;
 
-								m_bAlphenStrike_1 = true;
+									m_bAlphenStrike_1 = true;
+								}
 							}
-						}
-						if (!strcmp(pEvent.szName, "Alphen_Strike_2"))
-						{
-							if (!m_bAlphenStrike_2)
+							if (!strcmp(pEvent.szName, "Alphen_Strike_2"))
 							{
-								_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+								if (!m_bAlphenStrike_2)
+								{
+									_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
 
-								CBullet::BULLETDESC BulletDesc;
-								BulletDesc.eCollisionGroup = PLAYER;
-								BulletDesc.fDeadTime = 3.f;
-								BulletDesc.eBulletType = CAlphenSkills::STRIKE_2;
-								BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
-								BulletDesc.pOwner = m_pOwner;
-								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+									CBullet::BULLETDESC BulletDesc;
+									BulletDesc.eCollisionGroup = PLAYER;
+									BulletDesc.fDeadTime = 3.f;
+									BulletDesc.eBulletType = CAlphenSkills::STRIKE_2;
+									BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
+									BulletDesc.pOwner = m_pOwner;
+									BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
-								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-									return nullptr;
+									if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+										return nullptr;
 
-								m_bAlphenStrike_2 = true;
+									m_bAlphenStrike_2 = true;
+								}
 							}
 						}
 						break;
 					}
 
-					/* Add SION Logic after refactor. */
+					case CPlayer::SION:
+					{
+						if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+							m_bIsStateEvent = true;
+						else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+						{
+							if ((m_fEventStart != pEvent.fStartTime))
+							{
+								_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+								CBullet::BULLETDESC BulletDesc;
+								BulletDesc.eCollisionGroup = PLAYER;
+								BulletDesc.fDeadTime = 5.f;
+								BulletDesc.eBulletType = CSionSkills::BOOST;
+								BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook*2.f;
+								BulletDesc.pOwner = m_pOwner;
+								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+
+								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+									return nullptr;
+
+								m_fEventStart = pEvent.fStartTime;
+							}
+						}
+					}
 				}
 			}
-		}
-
-		if (!m_bBullet && m_eCurrentPlayerID == CPlayer::SION && m_fTime > 2.f)
-		{
-			switch (m_eCurrentPlayerID)
-			{
-				case CPlayer::SION:
-				{
-					_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
-
-					CBullet::BULLETDESC BulletDesc;
-					BulletDesc.eCollisionGroup = PLAYER;
-					BulletDesc.fDeadTime = 5.f;
-					BulletDesc.eBulletType = CSionSkills::BOOST;
-					BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook*2.f;
-					BulletDesc.pOwner = m_pOwner;
-					BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
-
-					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-						return nullptr;
-
-					m_bBullet = true;
-
-					break;
-				}	
-			}
-			
 		}
 
 		_vector vecTranslation;
@@ -125,7 +138,7 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
-
+	
 	m_pOwner->Check_Navigation();
 
 	return nullptr;
@@ -133,6 +146,12 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 
 CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 {
+	if (m_bIsStateEvent)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+	}
+
 	for (auto& iter : m_pEffects)
 	{
 		if (iter != nullptr && iter->Get_PreDead())
@@ -147,7 +166,6 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 
 void CAI_BoostAttack::Enter()
 {
-	//m_eStateId = STATE_ID::STATE_DEAD;
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
@@ -162,30 +180,24 @@ void CAI_BoostAttack::Enter()
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_Boost.dat"), mWorldMatrix);
 	}
-	//m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)
 	{
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	else
-		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
 	pCamera->Set_Target(m_pOwner);
-
 }
 
 void CAI_BoostAttack::Exit()
 {
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
-
-
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)
