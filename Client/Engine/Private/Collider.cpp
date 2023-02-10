@@ -127,7 +127,7 @@ HRESULT CCollider::Render()
 
 	m_pBatch->Begin();
 
-	m_pContext->IASetInputLayout(m_pInputLayout);
+ 	m_pContext->IASetInputLayout(m_pInputLayout);
 
 	m_pEffect->SetWorld(XMMatrixIdentity());	
 

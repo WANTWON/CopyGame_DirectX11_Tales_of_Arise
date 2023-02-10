@@ -307,7 +307,7 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 
 _int CBerserker::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-	if (fDamage <= 0 || m_bDead)
+	if (fDamage <= 0 || m_bDead || m_bTakeDamage)
 		return 0;
 	
 	m_iBeDamaged_Cnt++;

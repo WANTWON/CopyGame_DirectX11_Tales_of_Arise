@@ -18,12 +18,27 @@ public:
 	virtual void Exit() override;
 
 private:
+	void Reset_Skill();
+
+private:
 	_matrix m_StartMatrix;
 
 	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
 
-	_bool m_bEffectSlashSpawned = false;
+	/* Effects */
+	/* E */
+	_bool m_bHienzinFirstEffect = false;
+	_bool m_bHienzinSecondEffect = false;
+
+	/* R */
+	_bool m_bAkizameEffect = false;
+
+	/* F */
+	_bool m_bHousyutigakuzinFirstEffect = false;
+	_bool m_bHousyutigakuzinSecondEffect = false;
+
+	vector<CEffect*> m_HousyutigakuzinStart;
 };
 END
 END

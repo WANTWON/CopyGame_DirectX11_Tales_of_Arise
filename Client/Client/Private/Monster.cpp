@@ -385,7 +385,9 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (m_pTarget != nullptr)
 	{
 		if (dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() <= 100.f)
-			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 10.f);
+
+			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 3.f);
+
 	}
 	
 
