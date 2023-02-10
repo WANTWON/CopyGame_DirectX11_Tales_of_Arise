@@ -130,9 +130,11 @@ void CAI_BoostAttack::Enter()
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
+		CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->Set_BoostGuage(0);
 		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_STRIKE;
 		break;
 	case CPlayer::SION:
+		CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Set_BoostGuage(0);
 		m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
 
 		_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);

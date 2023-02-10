@@ -75,9 +75,9 @@ int CPlayer::Tick(_float fTimeDelta)
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(ALPHEN);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2))
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(SION);
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_8))
 	{
