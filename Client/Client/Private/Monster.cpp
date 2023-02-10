@@ -408,10 +408,10 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
 		return E_FAIL;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
-		return E_FAIL;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
-		return E_FAIL;
+	//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+	//	return E_FAIL;
+	//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+	//	return E_FAIL;
 	
 	
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
@@ -437,6 +437,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	CBattleManager::Get_Instance()->Set_LackonMonster(this);
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
+	m_bTakeDamage = true;
 
 	return _int(m_tStats.m_fCurrentHp);
 }

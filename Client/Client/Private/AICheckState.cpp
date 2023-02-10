@@ -95,7 +95,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 	m_fTimer += fTimeDelta;
 
 	
-	if (m_fTimer > 1.2f)
+	if (m_fTimer > 0.5f)
 	{
 		if (Get_Target_Distance() <= 3.f)
 		{
