@@ -45,6 +45,12 @@ HRESULT CUI_QuestStartScreen::Initialize(void * pArg)
 
 	m_iQuestindex = CUI_Manager::Get_Instance()->Get_QuestIndex();
 
+	if (!m_bQuestStart)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("QuestStart.wav"), SOUND_EFFECT, 1.0f);
+		m_bQuestStart = true;
+	}
+
 	return S_OK;
 }
 

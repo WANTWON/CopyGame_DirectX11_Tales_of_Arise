@@ -46,6 +46,12 @@ HRESULT CUI_QuestClear::Initialize(void * pArg)
 
 	m_iQuestindex = CUI_Manager::Get_Instance()->Get_QuestIndex();
 
+	if (!m_bQuestClear)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("QuestClear.wav"), SOUND_EFFECT, 1.0f);
+		m_bQuestClear = true;
+	}
+
 	return S_OK;
 }
 

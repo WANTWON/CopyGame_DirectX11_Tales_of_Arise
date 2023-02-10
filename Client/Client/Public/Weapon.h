@@ -35,6 +35,7 @@ public:
 	void Off_Collider(void) { m_isCollider = false; }
 	void Set_WeaponDesc(WEAPONDESC tWeaponDesc); 
 	void Collision_Immediate();
+	_bool Get_SoundStart() { m_bSoundStart; }
 
 public:
 	virtual HRESULT Initialize_Prototype();

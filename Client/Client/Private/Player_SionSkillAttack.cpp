@@ -536,11 +536,16 @@ void CPlayer_SionSkillAttack::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT); //얼음떨구기
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_E.wav"), SOUND_EFFECT, 0.6f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_E.wav"), SOUND_EFFECT, 0.5f);
 			break;
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK5:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); // 비가우수수
+			
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_R.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_R.wav"), SOUND_EFFECT, 0.5f);
 			break;
 		}
 	}
