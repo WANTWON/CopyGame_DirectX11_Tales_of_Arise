@@ -61,7 +61,7 @@ public: /* Getter &  Setter */
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
 	void Play_AISkill(PLAYERID ePlayer);
 
-  
+	void Plus_EXP(_uint exp);
 
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;

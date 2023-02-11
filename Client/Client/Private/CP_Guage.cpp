@@ -40,8 +40,8 @@ HRESULT CCP_Guage::Initialize(void * pArg)
 
 int CCP_Guage::Tick(_float fTimeDelta)
 {
-	m_fmaxcp = (_float)CUI_Manager::Get_Instance()->Get_MAXCP();
-	m_fcurrentcp = (_float)CUI_Manager::Get_Instance()->Get_CP();
+	m_fmaxcp = CUI_Manager::Get_Instance()->Get_MAXCP();
+	m_fcurrentcp = CUI_Manager::Get_Instance()->Get_CP();
 	/*m_fSize.x = 42.f;
 	m_fSize.y = 42.f;
 	m_fPosition.x = 1180.f;

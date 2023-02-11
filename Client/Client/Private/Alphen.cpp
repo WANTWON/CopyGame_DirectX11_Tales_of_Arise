@@ -46,6 +46,9 @@ HRESULT CAlphen::Initialize(void * pArg)
 	m_tInfo.fCurrentMp = 2.3f;
 	m_tInfo.iDamage = 100;
 	m_tInfo.fCurrentBoostGuage = 20.f;
+	m_tInfo.iLevel = 69;
+	m_tInfo.iCurrentExp = 43;
+	m_tInfo.iMaxExp = 100;
 
 	return S_OK;
 }

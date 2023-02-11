@@ -351,6 +351,23 @@ void CPlayer::Play_AISkill(PLAYERID ePlayer)
 
 }
 
+void CPlayer::Plus_EXP(_uint exp)
+{
+
+	m_tInfo.iCurrentExp += exp;
+	
+	if (m_tInfo.iCurrentExp >= m_tInfo.iMaxExp)
+	{
+		m_tInfo.iCurrentExp -= m_tInfo.iMaxExp;
+
+		++m_tInfo.iLevel;
+
+
+
+	}
+
+}
+
 void CPlayer::HandleInput()
 {
 	CPlayerState* pNewState = m_pPlayerState->HandleInput();

@@ -71,6 +71,7 @@
 #include "CriticalFont.h"
 #include "UI_Monster_HPbar.h"
 #include "UI_BossMonster_HPbar.h"
+#include "UI_BattleResult.h"
 //Monster
 #include "Ice_Wolf.h"
 #include "Berserker.h"
@@ -377,6 +378,10 @@ HRESULT CLoader::Loading_ForPrototype()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_BossMonsterHP"),
 		CUI_BossMonster_HPbar::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_BattleResult"),
+		CUI_BattleResult::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -1321,6 +1326,10 @@ HRESULT CLoader::Loading_ForUITexture()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Battlestart"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/battlestart/battlestart%d.dds"), 2))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Exp"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/expbar/expbar%d.dds"), 2))))
 		return E_FAIL;
 
 

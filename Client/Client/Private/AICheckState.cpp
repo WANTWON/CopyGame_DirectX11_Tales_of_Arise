@@ -292,7 +292,7 @@ CAIState * CAICheckState::RandomAttackChoose_Sion()
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
 	
 	}
-
+		return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 }
 
 CAIState * CAICheckState::RandomAttackChoose()
@@ -325,5 +325,6 @@ CAIState * CAICheckState::RandomAttackChoose()
 		return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
 
 	}
-
+	
+		return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
 }
