@@ -148,7 +148,7 @@ void CSion::Change_Level(LEVEL eLevel)
 
 		if (LEVEL_SNOWFIELD == eLevel)
 		{
-			pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L");
+			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 			if (nullptr == pSocket)
 			{
 				ERR_MSG(TEXT("Failed to Get BonePtr"));

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ #include "stdafx.h"
 #include "..\Public\UI_Questmsg.h"
 #include "GameInstance.h"
 

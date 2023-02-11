@@ -163,7 +163,7 @@ _bool CNonAnim_Instance::IsRenderShadow()
 _float CNonAnim_Instance::Check_CullingRadius()
 {
 
-	return 3.f;
+	return 5.f;
 }
 
 

@@ -73,28 +73,6 @@ CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta*2.f, m_pOwner->Get_Navigation());
 	}
 
-	
-
-	//m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-
-
-	/*if (!m_bIsAnimationFinished)
-	{
-		_vector vecTranslation;
-		_float fRotationRadian;
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-	}*/
-
-
-	
-	
-//	ChaseTarget(fTimeDelta);
-	//if(!m_bStopRunning)
-	//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
-
-	
-
 
 	m_pOwner->Check_Navigation();
 	return nullptr;
@@ -102,6 +80,21 @@ CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 
 CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 {
+	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+		return nullptr;
+
+	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+	{
+		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+	}
+	else
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
+
+	if (m_pTarget == nullptr)
+		return nullptr;
 
 	if (!m_bStopRunning)
 	{

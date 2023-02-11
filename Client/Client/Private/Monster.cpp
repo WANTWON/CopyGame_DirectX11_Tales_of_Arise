@@ -408,10 +408,10 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
 		return E_FAIL;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
-		return E_FAIL;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
-		return E_FAIL;
+	//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+	//	return E_FAIL;
+	//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+	//	return E_FAIL;
 	
 	
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
@@ -437,6 +437,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	CBattleManager::Get_Instance()->Set_LackonMonster(this);
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
+	m_bTakeDamage = true;
 
 	return _int(m_tStats.m_fCurrentHp);
 }
@@ -447,7 +448,7 @@ void CMonster::Collision_Object(_float fTimeDelta)
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
-	/*CBaseObj* pCollisionMonster = nullptr;
+	CBaseObj* pCollisionMonster = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionMonster))
 	{
 		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -457,8 +458,8 @@ void CMonster::Collision_Object(_float fTimeDelta)
 		else
 			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
 
-		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
-	}*/
+		m_pTransformCom->Go_PosDir(fTimeDelta*0.5f, vDirection, m_pNavigationCom);
+	}
 
 	/*CBaseObj* pPlayer = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionMonster))
