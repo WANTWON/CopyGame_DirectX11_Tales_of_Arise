@@ -250,7 +250,7 @@ _bool CMonster::Check_AmILastMoster()
 {
 	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
 
-	_uint iMonsterSize = pMonsterList->size();
+	_uint iMonsterSize = (_uint)pMonsterList->size();
 	_uint iCheckIsDead = 0;
 
 	for (auto& iter : *pMonsterList)
@@ -521,10 +521,10 @@ HRESULT CMonster::SetUp_ShaderResources()
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveLifespan", &m_fDissolveLifespan, sizeof(_float))))
 			return E_FAIL;
-		_float4 vDissolveColor = _float4(.85f, .9, 1.f, 1.f);
+		_float4 vDissolveColor = _float4(0.85f, 0.9f, 1.f, 1.f);
 		if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveColor", &vDissolveColor, sizeof(_float4))))
 			return E_FAIL;
-		_float4 vDissolveHighlight = _float4(.55f, .9, 1.f, 1.f);
+		_float4 vDissolveHighlight = _float4(0.55f, 0.9f, 1.f, 1.f);
 		if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveHighlight", &vDissolveHighlight, sizeof(_float4))))
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowUpTimer", &m_fGlowUpTimer, sizeof(_float))))

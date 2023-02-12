@@ -1,10 +1,11 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-
+matrix g_ViewMatrixInv, g_ProjMatrixInv;
 
 float g_fWinSizeX = 1280.f;
 float g_fWinSizeY = 720.f;
 
 texture2D g_BackBufferTexture;
+texture2D g_DepthTexture;
 
 /* Distortion */
 texture2D g_DistortionTexture;
@@ -19,6 +20,12 @@ float g_fGlowRadius = 1.f;
 const float Weight[17] = { 0.0561, 0.1353, 0.278, 0.4868, 0.6534, 0.7261, 0.8253, 0.9231, 1, 0.9231, 0.8253, 0.7261, 0.6534, 0.4868, 0.278, 0.1353, 0.0561 };
 const float WeightSum = 9.1682;
 const int WeightCount = 8;
+
+/* Fog */
+float3 g_vFogColor = float3(.2f, .2f, .2f);
+float g_fMinRange = 30.f;
+float g_fMaxRange = 50.f;
+float3 g_vPlayerPosition;
 
 sampler LinearSampler = sampler_state
 {
@@ -177,6 +184,38 @@ PS_OUT PS_VERTICAL_BLUR(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_FOG(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float4 vBackBufferTexture = g_BackBufferTexture.Sample(LinearSampler, In.vTexUV);
+	vector vDepthTexture = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
+
+	float fViewZ = vDepthTexture.y * 1000.f;
+
+	vector vWorldPos = (vector)0.f;
+	vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
+	vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
+	vWorldPos.z = vDepthTexture.r;
+	vWorldPos.w = 1.0f;
+
+	vWorldPos *= fViewZ;
+	vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+	float3 vPixelWorldPosition = vWorldPos.xyz;
+	float fDistance = length(g_vPlayerPosition - vPixelWorldPosition);
+	float fFogPower = saturate((fDistance - g_fMinRange) / (g_fMaxRange - g_fMinRange)); // 0 ~ 1
+
+	//float4 vLerpColor = lerp(vBackBufferTexture, float4(g_vFogColor, 1.0f), fFogPower);
+	Out.vColor = vBackBufferTexture;
+	Out.vColor.rgb += g_vFogColor * fFogPower;
+
+	//Out.vColor = vLerpColor;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default // 0
@@ -210,5 +249,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_VERTICAL_BLUR();
+	}
+	
+	pass Fog // 3 
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_FOG();
 	}
 }

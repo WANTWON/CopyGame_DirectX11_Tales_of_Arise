@@ -30,6 +30,7 @@ HRESULT CSionSkills::Initialize(void * pArg)
 	switch (m_BulletDesc.eBulletType)
 	{
 	case NORMALATTACK:
+		m_BulletDesc.vTargetPosition = XMVectorSetY(m_BulletDesc.vTargetPosition, XMVectorGetY(m_BulletDesc.vTargetPosition) + 3.f);
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
@@ -199,6 +200,9 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 	switch (m_BulletDesc.eBulletType)
 	{
 	case NORMALATTACK:
+		if (m_fTime >= m_BulletDesc.fDeadTime || XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) < 0.5f)
+			m_bDead = true;
+		break;
 	case TRESVENTOS:
 		break;
 	case BOOST:
@@ -248,12 +252,11 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 					return;
 			}
-			
+
 		}
 		break;
 	}
 
-	
 }
 
 void CSionSkills::Collision_Check()
@@ -564,7 +567,10 @@ void CSionSkills::Tick_NormalAttack(_float fTimeDelta)
 	if (m_bDeadEffect)
 		m_bDead = true;
 
-	m_pTransformCom->Go_PosTarget(fTimeDelta, m_BulletDesc.vTargetPosition);
+	_vector vDir = XMVector3Normalize(m_BulletDesc.vTargetPosition - m_BulletDesc.vInitPositon);
+
+	m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
+	m_pTransformCom->Go_PosDir(fTimeDelta, vDir);
 	//m_pTransformCom->Go_Straight(fTimeDelta);
 
 	for (auto& iter : m_pEffects)

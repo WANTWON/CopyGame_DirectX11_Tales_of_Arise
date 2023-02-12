@@ -483,7 +483,7 @@ HRESULT CRenderer::Render_AlphaBlend()
 
 HRESULT CRenderer::Render_Glow()
 {
-	/* If there are not Distortion Object return. */
+	/* If there are not Glow Object return. */
 	if (m_GameObjects[RENDER_GLOW].empty())
 		return S_OK;
 	else
@@ -543,7 +543,7 @@ HRESULT CRenderer::Render_PostProcessing()
 	if (!m_pTarget_Manager)
 		return E_FAIL;
 
-	/* Distortion (Post Processing) */
+	/* Distortion */
 	if (!m_GameObjects[RENDER_DISTORTION].empty())
 	{
 		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
@@ -576,7 +576,7 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_GameObjects[RENDER_DISTORTION].clear();
 	}
 
-	/* Glow (Post Processing) */
+	/* Glow */
 	if (!m_GameObjects[RENDER_GLOW].empty())
 	{
 		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
@@ -625,6 +625,19 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_pVIBuffer->Render();
 
 		m_GameObjects[RENDER_GLOW].clear();
+	}
+
+	/* Fog (Post Processing) */
+	if (m_bFog)
+	{
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(3);
+		m_pVIBuffer->Render();
 	}
 
 	return S_OK;

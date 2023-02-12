@@ -100,8 +100,8 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
 	{
 		g_fSoundVolume += 0.001f;
-		if (g_fSoundVolume >= 0.2f)
-			g_fSoundVolume = 0.2f;
+		if (g_fSoundVolume >= 0.15f)
+			g_fSoundVolume = 0.15f;
 	}
 	
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);

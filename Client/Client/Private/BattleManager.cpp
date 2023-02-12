@@ -32,7 +32,7 @@ CBaseObj * CBattleManager::Get_MinDistance_Monster(_vector vPosition)
 	_float fMinDistance = MAXDISTANCE;
 	for (auto& iter : *pMonsterList)
 	{
-		if (dynamic_cast<CMonster*>(iter)->Get_Dissolve() || dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0)
+		if (dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0 || iter == pLockOn)
 			continue;
 		
 		_float fDistance = XMVectorGetX(XMVector3Length(vPosition - dynamic_cast<CMonster*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
@@ -51,8 +51,17 @@ _bool CBattleManager::IsAllMonsterDead()
 	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
 	if (pMonsterList == nullptr || pMonsterList->size() <= 0)
 		return true;
+
+	for (auto& iter : *pMonsterList)
+	{
+		if (dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0)
+			continue;
+		else
+			return false;
+
+	}
 	
-	return false;
+	return true;
 }
 
 void CBattleManager::Update_LockOn()
