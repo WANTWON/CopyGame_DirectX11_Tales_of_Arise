@@ -51,7 +51,7 @@ public:
 	}
 	virtual void Exit() 
 	{ 
-		m_pOwner->Get_Model()->Reset();
+		//m_pOwner->Get_Model()->Reset();
 
 		if (0 != m_iSkillEvent)
 			m_iSkillEvent = 0;

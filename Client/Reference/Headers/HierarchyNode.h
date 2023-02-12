@@ -52,7 +52,7 @@ public:
 public:
 	HRESULT Initialize(BINBONE tBone, CHierarchyNode* pParent);
 	HRESULT Bin_Initialize(DATA_BINNODE* pNode); // 추가
-	void Invalidate_CombinedTransformationmatrix(const char* pBoneName, _bool isInterpolation);
+	void Invalidate_CombinedTransformationmatrix(const char* pBoneName);
 	void Set_FindParent(CHierarchyNode* pNode); // 추가
 
 private:
@@ -77,7 +77,7 @@ private:
 
 private:
 	/* 루트 본 이동 값 제거, 루트 본 이동, 회전 행렬 저장 함수 */
-	void Set_RootMotionMatrix(const char* pBoneName, _bool isInterpolation);
+	void Set_RootMotionMatrix(const char* pBoneName);
 
 public:
 	//static CHierarchyNode* Create(const aiNode* pNode, CHierarchyNode* pParent);

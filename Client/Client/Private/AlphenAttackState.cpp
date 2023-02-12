@@ -75,7 +75,7 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 		if (m_bIsFly)
 			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
 		else
-			return new CIdleState(m_pOwner);
+			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
 
 	return nullptr;
@@ -85,8 +85,6 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 {
 	if (GetKeyState(VK_LBUTTON) < 0)
 	{
-		m_pOwner->Get_Model()->Reset();
-
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
@@ -189,8 +187,6 @@ void CAlphenAttackState::Enter()
 	}
 	else
 	{
-		
-		
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:

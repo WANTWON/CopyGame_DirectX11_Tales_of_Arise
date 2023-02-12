@@ -1,5 +1,6 @@
 #include "..\Public\Animation.h"
 #include "Channel.h"
+#include "HierarchyNode.h"
 
 CAnimation::CAnimation()
 {
@@ -121,9 +122,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 		else
 		{
 			if (m_iTickPerSecondIndex >= 1)
-			{
 				m_fTickPerSecond = m_TickPerSeconds[m_iTickPerSecondIndex - 1];
-			}
 			else
 				m_fTickPerSecond = m_fOriTickPerSecond;
 		}
@@ -143,34 +142,41 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 			m_vecAnimEvent[i].isPlay = false;
 	}
 
-	if (m_fCurrentTime > m_fDuration)
+	if (m_fCurrentTime >= m_fDuration)
 	{
 		m_isFinished = true;
-		m_iTickPerSecondIndex = 0;
-		if (!isLoop)
+
+		if (isLoop)
 		{
-			for (auto& pChannel : m_Channels)
-			{
-				pChannel->Invalidate_TransformationMatrix(m_fCurrentTime, pBoneName);
-			}
-
-			Set_TimeReset();
-
-			return m_isFinished;
+			m_iTickPerSecondIndex = 0;
+			m_fCurrentTime = 0.f;
 		}
-		Set_TimeReset();
 	}
-	else
-		m_isFinished = false;
 
 
 	for (auto& pChannel : m_Channels)
 	{
+		if (m_isFinished && isLoop)
+		{
+			pChannel->Reset();
+			pChannel->Reset_Linear();
+		}
+
 		pChannel->Invalidate_TransformationMatrix(m_fCurrentTime, pBoneName);
+	
+		KEYFRAME ChannelKeyFrame = pChannel->Get_LinearKeyFrame();
+
+		_vector vScale = XMLoadFloat3(&ChannelKeyFrame.vScale);
+		_vector vRotation = XMLoadFloat4(&ChannelKeyFrame.vRotation);
+		_vector vPosition = XMLoadFloat3(&ChannelKeyFrame.vPosition);
+
+		_matrix	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
+
+		pChannel->Get_BoneNode()->Set_TransformationMatrix(TransformationMatrix);
 	}
 
-	if (true == m_isFinished && true == isLoop)
-		m_isFinished = false; //루프를 돌 때는 무조건 false로 반환하게 하려고
+	if (m_isFinished && isLoop)
+		m_isFinished = false;
 
 	return m_isFinished; //루프를 돌지 않고 애니메이션이 끝났을 때
 }
@@ -189,7 +195,7 @@ _bool CAnimation::Animation_Linear_Interpolation(_float fTimeDelta, CAnimation *
 			if (m_Channels[i]->Linear_Interpolation(NextAnimChannels[i]->Get_StartKeyFrame(), m_fLinear_CurrentTime, m_fTotal_Linear_Duration, pBoneName))
 			{
 				m_bLinearFinished = true;
-				//m_Channels[i]->Reset();
+				m_Channels[i]->Reset();
 			}
 		}
 
@@ -284,21 +290,23 @@ void CAnimation::Set_TimeReset()
 	for (auto& pChannel : m_Channels)
 		pChannel->Reset();
 	
-	m_fCurrentTime = 0.f;
+	//m_fCurrentTime = 0.f;
 }
 
 void CAnimation::Reset(void)
 {
 	for (auto& pChannel : m_Channels)
-	{
 		pChannel->Reset();
-	}
+
+	for (auto& pChannel : m_Channels)
+		pChannel->Reset_Linear();
 
 	for (auto& Event : m_vecAnimEvent)
 		Event.isPlay = false;
 
 	m_iTickPerSecondIndex = 0;
 	m_fCurrentTime = 0.f;
+	m_isFinished = false;
 }
 
 void CAnimation::Reset_ChannelKeyFrame(void)

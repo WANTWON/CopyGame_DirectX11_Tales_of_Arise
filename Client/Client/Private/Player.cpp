@@ -49,7 +49,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
 	/* Set State */
-	CPlayerState* pPlayerState = new Player::CIdleState(this);
+	CPlayerState* pPlayerState = new Player::CIdleState(this, CIdleState::IDLE_SIDE);
 	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
 
 	m_pPlayerManager = CPlayerManager::Get_Instance();
@@ -83,7 +83,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	{
 		CUI_Manager::Get_Instance()->MinusCP(10);
 		m_tInfo.fCurrentHp += 100.f;
-		CPlayerState* pState = new CIdleState(this);
+		CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
 		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 	}
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
@@ -472,7 +472,7 @@ void CPlayer::Change_Level(LEVEL eLevel)
 {
 	m_eLevel = eLevel;
 
-	CPlayerState* pNewState = new Player::CIdleState(this);
+	CPlayerState* pNewState = new Player::CIdleState(this, CIdleState::IDLE_SIDE);
 	if (pNewState)
 		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
 }

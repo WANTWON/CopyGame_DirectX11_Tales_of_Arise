@@ -61,7 +61,6 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime, const char* 
 {
 	/* 던져진 시간에 맞는 뼈의 상태를 만들거야.
 	만들면 모델이 가지고 있는 뼈에 던질꺼야. */
-
 	_vector			vScale, vRotation, vPosition;
 
 	KEYFRAME		LastKeyframe = m_KeyFrames.back();
@@ -72,13 +71,6 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime, const char* 
 		vRotation = XMLoadFloat4(&LastKeyframe.vRotation);
 		vPosition = XMLoadFloat3(&LastKeyframe.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
-
-		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
-		XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
-		XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
-		m_KeyFrame_Linear.fTime = fCurrentTime;
-
-		return;
 	}
 	else
 	{
@@ -110,19 +102,13 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime, const char* 
 		m_pBoneNode->Set_Translation(vPosition - m_vPrePos);
 		m_vPrePos = vPosition;
 		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	}
-	else
-		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 
 	/*Linear*/
 	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
 	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
+	XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	m_KeyFrame_Linear.fTime = fCurrentTime;
-
-	_matrix	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
-
-	m_pBoneNode->Set_TransformationMatrix(TransformationMatrix);
 }
 
 
@@ -162,10 +148,6 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 
 	if ((nullptr != pBoneName) && !strcmp(m_szName, pBoneName))
 		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-	
-	/*XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
-	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
-	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);*/
 
 	_matrix		TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 
@@ -174,45 +156,10 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	return false;
 }
 
-
 void CChannel::Set_KeyFrame(_int iIndex, KEYFRAME KeyFrame)
 {
 	m_KeyFrames[iIndex] = KeyFrame;
 }
-
-_bool CChannel::Compare_Name(const char * pName)
-{
-	if (!strcmp(m_szName, pName))
-		return true;
-	else
-		return false;
-}
-
-//void CChannel::Get_ChannelData(DATA_BINCHANNEL * pChannelData)
-//{
-//	memcpy(&pChannelData->szName, m_szName, sizeof(char)*MAX_PATH);
-//	pChannelData->iNumKeyFrames = m_iNumKeyframes;
-//
-//	pChannelData->pKeyFrames = new KEYFRAME[m_iNumKeyframes];
-//
-//	for (_uint i = 0; i < m_iNumKeyframes; ++i)
-//	{
-//		memcpy(&pChannelData->pKeyFrames[i], &m_KeyFrames[i], sizeof(KEYFRAME));
-//	}
-//}
-
-//CChannel * CChannel::Create( CModel* pModel, aiNodeAnim * pAIChannel)
-//{
-//	CChannel*	pInstance = new CChannel();
-//
-//	if (FAILED(pInstance->Initialize(pModel, pAIChannel)))
-//	{
-//		ERR_MSG(TEXT("Failed to Created : CChannel"));
-//		Safe_Release(pInstance);
-//	}
-//
-//	return pInstance;
-//}
 
 CChannel * CChannel::Create(HANDLE hFile, _ulong * pdwByte, CModel * pModel)
 {
