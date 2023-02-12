@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Camera_Dynamic.h"
+#include "Camera_Action.h"
 #include "Terrain.h"
 #include "Weapon.h"
 #include "Sky.h"
@@ -173,6 +174,10 @@ HRESULT CLoader::Loading_ForPrototype()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
+		return E_FAIL;
+	/*For.Prototype_Rinwell */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_CameraAction"),
+		CCamera_Action::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_Rinwell */

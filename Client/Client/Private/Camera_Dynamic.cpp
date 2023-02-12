@@ -37,6 +37,9 @@ HRESULT CCamera_Dynamic::Initialize(void* pArg)
 
 int CCamera_Dynamic::Tick(_float fTimeDelta)
 {
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_DYNAMIC)
+		return OBJ_NOEVENT;
+
 	__super::Tick(fTimeDelta);
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_F1))
@@ -89,6 +92,9 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 
 void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
 {
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_DYNAMIC)
+		return;
+
 	__super::Late_Tick(fTimeDelta);
 }
 

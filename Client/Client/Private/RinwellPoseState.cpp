@@ -45,7 +45,9 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 		switch (m_eStateId)
 		{
 		case Client::CRinwellState::STATE_AGGRO:
+		{
 			return new CMoveState(m_pOwner, STATETYPE_START, 0);
+		}	
 		case Client::CRinwellState::STATE_MOVE:
 			break;
 		case Client::CRinwellState::STATE_HP50DOWN:

@@ -437,6 +437,23 @@ HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_BATTLE, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
+	CCamera_Action::ACTIONCAMDESC				ActionCameraDesc;
+	ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+
+	ActionCameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+	ActionCameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+
+	ActionCameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	ActionCameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	ActionCameraDesc.CameraDesc.fNear = 0.1f;
+	ActionCameraDesc.CameraDesc.fFar = 1000.f;
+
+	CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+	CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_SNOWFIELD, pLayerTag, &CameraDesc)))
+		return E_FAIL;
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
