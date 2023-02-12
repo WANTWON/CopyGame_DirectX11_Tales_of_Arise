@@ -108,6 +108,11 @@ int CWeapon::Tick(_float fTimeDelta)
 			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 			pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 
+			if (!m_bSoundStart)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.2f);
+				m_bSoundStart = true;
+			}
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
 		else
@@ -146,11 +151,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 			if (pCollided)
 				pCollided->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
 
-			if (!m_bSoundStart)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.2f);
-				m_bSoundStart = true;
-			}
+		
 
 
 			//SkillSound 
