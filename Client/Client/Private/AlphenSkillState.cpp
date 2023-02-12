@@ -287,7 +287,7 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 		if (m_bIsFly)
 			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
 		else
-			return new CIdleState(m_pOwner);
+			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
 
 	return nullptr;

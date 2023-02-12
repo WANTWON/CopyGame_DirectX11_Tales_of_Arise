@@ -19,9 +19,10 @@
 
 using namespace Player;
 
-CIdleState::CIdleState(CPlayer* pPlayer)
+CIdleState::CIdleState(CPlayer* pPlayer, IDLETYPE eIdleType)
 {
 	m_pOwner = pPlayer;
+	m_eIdleType = eIdleType;
 	m_ePlayerID = m_pOwner->Get_PlayerID();
 }
 
@@ -118,8 +119,28 @@ CPlayerState * CIdleState::Tick(_float fTimeDelta)
 
 CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 {
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-		return new CHitState(m_pOwner);
+	if (LEVEL_BATTLE == m_pOwner->Get_Level())
+	{
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
+			return new CHitState(m_pOwner);
+	}
+
+	if (m_bIsAnimationFinished)
+	{
+		switch (m_eIdleType)
+		{
+		case Client::Player::CIdleState::IDLE_MAIN:
+			Exit();
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_TO_IDLE_SIDE);
+			m_eIdleType = IDLE_MAIN_TO_SIDE;
+			break;
+		case Client::Player::CIdleState::IDLE_MAIN_TO_SIDE:
+			Exit();
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_SIDE);
+			m_eIdleType = IDLE_SIDE;
+			break;
+		}
+	}
 
 	return nullptr;
 }
@@ -136,7 +157,17 @@ void CIdleState::Enter()
 		if (LEVEL_BATTLE == m_pOwner->Get_Level())
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_IDLE);
 		else
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE);
+		{
+			switch (m_eIdleType)
+			{
+			case Client::Player::CIdleState::IDLE_MAIN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE);
+				break;
+			case Client::Player::CIdleState::IDLE_SIDE:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_SIDE);
+				break;
+			}
+		}
 		break;
 	case CPlayer::SION:
 		if (LEVEL_BATTLE == m_pOwner->Get_Level())

@@ -35,7 +35,7 @@ CPlayerState * CCollectState::Tick(_float fTimeDelta)
 					if (nullptr != m_pObject)
 						m_pObject->Set_Interact();
 					else
-						return new CIdleState(m_pOwner);
+						return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 				}
 			}
 		}
@@ -47,7 +47,7 @@ CPlayerState * CCollectState::Tick(_float fTimeDelta)
 CPlayerState * CCollectState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
-		return new CIdleState(m_pOwner);
+		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	
 	return nullptr;
 }

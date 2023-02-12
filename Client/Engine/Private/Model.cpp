@@ -4,7 +4,7 @@
 #include "Shader.h"
 #include "HierarchyNode.h"
 #include "Animation.h"
-#include <regex> 
+#include "Channel.h"
 #include "MeshContainer_Instance.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -192,32 +192,6 @@ HRESULT CModel::Instance_Initialize_Prototype(TYPE eModelType, const char * pMod
 	return S_OK;
 }
 
-//HRESULT CModel::Bin_Initialize_Prototype(DATA_BINSCENE * pScene, TYPE eType, const char * pModelFilePath, _fmatrix PivotMatrix)
-//{
-//	m_bIsBin = true;
-//
-//	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
-//	m_eModelType = eType;
-//
-//	m_pBin_AIScene = pScene;
-//
-//	if (nullptr == m_pBin_AIScene)
-//		return E_FAIL;
-//
-//	/* ���� �����ϴ� �޽õ��� �����. */
-//	if (FAILED(Bin_Ready_MeshContainers(PivotMatrix)))
-//		return E_FAIL;
-//
-//
-//	if (FAILED(Bin_Ready_Materials(pModelFilePath)))
-//		return E_FAIL;
-//
-//	/*if (FAILED(Bin_Ready_Animations()))
-//	return E_FAIL;*/
-//
-//	return S_OK;
-//}
-
 HRESULT CModel::Initialize(void * pArg)
 {
 	if (TYPE_ANIM == m_eModelType)
@@ -278,39 +252,6 @@ HRESULT CModel::Initialize(void * pArg)
 	return S_OK;
 }
 
-//HRESULT CModel::Bin_Initialize(void * pArg)
-//{
-//	Bin_Ready_HierarchyNodes();
-//
-//	for (int i = 0; i < m_pBin_AIScene->iNodeCount; ++i)
-//	{
-//		for (int j = 0; j < m_pBin_AIScene->iNodeCount; ++j)
-//		{
-//			if (nullptr != m_Bones[i]->Get_Parent())
-//				break;
-//
-//			m_Bones[i]->Set_FindParent(m_Bones[j]);
-//		}
-//	}
-//
-//	int iBin = 1;
-//	if (TYPE_ANIM == m_eModelType)
-//	{
-//		_uint		iNumMeshes = 0;
-//
-//		for (auto& pMeshContainer : m_Meshes)
-//		{
-//			if (nullptr != pMeshContainer)
-//				pMeshContainer->Bin_SetUp_Bones(this, &m_pBin_AIScene->pBinMesh[iNumMeshes++]);
-//		}
-//	}
-//
-//	if (FAILED(Bin_Ready_Animations(this)))
-//		return E_FAIL;
-//
-//	return S_OK;
-//}
-
 HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _uint iMeshIndex, aiTextureType eType, _uint TextureNum)
 {
 	if (iMeshIndex >= m_iNumMeshes)
@@ -334,40 +275,90 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 
 _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
 {
+	_bool isAnimLoop = false;
+
 	if (m_bInterupted)
 	{
-		m_bLinearFinished = m_Animations[m_iPreAnimIndex]->Animation_Linear_Interpolation(fTimeDelta, m_Animations[m_iCurrentAnimIndex], pBoneName);
-	
-		if (m_bLinearFinished == true)
+		_bool isLinearEnd = false;
+
+		m_fLinearCurrentTime += fTimeDelta;
+
+		vector<CChannel*> PreChannels = m_Animations[m_iPreAnimIndex]->Get_Channels();
+		vector<CChannel*> CurChannels = m_Animations[m_iCurrentAnimIndex]->Get_Channels();
+
+		for (_int i = 0; i < PreChannels.size(); ++i)
 		{
-			m_Animations[m_iPreAnimIndex]->Set_TimeReset();
+			_float fPreLinearTime = PreChannels[i]->Get_LinearKeyFrame().fTime;
+			_float fCurLinearTime = CurChannels[i]->Get_LinearKeyFrame().fTime;
 
-			//m_iPreAnimIndex = m_iCurrentAnimIndex;
+			PreChannels[i]->Invalidate_TransformationMatrix(fPreLinearTime + fTimeDelta, pBoneName);
+			CurChannels[i]->Invalidate_TransformationMatrix(fCurLinearTime + fTimeDelta, pBoneName);
 
-			m_Animations[m_iPreAnimIndex]->Reset_ChannelKeyFrame();
+			_vector vScale, vRotation, vPosition;
+
+			if (m_fLinearCurrentTime >= 0.1f)
+			{
+				KEYFRAME CurLinearKeyFrame = CurChannels[i]->Get_LinearKeyFrame();
+
+				vScale = XMLoadFloat3(&CurLinearKeyFrame.vScale);
+				vRotation = XMLoadFloat4(&CurLinearKeyFrame.vRotation);
+				vPosition = XMLoadFloat3(&CurLinearKeyFrame.vPosition);
+				vPosition = XMVectorSetW(vPosition, 1.f);
+
+				isLinearEnd = true;
+			}
+			else
+			{
+				_vector vSourScale, vSourRotation, vSourPosition;
+				_vector vDestScale, vDestRotation, vDestPosition;
+
+				KEYFRAME PreLinearKeyFrame = PreChannels[i]->Get_LinearKeyFrame();
+				KEYFRAME CurLinearKeyFrame = CurChannels[i]->Get_LinearKeyFrame();
+
+				vSourScale = XMLoadFloat3(&PreLinearKeyFrame.vScale);
+				vSourRotation = XMLoadFloat4(&PreLinearKeyFrame.vRotation);
+				vSourPosition = XMLoadFloat3(&PreLinearKeyFrame.vPosition);
+
+				vDestScale = XMLoadFloat3(&CurLinearKeyFrame.vScale);
+				vDestRotation = XMLoadFloat4(&CurLinearKeyFrame.vRotation);
+				vDestPosition = XMLoadFloat3(&CurLinearKeyFrame.vPosition);
+
+				_float fRatio = m_fLinearCurrentTime / 0.1f;
+
+				vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
+				vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
+				vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
+				vPosition = XMVectorSetW(vPosition, 1.f);
+			}
+
+			_matrix	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
+
+			PreChannels[i]->Get_BoneNode()->Set_TransformationMatrix(TransformationMatrix);
+		}
+
+		if (isLinearEnd)
+		{
+			m_Animations[m_iPreAnimIndex]->Reset();
+			//m_Animations[m_iPreAnimIndex]->Reset_ChannelKeyFrame();
+			
+			m_Animations[m_iCurrentAnimIndex]->Set_CurrentTime(m_fLinearCurrentTime);
+
+			m_fLinearCurrentTime = 0.f;
 
 			m_bInterupted = false;
 		}
 	}
 	else
 	{
-		if (m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(fTimeDelta, isLoop, pBoneName))
-		{
-			for (auto& pBoneNode : m_Bones)
-			{
-				pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName, m_bInterupted);
-			}
-			return true;
-		}
+		isAnimLoop = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(fTimeDelta, isLoop, pBoneName);
+		if (isAnimLoop)
+			m_Animations[m_iCurrentAnimIndex]->Reset();
 	}
 
 	for (auto& pBoneNode : m_Bones)
-	{
 		pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName, m_bInterupted);
-	}
 
-	
-	return false;
+	return isAnimLoop;
 }
 
 HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
