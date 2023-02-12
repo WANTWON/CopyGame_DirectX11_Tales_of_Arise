@@ -145,13 +145,17 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 	if (m_fCurrentTime >= m_fDuration)
 	{
 		m_isFinished = true;
-		m_iTickPerSecondIndex = 0;
-		m_fCurrentTime = 0.f;
+
+		if (isLoop)
+		{
+			m_iTickPerSecondIndex = 0;
+			m_fCurrentTime = 0.f;
+		}
 	}
 
 	for (auto& pChannel : m_Channels)
 	{
-		if (m_isFinished)
+		if (m_isFinished && isLoop)
 		{
 			pChannel->Reset();
 			pChannel->Reset_Linear();

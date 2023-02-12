@@ -130,12 +130,10 @@ CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 		switch (m_eIdleType)
 		{
 		case Client::Player::CIdleState::IDLE_MAIN:
-			Exit();
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_TO_IDLE_SIDE);
 			m_eIdleType = IDLE_MAIN_TO_SIDE;
 			break;
 		case Client::Player::CIdleState::IDLE_MAIN_TO_SIDE:
-			Exit();
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_SIDE);
 			m_eIdleType = IDLE_SIDE;
 			break;

@@ -102,18 +102,13 @@ void CChannel::Invalidate_TransformationMatrix(_float fCurrentTime, const char* 
 		m_pBoneNode->Set_Translation(vPosition - m_vPrePos);
 		m_vPrePos = vPosition;
 		vPosition = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	}
-	else
-		XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 
 	/*Linear*/
 	XMStoreFloat4(&m_KeyFrame_Linear.vRotation, vRotation);
 	XMStoreFloat3(&m_KeyFrame_Linear.vScale, vScale);
+	XMStoreFloat3(&m_KeyFrame_Linear.vPosition, vPosition);
 	m_KeyFrame_Linear.fTime = fCurrentTime;
-	/*_matrix	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
-
-	m_pBoneNode->Set_TransformationMatrix(TransformationMatrix);*/
 }
 
 

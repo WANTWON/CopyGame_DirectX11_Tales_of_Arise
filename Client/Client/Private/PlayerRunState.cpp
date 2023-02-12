@@ -41,35 +41,35 @@ CPlayerState * CRunState::HandleInput()
 				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_E);
 			if (pGameInstance->Key_Down(DIK_R))
 				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_R);
-			if(pGameInstance->Key_Down(DIK_F))
+			if (pGameInstance->Key_Down(DIK_F))
 				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_F);
 		case CPlayer::SION:
 		case CPlayer::RINWELL:
 			//for Sion State//
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
-				break;
+				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
+			break;
 		}
-	
+
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 		{
 			switch (m_ePlayerID)
 			{
 			case CPlayer::SION:
-		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
-			return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK4);
-		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
-			return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK5);
+				if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK4);
+				else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK5);
 				else if (pGameInstance->Key_Down(DIK_E))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E);
 				else if (pGameInstance->Key_Down(DIK_R))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 				else if (pGameInstance->Key_Down(DIK_F))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
-				
+
 				break;
-			}	
+			}
 		}
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_BATTLE);
@@ -101,7 +101,7 @@ CPlayerState * CRunState::HandleInput()
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_RUN);
 	}
-	
+
 	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		m_eDirection = DIR_STRAIGHT_LEFT;
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
@@ -129,8 +129,8 @@ CPlayerState * CRunState::HandleInput()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
 			else if (CPlayer::SION == m_pOwner->Get_PlayerID())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
-		}	
-		
+		}
+
 		m_bIsDash = true;
 
 		if (!CBattleManager::Get_Instance()->Get_IsBattleMode())
@@ -163,7 +163,7 @@ CPlayerState * CRunState::HandleInput()
 
 CPlayerState * CRunState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), nullptr);
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	Move(fTimeDelta);
 
@@ -267,7 +267,7 @@ void CRunState::Move(_float fTimeDelta)
 		vCameraLook = XMVector3TransformNormal(vCameraLook, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-45.f)));
 		break;
 	case DIR_STRAIGHT_RIGHT:
-		vCameraLook = XMVector3TransformNormal(vCameraLook, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f))); 
+		vCameraLook = XMVector3TransformNormal(vCameraLook, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f)));
 		break;
 	case DIR_BACKWARD_LEFT:
 		vCameraLook = XMVector3TransformNormal(vCameraLook, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-135.f)));
@@ -295,7 +295,7 @@ void CRunState::Move(_float fTimeDelta)
 	NewCameraMatrix.r[0] = XMVector3Cross(NewCameraMatrix.r[1], NewCameraMatrix.r[2]);
 
 	CTransform* pPlayerTransform = m_pOwner->Get_Transform();
-	
+
 	_vector vPlayerScale, vPlayerRotQuat, vPlayerPos;
 	_vector vNewCamearScale, vNewCameraRot, vNewCameraPos;
 

@@ -83,9 +83,18 @@ void CModel::Get_MoveTransformationMatrix(const char * pBoneName, _vector * pTra
 
 void CModel::Set_CurrentAnimIndex(_uint iAnimIndex)
 {
-	m_iPreAnimIndex = m_iCurrentAnimIndex;
-	m_iCurrentAnimIndex = iAnimIndex;
-	m_bInterupted = true;
+	if (!m_bInterupted)
+	{
+		m_iPreAnimIndex = m_iCurrentAnimIndex;
+		m_iCurrentAnimIndex = iAnimIndex;
+		m_bInterupted = true;
+	}
+	else
+	{
+		m_Animations[m_iPreAnimIndex]->Reset();
+		m_iPreAnimIndex = m_iCurrentAnimIndex;
+		m_iCurrentAnimIndex = iAnimIndex;
+	}
 }
 
 _bool CModel::Is_Keyframe(char * pChannelName, _uint iKeyframe)
@@ -339,7 +348,6 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 		if (isLinearEnd)
 		{
 			m_Animations[m_iPreAnimIndex]->Reset();
-			//m_Animations[m_iPreAnimIndex]->Reset_ChannelKeyFrame();
 			
 			m_Animations[m_iCurrentAnimIndex]->Set_CurrentTime(m_fLinearCurrentTime);
 
@@ -349,14 +357,10 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 		}
 	}
 	else
-	{
 		isAnimLoop = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(fTimeDelta, isLoop, pBoneName);
-		if (isAnimLoop)
-			m_Animations[m_iCurrentAnimIndex]->Reset();
-	}
 
 	for (auto& pBoneNode : m_Bones)
-		pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName, m_bInterupted);
+		pBoneNode->Invalidate_CombinedTransformationmatrix(pBoneName);
 
 	return isAnimLoop;
 }

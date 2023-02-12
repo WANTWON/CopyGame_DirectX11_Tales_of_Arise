@@ -85,8 +85,6 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 {
 	if (GetKeyState(VK_LBUTTON) < 0)
 	{
-		m_pOwner->Get_Model()->Reset();
-
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
@@ -189,8 +187,6 @@ void CAlphenAttackState::Enter()
 	}
 	else
 	{
-		
-		
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
