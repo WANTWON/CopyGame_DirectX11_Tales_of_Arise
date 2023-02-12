@@ -17,6 +17,10 @@ public:
 	virtual HRESULT Initialize(void* pArg)override;
 
 public:
+	class CShader* Get_ShaderPostProcessing() { return m_pShaderPostProcessing; }
+	void Set_Fog(_bool bFog) { m_bFog = bFog; }
+
+public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
 	HRESULT Render_GameObjects();
 
@@ -73,6 +77,8 @@ private:
 
 	class CTexture* m_pDistortionNoiseTexture = nullptr;
 	_float m_fDistortionTimer = 0.f;
+
+	_bool m_bFog = false;
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
