@@ -90,12 +90,12 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 							if (m_pTarget != nullptr)
-								BulletDesc.vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+								BulletDesc.vTargetPosition = (m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 							else if (m_pTarget == nullptr)
-							BulletDesc.vTargetPosition = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-							(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+							BulletDesc.vTargetPosition =CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 							BulletDesc.pOwner = m_pOwner;
 							BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+							BulletDesc.fDeadTime = 5.f;
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;

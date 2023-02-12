@@ -19,8 +19,7 @@ CAI_ChaseState::CAI_ChaseState(CPlayer* pPlayer, STATE_ID eStateType, _uint play
 	m_eCurrentPlayerID = playerid;
 	if (nullptr == pTarget)
 	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		m_pTarget = CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 	}
 	m_pTarget = pTarget;
 }
@@ -30,24 +29,22 @@ CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;
 
-	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
-	{
-		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-	}
+	CBattleManager* pBattleManager = GET_INSTANCE(CBattleManager);
+	CBaseObj* pLockOn = pBattleManager->Get_LackonMonster();
+	if (nullptr != pLockOn)
+		m_pTarget = pLockOn;
 	else
-	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-	}
+		m_pTarget = pBattleManager->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+
+	RELEASE_INSTANCE(CBattleManager);
 
 	if (m_pTarget == nullptr)
 		return nullptr;
-	//m_fTimer += fTimeDelta;
+
 	
 	if (m_bStopRunning)
 	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-
 
 		if (!m_bIsAnimationFinished)
 		{
@@ -61,12 +58,10 @@ CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 	}
 	else
 	{
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 		if (nullptr == m_pTarget)
 		{
-		
-			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			m_pTarget = CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 		}
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -75,6 +70,8 @@ CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 
 
 	m_pOwner->Check_Navigation();
+
+
 	return nullptr;
 }
 

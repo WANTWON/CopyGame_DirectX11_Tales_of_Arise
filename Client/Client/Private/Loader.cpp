@@ -384,21 +384,6 @@ HRESULT CLoader::Loading_ForPrototype()
 		CUI_BattleResult::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-
-	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_QUESTSTART"),
-		CUI_QuestStart::Create(m_pDevice, m_pContext))))
-		return E_FAIL;*/
-
-	
-
-
-
-
-	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront"),
-		CUI_Portraitfront::Create(m_pDevice, m_pContext))))
-		return E_FAIL;*/
-
-
 	/*For.Prototype_GameObject_Sky */                                
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pDevice, m_pContext))))
