@@ -40,7 +40,8 @@ HRESULT CCP_Guage::Initialize(void * pArg)
 
 int CCP_Guage::Tick(_float fTimeDelta)
 {
-
+	m_fmaxcp = CUI_Manager::Get_Instance()->Get_MAXCP();
+	m_fcurrentcp = CUI_Manager::Get_Instance()->Get_CP();
 	/*m_fSize.x = 42.f;
 	m_fSize.y = 42.f;
 	m_fPosition.x = 1180.f;
@@ -49,11 +50,11 @@ int CCP_Guage::Tick(_float fTimeDelta)
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));*/
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
+	/*if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
 		--m_fcurrentcp;
 
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_J))
-		++m_fcurrentcp;
+		++m_fcurrentcp;*/
 
 	return OBJ_NOEVENT;
 }

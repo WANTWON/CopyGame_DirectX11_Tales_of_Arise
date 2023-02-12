@@ -108,7 +108,7 @@ private:
 	_bool m_bNameYScalemove = false;
 	_bool m_bStastYScalemove = false;
 	_bool m_bLightreverse = false;
-	
+	_bool m_bQuestStart = false;
 
 	_float m_fTimer = 0.f;
 

@@ -35,9 +35,16 @@ CAIState * CDeadState::Tick(_float fTimeDelta)
 
 CAIState * CDeadState::LateTick(_float fTimeDelta)
 {
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_V))
-		return new CAICheckState(m_pOwner, m_eStateId);
+	if (CUI_Manager::Get_Instance()->Get_CP() >= 0)
+	{
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_V))
+		{
+			CUI_Manager::Get_Instance()->MinusCP(10);
+			return new CAICheckState(m_pOwner, m_eStateId);
+		}
+	}
+	
+		
 
 
 	return nullptr;

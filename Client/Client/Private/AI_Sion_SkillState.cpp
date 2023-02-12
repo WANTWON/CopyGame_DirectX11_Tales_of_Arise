@@ -9,6 +9,7 @@
 #include "UI_Skillmessage.h"
 #include "Bullet.h"
 #include "SionSkills.h"
+#include "AIAttackNormalState.h"
 
 
 
@@ -67,9 +68,8 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 		_float fRotationRadian;
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-
-		
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Check_Navigation();
 	}
 	else
 		m_pOwner->Check_Navigation();
@@ -173,7 +173,31 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 
 				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				{
+					if ((m_fEventStart != pEvent.fStartTime) && !m_bBulletMake)
+					{
+						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+						if (pTarget == nullptr)
+							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.fVelocity = 1.f;
+						BulletDesc.eBulletType = CSionSkills::EXPLOSION;
+						BulletDesc.iDamage = 300 + rand() % 99;
+
+						BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						BulletDesc.vInitPositon = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						BulletDesc.vInitPositon.m128_f32[1] = 8.f;
+						BulletDesc.pOwner = m_pOwner;
+
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						m_bBulletMake = true;
+						m_fEventStart = pEvent.fStartTime;
+					}
+				}
 
 					break;
 
@@ -187,7 +211,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
-					if ((m_fEventStart != pEvent.fStartTime))
+					if ((m_fEventStart != pEvent.fStartTime) && !m_bBulletMake)
 					{
 						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 						if (pTarget == nullptr)
@@ -207,7 +231,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 
-
+						m_bBulletMake = true;
 						m_fEventStart = pEvent.fStartTime;
 
 					}
@@ -360,12 +384,12 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 		/*++m_iCurrentAnimIndex;
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);*/
 		m_bIsStateEvent = false;
-
+		m_bBulletMake = false;
 		m_fEventStart = -1.f;
 
 		if (Get_Target_Distance() >= 5.f)
 		{
-			switch (rand() % 5)
+			switch (rand() % 10)
 			{
 			case 0: //Client::CAIState::STATE_NORMAL_ATTACK1:
 				__super::Exit();
@@ -438,6 +462,9 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
 				break;
 
+			default:
+				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+
 
 			}
 		}
@@ -451,7 +478,7 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 void CAI_Sion_SkillState::Enter()
 {
 	//__super::Enter();
-
+	m_bBulletMake = false;
 	//m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_0;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)

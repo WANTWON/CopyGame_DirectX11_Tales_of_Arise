@@ -30,6 +30,7 @@ HRESULT CSionSkills::Initialize(void * pArg)
 	switch (m_BulletDesc.eBulletType)
 	{
 	case NORMALATTACK:
+		m_BulletDesc.vTargetPosition = XMVectorSetY(m_BulletDesc.vTargetPosition, XMVectorGetY(m_BulletDesc.vTargetPosition) + 3.f);
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
@@ -107,6 +108,20 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		mWorldMatrix.r[3] = vLocation;
 		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("AquaImpact.dat"), mWorldMatrix);
 		break;
+
+	case EXPLOSION:
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		
+		mWorldMatrix.r[3] = vLocation + vOffset;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ExplosionBall.dat"), mWorldMatrix);
+		break;
+	case EXPLOSIONGROUND:
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ExplosionGround.dat"), mWorldMatrix);
+		break;
 		
 	}
 
@@ -148,11 +163,12 @@ int CSionSkills::Tick(_float fTimeDelta)
 	case AQUA_LUINA:
 		Tick_AQUA_LUINA(fTimeDelta);
 		break;
-
 	case AQUA_LUINA_BULLET:
 		Tick_AQUA_LUINA_BULLET(fTimeDelta);
 		break;
-
+	case EXPLOSION:
+		Tick_Explosion(fTimeDelta);
+		break;
 
 
 	}
@@ -184,12 +200,16 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 	switch (m_BulletDesc.eBulletType)
 	{
 	case NORMALATTACK:
+		if (m_fTime >= m_BulletDesc.fDeadTime || XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) < 0.5f)
+			m_bDead = true;
+		break;
 	case TRESVENTOS:
 		break;
 	case BOOST:
 	case MAGNA_RAY:
 	case GRAVITY:
 	case AQUA_LUINA_BULLET:
+	case EXPLOSIONGROUND:
 		if (m_fTime >= m_BulletDesc.fDeadTime)
 			m_bDead = true;
 		break;
@@ -205,9 +225,38 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 			m_pSmoke = CEffect::PlayEffectAtLocation(TEXT("GlacioDeadSmoke.dat"), mWorldMatrix);
 		}
 		break;
+	case EXPLOSION:
+		if (XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - m_BulletDesc.vTargetPosition)) < 1.f)
+		{
+			m_fTime += fTimeDelta;
+
+			if (m_fTime > 3.f)
+				m_bDead = true;
+		}
+		else
+		{
+			m_fExplosionGroundTimer += fTimeDelta;
+
+			if (m_fExplosionGroundTimer > 5.f)
+			{
+				m_fExplosionGroundTimer = 0.f;
+				CBullet::BULLETDESC BulletDesc;
+				_vector vLocation = { 0.f,0.f,0.f,0.f };
+				BulletDesc.iDamage = rand() % 150 + 1;
+				BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+				BulletDesc.eCollisionGroup = PLAYER;
+				BulletDesc.pOwner = m_BulletDesc.pOwner;
+				BulletDesc.eBulletType = CSionSkills::EXPLOSIONGROUND;
+				BulletDesc.fDeadTime = 0.5f;
+
+				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+					return;
+			}
+
+		}
+		break;
 	}
 
-	
 }
 
 void CSionSkills::Collision_Check()
@@ -230,6 +279,7 @@ void CSionSkills::Collision_Check()
 		break;
 	case BOOST:
 	case GLACIA:
+	case EXPLOSION:
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
 		break;
@@ -323,7 +373,7 @@ void CSionSkills::Dead_Effect()
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GlacioDead.dat"), mWorldMatrix);
-		
+
 		CBullet::BULLETDESC BulletDesc;
 		BulletDesc.eCollisionGroup = PLAYER;
 		BulletDesc.fVelocity = 1.f;
@@ -335,7 +385,7 @@ void CSionSkills::Dead_Effect()
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
-		
+
 		break;
 	}
 	case BOOST:
@@ -350,7 +400,7 @@ void CSionSkills::Dead_Effect()
 					CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
 					if (pParticleSystem != nullptr)
 						pParticleSystem->Set_Stop(true);
-				}	
+				}
 			}
 		}
 		m_pEffects.clear();
@@ -358,6 +408,7 @@ void CSionSkills::Dead_Effect()
 		break;
 	}
 	case GRAVITY:
+	{
 		if (!m_pEffects.empty())
 		{
 			for (auto& iter : m_pEffects)
@@ -386,7 +437,14 @@ void CSionSkills::Dead_Effect()
 			return;
 
 		break;
-
+	}
+	case EXPLOSION:
+		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+		_vector vRight = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE::STATE_RIGHT));
+		_matrix mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ExplosionBurst.dat"), mWorldMatrix);
+		break;
 	}
 }
 
@@ -484,7 +542,12 @@ HRESULT CSionSkills::Ready_Components(void * pArg)
 			return E_FAIL;
 		break;
 
-
+	case EXPLOSION:
+		ColliderDesc.vScale = _float3(20.f, 20.f, 20.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+			return E_FAIL;
+		break;
 
 
 	}
@@ -504,7 +567,10 @@ void CSionSkills::Tick_NormalAttack(_float fTimeDelta)
 	if (m_bDeadEffect)
 		m_bDead = true;
 
-	m_pTransformCom->Go_PosTarget(fTimeDelta, m_BulletDesc.vTargetPosition);
+	_vector vDir = XMVector3Normalize(m_BulletDesc.vTargetPosition - m_BulletDesc.vInitPositon);
+
+	m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
+	m_pTransformCom->Go_PosDir(fTimeDelta, vDir);
 	//m_pTransformCom->Go_Straight(fTimeDelta);
 
 	for (auto& iter : m_pEffects)
@@ -634,15 +700,15 @@ void CSionSkills::Tick_TresVentos(_float fTimeDelta)
 
 void CSionSkills::Tick_AQUA_LUINA(_float fTimeDelta)
 {
+	if (m_bDead == true)
+		return;
+
 	m_fAquaTImer += fTimeDelta;
 
-	if (bulletcount <= 0)
-		m_bDead = true;
-	
-	if (m_fAquaTImer > 0.2f)
-	{
-		float offsetx = (_float)(rand() % 100)*(rand()%2 == 0 ? 1.f : -1.f) / 10;
-		float offsetz = (_float)(rand() % 100)*(rand() % 2 == 0 ? 1.f : -1.f) / 10;
+	//if (m_fAquaTImer > 0.1f)
+	//{
+		float offsetx = (_float)(rand() % 70)*(rand()%2 == 0 ? 1.f : -1.f) / 10;
+		float offsetz = (_float)(rand() % 70)*(rand() % 2 == 0 ? 1.f : -1.f) / 10;
 		CBullet::BULLETDESC BulletDesc;
 		_vector vLocation = { 0.f,0.f,0.f,0.f };
 		BulletDesc.iDamage = rand() % 150 + 1;
@@ -656,9 +722,12 @@ void CSionSkills::Tick_AQUA_LUINA(_float fTimeDelta)
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
-		bulletcount -= 3;
+		bulletcount -= 1;
 		m_fAquaTImer = 0.f;
-	}
+
+		if (bulletcount <= 0)
+			m_bDead = true;
+	//}
 	
 }
 
@@ -670,6 +739,27 @@ void CSionSkills::Tick_AQUA_LUINA_BULLET(_float fTimeDelta)
 
 	m_fTime += fTimeDelta;
 
+}
+
+void CSionSkills::Tick_Explosion(_float fTimeDelta)
+{
+	if (m_bDeadEffect)
+		m_bDead = true;
+
+	m_pTransformCom->Go_PosTarget(fTimeDelta, m_BulletDesc.vTargetPosition);
+
+
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+
+		if (iter != nullptr)
+		{
+			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+		}
+
+	}
 }
 
 CSionSkills * CSionSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

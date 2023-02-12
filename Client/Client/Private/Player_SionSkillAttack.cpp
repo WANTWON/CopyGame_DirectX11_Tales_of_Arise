@@ -232,7 +232,29 @@ m_fTime += fTimeDelta;
 			case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
+					if ((m_fEventStart != pEvent.fStartTime) && !m_bBulletMade)
+					{
+						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+						if (pTarget == nullptr)
+							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.fVelocity = 1.f;
+						BulletDesc.eBulletType = CSionSkills::EXPLOSION;
+						BulletDesc.iDamage = 300 + rand() % 99;
+						
+						BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						BulletDesc.vInitPositon = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						BulletDesc.vInitPositon.m128_f32[1] = 8.f;
+						BulletDesc.pOwner = m_pOwner;
+
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						m_bBulletMade = true;
+						m_fEventStart = pEvent.fStartTime;
+					}
 				}
 
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -277,12 +299,12 @@ m_fTime += fTimeDelta;
 						BulletDesc.fDeadTime = 5.f;
 
 
-						BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-						BulletDesc.vTargetPosition.m128_f32[2] += 3.f;
+						/*BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						BulletDesc.vTargetPosition.m128_f32[2] += 3.f;*/
 
 
 						BulletDesc.vInitPositon = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-						BulletDesc.vInitPositon.m128_f32[2] += 3.f;
+						/*BulletDesc.vInitPositon.m128_f32[2] += 3.f;*/
 
 						// +vOffset;
 						BulletDesc.vInitPositon.m128_f32[1] = 8.f;
@@ -303,8 +325,6 @@ m_fTime += fTimeDelta;
 							m_bBulletMade = true;
 						}
 
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-							return nullptr;
 
 						if (pTarget != nullptr)
 						{
@@ -326,9 +346,37 @@ m_fTime += fTimeDelta;
 
 						if (pTarget != nullptr)
 						{
+
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							BulletDesc.vTargetPosition.m128_f32[0] += 1.5f;
+							BulletDesc.vTargetPosition.m128_f32[2] += 3.f;
+						}
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						if (pTarget != nullptr)
+						{
+							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
+							BulletDesc.vTargetPosition.m128_f32[0] += 1.5f;
+						}
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						if (pTarget != nullptr)
+						{
 							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
 							BulletDesc.vTargetPosition.m128_f32[2] -= 6.f;
+						}
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						if (pTarget != nullptr)
+						{
+							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
+							BulletDesc.vTargetPosition.m128_f32[0] -= 1.5f;
 						}
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
@@ -362,7 +410,7 @@ m_fTime += fTimeDelta;
 				break;
 
 			case Client::CPlayerState::STATE_SKILL_ATTACK5:
-				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !m_bBulletMade)
 				{
 
 					if ((m_fEventStart != pEvent.fStartTime))
@@ -379,18 +427,15 @@ m_fTime += fTimeDelta;
 							BulletDesc.pOwner = m_pOwner;
 							
 						
-
-
-
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 
-
+						m_bBulletMade = true;
 						m_fEventStart = pEvent.fStartTime;
+
 
 					}
 				}
-
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 					if (GetKeyState(VK_LBUTTON) < 0)
@@ -477,7 +522,12 @@ void CPlayer_SionSkillAttack::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_TRESVENTOS);
+
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Fix.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Jump_E.wav"), SOUND_EFFECT, 0.5f);
+
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS);
+
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
@@ -502,6 +552,8 @@ void CPlayer_SionSkillAttack::Enter(void)
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayStart.dat"), mWorldMatrix);
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MAGNARAY);//마그나
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_EFFECT, 0.5f);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_MAGNARAY);
 			break;
 		}
@@ -516,9 +568,9 @@ void CPlayer_SionSkillAttack::Enter(void)
 
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Gravity_Force.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_R.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_R.wav"), SOUND_EFFECT, 0.5f);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GRAVITY);
-
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
@@ -529,11 +581,16 @@ void CPlayer_SionSkillAttack::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT); //얼음떨구기
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_E.wav"), SOUND_EFFECT, 0.6f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_E.wav"), SOUND_EFFECT, 0.5f);
 			break;
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK5:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); // 비가우수수
+			
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_R.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_R.wav"), SOUND_EFFECT, 0.5f);
 			break;
 		}
 	}
@@ -565,5 +622,6 @@ void CPlayer_SionSkillAttack::Enter(void)
 void CPlayer_SionSkillAttack::Exit(void)
 {
 	__super::Exit();
-	
+
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }

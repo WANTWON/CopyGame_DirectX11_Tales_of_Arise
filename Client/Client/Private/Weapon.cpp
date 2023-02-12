@@ -108,6 +108,11 @@ int CWeapon::Tick(_float fTimeDelta)
 			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 			pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 
+			if (!m_bSoundStart)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.2f);
+				m_bSoundStart = true;
+			}
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
 		else
@@ -122,12 +127,13 @@ int CWeapon::Tick(_float fTimeDelta)
 
 		RELEASE_INSTANCE(CCollision_Manager);
 	}
-
+	m_bSoundStart = false;
 	return OBJ_NOEVENT;
 }
 
 void CWeapon::Late_Tick(_float fTimeDelta)
 {
+
 	if (nullptr != m_pSPHERECom)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -140,26 +146,12 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 		CBaseObj* pCollisionTarget = nullptr;
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
+
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
 				pCollided->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
 
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeTest1.wav"), SOUND_EFFECT, 0.4f);
-
-			/*m_fHitTimeDeltaAcc += fTimeDelta;
-
-
-			_bool bSoundStart = false;
-			if (!bSoundStart)
-			{
-				if (m_fHitTimeDeltaAcc >= 0.042f)
-				{
-					CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-					m_fHitTimeDeltaAcc = 0.f;
-				}
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("HitSound2.wav"), SOUND_EFFECT, 0.4f);
-				bSoundStart = true;
-			}*/
+		
 
 
 			//SkillSound 
@@ -169,12 +161,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 				_bool bSoundStart = false;
 				if (!bSoundStart)
 				{
-					if (m_fTimeDeltaAcc > 0.04f)
-					{
-						CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-						m_fTimeDeltaAcc = 0.f;
-					}
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
 					bSoundStart = true;
 				}
 			}
@@ -195,21 +182,21 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 						CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 						m_fTimeDeltaAcc = 0.f;
 					}
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
 					bSoundStart = true;
 				}
 			}
 		}
 
 	}
-
+		
 
 	if (nullptr != m_pSPHERECom && !m_isCollider)
 	{
 		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
 		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSPHERECom);
-
+		m_bSoundStart = false;
 		m_pSPHERECom = nullptr;
 		pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 		RELEASE_INSTANCE(CCollision_Manager);

@@ -482,8 +482,8 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 //		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag)))
 //			return E_FAIL;
 	
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;*/
 
 
 	//}
@@ -562,6 +562,9 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_INTERECTMSG"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
+
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;*/
 
 	
 	
@@ -781,7 +784,7 @@ HRESULT CLevel_SnowField::Ready_Layer_DecoObject(const _tchar * pLayerTag)
 	NONANIMDESC  ModelDesc;
 	_uint iNum = 0;
 
-	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/CliffRock.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/CliffRock2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 

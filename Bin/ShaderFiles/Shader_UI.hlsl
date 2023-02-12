@@ -1433,10 +1433,62 @@ PS_OUT PS_UI_GLOW(PS_IN In)
 		Out.vColor *=  min(cos(g_fGlowTimer * 4) + 1.2f, 1.f);
 	}
 
+	Out.vColor.a *= g_fAlpha;
 	if (Out.vColor.a == 0)
 		discard;
 
+	
+
 	return Out;
+}
+
+PS_OUT PS_EXPBAR(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+	float4 DiffuseTexture = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//float duration = 500.f;
+
+	float progress = g_fCurrentHp / g_fMaxHp;
+
+	float innerRadius = 0.12f;
+	float outerRadius = 0.18f;
+
+	float middleRadius = 0.5f * (innerRadius + outerRadius);
+	float halfWidth = 0.5f * (outerRadius - innerRadius);
+
+	float2 pos = In.vTexUV.xy - 0.5f * g_WinXY.xy;
+	//float2 pos = In.vTexUV.xy;
+	float radius = length(pos.xy);
+
+	float fr = halfWidth - abs(radius - middleRadius) + 1.f;
+	/*if(fr < 0.0)
+	discard;*/
+	fr = saturate(fr);
+
+	float angle = degrees(atan2(pos.x, pos.y) + 0.f) + 180.f;
+	float fa = radians(angle - progress * 360.f) * radius + 1.f;
+
+	fa = saturate(fa);
+	if (fa != 1.f)
+		discard;
+	vector color = vector(0.f, 0.f, 0.f, 1.f);
+	vector col = lerp(color, DiffuseTexture, fa);
+	//   col.a *= fr;
+
+	//col = col * col2;//DiffuseTexture;
+
+	Out.vColor = col;
+
+	/*if (Out.vColor.a < 0.2f)
+		discard;
+
+	Out.vColor.a += 0.6f;*/
+
+	return Out;
+
+
+
+	//	return Out;
 }
 
 technique11 DefaultTechnique
@@ -1969,7 +2021,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_EFFECTSCREEN();                //47
 	}
-
+	
 	pass UI_GLOW // 48
 	{
 		SetRasterizerState(RS_Default);
@@ -1979,5 +2031,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_UI_GLOW();
+	}
+
+	pass EXPBAR // 49
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_EXPBAR();
 	}
 }

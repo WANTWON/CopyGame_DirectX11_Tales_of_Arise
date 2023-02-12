@@ -343,6 +343,9 @@
     <Filter Include="02.GameObjects\07.Bullet\AlphenSkills">
       <UniqueIdentifier>{7aa964f0-2600-4445-b958-d323d28ae920}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\22.UI_BattleResult">
+      <UniqueIdentifier>{570c6aa6-a3aa-4dc6-b5eb-92168bda269a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -837,7 +840,6 @@
     <ClInclude Include="..\Public\UI_Portraitfront.h">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI_MENU_Quest.h" />
     <ClInclude Include="..\Public\AIAttackNormalState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
@@ -924,6 +926,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\AI_Sion_SkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MENU_Quest.h">
+      <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_BattleResult.h">
+      <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1380,7 +1388,6 @@
     <ClCompile Include="..\Private\UI_Portraitfront.cpp">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UI_MENU_Quest.cpp" />
     <ClCompile Include="..\Private\AIAttackNormalState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
@@ -1476,6 +1483,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI_Sion_SkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MENU_Quest.cpp">
+      <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_BattleResult.cpp">
+      <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

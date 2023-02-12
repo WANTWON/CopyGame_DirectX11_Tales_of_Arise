@@ -83,15 +83,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		pGameInstance->Update_TimeDelta(TEXT("Timer_Default"));
 		fTimeAcc += pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));
 
-		//if (fTimeAcc >= 1.0f / 60.0f)
-		//{
+		if (fTimeAcc >= 1.0f / 60.0f)
+		{
 			fTimeAcc = 0.f;
 
 			pGameInstance->Update_TimeDelta(TEXT("Timer_60"));
 
 			pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
 			pMainApp->Render();
-		//}
+		}
 
 		
 	}
@@ -216,18 +216,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
-    switch (message)
-    {
-   /* case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
-*/
-   /* case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-        {
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
-        }
-        break;*/
-    }
+  
     return (INT_PTR)FALSE;
 }

@@ -100,8 +100,8 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
 	{
 		g_fSoundVolume += 0.001f;
-		if (g_fSoundVolume >= 0.2f)
-			g_fSoundVolume = 0.2f;
+		if (g_fSoundVolume >= 0.15f)
+			g_fSoundVolume = 0.15f;
 	}
 	
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
@@ -159,9 +159,23 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
+		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
+			if (!m_bZumIn)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
+				m_bZumIn = true;
+			}
+		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
+		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
+			if (!m_bZumIn)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
+				m_bZumIn = true;
+			}
+		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))

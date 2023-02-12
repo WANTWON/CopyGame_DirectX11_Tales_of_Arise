@@ -49,7 +49,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 	m_eMonsterID = ICE_WOLF;
 
-	m_tStats.m_fMaxHp = 10000;
+	m_tStats.m_fMaxHp = 15000;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -265,7 +265,7 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 
 _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-	if (fDamage <= 0 || m_bDead || m_bDissolve || m_tStats.m_fCurrentHp <= 0.f)
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_tStats.m_fCurrentHp <= 0.f || m_bTakeDamage)
 		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);

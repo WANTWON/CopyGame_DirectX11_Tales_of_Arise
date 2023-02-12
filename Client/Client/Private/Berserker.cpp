@@ -57,7 +57,7 @@ HRESULT CBerserker::Initialize(void * pArg)
 	}
 
 	
-	m_tStats.m_fMaxHp = 2500;
+	m_tStats.m_fMaxHp = 30000;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 	m_eMonsterID = BERSERKER;
@@ -307,7 +307,7 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 
 _int CBerserker::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-	if (fDamage <= 0 || m_bDead)
+	if (fDamage <= 0 || m_bDead || m_bTakeDamage)
 		return 0;
 	
 	m_iBeDamaged_Cnt++;

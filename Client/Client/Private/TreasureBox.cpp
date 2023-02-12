@@ -75,7 +75,7 @@ int CTreasureBox::Tick(_float fTimeDelta)
 			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_OMEGAELIXIR, ITEMTYPE_POTION, true, true);
 			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_HWANGJELLY, ITEMTYPE_JELLY, true, false);
 			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY, true, false);
-			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
+			//CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
 		}
 		if (m_fTimeDeltaAcc > 0.02f)
 			CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);

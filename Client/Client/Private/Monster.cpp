@@ -250,7 +250,7 @@ _bool CMonster::Check_AmILastMoster()
 {
 	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
 
-	_uint iMonsterSize = pMonsterList->size();
+	_uint iMonsterSize = (_uint)pMonsterList->size();
 	_uint iCheckIsDead = 0;
 
 	for (auto& iter : *pMonsterList)
@@ -385,7 +385,9 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (m_pTarget != nullptr)
 	{
 		if (dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() <= 100.f)
+
 			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 3.f);
+
 	}
 	
 
@@ -406,10 +408,10 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
 		return E_FAIL;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
-		return E_FAIL;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
-		return E_FAIL;
+	//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+	//	return E_FAIL;
+	//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
+	//	return E_FAIL;
 	
 	
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
@@ -435,6 +437,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	CBattleManager::Get_Instance()->Set_LackonMonster(this);
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
+	m_bTakeDamage = true;
 
 	return _int(m_tStats.m_fCurrentHp);
 }
@@ -445,7 +448,7 @@ void CMonster::Collision_Object(_float fTimeDelta)
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
-	/*CBaseObj* pCollisionMonster = nullptr;
+	CBaseObj* pCollisionMonster = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionMonster))
 	{
 		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -455,8 +458,8 @@ void CMonster::Collision_Object(_float fTimeDelta)
 		else
 			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
 
-		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
-	}*/
+		m_pTransformCom->Go_PosDir(fTimeDelta*0.5f, vDirection, m_pNavigationCom);
+	}
 
 	/*CBaseObj* pPlayer = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionMonster))
@@ -518,10 +521,10 @@ HRESULT CMonster::SetUp_ShaderResources()
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveLifespan", &m_fDissolveLifespan, sizeof(_float))))
 			return E_FAIL;
-		_float4 vDissolveColor = _float4(.85f, .9, 1.f, 1.f);
+		_float4 vDissolveColor = _float4(0.85f, 0.9f, 1.f, 1.f);
 		if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveColor", &vDissolveColor, sizeof(_float4))))
 			return E_FAIL;
-		_float4 vDissolveHighlight = _float4(.55f, .9, 1.f, 1.f);
+		_float4 vDissolveHighlight = _float4(0.55f, 0.9f, 1.f, 1.f);
 		if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveHighlight", &vDissolveHighlight, sizeof(_float4))))
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowUpTimer", &m_fGlowUpTimer, sizeof(_float))))
