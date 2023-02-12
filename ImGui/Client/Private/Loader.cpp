@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 
 #include "Camera_Dynamic.h"
+#include "Camera_Action.h"
 #include "BackGround.h"
 #include "Terrain.h"
 #include "NonAnim.h"
@@ -142,6 +143,11 @@ HRESULT CLoader::Loading_ForClient()
 		CCamera_Dynamic::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/*For.Prototype_GameObject_Camera_Action */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Action"),
+		CCamera_Action::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/*For.Prototype_GameObject_EffectTexture*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_EffectTexture"),
 		CEffectTexture::Create(m_pDevice, m_pContext))))
@@ -161,16 +167,16 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
-	if (FAILED(Loading_ForMaptoolModel()))
-		return E_FAIL;
+	//if (FAILED(Loading_ForMaptoolModel()))
+	//	return E_FAIL;
 
 	////For Effect
-	/*if (FAILED(Loading_ForEffect()))
+	if (FAILED(Loading_ForEffect()))
 		return E_FAIL;
-
+	 
 	if (FAILED(Loading_ForEffectTexture()))
 		return E_FAIL;
-*/
+
 
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));

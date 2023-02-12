@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Camera_Dynamic.h"
 #include "GameInstance.h"
+#include "Camera_Manager.h"
 
 CCamera_Dynamic::CCamera_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
@@ -33,6 +34,9 @@ HRESULT CCamera_Dynamic::Initialize(void* pArg)
 
 int CCamera_Dynamic::Tick(_float fTimeDelta)
 {
+	if (CCamera_Manager::Get_Instance()->Get_CamMode() != CCamera_Manager::DYNAMIC)
+		return OBJ_NOEVENT;
+
 	__super::Tick(fTimeDelta);
 
 	/* Debug Camera*/
@@ -67,6 +71,8 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 
 void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
 {
+	if (CCamera_Manager::Get_Instance()->Get_CamMode() != CCamera_Manager::DYNAMIC)
+		return ;
 	__super::Late_Tick(fTimeDelta);
 
 }

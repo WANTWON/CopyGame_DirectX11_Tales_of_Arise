@@ -24,7 +24,7 @@ public:
 		_bool m_bGlow = false;
 		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
 
-		_int m_iMaxParticles = 1000.f;
+		_int m_iMaxParticles = 1000;
 		_float m_fParticlesLifetime = 1.f;
 		_float m_fParticleStartAfter = 0.f;
 		_float m_fParticlesPerSecond = 1.f;

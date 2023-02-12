@@ -27,7 +27,7 @@ class CImgui_Manager final : public CBase
 public:
 	enum PICKING_TYPE { PICKING_TERRAIN_TRANSFORM,
 		PICKING_TERRAIN_SHAPE, PICKING_TERRAIN_BRUSH,
-	PICKING_MODEL,};
+	PICKING_MODEL, PICKING_CAMERA};
 
 	enum COLOR { RED, GREEN, BLUE};
 
@@ -43,7 +43,6 @@ public:
 
 public:
 	PICKING_TYPE Get_PickingType() {return (PICKING_TYPE)m_PickingType;}
-	_bool Get_CameraPicking() { return m_bMakeCamera; }
 	_bool Get_UpdateTerrain() { return m_bUpdateTerrain; }
 	void Set_UpdateTerrain(_bool Type) { m_bUpdateTerrain = Type; }
 	_int Get_BrushType() { return m_eBrushType; }
@@ -81,9 +80,14 @@ public:
 	_bool Get_ShowOnlyNavi() { return m_bShowOnlyNavi; }
 
 	/* For Camera Tool */
+	void Read_CamerasData();
+	void Set_ActionCamera(CCamera_Action* pCamera) { if (m_pCurrentCamera != nullptr) Safe_Release(m_pCurrentCamera); m_pCurrentCamera = pCamera; }
 	void Set_Camera();
-	void Save_Camera();
-	void Load_Camera();
+	_bool Save_Camera();
+	_bool Load_Camera();
+	CCamera_Action::TOOLDESC Get_CameraToolDesc() { return m_CameraToolDesc; }
+	void Set_CameraToolDesc(CCamera_Action::TOOLDESC Desc) { memcpy(&m_CameraToolDesc, &Desc, sizeof(CCamera_Action::TOOLDESC)); }
+	_bool Get_TargetMode() { return m_bTargetMode; }
 
 	/* For Light Tool */
 	void Set_Light();
@@ -134,7 +138,7 @@ private:
 
 	/* For Object */
 	CModelManager*							m_pModel_Manager = nullptr;
-	NONANIMDESC					m_InitDesc;
+	NONANIMDESC								m_InitDesc;
 	_tchar									m_pFilePath[MAX_PATH] = L"../../../Bin/Resources/Meshes/";
 	vector<string>							m_stLayerTags;
 	vector<const _tchar*>					m_TempLayerTags;
@@ -170,9 +174,15 @@ private:
 
 	/*For Camera*/
 	CCamera_Manager*						m_pCamera_Manager = nullptr;
-	_bool									m_bMakeCamera = false;
+	vector<string>							m_SavedCameras;
+	string									m_sCurrentCamera;
+	_int									m_iSavedCamera; /* Selected Saved Camera. */
 	_int									m_iCameraIndex = 0;
-	_float3									m_fCamPosition = _float3(0.f, 0.f, 0.f);
+	_float									m_fPlayTime = 0.f;
+	CCamera_Action::TOOLDESC				m_CameraToolDesc;
+	class CCamera_Action*					m_pCurrentCamera = nullptr;
+	_uint									m_iCamCurvedIndex = 0;
+	_bool									m_bTargetMode = false;
 
 	/*For Light */
 	_bool									m_bMakeLight = false;

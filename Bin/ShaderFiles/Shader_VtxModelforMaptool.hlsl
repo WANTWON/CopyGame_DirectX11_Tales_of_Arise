@@ -7,9 +7,10 @@ texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
 texture2D g_SpecularTexture;
 
-float4 g_vColor;
+float4 g_vColor = float4(1.f,1.f,0.f,1.f);
 float g_fAlpha = 1.f;
 float g_fTimer = 0.f;
+
 
 /* Diffuse */
 bool g_bDiffuse;
@@ -153,7 +154,7 @@ PS_OUT PS_SYMBOL(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	Out.vDiffuse = float4(1.f,0.f,1.f,1.f);
+	Out.vDiffuse = g_vColor;
 
 	return Out;
 }

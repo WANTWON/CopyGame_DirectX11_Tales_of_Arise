@@ -32,6 +32,7 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
+	CAMERADESC Get_CameraDesc() { return m_CameraDesc; }
 
 protected:
 	static _tchar*					m_pTransformTag;

@@ -163,6 +163,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 	else
 		m_isFinished = false;
 
+
 	for (auto& pChannel : m_Channels)
 	{
 		pChannel->Invalidate_TransformationMatrix(m_fCurrentTime, pBoneName);
