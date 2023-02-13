@@ -116,17 +116,17 @@ int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 	if (m_bArrived)
 	{
 		//UpdateShaderID();
+		if (m_fCurrentBoost >= 100)
+			m_eShaderID = 0;
+		else
+			m_eShaderID = UI_POTRAIT_DARK;
+
 		if (m_bfirst1 && CUI_Manager::Get_Instance()->Get_Arrived_Count() == 4)
 		{
-			if (m_fCurrentBoost >= 100)
-				m_bSmash = true;
-			else
-				m_bSmash = false;
 			
-			if (!m_bSmash)
-				m_eShaderID = UI_POTRAIT_DARK;
 			
-			else if (m_bSmash)m_eShaderID = 0;
+				
+
 			m_bfirst1 = false;
 			m_fAlpha = 0;
 		}

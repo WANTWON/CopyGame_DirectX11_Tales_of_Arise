@@ -43,6 +43,9 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 	/*if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 		return OBJ_NOEVENT;*/
 
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+
 	if (CBattleManager::Get_Instance()->Get_BossMonster() == nullptr)
 		return OBJ_DEAD;
 	else
@@ -162,6 +165,9 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 
 void CUI_BossMonster_HPbar::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
+
 	m_fHPbarvalue[3] = m_fmaxhp * 0.75f;
 	m_fHPbarvalue[2] = m_fmaxhp * 0.5f;
 	m_fHPbarvalue[1] = m_fmaxhp * 0.33f;

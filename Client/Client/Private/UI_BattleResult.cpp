@@ -2237,6 +2237,8 @@ HRESULT CUI_BattleResult::Render_Exp()
 	m_pShaderCom->Begin(UI_BRIGHT);
 
 	m_pVIBufferCom->Render();
+
+	return S_OK;
 }
 
 

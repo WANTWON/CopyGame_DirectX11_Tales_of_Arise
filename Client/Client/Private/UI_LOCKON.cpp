@@ -143,8 +143,15 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 	if (m_fcurrentmp >= 4.f)
 		m_bStrikeon = true;
-	//	else
-	//		m_bRenderDiamond = true;
+	else
+	{
+		m_bRenderDiamond = true;
+		m_bStrikefonton = false;
+		m_bStrikeon = false;
+		m_fAlphaDiamond = 1.f;
+		m_fDiamondShooter = 1.f;
+	}
+	
 
 	if (m_bStrikeon)        // f
 	{
@@ -368,7 +375,9 @@ HRESULT CUI_LOCKON::Render()
 		m_fSize.x = 128.f * m_bStrikeFakeScaler;
 		m_fSize.y = 32.f * m_bStrikeFakeScaler;
 		//	m_fPosition.x -= 3.f;
-
+		_float fake = m_fAlphaNomal *0.5f;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &fake, sizeof(_float))))
+			return E_FAIL;
 		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))

@@ -40,6 +40,7 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 
 	m_bfadein = true;
 	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY, false, false);
+	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LIFEBOTTLE, ITEMTYPE_POTION, false, false);
 	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_POTATO, ITEMTYPE_VEGITABLE, false, false);
 	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_DULLSWORD, ITEMTYPE_SWORD, false, false);
 	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_PYOGOMUSHROOM, ITEMTYPE_ARMOR, false, false);

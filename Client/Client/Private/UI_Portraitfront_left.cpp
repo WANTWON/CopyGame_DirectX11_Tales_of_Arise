@@ -93,6 +93,10 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 
 	if (m_bArrived)
 	{
+		if (m_fCurrentBoost >= 100)
+			m_eShaderID = 0;
+		else
+			m_eShaderID = UI_POTRAIT_DARK;
 		if (m_bfirst1 && CUI_Manager::Get_Instance()->Get_Arrived_Count() == 4)
 		{
 			if (m_fCurrentBoost >= 100)
