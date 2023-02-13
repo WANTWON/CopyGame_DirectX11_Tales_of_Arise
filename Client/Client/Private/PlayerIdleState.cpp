@@ -179,6 +179,8 @@ void CIdleState::Enter()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::IDLE);
 		break;
 	}
+
+	m_pOwner->Set_Manarecover(true);
 }
 
 void CIdleState::Exit()

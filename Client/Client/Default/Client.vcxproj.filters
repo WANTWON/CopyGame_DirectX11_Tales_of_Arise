@@ -343,6 +343,9 @@
     <Filter Include="01.Levels\00.Loading\ActorCreater">
       <UniqueIdentifier>{bc605024-7388-4a57-849b-4070f0b98949}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\23.UI_LevelUp">
+      <UniqueIdentifier>{bc40de5b-8754-46b1-a65e-ef8cbc3ba8a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -933,6 +936,9 @@
     <ClInclude Include="..\Public\Camera_Action.h">
       <Filter>03.Camera\01.Action_Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelUp.h">
+      <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1492,6 +1498,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Action.cpp">
       <Filter>03.Camera\01.Action_Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelUp.cpp">
+      <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -71,37 +71,47 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 			for (_uint j = 0; j < KeyFrames.size(); ++j)
 			{
 				KEYFRAME KeyFrame;
-				ReadFile(hAddFile, &KeyFrame, sizeof(KEYFRAME), pdwAddByte, nullptr);
+				if (ReadFile(hAddFile, &KeyFrame, sizeof(KEYFRAME), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
+					return S_OK;
 
-				m_Channels[i]->Set_KeyFrames(j, KeyFrame);
+				m_Channels[i]->Set_KeyFrames(j, KeyFrame); 
 			}
 		}
 
 		_int TickPerSecondsSize, ChangeTimesSize, EventsSize;
 
-		ReadFile(hAddFile, &TickPerSecondsSize, sizeof(_uint), pdwAddByte, nullptr);
+		if (ReadFile(hAddFile, &TickPerSecondsSize, sizeof(_uint), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
+			return S_OK;
+
 		for (_int i = 0; i < TickPerSecondsSize; ++i)
 		{
 			_float fTickPerSecond;
-			ReadFile(hAddFile, &fTickPerSecond, sizeof(_float), pdwAddByte, nullptr);
+			if (ReadFile(hAddFile, &fTickPerSecond, sizeof(_float), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
+				return S_OK;
 
 			m_TickPerSeconds.push_back(fTickPerSecond);
 		}
 
-		ReadFile(hAddFile, &ChangeTimesSize, sizeof(_uint), pdwAddByte, nullptr);
+		if (ReadFile(hAddFile, &ChangeTimesSize, sizeof(_uint), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
+			return S_OK;
+
 		for (_int i = 0; i < ChangeTimesSize; ++i)
 		{
 			_float fChangeTime;
-			ReadFile(hAddFile, &fChangeTime, sizeof(_float), pdwAddByte, nullptr);
+			if (ReadFile(hAddFile, &fChangeTime, sizeof(_float), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
+				return S_OK;
 
 			m_ChangeTickTimes.push_back(fChangeTime);
 		}
 
-		ReadFile(hAddFile, &EventsSize, sizeof(_uint), pdwAddByte, nullptr);
+		if (ReadFile(hAddFile, &EventsSize, sizeof(_uint), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
+			return S_OK;
+
 		for (_int i = 0; i < EventsSize; ++i)
 		{
 			ANIMEVENT tEvent;
-			ReadFile(hAddFile, &tEvent, sizeof(ANIMEVENT), pdwAddByte, nullptr);
+			if (ReadFile(hAddFile, &tEvent, sizeof(ANIMEVENT), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
+				return S_OK;
 			/*LOADEVENT tLoadEvent;
 			ReadFile(hAddFile, &tLoadEvent, sizeof(LOADEVENT), pdwAddByte, nullptr);
 
@@ -113,7 +123,8 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 			ReadFile(hAddFile, &tEvent.fStartTime, sizeof(_float), pdwAddByte, nullptr);
 			ReadFile(hAddFile, &tEvent.fEndTime, sizeof(_float), pdwAddByte, nullptr);
 			ReadFile(hAddFile, &tEvent.eType, sizeof(EVENTTYPE), pdwAddByte, nullptr);
-			*///memcpy(&tEvent.szName, "", sizeof(char) * MAX_PATH);
+			*/
+			//memcpy(&tEvent.szName, "", sizeof(char) * MAX_PATH);
 
 			m_vecAnimEvent.push_back(tEvent);
 		}

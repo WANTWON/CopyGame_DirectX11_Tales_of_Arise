@@ -73,6 +73,7 @@
 #include "UI_Monster_HPbar.h"
 #include "UI_BossMonster_HPbar.h"
 #include "UI_BattleResult.h"
+#include "UI_LevelUp.h"
 //Monster
 #include "Ice_Wolf.h"
 #include "Berserker.h"
@@ -387,6 +388,10 @@ HRESULT CLoader::Loading_ForPrototype()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_BattleResult"),
 		CUI_BattleResult::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Levelup"),
+		CUI_LevelUp::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Sky */                                
@@ -1327,6 +1332,9 @@ HRESULT CLoader::Loading_ForUITexture()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/expbar/expbar%d.dds"), 2))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Battleresult"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/battleresult/battleresult%d.dds"), 5))))
+		return E_FAIL;
 
 	
 	

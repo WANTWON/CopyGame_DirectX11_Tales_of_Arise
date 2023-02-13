@@ -110,6 +110,7 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 	{
+		
 		CUI_Manager::Get_Instance()->ReSet_Arrived_Count();
 
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
