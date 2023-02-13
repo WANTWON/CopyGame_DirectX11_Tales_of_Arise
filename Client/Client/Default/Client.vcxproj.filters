@@ -346,6 +346,9 @@
     <Filter Include="02.GameObjects\04.UI\22.UI_BattleResult">
       <UniqueIdentifier>{570c6aa6-a3aa-4dc6-b5eb-92168bda269a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\23.ScreenDistortion">
+      <UniqueIdentifier>{8a0a984c-de3a-4d5d-8090-46a9bed0b83f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -933,6 +936,9 @@
     <ClInclude Include="..\Public\UI_BattleResult.h">
       <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ScreenDistortion.h">
+      <Filter>02.GameObjects\04.UI\23.ScreenDistortion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1489,6 +1495,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_BattleResult.cpp">
       <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ScreenDistortion.cpp">
+      <Filter>02.GameObjects\04.UI\23.ScreenDistortion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

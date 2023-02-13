@@ -135,17 +135,16 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
-		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
-		LEVEL eNextLevel = LEVEL_BATTLE;
-
 		CPlayerManager::Get_Instance()->Save_LastPosition();
 		m_pCollision_Manager->Clear_AllCollisionGroup();
-		pGameInstance->Set_DestinationLevel(eNextLevel);
 
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		LEVEL eNextLevel = LEVEL_BATTLE;
+		pGameInstance->Set_DestinationLevel(eNextLevel);
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
 			return;
+
 		RELEASE_INSTANCE(CGameInstance);
 	}
 }

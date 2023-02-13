@@ -94,6 +94,7 @@ void CEffectTexture::Late_Tick(_float fTimeDelta)
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		//m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_DISTORTION, this);
 
 		if (m_tTextureEffectDesc.m_bGlow)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
