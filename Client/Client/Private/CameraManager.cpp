@@ -66,6 +66,7 @@ HRESULT CCameraManager::Play_ActionCamera(_tchar * wcCameraDataName, _matrix mWo
 	CloseHandle(hFileCamera);
 
 	dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(true);
+	return S_OK;
 }
 
 
