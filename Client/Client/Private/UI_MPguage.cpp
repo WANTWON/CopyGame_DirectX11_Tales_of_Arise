@@ -40,7 +40,7 @@ HRESULT CMP_Guage::Initialize(void * pArg)
 	//m_vRight = _float4(0.5f, 0.f, 0.f, 0.f);
 	//m_vUp = _float4(0.f, 0.5f, 0.f, 0.f);
 	/*pVertices->vLook = _float4(0.f, 0.f, 0.5f, 0.f);*/
-
+	m_fNext = 15.f;
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -134,7 +134,7 @@ void CMP_Guage::Late_Tick(_float fTimeDelta)
 {
 
 	m_fcurrent_render_slot_mp = m_fcurrentmp - (_uint)m_fcurrentmp;
-
+	
 	__super::Late_Tick(fTimeDelta);
 
 
@@ -154,7 +154,7 @@ HRESULT CMP_Guage::Render()
 	
 	
 	m_eShaderID = UI_MP_GUAGE;
-	if(m_fcurrentmp > 1.f)
+	if(m_fcurrentmp >= 1.f)
 	m_eShaderID = UI_POTRAIT_ALLBLUE;
 
 	m_pShaderCom->Begin(12);
@@ -174,7 +174,7 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<1.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp > 2.f)
+	else if (m_fcurrentmp >= 2.f)
 		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	else
 		m_eShaderID = UI_MP_GUAGE;
@@ -195,7 +195,7 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<2.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp > 3.f)
+	else if (m_fcurrentmp >= 3.f)
 		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	else
 		m_eShaderID = UI_MP_GUAGE;
@@ -218,7 +218,7 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<3.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp > 4.f)
+	else if (m_fcurrentmp >= 4.f)
 		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	else
 		m_eShaderID = UI_MP_GUAGE;
@@ -240,7 +240,7 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<4.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp > 5.f)
+	else if (m_fcurrentmp >= 5.f)
 		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	else
 		m_eShaderID = UI_MP_GUAGE;
@@ -262,7 +262,7 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<5.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp > 6.f)
+	else if (m_fcurrentmp >= 6.f)
 		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	else
 		m_eShaderID = UI_MP_GUAGE;
@@ -283,7 +283,7 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<6.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp > 7.f)
+	else if (m_fcurrentmp >= 7.f)
 		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	else
 		m_eShaderID = UI_MP_GUAGE;
@@ -305,7 +305,7 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<7.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp > 8.f)
+	else if (m_fcurrentmp >= 8.f)
 		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	else
 		m_eShaderID = UI_MP_GUAGE;
@@ -327,7 +327,7 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<8.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp > 9.f)
+	else if (m_fcurrentmp >= 9.f)
 		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	else
 		m_eShaderID = UI_MP_GUAGE;
@@ -349,7 +349,7 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp< 9.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp > 10.f)
+	else if (m_fcurrentmp >= 10.f)
 		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	else
 		m_eShaderID = UI_MP_GUAGE;
