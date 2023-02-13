@@ -46,7 +46,6 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 	}
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-
 	for (auto& pEvent : pEvents)
 	{
 		if (pEvent.isPlay)
@@ -61,13 +60,11 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 				switch (m_eStateId)
 				{
 					case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+					case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
 						break;
 					case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
-						break;
-					case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
 						break;
 					case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
@@ -88,13 +85,15 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 				{
 					if (!m_bEffectSlashSpawned)
 					{
-						CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+						if (!wcscmp(wcEffectName, TEXT("Normal_Attack_2.dat")))
+							m_SlashEffect = CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+						else
+							CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
 
 						m_bEffectSlashSpawned = true;
 					}	
 				}
 			}
-			break;
 		}
 		else
 		{
@@ -108,6 +107,20 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 
 CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 {
+	for (auto& pEffect : m_SlashEffect)
+	{
+		if (pEffect)
+		{
+			if (pEffect->Get_PreDead())
+				pEffect = nullptr;
+			else
+			{
+				_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + XMVectorSet(0.f, 2.5f, 0.f, 0.f);
+				pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+			}
+		}
+	}
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (m_bIsAnimationFinished)
