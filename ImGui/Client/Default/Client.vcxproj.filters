@@ -91,6 +91,12 @@
     <Filter Include="02.GameObjects\05.Effect\Trail">
       <UniqueIdentifier>{b083422e-06f3-4d30-9579-6dfc2ac0448c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.Camera\Dynamic">
+      <UniqueIdentifier>{e6d0e78d-958f-4a30-b3cf-2d68c1c7bf94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Camera\Action">
+      <UniqueIdentifier>{983ceae7-83b5-44a8-bd9a-7d629cfa397a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -156,9 +162,6 @@
     <ClInclude Include="..\Public\Imgui_Manager.h">
       <Filter>100.IMGUI\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Camera_Dynamic.h">
-      <Filter>96.Camera</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObjects\01.Terrain</Filter>
     </ClInclude>
@@ -206,6 +209,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Trail.h">
       <Filter>02.GameObjects\05.Effect\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Dynamic.h">
+      <Filter>96.Camera\Dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Action.h">
+      <Filter>96.Camera\Action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -260,9 +269,6 @@
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>02.GameObjects\01.Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Camera_Dynamic.cpp">
-      <Filter>96.Camera</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\PickingMgr.cpp">
       <Filter>95.PickingMgr</Filter>
     </ClCompile>
@@ -304,6 +310,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Trail.cpp">
       <Filter>02.GameObjects\05.Effect\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Dynamic.cpp">
+      <Filter>96.Camera\Dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Action.cpp">
+      <Filter>96.Camera\Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

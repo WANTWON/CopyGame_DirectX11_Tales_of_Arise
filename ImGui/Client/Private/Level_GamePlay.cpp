@@ -2,7 +2,7 @@
 #include "..\Public\Level_GamePlay.h"
 
 #include "GameInstance.h"
-#include "Camera_Dynamic.h"
+#include "Camera_Manager.h"
 #include "Terrain_Manager.h"
 #include "PickingMgr.h"
 
@@ -26,6 +26,7 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 
+	CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::DYNAMIC);
 	return S_OK;
 }
 
@@ -95,8 +96,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	TerrainDesc.m_eDebugTerrain = CTerrain_Manager::DEBUG_SOILD;
 	TerrainDesc.m_bShowWireFrame = true;
 
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, TEXT("Layer_DebugTerrain"), &TerrainDesc)))
-		//return E_FAIL;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), LEVEL_GAMEPLAY, TEXT("Layer_DebugTerrain"), &TerrainDesc)))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 

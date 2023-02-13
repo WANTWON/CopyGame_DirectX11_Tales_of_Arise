@@ -29,7 +29,7 @@ CPlayerState * CHitState::LateTick(_float fTimeDelta)
 		return new CHitState(m_pOwner);
 
 	if (m_bIsAnimationFinished)
-		return new CIdleState(m_pOwner);
+		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	
 	return nullptr;
 }

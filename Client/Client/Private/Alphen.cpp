@@ -9,9 +9,11 @@ _bool CAlphen::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
 	{
-		case ANIM_IDLE:
+		case ANIM_IDLE_SIDE:
 		case ANIM_RUN:
 		case ANIM_JUMP_LOOP:
+		case ANIM_DASH:
+		case ANIM_BATTLE_MOVE_RUN:
 			return true;
 		default:
 			return false;

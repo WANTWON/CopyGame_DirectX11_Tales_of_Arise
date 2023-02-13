@@ -3,6 +3,7 @@
 #include "Imgui_Manager.h"
 #include "PickingMgr.h"
 #include "GameInstance.h"
+#include "Camera_Manager.h"
 
 CNonAnim::CNonAnim(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -45,19 +46,29 @@ HRESULT CNonAnim::Initialize(void * pArg)
 	}
 	
 
-	if (CImgui_Manager::Get_Instance()->Get_CameraPicking() == true)
-		CCamera_Manager::Get_Instance()->Add_CreatedCamera(this);
+	if (CImgui_Manager::Get_Instance()->Get_PickingType() == CImgui_Manager::PICKING_CAMERA)
+	{
+		CCamera_Action::TOOLDESC CameraDesc =  CImgui_Manager::Get_Instance()->Get_CameraToolDesc();
+		m_iSymbolType =  CCamera_Manager::Get_Instance()->Get_SymBolType();
+
+		if (m_iSymbolType == 0)
+		{
+			XMStoreFloat4(&CameraDesc.vEyePosition, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+			CCamera_Manager::Get_Instance()->Add_CameraSymbol(CCamera_Manager::CAM_EYE, this);
+		}			
+		else if (m_iSymbolType == 1)
+		{
+			XMStoreFloat4(&CameraDesc.vAtPosition, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+			CCamera_Manager::Get_Instance()->Add_CameraSymbol(CCamera_Manager::CAM_AT, this);
+		}
+			
+
+		CImgui_Manager::Get_Instance()->Set_CameraToolDesc(CameraDesc);
+	}	
 	else
 		CModelManager::Get_Instance()->Add_CreatedModel(this);
 
 
-	//CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	//CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
-	//char cName[MAX_PATH];
-	//ZeroMemory(cName, sizeof(char) * MAX_PATH);
-	//pData_Manager->Conv_Bin_Model(m_pModelCom, m_ModelDesc.pModeltag, CData_Manager::DATA_NONANIM);
-	//RELEASE_INSTANCE(CData_Manager);
-	//RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -107,7 +118,19 @@ HRESULT CNonAnim::Render()
 			if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, m_iSymbolType)))
 				return E_FAIL;
 
-			m_eShaderID = SHADER_SYMBOL;
+			if (m_iSymbolType == 0)
+			{
+				m_eShaderID = SHADER_SYMBOL;
+				if (FAILED(m_pShaderCom->Set_RawValue("g_vColor", &XMVectorSet(1.f,1.f,0.f,1.f), sizeof(_float4))))
+					return E_FAIL;
+			}
+			else if (m_iSymbolType == 1)
+			{
+				m_eShaderID = SHADER_SYMBOL;
+				if (FAILED(m_pShaderCom->Set_RawValue("g_vColor", &XMVectorSet(1.f, 0.f, 1.f, 1.f), sizeof(_float4))))
+					return E_FAIL;
+			}
+				
 		}
 		else
 		{
