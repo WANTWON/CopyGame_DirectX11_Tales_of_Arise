@@ -68,6 +68,8 @@ void CDeadState::Enter()
 	default:
 		break;
 	}
+
+	m_pOwner->Set_Manarecover(false);
 	
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 }

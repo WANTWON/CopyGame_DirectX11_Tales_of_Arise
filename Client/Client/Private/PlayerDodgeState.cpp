@@ -252,6 +252,9 @@ void CDodgeState::Enter(void)
 	default:
 		break;
 	}
+
+	m_pOwner->Set_Manarecover(true);
+
 }
 
 void CDodgeState::Exit(void)

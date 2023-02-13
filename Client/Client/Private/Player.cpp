@@ -74,6 +74,12 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
+	if (m_bManaRecover)
+		m_tInfo.fCurrentMp += 0.02f;
+
+	if (m_tInfo.fCurrentMp >= m_tInfo.fMaxMp)
+		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
+
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(ALPHEN);
@@ -362,7 +368,7 @@ void CPlayer::Plus_EXP(_uint exp)
 
 		++m_tInfo.iLevel;
 
-
+		m_bLevelup = true;
 
 	}
 

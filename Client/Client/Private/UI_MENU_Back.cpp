@@ -2426,7 +2426,7 @@ HRESULT CUI_MENU_Back::Render_Player3_Status_MainMenu()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (m_PlayersLevel[1] >= 10)
+	if (m_PlayersLevel[2] >= 10)
 	{
 		m_ihpnum = (((_uint)m_PlayersLevel[2] % 100) / 10);
 
@@ -2630,7 +2630,7 @@ HRESULT CUI_MENU_Back::Render_Player3_Status_MainMenu()
 	m_fPosition.x += 9.f;
 	if ((_uint)m_PlayersMaxHP[2] >= 1000.f)
 	{
-		m_ihpnum = (((_uint)m_PlayersMaxHP[1] % 10000) / 1000);
+		m_ihpnum = (((_uint)m_PlayersMaxHP[2] % 10000) / 1000);
 
 
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -2648,7 +2648,7 @@ HRESULT CUI_MENU_Back::Render_Player3_Status_MainMenu()
 	m_fPosition.x += 9.f;
 	if (m_PlayersMaxHP[2] >= 100.f)
 	{
-		m_ihpnum = (((_uint)m_PlayersMaxHP[1] % 1000) / 100);
+		m_ihpnum = (((_uint)m_PlayersMaxHP[2] % 1000) / 100);
 
 
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -2666,7 +2666,7 @@ HRESULT CUI_MENU_Back::Render_Player3_Status_MainMenu()
 	m_fPosition.x += 9.f;
 	if (m_PlayersMaxHP[2] >= 10.f)
 	{
-		m_ihpnum = (((_uint)m_PlayersMaxHP[1] % 100) / 10);
+		m_ihpnum = (((_uint)m_PlayersMaxHP[2] % 100) / 10);
 
 
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));

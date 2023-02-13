@@ -191,6 +191,7 @@ void CAI_ChaseState::Enter()
 
 	}
 
+	m_pOwner->Set_Manarecover(true);
 
 	
 }

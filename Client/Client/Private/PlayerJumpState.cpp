@@ -515,6 +515,8 @@ void CJumpState::Enter()
 		}
 	}
 
+	m_pOwner->Set_Manarecover(true);
+
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_JumpStart.wav"), SOUND_FOOT, 0.4f);
 }
 

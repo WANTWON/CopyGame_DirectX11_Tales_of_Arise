@@ -55,6 +55,8 @@ void CHitState::Enter()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DAMAGE_LARGE_B);
 		break;
 	}
+
+	m_pOwner->Set_Manarecover(false);
 }
 
 void CHitState::Exit()

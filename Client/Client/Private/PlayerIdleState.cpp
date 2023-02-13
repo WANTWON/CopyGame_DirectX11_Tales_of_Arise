@@ -178,6 +178,8 @@ void CIdleState::Enter()
 	default:
 		break;
 	}
+
+	m_pOwner->Set_Manarecover(true);
 }
 
 void CIdleState::Exit()
