@@ -52,6 +52,7 @@ public:
 	virtual void Make_DeadEffect(CBaseObj* Target = nullptr);
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser);
 	void Collision_Object(_float fTimeDelta);
+	void Reset_Lockonguage() { m_tStats.m_fLockonSmashGuage = 0.f; }
 
 protected:
 	virtual HRESULT SetUp_ShaderResources();

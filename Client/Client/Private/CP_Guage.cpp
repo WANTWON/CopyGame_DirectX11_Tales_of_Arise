@@ -40,6 +40,9 @@ HRESULT CCP_Guage::Initialize(void * pArg)
 
 int CCP_Guage::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_END))
 	{
 		_float exp = 1000.f;
@@ -71,6 +74,9 @@ int CCP_Guage::Tick(_float fTimeDelta)
 
 void CCP_Guage::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
+
 	__super::Late_Tick(fTimeDelta);
 
 }

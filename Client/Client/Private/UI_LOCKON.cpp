@@ -52,6 +52,9 @@ HRESULT CUI_LOCKON::Initialize(void * pArg)
 int CUI_LOCKON::Tick(_float fTimeDelta)
 {
 	
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+
 	if (m_bDead || CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 	{
 		CUI_Manager::Get_Instance()->Set_LockOn(nullptr);
@@ -132,10 +135,16 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 		return OBJ_NOEVENT;
 
+	
+
+
+	if(nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+	m_fcurrentmp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
+
 	if (m_fcurrentmp >= 4.f)
 		m_bStrikeon = true;
-//	else
-//		m_bRenderDiamond = true;
+	//	else
+	//		m_bRenderDiamond = true;
 
 	if (m_bStrikeon)        // f
 	{
@@ -157,7 +166,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 			m_bStrikeSmallonetime = false;
 			m_bRenderDiamond = false;
 		}
-		
+
 
 	}
 
@@ -168,11 +177,6 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 			m_bStrikeFakeScaler = 1.f;
 
 	}
-
-
-	if(nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
-	m_fcurrentmp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
-
 	//m_pTransformCom->Turn({ 0.f,1.f,0.f,1.f }, 45.f);
 
 	_float2 lockonPos = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_ProjPosition();
@@ -190,6 +194,9 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
+
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 		return;
 

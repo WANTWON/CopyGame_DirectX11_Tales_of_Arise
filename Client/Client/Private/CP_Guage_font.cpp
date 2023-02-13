@@ -70,6 +70,9 @@ HRESULT CCP_Guage_font::Initialize(void * pArg)
 
 int CCP_Guage_font::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+
 	m_iMaxcp = CUI_Manager::Get_Instance()->Get_MAXCP();
 	m_iCurrentcp = CUI_Manager::Get_Instance()->Get_CP();
 
@@ -209,7 +212,8 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 
 void CCP_Guage_font::Late_Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 
 	if (!m_bRender)
 		return;

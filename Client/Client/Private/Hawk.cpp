@@ -197,7 +197,7 @@ int CHawk::Tick(_float fTimeDelta)
 
 void CHawk::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() )
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
