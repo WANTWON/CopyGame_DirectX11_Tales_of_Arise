@@ -51,8 +51,11 @@ public:
 	virtual void Make_GetAttacked_Effect(CBaseObj* DamageCauser = nullptr);
 	virtual void Make_DeadEffect(CBaseObj* Target = nullptr);
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser);
+	virtual void	 Set_BattleMode(_bool type)				PURE;
+public:
 	void Collision_Object(_float fTimeDelta);
-
+	void Change_Navigation(LEVEL eLevel);
+	void Compute_CurrentIndex(LEVEL eLevel);
 protected:
 	virtual HRESULT SetUp_ShaderResources();
 	virtual HRESULT SetUp_ShaderID();
@@ -64,7 +67,7 @@ protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr)	PURE;
 	virtual _bool Is_AnimationLoop(_uint eAnimId)			PURE;
 	virtual void Check_Navigation()							PURE;
-
+	
 	void Check_NearTrigger();
 	
 public: // Get & Set
@@ -82,6 +85,9 @@ public: // Get & Set
 	void Set_Dissolve() { m_bDissolve = true; }
 	CBaseObj* Get_Trigger() { return m_pTrigger; }
 	CBaseObj* Get_DamageCauser() { return m_pTarget; }
+	void	 Save_LastPosition();
+	_vector	 Get_LastPosition() { return m_vLastPos; }
+
 
 protected:
 	DMG_DIR Calculate_DmgDirection();
@@ -124,11 +130,13 @@ protected:
 
 	MONSTER_ID	m_eMonsterID = MONSTER_END;
 	DMG_DIR	m_eDmg_Direction = FRONT;
+	
 
 protected: /* For.Components */
 	CModel* m_pModelCom = nullptr;
 	CNavigation* m_pNavigationCom = nullptr;
 	CBaseObj* m_pTarget = nullptr;
+	CNavigation* m_vecNavigation[LEVEL_END] = { nullptr };
 
 	/* Dissolve */
 	CTexture* m_pDissolveTexture = nullptr;
@@ -141,7 +149,8 @@ protected:
 	_float m_fDissolveTimer = 0.f;
 	_float m_fDissolveLifespan = 3.f;
 	vector<class CEffect*> m_pDissolveParticles;
-
+	_vector m_vLastPos = { 0.f,0.f,0.f,1.f };
+	LEVEL m_eLevel = LEVEL_END;
 public:
 	virtual void Free() override;
 };

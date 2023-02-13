@@ -91,6 +91,7 @@ public:
 	void Set_Done_HitAnimState() { m_bDone_HitAnimState = false; }
 	void Set_OnGoingBite() { m_bOnGoing_Bite= true; }
 	void Set_FinishBite() { m_bOnGoing_Bite = false; }
+	virtual void	 Set_BattleMode(_bool type) override;
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;

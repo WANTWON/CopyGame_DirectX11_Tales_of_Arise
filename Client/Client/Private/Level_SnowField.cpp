@@ -114,9 +114,14 @@ HRESULT CLevel_SnowField::Initialize()
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
 
-	_float exp = rand() % 500 + 500;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, TEXT("sss"), &exp)))
-		return S_OK;
+	vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
+	if (vecFightedMonster.size() != 0)
+	{
+		_float exp = rand() % 500 + 500;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, TEXT("sss"), &exp)))
+			return S_OK;
+	}
+	
 	return S_OK;
 }
 
@@ -585,9 +590,9 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_INTERECTMSG"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	_float exp = 500.f;
+	/*_float exp = 500.f;
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, pLayerTag , &exp)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Levelup"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;*/

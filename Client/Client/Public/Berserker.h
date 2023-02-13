@@ -189,8 +189,10 @@ public: /*For.State*/
 	void AI_Behavior(_float fTimeDelta);
 	void Tick_State(_float fTimeDelta);
 	void LateTick_State(_float fTimeDelta);
+	virtual void	 Set_BattleMode(_bool type) override;
 		/*For Navigation*/
 	virtual void Check_Navigation() override;
+	
 
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;

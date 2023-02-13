@@ -143,6 +143,7 @@ public:
 	void Set_PlayerState(class CRinwellState* pPlayerState) { m_pState = pPlayerState; }
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	void Set_SkillIndex(_uint iIndex) { m_eSkillIndex = iIndex; }
+	virtual void	 Set_BattleMode(_bool type) override;
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;

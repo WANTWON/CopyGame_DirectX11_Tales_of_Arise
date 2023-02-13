@@ -40,12 +40,6 @@ HRESULT CCP_Guage::Initialize(void * pArg)
 
 int CCP_Guage::Tick(_float fTimeDelta)
 {
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_END))
-	{
-		_float exp = 1000.f;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, TEXT("sss"), &exp)))
-			return E_FAIL;
-	}
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont"), LEVEL_STATIC, pLayerTag, &i)))
 		return E_FAIL;*/
 	

@@ -187,6 +187,10 @@ HRESULT CSlime::Render_Glow()
 	return S_OK;
 }
 
+void CSlime::Set_BattleMode(_bool type)
+{
+}
+
 //HRESULT CSlime::Render()
 //{
 //	if (nullptr == m_pShaderCom ||
