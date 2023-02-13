@@ -28,6 +28,10 @@ float g_DissolveLifespan;
 vector g_DissolveColor = vector(1.f, .95f, .6f, 1.f);
 vector g_DissolveHighlight = vector(.92f, .36f, .2f, 1);
 
+/* VTF */
+texture2D g_BoneTexture;
+
+
 struct VS_IN
 {
 	float3 vPosition : POSITION;

@@ -371,13 +371,99 @@ HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
 	/* �޽� �� ���⤷�� �ִ� ������ ����� �����´�. */
 	if (TYPE_ANIM == m_eModelType)
 	{
-		_float4x4		BoneMatrix[400];
+		//_float4x4		BoneMatrix[400];
 
 		/* �޽ÿ��� �����ؼ� �ϰ� ����ִ� ������ �迭�� ��ƿ�.
 		�� = ���� ������ * ���� �Ĺ��ε��Ʈ���� * ���ʻ���������� */
-		m_Meshes[iMeshIndex]->Get_BoneMatrices(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
+		//m_Meshes[iMeshIndex]->Get_BoneMatrices(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
 
-		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 400);
+		//pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 400);
+
+		_uint iBoneSize = m_Meshes[iMeshIndex]->Get_NumBones();
+		_float4x4* BoneMatrix = new _float4x4[iBoneSize];
+
+		m_Meshes[iMeshIndex]->Get_BoneMatrices_Texture(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
+
+		ID3D11Texture2D* pTexture2D = nullptr;
+
+		D3D11_TEXTURE2D_DESC TextureDesc;
+		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		TextureDesc.Width = 128;
+		TextureDesc.Height = 128;
+		TextureDesc.MipLevels = 1;
+		TextureDesc.ArraySize = 1;
+		TextureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+
+		TextureDesc.SampleDesc.Quality = 0;
+		TextureDesc.SampleDesc.Count = 1;
+
+		TextureDesc.Usage = D3D11_USAGE_DYNAMIC;
+		TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		TextureDesc.MiscFlags = 0;
+
+		_float4* pPixel = new _float4[TextureDesc.Width * TextureDesc.Height];
+
+		_uint iMatrix = 0;
+
+		for (_uint i = 0; i < TextureDesc.Height; ++i)
+		{
+			for (_uint j = 0; j < TextureDesc.Width; j = j + 4)
+			{
+				_uint iIndex = i * TextureDesc.Width + j;
+
+				if (iBoneSize > iMatrix)
+				{
+					pPixel[iIndex + 0] = _float4(BoneMatrix[iMatrix].m[0][0], BoneMatrix[iMatrix].m[0][1], BoneMatrix[iMatrix].m[0][2], BoneMatrix[iMatrix].m[0][3]);
+					pPixel[iIndex + 1] = _float4(BoneMatrix[iMatrix].m[1][0], BoneMatrix[iMatrix].m[1][1], BoneMatrix[iMatrix].m[1][2], BoneMatrix[iMatrix].m[1][3]);
+					pPixel[iIndex + 2] = _float4(BoneMatrix[iMatrix].m[2][0], BoneMatrix[iMatrix].m[2][1], BoneMatrix[iMatrix].m[2][2], BoneMatrix[iMatrix].m[2][3]);
+					pPixel[iIndex + 3] = _float4(BoneMatrix[iMatrix].m[3][0], BoneMatrix[iMatrix].m[3][1], BoneMatrix[iMatrix].m[3][2], BoneMatrix[iMatrix].m[3][3]);
+				}
+				else
+				{
+					pPixel[iIndex + 0] = _float4(1.f, 0.f, 0.f, 0.f);
+					pPixel[iIndex + 1] = _float4(0.f, 1.f, 0.f, 0.f);
+					pPixel[iIndex + 2] = _float4(0.f, 0.f, 1.f, 0.f);
+					pPixel[iIndex + 3] = _float4(0.f, 0.f, 0.f, 1.f);
+				}
+
+				++iMatrix;
+			}
+		}
+		
+		D3D11_SUBRESOURCE_DATA SubResourceData;
+		ZeroMemory(&SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+
+		SubResourceData.pSysMem = pPixel;
+		SubResourceData.SysMemPitch = 128 * 4;
+
+		if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, &SubResourceData, &pTexture2D)))
+			return E_FAIL;
+
+		D3D11_MAPPED_SUBRESOURCE SubResource;
+		ZeroMemory(&SubResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+		if (FAILED(m_pContext->Map(pTexture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
+			return E_FAIL;
+		
+		memcpy(SubResource.pData, pPixel, sizeof(_float4) * TextureDesc.Width * TextureDesc.Height);
+
+		m_pContext->Unmap(pTexture2D, 0);
+		
+		ID3D11ShaderResourceView* pSRV = nullptr;
+
+		if (FAILED(DirectX::SaveDDSTextureToFile(m_pContext, pTexture2D, TEXT("../../../Bin/Bin_Data/Test/Bone.dds"))))
+			return E_FAIL;
+
+		if (FAILED(m_pDevice->CreateShaderResourceView(pTexture2D, nullptr, &pSRV)))
+			return E_FAIL;
+
+		pShader->Set_ShaderResourceView("g_BoneTexture", pSRV);
+
+		Safe_Delete_Array(BoneMatrix);
+		Safe_Delete_Array(pPixel);
+		Safe_Release(pTexture2D);
 	}
 
 	pShader->Begin(iPassIndex);

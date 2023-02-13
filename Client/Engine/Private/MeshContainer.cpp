@@ -40,6 +40,26 @@ void CMeshContainer::Get_BoneMatrices(_float4x4 * pBoneMatrices, _fmatrix PivotM
 	}
 }
 
+void CMeshContainer::Get_BoneMatrices_Texture(_float4x4 * pBoneMatrices, _fmatrix PivotMatrix)
+{
+	if (0 == m_iNumBones)
+	{
+		_float4x4 BoneMatrix;
+		XMStoreFloat4x4(&BoneMatrix, XMMatrixIdentity());
+		memcpy(pBoneMatrices, &BoneMatrix, sizeof(_float4x4));
+		return;
+	}
+
+	_uint iNumBones = 0;
+
+	_float4x4* BoneMatrices = new _float4x4[m_Bones.size()];
+
+	for (auto& pBoneNode : m_Bones)
+		XMStoreFloat4x4(&BoneMatrices[iNumBones++], (pBoneNode->Get_OffsetMatrix() * pBoneNode->Get_CombinedTransformationMatrix() * PivotMatrix));
+
+	memcpy(pBoneMatrices, BoneMatrices, sizeof(_float4x4) * m_Bones.size());
+}
+
 HRESULT CMeshContainer::Initialize_Prototype(CModel::TYPE eModelType, HANDLE hFile, _ulong* pdwByte, class CModel* pModel, _fmatrix PivotMatrix)
 {
 	/* 메시의 이름을 보관한다. */

@@ -53,8 +53,6 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
 
 	m_pPlayerManager = GET_INSTANCE(CPlayerManager);
-	
-	
 
 	m_eLevel = LEVEL_END;
 

@@ -80,7 +80,7 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 
 		_int TickPerSecondsSize, ChangeTimesSize, EventsSize;
 
-		if (ReadFile(hAddFile, &TickPerSecondsSize, sizeof(_uint), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
+		if (ReadFile(hAddFile, &TickPerSecondsSize, sizeof(_int), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
 			return S_OK;
 
 		for (_int i = 0; i < TickPerSecondsSize; ++i)
@@ -92,7 +92,7 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 			m_TickPerSeconds.push_back(fTickPerSecond);
 		}
 
-		if (ReadFile(hAddFile, &ChangeTimesSize, sizeof(_uint), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
+		if (ReadFile(hAddFile, &ChangeTimesSize, sizeof(_int), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
 			return S_OK;
 
 		for (_int i = 0; i < ChangeTimesSize; ++i)
@@ -104,7 +104,7 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 			m_ChangeTickTimes.push_back(fChangeTime);
 		}
 
-		if (ReadFile(hAddFile, &EventsSize, sizeof(_uint), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
+		if (ReadFile(hAddFile, &EventsSize, sizeof(_int), pdwAddByte, nullptr) && (0 == (*pdwAddByte)))
 			return S_OK;
 
 		for (_int i = 0; i < EventsSize; ++i)

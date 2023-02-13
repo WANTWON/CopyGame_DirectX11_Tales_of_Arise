@@ -19,6 +19,9 @@ public:
 	}
 
 	void Get_BoneMatrices(_float4x4* pBoneMatrices, _fmatrix PivotMatrix);
+	/* For. VTF */
+	void Get_BoneMatrices_Texture(_float4x4* pBoneMatrices, _fmatrix PivotMatrix);
+	_uint Get_NumBones(void) { return m_iNumBones; }
 
 public:
 	virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, HANDLE hFile, _ulong* pdwByte, class CModel* pModel, _fmatrix PivotMatrix);

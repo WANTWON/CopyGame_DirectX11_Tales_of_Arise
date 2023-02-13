@@ -63,8 +63,6 @@ HRESULT CObject_Manager::Add_GameObject(const _tchar * pPrototypeTag, _uint iLev
 		pLayer->Add_GameObject(pGameObject);
 	}
 
-
-
 	return S_OK;
 }
 
