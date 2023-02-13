@@ -334,6 +334,9 @@
     <Filter Include="02.GameObjects\04.UI\22.UI_BattleResult">
       <UniqueIdentifier>{570c6aa6-a3aa-4dc6-b5eb-92168bda269a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\23.ScreenDistortion">
+      <UniqueIdentifier>{8a0a984c-de3a-4d5d-8090-46a9bed0b83f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="03.Camera\00.Dynamic_Camera">
       <UniqueIdentifier>{83272f2d-f8c5-47b8-9532-169f984bf112}</UniqueIdentifier>
     </Filter>
@@ -345,6 +348,9 @@
     </Filter>
     <Filter Include="02.GameObjects\04.UI\23.UI_LevelUp">
       <UniqueIdentifier>{bc40de5b-8754-46b1-a65e-ef8cbc3ba8a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\24.UI_SidePopup">
+      <UniqueIdentifier>{eb5167e6-62de-4069-8346-d328e9d913a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -933,11 +939,20 @@
     <ClInclude Include="..\Public\UI_BattleResult.h">
       <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ScreenDistortion.h">
+      <Filter>02.GameObjects\04.UI\23.ScreenDistortion</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Camera_Action.h">
       <Filter>03.Camera\01.Action_Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_LevelUp.h">
       <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SmashAttack_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SidePopup.h">
+      <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1496,11 +1511,20 @@
     <ClCompile Include="..\Private\UI_BattleResult.cpp">
       <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\ScreenDistortion.cpp">
+      <Filter>02.GameObjects\04.UI\23.ScreenDistortion</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Camera_Action.cpp">
       <Filter>03.Camera\01.Action_Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_LevelUp.cpp">
       <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SmashAttack_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SidePopup.cpp">
+      <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -43,6 +43,8 @@ HRESULT CUI_Portraitfront_left::Initialize(void * pArg)
 
 int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 
 	if (m_fCurrentBoost <= 10)
 		m_bfirstglow = true;
@@ -91,6 +93,10 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 
 	if (m_bArrived)
 	{
+		if (m_fCurrentBoost >= 100)
+			m_eShaderID = 0;
+		else
+			m_eShaderID = UI_POTRAIT_DARK;
 		if (m_bfirst1 && CUI_Manager::Get_Instance()->Get_Arrived_Count() == 4)
 		{
 			if (m_fCurrentBoost >= 100)
@@ -170,7 +176,8 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 
 void CUI_Portraitfront_left::Late_Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 	/*if (m_fPosition.x <= 1200.f)
 	m_bmoveleft = false;*/
 

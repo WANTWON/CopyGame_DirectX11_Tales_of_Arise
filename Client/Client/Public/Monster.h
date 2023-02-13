@@ -56,6 +56,8 @@ public:
 	void Collision_Object(_float fTimeDelta);
 	void Change_Navigation(LEVEL eLevel);
 	void Compute_CurrentIndex(LEVEL eLevel);
+	void Reset_Lockonguage() { m_tStats.m_fLockonSmashGuage = 0.f; }
+
 protected:
 	virtual HRESULT SetUp_ShaderResources();
 	virtual HRESULT SetUp_ShaderID();

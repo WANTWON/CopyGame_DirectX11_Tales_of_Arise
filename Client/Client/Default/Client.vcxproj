@@ -210,6 +210,8 @@
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
+    <ClInclude Include="..\public\ScreenDistortion.h" />
+    <ClInclude Include="..\Public\SmashAttack_State.h" />
     <ClInclude Include="..\Public\SnowFieldNpc.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
@@ -362,6 +364,7 @@
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\UI_Portrait.h" />
+    <ClInclude Include="..\Public\UI_SidePopup.h" />
     <ClInclude Include="..\Public\UI_Skillmessage.h" />
     <ClInclude Include="..\public\Water.h" />
     <ClInclude Include="..\Public\UI_Skillbutton.h" />
@@ -407,6 +410,8 @@
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />
+    <ClCompile Include="..\private\ScreenDistortion.cpp" />
+    <ClCompile Include="..\Private\SmashAttack_State.cpp" />
     <ClCompile Include="..\Private\SnowFieldNpc.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
@@ -550,6 +555,7 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\UI_Portrait.cpp" />
+    <ClCompile Include="..\Private\UI_SidePopup.cpp" />
     <ClCompile Include="..\Private\UI_Skillmessage.cpp" />
     <ClCompile Include="..\private\Water.cpp" />
     <ClCompile Include="..\Private\UI_Skillbutton.cpp" />

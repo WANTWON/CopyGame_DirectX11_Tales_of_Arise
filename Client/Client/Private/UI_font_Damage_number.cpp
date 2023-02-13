@@ -39,7 +39,8 @@ HRESULT CUI_font_Damage_number::Initialize(void * pArg)
 
 int CUI_font_Damage_number::Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 	m_fDietimer += fTimeDelta;
 	if (m_fDietimer > 5.f)
 		m_bfadeout = true;
@@ -115,6 +116,8 @@ int CUI_font_Damage_number::Tick(_float fTimeDelta)
 
 void CUI_font_Damage_number::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 	
 	if (m_bRender == false)
 		return;

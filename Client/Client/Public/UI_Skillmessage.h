@@ -37,7 +37,7 @@ public:
 	//wchar_t* CharToWChar(const char* pstrSrc);
 
 
-	void Skillmsg_on(_uint index);//, _uint index1);l
+	void Skillmsg_on(_uint index , _bool itemuse = false);//, _uint index1);l
 
 
 	enum SKILLNAME {
@@ -58,6 +58,7 @@ public:
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
 	CTexture*               m_pTextureCom2 = nullptr;
+
 	_bool m_bfadein = true;
 	_bool m_bfadeout = false;
 
@@ -74,7 +75,7 @@ private:
 	//5
 	
 
-
+	
 
 	_float m_fFontsize = 0.9f;
 	_float m_fFontOffsetY = 35.f;
@@ -99,6 +100,8 @@ private:
 	_bool m_btick = false;
 
 	_float m_fIndexOffsetY = 0.f;
+
+	_bool m_bUseItem = false;
 
 
 

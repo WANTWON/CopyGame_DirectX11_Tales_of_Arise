@@ -42,7 +42,8 @@ int CUI_Portraitfront::Tick(_float fTimeDelta)
 	/*if (m_bmoveleft)
 	moveleft();*/
 
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 
 
 
@@ -76,7 +77,8 @@ int CUI_Portraitfront::Tick(_float fTimeDelta)
 
 void CUI_Portraitfront::Late_Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 	/*if (m_fPosition.x <= 1200.f)
 	m_bmoveleft = false;*/
 

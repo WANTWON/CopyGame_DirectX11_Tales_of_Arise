@@ -189,6 +189,10 @@ int CSionSkills::Tick(_float fTimeDelta)
 
 void CSionSkills::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
+
+
 	__super::Late_Tick(fTimeDelta);
 
 	for (auto& iter : m_pEffects)
@@ -575,6 +579,7 @@ void CSionSkills::Tick_NormalAttack(_float fTimeDelta)
 
 	for (auto& iter : m_pEffects)
 	{
+		if(iter != nullptr)
 		iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	return;

@@ -46,7 +46,30 @@ private:
 
 	_float m_fcurrent_render_slot_mp = 0.f;
 
+	_float2 Sprite = { 4.f,2.f };
+	_float speed = 0.f;
+	_float time = 0.f;
 
+	_bool m_bStrikeon = false;
+	_bool m_bStrikefonton = false;
+
+	_bool m_bStrikeSmallonetime = true;
+
+	_bool m_bRenderDiamond = true;
+
+	_float m_bStrikeScaler = 10.f;
+	_float m_bStrikeFakeScaler = 1.f;
+	_float m_fLockonScaler = 10.f;
+
+	_float m_fDiamondShooter = 1.f;
+
+	_float m_fAlphaDiamond = 1.f;
+
+	_float m_fAlphaNomal = 1.f;
+
+	
+
+//	_float scaler = 0.5f;
 
 };
 

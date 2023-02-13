@@ -50,7 +50,7 @@ private:
 	_float m_fbrightpos_hitfont[3] = { 0.f , -0.5f, -1.f };
 	_float m_fDietimer = 0.f;
 	_bool m_bfadeout = false;
-	_bool m_bfadein = false;
+	_bool m_bfadein = true;
 	_float m_fOffsetX = 0.f;
 
 

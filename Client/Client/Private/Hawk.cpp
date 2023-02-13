@@ -98,7 +98,7 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
-	//ColliderDesc.vScale = _float3(3.f, 3.f, 3.f); Áö±Ý ÄÝ¶óÀÌ´õ »çÀÌÁî 6Àº ³Ê¹« Å«µ¥, 3À¸·Î ÇÏ¸é ÇÇ°ÝÀÌ¾ÈµÊ
+	//ColliderDesc.vScale = _float3(3.f, 3.f, 3.f); ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 6ï¿½ï¿½ ï¿½Ê¹ï¿½ Å«ï¿½ï¿½, 3ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½Ç°ï¿½ï¿½Ì¾Èµï¿½
 	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
@@ -149,6 +149,7 @@ void CHawk::Late_Tick(_float fTimeDelta)
 {
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
+
 		return;
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;

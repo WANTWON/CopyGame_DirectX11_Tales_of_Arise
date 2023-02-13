@@ -13,6 +13,7 @@
 #include "Trigger.h"
 
 //Effect & Bullet
+#include "ScreenDistortion.h"
 #include "EffectTexture.h"
 #include "EffectMesh.h"
 #include "ParticleSystem.h"
@@ -74,6 +75,7 @@
 #include "UI_BossMonster_HPbar.h"
 #include "UI_BattleResult.h"
 #include "UI_LevelUp.h"
+#include "UI_SidePopup.h"
 //Monster
 #include "Ice_Wolf.h"
 #include "Berserker.h"
@@ -394,6 +396,10 @@ HRESULT CLoader::Loading_ForPrototype()
 		CUI_LevelUp::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Sidepopup"),
+		CUI_SidePopup::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/*For.Prototype_GameObject_Sky */                                
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pDevice, m_pContext))))
@@ -427,6 +433,11 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_GameObject_Weapon */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon"),
 		CWeapon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_ScreenDistortion*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ScreenDistortion"),
+		CScreenDistortion::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_EffectTexture*/
@@ -1199,7 +1210,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lockon"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/lockon/lockon%d.dds"), 6))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/lockon/lockon%d.dds"), 10))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENU_BACK"),
@@ -1336,6 +1347,9 @@ HRESULT CLoader::Loading_ForUITexture()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/battleresult/battleresult%d.dds"), 5))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Itemusemsg"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillmsg/itemuse%d.dds"), 1))))
+		return E_FAIL;
 	
 	
 	
@@ -1468,9 +1482,11 @@ HRESULT CLoader::Loading_ForEffect()
 #pragma endregion Model
 
 #pragma region Texture
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fog"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Fog.png"), 1))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Distortion_Noise"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Distortion_Noise.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Screen_Distortion"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Gradation/TO14_T_FX_Round_SO_02.png"), 1))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("RockFormation0"),
