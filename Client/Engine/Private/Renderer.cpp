@@ -92,6 +92,11 @@ HRESULT CRenderer::Initialize_Prototype()
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
 
+	/* For.Target_Fog */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Fog"), ViewportDesc.Width, ViewportDesc.Height,
+		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
+		return E_FAIL;
+
 	/**
 		Multiple Render Targets
 	**/
@@ -131,6 +136,10 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Glow_UI"), TEXT("Target_Glow_UI"))))
 		return E_FAIL;
 
+	/* For.MRT_Fog */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_Fog"))))
+		return E_FAIL;
+
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (!m_pVIBuffer)
 		return E_FAIL;
@@ -168,6 +177,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow"), 375.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Distortion"), 375.f, 225.f, 150.f, 150.f)))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Fog"), 375.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow_UI"), 525.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
@@ -630,23 +641,27 @@ HRESULT CRenderer::Render_PostProcessing()
 	/* Fog (Post Processing) */
 	if (m_bFog)
 	{
-		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
-			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
 			return E_FAIL;
 
-		if (!m_pFogTexture)
-			m_pFogTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Fog"));
-
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_FogTexture", m_pFogTexture->Get_SRV())))
-			return E_FAIL;
-
-		m_fFogTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
-		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fFogTimer", &m_fFogTimer, sizeof(_float))))
+		/* For.MRT_Fog */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Fog"))))
 			return E_FAIL;
 
 		m_pShaderPostProcessing->Begin(3);
+		m_pVIBuffer->Render();
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Fog"), m_pShaderPostProcessing, "g_FogTexture")))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(4);
 		m_pVIBuffer->Render();
 	}
 
@@ -699,6 +714,8 @@ HRESULT CRenderer::Render_Debug()
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Glow"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Distortion"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Fog"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Glow_UI"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;

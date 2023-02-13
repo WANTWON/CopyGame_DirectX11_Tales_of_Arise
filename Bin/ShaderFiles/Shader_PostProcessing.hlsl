@@ -24,14 +24,16 @@ const int WeightCount = 8;
 /* Fog */
 texture2D g_FogTexture;
 float3 g_vFogColor = float3(.8f, .8f, .8f);
+float g_fFogStrength = 0.6f;
 float g_fMinRange = 25.f;
 float g_fMaxRange = 70.f;
 float3 g_vPlayerPosition;
-float g_fFogTimer;
 
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_Linear;
+	AddressU = wrap;
+	AddressV = wrap;
 };
 
 sampler DepthSampler = sampler_state
@@ -59,6 +61,15 @@ BlendState BS_LightBlending
 	BlendEnable[1] = true;
 	SrcBlend = one;
 	DestBlend = one;
+	BlendOp = add;
+};
+
+BlendState BS_AlphaBlending
+{
+	BlendEnable[0] = true;
+
+	SrcBlend = src_alpha;
+	DestBlend = inv_Src_Alpha;
 	BlendOp = add;
 };
 
@@ -190,10 +201,6 @@ PS_OUT PS_FOG(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	Out.vColor = g_BackBufferTexture.Sample(LinearSampler, In.vTexUV);
-
-	float4 vFogTexture = g_FogTexture.Sample(LinearSampler, In.vTexUV + (2.f * g_fFogTimer));
-	
 	float4 vDepthTexture = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
 	float fViewZ = vDepthTexture.y * 1000.f;
 
@@ -218,8 +225,20 @@ PS_OUT PS_FOG(PS_IN In)
 		fFogPower = saturate((fDistance - g_fMinRange) / (g_fMaxRange - g_fMinRange)); // 0 ~ 1
 	}
 
-	Out.vColor.rgb = lerp(Out.vColor.rgb, g_vFogColor, fFogPower * .6f * vFogTexture.r);
+	Out.vColor.rgb = g_vFogColor;
+	Out.vColor.a = fFogPower * g_fFogStrength;
 	
+	return Out;
+}
+
+PS_OUT PS_FOG_BLEND(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float4 vFogTexture = g_FogTexture.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = vFogTexture;
+
 	return Out;
 }
 
@@ -261,11 +280,22 @@ technique11 DefaultTechnique
 	pass Fog // 3 
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_FOG();
+	}
+
+	pass Blend_Fog // 4
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_FOG_BLEND();
 	}
 }
