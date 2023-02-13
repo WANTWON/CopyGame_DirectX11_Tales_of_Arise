@@ -28,8 +28,9 @@ CGameObject * CLayer::Get_Object(_uint iIndex)
 	return *iter;
 }
 
-HRESULT CLayer::Initialize()
+HRESULT CLayer::Initialize(_uint iIndex)
 {
+	m_iLevel = iIndex;
 	return S_OK;
 }
 
@@ -39,6 +40,22 @@ HRESULT CLayer::Add_GameObject(CGameObject * pGameObject)
 		return E_FAIL;
 
 	m_GameObjects.push_back(pGameObject);
+
+	return S_OK;
+}
+
+HRESULT CLayer::Out_GameObject(CGameObject * pGameObject)
+{
+	for (auto& iter = m_GameObjects.begin(); iter != m_GameObjects.end();)
+	{
+		if ((*iter) == pGameObject)
+		{
+			iter = m_GameObjects.erase(iter);
+			return S_OK;
+		}
+		else
+			iter++;
+	}
 
 	return S_OK;
 }
@@ -70,11 +87,11 @@ void CLayer::Late_Tick(_float fTimeDelta)
 	}
 }
 
-CLayer * CLayer::Create()
+CLayer * CLayer::Create(_uint iIndex)
 {
 	CLayer*	pInstance = new CLayer();
 
-	if (FAILED(pInstance->Initialize()))
+	if (FAILED(pInstance->Initialize(iIndex)))
 	{
 		ERR_MSG(TEXT("Failed to Created : CLayer"));
 		Safe_Release(pInstance);

@@ -40,6 +40,7 @@ HRESULT CCP_Guage::Initialize(void * pArg)
 
 int CCP_Guage::Tick(_float fTimeDelta)
 {
+
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 
