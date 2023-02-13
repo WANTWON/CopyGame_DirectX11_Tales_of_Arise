@@ -40,6 +40,10 @@ CPlayerState * CJumpState::HandleInput()
 
 			case CPlayer::SION:
 				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
+
+			case CPlayer::RINWELL:
+				//for Rinwell State
+				break;
 			}
 
 		/* Skill */
@@ -62,6 +66,9 @@ CPlayerState * CJumpState::HandleInput()
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
 				else if (pGameInstance->Key_Down(DIK_F))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
+				break;
+			case CPlayer::RINWELL:
+				//For Rinwell State
 				break;
 			}
 		}
@@ -178,7 +185,6 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 			switch (m_ePlayerID)
 			{
 			case CPlayer::ALPHEN:
-				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
 				if (JUMP_IDLE == m_eJumpType)
 				{
 					if (Check_JumpEnd(2.f))
@@ -186,13 +192,10 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
 					}
-					else
+					else if(m_bIsAnimationFinished)
 					{
-						if (m_bIsAnimationFinished)
-						{
- 							m_eStateType = STATETYPE_MAIN;
-							m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
-						}
+ 						m_eStateType = STATETYPE_MAIN;
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
 					}
 				}
 				else if (JUMP_RUN == m_eJumpType)
@@ -202,13 +205,10 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LAND);
 					}
-					else
+					else if (m_bIsAnimationFinished)
 					{
-						if (m_bIsAnimationFinished)
-						{
-							m_eStateType = STATETYPE_MAIN;
-							m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LOOP);
-						}
+						m_eStateType = STATETYPE_MAIN;
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LOOP);
 					}
 				}
 				else if (JUMP_BATTLE == m_eJumpType)
@@ -218,19 +218,14 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
 					}
-					else
+					else if (m_bIsAnimationFinished)
 					{
-						if (m_bIsAnimationFinished)
-						{
-							m_eStateType = STATETYPE_MAIN;
-							m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
-						}
+						m_eStateType = STATETYPE_MAIN;
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
 					}
 				}
 				break;
 			case CPlayer::SION:
-				//for Sion State//
-				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
 				m_eStateType = STATETYPE_END;
 				if (JUMP_IDLE == m_eJumpType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LANDING);
@@ -239,41 +234,22 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				else if (JUMP_BATTLE == m_eJumpType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
 				break;
-			default:
+			case CPlayer::RINWELL:
+				m_eStateType = STATETYPE_END;
+				if (JUMP_IDLE == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_LANDING);
+				else if (JUMP_RUN == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_LANDING);
+				else if (JUMP_BATTLE == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
 				break;
 			}
-
-			//else
-			//{
-			//	switch (m_ePlayerID)
-			//	{
-			//	case CPlayer::ALPHEN:
-			//		m_eStateType = STATETYPE_MAIN;
-			//		if (JUMP_RUN == m_eJumpType)
-			//			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LOOP);
-			//		else
-			//			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
-			//		break;
-			//	case CPlayer::SION:
-			//		//for Sion State//
-			//		m_eStateType = STATETYPE_MAIN;
-			//		if (JUMP_RUN == m_eJumpType)
-			//			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_LOOP);
-			//		else
-			//			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LOOP);
-			//		break;
-			//	default:
-			//		break;
-			//	}
-			//	
-			//}
 		}
 		else if (m_bIsAnimationFinished)
 		{
 			switch (m_ePlayerID)
 			{
 			case CPlayer::ALPHEN:
-				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
 				if (JUMP_IDLE == m_eJumpType)
 				{
 					m_eStateType = STATETYPE_MAIN;
@@ -291,8 +267,6 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				}
 				break;
 			case CPlayer::SION:
-				//for Sion State//
-				//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Jumpland.wav"), SOUND_FOOT, 1.0f);
 				m_eStateType = STATETYPE_END;
 				if (JUMP_IDLE == m_eJumpType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LANDING);
@@ -301,7 +275,14 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				else if (JUMP_BATTLE == m_eJumpType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
 				break;
-			default:
+			case CPlayer::RINWELL:
+				m_eStateType = STATETYPE_END;
+				if (JUMP_IDLE == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_LANDING);
+				else if (JUMP_RUN == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_LANDING);
+				else if (JUMP_BATTLE == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
 				break;
 			}
 		}
@@ -322,7 +303,6 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
 				break;
 			case CPlayer::SION:
-				//for Sion State//
 				m_eStateType = STATETYPE_END;
 				if (JUMP_IDLE == m_eJumpType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LANDING);
@@ -331,7 +311,14 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				else if (JUMP_BATTLE == m_eJumpType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
 				break;
-			default:
+			case CPlayer::RINWELL:
+				m_eStateType = STATETYPE_END;
+				if (JUMP_IDLE == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_LANDING);
+				else if (JUMP_RUN == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_LANDING);
+				else if (JUMP_BATTLE == m_eJumpType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
 				break;
 			}
 		}
@@ -359,12 +346,10 @@ CPlayerState * CJumpState::EventInput(void)
 			{
 			case CPlayer::ALPHEN:
 				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_NORMAL_ATTACK1);
-				break;
 			case CPlayer::SION:
 				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
-				//for Sion State//
-				break;
-			default:
+			case CPlayer::RINWELL:
+				//for Rinwell
 				break;
 			}
 		}
@@ -394,6 +379,8 @@ CPlayerState * CJumpState::EventInput(void)
 				else if (pGameInstance->Key_Down(DIK_F))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
 
+				break;
+			case CPlayer::RINWELL:
 				break;
 			}
 
@@ -468,6 +455,24 @@ void CJumpState::Enter()
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LANDING);
 			}
 			break;
+		case CPlayer::RINWELL:
+			if (m_eStateType == STATETYPE_START)
+			{
+				if (LEVEL_BATTLE == m_pOwner->Get_Level())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_JUMP);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_START);
+			}
+			else if (m_eStateType == STATETYPE_MAIN)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_LOOP);
+			else if (m_eStateType == STATETYPE_END)
+			{
+				if (LEVEL_BATTLE == m_pOwner->Get_Level())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_LANDING);
+			}
+			break;
 		}
 	}
 	else if (JUMP_RUN == m_eJumpType)
@@ -490,6 +495,14 @@ void CJumpState::Enter()
 			else if (m_eStateType == STATETYPE_END)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_END);
 			break;
+		case CPlayer::RINWELL:
+			if (m_eStateType == STATETYPE_START)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_START);
+			else if (m_eStateType == STATETYPE_MAIN)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_LOOP);
+			else if (m_eStateType == STATETYPE_END)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_END);
+			break;
 		}
 	}
 	else if (JUMP_BATTLE == m_eJumpType)
@@ -511,6 +524,14 @@ void CJumpState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LOOP);
 			else if (m_eStateType == STATETYPE_END)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
+			break;
+		case CPlayer::RINWELL:
+			if (m_eStateType == STATETYPE_START)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_JUMP);
+			else if (m_eStateType == STATETYPE_MAIN)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_LOOP);
+			else if (m_eStateType == STATETYPE_END)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
 			break;
 		}
 	}

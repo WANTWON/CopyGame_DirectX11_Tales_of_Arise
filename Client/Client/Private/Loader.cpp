@@ -687,6 +687,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Model_Sion */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("AIRinwell"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/AIRinwell/Rinwell.dat"))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Model_Water_Plane*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Water/Plane.dat"))))
@@ -955,7 +960,7 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 
 	/*For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_SnowPlane3.dds"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_SpaceBlue2.dds"), 1))))
 		return E_FAIL;
 
 

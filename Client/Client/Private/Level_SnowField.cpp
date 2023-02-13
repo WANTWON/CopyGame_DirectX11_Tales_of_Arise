@@ -46,10 +46,10 @@ HRESULT CLevel_SnowField::Initialize()
 		return E_FAIL;
 
 
-	cout << " Npc Clone start" << endl;
+	/*cout << " Npc Clone start" << endl;
 	m_pNpcLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_NPC);
 	if (nullptr == m_pNpcLoader)
-		return E_FAIL;
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Backgorund"))))
 		return E_FAIL;
@@ -71,7 +71,7 @@ HRESULT CLevel_SnowField::Initialize()
 
 	DWORD dwTime = GetTickCount();
 	while (false == m_pPlayerLoader->Get_Finished() || 
-		false == m_pNpcLoader->Get_Finished() ||
+		/*false == m_pNpcLoader->Get_Finished() ||*/
 		false == m_pMonsterLoader1->Get_Finished())
 	{
 		if (dwTime + 1000 < GetTickCount())
@@ -80,8 +80,8 @@ HRESULT CLevel_SnowField::Initialize()
 				cout << "Finished Player Clone" << endl;
 	
 
-			if (m_pNpcLoader->Get_Finished() == true)
-				cout << "Finished Npc Clone" << endl;
+			//if (m_pNpcLoader->Get_Finished() == true)
+			//	cout << "Finished Npc Clone" << endl;
 
 
 			if (m_pMonsterLoader1->Get_Finished() == true)
@@ -108,7 +108,7 @@ HRESULT CLevel_SnowField::Initialize()
 
 	Safe_Release(m_pPlayerLoader);
 	Safe_Release(m_pMonsterLoader1);
-	Safe_Release(m_pNpcLoader);
+	//Safe_Release(m_pNpcLoader);
 
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();

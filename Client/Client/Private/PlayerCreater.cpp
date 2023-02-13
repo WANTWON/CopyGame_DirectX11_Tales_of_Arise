@@ -26,6 +26,7 @@ unsigned int APIENTRY Thread_Clone(void* pArg)
 	switch (pLoader->Get_CreateActorType())
 	{
 	case CLONE_PLAYER:
+		pLoader->Cloning_ForNpc();
 		pLoader->Cloning_ForPlayer();
 		break;
 	case CLONE_MONSTER1:
@@ -74,6 +75,9 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
 
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+			return E_FAIL;
+
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));
@@ -82,7 +86,7 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 	}
 	else
 	{
-		if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::RINWELL) == nullptr)
+		/*if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::RINWELL) == nullptr)
 		{
 			vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
 			for (auto& iter : vecFightedMonster)
@@ -94,7 +98,7 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 				}
 
 			}
-		}
+		}*/
 		
 		
 
@@ -165,8 +169,6 @@ HRESULT CPlayerCreater::Cloning_ForNpc()
 	}
 
 	CloseHandle(hFile);
-
-	m_isFinished = true;
 
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;

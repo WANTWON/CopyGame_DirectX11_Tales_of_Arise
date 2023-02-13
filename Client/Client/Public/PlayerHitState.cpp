@@ -54,6 +54,12 @@ void CHitState::Enter()
 		else
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DAMAGE_LARGE_B);
 		break;
+	case CPlayer::RINWELL:
+		if (m_bIsFly)
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_DAMAGE_AIR_LARGE_B);
+		else
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_DAMAGE_LARGE_B);
+		break;
 	}
 }
 

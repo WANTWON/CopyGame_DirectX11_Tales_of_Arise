@@ -4,6 +4,7 @@
 #include "Alphen.h"
 #include "Sion.h"
 #include "Weapon.h"
+#include "Rinwell.h"
 
 BEGIN(Engine)
 class CModel;

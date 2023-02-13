@@ -23,9 +23,9 @@ const int WeightCount = 8;
 
 /* Fog */
 texture2D g_FogTexture;
-float3 g_vFogColor = float3(.8f, .8f, .8f);
+float3 g_vFogColor = float3(0.2, 0.4, 0.9f);
 float g_fFogStrength = 0.6f;
-float g_fMinRange = 25.f;
+float g_fMinRange = 30.f;
 float g_fMaxRange = 70.f;
 float3 g_vPlayerPosition;
 
