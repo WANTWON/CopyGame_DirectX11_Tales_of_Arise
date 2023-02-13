@@ -636,6 +636,16 @@ HRESULT CRenderer::Render_PostProcessing()
 		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
 			return E_FAIL;
 
+		if (!m_pFogTexture)
+			m_pFogTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Fog"));
+
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_FogTexture", m_pFogTexture->Get_SRV())))
+			return E_FAIL;
+
+		m_fFogTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fFogTimer", &m_fFogTimer, sizeof(_float))))
+			return E_FAIL;
+
 		m_pShaderPostProcessing->Begin(3);
 		m_pVIBuffer->Render();
 	}

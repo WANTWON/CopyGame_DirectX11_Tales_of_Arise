@@ -78,7 +78,9 @@ private:
 	class CTexture* m_pDistortionNoiseTexture = nullptr;
 	_float m_fDistortionTimer = 0.f;
 
+	class CTexture* m_pFogTexture = nullptr;
 	_bool m_bFog = false;
+	_float m_fFogTimer = 0.f;
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
