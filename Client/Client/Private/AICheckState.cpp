@@ -89,6 +89,9 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 
 CAIState * CAICheckState::LateTick(_float fTimeDelta)
 {
+	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+		return nullptr;
+
 	if (m_pTarget == nullptr)
 		return nullptr;
 
