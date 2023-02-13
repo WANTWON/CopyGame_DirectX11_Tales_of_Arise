@@ -179,7 +179,8 @@ int CHawk::Tick(_float fTimeDelta)
 	if(!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 	
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
 
 	__super::Tick(fTimeDelta);
@@ -196,7 +197,7 @@ int CHawk::Tick(_float fTimeDelta)
 
 void CHawk::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() )
 		return;
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
@@ -206,7 +207,8 @@ void CHawk::Late_Tick(_float fTimeDelta)
 	if (m_pRendererCom && m_bGlowUp)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
 	LateTick_State(fTimeDelta);

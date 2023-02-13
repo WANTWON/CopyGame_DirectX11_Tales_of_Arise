@@ -4,6 +4,7 @@
 #include "BaseObj.h"
 #include "PlayerManager.h"
 
+
 BEGIN(Engine)
 class CNavigation;
 class CModel;
@@ -96,6 +97,7 @@ protected: /* for 4 Player */
 	CPlayerState*	m_pPlayerState = nullptr;
 	CAIState*		m_pAIState = nullptr;
 	CPlayerManager*	m_pPlayerManager = nullptr;
+	
 	/* ½ºÅ³ */
 	_uint			m_eGroundSkills[GROUND_SKILL_END] = { GROUND_SKILL_END, };
 	_uint			m_eFlySkills[FLY_SKILL_END] = { FLY_SKILL_END, };
@@ -108,7 +110,7 @@ protected: /* for 4 Player */
 
 protected:
 	vector<class CGameObject*> m_Parts;
-
+	
 protected:
 	HRESULT SetUp_Controller();
 

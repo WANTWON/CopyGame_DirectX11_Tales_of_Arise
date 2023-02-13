@@ -115,7 +115,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
-	/*if (JUMP_IDLE == m_eJumpType)
+	if (JUMP_IDLE == m_eJumpType)
 	{
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -159,7 +159,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 	m_pOwner->Get_Navigation()->Compute_CurrentIndex_byXZ(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 	if (STATETYPE_END == m_eStateType)
-		m_pOwner->Check_Navigation_Jump();*/
+		m_pOwner->Check_Navigation_Jump();
 
 	return nullptr;
 }

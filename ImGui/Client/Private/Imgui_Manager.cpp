@@ -2030,7 +2030,10 @@ void CImgui_Manager::Set_Camera()
 					string iIndex = to_string(i);
 					//ImGui::Text(iIndex.c_str()); /* ID */
 					if (ImGui::Selectable(iIndex.c_str(), i == m_iCamCurvedIndex, ImGuiSelectableFlags_SpanAllColumns)) /* Eye */
+					{
 						m_iCamCurvedIndex = i;
+						m_CameraToolDesc = m_pCurrentCamera->Get_CamData(m_iCamCurvedIndex);
+					}
 
 					ImGui::TableNextColumn(); 
 					string sEye = CutOnSpecificDecimalPt( to_string(CameraCurves[i].vEyePosition.x), 2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.y),2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.z),2);
@@ -2066,7 +2069,15 @@ void CImgui_Manager::Set_Camera()
 				if (m_pCurrentCamera->Get_AllCamData().size() > m_iCamCurvedIndex)
 					m_pCurrentCamera->Remove_Camdata(m_iCamCurvedIndex);
 
-			
+			ImGui::SameLine();
+			if (ImGui::Button("Edit"))
+			{
+				if (m_pCurrentCamera->Get_AllCamData().size() > m_iCamCurvedIndex)
+					m_pCurrentCamera->Set_CamData(m_iCamCurvedIndex, m_CameraToolDesc);
+			}
+				
+
+
 			ImGui::SameLine();
 			if (ImGui::Button("Cancle Click Point"))
 				m_pCamera_Manager->Clear_ClickPosition();

@@ -436,7 +436,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 
 	CCamera_Action::ACTIONCAMDESC				ActionCameraDesc;
-	ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+	ZeroMemory(&ActionCameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
 
 	ActionCameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
 	ActionCameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
@@ -446,10 +446,10 @@ HRESULT CLevel_SnowField::Ready_Layer_Camera(const _tchar * pLayerTag)
 	ActionCameraDesc.CameraDesc.fNear = 0.1f;
 	ActionCameraDesc.CameraDesc.fFar = 1000.f;
 
-	CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
-	CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
+	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_SNOWFIELD, pLayerTag, &CameraDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CameraAction"), LEVEL_SNOWFIELD, pLayerTag, &ActionCameraDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);

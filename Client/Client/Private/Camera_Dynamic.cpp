@@ -333,6 +333,32 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 	vCameraPosition = XMVectorSetZ(vCameraPosition, (XMVectorGetZ(vCenterPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
 	m_vNewPos = vCameraPosition;
 
+	if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+	{
+		m_bLerp = true;
+		if (YMouseMove > 0)
+		{
+			m_fCameraY += 0.2f;
+			m_fOffsetPosY -= 0.05f;
+		}
+		else if (YMouseMove < 0)
+		{
+			m_fCameraY -= 0.2f;
+			m_fOffsetPosY += 0.05f;
+		}
+
+		if (m_fCameraY >= 5.f)
+			m_fCameraY = 5.f;
+		else if (m_fCameraY <= 0.f)
+			m_fCameraY = 0.f;
+
+		if (m_fOffsetPosY >= 5.f)
+			m_fOffsetPosY = 5.f;
+		else if (m_fOffsetPosY <= 4.f)
+			m_fOffsetPosY = 4.f;
+
+	}
+
 
 	vCenterPos = XMVectorSetY(vCenterPos, XMVectorGetY(vCenterPos) + m_fOffsetPosY);
 	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vCenterPos) + m_fCameraY);
