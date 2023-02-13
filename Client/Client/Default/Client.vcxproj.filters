@@ -70,9 +70,6 @@
     <Filter Include="03.Camera">
       <UniqueIdentifier>{7af49b72-0f93-41a1-957e-9c7a9ade44fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Camera\Dynamic_Camera">
-      <UniqueIdentifier>{83272f2d-f8c5-47b8-9532-169f984bf112}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Camera\Manager">
       <UniqueIdentifier>{b789c60c-c914-46ce-9c77-496bede53424}</UniqueIdentifier>
     </Filter>
@@ -331,20 +328,23 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion">
       <UniqueIdentifier>{dd8b27f6-7a4b-4892-bc10-3d8930a862eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\00.Loading\MonsterCreater">
-      <UniqueIdentifier>{5bcaa77d-721e-4fc7-841e-7f13d7ee45ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Levels\00.Loading\PlayerCreater">
-      <UniqueIdentifier>{bc605024-7388-4a57-849b-4070f0b98949}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Levels\00.Loading\NpcCreater">
-      <UniqueIdentifier>{c22c4171-edd3-48cc-bd99-d99a21c94602}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\07.Bullet\AlphenSkills">
       <UniqueIdentifier>{7aa964f0-2600-4445-b958-d323d28ae920}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\04.UI\22.UI_BattleResult">
       <UniqueIdentifier>{570c6aa6-a3aa-4dc6-b5eb-92168bda269a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\23.ScreenDistortion">
+      <UniqueIdentifier>{8a0a984c-de3a-4d5d-8090-46a9bed0b83f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Camera\00.Dynamic_Camera">
+      <UniqueIdentifier>{83272f2d-f8c5-47b8-9532-169f984bf112}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Camera\01.Action_Camera">
+      <UniqueIdentifier>{e0106937-7a27-4593-adc4-699a0d95787b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\00.Loading\ActorCreater">
+      <UniqueIdentifier>{bc605024-7388-4a57-849b-4070f0b98949}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\04.UI\23.UI_LevelUp">
       <UniqueIdentifier>{bc40de5b-8754-46b1-a65e-ef8cbc3ba8a2}</UniqueIdentifier>
@@ -403,7 +403,7 @@
       <Filter>97.ShaderFiles</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Dynamic.h">
-      <Filter>03.Camera\Dynamic_Camera</Filter>
+      <Filter>03.Camera\00.Dynamic_Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CameraManager.h">
       <Filter>03.Camera\Manager</Filter>
@@ -907,7 +907,7 @@
       <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerCreater.h">
-      <Filter>01.Levels\00.Loading\PlayerCreater</Filter>
+      <Filter>01.Levels\00.Loading\ActorCreater</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
@@ -935,6 +935,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_BattleResult.h">
       <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ScreenDistortion.h">
+      <Filter>02.GameObjects\04.UI\23.ScreenDistortion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Action.h">
+      <Filter>03.Camera\01.Action_Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_LevelUp.h">
       <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
@@ -978,7 +984,7 @@
       <Filter>02.GameObjects\04.UI\01.UI_Portrait</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Dynamic.cpp">
-      <Filter>03.Camera\Dynamic_Camera</Filter>
+      <Filter>03.Camera\00.Dynamic_Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CameraManager.cpp">
       <Filter>03.Camera\Manager</Filter>
@@ -1467,7 +1473,7 @@
       <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerCreater.cpp">
-      <Filter>01.Levels\00.Loading\PlayerCreater</Filter>
+      <Filter>01.Levels\00.Loading\ActorCreater</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp">
       <Filter>02.GameObjects\04.UI\21.UI_MonsterHpbar</Filter>
@@ -1495,6 +1501,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_BattleResult.cpp">
       <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ScreenDistortion.cpp">
+      <Filter>02.GameObjects\04.UI\23.ScreenDistortion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Action.cpp">
+      <Filter>03.Camera\01.Action_Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_LevelUp.cpp">
       <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>

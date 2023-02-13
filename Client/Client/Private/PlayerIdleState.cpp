@@ -67,9 +67,8 @@ CPlayerState * CIdleState::HandleInput()
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 				else if (pGameInstance->Key_Down(DIK_F))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
-				
 				break;
-			default:
+			case CPlayer::RINWELL: //For Rinwell State
 				break;
 			}
 		}
@@ -174,8 +173,10 @@ void CIdleState::Enter()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE);
 		break;
 	case CPlayer::RINWELL:
-		break;
-	default:
+		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_LOOP);
+		else
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::IDLE);
 		break;
 	}
 

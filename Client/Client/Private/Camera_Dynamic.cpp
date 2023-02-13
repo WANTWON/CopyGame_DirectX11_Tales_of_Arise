@@ -37,6 +37,9 @@ HRESULT CCamera_Dynamic::Initialize(void* pArg)
 
 int CCamera_Dynamic::Tick(_float fTimeDelta)
 {
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_DYNAMIC)
+		return OBJ_NOEVENT;
+
 	__super::Tick(fTimeDelta);
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_F1))
@@ -89,6 +92,9 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 
 void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
 {
+	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_DYNAMIC)
+		return;
+
 	__super::Late_Tick(fTimeDelta);
 }
 
@@ -326,6 +332,32 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 	vCameraPosition = XMVectorSetX(vCameraPosition, (XMVectorGetX(vCenterPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
 	vCameraPosition = XMVectorSetZ(vCameraPosition, (XMVectorGetZ(vCenterPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
 	m_vNewPos = vCameraPosition;
+
+	if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+	{
+		m_bLerp = true;
+		if (YMouseMove > 0)
+		{
+			m_fCameraY += 0.2f;
+			m_fOffsetPosY -= 0.05f;
+		}
+		else if (YMouseMove < 0)
+		{
+			m_fCameraY -= 0.2f;
+			m_fOffsetPosY += 0.05f;
+		}
+
+		if (m_fCameraY >= 5.f)
+			m_fCameraY = 5.f;
+		else if (m_fCameraY <= 0.f)
+			m_fCameraY = 0.f;
+
+		if (m_fOffsetPosY >= 5.f)
+			m_fOffsetPosY = 5.f;
+		else if (m_fOffsetPosY <= 4.f)
+			m_fOffsetPosY = 4.f;
+
+	}
 
 
 	vCenterPos = XMVectorSetY(vCenterPos, XMVectorGetY(vCenterPos) + m_fOffsetPosY);

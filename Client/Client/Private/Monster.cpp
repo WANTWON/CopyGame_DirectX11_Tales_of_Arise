@@ -445,7 +445,8 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 void CMonster::Collision_Object(_float fTimeDelta)
 {
 
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
 	CBaseObj* pCollisionMonster = nullptr;

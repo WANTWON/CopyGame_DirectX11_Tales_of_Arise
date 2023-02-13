@@ -136,10 +136,11 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
-	if (m_bDead)
+	if (m_bDead || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION )
 		return OBJ_DEAD;
 		
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
 
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
@@ -167,7 +168,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() )
 		return;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
@@ -178,7 +179,11 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return;
+
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
 		return;
 
 	LateTick_State(fTimeDelta);

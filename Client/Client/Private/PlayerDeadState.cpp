@@ -61,6 +61,9 @@ void CPlayerDeadState::Enter()
 	case CPlayer::SION:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DEAD);
 		break;
+	case CPlayer::RINWELL:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_DEAD);
+		break;
 	}
 }
 

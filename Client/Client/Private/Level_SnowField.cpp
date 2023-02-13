@@ -46,10 +46,10 @@ HRESULT CLevel_SnowField::Initialize()
 		return E_FAIL;
 
 
-	cout << " Npc Clone start" << endl;
+	/*cout << " Npc Clone start" << endl;
 	m_pNpcLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_NPC);
 	if (nullptr == m_pNpcLoader)
-		return E_FAIL;
+		return E_FAIL;*/
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Backgorund"))))
 		return E_FAIL;
@@ -71,7 +71,7 @@ HRESULT CLevel_SnowField::Initialize()
 
 	DWORD dwTime = GetTickCount();
 	while (false == m_pPlayerLoader->Get_Finished() || 
-		false == m_pNpcLoader->Get_Finished() ||
+		/*false == m_pNpcLoader->Get_Finished() ||*/
 		false == m_pMonsterLoader1->Get_Finished())
 	{
 		if (dwTime + 1000 < GetTickCount())
@@ -80,8 +80,8 @@ HRESULT CLevel_SnowField::Initialize()
 				cout << "Finished Player Clone" << endl;
 	
 
-			if (m_pNpcLoader->Get_Finished() == true)
-				cout << "Finished Npc Clone" << endl;
+			//if (m_pNpcLoader->Get_Finished() == true)
+			//	cout << "Finished Npc Clone" << endl;
 
 
 			if (m_pMonsterLoader1->Get_Finished() == true)
@@ -108,7 +108,7 @@ HRESULT CLevel_SnowField::Initialize()
 
 	Safe_Release(m_pPlayerLoader);
 	Safe_Release(m_pMonsterLoader1);
-	Safe_Release(m_pNpcLoader);
+	//Safe_Release(m_pNpcLoader);
 
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
@@ -139,17 +139,16 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
-		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
-		Safe_AddRef(pGameInstance);
-
-		LEVEL eNextLevel = LEVEL_BATTLE;
-
 		CPlayerManager::Get_Instance()->Save_LastPosition();
 		m_pCollision_Manager->Clear_AllCollisionGroup();
-		pGameInstance->Set_DestinationLevel(eNextLevel);
 
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		LEVEL eNextLevel = LEVEL_BATTLE;
+		pGameInstance->Set_DestinationLevel(eNextLevel);
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
 			return;
+
 		RELEASE_INSTANCE(CGameInstance);
 	}
 }
@@ -436,6 +435,24 @@ HRESULT CLevel_SnowField::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_SNOWFIELD, pLayerTag, &CameraDesc)))
+		return E_FAIL;
+
+
+	CCamera_Action::ACTIONCAMDESC				ActionCameraDesc;
+	ZeroMemory(&ActionCameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+
+	ActionCameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+	ActionCameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+
+	ActionCameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	ActionCameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	ActionCameraDesc.CameraDesc.fNear = 0.1f;
+	ActionCameraDesc.CameraDesc.fFar = 1000.f;
+
+	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CameraAction"), LEVEL_SNOWFIELD, pLayerTag, &ActionCameraDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);

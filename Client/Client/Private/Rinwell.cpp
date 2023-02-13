@@ -12,7 +12,7 @@ _bool CRinwell::Is_AnimationLoop(_uint eAnimId)
 	case IDLE:
 	case RUN:
 	case BTL_MAGIC_LOOP:
-
+	case DASH:
 		return true;
 	default:
 		return false;
@@ -41,7 +41,7 @@ HRESULT CRinwell::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_tInfo.fMaxHp = 100000;
+	m_tInfo.fMaxHp = 5000;
 	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
 
 	m_tInfo.fMaxMp = 5.f;
@@ -67,7 +67,7 @@ HRESULT CRinwell::Ready_Parts()
 	WeaponDesc.pSocket = pSocket;
 	WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	WeaponDesc.pParentWorldMatrix = m_pTransformCom->Get_World4x4Ptr();
-	strcpy(WeaponDesc.pModeltag, "SWO1");
+	strcpy(WeaponDesc.pModeltag, "SIOW(00)");
 	WeaponDesc.pOwner = this;
 
 	Safe_AddRef(pSocket);
@@ -108,10 +108,18 @@ HRESULT CRinwell::Ready_Components(void* pArg)
 
 	/* For.Com_OBB */
 	CCollider::COLLIDERDESC ColliderDesc;
-	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	/*ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
 	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
+		return E_FAIL;*/
+
+	/* For.Com_SPHERE */
+	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	ColliderDesc.vScale = _float3(2.5f, 2.5f, 2.5f);
+	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+	ColliderDesc.vPosition = _float3(0.f, 2.5f, 0.f);
+	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
 
