@@ -170,14 +170,12 @@ HRESULT CLoader::Loading_ForClient()
 	//if (FAILED(Loading_ForMaptoolModel()))
 	//	return E_FAIL;
 
-	////For Effect
+	//For Effect
 	if (FAILED(Loading_ForEffect()))
 		return E_FAIL;
 	 
 	if (FAILED(Loading_ForEffectTexture()))
 		return E_FAIL;
-
-
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
 

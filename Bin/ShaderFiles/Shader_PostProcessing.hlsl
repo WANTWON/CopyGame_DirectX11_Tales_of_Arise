@@ -19,17 +19,21 @@ texture2D g_GlowTexture;
 float g_fGlowRadius = 1.f;
 const float Weight[17] = { 0.0561, 0.1353, 0.278, 0.4868, 0.6534, 0.7261, 0.8253, 0.9231, 1, 0.9231, 0.8253, 0.7261, 0.6534, 0.4868, 0.278, 0.1353, 0.0561 };
 const float WeightSum = 9.1682;
-const int WeightCount = 8;
+const int WeightCount = 8; 
 
 /* Fog */
-float3 g_vFogColor = float3(.2f, .2f, .2f);
-float g_fMinRange = 30.f;
-float g_fMaxRange = 50.f;
+texture2D g_FogTexture;
+float3 g_vFogColor = float3(.8f, .8f, .8f);
+float g_fFogStrength = 0.6f;
+float g_fMinRange = 25.f;
+float g_fMaxRange = 70.f;
 float3 g_vPlayerPosition;
 
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_Linear;
+	AddressU = wrap;
+	AddressV = wrap;
 };
 
 sampler DepthSampler = sampler_state
@@ -57,6 +61,15 @@ BlendState BS_LightBlending
 	BlendEnable[1] = true;
 	SrcBlend = one;
 	DestBlend = one;
+	BlendOp = add;
+};
+
+BlendState BS_AlphaBlending
+{
+	BlendEnable[0] = true;
+
+	SrcBlend = src_alpha;
+	DestBlend = inv_Src_Alpha;
 	BlendOp = add;
 };
 
@@ -188,30 +201,43 @@ PS_OUT PS_FOG(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	float4 vBackBufferTexture = g_BackBufferTexture.Sample(LinearSampler, In.vTexUV);
-	vector vDepthTexture = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
-
+	float4 vDepthTexture = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
 	float fViewZ = vDepthTexture.y * 1000.f;
 
-	vector vWorldPos = (vector)0.f;
-	vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
-	vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
-	vWorldPos.z = vDepthTexture.r;
-	vWorldPos.w = 1.0f;
+	float fFogPower;
 
-	vWorldPos *= fViewZ;
-	vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-	vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+	if (fViewZ == 0.f) /* SkyBox is not computed inside the DepthTexture. */
+		fFogPower = 1.f;
+	else
+	{
+		vector vWorldPos = (vector)0.f;
+		vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
+		vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
+		vWorldPos.z = vDepthTexture.r;
+		vWorldPos.w = 1.0f;
 
-	float3 vPixelWorldPosition = vWorldPos.xyz;
-	float fDistance = length(g_vPlayerPosition - vPixelWorldPosition);
-	float fFogPower = saturate((fDistance - g_fMinRange) / (g_fMaxRange - g_fMinRange)); // 0 ~ 1
+		vWorldPos *= fViewZ;
+		vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+		vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
 
-	//float4 vLerpColor = lerp(vBackBufferTexture, float4(g_vFogColor, 1.0f), fFogPower);
-	Out.vColor = vBackBufferTexture;
-	Out.vColor.rgb += g_vFogColor * fFogPower;
+		float3 vPixelWorldPosition = vWorldPos.xyz;
+		float fDistance = length(g_vPlayerPosition - vPixelWorldPosition);
+		fFogPower = saturate((fDistance - g_fMinRange) / (g_fMaxRange - g_fMinRange)); // 0 ~ 1
+	}
 
-	//Out.vColor = vLerpColor;
+	Out.vColor.rgb = g_vFogColor;
+	Out.vColor.a = fFogPower * g_fFogStrength;
+	
+	return Out;
+}
+
+PS_OUT PS_FOG_BLEND(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float4 vFogTexture = g_FogTexture.Sample(LinearSampler, In.vTexUV);
+
+	Out.vColor = vFogTexture;
 
 	return Out;
 }
@@ -254,11 +280,22 @@ technique11 DefaultTechnique
 	pass Fog // 3 
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_FOG();
+	}
+
+	pass Blend_Fog // 4
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_FOG_BLEND();
 	}
 }

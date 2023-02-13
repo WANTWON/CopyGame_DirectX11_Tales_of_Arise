@@ -1459,6 +1459,10 @@ HRESULT CLoader::Loading_ForEffect()
 
 #pragma region Texture
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fog"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Fog.png"), 1))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("RockFormation0"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Particle/RockFormation0.png"), 1))))
 		return E_FAIL;
