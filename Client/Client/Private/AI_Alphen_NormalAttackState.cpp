@@ -208,6 +208,7 @@ void CAI_Alphen_NormalAttackState::Enter()
 	else
 	m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
+	m_pOwner->Set_Manarecover(false);
 }
 
 void CAI_Alphen_NormalAttackState::Exit()

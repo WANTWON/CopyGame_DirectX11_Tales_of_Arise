@@ -44,6 +44,7 @@ CPlayerState * CDodgeState::HandleInput(void)
 					return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
 					break;
 				case CPlayer::RINWELL:
+					//for Rinwell State
 					break;
 				}
 			}
@@ -58,6 +59,7 @@ CPlayerState * CDodgeState::HandleInput(void)
 					return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
 					break;
 				case CPlayer::RINWELL:
+					//for Rinwell State
 					break;
 				}
 			}
@@ -86,6 +88,9 @@ CPlayerState * CDodgeState::HandleInput(void)
 					else if (pGameInstance->Key_Down(DIK_F))
 						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 					break;
+				case CPlayer::RINWELL:
+					//for Rinwell State
+					break;
 				}
 			}
 			else
@@ -107,6 +112,9 @@ CPlayerState * CDodgeState::HandleInput(void)
 						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 					else if (pGameInstance->Key_Down(DIK_F))
 						return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
+					break;
+				case CPlayer::RINWELL:
+					//for Rinwell State
 					break;
 				}
 			}
@@ -248,10 +256,34 @@ void CDodgeState::Enter(void)
 		}
 		break;
 	case CPlayer::RINWELL:
+		if (m_bIsFly)
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_STEP_AIR);
+
+		else
+		{
+			switch (m_eDirection)
+			{
+			case Client::DIR_STRAIGHT:
+			case Client::DIR_LEFT:
+			case Client::DIR_RIGHT:
+			case Client::DIR_STRAIGHT_LEFT:
+			case Client::DIR_STRAIGHT_RIGHT:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_STEP_LAND);
+				break;
+			case Client::DIR_BACKWARD:
+			case Client::DIR_BACKWARD_LEFT:
+			case Client::DIR_BACKWARD_RIGHT:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_STEP_LAND_BACK);
+				break;
+			}
+		}
 		break;
 	default:
 		break;
 	}
+
+	m_pOwner->Set_Manarecover(true);
+
 }
 
 void CDodgeState::Exit(void)

@@ -240,6 +240,7 @@ void CAICheckState::Enter()
 	}
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 
+	m_pOwner->Set_Manarecover(true);
 
 	/*m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 

@@ -4,6 +4,7 @@
 #include "BaseObj.h"
 #include "PlayerManager.h"
 
+
 BEGIN(Engine)
 class CNavigation;
 class CModel;
@@ -60,8 +61,17 @@ public: /* Getter &  Setter */
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
 	void Play_AISkill(PLAYERID ePlayer);
-
+	//expup
 	void Plus_EXP(_uint exp);
+
+	//levelup
+	_bool Get_Levelup() { return m_bLevelup; }
+	void Set_Levelup(_bool tof) { m_bLevelup = tof; }
+	//manarecover control
+	void Set_Manarecover(_bool tof) { m_bManaRecover = tof; }
+	// manause
+	void Use_Mana(_float mana) { m_tInfo.fCurrentMp -= mana; }
+
 
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;
@@ -96,6 +106,7 @@ protected: /* for 4 Player */
 	CPlayerState*	m_pPlayerState = nullptr;
 	CAIState*		m_pAIState = nullptr;
 	CPlayerManager*	m_pPlayerManager = nullptr;
+	
 	/* 스킬 */
 	_uint			m_eGroundSkills[GROUND_SKILL_END] = { GROUND_SKILL_END, };
 	_uint			m_eFlySkills[FLY_SKILL_END] = { FLY_SKILL_END, };
@@ -105,10 +116,15 @@ protected: /* for 4 Player */
 	LEVEL			m_eLevel = LEVEL_END;
 	/* 저스트 회피 판단 변수 */
 	_bool			m_bIsJustDodge = false;
+	/* mana recover */
+	_bool           m_bManaRecover = true;
+
+private:
+	_bool m_bLevelup = false;
 
 protected:
 	vector<class CGameObject*> m_Parts;
-
+	
 protected:
 	HRESULT SetUp_Controller();
 

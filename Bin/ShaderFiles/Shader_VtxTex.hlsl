@@ -76,18 +76,6 @@ PS_OUT PS_EFFECT(PS_IN In)
 	if (Out.vColor.a <= g_fAlphaDiscard) // Alpha Test
 		discard;
 
-	//float2	vUV;
-
-	//vUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
-	//vUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
-
-	//vector	vDepthDesc = g_DepthTexture.Sample(LinearSampler, vUV);
-
-	//float	fViewZ = In.vProjPos.w;
-	//float	fOldViewZ = vDepthDesc.y*1000.f;
-
-	//Out.vColor.a = Out.vColor.a * (fOldViewZ - fViewZ);
-
 	return Out;
 }
 

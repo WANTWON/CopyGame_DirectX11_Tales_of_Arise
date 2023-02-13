@@ -508,6 +508,8 @@ void CAI_Sion_SkillState::Enter()
 		break;
 	}
 
+	m_pOwner->Set_Manarecover(false);
+	m_pOwner->Use_Mana(1.f);
 
 }
 

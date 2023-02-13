@@ -4,7 +4,6 @@
 #include "GameInstance.h"
 #include "Weapon.h"
 
-
 _bool CSion::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
@@ -47,8 +46,8 @@ HRESULT CSion::Initialize(void * pArg)
 	m_tInfo.fCurrentMp = 2.3f;
 	m_tInfo.iDamage = 100;
 	m_tInfo.fCurrentBoostGuage = 20.f;
-	m_tInfo.iCurrentExp = 25;
-	m_tInfo.iMaxExp = 100;
+	m_tInfo.iCurrentExp = 500;
+	m_tInfo.iMaxExp = 1000;
 	m_tInfo.iLevel = 8;
 
 	return S_OK;
@@ -108,11 +107,11 @@ HRESULT CSion::Ready_Components(void* pArg)
 
 	/* For.Com_OBB */
 	CCollider::COLLIDERDESC ColliderDesc;
-	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
-	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
-	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
-		return E_FAIL;
+	//ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	//ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
+	//ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
+	//if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
+	//	return E_FAIL;
 
 	/* For.Com_SPHERE */
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
@@ -204,6 +203,7 @@ HRESULT CSion::SetUp_ShaderResources()
 
 	return S_OK;
 }
+
 
 CSion * CSion::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {

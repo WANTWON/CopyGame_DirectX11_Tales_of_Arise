@@ -44,10 +44,12 @@ CPlayerState * CRunState::HandleInput()
 			if (pGameInstance->Key_Down(DIK_F))
 				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_F);
 		case CPlayer::SION:
-		case CPlayer::RINWELL:
 			//for Sion State//
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
 				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
+			break;
+		case CPlayer::RINWELL:
+			//for Rinwell State//
 			break;
 		}
 
@@ -125,10 +127,12 @@ CPlayerState * CRunState::HandleInput()
 	{
 		if (!m_bIsDash)
 		{
-			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+			if (CPlayer::ALPHEN == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
-			else if (CPlayer::SION == m_pOwner->Get_PlayerID())
+			else if (CPlayer::SION == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
+			else if (CPlayer::RINWELL == m_ePlayerID)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
 		}
 
 		m_bIsDash = true;
@@ -143,10 +147,12 @@ CPlayerState * CRunState::HandleInput()
 	{
 		if (m_bIsDash)
 		{
-			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+			if (CPlayer::ALPHEN == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
-			else if (CPlayer::SION == m_pOwner->Get_PlayerID())
+			else if (CPlayer::SION == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
+			else if (CPlayer::RINWELL == m_ePlayerID)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
 		}
 
 		m_bIsDash = false;
@@ -208,7 +214,7 @@ void CRunState::Enter()
 
 	if (m_bIsDash)
 	{
-		switch (m_pOwner->Get_PlayerID())
+		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
 			if (LEVEL_BATTLE != m_pOwner->Get_Level())
@@ -220,11 +226,16 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
+		case CPlayer::RINWELL:
+			if (LEVEL_BATTLE != m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			break;
 		}
 	}
 	else
 	{
-		switch (m_pOwner->Get_PlayerID())
+		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
 			if (LEVEL_BATTLE == m_pOwner->Get_Level())
@@ -241,9 +252,18 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
+		case CPlayer::RINWELL:
+			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+			else
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			break;
 		}
 	}
 
+
+	m_pOwner->Set_Manarecover(true);
 }
 
 void CRunState::Exit()

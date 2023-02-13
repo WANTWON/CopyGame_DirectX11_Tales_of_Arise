@@ -297,6 +297,9 @@ void CAI_Alphen_SkillAttackState::Enter()
 		break;
 	}
 
+	m_pOwner->Set_Manarecover(false);
+	m_pOwner->Use_Mana(1.f);
+
 
 }
 

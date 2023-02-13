@@ -53,7 +53,7 @@ private:
 	_float m_fbrightpos_damagefont[6] = { 0.f , -0.5f, -1.f, -1.5f , -2.f , - 2.5f }; 
 	_float m_fOffsetX = 0.f;
 
-	_bool m_bfadein = false;
+	_bool m_bfadein = true;
 	_bool m_bfadeout = false;
 	_float m_fDietimer = 0.f;
 

@@ -368,8 +368,18 @@ void CJumpState::Enter()
 			else if (m_eStateType == STATETYPE_END)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
 			break;
+		case CPlayer::RINWELL:
+			if (m_eStateType == STATETYPE_START)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_JUMP);
+			else if (m_eStateType == STATETYPE_MAIN)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_LOOP);
+			else if (m_eStateType == STATETYPE_END)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
+			break;
 		}
 	}
+
+	m_pOwner->Set_Manarecover(true);
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_JumpStart.wav"), SOUND_FOOT, 0.4f);
 }
