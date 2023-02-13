@@ -267,7 +267,7 @@ CAIState * CAICheckState::RandomAttackChoose_Sion()
 			m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
 		if (m_pOwner->Get_Info().fCurrentMp < 1.f)
-			return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+			return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 
 
 

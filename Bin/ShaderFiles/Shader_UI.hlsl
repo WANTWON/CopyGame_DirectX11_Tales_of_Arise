@@ -388,7 +388,7 @@ PS_OUT PS_ALLBLUE(PS_IN In)
 	Out.vColor.b = 0.83441f;
 	if (Out.vColor.a < 0.2f)
 		discard;
-	Out.vColor.a = 1.f;
+	Out.vColor.a *= g_fAlpha;
 
 	return Out;
 }
@@ -1255,6 +1255,8 @@ PS_OUT PS_PROGRESSBAR(PS_IN In)
 
 	Out.vColor.a += 0.6f;
 
+	Out.vColor.a *= g_fAlpha;
+
 	return Out;
 
 
@@ -1489,6 +1491,47 @@ PS_OUT PS_EXPBAR(PS_IN In)
 
 
 	//	return Out;
+}
+
+PS_OUT PS_STRIKEEFFECT(PS_IN In)
+{
+	PS_OUT      Out = (PS_OUT)0;
+
+	int TotalIndex = 5;
+	int CurIndex = g_SpriteCurTime / g_SpriteSpeed;
+
+	if (g_SpriteLoop && CurIndex >= TotalIndex - 1)
+	{
+		CurIndex = 0;
+	}
+	else if (CurIndex >= TotalIndex - 1)
+	{
+		CurIndex = TotalIndex - 1;
+	}
+
+	//UV가로세로 개수
+	int SpriteU = (int)g_UVSpriteValue.x;
+	int SpriteV = (int)g_UVSpriteValue.y;
+
+	//밸류당 UV
+	float ValueX = 1.f / SpriteU;
+	float ValueY = 1.f / SpriteV;
+
+	//현재 인덱스의 XY
+	float CurX = CurIndex % SpriteU;
+	float CurY = CurIndex / SpriteU;
+
+	float2 NewUV = float2((In.vTexUV.x * ValueX) + (ValueX * CurX), (In.vTexUV.y * ValueY) + (ValueY * CurY));
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, NewUV);
+
+	Out.vColor.a = Out.vColor.rgb;
+
+
+
+
+
+	return Out;
 }
 
 technique11 DefaultTechnique
@@ -2043,4 +2086,17 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_EXPBAR();
 	}
+
+	pass STRIKEEFFECT // 50
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_STRIKEEFFECT();
+	}
+
+	
 }
