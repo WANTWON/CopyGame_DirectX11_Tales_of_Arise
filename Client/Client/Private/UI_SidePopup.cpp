@@ -2391,6 +2391,7 @@ void CUI_SidePopup::Free()
 	Safe_Release(m_pTextureCom6);
 	Safe_Release(m_pTextureCom7);
 	Safe_Release(m_pTextureCom8);
+	Safe_Release(m_pTextureCom9);
 
 	//Safe_Release(m_pTextureCom2);
 	__super::Free();
