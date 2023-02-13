@@ -97,7 +97,8 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
 	{
 		g_fSoundVolume += 0.001f;
 		if (g_fSoundVolume >= 0.15f)
@@ -109,6 +110,7 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 	{
+		
 		CUI_Manager::Get_Instance()->ReSet_Arrived_Count();
 
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -435,6 +437,24 @@ HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_BATTLE, pLayerTag, &CameraDesc)))
+		return E_FAIL;
+
+
+	CCamera_Action::ACTIONCAMDESC				ActionCameraDesc;
+	ZeroMemory(&ActionCameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+
+	ActionCameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+	ActionCameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+
+	ActionCameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	ActionCameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	ActionCameraDesc.CameraDesc.fNear = 0.1f;
+	ActionCameraDesc.CameraDesc.fFar = 1000.f;
+
+	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CameraAction"), LEVEL_BATTLE, pLayerTag, &ActionCameraDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);

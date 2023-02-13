@@ -145,7 +145,10 @@ void CNavigation::Compute_CurrentIndex_byXZ(_vector vPosition)
 
 	for (int i = 0; i < m_Cells.size(); ++i)
 	{
-		fDistance = XMVectorGetX(XMVector3Length(vPosition - m_Cells[i]->Get_Center()));
+		_vector vCellCenter = m_Cells[i]->Get_Center();
+		_vector vPosYCell = XMVectorSetY(vPosition, XMVectorGetY(vCellCenter));
+
+		fDistance = XMVectorGetX(XMVector3Length(vPosYCell - vCellCenter));
 
 		if (fMinDistance > fDistance)
 		{

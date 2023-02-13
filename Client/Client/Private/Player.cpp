@@ -11,7 +11,6 @@
 #include "PlayerDeadState.h"
 #include "PlayerHitState.h"
 
-#include "CameraManager.h"
 #include "AI_HitState.h"
 #include "AIDeadState.h"
 #include "AI_BoostAttackState.h"
@@ -19,6 +18,7 @@
 
 using namespace Player;
 using namespace AIPlayer;
+
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -52,8 +52,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	CPlayerState* pPlayerState = new Player::CIdleState(this, CIdleState::IDLE_SIDE);
 	m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
 
-	m_pPlayerManager = CPlayerManager::Get_Instance();
-	Safe_AddRef(m_pPlayerManager);
+	m_pPlayerManager = GET_INSTANCE(CPlayerManager);
+	
+	
 
 	m_eLevel = LEVEL_END;
 
@@ -66,18 +67,25 @@ HRESULT CPlayer::Initialize(void * pArg)
 int CPlayer::Tick(_float fTimeDelta)
 {
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if(m_eLevel == LEVEL_LOADING)
+	if(m_eLevel == LEVEL_LOADING || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
 		return OBJ_NOEVENT;
 
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if (m_pCameraManager->Get_CamState()== CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
+	if (m_bManaRecover)
+		m_tInfo.fCurrentMp += 0.02f;
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && CPlayerManager::Get_Instance()->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
+	if (m_tInfo.fCurrentMp >= m_tInfo.fMaxMp)
+		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
+
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_pPlayerManager->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(ALPHEN);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(SION);
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
 	{
@@ -137,8 +145,11 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 #endif //_DEBUG
 	}
 
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
+	
 
 	switch (eMode)
 	{
@@ -362,7 +373,7 @@ void CPlayer::Plus_EXP(_uint exp)
 
 		++m_tInfo.iLevel;
 
-
+		m_bLevelup = true;
 
 	}
 
@@ -532,7 +543,6 @@ void CPlayer::Free()
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pPlayerManager);
-
 
 	Safe_Delete(m_pPlayerState);
 	Safe_Delete(m_pAIState);

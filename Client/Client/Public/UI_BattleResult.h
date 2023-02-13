@@ -29,6 +29,8 @@ public:
 	HRESULT Render_Player2();
 	HRESULT Render_Player3();
 	HRESULT Render_Player4();
+	HRESULT Render_Cp();
+	HRESULT Render_Exp();
 
 public:
 	static CUI_BattleResult* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -45,7 +47,7 @@ public:
 	void Skillmsg_on(_uint index);//, _uint index1);l
 
 
-	enum SKILLNAME {
+	/*enum SKILLNAME {
 		SKILLNAME_CHOOSAWOO,
 		SKILLNAME_BEEYEONIN,
 		SKILLNAME_BOONGSUPGEEAKJIN,
@@ -58,7 +60,7 @@ public:
 		SKILLNAME_AQUARUINA,
 		SKILLNAME_GLACIA,
 		SKILLNAME_TRESVENTUS
-	};
+	};*/
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
@@ -67,6 +69,8 @@ private:
 	CTexture*               m_pTextureCom4 = nullptr;
 	CTexture*               m_pTextureCom5 = nullptr;
 	CTexture*               m_pTextureCom6 = nullptr;
+	CTexture*               m_pTextureCom7 = nullptr;
+	CTexture*               m_pTextureCom8 = nullptr;
 	_bool m_bfadein = true;
 	_bool m_bfadeout = false;
 
@@ -92,10 +96,12 @@ private:
 	_uint m_PlayersMaxExp[4] = { 0 , 0, 0, 0 };
 	_uint m_PlayersLevel[4] = { 0, 0 , 0, 0 };
 
+	_float m_PlayersHPAlpha[4] = { 0.f , 0.f , 0.f, 0.f };
+
 
 	_float m_fbrightpos = 0.f;
 	_float m_fbrightpos_hpbar = 0.f;
-	_float m_fMainAlpha = 1.f;
+	_float m_fMainAlpha = 0.f;
 
 	_bool m_bgoup = false;
 	_float m_fAlpha1 = 0.f;
@@ -112,21 +118,35 @@ private:
 
 	_float m_fIndexOffsetY = 0.f;
 
+	_bool m_PlayersHPAlphadown[4] = { false , false , false , false };
+	_bool m_PlayersHPAlphaup[4] = { false , false , false , false };
 
+	_float m_fLevelactiontimer[4] = { 0.f, 0.f, 0.f , 0.f };
+	_bool m_bLevelaction[4] = { false ,false,  false , false };
+	_bool m_bRuneOn[4] = { true , true , true , true };
+	_bool m_bLevelupOn[4] = { true , true , true , true };
+	_float m_fGainExp = 0.f;
+	_bool m_bExpFinish = false;
+	_bool m_bFirst = true;
+	_float m_fmaxcp = 0.f;
+	_float m_fcurrentcp = 0.f;
+	_uint m_icpnum = 0;
+	_float m_fGainExp1 = 0.f;
+		
 
-
-public:
-	typedef struct tagitempopup
-	{
-		//_float2 position = { 0.f,0.f };
-		_uint iIndex = 0;
-		_uint iCount = 0;
-		ITEM_NAME eName = ITEMNAME_END;
-		ITEM_TYPE eType = ITEMTYPE_END;
-
-	}POPUPDESC;
-
-	POPUPDESC m_popupdesc;
+	
+//public:
+//	typedef struct tagitempopup
+//	{
+//		//_float2 position = { 0.f,0.f };
+//		_uint iIndex = 0;
+//		_uint iCount = 0;
+//		ITEM_NAME eName = ITEMNAME_END;
+//		ITEM_TYPE eType = ITEMTYPE_END;
+//
+//	}POPUPDESC;
+//
+//	POPUPDESC m_popupdesc;
 };
 
 END

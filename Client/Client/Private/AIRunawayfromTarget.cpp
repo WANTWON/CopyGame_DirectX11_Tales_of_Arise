@@ -106,6 +106,8 @@ void CAIRunawayfromTarget::Enter()
 	}
 
 
+	m_pOwner->Set_Manarecover(true);
+
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 2.f);
 }

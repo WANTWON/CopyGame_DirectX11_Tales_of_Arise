@@ -201,6 +201,7 @@
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
     <ClInclude Include="..\Public\Bullet.h" />
+    <ClInclude Include="..\Public\Camera_Action.h" />
     <ClInclude Include="..\Public\CloseChaseState.h" />
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
@@ -323,6 +324,7 @@
     <ClInclude Include="..\Public\UI_Changebutton.h" />
     <ClInclude Include="..\Public\UI_Dialogue.h" />
     <ClInclude Include="..\Public\UI_Dialoguepopup.h" />
+    <ClInclude Include="..\Public\UI_LevelUp.h" />
     <ClInclude Include="..\Public\UI_LOCKON.h" />
     <ClInclude Include="..\Public\UI_font_Damage_number.h" />
     <ClInclude Include="..\Public\UI_MENU_Back.h" />
@@ -397,6 +399,7 @@
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
+    <ClCompile Include="..\Private\Camera_Action.cpp" />
     <ClCompile Include="..\Private\CloseChaseState.cpp" />
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
@@ -511,6 +514,7 @@
     <ClCompile Include="..\Private\UI_Changebutton.cpp" />
     <ClCompile Include="..\Private\UI_Dialogue.cpp" />
     <ClCompile Include="..\Private\UI_Dialoguepopup.cpp" />
+    <ClCompile Include="..\Private\UI_LevelUp.cpp" />
     <ClCompile Include="..\Private\UI_LOCKON.cpp" />
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Back.cpp" />

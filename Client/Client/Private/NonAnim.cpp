@@ -159,10 +159,10 @@ _float CNonAnim::Check_CullingRadius()
 		!strcmp(m_ModelDesc.pModeltag, "CliffRock3") ||
 		!strcmp(m_ModelDesc.pModeltag, "CliffRock4") )
 		return 20.f;
-	else if (!strcmp(m_ModelDesc.pModeltag, "CommonBridge"))
+	else if (!strcmp(m_ModelDesc.pModeltag, "CommonBridge") ||
+			!strcmp(m_ModelDesc.pModeltag, "Snow_Mountain"))
 		return 50.f;
 		
-
 	return 3.f;
 }
 

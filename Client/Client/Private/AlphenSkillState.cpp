@@ -285,7 +285,7 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_START, m_fTime, CJumpState::JUMP_BATTLE);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
@@ -295,7 +295,7 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 
 CPlayerState * CAlphenSkillState::EventInput(void)
 {
-	if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+	if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
 	{
 		if (GetKeyState('E') < 0)
 		{
@@ -353,6 +353,8 @@ CPlayerState * CAlphenSkillState::EventInput(void)
 void CAlphenSkillState::Enter(void)
 {
 	__super::Enter();
+	m_pOwner->Use_Mana(1.f);
+	m_pOwner->Set_Manarecover(false);
 
 	Reset_Skill();
 
@@ -419,6 +421,8 @@ void CAlphenSkillState::Enter(void)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	RELEASE_INSTANCE(CBattleManager);
+
+	
 }
 
 void CAlphenSkillState::Exit(void)
