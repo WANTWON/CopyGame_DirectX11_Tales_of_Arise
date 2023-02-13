@@ -364,6 +364,7 @@
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\UI_Portrait.h" />
+    <ClInclude Include="..\Public\UI_SidePopup.h" />
     <ClInclude Include="..\Public\UI_Skillmessage.h" />
     <ClInclude Include="..\public\Water.h" />
     <ClInclude Include="..\Public\UI_Skillbutton.h" />
@@ -554,6 +555,7 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\UI_Portrait.cpp" />
+    <ClCompile Include="..\Private\UI_SidePopup.cpp" />
     <ClCompile Include="..\Private\UI_Skillmessage.cpp" />
     <ClCompile Include="..\private\Water.cpp" />
     <ClCompile Include="..\Private\UI_Skillbutton.cpp" />

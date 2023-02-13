@@ -519,17 +519,17 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	////	}
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_STATIC, pLayerTag)))
+	//	return E_FAIL;
 
-	for (int i = 0; i < 7; ++i)
-	{
-		_uint number = i;
+	//for (int i = 0; i < 7; ++i)
+	//{
+	//	_uint number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_STATIC, pLayerTag, &i)))//, &i)))
-			return E_FAIL;
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_STATIC, pLayerTag, &i)))//, &i)))
+	//		return E_FAIL;
 
-	}
+	//}
 
 
 
@@ -583,6 +583,11 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_INTERECTMSG"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Sidepopup"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+	
+
 
 	/*_float exp = 500.f;
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, pLayerTag , &exp)))
