@@ -838,4 +838,5 @@ void CRenderer::Free()
 	Safe_Release(m_pTarget_Manager);
 
 	Safe_Release(m_pDistortionNoiseTexture);
+	Safe_Release(m_pFogTexture);
 }

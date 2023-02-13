@@ -8,6 +8,7 @@
 #include "PlayerJumpState.h"
 #include "PlayerRunState.h"
 #include "AlphenSkillState.h"
+#include "Effect.h"
 
 using namespace Player;
 
@@ -54,6 +55,45 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_tchar wcEffectName[MAX_PATH] = TEXT("");
+				switch (m_eStateId)
+				{
+					case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
+						break;
+				}
+
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				if (m_bIsFly)
+				{
+					if (!m_bEffectSlashSpawned)
+					{
+						CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+
+						m_bEffectSlashSpawned = true;
+					}
+				}
+				else
+				{
+					if (!m_bEffectSlashSpawned)
+					{
+						CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+
+						m_bEffectSlashSpawned = true;
+					}	
+				}
+			}
 			break;
 		}
 		else
@@ -167,6 +207,8 @@ void CAlphenAttackState::Enter()
 {
 	__super::Enter();
 
+	m_bEffectSlashSpawned = false;
+
 	if (m_bIsFly)
 	{
 		switch (m_eStateId)
@@ -192,7 +234,6 @@ void CAlphenAttackState::Enter()
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("swing_sword_01.wav"), SOUND_EFFECT, 0.8f);
-			
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_1);
