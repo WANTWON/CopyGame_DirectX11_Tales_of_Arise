@@ -1097,12 +1097,12 @@ void CUI_Dialogue::Read_TextFiles_for_Quest3Clear()
 
 
 	vector<vector<_tchar*>> matrix;
-	matrix.push_back(m_vDialogue[0]);
-	matrix.push_back(m_vDialogue[1]);
-	matrix.push_back(m_vDialogue[2]);
-	matrix.push_back(m_vDialogue[3]);
-	matrix.push_back(m_vDialogue[4]);
-	matrix.push_back(m_vDialogue[5]);
+	matrix.push_back(m_vDialouge5[0]);
+	matrix.push_back(m_vDialouge5[1]);
+	matrix.push_back(m_vDialouge5[2]);
+	matrix.push_back(m_vDialouge5[3]);
+	matrix.push_back(m_vDialouge5[4]);
+	matrix.push_back(m_vDialouge5[5]);
 
 
 	m_vCurrentDialogue.push_back(matrix);
