@@ -73,10 +73,17 @@ HRESULT CLevel_SnowField::Initialize()
 
 
 
+
 	////Test
 	//if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
 	//	return E_FAIL;
 	////Test
+
+	//Test
+	if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
+		return E_FAIL;
+	//Test
+
 
 
 	DWORD dwTime = GetTickCount();
