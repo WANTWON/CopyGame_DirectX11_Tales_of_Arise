@@ -228,6 +228,22 @@ vector<CEffect*> CEffect::PlayEffectAtLocation(_tchar * wcEffectName, _matrix mW
 			if (!NoisePowerCurves.empty())
 				pEffect->Set_NoisePowerCurves(NoisePowerCurves);
 
+			/* DISTORT POWER */
+			/* Read how many Distort Power Curves there are for this Effect. */
+			_uint iDistortPowerCurvesCount = 0;
+			ReadFile(hFileEffect, &iDistortPowerCurvesCount, sizeof(_uint), &dwByte, nullptr);
+			/* Read Distort Power Curves. */
+			vector<_float3> DistortPowerCurves;
+			_float3 DistortPowerCurve;
+			for (_uint j = 0; j < iDistortPowerCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &DistortPowerCurve, sizeof(_float3), &dwByte, nullptr);
+				DistortPowerCurves.push_back(DistortPowerCurve);
+			}
+			if (!DistortPowerCurves.empty())
+				pEffect->Set_DistortPowerCurves(DistortPowerCurves);
+
+			/* Change Effect Position. */
 			if (pEffect)
 			{
 				pEffect->Set_WorldPosition(mWorldMatrix);

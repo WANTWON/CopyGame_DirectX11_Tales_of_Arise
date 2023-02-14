@@ -194,9 +194,39 @@ protected:
 		
 
 		return false;
-		
 	}
 
+	_bool Is_TargetInFront(_fvector vAt)
+	{
+		_vector		vMonPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_vector		vMonLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+
+
+		_vector		vTargetDir = XMVector3Normalize(vAt - vMonPos);
+		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		_vector		vMonRight = XMVector3Cross(vAxisY, vMonLook);
+		_vector		vMonUp = XMVector3Cross(vMonLook, vMonRight);
+
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
+
+
+		//앞쪽인지 뒤쪽인지 
+		_float fLookDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
+
+
+		if (fLookDot > 0)
+		{
+			return true;
+		}
+
+		else
+			return false;
+
+
+		return false;
+	}
 
 protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
@@ -221,9 +251,15 @@ protected:
 	_float		m_fCosign;
 	_float		m_fEventSound_Count = 0.f;
 	_float		m_fSoundStart = -1.f;
+	_float		m_fColliderStart = -1.f;
+	
+	_uint		m_iColliderNum = 0.f;
+	
 	CBaseObj*	m_pCurTarget = nullptr;
 	_vector		m_vCurTargetPos;
 
+	CCollider*  m_pAtkColliderCom = false;
+	CCollider*	m_p2th_AtkColliderCom = false;
 
 	CBerserker* m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */

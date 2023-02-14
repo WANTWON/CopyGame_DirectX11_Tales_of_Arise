@@ -7,7 +7,7 @@ BEGIN(Berserker)
 class CTurnR_State : public CBerserkerState
 {
 public:
-	CTurnR_State(class CBerserker* pIceWolf);
+	CTurnR_State(class CBerserker* pBerserker);
 
 	virtual CBerserkerState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CBerserkerState* Tick(_float fTimeDelta) override;

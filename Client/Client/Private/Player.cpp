@@ -206,7 +206,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 		int a = 10;
 	}
-	else
+	else if (LEVEL_BATTLE == m_eLevel)
 	{
 		CBaseObj* pMonster = nullptr;
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pMonster))

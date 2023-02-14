@@ -3,6 +3,7 @@
 #include "AstralDoubt_ChaseState.h"
 #include "GameInstance.h"
 #include "AstralDoubt_WalkState.h"
+#include "AstralDoubt_TurnState.h"
 
 using namespace Astral_Doubt;
 
@@ -18,39 +19,11 @@ CAstralDoubt_State * CChaseState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CChaseState::Tick(_float fTimeDelta)
 {
+	Find_Target();
+	m_fTarget_Distance = Find_BattleTarget();
+
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-
-	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
-
-	if (pDamageCauser == nullptr)
-	{
-		if (m_pCurTarget == nullptr)
-		{
-			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
-			if (m_pCurTarget == nullptr)
-				return nullptr;
-
-			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-		}
-		else
-		{
-			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-		}
-
-	}
-	else
-	{
-		m_pCurTarget = pDamageCauser;
-		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
-		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
-	}
-
-
-	if (m_pCurTarget == nullptr)
-		return nullptr;
 	return nullptr;
 }
 
@@ -58,15 +31,30 @@ CAstralDoubt_State * CChaseState::LateTick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 
-	if (nullptr == m_pCurTarget)
-	{
-		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
-		m_pOwner->Get_Transform()->LookAt(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-	}
-	else
-		m_pOwner->Get_Transform()->LookAt(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	CBaseObj* pTrigger = m_pOwner->Get_Trigger();
+	_vector vTrigger_Pos = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
+	_bool bIs_TargetInFront = false;
+	bIs_TargetInFront = Is_TargetInFront(vTrigger_Pos);
+
+	_vector vTargetPos = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+	if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == true)
+	{
+		m_pOwner->Get_Transform()->LookAt(vTargetPos);
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.7f, m_pOwner->Get_Navigation());
+	}
+
+	else
+	{
+		if (bIs_TargetInFront)
+			return new CWalkState(m_pOwner, FIELD_STATE_ID::STATE_CHASE, true);
+
+		else
+			return new CTurnState(m_pOwner);
+
+	}
+
 
 	if (m_fTarget_Distance >= 15.f)
 		return new CWalkState(m_pOwner, CAstralDoubt_State::FIELD_STATE_ID::STATE_CHASE);

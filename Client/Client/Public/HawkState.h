@@ -159,6 +159,8 @@ protected:
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
 	CBaseObj*	m_pCurTarget = nullptr;
 	_vector		m_vCurTargetPos;
-
+	_bool		m_bIsATK = false;
+	CCollider*  m_pAtkColliderCom = false;
+	CCollider*	m_p2th_AtkColliderCom = false;
 };
 END

@@ -65,8 +65,8 @@ HRESULT CLevel_SnowField::Initialize()
 
 
 	//Test
-	//if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
+		return E_FAIL;
 	//Test
 
 	DWORD dwTime = GetTickCount();
@@ -1020,12 +1020,12 @@ HRESULT CLevel_SnowField::Ready_Layer_Test(const _tchar * pLayerTag)
 		_tchar pModeltag[MAX_PATH];
 		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
 
-		//if (!wcscmp(pModeltag, TEXT("Astral_Doubt")))
-		//{
-		//	//여기서 몬스터 생성하세요
-		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
-		//		return E_FAIL;
-		//}
+		if (!wcscmp(pModeltag, TEXT("Astral_Doubt")))
+		{
+			////여기서 몬스터 생성하세요
+			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
+			//	return E_FAIL;
+		}
 	}
 
 	CloseHandle(hFile);

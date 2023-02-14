@@ -13,7 +13,7 @@ CHowLing_State::CHowLing_State(CBerserker* pIceWolf)
 	m_pOwner = pIceWolf;
 
 	m_fTimeDeltaAcc = 0.f;
-	m_fHowlingTime = ((rand() % 10000 + 5000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fHowlingTime = ((rand() % 4000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CBerserkerState * CHowLing_State::AI_Behaviour(_float fTimeDelta)
@@ -34,32 +34,53 @@ CBerserkerState * CHowLing_State::Tick(_float fTimeDelta)
 
 CBerserkerState * CHowLing_State::LateTick(_float fTimeDelta)
 {
-	//수정코드 
+	m_pOwner->Check_Navigation();
 
 	m_fTimeDeltaAcc += fTimeDelta;
 
-	
-	if (m_fTimeDeltaAcc > m_fHowlingTime)
-		m_iRand = rand() % 2;
+
+	CBaseObj* pTrigger = m_pOwner->Get_Trigger();
+	_vector vTrigger_Pos = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+
+	_bool bIs_TargetInFront = false;
+
+	bIs_TargetInFront = Is_TargetInFront(vTrigger_Pos);
 
 
 	if (m_pTarget)
 		return new CChaseState(m_pOwner);
 
-	else if (m_bIsAnimationFinished)
-		switch (m_iRand)
+	if (m_bIsAnimationFinished)
+	{
+		if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == true)
 		{
-		case 0:
-			return new CWalkState(m_pOwner, FIELD_STATE_END);
-		case 1:
-			return new CTurnR_State(m_pOwner);
-		/*case 2:
-			return new CIdle_State(m_pOwner);*/
+			if (m_fTimeDeltaAcc > m_fRandTime)
+			{
+				switch (rand() % 2)
+				{
+				case 0:
+					return new CWalkState(m_pOwner, FIELD_STATE_END);
+				case 1:
+					return new CTurnR_State(m_pOwner);
 
-		default:
-			break;
+
+				default:
+					break;
+				}
+			}
 		}
 
+		else
+		{
+			if (bIs_TargetInFront)
+				return new CWalkState(m_pOwner, FIELD_STATE_ID::STATE_HOWLING, true);
+
+			else
+				return new CTurnR_State(m_pOwner);
+
+		}
+	}
 
 
 

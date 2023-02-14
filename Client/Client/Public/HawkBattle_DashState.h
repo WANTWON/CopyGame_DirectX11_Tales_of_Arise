@@ -22,6 +22,7 @@ private:
 	_bool		m_bAnimFinish = false;
 	_uint		m_iRand = 0;
 	_bool		m_bTargetSetting = false;
+
 private:
 	_matrix m_StartMatrix;
 };

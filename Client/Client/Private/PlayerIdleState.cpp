@@ -124,6 +124,7 @@ CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 			return new CHitState(m_pOwner);
 	}
 
+
 	if (m_bIsAnimationFinished)
 	{
 		switch (m_eIdleType)
@@ -138,6 +139,7 @@ CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 			break;
 		}
 	}
+
 
 	return nullptr;
 }

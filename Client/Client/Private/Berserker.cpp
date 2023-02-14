@@ -16,7 +16,7 @@
 #include "BerserkerBattle_FireBallState.h"
 #include "BerserkerBattle_Multiple_FireState.h"
 #include "BerserkerBattle_RunState.h"
-
+#include "BerserkerTurnR_State.h"
 
 using namespace Berserker;
 
@@ -145,7 +145,19 @@ int CBerserker::Tick(_float fTimeDelta)
 	
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
 	{
-		CBerserkerState* pState = new CBattle_Multiple_FireState(this);
+		CBerserkerState* pState = new CBattle_Shock_WaveState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	{
+		CBerserkerState* pState = new CBattle_PouncingState(this);
+		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	{
+		CBerserkerState* pState = new CBattle_FireBallState(this);
 		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
 	}
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
@@ -275,6 +287,7 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	case DAMAGE_SMALL_F:
 	case DAMAGE_SMALL_L:
 	case DAMAGE_SMALL_R:
+	case SYMBOL_TURN_LEFT:
 		return false;
 	}
 
@@ -304,7 +317,7 @@ _int CBerserker::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 				if (m_bOnGoingHowLing == false)
 				{
-					if (iHp <= 160)
+					if (iHp <= 15000)
 					{
 						_bool pAngry = true;
 

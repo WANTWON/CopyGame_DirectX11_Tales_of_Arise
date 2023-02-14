@@ -258,10 +258,9 @@ bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigati
 {
 	_matrix WorldMatrix = XMLoadFloat4x4(&m_WorldMatrix);
 
-	_vector vWorldPos = WorldMatrix.r[3];
-	WorldMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-
-	_vector vWorldRot = XMQuaternionNormalize(XMQuaternionRotationMatrix(WorldMatrix));
+	_vector vWorldScale, vWorldRot, vWorldPos;
+	XMMatrixDecompose(&vWorldScale, &vWorldRot, &vWorldPos, WorldMatrix);
+	vWorldRot = XMQuaternionNormalize(vWorldRot);
 
 	_vector RotationQuat = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), (fRotation * -1.f));
 
