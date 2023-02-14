@@ -35,9 +35,7 @@ texture2D g_DissolveTexture;
 
 /* Glow */
 float3 g_vGlowColor;
-
 float g_fGlowPower;
-
 
 /* Water (https://www.youtube.com/watch?v=aVCfVs1oZSY&list=PLv8DnRaQOs5-ST_VDqgbbMRtzMtpK36Hy&index=38&t=1610s) */
 float g_fScrollingSpeed = .05f;
@@ -297,6 +295,15 @@ PS_EFFECT_OUT PS_GLOW(PS_IN In)
 	return Out;
 }
 
+PS_EFFECT_OUT PS_DISTORTION(PS_IN In)
+{
+	PS_EFFECT_OUT Out = (PS_EFFECT_OUT)0;
+
+	Out.vColor = float4(1.f, 0.f, 0.f, 1.f);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default // 0
@@ -363,5 +370,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_GLOW();
+	}
+
+	pass Distortion // 6
+	{
+		SetRasterizerState(RS_Default_NoCull);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISTORTION();
 	}
 }

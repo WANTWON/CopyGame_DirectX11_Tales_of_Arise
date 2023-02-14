@@ -22,6 +22,10 @@ public:
 		_bool bGlow = false;
 		_float3 vGlowColor = _float3(1.f, 1.f, 1.f);
 		_float fGlowPower = 1.f;
+		_bool bDistort = false;
+		_float fDistortPowerInitial = .1f;
+		_float fDistortPower = .1f;
+		_float fDistortSpeed = .1f;
 		_float fLifetime = 0.f;
 		_float fStartAfter = 0.f;
 		_float3 vPosition = _float3(0.f, 0.f, 0.f);
@@ -61,6 +65,7 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Glow() override;
+	virtual HRESULT Render_Distort() override;
 
 public:
 	virtual void Add_MaskTexture() override;
@@ -71,6 +76,7 @@ public:
 	void ScaleLerp();
 	void TurnVelocityLerp();
 	void NoisePowerLerp();
+	void DistortionPowerLerp();
 
 private:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;

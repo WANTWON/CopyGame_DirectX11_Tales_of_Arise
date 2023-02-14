@@ -3572,9 +3572,9 @@ void CImgui_Manager::Set_Effect()
 		if (ImGui::Button("Load Effect"))
 			Load_Effect();
 
-		ImGui::SameLine();
+		/*ImGui::SameLine();
 		if (ImGui::Button("Upgrade Effects"))
-			Upgrade_Effects();
+			Upgrade_Effects();*/
 
 		ImGui::NewLine();
 		ImGui::Separator();
