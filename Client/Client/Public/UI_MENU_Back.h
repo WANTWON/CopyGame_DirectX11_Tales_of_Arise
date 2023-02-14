@@ -250,7 +250,7 @@ private:
 
 	_float m_fRecover_Power = 0.f;
 	_bool m_brecover_finsh = false; // for ++ --
-	_bool m_brecover_effect = false;
+	_bool m_brecover_effect[4] = { false,false , false ,false };
 	_bool m_brecovring = false;   //for finish effect
 
 	_float m_fBluepower = 0.f;

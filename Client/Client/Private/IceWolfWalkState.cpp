@@ -53,7 +53,7 @@ CIceWolfState * CWalkState::LateTick(_float fTimeDelta)
 		else
 		{
 			_vector vPosition = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.5f, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.17f, m_pOwner->Get_Navigation());
 			m_pOwner->Get_Transform()->LookAt(vPosition);
 			
 		}
@@ -66,7 +66,7 @@ CIceWolfState * CWalkState::LateTick(_float fTimeDelta)
 
 		m_fTimeDeltaAcc += fTimeDelta;
 
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.5f, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.17f, m_pOwner->Get_Navigation());
 
 		if (m_pTarget)
 			return new CChaseState(m_pOwner);

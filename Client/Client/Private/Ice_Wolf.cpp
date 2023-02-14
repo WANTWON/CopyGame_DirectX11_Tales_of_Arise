@@ -49,7 +49,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 	m_eMonsterID = ICE_WOLF;
 
-	m_tStats.m_fMaxHp = 15000;
+	m_tStats.m_fMaxHp = 15000  ;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -57,26 +57,7 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 	m_fRadius = 1.f;
 
-	NONANIMDESC ModelDesc;
-	if (pArg)
-		memcpy(&ModelDesc, pArg, sizeof(NONANIMDESC));
-
-	if (pArg)
-	{
-		_vector vPosition = XMLoadFloat3(&ModelDesc.vPosition);
-		vPosition = XMVectorSetW(vPosition, 1.f);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-		Set_Scale(ModelDesc.vScale);
-
-		if (ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
-	}
-
-	Check_NearTrigger();
-
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), 90.f);
-	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
-
 	m_fTimeDeltaAcc = 0;
 	m_fCntChanceTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
 	m_bDone_HitAnimState = false;
@@ -85,6 +66,8 @@ HRESULT CIce_Wolf::Initialize(void * pArg)
 
 HRESULT CIce_Wolf::Ready_Components(void * pArg)
 {
+	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
+
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 	TransformDesc.fSpeedPerSec = 6.f;
@@ -115,38 +98,34 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
-	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
-	switch (iLevel)
-	{
-	case Client::LEVEL_SNOWFIELD:
-		/* For.Com_Navigation */
-		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom)))
-			return E_FAIL;
-		break;
-	case Client::LEVEL_BATTLE:
-		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom)))
-			return E_FAIL;
-		break;
-	default:
-		break;
-	}
+	
+	if (FAILED(__super::Add_Components(TEXT("Com_FieldNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_vecNavigation[LEVEL_SNOWFIELD])))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Components(TEXT("Com_BattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_vecNavigation[LEVEL_BATTLE])))
+		return E_FAIL;
+
+	m_pNavigationCom = m_vecNavigation[iLevel];
 
 	return S_OK;
 }
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
+	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 	if (m_bDead || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION )
 		return OBJ_DEAD;
 		
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
 
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
-		return OBJ_NOEVENT;
+	
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
@@ -168,7 +147,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() )
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
 		return;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
@@ -239,6 +218,26 @@ void CIce_Wolf::LateTick_State(_float fTimeDelta)
 	CIceWolfState* pNewState = m_pState->LateTick(fTimeDelta);
 	if (pNewState)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
+}
+
+void CIce_Wolf::Set_BattleMode(_bool type)
+{
+	m_bBattleMode = type;
+	if (m_bBattleMode)
+	{
+		/* Set_Battle State */
+		CIceWolfState* pBattleState = new CBattle_IdleState(this, CIceWolfState::STATE_ID::START_BATTLE);
+		m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	}
+	else
+	{
+		Check_NearTrigger();
+		/* Set State */
+		CIceWolfState* pState = new CIdleState(this, CIceWolfState::FIELD_STATE_ID::FIELD_STATE_IDLE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
+
 }
 
 _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)

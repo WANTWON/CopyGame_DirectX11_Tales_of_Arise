@@ -1967,7 +1967,7 @@ HRESULT CUI_BattleResult::Render_Player4()
 
 HRESULT CUI_BattleResult::Render_Cp()
 {
-	m_fPosition.x = 160.f;
+	m_fPosition.x = 160.f - m_fFadeX;
 	m_fPosition.y = 480.f;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
@@ -2237,6 +2237,8 @@ HRESULT CUI_BattleResult::Render_Exp()
 	m_pShaderCom->Begin(UI_BRIGHT);
 
 	m_pVIBufferCom->Render();
+
+	return S_OK;
 }
 
 

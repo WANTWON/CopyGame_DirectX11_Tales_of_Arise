@@ -5,6 +5,7 @@
 #include "UI_RuneEffect.h"
 #include "PlayerManager.h"
 #include "Player.h"
+#include "UI_Skillmessage.h"
 
 CUI_MENU_Back::CUI_MENU_Back(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
@@ -64,13 +65,13 @@ int CUI_MENU_Back::Tick(_float fTimeDelta)
 	{
 		Fill_HP(m_iCursor_itemuse);   //차는기능끝
 	}
-	if (m_brecover_effect)
+	if (m_brecover_effect[m_iCursor_itemuse])
 	{
 		m_fRecoverFinish_HpbarEffectX += 1.f;
 
 		if (m_fRecoverFinish_HpbarEffectX > 10.f)
 		{
-			m_brecover_effect = false;
+			m_brecover_effect[m_iCursor_itemuse] = false;
 			m_fRecoverFinish_HpbarEffectX = 0.f;
 		}
 			
@@ -344,8 +345,8 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		}
 		else if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 2) // 3명
 		{
-			if (m_iCursor_itemuse == 2)
-				m_iCursor_itemuse = 0;
+			if (m_iCursor_itemuse == 0)
+				m_iCursor_itemuse = 2;
 			else
 				--m_iCursor_itemuse;
 		}
@@ -3100,7 +3101,7 @@ HRESULT CUI_MENU_Back::Render_Player1_Status_useitem()
 		m_pShaderCom->Begin(UI_BLUEHPBAR);
 		m_pVIBufferCom->Render();
 	}
-	if(m_brecover_effect)
+	if(m_brecover_effect[0])
 	{ 
 		m_fSize.x = 168.f + m_fRecoverFinish_HpbarEffectX;
 		m_fSize.y = 22.f + m_fRecoverFinish_HpbarEffectX; //f;
@@ -3382,20 +3383,50 @@ HRESULT CUI_MENU_Back::Render_Player2_Status_useitem()
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
-	_float fTESTMAXHP = CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_Info().fMaxHp;
-	_float fTESTCURRENTHP = CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_Info().fCurrentHp;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_PlayersCurrentHP[1], sizeof(_float))))
-		return E_FAIL;
+
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &m_PlayersMaxHP[1], sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom10->Get_SRV(0))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GradationTexture", m_pTextureCom11->Get_SRV(0))))
 		return E_FAIL;
-	m_pShaderCom->Begin(0);
-
+	m_pShaderCom->Begin(0);                                                                                       //for blackbar
 	m_pVIBufferCom->Render();
 
+	if (m_iCursor_itemuse == 1)
+	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fBluepower, sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BLUEHPBAR);
+		m_pVIBufferCom->Render();
+	}
+	if (m_brecover_effect[1])
+	{
+		m_fSize.x = 168.f + m_fRecoverFinish_HpbarEffectX;
+		m_fSize.y = 22.f + m_fRecoverFinish_HpbarEffectX; //f;
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4)))) // for bluebar
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom10->Get_SRV(1)))) //white
+			return E_FAIL;
+		m_pShaderCom->Begin();
+		m_pVIBufferCom->Render();
+	}
+
+
+	m_fSize.x = 168.f;
+	m_fSize.y = 22.f;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4)))) // for realhpnar
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom10->Get_SRV(0))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_PlayersCurrentHP[1], sizeof(_float))))
+		return E_FAIL;
 	m_pShaderCom->Begin(UI_HPBAR);
 	m_pVIBufferCom->Render();
 
@@ -3653,18 +3684,49 @@ HRESULT CUI_MENU_Back::Render_Player3_Status_useitem()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_PlayersCurrentHP[2], sizeof(_float))))
-		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &m_PlayersMaxHP[2], sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom10->Get_SRV(0))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GradationTexture", m_pTextureCom11->Get_SRV(0))))
 		return E_FAIL;
-	m_pShaderCom->Begin(0);
-
+	m_pShaderCom->Begin(0);                                                                                       //for blackbar
 	m_pVIBufferCom->Render();
 
+	if (m_iCursor_itemuse == 2)
+	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fBluepower, sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BLUEHPBAR);
+		m_pVIBufferCom->Render();
+	}
+	if (m_brecover_effect[2])
+	{
+		m_fSize.x = 168.f + m_fRecoverFinish_HpbarEffectX;
+		m_fSize.y = 22.f + m_fRecoverFinish_HpbarEffectX; //f;
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4)))) // for bluebar
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom10->Get_SRV(1)))) //white
+			return E_FAIL;
+		m_pShaderCom->Begin();
+		m_pVIBufferCom->Render();
+	}
+
+
+	m_fSize.x = 168.f;
+	m_fSize.y = 22.f;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4)))) // for realhpnar
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom10->Get_SRV(0))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_PlayersCurrentHP[2], sizeof(_float))))
+		return E_FAIL;
 	m_pShaderCom->Begin(UI_HPBAR);
 	m_pVIBufferCom->Render();
 
@@ -3921,18 +3983,50 @@ HRESULT CUI_MENU_Back::Render_Player4_Status_useitem()
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_PlayersCurrentHP, sizeof(_float))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &m_PlayersMaxHP, sizeof(_float))))
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &m_PlayersMaxHP[3], sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom10->Get_SRV(0))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GradationTexture", m_pTextureCom11->Get_SRV(0))))
 		return E_FAIL;
-	m_pShaderCom->Begin(0);
-
+	m_pShaderCom->Begin(0);                                                                                       //for blackbar
 	m_pVIBufferCom->Render();
 
+	if (m_iCursor_itemuse == 3)
+	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fBluepower, sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BLUEHPBAR);
+		m_pVIBufferCom->Render();
+	}
+	if (m_brecover_effect[3])
+	{
+		m_fSize.x = 168.f + m_fRecoverFinish_HpbarEffectX;
+		m_fSize.y = 22.f + m_fRecoverFinish_HpbarEffectX; //f;
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4)))) // for bluebar
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom10->Get_SRV(1)))) //white
+			return E_FAIL;
+		m_pShaderCom->Begin();
+		m_pVIBufferCom->Render();
+	}
+
+
+	m_fSize.x = 168.f;
+	m_fSize.y = 22.f;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4)))) // for realhpnar
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom10->Get_SRV(0))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_PlayersCurrentHP[3], sizeof(_float))))
+		return E_FAIL;
 	m_pShaderCom->Begin(UI_HPBAR);
 	m_pVIBufferCom->Render();
 
@@ -6297,15 +6391,18 @@ void CUI_MENU_Back::use_HPrecover_item()
 	{
 
 	case ITEMNAME_LEMONJELLY:  //여기서 셰이더 패스를 바꾸는 작업을 통해서 파란색으로 디는걸  하고.. 몇번째 플레이어를 받아왔냐에 따라서 걍 hp를 plus해주자 포인터로
+		if(CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iCursor_itemuse)->Get_Info().fCurrentHp > 0)
 		m_iRecover = 2000;
 		
 		break;
 
 	case ITEMNAME_HWANGJELLY:
+		if (CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iCursor_itemuse)->Get_Info().fCurrentHp > 0)
 		m_iRecover = 1000;
 		break;
 
 	case ITEMNAME_GRAPEJELLY:
+		if (CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iCursor_itemuse)->Get_Info().fCurrentHp > 0)
 		m_iRecover = 2800;
 		break;
 
@@ -6319,6 +6416,9 @@ void CUI_MENU_Back::use_HPrecover_item()
 		break;
 
 	case ITEMNAME_LIFEBOTTLE:
+		CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iCursor_itemuse)->Revive();
+		m_iRecover = 800;
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(0,true);
 		break;
 
 	case ITEMNAME_REDSAGE:
@@ -6326,13 +6426,17 @@ void CUI_MENU_Back::use_HPrecover_item()
 	
 	}
 	
-	if ((m_iRecover + m_PlayersCurrentHP[m_iCursor_itemuse]) >= m_PlayersMaxHP[m_iCursor_itemuse])
-		RecoverPlayerHP(m_iCursor_itemuse);
-	else
-		m_fRecover_Power = (_float)m_iRecover;
+	if (m_iRecover > 0)
+	{
+		if ((m_iRecover + m_PlayersCurrentHP[m_iCursor_itemuse]) >= m_PlayersMaxHP[m_iCursor_itemuse])
+			RecoverPlayerHP(m_iCursor_itemuse);
+		else
+			m_fRecover_Power = (_float)m_iRecover;
 
-	m_brecover_finsh = false;
-	m_brecovring = true;
+		m_brecover_finsh = false;
+		m_brecovring = true;
+	}
+	
 	//m_fResultHP = m_PlayersCurrentHP[m_iCursor_itemuse] + m_fRecover_Power;
 
 	//if (m_iCursor_itemuse == 0)  // alpen
@@ -6356,7 +6460,7 @@ void CUI_MENU_Back::Fill_HP(_uint playerindex)
 		if (m_fRecover_Power < 50.f)
 		{
 			m_PlayersCurrentHP[playerindex] += m_fRecover_Power;
-			m_brecover_effect = true;
+			m_brecover_effect[playerindex] = true;
 			goto first;
 		}
 		m_fRecover_Power -= 50.f;
@@ -6380,15 +6484,18 @@ void CUI_MENU_Back::check_HPrecover_item()
 	{
 
 	case ITEMNAME_LEMONJELLY:  //여기서 셰이더 패스를 바꾸는 작업을 통해서 파란색으로 디는걸  하고.. 몇번째 플레이어를 받아왔냐에 따라서 걍 hp를 plus해주자 포인터로
+		if (CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iCursor_itemuse)->Get_Info().fCurrentHp > 0)
 		m_fRecoverItempower = 2000;
 
 		break;
 
 	case ITEMNAME_HWANGJELLY:
+		if (CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iCursor_itemuse)->Get_Info().fCurrentHp > 0)
 		m_fRecoverItempower = 1000;
 		break;
 
 	case ITEMNAME_GRAPEJELLY:
+		if (CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iCursor_itemuse)->Get_Info().fCurrentHp > 0)
 		m_fRecoverItempower = 2800;
 		break;
 
@@ -6402,6 +6509,7 @@ void CUI_MENU_Back::check_HPrecover_item()
 		break;
 
 	case ITEMNAME_LIFEBOTTLE:
+		m_fRecoverItempower = 800;
 		break;
 
 	case ITEMNAME_REDSAGE:

@@ -137,6 +137,7 @@ void CRinwellSkills::Dead_Effect()
 	}
 }
 
+
 HRESULT CRinwellSkills::Ready_Components(void * pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg)))

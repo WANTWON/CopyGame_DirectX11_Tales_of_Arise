@@ -84,13 +84,13 @@ CAstralDoubt_State * CBattle_TurnState::LateTick(_float fTimeDelta)
 	
 	_vector		vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	_float fToTargetRadian = Find_ToTargetDot(vCurTargetPos);
-	_bool  Is_ToTargetRightSide = Find_ToTargetRightSide(vCurTargetPos);
+	_bool  Is_ToTargetRightSide = Is_TargetRightSide(vCurTargetPos);
 
 
-	if (m_bIsAnimationFinished)
-	{
-		return new CBattle_IdleState(m_pOwner);
-	}
+	//if (m_bIsAnimationFinished)
+	//{
+	//	return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::T);
+	//}
 
 	return nullptr;
 }

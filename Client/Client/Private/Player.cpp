@@ -14,6 +14,7 @@
 #include "AI_HitState.h"
 #include "AIDeadState.h"
 #include "AI_BoostAttackState.h"
+#include "SmashAttack_State.h"
 
 
 using namespace Player;
@@ -66,6 +67,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 int CPlayer::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 	if(m_eLevel == LEVEL_LOADING || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
 		return OBJ_NOEVENT;
@@ -82,20 +86,46 @@ int CPlayer::Tick(_float fTimeDelta)
 	if (m_tInfo.fCurrentMp >= m_tInfo.fMaxMp)
 		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_pPlayerManager->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
-		Play_AISkill(ALPHEN);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
-		Play_AISkill(SION);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
+	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
 	{
-		CUI_Manager::Get_Instance()->MinusCP(10);
-		m_tInfo.fCurrentHp += 100.f;
-		CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
-		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+		if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
+		{
+			_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
+			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
+			{
+				if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_pPlayerManager->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
+					Play_AISkill(ALPHEN);
+				else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
+					Play_AISkill(SION);
+
+			}
+			else
+			{
+				if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
+				{
+					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+					CAIState* pAIState = new AIPlayer::CSmashAttack_State(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+					m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+
+				}
+
+
+			}
+		}
+		
+
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
+		{
+			CUI_Manager::Get_Instance()->MinusCP(10);
+			m_tInfo.fCurrentHp += 100.f;
+			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
+			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+		}
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
+			Take_Damage(m_tInfo.fCurrentHp, nullptr);
 	}
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-		Take_Damage(m_tInfo.fCurrentHp, nullptr);
+	
 
 	switch (eMode)
 	{
@@ -129,6 +159,9 @@ int CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
+
 	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
 		return;
 
@@ -173,7 +206,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	{
 		int a = 10;
 	}
-	else
+	else if (LEVEL_BATTLE == m_eLevel)
 	{
 		CBaseObj* pMonster = nullptr;
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pMonster))
@@ -377,6 +410,134 @@ void CPlayer::Plus_EXP(_uint exp)
 
 	}
 
+}
+
+void CPlayer::Revive()
+{
+	
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	CPlayerState* pState = nullptr;
+	CAIState* pAIState = nullptr;
+
+	
+	//	m_tInfo.fCurrentHp += hp;
+		if (eMode == Client::ACTIVE)
+		{
+			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
+			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+		}
+		else
+		{
+			pAIState = new AIPlayer::CAICheckState(this, CAIState::STATE_IDLE);
+			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		}
+		
+			//return new (m_pOwner, m_eStateId);
+	
+
+	//switch (index)
+	//{
+	//case ALPHEN:
+
+	//	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	//	CPlayerState* pState = nullptr;
+	//	CAIState* pAIState = nullptr;
+
+	//	if (m_ePlayerID == ALPHEN)
+	//	{
+	//		m_tInfo.fCurrentHp += hp;
+	//		switch (eMode)
+	//		{
+	//		case Client::ACTIVE:
+	//			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
+	//			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+	//			break;
+	//		case Client::AI_MODE:
+	//			pAIState = new AIPlayer::CAICheckState(this, CAIState::STATE_IDLE);
+	//			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+	//			break;
+	//		}	//return new (m_pOwner, m_eStateId);
+	//	}
+	//	break;
+
+
+
+	//case SION:
+	//	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	//	CPlayerState* pState = nullptr;
+	//	CAIState* pAIState = nullptr;
+
+	//	if (m_ePlayerID == SION)
+	//	{
+	//		m_tInfo.fCurrentHp += hp;
+	//		switch (eMode)
+	//		{
+	//		case Client::ACTIVE:
+	//			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
+	//			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+	//			break;
+	//		case Client::AI_MODE:
+	//			pAIState = new AIPlayer::CAICheckState(this, CAIState::STATE_IDLE);
+	//			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+	//			break;
+	//		}	//return new (m_pOwner, m_eStateId);
+	//	}
+
+	//	break;
+
+	//case RINWELL:
+	//	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	//	CPlayerState* pState = nullptr;
+	//	CAIState* pAIState = nullptr;
+
+	//	if (m_ePlayerID == RINWELL)
+	//	{
+	//		m_tInfo.fCurrentHp += hp;
+	//		switch (eMode)
+	//		{
+	//		case Client::ACTIVE:
+	//			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
+	//			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+	//			break;
+	//		case Client::AI_MODE:
+	//			pAIState = new AIPlayer::CAICheckState(this, CAIState::STATE_IDLE);
+	//			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+	//			break;
+	//		}	//return new (m_pOwner, m_eStateId);
+	//	}
+
+	//	break;
+
+	//case LAW:
+	//	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	//	CPlayerState* pState = nullptr;
+	//	CAIState* pAIState = nullptr;
+
+	//	if (m_ePlayerID == LAW)
+	//	{
+	//		m_tInfo.fCurrentHp += hp;
+	//		switch (eMode)
+	//		{
+	//		case Client::ACTIVE:
+	//			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
+	//			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+	//			break;
+	//		case Client::AI_MODE:
+	//			pAIState = new AIPlayer::CAICheckState(this, CAIState::STATE_IDLE);
+	//			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+	//			break;
+	//		}	//return new (m_pOwner, m_eStateId);
+	//	}
+
+	//	break;
+
+	//}
+	
 }
 
 void CPlayer::HandleInput()

@@ -2,13 +2,11 @@
 
 #include "AstralDoubt_Battle_720Spin_FirstState.h"
 #include "GameInstance.h"
-#include "AstralDoubt_ChaseState.h"
-#include "AstralDoubt_WalkState.h"
-#include "AstralDoubt_DetectStopState.h"
+#include "AstralDoubt_Battle_WalkState.h"
 
 using namespace Astral_Doubt;
 
-CBattle_720Spin_FirstState::CBattle_720Spin_FirstState(CAstralDoubt* pAstralDoubt, FIELD_STATE_ID ePreState)
+CBattle_720Spin_FirstState::CBattle_720Spin_FirstState(CAstralDoubt* pAstralDoubt, STATE_ID ePreState)
 {
 	m_pOwner = pAstralDoubt;
 	m_ePreState_Id = ePreState;
@@ -24,7 +22,21 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 {
-	//m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	Find_Target();
+
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
+
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	//CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
@@ -58,10 +70,16 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_720Spin_FirstState::LateTick(_float fTimeDelta)
 {
-
 	m_pOwner->Check_Navigation();
 
 	m_fTimeDeltaAcc += fTimeDelta;
+
+	if (m_bIsAnimationFinished)
+	{
+			return new CBattleWalkState(m_pOwner);
+	}
+
+	
 
 
 
@@ -70,9 +88,14 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::LateTick(_float fTimeDelta)
 
 void CBattle_720Spin_FirstState::Enter()
 {
+	
 	m_eStateId = STATE_ID::STATE_IDLE;
-
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SWORD_720_FIRST);
+	
+//	if(m_ePreState_Id == CAstralDoubt_State::STATE_720SPIN_START)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SWING_360);
+	
+	//else 
+	//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SWORD_720_FIRST);
 }
 
 void CBattle_720Spin_FirstState::Exit()

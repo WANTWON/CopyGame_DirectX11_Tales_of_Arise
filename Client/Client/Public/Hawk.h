@@ -71,6 +71,7 @@ public:
 	class CHawkState* Get_State() { return m_pHawkState; }
 	void Set_PlayerState(class CHawkState* pHawkState) { m_pHawkState = pHawkState; }
 	void Set_Dead() { m_bDead = true; }
+		
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 
@@ -95,6 +96,7 @@ public: /*For.State*/
 	void LateTick_State(_float fTimeDelta);
 		/*For Navigation*/
 	virtual void Check_Navigation() override;
+	virtual void	 Set_BattleMode(_bool type) override;
 
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -102,6 +104,7 @@ private:
 private:
 	class CHawkState*  m_pHawkState = nullptr;
 		  _bool		   m_bDoneChangeState = false;
+
 public:
 	static CHawk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

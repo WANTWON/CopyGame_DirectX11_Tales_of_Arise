@@ -7,7 +7,7 @@ BEGIN(Astral_Doubt)
 class CBattle_720Spin_FirstState : public CAstralDoubt_State
 {
 public:
-	CBattle_720Spin_FirstState(class CAstralDoubt* pAstral_Doubt, FIELD_STATE_ID ePreState = FIELD_STATE_ID::FIELD_STATE_IDLE);
+	CBattle_720Spin_FirstState(class CAstralDoubt* pAstral_Doubt, STATE_ID ePreState = STATE_ID::STATE_IDLE);
 
 	virtual CAstralDoubt_State* AI_Behaviour(_float fTimeDelta) override;
 	virtual CAstralDoubt_State* Tick(_float fTimeDelta) override;
@@ -19,8 +19,8 @@ public:
 private:
 	//_float			m_fTimeDeltaAcc = 0.f;
 	_float			m_fIdleAttackTimer = 1.5f;
-	FIELD_STATE_ID	m_ePreState_Id;
-	FIELD_STATE_ID	m_ePreTurn_Id;
+	STATE_ID	m_ePreState_Id;
+	STATE_ID	m_ePreTurn_Id;
 
 	_float			m_fIdleTime;
 };

@@ -43,6 +43,8 @@ HRESULT CHPbar::Initialize(void * pArg)
 
 int CHPbar::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 
 	switch (m_iIndex)
 	{
@@ -134,6 +136,8 @@ int CHPbar::Tick(_float fTimeDelta)
 
 void CHPbar::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 	__super::Late_Tick(fTimeDelta);
 
 }

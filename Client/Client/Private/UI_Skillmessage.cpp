@@ -67,6 +67,9 @@ HRESULT CUI_Skillmessage::Initialize(void * pArg)
 
 int CUI_Skillmessage::Tick(_float fTimeDelta)
 {
+
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
 	{
 		m_bfadein = true;
@@ -162,7 +165,8 @@ int CUI_Skillmessage::Tick(_float fTimeDelta)
 
 void CUI_Skillmessage::Late_Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
 	if (m_btick)
 	{
 
@@ -188,8 +192,16 @@ HRESULT CUI_Skillmessage::Render()
 
 
 	_float alpha = m_fAlpha * 0.5f;
-
-	m_fSize.x = 430.f;
+	if (m_bUseItem)
+	{
+		m_fSize.x = 460.f;
+		
+	}
+	else
+	{
+		m_fSize.x = 430.f;
+		
+	}
 	m_fSize.y = 40.f;
 	m_fPosition.x = 640.f - m_fFadeX;
 	m_fPosition.y = 120.f;// +m_fFadeY + m_fIndexOffsetY;
@@ -209,7 +221,15 @@ HRESULT CUI_Skillmessage::Render()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	m_fSize.x = 400.f;
+	if (m_bUseItem)
+	{
+		m_fSize.x = 430.f;
+	}
+	else
+	{
+		m_fSize.x = 400.f;
+	}
+	
 	m_fSize.y = 4.f;
 	m_fPosition.x = 640.f -m_fFadeX;
 	m_fPosition.y = 135.f;// +m_fFadeY + m_fIndexOffsetY;
@@ -253,10 +273,20 @@ HRESULT CUI_Skillmessage::Render()
 	//m_pShaderCom->Begin(UI_BRIGHT);
 
 	//m_pVIBufferCom->Render();
-
-	m_fSize.x = 240.f;
-	m_fSize.y = 26.f;
-	m_fPosition.x = 700.f - m_fFadeX;
+	if (m_bUseItem)
+	{
+		m_fPosition.x = 650.f - m_fFadeX;
+		m_fSize.x = 400.f;
+		m_fSize.y = 28.f;
+	}
+	else
+	{
+		m_fPosition.x = 700.f - m_fFadeX;
+		m_fSize.x = 240.f;
+		m_fSize.y = 26.f;
+	}
+	
+	
 	m_fPosition.y = 120.f;// + m_fFadeY + m_fIndexOffsetY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
@@ -265,9 +295,17 @@ HRESULT CUI_Skillmessage::Render()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(m_iNum))))
-		return E_FAIL;
-
+	if (m_bUseItem)
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_iNum))))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(m_iNum))))
+			return E_FAIL;
+	}
+	
 	m_pShaderCom->Begin(UI_BRIGHT);
 
 	m_pVIBufferCom->Render();
@@ -313,9 +351,9 @@ HRESULT CUI_Skillmessage::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Skillname"), (CComponent**)&m_pTextureCom1)))
 		return E_FAIL;
 
-	///* For.Com_Texture */
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Item_name"), (CComponent**)&m_pTextureCom2)))
-	//	return E_FAIL;
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Itemusemsg"), (CComponent**)&m_pTextureCom2)))
+		return E_FAIL;
 
 
 
@@ -356,7 +394,7 @@ HRESULT CUI_Skillmessage::SetUp_ShaderResources()
 
 
 
-void CUI_Skillmessage::Skillmsg_on(_uint index)//, _uint index1)
+void CUI_Skillmessage::Skillmsg_on(_uint index , _bool itemuse)//, _uint index1)
 {
 
 	m_btick = true;
@@ -366,6 +404,8 @@ void CUI_Skillmessage::Skillmsg_on(_uint index)//, _uint index1)
 	m_fFadeX = 200.f;
 	m_iNum = index;
 	timer = 0.f;
+
+	m_bUseItem = itemuse;
 }
 
 
@@ -407,8 +447,10 @@ void CUI_Skillmessage::Free()
 	//CUI_Manager::Get_Instance()->Erase_Itempopup_list(this);
 
 	Safe_Release(m_pTextureCom1);
-	//Safe_Release(m_pTextureCom2);
+	Safe_Release(m_pTextureCom2);
 	__super::Free();
 }
+
+
 
 

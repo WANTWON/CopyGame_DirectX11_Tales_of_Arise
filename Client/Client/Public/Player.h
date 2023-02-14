@@ -72,6 +72,8 @@ public: /* Getter &  Setter */
 	// manause
 	void Use_Mana(_float mana) { m_tInfo.fCurrentMp -= mana; }
 
+	//revive
+	void Revive();
 
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;

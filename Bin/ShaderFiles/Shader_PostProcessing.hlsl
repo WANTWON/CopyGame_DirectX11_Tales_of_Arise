@@ -25,7 +25,7 @@ const int WeightCount = 8;
 texture2D g_FogTexture;
 float3 g_vFogColor = float3(0.2, 0.4, 0.9f);
 float g_fFogStrength = 0.6f;
-float g_fMinRange = 30.f;
+float g_fMinRange = 20.f;
 float g_fMaxRange = 70.f;
 float3 g_vPlayerPosition;
 

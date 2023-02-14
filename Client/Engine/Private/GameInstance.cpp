@@ -326,6 +326,22 @@ void CGameInstance::Clear_Layer(_uint iLevelIndex, const _tchar * LayerTag)
 	m_pObject_Manager->Clear_Layer(iLevelIndex, LayerTag);
 }
 
+HRESULT CGameInstance::Out_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, CGameObject * pGameObject)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Out_GameObject(iLevelIndex, pLayerTag, pGameObject);
+}
+
+HRESULT CGameInstance::ReAdd_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, CGameObject * pGameObject)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->ReAdd_GameObject(iLevelIndex, pLayerTag, pGameObject);
+}
+
 CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pComponentTag, _uint iIndex)
 {
 	if (nullptr == m_pObject_Manager)

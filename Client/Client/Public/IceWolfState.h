@@ -289,7 +289,7 @@ protected:
 		//앞쪽인지 뒤쪽인지 
 		_float fLookDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
 
-		//앞쪽에 있고 시야각 안에 있다
+	
 		if (fLookDot > 0)
 		{
 			return true;
@@ -321,6 +321,6 @@ protected:
 	CBaseObj*	m_pOriginTarget = nullptr;
 	CBaseObj*	m_pCurTarget = nullptr;
 	_vector		m_vCurTargetPos;
-	
+	CCollider*  m_pAtkColliderCom = false;
 };
 END

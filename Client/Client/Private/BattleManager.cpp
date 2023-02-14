@@ -22,15 +22,46 @@ void CBattleManager::Set_BattleMode(_bool type, MONSTER_ID eMonsterType, _bool I
 	 m_bIsBossBattle = IsBossBattle;
 }
 
+void CBattleManager::Out_Monster(CBaseObj * pMonster)
+{
+	for (auto& iter = m_FieldMonster.begin(); iter != m_FieldMonster.end();)
+	{
+		if ((*iter) != nullptr)
+		{
+			if ((*iter) == pMonster)
+			{
+				iter = m_FieldMonster.erase(iter);
+				return;
+			}
+			else
+				iter++;
+		}
+	}
+}
+
+void CBattleManager::Out_BattleMonster(CBaseObj * pMonster)
+{
+	for (auto& iter = m_BattleMonster.begin(); iter != m_BattleMonster.end();)
+	{
+		if ((*iter) != nullptr)
+		{
+			if ((*iter) == pMonster)
+			{
+				iter = m_BattleMonster.erase(iter);
+			}
+			else
+				iter++;
+		}
+	}
+}
+
 CBaseObj * CBattleManager::Get_MinDistance_Monster(_vector vPosition)
 {
 	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
 
-	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
-	
 	CBaseObj* pTarget = nullptr;
 	_float fMinDistance = MAXDISTANCE;
-	for (auto& iter : *pMonsterList)
+	for (auto& iter : m_BattleMonster)
 	{
 		if (dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0 || iter == pLockOn)
 			continue;
@@ -48,11 +79,10 @@ CBaseObj * CBattleManager::Get_MinDistance_Monster(_vector vPosition)
 
 _bool CBattleManager::IsAllMonsterDead()
 {
-	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
-	if (pMonsterList == nullptr || pMonsterList->size() <= 0)
+	if (m_BattleMonster.size() <= 0)
 		return true;
 
-	for (auto& iter : *pMonsterList)
+	for (auto& iter : m_BattleMonster)
 	{
 		if (dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0)
 			continue;
@@ -68,14 +98,13 @@ void CBattleManager::Update_LockOn()
 {
 	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
 
-	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
-	if (pMonsterList == nullptr || pMonsterList->size() <= 1)
+	if (m_BattleMonster.size() <= 1)
 	{
 		Set_LackonMonster(nullptr);
 		return;
 	}
 
-	for (auto& iter : *pMonsterList)
+	for (auto& iter : m_BattleMonster)
 	{
 		if (dynamic_cast<CMonster*>(iter)->Get_Dissolve() || dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0)
 			continue;

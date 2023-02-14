@@ -65,8 +65,8 @@ HRESULT CLevel_SnowField::Initialize()
 
 
 	//Test
-	//if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
+		return E_FAIL;
 	//Test
 
 	DWORD dwTime = GetTickCount();
@@ -114,9 +114,15 @@ HRESULT CLevel_SnowField::Initialize()
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
 
-	_float exp = rand() % 500 + 500;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, TEXT("sss"), &exp)))
-		return S_OK;
+
+	vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
+	if (vecFightedMonster.size() != 0)
+	{
+		_float exp = rand() % 500 + 500;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, TEXT("sss"), &exp)))
+			return S_OK;
+	}
+
 	return S_OK;
 }
 
@@ -519,17 +525,17 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	////	}
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_STATIC, pLayerTag)))
+	//	return E_FAIL;
 
-	for (int i = 0; i < 7; ++i)
-	{
-		_uint number = i;
+	//for (int i = 0; i < 7; ++i)
+	//{
+	//	_uint number = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_STATIC, pLayerTag, &i)))//, &i)))
-			return E_FAIL;
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_STATIC, pLayerTag, &i)))//, &i)))
+	//		return E_FAIL;
 
-	}
+	//}
 
 
 
@@ -584,9 +590,14 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_INTERECTMSG"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	_float exp = 500.f;
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, pLayerTag , &exp)))
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Sidepopup"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
+	
+
+	/*_float exp = 500.f;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, pLayerTag , &exp)))
+		return E_FAIL;*/
 
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Levelup"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;*/
@@ -1009,12 +1020,12 @@ HRESULT CLevel_SnowField::Ready_Layer_Test(const _tchar * pLayerTag)
 		_tchar pModeltag[MAX_PATH];
 		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
 
-		//if (!wcscmp(pModeltag, TEXT("Astral_Doubt")))
-		//{
-		//	//여기서 몬스터 생성하세요
-		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
-		//		return E_FAIL;
-		//}
+		if (!wcscmp(pModeltag, TEXT("Astral_Doubt")))
+		{
+			////여기서 몬스터 생성하세요
+			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
+			//	return E_FAIL;
+		}
 	}
 
 	CloseHandle(hFile);

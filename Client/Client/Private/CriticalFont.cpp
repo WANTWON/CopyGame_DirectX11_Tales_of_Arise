@@ -59,6 +59,9 @@ HRESULT CCriticalFont::Initialize(void * pArg)
 
 int CCriticalFont::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+
 	//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();
 
 	/*if (m_damagedesc.pPointer == nullptr)
@@ -145,7 +148,8 @@ int CCriticalFont::Tick(_float fTimeDelta)
 
 void CCriticalFont::Late_Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
 

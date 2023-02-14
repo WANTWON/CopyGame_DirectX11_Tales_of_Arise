@@ -41,7 +41,8 @@ HRESULT CUI_Skillbutton::Initialize(void * pArg)
 
 int CUI_Skillbutton::Tick(_float fTimeDelta)
 {
-	
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 	switch (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID())
 	{
 	case CPlayer::PLAYERID::ALPHEN:
@@ -146,7 +147,8 @@ int CUI_Skillbutton::Tick(_float fTimeDelta)
 
 void CUI_Skillbutton::Late_Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 
 
 	if (m_fAlpha <= 0)
