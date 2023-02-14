@@ -71,8 +71,8 @@ VS_OUT VS_MAIN(VS_IN In)
 	/*uint BoneTexWidth, BoneTexHeight;
 	g_BoneTexture.GetDimensions(BoneTexWidth, BoneTexHeight);*/
 
-	vBoneTexUV.x = In.vBlendIndex.x / 16;
-	vBoneTexUV.y = (In.vBlendIndex.x % 16) * 4;
+	vBoneTexUV.x = (In.vBlendIndex.x / 16) / 64;
+	vBoneTexUV.y = ((In.vBlendIndex.x % 16) * 4) / 64;
 	
 	float4x4 BoneMatrixX = float4x4(g_BoneTexture.SampleLevel(PointVTFSampler, vBoneTexUV, 0),
 		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 1), 0),
