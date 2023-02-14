@@ -334,6 +334,14 @@ HRESULT CGameInstance::Out_GameObject(_uint iLevelIndex, const _tchar * pLayerTa
 	return m_pObject_Manager->Out_GameObject(iLevelIndex, pLayerTag, pGameObject);
 }
 
+HRESULT CGameInstance::Out_GameObjectList(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Out_GameObjectList(iLevelIndex, pLayerTag);
+}
+
 HRESULT CGameInstance::ReAdd_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, CGameObject * pGameObject)
 {
 	if (nullptr == m_pObject_Manager)

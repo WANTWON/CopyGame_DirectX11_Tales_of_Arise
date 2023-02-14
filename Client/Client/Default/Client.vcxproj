@@ -281,7 +281,7 @@
     <ClInclude Include="..\Public\Collision_Manger.h" />
     <ClInclude Include="..\Public\CP_Guage.h" />
     <ClInclude Include="..\Public\CP_Guage_font.h" />
-    <ClInclude Include="..\Public\Data_Manager.h" />
+    <ClInclude Include="..\Public\Object_Pool_Manager.h" />
     <ClInclude Include="..\Public\Hawk.h" />
     <ClInclude Include="..\Public\HawkBattle_DashState.h" />
     <ClInclude Include="..\Public\HawkBattle_Damage_LargeB_State.h" />
@@ -492,7 +492,7 @@
     <ClCompile Include="..\Private\Collision_Manger.cpp" />
     <ClCompile Include="..\Private\CP_Guage.cpp" />
     <ClCompile Include="..\Private\CP_Guage_font.cpp" />
-    <ClCompile Include="..\Private\Data_Manager.cpp" />
+    <ClCompile Include="..\Private\Object_Pool_Manager.cpp" />
     <ClCompile Include="..\Private\Hawk.cpp" />
     <ClCompile Include="..\Private\HawkBattle_DashState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_Damage_LargeB_State.cpp" />

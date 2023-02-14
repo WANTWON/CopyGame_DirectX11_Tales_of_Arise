@@ -128,7 +128,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 
 
 				break;
-			case CSion::ANIM::BTL_MAGNARAY:
+			case CSion::ANIM::BTL_ATTACK_MAGNARAY:
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 
@@ -140,7 +140,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_MAGNARAY))
+						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_MAGNARAY))
 						{
 							CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 							if (pTarget == nullptr)
@@ -407,7 +407,7 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 				break;
 			case 1:
 				__super::Exit();
-				m_iCurrentAnimIndex = CSion::ANIM::BTL_MAGNARAY;
+				m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_MAGNARAY;
 				if (nullptr == m_pTarget)
 				{
 					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
@@ -494,7 +494,7 @@ void CAI_Sion_SkillState::Enter()
 	case CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GRAVITY);
 		break;
-	case CSion::ANIM::BTL_MAGNARAY:
+	case CSion::ANIM::BTL_ATTACK_MAGNARAY:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_MAGNARAY);
 		break;
 	case CSion::ANIM::BTL_ATTACK_BRAVE:

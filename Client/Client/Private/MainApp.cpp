@@ -16,9 +16,7 @@
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
 	, m_pUI_Manager(CUI_Manager::Get_Instance())
-	, m_pDataManager(CData_Manager::Get_Instance())
 {
-	Safe_AddRef(m_pDataManager);
 	Safe_AddRef(m_pUI_Manager);
 	Safe_AddRef(m_pGameInstance);
 }
@@ -48,9 +46,6 @@ HRESULT CMainApp::Initialize()
 
 	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, Graphic_Desc, &m_pDevice, &m_pContext)))
 		return E_FAIL;
-
-	if (FAILED(m_pDataManager->Init(m_pDevice, m_pContext)))
-		return E_FAIL;	// �߰�
 
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
@@ -195,24 +190,24 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	CObject_Pool_Manager::Get_Instance()->Reuse_AllPooling_Layer();
 	Safe_Release(m_pRenderer);
 
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 
 	Safe_Release(m_pGameInstance);
-
+	
 	CGameInstance::Release_Engine();
 
 
 	Safe_Release(m_pUI_Manager);
-	Safe_Release(m_pDataManager);
 
 	
 
 	CUI_Manager::Get_Instance()->Destroy_Instance();
 	CCollision_Manager::Get_Instance()->Destroy_Instance();
-	CData_Manager::Get_Instance()->Destroy_Instance();
+	CObject_Pool_Manager::Get_Instance()->Destroy_Instance();
 	CCameraManager::Get_Instance()->Destroy_Instance();
 	CPlayerManager::Get_Instance()->Destroy_Instance();
 	CBattleManager::Get_Instance()->Destroy_Instance();

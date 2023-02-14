@@ -142,6 +142,16 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bSenkusyourepaFirstEffect)
 							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_1.dat"), mWorldMatrix);
+
+								m_bSenkusyourepaFirstEffect = true;
+							}
+						}
+						else if (!strcmp(pEvent.szName, "Senkusyourepa_2"))
+						{
+							if (!m_bSenkusyourepaSecondEffect)
+							{
 								/* Destroy Particles first. */
 								if (!m_SenkusyourepaParticles.empty())
 								{
@@ -156,18 +166,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 									}
 								}
 
-								/* Then Spawn Effect*/
-								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-								m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_1.dat"), mWorldMatrix);
-
-								m_bSenkusyourepaFirstEffect = true;
-							}
-						}
-						else if (!strcmp(pEvent.szName, "Senkusyourepa_2"))
-						{
-							if (!m_bSenkusyourepaSecondEffect)
-							{
-								/* Spawn Effect Particles */
+								/* Then Spawn Particles Effect */
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
 								_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
@@ -176,11 +175,11 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 								vPosition += vOffset;
 								mWorldMatrix.r[3] = vPosition;
 
-								m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Explosion_Particles.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Explosion_Particles.dat"), mWorldMatrix);
 
-								/* Then Spawn Effect*/
+								/* Then Spawn Effect */
 								mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-								m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_2.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_2.dat"), mWorldMatrix);
 
 								m_bSenkusyourepaSecondEffect = true;
 							}
@@ -188,12 +187,25 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					}
 					else
 					{
-						if (!m_bAkizameEffect)
-						{
-							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-							CEffect::PlayEffectAtLocation(TEXT("Akizame.dat"), mWorldMatrix);
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-							m_bAkizameEffect = true;
+						if (!strcmp(pEvent.szName, "Akizame_1"))
+						{
+							if (!m_bAkizameFirstEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Akizame_1.dat"), mWorldMatrix);
+
+								m_bAkizameFirstEffect = true;
+							}
+						}
+						else if (!strcmp(pEvent.szName, "Akizame_2"))
+						{
+							if (!m_bAkizameSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Akizame_2.dat"), mWorldMatrix);
+
+								m_bAkizameSecondEffect = true;
+							}
 						}
 					}
 					break;
@@ -226,7 +238,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					{
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-						if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
+						/*if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
 						{
 							if (!m_bHousyutigakuzinFirstEffect)
 							{
@@ -236,17 +248,17 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 								vPosition += vLook * 2;
 
 								mWorldMatrix.r[3] = vPosition;
-								m_HousyutigakuzinStart = CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_Start.dat"), mWorldMatrix);
+								m_HousyutigakuzinStart = CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_1.dat"), mWorldMatrix);
 
 								m_bHousyutigakuzinFirstEffect = true;
 							}
-						}
+						}*/
 
 						if (!strcmp(pEvent.szName, "Housyutigakuzin_2"))
 						{
 							if (!m_bHousyutigakuzinSecondEffect)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_End.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_2.dat"), mWorldMatrix);
 
 								m_bHousyutigakuzinSecondEffect = true;
 							}
@@ -268,19 +280,26 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 
 CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 {
-	if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN)
+	for (auto& pEffect : m_HousyutigakuzinStart)
 	{
-		for (auto& pEffect : m_HousyutigakuzinStart)
+		if (pEffect)
 		{
-			if (pEffect)
-			{
-				if (pEffect->Get_PreDead())
-					pEffect = nullptr;
-				else
-					pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-			}
+			if (pEffect->Get_PreDead())
+				pEffect = nullptr;
+			else
+				pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
 		}
 	}
+
+	for (auto& pEffect : m_SenkusyourepaParticles)
+	{
+		if (pEffect)
+		{
+			if (pEffect->Get_PreDead())
+				pEffect = nullptr;
+		}
+	}
+	
 
 	if (m_bIsAnimationFinished)
 	{
@@ -437,7 +456,8 @@ void CAlphenSkillState::Reset_Skill()
 	m_bRyuuseizinSecondEffect = false;
 
 	/* R */
-	m_bAkizameEffect = false;
+	m_bAkizameFirstEffect = false;
+	m_bAkizameSecondEffect = false;
 	m_bSenkusyourepaParticle = false;
 	m_bSenkusyourepaFirstEffect = false;
 	m_bSenkusyourepaSecondEffect = false;

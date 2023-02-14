@@ -98,7 +98,7 @@ m_fTime += fTimeDelta;
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_MAGNARAY))
+						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_MAGNARAY))
 						{
 							CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 							if (pTarget == nullptr)
@@ -564,7 +564,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 			mWorldMatrix.r[3] = vLocation + vOffset + vLook*2.f;
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayStart.dat"), mWorldMatrix);
 
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MAGNARAY);//마그나
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_MAGNARAY);//마그나
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_EFFECT, 0.5f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_EFFECT, 0.5f);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_MAGNARAY);
