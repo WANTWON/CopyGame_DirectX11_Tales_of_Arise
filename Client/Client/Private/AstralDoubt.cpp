@@ -248,6 +248,25 @@ void CAstralDoubt::LateTick_State(_float fTimeDelta)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
 }
 
+void CAstralDoubt::Set_BattleMode(_bool type)
+{
+	m_bBattleMode = type;
+	if (m_bBattleMode)
+	{
+		/* Set_Battle State */
+		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::START_BATTLE);
+		m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	}
+	else
+	{
+		Check_NearTrigger();
+		/* Set State */
+		CAstralDoubt_State* pState = new CIdleState(this, CAstralDoubt_State::FIELD_STATE_ID::FIELD_STATE_IDLE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
+}
+
 _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)

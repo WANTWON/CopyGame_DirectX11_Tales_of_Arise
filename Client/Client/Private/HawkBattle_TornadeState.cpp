@@ -180,11 +180,11 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 	
 
 
-	/*if (m_bIsAnimationFinished)
-			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_TORNADE);*/
-
 	if (m_bIsAnimationFinished)
-		return new CBattle_TornadeState(m_pOwner);
+			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_TORNADE);
+
+	//if (m_bIsAnimationFinished)
+	//	return new CBattle_TornadeState(m_pOwner);
 		
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);

@@ -62,7 +62,7 @@ public:
 	void Set_Finish_HitAnimState() { m_bDone_HitAnimState = false; }
 	void Set_OnGoing320Spin() { m_bOnGoing_320Spin = true; }
 	void Set_Finish320Spin() { m_bOnGoing_320Spin = false; }
-
+	virtual void	 Set_BattleMode(_bool type) override;
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
