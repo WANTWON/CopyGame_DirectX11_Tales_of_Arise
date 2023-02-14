@@ -39,10 +39,26 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
+	NONANIMDESC ModelDesc;
+	if (pArg)
+		memcpy(&ModelDesc, pArg, sizeof(NONANIMDESC));
 
-	if(CGameInstance::Get_Instance()->Get_DestinationLevelIndex() == LEVEL_BATTLE)
-		CBattleManager::Get_Instance()->Add_Monster(this);
+	if (pArg)
+	{
+		_vector vPosition = XMLoadFloat3(&ModelDesc.vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		Set_Scale(ModelDesc.vScale);
+
+		if (ModelDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
+	}
+	Check_NearTrigger();
+	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
+	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	CBattleManager::Get_Instance()->Add_Monster(this);
+
 	return S_OK;
 }
 
@@ -82,7 +98,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
 	{
-		Take_Damage(2000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 		m_bTakeDamage = true;
 	}
 
@@ -196,6 +212,7 @@ HRESULT CMonster::Render_ShadowDepth()
 }
 
 
+
 CMonster::DMG_DIR CMonster::Calculate_DmgDirection()
 {
 	if (!m_pTarget)
@@ -248,12 +265,12 @@ _vector CMonster::Calculate_DirectionByPos()
 
 _bool CMonster::Check_AmILastMoster()
 {
-	list<CGameObject*>* pMonsterList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"));
+	vector<CBaseObj*> pMonsterList = CBattleManager::Get_Instance()->Get_BattleMonster();
 
-	_uint iMonsterSize = (_uint)pMonsterList->size();
+	_uint iMonsterSize = (_uint)pMonsterList.size();
 	_uint iCheckIsDead = 0;
 
-	for (auto& iter : *pMonsterList)
+	for (auto& iter : pMonsterList)
 	{
 		if (dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0 || iter->Get_Dead())
 		{
@@ -302,6 +319,7 @@ CBaseObj* CMonster::Find_MinDistance_Target()
 {
 	list<CGameObject*>* pPlayerList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player"));
 
+	m_fMinLengh = MAXDISTANCE;
 	for (auto& iter : *pPlayerList)
 	{
 		_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
@@ -417,7 +435,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
 		return E_FAIL;
 
-	m_tStats.m_fLockonSmashGuage += 0.01f;
+	m_tStats.m_fLockonSmashGuage += 0.1f;
 	
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
@@ -430,7 +448,6 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		m_tStats.m_fCurrentHp = 0;
 		CBattleManager::Get_Instance()->Update_LockOn();
 		Check_AmILastMoster();
-
 		return _int(m_tStats.m_fCurrentHp);
 	}
 
@@ -481,12 +498,23 @@ void CMonster::Compute_CurrentIndex()
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 }
 
+void CMonster::Change_Navigation(LEVEL eLevel)
+{
+	m_pNavigationCom = m_vecNavigation[eLevel];
+}
+
+void CMonster::Compute_CurrentIndex(LEVEL eLevel)
+{
+	m_pNavigationCom->Compute_CurrentIndex_byXZ(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+}
+
 void CMonster::Check_NearTrigger()
 {
 	list<CGameObject*>* TriggerLIst = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_SNOWFIELD, TEXT("Layer_Trigger"));
 	if (TriggerLIst == nullptr)
 		return;
 
+	m_fMinLengh = MAXDISTANCE;
 	for (auto& iter : *TriggerLIst)
 	{
 		_vector vTriggerPos = dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -544,13 +572,21 @@ HRESULT CMonster::SetUp_ShaderID()
 	return S_OK;
 }
 
+void CMonster::Save_LastPosition()
+{
+	m_vLastPos = Get_TransformState(CTransform::STATE_TRANSLATION);
+}
+
 void CMonster::Free()
 {
 	__super::Free();
 
 	CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 
+	for (auto& iter : m_vecNavigation)
+		Safe_Release(iter);
+
+	CBattleManager::Get_Instance()->Out_BattleMonster(this);
 	Safe_Release(m_pDissolveTexture);
-	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
 }

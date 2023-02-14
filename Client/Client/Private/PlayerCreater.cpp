@@ -8,6 +8,7 @@
 #include "BattleManager.h"
 #include "TreasureBox.h"
 #include "Item.h"
+#include "Monster.h"
 
 CPlayerCreater::CPlayerCreater(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -86,7 +87,7 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 	}
 	else
 	{
-		/*if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::RINWELL) == nullptr)
+		if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::RINWELL) == nullptr)
 		{
 			vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
 			for (auto& iter : vecFightedMonster)
@@ -98,7 +99,7 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 				}
 
 			}
-		}*/
+		}
 		
 		
 
@@ -205,14 +206,34 @@ HRESULT CPlayerCreater::Cloning_ForMonster()
 	}
 
 	CloseHandle(hFile);
-
-
-	 hFile = 0;
-	 dwByte = 0;
-	 ModelDesc;
+	
 	vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
-	 iNum = 0;
+	if (vecFightedMonster.size() == 0)
+		Loading_MonsterAtFirst();
+	else
+		Loading_Monster();
 
+	m_isFinished = true;
+	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CPlayerCreater::Cloning_ForNonAnim()
+{
+	
+	return S_OK;
+}
+
+HRESULT CPlayerCreater::Loading_MonsterAtFirst()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC ModelDesc;
+	_uint iNum = 0;
 	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Monster.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
@@ -229,79 +250,52 @@ HRESULT CPlayerCreater::Cloning_ForMonster()
 
 		if (!wcscmp(pModeltag, TEXT("Ice_Wolf")))
 		{
-			for (auto& iter : vecFightedMonster)
-			{
-				if (iter == ICE_WOLF)
-					m_bNotCreate = true;
-			}
-			if (m_bNotCreate)
-				continue;
-
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_SNOWFIELD, TEXT("Layer_Monster"), &ModelDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_STATIC, TEXT("Layer_Monster"), &ModelDesc)))
 				return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Hawk")))
 		{
-			for (auto& iter : vecFightedMonster)
-			{
-				if (iter == HAWK)
-					m_bNotCreate = true;
-			}
-			if (m_bNotCreate)
-				continue;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_SNOWFIELD, TEXT("Layer_Monster"), &ModelDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_STATIC, TEXT("Layer_Monster"), &ModelDesc)))
 				return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Berserker")))
 		{
-			for (auto& iter : vecFightedMonster)
-			{
-				if (iter == BERSERKER)
-					m_bNotCreate = true;
-			}
-			if (m_bNotCreate)
-				continue;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_SNOWFIELD, TEXT("Layer_Monster"), &ModelDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_STATIC, TEXT("Layer_Monster"), &ModelDesc)))
 				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("Slime")))
-		{
-			for (auto& iter : vecFightedMonster)
-			{
-				if (iter == SLIME)
-					m_bNotCreate = true;
-			}
-			if (m_bNotCreate)
-				continue;
-			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc.vScale)))
-			//	return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Rinwell")))
 		{
-			for (auto& iter : vecFightedMonster)
-			{
-				if (iter == RINWELL)
-					m_bNotCreate = true;
-			}
-			if (m_bNotCreate)
-				continue;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_SNOWFIELD, TEXT("Layer_Monster"), &ModelDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_STATIC, TEXT("Layer_Monster"), &ModelDesc)))
 				return E_FAIL;
 		}
 
 	}
 
 	CloseHandle(hFile);
-
-
-	m_isFinished = true;
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
-HRESULT CPlayerCreater::Cloning_ForNonAnim()
+HRESULT CPlayerCreater::Loading_Monster()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
+	vector<CBaseObj*> vecAllMonster = CBattleManager::Get_Instance()->Get_AllMonster();
 	
+	for (auto& iter : vecAllMonster)
+	{
+		pGameInstance->ReAdd_GameObject(LEVEL_STATIC, TEXT("Layer_Monster"), iter);
+		iter->Set_State(CTransform::STATE_TRANSLATION, dynamic_cast<CMonster*>(iter)->Get_LastPosition());
+		dynamic_cast<CMonster*>(iter)->Change_Navigation(LEVEL_SNOWFIELD);
+		dynamic_cast<CMonster*>(iter)->Compute_CurrentIndex(LEVEL_SNOWFIELD);
+		dynamic_cast<CMonster*>(iter)->Set_BattleMode(false);
+		
+	}
+	
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 

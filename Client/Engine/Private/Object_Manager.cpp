@@ -53,7 +53,7 @@ HRESULT CObject_Manager::Add_GameObject(const _tchar * pPrototypeTag, _uint iLev
 
 	if (nullptr == pLayer)
 	{
-		pLayer = CLayer::Create();
+		pLayer = CLayer::Create(iLevelIndex);
 		pLayer->Add_GameObject(pGameObject);
 
 		m_pLayers[iLevelIndex].emplace(pLayerTag, pLayer);
@@ -80,7 +80,7 @@ HRESULT CObject_Manager::Add_GameObject_Out(const _tchar * pPrototypeTag, _uint 
 
 	if (!pLayer)
 	{
-		pLayer = CLayer::Create();
+		pLayer = CLayer::Create(iLevelIndex);
 		pLayer->Add_GameObject(pGameObject);
 
 		m_pLayers[iLevelIndex].emplace(pLayerTag, pLayer);
@@ -107,7 +107,7 @@ HRESULT CObject_Manager::Add_GameObjectLoad(const _tchar * pPrototypeTag, _uint 
 
 	if (nullptr == pLayer)
 	{
-		pLayer = CLayer::Create();
+		pLayer = CLayer::Create(iLevelIndex);
 		pLayer->Add_GameObject(pGameObject);
 
 		m_pLayers[iLevelIndex].emplace(pLayerTag, pLayer);
@@ -169,6 +169,24 @@ list<CGameObject*>* CObject_Manager::Get_ObjectList(_uint iSceneID, const _tchar
 		return nullptr;
 
 	return pLayer->Get_ObjectList();
+}
+
+HRESULT CObject_Manager::Out_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, CGameObject * pGameObject)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	return pLayer->Out_GameObject(pGameObject);
+}
+
+HRESULT CObject_Manager::ReAdd_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, CGameObject * pGameObject)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	return pLayer->Add_GameObject(pGameObject);
 }
 
 void CObject_Manager::Clear(_uint iLevelIndex)

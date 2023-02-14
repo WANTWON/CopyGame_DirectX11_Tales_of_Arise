@@ -50,7 +50,8 @@ HRESULT CMP_Guage::Initialize(void * pArg)
 int CMP_Guage::Tick(_float fTimeDelta)
 {
 	
-		
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 
 		
 
@@ -132,6 +133,8 @@ int CMP_Guage::Tick(_float fTimeDelta)
 
 void CMP_Guage::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 
 	m_fcurrent_render_slot_mp = m_fcurrentmp - (_uint)m_fcurrentmp;
 	

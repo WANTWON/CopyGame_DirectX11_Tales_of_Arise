@@ -31,7 +31,6 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
-	// 캡슐 컨트롤러 만드는 함수 
 	
 
 public: /*For.State*/

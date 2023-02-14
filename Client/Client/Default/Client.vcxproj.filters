@@ -349,6 +349,9 @@
     <Filter Include="02.GameObjects\04.UI\23.UI_LevelUp">
       <UniqueIdentifier>{bc40de5b-8754-46b1-a65e-ef8cbc3ba8a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\24.UI_SidePopup">
+      <UniqueIdentifier>{eb5167e6-62de-4069-8346-d328e9d913a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -945,6 +948,12 @@
     <ClInclude Include="..\Public\UI_LevelUp.h">
       <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SmashAttack_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SidePopup.h">
+      <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1510,6 +1519,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_LevelUp.cpp">
       <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SmashAttack_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SidePopup.cpp">
+      <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

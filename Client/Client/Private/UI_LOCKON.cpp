@@ -52,13 +52,26 @@ HRESULT CUI_LOCKON::Initialize(void * pArg)
 int CUI_LOCKON::Tick(_float fTimeDelta)
 {
 	
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+
 	if (m_bDead || CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 	{
 		CUI_Manager::Get_Instance()->Set_LockOn(nullptr);
 		return OBJ_DEAD;
 	}
 		
+	speed = 0.1f;
+	//time = 0.f;
+	time += fTimeDelta;
 
+
+	if (time > 0.6f)
+	{
+		//scaler = 0.1f;
+		time = 0.f;
+		//return OBJ_DEAD;
+	}
 
 	/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
@@ -122,17 +135,63 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 		return OBJ_NOEVENT;
 
+	
+
+
 	if(nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	m_fcurrentmp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
 
+	if (m_fcurrentmp >= 4.f)
+		m_bStrikeon = true;
+	else
+	{
+		m_bRenderDiamond = true;
+		m_bStrikefonton = false;
+		m_bStrikeon = false;
+		m_fAlphaDiamond = 1.f;
+		m_fDiamondShooter = 1.f;
+	}
+	
+
+	if (m_bStrikeon)        // f
+	{
+		m_bStrikefonton = true;
+	}
+
+	if (m_bStrikefonton && m_bStrikeSmallonetime)    // first strike font smaller
+	{
+		m_bStrikeScaler -= 1.f;
+		m_fLockonScaler -= 1.f;
+		m_fDiamondShooter += 1.f;
+		m_fAlphaDiamond -= 0.1f;
+		if (m_bStrikeScaler <= 1.f)
+		{
+			m_fAlphaDiamond = 0.f;
+			m_bStrikeScaler = 1.f;
+			m_fLockonScaler = 1.f;
+			m_bStrikefonton = false;
+			m_bStrikeSmallonetime = false;
+			m_bRenderDiamond = false;
+		}
+
+
+	}
+
+	if (m_bStrikeon && !m_bStrikeSmallonetime) //jansang
+	{
+		m_bStrikeFakeScaler += 0.01f;
+		if (m_bStrikeFakeScaler >= 1.2f)
+			m_bStrikeFakeScaler = 1.f;
+
+	}
 	//m_pTransformCom->Turn({ 0.f,1.f,0.f,1.f }, 45.f);
 
 	_float2 lockonPos = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_ProjPosition();
 
 	m_fPosition.x = lockonPos.x;//550.f;
 	m_fPosition.y = lockonPos.y - 50.f; //600.f;
-	m_fSize.x = 48.f;
-	m_fSize.y = 48.f;
+	m_fSize.x = 48.f * m_fDiamondShooter;
+	m_fSize.y = 48.f * m_fDiamondShooter;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -142,6 +201,9 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
+
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 		return;
 
@@ -164,6 +226,15 @@ HRESULT CUI_LOCKON::Render()
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Set_RawValue("g_UVSpriteValue", &Sprite, sizeof(_float2))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_SpriteCurTime", &time, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_SpriteSpeed", &speed, sizeof(_float))))
+		return E_FAIL;
+
 //m_pShaderCo	m->Begin(0);
 //
 //	m_pVIBufferCom->Render();
@@ -182,36 +253,144 @@ HRESULT CUI_LOCKON::Render()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 	
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(2))))
-		return E_FAIL;
 	
+	
+	if (m_bRenderDiamond)
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(2))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlphaDiamond, sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_POTRAIT_ALLBLUE);
 
-	m_pShaderCom->Begin(UI_POTRAIT_ALLBLUE);
+		m_pVIBufferCom->Render();
 
-	m_pVIBufferCom->Render();
+		m_pShaderCom->Begin(UI_PROGRESSBAR);
 
-	m_pShaderCom->Begin(UI_PROGRESSBAR);
-
-	m_pVIBufferCom->Render();
+		m_pVIBufferCom->Render();
+	}
+	
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlphaNomal, sizeof(_float))))
+		return E_FAIL;
 	/*if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fcurrent_render_slot_mp, sizeof(_float))))
 		return E_FAIL;*/
-	m_fSize.x = 80.f;
-	m_fSize.y = 80.f;
-//	m_fPosition.x -= 3.f;
+
+	if (!m_bStrikefonton)
+	{
+		m_fSize.x = 80.f;
+		m_fSize.y = 80.f;
+		//	m_fPosition.x -= 3.f;
+
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		//	m_pTransformCom->Set_Rotation({ 0.f,0.f,0.f });
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(1))))
+			return E_FAIL;
+
+		m_pShaderCom->Begin(0);
+
+		m_pVIBufferCom->Render();
+	}
+	else
+	{
+		m_fSize.x = 80.f;
+		m_fSize.y = 80.f;
+		//	m_fPosition.x -= 3.f;
+
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		//	m_pTransformCom->Set_Rotation({ 0.f,0.f,0.f });
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(8))))
+			return E_FAIL;
+
+		m_pShaderCom->Begin(0);
+
+		m_pVIBufferCom->Render();
+	}
+
 	
+
+
+	m_fSize.x = 1500.f;
+	m_fSize.y = 1000.f;
+	//	m_fPosition.x -= 3.f;
+
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-//	m_pTransformCom->Set_Rotation({ 0.f,0.f,0.f });
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
-	
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(1))))
-		return E_FAIL;
 
-	m_pShaderCom->Begin(0);
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(9))))
+		return E_FAIL;
+	m_pShaderCom->Begin(UI_STRIKEEFFECT);
 
 	m_pVIBufferCom->Render();
+
+	if (m_bStrikeon)
+	{
+		/*m_fSize.x = 128.f * m_fLockonScaler;
+		m_fSize.y = 128.f * m_fLockonScaler;
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(7))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_ALPHASET);
+
+		m_pVIBufferCom->Render();*/
+
+
+		m_fPosition.y += 50.f;
+		m_fSize.x = 128.f * m_bStrikeScaler;
+		m_fSize.y = 32.f * m_bStrikeScaler;
+		//	m_fPosition.x -= 3.f;
+
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(7))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_POTRAIT_ALLBLUE);
+
+		m_pVIBufferCom->Render();
+
+		
+	}
+
+	if (m_bStrikeon && !m_bStrikeSmallonetime) //jansang
+	{
+		m_fSize.x = 128.f * m_bStrikeFakeScaler;
+		m_fSize.y = 32.f * m_bStrikeFakeScaler;
+		//	m_fPosition.x -= 3.f;
+		_float fake = m_fAlphaNomal *0.5f;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &fake, sizeof(_float))))
+			return E_FAIL;
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(7))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_POTRAIT_ALLBLUE);
+
+		m_pVIBufferCom->Render();
+	}
+
+
 
 	//m_fSize.x = 36.f;
 	//m_fSize.y = 4.f;

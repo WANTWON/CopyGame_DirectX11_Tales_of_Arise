@@ -95,6 +95,7 @@ public: /*For.State*/
 	void LateTick_State(_float fTimeDelta);
 		/*For Navigation*/
 	virtual void Check_Navigation() override;
+	virtual void	 Set_BattleMode(_bool type) override;
 
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;

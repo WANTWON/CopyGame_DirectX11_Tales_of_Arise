@@ -45,6 +45,8 @@ HRESULT CUI_Monster_HPbar::Initialize(void * pArg)
 
 int CUI_Monster_HPbar::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 		return OBJ_NOEVENT;
 
@@ -98,6 +100,8 @@ int CUI_Monster_HPbar::Tick(_float fTimeDelta)
 
 void CUI_Monster_HPbar::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
 	__super::Late_Tick(fTimeDelta);
 
 }

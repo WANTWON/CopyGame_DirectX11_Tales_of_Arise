@@ -565,7 +565,7 @@ void CCamera_Dynamic::AIBoostOff_Camera(_float fTimeDelta)
 void CCamera_Dynamic::Change_LockOn(_uchar eKeyID)
 {
 	CBaseObj* pLockOnMonster = CBattleManager::Get_Instance()->Get_LackonMonster();
-	vector<CBaseObj*> vecMonster = CBattleManager::Get_Instance()->Get_AllMonster();
+	vector<CBaseObj*> vecMonster = CBattleManager::Get_Instance()->Get_BattleMonster();
 
 	_int iIndex = 0;
 	for (auto& iter : vecMonster)

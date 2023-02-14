@@ -43,6 +43,8 @@ HRESULT CUI_Portraitfront_left::Initialize(void * pArg)
 
 int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 
 	if (m_fCurrentBoost <= 10)
 		m_bfirstglow = true;
@@ -60,8 +62,8 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 
 	if (m_bbigger && m_bfirstglow)
 	{
-		m_fGlowScaleOffset += 0.3f;
-		m_fGlowAlpha -= 0.0125f;
+		m_fGlowScaleOffset += 0.4f;
+		m_fGlowAlpha -= 0.025f;
 
 		if (m_fGlowScaleOffset >= 8.f)
 		{
@@ -91,6 +93,10 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 
 	if (m_bArrived)
 	{
+		if (m_fCurrentBoost >= 100)
+			m_eShaderID = 0;
+		else
+			m_eShaderID = UI_POTRAIT_DARK;
 		if (m_bfirst1 && CUI_Manager::Get_Instance()->Get_Arrived_Count() == 4)
 		{
 			if (m_fCurrentBoost >= 100)
@@ -149,10 +155,10 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 	m_fSize.x = 95.f;
 	m_fSize.y = 95.f;*/
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 사라질때
-	{
-		m_bfadeout = true;
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 사라질때
+	//{
+	//	m_bfadeout = true;
+	//}
 
 
 
@@ -170,7 +176,8 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 
 void CUI_Portraitfront_left::Late_Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 	/*if (m_fPosition.x <= 1200.f)
 	m_bmoveleft = false;*/
 

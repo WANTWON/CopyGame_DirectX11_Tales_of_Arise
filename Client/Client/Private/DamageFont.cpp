@@ -135,6 +135,9 @@ HRESULT CDamageFont::Initialize(void * pArg)
 
 int CDamageFont::Tick(_float fTimeDelta)
 {
+
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 	//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();
 
 	if (m_damagedesc.pPointer == nullptr)
@@ -316,7 +319,8 @@ int CDamageFont::Tick(_float fTimeDelta)
 
 void CDamageFont::Late_Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 	/*if (m_fStart_timer > 0.8f)
 	{
 		if (m_fAlpha >= 1.f)
