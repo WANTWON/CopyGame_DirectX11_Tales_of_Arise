@@ -119,6 +119,23 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
+	if (!m_bIsAnimationFinished)
+	{
+		if ((CPlayer::ALPHEN == m_pOwner->Get_PlayerID()) && (CAlphen::ANIM::ANIM_JUMP_RUN_LAND == m_pOwner->Get_Model()->Get_CurrentAnimIndex()))
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.025f), fRotationRadian, m_pOwner->Get_Navigation());
+
+			m_pOwner->Check_Navigation();
+
+			m_bIsJump = false;
+		}
+	}
+
 	if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
 	{
 		if (CAlphen::ANIM::ANIM_JUMP_START == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
@@ -135,6 +152,24 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 						if (ANIMEVENT::EVENT_INPUT == pEvent.eType)
 							m_bIsJump = true;
 						break;
+					}
+				}
+			}
+		}
+		
+		else if (CAlphen::ANIM::ANIM_JUMP_RUN_LAND == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
+		{
+			vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+			for (auto& pEvent : pEvents)
+			{
+				if (pEvent.isPlay)
+				{
+					if (ANIMEVENT::EVENT_STATE == pEvent.eType)
+					{
+						CPlayerState* pEvent = EventInput();
+						if (nullptr != pEvent)
+							return pEvent;
 					}
 				}
 			}
@@ -269,24 +304,18 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				break;
 			case Client::Player::CJumpState::JUMP_RUN:
 				if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_END);
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LAND);
 				else if (CPlayer::SION == m_pOwner->Get_PlayerID())
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_END);
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_LANDING);
 				else if (CPlayer::RINWELL == m_pOwner->Get_PlayerID())
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_END);
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_LANDING);
 				break;
 			}
 		}
 		break;
 	case Client::STATETYPE_END:
 		if (m_bIsAnimationFinished)
-		{
-			CPlayerState* pEvent = EventInput();
-			if (nullptr != pEvent)
-				return pEvent;
-			else
-				return new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
-		}
+			return new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
 		break;
 	}
 
@@ -503,6 +532,4 @@ void CJumpState::Move(_float fTimeDelta)
 
 	if ((JUMP_IDLE != m_eJumpType) && (m_eDirection != DIR_END))
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 3.f);
-	if (CAlphen::ANIM::ANIM_JUMP_RUN_LAND == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
-		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f, m_pOwner->Get_Navigation());
 }
