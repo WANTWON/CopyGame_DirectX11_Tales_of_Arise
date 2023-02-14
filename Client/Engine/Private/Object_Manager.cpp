@@ -182,11 +182,28 @@ HRESULT CObject_Manager::Out_GameObject(_uint iLevelIndex, const _tchar * pLayer
 	return pLayer->Out_GameObject(pGameObject);
 }
 
-HRESULT CObject_Manager::ReAdd_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, CGameObject * pGameObject)
+HRESULT CObject_Manager::Out_GameObjectList(_uint iLevelIndex, const _tchar * pLayerTag)
 {
 	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
 	if (nullptr == pLayer)
 		return E_FAIL;
+
+	return pLayer->Out_GameObjectList();
+}
+
+
+
+HRESULT CObject_Manager::ReAdd_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, CGameObject * pGameObject)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (nullptr == pLayer)
+	{
+		pLayer = CLayer::Create(iLevelIndex);
+		pLayer->Add_GameObject(pGameObject);
+
+		m_pLayers[iLevelIndex].emplace(pLayerTag, pLayer);
+		return S_OK;
+	}
 
 	return pLayer->Add_GameObject(pGameObject);
 }

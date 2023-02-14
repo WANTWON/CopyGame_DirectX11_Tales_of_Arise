@@ -13,6 +13,7 @@
 #include "TreasureBox.h"
 #include "SnowFieldNpc.h"
 #include "PlayerCreater.h"
+#include "Object_Pool_Manager.h"
 
 extern bool		g_bUIMade = false;
 
@@ -32,8 +33,11 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-		return E_FAIL;
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Camera")) == false)
+	{
+		if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+			return E_FAIL;
+	}
 
 	cout << " Player Clone start" << endl;
 	m_pPlayerLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER);
@@ -46,42 +50,37 @@ HRESULT CLevel_SnowField::Initialize()
 		return E_FAIL;
 
 
-	/*cout << " Npc Clone start" << endl;
-	m_pNpcLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_NPC);
-	if (nullptr == m_pNpcLoader)
-		return E_FAIL;*/
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund")) == false)
+	{
+		if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Backgorund"))))
+			return E_FAIL;
+	}
 
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Backgorund"))))
-		return E_FAIL;
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract")) == false)
+	{
+		if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Insteract"))))
+			return E_FAIL;
+	}
 
-	if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Backgorund"))))
-		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
+
+
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco")) == false)
+	{
+		if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
+			return E_FAIL;
+	}
+
 	
-	if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
-		return E_FAIL;
-
-
-	//Test
-	//if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
-	//	return E_FAIL;
-	//Test
 
 	DWORD dwTime = GetTickCount();
 	while (false == m_pPlayerLoader->Get_Finished() || 
-		/*false == m_pNpcLoader->Get_Finished() ||*/
 		false == m_pMonsterLoader1->Get_Finished())
 	{
 		if (dwTime + 1000 < GetTickCount())
 		{
 			if (m_pPlayerLoader->Get_Finished() == true)
 				cout << "Finished Player Clone" << endl;
-	
-
-			//if (m_pNpcLoader->Get_Finished() == true)
-			//	cout << "Finished Npc Clone" << endl;
 
 
 			if (m_pMonsterLoader1->Get_Finished() == true)
@@ -108,7 +107,6 @@ HRESULT CLevel_SnowField::Initialize()
 
 	Safe_Release(m_pPlayerLoader);
 	Safe_Release(m_pMonsterLoader1);
-	//Safe_Release(m_pNpcLoader);
 
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
@@ -119,7 +117,7 @@ HRESULT CLevel_SnowField::Initialize()
 	if (vecFightedMonster.size() != 0)
 	{
 		_float exp = rand() % 500 + 500;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, TEXT("sss"), &exp)))
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_SNOWFIELD, TEXT("sss"), &exp)))
 			return S_OK;
 	}
 
@@ -147,6 +145,12 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 	{
 		CPlayerManager::Get_Instance()->Save_LastPosition();
 		m_pCollision_Manager->Clear_AllCollisionGroup();
+
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Camera"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -372,7 +376,7 @@ HRESULT CLevel_SnowField::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_SNOWFIELD, TEXT("Layer_Terrain"), TEXT("Prototype_SnowField_Terrain"))))
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_SNOWFIELD, pLayerTag, TEXT("Prototype_SnowField_Terrain"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_SNOWFIELD, pLayerTag, nullptr)))
@@ -404,19 +408,7 @@ HRESULT CLevel_SnowField::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_SnowField::Ready_Layer_Effect(const _tchar * pLayerTag)
-{
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Particle_Rect"), LEVEL_SNOWFIELD, pLayerTag, nullptr)))
-		return E_FAIL;
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Particle_Point"), LEVEL_SNOWFIELD, pLayerTag, nullptr)))
-		return E_FAIL;*/
-
-	RELEASE_INSTANCE(CGameInstance);
-
-	return S_OK;
-}
 
 HRESULT CLevel_SnowField::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
@@ -733,83 +725,6 @@ HRESULT CLevel_SnowField::Ready_Layer_Interact_Object(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_SnowField::Ready_Layer_Instancing(const _tchar * pLayerTag)
-{
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	NONANIMDESC stModelDesc;
-
-	strcpy(stModelDesc.pModeltag, "Birch1");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Birch2");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Bush");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Broken_Tree");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "BushWood");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Conifer3");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Dead_Grass");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Dead_Tree");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Fence");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Lamppillar");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Snow1");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Snow2");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-	strcpy(stModelDesc.pModeltag, "SmallRock2");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Tree5");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Stalagmite5");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Stalagmite4");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	strcpy(stModelDesc.pModeltag, "Tree");
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
-		return E_FAIL;
-
-	RELEASE_INSTANCE(CGameInstance);
-
-	return S_OK;
-}
-
 HRESULT CLevel_SnowField::Ready_Layer_DecoObject(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -941,63 +856,6 @@ HRESULT CLevel_SnowField::Ready_Layer_Trigger(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_SnowField::Ready_Layer_Npc(const _tchar * pLayerTag)
-{
-	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
-
-	HANDLE hFile = 0;
-	_ulong dwByte = 0;
-	CNpc::NPCDESC NpcDesc; 
-
-	_uint iNum = 0;
-
-	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	/* 타일의 개수 받아오기 */
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(NpcDesc.Modeldesc), sizeof(NONANIMDESC), &dwByte, nullptr);
-		_tchar pModeltag[MAX_PATH];
-		MultiByteToWideChar(CP_ACP, 0, NpcDesc.Modeldesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
-
-		if (!wcscmp(pModeltag, TEXT("NpcFemaleYoung")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::FEMALE_YOUNG;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_GLD;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("NPC_NMO_DOK")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_OLD;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("NPC_NMY_PLC")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_PLC;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
-				return E_FAIL;
-		}
-		
-
-	}
-
-	CloseHandle(hFile);
-
-	RELEASE_INSTANCE(CGameInstance);
-
-	return S_OK;
-}
 
 HRESULT CLevel_SnowField::Ready_Layer_Test(const _tchar * pLayerTag)
 {
@@ -1054,6 +912,7 @@ void CLevel_SnowField::Free()
 	__super::Free();
 
 	Safe_Release(m_pCollision_Manager);
-	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
+	
+	
 
 }

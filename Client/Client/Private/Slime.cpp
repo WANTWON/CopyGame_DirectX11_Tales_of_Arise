@@ -36,16 +36,6 @@ HRESULT CSlime::Initialize(void * pArg)
 	CSlimeState* pState = new CIdleState(this, CSlimeState::FIELD_STATE_ID::FIELD_STATE_IDLE);
 	m_pSlimeState = m_pSlimeState->ChangeState(m_pSlimeState, pState);
 
-	///* Set Binary */
-	//CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	//CData_Manager* pData_Manager = GET_INSTANCE(CData_Manager);
-	//char cName[MAX_PATH];
-	//ZeroMemory(cName, sizeof(char) * MAX_PATH);
-	//pData_Manager->TCtoC(TEXT("Hawk"), cName);
-	//pData_Manager->Conv_Bin_Model(m_pModelCom, cName, CData_Manager::DATA_ANIM);
-	//RELEASE_INSTANCE(CData_Manager);
-	//RELEASE_INSTANCE(CGameInstance);
-
 
 	m_tInfo.fMaxHp = 3;
 	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
