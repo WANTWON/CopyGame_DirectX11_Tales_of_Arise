@@ -30,7 +30,7 @@ CBerserkerState * CBattle_FireBallState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex())/*, "ABone"*/);
 
 
-	m_pOwner->Check_Navigation();
+	//m_pOwner->Check_Navigation();
 	
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -94,6 +94,8 @@ CBerserkerState * CBattle_FireBallState::Tick(_float fTimeDelta)
 
 CBerserkerState * CBattle_FireBallState::LateTick(_float fTimeDelta)
 {
+	m_pOwner->Check_Navigation();
+
 	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 	//if (false == m_bTargetSetting)

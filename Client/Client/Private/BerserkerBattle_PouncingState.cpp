@@ -110,10 +110,11 @@ CBerserkerState * CBattle_PouncingState::LateTick(_float fTimeDelta)
 {
 	m_fTimeDeltaAcc += fTimeDelta;
 
+	m_pOwner->Check_Navigation();
+
 		if (m_bIsAnimationFinished)
 		{
-			/*return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BATTLE);*/
-			return new CBattle_PouncingState(m_pOwner);
+			return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BATTLE);
 		}
 
 		if (nullptr != m_pAtkColliderCom)

@@ -89,66 +89,25 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 			{
 				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
-				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("DB_WING3_2_R_end")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
+				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("ABone")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
 				matWorld.r[0] = XMVector3Normalize(matWorld.r[0]);
 				matWorld.r[1] = XMVector3Normalize(matWorld.r[1]);
 				matWorld.r[2] = XMVector3Normalize(matWorld.r[2]);
 
-				if (nullptr == m_pAtkColliderCom || nullptr == m_p2th_AtkColliderCom)
+				if (nullptr == m_pAtkColliderCom)
 				{
+					CCollider::COLLIDERDESC		ColliderDesc;
 
-					if (nullptr == m_pAtkColliderCom && m_p2th_AtkColliderCom)
-					{
-						CCollider::COLLIDERDESC		ColliderDesc;
+					ColliderDesc.vScale = _float3(7.5f, 7.5f, 7.5f);
+					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
-						ColliderDesc.vScale = _float3(10.f, 10.f, 10.f);
-						ColliderDesc.vPosition = _float3(-2.f, 0.f, -2.f);
-
-						m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
-						m_pAtkColliderCom->Update(matWorld);
-					}
-
-					else if (nullptr == m_p2th_AtkColliderCom && m_pAtkColliderCom)
-					{
-						CCollider::COLLIDERDESC		ColliderDesc2th;
-
-						ColliderDesc2th.vScale = _float3(2.f, 2.f, 2.f);
-						ColliderDesc2th.vPosition = _float3(2.f, 0.f, 2.f);
-
-
-						m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
-						m_p2th_AtkColliderCom->Update(matWorld);
-
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-					}
-
-					else if (nullptr == m_pAtkColliderCom && nullptr == m_p2th_AtkColliderCom)
-					{
-						CCollider::COLLIDERDESC		ColliderDesc;
-
-						ColliderDesc.vScale = _float3(12.f, 12.f, 12.f);
-						ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-
-						m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
-						m_pAtkColliderCom->Update(matWorld);
-
-						CCollider::COLLIDERDESC		ColliderDesc2th;
-
-						ColliderDesc2th.vScale = _float3(12.f, 12.f, 12.f);
-						ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
-
-
-						m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
-						m_p2th_AtkColliderCom->Update(matWorld);
-
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-					}
+					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+					m_pAtkColliderCom->Update(matWorld);
+					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 				else
-				{
 					m_pAtkColliderCom->Update(matWorld);
-					m_p2th_AtkColliderCom->Update(matWorld);
-				}
+
 				RELEASE_INSTANCE(CCollision_Manager);
 			}
 		}
@@ -158,10 +117,7 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
-			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p2th_AtkColliderCom);
-
 			m_pAtkColliderCom = nullptr;
-			m_p2th_AtkColliderCom = nullptr;
 
 			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 
@@ -189,8 +145,6 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
 
-	if (nullptr != m_p2th_AtkColliderCom)
-		m_pOwner->Get_Renderer()->Add_Debug(m_p2th_AtkColliderCom);
 
 	return nullptr;
 }
@@ -209,5 +163,5 @@ void CBattle_TornadeState::Exit()
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 
 	Safe_Release(m_pAtkColliderCom);
-	Safe_Release(m_p2th_AtkColliderCom);
+
 }

@@ -60,8 +60,8 @@ CBerserkerState * CBattle_RunState::Tick(_float fTimeDelta)
 	}
 
 
-	if (m_pCurTarget == nullptr)
-		return nullptr;
+	//if (m_pCurTarget == nullptr)
+	//	return nullptr;
 
 
 	return nullptr;
@@ -72,11 +72,20 @@ CBerserkerState * CBattle_RunState::LateTick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 
+	if (m_pCurTarget == nullptr)
+	{
+		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+	}
+
+
 	m_fTimeDeltaAcc += fTimeDelta;
 	if (m_fTimeDeltaAcc > m_fRandTime)
 		m_iRand = rand() % 4;
 
-	if (m_fTarget_Distance > 4.5f)
+	if (m_fTarget_Distance > 7.5f)
 	{
 
 		m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
@@ -100,7 +109,7 @@ CBerserkerState * CBattle_RunState::LateTick(_float fTimeDelta)
 		
 	}
 
-	else if (m_fTarget_Distance <= 4.5f)
+	else if (m_fTarget_Distance <= 7.5f)
 	{
 		switch (m_iRand)
 		{
