@@ -244,6 +244,15 @@ PS_EFFECT_OUT PS_GLOW(PS_IN In)
 	return Out;
 }
 
+PS_EFFECT_OUT PS_DISTORTION(PS_IN In)
+{
+	PS_EFFECT_OUT Out = (PS_EFFECT_OUT)0;
+
+	Out.vColor = float4(1.f, 0.f, 0.f, 1.f);
+	
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default // 0
@@ -310,5 +319,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_GLOW();
+	}
+
+	pass Distortion
+	{
+		SetRasterizerState(RS_Default_NoCull);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISTORTION();
 	}
 }

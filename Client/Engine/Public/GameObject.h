@@ -26,6 +26,7 @@ public:
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() { return NOERROR; }
 	virtual HRESULT Render_Glow() { return S_OK; };
+	virtual HRESULT Render_Distort() { return S_OK; }
 
 	virtual _bool Picking(_float3* PickingPoint) { return false; }
 	virtual void PickingTrue() { return; }

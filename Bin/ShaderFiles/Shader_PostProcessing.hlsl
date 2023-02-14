@@ -248,7 +248,9 @@ PS_OUT PS_DISTORTION(PS_IN In)
 		float2 vNoisedUVs;
 		vNoisedUVs = In.vTexUV + vNoise.r;
 
-		In.vTexUV = lerp(In.vTexUV, vNoisedUVs, g_fDistortionStrength);
+		In.vTexUV = lerp(In.vTexUV, vNoisedUVs, g_fDistortionStrength / 100);
+
+		vBackBufferCopy = g_BackBufferTexture.Sample(LinearSampler, In.vTexUV);
 	
 		/*vNewTexUV.x += (cos(vNoise.r * g_fDistortionTimer * g_fDistortionSpeed)) * vFilter * g_fDistortionStrength;
 		vNewTexUV.y += (sin(vNoise.r * g_fDistortionTimer * g_fDistortionSpeed)) * vFilter * g_fDistortionStrength;*/

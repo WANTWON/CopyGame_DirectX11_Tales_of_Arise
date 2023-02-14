@@ -18,6 +18,7 @@ public:
 public:
 	void Add_Effect(class CEffect * pEffect);
 	void Remove_Effect(class CEffect * pEffect);
+	void Clear_Effects();
 
 private:
 	vector<class CEffect*> m_InstancedEffects;
