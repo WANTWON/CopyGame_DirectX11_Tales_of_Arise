@@ -62,8 +62,8 @@ int CUI_Portraitfront_bottom::Tick(_float fTimeDelta)
 
 	if (m_bbigger && m_bfirstglow)
 	{
-		m_fGlowScaleOffset += 0.3f;
-		m_fGlowAlpha -= 0.0125f;
+		m_fGlowScaleOffset += 0.4f;
+		m_fGlowAlpha -= 0.025f;
 
 		if (m_fGlowScaleOffset >= 8.f)
 		{

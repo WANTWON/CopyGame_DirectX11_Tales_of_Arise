@@ -447,7 +447,7 @@ void CUI_Skillmessage::Free()
 	//CUI_Manager::Get_Instance()->Erase_Itempopup_list(this);
 
 	Safe_Release(m_pTextureCom1);
-	//Safe_Release(m_pTextureCom2);
+	Safe_Release(m_pTextureCom2);
 	__super::Free();
 }
 

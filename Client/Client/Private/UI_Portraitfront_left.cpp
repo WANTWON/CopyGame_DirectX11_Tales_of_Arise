@@ -62,8 +62,8 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 
 	if (m_bbigger && m_bfirstglow)
 	{
-		m_fGlowScaleOffset += 0.3f;
-		m_fGlowAlpha -= 0.0125f;
+		m_fGlowScaleOffset += 0.4f;
+		m_fGlowAlpha -= 0.025f;
 
 		if (m_fGlowScaleOffset >= 8.f)
 		{
@@ -155,10 +155,10 @@ int CUI_Portraitfront_left::Tick(_float fTimeDelta)
 	m_fSize.x = 95.f;
 	m_fSize.y = 95.f;*/
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 사라질때
-	{
-		m_bfadeout = true;
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 사라질때
+	//{
+	//	m_bfadeout = true;
+	//}
 
 
 
