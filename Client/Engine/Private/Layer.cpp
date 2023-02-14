@@ -80,6 +80,10 @@ void CLayer::Tick(_float fTimeDelta)
 				Safe_Release(*iter);
 				iter = m_GameObjects.erase(iter);
 			}
+			else if (iEvent == OBJ_POOL)
+			{
+				iter = m_GameObjects.erase(iter);
+			}
 			else
 				iter++;
 		}

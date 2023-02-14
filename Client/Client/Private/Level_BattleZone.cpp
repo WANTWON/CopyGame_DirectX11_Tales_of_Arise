@@ -439,30 +439,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 }
 
 
-HRESULT CLevel_BattleZone::Ready_Layer_Interact_Object(const _tchar * pLayerTag)
-{
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
 
-	for (_uint i = 0; i < 1; ++i)
-	{
-		_vector vPosition = { 128, 5.f, 128, 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_TreasureBox"), LEVEL_BATTLE, pLayerTag, &vPosition)))
-			return E_FAIL;
-	}
-
-	for (_uint i = 0; i < 1; ++i)
-	{
-		_vector vPosition = { 128, 5.f, 128, 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_BATTLE, pLayerTag, &vPosition)))
-			return E_FAIL;
-	}
-
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
 
 HRESULT CLevel_BattleZone::Ready_Layer_Instancing(const _tchar * pLayerTag)
 {

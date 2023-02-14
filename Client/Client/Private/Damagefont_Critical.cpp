@@ -139,7 +139,11 @@ int CDamagefont_Critical::Tick(_float fTimeDelta)
 	//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();
 
 	if (m_damagedesc.pPointer == nullptr)
-		return OBJ_DEAD;
+	{
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), this);
+		return OBJ_POOL;
+	}
+
 
 	for (_uint i = 0; i < 4; ++i)
 		m_fbrightpos_hp[i] += 0.015f;
@@ -190,8 +194,10 @@ int CDamagefont_Critical::Tick(_float fTimeDelta)
 		m_fYFadeout += 2.f;
 
 		if (m_fAlpha <= 0.f)
-			return OBJ_DEAD;
-
+		{
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), this);
+			return OBJ_POOL;
+		}		
 	}
 
 
@@ -233,107 +239,6 @@ int CDamagefont_Critical::Tick(_float fTimeDelta)
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	//	m_fAlpha += 0.01f;
-
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-	//{
-	//	CUI_RuneEffect::RUNEDESC desc;
-	//	desc.position.x = 1130.f;
-	//	desc.position.y = 375.f;
-	////	desc.m_etype = 1;
-	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
-	//		return E_FAIL;
-	//	desc.position.y = 435.f;
-	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
-	//		return E_FAIL;
-	//	desc.position.y = 495.f;
-	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
-	//		return E_FAIL;
-	//}
-
-	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-	{
-	CUI_RuneEffect::RUNEDESC desc;
-	desc.position.x = 1130.f;
-	desc.position.y = 375.f;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-	return E_FAIL;
-	desc.position.y = 435.f;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-	return E_FAIL;
-	desc.position.y = 495.f;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-	return E_FAIL;
-	}*/
-
-
-	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	{
-
-	CUI_Get_item_Popup::POPUPDESC testdesc;
-	ZeroMemory(&testdesc, sizeof(CUI_Get_item_Popup::POPUPDESC));
-	testdesc.iIndex = 0;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
-	return E_FAIL;
-	testdesc.iIndex = 1;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
-	return E_FAIL;
-	testdesc.iIndex = 2;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
-	return E_FAIL;
-	testdesc.iIndex = 3;
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
-	return E_FAIL;
-
-	}*/
-
-
-	/*if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
-	--m_iCurrenthp;
-
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_J))
-	++m_iCurrenthp;*/
-
-	//if (!m_bforMainPlayer)
-	//{
-	//	m_fSize.x = 16.f;
-	//	m_fSize.y = 20.f;
-	//	m_fPosition.x = 1180.f;
-	//	m_fPosition.y = m_fnumberY;
-	//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	//	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	//	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-
-	/*m_fSize.x = 40.f;
-	m_fSize.y = 20.f;*/
-
-
-	//}
-	//else
-	//{
-	//	/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	//	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));*/
-	//	Compute_CamDistance(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));//Get_State(CTransform::STATE_TRANSLATION));
-	//	m_fPosition.x = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().x + 44.f;
-	//	m_fPosition.y = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().y + 31.f - (m_fCamDistance / 5.f);
-
-	//	if (m_fCamDistance > 20.f)
-	//	{
-	//		m_fNext = 14.f / m_fCamDistance * 20;
-	//		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 16.f / m_fCamDistance * 18.f);
-	//		m_pTransformCom->Set_Scale(CTransform::STATE_UP, 16.f / m_fCamDistance * 18.f);
-	//		m_fPosition.x += m_fCamDistance *0.1f - 10.f;//(m_fNext*3);
-	//	}
-	//	else
-	//	{
-	//		m_fNext = 14.f;
-	//		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 16.f);
-	//		m_pTransformCom->Set_Scale(CTransform::STATE_UP, 16.f);
-	//	}
-
-	//}
-
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
 
 	return OBJ_NOEVENT;
@@ -459,6 +364,51 @@ HRESULT CDamagefont_Critical::Render()
 
 
 	return S_OK;
+}
+
+void CDamagefont_Critical::ReUse_Setting(void* pArg)
+{
+	if (pArg != nullptr)
+		memcpy(&m_damagedesc, pArg, sizeof(DMGDESC));
+
+	m_fTargetPos = m_damagedesc.pPointer->Get_ProjPosition();
+	m_iCurrentDamage = m_damagedesc.iDamage;
+	m_fStart_timer = 0.f;
+	m_fRandomOffset = { _float(rand() % 80)  , _float(rand() % 55) };
+
+	_uint random = rand() % 2;
+
+	if (random == 0)
+		m_bplusminus = true;
+	else
+		m_bplusminus = false;
+
+
+	m_eShaderID = UI_BRIGHT;
+	m_fAlpha = 1.f;
+	m_bfadein = true;
+	m_bfadeout = false;
+	m_fYFadeout = 0.f;
+	m_fScaler = 2.f;
+
+	m_fbrightpos_hp[0] = 0.f;
+	m_fbrightpos_hp[1] = -0.5f;
+	m_fbrightpos_hp[2] = -1.f;
+	m_fbrightpos_hp[3] = -1.5f;
+
+	m_fSize.x = 30.f * m_fScaler;
+	m_fSize.y = 30.f * m_fScaler;
+	m_fNext = 34.f;
+
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixTranspose(XMMatrixIdentity()));
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f)));
+
+
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+	
 }
 
 HRESULT CDamagefont_Critical::Ready_Components(void * pArg)
