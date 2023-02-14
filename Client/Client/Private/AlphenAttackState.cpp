@@ -263,14 +263,12 @@ void CAlphenAttackState::Enter()
 		}
 	}
 
-	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
+	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
 	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
 
 	if (nullptr != pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
-	RELEASE_INSTANCE(CBattleManager);
 
 	//m_pOwner->Use_Mana(1.f);
 	m_pOwner->Set_Manarecover(false);

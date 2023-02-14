@@ -87,7 +87,7 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("ABone")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
 				matWorld.r[0] = XMVector3Normalize(matWorld.r[0]);
@@ -107,21 +107,17 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 				}
 				else
 					m_pAtkColliderCom->Update(matWorld);
-
-				RELEASE_INSTANCE(CCollision_Manager);
 			}
 		}
 
 		else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
 		{
-			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+			CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
 
 			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-
-			RELEASE_INSTANCE(CCollision_Manager);
 		}
 	}
 

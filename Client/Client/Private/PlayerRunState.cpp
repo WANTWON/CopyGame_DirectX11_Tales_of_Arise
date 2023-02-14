@@ -265,7 +265,6 @@ void CRunState::Enter()
 		}
 	}
 
-
 	m_pOwner->Set_Manarecover(true);
 }
 
