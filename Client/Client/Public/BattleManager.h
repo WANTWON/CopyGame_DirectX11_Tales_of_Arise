@@ -25,6 +25,7 @@ public: /* Settter */
 
 	void Add_BattleMonster(CBaseObj* pMonster) { m_BattleMonster.push_back(pMonster); }
 	void Out_BattleMonster(CBaseObj* pMonster);
+	void Return_AllPoolingMonster_AtClear();
 
 public: /* Getter */
 	_bool Get_IsBattleMode() { return m_isBattleMode; }

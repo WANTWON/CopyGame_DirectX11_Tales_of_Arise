@@ -253,7 +253,7 @@ protected:
 	_float		m_fSoundStart = -1.f;
 	_float		m_fColliderStart = -1.f;
 	
-	_uint		m_iColliderNum = 0.f;
+	_uint		m_iColliderNum = 0;
 	
 	CBaseObj*	m_pCurTarget = nullptr;
 	_vector		m_vCurTargetPos;

@@ -23,7 +23,8 @@ public:
 	void Add_Pooling_Object(LEVEL iLevelIndex, const _tchar* pLayerTag, CGameObject* pgameObject);
 	void Add_Pooling_Layer(LEVEL iLevelIndex, const _tchar* pLayerTag);
 
-	_bool Reuse_Pooling_Layer(LEVEL iLevelIndex, const _tchar* pLayerTag);
+	_bool Reuse_Pooling_Layer(LEVEL iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
+	_bool Reuse_Pooling_Object(LEVEL iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
 	_bool Reuse_AllPooling_Layer();
 	
 private:
