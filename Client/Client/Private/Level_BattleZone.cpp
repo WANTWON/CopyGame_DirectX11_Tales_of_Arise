@@ -173,6 +173,9 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 				m_bZumIn = true;
 			}
 		}
+		//else if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
+		//	m_bZumIn = false;
+
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
@@ -182,6 +185,9 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 				m_bZumIn = true;
 			}
 		}
+		//else if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
+		//	m_bZumIn = false;
+
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))

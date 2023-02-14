@@ -139,6 +139,14 @@ int CHawk::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
+	//RELEASE_INSTANCE(CCollision_Manager);
+	
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	{
+		CHawkState* pState = new CBattle_TornadeState(this);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+	}
+
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 

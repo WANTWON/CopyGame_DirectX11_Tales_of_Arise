@@ -91,6 +91,7 @@ public: // Get & Set
 	_vector	 Get_LastPosition() { return m_vLastPos; }
 
 
+
 protected:
 	DMG_DIR Calculate_DmgDirection();
 	_vector	Calculate_DirectionByPos();

@@ -19,6 +19,7 @@ public:
 		STATE_TURN,
 		STATE_TRIGGER_TURN,
 		STATE_CHASE,
+		STATE_DETECTSTOP,
 		FIELD_STATE_END,
 	};
 
@@ -27,16 +28,17 @@ public:
 	enum STATE_ID
 	{
 		START_BATTLE,
-		STATE_BATTLEING,
 		STATE_IDLE,
 		STATE_RUN,
-		STATE_NORMAL_ATK,
 		STATE_MOVE,
-		STATE_DISCOVER,
-		STATE_ELEMENTAL_CHARGE,
-		STATE_SOMESAULT,
-		STATE_BITE,
-		STATE_BACKSTEP,
+		STATE_SPEARMULTI,
+		STATE_HEADBEAM,
+		STATE_UPPER,
+		STATE_720SPIN_START,
+		STATE_720SPIN_END,
+		STATE_RUSH_START,
+		STATE_RUSH_LOOP,
+		STATE_RUSH_END,
 		STATE_BE_DAMAGED,
 		STATE_DEAD,
 		STATE_END
@@ -81,6 +83,8 @@ protected:
 		if (!pPlayer)
 			return;
 
+		m_pTarget = pPlayer;
+
 		if (bHasAggro)
 			m_pTarget = pPlayer;
 		else
@@ -89,10 +93,13 @@ protected:
 			_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
 			_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+
+			m_fOutPutTarget_Distance = fDistance;
+			
 			if (fDistance < m_pOwner->Get_AggroRadius())
 			{
 				m_pTarget = pPlayer;
-
+				
 				m_pOwner->Get_Transform()->Change_Speed(m_pOwner->Get_Stats().m_fRunSpeed);
 
 				if (5 > fDistance)
@@ -206,7 +213,7 @@ protected:
 		return fDot;
 	}
 
-	_bool Find_ToTargetRightSide(_fvector vAt)
+	_bool Is_TargetRightSide(_fvector vAt)
 	{
 		_vector		vMonPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
 		_vector		vMonLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
@@ -225,6 +232,38 @@ protected:
 
 		else
 			return false;  //왼쪽
+
+		return false;
+	}
+
+	_bool Is_TargetInFront(_fvector vAt)
+	{
+		_vector		vMonPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_vector		vMonLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+
+
+		_vector		vTargetDir = XMVector3Normalize(vAt - vMonPos);
+		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		_vector		vMonRight = XMVector3Cross(vAxisY, vMonLook);
+		_vector		vMonUp = XMVector3Cross(vMonLook, vMonRight);
+
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
+
+
+		//앞쪽인지 뒤쪽인지 
+		_float fLookDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
+
+
+		if (fLookDot > 0)
+		{
+			return true;
+		}
+
+		else
+			return false;
+
 
 		return false;
 	}
@@ -258,6 +297,7 @@ protected:
 	_float		m_fTimeDeltaAcc = 0.f;
 	_float		m_fTarget_Distance;
 	_float		m_fDegreeToTarget;
+	_float		m_fOutPutTarget_Distance;
 	CAstralDoubt * m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
 

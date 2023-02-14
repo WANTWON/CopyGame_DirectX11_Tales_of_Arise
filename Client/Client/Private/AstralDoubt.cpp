@@ -2,6 +2,9 @@
 #include "AstralDoubt.h"
 #include "AstralDoubt_IdleState.h"
 #include "AstralDoubt_Battle_IdleState.h"
+#include "AstralDoubt_State.h"
+#include "AstralDoubt_TurnState.h"
+#include "AstralDoubt_Battle_Hit_AndDead.h"
 
 using namespace Astral_Doubt;
 
@@ -29,15 +32,23 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 	//if (m_bBattleMode)
 	//{
 	//	/* Set_Battle State */
-	//	CAstralDoubtState* pBattleState = new CBattle_IdleState(this, CAstralDoubtState::STATE_ID::START_BATTLE);
+	//	CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::START_BATTLE);
 	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	//}
 	//else
 	//{
-		/* Set State */
-		CAstralDoubt_State* pState = new CBattle_IdleState(this, CAstralDoubt_State::FIELD_STATE_ID::FIELD_STATE_START);
+	//	/* Set State */
+	//	CAstralDoubt_State* pState = new CIdleState(this, CAstralDoubt_State::FIELD_STATE_ID::FIELD_STATE_START);
+	//	m_pState = m_pState->ChangeState(m_pState, pState);
+	//}
+
+
+	
+		///* Set State */
+		CAstralDoubt_State* pState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::START_BATTLE);
 		m_pState = m_pState->ChangeState(m_pState, pState);
-//	}
+	
+
 
 	m_eMonsterID = ASTRAL_DOUBT;
 
@@ -154,6 +165,14 @@ int CAstralDoubt::Tick(_float fTimeDelta)
 	if (m_fTimeDeltaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
 
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
+	{
+		CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_BE_DAMAGED);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+
+
 	return OBJ_NOEVENT;
 }
 
@@ -229,6 +248,25 @@ void CAstralDoubt::LateTick_State(_float fTimeDelta)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
 }
 
+void CAstralDoubt::Set_BattleMode(_bool type)
+{
+	m_bBattleMode = type;
+	if (m_bBattleMode)
+	{
+		/* Set_Battle State */
+		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::START_BATTLE);
+		m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	}
+	else
+	{
+		Check_NearTrigger();
+		/* Set State */
+		CAstralDoubt_State* pState = new CIdleState(this, CAstralDoubt_State::FIELD_STATE_ID::FIELD_STATE_IDLE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
+}
+
 _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
@@ -248,7 +286,10 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_HEAD_BEAM:
 	case ATTACK_IN_OUT_UPPER:
 	case ATTACK_SPEAR_MULTI:
-
+	case SYMBOL_LOOKOUT:
+	case SYMBOL_TURN_LEFT:
+	case SYMBOL_TURN_RIGHT:
+	case ATTACK_SWING_360:
 		return false;
 	}
 
@@ -262,42 +303,42 @@ _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
-	//if (iHp <= 0)
-	//{
-	//	m_pModelCom->Set_TimeReset();
-	//	CAstralDoubtState* pState = new CBattle_Damage_LargeB_State(this, CAstralDoubtState::STATE_DEAD);
-	//	m_pState = m_pState->ChangeState(m_pState, pState);
-	//	
-	//	return 0;
-	//}
-	//else
-	//{
-	//	m_iBeDamaged_Cnt++;
+	if (iHp <= 0)
+	{
+		m_pModelCom->Set_TimeReset();
+		CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DEAD);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+		
+		return 0;
+	}
+	else
+	{
+		m_iBeDamaged_Cnt++;
 
-	//	if (m_bOnGoing_Bite == false)
-	//	{
-	//		if (m_bSomeSauling == false)
-	//		{
-	//			//m_pModelCom->Set_TimeReset();
-	//			CAstralDoubtState* pState = new CBattle_Damage_LargeB_State(this, CAstralDoubtState::STATE_BE_DAMAGED);
-	//			m_pState = m_pState->ChangeState(m_pState, pState);
+		if (m_bDone_HitAnimState == false)
+		{
+			if (m_bOnGoing_320Spin == false)
+			{
+				//m_pModelCom->Set_TimeReset();
+				CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_BE_DAMAGED);
+				m_pState = m_pState->ChangeState(m_pState, pState);
 
 
-	//		}
-	//		if (m_iBeDamaged_Cnt >= 3)
-	//		{
+			}
+			if (m_iBeDamaged_Cnt >= 3)
+			{
 
-	//			m_pModelCom->Set_TimeReset();
-	//			CAstralDoubtState* pState = new CBattle_Damage_LargeB_State(this, CAstralDoubtState::STATE_BE_DAMAGED, true);
-	//			m_pState = m_pState->ChangeState(m_pState, pState);
-	//			m_iBeDamaged_Cnt = 0;
-	//			m_bSomeSauling = true;
+				m_pModelCom->Set_TimeReset();
+				CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_BE_DAMAGED, true);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+				m_iBeDamaged_Cnt = 0;
+				//m_bOnGoing_320Spin = true;
 
-	//		}
-	//	}
-	//	else
-	//		return iHp;
-	//}
+			}
+		}
+		else
+			return iHp;
+	}
 
 	return iHp;
 }

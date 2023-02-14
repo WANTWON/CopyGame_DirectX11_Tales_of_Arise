@@ -30,6 +30,7 @@ public:
 	vector<_float3> Get_AlphaCurves() { return m_AlphaCurves; }
 	vector<_float3> Get_TurnVelocityCurves() { return m_TurnVelocityCurves; }
 	vector<_float3> Get_NoisePowerCurves() { return m_NoisePowerCurves; }
+	vector<_float3> Get_DistortPowerCurves() { return m_DistortPowerCurves; }
 	void Set_ColorCurves(vector<array<_float, 5>> ColorCurves) { m_ColorCurves = ColorCurves; }
 	void Set_VelocityCurves(vector<_float3> VelocityCurves) { m_VelocityCurves = VelocityCurves; }
 	void Set_SizeCurves(vector<_float3> SizeCurves) { m_SizeCurves = SizeCurves; }
@@ -37,6 +38,7 @@ public:
 	void Set_AlphaCurves(vector<_float3> AlphaCurves) { m_AlphaCurves = AlphaCurves; }
 	void Set_TurnVelocityCurves(vector<_float3> TurnVelocityCurves) { m_TurnVelocityCurves = TurnVelocityCurves; }
 	void Set_NoisePowerCurves(vector<_float3> NoisePowerCurves) { m_NoisePowerCurves = NoisePowerCurves; }
+	void Set_DistortPowerCurves(vector<_float3> DistortPowerCurves) { m_DistortPowerCurves = DistortPowerCurves; }
 	EFFECT_TYPE Get_EffectType() { return m_eType; }
 	virtual _tchar* Get_PrototypeId() PURE;
 	_tchar* Get_EffectName() { return m_EffectName; }
@@ -54,6 +56,7 @@ public:
 	void Add_AlphaCurve(_float3 AlphaCurve) { m_AlphaCurves.push_back(AlphaCurve); }
 	void Add_TurnVelocityCurve(_float3 TurnVelocityCurve) { m_TurnVelocityCurves.push_back(TurnVelocityCurve); }
 	void Add_NoisePowerCurve(_float3 NoisePowerCurve) { m_NoisePowerCurves.push_back(NoisePowerCurve); }
+	void Add_DistortPowerCurve(_float3 DistortPowerCurve) { m_DistortPowerCurves.push_back(DistortPowerCurve); }
 
 	void Remove_ColorCurve(_uint iIndex) { m_ColorCurves.erase(m_ColorCurves.begin() + iIndex); }
 	void Remove_VelocityCurve(_uint iIndex) { m_VelocityCurves.erase(m_VelocityCurves.begin() + iIndex); };
@@ -62,6 +65,7 @@ public:
 	void Remove_AlphaCurve(_uint iIndex) { m_AlphaCurves.erase(m_AlphaCurves.begin() + iIndex); };
 	void Remove_TurnVelocityCurve(_uint iIndex) { m_TurnVelocityCurves.erase(m_TurnVelocityCurves.begin() + iIndex); }
 	void Remove_NoisePowerCurve(_uint iIndex) { m_NoisePowerCurves.erase(m_NoisePowerCurves.begin() + iIndex); }
+	void Remove_DistortPowerCurve(_uint iIndex) { m_DistortPowerCurves.erase(m_DistortPowerCurves.begin() + iIndex); }
 
 	virtual void Add_MaskTexture() {};
 	virtual void Add_NoiseTexture() {};
@@ -95,6 +99,7 @@ protected:
 	vector<_float3> m_AlphaCurves;
 	vector<_float3> m_TurnVelocityCurves;
 	vector<_float3> m_NoisePowerCurves;
+	vector<_float3> m_DistortPowerCurves;
 
 	CTexture* m_pMaskTexture = nullptr;
 	CTexture* m_pNoiseTexture = nullptr;

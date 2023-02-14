@@ -10,12 +10,12 @@
 
 using namespace Berserker;
 
-CTurnR_State::CTurnR_State(CBerserker* pIceWolf)
+CTurnR_State::CTurnR_State(CBerserker* pBerserker)
 {
-	m_pOwner = pIceWolf;
+	m_pOwner = pBerserker;
 
 	m_fTimeDeltaAcc = 0;
-	m_fTurnR_Time = ((rand() % 8000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fTurnR_Time = ((rand() % 3000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CBerserkerState * CTurnR_State::AI_Behaviour(_float fTimeDelta)
@@ -42,74 +42,74 @@ CBerserkerState * CTurnR_State::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
+	if (m_bIsAnimationFinished)
+		return new CWalkState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_TURN_R);
 
 	return nullptr;
 }
 
 CBerserkerState * CTurnR_State::LateTick(_float fTimeDelta)
 {
-
+	//m_pOwner->Check_Navigation();
 
 	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (m_fTimeDeltaAcc > m_fTurnR_Time)
-		m_iRand = rand() % 2;
-	
-	if (m_pTarget)
-	{
-		return new CChaseState(m_pOwner);
-	}
+	//나의 트리거 박스랑 충돌안했을떄
+	CBaseObj* pTrigger = m_pOwner->Get_Trigger();
+	_vector vTrigger_Pos = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	else if (m_bIsAnimationFinished)
-	{
-		//나의 트리거 박스랑 충돌안했을떄
-		CBaseObj* pTrigger = m_pOwner->Get_Trigger();
+	_bool bIs_TargetInFront = false;
+	bIs_TargetInFront = Is_TargetInFront(vTrigger_Pos);
 
-		if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == false)
-			return new CWalkState(m_pOwner, FIELD_STATE_END, true);
-		else
-		{
-			switch (m_iRand)
-			{
-			case 0:
-				return new CWalkState(m_pOwner, FIELD_STATE_END, false);
-			case 1:
-				return new CHowLing_State(m_pOwner);
-			default:
-				break;
-			}
-		}
+	//if (m_bIsAnimationFinished)
+	//{
+	//	//나의 트리거 박스랑 충돌해 있을때(트리거 박스 안에 있을 때)
+	//	if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == true)
+	//	{
+	//		if (m_pTarget)
+	//		{
+	//			return new CChaseState(m_pOwner);
+	//		}
 
-	}
-		
+	//		else
+	//		{
+	//			if (m_fTimeDeltaAcc > m_fRandTime)
+	//			{
+	//				switch (rand() % 2)
+	//				{
+	//				case 0:
+	//					return new CWalkState(m_pOwner, FIELD_STATE_END, false);
+	//				case 1:
+	//					return new CHowLing_State(m_pOwner);
+	//				default:
+	//					break;
+	//				}
+	//			}
+	//		}
 
+	//	}
 
+	//	else
+	//	{
+	//		if (bIs_TargetInFront)
+	//			return new CWalkState(m_pOwner, FIELD_STATE_ID::STATE_TURN_R, true);
 
+	//		else
+	//			return new CTurnR_State(m_pOwner);
+	//	}
+	//}
 
+	//else if (!m_bIsAnimationFinished)
+	//{
+	//	_vector vecTranslation;
+	//	_float fRotationRadian;
 
+	//	m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-	//이전코드 ///
+	//	m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 
-	/*
-	if (m_pTarget)
-		return new CChaseState(m_pOwner);
-
-	m_fWalkMoveTimer += fTimeDelta;
-
-	if (m_fWalkMoveTimer > 1.f)
-		return new CIdleState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_TURN_R);
-
-	else
-	{
-		_vector vecTranslation;
-		_float fRotationRadian;
-
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
-	}*/
+	//	m_pOwner->Check_Navigation();
+	//}
 	return nullptr;
 }
 
@@ -117,10 +117,10 @@ void CTurnR_State::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::TURN_R);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::SYMBOL_TURN_LEFT);
 }
 
 void CTurnR_State::Exit()
 {
-
+	//m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 1.f), 2.f);
 }

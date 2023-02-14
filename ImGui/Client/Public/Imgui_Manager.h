@@ -103,7 +103,12 @@ public:
 
 	void Set_Effect();
 	_bool Save_Effect();
-	_bool Load_Effect();
+	_bool Load_Effect(_bool bUpgrade = false);
+	_bool Upgrade_Effects();
+
+	/* Used to be able to Load Effect Data after changing the Data Structure.
+	(You will constantly need to take care of this function every time there is a change in the Data Structure).*/
+	CEffectMesh::MESHEFFECTDESC UpgradeMeshStruct(CEffectMesh::MESHEFFECTDESC_OLD tMeshEffectDescOld);
 
 	void Show_TextureCustomization();
 	void Show_MeshCustomization();
@@ -215,13 +220,6 @@ private:
 	vector<string> m_SpawnTypes = { "LOOP", "BURST" };
 	string m_sCurrentSpawnType = "LOOP";
 
-	/*vector<string> m_ShadersTexture = { "SHADER_DEFAULT", "-", "SHADER_ALPHAMASK" };
-	vector<string> m_ShadersMesh = { "SHADER_DEFAULT", "-", "-", "-", "SHADER_EFFECT" };
-	vector<string> m_ShadersParticle = { "SHADER_DEFAULT", "SHADER_ALPHAMASK", "SHADER_DISTORTION" };
-	string m_sCurrentShaderTexture = m_ShadersTexture[0];
-	string m_sCurrentShaderMesh = m_ShadersMesh[0];
-	string m_sCurrentShaderParticle = m_ShadersParticle[0];*/
-
 	CEffectTexture::TEXTUREEFFECTDESC m_tTextureEffectDesc;
 	CEffectMesh::MESHEFFECTDESC m_tMeshEffectDesc;
 	CParticleSystem::PARTICLEDESC m_tParticleDesc;
@@ -233,7 +231,7 @@ private:
 	_float m_fCurveRed = 1.f, m_fCurveGreen = 1.f, m_fCurveBlue = 1.f;
 	_float m_fCurveScaleX = 1.f, m_fCurveScaleY = 1.f, m_fCurveScaleZ = 1.f;
 	_uint m_iSelectedColorCurve = 0, m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedScaleCurve = 0, m_iSelectedAlphaCurve = 0, 
-		m_iSelectedTurnVelocityCurve = 0, m_iSelectedNoisePowerCurve = 0;
+		m_iSelectedTurnVelocityCurve = 0, m_iSelectedNoisePowerCurve = 0, m_iSelectedDistortPowerCurve = 0;
 
 public:
 	virtual void Free() override;

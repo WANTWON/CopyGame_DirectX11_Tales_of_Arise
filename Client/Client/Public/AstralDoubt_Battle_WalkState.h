@@ -7,7 +7,7 @@ BEGIN(Astral_Doubt)
 class CBattleWalkState final : public CAstralDoubt_State
 {
 public:
-	CBattleWalkState(class CAstralDoubt* pIceWolf, FIELD_STATE_ID ePreState);
+	CBattleWalkState(class CAstralDoubt* pIceWolf, STATE_ID ePreState = STATE_ID::STATE_IDLE);
 
 	virtual CAstralDoubt_State* AI_Behaviour(_float fTimeDelta) override;
 	virtual CAstralDoubt_State* Tick(_float fTimeDelta) override;
@@ -22,8 +22,8 @@ public:
 private:
 	_float m_fWalkMoveTimeAcc = 0.f;
 	_float  m_fMoveTime = 0;
-	FIELD_STATE_ID	m_ePreState_Id;
-
+	STATE_ID	m_ePreState_Id;
+	_bool	m_Testbool;
 
 };
 END

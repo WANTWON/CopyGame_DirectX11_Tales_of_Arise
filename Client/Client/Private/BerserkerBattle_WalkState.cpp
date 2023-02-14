@@ -72,7 +72,7 @@ CBerserkerState * CBattle_WalkState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-	m_pOwner->Check_Navigation();
+	
 
 
 	return nullptr;
@@ -80,6 +80,15 @@ CBerserkerState * CBattle_WalkState::Tick(_float fTimeDelta)
 
 CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 {
+	m_pOwner->Check_Navigation();
+
+	if (m_pCurTarget == nullptr)
+	{
+		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+	}
 
 
 	m_fTimeDeltaAcc += fTimeDelta;
@@ -94,11 +103,10 @@ CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 
 	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	
-	if (4.5f < m_fTarget_Distance)
+	if (6.5f < m_fTarget_Distance)
 	{
 		m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.2f, m_pOwner->Get_Navigation());
-
 	}
 
 	else

@@ -3067,6 +3067,66 @@ void CImgui_Manager::Draw_EffectModals()
 				ImGui::EndTabItem();
 			}
 
+			if (ImGui::BeginTabItem("Distort Power Curves"))
+			{
+				if (ImGui::BeginTable("DistortPowerCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				{
+					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("Distort Power");
+					ImGui::TableSetupColumn("Start");
+					ImGui::TableSetupColumn("End");
+					ImGui::TableHeadersRow();
+
+					vector<_float3> DistortPowerCurves;
+
+					if (m_pSelectedEffect)
+						DistortPowerCurves = m_pSelectedEffect->Get_DistortPowerCurves();
+
+					for (_uint i = 0; i < DistortPowerCurves.size(); i++)
+					{
+						ImGui::TableNextColumn();
+						if (ImGui::Selectable(to_string(DistortPowerCurves[i].x).c_str(), i == m_iSelectedDistortPowerCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
+							m_iSelectedDistortPowerCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(DistortPowerCurves[i].y).c_str()); /* Start */
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(DistortPowerCurves[i].z).c_str()); /* End */
+					}
+
+					ImGui::EndTable();
+				}
+				if (ImGui::Button("Delete"))
+					if (m_pSelectedEffect->Get_DistortPowerCurves().size() > m_iSelectedDistortPowerCurve)
+						m_pSelectedEffect->Remove_DistortPowerCurve(m_iSelectedDistortPowerCurve);
+
+				ImGui::NewLine();
+
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##DistortPowerCurve", &m_fCurveValue, 0.05f, 0.f, 100.f, "Power: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##DistortPowerStart", &m_fCurveStart, 0.05f, 0.f, 1.f, "Start: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(100);
+				if (ImGui::DragFloat("##DistortPowerEnd", &m_fCurveEnd, 0.05f, 0.f, 1.f, "End: %.02f"))
+				{
+				}
+				ImGui::SameLine();
+
+				if (ImGui::Button("Add"))
+				{
+					if (m_pSelectedEffect)
+						m_pSelectedEffect->Add_DistortPowerCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+				}
+				ImGui::EndTabItem();
+			}
+
 			ImGui::EndTabBar();
 		}
 
@@ -3512,6 +3572,10 @@ void CImgui_Manager::Set_Effect()
 		if (ImGui::Button("Load Effect"))
 			Load_Effect();
 
+		/*ImGui::SameLine();
+		if (ImGui::Button("Upgrade Effects"))
+			Upgrade_Effects();*/
+
 		ImGui::NewLine();
 		ImGui::Separator();
 
@@ -3834,18 +3898,21 @@ _bool CImgui_Manager::Save_Effect()
 {
 	/* Backup the (selected) Effect Description in the Effect Class.
 	Since the backup gets done when selecting effects, it's possible that the current one is not back upped. */
-	switch (m_pSelectedEffect->Get_EffectType())
+	if (m_pSelectedEffect)
 	{
-	case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
-	{
-		((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDescTool(m_tTextureEffectDesc);
-		break;
-	}
-	case CEffect::EFFECT_TYPE::TYPE_MESH:
-	{
-		((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDescTool(m_tMeshEffectDesc);
-		break;
-	}
+		switch (m_pSelectedEffect->Get_EffectType())
+		{
+			case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+			{
+				((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDescTool(m_tTextureEffectDesc);
+				break;
+			}
+			case CEffect::EFFECT_TYPE::TYPE_MESH:
+			{
+				((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDescTool(m_tMeshEffectDesc);
+				break;
+			}
+		}
 	}
 
 	wstring wsCurrentEffect = wstring(m_sCurrentEffect.begin(), m_sCurrentEffect.end());
@@ -3952,16 +4019,33 @@ _bool CImgui_Manager::Save_Effect()
 		/* Write Noise Power Curves. */
 		for (_uint j = 0; j < iNoisePowerCurvesCount; j++)
 			WriteFile(hFileEffect, &Effects[i]->Get_NoisePowerCurves()[j], sizeof(_float3), &dwByte, nullptr);
+
+		/* DISTORT POWER */
+		/* Write how many Distort Power Curves there are for this Effect (needed when Loading). */
+		_uint iDistortPowerCurvesCount = (_uint)(Effects[i]->Get_DistortPowerCurves().size());
+		WriteFile(hFileEffect, &iDistortPowerCurvesCount, sizeof(_uint), &dwByte, nullptr);
+		/* Write Noise Power Curves. */
+		for (_uint j = 0; j < iDistortPowerCurvesCount; j++)
+			WriteFile(hFileEffect, &Effects[i]->Get_DistortPowerCurves()[j], sizeof(_float3), &dwByte, nullptr);
 	}
 
 	CloseHandle(hFileEffect);
+
+	for (auto& sSavedEffect : m_SavedEffects)
+	{
+		if (sSavedEffect == m_sCurrentEffect)
+		{
+			sSavedEffect = m_sCurrentEffect;
+			return true;
+		}
+	}
 
 	m_SavedEffects.push_back(m_sCurrentEffect);
 
 	return true;
 }
 
-_bool CImgui_Manager::Load_Effect()
+_bool CImgui_Manager::Load_Effect(_bool bUpgrade)
 {
 	wstring wsSelectedSavedEffect = wstring(m_SavedEffects[m_iSavedEffect].begin(), m_SavedEffects[m_iSavedEffect].end());
 
@@ -3996,7 +4080,8 @@ _bool CImgui_Manager::Load_Effect()
 			ReadFile(hFileEffect, &eType, sizeof(CEffect::EFFECT_TYPE), &dwByte, nullptr);
 
 			CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc;
-			CEffectMesh::MESHEFFECTDESC tMeshEffectDesc;
+			CEffectMesh::MESHEFFECTDESC tMeshEffectDesc; // Actual Logic
+			CEffectMesh::MESHEFFECTDESC_OLD tMeshEffectDescOld; // Upgrade Logic
 			CParticleSystem::PARTICLEDESC tParticleDesc;
 			CEffect* pEffect = nullptr;
 
@@ -4020,10 +4105,16 @@ _bool CImgui_Manager::Load_Effect()
 			}
 			case CEffect::EFFECT_TYPE::TYPE_MESH:
 			{
-				ReadFile(hFileEffect, &tMeshEffectDesc, sizeof(CEffectMesh::MESHEFFECTDESC), &dwByte, nullptr);
+				if (bUpgrade)
+					ReadFile(hFileEffect, &tMeshEffectDescOld, sizeof(CEffectMesh::MESHEFFECTDESC_OLD), &dwByte, nullptr); // Upgrade Logic
+				else
+					ReadFile(hFileEffect, &tMeshEffectDesc, sizeof(CEffectMesh::MESHEFFECTDESC), &dwByte, nullptr); // Actual Logic
 
 				if (!dwByte)
 					break;
+
+				if (bUpgrade)
+					tMeshEffectDesc = UpgradeMeshStruct(tMeshEffectDescOld); // Upgrade Logic
 
 				pGameInstance->Add_GameObject_Out(TEXT("Prototype_GameObject_EffectMesh"), LEVEL_GAMEPLAY, TEXT("Layer_Effects"), (CGameObject*&)pEffect, &tMeshEffectDesc);
 
@@ -4163,6 +4254,21 @@ _bool CImgui_Manager::Load_Effect()
 			}
 			if (!NoisePowerCurves.empty())
 				pEffect->Set_NoisePowerCurves(NoisePowerCurves);
+
+			/* DISTORT POWER */
+			/* Read how many Distort Power Curves there are for this Effect. */
+			_uint iDistortPowerCurvesCount = 0;
+			ReadFile(hFileEffect, &iDistortPowerCurvesCount, sizeof(_uint), &dwByte, nullptr);
+			/* Read Distort Power Curves. */
+			vector<_float3> DistortPowerCurves;
+			_float3 DistortPowerCurve;
+			for (_uint j = 0; j < iDistortPowerCurvesCount; j++)
+			{
+				ReadFile(hFileEffect, &DistortPowerCurve, sizeof(_float3), &dwByte, nullptr);
+				DistortPowerCurves.push_back(DistortPowerCurve);
+			}
+			if (!DistortPowerCurves.empty())
+				pEffect->Set_DistortPowerCurves(DistortPowerCurves);
 		}
 	}
 
@@ -4173,6 +4279,64 @@ _bool CImgui_Manager::Load_Effect()
 	m_sCurrentEffect = m_SavedEffects[m_iSavedEffect];
 
 	return true;
+}
+
+_bool CImgui_Manager::Upgrade_Effects()
+{
+	for (_uint i = 0; i < m_SavedEffects.size(); i++)
+	{
+		m_iSavedEffect = i;
+
+		Load_Effect(true);
+		Save_Effect();
+
+		m_pEffectManager->Clear_Effects();
+	}
+
+	m_sCurrentEffect.clear();
+
+	return true;
+}
+
+CEffectMesh::MESHEFFECTDESC CImgui_Manager::UpgradeMeshStruct(CEffectMesh::MESHEFFECTDESC_OLD tMeshEffectDescOld)
+{
+	CEffectMesh::MESHEFFECTDESC tMeshEffectDesc;
+
+	wcscpy_s(tMeshEffectDesc.wcPrototypeId, MAX_PATH, tMeshEffectDescOld.wcPrototypeId);
+	wcscpy_s(tMeshEffectDesc.wcMaskTexture, MAX_PATH, tMeshEffectDescOld.wcMaskTexture);
+	wcscpy_s(tMeshEffectDesc.wcNoiseTexture, MAX_PATH, tMeshEffectDescOld.wcNoiseTexture);
+	tMeshEffectDesc.vColorInitial =			tMeshEffectDescOld.vColorInitial;
+	tMeshEffectDesc.vColor =				tMeshEffectDescOld.vColor;
+	tMeshEffectDesc.fAlphaInitial =			tMeshEffectDescOld.fAlphaInitial;
+	tMeshEffectDesc.fAlpha =				tMeshEffectDescOld.fAlpha;
+	tMeshEffectDesc.bGlow =					tMeshEffectDescOld.bGlow;
+	tMeshEffectDesc.vGlowColor =			tMeshEffectDescOld.vGlowColor;
+	tMeshEffectDesc.fGlowPower =			tMeshEffectDescOld.fGlowPower;
+	tMeshEffectDesc.bDistort =				tMeshEffectDescOld.bDistort;
+	tMeshEffectDesc.fDistortPowerInitial =	tMeshEffectDescOld.fDistortPowerInitial;
+	tMeshEffectDesc.fDistortPower =			tMeshEffectDescOld.fDistortPower;
+	tMeshEffectDesc.fDistortSpeed =			tMeshEffectDescOld.fDistortSpeed;
+	tMeshEffectDesc.fLifetime =				tMeshEffectDescOld.fLifetime;
+	tMeshEffectDesc.fStartAfter =			tMeshEffectDescOld.fStartAfter;
+	tMeshEffectDesc.vPosition =				tMeshEffectDescOld.vPosition;
+	tMeshEffectDesc.vRotation =				tMeshEffectDescOld.vRotation;
+	tMeshEffectDesc.vScaleInitial =			tMeshEffectDescOld.vScaleInitial;
+	tMeshEffectDesc.vScale =				tMeshEffectDescOld.vScale;
+	tMeshEffectDesc.vTurn =					tMeshEffectDescOld.vTurn;
+	tMeshEffectDesc.fTurnVelocityInitial =	tMeshEffectDescOld.fTurnVelocityInitial;
+	tMeshEffectDesc.fTurnVelocity =			tMeshEffectDescOld.fTurnVelocity;
+	tMeshEffectDesc.fMaskSpeed =			tMeshEffectDescOld.fMaskSpeed;
+	tMeshEffectDesc.fMaskDirectionX =		tMeshEffectDescOld.fMaskDirectionX;
+	tMeshEffectDesc.fMaskDirectionY =		tMeshEffectDescOld.fMaskDirectionY;
+	tMeshEffectDesc.fNoiseSpeed =			tMeshEffectDescOld.fNoiseSpeed;
+	tMeshEffectDesc.fNoiseDirectionX =		tMeshEffectDescOld.fNoiseDirectionX;
+	tMeshEffectDesc.fNoiseDirectionY =		tMeshEffectDescOld.fNoiseDirectionY;
+	tMeshEffectDesc.fNoisePowerInitial =	tMeshEffectDescOld.fNoisePowerInitial;
+	tMeshEffectDesc.fNoisePower =			tMeshEffectDescOld.fNoisePower;
+	
+	/* The "new" Data will get automatically populated since its default initialized. */
+
+	return tMeshEffectDesc;
 }
 
 void CImgui_Manager::Show_TextureCustomization()
@@ -4437,6 +4601,32 @@ void CImgui_Manager::Show_MeshCustomization()
 		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
 		if (pEffectMesh)
 			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
+	ImGui::NewLine();
+
+	ImGui::Checkbox("Distort", &m_tMeshEffectDesc.bDistort);
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
+	ImGui::SetNextItemWidth(200.f);
+	if (ImGui::DragFloat("##DistortionSpeed", &m_tMeshEffectDesc.fDistortSpeed, 0.05f, 0, 0, "Distortion Speed: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+	}
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(200.f);
+	if (ImGui::DragFloat("##DistortionPower", &m_tMeshEffectDesc.fDistortPower, 0.05f, 0, 0, "Distortion Power: %.02f"))
+	{
+		CEffectMesh* pEffectMesh = dynamic_cast<CEffectMesh*>(m_pSelectedEffect);
+		if (pEffectMesh)
+		{
+			m_tMeshEffectDesc.fDistortPowerInitial = m_tMeshEffectDesc.fDistortPower;
+			pEffectMesh->Set_MeshEffectDesc(m_tMeshEffectDesc);
+		}
 	}
 	ImGui::NewLine();
 

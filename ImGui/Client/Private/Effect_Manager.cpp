@@ -30,6 +30,16 @@ void CEffect_Manager::Remove_Effect(CEffect* pEffect)
 	}
 }
 
+void CEffect_Manager::Clear_Effects()
+{
+	for (auto& iter = m_InstancedEffects.begin(); iter != m_InstancedEffects.end(); iter++)
+	{
+		(*iter)->Set_Dead(true);
+	}
+
+	m_InstancedEffects.clear();
+}
+
 void CEffect_Manager::Free()
 {
 }

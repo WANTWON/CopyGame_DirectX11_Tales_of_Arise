@@ -416,7 +416,7 @@ HRESULT CDamagefont_Critical::Render()
 		m_pVIBufferCom->Render();
 	}
 
-
+	
 	if (m_iCurrentDamage >= 1)
 	{
 		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[3], sizeof(_float))))

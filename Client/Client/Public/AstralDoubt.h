@@ -8,6 +8,7 @@ class CAstralDoubt final : public CMonster
 {
 public:
 	enum ANIM {
+		ARISE_B,
 		ARISE_F,
 		ATTACK_BRAVE,
 		ATTACK_HEAD_BEAM,
@@ -20,6 +21,7 @@ public:
 		ATTACK_SPEAR_HANDSTAND_FOOTPRESS,
 		ATTACK_SPEAR_MULTI,
 		ATTACK_SPEAR_RUSH_END,
+		ATTACK_SPEAR_RUSH_LOOP,
 		ATTACK_SPEAR_RUSH_START,
 		ATTACK_SPEAR_SWING_END,
 		ATTACK_SPEAR_SWING_LOOP,
@@ -56,10 +58,11 @@ public:
 	class CAstralDoubt_State* Get_State() { return m_pState; }
 	void Set_PlayerState(class CAstralDoubt_State* pPlayerState) { m_pState = pPlayerState; }
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
-	void Set_Done_HitAnimState() { m_bDone_HitAnimState = false; }
-	void Set_OnGoingBite() { m_bOnGoing_Bite= true; }
-	void Set_FinishBite() { m_bOnGoing_Bite = false; }
-
+	void Set_Done_HitAnimState() { m_bDone_HitAnimState = true; }
+	void Set_Finish_HitAnimState() { m_bDone_HitAnimState = false; }
+	void Set_OnGoing320Spin() { m_bOnGoing_320Spin = true; }
+	void Set_Finish320Spin() { m_bOnGoing_320Spin = false; }
+	virtual void	 Set_BattleMode(_bool type) override;
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
@@ -95,8 +98,8 @@ private:
 	
 	_int m_iBeDamaged_Cnt = 0;
 	_bool m_bDone_HitAnimState = false;
-	_bool m_bSomeSauling = false;
-	_bool m_bOnGoing_Bite = false;
+//	_bool m_bSomeSauling = false;
+	_bool m_bOnGoing_320Spin = false;
 
 public:
 	static CAstralDoubt* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
