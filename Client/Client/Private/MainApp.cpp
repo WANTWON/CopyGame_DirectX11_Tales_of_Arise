@@ -191,6 +191,8 @@ CMainApp * CMainApp::Create()
 void CMainApp::Free()
 {
 	CObject_Pool_Manager::Get_Instance()->Reuse_AllPooling_Layer();
+	CBattleManager::Get_Instance()->Return_AllPoolingMonster_AtClear();
+
 	Safe_Release(m_pRenderer);
 
 	Safe_Release(m_pDevice);

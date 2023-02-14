@@ -141,7 +141,11 @@ int CDamageFont::Tick(_float fTimeDelta)
 	//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();
 
 	if (m_damagedesc.pPointer == nullptr)
-		return OBJ_DEAD;
+	{
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), this);
+		return OBJ_POOL;
+	}
+		
 
 	for (_uint i = 0; i < 4; ++i)
 		m_fbrightpos_hp[i] += 0.015f;
@@ -180,7 +184,10 @@ int CDamageFont::Tick(_float fTimeDelta)
 		m_fYFadeout += 2.f;
 
 		if (m_fAlpha <= 0.f)
-			return OBJ_DEAD;
+		{
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), this);
+			return OBJ_POOL;
+		}
 
 	}
 
@@ -435,6 +442,53 @@ HRESULT CDamageFont::Render()
 
 
 	return S_OK;
+}
+
+void CDamageFont::ReUse_Setting(void * pArg)
+{
+	if (pArg != nullptr)
+		memcpy(&m_damagedesc, pArg, sizeof(DMGDESC));
+
+	//m_fTargetPos = m_damagedesc.fposition;
+	m_fTargetPos = m_damagedesc.pPointer->Get_ProjPosition();
+	m_iCurrentDamage = m_damagedesc.iDamage;
+
+	m_fRandomOffset = { _float(rand() % 80)  , _float(rand() % 55) };
+
+	_uint random = rand() % 2;
+
+	if (random == 0)
+		m_bplusminus = true;
+	else
+		m_bplusminus = false;
+
+	m_fbrightpos_hp[0] = 0.f;
+	m_fbrightpos_hp[1] = -0.5f;
+	m_fbrightpos_hp[2] = -1.f;
+	m_fbrightpos_hp[3] = -1.5f;
+
+	m_eShaderID = UI_BRIGHT;
+	m_fAlpha = 1.f;
+	m_fYFadeout = 0.f;
+	m_fScaler = 2.f;
+
+	m_fSize.x = 30.f * m_fScaler;
+	m_fSize.y = 30.f * m_fScaler;
+
+	m_fNext = 17.f;
+	m_fStart_timer = 0.f; 
+	m_bfadeout = false;
+	m_bfadein = true;
+
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixTranspose(XMMatrixIdentity()));
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f)));
+
+
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+
 }
 
 HRESULT CDamageFont::Ready_Components(void * pArg)
