@@ -26,18 +26,6 @@ HRESULT CNonAnim_Instance::Initialize(void * pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	/*if (pArg != nullptr)
-	{
-		_vector vPosition = XMLoadFloat3(&m_ModelDesc.vPosition);
-		vPosition = XMVectorSetW(vPosition, 1.f);
-		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-		Set_Scale(m_ModelDesc.vScale);
-
-		if(m_ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Turn(XMLoadFloat3(&m_ModelDesc.vRotation), m_ModelDesc.m_fAngle);
-	}*/
-
-
 
 	return S_OK;
 }
@@ -187,7 +175,7 @@ HRESULT CNonAnim_Instance::Ready_Components(void* pArg)
 	/* For.Com_Model*/
 	_tchar			szModeltag[MAX_PATH] = TEXT("");
 	MultiByteToWideChar(CP_ACP, 0, m_ModelDesc.pModeltag, (int)strlen(m_ModelDesc.pModeltag), szModeltag, MAX_PATH);
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), iLevel, szModeltag, (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, szModeltag, (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 	
 	return S_OK;

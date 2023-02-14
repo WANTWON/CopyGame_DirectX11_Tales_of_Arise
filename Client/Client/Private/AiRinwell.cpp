@@ -132,8 +132,10 @@ int CAiRinwell::Tick(_float fTimeDelta)
 	if (m_bDead)
 	{
 		CBattleManager::Get_Instance()->Set_BossMonster(nullptr);
+		CBattleManager::Get_Instance()->Out_Monster(this);
 		return OBJ_DEAD;
 	}
+
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
 		return OBJ_NOEVENT;
@@ -150,7 +152,7 @@ int CAiRinwell::Tick(_float fTimeDelta)
 
 	AI_Behavior(fTimeDelta);
 	Tick_State(fTimeDelta);
-	
+
 	return OBJ_NOEVENT;
 }
 
@@ -164,7 +166,7 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return ;
+		return;
 
 	if (m_pRendererCom && m_bGlowUp)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
@@ -339,7 +341,7 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	else
 	{
 		m_pTarget = DamageCauser;
-		m_eDmg_Direction =  Calculate_DmgDirection();
+		m_eDmg_Direction = Calculate_DmgDirection();
 		m_bTakeDamage = true;
 
 		if (fDamage > 100)
@@ -347,7 +349,7 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
-		
+
 	}
 
 	return iHp;

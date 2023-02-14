@@ -79,9 +79,6 @@
     <Filter Include="02.GameObjects\00.Base">
       <UniqueIdentifier>{3cda322b-a88a-4727-83ce-aeebaf0a20f4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.DataManager">
-      <UniqueIdentifier>{3714032a-de3a-40fb-a3ca-642696606767}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01.Actor\02.NPC">
       <UniqueIdentifier>{889715ea-45f4-49c2-8a44-1383682efa75}</UniqueIdentifier>
     </Filter>
@@ -352,6 +349,9 @@
     <Filter Include="02.GameObjects\04.UI\24.UI_SidePopup">
       <UniqueIdentifier>{eb5167e6-62de-4069-8346-d328e9d913a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.PoolingManager">
+      <UniqueIdentifier>{3714032a-de3a-40fb-a3ca-642696606767}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\AstralDoubt">
       <UniqueIdentifier>{e039fafc-908d-4736-850b-a6ac4e152b2c}</UniqueIdentifier>
     </Filter>
@@ -440,9 +440,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Collision_Manger.h">
       <Filter>04.CollisionManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Data_Manager.h">
-      <Filter>05.DataManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
@@ -966,6 +963,9 @@
     <ClInclude Include="..\Public\UI_SidePopup.h">
       <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Object_Pool_Manager.h">
+      <Filter>05.PoolingManager</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AstralDoubt.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt</Filter>
     </ClInclude>
@@ -1075,9 +1075,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collision_Manger.cpp">
       <Filter>04.CollisionManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Data_Manager.cpp">
-      <Filter>05.DataManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
@@ -1585,6 +1582,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_SidePopup.cpp">
       <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Object_Pool_Manager.cpp">
+      <Filter>05.PoolingManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AstralDoubt.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt</Filter>

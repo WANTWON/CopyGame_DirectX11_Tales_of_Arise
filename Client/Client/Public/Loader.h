@@ -42,6 +42,7 @@ public:
 	HRESULT Loading_ForEffect();
 	HRESULT Loading_ForStaticMapObject();
 
+
 private:
 	LEVEL					m_eNextLevel = LEVEL_END;
 	_bool					m_isFinished = false;
