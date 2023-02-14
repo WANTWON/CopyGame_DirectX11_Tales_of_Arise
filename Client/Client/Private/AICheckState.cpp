@@ -10,6 +10,7 @@
 #include "AI_Alphen_NormalAttackState.h"
 #include "AI_Alphen_SkillAttackState.h"
 #include "AI_Sion_SkillState.h"
+#include "AI_DodgeState.h"
 
 using namespace AIPlayer;
 
@@ -113,6 +114,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 		switch (m_eCurrentPlayerID)
 		{
 		case CPlayer::ALPHEN:
+			return new CAI_DodgeState(m_pOwner, m_pTarget);
 			if (Get_Target_Distance() >= 3.f)
 			{
 				if (nullptr == m_pTarget)
@@ -150,6 +152,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 
 		case CPlayer::SION:
 			//return new CAI_Sion_BoostAttack(m_pOwner);
+			return new CAI_DodgeState(m_pOwner, m_pTarget);
 			if (Get_Target_Distance() >= 20.f)
 			{
 				if (nullptr == m_pTarget)
@@ -192,7 +195,22 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 			break;
 
 		case CPlayer::RINWELL:
-			if (m_bRangerRunaway)
+			return new CAI_DodgeState(m_pOwner, m_pTarget);
+			if (Get_Target_Distance() >= 20.f)
+			{
+				if (nullptr == m_pTarget)
+				{
+					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+				}
+				else
+					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+
+				return new CAI_ChaseState(m_pOwner, STATE_RUN, m_eCurrentPlayerID, m_pTarget);
+			}
+
+			else if (m_bRangerRunaway)
 			{
 				if (nullptr == m_pTarget)
 				{
@@ -236,7 +254,7 @@ void CAICheckState::Enter()
 		m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_IDLE;
 		break;
 	case CPlayer::RINWELL:
-		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MAGIC_LOOP;
+		m_iCurrentAnimIndex = CRinwell::ANIM::IDLE;
 		break;
 	default:
 		break;
@@ -330,5 +348,5 @@ CAIState * CAICheckState::RandomAttackChoose()
 
 	}
 	
-		return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+		//return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
 }

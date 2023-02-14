@@ -71,18 +71,12 @@ HRESULT CLevel_SnowField::Initialize()
 			return E_FAIL;
 	}
 
-	
-	if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
-		return E_FAIL;
 
 
-	//Test
-	if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
-		return E_FAIL;
-	//Test
+	////Test
+	//if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
+	//	return E_FAIL;
+	////Test
 
 
 	DWORD dwTime = GetTickCount();

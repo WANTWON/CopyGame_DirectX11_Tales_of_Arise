@@ -205,9 +205,6 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\00.Alphen">
       <UniqueIdentifier>{14241fe6-1678-46b2-9aa5-b9069e722ed1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01.Actor\00.Player\01.Sion">
-      <UniqueIdentifier>{07ceaa0b-61ee-4ef4-8bd0-98feee9ed4d2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States">
       <UniqueIdentifier>{01ca6b4e-9be6-4a8d-9d1f-419da47ca73a}</UniqueIdentifier>
     </Filter>
@@ -366,6 +363,9 @@
     </Filter>
     <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Caption">
       <UniqueIdentifier>{3268bd8d-2beb-4a28-87c6-7db320ea4dc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\02.Rinwell\01.Sion">
+      <UniqueIdentifier>{07ceaa0b-61ee-4ef4-8bd0-98feee9ed4d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -691,7 +691,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sion.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell\01.Sion</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect.h">
       <Filter>02.GameObjects\03.Effect</Filter>
@@ -1020,6 +1020,9 @@
     <ClInclude Include="..\Public\UI_Dialogue_Caption.h">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AI_DodgeState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1311,7 +1314,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sion.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell\01.Sion</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect.cpp">
       <Filter>02.GameObjects\03.Effect</Filter>
@@ -1639,6 +1642,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_DodgeState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

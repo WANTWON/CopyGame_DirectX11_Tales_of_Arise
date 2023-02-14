@@ -7,6 +7,7 @@
 #include "AI_Alphen_NormalAttackState.h"
 #include "AI_Alphen_SkillAttackState.h"
 #include "AICheckState.h"
+#include "AI_Sion_SkillState.h"
 
 
 
@@ -119,6 +120,13 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			break;
 
 		case CPlayer::RINWELL:
+			if (Get_Target_Distance() <= 11.f)
+			{
+				__super::Exit();
+				m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_BRAKE;
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+				m_bStopRunning = true;
+			}
 			break;
 
 
@@ -145,6 +153,8 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			case 0:
 				return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
 
+				if (m_pOwner->Get_Info().fCurrentMp > 1.f)
+				{
 			case 1:
 				return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 
@@ -153,12 +163,42 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 
 			case 3:
 				return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
+				}
+				else
+					return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+			
 
 			}
 		}
 			
+		else if (m_eCurrentPlayerID == CPlayer::SION)
+		{
+			switch (rand() % 6)
+			{
+
+			case 0:
+				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+
+			case 1:
+				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+
+			case 2:
+				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_MAGNARAY);
+
+			case 3:
+				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
+
+			case 4:
+				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+
+			case 5:
+				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+
+			}
+		}
+
 		else
-		return new CAICheckState(m_pOwner, STATE_ID::STATE_RUN);
+			return new CAICheckState(m_pOwner, STATE_ID::STATE_RUN);
 
 	
 	}
@@ -185,6 +225,8 @@ void CAI_ChaseState::Enter()
 		break;
 
 	case CPlayer::RINWELL:
+		m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_RUN;
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 		break;
 
 
