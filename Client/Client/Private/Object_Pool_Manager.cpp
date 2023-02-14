@@ -5,6 +5,7 @@
 #include "Model.h"
 #include <fstream>
 #include <string.h>
+#include "GameObject.h"
 
 
 IMPLEMENT_SINGLETON(CObject_Pool_Manager)
@@ -18,8 +19,7 @@ CObject_Pool_Manager::CObject_Pool_Manager()
 
 void CObject_Pool_Manager::Add_Pooling_Object(LEVEL iLevelIndex, const _tchar * pLayerTag, CGameObject * pGameObject)
 {
-	CGameInstance::Get_Instance()->Out_GameObject(iLevelIndex, pLayerTag, pGameObject);
-
+	//무조건 반환값을 OBJ_POOL로 할 것
 	list< class CGameObject*>* pLayer = Find_PoolingObjects(iLevelIndex, pLayerTag);
 	if (pLayer == nullptr)
 	{
@@ -54,7 +54,7 @@ void CObject_Pool_Manager::Add_Pooling_Layer(LEVEL iLevelIndex, const _tchar * p
 	RELEASE_INSTANCE(CGameInstance);
 }
 
-_bool CObject_Pool_Manager::Reuse_Pooling_Layer(LEVEL iLevelIndex, const _tchar * pLayerTag)
+_bool CObject_Pool_Manager::Reuse_Pooling_Layer(LEVEL iLevelIndex, const _tchar * pLayerTag, void* pArg)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -66,13 +66,42 @@ _bool CObject_Pool_Manager::Reuse_Pooling_Layer(LEVEL iLevelIndex, const _tchar 
 	}
 		
 	
-	if (pLayer != nullptr)
+	for (auto& iter = pLayer->begin(); iter != pLayer->end();)
 	{
-		for (auto& iter : *pLayer)
-		{
-			pGameInstance->ReAdd_GameObject(iLevelIndex, pLayerTag, iter);
-		}
+		if (pArg != nullptr)
+			(*iter)->ReUse_Setting(pArg);
+		pGameInstance->ReAdd_GameObject(iLevelIndex, pLayerTag, *iter);
+
+		iter = pLayer->erase(iter);
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
+	return true;
+}
+
+_bool CObject_Pool_Manager::Reuse_Pooling_Object(LEVEL iLevelIndex, const _tchar * pLayerTag, void * pArg)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	list< class CGameObject*>* pLayer = Find_PoolingObjects(iLevelIndex, pLayerTag);
+	if (pLayer == nullptr || pLayer->size() == 0)
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return false;
+	}
+
+
+
+	for (auto& iter = pLayer->begin(); iter != pLayer->end();)
+	{
+		if (pArg != nullptr)
+			(*iter)->ReUse_Setting(pArg);
+		pGameInstance->ReAdd_GameObject(iLevelIndex, pLayerTag, *iter);
+
+		iter = pLayer->erase(iter);
+		break;
+	}
+	
 
 	RELEASE_INSTANCE(CGameInstance);
 	return true;
@@ -86,12 +115,16 @@ _bool CObject_Pool_Manager::Reuse_AllPooling_Layer()
 	{
 		for (auto& iter : m_pObjects[i])
 		{
-			for (auto& vec : *iter.second)
+			for (auto& vec = iter.second->begin(); vec != iter.second->end();)
 			{
-				pGameInstance->ReAdd_GameObject(LEVEL_STATIC, TEXT("layer_Pooling"), vec);
+				pGameInstance->ReAdd_GameObject(LEVEL_STATIC, TEXT("layer_Pooling"), *vec);
+
+				vec = iter.second->erase(vec);
 			}
-	
+			iter.second->clear();
+			Safe_Delete(iter.second);
 		}
+		m_pObjects[i].clear();
 	}
 
 	RELEASE_INSTANCE(CGameInstance);
