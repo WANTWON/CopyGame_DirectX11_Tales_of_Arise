@@ -55,7 +55,7 @@ void CMeshContainer::Get_BoneMatrices_Texture(_float4x4 * pBoneMatrices, _fmatri
 	_float4x4* BoneMatrices = new _float4x4[m_Bones.size()];
 
 	for (auto& pBoneNode : m_Bones)
-		XMStoreFloat4x4(&BoneMatrices[iNumBones++], (pBoneNode->Get_OffsetMatrix() * pBoneNode->Get_CombinedTransformationMatrix() * PivotMatrix));
+		XMStoreFloat4x4(&BoneMatrices[iNumBones++], XMMatrixTranspose(pBoneNode->Get_OffsetMatrix() * pBoneNode->Get_CombinedTransformationMatrix() * PivotMatrix));
 
 	memcpy(pBoneMatrices, BoneMatrices, sizeof(_float4x4) * m_Bones.size());
 }

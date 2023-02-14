@@ -31,6 +31,10 @@ vector g_DissolveHighlight = vector(.92f, .36f, .2f, 1);
 /* VTF */
 texture2D g_BoneTexture;
 
+sampler PointVTFSampler = sampler_state
+{
+	Filter = MIN_MAG_MIP_POINT;
+};
 
 struct VS_IN
 {
@@ -63,10 +67,51 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	float fW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
 
-	matrix BoneMatrix = g_BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
+	float2 vBoneTexUV;
+	/*uint BoneTexWidth, BoneTexHeight;
+	g_BoneTexture.GetDimensions(BoneTexWidth, BoneTexHeight);*/
+
+	vBoneTexUV.x = In.vBlendIndex.x / 16;
+	vBoneTexUV.y = (In.vBlendIndex.x % 16) * 4;
+	
+	float4x4 BoneMatrixX = float4x4(g_BoneTexture.SampleLevel(PointVTFSampler, vBoneTexUV, 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 1), 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 2), 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 3), 0));
+
+	vBoneTexUV.x = In.vBlendIndex.y / 16;
+	vBoneTexUV.y = (In.vBlendIndex.y % 16) * 4;
+
+	float4x4 BoneMatrixY = float4x4(g_BoneTexture.SampleLevel(PointVTFSampler, vBoneTexUV, 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 1), 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 2), 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 3), 0));
+
+	vBoneTexUV.x = In.vBlendIndex.z / 16;
+	vBoneTexUV.y = (In.vBlendIndex.z % 16) * 4;
+
+	float4x4 BoneMatrixZ = float4x4(g_BoneTexture.SampleLevel(PointVTFSampler, vBoneTexUV, 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 1), 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 2), 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 3), 0));
+
+	vBoneTexUV.x = In.vBlendIndex.w / 16;
+	vBoneTexUV.y = (In.vBlendIndex.w % 16) * 4;
+
+	float4x4 BoneMatrixW = float4x4(g_BoneTexture.SampleLevel(PointVTFSampler, vBoneTexUV, 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 1), 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 2), 0),
+		g_BoneTexture.SampleLevel(PointVTFSampler, float2(vBoneTexUV.x, vBoneTexUV.y + 3), 0));
+
+	matrix BoneMatrix = BoneMatrixX * In.vBlendWeight.x +
+		BoneMatrixY * In.vBlendWeight.y +
+		BoneMatrixZ * In.vBlendWeight.z +
+		BoneMatrixW * fW;
+
+	/*matrix BoneMatrix = g_BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
 		g_BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
 		g_BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
-		g_BoneMatrices[In.vBlendIndex.w] * fW;
+		g_BoneMatrices[In.vBlendIndex.w] * fW;*/
 
 	vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
 	vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);

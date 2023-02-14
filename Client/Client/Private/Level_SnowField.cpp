@@ -40,10 +40,10 @@ HRESULT CLevel_SnowField::Initialize()
 	if (nullptr == m_pPlayerLoader)
 		return E_FAIL;
 
-	cout << " Monster Group1 Clone start" << endl;
+	/*cout << " Monster Group1 Clone start" << endl;
 	m_pMonsterLoader1 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER1);
 	if (nullptr == m_pMonsterLoader1)
-		return E_FAIL;
+		return E_FAIL;*/
 
 
 	/*cout << " Npc Clone start" << endl;
@@ -70,9 +70,9 @@ HRESULT CLevel_SnowField::Initialize()
 	//Test
 
 	DWORD dwTime = GetTickCount();
-	while (false == m_pPlayerLoader->Get_Finished() || 
+	while (false == m_pPlayerLoader->Get_Finished()// || 
 		/*false == m_pNpcLoader->Get_Finished() ||*/
-		false == m_pMonsterLoader1->Get_Finished())
+		/*false == m_pMonsterLoader1->Get_Finished()*/)
 	{
 		if (dwTime + 1000 < GetTickCount())
 		{
@@ -84,8 +84,8 @@ HRESULT CLevel_SnowField::Initialize()
 			//	cout << "Finished Npc Clone" << endl;
 
 
-			if (m_pMonsterLoader1->Get_Finished() == true)
-				cout << "Finished Monster Grounp1 Clone" << endl;
+			/*if (m_pMonsterLoader1->Get_Finished() == true)
+				cout << "Finished Monster Grounp1 Clone" << endl;*/
 
 			dwTime = GetTickCount();
 		}

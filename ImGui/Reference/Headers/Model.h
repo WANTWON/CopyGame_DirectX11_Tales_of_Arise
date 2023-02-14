@@ -88,6 +88,10 @@ private:
 	_bool								m_bInterupted = false;
 	_float								m_fLinearCurrentTime = 0.f;
 
+	/* For. VTF */
+	ID3D11Texture2D*					m_pTexture2D = nullptr;
+	D3D11_TEXTURE2D_DESC				m_TextureDesc;
+
 private:
 	_float4x4				m_PivotMatrix;
 
