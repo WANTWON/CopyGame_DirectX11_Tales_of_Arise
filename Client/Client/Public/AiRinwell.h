@@ -167,7 +167,7 @@ public: /*For.State*/
 	void Tick_State(_float fTimeDelta);
 	void LateTick_State(_float fTimeDelta);
 	void Battle_Animation(_float fTimeDelta);
-
+	_bool Get_NpcMode() { return m_bNpcMode; }
 
 		/*For Navigation*/
 	virtual void Check_Navigation() override;
@@ -183,6 +183,7 @@ private:
 	_uint	 m_ePreAnim = IDLE_CHARA;
 
 	_bool	m_bMotion_Finished = false;
+	_bool	m_bNpcMode = false;
 	_uint	 m_eSkillIndex = PHOTONFLASH;
 
 public:

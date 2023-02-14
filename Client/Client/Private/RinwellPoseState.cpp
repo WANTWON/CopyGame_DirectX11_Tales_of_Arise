@@ -22,7 +22,7 @@ CRinwellState * CPoseState::Tick(_float fTimeDelta)
 	{
 	case Client::CRinwellState::STATE_IDLE:
 		m_fTarget_Distance =  Find_ActiveTarget();
-		if (m_fTarget_Distance < 10.f)
+		if (m_fTarget_Distance < 10.f && m_pOwner->Get_NpcMode() == false)
 			return new CPoseState(m_pOwner, STATE_AGGRO);
 		break;
 	case Client::CRinwellState::STATE_HP50DOWN:

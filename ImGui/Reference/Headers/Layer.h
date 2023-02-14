@@ -20,6 +20,7 @@ public:
 	HRESULT Initialize(_uint iLevelIndex);
 	HRESULT Add_GameObject(class CGameObject* pGameObject);
 	HRESULT Out_GameObject(class CGameObject* pGameObject);
+	HRESULT Out_GameObjectList();
 	void Tick(_float fTimeDelta);
 	void Late_Tick(_float fTimeDelta);
 	

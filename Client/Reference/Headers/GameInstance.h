@@ -73,6 +73,7 @@ public: /* For.Object_Manager */
 	list<class CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);
 	void Clear_Layer(_uint iLevelIndex, const _tchar* LayerTag);
 	HRESULT Out_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, class CGameObject* pGameObject);
+	HRESULT Out_GameObjectList(_uint iLevelIndex, const _tchar* pLayerTag);
 	HRESULT ReAdd_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, class CGameObject* pGameObject);
 
 public: /* For.Component_Manager */
