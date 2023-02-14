@@ -151,9 +151,10 @@ CIceWolfState * CAttackBiteState::LateTick(_float fTimeDelta)
 	else 
 		m_pOwner->Set_OnGoingBite();
 
-
+#ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
+#endif // _DEBUG
 
 	return nullptr;
 }

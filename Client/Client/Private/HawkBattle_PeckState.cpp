@@ -143,10 +143,10 @@ CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_PECK);
 
-
+#ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
-
+#endif // _DEBUG
 
 	return nullptr;
 }

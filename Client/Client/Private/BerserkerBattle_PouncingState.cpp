@@ -117,8 +117,10 @@ CBerserkerState * CBattle_PouncingState::LateTick(_float fTimeDelta)
 			return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BATTLE);
 		}
 
+#ifdef _DEBUG
 		if (nullptr != m_pAtkColliderCom)
 			m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
+#endif // _DEBUG
 
 	return nullptr;
 }
