@@ -122,12 +122,15 @@ int CWeapon::Tick(_float fTimeDelta)
 
 		RELEASE_INSTANCE(CCollision_Manager);
 	}
-	m_bSoundStart = false;
+	//m_bSoundStart = false;
+
+
 	return OBJ_NOEVENT;
 }
 
 void CWeapon::Late_Tick(_float fTimeDelta)
 {
+
 
 	if (nullptr != m_pSPHERECom)
 	{
@@ -139,6 +142,15 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 		CPlayerState::STATE_ID ePlayerState = pPlayerState->Get_StateId();
 
 		CBaseObj* pCollisionTarget = nullptr;
+
+		m_fSoundStopTimeDelta += fTimeDelta;
+
+		if ((m_fSoundStopTimeDelta > 1.5f))
+		{
+			CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+			m_fSoundStopTimeDelta = 0.f;
+		}
+
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
 
@@ -148,28 +160,11 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 
 
-
 			if (!m_bSoundStart)
 			{
 				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.4f);
 				m_bSoundStart = true;
 			}
-
-			/*m_fHitTimeDeltaAcc += fTimeDelta;
-
-
-			_bool bSoundStart = false;
-			if (!bSoundStart)
-			{
-				if (m_fHitTimeDeltaAcc >= 0.042f)
-				{
-					CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-					m_fHitTimeDeltaAcc = 0.f;
-				}
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("HitSound2.wav"), SOUND_EFFECT, 0.4f);
-				bSoundStart = true;
-			}*/
-
 
 			//SkillSound 
 			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK_E)
@@ -191,8 +186,6 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 		else
 		{
-
-
 			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK_E)
 			{
 				m_fTimeDeltaAcc += 0.4f;
@@ -212,6 +205,10 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 	}
 
+	else
+	{
+		m_bSoundStart = false;
+	}
 
 	if (nullptr != m_pSPHERECom && !m_isCollider)
 	{

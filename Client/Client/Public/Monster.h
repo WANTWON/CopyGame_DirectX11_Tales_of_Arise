@@ -83,6 +83,7 @@ public: // Get & Set
 	CBaseObj* Get_Trigger() { return m_pTrigger; }
 	CBaseObj* Get_DamageCauser() { return m_pTarget; }
 
+
 protected:
 	DMG_DIR Calculate_DmgDirection();
 	_vector	Calculate_DirectionByPos();

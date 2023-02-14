@@ -343,6 +343,18 @@
     <Filter Include="02.GameObjects\07.Bullet\AlphenSkills">
       <UniqueIdentifier>{7aa964f0-2600-4445-b958-d323d28ae920}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Astral_Doubt">
+      <UniqueIdentifier>{16218031-8407-496c-9e85-463201b3e5d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State">
+      <UniqueIdentifier>{94ff0af1-8720-4f64-a92b-af45ba9d67d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates">
+      <UniqueIdentifier>{8ee27add-4955-45e0-a2ba-a5aa3f15cd84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates">
+      <UniqueIdentifier>{44781982-2546-4ec9-9d3c-1cdcf93ea50d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -925,6 +937,54 @@
     <ClInclude Include="..\Public\AI_Sion_SkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_ChaseState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_DetectStopState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_IdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_TurnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_WalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_Battle_720Spin_FirstState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_Battle_HeadBeamState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_Battle_IdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_Battle_SpearMultiState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_Battle_TurnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_Battle_UpperState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_Battle_WalkState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_State.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_Battle_RushState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AstralDoubt_Battle_Hit_AndDead.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1476,6 +1536,51 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI_Sion_SkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_ChaseState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_DetectStopState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_IdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_TurnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_WalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_Battle_720Spin_FirstState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_Battle_HeadBeamState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_Battle_IdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_Battle_SpearMultiState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_Battle_TurnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_Battle_UpperState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_Battle_WalkState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_Battle_RushState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AstralDoubt_Battle_Hit_AndDead.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Astral_Doubt\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

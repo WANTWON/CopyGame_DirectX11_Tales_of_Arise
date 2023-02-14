@@ -80,7 +80,7 @@ CBerserkerState * CBattle_RunState::LateTick(_float fTimeDelta)
 	{
 
 		m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f);
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.7f);
 		//////회전 코드 
 		//CTransform* pMonSterTransform = m_pOwner->Get_Transform();
 

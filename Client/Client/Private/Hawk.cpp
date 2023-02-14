@@ -188,6 +188,8 @@ int CHawk::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
+	//RELEASE_INSTANCE(CCollision_Manager);
+	
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
 

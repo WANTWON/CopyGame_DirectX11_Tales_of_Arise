@@ -38,6 +38,15 @@ CBerserkerState * CBattle_DeadState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
 	{
+		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+
+		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
+		m_pAtkColliderCom = nullptr;
+
+		pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+
+		RELEASE_INSTANCE(CCollision_Manager);
+
 		m_bDeadAnimFinish = true;
 		m_pOwner->Set_GlowUp();
 

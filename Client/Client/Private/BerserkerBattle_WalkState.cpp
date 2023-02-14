@@ -98,7 +98,6 @@ CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 	{
 		m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.2f, m_pOwner->Get_Navigation());
-
 	}
 
 	else
