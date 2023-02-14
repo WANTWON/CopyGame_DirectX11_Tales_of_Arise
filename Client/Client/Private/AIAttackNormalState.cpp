@@ -90,12 +90,12 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 							if (m_pTarget != nullptr)
-								BulletDesc.vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+								BulletDesc.vTargetPosition = (m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 							else if (m_pTarget == nullptr)
-							BulletDesc.vTargetPosition = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-							(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+							BulletDesc.vTargetPosition =CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 							BulletDesc.pOwner = m_pOwner;
 							BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+							BulletDesc.fDeadTime = 5.f;
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
@@ -104,7 +104,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 							m_fEventStart = pEvent.fStartTime;
 
 							_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
-							_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir*2;
+							_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir*3;
 							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 							mWorldMatrix.r[3] = vLocation;
 							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
@@ -184,7 +184,7 @@ void CAIAttackNormalState::Enter()
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-
+	m_pOwner->Set_Manarecover(false);
 
 }
 

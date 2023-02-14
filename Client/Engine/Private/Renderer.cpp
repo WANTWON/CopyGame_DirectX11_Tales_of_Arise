@@ -92,6 +92,11 @@ HRESULT CRenderer::Initialize_Prototype()
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
 
+	/* For.Target_Fog */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Fog"), ViewportDesc.Width, ViewportDesc.Height,
+		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
+		return E_FAIL;
+
 	/**
 		Multiple Render Targets
 	**/
@@ -131,6 +136,10 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Glow_UI"), TEXT("Target_Glow_UI"))))
 		return E_FAIL;
 
+	/* For.MRT_Fog */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_Fog"))))
+		return E_FAIL;
+
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (!m_pVIBuffer)
 		return E_FAIL;
@@ -168,6 +177,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow"), 375.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Distortion"), 375.f, 225.f, 150.f, 150.f)))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Fog"), 375.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow_UI"), 525.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
@@ -483,7 +494,7 @@ HRESULT CRenderer::Render_AlphaBlend()
 
 HRESULT CRenderer::Render_Glow()
 {
-	/* If there are not Distortion Object return. */
+	/* If there are not Glow Object return. */
 	if (m_GameObjects[RENDER_GLOW].empty())
 		return S_OK;
 	else
@@ -507,76 +518,9 @@ HRESULT CRenderer::Render_Glow()
 
 		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
 			return E_FAIL;
-
-		return S_OK;
-	}
-}
-
-HRESULT CRenderer::Render_Distortion()
-{
-	/* If there are not Distortion Object return. */
-	if (m_GameObjects[RENDER_DISTORTION].empty())
-		return S_OK;
-	else
-	{
-		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Distortion"))))
-			return E_FAIL;
-
-		for (auto& pGameObject : m_GameObjects[RENDER_DISTORTION])
-		{
-			if (pGameObject)
-			{
-				pGameObject->Render();
-				Safe_Release(pGameObject);
-			}
-		}
-
-		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-			return E_FAIL;
-
-		return S_OK;
-	}
-}
-
-HRESULT CRenderer::Render_PostProcessing()
-{
-	if (!m_pTarget_Manager)
-		return E_FAIL;
-
-	/* Distortion (Post Processing) */
-	if (!m_GameObjects[RENDER_DISTORTION].empty())
-	{
-		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
-			return E_FAIL;
-
-		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
-			return E_FAIL;
-
-		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Distortion"), m_pShaderPostProcessing, "g_DistortionTexture")))
-			return E_FAIL;
-
-		if (!m_pDistortionNoiseTexture)
-			m_pDistortionNoiseTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Distortion_Noise"));
-
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_DistortionNoiseTexture", m_pDistortionNoiseTexture->Get_SRV())))
-			return E_FAIL;
-
-		m_fDistortionTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
-		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fDistortionTimer", &m_fDistortionTimer, sizeof(_float))))
-			return E_FAIL;
-
-		m_pShaderPostProcessing->Begin(0);
-		m_pVIBuffer->Render();
-
-		m_GameObjects[RENDER_DISTORTION].clear();
 	}
 
-	/* Glow (Post Processing) */
+	/* Glow */
 	if (!m_GameObjects[RENDER_GLOW].empty())
 	{
 		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
@@ -625,6 +569,123 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_pVIBuffer->Render();
 
 		m_GameObjects[RENDER_GLOW].clear();
+
+		return S_OK;
+	}
+}
+
+HRESULT CRenderer::Render_Distortion()
+{
+	/* If there are not Distortion Object return. */
+	if (m_GameObjects[RENDER_DISTORTION].empty())
+		return S_OK;
+	else
+	{
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Distortion"))))
+			return E_FAIL;
+
+		for (auto& pGameObject : m_GameObjects[RENDER_DISTORTION])
+		{
+			if (pGameObject)
+			{
+				pGameObject->Render();
+				Safe_Release(pGameObject);
+			}
+		}
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+	}
+
+	/* Distortion */
+	if (!m_GameObjects[RENDER_DISTORTION].empty())
+	{
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Distortion"), m_pShaderPostProcessing, "g_DistortionTexture")))
+			return E_FAIL;
+
+		if (!m_pDistortionNoiseTexture)
+			m_pDistortionNoiseTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Distortion_Noise"));
+
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_DistortionNoiseTexture", m_pDistortionNoiseTexture->Get_SRV())))
+			return E_FAIL;
+
+		m_fDistortionTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fDistortionTimer", &m_fDistortionTimer, sizeof(_float))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(6);
+		m_pVIBuffer->Render();
+
+		m_GameObjects[RENDER_DISTORTION].clear();
+		
+		return S_OK;
+	}
+}
+
+HRESULT CRenderer::Render_PostProcessing()
+{
+	if (!m_pTarget_Manager)
+		return E_FAIL;
+
+	/* Fog */
+	if (m_bFog)
+	{
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
+			return E_FAIL;
+
+		/* For.MRT_Fog */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Fog"))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(3);
+		m_pVIBuffer->Render();
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Fog"), m_pShaderPostProcessing, "g_FogTexture")))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(4);
+		m_pVIBuffer->Render();
+	}
+
+	/* Distortion */
+	/* This Distortion is a Post Processing Effect applied to the entire Screen. 
+	Unlike the Distortion Effect computed in the Render_Distortion() function which renders just Distorted Objects. */
+	if (m_bDistort)
+	{
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (!m_pScreenDistortionTexture)
+			m_pScreenDistortionTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Screen_Distortion"));
+
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_ScreenDistortionTexture", m_pScreenDistortionTexture->Get_SRV())))
+			return E_FAIL;
+
+		m_fScreenDistortionTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fScreenDistortionTimer", &m_fScreenDistortionTimer, sizeof(_float))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(5);
+		m_pVIBuffer->Render();
 	}
 
 	return S_OK;
@@ -676,6 +737,8 @@ HRESULT CRenderer::Render_Debug()
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Glow"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Distortion"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Fog"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Glow_UI"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
@@ -807,12 +870,14 @@ void CRenderer::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pLight_Manager);
+	Safe_Release(m_pTarget_Manager);
+
 	Safe_Release(m_pVIBuffer);
 	Safe_Release(m_pShaderDeferred);
 	Safe_Release(m_pShaderPostProcessing);
 
-	Safe_Release(m_pLight_Manager);
-	Safe_Release(m_pTarget_Manager);
-
+	Safe_Release(m_pDistortionTexture);
 	Safe_Release(m_pDistortionNoiseTexture);
+	Safe_Release(m_pScreenDistortionTexture);
 }

@@ -28,8 +28,8 @@ private:
 	CTexture*				m_pTextureCom1 = nullptr;
 	CTexture*				m_pTextureCom2 = nullptr;
 
-	_uint 	m_fcurrentcp = 200.f;
-	_uint m_fmaxcp = 200.f;
+	_uint 	m_fcurrentcp = 200;
+	_uint   m_fmaxcp = 200;
 
 	_uint m_iIndex = 0;
 

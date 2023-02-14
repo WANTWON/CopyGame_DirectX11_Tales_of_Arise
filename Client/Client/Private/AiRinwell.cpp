@@ -99,7 +99,7 @@ HRESULT CAiRinwell::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Model*/
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Rinwell"), (CComponent**)&m_pModelCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("AIRinwell"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
@@ -116,20 +116,14 @@ HRESULT CAiRinwell::Ready_Components(void * pArg)
 		return E_FAIL;
 
 
-	switch (iLevel)
-	{
-	case Client::LEVEL_SNOWFIELD:
-		/* For.Com_Navigation */
-		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom)))
-			return E_FAIL;
-		break;
-	case Client::LEVEL_BATTLE:
-		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom)))
-			return E_FAIL;
-		break;
-	default:
-		break;
-	}
+	if (FAILED(__super::Add_Components(TEXT("Com_FieldNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_vecNavigation[LEVEL_SNOWFIELD])))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Components(TEXT("Com_BattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_vecNavigation[LEVEL_BATTLE])))
+		return E_FAIL;
+
+	m_pNavigationCom = m_vecNavigation[iLevel];
+
 	return S_OK;
 }
 
@@ -140,13 +134,13 @@ int CAiRinwell::Tick(_float fTimeDelta)
 		CBattleManager::Get_Instance()->Set_BossMonster(nullptr);
 		return OBJ_DEAD;
 	}
-	
-
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
+		return OBJ_NOEVENT;
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_bDissolve)
-		return OBJ_NOEVENT;
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 
@@ -162,14 +156,15 @@ int CAiRinwell::Tick(_float fTimeDelta)
 
 void CAiRinwell::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
 		return;
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 	__super::Late_Tick(fTimeDelta);
 
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return;
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return ;
 
 	if (m_pRendererCom && m_bGlowUp)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
@@ -247,6 +242,26 @@ void CAiRinwell::Battle_Animation(_float fTimeDelta)
 }
 
 
+void CAiRinwell::Set_BattleMode(_bool type)
+{
+	m_bBattleMode = type;
+	if (m_bBattleMode)
+	{
+		/* Set State */
+		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_BATTLESTART);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+		m_pTransformCom->LookAt(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION));
+		CBattleManager::Get_Instance()->Set_BossMonster(this);
+	}
+	else
+	{
+		Check_NearTrigger();
+		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_IDLE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
+}
+
 _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 {
 	switch (eAnimId)
@@ -295,7 +310,6 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 	case Client::CAiRinwell::BTL_ATTACK_HOUDEN:
 	case Client::CAiRinwell::BTL_ATTACK_HYOUROU:
 	case Client::CAiRinwell::BTL_ATTACK_MIZUTAMARI_END:
-	case Client::CAiRinwell::BTL_STEP_AIR:
 	case Client::CAiRinwell::BTL_STEP_LAND_BACK:
 	case Client::CAiRinwell::BTL_STEP_LAND:
 	case Client::CAiRinwell::BTL_ATTACK_MAGIC_EMIT_AIR:

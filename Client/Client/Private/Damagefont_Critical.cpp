@@ -134,6 +134,8 @@ HRESULT CDamagefont_Critical::Initialize(void * pArg)
 
 int CDamagefont_Critical::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 	//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();
 
 	if (m_damagedesc.pPointer == nullptr)
@@ -340,6 +342,8 @@ int CDamagefont_Critical::Tick(_float fTimeDelta)
 
 void CDamagefont_Critical::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 
 	/*if (m_fStart_timer > 0.8f)
 	{

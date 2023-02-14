@@ -89,13 +89,16 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 
 CAIState * CAICheckState::LateTick(_float fTimeDelta)
 {
+	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+		return nullptr;
+
 	if (m_pTarget == nullptr)
 		return nullptr;
 
 	m_fTimer += fTimeDelta;
 
 	
-	if (m_fTimer > 1.2f)
+	if (m_fTimer > 0.5f)
 	{
 		if (Get_Target_Distance() <= 3.f)
 		{
@@ -240,6 +243,7 @@ void CAICheckState::Enter()
 	}
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 
+	m_pOwner->Set_Manarecover(true);
 
 	/*m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
@@ -266,7 +270,7 @@ CAIState * CAICheckState::RandomAttackChoose_Sion()
 			m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
 		if (m_pOwner->Get_Info().fCurrentMp < 1.f)
-			return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+			return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 
 
 
@@ -292,7 +296,7 @@ CAIState * CAICheckState::RandomAttackChoose_Sion()
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
 	
 	}
-
+		return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 }
 
 CAIState * CAICheckState::RandomAttackChoose()
@@ -325,5 +329,6 @@ CAIState * CAICheckState::RandomAttackChoose()
 		return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
 
 	}
-
+	
+		return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
 }

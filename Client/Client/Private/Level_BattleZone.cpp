@@ -8,6 +8,7 @@
 #include "UI_RuneEffect.h"
 #include "Level_Loading.h"
 #include "BattleManager.h"
+#include "Monster.h"
 
 CLevel_BattleZone::CLevel_BattleZone(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -57,11 +58,6 @@ HRESULT CLevel_BattleZone::Initialize()
 		return E_FAIL;
 
 
-
-	//가장 맨 처음에 생성된 몬스터를 라곤 타겟으로 설정함
-	CBattleManager::Get_Instance()->Set_LackonMonster(dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_BATTLE, TEXT("Layer_Monster"))));
-
-
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_BATTLE);
 	m_pCamera = dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera());
@@ -97,11 +93,12 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
 	{
 		g_fSoundVolume += 0.001f;
-		if (g_fSoundVolume >= 0.2f)
-			g_fSoundVolume = 0.2f;
+		if (g_fSoundVolume >= 0.15f)
+			g_fSoundVolume = 0.15f;
 	}
 	
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
@@ -109,6 +106,7 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 	{
+		
 		CUI_Manager::Get_Instance()->ReSet_Arrived_Count();
 
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
@@ -134,7 +132,7 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 	SetWindowText(g_hWnd, TEXT("BattleZoneLevel"));
 
 
-	_int iMonsterSize = (_int)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_BATTLE, TEXT("Layer_Monster"))->size();
+	_int iMonsterSize = (_int)CBattleManager::Get_Instance()->Get_BattleMonster().size();
 
 	if (iMonsterSize == 0)
 		CBattleManager::Get_Instance()->Set_BattleMode(false);
@@ -316,15 +314,27 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 
 HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 {
-
-	MONSTER_ID eMonsterID = CBattleManager::Get_Instance()->Get_MonsterType();
-
+	CBattleManager*			pBattleManager = GET_INSTANCE(CBattleManager);
 	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
+
+	MONSTER_ID eMonsterID = pBattleManager->Get_MonsterType();
+	vector<CBaseObj*>		vecAllMonster = pBattleManager->Get_AllMonster();
+	
+	for (auto& iter : vecAllMonster)
+	{
+		dynamic_cast<CMonster*>(iter)->Save_LastPosition();
+		if (dynamic_cast<CMonster*>(iter)->Get_MonsterID() == eMonsterID)
+		{
+			pBattleManager->Out_Monster(iter);
+			pBattleManager->Add_BattleMonster(iter);
+		}
+		else
+			pGameInstance->Out_GameObject(LEVEL_STATIC, TEXT("Layer_Monster"), iter);
+	}
 
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	NONANIMDESC ModelDesc;
-
 	_uint iNum = 0;
 
 	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/MonsterPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -334,55 +344,23 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	/* 타일의 개수 받아오기 */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-	int a = 0;
-
-	for (_uint i = 0; i < iNum; ++i)
+	vector<CBaseObj*>		vecBattleMonster = pBattleManager->Get_BattleMonster();
+	for (auto& iter : vecBattleMonster)
 	{
 		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 		_tchar pModeltag[MAX_PATH];
 		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
 
-
-		switch (eMonsterID)
-		{
-		case Client::ICE_WOLF:
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Ice_Wolf"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
-				return E_FAIL;
-			break;
-		case Client::HAWK:
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Hawk"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
-				return E_FAIL;
-			break;
-		case Client::BERSERKER:
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Berserker"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
-				return E_FAIL;
-			break;
-		case Client::SLIME:
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Slime"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
-				return E_FAIL;
-			break;
-		case Client::RINWELL:
-		{
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
-				return E_FAIL;
-			CloseHandle(hFile);
-			RELEASE_INSTANCE(CGameInstance);
-			return S_OK;
-		}
-
-		case Client::ASTRAL_DOUBT:
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_BATTLE, pLayerTag, &ModelDesc)))
-				return E_FAIL;
-			break;
-		default:
-			break;
-		}
-
+		iter->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&ModelDesc.vPosition), 1.f));
+		dynamic_cast<CMonster*>(iter)->Change_Navigation(LEVEL_BATTLE);
+		dynamic_cast<CMonster*>(iter)->Compute_CurrentIndex(LEVEL_BATTLE);
+		dynamic_cast<CMonster*>(iter)->Set_BattleMode(true);
+		pBattleManager->Set_LackonMonster(iter);
 	}
-
 	CloseHandle(hFile);
 
 	RELEASE_INSTANCE(CGameInstance);
+	RELEASE_INSTANCE(CBattleManager);
 
 	return S_OK;
 }
@@ -441,6 +419,24 @@ HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_BATTLE, pLayerTag, &CameraDesc)))
+		return E_FAIL;
+
+
+	CCamera_Action::ACTIONCAMDESC				ActionCameraDesc;
+	ZeroMemory(&ActionCameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+
+	ActionCameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+	ActionCameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+
+	ActionCameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	ActionCameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	ActionCameraDesc.CameraDesc.fNear = 0.1f;
+	ActionCameraDesc.CameraDesc.fFar = 1000.f;
+
+	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CameraAction"), LEVEL_BATTLE, pLayerTag, &ActionCameraDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -696,7 +692,7 @@ void CLevel_BattleZone::Free()
 {
 	__super::Free();
 
-	CBattleManager::Get_Instance()->Clear_Monster();
+	//CBattleManager::Get_Instance()->Clear_Monster();
 	Safe_Release(m_pCollision_Manager);
 
 	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);

@@ -397,7 +397,7 @@ HRESULT CUI_QuestClear::Render()
 
 	m_fSize.x = 300.f;
 	m_fSize.y = 36.f;
-	m_fPosition.x = 675.f + m_fStartYScale;;
+	m_fPosition.x = 675.f + m_fStartYScale;
 	m_fPosition.y = 405.f;// +m_fFadeY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);

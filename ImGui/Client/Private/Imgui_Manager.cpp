@@ -56,6 +56,11 @@ vector<string> SplitPath(string path, char sep) {
 	return out;
 }
 
+string CutOnSpecificDecimalPt(string num, int pos)
+{
+	return num.substr(0, num.find('.') + pos + 1);
+}
+
 CImgui_Manager::CImgui_Manager()
 	: m_pTerrain_Manager(CTerrain_Manager::Get_Instance())
 	, m_pModel_Manager(CModelManager::Get_Instance())
@@ -76,8 +81,9 @@ CImgui_Manager::CImgui_Manager()
 	m_stLayerTags.push_back(LayerTag);
 	m_stLayerTags.push_back(LayerTag2);
 	m_stLayerTags.push_back(LayerTag3);
-
+	
 	ZeroMemory(&m_BoxDesc, sizeof(CTreasureBox::BOXTAG));
+	ZeroMemory(&m_CameraToolDesc, sizeof(CCamera_Action::TOOLDESC));
 }
 
 
@@ -102,7 +108,7 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext *
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
 
-
+	Read_CamerasData();
 	/* Effect Tool */
 	Read_EffectsData();
 
@@ -111,7 +117,7 @@ HRESULT CImgui_Manager::Initialize(ID3D11Device * pDevice, ID3D11DeviceContext *
 
 	_tchar wcMeshesPath[MAX_PATH] = TEXT("../../../Bin/Bin_Data/Effect/");
 	Read_Meshes(wcMeshesPath);
-	/**/
+
 
 	return S_OK;
 }
@@ -257,8 +263,8 @@ void CImgui_Manager::Tick_Imgui()
 		}
 		if (ImGui::BeginTabItem("Camera Tool"))
 		{
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Add Camera Mode on"); ImGui::SameLine();
-			ImGui::Checkbox("##Add Camera Mode on", &m_bMakeCamera);
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Create Camera Symbol"); ImGui::SameLine();
+			ImGui::RadioButton("##Picking for Camera", &m_PickingType, PICKING_CAMERA);
 			Set_Camera();
 			ImGui::EndTabItem();
 		}
@@ -388,7 +394,7 @@ void CImgui_Manager::BrowseForFolder()
 			/* 타일의 개수 받아오기 */
 			ReadFile(hFile, &(iNum), sizeof(_int), &dwByte, nullptr);
 
-			for (_uint i = 0; i < iNum; ++i)
+			for (_int i = 0; i < iNum; ++i)
 			{
 				ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 				m_pModel_Manager->Set_InitModelDesc(ModelDesc);
@@ -603,7 +609,7 @@ void CImgui_Manager::Save_TrasureBox()
 		/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
 		WriteFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-		for (_int i = 0; i < iNum; ++i)
+		for (_uint i = 0; i < iNum; ++i)
 		{
 			TreasureBoxDesc = m_pModel_Manager->Get_TreasureBox(i)->Get_BoxDesc();
 			WriteFile(hFile, &TreasureBoxDesc, sizeof(CTreasureBox::BOXTAG), &dwByte, nullptr);
@@ -777,7 +783,7 @@ void CImgui_Manager::Set_Navigation()
 
 		if ((int)m_pNavigation_Manager->Get_CellsSize() != 0)
 		{
-			for (int i = 0; i < m_pNavigation_Manager->Get_CellsSize();)
+			for (_uint i = 0; i < m_pNavigation_Manager->Get_CellsSize();)
 			{
 				//char label[MAX_PATH] = "";
 				char szLayertag[MAX_PATH] = "Cell";
@@ -963,7 +969,7 @@ void CImgui_Manager::Save_Navigation()
 		/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
 		WriteFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-		for (int i = 0; i < iNum; ++i)
+		for (_uint i = 0; i < iNum; ++i)
 		{
 			CCell* pCell = m_pNavigation_Manager->Get_Cell(i);
 			vPoints[0] = pCell->Get_PointValue(CCell::POINT_A);
@@ -1017,7 +1023,7 @@ void CImgui_Manager::Load_Navigation()
 		/* 타일의 개수 받아오기 */
 		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-		for (int i = 0; i < iNum; ++i)
+		for (_uint i = 0; i < iNum; ++i)
 		{
 			ReadFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
 			ReadFile(hFile, &eCelltype, sizeof(CCell::CELLTYPE), &dwByte, nullptr);
@@ -1266,7 +1272,7 @@ void CImgui_Manager::Load_Terrain()
 		/* 타일의 개수 받아오기 */
 		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-		for (int i = 0; i < iNum; ++i)
+		for (_uint i = 0; i < iNum; ++i)
 		{
 			_tchar			szFullPath[MAX_PATH] = TEXT("Prototype_Component_VIBuffer_Terrain_Load");
 
@@ -1630,6 +1636,24 @@ void CImgui_Manager::Show_PopupBox()
 		ImGui::EndPopup();
 	}
 
+
+	/* Create Camera Modal */
+	ImVec2 pCenter = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(pCenter, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f)); // Center Window when appearing
+	if (ImGui::BeginPopupModal("Create Camera", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Camera Created!");
+		
+		_float fButtonSize = 100.f;
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2) - (fButtonSize / 2));
+
+		if (ImGui::Button("Got it!", ImVec2(fButtonSize, 0)))
+			ImGui::CloseCurrentPopup();
+
+		ImGui::SetItemDefaultFocus();
+		ImGui::EndPopup();
+	}
+
 }
 
 void CImgui_Manager::Show_ModelList()
@@ -1859,203 +1883,383 @@ void CImgui_Manager::Show_CurrentModelList()
 	}
 }
 
+void CImgui_Manager::Read_CamerasData()
+{
+	WIN32_FIND_DATA fileData;
+	HANDLE hDir = FindFirstFile(TEXT("../../../Bin/Data/CameraData/*"), &fileData);
+
+	/* No files found */
+	if (hDir == INVALID_HANDLE_VALUE)
+		return;
+
+	do {
+		if (fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			continue;
+
+		if (!lstrcmp(fileData.cFileName, TEXT(".")) || !lstrcmp(fileData.cFileName, TEXT("..")))
+			continue;
+
+		wstring wsFileName(fileData.cFileName);
+		string sFileName(wsFileName.begin(), wsFileName.end());
+
+		m_SavedCameras.push_back(sFileName);
+	} while (FindNextFile(hDir, &fileData));
+
+	FindClose(hDir);
+}
+
 void CImgui_Manager::Set_Camera()
 {
-	static int selected = 0;
+	ImGui::Checkbox("Target Mode", &m_bTargetMode);
+#pragma region Create Camera
+	ImGuiTreeNodeFlags TreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
+	if (ImGui::CollapsingHeader("Create", TreeNodeFlags))
 	{
-		ImGui::BeginChild("left pane", ImVec2(150, 0), true);
-
-		if ((int)m_pCamera_Manager->Get_CameraSize() != 0)
+		/* Create New Effect */
+		ImGui::Text("Create Camera Data");
+		static char cCameraName[MAX_PATH];
+		ImGui::SetNextItemWidth(175);
+		ImGui::InputText("##InputCamera", cCameraName, MAX_PATH);
+		ImGui::SameLine();
+		if (ImGui::Button("Create Camera"))
 		{
-			for (int i = 0; i < m_pCamera_Manager->Get_CameraSize();)
+			if (strcmp(cCameraName, ""))
 			{
-				//char label[MAX_PATH] = "";
-				char szLayertag[MAX_PATH] = "Camera";
+				m_sCurrentCamera = cCameraName; // Set Current Effect
+				m_sCurrentCamera += ".dat";
+				memset(cCameraName, 0, MAX_PATH);
+				ImGui::OpenPopup("Create Camera");
 
-				char label[MAX_PATH] = "Camera";
-				char buffer[MAX_PATH];
-				sprintf(buffer, "%d", i);
-				strcat(label, buffer);
-				if (ImGui::Selectable(label, m_iCameraIndex == i))
-				{
-					m_iCameraIndex = i;
+				CCamera_Action::ACTIONCAMDESC				CameraDesc;
+				ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+				CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+				CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
 
-				}
-				i++;
+				CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+				CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+				CameraDesc.CameraDesc.fNear = 0.2f;
+				CameraDesc.CameraDesc.fFar = 1000.f;
+
+				CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+				CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_STATIC, TEXT("Layer_Camera"), &CameraDesc);
 			}
 		}
-		ImGui::EndChild();
-	}
-	ImGui::SameLine();
-	// ------------------------ Right -----------------------------------
-	{
+		ImGui::NewLine();
+		ImGui::Separator();
+		ImGui::Text("Saved Camera");
 
-		ImGui::BeginGroup();
-		ImGui::BeginChild("Cell view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
-
-
-		ImGui::CollapsingHeader("Show Current Camera");
-
-		ImGui::Text("Selected Index : "); ImGui::SameLine();  ImGui::Text("%d", m_iCameraIndex);
-		m_pCamera_Manager->Set_CilckedCamIndex(m_iCameraIndex);
-		CNonAnim* pCurrentCam = m_pCamera_Manager->Get_CurrentCam();
-
-
-		static float fCamPositionX = m_fCamPosition.x;
-		static float fCamPositionY = m_fCamPosition.y;
-		static float fCamPositionZ = m_fCamPosition.z;
-
-
-		if (pCurrentCam != nullptr)
+		if (ImGui::BeginListBox("##SavedCamera", ImVec2(-FLT_MIN, 5.f*ImGui::GetTextLineHeightWithSpacing())))
 		{
-			_vector vCamPos = pCurrentCam->Get_Position();
-			fCamPositionX = XMVectorGetX(vCamPos);
-			fCamPositionY = XMVectorGetY(vCamPos);
-			fCamPositionZ = XMVectorGetZ(vCamPos);
-			m_fCamPosition = _float3(fCamPositionX, fCamPositionY, fCamPositionZ);
+			for (int i = 0; i < m_SavedCameras.size(); i++)
+			{
+				if (ImGui::Selectable(m_SavedCameras[i].c_str(), m_iSavedCamera == i))
+					m_iSavedCamera = i;
+
+				if (m_iSavedCamera == i)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndListBox();
 		}
 
-
-		ImGui::Text("CamPositionXYZ");
-		ImGui::DragFloat("CamPosX", &fCamPositionX, 0.01f);
-		ImGui::DragFloat("CamPosY", &fCamPositionY, 0.01f);
-		ImGui::DragFloat("CamPosZ", &fCamPositionZ, 0.01f);
-
-		m_fCamPosition = _float3(fCamPositionX, fCamPositionY, fCamPositionZ);
-		//m_pCamera_Manager->Update_CamPosition(m_fCamPosition);
-
-
-		if (ImGui::Button("Erase Picked Camera"))
+		if (ImGui::Button("Load Camera"))
 		{
-			m_pCamera_Manager->Out_CreatedCamera(pCurrentCam);
-			pCurrentCam->Set_Dead(true);
+			Load_Camera();
 		}
+			
 
-		if (ImGui::Button("All_Clear Camera"))
-			m_pCamera_Manager->Clear_Camreras();
+			ImGui::NewLine();
+		ImGui::Separator();
 
+		ImGui::Text("Current Camera:");
+		ImGui::SameLine();
+		ImGui::Text(m_sCurrentCamera.c_str());
 
 		if (ImGui::Button("Save Camera"))
 		{
 			Save_Camera();
 		}
-		if (ImGui::Button("Load Camera"))
-		{
-			Load_Camera();
-		}
+			
 
-		ImGui::EndChild();
-		ImGui::EndGroup();
+
+		ImGui::Text("PlayTime"); ImGui::SameLine();
+		ImGui::DragFloat("##AtX", &m_fPlayTime, 0.05f);
+		ImGui::SameLine();
+
+		if (ImGui::Button(m_bIsPlaying ? "Stop" : "Play"))
+		{
+			if (m_pCurrentCamera)
+			{
+				CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::ACTION);
+				m_pCurrentCamera->Set_PlayTime(m_fPlayTime);
+				m_bIsPlaying = !m_bIsPlaying;
+				m_pCurrentCamera->Set_Play(m_bIsPlaying);
+			}
+		}
 	}
 
 
-	if (m_bMakeCamera && CGameInstance::Get_Instance()->Key_Up(DIK_X))
-	{
+#pragma endregion Create Camera
 
-		if (FAILED(m_pCamera_Manager->Add_Camera()))
-			return;
-		XMStoreFloat3(&m_fCamPosition, m_pCamera_Manager->Get_LastCam()->Get_Position());
+#pragma region Add
+	ImGui::NewLine();
+	if (ImGui::CollapsingHeader("Add"))
+	{
+		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+		if (ImGui::BeginTabBar("CameraTabBar", tab_bar_flags))
+		{
+			if (ImGui::BeginTable("ColorCurvesTable", 5, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+			{
+				ImGui::TableSetupScrollFreeze(0, 1);
+				ImGui::TableSetupColumn("ID");
+				ImGui::TableSetupColumn("Eye");
+				ImGui::TableSetupColumn("At");
+				ImGui::TableSetupColumn("Start");
+				ImGui::TableSetupColumn("End");
+				ImGui::TableHeadersRow();
+
+				vector<CCamera_Action::TOOLDESC> CameraCurves;
+
+				if (m_pCurrentCamera)
+					CameraCurves = m_pCurrentCamera->Get_AllCamData();
+
+				for (_uint i = 0; i < CameraCurves.size(); i++)
+				{
+					ImGui::TableNextColumn();
+					string iIndex = to_string(i);
+					//ImGui::Text(iIndex.c_str()); /* ID */
+					if (ImGui::Selectable(iIndex.c_str(), i == m_iCamCurvedIndex, ImGuiSelectableFlags_SpanAllColumns)) /* Eye */
+					{
+						m_iCamCurvedIndex = i;
+						m_CameraToolDesc = m_pCurrentCamera->Get_CamData(m_iCamCurvedIndex);
+					}
+
+					ImGui::TableNextColumn(); 
+					string sEye = CutOnSpecificDecimalPt( to_string(CameraCurves[i].vEyePosition.x), 2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.y),2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.z),2);
+					ImGui::Text(sEye.c_str()); 
+					ImGui::TableNextColumn();
+					string sAt = CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.x),2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.y),2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.z),2);
+					ImGui::Text(sAt.c_str());
+
+
+					ImGui::TableNextColumn();
+					ImGui::Text(to_string(CameraCurves[i].fStartTime).c_str()); /* Start */
+
+					ImGui::TableNextColumn();
+					ImGui::Text(to_string(CameraCurves[i].fEndTime).c_str()); /* End */
+				}
+				ImGui::EndTable();
+			}
+			
+			
+			if (ImGui::Button("Add"))
+			{
+				if (m_pCurrentCamera)
+					m_pCurrentCamera->Add_CamData(m_CameraToolDesc);
+
+				_float fValue = m_CameraToolDesc.fEndTime - m_CameraToolDesc.fStartTime;
+				m_CameraToolDesc.fStartTime = m_CameraToolDesc.fEndTime;
+				m_CameraToolDesc.fEndTime += fValue;
+				if (m_CameraToolDesc.fEndTime > 1.f)
+					m_CameraToolDesc.fEndTime = 1.f;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Delete"))
+				if (m_pCurrentCamera->Get_AllCamData().size() > m_iCamCurvedIndex)
+					m_pCurrentCamera->Remove_Camdata(m_iCamCurvedIndex);
+
+			ImGui::SameLine();
+			if (ImGui::Button("Edit"))
+			{
+				if (m_pCurrentCamera->Get_AllCamData().size() > m_iCamCurvedIndex)
+					m_pCurrentCamera->Set_CamData(m_iCamCurvedIndex, m_CameraToolDesc);
+			}
+				
+
+
+			ImGui::SameLine();
+			if (ImGui::Button("Cancle Click Point"))
+				m_pCamera_Manager->Clear_ClickPosition();
+
+			ImGui::SameLine();
+			if (ImGui::Button("Capture Current"))
+			{
+				_float4x4 vCamMatrix = CGameInstance::Get_Instance()->Get_CamWorldMatrix();
+				_float4 vPosition = (_float4)vCamMatrix.m[3];
+				_float4 vLook = (_float4)vCamMatrix.m[2];
+				m_CameraToolDesc.vEyePosition = vPosition;
+				m_CameraToolDesc.vAtPosition = _float4( vPosition.x + vLook.x , vPosition.y + vLook.y, vPosition.z + vLook.z, 1.f);
+			}
+				
+
+			ImGui::NewLine();
+
+
+			ImGui::BulletText("EyePosition");
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##EyeX", &m_CameraToolDesc.vEyePosition.x, 0.05f,NULL, NULL, "X: %.02f"))
+			{
+				
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##EyeY", &m_CameraToolDesc.vEyePosition.y, 0.05f, NULL, NULL, "Y: %.02f"))
+			{
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##EyeZ", &m_CameraToolDesc.vEyePosition.z, 0.05f, NULL, NULL, "Z: %.02f"))
+			{
+			}
+	
+			ImGui::BulletText("AtPosition");
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##AtX", &m_CameraToolDesc.vAtPosition.x, 0.05f, NULL, NULL, "X: %.02f"))
+			{
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##AtY", &m_CameraToolDesc.vAtPosition.y, 0.05f, NULL, NULL, "Y: %.02f"))
+			{
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##AtZ", &m_CameraToolDesc.vAtPosition.z, 0.05f, NULL, NULL, "Z: %.02f"))
+			{
+			}
+
+			m_pCamera_Manager->Set_CameraSymbolPosition(CCamera_Manager::CAM_EYE, XMLoadFloat4(&m_CameraToolDesc.vEyePosition));
+			m_pCamera_Manager->Set_CameraSymbolPosition(CCamera_Manager::CAM_AT, XMLoadFloat4(&m_CameraToolDesc.vAtPosition));
+
+			ImGui::BulletText("Start/End Time");
+			ImGui::SetNextItemWidth(200);
+			if (ImGui::DragFloat("##Start", &m_CameraToolDesc.fStartTime, 0.01f, 0.f, 1.f, "Start: %.02f"))
+			{
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(200);
+			if (ImGui::DragFloat("##End", &m_CameraToolDesc.fEndTime, 0.01f, 0.f, 1.f, "End: %.02f"))
+			{
+			}
+
+			ImGui::EndTabBar();
+		}
+
+		ImGui::NewLine();
+	}
+#pragma endregion Add
+
+	Show_PopupBox();
+
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_X))
+	{
+		if (CPickingMgr::Get_Instance()->Picking())
+		{
+			_float3 fPosition = CPickingMgr::Get_Instance()->Get_PickingPos();
+			_float4 vPosition = _float4(fPosition.x, fPosition.y, fPosition.z, 1.f);
+			m_pCamera_Manager->Click_Position(vPosition);
+		}
+
 	}
 
 }
 
-void CImgui_Manager::Save_Camera()
+_bool CImgui_Manager::Save_Camera()
 {
-	OPENFILENAME OFN;
-	TCHAR filePathName[300] = L"";
-	TCHAR lpstrFile[300] = L"";
-	static TCHAR filter[] = L"데이터 파일\0*.dat\0텍스트 파일\0*.txt";
+	
+	/* Create Effect Data File */
+	wstring wsCurrentCamera = wstring(m_sCurrentCamera.begin(), m_sCurrentCamera.end());
+	HANDLE hFileCamera = nullptr;
+	_tchar LoadPathCamera[MAX_PATH] = TEXT("../../../Bin/Data/CameraData/");
+	wcscat_s(LoadPathCamera, MAX_PATH, wsCurrentCamera.c_str());
 
-	memset(&OFN, 0, sizeof(OPENFILENAME));
-	OFN.lStructSize = sizeof(OPENFILENAME);
-	OFN.hwndOwner = g_hWnd;
-	OFN.lpstrFilter = filter;
-	OFN.lpstrFile = lpstrFile;
-	OFN.nMaxFile = 300;
-	OFN.lpstrInitialDir = L".";
-	OFN.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
+	hFileCamera = CreateFile(LoadPathCamera, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	if (GetSaveFileName(&OFN))
+	if (hFileCamera == INVALID_HANDLE_VALUE)
+		return false;
+
+	DWORD dwByte = 0;
+
+	/* Camera play time */
+	_float fPlayTime = m_pCurrentCamera->Get_PlayTime();
+	WriteFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+
+	vector<CCamera_Action::TOOLDESC> CameraDatas = m_pCurrentCamera->Get_AllCamData();
+	/* For every Effect in this File: */
+	_uint iCamSize = CameraDatas.size();
+	WriteFile(hFileCamera, &iCamSize, sizeof(_uint), &dwByte, nullptr);
+	for (_uint i = 0; i < CameraDatas.size(); i++)
 	{
-		//ERR_MSG(TEXT("save-as  '%s'\n"), ofn.lpstrFile); //경로// 파일이름.확장자
-		//ERR_MSG(TEXT("filename '%s'\n"), ofn.lpstrFile + ofn.nFileOffset); 
-
-		HANDLE hFile = 0;
-		_ulong dwByte = 0;
-		_uint iNum = 0;
-		_float3	 vPosition;
-		m_iCurrentLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-
-		list<CGameObject*>* plistClone = CGameInstance::Get_Instance()->Get_ObjectList(m_iCurrentLevel, TEXT("Layer_CameraModel"));
-		iNum = (_int)m_pCamera_Manager->Get_CameraSize();
-
-
-		hFile = CreateFile(OFN.lpstrFile, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);;
-		if (0 == hFile)
-			return;
-
-		/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
-		WriteFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-		for (auto& iter : *plistClone)
-		{
-
-			XMStoreFloat3(&vPosition, dynamic_cast<CBaseObj*>(iter)->Get_Position());
-			WriteFile(hFile, &vPosition, sizeof(_float3), &dwByte, nullptr);
-
-		}
-
-		CloseHandle(hFile);
+		WriteFile(hFileCamera, &CameraDatas[i], sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
 	}
+
+	CloseHandle(hFileCamera);
+
+	m_SavedCameras.push_back(m_sCurrentCamera);
+
+	return true;
 }
 
-void CImgui_Manager::Load_Camera()
+_bool CImgui_Manager::Load_Camera()
 {
-	OPENFILENAME OFN;
-	TCHAR filePathName[300] = L"";
-	TCHAR lpstrFile[300] = L"";
-	static TCHAR filter[] = L"데이터 파일\0*.dat\0텍스트 파일\0*.txt";
+	CCamera_Action::ACTIONCAMDESC				CameraDesc;
+	ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+	CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+	CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
 
-	memset(&OFN, 0, sizeof(OPENFILENAME));
-	OFN.lStructSize = sizeof(OPENFILENAME);
-	OFN.hwndOwner = g_hWnd;
-	OFN.lpstrFilter = filter;
-	OFN.lpstrFile = lpstrFile;
-	OFN.nMaxFile = 300;
-	OFN.lpstrInitialDir = L".";
+	CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	CameraDesc.CameraDesc.fNear = 0.2f;
+	CameraDesc.CameraDesc.fFar = 1000.f;
 
-	if (GetOpenFileName(&OFN) != 0) {
-		wsprintf(filePathName, L"%s 파일을 열겠습니까?", OFN.lpstrFile);
-		MessageBox(g_hWnd, filePathName, L"열기 선택", MB_OK);
+	CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+	CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-		//ERR_MSG(TEXT("save-as  '%s'\n"), ofn.lpstrFile); //경로// 파일이름.확장자
-		//ERR_MSG(TEXT("filename '%s'\n"), ofn.lpstrFile + ofn.nFileOffset); 
+	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_STATIC, TEXT("Layer_Camera"), &CameraDesc);
+	wstring wsSelectedSavedCamera = wstring(m_SavedCameras[m_iSavedCamera].begin(), m_SavedCameras[m_iSavedCamera].end());
 
-		HANDLE hFile = 0;
-		_ulong dwByte = 0;
-		_uint iNum = 0;
-		_float3		vPosition;
+	/* Load Camera File. */
+	HANDLE hFileCamera = nullptr;
+	_tchar LoadPathCamera[MAX_PATH] = TEXT("../../../Bin/Data/CameraData/");
+	wcscat_s(LoadPathCamera, MAX_PATH, wsSelectedSavedCamera.c_str());
 
-		hFile = CreateFile(OFN.lpstrFile, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-		if (0 == hFile)
-			return;
+	hFileCamera = CreateFile(LoadPathCamera, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
+	if (hFileCamera == INVALID_HANDLE_VALUE)
+		return false;
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-		/* 타일의 개수 받아오기 */
-		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	DWORD dwByte = 0;
+	_uint iCameraCount = 0;
 
-		for (int i = 0; i < iNum; ++i)
-		{
-			ReadFile(hFile, &vPosition, sizeof(_float3), &dwByte, nullptr);
-			if (0 == dwByte)
-				break;
+	/* Read how many Effects there are in this File. */
+	_float fPlayTime = 0.f;
+	ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+	m_pCurrentCamera->Set_PlayTime(fPlayTime);
+	m_fPlayTime = fPlayTime;
+	CCamera_Action::TOOLDESC CamToolData;
 
-			m_pCamera_Manager->Add_Camera(vPosition);
-		}
-		CloseHandle(hFile);
+	
+	ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
+		/* For every Effect in this File: */
+	for (_uint i = 0; i < iCameraCount; i++)
+	{
 
+		ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
+		m_pCurrentCamera->Add_CamData(CamToolData);
 	}
+	
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	CloseHandle(hFileCamera);
+
+	m_sCurrentCamera = m_SavedCameras[m_iSavedCamera];
+
+	return true;
 }
 
 void CImgui_Manager::Set_Light()
@@ -2066,7 +2270,7 @@ void CImgui_Manager::Set_Light()
 
 		if ((int)CGameInstance::Get_Instance()->Get_LightSize() != 0)
 		{
-			for (int i = 0; i < CGameInstance::Get_Instance()->Get_LightSize();)
+			for (_uint i = 0; i < CGameInstance::Get_Instance()->Get_LightSize();)
 			{
 				//char label[MAX_PATH] = "";
 				char szLayertag[MAX_PATH] = "Light";
@@ -2247,7 +2451,7 @@ void CImgui_Manager::Save_Light()
 		/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
 		WriteFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-		for (int i = 0; i < iNum; ++i)
+		for (_uint i = 0; i < iNum; ++i)
 		{
 			LightDesc = *CGameInstance::Get_Instance()->Get_LightDesc(i);
 			WriteFile(hFile, &LightDesc, sizeof(LIGHTDESC), &dwByte, nullptr);
@@ -2291,7 +2495,7 @@ void CImgui_Manager::Load_Light()
 		/* 타일의 개수 받아오기 */
 		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-		for (int i = 0; i < iNum; ++i)
+		for (_uint i = 0; i < iNum; ++i)
 		{
 			ReadFile(hFile, &LightDesc, sizeof(LIGHTDESC), &dwByte, nullptr);
 			if (0 == dwByte)
@@ -3753,6 +3957,8 @@ _bool CImgui_Manager::Save_Effect()
 	CloseHandle(hFileEffect);
 
 	m_SavedEffects.push_back(m_sCurrentEffect);
+
+	return true;
 }
 
 _bool CImgui_Manager::Load_Effect()

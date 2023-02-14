@@ -6,34 +6,24 @@
 #include "PipeLine.h"
 
 
+
 IMPLEMENT_SINGLETON(CCamera_Manager)
 
 CCamera_Manager::CCamera_Manager()
 {
-	m_vecCameras.reserve(0);
-}
 
+}
 
 HRESULT CCamera_Manager::Add_Camera()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	
-	NONANIMDESC  NonAnimDesc;
-	CTransform* pTransform = (CTransform*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), TEXT("Com_Transform"));
+	CCamera_Action* pCameraAction = nullptr;
+	CCamera_Action::ACTIONCAMDESC	ActionCamDesc;
+	ZeroMemory(&ActionCamDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
 
-	if (pTransform == nullptr)
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_GAMEPLAY, TEXT("Layer_Camera"), nullptr)))
 		return E_FAIL;
-
-	XMStoreFloat3(&NonAnimDesc.vPosition, pTransform->Get_State(CTransform::STATE_TRANSLATION));
-	char pModeltag[MAX_PATH] = "Boulder.fbx";
-	strcpy(NonAnimDesc.pModeltag, pModeltag);
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_GAMEPLAY, TEXT("Layer_CameraModel"), &NonAnimDesc)))
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return E_FAIL;
-	}
 
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -41,60 +31,74 @@ HRESULT CCamera_Manager::Add_Camera()
 	return S_OK;
 }
 
-HRESULT CCamera_Manager::Add_Camera(_float3 position)
+void CCamera_Manager::Remove_Camera(_int iIndex)
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-
-	NONANIMDESC  NonAnimDesc;
-	NonAnimDesc.vPosition = position;
-	char pModeltag[MAX_PATH] = "Boulder.fbx";
-	strcpy(NonAnimDesc.pModeltag, pModeltag);
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_GAMEPLAY, TEXT("Layer_CameraModel"), &NonAnimDesc)))
-	{
-		RELEASE_INSTANCE(CGameInstance);
-		return E_FAIL;
-	}
-
-
-	RELEASE_INSTANCE(CGameInstance);
-
-	return S_OK;
+	m_pCurrentCamera->Remove_Camdata(iIndex);
 }
 
-void CCamera_Manager::Out_CreatedCamera(CNonAnim * pGameObject)
-{
-	auto& iter = m_vecCameras.begin();
-	while (iter != m_vecCameras.end())
-	{
-		if (*iter == pGameObject)
-			iter = m_vecCameras.erase(iter);
-		else
-			++iter;
-	}
-}
-
-void CCamera_Manager::Update_CamPosition(_float3 position)
-{
-	if (m_vecCameras.size() != 0)
-	{
-		_vector vPosition = XMLoadFloat3(&position);
-		vPosition = XMVectorSetW(vPosition, 1.f);
-		m_vecCameras[m_vecCameras.size() - 1]->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	}
-}
 
 void CCamera_Manager::Clear_Camreras()
 {
-	for (auto& iter : m_vecCameras)
-		iter->Set_Dead(true);
-	m_vecCameras.clear();
-
 	m_iCamIndex = 0;
+	Safe_Release(m_pCurrentCamera);
+	m_pCurrentCamera = nullptr;
+}
+
+void CCamera_Manager::Set_CameraSymbolPosition(CAMERASYMBOL eSymbol, _vector vPosition)
+{
+	if (m_pClickedSymbol[eSymbol] == nullptr)
+		return;
+
+	m_pClickedSymbol[eSymbol]->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+}
+
+HRESULT CCamera_Manager::Add_ClickedSymbol(_float4 vClickPos, CAMERASYMBOL Symboltype)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	NONANIMDESC NonAnimDesc;
+	char cModelTag[MAX_PATH] = "";
+	WideCharToMultiByte(CP_ACP, 0, TEXT("Picking_Symbol"), MAX_PATH, cModelTag, MAX_PATH, NULL, NULL);
+	strcpy(NonAnimDesc.pModeltag, cModelTag);
+	NonAnimDesc.vPosition = _float3(vClickPos.x, vClickPos.y, vClickPos.z);
+	NonAnimDesc.vScale = _float3(1.f, 1.f, 1.f);
+	m_iSymBolType = Symboltype;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_GAMEPLAY, TEXT("Layer_PickingSymbol"), &NonAnimDesc)))
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return E_FAIL;
+	}
+
+
+	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+void CCamera_Manager::Click_Position(_float4 vPosition)
+{
+	//찍은 점의 개수가 3개가 된다면. 삼각형이 그려지니 Cell에 추가한다.
+	if (2 == m_vClickedPoints.size())
+		Clear_ClickPosition();
+
+	if (0 == m_vClickedPoints.size())
+		Add_ClickedSymbol(vPosition, CAM_EYE);
+	else if (1 == m_vClickedPoints.size())
+		Add_ClickedSymbol(vPosition, CAM_AT);
+
+	m_vClickedPoints.push_back(vPosition);
+}
+
+void CCamera_Manager::Clear_ClickPosition()
+{
+	CGameInstance::Get_Instance()->Clear_Layer(LEVEL_GAMEPLAY, TEXT("Layer_PickingSymbol"));
+	m_vClickedPoints.clear();
+
+	m_pClickedSymbol[CAM_EYE] = nullptr;
+	m_pClickedSymbol[CAM_AT] = nullptr;
 }
 
 void CCamera_Manager::Free()
 {
-	m_vecCameras.clear();
+
 }

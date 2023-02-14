@@ -61,7 +61,8 @@ HRESULT CUI_font_Hits_number::Initialize(void * pArg)
 int CUI_font_Hits_number::Tick(_float fTimeDelta)
 {
 
-	
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 
 	m_fDietimer += fTimeDelta;
 	if (m_fDietimer > 5.f)
@@ -144,6 +145,8 @@ int CUI_font_Hits_number::Tick(_float fTimeDelta)
 
 void CUI_font_Hits_number::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return ;
 
 		
 	if (!m_bRender)

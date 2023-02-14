@@ -5,7 +5,7 @@
 #include "UI_Manager.h"
 #include "Collision_Manger.h"
 #include "Data_Manager.h"
-#include "Collision_Manger.h"
+#include "CameraManager.h"
 
 BEGIN(Engine)
 class CShader;
@@ -82,7 +82,7 @@ protected:
 	_float			m_fRadius = 0.f;
 
 	OBJINFO  m_tInfo;
-
+	CCameraManager* m_pCameraManager = nullptr;
 public:
 	virtual void Free() override;
 };

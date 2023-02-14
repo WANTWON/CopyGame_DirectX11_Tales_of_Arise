@@ -39,6 +39,9 @@ public:
 	HRESULT Cloning_ForMonster();
 	HRESULT Cloning_ForNonAnim();
 
+	HRESULT Loading_MonsterAtFirst();
+	HRESULT Loading_Monster();
+
 
 private:
 	THREAD_ID				m_eCloneType = THREAD_END;

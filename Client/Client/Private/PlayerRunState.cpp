@@ -41,35 +41,37 @@ CPlayerState * CRunState::HandleInput()
 				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_E);
 			if (pGameInstance->Key_Down(DIK_R))
 				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_R);
-			if(pGameInstance->Key_Down(DIK_F))
+			if (pGameInstance->Key_Down(DIK_F))
 				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_F);
 		case CPlayer::SION:
-		case CPlayer::RINWELL:
 			//for Sion State//
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
-				break;
+				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
+			break;
+		case CPlayer::RINWELL:
+			//for Rinwell State//
+			break;
 		}
-	
+
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 		{
 			switch (m_ePlayerID)
 			{
 			case CPlayer::SION:
-		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
-			return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK4);
-		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
-			return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK5);
+				if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK4);
+				else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK5);
 				else if (pGameInstance->Key_Down(DIK_E))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E);
 				else if (pGameInstance->Key_Down(DIK_R))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 				else if (pGameInstance->Key_Down(DIK_F))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
-				
+
 				break;
-			}	
+			}
 		}
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_BATTLE);
@@ -101,7 +103,7 @@ CPlayerState * CRunState::HandleInput()
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_RUN);
 	}
-	
+
 	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 		m_eDirection = DIR_STRAIGHT_LEFT;
 	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
@@ -119,18 +121,20 @@ CPlayerState * CRunState::HandleInput()
 	else if (pGameInstance->Key_Pressing(DIK_W))
 		m_eDirection = DIR_STRAIGHT;
 	else
-		return new CIdleState(m_pOwner);
+		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 
 	if ((LEVEL_SNOWFIELD == m_pOwner->Get_Level()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
 		if (!m_bIsDash)
 		{
-			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+			if (CPlayer::ALPHEN == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
-			else if (CPlayer::SION == m_pOwner->Get_PlayerID())
+			else if (CPlayer::SION == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
-		}	
-		
+			else if (CPlayer::RINWELL == m_ePlayerID)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
+		}
+
 		m_bIsDash = true;
 
 		if (!CBattleManager::Get_Instance()->Get_IsBattleMode())
@@ -143,10 +147,12 @@ CPlayerState * CRunState::HandleInput()
 	{
 		if (m_bIsDash)
 		{
-			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+			if (CPlayer::ALPHEN == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
-			else if (CPlayer::SION == m_pOwner->Get_PlayerID())
+			else if (CPlayer::SION == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
+			else if (CPlayer::RINWELL == m_ePlayerID)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
 		}
 
 		m_bIsDash = false;
@@ -163,12 +169,11 @@ CPlayerState * CRunState::HandleInput()
 
 CPlayerState * CRunState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	Move(fTimeDelta);
 
 	m_pOwner->Check_Navigation();
-
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -176,25 +181,18 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 	{
 		if (pEvent.isPlay)
 		{
-
 			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 			{
-
 				//CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
 				if (!m_bSoundStart)
 				{
 					m_bSoundStart = true;
 					CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Run1.wav"), SOUND_EFFECT, 0.5f);
-
-				
 				}
 			}
-
 			else
 				m_iRunSoundCount = 0;
-
 		}
-
 	}
 
 	return nullptr;
@@ -219,7 +217,7 @@ void CRunState::Enter()
 
 	if (m_bIsDash)
 	{
-		switch (m_pOwner->Get_PlayerID())
+		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
 			if (LEVEL_BATTLE != m_pOwner->Get_Level())
@@ -231,11 +229,16 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
+		case CPlayer::RINWELL:
+			if (LEVEL_BATTLE != m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			break;
 		}
 	}
 	else
 	{
-		switch (m_pOwner->Get_PlayerID())
+		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
 			if (LEVEL_BATTLE == m_pOwner->Get_Level())
@@ -252,9 +255,18 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
+		case CPlayer::RINWELL:
+			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+			else
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			break;
 		}
 	}
 
+
+	m_pOwner->Set_Manarecover(true);
 }
 
 void CRunState::Exit()
@@ -278,7 +290,7 @@ void CRunState::Move(_float fTimeDelta)
 		vCameraLook = XMVector3TransformNormal(vCameraLook, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-45.f)));
 		break;
 	case DIR_STRAIGHT_RIGHT:
-		vCameraLook = XMVector3TransformNormal(vCameraLook, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f))); 
+		vCameraLook = XMVector3TransformNormal(vCameraLook, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(45.f)));
 		break;
 	case DIR_BACKWARD_LEFT:
 		vCameraLook = XMVector3TransformNormal(vCameraLook, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-135.f)));
@@ -306,7 +318,7 @@ void CRunState::Move(_float fTimeDelta)
 	NewCameraMatrix.r[0] = XMVector3Cross(NewCameraMatrix.r[1], NewCameraMatrix.r[2]);
 
 	CTransform* pPlayerTransform = m_pOwner->Get_Transform();
-	
+
 	_vector vPlayerScale, vPlayerRotQuat, vPlayerPos;
 	_vector vNewCamearScale, vNewCameraRot, vNewCameraPos;
 
@@ -325,5 +337,10 @@ void CRunState::Move(_float fTimeDelta)
 	if (m_bIsDash)
 		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 4.f, m_pOwner->Get_Navigation());
 	else
-		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());
+	{
+		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f, m_pOwner->Get_Navigation());
+		else
+			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());
+	}
 }

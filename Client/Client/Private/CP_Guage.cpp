@@ -40,8 +40,22 @@ HRESULT CCP_Guage::Initialize(void * pArg)
 
 int CCP_Guage::Tick(_float fTimeDelta)
 {
-	m_fmaxcp = (_float)CUI_Manager::Get_Instance()->Get_MAXCP();
-	m_fcurrentcp = (_float)CUI_Manager::Get_Instance()->Get_CP();
+
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_END))
+	{
+		_float exp = 1000.f;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, TEXT("sss"), &exp)))
+			return E_FAIL;
+	}
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont"), LEVEL_STATIC, pLayerTag, &i)))
+		return E_FAIL;*/
+	
+
+	m_fmaxcp = CUI_Manager::Get_Instance()->Get_MAXCP();
+	m_fcurrentcp = CUI_Manager::Get_Instance()->Get_CP();
 	/*m_fSize.x = 42.f;
 	m_fSize.y = 42.f;
 	m_fPosition.x = 1180.f;
@@ -61,6 +75,9 @@ int CCP_Guage::Tick(_float fTimeDelta)
 
 void CCP_Guage::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
+
 	__super::Late_Tick(fTimeDelta);
 
 }

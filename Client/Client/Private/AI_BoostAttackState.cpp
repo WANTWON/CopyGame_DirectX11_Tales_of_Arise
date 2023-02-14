@@ -203,6 +203,8 @@ void CAI_BoostAttack::Enter()
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
 	pCamera->Set_Target(m_pOwner);
+
+	m_pOwner->Set_Manarecover(false);
 }
 
 void CAI_BoostAttack::Exit()

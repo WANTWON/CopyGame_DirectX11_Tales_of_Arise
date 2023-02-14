@@ -44,7 +44,8 @@ int CUI_Changebutton::Tick(_float fTimeDelta)
 {
 
 	//std::mbstowcs;
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 	if (m_bfadein)
 		m_fAlpha -= 0.04f; //»ý±æ¶§
 	else if (m_bfadeout)
@@ -72,7 +73,8 @@ int CUI_Changebutton::Tick(_float fTimeDelta)
 
 void CUI_Changebutton::Late_Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
 
 
 	if (m_fAlpha <= 0)

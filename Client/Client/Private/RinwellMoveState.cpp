@@ -129,7 +129,7 @@ void CMoveState::Enter()
 	}
 
 	m_fTarget_Distance = Find_ActiveTarget();
-	_vector vRandomPos = XMVectorSet((rand() % 30) + 50, 0.f, (rand() % 30) + 50, 0.f);
+	_vector vRandomPos = XMVectorSet((rand() % 30) + 50.f, 0.f, (rand() % 30) + 50.f, 0.f);
 	m_vTargetPosition = vRandomPos;
 }
 

@@ -155,20 +155,23 @@ m_fTime += fTimeDelta;
 					if (GetKeyState(VK_LBUTTON) < 0)
 						m_bIsStateEvent = true;
 
-					if (GetKeyState('E') < 0)
-						m_iSkillEvent = 1;
+					if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					{
+						if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
 
-					if (GetKeyState('R') < 0)
-						m_iSkillEvent = 2;
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
 
-					if (GetKeyState('F') < 0)
-						m_iSkillEvent = 3;
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
 
-					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
-						m_iSkillEvent = 4;
+						else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+							m_iSkillEvent = 4;
 
-					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
-						m_iSkillEvent = 5;
+						else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+							m_iSkillEvent = 5;
+					}
 
 					getchar();
 				}
@@ -210,21 +213,23 @@ m_fTime += fTimeDelta;
 					if (GetKeyState(VK_LBUTTON) < 0)
 						m_bIsStateEvent = true;
 
-					if (GetKeyState('E') < 0)
-						m_iSkillEvent = 1;
+					if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					{
+						if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
 
-					if (GetKeyState('R') < 0)
-						m_iSkillEvent = 2;
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
 
-					if (GetKeyState('F') < 0)
-						m_iSkillEvent = 3;
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
 
-					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
-						m_iSkillEvent = 4;
+						else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+							m_iSkillEvent = 4;
 
-					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
-						m_iSkillEvent = 5;
-
+						else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+							m_iSkillEvent = 5;
+					}
 					getchar();
 				}
 
@@ -262,20 +267,23 @@ m_fTime += fTimeDelta;
 					if (GetKeyState(VK_LBUTTON) < 0)
 						m_bIsStateEvent = true;
 
-					if (GetKeyState('E') < 0)
-						m_iSkillEvent = 1;
+					if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					{
+						if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
 
-					if (GetKeyState('R') < 0)
-						m_iSkillEvent = 2;
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
 
-					if (GetKeyState('F') < 0)
-						m_iSkillEvent = 3;
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
 
-					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
-						m_iSkillEvent = 4;
+						else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+							m_iSkillEvent = 4;
 
-					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
-						m_iSkillEvent = 5;
+						else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+							m_iSkillEvent = 5;
+					}
 
 					getchar();
 				}
@@ -389,20 +397,23 @@ m_fTime += fTimeDelta;
 					if (GetKeyState(VK_LBUTTON) < 0)
 						m_bIsStateEvent = true;
 
-					if (GetKeyState('E') < 0)
-						m_iSkillEvent = 1;
+					if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					{
+						if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
 
-					if (GetKeyState('R') < 0)
-						m_iSkillEvent = 2;
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
 
-					if (GetKeyState('F') < 0)
-						m_iSkillEvent = 3;
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
 
-					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
-						m_iSkillEvent = 4;
+						else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+							m_iSkillEvent = 4;
 
-					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
-						m_iSkillEvent = 5;
+						else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+							m_iSkillEvent = 5;
+					}
 
 					getchar();
 				}
@@ -441,21 +452,23 @@ m_fTime += fTimeDelta;
 					if (GetKeyState(VK_LBUTTON) < 0)
 						m_bIsStateEvent = true;
 
-					if (GetKeyState('E') < 0)
-						m_iSkillEvent = 1;
+					if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					{
+						if (GetKeyState('E') < 0)
+							m_iSkillEvent = 1;
 
-					if (GetKeyState('R') < 0)
-						m_iSkillEvent = 2;
+						else if (GetKeyState('R') < 0)
+							m_iSkillEvent = 2;
 
-					if (GetKeyState('F') < 0)
-						m_iSkillEvent = 3;
+						else if (GetKeyState('F') < 0)
+							m_iSkillEvent = 3;
 
-					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
-						m_iSkillEvent = 4;
+						else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+							m_iSkillEvent = 4;
 
-					if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
-						m_iSkillEvent = 5;
-
+						else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+							m_iSkillEvent = 5;
+					}
 					getchar();
 				}
 
@@ -504,7 +517,7 @@ CPlayerState * CPlayer_SionSkillAttack::LateTick(_float fTimeDelta)
 		if (m_bIsFly)
 			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
 		else
-			return new CIdleState(m_pOwner);
+			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 
 	}
 
@@ -514,7 +527,7 @@ CPlayerState * CPlayer_SionSkillAttack::LateTick(_float fTimeDelta)
 void CPlayer_SionSkillAttack::Enter(void)
 {
 	__super::Enter();
-
+	m_pOwner->Use_Mana(1.f);
 
 	if (m_bIsFly)
 	{
@@ -617,6 +630,8 @@ void CPlayer_SionSkillAttack::Enter(void)
 	}
 
 	RELEASE_INSTANCE(CBattleManager);
+
+	m_pOwner->Set_Manarecover(false);
 }
 
 void CPlayer_SionSkillAttack::Exit(void)

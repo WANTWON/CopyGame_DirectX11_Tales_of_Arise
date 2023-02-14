@@ -401,6 +401,8 @@ HRESULT CEffectMesh::Ready_Components(void * pArg)
 		if (FAILED(__super::Add_Components(TEXT("Com_TextureNoise"), LEVEL_STATIC, m_tMeshEffectDesc.wcNoiseTexture, (CComponent**)&m_pNoiseTexture)))
 			return E_FAIL;
 	}
+
+	return S_OK;
 }
 
 HRESULT CEffectMesh::SetUp_ShaderResources()

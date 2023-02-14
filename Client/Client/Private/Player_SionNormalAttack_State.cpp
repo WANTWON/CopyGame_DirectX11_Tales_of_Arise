@@ -98,7 +98,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
-						_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir * 2;
+						_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir * 3;
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 						mWorldMatrix.r[3] = vLocation;
 						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
@@ -111,7 +111,9 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 					if (GetKeyState(VK_LBUTTON) < 0)
 						m_bIsStateEvent = true;
 
-					else if (GetKeyState('E') < 0)
+					if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					{
+					    if (GetKeyState('E') < 0)
 						m_iSkillEvent = 1;
 
 					else if (GetKeyState('R') < 0)
@@ -125,6 +127,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
 						m_iSkillEvent = 5;
+					}
 
 					getchar();
 				}
@@ -175,7 +178,9 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 					if (GetKeyState(VK_LBUTTON) < 0)
 						m_bIsStateEvent = true;
 
-					else if (GetKeyState('E') < 0)
+					if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					{
+				      if (GetKeyState('E') < 0)
 						m_iSkillEvent = 1;
 
 					else if (GetKeyState('R') < 0)
@@ -189,6 +194,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
 						m_iSkillEvent = 5;
+					}
 
 					getchar();
 				}
@@ -242,8 +248,10 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 				{
 					if (GetKeyState(VK_LBUTTON) < 0)
 						m_bIsStateEvent = true;
+					if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					{
 
-					else if (GetKeyState('E') < 0)
+					    if (GetKeyState('E') < 0)
 						m_iSkillEvent = 1;
 
 					else if (GetKeyState('R') < 0)
@@ -257,6 +265,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
 						m_iSkillEvent = 5;
+					}
 
 					getchar();
 				}
@@ -311,7 +320,9 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 					if (GetKeyState(VK_LBUTTON) < 0)
 						m_bIsStateEvent = true;
 
-					else if (GetKeyState('E') < 0)
+					if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					{
+					    if (GetKeyState('E') < 0)
 						m_iSkillEvent = 1;
 
 					else if (GetKeyState('R') < 0)
@@ -325,6 +336,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
 						m_iSkillEvent = 5;
+					}
 
 					getchar();
 				}
@@ -394,7 +406,9 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 					if (GetKeyState(VK_LBUTTON) < 0)
 						m_bIsStateEvent = true;
 
-					else if (GetKeyState('E') < 0)
+					if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					{
+					   if (GetKeyState('E') < 0)
 						m_iSkillEvent = 1;
 
 					else if (GetKeyState('R') < 0)
@@ -408,6 +422,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 					else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
 						m_iSkillEvent = 5;
+					}
 
 					getchar();
 				}
@@ -491,7 +506,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::LateTick(_float fTimeDelta)
 		if (m_bIsFly)
 			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
 		else
-			return new CIdleState(m_pOwner);
+			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
 
 	return nullptr;
@@ -506,56 +521,7 @@ void CPlayer_SionNormalAttack_State::Enter()
 {
 	__super::Enter();
 
-	/*if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
-	{
-		if (m_bIsFly)
-		{
-			switch (m_eStateId)
-			{
-			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_0);
-				break;
-			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_1);
-				break;
-			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_2);
-				break;
-			case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_3);
-				break;
-			case Client::CPlayerState::STATE_NORMAL_ATTACK5:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_4);
-				break;
-
-
-			}
-		}
-		else
-		{
-			switch (m_eStateId)
-			{
-			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack1.wav"), SOUND_EFFECT, 1.0f);
-				break;
-			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_1);
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack2.wav"), SOUND_EFFECT, 1.0f);
-				break;
-			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_8);
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack3.wav"), SOUND_EFFECT, 1.0f);
-				break;
-			case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_6);
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack4.wav"), SOUND_EFFECT, 1.0f);
-				break;
-			}
-		}
-	}*/
-	/*else if (CPlayer::SION == m_pOwner->Get_PlayerID())
-	{*/
+	
 		if (m_bIsFly)
 		{
 			switch (m_eStateId)
@@ -598,7 +564,7 @@ void CPlayer_SionNormalAttack_State::Enter()
 				break;
 			}
 		}
-	//}
+	
 
 	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
 
@@ -621,6 +587,8 @@ void CPlayer_SionNormalAttack_State::Enter()
 	}
 
 	RELEASE_INSTANCE(CBattleManager);
+
+	m_pOwner->Set_Manarecover(false);
 }
 
 void CPlayer_SionNormalAttack_State::Exit()

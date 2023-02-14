@@ -116,7 +116,13 @@ public:
 		BTL_MAGIC_WALK_B,
 		BTL_MAGIC_WALK_F,
 		BTL_MAGIC_WALK_L,
-		BTL_MOVE_WALK_R
+		BTL_MOVE_WALK_R,
+
+		BTL_MOVE_IDLE,
+		BTL_MOVE_RUN,
+		BTL_LAND,
+		SYS_DOOR_OPEN_HAND_RIGHT,
+		IDLE_TO_IDLE_SIDE
 	};
 
 
@@ -137,6 +143,7 @@ public:
 	void Set_PlayerState(class CRinwellState* pPlayerState) { m_pState = pPlayerState; }
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	void Set_SkillIndex(_uint iIndex) { m_eSkillIndex = iIndex; }
+	virtual void	 Set_BattleMode(_bool type) override;
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;

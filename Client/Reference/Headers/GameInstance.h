@@ -72,6 +72,8 @@ public: /* For.Object_Manager */
 	class CGameObject* Get_Object(_uint iLevelIndex, const _tchar * pLayerTag, _uint iIndex = 0);
 	list<class CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);
 	void Clear_Layer(_uint iLevelIndex, const _tchar* LayerTag);
+	HRESULT Out_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, class CGameObject* pGameObject);
+	HRESULT ReAdd_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, class CGameObject* pGameObject);
 
 public: /* For.Component_Manager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
@@ -84,6 +86,7 @@ public: /* For.PipeLine */
 	_float4x4 Get_TransformFloat4x4(CPipeLine::TRANSFORMSTATE  eState);
 	_float4x4 Get_TransformFloat4x4_TP(CPipeLine::TRANSFORMSTATE  eState);
 	_float4x4 Get_TransformFloat4x4_Inverse(CPipeLine::TRANSFORMSTATE eState);
+	_float4x4 Get_TransformFloat4x4_Inverse_TP(CPipeLine::TRANSFORMSTATE eState);
 	_float4 Get_CamPosition();
 	_float4x4 Get_CamWorldMatrix();
 

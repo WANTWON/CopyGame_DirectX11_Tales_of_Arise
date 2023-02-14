@@ -326,6 +326,22 @@ void CGameInstance::Clear_Layer(_uint iLevelIndex, const _tchar * LayerTag)
 	m_pObject_Manager->Clear_Layer(iLevelIndex, LayerTag);
 }
 
+HRESULT CGameInstance::Out_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, CGameObject * pGameObject)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Out_GameObject(iLevelIndex, pLayerTag, pGameObject);
+}
+
+HRESULT CGameInstance::ReAdd_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, CGameObject * pGameObject)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->ReAdd_GameObject(iLevelIndex, pLayerTag, pGameObject);
+}
+
 CComponent * CGameInstance::Get_Component(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pComponentTag, _uint iIndex)
 {
 	if (nullptr == m_pObject_Manager)
@@ -412,6 +428,14 @@ _float4x4 CGameInstance::Get_TransformFloat4x4_Inverse(CPipeLine::TRANSFORMSTATE
 		return _float4x4();
 	
 	return m_pPipeLine->Get_TransformFloat4x4_Inverse(eState);
+}
+
+_float4x4 CGameInstance::Get_TransformFloat4x4_Inverse_TP(CPipeLine::TRANSFORMSTATE eState)
+{
+	if (nullptr == m_pPipeLine)
+		return _float4x4();
+
+	return m_pPipeLine->Get_TransformFloat4x4_Inverse_TP(eState);
 }
 
 _float4 CGameInstance::Get_CamPosition()

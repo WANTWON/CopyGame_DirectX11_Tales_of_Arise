@@ -81,6 +81,7 @@ using namespace physx;
 
 #endif // _DEBUG
 
+#define OBJ_POOL 2
 #define OBJ_DEAD 1
 #define OBJ_NOEVENT 0
 

@@ -437,20 +437,20 @@ HRESULT CTerrain::Create_FilterTexture(_tchar* bmpPath)
 
 		_float3 ConevertPos = m_vMousePickPos;
 		ConevertPos.y = 0.f; //_float3(m_vMousePickPos.x * 256 / iNumTerrainX, 0.f, m_vMousePickPos.z * 256 / iNumTerrainZ);
-		_uint iConvertRange = fRange;// (fRange * 256) / iNumTerrainX;
+		_uint iConvertRange = (_uint)fRange;// (fRange * 256) / iNumTerrainX;
 
-		_int StartX = max( ConevertPos.x - iConvertRange, 0);
+		_int StartX = (_int)max( ConevertPos.x - iConvertRange, 0);
 		
-		_int StartY = max(ConevertPos.z - iConvertRange, 0);
+		_int StartY = (_int)max(ConevertPos.z - iConvertRange, 0);
 		
-		_int EndX = min( ConevertPos.x + iConvertRange, 256);
-		_int EndY = min( ConevertPos.z + iConvertRange ,256);
+		_int EndX = (_int)min( ConevertPos.x + iConvertRange, 256);
+		_int EndY = (_int)min( ConevertPos.z + iConvertRange ,256);
 
-		for (_uint i = StartY; i < EndY; ++i)
+		for (_int i = StartY; i < EndY; ++i)
 		{
-			for (_uint j = StartX; j < EndX; ++j)
+			for (_int j = StartX; j < EndX; ++j)
 			{
-				_uint		iIndex = i * TextureDesc.Width + j;
+				_int		iIndex = i * TextureDesc.Width + j;
 
 				_float3 vPixelPos = _float3(j, 0.f, i);
 				_vector fDis = XMLoadFloat3(&ConevertPos) - XMLoadFloat3(&vPixelPos);
@@ -462,7 +462,7 @@ HRESULT CTerrain::Create_FilterTexture(_tchar* bmpPath)
 
 				if (fAlpha > 1.f)
 					fAlpha = 1.f;
-				_uint iPixelValue = (1 - fAlpha) * fStrength;
+				_uint iPixelValue = _uint((1 - fAlpha) * fStrength);
 
 				_float3 vCurrentPixelColor = pPixelColor[iIndex];
 				if (vCurrentPixelColor.x != 0.f)
@@ -473,13 +473,13 @@ HRESULT CTerrain::Create_FilterTexture(_tchar* bmpPath)
 				switch (iBrushType)
 				{
 				case CImgui_Manager::RED:
-					pNewPixelColor = _float3(iPixelValue, 0.f, 0.f);
+					pNewPixelColor = _float3((_float)iPixelValue, 0.f, 0.f);
 					break;
 				case CImgui_Manager::GREEN:
-					pNewPixelColor = _float3( 0.f, iPixelValue, 0.f);
+					pNewPixelColor = _float3( 0.f, (_float)iPixelValue, 0.f);
 					break;
 				case CImgui_Manager::BLUE:
-					pNewPixelColor = _float3( 0.f, 0.f, iPixelValue);
+					pNewPixelColor = _float3( 0.f, 0.f, (_float)iPixelValue);
 					break;
 				}
 				
@@ -775,6 +775,7 @@ HRESULT CTerrain::Create_FirstFilterTexture()
 	}
 
 
+	return S_OK;
 }
 
 

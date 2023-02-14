@@ -8,6 +8,7 @@
 #include "PlayerJumpState.h"
 #include "PlayerRunState.h"
 #include "AlphenSkillState.h"
+#include "Effect.h"
 
 using namespace Player;
 
@@ -45,7 +46,6 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 	}
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-
 	for (auto& pEvent : pEvents)
 	{
 		if (pEvent.isPlay)
@@ -54,7 +54,46 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
-			break;
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_tchar wcEffectName[MAX_PATH] = TEXT("");
+				switch (m_eStateId)
+				{
+					case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+					case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
+						break;
+				}
+
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				if (m_bIsFly)
+				{
+					if (!m_bEffectSlashSpawned)
+					{
+						CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+
+						m_bEffectSlashSpawned = true;
+					}
+				}
+				else
+				{
+					if (!m_bEffectSlashSpawned)
+					{
+						if (!wcscmp(wcEffectName, TEXT("Normal_Attack_2.dat")))
+							m_SlashEffect = CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+						else
+							CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+
+						m_bEffectSlashSpawned = true;
+					}	
+				}
+			}
 		}
 		else
 		{
@@ -68,14 +107,28 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 
 CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 {
+	for (auto& pEffect : m_SlashEffect)
+	{
+		if (pEffect)
+		{
+			if (pEffect->Get_PreDead())
+				pEffect = nullptr;
+			else
+			{
+				_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + XMVectorSet(0.f, 2.5f, 0.f, 0.f);
+				pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+			}
+		}
+	}
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_START, m_fTime, CJumpState::JUMP_BATTLE);
 		else
-			return new CIdleState(m_pOwner);
+			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
 
 	return nullptr;
@@ -85,8 +138,6 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 {
 	if (GetKeyState(VK_LBUTTON) < 0)
 	{
-		m_pOwner->Get_Model()->Reset();
-
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
@@ -110,17 +161,17 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 	{
 		if (GetKeyState('E') < 0)
 		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
 				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
 		}
 		else if (GetKeyState('R') < 0)
 		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
 				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
 		}
 		else if (GetKeyState('F') < 0)
 		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
 				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 		}
 	}
@@ -128,39 +179,39 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 	{
 		if (GetKeyState('E') < 0)
 		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
 				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
 		}
 		else if (GetKeyState('R') < 0)
 		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
 				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 		}
 		else if (GetKeyState('F') < 0)
 		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+			if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
 				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
 		}
+
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
+			return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
+			return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
+			return new CRunState(m_pOwner, DIR_BACKWARD_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
+			return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_A))
+			return new CRunState(m_pOwner, DIR_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_D))
+			return new CRunState(m_pOwner, DIR_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_S))
+			return new CRunState(m_pOwner, DIR_BACKWARD, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_W))
+			return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
 	}
-
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_BACKWARD_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_S))
-		return new CRunState(m_pOwner, DIR_BACKWARD, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_W))
-		return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
 
 	return nullptr;
 }
@@ -168,6 +219,8 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 void CAlphenAttackState::Enter()
 {
 	__super::Enter();
+
+	m_bEffectSlashSpawned = false;
 
 	if (m_bIsFly)
 	{
@@ -189,14 +242,11 @@ void CAlphenAttackState::Enter()
 	}
 	else
 	{
-		
-		
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("swing_sword_01.wav"), SOUND_EFFECT, 0.8f);
-			
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_1);
@@ -221,6 +271,9 @@ void CAlphenAttackState::Enter()
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	RELEASE_INSTANCE(CBattleManager);
+
+	//m_pOwner->Use_Mana(1.f);
+	m_pOwner->Set_Manarecover(false);
 }
 
 void CAlphenAttackState::Exit()

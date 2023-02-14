@@ -4,6 +4,7 @@
 #include "Alphen.h"
 #include "Sion.h"
 #include "Weapon.h"
+#include "Rinwell.h"
 
 BEGIN(Engine)
 class CModel;
@@ -51,7 +52,7 @@ public:
 	}
 	virtual void Exit() 
 	{ 
-		m_pOwner->Get_Model()->Reset();
+		//m_pOwner->Get_Model()->Reset();
 
 		if (0 != m_iSkillEvent)
 			m_iSkillEvent = 0;

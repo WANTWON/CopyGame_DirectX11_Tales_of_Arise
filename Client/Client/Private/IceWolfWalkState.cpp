@@ -28,7 +28,7 @@ CIceWolfState * CWalkState::AI_Behaviour(_float fTimeDelta)
 CIceWolfState * CWalkState::Tick(_float fTimeDelta)
 {
 	Find_Target();
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *0.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 	
 	return nullptr;

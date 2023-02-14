@@ -28,34 +28,7 @@ void CWeapon::Set_WeaponDesc(WEAPONDESC tWeaponDesc)
 
 void CWeapon::Collision_Immediate()
 {
-	/*if (nullptr == m_pSPHERECom)
-	{
-		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
-		CCollider::COLLIDERDESC		ColliderDesc;
-
-		ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
-
-		ColliderDesc.vPosition = _float3(0.f, 0.f, -2.f);
-
-		m_pSPHERECom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
-		m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
-		pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
-
-		RELEASE_INSTANCE(CCollision_Manager);
-	}
-	else
-		m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
-
-	else if (nullptr != m_pSPHERECom && !m_isCollider)
-	{
-		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
-
-		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSPHERECom);
-		m_pSPHERECom = nullptr;
-
-		RELEASE_INSTANCE(CCollision_Manager);
-	}*/
 }
 
 HRESULT CWeapon::Initialize_Prototype()
@@ -108,6 +81,11 @@ int CWeapon::Tick(_float fTimeDelta)
 			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 			pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 
+			if (!m_bSoundStart)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.2f);
+				m_bSoundStart = true;
+			}
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
 		else
@@ -158,8 +136,6 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 			if (pCollided)
 				pCollided->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
 
-
-
 			if (!m_bSoundStart)
 			{
 				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.4f);
@@ -173,12 +149,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 				_bool bSoundStart = false;
 				if (!bSoundStart)
 				{
-					//if (m_fTimeDeltaAcc > 0.04f)
-					//{
-					//	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-					//	m_fTimeDeltaAcc = 0.f;
-					//}
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
 					bSoundStart = true;
 				}
 			}
@@ -197,7 +168,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 						CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 						m_fTimeDeltaAcc = 0.f;
 					}
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
 					bSoundStart = true;
 				}
 			}
@@ -210,12 +181,13 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 		m_bSoundStart = false;
 	}
 
+
 	if (nullptr != m_pSPHERECom && !m_isCollider)
 	{
 		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
 		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSPHERECom);
-
+		m_bSoundStart = false;
 		m_pSPHERECom = nullptr;
 		pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 		RELEASE_INSTANCE(CCollision_Manager);
@@ -278,29 +250,6 @@ HRESULT CWeapon::Ready_Components(void* pArg)
 		return E_FAIL;
 
 
-	//CCollider::COLLIDERDESC		ColliderDesc;
-
-	///* For.Com_AABB */
-	//ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-
-	//ColliderDesc.vScale = _float3(0.7f, 1.4f, 0.7f);
-	//ColliderDesc.vPosition = _float3(0.f, 0.7f, 0.f);
-	//if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
-	//	return E_FAIL;
-
-	///* For.Com_OBB*/
-	//ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
-	//ColliderDesc.vPosition = _float3(0.f, 0.5f, 0.f);
-	//if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
-
-	//	return E_FAIL;
-
-	///* For.Com_SPHERE */
-	//ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
-	//ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-	//ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	//if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
-	//	return E_FAIL;
 
 	return S_OK;
 }

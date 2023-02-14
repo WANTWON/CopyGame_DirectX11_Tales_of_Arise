@@ -29,7 +29,7 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 {
 	//m_fDegreeToTarget = RadianToTarget();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.9, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.9f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 
 	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();

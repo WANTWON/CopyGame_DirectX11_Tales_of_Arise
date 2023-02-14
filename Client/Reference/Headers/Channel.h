@@ -24,13 +24,12 @@ public:
 
 public: /*Get*/
 	KEYFRAME	Get_StartKeyFrame(void) { return m_KeyFrames[0]; }
+	KEYFRAME	Get_LinearKeyFrame(void) { return m_KeyFrame_Linear; }
 	vector<KEYFRAME> Get_KeyFrames(void) { return m_KeyFrames; }
+	class CHierarchyNode* Get_BoneNode(void) { return m_pBoneNode; }
 
 public: /*Set*/
 	void Set_KeyFrame(_int iIndex, KEYFRAME KeyFrame);
-	
-public:
-	_bool Compare_Name(const char* pName);
 
 private:
 	char					m_szName[MAX_PATH] = "";

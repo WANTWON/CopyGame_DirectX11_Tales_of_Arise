@@ -9,9 +9,11 @@ _bool CAlphen::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
 	{
-		case ANIM_IDLE:
+		case ANIM_IDLE_SIDE:
 		case ANIM_RUN:
 		case ANIM_JUMP_LOOP:
+		case ANIM_DASH:
+		case ANIM_BATTLE_MOVE_RUN:
 			return true;
 		default:
 			return false;
@@ -46,6 +48,9 @@ HRESULT CAlphen::Initialize(void * pArg)
 	m_tInfo.fCurrentMp = 2.3f;
 	m_tInfo.iDamage = 100;
 	m_tInfo.fCurrentBoostGuage = 20.f;
+	m_tInfo.iLevel = 69;
+	m_tInfo.iCurrentExp = 500;
+	m_tInfo.iMaxExp = 1000;
 
 	return S_OK;
 }
@@ -106,11 +111,11 @@ HRESULT CAlphen::Ready_Components(void* pArg)
 
 	/* For.Com_OBB */
 	CCollider::COLLIDERDESC ColliderDesc;
-	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+	/*ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
 	ColliderDesc.vScale = _float3(1.f, 4.5f, 1.f);
 	ColliderDesc.vPosition = _float3(0.f, 2.28f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	/* For.Com_SPHERE */
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));

@@ -35,7 +35,7 @@ CPlayerState * CCollectState::Tick(_float fTimeDelta)
 					if (nullptr != m_pObject)
 						m_pObject->Set_Interact();
 					else
-						return new CIdleState(m_pOwner);
+						return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 				}
 			}
 		}
@@ -47,7 +47,7 @@ CPlayerState * CCollectState::Tick(_float fTimeDelta)
 CPlayerState * CCollectState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
-		return new CIdleState(m_pOwner);
+		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	
 	return nullptr;
 }
@@ -71,6 +71,12 @@ void CCollectState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_DOOR_OPEN_HAND_RIGHT);
 		else
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::TREASURE_OPEN);
+		break;
+	case CPlayer::RINWELL:
+		if (nullptr == m_pObject)
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::SYS_DOOR_OPEN_HAND_RIGHT);
+		else
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::TREASURE_OPEN);
 		break;
 	}
 }

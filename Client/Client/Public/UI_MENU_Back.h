@@ -120,6 +120,8 @@ private:
 	CTexture*               m_pTextureCom23 = nullptr; //lighteffect;
 	CTexture*               m_pTextureCom24 = nullptr; //lighteffect;
 	CTexture*               m_pTextureCom25 = nullptr; //lighteffect;
+
+	CTexture*               m_pTextureCom26 = nullptr; //expbar;
 	
 	
 	
@@ -241,9 +243,14 @@ private:
 
 	_float m_PlayersCurrentHP[4] = { 0.f ,0.f , 0.f, 0.f };
 	_float m_PlayersMaxHP[4] = { 0.f , 0.f, 0.f, 0.f };
+
+	_uint m_PlayersCurrentExp[4] = { 0 ,0 , 0, 0 };
+	_uint m_PlayersMaxExp[4] = { 0 , 0, 0, 0 };
+	_uint m_PlayersLevel[4] = { 0, 0 , 0, 0 };
+
 	_float m_fRecover_Power = 0.f;
 	_bool m_brecover_finsh = false; // for ++ --
-	_bool m_brecover_effect = false;
+	_bool m_brecover_effect[4] = { false,false , false ,false };
 	_bool m_brecovring = false;   //for finish effect
 
 	_float m_fBluepower = 0.f;

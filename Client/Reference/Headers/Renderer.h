@@ -17,6 +17,11 @@ public:
 	virtual HRESULT Initialize(void* pArg)override;
 
 public:
+	class CShader* Get_ShaderPostProcessing() { return m_pShaderPostProcessing; }
+	void Set_Fog(_bool bFog) { m_bFog = bFog; }
+	void Set_Distort(_bool bDistort) { m_bDistort = bDistort; }
+
+public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
 	HRESULT Render_GameObjects();
 
@@ -42,8 +47,8 @@ private:
 	class CVIBuffer_Rect* m_pVIBuffer = nullptr;
 	class CShader* m_pShaderDeferred = nullptr;
 	class CShader* m_pShaderPostProcessing = nullptr;
+
 	_float4x4 m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
-	_float4x4 m_ReflectionViewMatrix, m_RefractionViewMatrix;
 
 private:
 	HRESULT Render_Priority();
@@ -71,8 +76,18 @@ private:
 	bool m_bRenderComponentDebug = false;
 #endif // _DEBUG
 
+	/* Distortion Objects */
+	class CTexture* m_pDistortionTexture = nullptr;
 	class CTexture* m_pDistortionNoiseTexture = nullptr;
 	_float m_fDistortionTimer = 0.f;
+	
+	/* Fog (Post Processing) */
+	_bool m_bFog = false;
+
+	/* Distortion (Post Processing) */
+	_bool m_bDistort = false;
+	class CTexture* m_pScreenDistortionTexture = nullptr;
+	_float m_fScreenDistortionTimer = 0.f;
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

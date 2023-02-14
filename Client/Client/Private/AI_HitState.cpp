@@ -116,6 +116,8 @@ void CAI_HitState::Enter()
 	}
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+
+	m_pOwner->Set_Manarecover(false);
 }
 
 void CAI_HitState::Exit()

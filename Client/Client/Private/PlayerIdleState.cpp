@@ -19,9 +19,10 @@
 
 using namespace Player;
 
-CIdleState::CIdleState(CPlayer* pPlayer)
+CIdleState::CIdleState(CPlayer* pPlayer, IDLETYPE eIdleType)
 {
 	m_pOwner = pPlayer;
+	m_eIdleType = eIdleType;
 	m_ePlayerID = m_pOwner->Get_PlayerID();
 }
 
@@ -66,9 +67,8 @@ CPlayerState * CIdleState::HandleInput()
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 				else if (pGameInstance->Key_Down(DIK_F))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
-				
 				break;
-			default:
+			case CPlayer::RINWELL: //For Rinwell State
 				break;
 			}
 		}
@@ -124,6 +124,23 @@ CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 			return new CHitState(m_pOwner);
 	}
 
+
+	if (m_bIsAnimationFinished)
+	{
+		switch (m_eIdleType)
+		{
+		case Client::Player::CIdleState::IDLE_MAIN:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_TO_IDLE_SIDE);
+			m_eIdleType = IDLE_MAIN_TO_SIDE;
+			break;
+		case Client::Player::CIdleState::IDLE_MAIN_TO_SIDE:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_SIDE);
+			m_eIdleType = IDLE_SIDE;
+			break;
+		}
+	}
+
+
 	return nullptr;
 }
 
@@ -139,7 +156,17 @@ void CIdleState::Enter()
 		if (LEVEL_BATTLE == m_pOwner->Get_Level())
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_IDLE);
 		else
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE);
+		{
+			switch (m_eIdleType)
+			{
+			case Client::Player::CIdleState::IDLE_MAIN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE);
+				break;
+			case Client::Player::CIdleState::IDLE_SIDE:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_SIDE);
+				break;
+			}
+		}
 		break;
 	case CPlayer::SION:
 		if (LEVEL_BATTLE == m_pOwner->Get_Level())
@@ -148,10 +175,14 @@ void CIdleState::Enter()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE);
 		break;
 	case CPlayer::RINWELL:
-		break;
-	default:
+		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_LOOP);
+		else
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::IDLE);
 		break;
 	}
+
+	m_pOwner->Set_Manarecover(true);
 }
 
 void CIdleState::Exit()
