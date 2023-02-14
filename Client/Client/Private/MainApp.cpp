@@ -12,6 +12,7 @@
 #include "UI_Dialogue.h"
 #include "BattleManager.h"
 #include "UI_Dialoguepopup.h"
+#include "UI_Dialogue_Caption.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -75,6 +76,8 @@ void CMainApp::Tick(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Up(DIK_ESCAPE) && !(m_pUI_Manager->Get_StopTick()))
 		m_pUI_Manager->Set_Mainmenuon(true);
+
+	
 
 	/*if(m_pGameInstance->Key_Up(DIK_7))
 		dynamic_cast<CUI_Dialoguepopup*>(m_pUI_Manager->Get_Dialoguepopup())->Open_Dialogue(0 , false , 1 ,0);

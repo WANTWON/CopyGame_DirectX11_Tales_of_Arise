@@ -364,6 +364,9 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates">
       <UniqueIdentifier>{b9c0676a-05c5-40ee-b357-1ba01bc1ad0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Caption">
+      <UniqueIdentifier>{3268bd8d-2beb-4a28-87c6-7db320ea4dc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1014,6 +1017,9 @@
     <ClInclude Include="..\Public\AstralDoubt_WalkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Dialogue_Caption.h">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1630,6 +1636,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AstralDoubt_WalkState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

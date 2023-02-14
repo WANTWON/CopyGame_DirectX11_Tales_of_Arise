@@ -263,6 +263,7 @@
     <ClInclude Include="..\Public\SionSkills.h" />
     <ClInclude Include="..\Public\UI_BattleResult.h" />
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h" />
+    <ClInclude Include="..\Public\UI_Dialogue_Caption.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
     <ClInclude Include="..\Public\UI_InterectMsg.h" />
     <ClInclude Include="..\Public\Item.h" />
@@ -475,6 +476,7 @@
     <ClCompile Include="..\Private\SionSkills.cpp" />
     <ClCompile Include="..\Private\UI_BattleResult.cpp" />
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp" />
+    <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />

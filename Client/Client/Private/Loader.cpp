@@ -76,6 +76,7 @@
 #include "UI_BattleResult.h"
 #include "UI_LevelUp.h"
 #include "UI_SidePopup.h"
+#include "UI_Dialogue_Caption.h"
 //Monster
 #include "Ice_Wolf.h"
 #include "Berserker.h"
@@ -399,6 +400,12 @@ HRESULT CLoader::Loading_ForPrototype()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Sidepopup"),
 		CUI_SidePopup::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Dialogue_Caption"),
+		CUI_Dialogue_Caption::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
 
 	/*For.Prototype_GameObject_Sky */                                
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
