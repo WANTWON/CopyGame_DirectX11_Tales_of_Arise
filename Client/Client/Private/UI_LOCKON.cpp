@@ -98,10 +98,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 	m_fcurrentmp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
 
 	if (m_fcurrentmp >= 4.f && !m_bStrikeon)
-	{
 		m_bStrikeon = true;
-		m_bEffectSpawned = false;
-	}
 	else
 	{
 		m_bRenderDiamond = true;
