@@ -9,6 +9,9 @@
 #include "Monster.h"
 #include "AI_Sion_SkillState.h"
 #include "AI_DodgeState.h"
+#include "Rinwell.h"
+#include "RinwellSkills.h"
+#include "AI_Sion_SkillState.h"
 
 using namespace AIPlayer;
 
@@ -80,12 +83,12 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 	if (m_pTarget == nullptr)
 		return nullptr;
-
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 	switch (m_eCurrentPlayerID)
 	{
-	case CPlayer::SION   :            //sion
+	case CPlayer::SION:            //sion
 
-		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+		//vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 		for (auto& pEvent : pEvents)
 		{
@@ -94,63 +97,63 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 
-					
+
 					m_bIsStateEvent = true;
-		
+
 				}
 				else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-							CBullet::BULLETDESC BulletDesc;
-							BulletDesc.eCollisionGroup = PLAYER;
-							BulletDesc.fVelocity = 20.f;
-							BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
-							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
-							if (m_pTarget != nullptr)
-								BulletDesc.vTargetPosition = (m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-							else if (m_pTarget == nullptr)
-							BulletDesc.vTargetPosition =CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
-							BulletDesc.pOwner = m_pOwner;
-							BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
-							BulletDesc.fDeadTime = 5.f;
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.fVelocity = 20.f;
+						BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
+						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
+						if (m_pTarget != nullptr)
+							BulletDesc.vTargetPosition = (m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+						else if (m_pTarget == nullptr)
+							BulletDesc.vTargetPosition = CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION))->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+						BulletDesc.pOwner = m_pOwner;
+						BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+						BulletDesc.fDeadTime = 5.f;
 
-							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-								return nullptr;
-							//총 발사 사운드
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT_SION, 0.07f);
-							m_fEventStart = pEvent.fStartTime;
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+						//총 발사 사운드
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT_SION, 0.07f);
+						m_fEventStart = pEvent.fStartTime;
 
-							_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
-							_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir*3;
-							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-							mWorldMatrix.r[3] = vLocation;
-							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
-							
-							m_bSoundStart = false;
+						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+						_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir * 3;
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+						mWorldMatrix.r[3] = vLocation;
+						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
+
+						m_bSoundStart = false;
 					}
 				}
-				
+
 				else if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 				{
 					m_fReloadTimeDelta += fTimeDelta;
 
-					
-					CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
-						if (!m_bSoundStart)
-						{
-							/*if (m_fReloadTimeDelta > 0.005f)
-								CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);*/
-							
-							m_bSoundStart = true;
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_EFFECT, 0.1f);
-							
 
-						}
+					CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
+					if (!m_bSoundStart)
+					{
+						/*if (m_fReloadTimeDelta > 0.005f)
+							CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);*/
+
+						m_bSoundStart = true;
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_EFFECT, 0.1f);
+
+
+					}
 				}
 
 
-				
+
 			}
 		}
 		if (m_iCurrentAnimIndex == CSion::ANIM::BTL_ATTACK_NORMAL_4 && m_bIsAnimationFinished)
@@ -167,8 +170,8 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 					return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
 				}
 			}
-				
-			
+
+
 			switch (rand() % 12)
 			{
 
@@ -197,14 +200,128 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 			}
 		}
-				
-		
-		
+
+
+
+		break;
+
+	case CPlayer::RINWELL:            //sion
+
+
+
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+				{
+
+
+					m_bIsStateEvent = true;
+
+				}
+				else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				{
+					if ((m_fEventStart != pEvent.fStartTime))
+					{
+						_vector m_vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+						//Shot Ice Rock
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.eBulletType = CRinwellSkills::PHOTON_FLASH;
+						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
+						BulletDesc.vTargetPosition = m_vTargetPosition;
+						BulletDesc.vTargetDir = XMVector3Normalize(m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
+						BulletDesc.fVelocity = 5.f;
+						BulletDesc.fDeadTime = 5.f;
+						BulletDesc.pOwner = m_pOwner;
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
+						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+						_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir;
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+						mWorldMatrix.r[3] = vLocation;
+						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("PhotonFlashBlast.dat"), mWorldMatrix);
+						m_fEventStart = pEvent.fStartTime;
+
+					}
+				}
+
+				else if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					//m_fReloadTimeDelta += fTimeDelta;
+
+
+					//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
+					//if (!m_bSoundStart)
+					//{
+					//	/*if (m_fReloadTimeDelta > 0.005f)
+					//	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);*/
+
+					//	m_bSoundStart = true;
+					//	CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_EFFECT, 0.1f);
+
+
+
+				}
+
+
+
+			}
+		}
+		if (m_iCurrentAnimIndex == CRinwell::ANIM::BTL_ATTACK_NORMAL_3 && m_bIsAnimationFinished)
+		{
+
+			return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
+			/*if (m_pOwner->Get_Info().fCurrentMp < 1)
+			{
+				switch (rand() % 3)
+				{
+				case 0:
+					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+				case 1:
+					return new CAI_DodgeState(m_pOwner, m_pTarget);
+				case 2:
+					return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
+				}
+			}*/
+		}
+
+			/*switch (rand() % 12)
+			{
+
+			case 0:
+				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+
+			case 1:
+				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+
+			case 2:
+				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
+
+			case 3:
+				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
+
+			case 4:
+				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+
+			case 5:
+				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+			case 6:
+				return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+			default:
+				return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
+
+			}*/
 		break;
 	}
 
 
 
+	
+ 
 
 
 
@@ -215,11 +332,23 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 
 
+
+	
+
+
+	
+		//m_bIsStateEvent = false;
 
 	if (m_bIsStateEvent)
 	{
 		__super::Exit();
+
+		
 		++m_iCurrentAnimIndex;
+		
+		if (m_iCurrentAnimIndex == CRinwell::ANIM::BTL_ATTACK_NORMAL_3 && m_pOwner->Get_PlayerID() == CPlayer::RINWELL)
+			return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
+
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 		m_bIsStateEvent = false;
 		if (nullptr == m_pTarget)
@@ -242,7 +371,14 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 void CAIAttackNormalState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_ATTACK;
-	m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_NORMAL_0;
+
+	m_eCurrentPlayerID = m_pOwner->Get_PlayerID();
+	if (m_pOwner->Get_PlayerID() == CPlayer::SION)
+		m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_NORMAL_0;
+
+	else
+		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_NORMAL_0;
+
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)
 	{
