@@ -79,6 +79,9 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
 
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+			return E_FAIL;
+
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
 		//pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));

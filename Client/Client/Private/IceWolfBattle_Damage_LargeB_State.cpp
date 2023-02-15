@@ -56,14 +56,12 @@ CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 			if (m_bDeadAnimFinish)
 			{
 				m_pOwner->Set_GlowUp();
-				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 				m_pAtkColliderCom = nullptr;
 
 				pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-
-				RELEASE_INSTANCE(CCollision_Manager);
 			}
 			return new CBattle_Damage_LargeB_State(m_pOwner, STATE_DEAD, true);
 			break;

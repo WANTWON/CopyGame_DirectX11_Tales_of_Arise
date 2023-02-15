@@ -124,6 +124,19 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("Astral_Doubt");
 
+	/* For.Prototype_Component_Model_Rinwell */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Rinwell"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Rinwell");
+	
+
+	/* For.Prototype_Component_Model_Law */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Law"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Law/Law.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Law");
+
 
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));

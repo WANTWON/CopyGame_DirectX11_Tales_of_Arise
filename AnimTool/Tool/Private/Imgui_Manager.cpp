@@ -123,7 +123,15 @@ void CImgui_Manager::ShowGui()
 			break;
 
 		case MODEL_ASTRAL_DOUBT:
-			lstrcat(pAnimationDataFilePath, TEXT("Astral_Doubt/Hawk_Animation_Add.dat"));
+			lstrcat(pAnimationDataFilePath, TEXT("Astral_Doubt/Astral_Doubt_Animation_Add.dat"));
+			break;
+
+		case MODEL_RINWELL:
+			lstrcat(pAnimationDataFilePath, TEXT("Rinwell/Rinwell_Animation_Add.dat"));
+			break;
+
+		case MODEL_LAW:
+			lstrcat(pAnimationDataFilePath, TEXT("Law/Law_Animation_Add.dat"));
 			break;
 		}
 

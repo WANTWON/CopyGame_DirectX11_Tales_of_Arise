@@ -314,7 +314,11 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Hurricane4.fbx", "../../../Bin/Bin_Data/Effect/Water/", PivotMatrix))))
 	//	return E_FAIL;
 
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f)/* * XMMatrixRotationY(XMConvertToRadians(180.0f))*/;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("HalfSphere_ak_04.fbx"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/HalfSphere_ak_04.fbx", "../../../Bin/Bin_Data/Effect/Sphere/", PivotMatrix))))
+			return E_FAIL;
 
 	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ring_nm_03"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ring_nm_03.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
@@ -346,10 +350,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ring_hn_02.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
 		return E_FAIL;*/
 
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sion"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Sion2.fbx", "../../../Bin/Bin_Data/Anim/Sion/", PivotMatrix))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Rinwell.fbx", "../../../Bin/Bin_Data/Anim/Rinwell/", PivotMatrix))))

@@ -42,10 +42,10 @@ private:
 	/* F */
 	_bool m_bHousyutigakuzinFirstEffect = false;
 	_bool m_bHousyutigakuzinSecondEffect = false;
+	_bool m_bHousyutigakuzinThirdEffect = false;
 	_bool m_bEngetuFirstEffect = false;
 	_bool m_bEngetuSecondEffect = false;
 
-	vector<CEffect*> m_HousyutigakuzinStart;
 	vector<CEffect*> m_SenkusyourepaParticles;
 };
 END

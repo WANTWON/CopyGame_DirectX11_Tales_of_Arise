@@ -215,7 +215,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			_vector vMonsterPos = pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-			_vector vDirection = vPlayerPos - vMonsterPos;
+			_vector vDirection = XMVectorSetY(vPlayerPos, XMVectorGetY(vMonsterPos)) - vMonsterPos;
 
 			_float fRadiusSum = m_pSPHERECom->Get_SphereRadius() + pMonster->Get_SPHERECollider()->Get_SphereRadius();
 

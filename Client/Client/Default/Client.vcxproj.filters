@@ -361,6 +361,12 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates">
       <UniqueIdentifier>{b9c0676a-05c5-40ee-b357-1ba01bc1ad0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\03. Law">
+      <UniqueIdentifier>{6de98e5a-c150-4bac-8985-ef2513782efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law">
+      <UniqueIdentifier>{7aa6e27e-0965-43f8-a61d-7315bbe4bff5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Caption">
       <UniqueIdentifier>{3268bd8d-2beb-4a28-87c6-7db320ea4dc7}</UniqueIdentifier>
     </Filter>
@@ -1017,6 +1023,9 @@
     <ClInclude Include="..\Public\AstralDoubt_WalkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Law.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\03. Law</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\UI_Dialogue_Caption.h">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
     </ClInclude>
@@ -1645,6 +1654,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AstralDoubt_WalkState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Law.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\03. Law</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>

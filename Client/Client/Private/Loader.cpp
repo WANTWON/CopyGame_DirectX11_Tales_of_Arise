@@ -29,7 +29,7 @@
 #include "SnowFieldNpc.h"
 #include "AiRinwell.h"
 #include "Rinwell.h"
-
+#include "Law.h"
 
 //UI
 #include "UI_Portrait.h"
@@ -182,6 +182,11 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_Rinwell */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_CameraAction"),
 		CCamera_Action::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_Law */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Law"),
+		CLaw::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_Rinwell */
@@ -750,10 +755,14 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Slime/Slime.dat"))))
 		return E_FAIL;
 
-
 	/*For.Prototype_Component_Model_Astral_Doubbt*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Astral_Doubt"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Astral_Doubt/Astral_Doubt.dat"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Model_Law */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Law"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Law/Law.dat"))))
 		return E_FAIL;
 #pragma endregion Model Loading
 
@@ -1228,6 +1237,9 @@ HRESULT CLoader::Loading_ForEffect()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Sphere0"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Sphere/Sphere0.dat"))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("HalfSphere_ak_04"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Sphere/HalfSphere_ak_04.dat"))))
+		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ring_Ak1"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Ring/Ring_Ak1.dat"))))
 		return E_FAIL;
@@ -1268,6 +1280,9 @@ HRESULT CLoader::Loading_ForEffect()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CylinderSO2"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/CylinderSO2.dat"))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cylinder_SO2_2"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/Cylinder_SO2_2.dat"))))
+		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cylinder_nm_01"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/Cylinder_nm_01.dat"))))
 		return E_FAIL;
@@ -1276,6 +1291,9 @@ HRESULT CLoader::Loading_ForEffect()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cylinder_hn02"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/Cylinder_hn02.dat"))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cylinder_rt02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/Cylinder_rt02.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Plane"),
@@ -1480,8 +1498,14 @@ HRESULT CLoader::Loading_ForEffect()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_noise_256_ny_10"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Aura/TO14_T_FX_noise_256_ny_10.png"), 1))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_noise_512_ny_04"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Aura/TO14_T_FX_noise_512_ny_04.png"), 1))))
+		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_noise_512_ny_05"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Aura/TO14_T_FX_noise_512_ny_05.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_noise_512_ny_06"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Aura/TO14_T_FX_noise_512_ny_06.png"), 1))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Voronoi_Noise"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/DotNoise/Voronoi_Noise.png"), 1))))
@@ -1506,6 +1530,9 @@ HRESULT CLoader::Loading_ForEffect()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CoreAura_rm_01"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Unique/CoreAura_rm_01.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CoreAura_rm_02"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Unique/CoreAura_rm_02.png"), 1))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Gradient_rm_01"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Ring/Gradient_rm_01.dds"), 1))))
