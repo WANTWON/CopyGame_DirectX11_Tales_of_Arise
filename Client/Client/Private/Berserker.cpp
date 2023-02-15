@@ -49,10 +49,17 @@ HRESULT CBerserker::Initialize(void * pArg)
 		CBerserkerState* pBattleState = new CBattle_IdleState(this);
 		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pBattleState);
 	}
+	//else
+	//{
+	//	/* Set State */
+	//	CBerserkerState* pState = new CWalkState(this, CBerserkerState::FIELD_STATE_ID::FIELD_STATE_END);
+	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	//}
+
 	else
 	{
 		/* Set State */
-		CBerserkerState* pState = new CWalkState(this, CBerserkerState::FIELD_STATE_ID::FIELD_STATE_END);
+		CBerserkerState* pState = new CTurnR_State(this);
 		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
 	}
 
@@ -143,23 +150,27 @@ int CBerserker::Tick(_float fTimeDelta)
 	Tick_State(fTimeDelta);
 
 	
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
-	{
-		CBerserkerState* pState = new CBattle_Shock_WaveState(this);
-		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	//{
+	//	CBerserkerState* pState = new CBattle_Shock_WaveState(this);
+	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	//}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	{
-		CBerserkerState* pState = new CBattle_PouncingState(this);
-		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	//{
+	//	CBerserkerState* pState = new CBattle_PouncingState(this);
+	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	//}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	{
-		CBerserkerState* pState = new CBattle_FireBallState(this);
-		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	//{
+	//	CBerserkerState* pState = new CBattle_FireBallState(this);
+	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+	//}
+
+
+
+
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	
 

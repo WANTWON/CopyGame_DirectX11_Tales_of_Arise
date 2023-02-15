@@ -15,6 +15,7 @@
 #include "AIDeadState.h"
 #include "AI_BoostAttackState.h"
 #include "SmashAttack_State.h"
+#include "AiState_WakeUp.h"
 
 
 using namespace Player;
@@ -429,7 +430,7 @@ void CPlayer::Revive()
 		}
 		else
 		{
-			pAIState = new AIPlayer::CAICheckState(this, CAIState::STATE_IDLE);
+			CAIState* pState =  new CAiState_WakeUp(this);
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 		}
 		

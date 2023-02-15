@@ -42,15 +42,15 @@ CBerserkerState * CTurnR_State::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-	if (m_bIsAnimationFinished)
-		return new CWalkState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_TURN_R);
+	/*if (m_bIsAnimationFinished)
+		return new CWalkState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_TURN_R);*/
 
 	return nullptr;
 }
 
 CBerserkerState * CTurnR_State::LateTick(_float fTimeDelta)
 {
-	//m_pOwner->Check_Navigation();
+	m_pOwner->Check_Navigation();
 
 	m_fTimeDeltaAcc += fTimeDelta;
 
@@ -61,43 +61,42 @@ CBerserkerState * CTurnR_State::LateTick(_float fTimeDelta)
 	_bool bIs_TargetInFront = false;
 	bIs_TargetInFront = Is_TargetInFront(vTrigger_Pos);
 
-	//if (m_bIsAnimationFinished)
-	//{
-	//	//나의 트리거 박스랑 충돌해 있을때(트리거 박스 안에 있을 때)
-	//	if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == true)
-	//	{
-	//		if (m_pTarget)
-	//		{
-	//			return new CChaseState(m_pOwner);
-	//		}
+	if (m_bIsAnimationFinished)
+	{
+		//나의 트리거 박스랑 충돌해 있을때(트리거 박스 안에 있을 때)
+		if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == true)
+		{
+			if (m_pTarget)
+			{
+				return new CChaseState(m_pOwner);
+			}
 
-	//		else
-	//		{
-	//			if (m_fTimeDeltaAcc > m_fRandTime)
-	//			{
-	//				switch (rand() % 2)
-	//				{
-	//				case 0:
-	//					return new CWalkState(m_pOwner, FIELD_STATE_END, false);
-	//				case 1:
-	//					return new CHowLing_State(m_pOwner);
-	//				default:
-	//					break;
-	//				}
-	//			}
-	//		}
+			else
+			{
+				if (m_fTimeDeltaAcc > m_fRandTime)
+				{
+					switch (rand() % 2)
+					{
+					case 0:
+						return new CWalkState(m_pOwner, FIELD_STATE_END, false);
+					case 1:
+						return new CHowLing_State(m_pOwner);
+					default:
+						break;
+					}
+				}
+			}
 
-	//	}
+		}
+		else
+		{
+//			if (bIs_TargetInFront)
+				return new CWalkState(m_pOwner, FIELD_STATE_ID::STATE_TURN_R, true);
 
-	//	else
-	//	{
-	//		if (bIs_TargetInFront)
-	//			return new CWalkState(m_pOwner, FIELD_STATE_ID::STATE_TURN_R, true);
-
-	//		else
-	//			return new CTurnR_State(m_pOwner);
-	//	}
-	//}
+			//else
+			//	return new CTurnR_State(m_pOwner);
+		}
+	}
 
 	//else if (!m_bIsAnimationFinished)
 	//{
@@ -110,6 +109,8 @@ CBerserkerState * CTurnR_State::LateTick(_float fTimeDelta)
 
 	//	m_pOwner->Check_Navigation();
 	//}
+
+
 	return nullptr;
 }
 

@@ -2,6 +2,7 @@
 #include "RinwellPoseState.h"
 #include "RinwellMoveState.h"
 #include "CameraManager.h"
+#include "UI_Dialogue_Caption.h"
 
 using namespace AiRinwell;
 
@@ -79,6 +80,9 @@ void CPoseState::Enter()
 	case Client::CRinwellState::STATE_AGGRO:
 	{
 		CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(0);
+
 		pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
 		pCameraManager->Play_ActionCamera(TEXT("RinwellTest.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_ATTACK_BRAVE);

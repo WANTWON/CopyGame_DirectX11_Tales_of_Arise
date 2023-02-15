@@ -71,10 +71,19 @@ HRESULT CLevel_SnowField::Initialize()
 			return E_FAIL;
 	}
 
+
+
+
+	////Test
+	//if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
+	//	return E_FAIL;
+	////Test
+
 	//Test
 	if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
 		return E_FAIL;
 	//Test
+
 
 
 	DWORD dwTime = GetTickCount();
@@ -589,7 +598,11 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Sidepopup"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Dialogue_Caption"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
 	
+
 
 	/*_float exp = 500.f;
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, pLayerTag , &exp)))
