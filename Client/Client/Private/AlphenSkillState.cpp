@@ -102,7 +102,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bHienzinFirstEffect)
 							{							
-								CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin_1.dat"), mWorldMatrix);
 
 								m_bHienzinFirstEffect = true;
 							}
@@ -111,7 +111,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bHienzinSecondEffect)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin_2.dat"), mWorldMatrix);
 
 								m_bHienzinSecondEffect = true;
 							}

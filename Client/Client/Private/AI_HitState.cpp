@@ -110,28 +110,28 @@ void CAI_HitState::Enter()
 		switch (rand() % 8)
 		{
 		case 0:
-			m_iCurrentAnimIndex = CSion::ANIM::BTL_DAMAGE_LARGE_B;
+			m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DAMAGE_LARGE_B;
 			break;
 		case 1:
-			m_iCurrentAnimIndex = CSion::ANIM::BTL_DAMAGE_LARGE_F;
+			m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DAMAGE_LARGE_F;
 			break;
 		case 2:
-			m_iCurrentAnimIndex = CSion::ANIM::BTL_DAMAGE_LARGE_L;
+			m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DAMAGE_LARGE_L;
 			break;
 		case 3:
-			m_iCurrentAnimIndex = CSion::ANIM::BTL_DAMAGE_LARGE_R;
+			m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DAMAGE_LARGE_R;
 			break;
 		case 4:
-			m_iCurrentAnimIndex = CSion::ANIM::BTL_DAMAGE_SMALL_B;
+			m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DAMAGE_SMALL_B;
 			break;
 		case 5:
-			m_iCurrentAnimIndex = CSion::ANIM::BTL_DAMAGE_SMALL_F;
+			m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DAMAGE_SMALL_F;
 			break;
 		case 6:
-			m_iCurrentAnimIndex = CSion::ANIM::BTL_DAMAGE_SMALL_L;
+			m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DAMAGE_SMALL_L;
 			break;
 		case 7:
-			m_iCurrentAnimIndex = CSion::ANIM::BTL_DAMAGE_SMALL_R;
+			m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DAMAGE_SMALL_R;
 			break;
 		}
 		break;

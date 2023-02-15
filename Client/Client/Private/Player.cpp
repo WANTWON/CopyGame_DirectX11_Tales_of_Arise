@@ -424,7 +424,7 @@ void CPlayer::Revive()
 		}
 		else
 		{
-			CAIState* pState =  new CAiState_WakeUp(this);
+			CAIState* pAIState =  new CAiState_WakeUp(this);
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 		}
 		
@@ -533,6 +533,15 @@ void CPlayer::Revive()
 
 	//}
 	
+}
+
+void CPlayer::AI_check()
+{
+	CAIState* pAIState = nullptr;
+
+	pAIState = new CAiState_WakeUp(this);
+   m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+
 }
 
 void CPlayer::HandleInput()

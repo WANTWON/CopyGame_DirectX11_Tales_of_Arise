@@ -1047,6 +1047,9 @@
     <ClInclude Include="..\Public\LawAirFSkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AI_Rinwell_SkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1687,6 +1690,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\LawAirFSkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Rinwell_SkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

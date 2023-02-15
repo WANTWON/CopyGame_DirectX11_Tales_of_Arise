@@ -20,6 +20,7 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_Glow();
 
 private:
 	virtual HRESULT Ready_Components(void * pArg) override;
@@ -67,10 +68,7 @@ private:
 
 	_float m_fAlphaNomal = 1.f;
 
-	
-
-//	_float scaler = 0.5f;
-
+	_bool m_bEffectSpawned = false;
 };
 
 END
