@@ -15,7 +15,7 @@ class CPlayerManager : public CBase
 {
 	DECLARE_SINGLETON(CPlayerManager)
 public:
-	enum TYPE {ALPHEN, SION, RINWELL, PLAYER_END};
+	enum TYPE {ALPHEN, SION, RINWELL, LAW, PLAYER_END};
 
 private:
 	explicit CPlayerManager();
@@ -44,7 +44,7 @@ private:
 	_vector m_vLastPos = { 0.f,0.f,0.f,1.f };
 	_bool	m_bBattleMode = false;
 
-	CPlayer* m_AllPlayers[PLAYER_END] = { nullptr, nullptr, nullptr };
+	CPlayer* m_AllPlayers[PLAYER_END] = { nullptr, nullptr, nullptr, nullptr };
 
 public:
 	virtual void Free() override;

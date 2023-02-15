@@ -5,6 +5,7 @@
 #include "Sion.h"
 #include "Weapon.h"
 #include "Rinwell.h"
+#include "Law.h"
 
 BEGIN(Engine)
 class CModel;

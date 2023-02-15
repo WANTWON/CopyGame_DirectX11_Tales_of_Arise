@@ -245,7 +245,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				}
 			}
 			else
-				return new CAI_DodgeState(m_pOwner, m_pTarget, true);
+				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 				
 
 			break;

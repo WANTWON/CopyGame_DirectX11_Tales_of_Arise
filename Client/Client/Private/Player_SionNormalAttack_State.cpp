@@ -566,7 +566,7 @@ void CPlayer_SionNormalAttack_State::Enter()
 		}
 	
 
-	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
+	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
 	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
 
@@ -585,8 +585,6 @@ void CPlayer_SionNormalAttack_State::Enter()
 		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_RIGHT));
 		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_LOOK));
 	}
-
-	RELEASE_INSTANCE(CBattleManager);
 
 	m_pOwner->Set_Manarecover(false);
 }

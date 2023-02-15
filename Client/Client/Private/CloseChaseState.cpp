@@ -115,11 +115,9 @@ void CCloseChaseState::Enter()
 		break;
 	}
 
-	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
+	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
 	m_pTarget = pBattleMgr->Get_LackonMonster();
-
-	RELEASE_INSTANCE(CBattleManager);
 }
 
 void CCloseChaseState::Exit()

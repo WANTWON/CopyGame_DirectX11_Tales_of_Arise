@@ -74,6 +74,8 @@ public: /* Getter &  Setter */
 
 	//revive
 	void Revive();
+	//ai to checkstate
+	void AI_check();
 
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;

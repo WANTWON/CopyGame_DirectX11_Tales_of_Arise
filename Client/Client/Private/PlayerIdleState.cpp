@@ -37,10 +37,22 @@ CPlayerState * CIdleState::HandleInput()
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
 				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_NORMAL_ATTACK1);
 		}
-		else if (CPlayer::SION == m_pOwner->Get_PlayerID() || CPlayer::RINWELL == m_pOwner->Get_PlayerID())
+		else if (CPlayer::SION == m_pOwner->Get_PlayerID())
 		{
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
 				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
+		}
+		else if (CPlayer::RINWELL == m_pOwner->Get_PlayerID())
+		{
+			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+			{ }
+		}
+		else if (CPlayer::LAW == m_pOwner->Get_PlayerID())
+		{
+			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+			{
+				
+			}
 		}
 			
 		/* Skill */
@@ -69,6 +81,14 @@ CPlayerState * CIdleState::HandleInput()
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
 				break;
 			case CPlayer::RINWELL: //For Rinwell State
+				break;
+			case CPlayer::LAW:
+				if (pGameInstance->Key_Down(DIK_E))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_E);
+				if (pGameInstance->Key_Down(DIK_R))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_R);
+				if (pGameInstance->Key_Down(DIK_F))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_F);
 				break;
 			}
 		}
@@ -124,17 +144,38 @@ CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 			return new CHitState(m_pOwner);
 	}
 
-
-	if (m_bIsAnimationFinished)
+	if (m_bIsAnimationFinished && LEVEL_BATTLE != m_pOwner->Get_Level())
 	{
 		switch (m_eIdleType)
 		{
 		case Client::Player::CIdleState::IDLE_MAIN:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_TO_IDLE_SIDE);
+			switch (m_ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_TO_IDLE_SIDE);
+				break;
+			case CPlayer::SION:
+				break;
+			case CPlayer::RINWELL:
+				break;
+			case CPlayer::LAW:
+				break;
+			}
 			m_eIdleType = IDLE_MAIN_TO_SIDE;
 			break;
 		case Client::Player::CIdleState::IDLE_MAIN_TO_SIDE:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_SIDE);
+			switch (m_ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_SIDE);
+				break;
+			case CPlayer::SION:
+				break;
+			case CPlayer::RINWELL:
+				break;
+			case CPlayer::LAW:
+				break;
+			}
 			m_eIdleType = IDLE_SIDE;
 			break;
 		}
@@ -172,16 +213,50 @@ void CIdleState::Enter()
 		if (LEVEL_BATTLE == m_pOwner->Get_Level())
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_IDLE);
 		else
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE);
+		{
+			switch (m_eIdleType)
+			{
+			case Client::Player::CIdleState::IDLE_MAIN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE);
+				break;
+			case Client::Player::CIdleState::IDLE_SIDE:
+				break;
+			}
+		}
 		break;
 	case CPlayer::RINWELL:
 		if (LEVEL_BATTLE == m_pOwner->Get_Level())
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_LOOP);
 		else
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::IDLE);
+		{
+			switch (m_eIdleType)
+			{
+			case Client::Player::CIdleState::IDLE_MAIN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::IDLE);
+				break;
+			case Client::Player::CIdleState::IDLE_SIDE:
+				break;
+			}
+		}
+		break;
+	case CPlayer::LAW:
+		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_IDLE);
+		else
+		{
+			switch (m_eIdleType)
+			{
+			case Client::Player::CIdleState::IDLE_MAIN:
+				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_IDLE);
+				break;
+			case Client::Player::CIdleState::IDLE_SIDE:
+				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_IDLE);
+				break;
+			}
+		}
 		break;
 	}
-
+	
 	m_pOwner->Set_Manarecover(true);
 }
 
