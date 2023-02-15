@@ -42,7 +42,7 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 	if (m_pTarget == nullptr)
 		return nullptr;
 
-	if (m_bLookatOnetime)
+	/*if (m_bLookatOnetime)
 	{
 		if (nullptr == m_pTarget)
 		{
@@ -53,7 +53,7 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 		else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 		m_bLookatOnetime = false;
-	}
+	}*/
 	
 	//m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	
@@ -141,6 +141,8 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				else
 					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
+				return new CAI_DodgeState(m_pOwner, m_pTarget);
+				
 
 			}
 				
