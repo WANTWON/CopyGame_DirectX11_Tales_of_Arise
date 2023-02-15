@@ -336,7 +336,6 @@ m_fTime += fTimeDelta;
 
 						if (pTarget != nullptr)
 						{
-
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 							BulletDesc.vTargetPosition.m128_f32[0] += 3.f;
 						}

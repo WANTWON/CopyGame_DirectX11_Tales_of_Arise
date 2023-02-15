@@ -5,7 +5,7 @@ BEGIN(Client)
 class CRinwellSkills final : public CBullet
 {
 public:
-	enum TYPE { PHOTON_FLASH, GALE_FORCE };
+	enum TYPE { PHOTON_FLASH, GALE_FORCE , METEOR };
 
 public:
 	CRinwellSkills(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -26,6 +26,7 @@ protected:
 private:
 	void Tick_PhotonFlash(_float fTimeDelta);
 	void Tick_GaleForce(_float fTimeDelta);
+	void Tick_Meteor(_float fTimeDelta);
 
 private:
 	vector<CEffect*> m_pBlastEffects;
