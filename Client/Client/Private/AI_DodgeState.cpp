@@ -14,8 +14,9 @@
 
 using namespace AIPlayer;
 
-CAI_DodgeState::CAI_DodgeState(CPlayer * pPlayer, CBaseObj* pTarget)
+CAI_DodgeState::CAI_DodgeState(CPlayer * pPlayer, CBaseObj* pTarget ,_bool back , _bool lookat)
 {
+	m_bbackstep = back;
 	m_pOwner = pPlayer;
 	if (nullptr == pTarget)
 	{
@@ -131,6 +132,7 @@ void CAI_DodgeState::Enter()
 
 
 	m_eStateId = STATE_ID::STATE_DODGE;
+	if(m_bLookat)
 	m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	switch (m_eCurrentPlayerID)
 	{
@@ -154,28 +156,51 @@ void CAI_DodgeState::Enter()
 		}
 		break;
 	case CPlayer::SION:
-		switch (rand() % 4)
+		if (m_bbackstep)
 		{
-		case 0:
-			m_pOwner->Get_Transform()->Set_Rotation({ 0.f, 90.f ,0.f });
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_LAND_BACK);
+			break;
+		}
+		else if (!m_bLookat)
+		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_LAND);
 			break;
-
-		case 1:
-			m_pOwner->Get_Transform()->Set_Rotation({ 0.f, -90.f ,0.f });
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_LAND_BACK);
-			break;
-
-		default:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_LAND_BACK);
-			break;
-
 		}
-		break;
+
+			switch (rand() % 4)
+			{
+			case 0:
+				m_pOwner->Get_Transform()->Set_Rotation({ 0.f, 90.f ,0.f });
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_LAND);
+				break;
+
+			case 1:
+				m_pOwner->Get_Transform()->Set_Rotation({ 0.f, -90.f ,0.f });
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_LAND_BACK);
+				break;
+
+			default:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_LAND_BACK);
+				break;
+
+			}
+			break;
+		
 
 
 
 	case CPlayer::RINWELL:
+		if (m_bbackstep)
+		{
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_STEP_LAND_BACK);
+			break;
+		}
+		else if (!m_bLookat)
+		{
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_STEP_LAND);
+			break;
+		}
+
 		switch (rand() % 4)
 		{
 		case 0:

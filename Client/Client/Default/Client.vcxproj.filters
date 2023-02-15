@@ -1020,8 +1020,11 @@
     <ClInclude Include="..\Public\UI_Dialogue_Caption.h">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AiState_WakeUp.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AI_DodgeState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1644,6 +1647,9 @@
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AI_DodgeState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AiState_WakeUp.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
   </ItemGroup>

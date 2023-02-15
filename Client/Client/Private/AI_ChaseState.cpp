@@ -3,11 +3,13 @@
 #include "GameInstance.h"
 #include "Alphen.h"
 #include "Sion.h"
+#include "Rinwell.h"
 #include "AIAttackNormalState.h"
 #include "AI_Alphen_NormalAttackState.h"
 #include "AI_Alphen_SkillAttackState.h"
 #include "AICheckState.h"
 #include "AI_Sion_SkillState.h"
+#include "AI_DodgeState.h"
 
 
 
@@ -123,7 +125,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			if (Get_Target_Distance() <= 11.f)
 			{
 				__super::Exit();
-				m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_BRAKE;
+				m_iCurrentAnimIndex = CRinwell::ANIM::DASH_BRAKE_001;
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 				m_bStopRunning = true;
 			}
@@ -173,6 +175,20 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			
 		else if (m_eCurrentPlayerID == CPlayer::SION)
 		{
+			if (m_pOwner->Get_Info().fCurrentMp < 1)
+			{
+				switch (rand() % 3)
+				{
+				case 0:
+					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+				case 1:
+					return new CAICheckState(m_pOwner, m_eStateId);
+				case 2:
+					return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+				}
+			}
+
 			switch (rand() % 6)
 			{
 
@@ -195,6 +211,18 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
 
 			}
+		}
+
+		else if (m_eCurrentPlayerID == CPlayer::RINWELL)
+		{
+			if (nullptr == m_pTarget)
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			}
+
+			return new CAI_DodgeState(m_pOwner,m_pTarget);
+
 		}
 
 		else
@@ -225,7 +253,7 @@ void CAI_ChaseState::Enter()
 		break;
 
 	case CPlayer::RINWELL:
-		m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_RUN;
+		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MOVE_RUN;
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 		break;
 
