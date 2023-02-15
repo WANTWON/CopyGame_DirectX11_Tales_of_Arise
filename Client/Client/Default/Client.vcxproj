@@ -222,6 +222,7 @@
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
+    <ClInclude Include="..\Public\Law.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
@@ -437,6 +438,7 @@
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
+    <ClCompile Include="..\Private\Law.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
