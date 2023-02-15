@@ -6,6 +6,7 @@
 #include "Sion.h"
 #include "Rinwell.h"
 #include "AICheckState.h"
+#include "AiState_WakeUp.h"
 
 using namespace AIPlayer;
 
@@ -40,7 +41,7 @@ CAIState * CDeadState::LateTick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_V))
 		{
 			CUI_Manager::Get_Instance()->MinusCP(10);
-			return new CAICheckState(m_pOwner, m_eStateId);
+			return new CAiState_WakeUp(m_pOwner);
 		}
 	}
 	

@@ -45,15 +45,16 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 
 	_bool bIs_TargetInFront = false;
 	bIs_TargetInFront = Is_TargetInFront(vTrigger_Pos);
+	_bool pTriggerCollision = false;
+	pTriggerCollision = m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider());
 
 
-
-	if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == false)
+	if (pTrigger != nullptr && pTriggerCollision == false)
 	{
 		//나의 트리거 박스랑 충돌안했을떄
 		//돌게하고
 
-		if (false == m_bTriggerTurn && bIs_TargetInFront == false)
+		if (false == m_bTriggerTurn /*&& bIs_TargetInFront == false*/)
 			return new CTurnR_State(m_pOwner);
 
 		// 그 트리거 박스의 위치 방향으로 이동하는 상태를 세팅한다.
@@ -62,9 +63,10 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 		{
 			_vector vPosition = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
-			m_pOwner->Get_Transform()->LookAt(vTrigger_Pos);
+			m_pOwner->Get_Transform()->LookAt(vPosition);
 			
 		}
+
 	}
 
 	else

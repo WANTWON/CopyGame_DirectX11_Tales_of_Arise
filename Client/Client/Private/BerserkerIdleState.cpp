@@ -55,11 +55,11 @@ CBerserkerState * CIdleState::LateTick(_float fTimeDelta)
 				switch (rand() % 3)
 				{
 				case 0:
-					return new CWalkState(m_pOwner, FIELD_STATE_END);
+					return new CHowLing_State(m_pOwner);
 				case 1:
 					return new CIdleState(m_pOwner);
 				case 2:
-					return new CHowLing_State(m_pOwner);
+					return new CWalkState(m_pOwner, FIELD_STATE_END);
 			
 				default:
 					break;
@@ -72,7 +72,6 @@ CBerserkerState * CIdleState::LateTick(_float fTimeDelta)
 	{
 		return new CTurnR_State(m_pOwner);
 	}
-
 
 	return nullptr;
 }
