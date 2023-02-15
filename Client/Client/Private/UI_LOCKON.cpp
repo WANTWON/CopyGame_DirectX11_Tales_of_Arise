@@ -319,20 +319,20 @@ HRESULT CUI_LOCKON::Render()
 	
 
 
-	m_fSize.x = 1500.f;
-	m_fSize.y = 1000.f;
-	//	m_fPosition.x -= 3.f;
+	//m_fSize.x = 1500.f;
+	//m_fSize.y = 1000.f;
+	////	m_fPosition.x -= 3.f;
 
-	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
+	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	//	return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(9))))
-		return E_FAIL;
-	m_pShaderCom->Begin(UI_STRIKEEFFECT);
+	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(9))))
+	//	return E_FAIL;
+	//m_pShaderCom->Begin(UI_STRIKEEFFECT);
 
-	m_pVIBufferCom->Render();
+	//m_pVIBufferCom->Render();
 
 	if (m_bStrikeon)
 	{
