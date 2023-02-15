@@ -85,12 +85,13 @@ CPlayerState * CRunState::HandleInput()
 			case Client::DIR_RIGHT:
 			case Client::DIR_STRAIGHT_LEFT:
 			case Client::DIR_STRAIGHT_RIGHT:
-				return new CDodgeState(m_pOwner, DIR_STRAIGHT);
-				break;
 			case Client::DIR_BACKWARD_LEFT:
 			case Client::DIR_BACKWARD_RIGHT:
 			case Client::DIR_BACKWARD:
-				return new CDodgeState(m_pOwner, DIR_STRAIGHT/*DIR_BACKWARD*/);
+				return new CDodgeState(m_pOwner, DIR_STRAIGHT);
+				break;
+			case Client::DIR_END:
+				return new CDodgeState(m_pOwner, DIR_BACKWARD);
 				break;
 			}
 		}
@@ -133,6 +134,10 @@ CPlayerState * CRunState::HandleInput()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
 			else if (CPlayer::RINWELL == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
+			else if (CPlayer::LAW == m_ePlayerID)
+			{
+				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::);
+			}
 		}
 
 		m_bIsDash = true;
@@ -153,6 +158,9 @@ CPlayerState * CRunState::HandleInput()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
 			else if (CPlayer::RINWELL == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+			else if (CPlayer::LAW == m_ePlayerID)
+			{
+			}
 		}
 
 		m_bIsDash = false;
@@ -234,6 +242,13 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
+		case CPlayer::LAW:
+			if (LEVEL_BATTLE != m_pOwner->Get_Level())
+			{
+
+			}
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			break;
 		}
 	}
 	else
@@ -262,6 +277,14 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
+		case CPlayer::LAW:
+			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_RUN);
+			else
+			{
+			}
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+				break;
 		}
 	}
 

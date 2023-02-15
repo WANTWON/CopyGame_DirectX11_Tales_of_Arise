@@ -232,7 +232,16 @@ HRESULT CPlayer::Ready_Components(void)
 		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Astral_Doubt"), (CComponent**)&m_pModelCom)))
 			return E_FAIL;
 		break;
-		
+
+	case MODEL_RINWELL:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Rinwell"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
+
+	case MODEL_LAW:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Law"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
 	}
 
 	return S_OK;

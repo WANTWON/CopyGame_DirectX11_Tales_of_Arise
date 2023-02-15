@@ -29,7 +29,7 @@
 #include "SnowFieldNpc.h"
 #include "AiRinwell.h"
 #include "Rinwell.h"
-
+#include "Law.h"
 
 //UI
 #include "UI_Portrait.h"
@@ -181,6 +181,11 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_Rinwell */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_CameraAction"),
 		CCamera_Action::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_Law */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Law"),
+		CLaw::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_Rinwell */
@@ -743,10 +748,14 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Slime/Slime.dat"))))
 		return E_FAIL;
 
-
 	/*For.Prototype_Component_Model_Astral_Doubbt*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Astral_Doubt"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Astral_Doubt/Astral_Doubt.dat"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Model_Law */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Law"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Law/Law.dat"))))
 		return E_FAIL;
 #pragma endregion Model Loading
 

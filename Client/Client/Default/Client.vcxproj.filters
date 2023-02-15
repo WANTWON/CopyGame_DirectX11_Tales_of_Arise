@@ -367,6 +367,9 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\03. Law">
       <UniqueIdentifier>{6de98e5a-c150-4bac-8985-ef2513782efc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law">
+      <UniqueIdentifier>{7aa6e27e-0965-43f8-a61d-7315bbe4bff5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

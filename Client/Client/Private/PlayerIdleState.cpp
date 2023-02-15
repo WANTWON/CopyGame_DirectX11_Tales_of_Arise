@@ -47,6 +47,13 @@ CPlayerState * CIdleState::HandleInput()
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
 			{ }
 		}
+		else if (CPlayer::LAW == m_pOwner->Get_PlayerID())
+		{
+			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+			{
+				
+			}
+		}
 			
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
@@ -74,6 +81,14 @@ CPlayerState * CIdleState::HandleInput()
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
 				break;
 			case CPlayer::RINWELL: //For Rinwell State
+				break;
+			case CPlayer::LAW:
+				if (pGameInstance->Key_Down(DIK_E))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_E);
+				if (pGameInstance->Key_Down(DIK_R))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_R);
+				if (pGameInstance->Key_Down(DIK_F))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_F);
 				break;
 			}
 		}
@@ -224,8 +239,24 @@ void CIdleState::Enter()
 			}
 		}
 		break;
+	case CPlayer::LAW:
+		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_IDLE);
+		else
+		{
+			switch (m_eIdleType)
+			{
+			case Client::Player::CIdleState::IDLE_MAIN:
+				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_IDLE);
+				break;
+			case Client::Player::CIdleState::IDLE_SIDE:
+				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_IDLE);
+				break;
+			}
+		}
+		break;
 	}
-
+	
 	m_pOwner->Set_Manarecover(true);
 }
 
