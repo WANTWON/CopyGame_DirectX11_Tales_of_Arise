@@ -32,6 +32,7 @@ public:
 	class CGameObject* Get_Objects(_uint iLevelIndex, const _tchar* pLayerTag, _uint iIndex = 0);
 	list<CGameObject*>* Get_ObjectList(_uint iSceneID, const _tchar * pLayerTag);
 	HRESULT Out_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, class CGameObject* pGameObject);
+	HRESULT Out_GameObjectList(_uint iLevelIndex, const _tchar* pLayerTag);
 	HRESULT ReAdd_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, class CGameObject* pGameObject);
 public:
 	void Clear(_uint iLevelIndex);

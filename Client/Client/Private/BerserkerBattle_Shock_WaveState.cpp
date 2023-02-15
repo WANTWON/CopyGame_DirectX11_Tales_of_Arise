@@ -129,17 +129,18 @@ CBerserkerState * CBattle_Shock_WaveState::LateTick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 
-		if (m_bIsAnimationFinished)
-		{
-			return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BATTLE); 
-		}
+	if (m_bIsAnimationFinished)
+	{
+		return new CBattle_RunState(m_pOwner, STATE_ID::STATE_BATTLE); 
+	}
 
-		if (nullptr != m_pAtkColliderCom)
-			m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
+#ifdef _DEBUG
+	if (nullptr != m_pAtkColliderCom)
+		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
 
-		if (nullptr != m_p2th_AtkColliderCom)
-			m_pOwner->Get_Renderer()->Add_Debug(m_p2th_AtkColliderCom);
-
+	if (nullptr != m_p2th_AtkColliderCom)
+		m_pOwner->Get_Renderer()->Add_Debug(m_p2th_AtkColliderCom);
+#endif // _DEBUG
 
 	return nullptr;
 }

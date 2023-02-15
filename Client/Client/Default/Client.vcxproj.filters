@@ -79,9 +79,6 @@
     <Filter Include="02.GameObjects\00.Base">
       <UniqueIdentifier>{3cda322b-a88a-4727-83ce-aeebaf0a20f4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.DataManager">
-      <UniqueIdentifier>{3714032a-de3a-40fb-a3ca-642696606767}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01.Actor\02.NPC">
       <UniqueIdentifier>{889715ea-45f4-49c2-8a44-1383682efa75}</UniqueIdentifier>
     </Filter>
@@ -207,9 +204,6 @@
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\00.Alphen">
       <UniqueIdentifier>{14241fe6-1678-46b2-9aa5-b9069e722ed1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\01.Actor\00.Player\01.Sion">
-      <UniqueIdentifier>{07ceaa0b-61ee-4ef4-8bd0-98feee9ed4d2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States">
       <UniqueIdentifier>{01ca6b4e-9be6-4a8d-9d1f-419da47ca73a}</UniqueIdentifier>
@@ -352,6 +346,9 @@
     <Filter Include="02.GameObjects\04.UI\24.UI_SidePopup">
       <UniqueIdentifier>{eb5167e6-62de-4069-8346-d328e9d913a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.PoolingManager">
+      <UniqueIdentifier>{3714032a-de3a-40fb-a3ca-642696606767}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\AstralDoubt">
       <UniqueIdentifier>{e039fafc-908d-4736-850b-a6ac4e152b2c}</UniqueIdentifier>
     </Filter>
@@ -363,6 +360,12 @@
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates">
       <UniqueIdentifier>{b9c0676a-05c5-40ee-b357-1ba01bc1ad0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Caption">
+      <UniqueIdentifier>{3268bd8d-2beb-4a28-87c6-7db320ea4dc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\02.Rinwell\01.Sion">
+      <UniqueIdentifier>{07ceaa0b-61ee-4ef4-8bd0-98feee9ed4d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -440,9 +443,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Collision_Manger.h">
       <Filter>04.CollisionManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Data_Manager.h">
-      <Filter>05.DataManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
@@ -691,7 +691,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sion.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell\01.Sion</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect.h">
       <Filter>02.GameObjects\03.Effect</Filter>
@@ -966,6 +966,9 @@
     <ClInclude Include="..\Public\UI_SidePopup.h">
       <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Object_Pool_Manager.h">
+      <Filter>05.PoolingManager</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AstralDoubt.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt</Filter>
     </ClInclude>
@@ -1013,6 +1016,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\AstralDoubt_WalkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Dialogue_Caption.h">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AiState_WakeUp.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_DodgeState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1075,9 +1087,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collision_Manger.cpp">
       <Filter>04.CollisionManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Data_Manager.cpp">
-      <Filter>05.DataManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster</Filter>
@@ -1308,7 +1317,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sion.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell\01.Sion</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect.cpp">
       <Filter>02.GameObjects\03.Effect</Filter>
@@ -1586,6 +1595,9 @@
     <ClCompile Include="..\Private\UI_SidePopup.cpp">
       <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Object_Pool_Manager.cpp">
+      <Filter>05.PoolingManager</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\AstralDoubt.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt</Filter>
     </ClCompile>
@@ -1630,6 +1642,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\AstralDoubt_WalkState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp">
+      <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_DodgeState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AiState_WakeUp.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

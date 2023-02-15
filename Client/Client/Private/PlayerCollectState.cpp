@@ -68,7 +68,7 @@ void CCollectState::Enter(void)
 		break;
 	case CPlayer::SION:
 		if (nullptr == m_pObject)
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_DOOR_OPEN_HAND_RIGHT);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DOOR_OPEN_HAND_RIGHT);
 		else
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::TREASURE_OPEN);
 		break;

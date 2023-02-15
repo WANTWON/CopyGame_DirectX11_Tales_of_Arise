@@ -105,6 +105,7 @@ int CEffectMesh::Tick(_float fTimeDelta)
 			AlphaLerp();
 			TurnVelocityLerp();
 			NoisePowerLerp();
+			DistortionPowerLerp();
 
 			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_RIGHT,m_tMeshEffectDesc.vScale.x);
 			m_pTransformCom->Set_Scale(CTransform::STATE::STATE_UP, m_tMeshEffectDesc.vScale.y);
@@ -127,10 +128,12 @@ void CEffectMesh::Late_Tick(_float fTimeDelta)
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_DISTORTION, this);
 
 		if (m_tMeshEffectDesc.bGlow)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
+		if (m_tMeshEffectDesc.bDistort)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_DISTORTION, this);
 	}
 }
 
@@ -194,6 +197,38 @@ HRESULT CEffectMesh::Render_Glow()
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, SHADER_NONANIM_GLOW)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CEffectMesh::Render_Distort()
+{
+	if (!m_bCanStart)
+		return S_OK;
+
+	if (!m_pShaderCom || !m_pModelCom)
+		return E_FAIL;
+
+	__super::Render();
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_SpecularTexture", i, aiTextureType_SPECULAR)))
+			return E_FAIL;
+
+		if (FAILED(m_pRendererCom->Get_ShaderPostProcessing()->Set_RawValue("g_fDistortionSpeed", &m_tMeshEffectDesc.fDistortSpeed, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pRendererCom->Get_ShaderPostProcessing()->Set_RawValue("g_fDistortionStrength", &m_tMeshEffectDesc.fDistortPower, sizeof(_float))))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, SHADER_NONANIM_DISTORT)))
 			return E_FAIL;
 	}
 
@@ -381,6 +416,38 @@ void CEffectMesh::NoisePowerLerp()
 		_float fInterpFactor = fFactorDividend / fFactorDivisor;
 		_float fLerpNoisePower = m_tMeshEffectDesc.fNoisePowerInitial + fInterpFactor * (fNoisePowerCurve.x - m_tMeshEffectDesc.fNoisePowerInitial);
 		m_tMeshEffectDesc.fNoisePower = fLerpNoisePower;
+
+		break;
+	}
+}
+
+void CEffectMesh::DistortionPowerLerp()
+{
+	if (m_DistortPowerCurves.empty())
+		return;
+
+	/* 0 ~ 1 */
+	_float fCurrentLifeNormalized = m_fTimer / m_tMeshEffectDesc.fLifetime;
+
+	for (_float3& fDistortPowerCurve : m_DistortPowerCurves)
+	{
+		/* Break cause Curve should not start yet ('Y' is the Curve Start Time). */
+		if (fCurrentLifeNormalized < fDistortPowerCurve.y)
+			break;
+
+		/* Skip cause Curve has already been lerped through ('Z' is the Curve End Time). */
+		if (fCurrentLifeNormalized > fDistortPowerCurve.z)
+		{
+			m_tMeshEffectDesc.fDistortPowerInitial = fDistortPowerCurve.x;
+			continue;
+		}
+
+		_float fFactorDividend = (m_fTimer - (m_tMeshEffectDesc.fLifetime * fDistortPowerCurve.y));
+		_float fFactorDivisor = ((m_tMeshEffectDesc.fLifetime * fDistortPowerCurve.z) - (m_tMeshEffectDesc.fLifetime * fDistortPowerCurve.y));
+
+		_float fInterpFactor = fFactorDividend / fFactorDivisor;
+		_float fLerpDistortPower = m_tMeshEffectDesc.fDistortPowerInitial + fInterpFactor * (fDistortPowerCurve.x - m_tMeshEffectDesc.fDistortPowerInitial);
+		m_tMeshEffectDesc.fDistortPower = fLerpDistortPower;
 
 		break;
 	}

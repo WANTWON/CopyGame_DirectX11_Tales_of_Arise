@@ -156,8 +156,10 @@ CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 		//return new CBattle_DashState(m_pOwner);
 	}
 	
+#ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
+#endif // _DEBUG
 
 	return nullptr;
 }

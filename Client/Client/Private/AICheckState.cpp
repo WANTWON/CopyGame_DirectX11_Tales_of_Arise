@@ -10,6 +10,7 @@
 #include "AI_Alphen_NormalAttackState.h"
 #include "AI_Alphen_SkillAttackState.h"
 #include "AI_Sion_SkillState.h"
+#include "AI_DodgeState.h"
 
 using namespace AIPlayer;
 
@@ -41,7 +42,7 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 	if (m_pTarget == nullptr)
 		return nullptr;
 
-	if (m_bLookatOnetime)
+	/*if (m_bLookatOnetime)
 	{
 		if (nullptr == m_pTarget)
 		{
@@ -52,7 +53,7 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 		else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 		m_bLookatOnetime = false;
-	}
+	}*/
 	
 	//m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	
@@ -113,6 +114,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 		switch (m_eCurrentPlayerID)
 		{
 		case CPlayer::ALPHEN:
+		//	return new CAI_DodgeState(m_pOwner, m_pTarget);
 			if (Get_Target_Distance() >= 3.f)
 			{
 				if (nullptr == m_pTarget)
@@ -139,6 +141,8 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				else
 					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
+				return new CAI_DodgeState(m_pOwner, m_pTarget);
+				
 
 			}
 				
@@ -174,7 +178,19 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				else
 					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
-				return new CAIRunawayfromTarget(m_pOwner, STATE_RUN, m_eCurrentPlayerID);
+				switch (rand() % 3)
+				{
+				case 0:
+					return new CAIRunawayfromTarget(m_pOwner, STATE_RUN, m_eCurrentPlayerID);
+					break;
+				default:
+					return new CAI_DodgeState(m_pOwner, m_pTarget , true);
+					break;
+				}
+
+				
+
+			
 			}
 				
 			else
@@ -192,7 +208,8 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 			break;
 
 		case CPlayer::RINWELL:
-			if (m_bRangerRunaway)
+			//return new CAI_DodgeState(m_pOwner, m_pTarget);
+			if (Get_Target_Distance() >= 20.f)
 			{
 				if (nullptr == m_pTarget)
 				{
@@ -203,8 +220,32 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 				else
 					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
-				return new CAIRunawayfromTarget(m_pOwner, STATE_RUN, m_eCurrentPlayerID);
+				return new CAI_ChaseState(m_pOwner, STATE_RUN, m_eCurrentPlayerID, m_pTarget);
 			}
+
+			else if (m_bRangerRunaway)
+			{
+				if (nullptr == m_pTarget)
+				{
+					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+				}
+				else
+					m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+
+				switch (rand() % 3)
+				{
+				case 0:
+					return new CAIRunawayfromTarget(m_pOwner, STATE_RUN, m_eCurrentPlayerID);
+					break;
+				default:
+					return new CAI_DodgeState(m_pOwner, m_pTarget, true);
+					break;
+				}
+			}
+			else
+				return new CAI_DodgeState(m_pOwner, m_pTarget, true);
 				
 
 			break;
@@ -236,7 +277,7 @@ void CAICheckState::Enter()
 		m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_IDLE;
 		break;
 	case CPlayer::RINWELL:
-		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MAGIC_LOOP;
+		m_iCurrentAnimIndex = CRinwell::ANIM::IDLE;
 		break;
 	default:
 		break;
@@ -270,7 +311,19 @@ CAIState * CAICheckState::RandomAttackChoose_Sion()
 			m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
 		if (m_pOwner->Get_Info().fCurrentMp < 1.f)
-			return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+		{
+			switch (rand() % 2)
+			{
+			case 0:
+				return new CAI_DodgeState(m_pOwner, m_pTarget, true);
+			case 1:
+				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+
+			}
+			
+		
+		}
+			
 
 
 
@@ -284,7 +337,7 @@ CAIState * CAICheckState::RandomAttackChoose_Sion()
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
 	
 	case 2:
-		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_MAGNARAY);
+		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
 	
 	case 3:
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
@@ -296,7 +349,7 @@ CAIState * CAICheckState::RandomAttackChoose_Sion()
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
 	
 	}
-		return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+		
 }
 
 CAIState * CAICheckState::RandomAttackChoose()
@@ -311,9 +364,21 @@ CAIState * CAICheckState::RandomAttackChoose()
 		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
 	if (m_pOwner->Get_Info().fCurrentMp < 1.f)
-		return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+	{
+		switch (rand() % 2)
+		{
+		case 0:
+			return new CAI_DodgeState(m_pOwner, m_pTarget);
+			break;
+		case  1:
+			return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+			break;
+		}
+		
+	}
+		
 
-	switch (rand() % 4)
+	switch (rand() % 5)
 	{
 
 	case 0:
@@ -327,8 +392,10 @@ CAIState * CAICheckState::RandomAttackChoose()
 
 	case 3:
 		return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
+	case 4:
+		return new CAI_DodgeState(m_pOwner, m_pTarget);
 
 	}
 	
-		return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+		//return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
 }

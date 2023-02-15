@@ -1253,7 +1253,7 @@ PS_OUT PS_PROGRESSBAR(PS_IN In)
 	if (Out.vColor.a < 0.2f)
 		discard;
 
-	Out.vColor.a += 0.6f;
+	Out.vColor.a = 1.f;
 
 	Out.vColor.a *= g_fAlpha;
 
@@ -1478,11 +1478,11 @@ PS_OUT PS_EXPBAR(PS_IN In)
 	//   col.a *= fr;
 
 	//col = col * col2;//DiffuseTexture;
-
-	Out.vColor = col;
-
-	/*if (Out.vColor.a < 0.2f)
+	if (Out.vColor.a < 0.2f)
 		discard;
+	Out.vColor = lerp(float4(0.801f, 0.784f, 0.545f, 1.f), float4(0.9882f, 0.8352f, 0.647f, 1.f), 0.2f);
+
+	/*
 
 	Out.vColor.a += 0.6f;*/
 

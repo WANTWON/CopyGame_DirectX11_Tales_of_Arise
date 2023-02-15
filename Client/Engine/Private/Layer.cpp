@@ -60,6 +60,14 @@ HRESULT CLayer::Out_GameObject(CGameObject * pGameObject)
 	return S_OK;
 }
 
+HRESULT CLayer::Out_GameObjectList()
+{
+	for (auto& iter = m_GameObjects.begin(); iter != m_GameObjects.end();)
+		iter = m_GameObjects.erase(iter);
+
+	return S_OK;
+}
+
 void CLayer::Tick(_float fTimeDelta)
 {
 	for (auto& iter = m_GameObjects.begin(); iter != m_GameObjects.end();)
@@ -70,6 +78,10 @@ void CLayer::Tick(_float fTimeDelta)
 			if (iEvent == OBJ_DEAD)
 			{
 				Safe_Release(*iter);
+				iter = m_GameObjects.erase(iter);
+			}
+			else if (iEvent == OBJ_POOL)
+			{
 				iter = m_GameObjects.erase(iter);
 			}
 			else

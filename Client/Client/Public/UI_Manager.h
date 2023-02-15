@@ -62,6 +62,7 @@ public: /*Getter Setter*/
 	CUI_Dialoguepopup* Get_Dialoguepopup() { return m_pDialoguepopup; }*/
 	CUI_Base*	 Get_Dialogue() { return m_pDialogue; }
 	CUI_Base*    Get_Dialoguepopup() { return m_pDialoguepopup; }
+	CUI_Base*    Get_DialogueCaption() { return m_pDialogueCaption; }
 	CUI_Base*    Get_System_msg() { return m_pSystemmsg; }
 	CUI_Base*    Get_Skill_msg() { return m_pSkillmsg; }
 	CUI_Base*    Get_LockOn() { return m_pLockOn; }
@@ -78,6 +79,8 @@ public: /*Getter Setter*/
 
 	void Set_Dialogue(CUI_Base* pointer) { m_pDialogue = pointer; }
 	void Set_Dialoguepopup(CUI_Base* pointer) { m_pDialoguepopup = pointer; }
+	void Set_DialogueCaption(CUI_Base* pointer) { m_pDialogueCaption = pointer; }
+
 	void Set_SystemMsg(CUI_Base* pointer) { m_pSystemmsg = pointer; }
 	void Set_SkillMsg(CUI_Base* pointer) { m_pSkillmsg = pointer; }
 	void Set_LockOn(CUI_Base* pointer) { m_pLockOn = pointer; }
@@ -146,6 +149,7 @@ private:
 
 	CUI_Base* m_pDialogue = nullptr;
 	CUI_Base* m_pDialoguepopup = nullptr;
+	CUI_Base* m_pDialogueCaption = nullptr;
 	CUI_Base* m_pSystemmsg = nullptr;
 	CUI_Base* m_pSkillmsg = nullptr;
 	CUI_Base* m_pLockOn = nullptr;

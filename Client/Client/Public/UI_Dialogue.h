@@ -41,6 +41,7 @@ public:
 	void Read_TextFiles_for_Quest2Strat();
 	void Read_TextFiles_for_Quest2Clear();
 	void Read_TextFiles_for_Quest3Start();
+	void Read_TextFiles_for_Quest3Clear();
 
 	wchar_t* ConverCtoWC(char* str);
 
@@ -78,6 +79,8 @@ private:
 	vector<_tchar*> m_vDialouge3[6]; // quest 2 clear
 
 	vector<_tchar*> m_vDialouge4[6]; // quest 3 start
+
+	vector<_tchar*> m_vDialouge5[6]; // quest 3 clear
 
 	
 

@@ -33,26 +33,25 @@ HRESULT CLevel_BattleZone::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-		return E_FAIL;
-
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_Camera")) == false)
+	{
+		if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+			return E_FAIL;
+	}
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_BackGround")) == false)
+	{
+		if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+			return E_FAIL;
+	}
 
-	if (FAILED(Ready_Layer_Effect(TEXT("Layer_Effect"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Instancing(TEXT("Layer_Instancing"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
-		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_Instancing"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_Deco"));
 
 	if (FAILED(Ready_Layer_Battle_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
@@ -109,6 +108,11 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 		
 		CUI_Manager::Get_Instance()->ReSet_Arrived_Count();
 
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_Camera"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_Backgorund"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_Instancing"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_Deco"));
+
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
@@ -135,7 +139,11 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 	_int iMonsterSize = (_int)CBattleManager::Get_Instance()->Get_BattleMonster().size();
 
 	if (iMonsterSize == 0)
+	{
 		CBattleManager::Get_Instance()->Set_BattleMode(false);
+
+	}
+		
 	if (CGameInstance::Get_Instance()->Key_Down(DIK_CAPSLOCK))
 	{
 		CUI_RuneEffect::RUNEDESC desc;
@@ -374,27 +382,13 @@ HRESULT CLevel_BattleZone::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_BATTLE, pLayerTag, nullptr)))
 		return E_FAIL;
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Water"), LEVEL_SNOWFIELD, pLayerTag, nullptr)))
-		//return E_FAIL;
+
 
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
 
-HRESULT CLevel_BattleZone::Ready_Layer_Effect(const _tchar * pLayerTag)
-{
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Particle_Rect"), LEVEL_BATTLE, pLayerTag, nullptr)))
-		return E_FAIL;
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Particle_Point"), LEVEL_SNOWFIELD, pLayerTag, nullptr)))
-		return E_FAIL;*/
-
-	RELEASE_INSTANCE(CGameInstance);
-
-	return S_OK;
-}
 
 HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 {
@@ -445,52 +439,29 @@ HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 }
 
 
-HRESULT CLevel_BattleZone::Ready_Layer_Interact_Object(const _tchar * pLayerTag)
-{
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
 
-	for (_uint i = 0; i < 1; ++i)
-	{
-		_vector vPosition = { 128, 5.f, 128, 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_TreasureBox"), LEVEL_BATTLE, pLayerTag, &vPosition)))
-			return E_FAIL;
-	}
-
-	for (_uint i = 0; i < 1; ++i)
-	{
-		_vector vPosition = { 128, 5.f, 128, 1.f };
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_BATTLE, pLayerTag, &vPosition)))
-			return E_FAIL;
-	}
-
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
 
 HRESULT CLevel_BattleZone::Ready_Layer_Instancing(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	NONANIMDESC stModelDesc;
-	strcpy(stModelDesc.pModeltag, "Conifer3");
+	strcpy(stModelDesc.pModeltag, "Conifer3_BattleZone");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BATTLE, pLayerTag, &stModelDesc)))
 		return E_FAIL;
 
-	strcpy(stModelDesc.pModeltag, "Dead_Grass");
+	strcpy(stModelDesc.pModeltag, "Dead_Grass_BattleZone");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BATTLE, pLayerTag, &stModelDesc)))
 		return E_FAIL;
 
-	strcpy(stModelDesc.pModeltag, "Dead_Tree1");
+	strcpy(stModelDesc.pModeltag, "Dead_Tree1_BattleZone");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BATTLE, pLayerTag, &stModelDesc)))
 		return E_FAIL;
 
-	strcpy(stModelDesc.pModeltag, "Bush");
+	strcpy(stModelDesc.pModeltag, "Bush_BattleZone");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BATTLE, pLayerTag, &stModelDesc)))
 		return E_FAIL;
 
-	strcpy(stModelDesc.pModeltag, "Broken_Tree");
+	strcpy(stModelDesc.pModeltag, "Broken_Tree_BattleZone");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BATTLE, pLayerTag, &stModelDesc)))
 		return E_FAIL;
 

@@ -4,6 +4,8 @@
 #include "Alphen.h"
 #include "AIAttackNormalState.h"
 #include "AICheckState.h"
+#include "AI_DodgeState.h"
+#include "Rinwell.h"
 
 using namespace AIPlayer;
 
@@ -59,12 +61,34 @@ CAIState * CAIRunawayfromTarget::LateTick(_float fTimeDelta)
 
 		case CPlayer::SION:
 			__super::Exit();
-			m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_BRAKE;
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-			m_bStopRunning = true;
-			break;
+			switch (rand() % 2)
+			{
+			case 0:
+				m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_BRAKE;
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+				m_bStopRunning = true;
+				break;
+
+			case 1:
+				return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+			}
+			
 
 		case CPlayer::RINWELL:
+			__super::Exit();
+			switch (rand() % 2)
+			{
+			case 0:
+				m_iCurrentAnimIndex = CRinwell::ANIM::DASH_BRAKE_001;
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+				m_bStopRunning = true;
+				break;
+
+			case 1:
+				return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+			}
 			break;
 
 
@@ -99,6 +123,7 @@ void CAIRunawayfromTarget::Enter()
 		break;
 
 	case CPlayer::RINWELL:
+		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MOVE_RUN;
 		break;
 
 	

@@ -2,6 +2,7 @@
 #include "RinwellPoseState.h"
 #include "RinwellMoveState.h"
 #include "CameraManager.h"
+#include "UI_Dialogue_Caption.h"
 
 using namespace AiRinwell;
 
@@ -21,7 +22,7 @@ CRinwellState * CPoseState::Tick(_float fTimeDelta)
 	{
 	case Client::CRinwellState::STATE_IDLE:
 		m_fTarget_Distance =  Find_ActiveTarget();
-		if (m_fTarget_Distance < 10.f)
+		if (m_fTarget_Distance < 10.f && m_pOwner->Get_NpcMode() == false)
 			return new CPoseState(m_pOwner, STATE_AGGRO);
 		break;
 	case Client::CRinwellState::STATE_HP50DOWN:
@@ -78,6 +79,7 @@ void CPoseState::Enter()
 		break;
 	case Client::CRinwellState::STATE_AGGRO:
 	{
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(0);
 		CCameraManager* pCameraManager = GET_INSTANCE(CCameraManager);
 		pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
 		pCameraManager->Play_ActionCamera(TEXT("RinwellTest.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());

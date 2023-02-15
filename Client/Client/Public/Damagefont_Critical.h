@@ -20,6 +20,7 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual void ReUse_Setting(void* pArg);
 
 private:
 	virtual HRESULT Ready_Components(void * pArg) override;

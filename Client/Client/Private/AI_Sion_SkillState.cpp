@@ -10,6 +10,7 @@
 #include "Bullet.h"
 #include "SionSkills.h"
 #include "AIAttackNormalState.h"
+#include "AI_DodgeState.h"
 
 
 
@@ -128,7 +129,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 
 
 				break;
-			case CSion::ANIM::BTL_MAGNARAY:
+			case CSion::ANIM::BTL_ATTACK_MAGNARAY:
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
 
@@ -140,7 +141,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_MAGNARAY))
+						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_MAGNARAY))
 						{
 							CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 							if (pTarget == nullptr)
@@ -376,7 +377,31 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 
 CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+		return nullptr;
+
+	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+	{
+		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+	}
+	else
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
+
+	if (m_pTarget == nullptr)
+		return nullptr;
+
+
+
+	if (nullptr == m_pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
 
 	if (m_bIsStateEvent || m_bIsAnimationFinished)
 	{
@@ -387,6 +412,21 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 		m_bBulletMake = false;
 		m_fEventStart = -1.f;
 
+		if (m_pOwner->Get_Info().fCurrentMp < 1)
+		{
+			switch (rand() % 3)
+			{
+			case 0:
+				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+			case 1:
+				return new CAICheckState(m_pOwner, m_eStateId);
+			case 2:
+				return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+			}
+		}
+
+	
 		if (Get_Target_Distance() >= 5.f)
 		{
 			switch (rand() % 10)
@@ -407,7 +447,7 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 				break;
 			case 1:
 				__super::Exit();
-				m_iCurrentAnimIndex = CSion::ANIM::BTL_MAGNARAY;
+				m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_MAGNARAY;
 				if (nullptr == m_pTarget)
 				{
 					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
@@ -494,7 +534,7 @@ void CAI_Sion_SkillState::Enter()
 	case CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GRAVITY);
 		break;
-	case CSion::ANIM::BTL_MAGNARAY:
+	case CSion::ANIM::BTL_ATTACK_MAGNARAY:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_MAGNARAY);
 		break;
 	case CSion::ANIM::BTL_ATTACK_BRAVE:
