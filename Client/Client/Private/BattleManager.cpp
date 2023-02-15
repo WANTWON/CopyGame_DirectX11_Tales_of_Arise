@@ -59,7 +59,7 @@ void CBattleManager::Return_AllPoolingMonster_AtClear()
 {
 	for (auto& iter = m_FieldMonster.begin(); iter != m_FieldMonster.end();)
 	{
-		//CGameInstance::Get_Instance()->ReAdd_GameObject(LEVEL_STATIC, TEXT("Layer_Pooling"), *iter);
+		CGameInstance::Get_Instance()->ReAdd_GameObject(LEVEL_STATIC, TEXT("Layer_Pooling"), *iter);
 		iter = m_FieldMonster.erase(iter);
 	}
 }
