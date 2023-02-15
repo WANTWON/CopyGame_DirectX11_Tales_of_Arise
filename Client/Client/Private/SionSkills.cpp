@@ -574,7 +574,7 @@ void CSionSkills::Tick_NormalAttack(_float fTimeDelta)
 	_vector vDir = XMVector3Normalize(m_BulletDesc.vTargetPosition - m_BulletDesc.vInitPositon);
 
 	m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
-	m_pTransformCom->Go_PosDir(fTimeDelta, vDir);
+	m_pTransformCom->Go_PosDir(fTimeDelta*0.1f, vDir);
 	//m_pTransformCom->Go_Straight(fTimeDelta);
 
 	for (auto& iter : m_pEffects)

@@ -44,7 +44,11 @@ void CObject_Pool_Manager::Add_Pooling_Layer(LEVEL iLevelIndex, const _tchar * p
 		return;
 	}
 
-	list< class CGameObject*>* pLayer = new LAYERS;
+	list< class CGameObject*>* pLayer = Find_PoolingObjects(iLevelIndex, pLayerTag);
+	if(pLayer == nullptr)
+	{
+		pLayer = new LAYERS;
+	}
 	
 	for (auto& iter : *pLayerList)
 		pLayer->push_back(iter);
@@ -65,7 +69,7 @@ _bool CObject_Pool_Manager::Reuse_Pooling_Layer(LEVEL iLevelIndex, const _tchar 
 		return false;
 	}
 		
-	
+
 	for (auto& iter = pLayer->begin(); iter != pLayer->end();)
 	{
 		if (pArg != nullptr)
@@ -107,7 +111,7 @@ _bool CObject_Pool_Manager::Reuse_Pooling_Object(LEVEL iLevelIndex, const _tchar
 	return true;
 }
 
-_bool CObject_Pool_Manager::Reuse_AllPooling_Layer()
+_bool CObject_Pool_Manager::Clear_AllPooling_Layer()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -117,16 +121,15 @@ _bool CObject_Pool_Manager::Reuse_AllPooling_Layer()
 		{
 			for (auto& vec = iter.second->begin(); vec != iter.second->end();)
 			{
-				pGameInstance->ReAdd_GameObject(LEVEL_STATIC, TEXT("layer_Pooling"), *vec);
-
+				Safe_Release(*vec);
 				vec = iter.second->erase(vec);
 			}
 			iter.second->clear();
 			Safe_Delete(iter.second);
 		}
-		m_pObjects[i].clear();
+		m_pObjects[i].clear();	
 	}
-
+	Safe_Delete_Array(m_pObjects);
 	RELEASE_INSTANCE(CGameInstance);
 	return true;
 }
@@ -159,20 +162,6 @@ _bool CObject_Pool_Manager::Find_LayerTag(_uint iLevelIndex, const _tchar * pLay
 void CObject_Pool_Manager::Free()
 {
 
-	for (int i = 0; i < LEVEL_END; ++i)
-	{
-		for (auto& iter : m_pObjects[i])
-		{
-			for (auto& index = iter.second->begin(); index != iter.second->end();)
-			{
-				index = iter.second->erase(index);
-			}
-			iter.second->clear();
-			Safe_Delete(iter.second);
-		}
-		m_pObjects[i].clear();
-	}
-	m_pObjects->clear();
-	Safe_Delete_Array(m_pObjects);
+
 
 }
