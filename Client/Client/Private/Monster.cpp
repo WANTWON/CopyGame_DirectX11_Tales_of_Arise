@@ -589,4 +589,5 @@ void CMonster::Free()
 	CBattleManager::Get_Instance()->Out_BattleMonster(this);
 	Safe_Release(m_pDissolveTexture);
 	Safe_Release(m_pModelCom);
+	
 }

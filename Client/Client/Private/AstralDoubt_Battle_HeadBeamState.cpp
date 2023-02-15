@@ -56,7 +56,53 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 	//	m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
 	//}
 
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay)
+		{
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+			{
+				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+
+				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("HEAD1_C")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
+				matWorld.r[0] = XMVector4Normalize(matWorld.r[0]);
+				matWorld.r[1] = XMVector4Normalize(matWorld.r[1]);
+				matWorld.r[2] = XMVector4Normalize(matWorld.r[2]);
+
+				if (nullptr == m_pAtkColliderCom)
+				{
+					CCollider::COLLIDERDESC		ColliderDesc;
+
+					ColliderDesc.vScale = _float3(1.5f, 1.0f, 60.1f);
+					ColliderDesc.vPosition = _float3(0.f, 0.f, -30.f);
+
+					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+					m_pAtkColliderCom->Update(matWorld);
+					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+					int a = 0;
+				}
+				else
+					m_pAtkColliderCom->Update(matWorld);
+
+				RELEASE_INSTANCE(CCollision_Manager);
+			}
+		}
+
+		else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
+		{
+			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+
+			pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pAtkColliderCom);
+			m_pAtkColliderCom = nullptr;
+
+			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+
+			RELEASE_INSTANCE(CCollision_Manager);
+		}
+	}
 
 	return nullptr;
 }
@@ -77,61 +123,61 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 	
 
 
-		////회전 코드 
-		 m_pMonSterTransform = m_pOwner->Get_Transform();
+	//	////회전 코드 
+	//	 m_pMonSterTransform = m_pOwner->Get_Transform();
 
-		 m_vTargetDir = XMVector3Normalize(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
-		 m_vLook = XMVector3Normalize(m_pMonSterTransform->Get_State(CTransform::STATE_LOOK));
+	//	 m_vTargetDir = XMVector3Normalize(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
+	//	 m_vLook = XMVector3Normalize(m_pMonSterTransform->Get_State(CTransform::STATE_LOOK));
 
-		 m_vLook = XMVectorSetY(m_vLook, 0.f);
-		 m_vTargetDir = XMVectorSetY(m_vTargetDir, 0.f);
-		 m_fDot = XMVectorGetX(XMVector3Dot(m_vTargetDir, m_vLook));
+	//	 m_vLook = XMVectorSetY(m_vLook, 0.f);
+	//	 m_vTargetDir = XMVectorSetY(m_vTargetDir, 0.f);
+	//	 m_fDot = XMVectorGetX(XMVector3Dot(m_vTargetDir, m_vLook));
 
-		 m_vTargetPos = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//	 m_vTargetPos = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-		 m_bIs_TargetInRight = Is_TargetRightSide(m_vTargetPos);
-		
+	//	 m_bIs_TargetInRight = Is_TargetRightSide(m_vTargetPos);
+	//	
 
 
-	if (!m_bIsAnimationFinished)
-		{
-			m_fBeamTimeDeltaAcc += fTimeDelta;
+	//if (!m_bIsAnimationFinished)
+	//	{
+	//		m_fBeamTimeDeltaAcc += fTimeDelta;
 
-			if (m_bUpdatTargetPos == false)
-			{
-				if (m_bIs_TargetInRight)
-				{
-					if (m_fDot < 0.85f)
-					{
-						/*if (m_fBeamTimeDeltaAcc <= 1.f)
-						{*/
-							m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.03f);
-			/*			}
-						else
-						{
-							m_fBeamTimeDeltaAcc = 0.f;
-							m_bUpdatTargetPos = true;
-						}*/
-					
-					}
-				}
-				else if(m_bIs_TargetInRight == false)
-				{
-					if (m_fDot < 0.85f)
-					{
-						//if (m_fBeamTimeDeltaAcc <= 1.f)
-						//{
-							m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -0.03f);
-						//}
-						//else
-						//{
-						//	m_fBeamTimeDeltaAcc = 0.f;
-						//	m_bUpdatTargetPos = true;
-						//}
-					}
-				}
-			}
-		}
+	//		if (m_bUpdatTargetPos == false)
+	//		{
+	//			if (m_bIs_TargetInRight)
+	//			{
+	//				if (m_fDot < 0.85f)
+	//				{
+	//					/*if (m_fBeamTimeDeltaAcc <= 1.f)
+	//					{*/
+	//						m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.03f);
+	//		/*			}
+	//					else
+	//					{
+	//						m_fBeamTimeDeltaAcc = 0.f;
+	//						m_bUpdatTargetPos = true;
+	//					}*/
+	//				
+	//				}
+	//			}
+	//			else if(m_bIs_TargetInRight == false)
+	//			{
+	//				if (m_fDot < 0.85f)
+	//				{
+	//					//if (m_fBeamTimeDeltaAcc <= 1.f)
+	//					//{
+	//						m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -0.03f);
+	//					//}
+	//					//else
+	//					//{
+	//					//	m_fBeamTimeDeltaAcc = 0.f;
+	//					//	m_bUpdatTargetPos = true;
+	//					//}
+	//				}
+	//			}
+	//		}
+	//	}
 		//	m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
 			//if (m_bUpdatTargetPos == false)
 			//{
@@ -153,6 +199,9 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 	}
 
 
+	if (nullptr != m_pAtkColliderCom)
+		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
+
 	return nullptr;
 }
 
@@ -165,7 +214,7 @@ void CBattle_HeadBeamState::Enter()
 
 void CBattle_HeadBeamState::Exit()
 {
-
+	Safe_Release(m_pAtkColliderCom);
 }
 
 void CBattle_HeadBeamState::AimTarget(_float fTimeDelta)

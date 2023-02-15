@@ -23,7 +23,7 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 {
 	//Find_BattleTarget();
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *0.3f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.3f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 	//if (!m_bIsAnimationFinished)
 	//{

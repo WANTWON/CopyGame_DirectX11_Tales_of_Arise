@@ -5,6 +5,10 @@
 #include "AstralDoubt_State.h"
 #include "AstralDoubt_TurnState.h"
 #include "AstralDoubt_Battle_Hit_AndDead.h"
+#include "AstralDoubt_Battle_SpearMultiState.h"
+#include "AstralDoubt_Battle_UpperState.h"
+#include "AstralDoubt_Battle_720Spin_FirstState.h"
+#include "AstralDoubt_Battle_HeadBeamState.h"
 
 using namespace Astral_Doubt;
 
@@ -60,7 +64,7 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 
 	m_fRadius = 1.f;
 
-	NONANIMDESC ModelDesc;
+	/*NONANIMDESC ModelDesc;
 	if (pArg)
 		memcpy(&ModelDesc, pArg, sizeof(NONANIMDESC));
 
@@ -75,10 +79,10 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
 	}
 
-	Check_NearTrigger();
+	Check_NearTrigger();*/
 
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), 90.f);
-	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
+	//m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	m_fTimeDeltaAcc = 0;
 	m_fCntChanceTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
@@ -88,6 +92,8 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 
 HRESULT CAstralDoubt::Ready_Components(void * pArg)
 {
+	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
+
 	CTransform::TRANSFORMDESC TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 	TransformDesc.fSpeedPerSec = 6.f;
@@ -118,21 +124,27 @@ HRESULT CAstralDoubt::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
-	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
-	switch (iLevel)
-	{
-	case Client::LEVEL_SNOWFIELD:
-		/* For.Com_Navigation */
-		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom)))
-			return E_FAIL;
-		break;
-	case Client::LEVEL_BATTLE:
-		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom)))
-			return E_FAIL;
-		break;
-	default:
-		break;
-	}
+	//switch (iLevel)
+	//{
+	//case Client::LEVEL_SNOWFIELD:
+	//	/* For.Com_Navigation */
+	//	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom)))
+	//		return E_FAIL;
+	//	break;
+	//case Client::LEVEL_BATTLE:
+	//	if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom)))
+	//		return E_FAIL;
+	//	break;
+	//default:
+	//	break;
+	//}
+	if (FAILED(__super::Add_Components(TEXT("Com_FieldNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_vecNavigation[LEVEL_SNOWFIELD])))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Components(TEXT("Com_BattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_vecNavigation[LEVEL_BATTLE])))
+		return E_FAIL;
+
+	m_pNavigationCom = m_vecNavigation[iLevel];
 
 	return S_OK;
 }
@@ -147,7 +159,7 @@ int CAstralDoubt::Tick(_float fTimeDelta)
 
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
 		return OBJ_NOEVENT;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
@@ -166,19 +178,36 @@ int CAstralDoubt::Tick(_float fTimeDelta)
 		m_iRand = rand() % 3;
 
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
-	{
-		CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_BE_DAMAGED);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_U))
+	//{
+	//	CAstralDoubt_State* pState = new CBattle_HeadBeamState(this);
+	//	m_pState = m_pState->ChangeState(m_pState, pState);
+	//}
 
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
+	//{
+	//	CAstralDoubt_State* pState = new CBattle_SpearMultiState(this);
+	//	m_pState = m_pState->ChangeState(m_pState, pState);
+	//}
+	//
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
+	//{
+	//	CAstralDoubt_State* pState = new CBattle_UpperState(this);
+	//	m_pState = m_pState->ChangeState(m_pState, pState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_P))
+	//{
+	//	CAstralDoubt_State* pState = new CBattle_720Spin_FirstState(this);
+	//	m_pState = m_pState->ChangeState(m_pState, pState);
+	//}
 
 	return OBJ_NOEVENT;
 }
 
 void CAstralDoubt::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
 		return;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
@@ -257,7 +286,7 @@ void CAstralDoubt::Set_BattleMode(_bool type)
 		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::START_BATTLE);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
-	else
+	else 
 	{
 		Check_NearTrigger();
 		/* Set State */
