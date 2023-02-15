@@ -78,6 +78,12 @@ void CCollectState::Enter(void)
 		else
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::TREASURE_OPEN);
 		break;
+	case CPlayer::LAW:
+		if (nullptr == m_pObject)
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DOOR_OPEN_RIGHT_HAND);
+		else
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::TREASURE_OPEN);
+		break;
 	}
 }
 

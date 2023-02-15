@@ -7,6 +7,7 @@
 #include "PlayerHitState.h"
 #include "AlphenAttackState.h"
 #include "AlphenSkillState.h"
+#include "LawAttackState.h"
 
 using namespace Player;
 
@@ -90,6 +91,26 @@ CPlayerState * CCloseChaseState::LateTick(_float fTimeDelta)
 				}
 			}
 			break;
+		case CPlayer::LAW:
+			if (4.5f > XMVectorGetX(XMVector4Length(vToTargetDir)))
+			{
+				switch (m_eNextState)
+				{
+				case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+					return new CLawAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
+					break;
+				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+					return new CLawAttackState(m_pOwner, STATE_SKILL_ATTACK_E);
+					break;
+				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
+					return new CLawAttackState(m_pOwner, STATE_SKILL_ATTACK_R);
+					break;
+				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+					return new CLawAttackState(m_pOwner, STATE_SKILL_ATTACK_F);
+					break;
+				}
+			}
+			break;
 		}
 	}
 
@@ -110,8 +131,8 @@ void CCloseChaseState::Enter()
 	case CPlayer::ALPHEN:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_RUN);
 		break;
-	case CPlayer::SION:
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
+	case CPlayer::LAW:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_RUN);
 		break;
 	}
 

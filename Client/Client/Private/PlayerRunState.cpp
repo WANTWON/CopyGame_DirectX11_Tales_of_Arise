@@ -135,9 +135,7 @@ CPlayerState * CRunState::HandleInput()
 			else if (CPlayer::RINWELL == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
 			else if (CPlayer::LAW == m_ePlayerID)
-			{
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::);
-			}
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
 		}
 
 		m_bIsDash = true;
@@ -159,8 +157,7 @@ CPlayerState * CRunState::HandleInput()
 			else if (CPlayer::RINWELL == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
 			else if (CPlayer::LAW == m_ePlayerID)
-			{
-			}
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
 		}
 
 		m_bIsDash = false;
@@ -244,9 +241,7 @@ void CRunState::Enter()
 			break;
 		case CPlayer::LAW:
 			if (LEVEL_BATTLE != m_pOwner->Get_Level())
-			{
-
-			}
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		}
@@ -281,8 +276,7 @@ void CRunState::Enter()
 			if (LEVEL_BATTLE == m_pOwner->Get_Level())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_RUN);
 			else
-			{
-			}
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 				break;
 		}

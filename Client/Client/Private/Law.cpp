@@ -41,6 +41,10 @@ _bool CLaw::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
 	{
+	case IDLE:
+	case IDLE_SIDE:
+	case RUN:
+	case DASH:
 	case BTL_MOVE_IDLE:
 	case BTL_MOVE_RUN:
 		return true;
