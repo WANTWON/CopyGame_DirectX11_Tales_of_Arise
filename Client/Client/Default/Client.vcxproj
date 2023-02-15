@@ -179,9 +179,11 @@
     <ClInclude Include="..\Public\AICheckState.h" />
     <ClInclude Include="..\Public\AiRinwell.h" />
     <ClInclude Include="..\Public\AIRunawayfromTarget.h" />
+    <ClInclude Include="..\Public\AiState_WakeUp.h" />
     <ClInclude Include="..\Public\AI_Alphen_NormalAttackState.h" />
     <ClInclude Include="..\Public\AI_Alphen_SkillAttackState.h" />
     <ClInclude Include="..\Public\AI_ChaseState.h" />
+    <ClInclude Include="..\Public\AI_DodgeState.h" />
     <ClInclude Include="..\Public\AI_HitState.h" />
     <ClInclude Include="..\Public\AI_BoostAttackState.h" />
     <ClInclude Include="..\Public\AI_Sion_SkillState.h" />
@@ -263,6 +265,7 @@
     <ClInclude Include="..\Public\SionSkills.h" />
     <ClInclude Include="..\Public\UI_BattleResult.h" />
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h" />
+    <ClInclude Include="..\Public\UI_Dialogue_Caption.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
     <ClInclude Include="..\Public\UI_InterectMsg.h" />
     <ClInclude Include="..\Public\Item.h" />
@@ -395,9 +398,11 @@
     <ClCompile Include="..\Private\AICheckState.cpp" />
     <ClCompile Include="..\Private\AiRinwell.cpp" />
     <ClCompile Include="..\Private\AIRunawayfromTarget.cpp" />
+    <ClCompile Include="..\Private\AiState_WakeUp.cpp" />
     <ClCompile Include="..\Private\AI_Alphen_NormalAttackState.cpp" />
     <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp" />
     <ClCompile Include="..\Private\AI_ChaseState.cpp" />
+    <ClCompile Include="..\Private\AI_DodgeState.cpp" />
     <ClCompile Include="..\Private\AI_HitState.cpp" />
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp" />
     <ClCompile Include="..\Private\AI_Sion_SkillState.cpp" />
@@ -475,6 +480,7 @@
     <ClCompile Include="..\Private\SionSkills.cpp" />
     <ClCompile Include="..\Private\UI_BattleResult.cpp" />
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp" />
+    <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
     <ClCompile Include="..\Private\Item.cpp" />

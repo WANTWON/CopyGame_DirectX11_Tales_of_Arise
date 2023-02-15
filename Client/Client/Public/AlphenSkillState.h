@@ -33,7 +33,8 @@ private:
 	_bool m_bRyuuseizinSecondEffect = false;
 
 	/* R */
-	_bool m_bAkizameEffect = false;
+	_bool m_bAkizameFirstEffect = false;
+	_bool m_bAkizameSecondEffect = false;
 	_bool m_bSenkusyourepaParticle = false;
 	_bool m_bSenkusyourepaFirstEffect = false;
 	_bool m_bSenkusyourepaSecondEffect = false;
