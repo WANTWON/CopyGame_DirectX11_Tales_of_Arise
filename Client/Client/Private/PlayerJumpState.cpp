@@ -15,6 +15,9 @@
 #include "AlphenSkillState.h"
 
 #include "LawAttackState.h"
+#include "LawSkillState.h"
+#include "LawAirRSkillState.h"
+#include "LawAirFSkillState.h"
 
 using namespace Player;
 
@@ -71,6 +74,12 @@ CPlayerState * CJumpState::HandleInput()
 			case CPlayer::RINWELL:
 				break;
 			case CPlayer::LAW:
+				if (pGameInstance->Key_Down(DIK_E))
+					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
+				else if (pGameInstance->Key_Down(DIK_R)) {}
+					//return new CLawAirRSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
+				else if (pGameInstance->Key_Down(DIK_F)) {}
+					//return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 				break;
 			}
 		}
@@ -127,7 +136,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		if ((CPlayer::ALPHEN == m_pOwner->Get_PlayerID()) && (CAlphen::ANIM::ANIM_JUMP_RUN_LAND == m_pOwner->Get_Model()->Get_CurrentAnimIndex()))
+		if (STATETYPE_END == m_eStateType && JUMP_RUN == m_eJumpType)
 		{
 			_vector vecTranslation;
 			_float fRotationRadian;
@@ -138,13 +147,13 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 			m_pOwner->Check_Navigation();
 
-			m_bIsJump = false;
+ 			m_bIsJump = false;
 		}
 	}
 
-	if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+	if ((CPlayer::ALPHEN == m_pOwner->Get_PlayerID()) || (CPlayer::LAW == m_pOwner->Get_PlayerID()))
 	{
-		if (CAlphen::ANIM::ANIM_JUMP_START == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
+		if (STATETYPE_START == m_eStateType && JUMP_IDLE == m_eJumpType)
 		{
 			vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -163,7 +172,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 			}
 		}
 		
-		else if (CAlphen::ANIM::ANIM_JUMP_RUN_LAND == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
+		else if (STATETYPE_END == m_eStateType)
 		{
 			vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -212,7 +221,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 			case Client::Player::CJumpState::JUMP_IDLE:
 				if (CPlayer::ALPHEN == m_ePlayerID) 
 				{
-					if (Check_JumpEnd(1.f))
+					if (Check_JumpEnd(1.57f))
 					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LAND);
 						m_eStateType = STATETYPE_END;
@@ -242,7 +251,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				}
 				else if (CPlayer::LAW == m_ePlayerID)
 				{
-					if (Check_JumpEnd(0.f))
+					if (Check_JumpEnd(1.3f))
 					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::JUMP_LANDING);
 						m_eStateType = STATETYPE_END;
@@ -254,7 +263,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 			case Client::Player::CJumpState::JUMP_RUN:
 				if (CPlayer::ALPHEN == m_ePlayerID)
 				{
-					if (Check_JumpEnd(0.5f))
+					if (Check_JumpEnd(1.25f))
 					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LAND);
 						m_eStateType = STATETYPE_END;
@@ -284,7 +293,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				}
 				else if (CPlayer::LAW == m_ePlayerID)
 				{
-					if (Check_JumpEnd(0.f))
+					if (Check_JumpEnd(1.5f))
 					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::JUMP_RUN_LANDING);
 						m_eStateType = STATETYPE_END;
@@ -297,30 +306,46 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				if (CPlayer::ALPHEN == m_ePlayerID)
 				{
 					if (Check_JumpEnd(0.f))
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
+						m_eStateType = STATETYPE_END;
+					}
+						
 				}
 				else if (CPlayer::SION == m_ePlayerID)
 				{
 					if (Check_JumpEnd(0.f))
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
+						m_eStateType = STATETYPE_END;
+					}
+						
 				}
 				else if (CPlayer::RINWELL == m_ePlayerID)
 				{
 					if (Check_JumpEnd(0.f))
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
+						m_eStateType = STATETYPE_END;
+					}
+						
 				}
 				else if (CPlayer::LAW == m_ePlayerID)
 				{
 					if (Check_JumpEnd(0.f))
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_LAND);
+						m_eStateType = STATETYPE_END;
+					}
+						
 				}
-				m_eStateType = STATETYPE_END;
+				
 				break;
 			}
 		}
 		break;
 	case Client::STATETYPE_MAIN:
-		if (Check_JumpEnd(1.f))
+		if (Check_JumpEnd(1.5f))
 		{
 			m_eStateType = STATETYPE_END;
 			switch (m_eJumpType)

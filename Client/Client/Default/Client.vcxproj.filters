@@ -1041,6 +1041,12 @@
     <ClInclude Include="..\Public\LawSkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\LawAirRSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LawAirFSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1674,6 +1680,12 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\LawSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LawAirRSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LawAirFSkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
     </ClCompile>
   </ItemGroup>

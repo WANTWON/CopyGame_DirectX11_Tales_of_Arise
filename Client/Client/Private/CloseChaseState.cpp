@@ -5,9 +5,14 @@
 #include "PlayerJumpState.h"
 #include "PlayerRunState.h"
 #include "PlayerHitState.h"
+
 #include "AlphenAttackState.h"
 #include "AlphenSkillState.h"
+
 #include "LawAttackState.h"
+#include "LawSkillState.h"
+#include "LawAirRSkillState.h"
+#include "LawAirFSkillState.h"
 
 using namespace Player;
 
@@ -100,13 +105,13 @@ CPlayerState * CCloseChaseState::LateTick(_float fTimeDelta)
 					return new CLawAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
-					return new CLawAttackState(m_pOwner, STATE_SKILL_ATTACK_E);
+					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
-					return new CLawAttackState(m_pOwner, STATE_SKILL_ATTACK_R);
+					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
-					return new CLawAttackState(m_pOwner, STATE_SKILL_ATTACK_F);
+					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
 					break;
 				}
 			}

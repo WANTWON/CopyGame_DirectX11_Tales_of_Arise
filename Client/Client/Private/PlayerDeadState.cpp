@@ -25,11 +25,8 @@ CPlayerState * CPlayerDeadState::Tick(_float fTimeDelta)
 	{
 		if (pEvent.isPlay)
 		{
-			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
-			{
-				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-					m_bIsStop = true;
-			}
+			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+				m_bIsStop = true;
 		}
 	}
 

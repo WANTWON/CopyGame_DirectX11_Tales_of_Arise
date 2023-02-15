@@ -225,6 +225,8 @@
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
     <ClInclude Include="..\Public\Law.h" />
+    <ClInclude Include="..\Public\LawAirFSkillState.h" />
+    <ClInclude Include="..\Public\LawAirRSkillState.h" />
     <ClInclude Include="..\Public\LawAttackState.h" />
     <ClInclude Include="..\Public\LawSkillState.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
@@ -446,6 +448,8 @@
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
     <ClCompile Include="..\Private\Law.cpp" />
+    <ClCompile Include="..\Private\LawAirFSkillState.cpp" />
+    <ClCompile Include="..\Private\LawAirRSkillState.cpp" />
     <ClCompile Include="..\Private\LawAttackState.cpp" />
     <ClCompile Include="..\Private\LawSkillState.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />

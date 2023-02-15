@@ -40,8 +40,28 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
+	else if (m_bIsFly)
+		m_fTime += fTimeDelta;
 
 	m_pOwner->Check_Navigation_Jump();
+
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay)
+		{
+			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType) {}
+				//dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+				return EventInput();
+		}
+		else
+		{
+			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType) {}
+				//dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
+		}
+	}
 	
 	return nullptr;
 }
@@ -130,13 +150,7 @@ void CLawSkillState::Enter(void)
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_BRAVE);
-			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_BRAVE);
-			break;
-		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_BRAVE);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_BURN_KNUCKLE);
 			break;
 		}
 	}
@@ -145,10 +159,13 @@ void CLawSkillState::Enter(void)
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_RONDSENPU);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_GARYOUKUUHA);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_TYOURENGADAN);
 			break;
 		}
 	}
