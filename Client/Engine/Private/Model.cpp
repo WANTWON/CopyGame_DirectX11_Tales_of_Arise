@@ -433,7 +433,7 @@ HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
 		ZeroMemory(&SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 
 		SubResourceData.pSysMem = pPixel;
-		SubResourceData.SysMemPitch = 128 * 4;
+		SubResourceData.SysMemPitch = 64 * 4;
 
 		if (FAILED(m_pDevice->CreateTexture2D(&m_TextureDesc, &SubResourceData, &m_pTexture2D)))
 			return E_FAIL;
