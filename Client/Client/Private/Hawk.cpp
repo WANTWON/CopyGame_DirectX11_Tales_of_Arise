@@ -103,7 +103,6 @@ HRESULT CHawk::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
-
 	if (FAILED(__super::Add_Components(TEXT("Com_FieldNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_vecNavigation[LEVEL_SNOWFIELD])))
 		return E_FAIL;
 
@@ -149,7 +148,6 @@ int CHawk::Tick(_float fTimeDelta)
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
-
 	return OBJ_NOEVENT;
 }
 
@@ -157,8 +155,8 @@ void CHawk::Late_Tick(_float fTimeDelta)
 {
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
-
 		return;
+
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
@@ -238,6 +236,7 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	case SYMBOL_RUN:
 	case MOVE_WALK_F:
 	case SYMBOL_STOP:
+	case MOVE_IDLE:
 		return true;
 
 	case ATTACK_FLUTTER:
@@ -304,12 +303,15 @@ void CHawk::Check_Navigation()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 2.f);
+
 	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD)
 		m_fWalkingHeight -= 2.f;
-	
 
-	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	if (CHawkState::STATE_BRAVE != m_pHawkState->Get_StateId())
+	{
+		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	}
 }
 
 void CHawk::Set_BattleMode(_bool type)

@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "BattleManager.h"
 #include "Monster.h"
+#include "Effect.h"
+
 CUI_LOCKON::CUI_LOCKON(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -73,52 +75,6 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		//return OBJ_DEAD;
 	}
 
-	/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-	CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
-	Compute_CamDistance(pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
-	m_fPosition.x = dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().x - 85.f;
-	m_fPosition.y = dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().y + (m_fCamDistance / 5.f);*/
-
-
-	//if (m_fCamDistance > 20.f)
-	//{
-	//	m_fNext = 13.f / m_fCamDistance * 20;
-	//	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 16.f / m_fCamDistance * 18.f);
-	//	m_pTransformCom->Set_Scale(CTransform::STATE_UP, 16.f / m_fCamDistance * 18.f);
-	//	m_fPosition.x += m_fCamDistance *2.f - 35.f;//(m_fNext*3);
-	//}
-	//else
-	//{
-	//	m_fNext = 13.f;
-	//	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, 16.f);
-	//	m_pTransformCom->Set_Scale(CTransform::STATE_UP, 16.f);
-	//}
-
-//	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-
-
-
-
-	//Set_Scale({ 0.2f,0.2f,1.f });
-	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_V))
-	{*/
-	//		m_pTransformCom->Change_Speed(1.f);
-	//	
-	//	m_pTransformCom->Go_Left(1.5f);
-	////	}
-
-
-
-	
-
-
-	//_float3 pos = { 0.f,0.f,0.f };
-	////_vector vpos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	//XMStoreFloat3(&pos, vplayerpos);
-	//pos.x -= 1.6f;
-	//vplayerpos = XMLoadFloat3(&pos);
-	//vplayerpos = XMVectorSetW(vplayerpos, 1.f);
-	//SetUp_BillBoard();
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_5))
 	{
 		m_fcurrentmp += 5.f;
@@ -141,7 +97,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 	if(nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	m_fcurrentmp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
 
-	if (m_fcurrentmp >= 4.f)
+	if (m_fcurrentmp >= 4.f && !m_bStrikeon)
 		m_bStrikeon = true;
 	else
 	{
@@ -196,6 +152,22 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
+	if (m_bStrikeon && !m_bEffectSpawned)
+	{
+		CBaseObj* pObj = CBattleManager::Get_Instance()->Get_LackonMonster();
+		if (pObj)
+		{
+			_float4 vPosition;
+			XMStoreFloat4(&vPosition, pObj->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + XMVectorSet(0.f, 1.f, 0.f, 0.f));
+
+			_matrix mWorldMatrix = XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z);
+
+			CEffect::PlayEffectAtLocation(TEXT("Skill_Break_Shockwave_1.dat"), mWorldMatrix);
+
+			m_bEffectSpawned = true;
+		}
+	}
+
 	return OBJ_NOEVENT;
 }
 
@@ -211,8 +183,8 @@ void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
-
-
+	if (m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_GLOW, this);
 }
 
 HRESULT CUI_LOCKON::Render()
@@ -319,20 +291,20 @@ HRESULT CUI_LOCKON::Render()
 	
 
 
-	m_fSize.x = 1500.f;
-	m_fSize.y = 1000.f;
-	//	m_fPosition.x -= 3.f;
+	//m_fSize.x = 1500.f;
+	//m_fSize.y = 1000.f;
+	////	m_fPosition.x -= 3.f;
 
-	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
+	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	//	return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(9))))
-		return E_FAIL;
-	m_pShaderCom->Begin(UI_STRIKEEFFECT);
+	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(9))))
+	//	return E_FAIL;
+	//m_pShaderCom->Begin(UI_STRIKEEFFECT);
 
-	m_pVIBufferCom->Render();
+	//m_pVIBufferCom->Render();
 
 	if (m_bStrikeon)
 	{
@@ -390,114 +362,57 @@ HRESULT CUI_LOCKON::Render()
 		m_pVIBufferCom->Render();
 	}
 
+	return S_OK;
+}
 
+HRESULT CUI_LOCKON::Render_Glow()
+{
+	if (!m_bStrikeon)
+		return S_OK;
 
-	//m_fSize.x = 36.f;
-	//m_fSize.y = 4.f;
-	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-
-	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(3))))
-	//	return E_FAIL;
-
-	//m_fPosition.x += 13.f;
-	//m_fPosition.y -= 13.f;
-	//m_pTransformCom->Set_Rotation({ 0.f,0.f,-45.f });
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-	//return E_FAIL;
-
-	//m_eShaderID = UI_MP_GUAGE;
-	//if (m_fcurrentmp >= 1.f)
-	//m_eShaderID = UI_POTRAIT_ALLBLUE;
-	//
-
-	//m_pShaderCom->Begin(UI_COLOR_BLACK);
-
-	//m_pVIBufferCom->Render();
-
-	//m_pShaderCom->Begin(m_eShaderID);
-
-	//m_pVIBufferCom->Render();
-	///////////////////////////첫번째마나
-	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(5))))
-	//	return E_FAIL;
-	//m_fPosition.y += 25.f;
-	//m_pTransformCom->Set_Rotation({ 0.f,0.f,45.f });
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-	//	return E_FAIL;
-
-
-	//if (m_fcurrentmp<1.f)
-	//	m_eShaderID = UI_COLOR_BLACK;
-	//else if (m_fcurrentmp > 2.f)
-	//	m_eShaderID = UI_POTRAIT_ALLBLUE;
-	//else
-	//	m_eShaderID = UI_LOCKON_REVERSE;
-
-
-	//m_pShaderCom->Begin(UI_COLOR_BLACK);
-
-	//m_pVIBufferCom->Render();
-	//m_pShaderCom->Begin(m_eShaderID);
-
-	//m_pVIBufferCom->Render();
-
-	////////////////////////////두번째마나
-	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(3))))
-	//	return E_FAIL;
-	//m_fPosition.x -= 25.f;
-	//m_pTransformCom->Set_Rotation({ 0.f,0.f,-225.f });
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-	//	return E_FAIL;
-
-	//if (m_fcurrentmp<2.f)
-	//	m_eShaderID = UI_COLOR_BLACK;
-	//else if (m_fcurrentmp > 3.f)
-	//	m_eShaderID = UI_POTRAIT_ALLBLUE;
-	//else
-	//	m_eShaderID = UI_MP_GUAGE;
-	//m_pShaderCom->Begin(UI_COLOR_BLACK);
-
-	//m_pVIBufferCom->Render();
-	//m_pShaderCom->Begin(m_eShaderID);
-
-	//m_pVIBufferCom->Render();
-
-	//
-	////////////////////////세번째마나
-	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(3))))
-	//	return E_FAIL;
-
-
-	//m_fPosition.y -= 25.f;
-	//m_pTransformCom->Set_Rotation({ 0.f,0.f,-315.f });
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-	//	return E_FAIL;
-
-	//if (m_fcurrentmp<3.f)
-	//	m_eShaderID = UI_COLOR_BLACK;
-	//else if (m_fcurrentmp > 4.f)
-	//	m_eShaderID = UI_POTRAIT_ALLBLUE;
-	//else
-	//	m_eShaderID = UI_MP_GUAGE;
-	//m_pShaderCom->Begin(UI_COLOR_BLACK);
-
-	//m_pVIBufferCom->Render();
-	//m_pShaderCom->Begin(m_eShaderID);
-
-	//m_pVIBufferCom->Render();
-
+	if (!m_pShaderCom || !m_pVIBufferCom)
+		return E_FAIL; 
 	
-	////////////////////네번째마나
+	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+		return E_FAIL;
 
+	/* Set Glow Shader Variables. */
+	_float3 vColor = _float3(.25f, .67f, .78f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &vColor, sizeof(_float3))))
+		return E_FAIL;
+	_bool bUseDiffuseColor = false;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_bUseDiffuseColor", &bUseDiffuseColor, sizeof(_bool))))
+		return E_FAIL;
+
+	/* Gauge Glow */
+
+	// TODO: Position Change.
+	// ..
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
 	
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", m_pTextureGlowCom->Get_SRV(0))))
+		return E_FAIL;
 
+	m_pShaderCom->Begin(UI_GLOW);
+	m_pVIBufferCom->Render();
 
+	/* Keys Glow */
+	
+	// TODO: Position Change.
+	// ..
 
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+	
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", m_pTextureGlowCom->Get_SRV(1))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(UI_GLOW);
+	m_pVIBufferCom->Render();
 
 	return S_OK;
 }
@@ -520,11 +435,14 @@ HRESULT CUI_LOCKON::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lockon"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
+	/* For.Com_TextureGlow */
+	if (FAILED(__super::Add_Components(TEXT("Com_TextureGlow"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_LockOn_Glow"), (CComponent**)&m_pTextureGlowCom)))
+		return E_FAIL;
+
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
-	//m_pVIBufferCom1
 	return S_OK;
 }
 

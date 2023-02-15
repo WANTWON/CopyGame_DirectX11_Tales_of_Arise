@@ -15,7 +15,6 @@ public:
 		STATE_WALK,
 		STATE_TURN_L,
 		STATE_TURN_R,
-		STATE_BRAVE,
 		FIELD_STATE_END,
 	};
 
@@ -35,6 +34,7 @@ public:
 		STATE_PECK,
 		STATE_TORNADE,
 		STATE_DEAD,
+		STATE_BRAVE,
 		STATE_END
 	};
 

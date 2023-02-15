@@ -79,12 +79,13 @@ void CPoseState::Enter()
 		break;
 	case Client::CRinwellState::STATE_AGGRO:
 	{
+		CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(0);
-		CCameraManager* pCameraManager = GET_INSTANCE(CCameraManager);
+
 		pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
 		pCameraManager->Play_ActionCamera(TEXT("RinwellTest.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_ATTACK_BRAVE);
-		RELEASE_INSTANCE(CCameraManager);
 		break;
 	}		
 	case Client::CRinwellState::STATE_HP50DOWN:

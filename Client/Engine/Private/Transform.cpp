@@ -394,7 +394,7 @@ bool CTransform::Go_PosDir(_float fTimeDelta, _vector vecDir, CNavigation * pNav
 
 	vDir = XMVector3Normalize(vDir);
 
-	vPosition += vDir*fTimeDelta*m_TransformDesc.fSpeedPerSec;
+	vPosition += vDir*fTimeDelta*m_TransformDesc.fSpeedPerSec * 9999999.f;
 
 	if (nullptr == pNavigation)
 		Set_State(CTransform::STATE_TRANSLATION, vPosition);

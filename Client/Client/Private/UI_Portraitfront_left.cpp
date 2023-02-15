@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "..\Public\UI_Portraitfront_left.h"
 
-
+#include "UI_Portraitfront_left.h"
 #include "GameInstance.h"
+#include "BattleManager.h"
+#include "Monster.h"
 
 CUI_Portraitfront_left::CUI_Portraitfront_left(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Portraitfront(pDevice, pContext)
@@ -278,6 +279,18 @@ HRESULT CUI_Portraitfront_left::Render_Glow()
 		return E_FAIL;
 
 	_float3 vColor = _float3(1.f, 1.f, 1.f);
+
+	CBaseObj* pObj = CBattleManager::Get_Instance()->Get_LackonMonster();
+	if (pObj)
+	{
+		CMonster* pMonster = dynamic_cast<CMonster*>(pObj);
+		if (pMonster && pMonster->Get_Stats().m_fLockonSmashGuage >= 4.f)
+		{
+			m_fGlowTimer = 0.f;
+			vColor = _float3(.25f, .67f, .78f);
+		}
+	}
+
 	if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &vColor, sizeof(_float3))))
 		return E_FAIL;
 

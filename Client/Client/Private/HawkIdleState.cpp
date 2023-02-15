@@ -28,24 +28,17 @@ CHawkState * CIdleState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CIdleState::Tick(_float fTimeDelta)
 {
-	
 	Find_Target();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-
 	m_pOwner->Check_Navigation();
 	
-
-
-
 	return nullptr;
 }
 
 CHawkState * CIdleState::LateTick(_float fTimeDelta)
 {
-	
-
 	m_fTimeDeltaAcc += fTimeDelta;
 
 	if (m_pTarget)

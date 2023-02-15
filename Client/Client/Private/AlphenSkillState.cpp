@@ -102,7 +102,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bHienzinFirstEffect)
 							{							
-								CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin_1.dat"), mWorldMatrix);
 
 								m_bHienzinFirstEffect = true;
 							}
@@ -111,7 +111,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bHienzinSecondEffect)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin_2.dat"), mWorldMatrix);
 
 								m_bHienzinSecondEffect = true;
 							}
@@ -238,21 +238,15 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					{
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-						/*if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
+						if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
 						{
 							if (!m_bHousyutigakuzinFirstEffect)
 							{
-								_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
-								_vector vPosition = mWorldMatrix.r[3];
-								vPosition += XMVectorSet(0.f, 4.f, 0.f, 0.f);
-								vPosition += vLook * 2;
-
-								mWorldMatrix.r[3] = vPosition;
-								m_HousyutigakuzinStart = CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_1.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_1.dat"), mWorldMatrix);
 
 								m_bHousyutigakuzinFirstEffect = true;
 							}
-						}*/
+						}
 
 						if (!strcmp(pEvent.szName, "Housyutigakuzin_2"))
 						{
@@ -261,6 +255,16 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_2.dat"), mWorldMatrix);
 
 								m_bHousyutigakuzinSecondEffect = true;
+							}
+						}
+
+						if (!strcmp(pEvent.szName, "Housyutigakuzin_3"))
+						{
+							if (!m_bHousyutigakuzinThirdEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_3.dat"), mWorldMatrix);
+
+								m_bHousyutigakuzinThirdEffect = true;
 							}
 						}
 					}
@@ -280,17 +284,6 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 
 CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 {
-	for (auto& pEffect : m_HousyutigakuzinStart)
-	{
-		if (pEffect)
-		{
-			if (pEffect->Get_PreDead())
-				pEffect = nullptr;
-			else
-				pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-		}
-	}
-
 	for (auto& pEffect : m_SenkusyourepaParticles)
 	{
 		if (pEffect)
@@ -432,16 +425,12 @@ void CAlphenSkillState::Enter(void)
 		}
 	}
 
-	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
+	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
 	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
 
 	if (nullptr != pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
-	RELEASE_INSTANCE(CBattleManager);
-
-	
 }
 
 void CAlphenSkillState::Exit(void)
@@ -469,9 +458,9 @@ void CAlphenSkillState::Reset_Skill()
 	/* F */
 	m_bHousyutigakuzinFirstEffect = false;
 	m_bHousyutigakuzinSecondEffect = false;
+	m_bHousyutigakuzinThirdEffect = false;
 	m_bEngetuFirstEffect = false;
 	m_bEngetuSecondEffect = false;
 
-	m_HousyutigakuzinStart.clear();
 	m_SenkusyourepaParticles.clear();
 }

@@ -193,7 +193,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_START, m_fTime, CJumpState::JUMP_BATTLE);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}

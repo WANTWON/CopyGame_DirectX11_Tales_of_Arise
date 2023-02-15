@@ -177,10 +177,12 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<1.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp >= 2.f)
-		m_eShaderID = UI_POTRAIT_ALLBLUE;
-	else
+	else if (m_fcurrentmp >= 1.f)
 		m_eShaderID = UI_MP_GUAGE;
+
+	 if (m_fcurrentmp >= 2.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+	
 	
 	
 	m_pShaderCom->Begin(12);
@@ -198,10 +200,12 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<2.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp >= 3.f)
-		m_eShaderID = UI_POTRAIT_ALLBLUE;
-	else
+	
+	else if (m_fcurrentmp >= 2.f)
 		m_eShaderID = UI_MP_GUAGE;
+	if (m_fcurrentmp >= 3.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+
 	m_pShaderCom->Begin(12);
 
 	m_pVIBufferCom->Render();
@@ -221,10 +225,11 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<3.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp >= 4.f)
-		m_eShaderID = UI_POTRAIT_ALLBLUE;
-	else
+
+	else if (m_fcurrentmp >= 3.f)
 		m_eShaderID = UI_MP_GUAGE;
+	if (m_fcurrentmp >= 4.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	m_pShaderCom->Begin(12);
 
 	m_pVIBufferCom->Render();
@@ -243,10 +248,11 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<4.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp >= 5.f)
-		m_eShaderID = UI_POTRAIT_ALLBLUE;
-	else
+
+	else if (m_fcurrentmp >= 4.f)
 		m_eShaderID = UI_MP_GUAGE;
+	if (m_fcurrentmp >= 5.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	m_pShaderCom->Begin(12);
 
 	m_pVIBufferCom->Render();
@@ -265,10 +271,11 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<5.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp >= 6.f)
-		m_eShaderID = UI_POTRAIT_ALLBLUE;
-	else
+
+	else if (m_fcurrentmp >= 5.f)
 		m_eShaderID = UI_MP_GUAGE;
+	if (m_fcurrentmp >= 6.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	m_pShaderCom->Begin(12);
 
 	m_pVIBufferCom->Render();
@@ -286,10 +293,12 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<6.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp >= 7.f)
-		m_eShaderID = UI_POTRAIT_ALLBLUE;
-	else
+
+	else if (m_fcurrentmp >= 6.f)
 		m_eShaderID = UI_MP_GUAGE;
+	if (m_fcurrentmp >= 7.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
+
 	m_pShaderCom->Begin(12);
 
 	m_pVIBufferCom->Render();
@@ -308,10 +317,11 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<7.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp >= 8.f)
-		m_eShaderID = UI_POTRAIT_ALLBLUE;
-	else
+
+	else if (m_fcurrentmp >= 7.f)
 		m_eShaderID = UI_MP_GUAGE;
+	if (m_fcurrentmp >= 8.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	m_pShaderCom->Begin(12);
 
 	m_pVIBufferCom->Render();
@@ -330,10 +340,11 @@ HRESULT CMP_Guage::Render()
 
 	if (m_fcurrentmp<8.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp >= 9.f)
-		m_eShaderID = UI_POTRAIT_ALLBLUE;
-	else
+
+	else if (m_fcurrentmp >= 8.f)
 		m_eShaderID = UI_MP_GUAGE;
+	if (m_fcurrentmp >= 9.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	m_pShaderCom->Begin(12);
 
 	m_pVIBufferCom->Render();
@@ -350,12 +361,13 @@ HRESULT CMP_Guage::Render()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (m_fcurrentmp< 9.f)
+	if (m_fcurrentmp<9.f)
 		m_eShaderID = UI_COLOR_BLACK;
-	else if (m_fcurrentmp >= 10.f)
-		m_eShaderID = UI_POTRAIT_ALLBLUE;
-	else
+
+	else if (m_fcurrentmp >= 9.f)
 		m_eShaderID = UI_MP_GUAGE;
+	if (m_fcurrentmp >= 10.f)
+		m_eShaderID = UI_POTRAIT_ALLBLUE;
 	m_pShaderCom->Begin(12);
 
 	m_pVIBufferCom->Render();
@@ -437,6 +449,10 @@ HRESULT CMP_Guage::SetUp_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fcurrent_render_slot_mp, sizeof(_float))))
 		return E_FAIL;
+
+	_float alpha = 1.f;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+		return E_FAIL; 
 	 
 	/*if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxMp", &m_fmaxmp, sizeof(_float))))
 		return E_FAIL;*/

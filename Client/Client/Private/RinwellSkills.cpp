@@ -54,6 +54,12 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		mWorldMatrix.r[3] = vLocation;
 		m_pBlast2Effects = CEffect::PlayEffectAtLocation(TEXT("GaleForceParticle2.dat"), mWorldMatrix);
 		break;
+	case METEOR:
+		vLocation = m_BulletDesc.vInitPositon;
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+		break;
+
+
 	default:
 		break;
 	}
@@ -81,6 +87,10 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 		break;
 	case GALE_FORCE:
 		Tick_GaleForce(fTimeDelta);
+		break;
+
+	case METEOR:
+		Tick_Meteor(fTimeDelta);
 		break;
 	}
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
@@ -159,6 +169,12 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 1.f);
 		break;
+
+	case METEOR:
+		ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 1.f);
+		break;
 	}
 
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
@@ -190,6 +206,17 @@ void CRinwellSkills::Tick_GaleForce(_float fTimeDelta)
 
 	if (m_fTime >= m_BulletDesc.fDeadTime)
 		m_bDead = true;
+}
+
+void CRinwellSkills::Tick_Meteor(_float fTimeDelta)
+{
+	if (m_bDeadEffect)
+		m_bDead = true;
+
+	_vector vDir =  m_BulletDesc.vTargetDir;
+
+	//m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
+	m_pTransformCom->Go_PosDir(fTimeDelta, vDir);
 }
 
 CRinwellSkills * CRinwellSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
