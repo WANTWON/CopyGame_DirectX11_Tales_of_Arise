@@ -83,7 +83,7 @@ PS_OUT PS_GLOW(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	Out.vColor.gb = Out.vColor.r;
+	Out.vColor.agb = Out.vColor.r;
 
 	Out.vColor.rgb *= g_vGlowColor;
 	Out.vColor.a *= g_fAlpha;
