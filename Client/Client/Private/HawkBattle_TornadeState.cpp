@@ -166,12 +166,13 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 	//if (m_bIsAnimationFinished)
 	//	return new CBattle_TornadeState(m_pOwner);
 		
+#ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
 
 	if (nullptr != m_p2th_AtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_p2th_AtkColliderCom);
-
+#endif
 
 	return nullptr;
 }
