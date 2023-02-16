@@ -52,6 +52,8 @@ public: /* For.Timer_Manager */
 	HRESULT Add_Timer(const _tchar* pTimerTag);
 	_float Get_TimeDelta(const _tchar* pTimerTag);
 	void Update_TimeDelta(const _tchar* pTimerTag);
+	void Set_TimeSpeedOffset(const _tchar* pTimerTag, _float fOffset = 1.f);
+	float Get_TimeSpeedOffset(const _tchar* pTimerTag);
 
 public: /* For.Level_Manager */
 	HRESULT Open_Level(unsigned int iLevelIndex, class CLevel* pNewLevel);

@@ -39,16 +39,49 @@ HRESULT CLevel_SnowField::Initialize()
 			return E_FAIL;
 	}
 
-	cout << " Player Clone start" << endl;
-	m_pPlayerLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER);
-	if (nullptr == m_pPlayerLoader)
-		return E_FAIL;
+	if (CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
+	{
+		cout << " Player Clone start" << endl;
+		m_pPlayerLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER);
+		if (nullptr == m_pPlayerLoader)
+			return E_FAIL;
 
-	cout << " Monster Group1 Clone start" << endl;
-	m_pMonsterLoader1 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER1);
-	if (nullptr == m_pMonsterLoader1)
-		return E_FAIL;
+		cout << " Player Clone start2" << endl;
+		m_pPlayer2Loader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER2);
+		if (nullptr == m_pPlayer2Loader)
+			return E_FAIL;
 
+		cout << " Monster Group1 Clone start" << endl;
+		m_pMonsterLoader1 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER1);
+		if (nullptr == m_pMonsterLoader1)
+			return E_FAIL;
+
+	}
+	else
+	{
+		if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::RINWELL) == nullptr)
+		{
+			vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
+			for (auto& iter : vecFightedMonster)
+			{
+				if (iter == RINWELL)
+				{
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+						return E_FAIL;
+				}
+
+			}
+		}
+
+
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
+		pPlayer->Change_Navigation(LEVEL_SNOWFIELD);
+		pPlayer->Compute_CurrentIndex(LEVEL_SNOWFIELD);
+		pPlayer->Check_Navigation();
+		pPlayer->Change_Level(LEVEL_SNOWFIELD);
+	}
+	
 
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund")) == false)
 	{
@@ -72,30 +105,37 @@ HRESULT CLevel_SnowField::Initialize()
 	}
 
 
-
-
-	////Test
-	//if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
-	//	return E_FAIL;
-	////Test
-
-
-	DWORD dwTime = GetTickCount();
-	while (false == m_pPlayerLoader->Get_Finished() || 
-		false == m_pMonsterLoader1->Get_Finished())
+	if (m_pPlayerLoader != nullptr)
 	{
-		if (dwTime + 1000 < GetTickCount())
+		DWORD dwTime = GetTickCount();
+		while (false == m_pPlayerLoader->Get_Finished() || false == m_pPlayer2Loader->Get_Finished() ||
+			false == m_pMonsterLoader1->Get_Finished())
 		{
-			if (m_pPlayerLoader->Get_Finished() == true)
-				cout << "Finished Player Clone" << endl;
+			if (dwTime + 1000 < GetTickCount())
+			{
+				if (m_pPlayerLoader->Get_Finished() == true)
+					cout << "Finished Player Clone" << endl;
+
+				if (m_pPlayer2Loader->Get_Finished() == true)
+					cout << "Finished Player Clone2" << endl;
 
 
-			if (m_pMonsterLoader1->Get_Finished() == true)
-				cout << "Finished Monster Grounp1 Clone" << endl;
+				if (m_pMonsterLoader1->Get_Finished() == true)
+					cout << "Finished Monster Grounp1 Clone" << endl;
 
-			dwTime = GetTickCount();
+				dwTime = GetTickCount();
+			}
 		}
 	}
+	
+
+
+	if(m_pPlayerLoader != nullptr)
+		Safe_Release(m_pPlayerLoader);
+	if (m_pPlayer2Loader != nullptr)
+		Safe_Release(m_pPlayer2Loader);
+	if (m_pMonsterLoader1 != nullptr)
+		Safe_Release(m_pMonsterLoader1);
 
 	if (!g_bUIMade)
 	{
@@ -112,8 +152,6 @@ HRESULT CLevel_SnowField::Initialize()
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
 
-	Safe_Release(m_pPlayerLoader);
-	Safe_Release(m_pMonsterLoader1);
 
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();

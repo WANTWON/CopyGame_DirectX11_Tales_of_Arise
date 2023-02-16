@@ -31,6 +31,24 @@ _float CTimer_Manager::Get_TimeDelta(const _tchar * pTimerTag)
 	return pTimer->Get_TimeDelta();
 }
 
+void CTimer_Manager::Set_TimeSpeedOffset(const _tchar * pTimerTag, _float fOffset)
+{
+	CTimer*		pTimer = Find_Timer(pTimerTag);
+	if (nullptr == pTimer)
+		return;
+
+	return pTimer->Set_TimeSpeedOffset(fOffset);
+}
+
+float CTimer_Manager::Get_TimeSpeedOffset(const _tchar * pTimerTag)
+{
+	CTimer*		pTimer = Find_Timer(pTimerTag);
+	if (nullptr == pTimer)
+		return 0.f;
+
+	return pTimer->Get_TimeSpeedOffset();
+}
+
 void CTimer_Manager::Update(const _tchar * pTimerTag)
 {
 	CTimer*		pTimer = Find_Timer(pTimerTag);

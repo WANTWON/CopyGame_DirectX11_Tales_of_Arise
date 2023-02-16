@@ -123,7 +123,7 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_BattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_vecNavigation[LEVEL_BATTLE])))
 		return E_FAIL;
 
-	m_pNavigationCom = m_vecNavigation[iLevel];
+	m_pNavigationCom = m_vecNavigation[LEVEL_SNOWFIELD];
 
 	return S_OK;
 }
@@ -134,7 +134,7 @@ int CBerserker::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return OBJ_NOEVENT;
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
@@ -179,7 +179,7 @@ int CBerserker::Tick(_float fTimeDelta)
 
 void CBerserker::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
 	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
 		return;

@@ -230,6 +230,23 @@ void CGameInstance::Update_TimeDelta(const _tchar * pTimerTag)
 	m_pTimer_Manager->Update(pTimerTag);
 }
 
+void CGameInstance::Set_TimeSpeedOffset(const _tchar * pTimerTag, _float fOffset)
+{
+	if (nullptr == m_pTimer_Manager)
+		return;
+
+	m_pTimer_Manager->Set_TimeSpeedOffset(pTimerTag, fOffset);
+}
+
+float CGameInstance::Get_TimeSpeedOffset(const _tchar * pTimerTag)
+{
+	if (nullptr == m_pTimer_Manager)
+		return 0.f;
+
+	return m_pTimer_Manager->Get_TimeSpeedOffset(pTimerTag);
+}
+
+
 HRESULT CGameInstance::Open_Level(unsigned int iLevelIndex, CLevel * pNewLevel)
 {
 	if (nullptr == m_pLevel_Manager)

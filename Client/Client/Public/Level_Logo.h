@@ -21,6 +21,9 @@ public:
 	HRESULT Ready_InstancingForPooling(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Npc(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
+
+private:
+
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

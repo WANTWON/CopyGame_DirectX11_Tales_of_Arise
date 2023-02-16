@@ -29,7 +29,8 @@ public:
 		PICKING_TERRAIN_SHAPE, PICKING_TERRAIN_BRUSH,
 	PICKING_MODEL, PICKING_CAMERA};
 
-	enum COLOR { RED, GREEN, BLUE};
+	enum COLOR { RED, GREEN, BLUE };
+	enum CAMERATYPE { TARGETMODE, ACTION };
 
 private:
 	CImgui_Manager();
@@ -82,12 +83,14 @@ public:
 	/* For Camera Tool */
 	void Read_CamerasData();
 	void Set_ActionCamera(CCamera_Action* pCamera) { if (m_pCurrentCamera != nullptr) Safe_Release(m_pCurrentCamera); m_pCurrentCamera = pCamera; }
-	void Set_Camera();
+	void Set_ActionCamera();
+	void Set_TargetCamera();
 	_bool Save_Camera();
 	_bool Load_Camera();
-	CCamera_Action::TOOLDESC Get_CameraToolDesc() { return m_CameraToolDesc; }
-	void Set_CameraToolDesc(CCamera_Action::TOOLDESC Desc) { memcpy(&m_CameraToolDesc, &Desc, sizeof(CCamera_Action::TOOLDESC)); }
-	_bool Get_TargetMode() { return m_bTargetMode; }
+	CCamera_Action::TOOLDESC Get_CameraToolDesc() { return m_ActionCamDesc; }
+	void Set_CameraToolDesc(CCamera_Action::TOOLDESC Desc) { memcpy(&m_ActionCamDesc, &Desc, sizeof(CCamera_Action::TOOLDESC)); }
+	_int Get_TargetMode() { return m_eCameraType; }
+	
 
 	/* For Light Tool */
 	void Set_Light();
@@ -184,10 +187,13 @@ private:
 	_int									m_iSavedCamera; /* Selected Saved Camera. */
 	_int									m_iCameraIndex = 0;
 	_float									m_fPlayTime = 0.f;
-	CCamera_Action::TOOLDESC				m_CameraToolDesc;
-	class CCamera_Action*					m_pCurrentCamera = nullptr;
+	CCamera_Action::TOOLDESC				m_ActionCamDesc;
+	CCamera_Dynamic::TOOLDESC				m_DynamicCamDesc;
+	class CCamera*							m_pCurrentCamera = nullptr;
 	_uint									m_iCamCurvedIndex = 0;
-	_bool									m_bTargetMode = false;
+	_int 									m_eCameraType = 0;
+	_float4									vDynamicPos;
+
 
 	/*For Light */
 	_bool									m_bMakeLight = false;

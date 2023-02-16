@@ -69,6 +69,8 @@ private:
 	_float m_fAlphaNomal = 1.f;
 
 	_bool m_bEffectSpawned = false;
+
+	_float m_fTimeOffset = 1.f;
 };
 
 END
