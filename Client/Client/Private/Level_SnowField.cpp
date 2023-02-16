@@ -105,26 +105,29 @@ HRESULT CLevel_SnowField::Initialize()
 	}
 
 
-
-	DWORD dwTime = GetTickCount();
-	while (false == m_pPlayerLoader->Get_Finished() || false == m_pPlayer2Loader->Get_Finished() ||
-		false == m_pMonsterLoader1->Get_Finished())
+	if (m_pPlayerLoader != nullptr)
 	{
-		if (dwTime + 1000 < GetTickCount())
+		DWORD dwTime = GetTickCount();
+		while (false == m_pPlayerLoader->Get_Finished() || false == m_pPlayer2Loader->Get_Finished() ||
+			false == m_pMonsterLoader1->Get_Finished())
 		{
-			if (m_pPlayerLoader->Get_Finished() == true)
-				cout << "Finished Player Clone" << endl;
+			if (dwTime + 1000 < GetTickCount())
+			{
+				if (m_pPlayerLoader->Get_Finished() == true)
+					cout << "Finished Player Clone" << endl;
 
-			if (m_pPlayer2Loader->Get_Finished() == true)
-				cout << "Finished Player Clone2" << endl;
+				if (m_pPlayer2Loader->Get_Finished() == true)
+					cout << "Finished Player Clone2" << endl;
 
 
-			if (m_pMonsterLoader1->Get_Finished() == true)
-				cout << "Finished Monster Grounp1 Clone" << endl;
+				if (m_pMonsterLoader1->Get_Finished() == true)
+					cout << "Finished Monster Grounp1 Clone" << endl;
 
-			dwTime = GetTickCount();
+				dwTime = GetTickCount();
+			}
 		}
 	}
+	
 
 
 	if(m_pPlayerLoader != nullptr)
