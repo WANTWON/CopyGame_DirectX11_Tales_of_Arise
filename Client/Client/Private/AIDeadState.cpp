@@ -5,6 +5,7 @@
 #include "Alphen.h"
 #include "Sion.h"
 #include "Rinwell.h"
+#include "Law.h"
 #include "AICheckState.h"
 #include "AiState_WakeUp.h"
 
@@ -65,6 +66,9 @@ void CDeadState::Enter()
 		break;
 	case CPlayer::RINWELL:
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DEAD;
+		break;
+	case CPlayer::LAW:
+		m_iCurrentAnimIndex = CLaw::ANIM::BTL_DEAD;
 		break;
 	default:
 		break;

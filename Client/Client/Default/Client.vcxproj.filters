@@ -1035,6 +1035,18 @@
     <ClInclude Include="..\Public\AI_DodgeState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\LawAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LawSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LawAirRSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LawAirFSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AI_Rinwell_SkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
@@ -1666,6 +1678,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\AiState_WakeUp.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LawAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LawSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LawAirRSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LawAirFSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AI_Rinwell_SkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>

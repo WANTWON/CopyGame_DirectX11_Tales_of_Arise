@@ -28,7 +28,7 @@ CPlayerState * CCollectState::Tick(_float fTimeDelta)
 	{
 		if (pEvent.isPlay)
 		{
-			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID() || CPlayer::LAW == m_pOwner->Get_PlayerID())
 			{
 				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 				{
@@ -77,6 +77,12 @@ void CCollectState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::SYS_DOOR_OPEN_HAND_RIGHT);
 		else
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::TREASURE_OPEN);
+		break;
+	case CPlayer::LAW:
+		if (nullptr == m_pObject)
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DOOR_OPEN_RIGHT_HAND);
+		else
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::TREASURE_OPEN);
 		break;
 	}
 }

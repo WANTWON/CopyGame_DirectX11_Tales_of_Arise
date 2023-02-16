@@ -135,9 +135,7 @@ CPlayerState * CRunState::HandleInput()
 			else if (CPlayer::RINWELL == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
 			else if (CPlayer::LAW == m_ePlayerID)
-			{
-				//m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::);
-			}
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
 		}
 
 		m_bIsDash = true;
@@ -152,14 +150,20 @@ CPlayerState * CRunState::HandleInput()
 	{
 		if (m_bIsDash)
 		{
-			if (CPlayer::ALPHEN == m_ePlayerID)
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
-			else if (CPlayer::SION == m_ePlayerID)
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
-			else if (CPlayer::RINWELL == m_ePlayerID)
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
-			else if (CPlayer::LAW == m_ePlayerID)
+			switch (m_ePlayerID)
 			{
+			case CPlayer::ALPHEN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
+				break;
+			case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
+				break;
+			case CPlayer::RINWELL:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+				break;
+			case CPlayer::LAW:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
+				break;
 			}
 		}
 
@@ -208,11 +212,8 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 
 CPlayerState * CRunState::LateTick(_float fTimeDelta)
 {
-	//if (LEVEL_BATTLE == m_pOwner->Get_Level())
-	//{
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-			return new CHitState(m_pOwner);
-	//}
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
+		return new CHitState(m_pOwner);
 
 	return nullptr;
 }
@@ -244,9 +245,7 @@ void CRunState::Enter()
 			break;
 		case CPlayer::LAW:
 			if (LEVEL_BATTLE != m_pOwner->Get_Level())
-			{
-
-			}
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		}
@@ -281,8 +280,7 @@ void CRunState::Enter()
 			if (LEVEL_BATTLE == m_pOwner->Get_Level())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_RUN);
 			else
-			{
-			}
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 				break;
 		}
