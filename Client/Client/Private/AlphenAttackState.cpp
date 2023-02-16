@@ -121,8 +121,6 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 		}
 	}
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)

@@ -108,13 +108,9 @@ int CPlayer::Tick(_float fTimeDelta)
 
 					CAIState* pAIState = new AIPlayer::CSmashAttack_State(this, CBattleManager::Get_Instance()->Get_LackonMonster());
 					m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-
 				}
-
-
 			}
 		}
-		
 
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
 		{
@@ -179,12 +175,10 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 #endif //_DEBUG
 	}
 
-	
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 	
-
 	switch (eMode)
 	{
 	case Client::ACTIVE:
@@ -237,7 +231,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vNewDir) * fRadiusSum);
 
-				_vector vLerpPos = XMVectorLerp(vPlayerPos, vNewPos, 0.5f);
+				_vector vLerpPos = XMVectorLerp(vPlayerPos, XMVectorSetY(vNewPos, XMVectorGetY(vPlayerPos)), 0.5f);
 
 				if (true == m_pNavigationCom->isMove(vLerpPos))
 					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
