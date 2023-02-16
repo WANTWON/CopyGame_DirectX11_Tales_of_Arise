@@ -21,6 +21,17 @@ public:
 private:
 	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
+	_float m_fResultTime = 0.f;
+
+	CCollider* m_pLeftHandCollider = nullptr;
+	CCollider* m_pRightHandCollider = nullptr;
+	CCollider* m_pLeftFootCollider = nullptr;
+	CCollider* m_pRightFootCollider = nullptr;
+
+	_float m_fEventStartTime = -1.f;
+
+private:
+	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
 };
 END
 END

@@ -76,8 +76,8 @@ CPlayerState * CJumpState::HandleInput()
 			case CPlayer::LAW:
 				if (pGameInstance->Key_Down(DIK_E))
 					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
-				else if (pGameInstance->Key_Down(DIK_R)) {}
-					//return new CLawAirRSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
+				else if (pGameInstance->Key_Down(DIK_R))
+					return new CLawAirRSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
 				else if (pGameInstance->Key_Down(DIK_F)) {}
 					//return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 				break;
@@ -337,7 +337,6 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_LAND);
 						m_eStateType = STATETYPE_END;
 					}
-						
 				}
 				
 				break;

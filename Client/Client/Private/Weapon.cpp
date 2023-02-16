@@ -108,8 +108,6 @@ int CWeapon::Tick(_float fTimeDelta)
 
 void CWeapon::Late_Tick(_float fTimeDelta)
 {
-
-
 	if (nullptr != m_pSPHERECom)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -173,14 +171,10 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 				}
 			}
 		}
-
 	}
 
 	else
-	{
 		m_bSoundStart = false;
-	}
-
 
 	if (nullptr != m_pSPHERECom && !m_isCollider)
 	{
