@@ -66,9 +66,9 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 
 	/* For.Target_ShadowDepth_Blur */
-	/*if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_ShadowDepth_Blur"), iShadowMapCX, iShadowMapCY,
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_ShadowDepth_Blur"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(1.0f, 1.0f, 1.0f, 1.0f))))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	/* Copy Back Buffer */
 	if (FAILED(m_pTarget_Manager->Ready_BackBufferCopyTexture(m_pDevice, m_pContext, ViewportDesc.Width, ViewportDesc.Height)))
@@ -124,8 +124,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 
 	/* For.MRT_LightDepth_Blur */
-	/*if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_LightDepth_Blur"), TEXT("Target_ShadowDepth_Blur"))))
-		return E_FAIL;*/
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_LightDepth_Blur"), TEXT("Target_ShadowDepth_Blur"))))
+		return E_FAIL;
 
 	/* For.MRT_Blur_Horizontal */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Blur_Horizontal"), TEXT("Target_Blur_Horizontal"))))
@@ -183,8 +183,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth"), 225.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
-	/*if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth_Blur"), 225.f, 525.f, 150.f, 150.f)))
-		return E_FAIL;*/
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth_Blur"), 225.f, 525.f, 150.f, 150.f)))
+		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow"), 375.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Distortion"), 375.f, 225.f, 150.f, 150.f)))
@@ -461,6 +461,8 @@ HRESULT CRenderer::Render_Blend()
 
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_ShadowDepth"), m_pShaderDeferred, "g_ShadowDepthTexture")))
 		return E_FAIL;
+	/*if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_ShadowDepth_Blur"), m_pShaderDeferred, "g_ShadowDepthTexture")))
+		return E_FAIL;*/
 
 	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
 

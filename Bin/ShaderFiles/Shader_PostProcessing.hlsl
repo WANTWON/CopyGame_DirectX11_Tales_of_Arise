@@ -292,49 +292,49 @@ PS_OUT PS_DEPTHOFFIELD(PS_IN In)
 	return Out;
 }
 
-//PS_OUT PS_HORIZONTAL_BLUR_SHADOW(PS_IN In)
-//{
-//	PS_OUT Out = (PS_OUT)0;
-//
-//	float4 vBlurTexture = g_BlurTexture.Sample(LinearSampler, In.vTexUV);
-//	if (vBlurTexture.g == 0 && vBlurTexture.b == 0)
-//		discard;
-//
-//	float2 vTexUVOffset = 0;
-//	float texelSizeX = 1 / (1280.f * 12.5f); /* Get the size of a Texel Horizontally. */
-//
-//	for (int i = -WeightCount; i < WeightCount; ++i)
-//	{
-//		vTexUVOffset = In.vTexUV + float2(texelSizeX * i, 0); /* Get the UV coordinates for the Offsetted Pixel. */
-//		Out.vColor.r += Weight[WeightCount + i] * g_BlurTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
-//	}
-//
-//	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
-//	Out.vColor.a = 0.f;
-//	return Out;
-//}
-//
-//PS_OUT PS_VERTICAL_BLUR_SHADOW(PS_IN In)
-//{
-//	PS_OUT Out = (PS_OUT)0;
-//
-//	float4 vBlurTexture = g_BlurTexture.Sample(LinearSampler, In.vTexUV);
-//	if (vBlurTexture.g == 0 && vBlurTexture.b == 0)
-//		discard;
-//
-//	float2 vTexUVOffset = 0;
-//	float texelSizeY = 1 / (720.f * 12.5f); /* Get the size of a Texel Vertically. */
-//
-//	for (int i = -WeightCount; i < WeightCount; ++i)
-//	{
-//		vTexUVOffset = In.vTexUV + float2(0, texelSizeY * i); /* Get the UV coordinates for the Offsetted Pixel. */
-//		Out.vColor.r += Weight[WeightCount + i] * g_BlurTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
-//	}
-//
-//	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
-//	Out.vColor.a = 0.f;
-//	return Out;
-//}
+PS_OUT PS_HORIZONTAL_BLUR_SHADOW(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float4 vBlurTexture = g_BlurTexture.Sample(LinearSampler, In.vTexUV);
+	if (vBlurTexture.g == 0 && vBlurTexture.b == 0)
+		discard;
+
+	float2 vTexUVOffset = 0;
+	float texelSizeX = 1 / (1280.f * 12.5f); /* Get the size of a Texel Horizontally. */
+
+	for (int i = -WeightCount; i < WeightCount; ++i)
+	{
+		vTexUVOffset = In.vTexUV + float2(texelSizeX * i, 0); /* Get the UV coordinates for the Offsetted Pixel. */
+		Out.vColor.r += Weight[WeightCount + i] * g_BlurTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
+	}
+
+	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
+	Out.vColor.a = 0.f;
+	return Out;
+}
+
+PS_OUT PS_VERTICAL_BLUR_SHADOW(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float4 vBlurTexture = g_BlurTexture.Sample(LinearSampler, In.vTexUV);
+	if (vBlurTexture.g == 0 && vBlurTexture.b == 0)
+		discard;
+
+	float2 vTexUVOffset = 0;
+	float texelSizeY = 1 / (720.f * 12.5f); /* Get the size of a Texel Vertically. */
+
+	for (int i = -WeightCount; i < WeightCount; ++i)
+	{
+		vTexUVOffset = In.vTexUV + float2(0, texelSizeY * i); /* Get the UV coordinates for the Offsetted Pixel. */
+		Out.vColor.r += Weight[WeightCount + i] * g_BlurTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
+	}
+
+	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
+	Out.vColor.a = 0.f;
+	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -426,25 +426,25 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_DEPTHOFFIELD();
 	}
 
-	//pass Horizontal_Blur_Shadow // 8
-	//{
-	//	SetRasterizerState(RS_Default);
-	//	SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-	//	SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+	pass Horizontal_Blur_Shadow // 8
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
 
-	//	VertexShader = compile vs_5_0 VS_MAIN();
-	//	GeometryShader = NULL;
-	//	PixelShader = compile ps_5_0 PS_HORIZONTAL_BLUR_SHADOW();
-	//}
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_HORIZONTAL_BLUR_SHADOW();
+	}
 
-	//pass Vertical_Blur_Shadow // 9
-	//{
-	//	SetRasterizerState(RS_Default);
-	//	SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-	//	SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+	pass Vertical_Blur_Shadow // 9
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
 
-	//	VertexShader = compile vs_5_0 VS_MAIN();
-	//	GeometryShader = NULL;
-	//	PixelShader = compile ps_5_0 PS_VERTICAL_BLUR_SHADOW();
-	//}
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_VERTICAL_BLUR_SHADOW();
+	}
 }
