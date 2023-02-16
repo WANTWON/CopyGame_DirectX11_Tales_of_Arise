@@ -30,6 +30,8 @@ private:
 
 	_bool m_bIsLoop = false;
 
+	CBaseObj* m_pTarget = nullptr;
+
 private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
 };

@@ -33,6 +33,9 @@ CPlayerState * CLawAirRSkillState::HandleInput(void)
 
 CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 {
+	if ((STATETYPE_END == m_eStateType) && (nullptr != m_pTarget))
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	if (!m_bIsAnimationFinished)
@@ -315,10 +318,10 @@ void CLawAirRSkillState::Enter(void)
 
 	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
-	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
+	m_pTarget = pBattleMgr->Get_LackonMonster();
 
-	if (nullptr != pTarget)
-		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	if (nullptr != m_pTarget)
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 }
 
 void CLawAirRSkillState::Exit(void)
