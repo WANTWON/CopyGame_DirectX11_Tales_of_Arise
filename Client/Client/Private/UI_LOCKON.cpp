@@ -97,7 +97,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 	if(nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	m_fcurrentmp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
 
-	if (m_fcurrentmp >= 4.f && !m_bStrikeon)
+	if (m_fcurrentmp >= 4.f)
 		m_bStrikeon = true;
 	else
 	{
