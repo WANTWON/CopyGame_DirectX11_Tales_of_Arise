@@ -14,9 +14,23 @@ public:
 
 	enum CAMERAMODE {CAM_DEBUG, CAM_PLAYER,
 		CAM_BATTLEZONE, CAM_BATTLE_CLEAR, CAM_LOCKON, CAM_LOCKOFF,
-		CAM_AIBOOSTON, CAM_AIBOOSTOFF,
+		CAM_AIBOOSTON, CAM_AIBOOSTOFF, CAM_TARGETMODE, CAM_TARGETMODE_OFF,
 		CAM_END};
 	
+
+	typedef struct tagCameraTool
+	{
+		_float					fRadian = 0.f;
+		_float					fLength = 0.f;
+		_float					fYoffset = 0.f;
+		_float4					vLook;
+		_float					fStartTime;
+		_float					fEndTime;
+
+	}TOOLDESC;
+
+
+
 	typedef struct tagCameraDesc_Derived
 	{
 		_float4						InitPostion = _float4(0.f, 0.f, 0.f, 1.f);
@@ -42,8 +56,18 @@ public:
 	void Set_Position(_vector vPosition);
 	void Set_TargetPosition(_vector vPosition) { m_vTargetPos = vPosition; }
 	void Set_Zoom(_bool type) { m_bZoom = type; }
-
 	CAMERAMODE Get_CamMode() { return m_eCamMode; }
+
+public:
+	void					Add_CamData(TOOLDESC CamDesc) { m_CamDatas.push_back(CamDesc); }
+	vector<TOOLDESC>		Get_AllCamData() { return m_CamDatas; }
+	void					Remove_Camdata(_int iIndex) { m_CamDatas.erase(m_CamDatas.begin() + iIndex); };
+	void					Set_Play(_bool type);
+	void					Set_PlayTime(_float fTime) { m_fPlayTime = fTime; m_fTime = 0.f; }
+	void					Set_TargetMatrix(_matrix matTarget) { m_matTarget = matTarget; }
+	void					Set_ShakingMode(_bool type, _float fPower = 1.f, _float fMinusPower = 0.1f);
+public:
+	
 
 public:
 	void Debug_Camera(_float fTimeDelta);
@@ -57,6 +81,12 @@ public:
 	void AIBoostOff_Camera(_float fTimeDelta);
 
 	void Change_LockOn(_uchar eKeyID);
+	void TargetTool_Camera(_float fTimeDelta);
+	void TargetTool_CameraOff(_float fTimeDelta);
+
+private:
+	void ZoomSetting(_float fDistance, _float fSpeed);
+	void Shaking_Camera(_float fTimeDelta);
 
 private:
 	class CBaseObj*	m_pTarget = nullptr;
@@ -68,13 +98,14 @@ private:
 	_vector			m_vTargetPos = { 0.f,0.f,0.f,0.f };
 	_vector			m_vLasrDirwithPlayer = { 0.f,0.f,0.f,0.f };
 	_float			m_fTime = 0.f;
-	_float			m_fOffsetPosY = 4.f;
+	_float			m_fLookOffsetY = 4.f;
+	_float			m_fCameraOffsetY = 5.f;
 	_float			m_fAngle = 0.f;
-	_float			m_fYAngle = 0.f;
 	_double			m_fVec = 1.f;
 	_vector			m_OriginPos = { 0.f,0.f,0.f,0.f };
 	_vector			m_vNewPos;
 
+	_float			fLength = 8.f;
 	_long			m_MoveValue = 0;
 	_long			XMouseMove = 0;
 	_long			YMouseMove = 0;
@@ -84,9 +115,23 @@ private:
 
 	_bool			m_bTurn = false;
 	_bool			m_bZoom = false;
+	_float			m_fZoomOffset = 0.f;
 
-	_float			m_fCameraY = 5.f;
-	_float			m_fZoom = 0.f;
+	_bool			m_bShakingMode = false;
+	_float			m_fVelocity = 1.f;
+	_float			m_fMinusVelocity = 1.f;
+	_vector			m_vShakingStartPos = { 0.f, 0.f, 0.f, 0.f };
+	_int			m_iShakingCount = 0;
+	
+
+private:
+	_float		m_fPlayTime = 0.f;
+	_bool		m_bPlay = false;
+	_int		m_iIndex = 0;
+	_vector		m_vInitPos = { 0.f,0.f,0.f,0.f };
+
+	vector<TOOLDESC> m_CamDatas;
+	_matrix			 m_matTarget;
 
 private:
 	vector<CMonster*> vecRightMonster;

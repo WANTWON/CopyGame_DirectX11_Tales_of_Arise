@@ -14,6 +14,17 @@ CCamera_Manager::CCamera_Manager()
 
 }
 
+void CCamera_Manager::Set_CamMode(CAM_MODE eMode)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	CCamera* pCamera = dynamic_cast<CCamera*>(pGameInstance->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), eMode));
+	if (nullptr == pCamera)
+		return;
+	m_eCamState = eMode;
+	m_pCurrentCamera = pCamera;
+}
+
 HRESULT CCamera_Manager::Add_Camera()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -33,7 +44,10 @@ HRESULT CCamera_Manager::Add_Camera()
 
 void CCamera_Manager::Remove_Camera(_int iIndex)
 {
-	m_pCurrentCamera->Remove_Camdata(iIndex);
+	if(m_eCamState == DYNAMIC)
+	 dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Remove_Camdata(iIndex);
+	if (m_eCamState == ACTION)
+		dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Remove_Camdata(iIndex);
 }
 
 

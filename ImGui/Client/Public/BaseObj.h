@@ -36,7 +36,8 @@ public:
 	void Set_State(CTransform::STATE eState, _fvector vState);
 	void Set_Scale(_float3 vScale);
 	void Set_Picked(_bool Type) { m_bPicked = Type; }
-
+	CTransform* Get_Transform() { return m_pTransformCom; }
+	_vector		Get_TransformState(CTransform::STATE eState);
 	
 
 

@@ -20,15 +20,15 @@ void CFrustum::Initialize()
 	m_vOriginalPoints[7] = _float3(-1.f, -1.f, 1.f);
 
 
-	m_vBattleZoneOriginalPoints[0] = _float3(-0.9f, 1.f, 0.f);
-	m_vBattleZoneOriginalPoints[1] = _float3(0.9f, 1.f, 0.f);
-	m_vBattleZoneOriginalPoints[2] = _float3(0.9f, -1.f, 0.f);
-	m_vBattleZoneOriginalPoints[3] = _float3(-0.9f, -1.f, 0.f);
+	m_vBattleZoneOriginalPoints[0] = _float3(-0.8f, 1.f, 0.f);
+	m_vBattleZoneOriginalPoints[1] = _float3(0.8f, 1.f, 0.f);
+	m_vBattleZoneOriginalPoints[2] = _float3(0.8f, -1.f, 0.f);
+	m_vBattleZoneOriginalPoints[3] = _float3(-0.8f, -1.f, 0.f);
 
-	m_vBattleZoneOriginalPoints[4] = _float3(-0.9f, 1.f, 1.f);
-	m_vBattleZoneOriginalPoints[5] = _float3(0.9f, 1.f, 1.f);
-	m_vBattleZoneOriginalPoints[6] = _float3(0.9f, -1.f, 1.f);
-	m_vBattleZoneOriginalPoints[7] = _float3(-0.9f, -1.f, 1.f);
+	m_vBattleZoneOriginalPoints[4] = _float3(-0.8f, 1.f, 1.f);
+	m_vBattleZoneOriginalPoints[5] = _float3(0.8f, 1.f, 1.f);
+	m_vBattleZoneOriginalPoints[6] = _float3(0.8f, -1.f, 1.f);
+	m_vBattleZoneOriginalPoints[7] = _float3(-0.8f, -1.f, 1.f);
 }
 
 void CFrustum::Transform_ToWorldSpace()

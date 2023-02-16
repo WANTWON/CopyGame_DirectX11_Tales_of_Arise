@@ -150,7 +150,7 @@ CAIState * CSmashAttack_State::LateTick(_float fTimeDelta)
 	if (m_bIsStateEvent)
 	{
 		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
 
 	for (auto& iter : m_pEffects)
@@ -160,7 +160,12 @@ CAIState * CSmashAttack_State::LateTick(_float fTimeDelta)
 	}
 
 	if (m_bIsAnimationFinished)
+	{
 		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+	}
+		
 
 	return nullptr;
 }
@@ -200,7 +205,7 @@ void CSmashAttack_State::Enter()
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
 	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
@@ -221,5 +226,6 @@ void CSmashAttack_State::Exit()
 		}
 	}
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	__super::Exit();
 }

@@ -106,12 +106,27 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		m_bStrikeon = false;
 		m_fAlphaDiamond = 1.f;
 		m_fDiamondShooter = 1.f;
+
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+		m_fTimeOffset += 0.1f;
+		if (m_fTimeOffset >= 1.f)
+			m_fTimeOffset = 1.f;
+		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_60"), m_fTimeOffset);
+		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(false);
 	}
 	
 
 	if (m_bStrikeon)        // f
 	{
 		m_bStrikefonton = true;
+		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(true);
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+		m_fTimeOffset -= 0.1f;
+		if (m_fTimeOffset <= 0.1f)
+			m_fTimeOffset = 0.1f;		
+		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_60"), m_fTimeOffset);
+		RELEASE_INSTANCE(CGameInstance);
+		
 	}
 
 	if (m_bStrikefonton && m_bStrikeSmallonetime)    // first strike font smaller
@@ -165,6 +180,8 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 			CEffect::PlayEffectAtLocation(TEXT("Skill_Break_Shockwave_1.dat"), mWorldMatrix);
 
 			m_bEffectSpawned = true;
+
+			
 		}
 	}
 

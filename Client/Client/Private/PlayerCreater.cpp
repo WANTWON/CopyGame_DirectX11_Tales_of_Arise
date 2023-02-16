@@ -27,8 +27,11 @@ unsigned int APIENTRY Thread_Clone(void* pArg)
 	switch (pLoader->Get_CreateActorType())
 	{
 	case CLONE_PLAYER:
-		pLoader->Cloning_ForNpc();
+
 		pLoader->Cloning_ForPlayer();
+		break;
+	case CLONE_PLAYER2:
+		pLoader->Cloning_ForPlayer2();
 		break;
 	case CLONE_MONSTER1:
 		pLoader->Cloning_ForMonster();
@@ -79,9 +82,6 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;
-
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
 		//pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));
@@ -113,6 +113,27 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 		pPlayer->Change_Level(LEVEL_SNOWFIELD);
 	}
 
+	m_isFinished = true;
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CPlayerCreater::Cloning_ForPlayer2()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		return E_FAIL;
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
+	CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
+	pPlayer->Change_Level(LEVEL_SNOWFIELD);
+	
 	m_isFinished = true;
 
 	RELEASE_INSTANCE(CGameInstance);

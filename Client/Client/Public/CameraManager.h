@@ -9,7 +9,7 @@ class CCameraManager final : public CBase
 	DECLARE_SINGLETON(CCameraManager)
 public:
 	enum CAM_STATE { CAM_DYNAMIC, CAM_ACTION, CAM_END };
-
+	enum LOAD_CAMERATYPE { TARGETMODE, ACTION };
 public:
 	CCameraManager();
 	virtual ~CCameraManager() = default;
