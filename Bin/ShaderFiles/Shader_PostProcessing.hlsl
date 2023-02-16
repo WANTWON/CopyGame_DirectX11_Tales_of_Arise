@@ -33,6 +33,11 @@ float3 g_vPlayerPosition;
 texture2D g_ScreenDistortionTexture;
 float g_fScreenDistortionTimer;
 
+/* Depth Of Field */
+texture2D g_BlurredBackBufferTexture;
+float g_fMinBlurDepth = 100.f;
+float g_fMaxBlurDepth = 400.f;
+
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_Linear;
@@ -251,15 +256,38 @@ PS_OUT PS_DISTORTION(PS_IN In)
 		In.vTexUV = lerp(In.vTexUV, vNoisedUVs, g_fDistortionStrength / 100);
 
 		vBackBufferCopy = g_BackBufferTexture.Sample(LinearSampler, In.vTexUV);
-	
-		/*vNewTexUV.x += (cos(vNoise.r * g_fDistortionTimer * g_fDistortionSpeed)) * vFilter * g_fDistortionStrength;
-		vNewTexUV.y += (sin(vNoise.r * g_fDistortionTimer * g_fDistortionSpeed)) * vFilter * g_fDistortionStrength;*/
 	}
 	/* No Distort */
 	else
 		vBackBufferCopy = g_BackBufferTexture.Sample(LinearSampler, In.vTexUV);
 
 	Out.vColor = vBackBufferCopy;
+
+	return Out;
+}
+
+PS_OUT PS_DEPTHOFFIELD(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float4 vBackBufferTexture = g_BackBufferTexture.Sample(LinearSampler, In.vTexUV);
+	float4 vBlurredBackBufferTexture = g_BlurredBackBufferTexture.Sample(LinearSampler, In.vTexUV);
+	
+	float4 vDepthTexture = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
+	
+	/* 0 ~ 1 */
+	float fViewZ = (vDepthTexture.y * 1000); /* Why subtract 0.0001 (C:\Users\giuse\OneDrive\Desktop\Giuseppe\Dev\Jusin_Game_Academy\DepthTexture.txt) */
+
+	if (fViewZ < g_fMinBlurDepth) /* SkyBox is not computed inside the DepthTexture. */
+		Out.vColor = vBackBufferTexture; /* Just render BackBuffer color. */
+	else
+	{
+		/* Lerp between BackBufferTexture and BlurredBackBufferTexture based on Depth. */
+		float fInterpFactor = min(((fViewZ - g_fMinBlurDepth) / (g_fMaxBlurDepth - g_fMinBlurDepth)), 1.f);
+		float4 vLerpColor = lerp(vBackBufferTexture, vBlurredBackBufferTexture, fInterpFactor);
+
+		Out.vColor = vLerpColor;
+	}
 
 	return Out;
 }
@@ -341,5 +369,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DISTORTION();
+	}
+
+	pass DepthOfField // 7
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DEPTHOFFIELD();
 	}
 }

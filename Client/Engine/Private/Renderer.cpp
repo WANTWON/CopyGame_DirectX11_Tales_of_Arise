@@ -182,6 +182,12 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow_UI"), 525.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Blur_Horizontal"), 1205.f, 75.f, 150.f, 150.f)))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Blur_Vertical"), 1205.f, 225.f, 150.f, 150.f)))
+		return E_FAIL;
+
 #endif
 
 	return S_OK;
@@ -227,14 +233,12 @@ HRESULT CRenderer::Render_GameObjects()
 		return E_FAIL;
 	if (FAILED(Render_AlphaBlend()))
 		return E_FAIL;
-
-	/* Post Processing Renders */
 	if (FAILED(Render_Glow()))
 		return E_FAIL;
 	if (FAILED(Render_Distortion()))
 		return E_FAIL;
 
-	/* Post Processing Blend */
+	/* Post Processing */
 	if (FAILED(Render_PostProcessing()))
 		return E_FAIL;
 
@@ -634,6 +638,42 @@ HRESULT CRenderer::Render_PostProcessing()
 	if (!m_pTarget_Manager)
 		return E_FAIL;
 
+	/* Depth of Field */
+	m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+		return E_FAIL;
+	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_GlowTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Horizontal"))))
+		return E_FAIL;
+
+	m_pShaderPostProcessing->Begin(1); /* Horizontal Blur */
+	m_pVIBuffer->Render();
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShaderPostProcessing, "g_GlowTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Vertical"))))
+		return E_FAIL;
+
+	m_pShaderPostProcessing->Begin(2); /* Vertical Blur */
+	m_pVIBuffer->Render();
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShaderPostProcessing, "g_BlurredBackBufferTexture")))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
+		return E_FAIL;
+
+	m_pShaderPostProcessing->Begin(7); /* Final Pass */
+	m_pVIBuffer->Render();
+
 	/* Fog */
 	if (m_bFog)
 	{
@@ -737,6 +777,11 @@ HRESULT CRenderer::Render_Debug()
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Fog"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Glow_UI"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Blur_Horizontal"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Blur_Vertical"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 	}
 
