@@ -87,7 +87,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::SION:            //sion
-
+	{
 		//vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 		for (auto& pEvent : pEvents)
@@ -107,7 +107,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 					{
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.fVelocity = 20.f;
+						BulletDesc.fVelocity = 10.f;
 						BulletDesc.eBulletType = CSionSkills::NORMALATTACK;
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f);
 						if (m_pTarget != nullptr)
@@ -204,9 +204,9 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 
 		break;
-
+	}
 	case CPlayer::RINWELL:            //sion
-
+	{
 
 
 		for (auto& pEvent : pEvents)
@@ -288,34 +288,35 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 			}*/
 		}
 
-			/*switch (rand() % 12)
-			{
+		/*switch (rand() % 12)
+		{
 
-			case 0:
-				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+		case 0:
+			return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 
-			case 1:
-				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+		case 1:
+			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
 
-			case 2:
-				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
+		case 2:
+			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
 
-			case 3:
-				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
+		case 3:
+			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
 
-			case 4:
-				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+		case 4:
+			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
 
-			case 5:
-				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
-			case 6:
-				return new CAI_DodgeState(m_pOwner, m_pTarget);
+		case 5:
+			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+		case 6:
+			return new CAI_DodgeState(m_pOwner, m_pTarget);
 
-			default:
-				return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
+		default:
+			return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
 
-			}*/
+		}*/
 		break;
+	}
 	}
 
 
