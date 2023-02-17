@@ -4419,7 +4419,7 @@ _bool CImgui_Manager::Load_Effect(_bool bUpgrade)
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	DWORD dwByte = 0;
+ 	DWORD dwByte = 0;
 	_uint iEffectsCount = 0;
 
 	/* Read how many Effects there are in this File. */

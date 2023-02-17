@@ -112,7 +112,9 @@ CPlayerState * CLawAirFSkillState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pLandCollider);
+#endif
 	}
 
 	if (STATETYPE_MAIN == m_eStateType)
