@@ -30,15 +30,24 @@ private:
 	/* E */
 	_bool m_bHienzinFirstEffect = false;
 	_bool m_bHienzinSecondEffect = false;
+	_bool m_bRyuuseizinFirstEffect = false;
+	_bool m_bRyuuseizinSecondEffect = false;
 
 	/* R */
-	_bool m_bAkizameEffect = false;
+	_bool m_bAkizameFirstEffect = false;
+	_bool m_bAkizameSecondEffect = false;
+	_bool m_bSenkusyourepaParticle = false;
+	_bool m_bSenkusyourepaFirstEffect = false;
+	_bool m_bSenkusyourepaSecondEffect = false;
 
 	/* F */
 	_bool m_bHousyutigakuzinFirstEffect = false;
 	_bool m_bHousyutigakuzinSecondEffect = false;
+	_bool m_bHousyutigakuzinThirdEffect = false;
+	_bool m_bEngetuFirstEffect = false;
+	_bool m_bEngetuSecondEffect = false;
 
-	vector<CEffect*> m_HousyutigakuzinStart;
+	vector<CEffect*> m_SenkusyourepaParticles;
 };
 END
 END
