@@ -30,7 +30,7 @@ HRESULT CHPbar::Initialize(void * pArg)
 	m_fSize.x = 200.0f;
 	m_fSize.y = 22.0f;
 	m_fPosition.x = 1130.f; 
-	m_fPosition.y = 360.f + (m_iIndex * 60.f);
+	m_fPosition.y = 310.f + (m_iIndex * 60.f);
 
 	
 	
