@@ -199,7 +199,6 @@ CCollider * CCollision_Manager::Reuse_Collider(CCollider::TYPE eType, _uint iLev
 	{
 		pCollider = m_ColliderPool[eType].front();
 		m_ColliderPool[eType].pop_front();
-
 		pCollider->Set_ColliderDesc(pArg);
 	}
 

@@ -42,6 +42,7 @@ public:
 	_bool Between_Keyframe(char * pChannelName, _uint iKeyframeLower, _uint iKeyframeUpper);
 	void Set_TimeReset();
 	void Reset(void);
+	void Reset_Anim(_uint iAnimIndex);
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eModelType, const char* pModelFilePath, _fmatrix PivotMatrix);

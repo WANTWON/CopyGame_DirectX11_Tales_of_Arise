@@ -80,15 +80,18 @@ HRESULT CCollider::Initialize(void * pArg)
 		{
 		case TYPE_AABB:
 			m_pAABB[i] = new BoundingBox(_float3(0.f, 0.f, 0.f), _float3(0.5f, 0.5f, 0.5f));
-			m_pAABB[i]->Transform(*m_pAABB[i], ScaleMatrix * TranslationMatrix);
+			m_pOriAABB[i] = new BoundingBox(_float3(0.f, 0.f, 0.f), _float3(0.5f, 0.5f, 0.5f));
+			m_pOriAABB[i]->Transform(*m_pAABB[i], ScaleMatrix * TranslationMatrix);
 			break;
 		case TYPE_OBB:
 			m_pOBB[i] = new BoundingOrientedBox(m_ColliderDesc.vPosition, _float3(m_ColliderDesc.vScale.x * 0.5f, m_ColliderDesc.vScale.y * 0.5f, m_ColliderDesc.vScale.z * 0.5f), _float4(0.f, 0.f, 0.f, 1.f));
-			m_pOBB[i]->Transform(*m_pOBB[i], RotationMatrix);
+			m_pOriOBB[i] = new BoundingOrientedBox(m_ColliderDesc.vPosition, _float3(m_ColliderDesc.vScale.x * 0.5f, m_ColliderDesc.vScale.y * 0.5f, m_ColliderDesc.vScale.z * 0.5f), _float4(0.f, 0.f, 0.f, 1.f));
+			m_pOriOBB[i]->Transform(*m_pOBB[i], RotationMatrix);
 			break;
 		case TYPE_SPHERE:
 			m_pSphere[i] = new BoundingSphere(_float3(0.f, 0.f, 0.f), 0.5f);
-			m_pSphere[i]->Transform(*m_pSphere[i], ScaleMatrix * RotationMatrix * TranslationMatrix);
+			m_pOriSphere[i] = new BoundingSphere(_float3(0.f, 0.f, 0.f), 0.5f);
+			m_pOriSphere[i]->Transform(*m_pSphere[i], ScaleMatrix * RotationMatrix * TranslationMatrix);
 			break;
 		}
 	}
@@ -134,13 +137,13 @@ HRESULT CCollider::Set_ColliderDesc(void * pArg)
 		switch (m_eType)
 		{
 		case TYPE_AABB:
-			m_pAABB[i]->Transform(*m_pAABB[i], ScaleMatrix * TranslationMatrix);
+			m_pOriAABB[i]->Transform(*m_pAABB[i], ScaleMatrix * TranslationMatrix);
 			break;
 		case TYPE_OBB:
-			m_pOBB[i]->Transform(*m_pOBB[i], RotationMatrix);
+			m_pOriOBB[i]->Transform(*m_pOBB[i], RotationMatrix);
 			break;
 		case TYPE_SPHERE:
-			m_pSphere[i]->Transform(*m_pSphere[i], ScaleMatrix * RotationMatrix * TranslationMatrix);
+			m_pOriSphere[i]->Transform(*m_pSphere[i], ScaleMatrix * RotationMatrix * TranslationMatrix);
 			break;
 		}
 	}
@@ -233,8 +236,6 @@ _bool CCollider::Collision(CCollider * pTargetCollider)
 			
 		if (TYPE_SPHERE == pTargetCollider->m_eType)
 			m_isCollision = m_pSphere[BOUNDING_WORLD]->Intersects(*pTargetCollider->m_pSphere[BOUNDING_WORLD]);
-
-			
 	}
 
 
@@ -405,6 +406,11 @@ void CCollider::Free()
 		Safe_Delete(m_pOBB[i]);
 		Safe_Delete(m_pSphere[i]);
 	}
-	
 
+	for (_uint i = 0; i < BOUNDING_END; ++i)
+	{
+		Safe_Delete(m_pOriAABB[i]);
+		Safe_Delete(m_pOriOBB[i]);
+		Safe_Delete(m_pOriSphere[i]);
+	}
 }
