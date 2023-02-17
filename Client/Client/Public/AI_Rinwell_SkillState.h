@@ -28,6 +28,7 @@ private:
 	_bool m_bIsStateEvent = false;
 	_bool m_bBulletMake = false;
 	_bool m_bStateFinish = false;
+	_bool m_bCollideFinsh = false;
 	vector<CEffect*> m_pBlastEffect;
 	vector<CEffect*> m_pSmokeEffect;
 };

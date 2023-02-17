@@ -131,7 +131,7 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p2th_AtkColliderCom)
 					m_p2th_AtkColliderCom->Update(R_matWorld);
 
-				RELEASE_INSTANCE(CCollision_Manager);
+				//RELEASE_INSTANCE(CCollision_Manager);
 			}
 		}
 

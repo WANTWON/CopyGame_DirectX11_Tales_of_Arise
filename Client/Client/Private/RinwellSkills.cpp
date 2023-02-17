@@ -73,6 +73,20 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		//m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("AquaImpact.dat"), mWorldMatrix);
 		break;
 
+	case HOlY_RANCE:
+
+		/*vLocation = m_BulletDesc.vInitPositon;
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);*/
+
+		break;
+	case HOLY_RANCE_BULLET:
+		vLocation = m_BulletDesc.vInitPositon;
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+		//m_BulletDesc.vTargetPosition = 
+
+		break;
+
+
 
 	default:
 		break;
@@ -117,9 +131,17 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 		Tick_DivineSaberBullet(fTimeDelta);
 		break;
 
+	case HOlY_RANCE:
+		Tick_HolyRance(fTimeDelta);
+		break;
+
+	case HOLY_RANCE_BULLET:
+		Tick_HolyRanceBullet(fTimeDelta);
+		break;
+
 	}
 
-	if(m_BulletDesc.eBulletType == THUNDER_FIELD)
+	if(m_BulletDesc.eBulletType == THUNDER_FIELD || m_BulletDesc.eBulletType == DIVINE_SABER || m_BulletDesc.eBulletType == DIVINE_SABER_BULLET)
 		m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	else
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
@@ -144,6 +166,7 @@ void CRinwellSkills::Collision_Check()
 	{
 	case PHOTON_FLASH:
 	case METEOR:
+	case HOLY_RANCE_BULLET:
 		__super::Collision_Check();
 		break;
 	case THUNDER_FIELD:
@@ -244,6 +267,16 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+
+	case HOlY_RANCE:
+		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+
+	case HOLY_RANCE_BULLET:
+		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 		
 		break;
 
@@ -336,7 +369,7 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 	BulletDesc.eBulletType = CRinwellSkills::DIVINE_SABER_BULLET;
 	BulletDesc.fDeadTime = 0.5f;
 
-	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 		return;
 	bulletcount -= 1;
 	m_fDivineOffset -= 1;
@@ -352,6 +385,119 @@ void CRinwellSkills::Tick_DivineSaberBullet(_float fTimeDelta)
 	if (m_fDivineTimer> 0.5f)
 		m_bDead = true;
 
+}
+
+void CRinwellSkills::Tick_HolyRance(_float fTimeDelta)
+{
+	m_fholytimer += fTimeDelta;
+    
+	if (m_fholytimer > 0.5f && m_bholybullet[0])
+	{
+		m_bholybullet[0] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] += 4.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+		
+	}
+
+	if (m_fholytimer > 0.8f && m_bholybullet[1])
+	{
+		m_bholybullet[1] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] += 4.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+	}
+
+	if (m_fholytimer > 1.1f && m_bholybullet[2])
+	{
+		m_bholybullet[2] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] -= 8.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+	}
+
+	if (m_fholytimer > 1.4f && m_bholybullet[3])
+	{
+		m_bholybullet[3] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] += 6.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+	}
+
+	if (m_fholytimer > 1.7f && m_bholybullet[4])
+	{
+		m_bholybullet[4] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] -= 6.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+	}
+
+	if (m_fholytimer > 2.f && m_bholybullet[5])
+	{
+		m_bholybullet[5] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] += 2.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+	}
+
+
+	if (m_fholytimer > 2.3f)
+	{
+
+		m_bDead = true;
+	}
+
+
+}
+
+void CRinwellSkills::Tick_HolyRanceBullet(_float fTimeDelta)
+{
+	_vector vDir = XMVector3Normalize(m_BulletDesc.vTargetPosition - m_BulletDesc.vInitPositon);
+
+	m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
+	m_pTransformCom->Go_PosDir(fTimeDelta, vDir);
 }
 
 CRinwellSkills * CRinwellSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
