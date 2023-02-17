@@ -69,7 +69,7 @@ int CWeapon::Tick(_float fTimeDelta)
 	{
 		if (nullptr == m_pSPHERECom)
 		{
-			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+			CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 			CCollider::COLLIDERDESC		ColliderDesc;
 
@@ -86,19 +86,16 @@ int CWeapon::Tick(_float fTimeDelta)
 				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.2f);
 				m_bSoundStart = true;
 			}
-			RELEASE_INSTANCE(CCollision_Manager);
 		}
 		else
 			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 	}
 	else if (nullptr != m_pSPHERECom && !m_isCollider)
 	{
-		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+		CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSPHERECom);
 		m_pSPHERECom = nullptr;
-
-		RELEASE_INSTANCE(CCollision_Manager);
 	}
 	//m_bSoundStart = false;
 
@@ -178,13 +175,12 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pSPHERECom && !m_isCollider)
 	{
-		CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+		CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSPHERECom);
 		m_bSoundStart = false;
 		m_pSPHERECom = nullptr;
 		pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
-		RELEASE_INSTANCE(CCollision_Manager);
 	}
 
 #ifdef _DEBUG

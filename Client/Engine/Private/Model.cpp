@@ -127,6 +127,11 @@ void CModel::Reset(void)
 	m_Animations[m_iCurrentAnimIndex]->Reset();
 }
 
+void CModel::Reset_Anim(_uint iAnimIndex)
+{
+	m_Animations[iAnimIndex]->Reset();
+}
+
 HRESULT CModel::Initialize_Prototype(TYPE eModelType, const char * pModelFilePath, _fmatrix PivotMatrix)
 {
 	m_eModelType = eModelType;
