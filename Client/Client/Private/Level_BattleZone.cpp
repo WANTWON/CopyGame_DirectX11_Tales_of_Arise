@@ -84,7 +84,9 @@ HRESULT CLevel_BattleZone::Initialize()
 		break;
 	}
 
-
+	
+	pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+	pCameraManager->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
 	return S_OK;
 }
 
@@ -173,8 +175,6 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 				m_bZumIn = true;
 			}
 		}
-		//else if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
-		//	m_bZumIn = false;
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
@@ -185,8 +185,6 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 				m_bZumIn = true;
 			}
 		}
-		//else if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
-		//	m_bZumIn = false;
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
@@ -259,7 +257,7 @@ HRESULT CLevel_BattleZone::Ready_Lights()
 
 	pGameInstance->Set_ShadowLightView(vLightEye, vLightAt);
 
-
+	
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;

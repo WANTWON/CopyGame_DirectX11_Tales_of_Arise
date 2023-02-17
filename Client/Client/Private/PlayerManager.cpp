@@ -73,6 +73,7 @@ void CPlayerManager::Set_ActivePlayer(_uint iIndex)
 		if (iter == m_pActivePlayer)
 			continue;
 		m_pAIPlayers.push_back(dynamic_cast<CPlayer*>(iter));
+		dynamic_cast<CPlayer*>(iter)->AI_check();
 	}
 }
 

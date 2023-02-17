@@ -72,14 +72,13 @@ int CAlphenSkills::Tick(_float fTimeDelta)
 		}
 	}
 
-#ifdef _DEBUG
 	if (m_pAABBCom != nullptr)
 		m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	if (m_pOBBCom != nullptr)
 		m_pOBBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	if (m_pSPHERECom != nullptr)
 		m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-#endif
+
 
 	return OBJ_NOEVENT;
 }

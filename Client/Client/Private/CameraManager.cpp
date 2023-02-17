@@ -22,15 +22,7 @@ void CCameraManager::Set_CamState(CAM_STATE _eState)
 
 HRESULT CCameraManager::Play_ActionCamera(_tchar * wcCameraDataName, _matrix mWorldMatrix)
 {
-	if (m_eCamState != CAM_ACTION)
-	{
-		CCamera* pCamera = dynamic_cast<CCamera*>(CGameInstance::Get_Instance()->Get_Object(m_eCurrentLevel, TEXT("Layer_Camera"), CAM_ACTION));
-		if (nullptr == pCamera)
-			return E_FAIL;
-		m_eCamState = CAM_ACTION;
-		m_pCurrentCamera = pCamera;
-	}
-	dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_TargetMatrix(mWorldMatrix);
+	
 
 	/* Load Effect File. */
 	HANDLE hFileCamera = nullptr;
@@ -46,26 +38,77 @@ HRESULT CCameraManager::Play_ActionCamera(_tchar * wcCameraDataName, _matrix mWo
 
 	DWORD dwByte = 0;
 	_uint iCameraCount = 0;
-	CCamera_Action::TOOLDESC CamToolData;
+	_int eCameraType = 0;
+	ReadFile(hFileCamera, &eCameraType, sizeof(_int), &dwByte, nullptr);
 
-	/* Read how many Effects there are in this File. */
-	_float fPlayTime = 0.f;
-	ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
-	dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_PlayTime(fPlayTime);
-	
-	ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
-	/* For every Effect in this File: */
-	for (_uint i = 0; i < iCameraCount; i++)
+
+	if (eCameraType == CCameraManager::TARGETMODE)
 	{
+		if (m_eCamState != CAM_DYNAMIC)
+		{
+			CCamera* pCamera = dynamic_cast<CCamera*>(CGameInstance::Get_Instance()->Get_Object(m_eCurrentLevel, TEXT("Layer_Camera"), CAM_DYNAMIC));
+			if (nullptr == pCamera)
+				return E_FAIL;
+			m_eCamState = CAM_DYNAMIC;
+			m_pCurrentCamera = pCamera;
+		}
+		dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_TargetMatrix(mWorldMatrix);
+		dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_CamMode(CCamera_Dynamic::CAM_TARGETMODE);
 
-		ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
-		dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Add_CamData(CamToolData);
+		CCamera_Dynamic::TOOLDESC CamToolData;
+
+		/* Read how many Effects there are in this File. */
+		_float fPlayTime = 0.f;
+		ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+		dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_PlayTime(fPlayTime);
+
+		ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
+		/* For every Effect in this File: */
+		for (_uint i = 0; i < iCameraCount; i++)
+		{
+
+			ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Dynamic::TOOLDESC), &dwByte, nullptr);
+			dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Add_CamData(CamToolData);
+		}
+
 	}
+	else
+	{
+		
+		CCamera* pCamera = dynamic_cast<CCamera*>(CGameInstance::Get_Instance()->Get_Object(m_eCurrentLevel, TEXT("Layer_Camera"), CAM_ACTION));
+		if (nullptr == pCamera)
+			return E_FAIL;
+		m_eCamState = CAM_ACTION;
+		m_pCurrentCamera = pCamera;
+		
+		dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_TargetMatrix(mWorldMatrix);
+
+		CCamera_Action::TOOLDESC CamToolData;
+
+		/* Read how many Effects there are in this File. */
+		_float fPlayTime = 0.f;
+		ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+		dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_PlayTime(fPlayTime);
+
+		ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
+		/* For every Effect in this File: */
+		for (_uint i = 0; i < iCameraCount; i++)
+		{
+
+			ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
+			dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Add_CamData(CamToolData);
+		}
+	}
+	
 
 	RELEASE_INSTANCE(CGameInstance);
 	CloseHandle(hFileCamera);
 
-	dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(true);
+	if (eCameraType == CCameraManager::TARGETMODE)
+		dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_Play(true);
+	else
+		dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(true);
+
 	return S_OK;
 }
 

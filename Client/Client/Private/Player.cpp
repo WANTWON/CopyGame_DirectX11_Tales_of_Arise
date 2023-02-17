@@ -72,7 +72,7 @@ int CPlayer::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if(m_eLevel == LEVEL_LOADING || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
+	if(m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
 		return OBJ_NOEVENT;
 
 	if (m_pCameraManager->Get_CamState()== CCameraManager::CAM_DYNAMIC &&
@@ -108,13 +108,9 @@ int CPlayer::Tick(_float fTimeDelta)
 
 					CAIState* pAIState = new AIPlayer::CSmashAttack_State(this, CBattleManager::Get_Instance()->Get_LackonMonster());
 					m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-
 				}
-
-
 			}
 		}
-		
 
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
 		{
@@ -163,7 +159,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 
-	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LOADING)
+	if (m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
@@ -171,20 +167,21 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom && eMode != UNVISIBLE)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
+
+		if(CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_ACTION)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+
 #ifdef _DEBUG
 		m_pRendererCom->Add_Debug(m_pNavigationCom);
 		__super::Late_Tick(fTimeDelta);
 #endif //_DEBUG
 	}
 
-	
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 	
-
 	switch (eMode)
 	{
 	case Client::ACTIVE:
@@ -215,7 +212,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			_vector vMonsterPos = pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-			_vector vDirection = vPlayerPos - vMonsterPos;
+			_vector vDirection = XMVectorSetY(vPlayerPos, XMVectorGetY(vMonsterPos)) - vMonsterPos;
 
 			_float fRadiusSum = m_pSPHERECom->Get_SphereRadius() + pMonster->Get_SPHERECollider()->Get_SphereRadius();
 
@@ -237,7 +234,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vNewDir) * fRadiusSum);
 
-				_vector vLerpPos = XMVectorLerp(vPlayerPos, vNewPos, 0.5f);
+				_vector vLerpPos = XMVectorLerp(vPlayerPos, XMVectorSetY(vNewPos, XMVectorGetY(vPlayerPos)), 0.5f);
 
 				if (true == m_pNavigationCom->isMove(vLerpPos))
 					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
@@ -430,7 +427,7 @@ void CPlayer::Revive()
 		}
 		else
 		{
-			CAIState* pState =  new CAiState_WakeUp(this);
+			CAIState* pAIState =  new CAiState_WakeUp(this);
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 		}
 		
@@ -541,6 +538,15 @@ void CPlayer::Revive()
 	
 }
 
+void CPlayer::AI_check()
+{
+	CAIState* pAIState = nullptr;
+
+	pAIState = new CAiState_WakeUp(this);
+   m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+
+}
+
 void CPlayer::HandleInput()
 {
 	CPlayerState* pNewState = m_pPlayerState->HandleInput();
@@ -624,16 +630,20 @@ void CPlayer::Check_Navigation()
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 }
 
-void CPlayer::Check_Navigation_Jump(void)
+_bool CPlayer::Check_Navigation_Jump(void)
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_fWalkingHeight > XMVectorGetY(vPosition))
+	if (m_fWalkingHeight >= XMVectorGetY(vPosition))
 	{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+
+		return true;
 	}
+
+	return false;
 }
 
 void CPlayer::Compute_CurrentIndex(LEVEL eLevel)

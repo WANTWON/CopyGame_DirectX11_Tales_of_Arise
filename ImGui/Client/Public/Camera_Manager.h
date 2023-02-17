@@ -19,14 +19,14 @@ public:
 	virtual ~CCamera_Manager() = default;
 
 public:
-	void		Set_CamMode(CAM_MODE eMode) { m_eCamMode = eMode; }
-	CAM_MODE	Get_CamMode() { return m_eCamMode; }
+	void		Set_CamMode(CAM_MODE eMode);
+	CAM_MODE	Get_CamMode() { return m_eCamState; }
 
 public:
 	HRESULT			Add_Camera();
 	void			Remove_Camera(_int iIndex);
 	void			Clear_Camreras();
-	CCamera_Action* Get_CurrentCamera() { return m_pCurrentCamera; }
+	CCamera*		 Get_CurrentCamera() { return m_pCurrentCamera; }
 	_uint			Get_SymBolType() { return m_iSymBolType; }
 
 
@@ -36,7 +36,7 @@ public:
 	void	Click_Position(_float4 vPosition);
 	void	Clear_ClickPosition();
 private:
-	CAM_MODE										m_eCamMode = DYNAMIC;
+	CAM_MODE										m_eCamState = DYNAMIC;
 
 private:
 	_int											m_iCamIndex = 0;
@@ -44,7 +44,7 @@ private:
 
 	vector<_float4>									m_vClickedPoints;
 	CBaseObj*										m_pClickedSymbol[CAM_END] = { nullptr };
-	CCamera_Action*									m_pCurrentCamera = nullptr;
+	CCamera*									m_pCurrentCamera = nullptr;
 
 	_vector					m_vEyePosition = {0.f,0.f,0.f,1.f};
 	_vector					m_vAtPosition = { 0.f,0.f,0.f,1.f };

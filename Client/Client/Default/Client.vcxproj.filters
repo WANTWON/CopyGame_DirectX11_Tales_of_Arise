@@ -361,10 +361,16 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates">
       <UniqueIdentifier>{b9c0676a-05c5-40ee-b357-1ba01bc1ad0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\03. Law">
+      <UniqueIdentifier>{6de98e5a-c150-4bac-8985-ef2513782efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law">
+      <UniqueIdentifier>{7aa6e27e-0965-43f8-a61d-7315bbe4bff5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Caption">
       <UniqueIdentifier>{3268bd8d-2beb-4a28-87c6-7db320ea4dc7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01.Actor\00.Player\02.Rinwell\01.Sion">
+    <Filter Include="02.GameObjects\01.Actor\00.Player\01.Sion">
       <UniqueIdentifier>{07ceaa0b-61ee-4ef4-8bd0-98feee9ed4d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -691,7 +697,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sion.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell\01.Sion</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect.h">
       <Filter>02.GameObjects\03.Effect</Filter>
@@ -1017,6 +1023,9 @@
     <ClInclude Include="..\Public\AstralDoubt_WalkState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Law.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\03. Law</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\UI_Dialogue_Caption.h">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
     </ClInclude>
@@ -1024,6 +1033,21 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AI_DodgeState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LawAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LawSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LawAirRSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LawAirFSkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_Rinwell_SkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1317,7 +1341,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sion.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell\01.Sion</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect.cpp">
       <Filter>02.GameObjects\03.Effect</Filter>
@@ -1643,6 +1667,9 @@
     <ClCompile Include="..\Private\AstralDoubt_WalkState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Law.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\03. Law</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
     </ClCompile>
@@ -1650,6 +1677,21 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AiState_WakeUp.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LawAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LawSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LawAirRSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LawAirFSkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Rinwell_SkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
   </ItemGroup>

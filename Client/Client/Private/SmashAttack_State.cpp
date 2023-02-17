@@ -59,49 +59,49 @@ CAIState * CSmashAttack_State::Tick(_float fTimeDelta)
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
-					{
-						if (!strcmp(pEvent.szName, "Alphen_Strike_1"))
-						{
-							if (!m_bAlphenStrike_1)
-							{
-								_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+					//else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					//{
+					//	if (!strcmp(pEvent.szName, "Alphen_Strike_1"))
+					//	{
+					//		if (!m_bAlphenStrike_1)
+					//		{
+					//			_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
 
-								CBullet::BULLETDESC BulletDesc;
-								BulletDesc.eCollisionGroup = PLAYER;
-								BulletDesc.fDeadTime = 3.f;
-								BulletDesc.eBulletType = CAlphenSkills::STRIKE_1;
-								BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
-								BulletDesc.pOwner = m_pOwner;
-								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+					//			CBullet::BULLETDESC BulletDesc;
+					//			BulletDesc.eCollisionGroup = PLAYER;
+					//			BulletDesc.fDeadTime = 3.f;
+					//			BulletDesc.eBulletType = CAlphenSkills::STRIKE_1;
+					//			BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
+					//			BulletDesc.pOwner = m_pOwner;
+					//			BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
-								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-									return nullptr;
+					//			//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+					//			//	return nullptr;
 
-								m_bAlphenStrike_1 = true;
-							}
-						}
-						if (!strcmp(pEvent.szName, "Alphen_Strike_2"))
-						{
-							if (!m_bAlphenStrike_2)
-							{
-								_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+					//			m_bAlphenStrike_1 = true;
+					//		}
+					//	}
+					//	if (!strcmp(pEvent.szName, "Alphen_Strike_2"))
+					//	{
+					//		if (!m_bAlphenStrike_2)
+					//		{
+					//			_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
 
-								CBullet::BULLETDESC BulletDesc;
-								BulletDesc.eCollisionGroup = PLAYER;
-								BulletDesc.fDeadTime = 3.f;
-								BulletDesc.eBulletType = CAlphenSkills::STRIKE_2;
-								BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
-								BulletDesc.pOwner = m_pOwner;
-								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+					//			CBullet::BULLETDESC BulletDesc;
+					//			BulletDesc.eCollisionGroup = PLAYER;
+					//			BulletDesc.fDeadTime = 3.f;
+					//			BulletDesc.eBulletType = CAlphenSkills::STRIKE_2;
+					//			BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
+					//			BulletDesc.pOwner = m_pOwner;
+					//			BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
-								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-									return nullptr;
+					//			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+					//				return nullptr;
 
-								m_bAlphenStrike_2 = true;
-							}
-						}
-					}
+					//			m_bAlphenStrike_2 = true;
+					//		}
+					//	}
+					//}
 					break;
 				}
 
@@ -123,7 +123,7 @@ CAIState * CSmashAttack_State::Tick(_float fTimeDelta)
 							BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-								return nullptr;
+								return nullptr; 
 
 							m_fEventStart = pEvent.fStartTime;
 						}
@@ -150,7 +150,7 @@ CAIState * CSmashAttack_State::LateTick(_float fTimeDelta)
 	if (m_bIsStateEvent)
 	{
 		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
 
 	for (auto& iter : m_pEffects)
@@ -160,7 +160,12 @@ CAIState * CSmashAttack_State::LateTick(_float fTimeDelta)
 	}
 
 	if (m_bIsAnimationFinished)
+	{
 		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+	}
+		
 
 	return nullptr;
 }
@@ -200,7 +205,7 @@ void CSmashAttack_State::Enter()
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
 	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
@@ -221,5 +226,6 @@ void CSmashAttack_State::Exit()
 		}
 	}
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	__super::Exit();
 }

@@ -80,9 +80,6 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 		}
 	}
 
-	if (m_bIsFly)
-m_fTime += fTimeDelta;
-
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -336,7 +333,6 @@ m_fTime += fTimeDelta;
 
 						if (pTarget != nullptr)
 						{
-
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 							BulletDesc.vTargetPosition.m128_f32[0] += 3.f;
 						}
@@ -540,6 +536,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Jump_E.wav"), SOUND_EFFECT, 0.5f);
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS);
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("SionTresShot.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
@@ -568,6 +565,8 @@ void CPlayer_SionSkillAttack::Enter(void)
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_EFFECT, 0.5f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_EFFECT, 0.5f);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_MAGNARAY);
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("SionMagnaRay.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
@@ -609,7 +608,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 	}
 
 
-	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
+	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
 	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
 
@@ -628,8 +627,6 @@ void CPlayer_SionSkillAttack::Enter(void)
 		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_RIGHT));
 		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_LOOK));
 	}
-
-	RELEASE_INSTANCE(CBattleManager);
 
 	m_pOwner->Set_Manarecover(false);
 }

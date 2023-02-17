@@ -74,6 +74,8 @@ public: /* Getter &  Setter */
 
 	//revive
 	void Revive();
+	//ai to checkstate
+	void AI_check();
 
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;
@@ -90,7 +92,7 @@ public: /*For.State*/
 public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);
 	void Check_Navigation();
-	void Check_Navigation_Jump(void);
+	_bool Check_Navigation_Jump(void);
 	void Compute_CurrentIndex(LEVEL eLevel);
 
 public:	/* For.Weapon */

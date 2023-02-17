@@ -14,6 +14,7 @@
 #include "SnowFieldNpc.h"
 #include "PlayerCreater.h"
 #include "Object_Pool_Manager.h"
+#include "Monster.h"
 
 extern bool		g_bUIMade = false;
 
@@ -39,15 +40,22 @@ HRESULT CLevel_SnowField::Initialize()
 			return E_FAIL;
 	}
 
-	cout << " Player Clone start" << endl;
-	m_pPlayerLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER);
-	if (nullptr == m_pPlayerLoader)
-		return E_FAIL;
+	
+		cout << " Player Clone start" << endl;
+		m_pPlayerLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER);
+		if (nullptr == m_pPlayerLoader)
+			return E_FAIL;
 
-	cout << " Monster Group1 Clone start" << endl;
-	m_pMonsterLoader1 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER1);
-	if (nullptr == m_pMonsterLoader1)
-		return E_FAIL;
+		cout << " Player Clone start2" << endl;
+		m_pPlayer2Loader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER2);
+		if (nullptr == m_pPlayer2Loader)
+				return E_FAIL;
+
+		cout << " Monster Group1 Clone start" << endl;
+		m_pMonsterLoader1 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER1);
+		if (nullptr == m_pMonsterLoader1)
+			return E_FAIL;
+
 
 
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund")) == false)
@@ -63,7 +71,7 @@ HRESULT CLevel_SnowField::Initialize()
 	}
 
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
-
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
 
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco")) == false)
 	{
@@ -72,36 +80,37 @@ HRESULT CLevel_SnowField::Initialize()
 	}
 
 
-
-
-	////Test
-	//if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
-	//	return E_FAIL;
-	////Test
-
-	//Test
-	if (FAILED(Ready_Layer_Test(TEXT("Layer_Test"))))
-		return E_FAIL;
-	//Test
-
-
-
-	DWORD dwTime = GetTickCount();
-	while (false == m_pPlayerLoader->Get_Finished() || 
-		false == m_pMonsterLoader1->Get_Finished())
+	if (m_pPlayerLoader != nullptr)
 	{
-		if (dwTime + 1000 < GetTickCount())
+		DWORD dwTime = GetTickCount();
+		while (false == m_pPlayerLoader->Get_Finished() || false == m_pPlayer2Loader->Get_Finished() ||
+			false == m_pMonsterLoader1->Get_Finished())
 		{
-			if (m_pPlayerLoader->Get_Finished() == true)
-				cout << "Finished Player Clone" << endl;
+			if (dwTime + 1000 < GetTickCount())
+			{
+				if (m_pPlayerLoader->Get_Finished() == true)
+					cout << "Finished Player Clone" << endl;
+
+				if (m_pPlayer2Loader->Get_Finished() == true)
+					cout << "Finished Player Clone2" << endl;
 
 
-			if (m_pMonsterLoader1->Get_Finished() == true)
-				cout << "Finished Monster Grounp1 Clone" << endl;
+				if (m_pMonsterLoader1->Get_Finished() == true)
+					cout << "Finished Monster Grounp1 Clone" << endl;
 
-			dwTime = GetTickCount();
+				dwTime = GetTickCount();
+			}
 		}
 	}
+	
+
+
+	if(m_pPlayerLoader != nullptr)
+		Safe_Release(m_pPlayerLoader);
+	if (m_pPlayer2Loader != nullptr)
+		Safe_Release(m_pPlayer2Loader);
+	if (m_pMonsterLoader1 != nullptr)
+		Safe_Release(m_pMonsterLoader1);
 
 	if (!g_bUIMade)
 	{
@@ -118,8 +127,6 @@ HRESULT CLevel_SnowField::Initialize()
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 	dynamic_cast<CCamera_Dynamic*>(pCamera)->Set_Position(XMVectorSet(10.f, 20.f, -10.f, 1.f));
 
-	Safe_Release(m_pPlayerLoader);
-	Safe_Release(m_pMonsterLoader1);
 
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
@@ -164,6 +171,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -184,32 +192,26 @@ void CLevel_SnowField::Late_Tick(_float fTimeDelta)
 
 	/* Fog Shader */
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	
-	CRenderer* pRenderer = (CRenderer*)pGameInstance->Clone_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), nullptr);
-	if (!pRenderer)
-		return;
 
-	pRenderer->Set_Fog(true);
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	if (pPlayer)
+	{
+		pPlayer->Get_Renderer()->Set_Fog(true);
 
-	CShader* pShaderPostProcessing = pRenderer->Get_ShaderPostProcessing();
-	if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return;
-	if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
-		return;
+		CShader* pShaderPostProcessing = pPlayer->Get_Renderer()->Get_ShaderPostProcessing();
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+			return;
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+			return;
 
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-	if (!pPlayer)
-		return;
+		_float3 vPlayerPosition;
+		XMStoreFloat3(&vPlayerPosition, pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vPlayerPosition", &vPlayerPosition, sizeof(_float3))))
+			return;
+	}
 
 	RELEASE_INSTANCE(CGameInstance);
-
-	_float3 vPlayerPosition;
-	XMStoreFloat3(&vPlayerPosition, pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-
-	if (FAILED(pShaderPostProcessing->Set_RawValue("g_vPlayerPosition", &vPlayerPosition, sizeof(_float3))))
-		return;
-
-	Safe_Release(pRenderer);
 }
 
 HRESULT CLevel_SnowField::Ready_Lights()

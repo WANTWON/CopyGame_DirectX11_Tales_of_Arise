@@ -83,7 +83,8 @@ CImgui_Manager::CImgui_Manager()
 	m_stLayerTags.push_back(LayerTag3);
 	
 	ZeroMemory(&m_BoxDesc, sizeof(CTreasureBox::BOXTAG));
-	ZeroMemory(&m_CameraToolDesc, sizeof(CCamera_Action::TOOLDESC));
+	ZeroMemory(&m_ActionCamDesc, sizeof(CCamera_Action::TOOLDESC));
+	ZeroMemory(&m_DynamicCamDesc, sizeof(CCamera_Dynamic::TOOLDESC));
 }
 
 
@@ -265,7 +266,21 @@ void CImgui_Manager::Tick_Imgui()
 		{
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Create Camera Symbol"); ImGui::SameLine();
 			ImGui::RadioButton("##Picking for Camera", &m_PickingType, PICKING_CAMERA);
-			Set_Camera();
+
+			if (ImGui::RadioButton("Target Mode(Radian)", &m_eCameraType, 0))
+			{
+				CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::DYNAMIC);
+				m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
+			}
+			ImGui::SameLine();
+			ImGui::RadioButton("Action Mode(Position)", &m_eCameraType, 1);
+			
+
+			if (m_eCameraType == ACTION)
+				Set_ActionCamera();
+			else if(m_eCameraType == TARGETMODE)
+				Set_TargetCamera();
+
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Light Tool"))
@@ -1908,9 +1923,9 @@ void CImgui_Manager::Read_CamerasData()
 	FindClose(hDir);
 }
 
-void CImgui_Manager::Set_Camera()
+void CImgui_Manager::Set_ActionCamera()
 {
-	ImGui::Checkbox("Target Mode", &m_bTargetMode);
+
 #pragma region Create Camera
 	ImGuiTreeNodeFlags TreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
 	if (ImGui::CollapsingHeader("Create", TreeNodeFlags))
@@ -1930,20 +1945,24 @@ void CImgui_Manager::Set_Camera()
 				memset(cCameraName, 0, MAX_PATH);
 				ImGui::OpenPopup("Create Camera");
 
-				CCamera_Action::ACTIONCAMDESC				CameraDesc;
-				ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
-				CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
-				CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+				if (CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), ACTION) == nullptr)
+				{
+					CCamera_Action::ACTIONCAMDESC				CameraDesc;
+					ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+					CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+					CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
 
-				CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
-				CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-				CameraDesc.CameraDesc.fNear = 0.2f;
-				CameraDesc.CameraDesc.fFar = 1000.f;
+					CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+					CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+					CameraDesc.CameraDesc.fNear = 0.2f;
+					CameraDesc.CameraDesc.fFar = 1000.f;
 
-				CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
-				CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+					CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+					CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_STATIC, TEXT("Layer_Camera"), &CameraDesc);
+					CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_GAMEPLAY, TEXT("Layer_Camera"), &CameraDesc);
+				}
+				
 			}
 		}
 		ImGui::NewLine();
@@ -1992,9 +2011,9 @@ void CImgui_Manager::Set_Camera()
 			if (m_pCurrentCamera)
 			{
 				CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::ACTION);
-				m_pCurrentCamera->Set_PlayTime(m_fPlayTime);
+				dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_PlayTime(m_fPlayTime);
 				m_bIsPlaying = !m_bIsPlaying;
-				m_pCurrentCamera->Set_Play(m_bIsPlaying);
+				dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
 			}
 		}
 	}
@@ -2022,7 +2041,7 @@ void CImgui_Manager::Set_Camera()
 				vector<CCamera_Action::TOOLDESC> CameraCurves;
 
 				if (m_pCurrentCamera)
-					CameraCurves = m_pCurrentCamera->Get_AllCamData();
+					CameraCurves = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_AllCamData();
 
 				for (_uint i = 0; i < CameraCurves.size(); i++)
 				{
@@ -2032,7 +2051,7 @@ void CImgui_Manager::Set_Camera()
 					if (ImGui::Selectable(iIndex.c_str(), i == m_iCamCurvedIndex, ImGuiSelectableFlags_SpanAllColumns)) /* Eye */
 					{
 						m_iCamCurvedIndex = i;
-						m_CameraToolDesc = m_pCurrentCamera->Get_CamData(m_iCamCurvedIndex);
+						m_ActionCamDesc = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_CamData(m_iCamCurvedIndex);
 					}
 
 					ImGui::TableNextColumn(); 
@@ -2056,24 +2075,24 @@ void CImgui_Manager::Set_Camera()
 			if (ImGui::Button("Add"))
 			{
 				if (m_pCurrentCamera)
-					m_pCurrentCamera->Add_CamData(m_CameraToolDesc);
+					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Add_CamData(m_ActionCamDesc);
 
-				_float fValue = m_CameraToolDesc.fEndTime - m_CameraToolDesc.fStartTime;
-				m_CameraToolDesc.fStartTime = m_CameraToolDesc.fEndTime;
-				m_CameraToolDesc.fEndTime += fValue;
-				if (m_CameraToolDesc.fEndTime > 1.f)
-					m_CameraToolDesc.fEndTime = 1.f;
+				_float fValue = m_ActionCamDesc.fEndTime - m_ActionCamDesc.fStartTime;
+				m_ActionCamDesc.fStartTime = m_ActionCamDesc.fEndTime;
+				m_ActionCamDesc.fEndTime += fValue;
+				if (m_ActionCamDesc.fEndTime > 1.f)
+					m_ActionCamDesc.fEndTime = 1.f;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Delete"))
-				if (m_pCurrentCamera->Get_AllCamData().size() > m_iCamCurvedIndex)
-					m_pCurrentCamera->Remove_Camdata(m_iCamCurvedIndex);
+				if (dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_AllCamData().size() > m_iCamCurvedIndex)
+					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Remove_Camdata(m_iCamCurvedIndex);
 
 			ImGui::SameLine();
 			if (ImGui::Button("Edit"))
 			{
-				if (m_pCurrentCamera->Get_AllCamData().size() > m_iCamCurvedIndex)
-					m_pCurrentCamera->Set_CamData(m_iCamCurvedIndex, m_CameraToolDesc);
+				if (dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_AllCamData().size() > m_iCamCurvedIndex)
+					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_CamData(m_iCamCurvedIndex, m_ActionCamDesc);
 			}
 				
 
@@ -2088,8 +2107,8 @@ void CImgui_Manager::Set_Camera()
 				_float4x4 vCamMatrix = CGameInstance::Get_Instance()->Get_CamWorldMatrix();
 				_float4 vPosition = (_float4)vCamMatrix.m[3];
 				_float4 vLook = (_float4)vCamMatrix.m[2];
-				m_CameraToolDesc.vEyePosition = vPosition;
-				m_CameraToolDesc.vAtPosition = _float4( vPosition.x + vLook.x , vPosition.y + vLook.y, vPosition.z + vLook.z, 1.f);
+				m_ActionCamDesc.vEyePosition = vPosition;
+				m_ActionCamDesc.vAtPosition = _float4( vPosition.x + vLook.x , vPosition.y + vLook.y, vPosition.z + vLook.z, 1.f);
 			}
 				
 
@@ -2098,48 +2117,334 @@ void CImgui_Manager::Set_Camera()
 
 			ImGui::BulletText("EyePosition");
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::DragFloat("##EyeX", &m_CameraToolDesc.vEyePosition.x, 0.05f,NULL, NULL, "X: %.02f"))
+			if (ImGui::DragFloat("##EyeX", &m_ActionCamDesc.vEyePosition.x, 0.05f,NULL, NULL, "X: %.02f"))
 			{
 				
 			}
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::DragFloat("##EyeY", &m_CameraToolDesc.vEyePosition.y, 0.05f, NULL, NULL, "Y: %.02f"))
+			if (ImGui::DragFloat("##EyeY", &m_ActionCamDesc.vEyePosition.y, 0.05f, NULL, NULL, "Y: %.02f"))
 			{
 			}
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::DragFloat("##EyeZ", &m_CameraToolDesc.vEyePosition.z, 0.05f, NULL, NULL, "Z: %.02f"))
+			if (ImGui::DragFloat("##EyeZ", &m_ActionCamDesc.vEyePosition.z, 0.05f, NULL, NULL, "Z: %.02f"))
 			{
 			}
 	
 			ImGui::BulletText("AtPosition");
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::DragFloat("##AtX", &m_CameraToolDesc.vAtPosition.x, 0.05f, NULL, NULL, "X: %.02f"))
+			if (ImGui::DragFloat("##AtX", &m_ActionCamDesc.vAtPosition.x, 0.05f, NULL, NULL, "X: %.02f"))
 			{
 			}
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::DragFloat("##AtY", &m_CameraToolDesc.vAtPosition.y, 0.05f, NULL, NULL, "Y: %.02f"))
+			if (ImGui::DragFloat("##AtY", &m_ActionCamDesc.vAtPosition.y, 0.05f, NULL, NULL, "Y: %.02f"))
 			{
 			}
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::DragFloat("##AtZ", &m_CameraToolDesc.vAtPosition.z, 0.05f, NULL, NULL, "Z: %.02f"))
+			if (ImGui::DragFloat("##AtZ", &m_ActionCamDesc.vAtPosition.z, 0.05f, NULL, NULL, "Z: %.02f"))
 			{
 			}
 
-			m_pCamera_Manager->Set_CameraSymbolPosition(CCamera_Manager::CAM_EYE, XMLoadFloat4(&m_CameraToolDesc.vEyePosition));
-			m_pCamera_Manager->Set_CameraSymbolPosition(CCamera_Manager::CAM_AT, XMLoadFloat4(&m_CameraToolDesc.vAtPosition));
+			m_pCamera_Manager->Set_CameraSymbolPosition(CCamera_Manager::CAM_EYE, XMLoadFloat4(&m_ActionCamDesc.vEyePosition));
+			m_pCamera_Manager->Set_CameraSymbolPosition(CCamera_Manager::CAM_AT, XMLoadFloat4(&m_ActionCamDesc.vAtPosition));
 
 			ImGui::BulletText("Start/End Time");
 			ImGui::SetNextItemWidth(200);
-			if (ImGui::DragFloat("##Start", &m_CameraToolDesc.fStartTime, 0.01f, 0.f, 1.f, "Start: %.02f"))
+			if (ImGui::DragFloat("##Start", &m_ActionCamDesc.fStartTime, 0.01f, 0.f, 1.f, "Start: %.02f"))
 			{
 			}
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(200);
-			if (ImGui::DragFloat("##End", &m_CameraToolDesc.fEndTime, 0.01f, 0.f, 1.f, "End: %.02f"))
+			if (ImGui::DragFloat("##End", &m_ActionCamDesc.fEndTime, 0.01f, 0.f, 1.f, "End: %.02f"))
+			{
+			}
+
+			ImGui::EndTabBar();
+		}
+
+		ImGui::NewLine();
+	}
+#pragma endregion Add
+
+	Show_PopupBox();
+
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_X))
+	{
+		if (CPickingMgr::Get_Instance()->Picking())
+		{
+			_float3 fPosition = CPickingMgr::Get_Instance()->Get_PickingPos();
+			_float4 vPosition = _float4(fPosition.x, fPosition.y, fPosition.z, 1.f);
+			m_pCamera_Manager->Click_Position(vPosition);
+		}
+
+	}
+
+}
+
+void CImgui_Manager::Set_TargetCamera()
+{
+
+#pragma region Create Camera
+	ImGuiTreeNodeFlags TreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
+	if (ImGui::CollapsingHeader("Create", TreeNodeFlags))
+	{
+		/* Create New Effect */
+		ImGui::Text("Create Camera Data");
+		static char cCameraName[MAX_PATH];
+		ImGui::SetNextItemWidth(175);
+		ImGui::InputText("##InputCamera", cCameraName, MAX_PATH);
+		ImGui::SameLine();
+		if (ImGui::Button("Create Camera"))
+		{
+			m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
+			if (strcmp(cCameraName, ""))
+			{
+				m_sCurrentCamera = cCameraName; // Set Current Effect
+				m_sCurrentCamera += ".dat";
+				memset(cCameraName, 0, MAX_PATH);
+				ImGui::OpenPopup("Create Camera");	
+			}
+			
+		}
+		ImGui::NewLine();
+		ImGui::Separator();
+		ImGui::Text("Saved Camera");
+
+		if (ImGui::BeginListBox("##SavedCamera", ImVec2(-FLT_MIN, 5.f*ImGui::GetTextLineHeightWithSpacing())))
+		{
+			for (int i = 0; i < m_SavedCameras.size(); i++)
+			{
+				if (ImGui::Selectable(m_SavedCameras[i].c_str(), m_iSavedCamera == i))
+					m_iSavedCamera = i;
+
+				if (m_iSavedCamera == i)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndListBox();
+		}
+
+		if (ImGui::Button("Load Camera"))
+		{
+			Load_Camera();
+		}
+
+
+		ImGui::NewLine();
+		ImGui::Separator();
+
+		ImGui::Text("Current Camera:");
+		ImGui::SameLine();
+		ImGui::Text(m_sCurrentCamera.c_str());
+
+		if (ImGui::Button("Save Camera"))
+		{
+			Save_Camera();
+		}
+
+
+
+		ImGui::Text("PlayTime"); ImGui::SameLine();
+		ImGui::DragFloat("##AtX", &m_fPlayTime, 0.05f);
+		ImGui::SameLine();
+
+		if (ImGui::Button(m_bIsPlaying ? "Stop" : "Play"))
+		{
+			if (dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_CamMode() == CCamera_Dynamic::CAM_DEBUG)
+			{
+				CGameObject* pPickedObj = CPickingMgr::Get_Instance()->Get_PickedObj();
+				CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pPickedObj);
+				dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_Target(pTarget);
+
+				CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::DYNAMIC);
+				dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_CamMode(CCamera_Dynamic::CAM_TARGET);
+				dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_PlayTime(m_fPlayTime);
+				m_bIsPlaying = !m_bIsPlaying;
+				dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
+			}
+			else
+			{
+				dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_Play(false);
+				dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_CamMode(CCamera_Dynamic::CAM_DEBUG);
+			}
+		}
+	}
+
+
+#pragma endregion Create Camera
+
+#pragma region Add
+	ImGui::NewLine();
+	if (ImGui::CollapsingHeader("Add"))
+	{
+		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+		if (ImGui::BeginTabBar("CameraTabBar", tab_bar_flags))
+		{
+			if (ImGui::BeginTable("ColorCurvesTable", 7, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+			{
+				ImGui::TableSetupScrollFreeze(0, 1);
+				ImGui::TableSetupColumn("ID");
+				ImGui::TableSetupColumn("Radian");
+				ImGui::TableSetupColumn("Distance");
+				ImGui::TableSetupColumn("YOffset");
+				ImGui::TableSetupColumn("At");
+				ImGui::TableSetupColumn("Start");
+				ImGui::TableSetupColumn("End");
+				ImGui::TableHeadersRow();
+
+				vector<CCamera_Dynamic::TOOLDESC> CameraCurves;
+
+				if (m_pCurrentCamera)
+					CameraCurves = dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_AllCamData();
+
+				for (_uint i = 0; i < CameraCurves.size(); i++)
+				{
+					ImGui::TableNextColumn();
+					string iIndex = to_string(i);
+					//ImGui::Text(iIndex.c_str()); /* ID */
+					if (ImGui::Selectable(iIndex.c_str(), i == m_iCamCurvedIndex, ImGuiSelectableFlags_SpanAllColumns)) /* Eye */
+					{
+						m_iCamCurvedIndex = i;
+						m_DynamicCamDesc = dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_CamData(m_iCamCurvedIndex);
+					}
+
+					ImGui::TableNextColumn();
+					string sRadian = (to_string(CameraCurves[i].fRadian));
+					ImGui::Text(sRadian.c_str());
+					ImGui::TableNextColumn();
+					string sDistance = (to_string(CameraCurves[i].fLength));
+					ImGui::Text(sDistance.c_str());
+					ImGui::TableNextColumn();
+					string sOffset = (to_string(CameraCurves[i].fYoffset));
+					ImGui::Text(sOffset.c_str());
+
+					ImGui::TableNextColumn();
+					string sAt = CutOnSpecificDecimalPt(to_string(CameraCurves[i].vLook.x), 2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vLook.y), 2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vLook.z), 2);
+					ImGui::Text(sAt.c_str());
+
+					ImGui::TableNextColumn();
+					ImGui::Text(to_string(CameraCurves[i].fStartTime).c_str()); /* Start */
+
+					ImGui::TableNextColumn();
+					ImGui::Text(to_string(CameraCurves[i].fEndTime).c_str()); /* End */
+				}
+				ImGui::EndTable();
+			}
+
+
+			if (ImGui::Button("Add"))
+			{
+				if (m_pCurrentCamera)
+					dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Add_CamData(m_DynamicCamDesc);
+
+				_float fValue = m_DynamicCamDesc.fEndTime - m_DynamicCamDesc.fStartTime;
+				m_DynamicCamDesc.fStartTime = m_DynamicCamDesc.fEndTime;
+				m_DynamicCamDesc.fEndTime += fValue;
+				if (m_DynamicCamDesc.fEndTime > 1.f)
+					m_DynamicCamDesc.fEndTime = 1.f;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Delete"))
+				if (dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_AllCamData().size() > m_iCamCurvedIndex)
+					dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Remove_Camdata(m_iCamCurvedIndex);
+
+			ImGui::SameLine();
+			if (ImGui::Button("Edit"))
+			{
+				if (dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_AllCamData().size() > m_iCamCurvedIndex)
+					dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_CamData(m_iCamCurvedIndex, m_DynamicCamDesc);
+			}
+
+
+
+			ImGui::SameLine();
+			if (ImGui::Button("Cancle Click Point"))
+				m_pCamera_Manager->Clear_ClickPosition();
+
+			ImGui::SameLine();
+			if (ImGui::Button("Capture Current"))
+			{
+				CGameObject* pPickedObj = CPickingMgr::Get_Instance()->Get_PickedObj();
+				CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pPickedObj);
+				if (pTarget == nullptr)
+					return;
+				dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_Target(pTarget);
+
+				_float4x4 vCamMatrix = CGameInstance::Get_Instance()->Get_CamWorldMatrix();
+				_float4 vPosition = (_float4)vCamMatrix.m[3];
+				_vector vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+				_vector vTargetLook = pTarget->Get_TransformState(CTransform::STATE_LOOK);
+				_vector vTargettoCamDir = XMLoadFloat4(&vPosition) - vTargetPosition;
+				_float  fLength = XMVectorGetX(XMVector3Length(XMVectorSetY(vTargettoCamDir, 0.f)));
+				_float  fRadian =  acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(vTargetLook), XMVector3Normalize(vTargettoCamDir))));
+				_float  fCross = (XMVectorGetX(XMVector3Cross(XMVector3Normalize(vTargetLook), XMVector3Normalize(vTargettoCamDir))));
+			
+				_float4 vLook = (_float4)vCamMatrix.m[2];
+
+				if(fCross >= 0.f)
+					m_DynamicCamDesc.fRadian = fRadian;
+				else
+					m_DynamicCamDesc.fRadian = -fRadian;
+
+				m_DynamicCamDesc.fLength = fLength;
+				m_DynamicCamDesc.fYoffset = XMVectorGetY(vTargettoCamDir);
+				m_DynamicCamDesc.vLook = (_float4)vCamMatrix.m[2];
+
+				_vector vCamLook = XMVector3Normalize(XMLoadFloat4(&m_DynamicCamDesc.vLook));
+				XMStoreFloat4(&m_DynamicCamDesc.vLook, vCamLook);
+			}
+
+
+			ImGui::NewLine();
+
+
+			ImGui::BulletText("AngleSetting");
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##Radian", &m_DynamicCamDesc.fRadian, 0.05f, NULL, NULL, "Radian: %.02f"))
+			{
+
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##Distance", &m_DynamicCamDesc.fLength, 0.05f, NULL, NULL, "Distance: %.02f"))
+			{
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##YOffset", &m_DynamicCamDesc.fYoffset, 0.05f, NULL, NULL, "YOffset: %.02f"))
+			{
+			}
+
+			ImGui::BulletText("AtPosition");
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##AtX", &m_DynamicCamDesc.vLook.x, 0.05f, NULL, NULL, "X: %.02f"))
+			{
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##AtY", &m_DynamicCamDesc.vLook.y, 0.05f, NULL, NULL, "Y: %.02f"))
+			{
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(100);
+			if (ImGui::DragFloat("##AtZ", &m_DynamicCamDesc.vLook.z, 0.05f, NULL, NULL, "Z: %.02f"))
+			{
+			}
+
+			m_pCamera_Manager->Set_CameraSymbolPosition(CCamera_Manager::CAM_EYE, XMLoadFloat4(&vDynamicPos));
+			m_pCamera_Manager->Set_CameraSymbolPosition(CCamera_Manager::CAM_AT, XMLoadFloat4(&m_DynamicCamDesc.vLook));
+
+			ImGui::BulletText("Start/End Time");
+			ImGui::SetNextItemWidth(200);
+			if (ImGui::DragFloat("##Start", &m_DynamicCamDesc.fStartTime, 0.01f, 0.f, 1.f, "Start: %.02f"))
+			{
+			}
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(200);
+			if (ImGui::DragFloat("##End", &m_DynamicCamDesc.fEndTime, 0.01f, 0.f, 1.f, "End: %.02f"))
 			{
 			}
 
@@ -2181,19 +2486,41 @@ _bool CImgui_Manager::Save_Camera()
 		return false;
 
 	DWORD dwByte = 0;
+	/* Camera Type */
+	WriteFile(hFileCamera, &m_eCameraType, sizeof(_int), &dwByte, nullptr);
 
-	/* Camera play time */
-	_float fPlayTime = m_pCurrentCamera->Get_PlayTime();
-	WriteFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
-
-	vector<CCamera_Action::TOOLDESC> CameraDatas = m_pCurrentCamera->Get_AllCamData();
-	/* For every Effect in this File: */
-	_uint iCamSize = CameraDatas.size();
-	WriteFile(hFileCamera, &iCamSize, sizeof(_uint), &dwByte, nullptr);
-	for (_uint i = 0; i < CameraDatas.size(); i++)
+	if (m_eCameraType == ACTION)
 	{
-		WriteFile(hFileCamera, &CameraDatas[i], sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
+		/* Camera play time */
+		_float fPlayTime = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_PlayTime();
+		WriteFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+
+		vector<CCamera_Action::TOOLDESC> CameraDatas = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_AllCamData();
+		/* For every Effect in this File: */
+		_uint iCamSize = CameraDatas.size();
+		WriteFile(hFileCamera, &iCamSize, sizeof(_uint), &dwByte, nullptr);
+		for (_uint i = 0; i < CameraDatas.size(); i++)
+		{
+			WriteFile(hFileCamera, &CameraDatas[i], sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
+		}
 	}
+	else if (m_eCameraType == TARGETMODE)
+	{
+		/* Camera play time */
+		_float fPlayTime = dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_PlayTime();
+		WriteFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+
+		vector<CCamera_Dynamic::TOOLDESC> CameraDatas = dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_AllCamData();
+		/* For every Effect in this File: */
+		_uint iCamSize = CameraDatas.size();
+		WriteFile(hFileCamera, &iCamSize, sizeof(_uint), &dwByte, nullptr);
+		for (_uint i = 0; i < CameraDatas.size(); i++)
+		{
+			WriteFile(hFileCamera, &CameraDatas[i], sizeof(CCamera_Dynamic::TOOLDESC), &dwByte, nullptr);
+		}
+	}
+
+	
 
 	CloseHandle(hFileCamera);
 
@@ -2204,20 +2531,6 @@ _bool CImgui_Manager::Save_Camera()
 
 _bool CImgui_Manager::Load_Camera()
 {
-	CCamera_Action::ACTIONCAMDESC				CameraDesc;
-	ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
-	CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
-	CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-
-	CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
-	CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-	CameraDesc.CameraDesc.fNear = 0.2f;
-	CameraDesc.CameraDesc.fFar = 1000.f;
-
-	CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
-	CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-
-	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_STATIC, TEXT("Layer_Camera"), &CameraDesc);
 	wstring wsSelectedSavedCamera = wstring(m_SavedCameras[m_iSavedCamera].begin(), m_SavedCameras[m_iSavedCamera].end());
 
 	/* Load Camera File. */
@@ -2234,23 +2547,68 @@ _bool CImgui_Manager::Load_Camera()
 
 	DWORD dwByte = 0;
 	_uint iCameraCount = 0;
+	_int iCameratype = 0;
 
-	/* Read how many Effects there are in this File. */
-	_float fPlayTime = 0.f;
-	ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
-	m_pCurrentCamera->Set_PlayTime(fPlayTime);
-	m_fPlayTime = fPlayTime;
-	CCamera_Action::TOOLDESC CamToolData;
+	/* Read CameraType. */
+	ReadFile(hFileCamera, &iCameratype, sizeof(_int), &dwByte, nullptr);
 
-	
-	ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
-		/* For every Effect in this File: */
-	for (_uint i = 0; i < iCameraCount; i++)
+	if (m_eCameraType == ACTION)
 	{
+		CCamera_Action::ACTIONCAMDESC				CameraDesc;
+		ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+		CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+		CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
 
-		ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
-		m_pCurrentCamera->Add_CamData(CamToolData);
+		CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+		CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+		CameraDesc.CameraDesc.fNear = 0.2f;
+		CameraDesc.CameraDesc.fFar = 1000.f;
+
+		CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+		CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+		if(CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), ACTION) == nullptr)
+			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_GAMEPLAY, TEXT("Layer_Camera"), &CameraDesc);
+		CCamera* pActionCamera = dynamic_cast<CCamera*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), ACTION));
+
+		/* Read how many Effects there are in this File. */
+		_float fPlayTime = 0.f;
+		ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+		dynamic_cast<CCamera_Action*>(pActionCamera)->Set_PlayTime(fPlayTime);
+		m_fPlayTime = fPlayTime;
+		CCamera_Action::TOOLDESC CamToolData;
+
+
+		ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
+		/* For every Effect in this File: */
+		for (_uint i = 0; i < iCameraCount; i++)
+		{
+
+			ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
+			dynamic_cast<CCamera_Action*>(pActionCamera)->Add_CamData(CamToolData);
+		}
 	}
+	else
+	{
+		m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
+		/* Read how many Effects there are in this File. */
+		_float fPlayTime = 0.f;
+		ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+		dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_PlayTime(fPlayTime);
+		m_fPlayTime = fPlayTime;
+		CCamera_Dynamic::TOOLDESC CamToolData;
+
+
+		ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
+		/* For every Effect in this File: */
+		for (_uint i = 0; i < iCameraCount; i++)
+		{
+
+			ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Dynamic::TOOLDESC), &dwByte, nullptr);
+			dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Add_CamData(CamToolData);
+		}
+	}
+	
 	
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -4061,7 +4419,7 @@ _bool CImgui_Manager::Load_Effect(_bool bUpgrade)
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	DWORD dwByte = 0;
+ 	DWORD dwByte = 0;
 	_uint iEffectsCount = 0;
 
 	/* Read how many Effects there are in this File. */

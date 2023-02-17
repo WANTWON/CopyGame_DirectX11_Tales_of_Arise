@@ -38,7 +38,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-		if (CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN == m_pOwner->Get_Model()->Get_CurrentAnimIndex())
+		if (CPlayerState::STATE_SKILL_ATTACK_F && !m_bIsFly)
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
@@ -102,7 +102,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bHienzinFirstEffect)
 							{							
-								CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin_1.dat"), mWorldMatrix);
 
 								m_bHienzinFirstEffect = true;
 							}
@@ -111,7 +111,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bHienzinSecondEffect)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin_2.dat"), mWorldMatrix);
 
 								m_bHienzinSecondEffect = true;
 							}
@@ -238,21 +238,15 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					{
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-						/*if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
+						if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
 						{
 							if (!m_bHousyutigakuzinFirstEffect)
 							{
-								_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
-								_vector vPosition = mWorldMatrix.r[3];
-								vPosition += XMVectorSet(0.f, 4.f, 0.f, 0.f);
-								vPosition += vLook * 2;
-
-								mWorldMatrix.r[3] = vPosition;
-								m_HousyutigakuzinStart = CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_1.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_1.dat"), mWorldMatrix);
 
 								m_bHousyutigakuzinFirstEffect = true;
 							}
-						}*/
+						}
 
 						if (!strcmp(pEvent.szName, "Housyutigakuzin_2"))
 						{
@@ -261,6 +255,16 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_2.dat"), mWorldMatrix);
 
 								m_bHousyutigakuzinSecondEffect = true;
+							}
+						}
+
+						if (!strcmp(pEvent.szName, "Housyutigakuzin_3"))
+						{
+							if (!m_bHousyutigakuzinThirdEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_3.dat"), mWorldMatrix);
+
+								m_bHousyutigakuzinThirdEffect = true;
 							}
 						}
 					}
@@ -280,17 +284,6 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 
 CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 {
-	for (auto& pEffect : m_HousyutigakuzinStart)
-	{
-		if (pEffect)
-		{
-			if (pEffect->Get_PreDead())
-				pEffect = nullptr;
-			else
-				pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-		}
-	}
-
 	for (auto& pEffect : m_SenkusyourepaParticles)
 	{
 		if (pEffect)
@@ -386,6 +379,8 @@ void CAlphenSkillState::Enter(void)
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YOUSEONGJIN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 0.6f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 0.6f);
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("AlphenAirE.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_SENKUSYOUREPA);
@@ -393,6 +388,8 @@ void CAlphenSkillState::Enter(void)
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(1);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_R.wav"), SOUND_EFFECT, 0.6f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_R.wav"), SOUND_EFFECT, 0.6f);
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("AlphenAirR.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_ENGETU);
@@ -411,7 +408,6 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_E.wav"), SOUND_EFFECT, 0.6f);
-			//이 스킬 이펙트 소리는 Player_Weapon쪽에 있음. 여기서 이펙트 소리 넣으면, 애님이랑 타이밍이 안맞음. 
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
@@ -420,6 +416,7 @@ void CAlphenSkillState::Enter(void)
 
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R_Test2.wav"), SOUND_EFFECT, 0.6f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.6f);
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("TestSkill.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
@@ -432,16 +429,12 @@ void CAlphenSkillState::Enter(void)
 		}
 	}
 
-	CBattleManager* pBattleMgr = GET_INSTANCE(CBattleManager);
+	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
 	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
 
 	if (nullptr != pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
-	RELEASE_INSTANCE(CBattleManager);
-
-	
 }
 
 void CAlphenSkillState::Exit(void)
@@ -469,9 +462,9 @@ void CAlphenSkillState::Reset_Skill()
 	/* F */
 	m_bHousyutigakuzinFirstEffect = false;
 	m_bHousyutigakuzinSecondEffect = false;
+	m_bHousyutigakuzinThirdEffect = false;
 	m_bEngetuFirstEffect = false;
 	m_bEngetuSecondEffect = false;
 
-	m_HousyutigakuzinStart.clear();
 	m_SenkusyourepaParticles.clear();
 }

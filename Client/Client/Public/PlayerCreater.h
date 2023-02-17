@@ -35,6 +35,7 @@ public:
 	HRESULT Initialize(THREAD_ID eNextLevel);
 
 	HRESULT Cloning_ForPlayer();
+	HRESULT Cloning_ForPlayer2();
 	HRESULT Cloning_ForNpc();
 	HRESULT Cloning_ForMonster();
 	HRESULT Cloning_ForNonAnim();

@@ -85,12 +85,13 @@ CPlayerState * CRunState::HandleInput()
 			case Client::DIR_RIGHT:
 			case Client::DIR_STRAIGHT_LEFT:
 			case Client::DIR_STRAIGHT_RIGHT:
-				return new CDodgeState(m_pOwner, DIR_STRAIGHT);
-				break;
 			case Client::DIR_BACKWARD_LEFT:
 			case Client::DIR_BACKWARD_RIGHT:
 			case Client::DIR_BACKWARD:
-				return new CDodgeState(m_pOwner, DIR_STRAIGHT/*DIR_BACKWARD*/);
+				return new CDodgeState(m_pOwner, DIR_STRAIGHT);
+				break;
+			case Client::DIR_END:
+				return new CDodgeState(m_pOwner, DIR_BACKWARD);
 				break;
 			}
 		}
@@ -133,6 +134,8 @@ CPlayerState * CRunState::HandleInput()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
 			else if (CPlayer::RINWELL == m_ePlayerID)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
+			else if (CPlayer::LAW == m_ePlayerID)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
 		}
 
 		m_bIsDash = true;
@@ -147,12 +150,21 @@ CPlayerState * CRunState::HandleInput()
 	{
 		if (m_bIsDash)
 		{
-			if (CPlayer::ALPHEN == m_ePlayerID)
+			switch (m_ePlayerID)
+			{
+			case CPlayer::ALPHEN:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
-			else if (CPlayer::SION == m_ePlayerID)
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
-			else if (CPlayer::RINWELL == m_ePlayerID)
+				break;
+			case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
+				break;
+			case CPlayer::RINWELL:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+				break;
+			case CPlayer::LAW:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
+				break;
+			}
 		}
 
 		m_bIsDash = false;
@@ -200,11 +212,8 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 
 CPlayerState * CRunState::LateTick(_float fTimeDelta)
 {
-	//if (LEVEL_BATTLE == m_pOwner->Get_Level())
-	//{
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-			return new CHitState(m_pOwner);
-	//}
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
+		return new CHitState(m_pOwner);
 
 	return nullptr;
 }
@@ -232,6 +241,11 @@ void CRunState::Enter()
 		case CPlayer::RINWELL:
 			if (LEVEL_BATTLE != m_pOwner->Get_Level())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			break;
+		case CPlayer::LAW:
+			if (LEVEL_BATTLE != m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		}
@@ -262,9 +276,15 @@ void CRunState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
+		case CPlayer::LAW:
+			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_RUN);
+			else
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+				break;
 		}
 	}
-
 
 	m_pOwner->Set_Manarecover(true);
 }
@@ -276,11 +296,9 @@ void CRunState::Exit()
 
 void CRunState::Move(_float fTimeDelta)
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	_float4x4 CameraMatrix = pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW);
-
-	RELEASE_INSTANCE(CGameInstance);
 
 	_vector vCameraLook = XMVectorSet(CameraMatrix.m[2][0], 0.f, CameraMatrix.m[2][2], CameraMatrix.m[2][3]);
 

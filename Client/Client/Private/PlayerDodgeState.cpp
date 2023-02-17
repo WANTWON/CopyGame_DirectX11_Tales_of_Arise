@@ -46,6 +46,8 @@ CPlayerState * CDodgeState::HandleInput(void)
 				case CPlayer::RINWELL:
 					//for Rinwell State
 					break;
+				case CPlayer::LAW:
+					break;
 				}
 			}
 			else
@@ -53,6 +55,7 @@ CPlayerState * CDodgeState::HandleInput(void)
 				switch (m_ePlayerID)
 				{
 				case CPlayer::ALPHEN:
+				case CPlayer::LAW:
 					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_NORMAL_ATTACK1);
 					break;
 				case CPlayer::SION:
@@ -91,6 +94,8 @@ CPlayerState * CDodgeState::HandleInput(void)
 				case CPlayer::RINWELL:
 					//for Rinwell State
 					break;
+				case CPlayer::LAW:
+					break;
 				}
 			}
 			else
@@ -115,6 +120,8 @@ CPlayerState * CDodgeState::HandleInput(void)
 					break;
 				case CPlayer::RINWELL:
 					//for Rinwell State
+					break;
+				case CPlayer::LAW:
 					break;
 				}
 			}
@@ -177,12 +184,20 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 			{
+				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_60"), 0.3f);
 				m_pOwner->On_JustDodge();
 				break;
 			}
 		}
 		else
+		{
+			
+			if(m_pOwner->Get_IsJustDodge() == true)
+				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_60"), 1.f);
+
 			m_pOwner->Off_JustDodge();
+		}
+			
 	}
 
 	return nullptr;
@@ -193,7 +208,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_START, m_fTime, CJumpState::JUMP_BATTLE);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
@@ -222,11 +237,12 @@ void CDodgeState::Enter(void)
 			case Client::DIR_RIGHT:
 			case Client::DIR_STRAIGHT_LEFT:
 			case Client::DIR_STRAIGHT_RIGHT:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DODGE_FRONT);
-				break;
 			case Client::DIR_BACKWARD:
 			case Client::DIR_BACKWARD_LEFT:
 			case Client::DIR_BACKWARD_RIGHT:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DODGE_FRONT);
+				break;
+			case Client::DIR_END:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DODGE_BACK);
 				break;
 			}
@@ -278,7 +294,28 @@ void CDodgeState::Enter(void)
 			}
 		}
 		break;
-	default:
+	case CPlayer::LAW:
+		if (m_bIsFly)
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_AIR);
+		else
+		{
+			switch (m_eDirection)
+			{
+			case Client::DIR_STRAIGHT:
+			case Client::DIR_LEFT:
+			case Client::DIR_RIGHT:
+			case Client::DIR_STRAIGHT_LEFT:
+			case Client::DIR_STRAIGHT_RIGHT:
+			case Client::DIR_BACKWARD:
+			case Client::DIR_BACKWARD_LEFT:
+			case Client::DIR_BACKWARD_RIGHT:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_LAND);
+				break;
+			case Client::DIR_END:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_LAND_BACK);
+				break;
+			}
+		}
 		break;
 	}
 

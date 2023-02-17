@@ -87,7 +87,7 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("DB_WING2_2_L")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
 				matWorld.r[0] = XMVector4Normalize(matWorld.r[0]);
@@ -137,7 +137,7 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 		else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
 		{
-			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+			CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p2th_AtkColliderCom);
@@ -146,8 +146,6 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 			m_p2th_AtkColliderCom = nullptr;
 
 			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-
-			RELEASE_INSTANCE(CCollision_Manager);
 		}
 	}
 
@@ -168,12 +166,13 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 	//if (m_bIsAnimationFinished)
 	//	return new CBattle_TornadeState(m_pOwner);
 		
+#ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
 
 	if (nullptr != m_p2th_AtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_p2th_AtkColliderCom);
-
+#endif
 
 	return nullptr;
 }

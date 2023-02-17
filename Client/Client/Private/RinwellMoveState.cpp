@@ -61,10 +61,10 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 			m_iChangeCount++;
 			m_ChangedDir = true;
 
-			if (m_iChangeCount >= 3)
+			/*if (m_iChangeCount >= 3)
 				return new CMoveState(m_pOwner, STATETYPE_END, m_iChangeCount);
 			else
-				return new CMoveState(m_pOwner, STATETYPE_MAIN, m_iChangeCount);
+				return new CMoveState(m_pOwner, STATETYPE_MAIN, m_iChangeCount);*/
 		}
 		break;
 	}
@@ -73,7 +73,7 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 		if (m_bIsAnimationFinished)
 		{
 			_uint iSkillIndex = m_pOwner->Get_SkillIndex();
-			switch (iSkillIndex)
+			/*switch (iSkillIndex)
 			{
 			case PHOTONFLASH:
 				iSkillIndex++;
@@ -85,7 +85,7 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 					iSkillIndex = PHOTONFLASH;
 				m_pOwner->Set_SkillIndex(iSkillIndex);
 				return new CSkillState(m_pOwner, GALEFORCE);
-			}
+			}*/
 		}		
 		break;
 	}
