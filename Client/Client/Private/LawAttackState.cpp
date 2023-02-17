@@ -440,6 +440,12 @@ CPlayerState * CLawAttackState::EventInput(void)
 			else if (GetKeyState('F') < 0)
 				return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 		}
+
+		if (100.f <= m_pOwner->Get_Info().fCurrentBoostGuage)
+		{
+			if (GetKeyState('4') < 0)
+				return new CLawSkillState(m_pOwner, STATE_SKILL_BOOST, m_fStartHeight, m_fTime);
+		}
 	}
 	else
 	{
@@ -451,6 +457,12 @@ CPlayerState * CLawAttackState::EventInput(void)
 				return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 			else if (GetKeyState('F') < 0)
 				return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
+		}
+
+		if (100.f <= m_pOwner->Get_Info().fCurrentBoostGuage)
+		{
+			if (GetKeyState('4') < 0)
+				return new CLawSkillState(m_pOwner, STATE_SKILL_BOOST);
 		}
 
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();

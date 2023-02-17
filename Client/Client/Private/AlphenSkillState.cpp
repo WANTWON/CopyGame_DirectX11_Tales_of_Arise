@@ -292,7 +292,6 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 				pEffect = nullptr;
 		}
 	}
-	
 
 	if (m_bIsAnimationFinished)
 	{
@@ -365,9 +364,13 @@ CPlayerState * CAlphenSkillState::EventInput(void)
 void CAlphenSkillState::Enter(void)
 {
 	__super::Enter();
-	m_pOwner->Use_Mana(1.f);
-	m_pOwner->Set_Manarecover(false);
 
+	if (CPlayerState::STATE_SKILL_BOOST != m_eStateId)
+	{
+		m_pOwner->Use_Mana(1.f);
+		m_pOwner->Set_Manarecover(false);
+	}
+	
 	Reset_Skill();
 
 	if (m_bIsFly)
@@ -398,6 +401,11 @@ void CAlphenSkillState::Enter(void)
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_F.wav"), SOUND_EFFECT, 0.6f);
 
 			break;
+		case Client::CPlayerState::STATE_SKILL_BOOST:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_STRIKE_AIR);
+
+			
+			break;
 		}
 	}
 	else
@@ -425,6 +433,9 @@ void CAlphenSkillState::Enter(void)
 
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.6f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_EFFECT, 0.6f);
+			break;
+		case Client::CPlayerState::STATE_SKILL_BOOST:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_STRIKE);
 			break;
 		}
 	}
