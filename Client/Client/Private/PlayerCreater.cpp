@@ -84,7 +84,7 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
-		//pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 		pPlayer->Change_Level(LEVEL_SNOWFIELD);
 	}

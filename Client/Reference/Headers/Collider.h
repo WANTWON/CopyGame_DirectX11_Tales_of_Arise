@@ -39,7 +39,8 @@ public:
 public:
 	void Update(_fmatrix WorldMatrix);
 	_float Get_SphereRadius(void) { return m_pSphere[BOUNDING_WORLD]->Radius; }
-	void Set_ColliderDesc(void* pArg);
+	HRESULT Set_ColliderDesc(void* pArg);
+
 #ifdef _DEBUG
 public:
 	HRESULT Render();
@@ -51,8 +52,6 @@ public:
 	_bool Collision_AABB(class CCollider* pTargetCollider);
 	_bool Collision_OBB(class CCollider* pTargetCollider);
 
-
-
 private:
 	TYPE					m_eType = TYPE_END;
 	
@@ -61,6 +60,10 @@ private:
 	BoundingBox*			m_pAABB[BOUNDING_END] = { nullptr } ;
 	BoundingOrientedBox*	m_pOBB[BOUNDING_END] = { nullptr };
 	BoundingSphere*			m_pSphere[BOUNDING_END] = { nullptr };
+
+	BoundingBox*			m_pOriAABB[BOUNDING_END] = { nullptr };
+	BoundingOrientedBox*	m_pOriOBB[BOUNDING_END] = { nullptr };
+	BoundingSphere*			m_pOriSphere[BOUNDING_END] = { nullptr };
 
 	_bool					m_isCollision = false;
 
@@ -72,15 +75,12 @@ private:
 	ID3D11DepthStencilState*						m_pDepthStencilState = nullptr;
 #endif // _DEBUG
 
-
-
 private:
 	_matrix Remove_Rotation(_fmatrix Matrix);
 	_float3 Compute_Min();
 	_float3 Compute_Max();
 
 	OBBDESC Compute_OBBDesc();
-
 
 public:
 	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType);
