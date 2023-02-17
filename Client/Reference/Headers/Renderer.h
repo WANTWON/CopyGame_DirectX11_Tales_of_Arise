@@ -20,6 +20,7 @@ public:
 	class CShader* Get_ShaderPostProcessing() { return m_pShaderPostProcessing; }
 	void Set_Fog(_bool bFog) { m_bFog = bFog; }
 	void Set_Distort(_bool bDistort) { m_bDistort = bDistort; }
+	void Set_ZoomBlur(_bool bZoomBlur, _uint iFocusDetail = 0) { m_bZoomBlur = bZoomBlur; m_iFocusDetail = iFocusDetail; }
 
 public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
@@ -88,6 +89,10 @@ private:
 	_bool m_bDistort = false;
 	class CTexture* m_pScreenDistortionTexture = nullptr;
 	_float m_fScreenDistortionTimer = 0.f;
+
+	/* Zoom Blur (Post Processing) */
+	_bool m_bZoomBlur = false;
+	_int m_iFocusDetail = 1.f;
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
