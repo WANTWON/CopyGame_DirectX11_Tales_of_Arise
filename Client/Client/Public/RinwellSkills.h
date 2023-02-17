@@ -52,6 +52,11 @@ private:
 
 	_bool m_bholybullet[6] = { true, true , true , true ,  true , true };
 
+	LIGHTDESC OriginLightDesc;
+	LIGHTDESC OriginLightDesc2;
+	LIGHTDESC DevineLightDesc;
+	LIGHTDESC DevineLightDesc2;
+	_float3	  LightOffset = _float3(0.f, 0.f, 0.f);
 };
 
 END

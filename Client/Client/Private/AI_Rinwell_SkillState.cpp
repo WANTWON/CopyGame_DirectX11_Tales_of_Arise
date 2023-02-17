@@ -191,7 +191,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.eBulletType = CRinwellSkills::METEOR;
-
+						BulletDesc.pOwner = m_pOwner;
 						BulletDesc.vTargetDir = { -0.3f, -1.f, -0.1f, 0.f };
 
 
