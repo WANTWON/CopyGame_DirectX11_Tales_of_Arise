@@ -1050,6 +1050,12 @@
     <ClInclude Include="..\Public\AI_Rinwell_SkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_RinwellNormalAttack_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Rinwell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_RinwellSkillAttack_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Rinwell</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1693,6 +1699,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI_Rinwell_SkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_RinwellNormalAttack_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Rinwell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_RinwellSkillAttack_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Rinwell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
