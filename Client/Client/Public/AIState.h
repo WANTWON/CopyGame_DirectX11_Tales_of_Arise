@@ -16,7 +16,11 @@ public:
 		STATE_DEAD,
 		STATE_HIT,
 		STATE_DODGE,
+		STATE_THUNDERFIELD,
+		STATE_METEOR,
+		STATE_GALEFORCE,
 		STATE_END
+		
 	};
 
 	STATE_ID Get_StateId() { return m_eStateId; }

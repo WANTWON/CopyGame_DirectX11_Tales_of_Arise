@@ -80,9 +80,6 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 		}
 	}
 
-	if (m_bIsFly)
-m_fTime += fTimeDelta;
-
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 

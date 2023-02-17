@@ -112,6 +112,7 @@ void CRinwellSkills::Collision_Check()
 	switch (m_BulletDesc.eBulletType)
 	{
 	case PHOTON_FLASH:
+	case METEOR:
 		__super::Collision_Check();
 		break;
 	case GALE_FORCE:
@@ -171,7 +172,7 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		break;
 
 	case METEOR:
-		ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
+		ColliderDesc.vScale = _float3(15.f, 5.f, 15.f);
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 1.f);
 		break;
@@ -213,10 +214,10 @@ void CRinwellSkills::Tick_Meteor(_float fTimeDelta)
 	if (m_bDeadEffect)
 		m_bDead = true;
 
-	_vector vDir =  m_BulletDesc.vTargetDir;
+	//_vector vDir =  m_BulletDesc.vTargetDir;
 
 	//m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
-	m_pTransformCom->Go_PosDir(fTimeDelta, vDir);
+	m_pTransformCom->Go_PosDir(fTimeDelta, m_BulletDesc.vTargetDir);
 }
 
 CRinwellSkills * CRinwellSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

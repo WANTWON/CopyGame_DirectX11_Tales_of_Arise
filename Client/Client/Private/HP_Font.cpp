@@ -45,7 +45,7 @@ HRESULT CHP_Font::Initialize(void * pArg)
 //		m_fPosition.x = 1180.f + (m_iIndex * 14);
 		
 		
-		m_fnumberY = 	desc.position.y  = m_fPosition.y = 375.f;
+		m_fnumberY = 	desc.position.y  = m_fPosition.y = 325.f;
 		
 		
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
@@ -57,10 +57,10 @@ HRESULT CHP_Font::Initialize(void * pArg)
 			return E_FAIL;
 
 	}
-	if (m_iIndex == 1)
+	else if (m_iIndex == 1)
 	{
 		
-		m_fnumberY = desc.position.y  = m_fPosition.y = 435.f;
+		m_fnumberY = desc.position.y  = m_fPosition.y = 385.f;
 		
 		
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
@@ -70,10 +70,10 @@ HRESULT CHP_Font::Initialize(void * pArg)
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
 			return E_FAIL;
 	}
-	if (m_iIndex == 2)
+	else if (m_iIndex == 2)
 	{
 
-		m_fnumberY = desc.position.y = m_fPosition.y = 495.f;
+		m_fnumberY = desc.position.y = m_fPosition.y = 445.f;
 
 		
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
@@ -84,12 +84,21 @@ HRESULT CHP_Font::Initialize(void * pArg)
 			return E_FAIL;
 
 	}
-//	if (m_iIndex == 3)
-//	{
-////		m_fPosition.x = 1180.f + (m_iIndex * 14);
-//		m_fnumberY = desc.position.y = m_fPosition.y = 555;
-//	}
-	
+  else if (m_iIndex == 3)
+{
+
+	m_fnumberY = desc.position.y = m_fPosition.y = 505.f;
+
+
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
+		return E_FAIL;
+	desc.position.x = 1060.f;
+	desc.position.y = m_fnumberY - 34.f;
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
+		return E_FAIL;
+
+}
+
 	
 	
 
