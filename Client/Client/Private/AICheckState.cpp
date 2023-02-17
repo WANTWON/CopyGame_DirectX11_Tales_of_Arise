@@ -209,6 +209,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 			break;
 
 		case CPlayer::RINWELL:
+			//return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
 			//return new CAI_DodgeState(m_pOwner, m_pTarget);
 			if (Get_Target_Distance() >= 20.f)
 			{
@@ -350,7 +351,7 @@ CAIState * CAICheckState::RandomAttackChoose_Sion()
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
 	
 	}
-		
+		return nullptr;
 }
 
 CAIState * CAICheckState::RandomAttackChoose_Rinwell()
@@ -381,7 +382,7 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 
 
 
-	switch (rand() % 4)
+	switch (rand() % 6)
 	{
 
 	case 0:
@@ -396,13 +397,17 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 	case 3:
 		return new CAI_Rinwell_SkillState(m_pOwner, STATE_METEOR, m_pTarget);
 
-	/*case 4:
-		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+	case 4:
+		return new CAI_Rinwell_SkillState(m_pOwner, STATE_DIVINE_SABER, m_pTarget);
 
 	case 5:
+		return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
+
+	/*case 5:
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);*/
 
 	}
+	return nullptr;
 }
 
 CAIState * CAICheckState::RandomAttackChoose()
@@ -449,6 +454,6 @@ CAIState * CAICheckState::RandomAttackChoose()
 		return new CAI_DodgeState(m_pOwner, m_pTarget);
 
 	}
-	
+	return nullptr;
 		//return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
 }

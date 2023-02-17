@@ -63,52 +63,50 @@ CAIState * CAI_Alphen_NormalAttackState::Tick(_float fTimeDelta)
 	{
 		if (pEvent.isPlay)
 		{
-			
+			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+			{
+				if (m_iCurrentAnimIndex != CAlphen::ANIM::ANIM_ATTACK_NORMAL_6)
+				{
+					m_bIsStateEvent = true;
+					getchar();
+				}
+			}
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_tchar wcEffectName[MAX_PATH] = TEXT("");
 				switch (m_iCurrentAnimIndex)
 				{
-				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0:
-					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
-					{
-							m_bIsStateEvent = true;
-
-						    getchar();
-					}
-					break;
-				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
-					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
-					{
-			
-							m_bIsStateEvent = true;
-						getchar();
-					}
-					break;
-				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
-					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
-					{
-							m_bIsStateEvent = true;
-
-
-						getchar();
-					}
-					break;
-				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_6:
-					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-					break;
+					case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0:
+					case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
+						break;
+					case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
+						break;
+					case CAlphen::ANIM::ANIM_ATTACK_NORMAL_6:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
+						break;
 				}
-			
+
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+				if (!m_bEffectSlashSpawned)
+				{
+					if (!wcscmp(wcEffectName, TEXT("Normal_Attack_2.dat")))
+						m_SlashEffect = CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+					else
+						CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+
+					m_bEffectSlashSpawned = true;
+				}
+			}
 		}
 		else
 		{
-			
-				switch (m_iCurrentAnimIndex)
-				{
+			switch (m_iCurrentAnimIndex)
+			{
 				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0:
 					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
@@ -125,7 +123,6 @@ CAIState * CAI_Alphen_NormalAttackState::Tick(_float fTimeDelta)
 					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
 					break;
-				
 			}
 		}
 	}
@@ -183,6 +180,7 @@ CAIState * CAI_Alphen_NormalAttackState::LateTick(_float fTimeDelta)
 			break;
 		}
 		m_bIsStateEvent = false;
+		m_bEffectSlashSpawned = false;
 	}
 
 	if (m_bIsAnimationFinished && m_iCurrentAnimIndex == CAlphen::ANIM::ANIM_ATTACK_NORMAL_6)

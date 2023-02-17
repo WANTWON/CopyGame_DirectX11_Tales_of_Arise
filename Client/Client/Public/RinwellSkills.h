@@ -5,7 +5,7 @@ BEGIN(Client)
 class CRinwellSkills final : public CBullet
 {
 public:
-	enum TYPE { PHOTON_FLASH, GALE_FORCE , METEOR , THUNDER_FIELD };
+	enum TYPE { PHOTON_FLASH, GALE_FORCE , METEOR , THUNDER_FIELD , DIVINE_SABER , DIVINE_SABER_BULLET , HOlY_RANCE , HOLY_RANCE_BULLET};
 
 public:
 	CRinwellSkills(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -28,6 +28,10 @@ private:
 	void Tick_GaleForce(_float fTimeDelta);
 	void Tick_Meteor(_float fTimeDelta);
 	void Tick_ThunderField(_float fTimeDelta);
+	void Tick_DivineSaber(_float fTimeDelta);
+	void Tick_DivineSaberBullet(_float fTimeDelta);
+	void Tick_HolyRance(_float fTimeDelta);
+	void Tick_HolyRanceBullet(_float fTimeDelta);
 
 private:
 	vector<CEffect*> m_pBlastEffects;
@@ -40,6 +44,13 @@ public:
 
 private:
 	_float m_fThunderStopTimer = 0.f;
+
+	_int bulletcount = 60;
+	_float m_fDivineTimer = 0.f;
+	_int m_fDivineOffset = 70;
+	_float m_fholytimer = 0.f;
+
+	_bool m_bholybullet[6] = { true, true , true , true ,  true , true };
 
 };
 

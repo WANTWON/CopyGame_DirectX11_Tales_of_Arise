@@ -24,6 +24,7 @@ private:
 	_float m_fTime = 0.f;
 
 	_bool m_bEffectSlashSpawned = false;
+	vector<CEffect*> m_SlashEffect;
 };
 END
 END

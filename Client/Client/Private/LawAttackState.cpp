@@ -144,6 +144,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 							m_pRightFootCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					else
@@ -152,6 +156,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftHandCollider);
 							m_pLeftHandCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					break;
@@ -162,6 +170,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftFootCollider);
 							m_pLeftFootCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					else
@@ -170,6 +182,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
 							m_pRightHandCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					break;
@@ -180,6 +196,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
 							m_pRightHandCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					else
@@ -188,6 +208,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 							m_pRightFootCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					break;
@@ -198,6 +222,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 							m_pRightFootCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					else
@@ -206,6 +234,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftHandCollider);
 							m_pLeftHandCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					break;
@@ -216,6 +248,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
 							m_pRightHandCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					else
@@ -224,14 +260,14 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftFootCollider);
 							m_pLeftFootCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					break;
 				}
-
-				pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
-				m_fEventStartTime = -1.f;
 			}
 		}
 	}
@@ -300,7 +336,9 @@ CPlayerState * CLawAttackState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pLeftHandCollider);
+#endif
 	}
 
 	if (nullptr != m_pRightHandCollider)
@@ -315,7 +353,9 @@ CPlayerState * CLawAttackState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pRightHandCollider);
+#endif
 	}
 
 	if (nullptr != m_pLeftFootCollider)
@@ -330,7 +370,9 @@ CPlayerState * CLawAttackState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pLeftFootCollider);
+#endif
 	}
 
 	if (nullptr != m_pRightFootCollider)
@@ -345,7 +387,9 @@ CPlayerState * CLawAttackState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pRightFootCollider);
+#endif
 	}
 
 	if (m_bIsAnimationFinished)

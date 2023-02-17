@@ -143,6 +143,9 @@ int CAiRinwell::Tick(_float fTimeDelta)
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
 
+	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+		return OBJ_NOEVENT;
+
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 
@@ -160,9 +163,14 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
+
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
+
 	__super::Late_Tick(fTimeDelta);
+
+	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+		return;
 
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)

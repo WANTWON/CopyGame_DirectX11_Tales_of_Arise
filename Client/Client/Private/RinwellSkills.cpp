@@ -57,27 +57,37 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 	case METEOR:
 		vLocation = m_BulletDesc.vInitPositon;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+		break;
+	case DIVINE_SABER:
+		vLocation = m_BulletDesc.vTargetPosition;
+		//mWorldMatrix.r[]
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+		break;
+	case DIVINE_SABER_BULLET:
+		vLocation = m_BulletDesc.vTargetPosition;
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
 
-		vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
-		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorBall.dat"), mWorldMatrix);
+		//m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("AquaImpact.dat"), mWorldMatrix);
+		break;
+
+	case HOlY_RANCE:
+
+		/*vLocation = m_BulletDesc.vInitPositon;
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);*/
 
 		break;
-	case THUNDER_FIELD:
-		vOffset = XMVectorSet(0.f, 6, 0.f, 0.f);
-		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
-		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ThunderFieldBullet.dat"), mWorldMatrix);
+	case HOLY_RANCE_BULLET:
+		vLocation = m_BulletDesc.vInitPositon;
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+		//m_BulletDesc.vTargetPosition = 
 
-		vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
-		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
-		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
-		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("ThunderFieldFloor.dat"), mWorldMatrix);
 		break;
+
+
+
 	default:
 		break;
 	}
@@ -113,9 +123,25 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 	case METEOR:
 		Tick_Meteor(fTimeDelta);
 		break;
+	case DIVINE_SABER:
+		Tick_DivineSaber(fTimeDelta);
+		break;
+
+	case DIVINE_SABER_BULLET:
+		Tick_DivineSaberBullet(fTimeDelta);
+		break;
+
+	case HOlY_RANCE:
+		Tick_HolyRance(fTimeDelta);
+		break;
+
+	case HOLY_RANCE_BULLET:
+		Tick_HolyRanceBullet(fTimeDelta);
+		break;
+
 	}
 
-	if(m_BulletDesc.eBulletType == THUNDER_FIELD)
+	if(m_BulletDesc.eBulletType == THUNDER_FIELD || m_BulletDesc.eBulletType == DIVINE_SABER || m_BulletDesc.eBulletType == DIVINE_SABER_BULLET)
 		m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
 	else
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
@@ -140,6 +166,7 @@ void CRinwellSkills::Collision_Check()
 	{
 	case PHOTON_FLASH:
 	case METEOR:
+	case HOLY_RANCE_BULLET:
 		__super::Collision_Check();
 		break;
 	case THUNDER_FIELD:
@@ -166,17 +193,19 @@ void CRinwellSkills::Collision_Check()
 				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
 		}
 		break;
+
+	case DIVINE_SABER_BULLET:
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
+		{
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			m_bDead = true;
+		}
+		break;
 	}
 }
 
 void CRinwellSkills::Dead_Effect()
 {
-	for (auto& iter : m_pEffects)
-	{
-		if (iter != nullptr && iter->Get_PreDead())
-			iter = nullptr;
-	}
-
 	switch (m_BulletDesc.eBulletType)
 	{
 	case PHOTON_FLASH:
@@ -186,22 +215,6 @@ void CRinwellSkills::Dead_Effect()
 		_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pDeadEffects = CEffect::PlayEffectAtLocation(TEXT("PhotonFlashDead.dat"), mWorldMatrix);
-		break;
-	}
-	case METEOR:
-	{
-		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
-		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
-		_vector vRight = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE::STATE_RIGHT));
-		_matrix mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
-		m_pBlast2Effects = CEffect::PlayEffectAtLocation(TEXT("MeteorDeadFlash.dat"), mWorldMatrix);
-
-		_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
-		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
-		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
-		m_pDeadEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorPlane.dat"), mWorldMatrix);
 		break;
 	}
 
@@ -244,9 +257,32 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 1.f);
 		break;
 
+	case DIVINE_SABER:
+		ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 1.f);
+		break;
+
+	case DIVINE_SABER_BULLET:
+		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+
+	case HOlY_RANCE:
+		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+
+	case HOLY_RANCE_BULLET:
+		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		
+		break;
+
 	}
 
-	if (m_BulletDesc.eBulletType == THUNDER_FIELD)
+	if (m_BulletDesc.eBulletType == THUNDER_FIELD || m_BulletDesc.eBulletType == DIVINE_SABER || m_BulletDesc.eBulletType == DIVINE_SABER_BULLET)
 	{
 		if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
 			return E_FAIL;
@@ -290,22 +326,11 @@ void CRinwellSkills::Tick_Meteor(_float fTimeDelta)
 {
 	if (m_bDeadEffect)
 		m_bDead = true;
-
+	 
 	//_vector vDir =  m_BulletDesc.vTargetDir;
 
 	//m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
 	m_pTransformCom->Go_PosDir(fTimeDelta, m_BulletDesc.vTargetDir);
-
-
-	for (auto& iter : m_pEffects)
-	{
-		iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
-	}
-
-	for (auto& iter : m_pBlastEffects)
-	{
-		iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
-	}
 }
 
 void CRinwellSkills::Tick_ThunderField(_float fTimeDelta)
@@ -320,6 +345,159 @@ void CRinwellSkills::Tick_ThunderField(_float fTimeDelta)
 
 	if(m_fThunderStopTimer < 4.f)
 	m_pTransformCom->Go_PosDir(fTimeDelta, m_BulletDesc.vTargetDir);
+}
+
+void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
+{
+	if (m_bDead == true)
+		return;
+
+	//m_fDivineTimer += fTimeDelta;
+
+	//if (m_fAquaTImer > 0.1f)
+	//{
+	float offsetx = (_float)(rand() % m_fDivineOffset)*(rand() % 2 == 0 ? 1.f : -1.f) / 10;
+	float offsetz = (_float)(rand() % m_fDivineOffset)*(rand() % 2 == 0 ? 1.f : -1.f) / 10;
+	CBullet::BULLETDESC BulletDesc;
+	_vector vLocation = { 0.f,0.f,0.f,0.f };
+	BulletDesc.iDamage = rand() % 150 + 1;
+	BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+	BulletDesc.vTargetPosition.m128_f32[0] += offsetx;
+	BulletDesc.vTargetPosition.m128_f32[2] += offsetz;
+	BulletDesc.eCollisionGroup = PLAYER;
+	BulletDesc.pOwner = m_BulletDesc.pOwner;
+	BulletDesc.eBulletType = CRinwellSkills::DIVINE_SABER_BULLET;
+	BulletDesc.fDeadTime = 0.5f;
+
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+		return;
+	bulletcount -= 1;
+	m_fDivineOffset -= 1;
+	//m_fDivineTimer = 0.f;
+
+	if (bulletcount <= 0)
+		m_bDead = true;
+}
+
+void CRinwellSkills::Tick_DivineSaberBullet(_float fTimeDelta)
+{
+	m_fDivineTimer += fTimeDelta;
+	if (m_fDivineTimer> 0.5f)
+		m_bDead = true;
+
+}
+
+void CRinwellSkills::Tick_HolyRance(_float fTimeDelta)
+{
+	m_fholytimer += fTimeDelta;
+    
+	if (m_fholytimer > 0.5f && m_bholybullet[0])
+	{
+		m_bholybullet[0] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] += 4.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+		
+	}
+
+	if (m_fholytimer > 0.8f && m_bholybullet[1])
+	{
+		m_bholybullet[1] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] += 4.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+	}
+
+	if (m_fholytimer > 1.1f && m_bholybullet[2])
+	{
+		m_bholybullet[2] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] -= 8.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+	}
+
+	if (m_fholytimer > 1.4f && m_bholybullet[3])
+	{
+		m_bholybullet[3] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] += 6.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+	}
+
+	if (m_fholytimer > 1.7f && m_bholybullet[4])
+	{
+		m_bholybullet[4] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] -= 6.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+	}
+
+	if (m_fholytimer > 2.f && m_bholybullet[5])
+	{
+		m_bholybullet[5] = false;
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 15.f;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_BULLET;
+		BulletDesc.vInitPositon = m_BulletDesc.vInitPositon;
+		BulletDesc.vInitPositon.m128_f32[0] += 2.f;
+
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+	}
+
+
+	if (m_fholytimer > 2.3f)
+	{
+
+		m_bDead = true;
+	}
+
+
+}
+
+void CRinwellSkills::Tick_HolyRanceBullet(_float fTimeDelta)
+{
+	_vector vDir = XMVector3Normalize(m_BulletDesc.vTargetPosition - m_BulletDesc.vInitPositon);
+
+	m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
+	m_pTransformCom->Go_PosDir(fTimeDelta, vDir);
 }
 
 CRinwellSkills * CRinwellSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

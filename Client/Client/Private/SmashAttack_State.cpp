@@ -59,7 +59,7 @@ CAIState * CSmashAttack_State::Tick(_float fTimeDelta)
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if (!strcmp(pEvent.szName, "Alphen_Strike_1"))
 						{
@@ -123,7 +123,7 @@ CAIState * CSmashAttack_State::Tick(_float fTimeDelta)
 							BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-								return nullptr;
+								return nullptr; 
 
 							m_fEventStart = pEvent.fStartTime;
 						}
