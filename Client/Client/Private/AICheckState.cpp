@@ -209,7 +209,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 			break;
 
 		case CPlayer::RINWELL:
-			return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
+			//return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
 			//return new CAI_DodgeState(m_pOwner, m_pTarget);
 			if (Get_Target_Distance() >= 20.f)
 			{
