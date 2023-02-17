@@ -167,15 +167,15 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
-	if (FAILED(Loading_ForMaptoolModel()))
-		return E_FAIL;
+	//if (FAILED(Loading_ForMaptoolModel()))
+	//	return E_FAIL;
 
-	////For Effect
-	//if (FAILED(Loading_ForEffect()))
-	//	return E_FAIL;
-	// 
-	//if (FAILED(Loading_ForEffectTexture()))
-	//	return E_FAIL;
+	//For Effect
+	if (FAILED(Loading_ForEffect()))
+		return E_FAIL;
+	 
+	if (FAILED(Loading_ForEffectTexture()))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
 
@@ -1026,6 +1026,9 @@ HRESULT CLoader::Loading_ForEffect()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Thunder9"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Thunder/Thunder9.dat"))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FreezeLance"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/FreezeLance/FreezeLance.dat"))))
+		return E_FAIL;
 	
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -1469,7 +1472,27 @@ HRESULT CLoader::Loading_ForEffectTexture()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Mask/floormask.png"), 1))))
 		return E_FAIL;
 	
-
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Thunder_1"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Thunder/Thunder_1.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Thunder_2"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Thunder/Thunder_2.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Thunder_3"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Thunder/Thunder_3.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Thunder_4"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Thunder/Thunder_4.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Thunder_a"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Thunder/Thunder_a.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Thunder_b"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Thunder/Thunder_b.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Thunder_c"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Thunder/Thunder_c.png"), 1))))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
 
