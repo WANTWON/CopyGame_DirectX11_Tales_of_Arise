@@ -10,7 +10,7 @@ vector g_vLightDiffuse;
 vector g_vLightAmbient;
 vector g_vLightSpecular;
 
-vector g_vMtrlSpecular = vector(0.5f, 0.5f, 0.5f, 0.5f);
+vector g_vMtrlSpecular = vector(0.75f, 0.75f, 0.75f, 1.f);
 
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
@@ -186,7 +186,7 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_POINT(PS_IN In)
 	float fDistance = length(vLightDir);
 	float fAtt = saturate((g_fLightRange - fDistance) / g_fLightRange);
 
-	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient ));
+	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient));
 	Out.vShade *= fAtt;
 	Out.vShade.a = 1.f;
 
