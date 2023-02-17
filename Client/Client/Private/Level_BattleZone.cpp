@@ -84,7 +84,9 @@ HRESULT CLevel_BattleZone::Initialize()
 		break;
 	}
 
-
+	
+	pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+	pCameraManager->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
 	return S_OK;
 }
 
@@ -255,7 +257,7 @@ HRESULT CLevel_BattleZone::Ready_Lights()
 
 	pGameInstance->Set_ShadowLightView(vLightEye, vLightAt);
 
-
+	
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;

@@ -74,14 +74,13 @@ HRESULT CCameraManager::Play_ActionCamera(_tchar * wcCameraDataName, _matrix mWo
 	}
 	else
 	{
-		if (m_eCamState != CAM_ACTION)
-		{
-			CCamera* pCamera = dynamic_cast<CCamera*>(CGameInstance::Get_Instance()->Get_Object(m_eCurrentLevel, TEXT("Layer_Camera"), CAM_ACTION));
-			if (nullptr == pCamera)
-				return E_FAIL;
-			m_eCamState = CAM_ACTION;
-			m_pCurrentCamera = pCamera;
-		}
+		
+		CCamera* pCamera = dynamic_cast<CCamera*>(CGameInstance::Get_Instance()->Get_Object(m_eCurrentLevel, TEXT("Layer_Camera"), CAM_ACTION));
+		if (nullptr == pCamera)
+			return E_FAIL;
+		m_eCamState = CAM_ACTION;
+		m_pCurrentCamera = pCamera;
+		
 		dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_TargetMatrix(mWorldMatrix);
 
 		CCamera_Action::TOOLDESC CamToolData;

@@ -44,17 +44,12 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 	if (m_pTarget == nullptr)
 		return nullptr;
 
-
-
 	if (nullptr == m_pTarget)
 	{
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 	}
 	
-
-
-
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	if (!m_bIsAnimationFinished)
@@ -72,102 +67,114 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation_Jump();
 
-
+	/* Animation Events */
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-
 	for (auto& pEvent : pEvents)
 	{
 		if (pEvent.isPlay)
 		{
-
-			switch (m_iCurrentAnimIndex)
+			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 			{
-			case CAlphen::ANIM::ANIM_ATTACK_HIENZIN:
-				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				switch (m_iCurrentAnimIndex)
 				{
-					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-					_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
-					_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+					case CAlphen::ANIM::ANIM_ATTACK_HIENZIN:
+					{	
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+						_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+						_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
-					_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
-					vPosition += vLook * 2;
-					vPosition += vOffset;
+						_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+						vPosition += vLook * 2;
+						vPosition += vOffset;
 
-					mWorldMatrix.r[3] = vPosition;
+						mWorldMatrix.r[3] = vPosition;
 
-					if (!strcmp(pEvent.szName, "Hienzin_1"))
-					{
-						if (!m_bHienzinFirstEffect)
+						if (!strcmp(pEvent.szName, "Hienzin_1"))
 						{
-							CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+							if (!m_bHienzinFirstEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin_1.dat"), mWorldMatrix);
 
-							m_bHienzinFirstEffect = true;
+								m_bHienzinFirstEffect = true;
+							}
 						}
-					}
-					else if (!strcmp(pEvent.szName, "Hienzin_2"))
-					{
-						if (!m_bHienzinSecondEffect)
+						else if (!strcmp(pEvent.szName, "Hienzin_2"))
 						{
-							CEffect::PlayEffectAtLocation(TEXT("Hienzin.dat"), mWorldMatrix);
+							if (!m_bHienzinSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin_2.dat"), mWorldMatrix);
 
-							m_bHienzinSecondEffect = true;
+								m_bHienzinSecondEffect = true;
+							}
 						}
+
+						break;
 					}
-				}
-				break;
-			case CAlphen::ANIM::ANIM_ATTACK_AKIZAME:
-				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
-				{
-					if (!m_bAkizameEffect)
+					case CAlphen::ANIM::ANIM_ATTACK_AKIZAME:
 					{
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-						CEffect::PlayEffectAtLocation(TEXT("Akizame.dat"), mWorldMatrix);
 
-						m_bAkizameEffect = true;
+						if (!strcmp(pEvent.szName, "Akizame_1"))
+						{
+							if (!m_bAkizameFirstEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Akizame_1.dat"), mWorldMatrix);
+
+								m_bAkizameFirstEffect = true;
+							}
+						}
+						else if (!strcmp(pEvent.szName, "Akizame_2"))
+						{
+							if (!m_bAkizameSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Akizame_2.dat"), mWorldMatrix);
+
+								m_bAkizameSecondEffect = true;
+							}
+						}
+
+						break;
+					}
+					case CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN:
+					{
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+						if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
+						{
+							if (!m_bHousyutigakuzinFirstEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_1.dat"), mWorldMatrix);
+
+								m_bHousyutigakuzinFirstEffect = true;
+							}
+						}
+
+						if (!strcmp(pEvent.szName, "Housyutigakuzin_2"))
+						{
+							if (!m_bHousyutigakuzinSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_2.dat"), mWorldMatrix);
+
+								m_bHousyutigakuzinSecondEffect = true;
+							}
+						}
+
+						if (!strcmp(pEvent.szName, "Housyutigakuzin_3"))
+						{
+							if (!m_bHousyutigakuzinThirdEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_3.dat"), mWorldMatrix);
+
+								m_bHousyutigakuzinThirdEffect = true;
+							}
+						}
+
+						break;
 					}
 				}
-				
-				break;
-			case CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN:
-				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
-				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
-				{
-					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-
-					if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
-					{
-						if (!m_bHousyutigakuzinFirstEffect)
-						{
-							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
-							_vector vPosition = mWorldMatrix.r[3];
-							vPosition += XMVectorSet(0.f, 4.f, 0.f, 0.f);
-							vPosition += vLook * 2;
-
-							mWorldMatrix.r[3] = vPosition;
-							m_HousyutigakuzinStart = CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_Start.dat"), mWorldMatrix);
-
-							m_bHousyutigakuzinFirstEffect = true;
-						}
-					}
-
-					if (!strcmp(pEvent.szName, "Housyutigakuzin_2"))
-					{
-						if (!m_bHousyutigakuzinSecondEffect)
-						{
-							CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_End.dat"), mWorldMatrix);
-
-							m_bHousyutigakuzinSecondEffect = true;
-						}
-					}
-				}
-				break;
 			}
-
 		}
 		else
 		{
@@ -195,20 +202,6 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 
 CAIState * CAI_Alphen_SkillAttackState::LateTick(_float fTimeDelta)
 {
-	if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN)
-	{
-		for (auto& pEffect : m_HousyutigakuzinStart)
-		{
-			if (pEffect)
-			{
-				if (pEffect->Get_PreDead())
-					pEffect = nullptr;
-				else
-					pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-			}
-		}
-	}
-
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (m_bIsAnimationFinished)
@@ -313,13 +306,22 @@ void CAI_Alphen_SkillAttackState::Reset_Skill()
 	/* E */
 	m_bHienzinFirstEffect = false;
 	m_bHienzinSecondEffect = false;
+	m_bRyuuseizinFirstEffect = false;
+	m_bRyuuseizinSecondEffect = false;
 
 	/* R */
-	m_bAkizameEffect = false;
+	m_bAkizameFirstEffect = false;
+	m_bAkizameSecondEffect = false;
+	m_bSenkusyourepaParticle = false;
+	m_bSenkusyourepaFirstEffect = false;
+	m_bSenkusyourepaSecondEffect = false;
 
 	/* F */
 	m_bHousyutigakuzinFirstEffect = false;
 	m_bHousyutigakuzinSecondEffect = false;
+	m_bHousyutigakuzinThirdEffect = false;
+	m_bEngetuFirstEffect = false;
+	m_bEngetuSecondEffect = false;
 
-	m_HousyutigakuzinStart.clear();
+	m_SenkusyourepaParticles.clear();
 }

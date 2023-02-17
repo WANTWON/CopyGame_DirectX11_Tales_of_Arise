@@ -235,7 +235,9 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pLeftHandCollider);
+#endif
 	}
 
 	if (nullptr != m_pRightHandCollider)
@@ -250,7 +252,9 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pRightHandCollider);
+#endif
 	}
 
 	if (nullptr != m_pLeftFootCollider)
@@ -265,7 +269,9 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pLeftFootCollider);
+#endif
 	}
 
 	if (nullptr != m_pRightFootCollider)
@@ -280,7 +286,9 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pRightFootCollider);
+#endif
 	}
 
 	if (m_bIsAnimationFinished)
@@ -318,9 +326,7 @@ CPlayerState * CLawSkillState::EventInput(void)
 		else if (GetKeyState('F') < 0)
 		{
 			if (m_bIsFly)
-			{
-
-			}
+				return new CLawAirFSkillState(m_pOwner, STATE_ID::STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 			else
 			{
 				m_pOwner->Get_Model()->Reset();

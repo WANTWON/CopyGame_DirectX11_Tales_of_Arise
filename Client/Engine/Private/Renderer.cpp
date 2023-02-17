@@ -755,6 +755,20 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_pVIBuffer->Render();
 	}
 
+	/* Zoom Blur */
+	if (m_bZoomBlur)
+	{
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BlurTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_iFocusDetail", &m_iFocusDetail, sizeof(_int))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(10); /* Zoom Blur */
+		m_pVIBuffer->Render();
+	}
+
 	return S_OK;
 }
 

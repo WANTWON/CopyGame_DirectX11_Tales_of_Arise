@@ -36,7 +36,7 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 	if ((STATETYPE_END == m_eStateType) && (nullptr != m_pTarget))
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -197,7 +197,9 @@ CPlayerState * CLawAirRSkillState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pLeftHandCollider);
+#endif
 	}
 
 	if (nullptr != m_pRightHandCollider)
@@ -211,8 +213,9 @@ CPlayerState * CLawAirRSkillState::LateTick(_float fTimeDelta)
 			if (pCollided)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
-
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pRightHandCollider);
+#endif
 	}
 
 	if (nullptr != m_pLeftFootCollider)
@@ -227,7 +230,9 @@ CPlayerState * CLawAirRSkillState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+#ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pLeftFootCollider);
+#endif
 	}
 
 	if (m_bIsLoop)

@@ -54,29 +54,13 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 	_vector vPositionEnd = XMLoadFloat4(&m_CamDatas[m_iIndex + 1].vEyePosition);
 	_vector vCatRom1 = vPositionStart;
 	_vector vCatRom2 = vPositionEnd;
-	if (m_iIndex - 1 < 0)
-	{
-		vCatRom1 = vPositionStart;
-		vCatRom2 = XMLoadFloat4(&m_CamDatas[m_iIndex + 2].vEyePosition);
-	}
-	else if (m_iIndex + 2 >= m_CamDatas.size() - 1)
-	{
-		vCatRom1 = XMLoadFloat4(&m_CamDatas[m_iIndex - 1].vEyePosition);
-		vCatRom2 = vPositionEnd;
-	}
-	else
-	{
-		vCatRom1 = XMLoadFloat4(&m_CamDatas[m_iIndex - 1].vEyePosition);
-		vCatRom2 = XMLoadFloat4(&m_CamDatas[m_iIndex + 2].vEyePosition);
-	}
 	
 	
-
 	_vector vAtStart = XMVectorSetW(XMLoadFloat4(&m_CamDatas[m_iIndex].vAtPosition), 1.f);
 	_vector vAtEnd = XMVectorSetW(XMLoadFloat4(&m_CamDatas[m_iIndex + 1].vAtPosition), 1.f);
 	_vector vPosition = XMVectorCatmullRom(vCatRom1, vPositionStart, vPositionEnd, vCatRom2, fValue);
 
-	// vPosition = XMVectorLerp(vPositionStart, vPositionEnd, fValue);
+//	vPosition = XMVectorLerp(vPositionStart, vPositionEnd, fValue);
 	_vector vAt = XMVectorLerp(vAtStart, vAtEnd, fValue);
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	m_pTransform->LookAt(vAt);

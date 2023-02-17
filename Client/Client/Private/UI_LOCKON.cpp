@@ -112,14 +112,16 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		if (m_fTimeOffset >= 1.f)
 			m_fTimeOffset = 1.f;
 		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_60"), m_fTimeOffset);
-		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(false);
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(false);
 	}
 	
 
 	if (m_bStrikeon)        // f
 	{
 		m_bStrikefonton = true;
-		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(true);
+		if(CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(true);
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 		m_fTimeOffset -= 0.1f;
 		if (m_fTimeOffset <= 0.1f)
