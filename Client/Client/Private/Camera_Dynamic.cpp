@@ -756,14 +756,23 @@ void CCamera_Dynamic::ZoomSetting(_float fDistance, _float fSpeed)
 	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (m_pTarget)
 	{
+		_float fFocusPower = 3.f;
+
+		_float fInterpFactor = m_fZoomOffset / -3.f;
+		_int iFocusDetailLerp = 1 + fInterpFactor * (7 - 1);
+
 		if (m_fZoomOffset == 0.f)
-			m_pTarget->Get_Renderer()->Set_ZoomBlur(false);
+		{
+			if (!m_bBlurResetted)
+			{
+				m_pTarget->Get_Renderer()->Set_ZoomBlur(false);
+				m_bBlurResetted = true;
+			}
+		}
 		else
 		{
-			_float fInterpFactor = m_fZoomOffset / -3.f;
-			_int iLerp = 1 + fInterpFactor * (7 - 1);
-
-			m_pTarget->Get_Renderer()->Set_ZoomBlur(true, iLerp);
+			m_pTarget->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);	
+			m_bBlurResetted = false;
 		}
 	}
 }

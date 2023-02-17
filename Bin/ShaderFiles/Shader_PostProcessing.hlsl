@@ -39,8 +39,8 @@ float g_fMinBlurDepth = 100.f;
 float g_fMaxBlurDepth = 400.f;
 
 /* Zoom Blur */
-float g_fFocusPower = 3.f;
-int g_iFocusDetail = 5;
+float g_fFocusPower;
+int g_iFocusDetail;
 
 sampler LinearSampler = sampler_state
 {
