@@ -41,10 +41,6 @@ HRESULT CCollider::Initialize_Prototype(TYPE eType)
 	if (FAILED(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderbyteCode, iShaderByteCodeLength, &m_pInputLayout)))
 		return E_FAIL;
 
-
-
-	
-
 	D3D11_DEPTH_STENCIL_DESC			DepthStecilDesc;
 	ZeroMemory(&DepthStecilDesc, sizeof(DepthStecilDesc));
 
@@ -97,8 +93,6 @@ HRESULT CCollider::Initialize(void * pArg)
 		}
 	}
 
-	
-
 	return S_OK;
 }
 
@@ -116,6 +110,42 @@ void CCollider::Update(_fmatrix WorldMatrix)
 		m_pSphere[BOUNDING_ORIGINAL]->Transform(*m_pSphere[BOUNDING_WORLD], WorldMatrix);
 		break;
 	}
+}
+
+HRESULT CCollider::Set_ColliderDesc(void * pArg)
+{
+	if (nullptr == pArg)
+		return E_FAIL;
+
+	memcpy(&m_ColliderDesc, pArg, sizeof(COLLIDERDESC));
+
+	_matrix			ScaleMatrix, RotationMatrix, TranslationMatrix;
+
+	ScaleMatrix = XMMatrixScaling(m_ColliderDesc.vScale.x, m_ColliderDesc.vScale.y, m_ColliderDesc.vScale.z);
+	_matrix RotationXMatrix = XMMatrixRotationX(m_ColliderDesc.vRotation.x);
+	_matrix RotationYMatrix = XMMatrixRotationY(m_ColliderDesc.vRotation.y);
+	_matrix RotationZMatrix = XMMatrixRotationZ(m_ColliderDesc.vRotation.z);
+	RotationMatrix = RotationXMatrix * RotationYMatrix * RotationZMatrix;
+
+	TranslationMatrix = XMMatrixTranslation(m_ColliderDesc.vPosition.x, m_ColliderDesc.vPosition.y, m_ColliderDesc.vPosition.z);
+
+	for (_uint i = 0; i < BOUNDING_END; ++i)
+	{
+		switch (m_eType)
+		{
+		case TYPE_AABB:
+			m_pAABB[i]->Transform(*m_pAABB[i], ScaleMatrix * TranslationMatrix);
+			break;
+		case TYPE_OBB:
+			m_pOBB[i]->Transform(*m_pOBB[i], RotationMatrix);
+			break;
+		case TYPE_SPHERE:
+			m_pSphere[i]->Transform(*m_pSphere[i], ScaleMatrix * RotationMatrix * TranslationMatrix);
+			break;
+		}
+	}
+
+	return S_OK;
 }
 
 #ifdef _DEBUG

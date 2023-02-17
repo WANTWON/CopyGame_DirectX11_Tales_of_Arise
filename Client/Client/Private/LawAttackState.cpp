@@ -392,13 +392,9 @@ CPlayerState * CLawAttackState::EventInput(void)
 			if (GetKeyState('E') < 0)
 				return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
 			else if (GetKeyState('R') < 0)
-			{
-				//return new CLawAirRSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
-			}
+				return new CLawAirRSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
 			else if (GetKeyState('F') < 0)
-			{
-				//return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
-			}
+				return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 		}
 	}
 	else

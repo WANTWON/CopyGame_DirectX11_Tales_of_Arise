@@ -39,6 +39,7 @@ public:
 public:
 	void Update(_fmatrix WorldMatrix);
 	_float Get_SphereRadius(void) { return m_pSphere[BOUNDING_WORLD]->Radius; }
+	void Set_ColliderDesc(void* pArg) { memcpy(&m_ColliderDesc, &pArg, sizeof(COLLIDERDESC)); }
 #ifdef _DEBUG
 public:
 	HRESULT Render();
