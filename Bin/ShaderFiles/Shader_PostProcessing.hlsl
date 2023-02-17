@@ -38,6 +38,10 @@ texture2D g_BlurredBackBufferTexture;
 float g_fMinBlurDepth = 100.f;
 float g_fMaxBlurDepth = 400.f;
 
+/* Zoom Blur */
+float g_fFocusPower = 3.f;
+int g_iFocusDetail = 5;
+
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_Linear;
@@ -336,6 +340,27 @@ PS_OUT PS_VERTICAL_BLUR_SHADOW(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_ZOOMBLUR(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float2 vFocusPosition = float2(g_fWinSizeX / 2, g_fWinSizeY / 2);
+	vFocusPosition.x /= g_fWinSizeX;
+	vFocusPosition.y /= g_fWinSizeY;
+
+	float2 vFocus = In.vTexUV - vFocusPosition;
+
+	for (int i = 0; i < g_iFocusDetail; i++) 
+	{
+		float fPower = 1.0 - g_fFocusPower * (1.0 / g_fWinSizeX) * float(i);
+		Out.vColor.rgb += g_BlurTexture.Sample(LinearSampler, vFocus * fPower + vFocusPosition).rgb;
+	}
+
+	Out.vColor.rgb *= 1.0 / float(g_iFocusDetail);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default // 0
@@ -446,5 +471,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_VERTICAL_BLUR_SHADOW();
+	}
+
+	pass Zoom_Blur // 10
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_ZOOMBLUR();
 	}
 }

@@ -300,7 +300,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 
 	m_lMouseWheel = pGameInstance->Get_DIMMoveState(DIMM_WHEEL);
 
-	ZoomSetting(-3.f, 0.05f);
+	ZoomSetting(-5.f, 0.25f);
 
 	if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
 	{
@@ -739,6 +739,21 @@ void CCamera_Dynamic::ZoomSetting(_float fDistance, _float fSpeed)
 		m_fZoomOffset += fSpeed;
 		if (m_fZoomOffset >= 0.f)
 			m_fZoomOffset = 0.f;
+	}
+	
+	/* Zoom Blur */
+	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	if (m_pTarget)
+	{
+		if (m_fZoomOffset == 0.f)
+			m_pTarget->Get_Renderer()->Set_ZoomBlur(false);
+		else
+		{
+			_float fInterpFactor = m_fZoomOffset / -3.f;
+			_int iLerp = 1 + fInterpFactor * (7 - 1);
+
+			m_pTarget->Get_Renderer()->Set_ZoomBlur(true, iLerp);
+		}
 	}
 }
 

@@ -216,32 +216,26 @@ void CLevel_SnowField::Late_Tick(_float fTimeDelta)
 
 	/* Fog Shader */
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	
-	CRenderer* pRenderer = (CRenderer*)pGameInstance->Clone_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), nullptr);
-	if (!pRenderer)
-		return;
 
-	pRenderer->Set_Fog(true);
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	if (pPlayer)
+	{
+		pPlayer->Get_Renderer()->Set_Fog(true);
 
-	CShader* pShaderPostProcessing = pRenderer->Get_ShaderPostProcessing();
-	if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return;
-	if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
-		return;
+		CShader* pShaderPostProcessing = pPlayer->Get_Renderer()->Get_ShaderPostProcessing();
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+			return;
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+			return;
 
-	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-	if (!pPlayer)
-		return;
+		_float3 vPlayerPosition;
+		XMStoreFloat3(&vPlayerPosition, pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vPlayerPosition", &vPlayerPosition, sizeof(_float3))))
+			return;
+	}
 
 	RELEASE_INSTANCE(CGameInstance);
-
-	_float3 vPlayerPosition;
-	XMStoreFloat3(&vPlayerPosition, pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-
-	if (FAILED(pShaderPostProcessing->Set_RawValue("g_vPlayerPosition", &vPlayerPosition, sizeof(_float3))))
-		return;
-
-	Safe_Release(pRenderer);
 }
 
 HRESULT CLevel_SnowField::Ready_Lights()
