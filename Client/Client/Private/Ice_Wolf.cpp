@@ -105,7 +105,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_BattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_vecNavigation[LEVEL_BATTLE])))
 		return E_FAIL;
 
-	m_pNavigationCom = m_vecNavigation[iLevel];
+	m_pNavigationCom = m_vecNavigation[LEVEL_SNOWFIELD];
 
 	return S_OK;
 }
@@ -116,7 +116,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	if (m_bDead )
 		return OBJ_DEAD;
 		
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
 		return OBJ_NOEVENT;
 
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
@@ -147,7 +147,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 void CIce_Wolf::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)

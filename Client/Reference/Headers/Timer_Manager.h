@@ -14,6 +14,8 @@ private:
 public:
 	HRESULT Add_Timer(const _tchar* pTimerTag);
 	_float Get_TimeDelta(const _tchar* pTimerTag);
+	void Set_TimeSpeedOffset(const _tchar* pTimerTag, _float fOffset);
+	float Get_TimeSpeedOffset(const _tchar* pTimerTag);
 	void Update(const _tchar* pTimerTag);
 
 public:

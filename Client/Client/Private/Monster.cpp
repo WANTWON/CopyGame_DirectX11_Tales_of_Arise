@@ -93,7 +93,9 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	if (m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+
+		if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_ACTION)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 	}
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
@@ -452,7 +454,8 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		return _int(m_tStats.m_fCurrentHp);
 	}
 
-	CBattleManager::Get_Instance()->Set_LackonMonster(this);
+	if(DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+		CBattleManager::Get_Instance()->Set_LackonMonster(this);
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
 	m_bTakeDamage = true;

@@ -539,6 +539,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Jump_E.wav"), SOUND_EFFECT, 0.5f);
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS);
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("SionTresShot.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
@@ -567,6 +568,8 @@ void CPlayer_SionSkillAttack::Enter(void)
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_EFFECT, 0.5f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_EFFECT, 0.5f);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_MAGNARAY);
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("SionMagnaRay.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
