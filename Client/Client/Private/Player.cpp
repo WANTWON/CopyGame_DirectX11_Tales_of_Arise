@@ -75,6 +75,9 @@ int CPlayer::Tick(_float fTimeDelta)
 	if(m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
 		return OBJ_NOEVENT;
 
+	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
+		return OBJ_NOEVENT;
+
 	if (m_pCameraManager->Get_CamState()== CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
@@ -177,6 +180,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		__super::Late_Tick(fTimeDelta);
 #endif //_DEBUG
 	}
+
+	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
+		return;
 
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)

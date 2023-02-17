@@ -1167,7 +1167,7 @@ PS_OUT PS_TODOCOMPLETE(PS_IN In)
 
 PS_OUT PS_BATTLESTART(PS_IN In)
 {
-	PS_OUT      Out = (PS_OUT)0;
+	PS_OUT Out = (PS_OUT)0;
 
 	int TotalIndex = (int)g_UVSpriteValue.x * (int)g_UVSpriteValue.y;
 	int CurIndex = g_SpriteCurTime / g_SpriteSpeed;
@@ -1196,18 +1196,12 @@ PS_OUT PS_BATTLESTART(PS_IN In)
 	float2 NewUV = float2((In.vTexUV.x * ValueX) + (ValueX * CurX), (In.vTexUV.y * ValueY) + (ValueY * CurY));
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, NewUV);
-
 	Out.vColor.a = Out.vColor.rgb;
 
 	float origina = Out.vColor.r;
 
 	Out.vColor.rgb = float3(0.9843137254901961f, 0.3607843137254902f, 0.f);// * 1.3f;
-
 	Out.vColor.g += 0.3f * origina;
-
-
-
-
 
 	return Out;
 }

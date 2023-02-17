@@ -762,6 +762,8 @@ HRESULT CRenderer::Render_PostProcessing()
 		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BlurTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
 			return E_FAIL;
 
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fFocusPower", &m_fFocusPower, sizeof(_float))))
+			return E_FAIL;
 		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_iFocusDetail", &m_iFocusDetail, sizeof(_int))))
 			return E_FAIL;
 

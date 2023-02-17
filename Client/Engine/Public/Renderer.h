@@ -20,7 +20,7 @@ public:
 	class CShader* Get_ShaderPostProcessing() { return m_pShaderPostProcessing; }
 	void Set_Fog(_bool bFog) { m_bFog = bFog; }
 	void Set_Distort(_bool bDistort) { m_bDistort = bDistort; }
-	void Set_ZoomBlur(_bool bZoomBlur, _uint iFocusDetail = 0) { m_bZoomBlur = bZoomBlur; m_iFocusDetail = iFocusDetail; }
+	void Set_ZoomBlur(_bool bZoomBlur, _float fFocusPower = 3.f, _uint iFocusDetail = 0) { m_bZoomBlur = bZoomBlur; m_fFocusPower = fFocusPower; m_iFocusDetail = iFocusDetail; }
 
 public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
@@ -92,6 +92,7 @@ private:
 
 	/* Zoom Blur (Post Processing) */
 	_bool m_bZoomBlur = false;
+	_float m_fFocusPower = 3.f;
 	_int m_iFocusDetail = 1.f;
 
 public:
