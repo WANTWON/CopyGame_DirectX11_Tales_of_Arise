@@ -1945,20 +1945,24 @@ void CImgui_Manager::Set_ActionCamera()
 				memset(cCameraName, 0, MAX_PATH);
 				ImGui::OpenPopup("Create Camera");
 
-				CCamera_Action::ACTIONCAMDESC				CameraDesc;
-				ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
-				CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
-				CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+				if (CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), ACTION) == nullptr)
+				{
+					CCamera_Action::ACTIONCAMDESC				CameraDesc;
+					ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+					CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+					CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
 
-				CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
-				CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-				CameraDesc.CameraDesc.fNear = 0.2f;
-				CameraDesc.CameraDesc.fFar = 1000.f;
+					CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+					CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+					CameraDesc.CameraDesc.fNear = 0.2f;
+					CameraDesc.CameraDesc.fFar = 1000.f;
 
-				CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
-				CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+					CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+					CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_STATIC, TEXT("Layer_Camera"), &CameraDesc);
+					CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_GAMEPLAY, TEXT("Layer_Camera"), &CameraDesc);
+				}
+				
 			}
 		}
 		ImGui::NewLine();

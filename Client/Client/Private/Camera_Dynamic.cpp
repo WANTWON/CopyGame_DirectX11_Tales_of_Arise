@@ -424,8 +424,8 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 
 		_float fDot = XMVectorGetX(XMVector3Dot(vPlayerLockonDir, vLook));
 		_float fRightDot = XMVectorGetX(XMVector3Dot(vCameraLockonDir, vRight));
-
-		if (pLockOnMonster->Check_IsinBattleZoneFrustum() == false)
+		_float fDistance = XMVectorGetX(XMVector3Length(vLockOnPosition - vPlayerPosition));
+		if (pLockOnMonster->Check_IsinBattleZoneFrustum() == false )
 			m_bTurn = true;
 
 		if(m_bTurn)
@@ -433,9 +433,20 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 			if (fDot < 0.8f)
 			{
 				if (fRightDot > 0.f)
-					m_fAngle -= (0.8f - fDot)* 5.f;
+				{
+					if(fDistance < 15.f)
+						m_fAngle -= (0.8f - fDot)* 2.f;
+					else
+						m_fAngle -= (0.8f - fDot)* 5.f;
+				}
 				else
-					m_fAngle += (0.8f - fDot)* 5.f;
+				{
+					if (fDistance < 15.f)
+						m_fAngle += (0.8f - fDot)* 2.f;
+					else
+						m_fAngle += (0.8f - fDot)* 5.f;
+				}
+					
 			}
 			else
 				m_bTurn = false;
@@ -443,7 +454,7 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 		}
 
 
-		_float fDistance = XMVectorGetX(XMVector3Length(vLockOnPosition - vPlayerPosition));
+		
 		if (fDistance > 30.F)
 		{
 			fLength += 0.02f;
@@ -473,8 +484,8 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 			fLength = 7.f;
 		if (m_fCameraOffsetY >= 5.f)
 			m_fCameraOffsetY = 5.f;
-		else if (m_fCameraOffsetY <= 0.f)
-			m_fCameraOffsetY = 0.f;
+		else if (m_fCameraOffsetY <= 1.f)
+			m_fCameraOffsetY = 1.f;
 	}
 
 	

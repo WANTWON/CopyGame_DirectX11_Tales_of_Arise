@@ -50,7 +50,7 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 		case Client::CRinwellState::STATE_AGGRO:
 		{
 			m_bFinised = true;
-			if (CGameInstance::Get_Instance()->Key_Up(DIK_6))
+			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 				return new CMoveState(m_pOwner, STATETYPE_START, 0);
 			else
 				return nullptr;
