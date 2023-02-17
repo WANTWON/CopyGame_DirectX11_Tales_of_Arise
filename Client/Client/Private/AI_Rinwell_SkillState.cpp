@@ -75,14 +75,14 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 	else
 		m_pOwner->Check_Navigation();
 
-//////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////
 
 	if (m_iCurrentAnimIndex == CRinwell::ANIM::BTL_MAGIC_START && m_bIsAnimationFinished)
 	{
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MAGIC_EMIT;
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	}
-		
+
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -141,11 +141,35 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
+						//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+						//Bullet
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
+
+						BulletDesc.fVelocity = 0.5f;
+						BulletDesc.vInitPositon = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+						//BulletDesc.vTargetDir = { -0.3f, -1.f, -0.1f, 0.f };
+						//BulletDesc.vTargetPosition = vTargetPosition;
+						BulletDesc.fDeadTime = 6.f;
+						BulletDesc.pOwner = m_pOwner;
+						for (_uint i = 0; i < 12; ++i)
+						{
+							m_pOwner->Get_Transform()->Set_Rotation({ 0.f,0.f + i * 30.f , 0.f });
+							BulletDesc.vTargetDir = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
+							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+								return nullptr;
+						}
+						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 						m_fEventStart = pEvent.fStartTime;
 					}
 
+					m_fEventStart = pEvent.fStartTime;
+				}
 
-					break;
+
+				break;
 			case STATE_METEOR:
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
@@ -164,7 +188,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.eBulletType = CRinwellSkills::METEOR;
-						
+
 						BulletDesc.vTargetDir = { -0.3f, -1.f, -0.1f, 0.f };
 
 
@@ -196,7 +220,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime) && !m_bBulletMake)
 					{
-						
+
 						m_fEventStart = pEvent.fStartTime;
 
 					}
@@ -216,21 +240,21 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						
+
 
 						m_fEventStart = pEvent.fStartTime;
 					}
 				}
 
 				break;
-				}
-
 			}
 
 		}
 
-
 	}
+
+
+
 	return nullptr;
 }
 
