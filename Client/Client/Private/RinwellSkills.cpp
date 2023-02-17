@@ -57,9 +57,27 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 	case METEOR:
 		vLocation = m_BulletDesc.vInitPositon;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+
+		vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorBall.dat"), mWorldMatrix);
+
 		break;
+	case THUNDER_FIELD:
+		vOffset = XMVectorSet(0.f, 6, 0.f, 0.f);
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ThunderFieldBullet.dat"), mWorldMatrix);
 
-
+		vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("ThunderFieldFloor.dat"), mWorldMatrix);
+		break;
 	default:
 		break;
 	}
@@ -153,6 +171,12 @@ void CRinwellSkills::Collision_Check()
 
 void CRinwellSkills::Dead_Effect()
 {
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
 	switch (m_BulletDesc.eBulletType)
 	{
 	case PHOTON_FLASH:
@@ -162,6 +186,22 @@ void CRinwellSkills::Dead_Effect()
 		_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pDeadEffects = CEffect::PlayEffectAtLocation(TEXT("PhotonFlashDead.dat"), mWorldMatrix);
+		break;
+	}
+	case METEOR:
+	{
+		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
+		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+		_vector vRight = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE::STATE_RIGHT));
+		_matrix mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pBlast2Effects = CEffect::PlayEffectAtLocation(TEXT("MeteorDeadFlash.dat"), mWorldMatrix);
+
+		_vector vOffset = XMVectorSet(0.f, m_fRadius, 0.f, 0.f);
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pDeadEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorPlane.dat"), mWorldMatrix);
 		break;
 	}
 
@@ -255,6 +295,17 @@ void CRinwellSkills::Tick_Meteor(_float fTimeDelta)
 
 	//m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
 	m_pTransformCom->Go_PosDir(fTimeDelta, m_BulletDesc.vTargetDir);
+
+
+	for (auto& iter : m_pEffects)
+	{
+		iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+
+	for (auto& iter : m_pBlastEffects)
+	{
+		iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
 }
 
 void CRinwellSkills::Tick_ThunderField(_float fTimeDelta)

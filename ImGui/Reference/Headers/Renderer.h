@@ -92,7 +92,7 @@ private:
 
 	/* Zoom Blur (Post Processing) */
 	_bool m_bZoomBlur = false;
-	_int m_iFocusDetail = 1.f;
+	_int m_iFocusDetail = 1;
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
