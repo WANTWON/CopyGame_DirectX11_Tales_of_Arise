@@ -318,9 +318,7 @@ CPlayerState * CLawSkillState::EventInput(void)
 		else if (GetKeyState('F') < 0)
 		{
 			if (m_bIsFly)
-			{
-
-			}
+				return new CLawAirFSkillState(m_pOwner, STATE_ID::STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 			else
 			{
 				m_pOwner->Get_Model()->Reset();

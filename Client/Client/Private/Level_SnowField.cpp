@@ -14,6 +14,7 @@
 #include "SnowFieldNpc.h"
 #include "PlayerCreater.h"
 #include "Object_Pool_Manager.h"
+#include "Monster.h"
 
 extern bool		g_bUIMade = false;
 
@@ -39,8 +40,7 @@ HRESULT CLevel_SnowField::Initialize()
 			return E_FAIL;
 	}
 
-	if (CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
-	{
+	
 		cout << " Player Clone start" << endl;
 		m_pPlayerLoader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER);
 		if (nullptr == m_pPlayerLoader)
@@ -49,39 +49,14 @@ HRESULT CLevel_SnowField::Initialize()
 		cout << " Player Clone start2" << endl;
 		m_pPlayer2Loader = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER2);
 		if (nullptr == m_pPlayer2Loader)
-			return E_FAIL;
+				return E_FAIL;
 
 		cout << " Monster Group1 Clone start" << endl;
 		m_pMonsterLoader1 = CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_MONSTER1);
 		if (nullptr == m_pMonsterLoader1)
 			return E_FAIL;
 
-	}
-	else
-	{
-		if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::RINWELL) == nullptr)
-		{
-			vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
-			for (auto& iter : vecFightedMonster)
-			{
-				if (iter == RINWELL)
-				{
-					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-						return E_FAIL;
-				}
 
-			}
-		}
-
-
-		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-		pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
-		pPlayer->Change_Navigation(LEVEL_SNOWFIELD);
-		pPlayer->Compute_CurrentIndex(LEVEL_SNOWFIELD);
-		pPlayer->Check_Navigation();
-		pPlayer->Change_Level(LEVEL_SNOWFIELD);
-	}
-	
 
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund")) == false)
 	{
@@ -96,7 +71,7 @@ HRESULT CLevel_SnowField::Initialize()
 	}
 
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
-
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
 
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco")) == false)
 	{
@@ -196,6 +171,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 

@@ -183,7 +183,7 @@ void CCamera_Dynamic::TargetTool_Camera(_float fTimeDelta)
 	_matrix		RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_CamDatas[m_iIndex].fRadian);
 	pPlayertoCameraDir = XMVector3TransformNormal(pTargetLook, RotationMatrix);
 	_vector vCameraPos = pTargetPosition + pPlayertoCameraDir*m_CamDatas[m_iIndex].fLength;
-	vCameraPos = XMVectorSetY(vCameraPos, XMVectorGetY(vCameraPos) + m_CamDatas[m_iIndex].fYoffset);
+	vCameraPos = XMVectorSetY(vCameraPos, XMVectorGetY(vCameraPos) + m_CamDatas[m_iIndex].fYoffset + m_fCameraOffsetY);
 
 
 	_vector FinalPos = XMVectorLerp(m_vInitPos, vCameraPos, fValue); //_float4 저장 y올리기 
@@ -424,8 +424,8 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 
 		_float fDot = XMVectorGetX(XMVector3Dot(vPlayerLockonDir, vLook));
 		_float fRightDot = XMVectorGetX(XMVector3Dot(vCameraLockonDir, vRight));
-
-		if (pLockOnMonster->Check_IsinBattleZoneFrustum() == false)
+		_float fDistance = XMVectorGetX(XMVector3Length(vLockOnPosition - vPlayerPosition));
+		if (pLockOnMonster->Check_IsinBattleZoneFrustum() == false )
 			m_bTurn = true;
 
 		if(m_bTurn)
@@ -433,9 +433,20 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 			if (fDot < 0.8f)
 			{
 				if (fRightDot > 0.f)
-					m_fAngle -= (0.8f - fDot)* 5.f;
+				{
+					if(fDistance < 15.f)
+						m_fAngle -= (0.8f - fDot)* 2.f;
+					else
+						m_fAngle -= (0.8f - fDot)* 5.f;
+				}
 				else
-					m_fAngle += (0.8f - fDot)* 5.f;
+				{
+					if (fDistance < 15.f)
+						m_fAngle += (0.8f - fDot)* 2.f;
+					else
+						m_fAngle += (0.8f - fDot)* 5.f;
+				}
+					
 			}
 			else
 				m_bTurn = false;
@@ -443,25 +454,25 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 		}
 
 
-		_float fDistance = XMVectorGetX(XMVector3Length(vLockOnPosition - vPlayerPosition));
-		if (fDistance > 20.f)
+		
+		if (fDistance > 30.F)
 		{
 			fLength += 0.02f;
 			m_fCameraOffsetY -= 0.2f;
 			
 		}
-		else if (fDistance >= 10.f && fDistance <= 20.f)
+		else if (fDistance >= 15.f && fDistance <= 30.f)
 		{
 			if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
 			{
 				if (YMouseMove > 0)
-					m_fCameraOffsetY += 0.1f;
+					m_fCameraOffsetY += 0.2f;
 				else if (YMouseMove < 0)
-					m_fCameraOffsetY -= 0.1f;
+					m_fCameraOffsetY -= 0.2f;
 			}
 
 		}
-		else if(fDistance < 10.f)
+		else if(fDistance < 15.f)
 		{
 			fLength -= 0.02f;
 			m_fCameraOffsetY += 0.2f;
@@ -473,8 +484,8 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 			fLength = 7.f;
 		if (m_fCameraOffsetY >= 5.f)
 			m_fCameraOffsetY = 5.f;
-		else if (m_fCameraOffsetY <= 0.f)
-			m_fCameraOffsetY = 0.f;
+		else if (m_fCameraOffsetY <= 1.f)
+			m_fCameraOffsetY = 1.f;
 	}
 
 	
