@@ -79,7 +79,6 @@ int CAlphenSkills::Tick(_float fTimeDelta)
 	if (m_pSPHERECom != nullptr)
 		m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
-
 	return OBJ_NOEVENT;
 }
 
