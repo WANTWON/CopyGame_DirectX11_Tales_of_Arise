@@ -41,10 +41,6 @@ HRESULT CCollider::Initialize_Prototype(TYPE eType)
 	if (FAILED(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderbyteCode, iShaderByteCodeLength, &m_pInputLayout)))
 		return E_FAIL;
 
-
-
-	
-
 	D3D11_DEPTH_STENCIL_DESC			DepthStecilDesc;
 	ZeroMemory(&DepthStecilDesc, sizeof(DepthStecilDesc));
 
