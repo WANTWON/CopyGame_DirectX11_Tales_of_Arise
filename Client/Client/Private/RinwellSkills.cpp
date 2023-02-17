@@ -89,11 +89,20 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 		Tick_GaleForce(fTimeDelta);
 		break;
 
+	case THUNDER_FIELD:
+		Tick_ThunderField(fTimeDelta);
+		break;
 	case METEOR:
 		Tick_Meteor(fTimeDelta);
 		break;
 	}
+
+	if(m_BulletDesc.eBulletType == THUNDER_FIELD)
+		m_pAABBCom->Update(m_pTransformCom->Get_WorldMatrix());
+	else
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+
+
 
 	return OBJ_NOEVENT;
 }
@@ -114,6 +123,18 @@ void CRinwellSkills::Collision_Check()
 	case PHOTON_FLASH:
 	case METEOR:
 		__super::Collision_Check();
+		break;
+	case THUNDER_FIELD:
+		if (m_BulletDesc.eCollisionGroup == PLAYER)
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		}
+		else
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAABBCom, &pCollisionTarget))
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		}
 		break;
 	case GALE_FORCE:
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
@@ -176,10 +197,26 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 1.f);
 		break;
+	
+	case THUNDER_FIELD:
+		ColliderDesc.vScale = _float3(1.f, 10.f, 1.f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 1.f);
+		break;
+
 	}
 
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
-		return E_FAIL;
+	if (m_BulletDesc.eBulletType == THUNDER_FIELD)
+	{
+		if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+			return E_FAIL;
+	}
+	
 
 	return S_OK;
 }
@@ -217,6 +254,20 @@ void CRinwellSkills::Tick_Meteor(_float fTimeDelta)
 	//_vector vDir =  m_BulletDesc.vTargetDir;
 
 	//m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
+	m_pTransformCom->Go_PosDir(fTimeDelta, m_BulletDesc.vTargetDir);
+}
+
+void CRinwellSkills::Tick_ThunderField(_float fTimeDelta)
+{
+	if (m_bDeadEffect)
+		m_bDead = true;
+
+	//_vector vDir =  m_BulletDesc.vTargetDir;
+
+	//m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
+	m_fThunderStopTimer += fTimeDelta;
+
+	if(m_fThunderStopTimer < 4.f)
 	m_pTransformCom->Go_PosDir(fTimeDelta, m_BulletDesc.vTargetDir);
 }
 
