@@ -381,7 +381,7 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 
 
 
-	switch (rand() % 4)
+	switch (rand() % 5)
 	{
 
 	case 0:
@@ -396,10 +396,10 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 	case 3:
 		return new CAI_Rinwell_SkillState(m_pOwner, STATE_METEOR, m_pTarget);
 
-	/*case 4:
-		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+	case 4:
+		return new CAI_Rinwell_SkillState(m_pOwner, STATE_DIVINE_SABER, m_pTarget);
 
-	case 5:
+	/*case 5:
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);*/
 
 	}

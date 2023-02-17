@@ -58,6 +58,20 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		vLocation = m_BulletDesc.vInitPositon;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
 		break;
+	case DIVINE_SABER:
+		vLocation = m_BulletDesc.vTargetPosition;
+		//mWorldMatrix.r[]
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+		break;
+	case DIVINE_SABER_BULLET:
+		vLocation = m_BulletDesc.vTargetPosition;
+		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		//m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("AquaImpact.dat"), mWorldMatrix);
+		break;
 
 
 	default:
@@ -95,6 +109,14 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 	case METEOR:
 		Tick_Meteor(fTimeDelta);
 		break;
+	case DIVINE_SABER:
+		Tick_DivineSaber(fTimeDelta);
+		break;
+
+	case DIVINE_SABER_BULLET:
+		Tick_DivineSaberBullet(fTimeDelta);
+		break;
+
 	}
 
 	if(m_BulletDesc.eBulletType == THUNDER_FIELD)
@@ -146,6 +168,14 @@ void CRinwellSkills::Collision_Check()
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
 				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		}
+		break;
+
+	case DIVINE_SABER_BULLET:
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
+		{
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			m_bDead = true;
 		}
 		break;
 	}
@@ -204,9 +234,22 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 1.f);
 		break;
 
+	case DIVINE_SABER:
+		ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 1.f);
+		break;
+
+	case DIVINE_SABER_BULLET:
+		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		
+		break;
+
 	}
 
-	if (m_BulletDesc.eBulletType == THUNDER_FIELD)
+	if (m_BulletDesc.eBulletType == THUNDER_FIELD || m_BulletDesc.eBulletType == DIVINE_SABER || m_BulletDesc.eBulletType == DIVINE_SABER_BULLET)
 	{
 		if (FAILED(__super::Add_Components(TEXT("Com_AABB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), (CComponent**)&m_pAABBCom, &ColliderDesc)))
 			return E_FAIL;
@@ -250,7 +293,7 @@ void CRinwellSkills::Tick_Meteor(_float fTimeDelta)
 {
 	if (m_bDeadEffect)
 		m_bDead = true;
-
+	 
 	//_vector vDir =  m_BulletDesc.vTargetDir;
 
 	//m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
@@ -269,6 +312,46 @@ void CRinwellSkills::Tick_ThunderField(_float fTimeDelta)
 
 	if(m_fThunderStopTimer < 4.f)
 	m_pTransformCom->Go_PosDir(fTimeDelta, m_BulletDesc.vTargetDir);
+}
+
+void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
+{
+	if (m_bDead == true)
+		return;
+
+	//m_fDivineTimer += fTimeDelta;
+
+	//if (m_fAquaTImer > 0.1f)
+	//{
+	float offsetx = (_float)(rand() % m_fDivineOffset)*(rand() % 2 == 0 ? 1.f : -1.f) / 10;
+	float offsetz = (_float)(rand() % m_fDivineOffset)*(rand() % 2 == 0 ? 1.f : -1.f) / 10;
+	CBullet::BULLETDESC BulletDesc;
+	_vector vLocation = { 0.f,0.f,0.f,0.f };
+	BulletDesc.iDamage = rand() % 150 + 1;
+	BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+	BulletDesc.vTargetPosition.m128_f32[0] += offsetx;
+	BulletDesc.vTargetPosition.m128_f32[2] += offsetz;
+	BulletDesc.eCollisionGroup = PLAYER;
+	BulletDesc.pOwner = m_BulletDesc.pOwner;
+	BulletDesc.eBulletType = CRinwellSkills::DIVINE_SABER_BULLET;
+	BulletDesc.fDeadTime = 0.5f;
+
+	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+		return;
+	bulletcount -= 1;
+	m_fDivineOffset -= 1;
+	//m_fDivineTimer = 0.f;
+
+	if (bulletcount <= 0)
+		m_bDead = true;
+}
+
+void CRinwellSkills::Tick_DivineSaberBullet(_float fTimeDelta)
+{
+	m_fDivineTimer += fTimeDelta;
+	if (m_fDivineTimer> 0.5f)
+		m_bDead = true;
+
 }
 
 CRinwellSkills * CRinwellSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
