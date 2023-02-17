@@ -72,12 +72,7 @@ HRESULT CLevel_SnowField::Initialize()
 
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
-	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco")) == false)
-	{
-		if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
-			return E_FAIL;
-	}
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
 
 
 	if (m_pPlayerLoader != nullptr)

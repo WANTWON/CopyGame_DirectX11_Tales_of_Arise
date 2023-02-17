@@ -92,6 +92,7 @@ private:
 
 	/* Zoom Blur (Post Processing) */
 	_bool m_bZoomBlur = false;
+
 	_float m_fFocusPower = 3.f;
 	_int m_iFocusDetail = 1;
 
