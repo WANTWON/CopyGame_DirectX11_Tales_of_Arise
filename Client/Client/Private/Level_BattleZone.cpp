@@ -312,8 +312,9 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Change_Level(LEVEL_BATTLE);
 		i++;
 	}
-
+	
 	CPlayerManager::Get_Instance()->Set_BattleMode(true);
+	CPlayerManager::Get_Instance()->Set_Ai_Check();
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;

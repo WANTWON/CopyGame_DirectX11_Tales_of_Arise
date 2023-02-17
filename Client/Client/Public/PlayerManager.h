@@ -38,6 +38,8 @@ public: /* Getter Setter */
 
 	CPlayer* Get_EnumPlayer(_uint eID);
 
+	void Set_Ai_Check();
+
 private:
 	CPlayer* m_pActivePlayer = nullptr;
 	vector<CPlayer*> m_pAIPlayers;
