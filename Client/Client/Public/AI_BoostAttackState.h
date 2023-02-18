@@ -19,6 +19,7 @@ public:
 private:
 	vector<CEffect*> m_pEffects;
 	vector<CEffect*> m_pEffects2;
+	vector<CEffect*> m_pEffects3;
 
 	_float m_fTime = 0.f;
 	_bool  m_bBullet = false;

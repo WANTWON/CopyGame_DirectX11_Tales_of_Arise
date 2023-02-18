@@ -237,6 +237,7 @@ void CAI_BoostAttack::Enter()
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
 		m_pEffects2 = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartFlash.dat"), mWorldMatrix);
+		m_pEffects3 = CEffect::PlayEffectAtLocation(TEXT("RinwellBoostEffect.dat"), mWorldMatrix);
 
 		break;
 	}

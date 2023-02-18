@@ -7,7 +7,8 @@ class CRinwellSkills final : public CBullet
 public:
 	enum TYPE { PHOTON_FLASH, GALE_FORCE , METEOR , METEORDEAD,
 		THUNDER_FIELD , DIVINE_SABER , DIVINE_SABER_BULLET , 
-		HOlY_RANCE , HOLY_RANCE_BULLET , BANGJEON, BANGEONDEAD};
+		HOlY_RANCE , HOLY_RANCE_BULLET , HOLY_RANCE_LASTBULLET, HOLY_RANCE_FISRTBULLET,
+		BANGJEON, BANGEONDEAD};
 
 public:
 	CRinwellSkills(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -34,6 +35,7 @@ private:
 	void Tick_DivineSaberBullet(_float fTimeDelta);
 	void Tick_HolyRance(_float fTimeDelta);
 	void Tick_HolyRanceBullet(_float fTimeDelta);
+	void Tick_HolyRanceBullet2(_float fTimeDelta);
 	void Tick_BangJeon(_float fTimeDelta);
 
 private:
@@ -53,7 +55,7 @@ private:
 	_int m_fDivineOffset = 70;
 	_float m_fholytimer = 0.f;
 
-	_bool m_bholybullet[6] = { true, true , true , true ,  true , true };
+	_bool m_bholybullet[7] = { true, true, true , true , true ,  true , true };
 
 	LIGHTDESC OriginLightDesc;
 	LIGHTDESC OriginLightDesc2;
