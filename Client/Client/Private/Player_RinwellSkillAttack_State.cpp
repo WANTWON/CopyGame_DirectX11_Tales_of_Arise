@@ -277,8 +277,19 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-					
+
+
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.fDeadTime = 3.f;
+						BulletDesc.eBulletType = CRinwellSkills::BANGJEON;
+						BulletDesc.pOwner = m_pOwner;
+						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 5.f);
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+
 						m_fEventStart = pEvent.fStartTime;
+						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
 					}
 				}
 
@@ -558,10 +569,9 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			break;*/
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK4:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT); //¾óÀ½¶³±¸±â
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_E.wav"), SOUND_EFFECT, 0.6f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_E.wav"), SOUND_EFFECT, 0.5f);
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); //¾óÀ½¶³±¸±â
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
+
 			break;
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK5:

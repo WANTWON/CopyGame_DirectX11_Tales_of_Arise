@@ -8,6 +8,8 @@
 #include "Alphen.h"
 #include "Law.h"
 #include "AICheckState.h"
+#include "AI_LAW_SkillAttack_State.h"
+#include "AI_DodgeState.h"
 
 
 using namespace AIPlayer;
@@ -122,7 +124,31 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 					break;
 				case Client::CAIState::STATE_NORMAL_ATTACK5:
 					//if(m_pTarget != nullptr)
-					return new CAICheckState(m_pOwner, m_eStateId); //return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1,m_pTarget);
+					if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+					{
+						return new CAI_DodgeState(m_pOwner, m_pTarget);
+					}
+					else
+					{
+						switch (rand() % 5)
+						{
+
+						case 0:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_R);
+
+						case 1:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
+
+						case 2:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
+
+						case 3:
+							return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+						}
+					}
+					
+					return nullptr;
 					break;
 				}
 
