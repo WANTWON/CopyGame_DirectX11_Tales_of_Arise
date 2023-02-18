@@ -429,18 +429,100 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SionHead.fbx", "../../../Bin/Bin_Data/Anim/Sion/", PivotMatrix))))
 		return E_FAIL;*/
 
-		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Fence"),
-		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Fence_001.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
-		//	return E_FAIL;*/
+		
 
 	
 
 
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FreezeLance"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/FreezeLance.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Crystal_BreakPts_01"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Crystal_BreakPts_01.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Crystal_BreakPts_02"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Crystal_BreakPts_02.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Crystal_BreakPts_03"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Crystal_BreakPts_03.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CrystalPts_rt_01"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/CrystalPts_rt_01.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CrystalPts_rt_02"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/CrystalPts_rt_02.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CrystalPts_rt_03"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/CrystalPts_rt_03.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CrystalPts_rt_04"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/CrystalPts_rt_04.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CrystalPts_rt_05"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/CrystalPts_rt_05.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("HolyLanceGround"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/HolyLanceGround.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("HolyLanceHalfSphere"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/HolyLanceHalfSphere.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("HolyLanceQuardRing"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/HolyLanceQuardRing.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("HolyLanceRing"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/HolyLanceRing.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("HolyLanceTrail"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/HolyLanceTrail.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("HolyLanceTube"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/HolyLanceTube.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Splash"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Splash.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
+	//	return E_FAIL;
+
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Tree1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Tree5.fbx", "../../../Bin/Bin_Data/NonAnim/WinterNature/", PivotMatrix))))
 		return E_FAIL;
 
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Tree2"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Tree2.fbx", "../../../Bin/Bin_Data/NonAnim/WinterNature/", PivotMatrix))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Tree5"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Tree2.fbx", "../../../Bin/Bin_Data/NonAnim/WinterNature/", PivotMatrix))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Birch"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Birch.fbx", "../../../Bin/Bin_Data/NonAnim/WinterNature/", PivotMatrix))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Birch2"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Birch2.fbx", "../../../Bin/Bin_Data/NonAnim/WinterNature/", PivotMatrix))))
+		return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));

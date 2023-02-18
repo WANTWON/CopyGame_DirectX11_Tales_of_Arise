@@ -326,7 +326,8 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.fDeadTime = 3.f;
+						BulletDesc.fDeadTime = 2.f;
+
 						BulletDesc.eBulletType = CRinwellSkills::BANGJEON;
 						BulletDesc.pOwner = m_pOwner;
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 5.f);
@@ -498,7 +499,7 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 					}
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-
+					break;
 				case 5:
 					__super::Exit();
 					m_pOwner->Use_Mana(1.f);
@@ -510,13 +511,7 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 						(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 					}
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-					/*else
-						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-					dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
-					break;*/
-
+					break;
 				default:
 					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 
@@ -584,6 +579,11 @@ void CAI_Rinwell_SkillState::Enter()
 
 		break;
 	case STATE_BANGJEON:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+		/* Make Effect */
+		_vector vOffset = { 0.f,0.f,0.f,0.f };
+		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_HOUDEN;
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
 		break;

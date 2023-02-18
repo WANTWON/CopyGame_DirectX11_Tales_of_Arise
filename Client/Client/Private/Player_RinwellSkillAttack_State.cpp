@@ -281,7 +281,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
-						BulletDesc.fDeadTime = 3.f;
+						BulletDesc.fDeadTime = 2.f;
 						BulletDesc.eBulletType = CRinwellSkills::BANGJEON;
 						BulletDesc.pOwner = m_pOwner;
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 5.f);
@@ -569,11 +569,16 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			break;*/
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK4:
+		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); //얼음떨구기
+																							/* Make Effect */
+			_vector vOffset = { 0.f,0.f,0.f,0.f };
+			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
 
 			break;
-
+		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK5:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); // 비가우수수
 		//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); // 비가우수수

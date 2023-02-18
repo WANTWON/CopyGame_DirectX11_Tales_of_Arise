@@ -57,6 +57,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 	case METEOR:
 		vLocation = m_BulletDesc.vInitPositon;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(_float(rand() % 180)));
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorBall.dat"), mWorldMatrix);
@@ -144,7 +145,17 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		break;
 
 	case BANGJEON:
-
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBall.dat"), mWorldMatrix);
+		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeThunder.dat"), mWorldMatrix);
+		break;
+	case BANGEONDEAD:
+		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeEnd.dat"), mWorldMatrix);
 		break;
 	}
 
@@ -169,6 +180,7 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 		Tick_PhotonFlash(fTimeDelta);
 		break;
 	case METEORDEAD:
+	case BANGEONDEAD:
 	case GALE_FORCE:
 		Tick_GaleForce(fTimeDelta);
 		break;
@@ -318,6 +330,32 @@ void CRinwellSkills::Dead_Effect()
 				}
 			}
 		}
+		break;
+	}
+	case BANGJEON:
+	{
+		if (!m_pBlastEffects.empty())
+		{
+			for (auto& iter : m_pBlast2Effects)
+			{
+				if (iter != nullptr)
+				{
+					iter->Set_Dead(true);
+				}
+			}
+		}
+
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.fVelocity = 1.f;
+		BulletDesc.eBulletType = BANGEONDEAD;
+		BulletDesc.iDamage = 300;
+		BulletDesc.fDeadTime = 1.f;
+		BulletDesc.vInitPositon = Get_TransformState(CTransform::STATE_TRANSLATION);
+		BulletDesc.pOwner = m_BulletDesc.pOwner;
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
 		break;
 	}
 
@@ -513,7 +551,7 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 	DevineLightDesc.vDiffuse.y = OriginLightDesc.vDiffuse.y + LightOffset.y;
 	DevineLightDesc.vDiffuse.z = OriginLightDesc.vDiffuse.z + LightOffset.z;
 	DevineLightDesc2.vDiffuse.x = OriginLightDesc2.vDiffuse.x + LightOffset.x*2.f;
-	DevineLightDesc2.vDiffuse.y = OriginLightDesc2.vDiffuse.y + LightOffset.x*2.f;
+	DevineLightDesc2.vDiffuse.y = OriginLightDesc2.vDiffuse.y + LightOffset.y*2.f;
 	DevineLightDesc2.vDiffuse.z = OriginLightDesc2.vDiffuse.z + LightOffset.z*2.f;
 
 	CGameInstance::Get_Instance()->Set_LightDesc(0,&DevineLightDesc);
@@ -555,7 +593,7 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 			LightOffset.z = 0.f;
 
 		DevineLightDesc.vDiffuse.x = OriginLightDesc.vDiffuse.x + LightOffset.x;
-		DevineLightDesc.vDiffuse.y = OriginLightDesc.vDiffuse.x + LightOffset.x;
+		DevineLightDesc.vDiffuse.y = OriginLightDesc.vDiffuse.y + LightOffset.y;
 		DevineLightDesc.vDiffuse.z = OriginLightDesc.vDiffuse.z + LightOffset.z;
 		DevineLightDesc2.vDiffuse.x = OriginLightDesc2.vDiffuse.x + LightOffset.x*2.f;
 		DevineLightDesc2.vDiffuse.y = OriginLightDesc2.vDiffuse.y + LightOffset.y*2.f;
@@ -708,6 +746,24 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 {
 	if (m_bDeadEffect)
 		m_bDead = true;
+
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+
+		if (iter != nullptr)
+			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+
+	for (auto& iter : m_pBlastEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+
+		if (iter != nullptr)
+			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
 }
 
 CRinwellSkills * CRinwellSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
