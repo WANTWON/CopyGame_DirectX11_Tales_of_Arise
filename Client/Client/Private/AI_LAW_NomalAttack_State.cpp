@@ -1,0 +1,317 @@
+#include "stdafx.h"
+#include "..\Public\AI_LAW_NomalAttack_State.h"
+#include "GameInstance.h"
+#include "Weapon.h"
+#include "Effect.h"
+#include "EffectMesh.h"
+#include "AICheckState.h"
+#include "Alphen.h"
+#include "Law.h"
+
+
+using namespace AIPlayer;
+
+AI_LAW_NomalAttack_State::AI_LAW_NomalAttack_State(CPlayer* pPlayer, STATE_ID eStateType, CBaseObj* pTarget)//, _float fStartHeight, _float fTime)
+{
+	m_eStateId = eStateType;
+	m_pOwner = pPlayer;
+	if (nullptr == pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
+	m_pTarget = pTarget;
+
+	//m_fStartHeight = fStartHeight;
+	//m_fTime = fTime;
+}
+
+CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
+{
+	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+		return nullptr;
+
+	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+	{
+		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+	}
+	else
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
+
+	if (m_pTarget == nullptr)
+		return nullptr;
+
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
+
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	for (auto& pEvent : pEvents)
+	{
+		if (pEvent.isPlay)
+		{
+			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+			{
+				switch (m_eStateId)
+				{
+				case Client::CAIState::STATE_NORMAL_ATTACK1:
+					if (m_bIsFly)
+					{
+						if (nullptr == m_pRightFootCollider)
+							m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					else
+					{
+						if (nullptr == m_pLeftHandCollider)
+							m_pLeftHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					break;
+				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+					if (m_bIsFly)
+					{
+						if (nullptr == m_pLeftFootCollider)
+							m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					else
+					{
+						if (nullptr == m_pRightHandCollider)
+							m_pRightHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					break;
+				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+					if (m_bIsFly)
+					{
+						if (nullptr == m_pRightHandCollider)
+							m_pRightHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					else
+					{
+						if (nullptr == m_pRightFootCollider)
+							m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					break;
+				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+					if (m_bIsFly)
+					{
+						if (nullptr == m_pRightFootCollider)
+							m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					else
+					{
+						if (nullptr == m_pLeftHandCollider)
+							m_pLeftHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					break;
+				case Client::CPlayerState::STATE_NORMAL_ATTACK5:
+					if (m_bIsFly)
+					{
+						if (nullptr == m_pRightHandCollider)
+							m_pRightHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					else
+					{
+						if (nullptr == m_pLeftFootCollider)
+							m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					break;
+				}
+
+				pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+				m_fEventStartTime = pEvent.fStartTime;
+			}
+			}
+				
+			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+			{
+				if (m_iCurrentAnimIndex != CAlphen::ANIM::ANIM_ATTACK_NORMAL_6)
+				{
+					m_bIsStateEvent = true;
+					getchar();
+				}
+			}
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_tchar wcEffectName[MAX_PATH] = TEXT("");
+				switch (m_iCurrentAnimIndex)
+				{
+				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0:
+				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
+					wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
+					break;
+				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
+					wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
+					break;
+				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_6:
+					wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
+					break;
+				}
+
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+				if (!m_bEffectSlashSpawned)
+				{
+					if (!wcscmp(wcEffectName, TEXT("Normal_Attack_2.dat")))
+						m_SlashEffect = CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+					else
+						CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+
+					m_bEffectSlashSpawned = true;
+				}
+			}
+		}
+		else
+		{
+			switch (m_iCurrentAnimIndex)
+			{
+			case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0:
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
+				break;
+			case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
+				break;
+			case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
+				break;
+			case CAlphen::ANIM::ANIM_ATTACK_NORMAL_6:
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
+				break;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	if (m_bIsStateEvent)
+	{
+		switch (m_iCurrentAnimIndex)
+		{
+		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0: //Client::CAIState::STATE_NORMAL_ATTACK1:
+			__super::Exit();
+			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_1;
+			if (nullptr == m_pTarget)
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			}
+			else
+				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+			break;
+		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
+			__super::Exit();
+			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_8;
+			if (nullptr == m_pTarget)
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			}
+			else
+				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+			break;
+		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
+			__super::Exit();
+			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_6;
+			if (nullptr == m_pTarget)
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			}
+			else
+				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+			break;
+		}
+		m_bIsStateEvent = false;
+		m_bEffectSlashSpawned = false;
+	}
+
+	if (m_bIsAnimationFinished && m_iCurrentAnimIndex == CAlphen::ANIM::ANIM_ATTACK_NORMAL_6)
+	{
+		return new CAICheckState(m_pOwner, STATE_ATTACK);
+	}
+
+	return nullptr;
+}
+
+void AI_LAW_NomalAttack_State::Enter()
+{
+	//__super::Enter();
+
+	m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_0;
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+	if (nullptr == m_pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+	else
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	m_pOwner->Set_Manarecover(false);
+}
+
+void AI_LAW_NomalAttack_State::Exit()
+{
+	__super::Exit();
+
+	Safe_Release(m_pLeftHandCollider);
+	Safe_Release(m_pRightHandCollider);
+	Safe_Release(m_pLeftFootCollider);
+	Safe_Release(m_pRightFootCollider);
+}
+
+CCollider * AI_LAW_NomalAttack_State::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)
+{
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+	CCollider::COLLIDERDESC		ColliderDesc;
+
+	ColliderDesc.vScale = vScale;
+	ColliderDesc.vRotation = vRotation;
+	ColliderDesc.vPosition = vPosition;
+
+	switch (eType)
+	{
+	case Engine::CCollider::TYPE_AABB:
+		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
+		break;
+	case Engine::CCollider::TYPE_OBB:
+		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+		break;
+	case Engine::CCollider::TYPE_SPHERE:
+		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+		break;
+	}
+
+	return nullptr;
+}

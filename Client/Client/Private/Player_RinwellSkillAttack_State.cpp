@@ -440,7 +440,11 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 
 CPlayerState * CPlayer_RinwellSkillAttack_State::LateTick(_float fTimeDelta)
 {
-
+	if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == CRinwell::ANIM::BTL_MAGIC_START && m_bIsAnimationFinished)
+	{
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_EMIT);
+		return nullptr;
+	}
 
 	if (m_bIsStateEvent)
 		return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1);
@@ -468,10 +472,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::LateTick(_float fTimeDelta)
 	}
 
 
-	if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == CRinwell::ANIM::BTL_MAGIC_START && m_bIsAnimationFinished)
-	{
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_EMIT);
-	}
+	
 
 	if (m_bIsAnimationFinished)
 	{
@@ -552,6 +553,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); // 메테오
+			break;
 			/*dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_METEOR);
 			break;*/
 
@@ -565,7 +567,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK5:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); // 비가우수수
 		//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); // 비가우수수
-
+			break;
 		//	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
 		//	CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_R.wav"), SOUND_EFFECT, 0.5f);
 		//	CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_R.wav"), SOUND_EFFECT, 0.5f);

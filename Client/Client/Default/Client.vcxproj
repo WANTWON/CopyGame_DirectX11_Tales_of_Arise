@@ -186,6 +186,8 @@
     <ClInclude Include="..\Public\AI_DodgeState.h" />
     <ClInclude Include="..\Public\AI_HitState.h" />
     <ClInclude Include="..\Public\AI_BoostAttackState.h" />
+    <ClInclude Include="..\Public\AI_LAW_NomalAttack_State.h" />
+    <ClInclude Include="..\Public\AI_LAW_SkillAttack_State.h" />
     <ClInclude Include="..\Public\AI_Rinwell_SkillState.h" />
     <ClInclude Include="..\Public\AI_Sion_SkillState.h" />
     <ClInclude Include="..\Public\AlphenAttackState.h" />
@@ -413,6 +415,8 @@
     <ClCompile Include="..\Private\AI_DodgeState.cpp" />
     <ClCompile Include="..\Private\AI_HitState.cpp" />
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp" />
+    <ClCompile Include="..\Private\AI_LAW_NomalAttack_State.cpp" />
+    <ClCompile Include="..\Private\AI_LAW_SkillAttack_State.cpp" />
     <ClCompile Include="..\Private\AI_Rinwell_SkillState.cpp" />
     <ClCompile Include="..\Private\AI_Sion_SkillState.cpp" />
     <ClCompile Include="..\Private\AlphenAttackState.cpp" />
