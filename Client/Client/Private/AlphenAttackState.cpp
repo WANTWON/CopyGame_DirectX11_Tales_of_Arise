@@ -56,25 +56,39 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 				return EventInput();
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 			{
-				_tchar wcEffectName[MAX_PATH] = TEXT("");
-				switch (m_eStateId)
-				{
-					case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-					case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
-						break;
-					case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
-						break;
-					case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
-						break;
-				}
-
 				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				_tchar wcEffectName[MAX_PATH] = TEXT("");
+			
 				if (m_bIsFly)
 				{
-					if (!m_bEffectSlashSpawned)
+					switch (m_eStateId)
+					{
+						case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_1.dat"));
+							break;
+						case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_2.dat"));
+							break;
+						case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+						{
+							if (!strcmp(pEvent.szName, "Jump_Normal_Attack_3"))
+								wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_3.dat"));
+							if (!strcmp(pEvent.szName, "Jump_Normal_Attack_4"))
+							{
+								if (!m_bEffectKickSpawned)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Jump_Normal_Attack_4.dat"), mWorldMatrix);
+									m_bEffectKickSpawned = true;
+								}
+							}
+							break;
+						}
+						case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_5.dat"));
+							break;
+					}
+
+					if (!m_bEffectSlashSpawned && !m_bEffectKickSpawned)
 					{
 						CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
 
@@ -83,6 +97,20 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 				}
 				else
 				{
+					switch (m_eStateId)
+					{
+						case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+						case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
+							break;
+						case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
+							break;
+						case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
+							break;
+					}
+
 					if (!m_bEffectSlashSpawned)
 					{
 						if (!wcscmp(wcEffectName, TEXT("Normal_Attack_2.dat")))
@@ -219,6 +247,7 @@ void CAlphenAttackState::Enter()
 	__super::Enter();
 
 	m_bEffectSlashSpawned = false;
+	m_bEffectKickSpawned = false;
 
 	if (m_bIsFly)
 	{

@@ -42,6 +42,7 @@ public:
 	_bool Between_Keyframe(char * pChannelName, _uint iKeyframeLower, _uint iKeyframeUpper);
 	void Set_TimeReset();
 	void Reset(void);
+	void Reset_Anim(_uint iAnimIndex);
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eModelType, const char* pModelFilePath, _fmatrix PivotMatrix);
@@ -50,7 +51,7 @@ public:
 
 public:
 	HRESULT SetUp_Material(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint TextureNum = 0);
-	_bool Play_Animation(_float fTimeDelta, _bool isLoop = true, const char* pBoneName = nullptr);
+	_bool Play_Animation(_float fTimeDelta, _bool isLoop = true, const char* pBoneName = nullptr, _float fInterpolatonTime = 0.1f);
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
 	HRESULT RenderShadow(class CShader* pShader, _uint iMeshIndex, _uint iLevelIndex,  _uint iPassIndex = 0);
 	HRESULT Set_AnimationReset();

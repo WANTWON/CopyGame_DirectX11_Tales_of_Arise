@@ -33,7 +33,10 @@ CPlayerState * CLawAirFSkillState::HandleInput(void)
 
 CPlayerState * CLawAirFSkillState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	if (STATETYPE_MAIN == m_eStateType)
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.f);
+	else
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.f);
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -48,7 +51,7 @@ CPlayerState * CLawAirFSkillState::Tick(_float fTimeDelta)
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	if (STATETYPE_END == m_eStateType)
+	if (STATETYPE_MAIN != m_eStateType)
 	{
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -58,6 +61,10 @@ CPlayerState * CLawAirFSkillState::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+				{
+
+				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
 					if (nullptr == m_pLandCollider)
@@ -131,8 +138,6 @@ CPlayerState * CLawAirFSkillState::LateTick(_float fTimeDelta)
 		switch (m_eStateType)
 		{
 		case Client::STATETYPE_START:
-			m_pOwner->Get_Model()->Reset();
-
 			if (!m_pOwner->Check_Navigation_Jump())
 			{
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_LOOP);
@@ -217,6 +222,10 @@ void CLawAirFSkillState::Exit(void)
 
 	if (m_bIsFly)
 		m_pOwner->Off_IsFly();
+
+	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_START);
+	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_LOOP);
+	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_END);
 }
 
 CCollider * CLawAirFSkillState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)

@@ -36,7 +36,10 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 	if ((STATETYPE_END == m_eStateType) && (nullptr != m_pTarget))
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	if (STATETYPE_MAIN == m_eStateType)
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 3.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	else
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -237,8 +240,6 @@ CPlayerState * CLawAirRSkillState::LateTick(_float fTimeDelta)
 
 	if (m_bIsLoop)
 	{
-		m_pOwner->Get_Model()->Reset();
-
 		if (m_pOwner->Check_Navigation_Jump())
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);
@@ -255,8 +256,6 @@ CPlayerState * CLawAirRSkillState::LateTick(_float fTimeDelta)
 
 	if ((STATETYPE_MAIN == m_eStateType) && m_pOwner->Check_Navigation_Jump())
 	{
-		m_pOwner->Get_Model()->Reset();
-
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);
 		m_eStateType = STATETYPE_END;
 	}
@@ -334,6 +333,10 @@ void CLawAirRSkillState::Enter(void)
 void CLawAirRSkillState::Exit(void)
 {
 	__super::Exit();
+
+	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
+	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
+	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);
 }
 
 CCollider * CLawAirRSkillState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)

@@ -373,6 +373,18 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\01.Sion">
       <UniqueIdentifier>{07ceaa0b-61ee-4ef4-8bd0-98feee9ed4d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen">
+      <UniqueIdentifier>{cf66058e-7edc-421c-a23f-37d9d83207ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\Sion">
+      <UniqueIdentifier>{ed952f63-aea9-4242-a286-7f8c2b4836f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\Rinwell">
+      <UniqueIdentifier>{e5fd7631-3fb6-44c8-8502-0883ad20034c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\Law">
+      <UniqueIdentifier>{a69218a6-7d99-4ef7-bec8-ec2414b5a8ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -894,12 +906,6 @@
     <ClInclude Include="..\Public\AI_ChaseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AI_Alphen_NormalAttackState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AI_Alphen_SkillAttackState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\AI_BoostAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
@@ -947,9 +953,6 @@
     </ClInclude>
     <ClInclude Include="..\public\AlphenSkills.h">
       <Filter>02.GameObjects\07.Bullet\AlphenSkills</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AI_Sion_SkillState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_MENU_Quest.h">
       <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
@@ -1047,8 +1050,29 @@
     <ClInclude Include="..\Public\LawAirFSkillState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_RinwellNormalAttack_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Rinwell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_RinwellSkillAttack_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Rinwell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_Alphen_NormalAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_Alphen_SkillAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_Sion_SkillState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Sion</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AI_Rinwell_SkillState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Rinwell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_LAW_NomalAttack_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_LAW_SkillAttack_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1532,12 +1556,6 @@
     <ClCompile Include="..\Private\AI_ChaseState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AI_Alphen_NormalAttackState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
@@ -1594,9 +1612,6 @@
     </ClCompile>
     <ClCompile Include="..\private\AlphenSkills.cpp">
       <Filter>02.GameObjects\07.Bullet\AlphenSkills</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\AI_Sion_SkillState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_MENU_Quest.cpp">
       <Filter>02.GameObjects\04.UI\22.UI_BattleResult</Filter>
@@ -1691,8 +1706,29 @@
     <ClCompile Include="..\Private\LawAirFSkillState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Player_RinwellNormalAttack_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Rinwell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_RinwellSkillAttack_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Rinwell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Alphen_NormalAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Sion_SkillState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Sion</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\AI_Rinwell_SkillState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Rinwell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_LAW_NomalAttack_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_LAW_SkillAttack_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

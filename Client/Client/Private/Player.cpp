@@ -75,6 +75,9 @@ int CPlayer::Tick(_float fTimeDelta)
 	if(m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
 		return OBJ_NOEVENT;
 
+	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
+		return OBJ_NOEVENT;
+
 	if (m_pCameraManager->Get_CamState()== CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
@@ -88,7 +91,7 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 
 	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
-	{
+	{	
 		if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
 		{
 			_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
@@ -98,11 +101,21 @@ int CPlayer::Tick(_float fTimeDelta)
 					Play_AISkill(ALPHEN);
 				else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
 					Play_AISkill(SION);
-
+				else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_pPlayerManager->Get_EnumPlayer(2)->Get_BoostGuage() >= 100.f)
+					Play_AISkill(RINWELL);
+				else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage() >= 100.f)
+					Play_AISkill(LAW);
 			}
 			else
 			{
 				if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
+				{
+					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+					CAIState* pAIState = new AIPlayer::CSmashAttack_State(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+					m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+				}
+				else if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
 				{
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
@@ -177,6 +190,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		__super::Late_Tick(fTimeDelta);
 #endif //_DEBUG
 	}
+
+	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
+		return;
 
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
@@ -384,10 +400,16 @@ void CPlayer::Play_AISkill(PLAYERID ePlayer)
 		break;
 	}
 	case Client::CPlayer::RINWELL:
+	{
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+	}
+		
+		
 		break;
 	case Client::CPlayer::LAW:
-		break;
-	default:
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 		break;
 	}
 

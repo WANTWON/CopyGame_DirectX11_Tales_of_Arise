@@ -19,6 +19,17 @@ public:
 		STATE_THUNDERFIELD,
 		STATE_METEOR,
 		STATE_GALEFORCE,
+		STATE_DIVINE_SABER,
+		STATE_HOLYRANCE,
+		STATE_BANGJEON,
+		STATE_NORMAL_ATTACK1,
+		STATE_NORMAL_ATTACK2,
+		STATE_NORMAL_ATTACK3,
+		STATE_NORMAL_ATTACK4,
+		STATE_NORMAL_ATTACK5,
+		STATE_SKILL_ATTACK_E,
+		STATE_SKILL_ATTACK_R,
+		STATE_SKILL_ATTACK_F,
 		STATE_END
 		
 	};
@@ -49,18 +60,19 @@ public:
 
 	_float Get_Target_Distance()
 	{
-		if (nullptr == m_pTarget)
+		if (!m_pTarget)
 		{
-			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			CBaseObj* pObj = CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+			m_pTarget = static_cast<CMonster*>(pObj);
 		}
 
-		if (nullptr == m_pTarget)
+		if (!m_pTarget)
 			return 5.f;
-		_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
-		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+		_vector vMonsterPosition = m_pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+		_vector vPlayerPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+		_float fDistance = XMVectorGetX(XMVector3Length(vMonsterPosition - vPlayerPosition));
 		return fDistance;
 	}
 

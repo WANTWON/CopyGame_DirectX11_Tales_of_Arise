@@ -123,6 +123,7 @@ private:
 	_vector			m_vShakingStartPos = { 0.f, 0.f, 0.f, 0.f };
 	_int			m_iShakingCount = 0;
 	
+	_bool			m_bBlurResetted = false;
 
 private:
 	_float		m_fPlayTime = 0.f;

@@ -305,18 +305,23 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
 	{
 		m_bLerp = true;
-		if (XMouseMove < 0)
+
+		if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 		{
-			m_fAngle += 4.f;
-			if (m_fAngle >= 360.f)
-				m_fAngle = 0.f;
+			if (XMouseMove < 0)
+			{
+				m_fAngle += 4.f;
+				if (m_fAngle >= 360.f)
+					m_fAngle = 0.f;
+			}
+			else if (XMouseMove > 0)
+			{
+				m_fAngle -= 4.f;
+				if (m_fAngle <= 0.f)
+					m_fAngle = 360.f;
+			}
 		}
-		else if (XMouseMove > 0)
-		{
-			m_fAngle -= 4.f;
-			if (m_fAngle <= 0.f)
-				m_fAngle = 360.f;
-		}
+		
 
 	}
 	// 항상 플레이어 위치 바라보게 하기
@@ -332,15 +337,21 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
 	{
 		m_bLerp = true;
-		if (YMouseMove > 0)
+
+
+		if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 		{
-			m_fCameraOffsetY += 0.3f;
-			m_fLookOffsetY -= 0.1f;
-		}
-		else if (YMouseMove < 0)
-		{
-			m_fCameraOffsetY -= 0.3f;
-			m_fLookOffsetY += 0.1f;
+
+			if (YMouseMove > 0)
+			{
+				m_fCameraOffsetY += 0.3f;
+				m_fLookOffsetY -= 0.1f;
+			}
+			else if (YMouseMove < 0)
+			{
+				m_fCameraOffsetY -= 0.3f;
+				m_fLookOffsetY += 0.1f;
+			}
 		}
 
 		if (m_fCameraOffsetY >= 8.f)
@@ -756,14 +767,23 @@ void CCamera_Dynamic::ZoomSetting(_float fDistance, _float fSpeed)
 	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (m_pTarget)
 	{
+		_float fFocusPower = 3.f;
+
+		_float fInterpFactor = m_fZoomOffset / -3.f;
+		_int iFocusDetailLerp = 1 + fInterpFactor * (7 - 1);
+
 		if (m_fZoomOffset == 0.f)
-			m_pTarget->Get_Renderer()->Set_ZoomBlur(false);
+		{
+			if (!m_bBlurResetted)
+			{
+				m_pTarget->Get_Renderer()->Set_ZoomBlur(false);
+				m_bBlurResetted = true;
+			}
+		}
 		else
 		{
-			_float fInterpFactor = m_fZoomOffset / -3.f;
-			_int iLerp = 1 + fInterpFactor * (7 - 1);
-
-			m_pTarget->Get_Renderer()->Set_ZoomBlur(true, iLerp);
+			m_pTarget->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);	
+			m_bBlurResetted = false;
 		}
 	}
 }

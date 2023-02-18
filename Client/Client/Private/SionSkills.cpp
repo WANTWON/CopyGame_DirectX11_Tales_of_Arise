@@ -40,7 +40,7 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		vLocation = m_BulletDesc.vInitPositon;
 		//mWorldMatrix.r[]
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
-		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(rand() % 180));
+		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians((_float)(rand() % 180)));
 		break;
 	case BOOST:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);

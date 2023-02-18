@@ -38,6 +38,8 @@ private:
 	class CPlayerCreater*	m_pMonsterLoader1 = nullptr;
 	class CPlayerCreater*	m_pPlayer2Loader = nullptr;
 
+	_float m_fBlurTimer = 0.f;
+
 public:
 	static CLevel_SnowField* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

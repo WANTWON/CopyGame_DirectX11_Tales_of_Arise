@@ -125,7 +125,8 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	
+	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+		return OBJ_NOEVENT;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
@@ -154,6 +155,9 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
+
+	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+		return;
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);

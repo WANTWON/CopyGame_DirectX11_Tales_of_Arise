@@ -96,6 +96,18 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 					}
 					m_fEventStartTime = pEvent.fStartTime;
 					break;
+				case Client::CPlayerState::STATE_SKILL_BOOST:
+					if (m_bIsFly)
+					{
+						if (nullptr == m_pLeftFootCollider)
+							m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					else
+					{
+						if (nullptr == m_pRightHandCollider)
+							m_pRightHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+					break;
 				}
 
 				pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
@@ -162,6 +174,24 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 							}
 						}
 						m_fEventStartTime = -1.f;
+					}
+					break;
+				case Client::CPlayerState::STATE_SKILL_BOOST:
+					if (m_bIsFly)
+					{
+						if (nullptr != m_pLeftFootCollider)
+						{
+							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftFootCollider);
+							m_pLeftFootCollider = nullptr;
+						}
+					}
+					else
+					{
+						if (nullptr != m_pRightHandCollider)
+						{
+							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
+							m_pRightHandCollider = nullptr;
+						}
 					}
 					break;
 				}
@@ -373,9 +403,12 @@ void CLawSkillState::Enter(void)
 {
 	__super::Enter();
 
-	m_pOwner->Use_Mana(1.f);
-	m_pOwner->Set_Manarecover(false);
-
+	if (CPlayerState::STATE_SKILL_BOOST != m_eStateId)
+	{
+		m_pOwner->Use_Mana(1.f);
+		m_pOwner->Set_Manarecover(false);
+	}
+	
 	Reset_Skill();
 
 	if (m_bIsFly)
@@ -385,6 +418,9 @@ void CLawSkillState::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_BURN_KNUCKLE);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
+			break;
+		case Client::CPlayerState::STATE_SKILL_BOOST:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_STRIKE_AIR);
 			break;
 		}
 	}
@@ -403,6 +439,9 @@ void CLawSkillState::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_TYOURENGADAN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_F.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
+			break;
+		case Client::CPlayerState::STATE_SKILL_BOOST:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_STRIKE);
 			break;
 		}
 	}

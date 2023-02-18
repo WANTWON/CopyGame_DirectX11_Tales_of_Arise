@@ -60,7 +60,7 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 					{
 						if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 							m_bIsStateEvent = true;
-						else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+						if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 						{
 							if (!strcmp(pEvent.szName, "Alphen_Strike_1"))
 							{
@@ -129,6 +129,43 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 								m_fEventStart = pEvent.fStartTime;
 							}
 						}
+						break;
+					}
+
+					case CPlayer::RINWELL:
+					{
+						if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+							m_bIsStateEvent = true;
+						else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+						{
+							if ((m_fEventStart != pEvent.fStartTime))
+							{
+								for (_int i = 0; i < CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1; ++i)
+								{
+									
+									CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Plus_HP(CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp*0.1f);
+									if (CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp < CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fCurrentHp)
+										CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Set_HP(CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp);
+									
+								}
+								
+								//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Plus_HP()
+								/*_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+								CBullet::BULLETDESC BulletDesc;
+								BulletDesc.eCollisionGroup = PLAYER;
+								BulletDesc.fDeadTime = 5.f;
+								BulletDesc.eBulletType = CSionSkills::BOOST;
+								BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook*2.f;
+								BulletDesc.pOwner = m_pOwner;
+								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+
+								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+									return nullptr;*/
+
+								m_fEventStart = pEvent.fStartTime;
+							}
+						}
+						break;
 					}
 				}
 			}
@@ -177,6 +214,7 @@ void CAI_BoostAttack::Enter()
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Booster.wav"), SOUND_EFFECT, 0.5f);
 		break;
 	case CPlayer::SION:
+	{
 		CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Set_BoostGuage(0);
 		m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
 
@@ -187,6 +225,21 @@ void CAI_BoostAttack::Enter()
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_Boost.dat"), mWorldMatrix);
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Booster.wav"), SOUND_EFFECT, 0.5f);
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Booster.wav"), SOUND_EFFECT, 0.5f);
+		break;
+	}
+	case CPlayer::RINWELL:
+		CPlayerManager::Get_Instance()->Get_EnumPlayer(2)->Set_BoostGuage(0);
+		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_STRIKE;
+	   // mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+		/*_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)) * 2;
+		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_Boost.dat"), mWorldMatrix);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Booster.wav"), SOUND_EFFECT, 0.5f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Booster.wav"), SOUND_EFFECT, 0.5f);*/
+		break;
 	}
 
 

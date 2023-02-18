@@ -125,6 +125,10 @@ int CHawk::Tick(_float fTimeDelta)
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return OBJ_NOEVENT;
+
+	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+		return OBJ_NOEVENT;
+
 	if(!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 	
@@ -161,6 +165,9 @@ void CHawk::Late_Tick(_float fTimeDelta)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
+
+	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+		return;
 
 	if (m_pRendererCom && m_bGlowUp)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);

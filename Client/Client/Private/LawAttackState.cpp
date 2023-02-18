@@ -144,6 +144,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 							m_pRightFootCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					else
@@ -152,6 +156,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftHandCollider);
 							m_pLeftHandCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					break;
@@ -162,6 +170,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftFootCollider);
 							m_pLeftFootCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					else
@@ -170,6 +182,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
 							m_pRightHandCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					break;
@@ -180,6 +196,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
 							m_pRightHandCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					else
@@ -188,6 +208,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 							m_pRightFootCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					break;
@@ -198,6 +222,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 							m_pRightFootCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					else
@@ -206,6 +234,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftHandCollider);
 							m_pLeftHandCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					break;
@@ -216,6 +248,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
 							m_pRightHandCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					else
@@ -224,14 +260,14 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftFootCollider);
 							m_pLeftFootCollider = nullptr;
+
+							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+							m_fEventStartTime = -1.f;
 						}
 					}
 					break;
 				}
-
-				pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
-				m_fEventStartTime = -1.f;
 			}
 		}
 	}
@@ -404,6 +440,12 @@ CPlayerState * CLawAttackState::EventInput(void)
 			else if (GetKeyState('F') < 0)
 				return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
 		}
+
+		if (100.f <= m_pOwner->Get_Info().fCurrentBoostGuage)
+		{
+			if (GetKeyState('4') < 0)
+				return new CLawSkillState(m_pOwner, STATE_SKILL_BOOST, m_fStartHeight, m_fTime);
+		}
 	}
 	else
 	{
@@ -415,6 +457,12 @@ CPlayerState * CLawAttackState::EventInput(void)
 				return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 			else if (GetKeyState('F') < 0)
 				return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
+		}
+
+		if (100.f <= m_pOwner->Get_Info().fCurrentBoostGuage)
+		{
+			if (GetKeyState('4') < 0)
+				return new CLawSkillState(m_pOwner, STATE_SKILL_BOOST);
 		}
 
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();

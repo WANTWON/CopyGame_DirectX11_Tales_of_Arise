@@ -72,12 +72,7 @@ HRESULT CLevel_SnowField::Initialize()
 
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
-	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco")) == false)
-	{
-		if (FAILED(Ready_Layer_DecoObject(TEXT("Layer_Deco"))))
-			return E_FAIL;
-	}
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
 
 
 	if (m_pPlayerLoader != nullptr)
@@ -163,24 +158,51 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
-		CPlayerManager::Get_Instance()->Save_LastPosition();
-		m_pCollision_Manager->Clear_AllCollisionGroup();
+		if (m_fBlurTimer >= 1.5f)
+		{
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			if (pPlayer)
+				pPlayer->Get_Renderer()->Set_ZoomBlur(false);
 
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Camera"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+			CPlayerManager::Get_Instance()->Save_LastPosition();
+			m_pCollision_Manager->Clear_AllCollisionGroup();
 
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Camera"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
 
-		LEVEL eNextLevel = LEVEL_BATTLE;
-		pGameInstance->Set_DestinationLevel(eNextLevel);
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
-			return;
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-		RELEASE_INSTANCE(CGameInstance);
+			LEVEL eNextLevel = LEVEL_BATTLE;
+			pGameInstance->Set_DestinationLevel(eNextLevel);
+			if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
+				return;
+
+			RELEASE_INSTANCE(CGameInstance);
+
+			m_fBlurTimer = 0.f;
+		}
+		else
+		{
+			if (m_fBlurTimer < 1.5f / 3)
+			{
+				CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+				if (pPlayer)
+				{
+					_float fFocusPower = 15.f;
+
+					_float fInterpFactor = m_fBlurTimer / (1.5f / 3);
+					_int iFocusDetailLerp = 1 + fInterpFactor * (10 - 1);
+
+					pPlayer->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+				}
+			}
+				
+			m_fBlurTimer += fTimeDelta;
+		}
 	}
 }
 
