@@ -229,7 +229,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 
 						for (int i = 0; i < 14; ++i)
 						{
-							BulletDesc.fVelocity = 2.f + ((_float)(rand() % 20 + 1))*0.1f;
+							BulletDesc.fVelocity = 4.f + ((_float)(rand() % 20 + 1))*0.1f;
 							_vector pos = { (_float)(rand() % 40 + 40) , 12.f + i*2.5f , (_float)(rand() % 40 + 40), 1.f };
 							BulletDesc.vInitPositon = pos;
 
@@ -572,7 +572,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); //¾óÀ½¶³±¸±â
 																							/* Make Effect */
-			_vector vOffset = { 0.f,0.f,0.f,0.f };
+			_vector vOffset = { 0.f,3.f,0.f,0.f };
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
