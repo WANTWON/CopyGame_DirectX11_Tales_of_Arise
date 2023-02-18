@@ -237,7 +237,7 @@ void CRinwellSkills::Collision_Check()
 		__super::Collision_Check();
 		break;
 	case THUNDER_FIELD:
-		BANGJEON:
+	case BANGJEON:
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
