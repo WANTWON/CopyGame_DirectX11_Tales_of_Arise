@@ -23,6 +23,7 @@ private:
 	_float m_fTime = 0.f;
 
 	_bool m_bEffectSlashSpawned = false;
+	_bool m_bEffectKickSpawned = false;
 	vector<CEffect*> m_SlashEffect;
 };
 END
