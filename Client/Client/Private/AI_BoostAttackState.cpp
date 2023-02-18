@@ -142,10 +142,13 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 							{
 								for (_int i = 0; i < CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1; ++i)
 								{
+									if (CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fCurrentHp > 0)
+									{
+										CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Plus_HP(CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp*0.1f);
+										if (CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp < CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fCurrentHp)
+											CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Set_HP(CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp);
+									}
 									
-									CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Plus_HP(CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp*0.1f);
-									if (CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp < CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fCurrentHp)
-										CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Set_HP(CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp);
 									
 								}
 								

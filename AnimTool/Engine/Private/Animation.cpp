@@ -59,14 +59,18 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 
 	if (INVALID_HANDLE_VALUE != hAddFile && (pdwAddByte != 0))
 	{
-		_bool isReadDuration = ReadFile(hAddFile, &m_fDuration, sizeof(_float), pdwAddByte, nullptr);
+		_float fDuration;
+		_bool isReadDuration = ReadFile(hAddFile, &fDuration, sizeof(_float), pdwAddByte, nullptr);
 
 		if (isReadDuration && (0 == (*pdwAddByte)))
 			return S_OK;
 
+		_float fDurationRation = fDuration / m_fDuration;
+
 		for (_uint i = 0; i < m_iNumChannels; ++i)
 		{
-			vector<KEYFRAME>KeyFrames = m_Channels[i]->Get_KeyFrames();
+			m_Channels[i]->Set_KeyFrames(fDurationRation);
+			/*vector<KEYFRAME>KeyFrames = m_Channels[i]->Get_KeyFrames();
 
 			for (_uint j = 0; j < KeyFrames.size(); ++j)
 			{
@@ -75,8 +79,10 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 					return S_OK;
 
 				m_Channels[i]->Set_KeyFrames(j, KeyFrame); 
-			}
+			}*/
 		}
+
+		m_fDuration = fDuration;
 
 		_int TickPerSecondsSize, ChangeTimesSize, EventsSize;
 
