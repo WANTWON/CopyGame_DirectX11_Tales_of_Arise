@@ -12,6 +12,7 @@
 #include "Rinwell.h"
 #include "RinwellSkills.h"
 #include "AI_Sion_SkillState.h"
+#include "AI_Rinwell_SkillState.h"
 
 using namespace AIPlayer;
 
@@ -347,8 +348,59 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 		
 		++m_iCurrentAnimIndex;
 		
-		if (m_iCurrentAnimIndex == CRinwell::ANIM::BTL_ATTACK_NORMAL_3 && m_pOwner->Get_PlayerID() == CPlayer::RINWELL)
-			return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
+		if (m_pOwner->Get_PlayerID() == CPlayer::RINWELL)
+		{
+			if (m_iCurrentAnimIndex == CRinwell::ANIM::BTL_ATTACK_NORMAL_3)
+			{
+				if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+				{
+					switch (rand() % 2)
+					{
+					case 0:
+						return new CAI_DodgeState(m_pOwner, m_pTarget, true);
+					case 1:
+						return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+
+					}
+
+
+				}
+
+
+
+
+				switch (rand() % 7)
+				{
+
+				case 0:
+					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+
+				case 1:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_GALEFORCE, m_pTarget);
+
+				case 2:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_THUNDERFIELD, m_pTarget);
+
+				case 3:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_METEOR, m_pTarget);
+
+				case 4:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_DIVINE_SABER, m_pTarget);
+
+				case 5:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
+
+				case 6:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_BANGJEON, m_pTarget);
+
+					/*case 5:
+					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);*/
+
+				}
+			}
+				return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
+		}
+		
 
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 		m_bIsStateEvent = false;

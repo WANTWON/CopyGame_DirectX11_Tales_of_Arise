@@ -213,6 +213,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 		case CPlayer::RINWELL:
 			//return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
 			//return new CAI_DodgeState(m_pOwner, m_pTarget);
+			//return new CAI_Rinwell_SkillState(m_pOwner, STATE_BANGJEON, m_pTarget);
 			if (Get_Target_Distance() >= 20.f)
 			{
 				if (nullptr == m_pTarget)
@@ -420,7 +421,7 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 
 
 
-	switch (rand() % 6)
+	switch (rand() % 7)
 	{
 
 	case 0:
@@ -440,6 +441,9 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 
 	case 5:
 		return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
+
+	case 6:
+		return new CAI_Rinwell_SkillState(m_pOwner, STATE_BANGJEON, m_pTarget);
 
 	/*case 5:
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);*/

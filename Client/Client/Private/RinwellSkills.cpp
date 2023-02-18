@@ -87,7 +87,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 	{
 		vLocation = m_BulletDesc.vTargetPosition;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
-		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(rand() % 180));
+		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(_float(rand() % 180)));
 
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
@@ -142,6 +142,10 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorDeadFlash.dat"), mWorldMatrix);
 		break;
+
+	case BANGJEON:
+
+		break;
 	}
 
 	
@@ -187,6 +191,10 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 
 	case HOLY_RANCE_BULLET:
 		Tick_HolyRanceBullet(fTimeDelta);
+		break;
+
+	case BANGJEON:
+		Tick_BangJeon(fTimeDelta);
 		break;
 
 	}
@@ -360,11 +368,13 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		break;
 
 	case HOlY_RANCE:
 		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		break;
 
 	case HOLY_RANCE_BULLET:
 		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
@@ -372,6 +382,11 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 		
 		break;
+
+	case BANGJEON:
+		ColliderDesc.vScale = _float3(7.f, 7.f, 7.f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 	}
 
@@ -686,6 +701,12 @@ void CRinwellSkills::Tick_HolyRanceBullet(_float fTimeDelta)
 
 	m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
 	m_pTransformCom->Go_PosDir(fTimeDelta, vDir);
+}
+
+void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
+{
+
+
 }
 
 CRinwellSkills * CRinwellSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
