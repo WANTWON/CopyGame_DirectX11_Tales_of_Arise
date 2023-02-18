@@ -31,7 +31,7 @@ private:
 	_bool m_bHienzinSecondEffect = false;
 	_bool m_bRyuuseizinFirstEffect = false;
 	_bool m_bRyuuseizinSecondEffect = false;
-
+	_bool m_bSkillSoundStart = false;
 	/* R */
 	_bool m_bAkizameFirstEffect = false;
 	_bool m_bAkizameSecondEffect = false;
@@ -45,7 +45,7 @@ private:
 	_bool m_bHousyutigakuzinThirdEffect = false;
 	_bool m_bEngetuFirstEffect = false;
 	_bool m_bEngetuSecondEffect = false;
-
+	
 	vector<CEffect*> m_SenkusyourepaParticles;
 };
 END
