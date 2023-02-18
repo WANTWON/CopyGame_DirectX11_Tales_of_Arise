@@ -159,15 +159,15 @@ void CImgui_Manager::ShowGui()
 				_float fDuration = Animation->Get_Duration();
 				WriteFile(hFile, &fDuration, sizeof(_float), &dwByte, nullptr);
 
-				_int iNumChannels = Animation->Get_Channels().size();
-				//WriteFile(hFile, &iNumChannels, sizeof(_int), &dwByte, nullptr);
+				//_int iNumChannels = Animation->Get_Channels().size();
+				////WriteFile(hFile, &iNumChannels, sizeof(_int), &dwByte, nullptr);
 
-				for (_int i = 0; i < iNumChannels; ++i)
-				{
-					_int iNumKeyFrames = Animation->Get_Channels()[i]->Get_KeyFrames().size();
-					for (_int j = 0; j < iNumKeyFrames; ++j)
-						WriteFile(hFile, &Animation->Get_Channels()[i]->Get_KeyFrames()[j], sizeof(KEYFRAME), &dwByte, nullptr);
-				}
+				//for (_int i = 0; i < iNumChannels; ++i)
+				//{
+				//	_int iNumKeyFrames = Animation->Get_Channels()[i]->Get_KeyFrames().size();
+				//	for (_int j = 0; j < iNumKeyFrames; ++j)
+				//		WriteFile(hFile, &Animation->Get_Channels()[i]->Get_KeyFrames()[j], sizeof(KEYFRAME), &dwByte, nullptr);
+				//}
 
 				WriteFile(hFile, &TickPerSecondsSize, sizeof(_int), &dwByte, nullptr);
 				for (_int i = 0; i < TickPerSecondsSize; ++i)
