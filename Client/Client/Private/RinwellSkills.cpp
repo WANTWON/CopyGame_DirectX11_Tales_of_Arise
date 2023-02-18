@@ -237,7 +237,6 @@ void CRinwellSkills::Collision_Check()
 		__super::Collision_Check();
 		break;
 	case THUNDER_FIELD:
-	case BANGJEON:
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
@@ -250,6 +249,7 @@ void CRinwellSkills::Collision_Check()
 		}
 		break;
 	case GALE_FORCE:
+	case BANGJEON:
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
@@ -706,7 +706,8 @@ void CRinwellSkills::Tick_HolyRanceBullet(_float fTimeDelta)
 
 void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 {
-	m_fTime += fTimeDelta;
+	if (m_bDeadEffect)
+		m_bDead = true;
 }
 
 CRinwellSkills * CRinwellSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
