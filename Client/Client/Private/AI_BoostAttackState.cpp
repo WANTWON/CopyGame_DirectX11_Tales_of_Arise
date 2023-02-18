@@ -231,18 +231,19 @@ void CAI_BoostAttack::Enter()
 		break;
 	}
 	case CPlayer::RINWELL:
+	{
 		CPlayerManager::Get_Instance()->Get_EnumPlayer(2)->Set_BoostGuage(0);
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_STRIKE;
-	   // mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-
-		/*_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+		_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
 		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)) * 2;
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_Boost.dat"), mWorldMatrix);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Booster.wav"), SOUND_EFFECT, 0.5f);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Booster.wav"), SOUND_EFFECT, 0.5f);*/
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
+		m_pEffects2 = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartFlash.dat"), mWorldMatrix);
+		m_pEffects3 = CEffect::PlayEffectAtLocation(TEXT("RinwellBoostEffect.dat"), mWorldMatrix);
+
 		break;
+	}
 	}
 
 

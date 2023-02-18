@@ -106,12 +106,12 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
-	float3 vNormal;
+	float3	vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
 
-	vNormal = float3(vTextureNormal.x, vTextureNormal.y, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
+	vNormal = vNormal * 2.f - 1.f;
 
-	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+	float3x3	WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+
 	vNormal = mul(vNormal, WorldMatrix);
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
@@ -129,12 +129,12 @@ PS_OUT PS_PICKED(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
-	float3 vNormal;
+	float3	vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
 
-	vNormal = float3(vTextureNormal.x, vTextureNormal.y, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
+	vNormal = vNormal * 2.f - 1.f;
 
-	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+	float3x3	WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+
 	vNormal = mul(vNormal, WorldMatrix);
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
