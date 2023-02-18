@@ -23,6 +23,7 @@ public:
 	CAIState* RandomAttackChoose();
 	CAIState* RandomAttackChoose_Sion();
 	CAIState* RandomAttackChoose_Rinwell();
+	CAIState* RandomAttackChoose_Law();
 
 };
 END

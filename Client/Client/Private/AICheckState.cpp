@@ -13,6 +13,7 @@
 #include "AI_DodgeState.h"
 #include "AI_Rinwell_SkillState.h"
 #include "AI_LAW_NomalAttack_State.h"
+#include "AI_LAW_SkillAttack_State.h"
 
 using namespace AIPlayer;
 
@@ -288,7 +289,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 
 
 			else
-				return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
+				return RandomAttackChoose_Law();
 
 			break;
 		}
@@ -445,6 +446,54 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 
 	}
 	return nullptr;
+}
+
+CAIState * CAICheckState::RandomAttackChoose_Law()
+{
+	if (nullptr == m_pTarget)
+	{
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+	else
+		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+
+	if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+	{
+		switch (rand() % 2)
+		{
+		case 0:
+			return new CAI_DodgeState(m_pOwner, m_pTarget);
+			break;
+		case  1:
+			return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+			break;
+		}
+
+	}
+
+
+	switch (rand() % 5)
+	{
+
+	case 0:
+		return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_R);
+
+	case 1:
+		return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
+
+	case 2:
+		return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
+
+	case 3:
+		return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
+	case 4:
+		return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+	}
+	return nullptr;
+	//return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
 }
 
 CAIState * CAICheckState::RandomAttackChoose()

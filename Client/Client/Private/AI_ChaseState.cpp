@@ -12,6 +12,7 @@
 #include "AI_Sion_SkillState.h"
 #include "AI_DodgeState.h"
 #include "AI_LAW_NomalAttack_State.h"
+#include "AI_Rinwell_SkillState.h"
 
 
 
@@ -164,27 +165,27 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 			}
 
-			switch (rand() % 4)
+			if (m_pOwner->Get_Info().fCurrentMp > 1.f)
 			{
-			case 0:
-				return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
-
-				if (m_pOwner->Get_Info().fCurrentMp > 1.f)
+				switch (rand() % 4)
 				{
-			case 1:
-				return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
-
-			case 2:
-				return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
-
-			case 3:
-				return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
-				}
-				else
+				case 0:
 					return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
-			
 
+
+				case 1:
+					return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
+
+				case 2:
+					return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
+
+				case 3:
+					return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
+
+				}
 			}
+			else
+				return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
 		}
 			
 		else if (m_eCurrentPlayerID == CPlayer::SION)
@@ -202,40 +203,80 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 
 				}
 			}
-
-			switch (rand() % 6)
+			else
 			{
+				switch (rand() % 6)
+				{
 
-			case 0:
-				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+				case 0:
+					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 
-			case 1:
-				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+				case 1:
+					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
 
-			case 2:
-				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
+				case 2:
+					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
 
-			case 3:
-				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
+				case 3:
+					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
 
-			case 4:
-				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+				case 4:
+					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
 
-			case 5:
-				return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+				case 5:
+					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
 
+				}
 			}
+
+		
 		}
 
 		else if (m_eCurrentPlayerID == CPlayer::RINWELL)
 		{
-			if (nullptr == m_pTarget)
+			if (m_pOwner->Get_Info().fCurrentMp < 1.f)
 			{
-				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-			}
+				switch (rand() % 2)
+				{
+				case 0:
+					return new CAI_DodgeState(m_pOwner, m_pTarget, true);
+				case 1:
+					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 
-			return new CAI_DodgeState(m_pOwner,m_pTarget);
+				}
+
+
+			}
+			else
+			{
+				switch (rand() % 7)
+				{
+
+				case 0:
+					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+
+				case 1:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_GALEFORCE, m_pTarget);
+
+				case 2:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_THUNDERFIELD, m_pTarget);
+
+				case 3:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_METEOR, m_pTarget);
+
+				case 4:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_DIVINE_SABER, m_pTarget);
+
+				case 5:
+					return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
+
+				case 6:
+				return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+
+				}
+				return nullptr;
+			}
 
 		}
 
