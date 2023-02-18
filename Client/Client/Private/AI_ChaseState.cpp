@@ -129,7 +129,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			if (Get_Target_Distance() <= 11.f)
 			{
 				__super::Exit();
-				m_iCurrentAnimIndex = CRinwell::ANIM::DASH_BRAKE_001;
+				m_iCurrentAnimIndex = CRinwell::ANIM::DASH_BRAKE_000;
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 				m_bStopRunning = true;
 			}

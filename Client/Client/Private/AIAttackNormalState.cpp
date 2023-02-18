@@ -271,53 +271,16 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 			}
 		}
-		if (m_iCurrentAnimIndex == CRinwell::ANIM::BTL_ATTACK_NORMAL_3 && m_bIsAnimationFinished)
+		/*if (m_iCurrentAnimIndex == CRinwell::ANIM::BTL_ATTACK_NORMAL_3 && m_bIsAnimationFinished)
 		{
 
 			return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
-			/*if (m_pOwner->Get_Info().fCurrentMp < 1)
-			{
-				switch (rand() % 3)
-				{
-				case 0:
-					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
-				case 1:
-					return new CAI_DodgeState(m_pOwner, m_pTarget);
-				case 2:
-					return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
-				}
-			}*/
-		}
-
-		/*switch (rand() % 12)
-		{
-
-		case 0:
-			return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
-
-		case 1:
-			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
-
-		case 2:
-			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
-
-		case 3:
-			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
-
-		case 4:
-			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
-
-		case 5:
-			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
-		case 6:
-			return new CAI_DodgeState(m_pOwner, m_pTarget);
-
-		default:
-			return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
-
+			
 		}*/
+
+		
 		break;
-	}
+	 }
 	}
 
 
@@ -398,7 +361,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 				}
 			}
-				return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
+			//	return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
 		}
 		
 

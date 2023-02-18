@@ -121,7 +121,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 	case THUNDER_FIELD:
 		vOffset = XMVectorSet(0.f, m_fRadius + 5.f, 0.f, 0.f);
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
-		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(rand() % 180));
+		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(_float(rand() % 180)));
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ThunderFieldBullet.dat"), mWorldMatrix);
