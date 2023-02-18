@@ -32,18 +32,16 @@ bool g_SpriteLoop = true;
 
 float2 g_WinXY;
 
-
-//= (int)g_UVSpriteValue.x * (int)g_UVSpriteValue.y;
-//g_SpriteCurTime / g_SpriteSpeed;
-
+/* Sprite */
+float2 g_vSprite;			/* Number of Sprites (Horizontally and Vertically). */
+float g_fSpriteTimer;		/* Time elapsed since start of Sprite Animation. */
+float g_fSpriteDuration;	/* Duration of entire Sprite Animation in seconds. */
 
 /* Glow */
 texture2D g_GlowTexture;
 float4 g_vGlowColor;
 bool g_bUseDiffuseColor;
 float g_fGlowTimer;
-
-
 
 struct VS_IN
 {
@@ -1169,39 +1167,32 @@ PS_OUT PS_BATTLESTART(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	int TotalIndex = (int)g_UVSpriteValue.x * (int)g_UVSpriteValue.y;
-	int CurIndex = g_SpriteCurTime / g_SpriteSpeed;
+	float fSpriteCount = g_vSprite.x * g_vSprite.y;
+	float fSpriteWidth = 1.0 / g_vSprite.x;
+	float fSpriteHeight = 1.0 / g_vSprite.y;
 
-	if (g_SpriteLoop && CurIndex >= TotalIndex - 1)
-	{
-		CurIndex = 0;
-	}
-	else if (CurIndex >= TotalIndex - 1)
-	{
-		CurIndex = TotalIndex - 1;
-	}
+	float fFullSprites = fSpriteCount - 1.0;
+	float fTimePerFullSprite = g_fSpriteDuration / fFullSprites;
+	float fTimePerLastSprite = fTimePerFullSprite * fSpriteWidth * (1.0 / fSpriteHeight);
+	float fTimePerSprite = (fTimePerFullSprite * fFullSprites + fTimePerLastSprite) / fSpriteCount;
 
-	//UV가로세로 개수
-	int SpriteU = (int)g_UVSpriteValue.x;
-	int SpriteV = (int)g_UVSpriteValue.y;
+	float fSpriteIndex = floor(g_fSpriteTimer / fTimePerSprite);
+	float fRow = floor(fSpriteIndex / g_vSprite.x);
+	float fCol = fSpriteIndex % g_vSprite.x;
 
-	//밸류당 UV
-	float ValueX = 1.f / SpriteU;
-	float ValueY = 1.f / SpriteV;
+	float u = fCol * fSpriteWidth;
+	float v = fRow * fSpriteHeight;
+	float2 vSpriteUV = float2(u + In.vTexUV.x * fSpriteWidth, v + In.vTexUV.y * fSpriteHeight);
 
-	//현재 인덱스의 XY
-	float CurX = CurIndex % SpriteU;
-	float CurY = CurIndex / SpriteU;
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, vSpriteUV);
+	Out.vColor.a = Out.vColor.r;
 
-	float2 NewUV = float2((In.vTexUV.x * ValueX) + (ValueX * CurX), (In.vTexUV.y * ValueY) + (ValueY * CurY));
+	float3 vFirstColor = float3(.96f, .87f, .3f);
+	float3 vSecondColor = float3(.7f, .21f, .18f);
 
-	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, NewUV);
-	Out.vColor.a = Out.vColor.rgb;
-
-	float origina = Out.vColor.r;
-
-	Out.vColor.rgb = float3(0.9843137254901961f, 0.3607843137254902f, 0.f);// * 1.3f;
-	Out.vColor.g += 0.3f * origina;
+	float fInterpFactor = (Out.vColor.a - .5f) / (1.f - .5f);
+	float3 vLerpColor = lerp(vSecondColor, vFirstColor, fInterpFactor);
+	Out.vColor.rgb = vLerpColor;
 
 	return Out;
 }
@@ -1524,6 +1515,43 @@ PS_OUT PS_STRIKEEFFECT(PS_IN In)
 
 
 
+
+	return Out;
+}
+
+PS_OUT PS_UI_SPRITE_GLOW(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float fSpriteCount = g_vSprite.x * g_vSprite.y;
+	float fSpriteWidth = 1.0 / g_vSprite.x;
+	float fSpriteHeight = 1.0 / g_vSprite.y;
+
+	float fFullSprites = fSpriteCount - 1.0;
+	float fTimePerFullSprite = g_fSpriteDuration / fFullSprites;
+	float fTimePerLastSprite = fTimePerFullSprite * fSpriteWidth * (1.0 / fSpriteHeight);
+	float fTimePerSprite = (fTimePerFullSprite * fFullSprites + fTimePerLastSprite) / fSpriteCount;
+
+	float fSpriteIndex = floor(g_fSpriteTimer / fTimePerSprite);
+	float fRow = floor(fSpriteIndex / g_vSprite.x);
+	float fCol = fSpriteIndex % g_vSprite.x;
+
+	float u = fCol * fSpriteWidth;
+	float v = fRow * fSpriteHeight;
+	float2 vSpriteUV = float2(u + In.vTexUV.x * fSpriteWidth, v + In.vTexUV.y * fSpriteHeight);
+	 
+	Out.vColor = g_GlowTexture.Sample(LinearSampler, vSpriteUV);
+	Out.vColor.a = Out.vColor.r;
+
+	float3 vFirstColor = float3(.96f, .87f, .3f);
+	float3 vSecondColor = float3(.7f, .21f, .18f);
+
+	float fInterpFactor = (Out.vColor.a - .5f) / (1.f - .5f);
+	float3 vLerpColor = lerp(vSecondColor, vFirstColor, fInterpFactor);
+	Out.vColor.rgb = vLerpColor;
+
+	if (Out.vColor.a == 0)
+		discard;
 
 	return Out;
 }
@@ -2092,5 +2120,14 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_STRIKEEFFECT();
 	}
 
-	
+	pass UI_SPRITE_GLOW // 51
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_UI_SPRITE_GLOW();
+	}
 }
