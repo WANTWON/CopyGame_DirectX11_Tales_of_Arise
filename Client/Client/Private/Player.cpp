@@ -14,7 +14,6 @@
 #include "AI_HitState.h"
 #include "AIDeadState.h"
 #include "AI_BoostAttackState.h"
-#include "SmashAttack_State.h"
 #include "AiState_WakeUp.h"
 #include "AI_AlphenSion_Smash.h"
 #include "AI_AlphenRinwell_Smash.h"
@@ -102,38 +101,12 @@ int CPlayer::Tick(_float fTimeDelta)
 		{
 			/*_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;*/
 			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
-
 				BoostAttack();
 			else
 				SmashAttack();
 
-			{
-				if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_pPlayerManager->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
-					Play_AISkill(ALPHEN);
-				else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
-					Play_AISkill(SION);
-				else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_pPlayerManager->Get_EnumPlayer(2)->Get_BoostGuage() >= 100.f)
-					Play_AISkill(RINWELL);
-				else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage() >= 100.f)
-					Play_AISkill(LAW);
-			}
-			else
-			{
-				if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
-				{
-					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
-
-					CAIState* pAIState = new AIPlayer::CSmashAttack_State(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-					m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-				}
-				else if (CGameInstance::Get_Instance()->Key_Up(DIK_4))
-				{
-					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
-
-					CAIState* pAIState = new AIPlayer::CSmashAttack_State(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-					m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-				}
-			}
+			
+			
 
 		}
 
