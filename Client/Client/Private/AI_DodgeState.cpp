@@ -3,6 +3,7 @@
 #include "Alphen.h"
 #include "Sion.h"
 #include "Rinwell.h"
+#include "Law.h"
 #include "GameInstance.h"
 #include "AIAttackNormalState.h"
 #include "AI_Alphen_NormalAttackState.h"
@@ -229,6 +230,26 @@ void CAI_DodgeState::Enter()
 
 		default:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_STEP_LAND_BACK);
+			break;
+
+		}
+		break;
+
+	case CPlayer::LAW:
+		switch (rand() % 3)
+		{
+		case 0:
+			m_pOwner->Get_Transform()->Set_Rotation({ 0.f, 45.f ,0.f });
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_LAND);
+			break;
+
+		case 1:
+			m_pOwner->Get_Transform()->Set_Rotation({ 0.f, -45.f ,0.f });
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_LAND);
+			break;
+
+		case 2:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_LAND_BACK);
 			break;
 
 		}

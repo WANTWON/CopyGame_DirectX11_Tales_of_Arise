@@ -52,6 +52,7 @@ public: /* Getter Setter */
 	OBJINFO			Get_Info() { return m_tInfo; }
 	void			Set_Info(OBJINFO tInfo) { memcpy(&m_tInfo, &tInfo, sizeof(OBJINFO)); }
 	void            Set_HP(_float hp) { m_tInfo.fCurrentHp = hp; }
+	void            Plus_HP(_float hp) { m_tInfo.fCurrentHp += hp; }
 	CRenderer* Get_Renderer(void) { return m_pRendererCom; }
 
 protected:
