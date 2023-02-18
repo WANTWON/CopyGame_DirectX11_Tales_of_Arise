@@ -287,7 +287,7 @@ HRESULT CModel::SetUp_Material(CShader * pShader, const char * pConstantName, _u
 	}
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName)
+_bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneName, _float fInterpolatonTime)
 {
 	_bool isAnimLoop = false;
 
@@ -310,7 +310,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 
 			_vector vScale, vRotation, vPosition;
 
-			if (m_fLinearCurrentTime >= 0.1f)
+			if (m_fLinearCurrentTime >= fInterpolatonTime)
 			{
 				KEYFRAME CurLinearKeyFrame = CurChannels[i]->Get_LinearKeyFrame();
 
@@ -337,7 +337,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 				vDestRotation = XMLoadFloat4(&CurLinearKeyFrame.vRotation);
 				vDestPosition = XMLoadFloat3(&CurLinearKeyFrame.vPosition);
 
-				_float fRatio = m_fLinearCurrentTime / 0.1f;
+				_float fRatio = m_fLinearCurrentTime / fInterpolatonTime;
 
 				vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
 				vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);

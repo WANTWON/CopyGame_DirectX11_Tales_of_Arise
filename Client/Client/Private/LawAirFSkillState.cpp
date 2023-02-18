@@ -33,7 +33,10 @@ CPlayerState * CLawAirFSkillState::HandleInput(void)
 
 CPlayerState * CLawAirFSkillState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.1f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	if (STATETYPE_MAIN == m_eStateType)
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.f);
+	else
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.f);
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -48,7 +51,7 @@ CPlayerState * CLawAirFSkillState::Tick(_float fTimeDelta)
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	if (STATETYPE_END == m_eStateType)
+	if (STATETYPE_MAIN != m_eStateType)
 	{
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -58,6 +61,10 @@ CPlayerState * CLawAirFSkillState::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+				{
+
+				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
 					if (nullptr == m_pLandCollider)
@@ -205,6 +212,8 @@ void CLawAirFSkillState::Enter(void)
 
 	if (nullptr != pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_F.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
 }
 
 void CLawAirFSkillState::Exit(void)
