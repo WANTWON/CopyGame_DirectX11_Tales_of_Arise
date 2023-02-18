@@ -109,6 +109,16 @@ CPlayer * CPlayerManager::Get_EnumPlayer(_uint eID)
 	return nullptr;
 }
 
+void CPlayerManager::Set_Ai_Check()
+{
+
+	for (auto& iter : m_pAIPlayers)
+	{
+		iter->AI_check();
+	}
+	
+}
+
 void CPlayerManager::Free()
 {
 

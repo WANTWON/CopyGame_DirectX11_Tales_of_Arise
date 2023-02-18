@@ -13,6 +13,7 @@
 #include "CloseChaseState.h"
 #include "AlphenAttackState.h"
 #include "AlphenSkillState.h"
+#include "Player_RinwellNormalAttack_State.h"
 
 #include "LawAttackState.h"
 #include "LawSkillState.h"
@@ -45,6 +46,7 @@ CPlayerState * CJumpState::HandleInput()
 			case CPlayer::SION:
 				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
 			case CPlayer::RINWELL:
+				return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
 				break;
 			case CPlayer::LAW:
 				return new CLawAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
@@ -398,6 +400,10 @@ CPlayerState * CJumpState::EventInput(void)
 			case CPlayer::SION:
 				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
 				//for Sion State//
+				break;
+
+			case CPlayer::RINWELL:
+				return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
 				break;
 			}
 		}

@@ -16,6 +16,9 @@
 
 #include "Player_SionNormalAttack_State.h"
 #include "Player_SionSkillAttack.h"
+#include "Player_RinwellNormalAttack_State.h"
+#include "Player_RinwellSkillAttack_State.h"
+
 
 using namespace Player;
 
@@ -45,7 +48,7 @@ CPlayerState * CIdleState::HandleInput()
 		else if (CPlayer::RINWELL == m_pOwner->Get_PlayerID())
 		{
 			if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			{ }
+				return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
 		}
 			
 		/* Skill */
@@ -74,6 +77,18 @@ CPlayerState * CIdleState::HandleInput()
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
 				break;
 			case CPlayer::RINWELL: //For Rinwell State
+				if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
+					return new CPlayer_RinwellSkillAttack_State(m_pOwner, STATE_SKILL_ATTACK4);
+				else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_R))
+					return new CPlayer_RinwellSkillAttack_State(m_pOwner, STATE_SKILL_ATTACK5);
+				else if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_F))
+					return new CPlayer_RinwellSkillAttack_State(m_pOwner, STATE_SKILL_ATTACK6);
+				else if (pGameInstance->Key_Down(DIK_E))
+					return new CPlayer_RinwellSkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
+				else if (pGameInstance->Key_Down(DIK_R))
+					return new CPlayer_RinwellSkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_R);
+				else if (pGameInstance->Key_Down(DIK_F))
+					return new CPlayer_RinwellSkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
 				break;
 			case CPlayer::LAW:
 				if (pGameInstance->Key_Down(DIK_E))

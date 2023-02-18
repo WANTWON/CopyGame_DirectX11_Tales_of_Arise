@@ -305,18 +305,23 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
 	{
 		m_bLerp = true;
-		if (XMouseMove < 0)
+
+		if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 		{
-			m_fAngle += 4.f;
-			if (m_fAngle >= 360.f)
-				m_fAngle = 0.f;
+			if (XMouseMove < 0)
+			{
+				m_fAngle += 4.f;
+				if (m_fAngle >= 360.f)
+					m_fAngle = 0.f;
+			}
+			else if (XMouseMove > 0)
+			{
+				m_fAngle -= 4.f;
+				if (m_fAngle <= 0.f)
+					m_fAngle = 360.f;
+			}
 		}
-		else if (XMouseMove > 0)
-		{
-			m_fAngle -= 4.f;
-			if (m_fAngle <= 0.f)
-				m_fAngle = 360.f;
-		}
+		
 
 	}
 	// 항상 플레이어 위치 바라보게 하기
@@ -332,15 +337,21 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
 	{
 		m_bLerp = true;
-		if (YMouseMove > 0)
+
+
+		if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 		{
-			m_fCameraOffsetY += 0.3f;
-			m_fLookOffsetY -= 0.1f;
-		}
-		else if (YMouseMove < 0)
-		{
-			m_fCameraOffsetY -= 0.3f;
-			m_fLookOffsetY += 0.1f;
+
+			if (YMouseMove > 0)
+			{
+				m_fCameraOffsetY += 0.3f;
+				m_fLookOffsetY -= 0.1f;
+			}
+			else if (YMouseMove < 0)
+			{
+				m_fCameraOffsetY -= 0.3f;
+				m_fLookOffsetY += 0.1f;
+			}
 		}
 
 		if (m_fCameraOffsetY >= 8.f)

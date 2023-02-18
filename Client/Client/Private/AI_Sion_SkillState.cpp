@@ -33,6 +33,7 @@ CAI_Sion_SkillState::CAI_Sion_SkillState(CPlayer* pPlayer, STATE_ID eStateType, 
 
 CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 {
+	return nullptr;
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;
 
@@ -377,6 +378,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 
 CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 {
+	return nullptr;
 	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
@@ -402,7 +404,8 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 	}
-
+	if (m_bIsStateEvent)
+		m_fEventStart = -1.f;
 	if (m_bIsStateEvent || m_bIsAnimationFinished)
 	{
 		__super::Exit();
@@ -410,7 +413,7 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);*/
 		m_bIsStateEvent = false;
 		m_bBulletMake = false;
-		m_fEventStart = -1.f;
+		//m_fEventStart = -1.f;
 
 		if (m_pOwner->Get_Info().fCurrentMp < 1)
 		{
