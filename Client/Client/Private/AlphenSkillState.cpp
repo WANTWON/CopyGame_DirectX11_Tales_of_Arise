@@ -55,9 +55,13 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		if (pEvent.isPlay)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
- 				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
+			
+
+		
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 			{
 				switch (m_eStateId)
@@ -416,6 +420,7 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_E.wav"), SOUND_EFFECT, 0.6f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);

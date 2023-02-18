@@ -84,6 +84,8 @@ public: /*For.State*/
 	void			Tick_AIState(_float fTimeDelta);
 	void			LateTick_State(_float fTimeDelta);
 	void			LateTick_AIState(_float fTimeDelta);
+	void            SmashAttack();
+	void            BoostAttack();
 
 	void Set_BoostGuage(_float boostguage) { m_tInfo.fCurrentBoostGuage = boostguage; }
 	_float Get_BoostGuage() { return m_tInfo.fCurrentBoostGuage; }

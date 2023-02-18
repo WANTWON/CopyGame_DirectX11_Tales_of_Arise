@@ -385,6 +385,9 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\Law">
       <UniqueIdentifier>{a69218a6-7d99-4ef7-bec8-ec2414b5a8ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack">
+      <UniqueIdentifier>{694fc3dd-33ad-4766-9fd7-80140fc0f6c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -969,9 +972,6 @@
     <ClInclude Include="..\Public\UI_LevelUp.h">
       <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\SmashAttack_State.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UI_SidePopup.h">
       <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
     </ClInclude>
@@ -1073,6 +1073,24 @@
     </ClInclude>
     <ClInclude Include="..\Public\AI_LAW_SkillAttack_State.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_AlphenLaw_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_AlphenRinwell_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_AlphenSion_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_RinwellLaw_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_SionLaw_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_SionRinwell_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1628,9 +1646,6 @@
     <ClCompile Include="..\Private\UI_LevelUp.cpp">
       <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SmashAttack_State.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UI_SidePopup.cpp">
       <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
     </ClCompile>
@@ -1729,6 +1744,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI_LAW_SkillAttack_State.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_AlphenLaw_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_AlphenRinwell_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_AlphenSion_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_RinwellLaw_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_SionLaw_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_SionRinwell_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

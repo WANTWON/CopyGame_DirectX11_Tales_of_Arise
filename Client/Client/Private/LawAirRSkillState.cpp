@@ -326,6 +326,8 @@ void CLawAirRSkillState::Enter(void)
 
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_R.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
 }
 
 void CLawAirRSkillState::Exit(void)
