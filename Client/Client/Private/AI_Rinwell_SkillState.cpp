@@ -153,7 +153,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						BulletDesc.vInitPositon = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
 						//BulletDesc.vTargetDir = { -0.3f, -1.f, -0.1f, 0.f };
 						//BulletDesc.vTargetPosition = vTargetPosition;
-						BulletDesc.fDeadTime = 6.f;
+						BulletDesc.fDeadTime = 5.5f;
 						BulletDesc.pOwner = m_pOwner;
 						for (_uint i = 0; i < 12; ++i)
 						{
@@ -233,7 +233,13 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.eBulletType = CRinwellSkills::DIVINE_SABER;
 						if (pTarget != nullptr)
+						{
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							if (dynamic_cast<CMonster*>(pTarget)->Get_MonsterID() == HAWK)
+								BulletDesc.vTargetPosition = XMVectorSetY(BulletDesc.vTargetPosition, XMVectorGetY(BulletDesc.vTargetPosition) - 2.f);
+
+						}
+							
 						BulletDesc.pOwner = m_pOwner;
 
 
