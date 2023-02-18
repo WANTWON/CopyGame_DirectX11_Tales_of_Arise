@@ -4,6 +4,7 @@
 #include "Alphen.h"
 #include "Rinwell.h"
 #include "Sion.h"
+#include "Law.h"
 #include "AICheckState.h"
 
 using namespace AIPlayer;
@@ -133,6 +134,35 @@ void CAI_HitState::Enter()
 		case 7:
 			m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DAMAGE_SMALL_R;
 			break;
+		}
+
+		case CPlayer::LAW:
+			switch (rand() % 8)
+			{
+			case 0:
+				m_iCurrentAnimIndex = CLaw::ANIM::BTL_DAMAGE_LARGE_B;
+				break;
+			case 1:
+				m_iCurrentAnimIndex = CLaw::ANIM::BTL_DAMAGE_LARGE_F;
+				break;
+			case 2:
+				m_iCurrentAnimIndex = CLaw::ANIM::BTL_DAMAGE_LARGE_L;
+				break;
+			case 3:
+				m_iCurrentAnimIndex = CLaw::ANIM::BTL_DAMAGE_LARGE_R;
+				break;
+			case 4:
+				m_iCurrentAnimIndex = CLaw::ANIM::BTL_DAMAGE_SMALL_B;
+				break;
+			case 5:
+				m_iCurrentAnimIndex = CLaw::ANIM::BTL_DAMAGE_SMALL_F;
+				break;
+			case 6:
+				m_iCurrentAnimIndex = CLaw::ANIM::BTL_DAMAGE_SMALL_L;
+				break;
+			case 7:
+				m_iCurrentAnimIndex = CLaw::ANIM::BTL_DAMAGE_SMALL_R;
+				break;
 		}
 		break;
 

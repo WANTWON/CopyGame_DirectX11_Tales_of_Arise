@@ -101,6 +101,8 @@ int CPlayer::Tick(_float fTimeDelta)
 					Play_AISkill(ALPHEN);
 				else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
 					Play_AISkill(SION);
+				else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_pPlayerManager->Get_EnumPlayer(2)->Get_BoostGuage() >= 100.f)
+					Play_AISkill(RINWELL);
 				else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage() >= 100.f)
 					Play_AISkill(LAW);
 			}
@@ -398,6 +400,12 @@ void CPlayer::Play_AISkill(PLAYERID ePlayer)
 		break;
 	}
 	case Client::CPlayer::RINWELL:
+	{
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+	}
+		
+		
 		break;
 	case Client::CPlayer::LAW:
 		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());

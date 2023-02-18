@@ -7,6 +7,9 @@
 #include "AICheckState.h"
 #include "Alphen.h"
 #include "Law.h"
+#include "AICheckState.h"
+#include "AI_LAW_SkillAttack_State.h"
+#include "AI_DodgeState.h"
 
 
 using namespace AIPlayer;
@@ -59,6 +62,7 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 	}
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 	for (auto& pEvent : pEvents)
 	{
@@ -69,194 +73,287 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 				switch (m_eStateId)
 				{
 				case Client::CAIState::STATE_NORMAL_ATTACK1:
-					if (m_bIsFly)
-					{
-						if (nullptr == m_pRightFootCollider)
-							m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
-					else
-					{
-						if (nullptr == m_pLeftHandCollider)
-							m_pLeftHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
+
+					if (nullptr == m_pLeftHandCollider)
+						m_pLeftHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
 					break;
-				case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-					if (m_bIsFly)
-					{
-						if (nullptr == m_pLeftFootCollider)
-							m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
-					else
-					{
-						if (nullptr == m_pRightHandCollider)
-							m_pRightHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
+				case Client::CAIState::STATE_NORMAL_ATTACK2:
+
+					if (nullptr == m_pRightHandCollider)
+						m_pRightHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
 					break;
-				case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-					if (m_bIsFly)
-					{
-						if (nullptr == m_pRightHandCollider)
-							m_pRightHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
-					else
-					{
-						if (nullptr == m_pRightFootCollider)
-							m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
+				case Client::CAIState::STATE_NORMAL_ATTACK3:
+					if (nullptr == m_pRightFootCollider)
+						m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
 					break;
-				case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-					if (m_bIsFly)
-					{
-						if (nullptr == m_pRightFootCollider)
-							m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
-					else
-					{
-						if (nullptr == m_pLeftHandCollider)
-							m_pLeftHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
+				case Client::CAIState::STATE_NORMAL_ATTACK4:
+					if (nullptr == m_pLeftHandCollider)
+						m_pLeftHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
 					break;
-				case Client::CPlayerState::STATE_NORMAL_ATTACK5:
-					if (m_bIsFly)
-					{
-						if (nullptr == m_pRightHandCollider)
-							m_pRightHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
-					else
-					{
-						if (nullptr == m_pLeftFootCollider)
-							m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
+				case Client::CAIState::STATE_NORMAL_ATTACK5:
+					if (nullptr == m_pLeftFootCollider)
+						m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
 					break;
+
+
+					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+					m_fEventStartTime = pEvent.fStartTime;
 				}
-
-				pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
-				m_fEventStartTime = pEvent.fStartTime;
 			}
-			}
-				
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 			{
-				if (m_iCurrentAnimIndex != CAlphen::ANIM::ANIM_ATTACK_NORMAL_6)
+				switch (m_eStateId)
 				{
-					m_bIsStateEvent = true;
-					getchar();
-				}
-			}
-			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
-			{
-				_tchar wcEffectName[MAX_PATH] = TEXT("");
-				switch (m_iCurrentAnimIndex)
-				{
-				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0:
-				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
-					wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
+				case Client::CAIState::STATE_NORMAL_ATTACK1:
+					m_eStateId = STATE_NORMAL_ATTACK2;
 					break;
-				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
-					wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
+				case Client::CAIState::STATE_NORMAL_ATTACK2:
+					m_eStateId = STATE_NORMAL_ATTACK3;
 					break;
-				case CAlphen::ANIM::ANIM_ATTACK_NORMAL_6:
-					wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
+				case Client::CAIState::STATE_NORMAL_ATTACK3:
+					m_eStateId = STATE_NORMAL_ATTACK4;
 					break;
-				}
-
-				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-
-				if (!m_bEffectSlashSpawned)
-				{
-					if (!wcscmp(wcEffectName, TEXT("Normal_Attack_2.dat")))
-						m_SlashEffect = CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+				case Client::CAIState::STATE_NORMAL_ATTACK4:
+					m_eStateId = STATE_NORMAL_ATTACK5;
+					break;
+				case Client::CAIState::STATE_NORMAL_ATTACK5:
+					//if(m_pTarget != nullptr)
+					if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+					{
+						return new CAI_DodgeState(m_pOwner, m_pTarget);
+					}
 					else
-						CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
+					{
+						switch (rand() % 5)
+						{
 
-					m_bEffectSlashSpawned = true;
+						case 0:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_R);
+
+						case 1:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
+
+						case 2:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
+
+						case 3:
+							return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+						}
+					}
+					
+					return nullptr;
+					break;
 				}
+
+				Enter();
+
+				return nullptr;
 			}
+
 		}
 		else
 		{
-			switch (m_iCurrentAnimIndex)
+			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-			case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0:
-				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
-				break;
-			case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
-				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
-				break;
-			case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
-				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
-				break;
-			case CAlphen::ANIM::ANIM_ATTACK_NORMAL_6:
-				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
-				break;
+				switch (m_eStateId)
+				{
+				case Client::CAIState::STATE_NORMAL_ATTACK1:
+
+					if (nullptr != m_pLeftHandCollider && (m_fEventStartTime == pEvent.fStartTime))
+					{
+						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftHandCollider);
+						m_pLeftHandCollider = nullptr;
+
+						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+						m_fEventStartTime = -1.f;
+					}
+					break;
+				case Client::CAIState::STATE_NORMAL_ATTACK2:
+
+					if (nullptr != m_pRightHandCollider && (m_fEventStartTime == pEvent.fStartTime))
+					{
+						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
+						m_pRightHandCollider = nullptr;
+
+						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+						m_fEventStartTime = -1.f;
+					}
+					break;
+				case Client::CAIState::STATE_NORMAL_ATTACK3:
+
+					if (nullptr != m_pRightFootCollider && (m_fEventStartTime == pEvent.fStartTime))
+					{
+						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
+						m_pRightFootCollider = nullptr;
+
+						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+						m_fEventStartTime = -1.f;
+					}
+					break;
+				case Client::CAIState::STATE_NORMAL_ATTACK4:
+					if (nullptr != m_pLeftHandCollider && (m_fEventStartTime == pEvent.fStartTime))
+					{
+						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftHandCollider);
+						m_pLeftHandCollider = nullptr;
+
+						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+						m_fEventStartTime = -1.f;
+					}
+					break;
+				case Client::CAIState::STATE_NORMAL_ATTACK5:
+					if (nullptr != m_pLeftFootCollider && (m_fEventStartTime == pEvent.fStartTime))
+					{
+						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftFootCollider);
+						m_pLeftFootCollider = nullptr;
+
+						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+
+						m_fEventStartTime = -1.f;
+					}
+					break;
+				}
 			}
+
+
 		}
 	}
+
+			
+	_matrix	WorldBoneMatrix = XMMatrixIdentity();
+
+	if (nullptr != m_pLeftHandCollider)
+	{
+		WorldBoneMatrix = m_pOwner->Get_Model()->Get_BonePtr("SLA_GNT_00_E_L")->Get_CombinedTransformationMatrix() *
+			XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+		WorldBoneMatrix.r[0] = XMVector4Normalize(WorldBoneMatrix.r[0]);
+		WorldBoneMatrix.r[1] = XMVector4Normalize(WorldBoneMatrix.r[1]);
+		WorldBoneMatrix.r[2] = XMVector4Normalize(WorldBoneMatrix.r[2]);
+
+		m_pLeftHandCollider->Update(WorldBoneMatrix);
+	}
+	if (nullptr != m_pRightHandCollider)
+	{
+		WorldBoneMatrix = m_pOwner->Get_Model()->Get_BonePtr("SLA_GNT_00_E_R")->Get_CombinedTransformationMatrix() *
+			XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+		WorldBoneMatrix.r[0] = XMVector4Normalize(WorldBoneMatrix.r[0]);
+		WorldBoneMatrix.r[1] = XMVector4Normalize(WorldBoneMatrix.r[1]);
+		WorldBoneMatrix.r[2] = XMVector4Normalize(WorldBoneMatrix.r[2]);
+
+		m_pRightHandCollider->Update(WorldBoneMatrix);
+	}
+	if (nullptr != m_pLeftFootCollider)
+	{
+		WorldBoneMatrix = m_pOwner->Get_Model()->Get_BonePtr("ball_L")->Get_CombinedTransformationMatrix() *
+			XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+		WorldBoneMatrix.r[0] = XMVector4Normalize(WorldBoneMatrix.r[0]);
+		WorldBoneMatrix.r[1] = XMVector4Normalize(WorldBoneMatrix.r[1]);
+		WorldBoneMatrix.r[2] = XMVector4Normalize(WorldBoneMatrix.r[2]);
+
+		m_pLeftFootCollider->Update(WorldBoneMatrix);
+	}
+	if (nullptr != m_pRightFootCollider)
+	{
+		WorldBoneMatrix = m_pOwner->Get_Model()->Get_BonePtr("ball_R")->Get_CombinedTransformationMatrix() *
+			XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+		WorldBoneMatrix.r[0] = XMVector4Normalize(WorldBoneMatrix.r[0]);
+		WorldBoneMatrix.r[1] = XMVector4Normalize(WorldBoneMatrix.r[1]);
+		WorldBoneMatrix.r[2] = XMVector4Normalize(WorldBoneMatrix.r[2]);
+
+		m_pRightFootCollider->Update(WorldBoneMatrix);
+	}
+	
 
 	return nullptr;
 }
 
 CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-
-	if (m_bIsStateEvent)
+	if (nullptr != m_pLeftHandCollider)
 	{
-		switch (m_iCurrentAnimIndex)
-		{
-		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0: //Client::CAIState::STATE_NORMAL_ATTACK1:
-			__super::Exit();
-			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_1;
-			if (nullptr == m_pTarget)
-			{
-				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-			}
-			else
-				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CBaseObj* pCollisionTarget = nullptr;
 
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-			break;
-		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
-			__super::Exit();
-			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_8;
-			if (nullptr == m_pTarget)
-			{
-				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-			}
-			else
-				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-			break;
-		case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
-			__super::Exit();
-			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_6;
-			if (nullptr == m_pTarget)
-			{
-				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-			}
-			else
-				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-			break;
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pLeftHandCollider, &pCollisionTarget))
+		{
+			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
-		m_bIsStateEvent = false;
-		m_bEffectSlashSpawned = false;
+
+#ifdef _DEBUG
+		m_pOwner->Get_Renderer()->Add_Debug(m_pLeftHandCollider);
+#endif
 	}
 
-	if (m_bIsAnimationFinished && m_iCurrentAnimIndex == CAlphen::ANIM::ANIM_ATTACK_NORMAL_6)
+	if (nullptr != m_pRightHandCollider)
 	{
-		return new CAICheckState(m_pOwner, STATE_ATTACK);
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pRightHandCollider, &pCollisionTarget))
+		{
+			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+
+#ifdef _DEBUG
+		m_pOwner->Get_Renderer()->Add_Debug(m_pRightHandCollider);
+#endif
+	}
+
+	if (nullptr != m_pLeftFootCollider)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pLeftFootCollider, &pCollisionTarget))
+		{
+			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+
+#ifdef _DEBUG
+		m_pOwner->Get_Renderer()->Add_Debug(m_pLeftFootCollider);
+#endif
+	}
+
+	if (nullptr != m_pRightFootCollider)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pRightFootCollider, &pCollisionTarget))
+		{
+			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+
+#ifdef _DEBUG
+		m_pOwner->Get_Renderer()->Add_Debug(m_pRightFootCollider);
+#endif
+	}
+
+	if (m_bIsAnimationFinished)
+	{
+	 return new CAICheckState(m_pOwner, m_eStateId);
 	}
 
 	return nullptr;
@@ -266,8 +363,57 @@ void AI_LAW_NomalAttack_State::Enter()
 {
 	//__super::Enter();
 
-	m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_0;
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+	//__super::Enter();
+
+	/*if (m_bIsFly)
+	{
+		switch (m_eStateId)
+		{
+		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_0);
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_1);
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_2);
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_3);
+			break;
+		case Client::CPlayerState::STATE_NORMAL_ATTACK5:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_4);
+			break;
+		}
+	}
+	else
+	{*/
+		switch (m_eStateId)
+		{
+		case Client::CAIState::STATE_NORMAL_ATTACK1:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_0);
+			break;
+		case Client::CAIState::STATE_NORMAL_ATTACK2:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_1);
+			break;
+		case Client::CAIState::STATE_NORMAL_ATTACK3:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_2);
+			break;
+		case Client::CAIState::STATE_NORMAL_ATTACK4:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_3);
+			break;
+		case Client::CAIState::STATE_NORMAL_ATTACK5:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_4);
+			break;
+		}
+//	}
+
+	//m_fResultTime = m_fTime;
+
+	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
+
+	CBaseObj* pTarget = pBattleMgr->Get_LackonMonster();
+
 	if (nullptr == m_pTarget)
 	{
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
@@ -277,7 +423,9 @@ void AI_LAW_NomalAttack_State::Enter()
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
+	//m_pOwner->Use_Mana(1.f);
 	m_pOwner->Set_Manarecover(false);
+
 }
 
 void AI_LAW_NomalAttack_State::Exit()
