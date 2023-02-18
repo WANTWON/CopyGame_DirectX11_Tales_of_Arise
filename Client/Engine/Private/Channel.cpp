@@ -156,9 +156,10 @@ bool CChannel::Linear_Interpolation(KEYFRAME NextKeyFrame, _float fLinearCurrent
 	return false;
 }
 
-void CChannel::Set_KeyFrame(_int iIndex, KEYFRAME KeyFrame)
+void CChannel::Set_KeyFrame(_float fDurationRatio)
 {
-	m_KeyFrames[iIndex] = KeyFrame;
+	for (_int i = 0; i < m_KeyFrames.size(); ++i)
+		m_KeyFrames[i].fTime *= fDurationRatio;
 }
 
 CChannel * CChannel::Create(HANDLE hFile, _ulong * pdwByte, CModel * pModel)

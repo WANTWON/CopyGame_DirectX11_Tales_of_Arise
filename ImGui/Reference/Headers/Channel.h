@@ -29,7 +29,7 @@ public: /*Get*/
 	class CHierarchyNode* Get_BoneNode(void) { return m_pBoneNode; }
 
 public: /*Set*/
-	void Set_KeyFrame(_int iIndex, KEYFRAME KeyFrame);
+	void Set_KeyFrame(_float fDurationRatio);
 
 private:
 	char					m_szName[MAX_PATH] = "";

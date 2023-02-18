@@ -135,9 +135,11 @@ void CChannel::ChangeKeyFrameTime(_float fDuration)
 		pKeyFrame.fTime *= fDuration;
 }
 
-void CChannel::Set_KeyFrames(_int iIndex, KEYFRAME KeyFrame)
+void CChannel::Set_KeyFrames(_float fDuration/*_int iIndex, KEYFRAME KeyFrame*/)
 {
-	m_KeyFrames[iIndex] = KeyFrame;
+	//m_KeyFrames[iIndex] = KeyFrame;
+	for (_int i = 0; i < m_KeyFrames.size(); ++i)
+		m_KeyFrames[i].fTime *= fDuration;
 }
 
 CChannel * CChannel::Create(CModel* pModel, aiNodeAnim * pAIChannel)
