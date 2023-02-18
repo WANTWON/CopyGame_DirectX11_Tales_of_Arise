@@ -186,6 +186,8 @@
     <ClInclude Include="..\Public\AI_DodgeState.h" />
     <ClInclude Include="..\Public\AI_HitState.h" />
     <ClInclude Include="..\Public\AI_BoostAttackState.h" />
+    <ClInclude Include="..\Public\AI_LAW_NomalAttack_State.h" />
+    <ClInclude Include="..\Public\AI_LAW_SkillAttack_State.h" />
     <ClInclude Include="..\Public\AI_Rinwell_SkillState.h" />
     <ClInclude Include="..\Public\AI_Sion_SkillState.h" />
     <ClInclude Include="..\Public\AlphenAttackState.h" />
@@ -232,6 +234,8 @@
     <ClInclude Include="..\Public\LawSkillState.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
+    <ClInclude Include="..\Public\Player_RinwellNormalAttack_State.h" />
+    <ClInclude Include="..\Public\Player_RinwellSkillAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
     <ClInclude Include="..\public\ScreenDistortion.h" />
@@ -411,6 +415,8 @@
     <ClCompile Include="..\Private\AI_DodgeState.cpp" />
     <ClCompile Include="..\Private\AI_HitState.cpp" />
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp" />
+    <ClCompile Include="..\Private\AI_LAW_NomalAttack_State.cpp" />
+    <ClCompile Include="..\Private\AI_LAW_SkillAttack_State.cpp" />
     <ClCompile Include="..\Private\AI_Rinwell_SkillState.cpp" />
     <ClCompile Include="..\Private\AI_Sion_SkillState.cpp" />
     <ClCompile Include="..\Private\AlphenAttackState.cpp" />
@@ -456,6 +462,8 @@
     <ClCompile Include="..\Private\LawSkillState.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
+    <ClCompile Include="..\Private\Player_RinwellNormalAttack_State.cpp" />
+    <ClCompile Include="..\Private\Player_RinwellSkillAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />
     <ClCompile Include="..\private\ScreenDistortion.cpp" />

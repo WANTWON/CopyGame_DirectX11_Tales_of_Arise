@@ -104,9 +104,50 @@ int CUI_Skillbutton::Tick(_float fTimeDelta)
 		break;
 
 	case CPlayer::PLAYERID::RINWELL:
+		m_iSkill1name1 = CUI_Skillmessage::SKILLNAME::SKILLNAME_THUNDERFIELD;
+		m_iSkill1name2 = CUI_Skillmessage::SKILLNAME::SKILLNAME_GALEFORCE;
+		m_iSkill1name3 = CUI_Skillmessage::SKILLNAME::SKILLNAME_METEORSWARM;
+		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL))
+		{
+			m_iSkill1name1 = CUI_Skillmessage::SKILLNAME::SKILLNAME_DIVINESABER;
+			m_iSkill1name2 = CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON;
+			m_iSkill1name3 = CUI_Skillmessage::SKILLNAME::SKILLNAME_HOLYRANCE;
+			//m_bSkill3non = false;
+		}
+		//else
+		//	m_bSkill3non = true;
+
+		//if (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_IsFly())
+		//{
+		//	//	m_iSkill1name1 = CUI_Skillmessage::SKILLNAME::SKILLNAME_SUMGONGSANGEULPA;
+		//	m_bSkill1non = false;
+		//	m_iSkill1name2 = CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS;
+		//	m_bSkill3non = false;
+		//	//m_iSkill1name3 = CUI_Skillmessage::SKILLNAME::SKILLNAME_ONEWALL;
+		//}
+		//else
+		//{
+		//	m_bSkill1non = true;
+		//	m_bSkill3non = true;
+		//}
 		break;
 
 	case CPlayer::PLAYERID::LAW:
+		m_bSkill1non = true;
+		m_bSkill2non = true;
+		m_bSkill3non = true;
+
+		m_iSkill1name1 = CUI_Skillmessage::SKILLNAME::SKILLNAME_WARYUNGGONGPA;
+		m_iSkill1name2 = CUI_Skillmessage::SKILLNAME::SKILLNAME_YOONMUSUNPOONG;
+		m_iSkill1name3 = CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOYUNATAN;
+		if (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_IsFly())
+		{
+			m_iSkill1name1 = CUI_Skillmessage::SKILLNAME::SKILLNAME_SANHWAMANGSUP;
+			m_iSkill1name2 = CUI_Skillmessage::SKILLNAME::SKILLNAME_YUENSOKWAN;
+			m_iSkill1name3 = CUI_Skillmessage::SKILLNAME::SKILLNAME_YUMPAEFUCKSAY;
+		}
+
+
 		break;
 
 

@@ -205,7 +205,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 								return nullptr;
 						}
 
-						//m_bCollideFinsh = true;
+						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_METEORSWARM);
 						m_fEventStart = pEvent.fStartTime;
 					}
 				}
@@ -244,7 +244,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 							return nullptr;
 						//m_bCollideFinsh = true;
 						m_fEventStart = pEvent.fStartTime;
-
+						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_DIVINESABER);
 
 					}
 				}
@@ -297,6 +297,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						//m_bCollideFinsh = true;
 					 
 						m_fEventStart = pEvent.fStartTime;
+						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_HOLYRANCE);
 					}
 				}
 
@@ -388,6 +389,7 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 					m_pOwner->Use_Mana(1.f);
 					m_eStateId = STATE_GALEFORCE;
 					m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_FUATU;
+					dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GALEFORCE);
 					if (nullptr == m_pTarget)
 					{
 						m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
@@ -397,13 +399,14 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 					else
 						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-					dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GRAVITY);
+					
 					break;
 				case 1:
 					__super::Exit();
 					m_pOwner->Use_Mana(1.f);
 					m_eStateId = STATE_THUNDERFIELD;
 					m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_DENGEKISYOUHEKI;
+					dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_THUNDERFIELD);
 					if (nullptr == m_pTarget)
 					{
 						m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
@@ -413,7 +416,7 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 					else
 						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-					dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_MAGNARAY);
+					
 					break;
 				case 2:
 					__super::Exit();
@@ -429,7 +432,7 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 					else
 						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-					dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_EXPLODE);
+				
 					break;
 				case 3:
 					__super::Exit();
@@ -445,7 +448,7 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 					else
 						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-					dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
+				
 					break;
 				case 4:
 					__super::Exit();
