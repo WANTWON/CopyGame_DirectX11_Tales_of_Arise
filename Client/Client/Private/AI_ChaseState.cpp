@@ -4,12 +4,14 @@
 #include "Alphen.h"
 #include "Sion.h"
 #include "Rinwell.h"
+#include "Law.h"
 #include "AIAttackNormalState.h"
 #include "AI_Alphen_NormalAttackState.h"
 #include "AI_Alphen_SkillAttackState.h"
 #include "AICheckState.h"
 #include "AI_Sion_SkillState.h"
 #include "AI_DodgeState.h"
+#include "AI_LAW_NomalAttack_State.h"
 
 
 
@@ -131,6 +133,18 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			}
 			break;
 
+		case CPlayer::LAW:
+			if (Get_Target_Distance() <= 4.f)
+			{
+				__super::Exit();
+				m_iCurrentAnimIndex = CLaw::ANIM::BTL_MOVE_BRAKE;
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+				m_bStopRunning = true;
+			}
+
+			break;
+
+
 
 
 		}
@@ -225,12 +239,39 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 
 		}
 
-		else
-			return new CAICheckState(m_pOwner, STATE_ID::STATE_RUN);
+	 else if (m_eCurrentPlayerID == CPlayer::LAW)
+	 	{
+			if (nullptr == m_pTarget)
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			}
+
+			/*switch (rand() % 4)
+			{
+			case 0:
+				return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+
+				if (m_pOwner->Get_Info().fCurrentMp > 1.f)
+				{
+			case 1:
+				return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
+
+			case 2:
+				return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
+
+			case 3:
+				return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
+				}*/
+					return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
+
+
+			}
+		}
+
 
 	
-	}
-
+	
 
 
 	return nullptr;
@@ -254,6 +295,11 @@ void CAI_ChaseState::Enter()
 
 	case CPlayer::RINWELL:
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MOVE_RUN;
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+		break;
+
+	case CPlayer::LAW:
+		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MOVE_RUN;
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 		break;
 

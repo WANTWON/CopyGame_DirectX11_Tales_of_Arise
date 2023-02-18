@@ -27,9 +27,6 @@ private:
 	vector<CEffect*> m_SlashEffect;
 
 private:
-	_float m_fStartHeight = 0.f;
-	_float m_fTime = 0.f;
-	_float m_fResultTime = 0.f;
 
 	CCollider* m_pLeftHandCollider = nullptr;
 	CCollider* m_pRightHandCollider = nullptr;
