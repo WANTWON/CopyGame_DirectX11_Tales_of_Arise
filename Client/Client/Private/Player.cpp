@@ -15,12 +15,15 @@
 #include "AIDeadState.h"
 #include "AI_BoostAttackState.h"
 #include "AiState_WakeUp.h"
+///////////////////////////////////
 #include "AI_AlphenSion_Smash.h"
 #include "AI_AlphenRinwell_Smash.h"
 #include "AI_AlphenLaw_Smash.h"
 #include "AI_SionRinwell_Smash.h"
 #include "AI_SionLaw_Smash.h"
 #include "AI_RinwellLaw_Smash.h"
+//////////////////////////////////
+#include "AI_Overlimit_State.h"
 
 
 using namespace Player;
@@ -89,11 +92,36 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_7))//test
+		OverLimitStateOn();
+
+	if (m_bOverLimit)
+	{
+		m_fOverLimitTimer += fTimeDelta;
+		if (m_fOverLimitTimer > 0.2f)
+		{
+
+			m_fOverLimitTimer = 0.f;
+			m_tInfo.fCurrentOverlimitGauge -= 1.f;
+			if (m_tInfo.fCurrentOverlimitGauge <= 0.f)
+			{
+				m_tInfo.fCurrentOverlimitGauge = 100.f;
+				m_bOverLimit = false;
+				m_fOverLimitTimer = 0.f;
+			}
+		}
+	}
+
+
 	if (m_bManaRecover)
 		m_tInfo.fCurrentMp += 0.02f;
 
 	if (m_tInfo.fCurrentMp >= m_tInfo.fMaxMp)
 		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
+
+
+
+
 
 	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
 	{	
@@ -400,6 +428,8 @@ void CPlayer::Play_AISkill(PLAYERID ePlayer)
 
 }
 
+
+
 void CPlayer::Plus_EXP(_uint exp)
 {
 
@@ -571,6 +601,19 @@ void CPlayer::BoostAttack()
 		Play_AISkill(SION);
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_pPlayerManager->Get_EnumPlayer(2)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(RINWELL);
+}
+
+void CPlayer::OverLimitStateOn()
+{
+
+	if (m_ePlayerID == RINWELL)
+	{
+		CAIState* pAIState = new AIPlayer::CAI_Overlimit_State(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+	}
+	
+
+
 }
 
 

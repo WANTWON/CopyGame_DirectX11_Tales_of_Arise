@@ -388,6 +388,9 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack">
       <UniqueIdentifier>{694fc3dd-33ad-4766-9fd7-80140fc0f6c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\OverLimit">
+      <UniqueIdentifier>{49cc5f09-84fb-4077-ac03-5ac549c2555f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1092,6 +1095,9 @@
     <ClInclude Include="..\Public\AI_SionRinwell_Smash.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AI_Overlimit_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\OverLimit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1762,6 +1768,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI_SionRinwell_Smash.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Overlimit_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\OverLimit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
