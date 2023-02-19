@@ -40,6 +40,7 @@ public:
 	HRESULT Loading_ForSnowFieldLevel();
 	HRESULT Loading_ForUITexture();
 	HRESULT Loading_ForEffect();
+	HRESULT Loading_ForEffectTexture();
 	HRESULT Loading_ForStaticMapObject();
 
 

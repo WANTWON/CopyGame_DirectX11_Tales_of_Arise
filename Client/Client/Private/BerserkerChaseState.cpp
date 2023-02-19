@@ -44,7 +44,7 @@ CBerserkerState * CChaseState::LateTick(_float fTimeDelta)
 
 	if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == true)
 	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPos);
+		m_pOwner->Get_Transform()->LookAtExceptY(vTargetPos);
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.4f, m_pOwner->Get_Navigation());
 	}
 

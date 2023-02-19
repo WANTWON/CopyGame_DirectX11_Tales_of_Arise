@@ -36,7 +36,10 @@ public:
 	HRESULT Loading_ForLogoLevel();
 	HRESULT Loading_ForClient();
 
-	HRESULT Loading_ForMaptoolModel();
+	HRESULT Loading_ForMaptoolSnowFieldModel();
+	HRESULT Loading_ForMaptoolBossRoomModel();
+	HRESULT Loading_ForMaptoolVillageModel();
+	
 	HRESULT Loading_ForActor();
 	HRESULT Loading_ForEffect();
 	HRESULT Loading_ForEffectTexture();

@@ -14,8 +14,16 @@
 #include "AI_HitState.h"
 #include "AIDeadState.h"
 #include "AI_BoostAttackState.h"
-#include "SmashAttack_State.h"
 #include "AiState_WakeUp.h"
+///////////////////////////////////
+#include "AI_AlphenSion_Smash.h"
+#include "AI_AlphenRinwell_Smash.h"
+#include "AI_AlphenLaw_Smash.h"
+#include "AI_SionRinwell_Smash.h"
+#include "AI_SionLaw_Smash.h"
+#include "AI_RinwellLaw_Smash.h"
+//////////////////////////////////
+#include "AI_Overlimit_State.h"
 
 
 using namespace Player;
@@ -63,6 +71,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pPlayerManager->Set_PlayerEnum(this, m_ePlayerID);
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
 
+	m_tInfo.fCurrentOverlimitGauge = 100.f;
+
 	return S_OK;
 }
 
@@ -84,37 +94,48 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
+
+	if (m_bOverLimit)
+	{
+		m_fOverLimitTimer += fTimeDelta;
+		if (m_fOverLimitTimer > 0.2f)
+		{
+
+			m_fOverLimitTimer = 0.f;
+			m_tInfo.fCurrentOverlimitGauge -= 1.f;
+			if (m_tInfo.fCurrentOverlimitGauge <= 0.f)
+			{
+				m_tInfo.fCurrentOverlimitGauge = 100.f;
+				m_bOverLimit = false;
+				m_fOverLimitTimer = 0.f;
+			}
+		}
+	}
+
+
 	if (m_bManaRecover)
 		m_tInfo.fCurrentMp += 0.02f;
 
 	if (m_tInfo.fCurrentMp >= m_tInfo.fMaxMp)
 		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 
+
+
+
+
 	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
-	{
+	{	
 		if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
 		{
-			_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;
+			/*_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;*/
 			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
-			{
-				if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_pPlayerManager->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
-					Play_AISkill(ALPHEN);
-				else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
-					Play_AISkill(SION);
-				else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_pPlayerManager->Get_EnumPlayer(2)->Get_BoostGuage() >= 100.f)
-					Play_AISkill(RINWELL);
+				BoostAttack();
 
-			}
-			else
-			{
-				if (CGameInstance::Get_Instance()->Key_Up(DIK_1))
-				{
-					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
-					CAIState* pAIState = new AIPlayer::CSmashAttack_State(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-					m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-				}
-			}
+			
+			
+
+
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
@@ -301,7 +322,7 @@ HRESULT CPlayer::Render_ShadowDepth()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
-}
+} 
 
 
 _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
@@ -400,12 +421,14 @@ void CPlayer::Play_AISkill(PLAYERID ePlayer)
 		
 		break;
 	case Client::CPlayer::LAW:
-		break;
-	default:
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 		break;
 	}
 
 }
+
+
 
 void CPlayer::Plus_EXP(_uint exp)
 {
@@ -445,110 +468,7 @@ void CPlayer::Revive()
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 		}
 		
-			//return new (m_pOwner, m_eStateId);
-	
-
-	//switch (index)
-	//{
-	//case ALPHEN:
-
-	//	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
-
-	//	CPlayerState* pState = nullptr;
-	//	CAIState* pAIState = nullptr;
-
-	//	if (m_ePlayerID == ALPHEN)
-	//	{
-	//		m_tInfo.fCurrentHp += hp;
-	//		switch (eMode)
-	//		{
-	//		case Client::ACTIVE:
-	//			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
-	//			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
-	//			break;
-	//		case Client::AI_MODE:
-	//			pAIState = new AIPlayer::CAICheckState(this, CAIState::STATE_IDLE);
-	//			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-	//			break;
-	//		}	//return new (m_pOwner, m_eStateId);
-	//	}
-	//	break;
-
-
-
-	//case SION:
-	//	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
-
-	//	CPlayerState* pState = nullptr;
-	//	CAIState* pAIState = nullptr;
-
-	//	if (m_ePlayerID == SION)
-	//	{
-	//		m_tInfo.fCurrentHp += hp;
-	//		switch (eMode)
-	//		{
-	//		case Client::ACTIVE:
-	//			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
-	//			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
-	//			break;
-	//		case Client::AI_MODE:
-	//			pAIState = new AIPlayer::CAICheckState(this, CAIState::STATE_IDLE);
-	//			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-	//			break;
-	//		}	//return new (m_pOwner, m_eStateId);
-	//	}
-
-	//	break;
-
-	//case RINWELL:
-	//	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
-
-	//	CPlayerState* pState = nullptr;
-	//	CAIState* pAIState = nullptr;
-
-	//	if (m_ePlayerID == RINWELL)
-	//	{
-	//		m_tInfo.fCurrentHp += hp;
-	//		switch (eMode)
-	//		{
-	//		case Client::ACTIVE:
-	//			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
-	//			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
-	//			break;
-	//		case Client::AI_MODE:
-	//			pAIState = new AIPlayer::CAICheckState(this, CAIState::STATE_IDLE);
-	//			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-	//			break;
-	//		}	//return new (m_pOwner, m_eStateId);
-	//	}
-
-	//	break;
-
-	//case LAW:
-	//	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
-
-	//	CPlayerState* pState = nullptr;
-	//	CAIState* pAIState = nullptr;
-
-	//	if (m_ePlayerID == LAW)
-	//	{
-	//		m_tInfo.fCurrentHp += hp;
-	//		switch (eMode)
-	//		{
-	//		case Client::ACTIVE:
-	//			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
-	//			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
-	//			break;
-	//		case Client::AI_MODE:
-	//			pAIState = new AIPlayer::CAICheckState(this, CAIState::STATE_IDLE);
-	//			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-	//			break;
-	//		}	//return new (m_pOwner, m_eStateId);
-	//	}
-
-	//	break;
-
-	//}
+			
 	
 }
 
@@ -595,6 +515,95 @@ void CPlayer::LateTick_AIState(_float fTimeDelta)
 	if (pNewState)
 		m_pAIState = m_pAIState->ChangeState(m_pAIState, pNewState);
 }
+
+void CPlayer::SmashAttack(_uint smashtype)
+{
+	switch (smashtype)
+	{
+	case ALPHEN_SION:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_AlphenSion_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+		
+
+	case ALPHEN_RINWELL:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_AlphenRinwell_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+
+		
+
+	case ALPHEN_LAW:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_AlphenLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+		
+
+	case SION_RINWELL:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_SionRinwell_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+
+
+		
+
+	case SION_LAW:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_SionLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+		
+
+	case RINWELL_LAW:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_RinwellLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+		
+
+
+	}
+
+
+
+}
+	
+			
+	
+
+void CPlayer::BoostAttack()
+{
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_pPlayerManager->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
+		Play_AISkill(ALPHEN);
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
+		Play_AISkill(SION);
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_pPlayerManager->Get_EnumPlayer(2)->Get_BoostGuage() >= 100.f)
+		Play_AISkill(RINWELL);
+}
+
+
 
 
 HRESULT CPlayer::SetUp_ShaderResources()

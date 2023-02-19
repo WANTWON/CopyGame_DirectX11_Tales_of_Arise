@@ -70,6 +70,19 @@ HRESULT CLevel_SnowField::Initialize()
 			return E_FAIL;
 	}
 
+
+
+		vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
+		for (auto& iter : vecFightedMonster)
+		{
+			if (iter == RINWELL)
+			{
+				CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("LayerNpcRinwell"));
+				break;
+			}
+		}
+	
+
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
@@ -128,10 +141,9 @@ HRESULT CLevel_SnowField::Initialize()
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
 
 
-	vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
 	if (vecFightedMonster.size() != 0)
 	{
-		_float exp = rand() % 500 + 500;
+		_float exp = rand() % 500 + 500.f;
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_SNOWFIELD, TEXT("sss"), &exp)))
 			return S_OK;
 	}
@@ -195,7 +207,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 					_float fFocusPower = 15.f;
 
 					_float fInterpFactor = m_fBlurTimer / (1.5f / 3);
-					_int iFocusDetailLerp = 1 + fInterpFactor * (10 - 1);
+					_int iFocusDetailLerp = 1 + (_int)fInterpFactor * (10 - 1);
 
 					pPlayer->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
 				}
@@ -625,8 +637,11 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Dialogue_Caption"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
-	
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+	
+	
 
 	/*_float exp = 500.f;
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, pLayerTag , &exp)))

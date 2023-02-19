@@ -262,9 +262,6 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\Manager">
       <UniqueIdentifier>{575e09da-0184-48c0-89d5-0b9fc2716218}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01.Actor\02.NPC\FemaleYoung">
-      <UniqueIdentifier>{ec4f57e9-3244-4a8c-b9e6-728d39635f29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04.UI\15.UI_QuestStart">
       <UniqueIdentifier>{a829f820-ba18-43fa-a651-8e9dbb119f23}</UniqueIdentifier>
     </Filter>
@@ -384,6 +381,21 @@
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\Law">
       <UniqueIdentifier>{a69218a6-7d99-4ef7-bec8-ec2414b5a8ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack">
+      <UniqueIdentifier>{694fc3dd-33ad-4766-9fd7-80140fc0f6c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\OverLimit">
+      <UniqueIdentifier>{49cc5f09-84fb-4077-ac03-5ac549c2555f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\25.UI_AlphaScreen">
+      <UniqueIdentifier>{2d2a3b94-d961-4063-b126-7d3032760baf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\26.UI_PartyJoin">
+      <UniqueIdentifier>{0d4ea2a4-70e7-4d47-8045-d9ef2db0157c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\02.NPC\SnowFieldNpc">
+      <UniqueIdentifier>{ec4f57e9-3244-4a8c-b9e6-728d39635f29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -931,7 +943,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SnowFieldNpc.h">
-      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+      <Filter>02.GameObjects\01.Actor\02.NPC\SnowFieldNpc</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerCreater.h">
       <Filter>01.Levels\00.Loading\ActorCreater</Filter>
@@ -968,9 +980,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_LevelUp.h">
       <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\SmashAttack_State.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_SidePopup.h">
       <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
@@ -1073,6 +1082,36 @@
     </ClInclude>
     <ClInclude Include="..\Public\AI_LAW_SkillAttack_State.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_AlphenLaw_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_AlphenRinwell_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_AlphenSion_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_RinwellLaw_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_SionLaw_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_SionRinwell_Smash.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_Overlimit_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\OverLimit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AlphaScreen.h">
+      <Filter>02.GameObjects\04.UI\25.UI_AlphaScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PartyjoinMsg.h">
+      <Filter>02.GameObjects\04.UI\26.UI_PartyJoin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerOverlimit.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1590,7 +1629,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SnowFieldNpc.cpp">
-      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+      <Filter>02.GameObjects\01.Actor\02.NPC\SnowFieldNpc</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerCreater.cpp">
       <Filter>01.Levels\00.Loading\ActorCreater</Filter>
@@ -1627,9 +1666,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_LevelUp.cpp">
       <Filter>02.GameObjects\04.UI\23.UI_LevelUp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\SmashAttack_State.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_SidePopup.cpp">
       <Filter>02.GameObjects\04.UI\24.UI_SidePopup</Filter>
@@ -1729,6 +1765,36 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI_LAW_SkillAttack_State.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_AlphenLaw_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_AlphenRinwell_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_AlphenSion_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_RinwellLaw_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_SionLaw_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_SionRinwell_Smash.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\SmashAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Overlimit_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\OverLimit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_AlphaScreen.cpp">
+      <Filter>02.GameObjects\04.UI\25.UI_AlphaScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PartyjoinMsg.cpp">
+      <Filter>02.GameObjects\04.UI\26.UI_PartyJoin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerOverlimit.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

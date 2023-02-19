@@ -21,6 +21,8 @@ public:
 	enum FLYSKILL { FLY_SKILL1, FLY_SKILL2, FLY_SKILL3, FLY_SKILL_END };
 	enum PLAYERID { ALPHEN, SION, RINWELL, LAW };
 
+	enum STRIKESMASH { ALPHEN_SION, ALPHEN_RINWELL, ALPHEN_LAW, SION_RINWELL, SION_LAW, RINWELL_LAW };
+
 protected:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& rhs);
@@ -57,6 +59,12 @@ public: /* Getter &  Setter */
 	_bool			Get_IsJustDodge(void) { return m_bIsJustDodge; }
 	void			On_JustDodge(void) { m_bIsJustDodge = true; }
 	void			Off_JustDodge(void) { m_bIsJustDodge = false; }
+	/* OverLimit */
+	void            Set_Overlimit(_bool tof) { m_bOverLimit = tof; }
+	_bool           Get_Overlimit() {	return m_bOverLimit;}
+
+
+
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
@@ -84,10 +92,16 @@ public: /*For.State*/
 	void			Tick_AIState(_float fTimeDelta);
 	void			LateTick_State(_float fTimeDelta);
 	void			LateTick_AIState(_float fTimeDelta);
+	void            SmashAttack(_uint smashtype);
+	void            BoostAttack();
+
 
 	void Set_BoostGuage(_float boostguage) { m_tInfo.fCurrentBoostGuage = boostguage; }
 	_float Get_BoostGuage() { return m_tInfo.fCurrentBoostGuage; }
+	void Plus_Overcount() { ++m_tInfo.idodgecount; }
+	void Set_Overcount(_uint count) { m_tInfo.idodgecount = count; }
 
+	
 
 public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);
@@ -122,6 +136,10 @@ protected: /* for 4 Player */
 	_bool			m_bIsJustDodge = false;
 	/* mana recover */
 	_bool           m_bManaRecover = true;
+
+	/* Over Limit */
+	_bool          m_bOverLimit = false;
+	_float         m_fOverLimitTimer = 0.f;
 
 private:
 	_bool m_bLevelup = false;

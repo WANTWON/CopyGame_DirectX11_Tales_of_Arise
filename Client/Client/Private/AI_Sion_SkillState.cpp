@@ -33,7 +33,7 @@ CAI_Sion_SkillState::CAI_Sion_SkillState(CPlayer* pPlayer, STATE_ID eStateType, 
 
 CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 {
-
+	
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;
 
@@ -378,7 +378,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 
 CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 {
-
+	
 	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())

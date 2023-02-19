@@ -55,9 +55,13 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		if (pEvent.isPlay)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
- 				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
+			
+
+		
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 			{
 				switch (m_eStateId)
@@ -292,7 +296,6 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 				pEffect = nullptr;
 		}
 	}
-	
 
 	if (m_bIsAnimationFinished)
 	{
@@ -365,9 +368,13 @@ CPlayerState * CAlphenSkillState::EventInput(void)
 void CAlphenSkillState::Enter(void)
 {
 	__super::Enter();
-	m_pOwner->Use_Mana(1.f);
-	m_pOwner->Set_Manarecover(false);
 
+	if (CPlayerState::STATE_SKILL_BOOST != m_eStateId)
+	{
+		m_pOwner->Use_Mana(1.f);
+		m_pOwner->Set_Manarecover(false);
+	}
+	
 	Reset_Skill();
 
 	if (m_bIsFly)
@@ -398,6 +405,11 @@ void CAlphenSkillState::Enter(void)
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_F.wav"), SOUND_EFFECT, 0.6f);
 
 			break;
+		case Client::CPlayerState::STATE_SKILL_BOOST:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_STRIKE_AIR);
+
+			
+			break;
 		}
 	}
 	else
@@ -408,6 +420,7 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_E.wav"), SOUND_EFFECT, 0.6f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
@@ -425,6 +438,9 @@ void CAlphenSkillState::Enter(void)
 
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.6f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_EFFECT, 0.6f);
+			break;
+		case Client::CPlayerState::STATE_SKILL_BOOST:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_STRIKE);
 			break;
 		}
 	}

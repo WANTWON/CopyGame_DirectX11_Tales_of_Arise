@@ -59,6 +59,7 @@ private:
 private:
 	_bool m_isCollider = false;
 	_bool m_bSoundStart = false;
+	_bool m_bSkillSoundStart = false;
 	_float m_fTimeDeltaAcc = 0.f;
 	_float m_fSkillF_TimeDelta = 0.f;
 	_float m_fHitTimeDeltaAcc = 0.f;

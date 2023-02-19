@@ -180,6 +180,9 @@
     <ClInclude Include="..\Public\AiRinwell.h" />
     <ClInclude Include="..\Public\AIRunawayfromTarget.h" />
     <ClInclude Include="..\Public\AiState_WakeUp.h" />
+    <ClInclude Include="..\Public\AI_AlphenLaw_Smash.h" />
+    <ClInclude Include="..\Public\AI_AlphenRinwell_Smash.h" />
+    <ClInclude Include="..\Public\AI_AlphenSion_Smash.h" />
     <ClInclude Include="..\Public\AI_Alphen_NormalAttackState.h" />
     <ClInclude Include="..\Public\AI_Alphen_SkillAttackState.h" />
     <ClInclude Include="..\Public\AI_ChaseState.h" />
@@ -188,7 +191,11 @@
     <ClInclude Include="..\Public\AI_BoostAttackState.h" />
     <ClInclude Include="..\Public\AI_LAW_NomalAttack_State.h" />
     <ClInclude Include="..\Public\AI_LAW_SkillAttack_State.h" />
+    <ClInclude Include="..\Public\AI_Overlimit_State.h" />
+    <ClInclude Include="..\Public\AI_RinwellLaw_Smash.h" />
     <ClInclude Include="..\Public\AI_Rinwell_SkillState.h" />
+    <ClInclude Include="..\Public\AI_SionLaw_Smash.h" />
+    <ClInclude Include="..\Public\AI_SionRinwell_Smash.h" />
     <ClInclude Include="..\Public\AI_Sion_SkillState.h" />
     <ClInclude Include="..\Public\AlphenAttackState.h" />
     <ClInclude Include="..\public\AlphenSkills.h" />
@@ -234,12 +241,12 @@
     <ClInclude Include="..\Public\LawSkillState.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
+    <ClInclude Include="..\Public\PlayerOverlimit.h" />
     <ClInclude Include="..\Public\Player_RinwellNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_RinwellSkillAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
     <ClInclude Include="..\public\ScreenDistortion.h" />
-    <ClInclude Include="..\Public\SmashAttack_State.h" />
     <ClInclude Include="..\Public\SnowFieldNpc.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
     <ClInclude Include="..\Public\HawkBattle_TornadeState.h" />
@@ -273,6 +280,7 @@
     <ClInclude Include="..\Public\RinwellSkillState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\SionSkills.h" />
+    <ClInclude Include="..\Public\UI_AlphaScreen.h" />
     <ClInclude Include="..\Public\UI_BattleResult.h" />
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h" />
     <ClInclude Include="..\Public\UI_Dialogue_Caption.h" />
@@ -360,6 +368,7 @@
     <ClInclude Include="..\Public\UI_MENU_Back.h" />
     <ClInclude Include="..\Public\UI_MENU_Quest.h" />
     <ClInclude Include="..\Public\UI_Monster_HPbar.h" />
+    <ClInclude Include="..\Public\UI_PartyjoinMsg.h" />
     <ClInclude Include="..\Public\UI_Portraitback.h" />
     <ClInclude Include="..\Public\ScreenFadeEffect.h" />
     <ClInclude Include="..\Public\UI_Comboline.h" />
@@ -409,6 +418,9 @@
     <ClCompile Include="..\Private\AiRinwell.cpp" />
     <ClCompile Include="..\Private\AIRunawayfromTarget.cpp" />
     <ClCompile Include="..\Private\AiState_WakeUp.cpp" />
+    <ClCompile Include="..\Private\AI_AlphenLaw_Smash.cpp" />
+    <ClCompile Include="..\Private\AI_AlphenRinwell_Smash.cpp" />
+    <ClCompile Include="..\Private\AI_AlphenSion_Smash.cpp" />
     <ClCompile Include="..\Private\AI_Alphen_NormalAttackState.cpp" />
     <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp" />
     <ClCompile Include="..\Private\AI_ChaseState.cpp" />
@@ -417,7 +429,11 @@
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp" />
     <ClCompile Include="..\Private\AI_LAW_NomalAttack_State.cpp" />
     <ClCompile Include="..\Private\AI_LAW_SkillAttack_State.cpp" />
+    <ClCompile Include="..\Private\AI_Overlimit_State.cpp" />
+    <ClCompile Include="..\Private\AI_RinwellLaw_Smash.cpp" />
     <ClCompile Include="..\Private\AI_Rinwell_SkillState.cpp" />
+    <ClCompile Include="..\Private\AI_SionLaw_Smash.cpp" />
+    <ClCompile Include="..\Private\AI_SionRinwell_Smash.cpp" />
     <ClCompile Include="..\Private\AI_Sion_SkillState.cpp" />
     <ClCompile Include="..\Private\AlphenAttackState.cpp" />
     <ClCompile Include="..\private\AlphenSkills.cpp" />
@@ -462,12 +478,12 @@
     <ClCompile Include="..\Private\LawSkillState.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
+    <ClCompile Include="..\Private\PlayerOverlimit.cpp" />
     <ClCompile Include="..\Private\Player_RinwellNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_RinwellSkillAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />
     <ClCompile Include="..\private\ScreenDistortion.cpp" />
-    <ClCompile Include="..\Private\SmashAttack_State.cpp" />
     <ClCompile Include="..\Private\SnowFieldNpc.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_TornadeState.cpp" />
@@ -498,6 +514,7 @@
     <ClCompile Include="..\Private\RinwellSkills.cpp" />
     <ClCompile Include="..\Private\RinwellSkillState.cpp" />
     <ClCompile Include="..\Private\SionSkills.cpp" />
+    <ClCompile Include="..\Private\UI_AlphaScreen.cpp" />
     <ClCompile Include="..\Private\UI_BattleResult.cpp" />
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp" />
     <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp" />
@@ -580,6 +597,7 @@
     <ClCompile Include="..\Private\UI_MENU_Back.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Quest.cpp" />
     <ClCompile Include="..\Private\UI_Monster_HPbar.cpp" />
+    <ClCompile Include="..\Private\UI_PartyjoinMsg.cpp" />
     <ClCompile Include="..\Private\UI_Portraitback.cpp" />
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp" />
     <ClCompile Include="..\Private\UI_Comboline.cpp" />
