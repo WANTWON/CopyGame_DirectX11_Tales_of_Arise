@@ -84,7 +84,7 @@ void CPoseState::Enter()
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(0);
 
 		pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-		pCameraManager->Play_ActionCamera(TEXT("RinwellTest.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+		pCameraManager->Play_ActionCamera(TEXT("RinwellAction.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_ATTACK_BRAVE);
 		break;
 	}		

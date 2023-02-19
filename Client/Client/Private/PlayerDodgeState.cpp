@@ -13,6 +13,9 @@
 
 #include "Player_SionNormalAttack_State.h"
 #include "Player_SionSkillAttack.h"
+#include "Monster.h"
+#include "PlayerOverlimit.h"
+
 
 using namespace Player;
 
@@ -207,6 +210,16 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 {
 	if (m_bIsAnimationFinished)
 	{
+		if (m_pOwner->Get_Info().idodgecount >= 3)
+		{
+		    CBaseObj* pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			
+			m_pOwner->Set_Overcount(0);
+			return new CPlayerOverlimit(m_pOwner);
+
+		}
+
 		if (m_bIsFly)
 			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_START, m_fTime, CJumpState::JUMP_BATTLE);
 		else
@@ -218,6 +231,8 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 
 void CDodgeState::Enter(void)
 {
+
+	m_pOwner->Plus_Overcount();
 	__super::Enter();
 
 	m_eStateId = STATE_ID::STATE_DODGE;

@@ -124,6 +124,8 @@ void CPlayerManager::Set_Ai_Check()
 
 void CPlayerManager::Set_SmashAttack()
 {
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
+		return;
 	if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
 	{
 		

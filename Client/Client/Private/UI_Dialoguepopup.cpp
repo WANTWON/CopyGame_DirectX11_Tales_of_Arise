@@ -129,19 +129,19 @@ int CUI_Dialoguepopup::Tick(_float fTimeDelta)
 
 		//	m_fAlpha = 0.5f;
 
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
-		{
-			m_bfadeout = true;
-		}
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 생겨질때
-		{
-			m_bfadein = true;
-		}
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_7)) // 생겨질때
-		{
-			m_bfadein = true;
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
+		//{
+		//	m_bfadeout = true;
+		//}
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 생겨질때
+		//{
+		//	m_bfadein = true;
+		//}
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_7)) // 생겨질때
+		//{
+		//	m_bfadein = true;
 
-		}
+		//}
 	}
 
 
