@@ -81,8 +81,11 @@ int CPlayer::Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return OBJ_NOEVENT;
+
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if(m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
+	if(m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return OBJ_NOEVENT;
 
 	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
@@ -120,9 +123,6 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 
 
-
-
-
 	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
 	{	
 		if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
@@ -130,12 +130,6 @@ int CPlayer::Tick(_float fTimeDelta)
 			/*_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;*/
 			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
 				BoostAttack();
-
-
-			
-			
-
-
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
@@ -184,6 +178,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
+
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return;
 
 	if (m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
@@ -483,6 +480,15 @@ void CPlayer::AI_check()
 
 void CPlayer::HandleInput()
 {
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON || eCamMode == CCamera_Dynamic::CAM_AIBOOSTOFF)
+			return;
+	}
+
 	CPlayerState* pNewState = m_pPlayerState->HandleInput();
 	if (pNewState)
 		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);

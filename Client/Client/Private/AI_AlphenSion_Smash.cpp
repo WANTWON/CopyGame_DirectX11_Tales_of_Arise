@@ -112,9 +112,12 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
+			m_pOwner->Set_IsActionMode(false);
+			return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+
+		}
 	}
 
 
@@ -146,17 +149,15 @@ void CAI_AlphenSion_Smash::Enter()
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-	pCamera->Set_Target(m_pOwner);
-
 	m_pOwner->Set_Manarecover(false);
+
+
 }
 
 void CAI_AlphenSion_Smash::Exit()
 {
 
-
+	m_pOwner->Set_IsActionMode(false);
 
 
 

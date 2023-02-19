@@ -136,6 +136,9 @@ int CAiRinwell::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return OBJ_NOEVENT;
+
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return OBJ_NOEVENT;
@@ -162,6 +165,9 @@ int CAiRinwell::Tick(_float fTimeDelta)
 void CAiRinwell::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
+		return;
+
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
 		return;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)

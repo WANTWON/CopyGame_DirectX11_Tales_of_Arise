@@ -85,8 +85,6 @@ HRESULT CLevel_BattleZone::Initialize()
 	}
 
 	
-	pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-	pCameraManager->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
 	return S_OK;
 }
 
