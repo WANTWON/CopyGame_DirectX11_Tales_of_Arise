@@ -71,6 +71,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pPlayerManager->Set_PlayerEnum(this, m_ePlayerID);
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
 
+	m_tInfo.fCurrentOverlimitGauge = 100.f;
+
 	return S_OK;
 }
 
@@ -92,8 +94,6 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_7))//test
-		OverLimitStateOn();
 
 	if (m_bOverLimit)
 	{
@@ -603,18 +603,7 @@ void CPlayer::BoostAttack()
 		Play_AISkill(RINWELL);
 }
 
-void CPlayer::OverLimitStateOn()
-{
 
-	if (m_ePlayerID == RINWELL)
-	{
-		CAIState* pAIState = new AIPlayer::CAI_Overlimit_State(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-	}
-	
-
-
-}
 
 
 HRESULT CPlayer::SetUp_ShaderResources()

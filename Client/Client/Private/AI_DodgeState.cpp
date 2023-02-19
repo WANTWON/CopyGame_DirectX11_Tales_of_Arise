@@ -10,6 +10,7 @@
 #include "AI_Alphen_SkillAttackState.h"
 #include "AICheckState.h"
 #include "AI_Sion_SkillState.h"
+#include "AI_Overlimit_State.h"
 
 
 
@@ -120,6 +121,23 @@ CAIState * CAI_DodgeState::LateTick(_float ftimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
+		if (m_pOwner->Get_Info().idodgecount >= 3)
+		{
+			if (m_pTarget == nullptr)
+				return nullptr;
+
+
+
+			if (nullptr == m_pTarget)
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			}
+			m_pOwner->Set_Overcount(0);
+			return new CAI_Overlimit_State(m_pOwner , m_pTarget);
+
+		}
+
 		return new CAICheckState(m_pOwner, m_eStateId);
 	}
 
@@ -128,7 +146,7 @@ CAIState * CAI_DodgeState::LateTick(_float ftimeDelta)
 
 void CAI_DodgeState::Enter()
 {
-
+	m_pOwner->Plus_Overcount();
 	//__super::Enter();
 
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())

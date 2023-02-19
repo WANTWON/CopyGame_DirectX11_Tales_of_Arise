@@ -47,7 +47,8 @@ namespace Client
 		int iCurrentExp;
 		int iMaxExp;
 		int iLevel;
-		float fCurrentOverlimitGauge = 100.f;
+		float fCurrentOverlimitGauge;
+		int idodgecount;
 
 	}OBJINFO;
 

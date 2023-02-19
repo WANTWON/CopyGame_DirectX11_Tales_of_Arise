@@ -640,6 +640,8 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_BATTLE, pLayerTag)))
 			return E_FAIL;
 	}
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
 
 	/**/
 	

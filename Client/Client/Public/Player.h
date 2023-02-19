@@ -94,10 +94,12 @@ public: /*For.State*/
 	void			LateTick_AIState(_float fTimeDelta);
 	void            SmashAttack(_uint smashtype);
 	void            BoostAttack();
-	void            OverLimitStateOn();
+
 
 	void Set_BoostGuage(_float boostguage) { m_tInfo.fCurrentBoostGuage = boostguage; }
 	_float Get_BoostGuage() { return m_tInfo.fCurrentBoostGuage; }
+	void Plus_Overcount() { ++m_tInfo.idodgecount; }
+	void Set_Overcount(_uint count) { m_tInfo.idodgecount = count; }
 
 	
 

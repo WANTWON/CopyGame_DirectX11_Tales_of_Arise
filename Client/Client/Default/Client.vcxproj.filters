@@ -1110,6 +1110,9 @@
     <ClInclude Include="..\Public\UI_PartyjoinMsg.h">
       <Filter>02.GameObjects\04.UI\26.UI_PartyJoin</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerOverlimit.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1789,6 +1792,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_PartyjoinMsg.cpp">
       <Filter>02.GameObjects\04.UI\26.UI_PartyJoin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerOverlimit.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

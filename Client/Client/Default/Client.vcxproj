@@ -241,6 +241,7 @@
     <ClInclude Include="..\Public\LawSkillState.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
+    <ClInclude Include="..\Public\PlayerOverlimit.h" />
     <ClInclude Include="..\Public\Player_RinwellNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_RinwellSkillAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
@@ -477,6 +478,7 @@
     <ClCompile Include="..\Private\LawSkillState.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
+    <ClCompile Include="..\Private\PlayerOverlimit.cpp" />
     <ClCompile Include="..\Private\Player_RinwellNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_RinwellSkillAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />

@@ -288,21 +288,21 @@ HRESULT CUI_PartyjoinMsg::Render()
 
 
 
-	//m_fSize.x = 24.f;
-	//m_fSize.y = 24.f;
-	//m_fPosition.x = 595.f;
-	//m_fPosition.y = 370.f;// +m_fFadeY;
-	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-	//	return E_FAIL;
-	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_msgboxdesc.eType))))
-	//	return E_FAIL;
+	m_fSize.x = 300.f;
+	m_fSize.y = 28.f;
+	m_fPosition.x = 595.f;
+	m_fPosition.y = 370.f;// +m_fFadeY;
+	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom5->Get_SRV(0))))
+		return E_FAIL;
 
-	//m_pShaderCom->Begin(UI_ALPHASET);
+	m_pShaderCom->Begin(UI_BRIGHT);
 
-	//m_pVIBufferCom->Render();
+	m_pVIBufferCom->Render();
 
 
 	//m_fSize.x = 180.f;
@@ -503,6 +503,11 @@ HRESULT CUI_PartyjoinMsg::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture4"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_ITEMINFO"), (CComponent**)&m_pTextureCom4)))
 		return E_FAIL;
 
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture5"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Partyjoin"), (CComponent**)&m_pTextureCom5)))
+		return E_FAIL;
+
+	
+
 	///* For.Com_Texture */
 	//if (FAILED(__super::Add_Components(TEXT("Com_Texture5"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_QUESTNAME"), (CComponent**)&m_pTextureCom5)))
 	//	return E_FAIL;
@@ -586,7 +591,7 @@ void CUI_PartyjoinMsg::Free()
 	Safe_Release(m_pTextureCom2);
 	Safe_Release(m_pTextureCom3);
 	Safe_Release(m_pTextureCom4);
-	//Safe_Release(m_pTextureCom5);
+	Safe_Release(m_pTextureCom5);
 	__super::Free();
 }
 
