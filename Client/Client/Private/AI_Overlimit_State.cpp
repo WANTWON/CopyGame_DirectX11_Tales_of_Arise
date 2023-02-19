@@ -114,8 +114,8 @@ CAIState * CAI_Overlimit_State::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
-		//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
 
 
@@ -127,19 +127,19 @@ void CAI_Overlimit_State::Enter()
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
-		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_STRIKE;
+		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ADVENT;
 
 		break;
 	case CPlayer::LAW:
-		m_iCurrentAnimIndex = CLaw::ANIM::BTL_ATTACK_STRIKE;
+		m_iCurrentAnimIndex = CLaw::ANIM::BTL_ADVENT;
 		break;
 
 	case CPlayer::RINWELL:
-		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_STRIKE;
+		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ADVENT;
 		break;
 
 	case CPlayer::SION:
-		m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
+		m_iCurrentAnimIndex = CSion::ANIM::BTL_ADVENT;
 		break;
 
 	}

@@ -279,6 +279,7 @@
     <ClInclude Include="..\Public\RinwellSkillState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\SionSkills.h" />
+    <ClInclude Include="..\Public\UI_AlphaScreen.h" />
     <ClInclude Include="..\Public\UI_BattleResult.h" />
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h" />
     <ClInclude Include="..\Public\UI_Dialogue_Caption.h" />
@@ -366,6 +367,7 @@
     <ClInclude Include="..\Public\UI_MENU_Back.h" />
     <ClInclude Include="..\Public\UI_MENU_Quest.h" />
     <ClInclude Include="..\Public\UI_Monster_HPbar.h" />
+    <ClInclude Include="..\Public\UI_PartyjoinMsg.h" />
     <ClInclude Include="..\Public\UI_Portraitback.h" />
     <ClInclude Include="..\Public\ScreenFadeEffect.h" />
     <ClInclude Include="..\Public\UI_Comboline.h" />
@@ -510,6 +512,7 @@
     <ClCompile Include="..\Private\RinwellSkills.cpp" />
     <ClCompile Include="..\Private\RinwellSkillState.cpp" />
     <ClCompile Include="..\Private\SionSkills.cpp" />
+    <ClCompile Include="..\Private\UI_AlphaScreen.cpp" />
     <ClCompile Include="..\Private\UI_BattleResult.cpp" />
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp" />
     <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp" />
@@ -592,6 +595,7 @@
     <ClCompile Include="..\Private\UI_MENU_Back.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Quest.cpp" />
     <ClCompile Include="..\Private\UI_Monster_HPbar.cpp" />
+    <ClCompile Include="..\Private\UI_PartyjoinMsg.cpp" />
     <ClCompile Include="..\Private\UI_Portraitback.cpp" />
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp" />
     <ClCompile Include="..\Private\UI_Comboline.cpp" />

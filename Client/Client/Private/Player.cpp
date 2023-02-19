@@ -322,7 +322,7 @@ HRESULT CPlayer::Render_ShadowDepth()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
-}
+} 
 
 
 _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
