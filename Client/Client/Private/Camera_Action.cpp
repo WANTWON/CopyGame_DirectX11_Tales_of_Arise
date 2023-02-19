@@ -90,6 +90,7 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 
 		if (m_iIndex >= m_CamDatas.size())
 		{
+			m_CamDatas.clear();
 			m_iIndex = 0;
 			m_bPlay = false;
 			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);

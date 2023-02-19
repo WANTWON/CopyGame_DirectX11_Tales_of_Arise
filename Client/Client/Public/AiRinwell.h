@@ -145,7 +145,6 @@ public:
 	void Set_SkillIndex(_uint iIndex) { m_eSkillIndex = iIndex; }
 	virtual void	 Set_BattleMode(_bool type) override;
 
-	_bool Get_LastStrikeAttack() { return m_bLastStrikeAttack; }
 	void Kill_Boss_Rinwell();
 
 public:
@@ -189,8 +188,7 @@ private:
 	_bool	m_bNpcMode = false;
 	_uint	 m_eSkillIndex = PHOTONFLASH;
 
-	_bool  m_bLastStrikeAttack = false;
-	_bool m_bStrikeOnetime = true;
+
 
 public:
 	static CAiRinwell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

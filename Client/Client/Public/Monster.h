@@ -98,8 +98,8 @@ public: // Get & Set
 	CBaseObj* Get_DamageCauser() { return m_pTarget; }
 	void	 Save_LastPosition();
 	_vector	 Get_LastPosition() { return m_vLastPos; }
-
-
+	void	Set_LastStrikeAttack(_bool type) { m_bLastStrikeAttack = type; }
+	_bool Get_LastStrikeAttack() { return m_bLastStrikeAttack; }
 
 protected:
 	DMG_DIR Calculate_DmgDirection();
@@ -131,6 +131,8 @@ protected:
 	_bool m_bOnGoingDown = false;
 	_bool m_bBedamageAnim = false;
 	_bool m_bBedamageAnim_Delay = false;
+	_bool  m_bLastStrikeAttack = false;
+
 	_uint m_eCurLevel = LEVEL_END;
 	_uint m_iRand = 0;
 

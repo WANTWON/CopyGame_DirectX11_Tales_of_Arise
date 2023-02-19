@@ -29,8 +29,6 @@ CAI_AlphenSion_Smash::CAI_AlphenSion_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 {
-	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
-		return nullptr;
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
@@ -113,9 +111,12 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
+			m_pOwner->Set_IsActionMode(false);
+			return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+
+		}
 	}
 
 
@@ -157,19 +158,26 @@ void CAI_AlphenSion_Smash::Enter()
 	}*/
 	
 
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-	pCamera->Set_Target(m_pOwner);
-
 	m_pOwner->Set_Manarecover(false);
+
+
 }
 
 void CAI_AlphenSion_Smash::Exit()
 {
-	if (dynamic_cast<CAiRinwell*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_LastStrikeAttack())
-		dynamic_cast<CAiRinwell*>(CBattleManager::Get_Instance()->Get_BossMonster())->Kill_Boss_Rinwell();
 
+	m_pOwner->Set_IsActionMode(false);
 
+	if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+	}
+	else
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+	}
+		
 
 	if (!m_pEffects.empty())
 	{
@@ -184,6 +192,6 @@ void CAI_AlphenSion_Smash::Exit()
 		}
 	}
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+	
 	__super::Exit();
 }

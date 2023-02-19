@@ -126,15 +126,31 @@ void CPlayerManager::Set_SmashAttack()
 {
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
 		return;
-	if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
-	{
-		
+
+	
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
+			CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+
+			Get_EnumPlayer(0)->Set_IsActionMode(true);
+			Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
+			Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 			Get_EnumPlayer(0)->SmashAttack(CPlayer::ALPHEN_SION);
+
+			Get_EnumPlayer(1)->Set_IsActionMode(true);
+			Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
+			Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 			Get_EnumPlayer(1)->SmashAttack(CPlayer::ALPHEN_SION);
+
+			Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
+			Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+
+			CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+			pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+			pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
+
 			if(CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 		}
 		
 		
@@ -183,10 +199,38 @@ void CPlayerManager::Set_SmashAttack()
 		}
 	   }
 		
-		
 	}
 
+void CPlayerManager::Update_StrikePosition(_tchar * FilePath)
+{
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC Active1;
+	NONANIMDESC Active2;
+	NONANIMDESC AIplayer1;
+	NONANIMDESC AIplayer2;
+	NONANIMDESC Monster;
+	_uint iNum = 0;
 
+	hFile = CreateFile(FilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return;
+
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	ReadFile(hFile, &(Active1), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(Active2), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(AIplayer1), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(AIplayer2), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(Monster), sizeof(NONANIMDESC), &dwByte, nullptr);
+	CloseHandle(hFile);
+
+
+	m_vStrikePosition[ACTIVE1] = XMVectorSetW(XMLoadFloat3(&Active1.vPosition), 1.f);
+	m_vStrikePosition[ACTIVE2] = XMVectorSetW(XMLoadFloat3(&Active2.vPosition), 1.f);
+	m_vStrikePosition[AIPLAYER1] = XMVectorSetW(XMLoadFloat3(&AIplayer1.vPosition), 1.f);
+	m_vStrikePosition[AIPLAYER2] = XMVectorSetW(XMLoadFloat3(&AIplayer2.vPosition), 1.f);
+	m_vStrikePosition[LOCKON] = XMVectorSetW(XMLoadFloat3(&Monster.vPosition), 1.f);
 }
 
 void CPlayerManager::Free()

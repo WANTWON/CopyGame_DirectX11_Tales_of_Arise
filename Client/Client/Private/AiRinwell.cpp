@@ -34,7 +34,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 		return E_FAIL;
 
 
-	m_tStats.m_fMaxHp = 1000.f;
+	m_tStats.m_fMaxHp = 100000.f;
 
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
@@ -136,6 +136,11 @@ int CAiRinwell::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
+	__super::Tick(fTimeDelta);
+
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return OBJ_NOEVENT;
+
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return OBJ_NOEVENT;
@@ -149,8 +154,6 @@ int CAiRinwell::Tick(_float fTimeDelta)
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
 
-	__super::Tick(fTimeDelta);
-
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
 	AI_Behavior(fTimeDelta);
@@ -163,11 +166,13 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
-
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
+
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return;
 
 	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
 		return;
@@ -349,25 +354,26 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
 
-	
-
 	if (iHp <= 0)
 	{
-		iHp = 1;
-		if (m_bStrikeOnetime)
+		if (!m_bLastStrikeAttack)
 		{
 			m_tStats.m_fLockonSmashGuage = 4.f;
-			false;
+		
+			m_bTakeDamage = true;
+			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
-		
-		
-		m_bTakeDamage = true;
-		m_bLastStrikeAttack = true;
-		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
-		m_pState = m_pState->ChangeState(m_pState, pState);
+		else
+		{
+			m_tStats.m_fCurrentHp = 0;
+			CBattleManager::Get_Instance()->Update_LockOn();
+			Check_AmILastMoster();
 
-		
-		//return 0;
+			m_bTakeDamage = true;
+			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+		}
 	}
 	else
 	{
@@ -375,7 +381,7 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		m_eDmg_Direction = Calculate_DmgDirection();
 		m_bTakeDamage = true;
 
-		if (fDamage > 100)
+		if (fDamage > 300)
 		{
 			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 			m_pState = m_pState->ChangeState(m_pState, pState);

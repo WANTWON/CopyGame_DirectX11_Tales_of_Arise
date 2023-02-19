@@ -166,6 +166,16 @@ void CImgui_Manager::Tick_Imgui()
 	ImGui::Begin(u8"Editor", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_HorizontalScrollbar
 		| ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
+
+	// Editor Alpha
+	ImGui::Text("Settings");
+	ImGuiStyle& style = ImGui::GetStyle();
+	ImVec4 WindowColor = style.Colors[ImGuiCol_WindowBg];
+	ImGui::SliderFloat("Editor Opacity", &m_fEditorAlpha, 0.0f, 1.0f);
+	const ImVec4 NewColor = ImVec4(WindowColor.x, WindowColor.y, WindowColor.z, m_fEditorAlpha);
+	style.Colors[ImGuiCol_WindowBg] = NewColor;
+	ImGui::NewLine();
+
 	//메뉴바
 	if (ImGui::BeginMenuBar())
 	{
@@ -349,7 +359,11 @@ void CImgui_Manager::BrowseForFolder()
 
 			hFile = CreateFile(OFN.lpstrFile, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);;
 			if (0 == hFile)
+			{
+				CloseHandle(hFile);
 				return;
+			}
+
 
 			/* 첫줄은 object 리스트의 size 받아서 갯수만큼 for문 돌리게 하려고 저장해놓음*/
 			WriteFile(hFile, &(iNum), sizeof(_int), &dwByte, nullptr);
@@ -404,7 +418,11 @@ void CImgui_Manager::BrowseForFolder()
 
 			hFile = CreateFile(OFN.lpstrFile, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 			if (0 == hFile)
+			{
+				CloseHandle(hFile);
 				return;
+			}
+				
 
 			/* 타일의 개수 받아오기 */
 			ReadFile(hFile, &(iNum), sizeof(_int), &dwByte, nullptr);
@@ -2407,10 +2425,18 @@ void CImgui_Manager::Set_TargetCamera()
 				_float4 vPosition = (_float4)vCamMatrix.m[3];
 				_vector vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 				_vector vTargetLook = pTarget->Get_TransformState(CTransform::STATE_LOOK);
+				_vector vTargetRight = pTarget->Get_TransformState(CTransform::STATE_RIGHT);
+
 				_vector vTargettoCamDir = XMLoadFloat4(&vPosition) - vTargetPosition;
-				_float  fLength = XMVectorGetX(XMVector3Length(XMVectorSetY(vTargettoCamDir, 0.f)));
+				vTargettoCamDir = XMVectorSetW(vTargettoCamDir, 0.f);
+				_vector vNewTargetoCamDir = (XMVectorSetY(vTargettoCamDir, 0.f));
+
+				vTargetLook = XMVectorSetY(vTargetLook, 0.f);
+				_vector vCross = XMVector3Cross(vTargetLook, XMVectorSetY(vTargettoCamDir, 0.f));
+
+				_float  fLength = XMVectorGetX(XMVector3Length(vTargettoCamDir));
 				_float  fRadian =  acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(vTargetLook), XMVector3Normalize(vTargettoCamDir))));
-				_float  fCross = (XMVectorGetX(XMVector3Cross(XMVector3Normalize(vTargetLook), XMVector3Normalize(vTargettoCamDir))));
+				_float  fCross = XMVectorGetY(vCross);
 			
 				_float4 vLook = (_float4)vCamMatrix.m[2];
 
@@ -2506,53 +2532,76 @@ _bool CImgui_Manager::Save_Camera()
 	
 	/* Create Effect Data File */
 	wstring wsCurrentCamera = wstring(m_sCurrentCamera.begin(), m_sCurrentCamera.end());
-	HANDLE hFileCamera = nullptr;
-	_tchar LoadPathCamera[MAX_PATH] = TEXT("../../../Bin/Data/CameraData/");
-	wcscat_s(LoadPathCamera, MAX_PATH, wsCurrentCamera.c_str());
 
-	hFileCamera = CreateFile(LoadPathCamera, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	OPENFILENAME OFN;
+	TCHAR filePathName[300] = L"";
+	TCHAR lpstrFile[300] = L"";
+	static TCHAR filter[] = L"데이터 파일\0*.dat\0텍스트 파일\0*.txt";
 
-	if (hFileCamera == INVALID_HANDLE_VALUE)
-		return false;
+	memset(&OFN, 0, sizeof(OPENFILENAME));
+	OFN.lStructSize = sizeof(OPENFILENAME);
+	OFN.hwndOwner = g_hWnd;
+	OFN.lpstrFilter = filter;
+	OFN.lpstrFile = lpstrFile;
+	OFN.nMaxFile = 300;
+	OFN.lpstrInitialDir = L".";
+	OFN.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
 
-	DWORD dwByte = 0;
-	/* Camera Type */
-	WriteFile(hFileCamera, &m_eCameraType, sizeof(_int), &dwByte, nullptr);
-
-	if (m_eCameraType == ACTION)
+	if (GetSaveFileName(&OFN))
 	{
-		/* Camera play time */
-		_float fPlayTime = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_PlayTime();
-		WriteFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
 
-		vector<CCamera_Action::TOOLDESC> CameraDatas = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_AllCamData();
-		/* For every Effect in this File: */
-		_uint iCamSize = CameraDatas.size();
-		WriteFile(hFileCamera, &iCamSize, sizeof(_uint), &dwByte, nullptr);
-		for (_uint i = 0; i < CameraDatas.size(); i++)
+		HANDLE hFileCamera = 0;
+		DWORD dwByte = 0;
+		NONANIMDESC  ModelDesc;
+
+
+		hFileCamera = CreateFile(OFN.lpstrFile, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);;
+		if (0 == hFileCamera)
 		{
-			WriteFile(hFileCamera, &CameraDatas[i], sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
+			CloseHandle(hFileCamera);
+			return E_FAIL;
 		}
-	}
-	else if (m_eCameraType == TARGETMODE)
-	{
-		/* Camera play time */
-		_float fPlayTime = dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_PlayTime();
-		WriteFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
 
-		vector<CCamera_Dynamic::TOOLDESC> CameraDatas = dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_AllCamData();
-		/* For every Effect in this File: */
-		_uint iCamSize = CameraDatas.size();
-		WriteFile(hFileCamera, &iCamSize, sizeof(_uint), &dwByte, nullptr);
-		for (_uint i = 0; i < CameraDatas.size(); i++)
+
+		/* Camera Type */
+		WriteFile(hFileCamera, &m_eCameraType, sizeof(_int), &dwByte, nullptr);
+
+		if (m_eCameraType == ACTION)
 		{
-			WriteFile(hFileCamera, &CameraDatas[i], sizeof(CCamera_Dynamic::TOOLDESC), &dwByte, nullptr);
+			/* Camera play time */
+			_float fPlayTime = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_PlayTime();
+			WriteFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+
+			vector<CCamera_Action::TOOLDESC> CameraDatas = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_AllCamData();
+			/* For every Effect in this File: */
+			_uint iCamSize = CameraDatas.size();
+			WriteFile(hFileCamera, &iCamSize, sizeof(_uint), &dwByte, nullptr);
+			for (_uint i = 0; i < CameraDatas.size(); i++)
+			{
+				WriteFile(hFileCamera, &CameraDatas[i], sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
+			}
 		}
+		else if (m_eCameraType == TARGETMODE)
+		{
+			/* Camera play time */
+			_float fPlayTime = dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_PlayTime();
+			WriteFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+
+			vector<CCamera_Dynamic::TOOLDESC> CameraDatas = dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Get_AllCamData();
+			/* For every Effect in this File: */
+			_uint iCamSize = CameraDatas.size();
+			WriteFile(hFileCamera, &iCamSize, sizeof(_uint), &dwByte, nullptr);
+			for (_uint i = 0; i < CameraDatas.size(); i++)
+			{
+				WriteFile(hFileCamera, &CameraDatas[i], sizeof(CCamera_Dynamic::TOOLDESC), &dwByte, nullptr);
+			}
+		}
+
+
+		CloseHandle(hFileCamera);
+
 	}
 
-	
-
-	CloseHandle(hFileCamera);
 
 	m_SavedCameras.push_back(m_sCurrentCamera);
 

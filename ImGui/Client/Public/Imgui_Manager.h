@@ -238,6 +238,7 @@ private:
 	_float m_fCurveScaleX = 1.f, m_fCurveScaleY = 1.f, m_fCurveScaleZ = 1.f;
 	_uint m_iSelectedColorCurve = 0, m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedScaleCurve = 0, m_iSelectedAlphaCurve = 0, 
 		m_iSelectedTurnVelocityCurve = 0, m_iSelectedNoisePowerCurve = 0, m_iSelectedDistortPowerCurve = 0;
+	_float m_fEditorAlpha = 0.9f;
 
 public:
 	virtual void Free() override;
