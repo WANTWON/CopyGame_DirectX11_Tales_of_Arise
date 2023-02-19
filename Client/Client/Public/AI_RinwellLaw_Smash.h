@@ -5,10 +5,10 @@
 BEGIN(Client)
 class CEffect;
 BEGIN(AIPlayer)
-class CSmashAttack_State final : public CAIState
+class CAI_RinwellLaw_Smash final : public CAIState
 {
 public:
-	CSmashAttack_State(class CPlayer* pPlayer, CBaseObj* pTarget);
+	CAI_RinwellLaw_Smash(class CPlayer* pPlayer, CBaseObj* pTarget);
 
 	virtual CAIState* Tick(_float fTimeDelta) override;
 	virtual CAIState* LateTick(_float fTimeDelta) override;
@@ -26,8 +26,6 @@ private:
 	_bool m_bAlphenStrike_2 = false;
 
 	_float m_fEventStart = -1.f;
-
-	CCollider* m_pLawCollider = nullptr;
 };
 END
 END

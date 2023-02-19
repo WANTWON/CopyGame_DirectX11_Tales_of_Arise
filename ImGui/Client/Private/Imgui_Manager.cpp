@@ -3023,6 +3023,12 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_AlphaCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 				ImGui::EndTabItem();
 			}
@@ -3082,6 +3088,12 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_SizeCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 
 				ImGui::EndTabItem();
@@ -3172,6 +3184,12 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_ColorCurve({ m_fCurveRed, m_fCurveGreen, m_fCurveBlue, m_fCurveStart, m_fCurveEnd });
+
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 
 				ImGui::EndTabItem();
@@ -3232,6 +3250,12 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_AlphaCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 				ImGui::EndTabItem();
 			}
@@ -3302,6 +3326,12 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_ScaleCurve({ m_fCurveScaleX, m_fCurveScaleY, m_fCurveScaleZ, m_fCurveStart, m_fCurveEnd });
+
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 
 				ImGui::EndTabItem();
@@ -3362,6 +3392,12 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_TurnVelocityCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 				ImGui::EndTabItem();
 			}
@@ -3421,6 +3457,12 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_NoisePowerCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+					
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 				ImGui::EndTabItem();
 			}
@@ -3481,6 +3523,12 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_DistortPowerCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 				ImGui::EndTabItem();
 			}
@@ -3570,6 +3618,12 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_ColorCurve({ m_fCurveRed, m_fCurveGreen, m_fCurveBlue, m_fCurveStart, m_fCurveEnd });
+
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 
 				ImGui::EndTabItem();
@@ -3630,6 +3684,11 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_AlphaCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 				ImGui::EndTabItem();
 			}
@@ -3689,6 +3748,11 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_SizeCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 
 				ImGui::EndTabItem();
@@ -3749,6 +3813,11 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_VelocityCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+					_float fValue = m_fCurveEnd - m_fCurveStart;
+					m_fCurveStart = m_fCurveEnd;
+					m_fCurveEnd += fValue;
+					if (m_fCurveEnd > 1.f)
+						m_fCurveEnd = 1.f;
 				}
 
 				ImGui::EndTabItem();

@@ -27,7 +27,7 @@ public:
 
 public:
 	void ChangeKeyFrameTime(_float fDuration);
-	void Set_KeyFrames(_int iIndex, KEYFRAME KeyFrame);
+	void Set_KeyFrames(_float fDuration/*_int iIndex, KEYFRAME KeyFrame*/);
 
 private:
 	char m_szName[MAX_PATH] = "";
