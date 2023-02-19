@@ -23,6 +23,8 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+	HRESULT Render_Overlimit();
+
 private:
 	virtual HRESULT Ready_Components(void * pArg) override;
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
@@ -32,6 +34,9 @@ private:
 private:
 	_float4 m_vRight;
 	_float4 m_vUp;
+
+	CTexture*				m_pTextureCom1 = nullptr;
+	CTexture*				m_pTextureCom2 = nullptr;
 
 public:
 	static CMP_Guage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -47,6 +52,9 @@ private:
 
 	
 	_tchar					m_szFPS[MAX_PATH] = TEXT("");
+
+	_bool m_bOverlimit = false;
+	_float m_fCurrentOverlimitGauge = 0.f;
 
 
 	_float m_fcurrent_render_slot_mp = 0.f;
