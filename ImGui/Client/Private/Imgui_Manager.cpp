@@ -1962,6 +1962,13 @@ void CImgui_Manager::Set_ActionCamera()
 
 					CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_GAMEPLAY, TEXT("Layer_Camera"), &CameraDesc);
 				}
+				else
+				{
+					ZeroMemory(&m_ActionCamDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+					CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::ACTION);
+					m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
+					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Remove_AllCamdata();
+				}
 				
 			}
 		}
@@ -2028,10 +2035,12 @@ void CImgui_Manager::Set_ActionCamera()
 		ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 		if (ImGui::BeginTabBar("CameraTabBar", tab_bar_flags))
 		{
-			if (ImGui::BeginTable("ColorCurvesTable", 5, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+			if (ImGui::BeginTable("ColorCurvesTable", 7, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 			{
 				ImGui::TableSetupScrollFreeze(0, 1);
 				ImGui::TableSetupColumn("ID");
+				ImGui::TableSetupColumn("Section");
+				ImGui::TableSetupColumn("Lerp/CatRom");
 				ImGui::TableSetupColumn("Eye");
 				ImGui::TableSetupColumn("At");
 				ImGui::TableSetupColumn("Start");
@@ -2053,20 +2062,31 @@ void CImgui_Manager::Set_ActionCamera()
 						m_iCamCurvedIndex = i;
 						m_ActionCamDesc = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_CamData(m_iCamCurvedIndex);
 					}
+					ImGui::TableNextColumn();
+					string sSection = CameraCurves[i].bNewSection == true ? "NewSection" : " ";
+					ImGui::Text(sSection.c_str());
+
+
+					ImGui::TableNextColumn();
+					string sLerp = CameraCurves[i].bLerp == true ? "lerp" : "CatRom";
+					if (CameraCurves[i].bNewSection == true)
+						sLerp = " ";
+					ImGui::Text(sLerp.c_str());
 
 					ImGui::TableNextColumn(); 
 					string sEye = CutOnSpecificDecimalPt( to_string(CameraCurves[i].vEyePosition.x), 2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.y),2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.z),2);
 					ImGui::Text(sEye.c_str()); 
+
 					ImGui::TableNextColumn();
 					string sAt = CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.x),2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.y),2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.z),2);
 					ImGui::Text(sAt.c_str());
 
 
 					ImGui::TableNextColumn();
-					ImGui::Text(to_string(CameraCurves[i].fStartTime).c_str()); /* Start */
+					ImGui::Text(CameraCurves[i].bNewSection == false ? to_string(CameraCurves[i].fStartTime).c_str() : " "); /* Start */
 
 					ImGui::TableNextColumn();
-					ImGui::Text(to_string(CameraCurves[i].fEndTime).c_str()); /* End */
+					ImGui::Text(CameraCurves[i].bNewSection == false ? to_string(CameraCurves[i].fEndTime).c_str() : " " ); /* End */
 				}
 				ImGui::EndTable();
 			}
@@ -2152,6 +2172,16 @@ void CImgui_Manager::Set_ActionCamera()
 			m_pCamera_Manager->Set_CameraSymbolPosition(CCamera_Manager::CAM_AT, XMLoadFloat4(&m_ActionCamDesc.vAtPosition));
 
 			ImGui::BulletText("Start/End Time");
+			if (ImGui::Checkbox("Section Start", &m_ActionCamDesc.bNewSection))
+			{
+			}
+			ImGui::SameLine();
+			ImGui::Text("lerp Mode / CatRom Mode");
+			ImGui::SameLine();
+			if (ImGui::Button(m_ActionCamDesc.bLerp ? "Lerp" : "CatRom"))
+			{
+				m_ActionCamDesc.bLerp = !m_ActionCamDesc.bLerp;
+			}
 			ImGui::SetNextItemWidth(200);
 			if (ImGui::DragFloat("##Start", &m_ActionCamDesc.fStartTime, 0.01f, 0.f, 1.f, "Start: %.02f"))
 			{
