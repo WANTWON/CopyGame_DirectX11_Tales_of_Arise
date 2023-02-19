@@ -167,8 +167,14 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
-	//if (FAILED(Loading_ForMaptoolModel()))
+	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
 	//	return E_FAIL;
+
+	if (FAILED(Loading_ForMaptoolBossRoomModel()))
+		return E_FAIL;
+
+	if (FAILED(Loading_ForMaptoolVillageModel()))
+		return E_FAIL;
 
 	//For Effect
 	if (FAILED(Loading_ForEffect()))
@@ -188,12 +194,9 @@ HRESULT CLoader::Loading_ForClient()
 }
 
 
-HRESULT CLoader::Loading_ForMaptoolModel()
+HRESULT CLoader::Loading_ForMaptoolSnowFieldModel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	
-	
-
 	
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock"),
@@ -685,7 +688,6 @@ HRESULT CLoader::Loading_ForMaptoolModel()
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Crystal"));
 
 
-
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Terrain_HeightMap"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap3.bmp"), false))))
@@ -699,6 +701,35 @@ HRESULT CLoader::Loading_ForMaptoolModel()
 	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("HeightMapPlane"));
 
 	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForMaptoolBossRoomModel()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Ceil_A_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Cell/Bld_Ceil_A_Lod1/Bld_Ceil_A_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Ceil_A_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ceiling"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Cell/Ceiling/Ceiling.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Ceiling"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D03_Wall03_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_D03_Wall03_Lod1/Bld_D03_Wall03_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D03_Wall03_Lod1"));
+
+	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForMaptoolVillageModel()
+{
 	return S_OK;
 }
 

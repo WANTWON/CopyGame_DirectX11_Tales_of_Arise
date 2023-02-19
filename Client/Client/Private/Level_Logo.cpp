@@ -242,7 +242,12 @@ HRESULT CLevel_Logo::Ready_Layer_Npc(const _tchar * pLayerTag)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
 				return E_FAIL;
 		}
-
+		else if (!wcscmp(pModeltag, TEXT("Rinwell")))
+		{
+			NpcDesc.eNpcType = CSnowFieldNpc::RINWELL_NPC;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, TEXT("LayerNpcRinwell"), &NpcDesc)))
+				return E_FAIL;
+		}
 
 	}
 
@@ -251,6 +256,7 @@ HRESULT CLevel_Logo::Ready_Layer_Npc(const _tchar * pLayerTag)
 	RELEASE_INSTANCE(CGameInstance);
 
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("LayerNpcRinwell"));
 	return S_OK;
 }
 

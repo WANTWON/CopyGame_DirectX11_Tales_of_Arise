@@ -262,9 +262,6 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\Manager">
       <UniqueIdentifier>{575e09da-0184-48c0-89d5-0b9fc2716218}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01.Actor\02.NPC\FemaleYoung">
-      <UniqueIdentifier>{ec4f57e9-3244-4a8c-b9e6-728d39635f29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04.UI\15.UI_QuestStart">
       <UniqueIdentifier>{a829f820-ba18-43fa-a651-8e9dbb119f23}</UniqueIdentifier>
     </Filter>
@@ -396,6 +393,9 @@
     </Filter>
     <Filter Include="02.GameObjects\04.UI\26.UI_PartyJoin">
       <UniqueIdentifier>{0d4ea2a4-70e7-4d47-8045-d9ef2db0157c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\02.NPC\SnowFieldNpc">
+      <UniqueIdentifier>{ec4f57e9-3244-4a8c-b9e6-728d39635f29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -943,7 +943,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SnowFieldNpc.h">
-      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+      <Filter>02.GameObjects\01.Actor\02.NPC\SnowFieldNpc</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerCreater.h">
       <Filter>01.Levels\00.Loading\ActorCreater</Filter>
@@ -1626,7 +1626,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Alphen</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SnowFieldNpc.cpp">
-      <Filter>02.GameObjects\01.Actor\02.NPC\FemaleYoung</Filter>
+      <Filter>02.GameObjects\01.Actor\02.NPC\SnowFieldNpc</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerCreater.cpp">
       <Filter>01.Levels\00.Loading\ActorCreater</Filter>
