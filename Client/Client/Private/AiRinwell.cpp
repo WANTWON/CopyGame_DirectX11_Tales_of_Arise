@@ -166,14 +166,13 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
-		return;
-
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
+
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return;
 
 	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
 		return;
