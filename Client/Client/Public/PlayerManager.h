@@ -19,6 +19,8 @@ public:
 
 	enum STRIKESMASH{ALPHEN_SION , ALPHEN_RINWELL , ALPHEN_LAW , SION_RINWELL , SION_LAW , RINWELL_LAW};
 
+	enum STRIKEPOSITION { ACTIVE1, ACTIVE2, AIPLAYER1, AIPLAYER2, LOCKON };
+
 private:
 	explicit CPlayerManager();
 	virtual ~CPlayerManager() = default;
@@ -37,12 +39,11 @@ public: /* Getter Setter */
 
 	PLAYER_MODE	 Check_ActiveMode(CPlayer* pPlayer);
 	void	 Set_BattleMode(_bool bType) { m_bBattleMode = bType; }
-
 	CPlayer* Get_EnumPlayer(_uint eID);
 
 	void Set_Ai_Check();
-
 	void Set_SmashAttack();
+	void Update_StrikePosition(_tchar* FilePath);
 
 private:
 	CPlayer* m_pActivePlayer = nullptr;
@@ -51,6 +52,8 @@ private:
 	_bool	m_bBattleMode = false;
 
 	CPlayer* m_AllPlayers[PLAYER_END] = { nullptr, nullptr, nullptr, nullptr };
+
+	_vector m_vStrikePosition[5];
 
 public:
 	virtual void Free() override;

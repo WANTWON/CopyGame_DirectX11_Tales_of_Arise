@@ -391,7 +391,8 @@ void CSionSkills::Dead_Effect()
 	case BOOST:
 	case GRAVITY_DEAD:
 	{
-		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
 		if (!m_pEffects.empty())
 		{
 			for (auto& iter : m_pEffects)

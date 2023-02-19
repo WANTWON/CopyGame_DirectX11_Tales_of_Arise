@@ -602,6 +602,9 @@ void CPlayer::SmashAttack(_uint smashtype)
 
 void CPlayer::BoostAttack()
 {
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::ACTION)
+		return;
+
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_pPlayerManager->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(ALPHEN);
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
