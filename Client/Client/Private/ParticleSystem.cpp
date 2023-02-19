@@ -62,7 +62,7 @@ int CParticleSystem::Tick(_float fTimeDelta)
 		if (m_bCanStart)
 			EmitParticles(fTimeDelta); /* Emit new Particles. */
 
-									   // Billboard
+		// Billboard
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 		m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
 		RELEASE_INSTANCE(CGameInstance);
