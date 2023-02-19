@@ -438,7 +438,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 			return E_FAIL;
 	}
 
-	m_tStats.m_fLockonSmashGuage += 0.01f;
+	m_tStats.m_fLockonSmashGuage += 0.2f;
 	
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)

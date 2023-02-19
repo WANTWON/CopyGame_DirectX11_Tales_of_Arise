@@ -155,6 +155,11 @@ void CAI_AlphenSion_Smash::Enter()
 
 void CAI_AlphenSion_Smash::Exit()
 {
+
+
+
+
+
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)

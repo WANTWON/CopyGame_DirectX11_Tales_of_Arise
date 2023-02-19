@@ -102,11 +102,11 @@ int CPlayer::Tick(_float fTimeDelta)
 			/*_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;*/
 			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
 				BoostAttack();
-			else
-				SmashAttack();
+
 
 			
 			
+
 
 		}
 
@@ -470,75 +470,82 @@ void CPlayer::LateTick_AIState(_float fTimeDelta)
 		m_pAIState = m_pAIState->ChangeState(m_pAIState, pNewState);
 }
 
-void CPlayer::SmashAttack()
+void CPlayer::SmashAttack(_uint smashtype)
 {
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && CGameInstance::Get_Instance()->Key_Up(DIK_2))
+	switch (smashtype)
 	{
-		if (m_ePlayerID == ALPHEN || m_ePlayerID == SION)
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+	case ALPHEN_SION:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
-			CAIState* pAIState = new AIPlayer::CAI_AlphenSion_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-		}
+		CAIState* pAIState = new AIPlayer::CAI_AlphenSion_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+		
+
+	case ALPHEN_RINWELL:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_AlphenRinwell_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+
+		
+
+	case ALPHEN_LAW:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_AlphenLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+		
+
+	case SION_RINWELL:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_SionRinwell_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+
+
+		
+
+	case SION_LAW:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_SionLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+		
+
+	case RINWELL_LAW:
+	{
+		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+
+		CAIState* pAIState = new AIPlayer::CAI_RinwellLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+		
+
 
 	}
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && CGameInstance::Get_Instance()->Key_Up(DIK_3))
-	{
-		if (m_ePlayerID == ALPHEN || m_ePlayerID == RINWELL)
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
-			CAIState* pAIState = new AIPlayer::CAI_AlphenRinwell_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-		}
 
-	}
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && CGameInstance::Get_Instance()->Key_Up(DIK_4))
-	{
-		if (m_ePlayerID == ALPHEN || m_ePlayerID == LAW)
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
-			CAIState* pAIState = new AIPlayer::CAI_AlphenLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-		}
-
-	}
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && CGameInstance::Get_Instance()->Key_Up(DIK_3))
-	{
-		if (m_ePlayerID == SION || m_ePlayerID == RINWELL)
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
-
-			CAIState* pAIState = new AIPlayer::CAI_SionRinwell_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-		}
-
-	}
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && CGameInstance::Get_Instance()->Key_Up(DIK_4))
-	{
-		if (m_ePlayerID == SION || m_ePlayerID == LAW)
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
-
-			CAIState* pAIState = new AIPlayer::CAI_SionLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-		}
-
-	}
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && CGameInstance::Get_Instance()->Key_Up(DIK_4))
-	{
-		if (m_ePlayerID == RINWELL || m_ePlayerID == LAW)
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
-
-			CAIState* pAIState = new AIPlayer::CAI_RinwellLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
-			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-		}
-
-	}
 }
+	
+			
+	
 
 void CPlayer::BoostAttack()
 {

@@ -17,6 +17,8 @@ class CPlayerManager : public CBase
 public:
 	enum TYPE {ALPHEN, SION, RINWELL, LAW, PLAYER_END};
 
+	enum STRIKESMASH{ALPHEN_SION , ALPHEN_RINWELL , ALPHEN_LAW , SION_RINWELL , SION_LAW , RINWELL_LAW};
+
 private:
 	explicit CPlayerManager();
 	virtual ~CPlayerManager() = default;
@@ -39,6 +41,8 @@ public: /* Getter Setter */
 	CPlayer* Get_EnumPlayer(_uint eID);
 
 	void Set_Ai_Check();
+
+	void Set_SmashAttack();
 
 private:
 	CPlayer* m_pActivePlayer = nullptr;

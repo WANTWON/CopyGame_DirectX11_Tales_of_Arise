@@ -21,6 +21,8 @@ public:
 	enum FLYSKILL { FLY_SKILL1, FLY_SKILL2, FLY_SKILL3, FLY_SKILL_END };
 	enum PLAYERID { ALPHEN, SION, RINWELL, LAW };
 
+	enum STRIKESMASH { ALPHEN_SION, ALPHEN_RINWELL, ALPHEN_LAW, SION_RINWELL, SION_LAW, RINWELL_LAW };
+
 protected:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& rhs);
@@ -84,12 +86,13 @@ public: /*For.State*/
 	void			Tick_AIState(_float fTimeDelta);
 	void			LateTick_State(_float fTimeDelta);
 	void			LateTick_AIState(_float fTimeDelta);
-	void            SmashAttack();
+	void            SmashAttack(_uint smashtype);
 	void            BoostAttack();
 
 	void Set_BoostGuage(_float boostguage) { m_tInfo.fCurrentBoostGuage = boostguage; }
 	_float Get_BoostGuage() { return m_tInfo.fCurrentBoostGuage; }
 
+	
 
 public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);
@@ -124,6 +127,7 @@ protected: /* for 4 Player */
 	_bool			m_bIsJustDodge = false;
 	/* mana recover */
 	_bool           m_bManaRecover = true;
+  
 
 private:
 	_bool m_bLevelup = false;

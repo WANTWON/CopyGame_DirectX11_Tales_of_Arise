@@ -155,15 +155,44 @@ PS_OUT PS_PICKED(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector		vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV);
+	vector		vDiffuse1 = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vDiffuse2 = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vDiffuse3 = g_DiffuseTexture[2].Sample(LinearSampler, In.vTexUV * 30.f);
+	vector		vDiffuse4 = g_DiffuseTexture[3].Sample(LinearSampler, In.vTexUV * 30.f);
 
-	Out.vDiffuse = vSourDiffuse;
+	vector		vFilter = g_FilterTexture.Sample(LinearSampler, In.vTexUV);
+
+	vector		vBrush = vector(0.f, 0.f, 0.f, 0.f);
+
+	if (g_vBrushPos.x - g_fBrushRange < In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fBrushRange &&
+		g_vBrushPos.z - g_fBrushRange < In.vWorldPos.z && In.vWorldPos.z < g_vBrushPos.z + g_fBrushRange)
+	{
+		float2		fNewUV;
+
+		fNewUV.x = (In.vWorldPos.x - (g_vBrushPos.x - g_fBrushRange)) / (2.f * g_fBrushRange);
+		fNewUV.y = ((g_vBrushPos.z + g_fBrushRange) - In.vWorldPos.z) / (2.f * g_fBrushRange);
+
+		vBrush = g_BrushTexture.Sample(LinearSampler, fNewUV);
+		vBrush.a = vBrush.r;
+	}
+
+	vector		vMtrlDiffuse = vDiffuse2 * vFilter.r + vDiffuse3 * vFilter.g + vDiffuse4 * vFilter.b;
+	Out.vDiffuse = (1 - vFilter.r - vFilter.g - vFilter.b)*vDiffuse1 + vMtrlDiffuse + vBrush;
+
+	/*if (Out.vDiffuse.a == 0.0f)
+	discard;*/
+
 	Out.vDiffuse.rgb += 0.1f;
 	Out.vDiffuse.a = 1.f;
 
 	/* -1 ~ 1 => 0 ~ 1*/
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+
+	/* near ~ far */
+	/* 0 ~ far */
+	/* 0 ~ 1 */
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+
 	return Out;
 }
 
