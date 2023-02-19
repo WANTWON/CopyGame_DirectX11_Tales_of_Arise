@@ -564,7 +564,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); // ╦чев©ю
 
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_F.mp3"), SOUND_EFFECT_ALPHEN, 1.0f);
-			
+
 			/*dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_METEOR);
 			break;*/
 
@@ -622,7 +622,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellBoostEffect.dat"), mWorldMatrix);
 			break;
 		}
-		
+		}
 	}
 
 
