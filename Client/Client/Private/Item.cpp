@@ -108,6 +108,15 @@ void CItem::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
+
+	if (!m_pPickupFlares.empty())
+	{
+		for (auto& pPickupFlare : m_pPickupFlares)
+		{
+			if (pPickupFlare != nullptr && pPickupFlare->Get_PreDead())
+				pPickupFlare = nullptr;
+		}
+	}
 	__super::Late_Tick(fTimeDelta);
 
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();

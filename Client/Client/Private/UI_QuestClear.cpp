@@ -219,37 +219,30 @@ int CUI_QuestClear::Tick(_float fTimeDelta)
 
 	if (m_fDietimer > 2.f)
 	{
-		if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 1)
+		switch (CUI_Manager::Get_Instance()->Get_QuestIndex())
 		{
+		case 1:
 			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(1, false, 0, 1); //popup
 
 			CUI_Manager::Get_Instance()->Set_Dialogue_section(2); //after quest 1 clear
-		}
-		if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 2)
-		{
-		
+			break;
 
+		case 2:
 			CUI_Manager::Get_Instance()->Set_Dialogue_section(4); //after quest 2 clear
-		}
+			break;
 
+		case 3:
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_STATIC, (TEXT("party")))))
+				return E_FAIL;
+			CUI_Manager::Get_Instance()->Set_Dialogue_section(6); //after quest 3 clear
+			break;
+
+
+		}
 		
 		return OBJ_DEAD;
+			
 	}
-
-	//		
-	//	
-	//}
-
-	/*if (m_bNameYScalemove)
-	{
-	m_fNameYScale -= 5.f;
-	if (m_fStartYScale <= 0.f)
-	{
-	m_fNameYScale = 0.f;
-	m_bNameYScalemove = false;
-	}
-
-	}*/
 
 
 
