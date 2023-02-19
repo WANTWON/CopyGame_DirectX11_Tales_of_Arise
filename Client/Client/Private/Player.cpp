@@ -222,8 +222,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vDirection) * fRadiusSum);
 				_vector vLerpPos = XMVectorLerp(vPlayerPos, XMVectorSetY(vNewPos, XMVectorGetY(vPlayerPos)), 0.5f);
 
-				if (true == m_pNavigationCom->isMove(vLerpPos))
-					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
+				//if (true == m_pNavigationCom->isMove(vLerpPos))
+				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
 			}
 		}
 	}
@@ -328,8 +328,11 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		switch (eMode)
 		{
 		case Client::ACTIVE:
-			pState = new CHitState(this);
-			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+			if (CPlayerState::STATE_HIT != m_pPlayerState->Get_StateId())
+			{
+				pState = new CHitState(this);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+			}
 			break;
 		case Client::AI_MODE:
 			pAIState = new AIPlayer::CAI_HitState(this);

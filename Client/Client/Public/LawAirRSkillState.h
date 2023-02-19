@@ -8,7 +8,7 @@ BEGIN(Player)
 class CLawAirRSkillState final : public CPlayerState
 {
 public:
-	CLawAirRSkillState(class CPlayer* pPlayer, STATE_ID eStateType, _float fStartHeight = 0.f, _float fTime = 0.f);
+	CLawAirRSkillState(class CPlayer* pPlayer, STATE_ID eStateType);
 	
 	virtual CPlayerState* HandleInput(void) override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -19,9 +19,6 @@ public:
 	virtual void Exit(void) override;
 
 private:
-	_float m_fStartHeight;
-	_float m_fTime;
-
 	CCollider* m_pLeftHandCollider = nullptr;
 	CCollider* m_pRightHandCollider = nullptr;
 	CCollider* m_pLeftFootCollider = nullptr;

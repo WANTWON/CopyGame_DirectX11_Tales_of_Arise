@@ -13,12 +13,11 @@
 
 using namespace Player;
 
-CAlphenSkillState::CAlphenSkillState(CPlayer * pPlayer, STATE_ID eStateType, _float fStartHeight, _float fTime)
+CAlphenSkillState::CAlphenSkillState(CPlayer * pPlayer, STATE_ID eStateType, _float fTime)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
 
-	m_fStartHeight = fStartHeight;
 	m_fTime = fTime;
 }
 
@@ -39,7 +38,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
 		if (CPlayerState::STATE_SKILL_ATTACK_F && !m_bIsFly)
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.04f), fRotationRadian, m_pOwner->Get_Navigation());
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
@@ -300,7 +299,7 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_START, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, m_fTime);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
@@ -335,7 +334,7 @@ CPlayerState * CAlphenSkillState::EventInput(void)
 	if (m_bIsFly)
 	{
 		if (GetKeyState(VK_LBUTTON) < 0)
-			return new CAlphenAttackState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
+			return new CAlphenAttackState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1, m_fTime);
 	}
 	else
 	{

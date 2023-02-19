@@ -13,16 +13,12 @@
 
 using namespace Player;
 
-CPlayer_RinwellNormalAttack_State::CPlayer_RinwellNormalAttack_State(CPlayer* pPlayer, STATE_ID eStateType, _float fStartHeight, _float fTime)
+CPlayer_RinwellNormalAttack_State::CPlayer_RinwellNormalAttack_State(CPlayer* pPlayer, STATE_ID eStateType, _float fTime)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
 
-	m_fStartHeight = fStartHeight;
 	m_fTime = fTime;
-
-	if (m_fStartHeight != 0.f)
-		m_pOwner->On_IsFly();
 }
 
 CPlayerState * CPlayer_RinwellNormalAttack_State::HandleInput()
@@ -400,18 +396,18 @@ CPlayerState * CPlayer_RinwellNormalAttack_State::LateTick(_float fTimeDelta)
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-			return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK2, m_fStartHeight, m_fTime);
+			return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK2, m_fTime);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-			return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK3, m_fStartHeight, m_fTime);
+			return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK3, m_fTime);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			if (!m_bIsFly)
-				return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK4, m_fStartHeight, m_fTime);
+				return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK4, m_fTime);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 			if (!m_bIsFly)
-				return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK5, m_fStartHeight, m_fTime);
+				return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK5, m_fTime);
 			break;
 		}
 	}
@@ -446,7 +442,7 @@ CPlayerState * CPlayer_RinwellNormalAttack_State::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, STATETYPE_MAIN, CJumpState::JUMP_BATTLE, m_fTime);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}

@@ -99,12 +99,9 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 						m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 
 					break;
-
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
-					m_fEventStartTime = pEvent.fStartTime;
 				}
+
+				m_fEventStartTime = pEvent.fStartTime;
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 			{
@@ -132,31 +129,23 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 					{
 						switch (rand() % 5)
 						{
-
 						case 0:
 							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_R);
-
 						case 1:
 							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
-
 						case 2:
 							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
-
 						case 3:
 							return new CAI_DodgeState(m_pOwner, m_pTarget);
-
 						}
 					}
-					
 					return nullptr;
 					break;
 				}
-
 				Enter();
 
 				return nullptr;
 			}
-
 		}
 		else
 		{
@@ -171,8 +160,6 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftHandCollider);
 						m_pLeftHandCollider = nullptr;
 
-						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
 						m_fEventStartTime = -1.f;
 					}
 					break;
@@ -182,8 +169,6 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 					{
 						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
 						m_pRightHandCollider = nullptr;
-
-						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 
 						m_fEventStartTime = -1.f;
 					}
@@ -195,8 +180,6 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 						m_pRightFootCollider = nullptr;
 
-						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
 						m_fEventStartTime = -1.f;
 					}
 					break;
@@ -205,8 +188,6 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 					{
 						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftHandCollider);
 						m_pLeftHandCollider = nullptr;
-
-						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 
 						m_fEventStartTime = -1.f;
 					}
@@ -217,15 +198,11 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftFootCollider);
 						m_pLeftFootCollider = nullptr;
 
-						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
 						m_fEventStartTime = -1.f;
 					}
 					break;
 				}
 			}
-
-
 		}
 	}
 
@@ -276,7 +253,6 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 
 		m_pRightFootCollider->Update(WorldBoneMatrix);
 	}
-	
 
 	return nullptr;
 }

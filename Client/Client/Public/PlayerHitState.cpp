@@ -5,11 +5,10 @@
 
 using namespace Player;
 
-CHitState::CHitState(CPlayer * pPlayer, _float fStartHeight, _float fTime)
+CHitState::CHitState(CPlayer * pPlayer, _float fTime)
 {
 	m_pOwner = pPlayer;
 	m_ePlayerID = m_pOwner->Get_PlayerID();
-	m_fStartHeight = fStartHeight;
 	m_fTime = fTime;
 }
 
@@ -23,18 +22,24 @@ CPlayerState * CHitState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 	m_pOwner->Check_Navigation();
 
+	if(!m_bIsBack)
+	{
+		m_pOwner->Get_Transform()->Sliding_Backward(fTimeDelta, m_pOwner->Get_Navigation());
+		m_bIsBack = true;
+	}
+
 	return nullptr;
 }
 
 CPlayerState * CHitState::LateTick(_float fTimeDelta)
 {
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-		return new CHitState(m_pOwner, m_fStartHeight, m_fTime);
+		return new CHitState(m_pOwner, m_fTime);
 
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_START, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, m_fTime);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
@@ -82,4 +87,6 @@ void CHitState::Enter()
 void CHitState::Exit()
 {
 	__super::Exit();
+
+	m_bIsBack = false;
 }

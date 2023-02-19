@@ -8,7 +8,7 @@ BEGIN(Player)
 class CLawSkillState final : public CPlayerState
 {
 public:
-	CLawSkillState(class CPlayer* pPlayer, STATE_ID eStaetType, _float fStartHeight = 0.f, _float fTime = 0.f);
+	CLawSkillState(class CPlayer* pPlayer, STATE_ID eStaetType, _float fTime = 0.f);
 
 	virtual CPlayerState* HandleInput(void) override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -22,7 +22,6 @@ private:
 	void Reset_Skill(void);
 
 private:
-	_float m_fStartHeight;
 	_float m_fTime;
 
 	CCollider* m_pLeftHandCollider = nullptr;

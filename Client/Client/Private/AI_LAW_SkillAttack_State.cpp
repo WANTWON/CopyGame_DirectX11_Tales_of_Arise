@@ -81,8 +81,6 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 					m_fEventStartTime = pEvent.fStartTime;
 					break;
 				}
-
-				pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 			{
@@ -105,7 +103,6 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 						m_eStateId = STATE_SKILL_ATTACK_F;
 						Enter();
 						break;
-
 					}
 				}
 				else
@@ -122,10 +119,6 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 						break;
 					}
 				}
-					
-				
-
-				
 			}
 		}
 		else
@@ -134,22 +127,21 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 			{
 				switch (m_eStateId)
 				{
-				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
-					if (nullptr != m_pRightFootCollider)
-						{
-							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
-							m_pRightFootCollider = nullptr;
-						}
-	
-					break;
-				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
+				case Client::CAIState::STATE_SKILL_ATTACK_E:
 					if (nullptr != m_pRightFootCollider)
 					{
 						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 						m_pRightFootCollider = nullptr;
 					}
 					break;
-				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+				case Client::CAIState::STATE_SKILL_ATTACK_R:
+					if (nullptr != m_pRightFootCollider)
+					{
+						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
+						m_pRightFootCollider = nullptr;
+					}
+					break;
+				case Client::CAIState::STATE_SKILL_ATTACK_F:
 					if (pEvent.fStartTime == m_fEventStartTime)
 					{
 						if (!strcmp(pEvent.szName, "RH"))
@@ -180,8 +172,6 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 					}
 					break;
 				}
-
-				pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 			}
 		}
 	}
