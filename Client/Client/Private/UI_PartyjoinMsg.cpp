@@ -118,24 +118,6 @@ int CUI_PartyjoinMsg::Tick(_float fTimeDelta)
 void CUI_PartyjoinMsg::Late_Tick(_float fTimeDelta)
 {
 
-	//	if (m_btick)
-	//	{
-	/*	if (m_fAlpha >= 1.f && m_bfadein)
-	{
-	m_fAlpha = 1.f;
-	m_bfadein = false;
-	m_bfirstarrived = true;
-	}
-
-	if (m_fAlpha <= 0.f && m_bfadeout)
-	{
-	m_fAlpha = 0.f;
-	m_bfadeout = false;
-	m_fAlpha1 = 0;
-	m_fFadeY = -20.f;
-	m_fFade1Y = -20.f;
-	m_btick = false;
-	}*/
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
@@ -162,7 +144,7 @@ HRESULT CUI_PartyjoinMsg::Render()
 	}*/
 	//	m_fAlpha = 1.f;
 	//_float alpha = 0.4f;
-	_float alpha = m_fAlpha * 0.8f;
+	_float alpha = m_fAlpha * 0.6f;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
 		return E_FAIL;
 	m_fSize.x = 400.f;
@@ -234,64 +216,78 @@ HRESULT CUI_PartyjoinMsg::Render()
 
 	//m_fAlpha = 1.f;
 
-	m_fSize.x = 200.f;
-	m_fSize.y = 22.f;
-	m_fPosition.x = 720.f;
-	m_fPosition.y = 315.f;
+	//m_fSize.x = 200.f;
+	//m_fSize.y = 22.f;
+	//m_fPosition.x = 720.f;
+	//m_fPosition.y = 315.f;
+	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(1))))
+	//	return E_FAIL;
+
+	//m_pShaderCom->Begin(UI_ALPHASET);
+
+	//m_pVIBufferCom->Render();
+
+	//m_fSize.x = 20.f;
+	//m_fSize.y = 10.f;
+	//m_fPosition.x = 640.f;
+	//m_fPosition.y = 333.f;// +m_fFadeY;
+	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(2))))
+	//	return E_FAIL;
+
+	//m_pShaderCom->Begin(UI_ALPHASET);
+
+	//m_pVIBufferCom->Render();
+
+	//m_pVIBufferCom->Render();
+
+	//m_fSize.x = 280.f;
+	//m_fSize.y = 3.f;
+	//m_fPosition.x = 640.f;
+	//m_fPosition.y = 330.f;
+	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+	//m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	////_float linealpha = 1.f;
+	//if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(1))))
+	//	return E_FAIL;
+
+	//m_pShaderCom->Begin(UI_DIALOGUELINE);
+
+	//m_pVIBufferCom->Render();
+
+
+	m_fSize.x = 128.f;
+	m_fSize.y = 128.f;
+	m_fPosition.x = 650.f;
+	m_fPosition.y = 340.f;// +m_fFadeY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(1))))
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom5->Get_SRV(1))))
 		return E_FAIL;
 
 	m_pShaderCom->Begin(UI_ALPHASET);
 
 	m_pVIBufferCom->Render();
 
-	m_fSize.x = 20.f;
-	m_fSize.y = 10.f;
-	m_fPosition.x = 640.f;
-	m_fPosition.y = 333.f;// +m_fFadeY;
-	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(2))))
-		return E_FAIL;
-
-	m_pShaderCom->Begin(UI_ALPHASET);
-
-	m_pVIBufferCom->Render();
-
-	m_pVIBufferCom->Render();
-
-	m_fSize.x = 280.f;
-	m_fSize.y = 3.f;
-	m_fPosition.x = 640.f;
-	m_fPosition.y = 330.f;
-	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	//_float linealpha = 1.f;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(1))))
-		return E_FAIL;
-
-	m_pShaderCom->Begin(UI_DIALOGUELINE);
-
-	m_pVIBufferCom->Render();
-
-
-
-
-	m_fSize.x = 300.f;
-	m_fSize.y = 28.f;
-	m_fPosition.x = 595.f;
-	m_fPosition.y = 370.f;// +m_fFadeY;
+	m_fSize.x = 400.f;
+	m_fSize.y = 36.f;
+	m_fPosition.x = 700.f;
+	m_fPosition.y = 420.f;// +m_fFadeY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -303,6 +299,8 @@ HRESULT CUI_PartyjoinMsg::Render()
 	m_pShaderCom->Begin(UI_BRIGHT);
 
 	m_pVIBufferCom->Render();
+
+	
 
 
 	//m_fSize.x = 180.f;

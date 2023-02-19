@@ -528,6 +528,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 	{
 	case ALPHEN_SION:
 	{
+		if (CBattleManager::Get_Instance()->Get_LackonMonster()!= nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_AlphenSion_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -537,7 +538,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 		
 
 	case ALPHEN_RINWELL:
-	{
+	{  if (CBattleManager::Get_Instance()->Get_LackonMonster()!= nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_AlphenRinwell_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -548,7 +549,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 		
 
 	case ALPHEN_LAW:
-	{
+	{if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_AlphenLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -558,7 +559,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 		
 
 	case SION_RINWELL:
-	{
+	{if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_SionRinwell_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -570,7 +571,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 		
 
 	case SION_LAW:
-	{
+	{if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_SionLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -580,7 +581,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 		
 
 	case RINWELL_LAW:
-	{
+	{if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_RinwellLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());

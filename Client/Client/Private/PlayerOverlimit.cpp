@@ -77,7 +77,7 @@ void CPlayerOverlimit::Enter(void)
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return;
 
-	if (!CBattleManager::Get_Instance()->Get_LackonMonster())
+	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
 		CBaseObj* pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));

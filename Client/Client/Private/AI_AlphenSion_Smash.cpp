@@ -10,6 +10,7 @@
 #include "SionSkills.h"
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
+#include "AiRinwell.h"
 
 using namespace AIPlayer;
 
@@ -140,14 +141,24 @@ void CAI_AlphenSion_Smash::Enter()
 
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-	if (nullptr == m_pTarget)
+	if (!CBattleManager::Get_Instance()->Get_IsBossBattle())
 	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		if (nullptr == m_pTarget)
+		{
+			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		}
+		else
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
-	else
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	/*else
+	{
+		if (nullptr == m_pTarget)
+		{
+		}
+	}*/
+	
 
 	m_pOwner->Set_Manarecover(false);
 
@@ -159,6 +170,8 @@ void CAI_AlphenSion_Smash::Exit()
 
 	m_pOwner->Set_IsActionMode(false);
 
+	if (dynamic_cast<CAiRinwell*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_LastStrikeAttack())
+		dynamic_cast<CAiRinwell*>(CBattleManager::Get_Instance()->Get_BossMonster())->Kill_Boss_Rinwell();
 
 
 	if (!m_pEffects.empty())

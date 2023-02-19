@@ -27,6 +27,7 @@ public:
 		_float m_fWalkSpeed = 3.f;
 		_float m_fRunSpeed = 5.f;
 		_float m_fLockonSmashGuage = 0.f;
+		_uint  m_iHitcount = 0;
 	}STATS;
 
 protected:

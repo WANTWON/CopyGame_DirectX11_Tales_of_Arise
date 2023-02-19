@@ -34,7 +34,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 		return E_FAIL;
 
 
-	m_tStats.m_fMaxHp = 100000.f;
+	m_tStats.m_fMaxHp = 1000.f;
 
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
@@ -277,6 +277,18 @@ void CAiRinwell::Set_BattleMode(_bool type)
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 }
 
+void CAiRinwell::Kill_Boss_Rinwell()
+{
+	CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+	m_pState = m_pState->ChangeState(m_pState, pState);
+	m_tStats.m_fCurrentHp = 0.f;
+
+
+	CBattleManager::Get_Instance()->Update_LockOn();
+	Check_AmILastMoster();
+
+}
+
 _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 {
 	switch (eAnimId)
@@ -342,14 +354,25 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
 
-
+	
 
 	if (iHp <= 0)
 	{
+		iHp = 1;
+		if (m_bStrikeOnetime)
+		{
+			m_tStats.m_fLockonSmashGuage = 4.f;
+			false;
+		}
+		
+		
 		m_bTakeDamage = true;
-		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+		m_bLastStrikeAttack = true;
+		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 		m_pState = m_pState->ChangeState(m_pState, pState);
-		return 0;
+
+		
+		//return 0;
 	}
 	else
 	{
