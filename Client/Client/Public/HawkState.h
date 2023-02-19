@@ -35,6 +35,7 @@ public:
 		STATE_TORNADE,
 		STATE_DEAD,
 		STATE_BRAVE,
+		STATE_DOWN,
 		STATE_END
 	};
 

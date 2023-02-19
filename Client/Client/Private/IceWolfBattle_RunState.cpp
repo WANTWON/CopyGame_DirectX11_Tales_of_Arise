@@ -19,6 +19,7 @@ CBattle_RunState::CBattle_RunState(class CIce_Wolf* pIceWolf, STATE_ID ePreState
 	m_fTimeDeltaAcc = 0;
 	m_fRandTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 	m_pCurTarget = pCurTarget;
+
 }
 
 CIceWolfState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
@@ -94,7 +95,7 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 		return new CBattle_SomerSaultState(m_pOwner);
 	
 	if (m_fTarget_Distance >= 12.5f && m_ePreState_Id != STATE_ID::STATE_CHARGE_START)
-		return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START);
+		return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START, false);
 
 	else
 	{		////회전 코드 
@@ -132,7 +133,7 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 					
 				}
 				else if (m_b_IsTargetInsight = false)
-					return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END);
+					return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_END, false);
 			}
 
 	}

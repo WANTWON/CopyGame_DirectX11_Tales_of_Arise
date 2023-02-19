@@ -402,12 +402,21 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 	
 	++m_tStats.m_iHitcount;
-	if (m_tStats.m_iHitcount >= 200)
+	//if (m_tStats.m_iHitcount >= 200) //원본코드
+	if (m_tStats.m_iHitcount >= 60)
 	{
-
+		m_bDownState = true;
 		m_tStats.m_iHitcount = 0;
 	}
 		
+	++m_tStats.m_iBedamagedCount;
+	
+	if (m_tStats.m_iBedamagedCount >= 20)
+	{
+		m_bBedamageAnim = true;
+		m_tStats.m_iBedamagedCount = 0;
+	}
+
 
 	if (m_pTarget != nullptr)
 	{

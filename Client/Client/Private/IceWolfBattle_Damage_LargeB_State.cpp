@@ -7,6 +7,7 @@
 #include "IceWolfAttackBiteState.h"
 #include "IceWolfBattle_RunState.h"
 #include "IceWolfAttackBiteState.h"
+#include "IceWolfBattle_IdleState.h"
 
 using namespace IceWolf;
 
@@ -31,6 +32,20 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 	case Client::CIceWolfState::STATE_BE_DAMAGED:
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
+	case Client::CIceWolfState::STATE_DOWN:
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+			m_pOwner->Check_Navigation();
+		}
+		break;
+
 	default:
 		break;
 	}
@@ -88,7 +103,11 @@ CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 				}
 			}
 			break;
+
+		case Client::CIceWolfState::STATE_DOWN:
+			return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_ARISE);
 		}	
+
 	}
 	
 
@@ -114,7 +133,8 @@ void CBattle_Damage_LargeB_State::Enter()
 
 	case Client::CIceWolfState::STATE_BE_DAMAGED:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
-
+		m_pOwner->SetOff_BedamagedCount();
+		m_pOwner->Set_BedamageCount_Delay();
 		if (!m_bAnimFinish)
 		{
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Hit.wav"), SOUND_VOICE, 0.4f);
@@ -122,6 +142,12 @@ void CBattle_Damage_LargeB_State::Enter()
 			break;
 		}
 		break;
+
+	case Client::CIceWolfState::STATE_DOWN:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DOWN_F);
+		m_pOwner->Set_OnGoingDown();
+		break;
+
 	}
 
 }
@@ -129,4 +155,6 @@ void CBattle_Damage_LargeB_State::Enter()
 void CBattle_Damage_LargeB_State::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	if(m_eStateId == Client::CIceWolfState::STATE_BE_DAMAGED)
+		m_pOwner->SetOff_BedamageCount_Delay();
 }
