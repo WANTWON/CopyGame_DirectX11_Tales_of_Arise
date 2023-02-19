@@ -2425,10 +2425,18 @@ void CImgui_Manager::Set_TargetCamera()
 				_float4 vPosition = (_float4)vCamMatrix.m[3];
 				_vector vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 				_vector vTargetLook = pTarget->Get_TransformState(CTransform::STATE_LOOK);
+				_vector vTargetRight = pTarget->Get_TransformState(CTransform::STATE_RIGHT);
+
 				_vector vTargettoCamDir = XMLoadFloat4(&vPosition) - vTargetPosition;
-				_float  fLength = XMVectorGetX(XMVector3Length(XMVectorSetY(vTargettoCamDir, 0.f)));
+				vTargettoCamDir = XMVectorSetW(vTargettoCamDir, 0.f);
+				_vector vNewTargetoCamDir = (XMVectorSetY(vTargettoCamDir, 0.f));
+
+				vTargetLook = XMVectorSetY(vTargetLook, 0.f);
+				_vector vCross = XMVector3Cross(vTargetLook, XMVectorSetY(vTargettoCamDir, 0.f));
+
+				_float  fLength = XMVectorGetX(XMVector3Length(vTargettoCamDir));
 				_float  fRadian =  acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(vTargetLook), XMVector3Normalize(vTargettoCamDir))));
-				_float  fCross = (XMVectorGetX(XMVector3Cross(XMVector3Normalize(vTargetLook), XMVector3Normalize(vTargettoCamDir))));
+				_float  fCross = XMVectorGetY(vCross);
 			
 				_float4 vLook = (_float4)vCamMatrix.m[2];
 

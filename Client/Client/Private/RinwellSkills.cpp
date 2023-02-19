@@ -811,7 +811,6 @@ void CRinwellSkills::Tick_HolyRanceBullet(_float fTimeDelta)
 {
 	_vector vDir = XMVector3Normalize(m_BulletDesc.vTargetPosition - m_BulletDesc.vInitPositon);
 
-	m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
 	m_pTransformCom->Go_PosDir(fTimeDelta, vDir);
 
 	for (auto& iter : m_pEffects)

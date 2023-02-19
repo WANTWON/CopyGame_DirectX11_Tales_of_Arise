@@ -155,9 +155,12 @@ void CAI_Overlimit_State::Enter()
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-	pCamera->Set_Target(m_pOwner);
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+		pCamera->Set_Target(m_pOwner);
+	}
 
 	m_pOwner->Set_Manarecover(false);
 
@@ -178,7 +181,13 @@ void CAI_Overlimit_State::Exit()
 			}
 		}
 	}
-	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		if(pCamera->Get_CamMode() == CCamera_Dynamic::CAM_AIBOOSTON)
+			pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+	}
+
 	__super::Exit();
 }
