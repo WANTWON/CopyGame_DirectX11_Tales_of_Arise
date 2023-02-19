@@ -77,6 +77,8 @@
 #include "UI_LevelUp.h"
 #include "UI_SidePopup.h"
 #include "UI_Dialogue_Caption.h"
+#include "UI_AlphaScreen.h"
+#include "UI_PartyjoinMsg.h"
 //Monster
 #include "Ice_Wolf.h"
 #include "Berserker.h"
@@ -410,6 +412,14 @@ HRESULT CLoader::Loading_ForPrototype()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Dialogue_Caption"),
 		CUI_Dialogue_Caption::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Alpha_Screen"),
+		CUI_AlphaScreen::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_PartyMessage"),
+		CUI_PartyjoinMsg::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -1212,6 +1222,14 @@ HRESULT CLoader::Loading_ForUITexture()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Itemusemsg"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillmsg/itemuse%d.dds"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_AlphaScreen"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/alphascreen/alphascreen.dds"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Partyjoin"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/partyjoin/partyjoin%d.dds"), 2))))
 		return E_FAIL;
 	
 	

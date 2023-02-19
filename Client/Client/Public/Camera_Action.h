@@ -17,7 +17,8 @@ public:
 		_float4					vAtPosition;
 		_float					fStartTime;
 		_float					fEndTime;
-
+		_bool					bNewSection = false;
+		_bool					bLerp = false;
 	}TOOLDESC;
 
 	typedef struct tagActionCamera
@@ -58,6 +59,8 @@ private:
 
 	vector<TOOLDESC> m_CamDatas;
 	_matrix			 m_matTarget;
+	_vector		m_vInitPosition;
+	_vector		m_vInitAt;
 
 	
 public:

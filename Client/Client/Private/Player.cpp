@@ -15,12 +15,15 @@
 #include "AIDeadState.h"
 #include "AI_BoostAttackState.h"
 #include "AiState_WakeUp.h"
+///////////////////////////////////
 #include "AI_AlphenSion_Smash.h"
 #include "AI_AlphenRinwell_Smash.h"
 #include "AI_AlphenLaw_Smash.h"
 #include "AI_SionRinwell_Smash.h"
 #include "AI_SionLaw_Smash.h"
 #include "AI_RinwellLaw_Smash.h"
+//////////////////////////////////
+#include "AI_Overlimit_State.h"
 
 
 using namespace Player;
@@ -68,6 +71,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pPlayerManager->Set_PlayerEnum(this, m_ePlayerID);
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
 
+	m_tInfo.fCurrentOverlimitGauge = 100.f;
+
 	return S_OK;
 }
 
@@ -76,8 +81,11 @@ int CPlayer::Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return OBJ_NOEVENT;
+
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if(m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
+	if(m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return OBJ_NOEVENT;
 
 	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
@@ -89,11 +97,31 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
+
+	if (m_bOverLimit)
+	{
+		m_fOverLimitTimer += fTimeDelta;
+		if (m_fOverLimitTimer > 0.2f)
+		{
+
+			m_fOverLimitTimer = 0.f;
+			m_tInfo.fCurrentOverlimitGauge -= 1.f;
+			if (m_tInfo.fCurrentOverlimitGauge <= 0.f)
+			{
+				m_tInfo.fCurrentOverlimitGauge = 100.f;
+				m_bOverLimit = false;
+				m_fOverLimitTimer = 0.f;
+			}
+		}
+	}
+
+
 	if (m_bManaRecover)
 		m_tInfo.fCurrentMp += 0.02f;
 
 	if (m_tInfo.fCurrentMp >= m_tInfo.fMaxMp)
 		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
+
 
 	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
 	{	
@@ -102,12 +130,6 @@ int CPlayer::Tick(_float fTimeDelta)
 			/*_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;*/
 			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
 				BoostAttack();
-
-
-			
-			
-
-
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
@@ -156,6 +178,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
+
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return;
 
 	if (m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
@@ -278,7 +303,7 @@ HRESULT CPlayer::Render_ShadowDepth()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
-}
+} 
 
 
 _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
@@ -387,6 +412,8 @@ void CPlayer::Play_AISkill(PLAYERID ePlayer)
 
 }
 
+
+
 void CPlayer::Plus_EXP(_uint exp)
 {
 
@@ -440,6 +467,15 @@ void CPlayer::AI_check()
 
 void CPlayer::HandleInput()
 {
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON || eCamMode == CCamera_Dynamic::CAM_AIBOOSTOFF)
+			return;
+	}
+
 	CPlayerState* pNewState = m_pPlayerState->HandleInput();
 	if (pNewState)
 		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
@@ -479,6 +515,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 	{
 	case ALPHEN_SION:
 	{
+		if (CBattleManager::Get_Instance()->Get_LackonMonster()!= nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_AlphenSion_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -488,7 +525,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 		
 
 	case ALPHEN_RINWELL:
-	{
+	{  if (CBattleManager::Get_Instance()->Get_LackonMonster()!= nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_AlphenRinwell_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -499,7 +536,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 		
 
 	case ALPHEN_LAW:
-	{
+	{if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_AlphenLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -509,7 +546,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 		
 
 	case SION_RINWELL:
-	{
+	{if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_SionRinwell_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -521,7 +558,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 		
 
 	case SION_LAW:
-	{
+	{if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_SionLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -531,7 +568,7 @@ void CPlayer::SmashAttack(_uint smashtype)
 		
 
 	case RINWELL_LAW:
-	{
+	{if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 
 		CAIState* pAIState = new AIPlayer::CAI_RinwellLaw_Smash(this, CBattleManager::Get_Instance()->Get_LackonMonster());
@@ -552,6 +589,9 @@ void CPlayer::SmashAttack(_uint smashtype)
 
 void CPlayer::BoostAttack()
 {
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::ACTION)
+		return;
+
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_pPlayerManager->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(ALPHEN);
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
@@ -559,6 +599,8 @@ void CPlayer::BoostAttack()
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_pPlayerManager->Get_EnumPlayer(2)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(RINWELL);
 }
+
+
 
 
 HRESULT CPlayer::SetUp_ShaderResources()

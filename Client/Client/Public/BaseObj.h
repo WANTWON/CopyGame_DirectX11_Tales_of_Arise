@@ -54,6 +54,7 @@ public: /* Getter Setter */
 	void            Set_HP(_float hp) { m_tInfo.fCurrentHp = hp; }
 	void            Plus_HP(_float hp) { m_tInfo.fCurrentHp += hp; }
 	CRenderer* Get_Renderer(void) { return m_pRendererCom; }
+	void			Set_IsActionMode(_bool _type) { m_bIsActiveAtActionCamera = _type; }
 
 protected:
 	virtual HRESULT Ready_Components(void* pArg) = 0;
@@ -70,6 +71,7 @@ protected: /* For.Components */
 	CCollider*				m_pSPHERECom = nullptr;
 
 protected: 
+	_bool			m_bIsActiveAtActionCamera = false;
 	_bool			m_bIsLoop = true;
 	_bool			m_bStop = false;
 	_uint			m_eShaderID = SHADER_ANIMDEFAULT;

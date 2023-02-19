@@ -167,15 +167,21 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
-	//if (FAILED(Loading_ForMaptoolModel()))
+	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+		return E_FAIL;
+
+	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
+	//	return E_FAIL;
+
+	//if (FAILED(Loading_ForMaptoolVillageModel()))
 	//	return E_FAIL;
 
 	//For Effect
-	if (FAILED(Loading_ForEffect()))
-		return E_FAIL;
-	 
-	if (FAILED(Loading_ForEffectTexture()))
-		return E_FAIL;
+	//if (FAILED(Loading_ForEffect()))
+	//	return E_FAIL;
+	// 
+	//if (FAILED(Loading_ForEffectTexture()))
+	//	return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
 
@@ -188,12 +194,9 @@ HRESULT CLoader::Loading_ForClient()
 }
 
 
-HRESULT CLoader::Loading_ForMaptoolModel()
+HRESULT CLoader::Loading_ForMaptoolSnowFieldModel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	
-	
-
 	
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock"),
@@ -685,7 +688,6 @@ HRESULT CLoader::Loading_ForMaptoolModel()
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Crystal"));
 
 
-
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Terrain_HeightMap"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap3.bmp"), false))))
@@ -699,6 +701,337 @@ HRESULT CLoader::Loading_ForMaptoolModel()
 	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("HeightMapPlane"));
 
 	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForMaptoolBossRoomModel()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	///////////////////////Ceil////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Ceil_A_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Bld_Ceil_A_Lod1/Bld_Ceil_A_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Ceil_A_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Ceil_A2_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Bld_Ceil_A2_Lod1/Bld_Ceil_A2_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Ceil_A2_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ceiling"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Ceiling/Ceiling.dat"))))
+		return E_FAIL;        // 위쪽 바라보면 있음 
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Ceiling"));
+	
+
+	/////////////////////Chandelier////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Chandelier_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Chandelier/Bld_Chandelier_Lod1/Bld_Chandelier_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Chandelier_Lod1"));
+
+
+	///////////////////////Door////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D03_TallDoor"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Door/Bld_D03_TallDoor/Bld_D03_TallDoor.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D03_TallDoor"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Elevator_Door"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Door/Bld_Elevator_Door/Bld_Elevator_Door.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Elevator_Door"));
+
+
+	///////////////////////Fence////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Fence_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Fence/Bld_Fence_01/Bld_Fence_01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Fence_01"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Fence_02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Fence/Bld_Fence_02/Bld_Fence_02.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Fence_02"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Fence04_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Fence/Bld_Fence04_Lod1/Bld_Fence04_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Fence04_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_FencePartsB_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Fence/Bld_FencePartsB_Lod1/Bld_FencePartsB_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_FencePartsB_Lod1"));
+
+
+	///////////////////////Floor////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D01_EntStairs"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_D01_EntStairs/Bld_D01_EntStairs.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D01_EntStairs"));
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D03_Floor02_Detail_Lod1"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_D03_Floor02_Detail_Lod1/Bld_D03_Floor02_Detail_Lod1.dat"))))
+	//	return E_FAIL;   //3ds max에서 로드하면 온전하게 나오는데, 머테리얼 다 넣고 fbx파일로 볼 때는 구멍이 생겨있음. 
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D03_Floor02_Detail_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_Terrace_Floor01_A"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_D04_Terrace_Floor01_A/Bld_D04_Terrace_Floor01_A.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_Terrace_Floor01_A"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_Terrace_Floor01_Pts_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_D04_Terrace_Floor01_Pts_Lod1/Bld_D04_Terrace_Floor01_Pts_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_Terrace_Floor01_Pts_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_Terrace_Floor02_Omt_02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_D04_Terrace_Floor02_Omt_02_Lod1/Bld_D04_Terrace_Floor02_Omt_02_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_Terrace_Floor02_Omt_02_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor_A_200_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor_A_200_01/Bld_Floor_A_200_01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor_A_200_01"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor01/Bld_Floor01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor01"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor01_"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor01_/Bld_Floor01_.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor01_"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor01_outside_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor01_outside_Lod1/Bld_Floor01_outside_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor01_outside_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor01_outsideArch_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor01_outsideArch_Lod1/Bld_Floor01_outsideArch_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor01_outsideArch_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor02_Lod1/Bld_Floor02_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor02_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor02_sub.props"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor02_sub.props/Bld_Floor02_sub.props.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor02_sub.props"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_FloorPartsB"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_FloorPartsB/Bld_FloorPartsB.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_FloorPartsB"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_under_Floor"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_under_Floor/Bld_under_Floor.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_under_Floor"));
+
+
+	///////////////////////Light////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prop_Light_stand_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Light/Prop_Light_stand_Lod1/Prop_Light_stand_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Prop_Light_stand_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prop_Light02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Light/Prop_Light02_Lod1/Prop_Light02_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Prop_Light02_Lod1"));
+
+
+
+	///////////////////////Pillar////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_outer_Pillar_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Pillar/Bld_outer_Pillar_Lod1/Bld_outer_Pillar_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_outer_Pillar_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Pillar01_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Pillar/Bld_Pillar01_Lod1/Bld_Pillar01_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Pillar01_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Pillar01_Sub_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Pillar/Bld_Pillar01_Sub_Lod1/Bld_Pillar01_Sub_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Pillar01_Sub_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Pillar02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Pillar/Bld_Pillar02_Lod1/Bld_Pillar02_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Pillar02_Lod1"));
+
+
+	///////////////////////Roaster////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prop_MP_roaster02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Roaster/Prop_MP_roaster02_Lod1/Prop_MP_roaster02_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Prop_MP_roaster02_Lod1"));
+
+
+	///////////////////////Throne////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D03_Throne"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Throne/Bld_D03_Throne/Bld_D03_Throne.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D03_Throne"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D03_Throne_Break_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Throne/Bld_D03_Throne_Break_Lod1/Bld_D03_Throne_Break_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D03_Throne_Break_Lod1"));
+
+
+	///////////////////////Tiling////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_TilingA"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Tiling/Bld_TilingA/Bld_TilingA.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_TilingA"));
+
+
+	///////////////////////vine of thorns////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("POSE_A_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/vine of thorns/POSE_A_Lod1/POSE_A_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("POSE_A_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("POSE_B_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/vine of thorns/POSE_B_Lod1/POSE_B_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("POSE_B_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("POSE_C_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/vine of thorns/POSE_C_Lod1/POSE_C_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("POSE_C_Lod1"));
+
+
+	///////////////////////Wall////////////////////////////////
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D03_Wall03_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_D03_Wall03_Lod1/Bld_D03_Wall03_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D03_Wall03_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_Door01_Wall_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_D04_Door01_Wall_Lod1/Bld_D04_Door01_Wall_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_Door01_Wall_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_FillWall_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_FillWall_01/Bld_FillWall_01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_FillWall_01"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_FloorPartsA_wall"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_FloorPartsA_wall/Bld_FloorPartsA_wall.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_FloorPartsA_wall"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Option02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Option02_Lod1/Bld_Option02_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Option02_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_outer_Wall_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_outer_Wall_Lod1/Bld_outer_Wall_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_outer_Wall_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Wall01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall01/Bld_Wall01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Wall01"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Wall01_A"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall01_A/Bld_Wall01_A.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Wall01_A"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Wall01_B02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall01_B02_Lod1/Bld_Wall01_B02_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Wall01_B02_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Wall01_Coner_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall01_Coner_Lod1/Bld_Wall01_Coner_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Wall01_Coner_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Wall03_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall03_Lod1/Bld_Wall03_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Wall03_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_WallB"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_WallB/Bld_WallB.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_WallB"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_WallB_corner_B_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_WallB_corner_B_Lod1/Bld_WallB_corner_B_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_WallB_corner_B_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_WallB_End"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_WallB_End/Bld_WallB_End.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_WallB_End"));
+
+	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForMaptoolVillageModel()
+{
 	return S_OK;
 }
 

@@ -61,7 +61,7 @@ void CChaseState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::MOVE_RUN);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Chase.wav"), SOUND_VOICE, 0.4f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Chase.wav"), SOUND_VOICE, 0.2f);
 }
 
 void CChaseState::Exit()

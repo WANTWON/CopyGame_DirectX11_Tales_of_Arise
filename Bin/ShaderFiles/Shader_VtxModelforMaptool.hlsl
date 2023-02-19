@@ -119,8 +119,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 	Out.vDiffuse.a *= g_fAlpha;
 
-	if (Out.vDiffuse.a <= 0.0f)
-		discard;
+	//if (Out.vDiffuse.a <= 0.0f)
+	//	discard;
 
 	return Out;
 }
@@ -257,7 +257,7 @@ technique11 DefaultTechnique
 {
 	pass Default // 0
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_Default_NoCull);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_Default, 0);
 

@@ -51,7 +51,11 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 		{
 			m_bFinised = true;
 			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			{
+				m_pOwner->Set_IsActionMode(false);
 				return new CMoveState(m_pOwner, STATETYPE_START, 0);
+				
+			}	
 			else
 				return nullptr;
 		}	
@@ -84,8 +88,9 @@ void CPoseState::Enter()
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(0);
 
 		pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-		pCameraManager->Play_ActionCamera(TEXT("RinwellTest.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+		pCameraManager->Play_ActionCamera(TEXT("RinwellAction.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_ATTACK_BRAVE);
+		m_pOwner->Set_IsActionMode(true);
 		break;
 	}		
 	case Client::CRinwellState::STATE_HP50DOWN:

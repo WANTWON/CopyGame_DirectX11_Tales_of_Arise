@@ -17,7 +17,8 @@ public:
 		_float4					vAtPosition;
 		_float					fStartTime;
 		_float					fEndTime;
-
+		_bool					bNewSection = false;
+		_bool					bLerp = false;
 	}TOOLDESC;
 
 	typedef struct tagActionCamera
@@ -38,7 +39,8 @@ public:
 	void Set_CamData(_int iIndex, TOOLDESC CamDesc) { memcpy(&m_CamDatas[iIndex], &CamDesc, sizeof(TOOLDESC)); }
 	TOOLDESC Get_CamData(_int iIndex) { return m_CamDatas[iIndex]; }
 	vector<TOOLDESC> Get_AllCamData() { return m_CamDatas; }
-	void Remove_Camdata(_int iIndex);
+	void Remove_Camdata(_int iIndex) { m_CamDatas.erase(m_CamDatas.begin() + iIndex); };
+	void Remove_AllCamdata() { m_CamDatas.clear(); };
 
 public:
 	void					Set_Play(_bool type);
@@ -64,6 +66,8 @@ private:
 	_tchar		m_CameraName[MAX_PATH] = TEXT("");
 	_float		m_fTime = 0.f;
 	_int		m_iIndex = 0;
+	_vector		m_vInitPosition;
+	_vector		m_vInitAt;
 
 	vector<TOOLDESC> m_CamDatas;
 

@@ -7,6 +7,7 @@
 #include "UI_Manager.h"
 #include "UI_Dialogue.h"
 #include "UI_InterectMsg.h"
+#include "Rinwell.h"
 
 CSnowFieldNpc::CSnowFieldNpc(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CNpc(pDevice, pContext)
@@ -41,6 +42,9 @@ HRESULT CSnowFieldNpc::Initialize(void * pArg)
 		break;
 	case MAN_PLC:
 		m_eState = ANIM_MAN_PLC::IDLE;
+		break;
+	case RINWELL_NPC:
+		m_eState = CRinwell::IDLE_SIDE;
 		break;
 	}
 	
@@ -180,6 +184,16 @@ void CSnowFieldNpc::Talk_with_Npc()
 		break;
 	case MAN_PLC:
 		break;
+
+	case RINWELL_NPC:
+		switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
+		{
+		case 5:
+			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(5);
+		}
+		break;
+
+
 	default:
 		break;
 	}
@@ -221,7 +235,7 @@ HRESULT CSnowFieldNpc::Ready_Components(void * pArg)
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(4.f, 4.f, 4.f);
+	ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 3.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))

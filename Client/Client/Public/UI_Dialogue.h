@@ -80,7 +80,7 @@ private:
 
 	vector<_tchar*> m_vDialouge4[6]; // quest 3 start
 
-	vector<_tchar*> m_vDialouge5[6]; // quest 3 clear
+	vector<_tchar*> m_vDialouge5[7]; // quest 3 clear
 
 	
 
