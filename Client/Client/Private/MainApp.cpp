@@ -195,7 +195,8 @@ void CMainApp::Free()
 {
 	CObject_Pool_Manager::Get_Instance()->Clear_AllPooling_Layer();
 
-	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
+	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE ||
+		CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BOSS)
 	{
 		CBattleManager::Get_Instance()->Return_AllPoolingMonster_AtClear();
 	}
