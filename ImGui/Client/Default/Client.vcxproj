@@ -260,6 +260,7 @@
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxModelforMaptool.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxNorTexforMaptool.hlsl" />
+    <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl" />
     <FxCompile Include="..\..\..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

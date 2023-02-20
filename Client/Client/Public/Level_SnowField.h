@@ -37,6 +37,9 @@ private:
 	class CPlayerCreater*	m_pPlayer2Loader = nullptr;
 
 	_float m_fBlurTimer = 0.f;
+	 
+	vector<class CEffect*> m_SnowParticles1;
+	vector<class CEffect*> m_SnowParticles2;
 
 public:
 	static CLevel_SnowField* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -8,7 +8,7 @@ BEGIN(Player)
 class CAlphenSkillState final : public CPlayerState
 {
 public:
-	CAlphenSkillState(class CPlayer* pPlayer, STATE_ID eStateType, _float fStartHeight = 0.f, _float fTime = 0.f);
+	CAlphenSkillState(class CPlayer* pPlayer, STATE_ID eStateType, _float fTime = 0.f);
 
 	virtual CPlayerState* HandleInput(void) override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -22,7 +22,6 @@ private:
 	void Reset_Skill();
 
 private:
-	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
 
 	/* Effects */

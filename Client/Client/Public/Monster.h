@@ -28,6 +28,7 @@ public:
 		_float m_fRunSpeed = 5.f;
 		_float m_fLockonSmashGuage = 0.f;
 		_uint  m_iHitcount = 0;
+		_uint  m_iBedamagedCount = 0;
 	}STATS;
 
 protected:
@@ -78,6 +79,7 @@ public: // Get & Set
 	_bool Get_Aggro(void) { return m_bAggro; }
 	_bool Get_Hited(void) { return m_bHit; }
 	_bool Get_Dissolve(void) { return m_bDissolve; }
+	_bool Get_DownState(void) { return m_bDownState; }
 	_float Get_AggroRadius() { return m_fAggroRadius; }
 	_float Get_PatrolRadius() { return m_fPatrolRadius; }
 	_float Get_AttackRadius() { return m_fAttackRadius; }
@@ -86,6 +88,12 @@ public: // Get & Set
 	CNavigation* Get_Navigation(void) { return m_pNavigationCom; }
 	void Set_GlowUp() { m_bGlowUp = true; }
 	void Set_Dissolve() { m_bDissolve = true; }
+	void Set_OnGoingDown() { m_bOnGoingDown = true; }
+	void Set_FinishGoingDown() { m_bOnGoingDown = false; }
+	void Set_FinishDownState() { m_bDownState = false; }
+	void SetOff_BedamagedCount() { m_bBedamageAnim = false; }
+	void Set_BedamageCount_Delay() { m_bBedamageAnim_Delay = true; }
+	void SetOff_BedamageCount_Delay() { m_bBedamageAnim_Delay = false; }
 	CBaseObj* Get_Trigger() { return m_pTrigger; }
 	CBaseObj* Get_DamageCauser() { return m_pTarget; }
 	void	 Save_LastPosition();
@@ -120,7 +128,12 @@ protected:
 	_bool m_bMakeEffect = false;
 	_bool m_bTakeDamage = false;
 	_bool m_bBattleMode = false;
+	_bool m_bDownState = false;
+	_bool m_bOnGoingDown = false;
+	_bool m_bBedamageAnim = false;
+	_bool m_bBedamageAnim_Delay = false;
 	_bool  m_bLastStrikeAttack = false;
+
 	_uint m_eCurLevel = LEVEL_END;
 	_uint m_iRand = 0;
 

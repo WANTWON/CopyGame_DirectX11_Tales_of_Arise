@@ -66,17 +66,38 @@ CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 {	
 	m_pOwner->Check_Navigation();
-	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
+	//m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 
+	m_fTimeDeltaAcc += fTimeDelta;
 
-	/*if (false == m_bTargetSetting)
+	if (m_ePreBattleState == STATE_ID::STATE_DOWN)
 	{
-		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-		m_bTargetSetting = true;
-	}*/
+		if (m_bIsAnimationFinished)
+		{
+			return new CBattle_DashState(m_pOwner);
+		}
+
+		else
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+			m_pOwner->Check_Navigation();
+		}
+	}
+
+	else
+	{
+		if (m_fTimeDeltaAcc > m_fRandTime)
+			return new CBattle_DashState(m_pOwner);
+
+
+	}
 
 	
-	m_fTimeDeltaAcc += fTimeDelta;
+	/*m_fTimeDeltaAcc += fTimeDelta;
 
 	if (m_fTimeDeltaAcc > m_fRandTime)
 	{
@@ -88,7 +109,7 @@ CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 		default:
 			break;
 		}
-	}
+	}*/
 
 	return nullptr;
 }
@@ -97,13 +118,20 @@ void CBattle_IdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::SYMBOL_IDLE);
 
+	if (m_ePreBattleState == STATE_ID::STATE_DOWN)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ARISE_F);
+
+	else
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::SYMBOL_IDLE);
 	
 }
 
 void CBattle_IdleState::Exit()
 {
-
-	
+	if (m_ePreBattleState == STATE_ID::STATE_DOWN)
+	{
+		m_pOwner->Set_FinishGoingDown();
+		m_pOwner->Set_FinishDownState();
+	}
 }

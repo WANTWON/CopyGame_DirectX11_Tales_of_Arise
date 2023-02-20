@@ -519,23 +519,26 @@ HRESULT CUI_SidePopup::Render()
 
 	m_pVIBufferCom->Render();
 
+	if (CUI_Manager::Get_Instance()->Get_QuestIndex() > 0)
+	{
+		m_fSize.x = 300.f;
+		m_fSize.y = 38.f;
+		m_fPosition.x = 675.f;
+		m_fPosition.y = 118.f;// +m_fFadeY + m_fIndexOffsetY;
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom9->Get_SRV(CUI_Manager::Get_Instance()->Get_QuestIndex() - 1))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_BRIGHT);
 
-	m_fSize.x = 300.f;
-	m_fSize.y = 38.f;
-	m_fPosition.x = 675.f;
-	m_fPosition.y = 118.f;// +m_fFadeY + m_fIndexOffsetY;
-	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
-	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom9->Get_SRV(CUI_Manager::Get_Instance()->Get_QuestIndex()))))
-		return E_FAIL;
-	m_pShaderCom->Begin(UI_BRIGHT);
-
-	m_pVIBufferCom->Render();
+		m_pVIBufferCom->Render();
+	}
+	
 
 	//m_fSize.x = 200;
 	//m_fSize.y = 24.f;

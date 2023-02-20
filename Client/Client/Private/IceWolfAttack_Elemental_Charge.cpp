@@ -8,14 +8,14 @@
 #include "IceWolfBattle_RunState.h"
 using namespace IceWolf;
 
-CAttack_Elemental_Charge::CAttack_Elemental_Charge(class CIce_Wolf* pIceWolf, STATE_ID eStateType, CBaseObj* pCurTarget)
+CAttack_Elemental_Charge::CAttack_Elemental_Charge(class CIce_Wolf* pIceWolf, STATE_ID eStateType, _bool bPreDownState, CBaseObj* pCurTarget)
 {
 	m_eStateId_Charge = eStateType;
 	m_pOwner = pIceWolf;
 	m_pCurTarget = pCurTarget;
 	m_fTimeDeltaAcc = 0.f;
 	m_fRandTime = ((rand() % 3000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
-	
+	m_bPreDownState = bPreDownState;
 }
 
 CIceWolfState * CAttack_Elemental_Charge::AI_Behaviour(_float fTimeDelta)
@@ -87,10 +87,10 @@ CIceWolfState * CAttack_Elemental_Charge::LateTick(_float fTimeDelta)
 		default:
 			break;
 		}
+
+		if (m_bPreDownState)
+			return new CBattle_SomerSaultState(m_pOwner);
 	}
-
-		
-
 	return nullptr;
 }
 
@@ -100,6 +100,11 @@ void CAttack_Elemental_Charge::Enter()
 	{
 	case STATE_CHARGE_START:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ATTACK_ELEMENTAL_CHARGE_START);
+		if (m_bPreDownState == true)
+		{
+			m_pOwner->Set_FinishGoingDown();
+			m_pOwner->Set_FinishDownState();
+		}
 		break;
 
 	case STATE_CHARGE_LOOP:
@@ -112,7 +117,6 @@ void CAttack_Elemental_Charge::Enter()
 	}
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Charge.wav"), SOUND_VOICE, 0.1f);
-
 }
 
 void CAttack_Elemental_Charge::Exit()

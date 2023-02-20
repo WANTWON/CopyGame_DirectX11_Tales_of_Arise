@@ -11,9 +11,10 @@
 #include "SionSkills.h"
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
+#include "PlayerIdleState.h"
 
 using namespace AIPlayer;
-
+using namespace Player;
 CAI_RinwellLaw_Smash::CAI_RinwellLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 {
 	//m_ePreStateID = eStateType;
@@ -113,17 +114,35 @@ CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
-	}
+		PLAYER_MODE eMode = CPlayerManager::Get_Instance()->Check_ActiveMode(m_pOwner);
+		switch (eMode)
+		{
+		case Client::ACTIVE:
+		{
+			CPlayerState* pState = nullptr;
 
+			pState = new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
+			m_pOwner->Set_PlayerState(m_pOwner->Get_PlayerState()->ChangeState(m_pOwner->Get_PlayerState(), pState));
+		}
+
+
+
+		case Client::AI_MODE:
+		{
+			return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+		}
+		}
+
+
+		
+	}
 
 	return nullptr;
 }
 
 void CAI_RinwellLaw_Smash::Enter()
 {
+	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::RINWELL:
@@ -156,6 +175,7 @@ void CAI_RinwellLaw_Smash::Enter()
 
 void CAI_RinwellLaw_Smash::Exit()
 {
+	m_pOwner->Set_StrikeAttack(false);
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)

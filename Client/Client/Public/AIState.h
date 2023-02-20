@@ -34,6 +34,12 @@ public:
 		
 	};
 
+	enum AI_MODE
+	{
+		ATTACK_LOCKONMODE,
+		ATTACK_FREEMODE
+	};
+
 	STATE_ID Get_StateId() { return m_eStateId; }
 
 	virtual ~CAIState() {};
@@ -76,10 +82,41 @@ public:
 		return fDistance;
 	}
 
+	_bool CheckTarget()
+	{
+		if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+			return false;
+		if (nullptr == CBattleManager::Get_Instance()->Get_LackonMonster())
+			return false;
+
+		switch (m_eAIMode)
+		{
+		case ATTACK_LOCKONMODE:
+			if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+			{
+				m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+			}
+			else
+			{
+				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+				(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			}
+
+			if (m_pTarget == nullptr)
+				return false;
+			break;
+		case ATTACK_FREEMODE:
+			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		}
+	}
+	
+
 protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
 	STATE_ID m_eStateId = STATE_END;
 	STATE_ID m_ePreStateID = STATE_END;
+	AI_MODE m_eAIMode = ATTACK_FREEMODE;
 	_uint m_iCurrentAnimIndex = 0;
 	_uint m_eCurrentPlayerID = CPlayer::PLAYERID::SION;
 	CPlayer* m_pOwner = nullptr;
@@ -93,6 +130,7 @@ protected:
 
 	_bool m_bLookatOnetime = true;
 
+	
 	
 };
 END

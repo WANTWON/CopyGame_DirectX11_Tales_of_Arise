@@ -651,7 +651,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 
 	/*For.Prototype_Component_VIBuffer_PointInstance*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_PointInstance"),
-		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, 50))))
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_VIBuffer_Point*/

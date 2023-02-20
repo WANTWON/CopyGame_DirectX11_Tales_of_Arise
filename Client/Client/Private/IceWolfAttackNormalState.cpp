@@ -187,7 +187,7 @@ CIceWolfState * CAttackNormalState::LateTick(_float fTimeDelta)
 			}
 
 			else
-				return new CAttack_Elemental_Charge(m_pOwner, STATE_CHARGE_START);
+				return new CAttack_Elemental_Charge(m_pOwner, STATE_CHARGE_START, false, false);
 		}
 	}
 

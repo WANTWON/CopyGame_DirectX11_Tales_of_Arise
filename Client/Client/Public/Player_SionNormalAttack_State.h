@@ -9,7 +9,7 @@ BEGIN(Player)
 class CPlayer_SionNormalAttack_State final : public CPlayerState
 {
 public:
-	CPlayer_SionNormalAttack_State(class CPlayer* pPlayer, STATE_ID eStateType, _float fStartHeight = 0.f, _float fTime = 0.f);
+	CPlayer_SionNormalAttack_State(class CPlayer* pPlayer, STATE_ID eStateType, _float fTime = 0.f);
 
 	virtual CPlayerState* HandleInput() override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -24,7 +24,6 @@ public:
 private:
 	_matrix m_StartMatrix;
 
-	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
 
 	_bool m_bEffectSlashSpawned = false;

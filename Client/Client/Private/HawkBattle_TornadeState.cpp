@@ -145,6 +145,7 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 			m_p2th_AtkColliderCom = nullptr;
 
 			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 		}
 	}
 
@@ -188,8 +189,4 @@ void CBattle_TornadeState::Enter()
 void CBattle_TornadeState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
-
-	Safe_Release(m_pAtkColliderCom);
-	Safe_Release(m_p2th_AtkColliderCom);
-
 }

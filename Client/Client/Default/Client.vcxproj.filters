@@ -1604,9 +1604,6 @@
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
@@ -1804,6 +1801,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_BossZone.cpp">
       <Filter>01.Levels\04.BossZone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -189,6 +189,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					break;
 
 				case 5:
+					CUI_Manager::Get_Instance()->Set_QuestIndex(3);
 					CUI_QuestClear::QUESTCLEARDESC garr;
 					ZeroMemory(&garr, sizeof(CUI_QuestClear::QUESTCLEARDESC));
 					garr.eName1 = ITEMNAME_REDSAGE;

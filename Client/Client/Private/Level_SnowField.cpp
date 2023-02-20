@@ -15,6 +15,7 @@
 #include "PlayerCreater.h"
 #include "Object_Pool_Manager.h"
 #include "Monster.h"
+#include "Effect.h"
 
 extern bool		g_bUIMade = false;
 
@@ -157,6 +158,13 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (m_SnowParticles1.empty() && m_SnowParticles2.empty())
+	{
+		_matrix mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 128.f);
+		m_SnowParticles1 = CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_1.dat"), mWorldMatrix);
+		m_SnowParticles2 = CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_2.dat"), mWorldMatrix);
+	}
+	
 	g_fSoundVolume += 0.001f;
 	if (g_fSoundVolume >= 0.3f)
 		g_fSoundVolume = 0.3f;

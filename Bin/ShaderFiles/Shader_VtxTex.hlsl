@@ -71,6 +71,7 @@ PS_OUT PS_EFFECT(PS_IN In)
 	Out.vColor.gba = Out.vColor.r;
 
 	Out.vColor.rgb *= g_vColor; // Set Color
+	Out.vColor.rgb /= Out.vColor.a;
 	Out.vColor.a *= g_fAlpha;
 
 	if (Out.vColor.a <= g_fAlphaDiscard) // Alpha Test
@@ -86,6 +87,7 @@ PS_OUT PS_GLOW(PS_IN In)
 	Out.vColor.gba = Out.vColor.r;
 
 	Out.vColor.rgb *= g_vGlowColor;
+	Out.vColor.rgb /= Out.vColor.a;
 	Out.vColor.a *= g_fAlpha;
 
 	if (Out.vColor.a == 0)
