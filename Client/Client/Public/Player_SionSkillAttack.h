@@ -7,7 +7,7 @@ BEGIN(Player)
 class CPlayer_SionSkillAttack final : public CPlayerState
 {
 public:
-	CPlayer_SionSkillAttack(class CPlayer* pPlayer, STATE_ID eStateType, _float fStartHeight = 0.f, _float fTime = 0.f);
+	CPlayer_SionSkillAttack(class CPlayer* pPlayer, STATE_ID eStateType, _float fTime = 0.f);
 
 	virtual CPlayerState* HandleInput(void) override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -17,7 +17,6 @@ public:
 	virtual void Exit(void) override;
 
 private:
-	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
 
 	_bool m_bBulletMade = false;

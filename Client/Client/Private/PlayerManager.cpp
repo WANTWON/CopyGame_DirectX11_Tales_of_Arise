@@ -124,10 +124,9 @@ void CPlayerManager::Set_Ai_Check()
 
 void CPlayerManager::Set_SmashAttack()
 {
-	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
-		return;
-
-	
+	CMonster* pLockonMonster = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster());
+	if ((nullptr != pLockonMonster) && (pLockonMonster->Get_Stats().m_fLockonSmashGuage >= 4.f))
+	{
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
 			CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
@@ -149,11 +148,11 @@ void CPlayerManager::Set_SmashAttack()
 			pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
 			pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
 
-			if(CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+			if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 		}
-		
-		
+
+
 		if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 2)
 		{
 			if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_3))
@@ -161,7 +160,7 @@ void CPlayerManager::Set_SmashAttack()
 				Get_EnumPlayer(0)->SmashAttack(CPlayer::ALPHEN_RINWELL);
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::ALPHEN_RINWELL);
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
-				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 			}
 
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_3))
@@ -169,37 +168,37 @@ void CPlayerManager::Set_SmashAttack()
 				Get_EnumPlayer(1)->SmashAttack(CPlayer::SION_RINWELL);
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::SION_RINWELL);
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
-				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 			}
 		}
 
-		 if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 3)
+		if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 3)
 		{
-		 if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
-		{
-			Get_EnumPlayer(0)->SmashAttack(CPlayer::ALPHEN_LAW);
-			Get_EnumPlayer(3)->SmashAttack(CPlayer::ALPHEN_LAW);
-			if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
-		}
+			if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
+			{
+				Get_EnumPlayer(0)->SmashAttack(CPlayer::ALPHEN_LAW);
+				Get_EnumPlayer(3)->SmashAttack(CPlayer::ALPHEN_LAW);
+				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+			}
 
-		else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
-		{
-			Get_EnumPlayer(1)->SmashAttack(CPlayer::SION_LAW);
-			Get_EnumPlayer(3)->SmashAttack(CPlayer::SION_LAW);
-			if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+			else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
+			{
+				Get_EnumPlayer(1)->SmashAttack(CPlayer::SION_LAW);
+				Get_EnumPlayer(3)->SmashAttack(CPlayer::SION_LAW);
+				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+			}
+			else if (CGameInstance::Get_Instance()->Key_Down(DIK_3) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
+			{
+				Get_EnumPlayer(1)->SmashAttack(CPlayer::RINWELL_LAW);
+				Get_EnumPlayer(4)->SmashAttack(CPlayer::RINWELL_LAW);
+				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+			}
 		}
-		else if (CGameInstance::Get_Instance()->Key_Down(DIK_3) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
-		{
-			Get_EnumPlayer(1)->SmashAttack(CPlayer::RINWELL_LAW);
-			Get_EnumPlayer(4)->SmashAttack(CPlayer::RINWELL_LAW);
-			if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
-		}
-	   }
-		
 	}
+}
 
 void CPlayerManager::Update_StrikePosition(_tchar * FilePath)
 {

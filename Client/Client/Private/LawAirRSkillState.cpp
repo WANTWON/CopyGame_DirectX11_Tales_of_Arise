@@ -17,13 +17,10 @@
 
 using namespace Player;
 
-CLawAirRSkillState::CLawAirRSkillState(CPlayer * pPlayer, STATE_ID eStateType, _float fStartHeight, _float fTime)
+CLawAirRSkillState::CLawAirRSkillState(CPlayer * pPlayer, STATE_ID eStateType)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
-
-	m_fStartHeight = fStartHeight;
-	m_fTime = fTime;
 }
 
 CPlayerState * CLawAirRSkillState::HandleInput(void)

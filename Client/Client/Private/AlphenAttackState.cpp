@@ -12,12 +12,11 @@
 
 using namespace Player;
 
-CAlphenAttackState::CAlphenAttackState(CPlayer * pPlayer, STATE_ID eStateType, _float fStartHeight, _float fTime)
+CAlphenAttackState::CAlphenAttackState(CPlayer * pPlayer, STATE_ID eStateType, _float fTime)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
 
-	m_fStartHeight = fStartHeight;
 	m_fTime = fTime;
 }
 
@@ -152,7 +151,7 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_START, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, m_fTime);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
@@ -176,7 +175,7 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 			m_eStateId = STATE_NORMAL_ATTACK4;
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-			return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
+			return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
 			break;
 		}
 
@@ -188,17 +187,17 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 		if (GetKeyState('E') < 0)
 		{
 			if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fTime);
 		}
 		else if (GetKeyState('R') < 0)
 		{
 			if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fTime);
 		}
 		else if (GetKeyState('F') < 0)
 		{
 			if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
+				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fTime);
 		}
 	}
 	else

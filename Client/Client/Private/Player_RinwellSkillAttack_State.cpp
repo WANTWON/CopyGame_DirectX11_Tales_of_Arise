@@ -17,12 +17,11 @@
 
 using namespace Player;
 
-CPlayer_RinwellSkillAttack_State::CPlayer_RinwellSkillAttack_State(CPlayer * pPlayer, STATE_ID eStateType, _float fStartHeight, _float fTime)
+CPlayer_RinwellSkillAttack_State::CPlayer_RinwellSkillAttack_State(CPlayer * pPlayer, STATE_ID eStateType, _float fTime)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
 
-	m_fStartHeight = fStartHeight;
 	m_fTime = fTime;
 }
 
@@ -480,13 +479,10 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::LateTick(_float fTimeDelta)
 		}
 	}
 
-
-	
-
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_MAIN, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, STATETYPE_MAIN, CJumpState::JUMP_BATTLE, m_fTime);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 
