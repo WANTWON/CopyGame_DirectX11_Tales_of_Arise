@@ -13,6 +13,7 @@ public:
 		STATE_RUN,
 		STATE_ATTACK,
 		STATE_BOOSTATTACK,
+		STATE_JUMP,
 		STATE_DEAD,
 		STATE_HIT,
 		STATE_DODGE,
@@ -109,6 +110,7 @@ public:
 			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 		}
+		return true;
 	}
 	
 
@@ -130,7 +132,7 @@ protected:
 
 	_bool m_bLookatOnetime = true;
 
-	
+	//_bool m_bIsFly = false;
 	
 };
 END

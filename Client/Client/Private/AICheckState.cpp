@@ -14,6 +14,7 @@
 #include "AI_Rinwell_SkillState.h"
 #include "AI_LAW_NomalAttack_State.h"
 #include "AI_LAW_SkillAttack_State.h"
+#include "AI_JumpState.h"
 
 using namespace AIPlayer;
 
@@ -108,9 +109,9 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 
 	m_fTimer += fTimeDelta;
 
-	
-	if (m_fTimer > 0.5f)
-	{
+	return new CAI_JumpState(m_pOwner, STATETYPE_START ,true);
+//	if (m_fTimer > 0.5f)
+//	{
 		if (Get_Target_Distance() <= 3.f)
 		{
 			m_bRangerRunaway = true; // for ranger runaway
@@ -288,7 +289,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 		}
 		
 
-	}
+//	}
 	
 
 

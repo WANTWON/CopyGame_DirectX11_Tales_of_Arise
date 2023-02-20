@@ -1113,6 +1113,7 @@
     <ClInclude Include="..\Public\PlayerOverlimit.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AI_JumpState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1796,6 +1797,7 @@
     <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\AI_JumpState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
