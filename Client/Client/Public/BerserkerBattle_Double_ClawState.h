@@ -21,6 +21,9 @@ private:
 	_float		m_fIdleAttackTimer = 1.5f;
 	_uint		m_iRand = 0;
 
+	CCollider*  m_pAtkColliderCom = false;
+	CCollider*	m_p2th_AtkColliderCom = false;
+
 private:
 	_matrix m_StartMatrix;
 };

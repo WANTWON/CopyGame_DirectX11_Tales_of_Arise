@@ -83,9 +83,9 @@ CBerserkerState * CBattle_RunState::LateTick(_float fTimeDelta)
 
 	m_fTimeDeltaAcc += fTimeDelta;
 	if (m_fTimeDeltaAcc > m_fRandTime)
-		m_iRand = rand() % 4;
+		m_iRand = rand() % 2;
 
-	if (m_fTarget_Distance > 7.5f)
+	if (m_fTarget_Distance > 11.5f)
 	{
 
 		m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
@@ -109,24 +109,35 @@ CBerserkerState * CBattle_RunState::LateTick(_float fTimeDelta)
 		
 	}
 
-	else if (m_fTarget_Distance <= 7.5f)
+	else if (m_fTarget_Distance <= 11.5f)
 	{
 		switch (m_iRand)
 		{
 		case 0:
 			return new CBattle_PouncingState(m_pOwner);
-			
+
 		case 1:
-			return new CBattle_FireBallState(m_pOwner);
-				
-		case 2:
-			return new CBattle_Multiple_FireState(m_pOwner);
-			
-		case 3:
 			return new CBattle_Shock_WaveState(m_pOwner);
 		default:
 			break;
 		}
+
+		//switch (m_iRand)
+		//{
+		//case 0:
+		//	return new CBattle_PouncingState(m_pOwner);
+		//	
+		//case 1:
+		//	return new CBattle_FireBallState(m_pOwner);
+		//		
+		//case 2:
+		//	return new CBattle_Multiple_FireState(m_pOwner);
+		//	
+		//case 3:
+		//	return new CBattle_Shock_WaveState(m_pOwner);
+		//default:
+		//	break;
+		//}
 	}
 
 

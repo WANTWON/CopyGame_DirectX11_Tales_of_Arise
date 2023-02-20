@@ -5,12 +5,14 @@
 
 #include "BerserkerBattle_IdleState.h"
 #include "BerserkerBattle_WalkState.h"
+#include "BerserkerBattle_RunState.h"
 
 using namespace Berserker;
 
 CBattle_Double_ClawState::CBattle_Double_ClawState(CBerserker* pBerserker)
 {
 	m_pOwner = pBerserker;
+	m_fRandTime = ((rand() % 3000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CBerserkerState * CBattle_Double_ClawState::AI_Behaviour(_float fTimeDelta)
@@ -71,7 +73,7 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 					{
 						CCollider::COLLIDERDESC		ColliderDesc;
 
-						ColliderDesc.vScale = _float3(2.f, 2.f, 2.f);
+						ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
 						ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 						m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
@@ -87,7 +89,7 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 					{
 						CCollider::COLLIDERDESC		ColliderDesc2th;
 
-						ColliderDesc2th.vScale = _float3(2.f, 2.f, 2.f);
+						ColliderDesc2th.vScale = _float3(6.f, 6.f, 6.f);
 						ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
 
 						m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
@@ -126,9 +128,30 @@ CBerserkerState * CBattle_Double_ClawState::LateTick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 
+	m_fTimeDeltaAcc += fTimeDelta;
+	if (m_fTimeDeltaAcc > m_fRandTime)
+		m_iRand = rand() % 2;
+
+	m_bAngry = m_pOwner->Get_IsAngry();
+
 	if (m_bIsAnimationFinished)
 	{	
-		return new CBattle_WalkState(m_pOwner);
+		if (m_bAngry == false)
+		{
+			return new CBattle_WalkState(m_pOwner);
+		}
+
+		else
+		{
+			switch (m_iRand)
+			{
+			case 0:
+				return new CBattle_WalkState(m_pOwner);
+
+			case 1:
+				return new CBattle_RunState(m_pOwner);
+			}
+		}
 	}
 	
 #ifdef _DEBUG
@@ -158,4 +181,6 @@ void CBattle_Double_ClawState::Exit()
 
 	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);
+
+	m_pOwner->SetOff_BedamageCount_Delay();
 }

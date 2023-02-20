@@ -64,5 +64,5 @@ void CBattle_BackStepState::Enter()
 
 void CBattle_BackStepState::Exit()
 {
-
+	m_pOwner->SetOff_BedamageCount_Delay();
 }

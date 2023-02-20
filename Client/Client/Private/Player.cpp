@@ -100,6 +100,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	if (m_bOverLimit)
 	{
+		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 		m_fOverLimitTimer += fTimeDelta;
 		if (m_fOverLimitTimer > 0.2f)
 		{
@@ -469,7 +470,7 @@ void CPlayer::AI_check()
 {
 	CAIState* pAIState = nullptr;
 
-	pAIState = new CAiState_WakeUp(this);
+	pAIState = new CAICheckState(this,CAIState::STATE_IDLE);
    m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
 }
@@ -645,6 +646,10 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 	case Client::LEVEL_SNOWFIELD:
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_FieldNavigation"), m_ePlayerID));
 		break;
+	case Client::LEVEL_BOSS:
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BossNavigation"), m_ePlayerID));
+		break;
+
 	}
 
 	RELEASE_INSTANCE(CGameInstance);

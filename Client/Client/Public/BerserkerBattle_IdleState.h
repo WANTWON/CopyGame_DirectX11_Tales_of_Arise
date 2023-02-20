@@ -7,7 +7,7 @@ BEGIN(Berserker)
 class CBattle_IdleState : public CBerserkerState
 {
 public:
-	CBattle_IdleState(class CBerserker* pBerserker);
+	CBattle_IdleState(class CBerserker* pBerserker, STATE_ID eStateId = STATE_ID::STATE_END);
 
 	virtual CBerserkerState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CBerserkerState* Tick(_float fTimeDelta) override;
@@ -23,6 +23,7 @@ private:
 	_bool		m_bAnimFinish = false;
 	_bool		m_bTargetSetting = false;
 	_float		m_fRedayAttackTimer = 0.f;
+	STATE_ID	m_eState_Id = STATE_ID::STATE_END;
 };
 END
 END

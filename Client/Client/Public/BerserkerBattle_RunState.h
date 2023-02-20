@@ -7,7 +7,7 @@ BEGIN(Berserker)
 class CBattle_RunState : public CBerserkerState
 {
 public:
-	CBattle_RunState(class CBerserker* pBerserker,STATE_ID ePreState);
+	CBattle_RunState(class CBerserker* pBerserker,STATE_ID ePreState = STATE_END);
 
 	virtual CBerserkerState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CBerserkerState* Tick(_float fTimeDelta) override;

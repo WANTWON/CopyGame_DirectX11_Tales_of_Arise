@@ -11,9 +11,10 @@
 #include "SionSkills.h"
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
+#include "PlayerIdleState.h"
 
 using namespace AIPlayer;
-
+using namespace Player;
 CAI_AlphenRinwell_Smash::CAI_AlphenRinwell_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 {
 	//m_ePreStateID = eStateType;
@@ -113,9 +114,28 @@ CAIState * CAI_AlphenRinwell_Smash::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+		
+
+			PLAYER_MODE eMode = CPlayerManager::Get_Instance()->Check_ActiveMode(m_pOwner);
+			switch (eMode)
+			{
+			case Client::ACTIVE:
+			{
+				CPlayerState* pState = nullptr;
+
+				pState = new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
+				m_pOwner->Set_PlayerState(m_pOwner->Get_PlayerState()->ChangeState(m_pOwner->Get_PlayerState(), pState));
+			}
+
+
+
+			case Client::AI_MODE:
+			{
+				return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+			}
+
+			}
+		
 	}
 
 
@@ -149,9 +169,9 @@ void CAI_AlphenRinwell_Smash::Enter()
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+//	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-	pCamera->Set_Target(m_pOwner);
+//	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
 }
@@ -172,6 +192,6 @@ void CAI_AlphenRinwell_Smash::Exit()
 		}
 	}
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+//	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	__super::Exit();
 }

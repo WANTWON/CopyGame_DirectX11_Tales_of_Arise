@@ -22,6 +22,7 @@ private:
 	_uint		m_iRand = 0;
 	_bool		m_bAnimFinish = false;
 	_bool		m_bDeadAnimFinish = false;
+	CCollider*  m_pAtkColliderCom = false;
 
 private:
 	_matrix		m_StartMatrix;

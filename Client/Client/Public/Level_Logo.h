@@ -22,6 +22,8 @@ public:
 	HRESULT Ready_Layer_Npc(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_SnowDecoObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_BossMapObject(const _tchar* pLayerTag);
+
 
 private:
 

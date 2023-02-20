@@ -83,8 +83,34 @@ CBaseObj * CBattleManager::Get_MinDistance_Monster(_vector vPosition)
 			pTarget = dynamic_cast<CBaseObj*>(iter);
 		}
 	}
+
+	if (pTarget == nullptr)
+		return pLockOn;
+	else
 	return pTarget;
 }
+
+//CBaseObj * CBattleManager::Get_MinDistance_Monster_includeLockon(_vector vPosition)
+//{
+//	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+//
+//	CBaseObj* pTarget = nullptr;
+//	_float fMinDistance = MAXDISTANCE;
+//	for (auto& iter : m_BattleMonster)
+//	{
+//		if (dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0)
+//			continue;
+//
+//		_float fDistance = XMVectorGetX(XMVector3Length(vPosition - dynamic_cast<CMonster*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
+//
+//		if (fDistance < fMinDistance)
+//		{
+//			fMinDistance = fDistance;
+//			pTarget = dynamic_cast<CBaseObj*>(iter);
+//		}
+//	}
+//	return pTarget;
+//}
 
 _bool CBattleManager::IsAllMonsterDead()
 {

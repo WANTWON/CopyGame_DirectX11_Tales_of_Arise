@@ -6,6 +6,7 @@
 #include "Level_Logo.h"
 #include "Level_BattleZone.h"
 #include "Level_SnowField.h"
+#include "Level_BossZone.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -49,6 +50,9 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			break;
 		case LEVEL_SNOWFIELD:
 			pNewLevel = CLevel_SnowField::Create(m_pDevice, m_pContext);
+			break;
+		case LEVEL_BOSS:
+			pNewLevel = CLevel_BossZone::Create(m_pDevice, m_pContext);
 			break;
 		}
 

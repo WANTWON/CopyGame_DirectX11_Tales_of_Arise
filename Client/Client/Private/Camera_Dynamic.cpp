@@ -387,7 +387,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	else
 	{
 		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
-		FinalPos = m_vNewPos + +vZoomDir*m_fZoomOffset;
+		FinalPos = m_vNewPos +vZoomDir*m_fZoomOffset;
 		m_fTime = 0.f;
 	}
 
@@ -466,9 +466,9 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 
 
 		
-		if (fDistance > 30.F)
+		if (fDistance > 30.f)
 		{
-			fLength += 0.02f;
+			fLength -= 0.02f;
 			m_fCameraOffsetY -= 0.2f;
 			
 		}
@@ -485,14 +485,14 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 		}
 		else if(fDistance < 15.f)
 		{
-			fLength -= 0.02f;
+			fLength += 0.02f;
 			m_fCameraOffsetY += 0.2f;
 		}
 
 		if (fLength >= 10.f)
 			fLength = 10.f;
-		if (fLength <= 7.f)
-			fLength = 7.f;
+		if (fLength <= 5.f)
+			fLength = 5.f;
 		if (m_fCameraOffsetY >= 5.f)
 			m_fCameraOffsetY = 5.f;
 		else if (m_fCameraOffsetY <= 1.f)
@@ -520,13 +520,15 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 		m_fTime += fTimeDelta*0.3f;
 
 		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
-
+		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = m_vNewPos + vZoomDir*m_fZoomOffset;
 		if (m_fTime >= 1.f)
 			m_bLerp = false;
 	}
 	else
 	{
-		FinalPos = m_vNewPos;
+		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = m_vNewPos + vZoomDir*m_fZoomOffset;
 		m_fTime = 0.f;
 	}
 
