@@ -736,7 +736,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;
 
 	/*For.Prototype_Component_Model_Water_Plane*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"),
+ 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Water/Plane.dat"))))
 		return E_FAIL;
 
