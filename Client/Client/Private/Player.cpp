@@ -649,6 +649,10 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 	case Client::LEVEL_SNOWFIELD:
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_FieldNavigation"), m_ePlayerID));
 		break;
+	case Client::LEVEL_BOSS:
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BossNavigation"), m_ePlayerID));
+		break;
+
 	}
 
 	RELEASE_INSTANCE(CGameInstance);

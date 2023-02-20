@@ -94,6 +94,9 @@ HRESULT CLaw::Ready_Components(void * pArg)
 	/* For.Com_Navigation */
 	CNavigation::NAVIDESC NaviDesc;
 	ZeroMemory(&NaviDesc, sizeof NaviDesc);
+	if (FAILED(__super::Add_Components(TEXT("Com_BossNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_Boss_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+	m_vecNavigations.push_back(m_pNavigationCom);
 	if (FAILED(__super::Add_Components(TEXT("Com_BattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 	m_vecNavigations.push_back(m_pNavigationCom);

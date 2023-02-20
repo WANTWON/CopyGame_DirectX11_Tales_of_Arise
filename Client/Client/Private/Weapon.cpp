@@ -77,7 +77,7 @@ int CWeapon::Tick(_float fTimeDelta)
 
 			ColliderDesc.vPosition = _float3(0.f, 0.f, -2.f);
 
-			m_pSPHERECom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+			m_pSPHERECom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 			pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 

@@ -79,7 +79,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		//m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("DivineFloor.dat"), mWorldMatrix);
 
 		memcpy(&OriginLightDesc, CGameInstance::Get_Instance()->Get_LightDesc(0), sizeof(LIGHTDESC));
-		memcpy(&OriginLightDesc2, CGameInstance::Get_Instance()->Get_LightDesc(10), sizeof(LIGHTDESC));
+	//	memcpy(&OriginLightDesc2, CGameInstance::Get_Instance()->Get_LightDesc(10), sizeof(LIGHTDESC));
 		memcpy(&DevineLightDesc, &OriginLightDesc, sizeof(LIGHTDESC));
 		memcpy(&DevineLightDesc2, &OriginLightDesc2, sizeof(LIGHTDESC));
 		break;
@@ -604,7 +604,7 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 		DevineLightDesc2.vDiffuse.z = OriginLightDesc2.vDiffuse.z + LightOffset.z*2.f;
 
 		CGameInstance::Get_Instance()->Set_LightDesc(0, &DevineLightDesc);
-		CGameInstance::Get_Instance()->Set_LightDesc(10, &DevineLightDesc2);
+		//CGameInstance::Get_Instance()->Set_LightDesc(10, &DevineLightDesc2);
 	}
 
 
@@ -654,14 +654,14 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 		DevineLightDesc2.vDiffuse.z = OriginLightDesc2.vDiffuse.z + LightOffset.z*2.f;
 
 		CGameInstance::Get_Instance()->Set_LightDesc(0, &DevineLightDesc);
-		CGameInstance::Get_Instance()->Set_LightDesc(10, &DevineLightDesc2);
+		//CGameInstance::Get_Instance()->Set_LightDesc(10, &DevineLightDesc2);
 	}
 
 	if (bulletcount <= 0)
 	{
 		m_bDead = true;
 		CGameInstance::Get_Instance()->Set_LightDesc(0, &OriginLightDesc);
-		CGameInstance::Get_Instance()->Set_LightDesc(10, &OriginLightDesc2);
+		//CGameInstance::Get_Instance()->Set_LightDesc(10, &OriginLightDesc2);
 	}
 		
 }

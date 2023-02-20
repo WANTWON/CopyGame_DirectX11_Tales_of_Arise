@@ -122,8 +122,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 				else if (nullptr != m_pAtkColliderCom)
 					m_pAtkColliderCom->Update(matWorld);
@@ -138,8 +136,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 
 					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 					m_p2th_AtkColliderCom->Update(matWorld_2th);
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 				else if (nullptr != m_p2th_AtkColliderCom)
 					m_p2th_AtkColliderCom->Update(matWorld_2th);
@@ -154,8 +150,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 
 					m_p3th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc3th);
 					m_p3th_AtkColliderCom->Update(matWorld_3th);
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 				else if (nullptr != m_p3th_AtkColliderCom)
 					m_p3th_AtkColliderCom->Update(matWorld_3th);
@@ -170,8 +164,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 
 					m_p4th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc4th);
 					m_p4th_AtkColliderCom->Update(matWorld_4th);
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 
 				else if (nullptr != m_p4th_AtkColliderCom)
@@ -186,8 +178,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 
 					m_p5th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc5th);
 					m_p5th_AtkColliderCom->Update(matWorld_5th);
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 				else if (nullptr != m_p5th_AtkColliderCom)
 					m_p5th_AtkColliderCom->Update(matWorld_5th);
@@ -202,8 +192,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 
 					m_p6th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc6th);
 					m_p6th_AtkColliderCom->Update(matWorld_6th);
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 				else if (nullptr != m_p6th_AtkColliderCom)
 					m_p6th_AtkColliderCom->Update(matWorld_6th);
@@ -229,9 +217,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 			m_p4th_AtkColliderCom = nullptr;
 			m_p5th_AtkColliderCom = nullptr;
 			m_p6th_AtkColliderCom = nullptr;
-
-
-			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
