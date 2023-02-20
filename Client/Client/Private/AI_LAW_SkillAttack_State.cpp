@@ -12,6 +12,7 @@
 #include "AICheckState.h"
 #include "AI_LAW_NomalAttack_State.h"
 #include "AI_DodgeState.h"
+#include "AI_JumpState.h"
 
 using namespace AIPlayer;
 
@@ -89,7 +90,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 			{
 				if (m_pOwner->Get_Info().fCurrentMp > 1)
 				{
-					switch (rand() % 3)
+					switch (rand() % 4)
 					{
 					case 0:
 						m_pOwner->Get_Model()->Reset();
@@ -106,6 +107,10 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 						m_eStateId = STATE_SKILL_ATTACK_F;
 						Enter();
 						break;
+
+					case 3:
+						return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
 					}
 				}
 				else

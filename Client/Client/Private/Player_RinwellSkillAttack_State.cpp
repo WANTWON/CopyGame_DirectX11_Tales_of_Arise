@@ -34,7 +34,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::HandleInput(void)
 CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-	if (CSion::ANIM::BTL_ATTACK_TRESVENTOS)
+	if (CRinwell::ANIM::BTL_ATTACK_HOUDEN)
 	{
 		if (!m_bIsAnimationFinished)
 		{
@@ -448,6 +448,9 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::LateTick(_float fTimeDelta)
 		return nullptr;
 	}
 
+//	if(m_pOwner->Get_IsFly() && m_bIsAnimationFinished)
+
+
 	if (m_bIsStateEvent)
 		return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1);
 
@@ -494,15 +497,22 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 	{
 		switch (m_eStateId)
 		{
-		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_TRESVENTOS);
-
-			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Fix.wav"), SOUND_EFFECT, 0.5f);
-			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Jump_E.wav"), SOUND_EFFECT, 0.5f);
+		case Client::CPlayerState::STATE_SKILL_ATTACK4:
+		{
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); //¾óÀ½¶³±¸±â
+																							/* Make Effect */
+			_vector vOffset = { 0.f,3.f,0.f,0.f };
+			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_E.mp3"), SOUND_EFFECT_ALPHEN, 1.0f);
+			break;
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS);
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("SionTresShot.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 			break;
+		}
+			
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
 			break;

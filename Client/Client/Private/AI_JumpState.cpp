@@ -22,7 +22,10 @@
 #include "AICheckState.h"
 #include "AI_Sion_SkillState.h"
 #include "AI_Alphen_SkillAttackState.h"
+#include "AI_Rinwell_SkillState.h"
 
+#include "AI_LAW_AIRSKILLR.h"
+#include "AI_LAW_AIRSKILLF.h"
 using namespace AIPlayer;
 
 CAI_JumpState::CAI_JumpState(CPlayer* pPlayer, STATETYPE eType, _bool useskill , _float fTime )
@@ -82,10 +85,24 @@ CAIState * CAI_JumpState::LateTick(_float fTimeDelta)
 			}
 			break;
 		case CPlayer::LAW:
+			switch (rand() % 2)
+			{
+			case 0:
+				return new CAI_LAW_AIRSKILLR(m_pOwner, STATE_SKILL_ATTACK_R);
+				break;
+
+			case 1:
+				return new CAI_LAW_AIRSKILLF(m_pOwner, STATE_SKILL_ATTACK_F);
+				break;
+			}
 
 			break;
 		case CPlayer::SION:
 			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_TRESVENTOS, m_fTime);
+			break;
+
+		case CPlayer::RINWELL:
+			return new CAI_Rinwell_SkillState(m_pOwner, STATE_BANGJEON, m_pTarget , m_fTime);
 			break;
 		}
 	}

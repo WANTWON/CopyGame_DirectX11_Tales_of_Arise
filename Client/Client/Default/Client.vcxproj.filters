@@ -1116,9 +1116,17 @@
     <ClInclude Include="..\Public\PlayerOverlimit.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AI_JumpState.h" />
     <ClInclude Include="..\Public\Level_BossZone.h">
       <Filter>01.Levels\04.BossZone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_JumpState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_LAW_AIRSKILLR.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_LAW_AIRSKILLF.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1806,7 +1814,15 @@
     <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AI_JumpState.cpp" />
+    <ClCompile Include="..\Private\AI_JumpState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_LAW_AIRSKILLR.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_LAW_AIRSKILLF.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
