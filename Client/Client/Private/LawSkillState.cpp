@@ -17,12 +17,11 @@
 
 using namespace Player;
 
-CLawSkillState::CLawSkillState(CPlayer * pPlayer, STATE_ID eStaetType, _float fStartHeight, _float fTime)
+CLawSkillState::CLawSkillState(CPlayer * pPlayer, STATE_ID eStaetType, _float fTime)
 {
 	m_eStateId = eStaetType;
 	m_pOwner = pPlayer;
 	
-	m_fStartHeight = fStartHeight;
 	m_fTime = fTime;
 }
 
@@ -324,7 +323,7 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_START, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, m_fTime);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
@@ -345,7 +344,7 @@ CPlayerState * CLawSkillState::EventInput(void)
 		else if (GetKeyState('R') < 0)
 		{
 			if (m_bIsFly)
-				return new CLawAirRSkillState(m_pOwner, STATE_ID::STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
+				return new CLawAirRSkillState(m_pOwner, STATE_ID::STATE_SKILL_ATTACK_R);
 			else
 			{
 				m_pOwner->Get_Model()->Reset();
@@ -356,7 +355,7 @@ CPlayerState * CLawSkillState::EventInput(void)
 		else if (GetKeyState('F') < 0)
 		{
 			if (m_bIsFly)
-				return new CLawAirFSkillState(m_pOwner, STATE_ID::STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
+				return new CLawAirFSkillState(m_pOwner, STATE_ID::STATE_SKILL_ATTACK_F);
 			else
 			{
 				m_pOwner->Get_Model()->Reset();
@@ -369,7 +368,7 @@ CPlayerState * CLawSkillState::EventInput(void)
 	if (m_bIsFly)
 	{
 		if (GetKeyState(VK_LBUTTON) < 0)
-			return new CLawAttackState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
+			return new CLawAttackState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1, m_fTime);
 	}
 	else
 	{

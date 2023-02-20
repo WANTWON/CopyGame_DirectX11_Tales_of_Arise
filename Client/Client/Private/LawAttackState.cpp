@@ -17,12 +17,11 @@
 
 using namespace Player;
 
-CLawAttackState::CLawAttackState(CPlayer * pPlayer, STATE_ID eStateType, _float fStartHeight, _float fTime)
+CLawAttackState::CLawAttackState(CPlayer * pPlayer, STATE_ID eStateType, _float fTime)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
 
-	m_fStartHeight = fStartHeight;
 	m_fTime = fTime;
 }
 
@@ -395,7 +394,7 @@ CPlayerState * CLawAttackState::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, m_fStartHeight, STATETYPE_START, m_fTime, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, m_fTime);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
@@ -422,7 +421,7 @@ CPlayerState * CLawAttackState::EventInput(void)
 			m_eStateId = STATE_NORMAL_ATTACK5;
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK5:
-			return new CLawAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
+			return new CLawAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
 			break;
 		}
 
@@ -434,17 +433,17 @@ CPlayerState * CLawAttackState::EventInput(void)
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
 		{
 			if (GetKeyState('E') < 0)
-				return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
+				return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fTime);
 			else if (GetKeyState('R') < 0)
-				return new CLawAirRSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
+				return new CLawAirRSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 			else if (GetKeyState('F') < 0)
-				return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
+				return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
 		}
 
 		if (100.f <= m_pOwner->Get_Info().fCurrentBoostGuage)
 		{
 			if (GetKeyState('4') < 0)
-				return new CLawSkillState(m_pOwner, STATE_SKILL_BOOST, m_fStartHeight, m_fTime);
+				return new CLawSkillState(m_pOwner, STATE_SKILL_BOOST, m_fTime);
 		}
 	}
 	else
@@ -543,8 +542,6 @@ void CLawAttackState::Enter()
 			break;
 		}
 	}
-
-	m_fResultTime = m_fTime;
 
 	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
