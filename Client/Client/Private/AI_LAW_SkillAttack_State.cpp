@@ -25,6 +25,9 @@ CAI_LAW_SkillAttack_State::CAI_LAW_SkillAttack_State(CPlayer * pPlayer, STATE_ID
 
 CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 {
+	if (CheckTarget() == false)
+		return nullptr;
+
 	if ((m_eStateId == CPlayerState::STATE_SKILL_ATTACK_F) && (nullptr != m_pTarget))
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
@@ -238,6 +241,9 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 
 CAIState * CAI_LAW_SkillAttack_State::LateTick(_float fTimeDelta)
 {
+	if (CheckTarget() == false)
+		return nullptr;
+
 	if (nullptr != m_pLeftHandCollider)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -317,7 +323,8 @@ CAIState * CAI_LAW_SkillAttack_State::LateTick(_float fTimeDelta)
 void CAI_LAW_SkillAttack_State::Enter(void)
 {
 	//__super::Enter();
-
+	if (CheckTarget() == false)
+		return;
 	m_pOwner->Use_Mana(1.f);
 	m_pOwner->Set_Manarecover(false);
 
@@ -340,7 +347,7 @@ void CAI_LAW_SkillAttack_State::Enter(void)
 
 	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
-	m_pTarget = pBattleMgr->Get_LackonMonster();
+	
 
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));

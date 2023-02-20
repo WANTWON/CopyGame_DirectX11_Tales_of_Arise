@@ -100,6 +100,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	if (m_bOverLimit)
 	{
+		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 		m_fOverLimitTimer += fTimeDelta;
 		if (m_fOverLimitTimer > 0.2f)
 		{
@@ -482,7 +483,7 @@ void CPlayer::AI_check()
 {
 	CAIState* pAIState = nullptr;
 
-	pAIState = new CAiState_WakeUp(this);
+	pAIState = new CAICheckState(this,CAIState::STATE_IDLE);
    m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
 }

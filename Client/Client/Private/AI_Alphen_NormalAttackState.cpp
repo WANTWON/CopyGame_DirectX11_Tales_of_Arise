@@ -27,21 +27,12 @@ CAI_Alphen_NormalAttackState::CAI_Alphen_NormalAttackState(CPlayer* pPlayer, STA
 
 CAIState * CAI_Alphen_NormalAttackState::Tick(_float fTimeDelta)
 {
-	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
-		return nullptr;
+	
 
-	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
-	{
-		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-	}
-	else
-	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-	}
-
-	if (m_pTarget == nullptr)
+	if(CheckTarget() == false)
 		return nullptr;
+	
+	
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
@@ -132,6 +123,9 @@ CAIState * CAI_Alphen_NormalAttackState::Tick(_float fTimeDelta)
 
 CAIState * CAI_Alphen_NormalAttackState::LateTick(_float fTimeDelta)
 {
+	if (CheckTarget() == false)
+		return nullptr;
+
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (m_bIsStateEvent)
@@ -194,6 +188,8 @@ CAIState * CAI_Alphen_NormalAttackState::LateTick(_float fTimeDelta)
 void CAI_Alphen_NormalAttackState::Enter()
 {
 	//__super::Enter();
+	if (CheckTarget() == false)
+		return;
 
 	m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_0;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);

@@ -28,24 +28,26 @@ CAI_Alphen_SkillAttackState::CAI_Alphen_SkillAttackState(CPlayer* pPlayer, STATE
 
 CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 {
-	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+	if (CheckTarget() == false)
 		return nullptr;
 
-	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+	switch (m_eAIMode)
 	{
-		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-	}
-	else
-	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-	}
+	case ATTACK_LOCKONMODE:
+		if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+		{
+			m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+		}
+		else
+		{
+			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		}
 
-	if (m_pTarget == nullptr)
-		return nullptr;
-
-	if (nullptr == m_pTarget)
-	{
+		if (m_pTarget == nullptr)
+			return nullptr;
+		break;
+	case ATTACK_FREEMODE:
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 	}
@@ -202,6 +204,29 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 
 CAIState * CAI_Alphen_SkillAttackState::LateTick(_float fTimeDelta)
 {
+	if (CheckTarget() == false)
+		return nullptr;
+
+	switch (m_eAIMode)
+	{
+	case ATTACK_LOCKONMODE:
+		if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
+		{
+			m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+		}
+		else
+		{
+			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+		}
+
+		if (m_pTarget == nullptr)
+			return nullptr;
+		break;
+	case ATTACK_FREEMODE:
+		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+	}
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (m_bIsAnimationFinished)
@@ -263,7 +288,8 @@ CAIState * CAI_Alphen_SkillAttackState::LateTick(_float fTimeDelta)
 
 void CAI_Alphen_SkillAttackState::Enter()
 {
-	//__super::Enter();
+	if (CheckTarget() == false)
+		return;
 
 	Reset_Skill();
 
