@@ -62,15 +62,34 @@ CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	
 
 	m_pOwner->Check_Navigation();
-	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 	
-	
-
 	m_fTimeDeltaAcc += fTimeDelta;
+	
+	if (m_ePreState == STATE_ID::STATE_ARISE)
+	{
+		if (m_bIsAnimationFinished)
+		{
+			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START, true, m_pCurTarget);
+		}
 
-	if(m_fTimeDeltaAcc > m_fIdleTime)
-		return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START, m_pCurTarget);
+		else
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
 
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+			m_pOwner->Check_Navigation();
+		}
+	}
+
+	else
+	{
+		if (m_fTimeDeltaAcc > m_fIdleTime)
+			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START, false, m_pCurTarget);
+
+	
+	}
 
 	return nullptr;
 }
@@ -79,7 +98,11 @@ void CBattle_IdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_MOVE_IDLE);
+	if(m_ePreState == STATE_ID::STATE_ARISE)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_ARISE_F);
+
+	else
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_MOVE_IDLE);
 }
 
 void CBattle_IdleState::Exit()

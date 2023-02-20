@@ -30,7 +30,6 @@ HRESULT CParticleSystem::Initialize(void * pArg)
 		return E_FAIL;
 
 	InitializeParticleSystem();
-	InitializeBuffers();
 
 	return S_OK;
 }
@@ -62,15 +61,10 @@ int CParticleSystem::Tick(_float fTimeDelta)
 		if (m_bCanStart)
 			EmitParticles(fTimeDelta); /* Emit new Particles. */
 
-									   // Billboard
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-		m_pTransformCom->LookAt(XMLoadFloat4(&pGameInstance->Get_CamPosition()));
-		RELEASE_INSTANCE(CGameInstance);
-
 		UpdateParticles(fTimeDelta);	/* Update Particles. */
 		SortParticles();				/* Sort Particles. */
 
-		UpdateBuffers();
+		m_pVIBufferPointInstance->Update(fTimeDelta, m_Particles, m_iCurrentParticleCount);
 	}
 
 	KillParticles();				/* Release old Particles. */
@@ -93,26 +87,26 @@ void CParticleSystem::Late_Tick(_float fTimeDelta)
 
 HRESULT CParticleSystem::Render()
 {
-	if (!m_pVertexBuffer || !m_pShaderCom)
+	if (!m_pVIBufferPointInstance || !m_pShaderCom)
 		return E_FAIL;
 
 	__super::Render();
 
-	m_pShaderCom->Begin(SHADER_EFFECT);
-	RenderBuffers();
+	m_pShaderCom->Begin(0);
+	m_pVIBufferPointInstance->Render();
 
 	return S_OK;
 }
 
 HRESULT CParticleSystem::Render_Glow()
 {
-	if (!m_pVertexBuffer || !m_pShaderCom)
+	if (!m_pVIBufferPointInstance || !m_pShaderCom)
 		return E_FAIL;
 
 	__super::Render();
 
-	m_pShaderCom->Begin(SHADER_GLOW);
-	RenderBuffers();
+	m_pShaderCom->Begin(1);
+	m_pVIBufferPointInstance->Render();
 
 	return S_OK;
 }
@@ -136,7 +130,10 @@ HRESULT CParticleSystem::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, m_tParticleDesc.wcPrototypeId, (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_Effect"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointInstance"), (CComponent**)&m_pShaderCom)))
+		return E_FAIL;
+	/* For.Com_VIBuffer_Point_Instance */
+	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer_Point_Instance"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point_Instance"), (CComponent**)&m_pVIBufferPointInstance, &m_tParticleDesc.m_iMaxParticles)))
 		return E_FAIL;
 
 	return S_OK;
@@ -151,6 +148,11 @@ HRESULT CParticleSystem::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlphaDiscard", &m_tParticleDesc.m_fAlphaDiscard, sizeof(_float))))
 		return E_FAIL;
 
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vCamPosition", &pGameInstance->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;
+	RELEASE_INSTANCE(CGameInstance);
+
 	if (m_tParticleDesc.m_bGlow)
 	{
 		if (FAILED(m_pShaderCom->Set_RawValue("g_vGlowColor", &m_tParticleDesc.vGlowColor, sizeof(_float3))))
@@ -163,82 +165,17 @@ HRESULT CParticleSystem::SetUp_ShaderResources()
 HRESULT CParticleSystem::InitializeParticleSystem()
 {
 	/* Create the Particle List. */
-	m_Particles = new ParticleType[m_tParticleDesc.m_iMaxParticles];
+	m_Particles = new Particle[m_tParticleDesc.m_iMaxParticles];
 
 	/* Initialize the Particle List. */
 	for (_int i = 0; i < m_tParticleDesc.m_iMaxParticles; i++)
 		m_Particles[i].bActive = false;
 
 	/* Initialize the current Particle Count to zero since none are emitted yet. */
-	m_fCurrentParticleCount = 0;
+	m_iCurrentParticleCount = 0;
 
 	/* Clear the initial Accumulated Time. */
 	m_fAccumulatedTime = 0.f;
-
-	return S_OK;
-}
-
-HRESULT CParticleSystem::InitializeBuffers()
-{
-	unsigned long* indices;
-	int i;
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT result;
-
-	/* Set the maximum number of vertices in the vertex array. */
-	m_iVertexCount = m_tParticleDesc.m_iMaxParticles * 6;
-
-	/* Set the maximum number of indices in the index array. */
-	m_iIndexCount = m_iVertexCount;
-
-	/* Create the vertex array for the particles that will be rendered. */
-	m_Vertices = new VertexType[m_iVertexCount];
-
-	/* Create the index array. */
-	indices = new unsigned long[m_iIndexCount];
-
-	/* Initialize vertex array to zeros at first. */
-	memset(m_Vertices, 0, (sizeof(VertexType) * m_iVertexCount));
-
-	/* Initialize the index array. */
-	for (i = 0; i < m_iIndexCount; i++)
-		indices[i] = i;
-
-	/* Set up the description of the dynamic vertex buffer. */
-	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_iVertexCount;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
-
-	/* Give the subresource structure a pointer to the vertex data. */
-	vertexData.pSysMem = m_Vertices;
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
-
-	/* Now finally create the vertex buffer. */
-	m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexData, &m_pVertexBuffer);
-
-	/* Set up the description of the static index buffer. */
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_iIndexCount;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
-	indexBufferDesc.StructureByteStride = 0;
-
-	/* Give the subresource structure a pointer to the index data. */
-	indexData.pSysMem = indices;
-	indexData.SysMemPitch = 0;
-	indexData.SysMemSlicePitch = 0;
-
-	/* Create the index buffer. */
-	m_pDevice->CreateBuffer(&indexBufferDesc, &indexData, &m_pIndexBuffer);
-
-	/* Release the index array since it is no longer needed. */
-	Safe_Delete_Array(indices);
 
 	return S_OK;
 }
@@ -271,9 +208,9 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 		}
 
 		/* If there are Particles to emit then emit one per frame. */
-		if ((bEmitParticle == true) && (m_fCurrentParticleCount < (m_tParticleDesc.m_iMaxParticles - 1)))
+		if ((bEmitParticle == true) && (m_iCurrentParticleCount < (m_tParticleDesc.m_iMaxParticles - 1)))
 		{
-			m_fCurrentParticleCount++;
+			m_iCurrentParticleCount++;
 
 			/* Now generate the randomized particle properties. */
 			fPositionX = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationX;
@@ -317,7 +254,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 			}
 
 			/* Now that we know the location to insert into we need to copy the array over by one position from the index to make room for the new particle. */
-			i = m_fCurrentParticleCount;
+			i = m_iCurrentParticleCount;
 			j = i - 1;
 
 			while (i != iIndex)
@@ -368,11 +305,11 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 		/* Increment the frame time. */
 		m_fAccumulatedTime += fTimeDelta;
 
-		if (m_fCurrentParticleCount == 0)
+		if (m_iCurrentParticleCount == 0)
 		{
-			while (m_fCurrentParticleCount < (m_tParticleDesc.m_iMaxParticles - 1))
+			while (m_iCurrentParticleCount < (m_tParticleDesc.m_iMaxParticles - 1))
 			{
-				m_fCurrentParticleCount++;
+				m_iCurrentParticleCount++;
 
 				/* Now generate the randomized particle properties. */
 				fPositionX = (((float)rand() - (float)rand()) / RAND_MAX) * m_tParticleDesc.m_fParticleDeviationX;
@@ -416,7 +353,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 				}
 
 				/* Now that we know the location to insert into we need to copy the array over by one position from the index to make room for the new particle. */
-				i = m_fCurrentParticleCount;
+				i = m_iCurrentParticleCount;
 				j = i - 1;
 
 				while (i != iIndex)
@@ -469,7 +406,7 @@ void CParticleSystem::EmitParticles(_float fTimeDelta)
 void CParticleSystem::UpdateParticles(_float fTimeDelta)
 {
 	/* Each frame we update all the Particles by making them move using their Position, Velocity, and TimeDelta. */
-	for (_int i = 0; i < m_fCurrentParticleCount; i++)
+	for (_int i = 0; i < m_iCurrentParticleCount; i++)
 	{
 		_float3 vPosition = _float3(m_Particles[i].fPositionX, m_Particles[i].fPositionY, m_Particles[i].fPositionZ);
 		_vector vNewPosition = XMVector3Normalize(XMLoadFloat3(&m_Particles[i].vDirection)) * m_Particles[i].fVelocity * fTimeDelta;
@@ -492,20 +429,19 @@ void CParticleSystem::UpdateParticles(_float fTimeDelta)
 
 void CParticleSystem::SortParticles()
 {
-	sort(m_Particles, m_Particles + m_fCurrentParticleCount, [&](const ParticleType & pParticleSour, const ParticleType & pParticleDesc) {
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-		_vector vCameraPosition = XMLoadFloat4(&pGameInstance->Get_CamPosition());
-		RELEASE_INSTANCE(CGameInstance);
+	sort(m_Particles, m_Particles + m_iCurrentParticleCount, [&](const Particle & pParticleSour, const Particle & pParticleDest) {
+		/* Get Camera Position. */
+		_vector vCameraPosition = XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition());
 
 		_matrix vParticleWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 
 		_vector vParticleWorldPositionSour = XMVector3TransformCoord(XMVectorSet(pParticleSour.fPositionX, pParticleSour.fPositionY, pParticleSour.fPositionZ, 1.f), vParticleWorldMatrix);
-		_vector vParticleWorldPositionDest = XMVector3TransformCoord(XMVectorSet(pParticleDesc.fPositionX, pParticleDesc.fPositionY, pParticleDesc.fPositionZ, 1.f), vParticleWorldMatrix);
+		_vector vParticleWorldPositionDest = XMVector3TransformCoord(XMVectorSet(pParticleDest.fPositionX, pParticleDest.fPositionY, pParticleDest.fPositionZ, 1.f), vParticleWorldMatrix);
 
 		_float fParticleSourDistance = XMVectorGetX(XMVector3Length(vCameraPosition - vParticleWorldPositionSour));
 		_float fParticleDestDistance = XMVectorGetX(XMVector3Length(vCameraPosition - vParticleWorldPositionDest));;
 
-		return fParticleSourDistance < fParticleDestDistance;
+		return fParticleSourDistance > fParticleDestDistance;
 	});
 }
 
@@ -649,7 +585,7 @@ void CParticleSystem::KillParticles()
 		if ((m_Particles[i].bActive == true) && (m_Particles[i].fLife > m_tParticleDesc.m_fParticlesLifetime))
 		{
 			m_Particles[i].bActive = false;
-			m_fCurrentParticleCount--;
+			m_iCurrentParticleCount--;
 
 			/* Now shift all the live particles back up the array to erase the destroyed particle and keep the array sorted correctly. */
 			for (_int j = i; j < m_tParticleDesc.m_iMaxParticles - 1; j++)
@@ -673,112 +609,14 @@ void CParticleSystem::KillParticles()
 			}
 
 			/* If SpawnType is LOOP after removing the last Particle stop emitting. */
-			if (m_tParticleDesc.m_eSpawnType == 0 && m_fCurrentParticleCount == 0 && m_bStop)
+			if (m_tParticleDesc.m_eSpawnType == 0 && m_iCurrentParticleCount == 0 && m_bStop)
 				m_bPreDead = true;
 
 			/* If SpawnType is BURST after removing the last Particle stop emitting. */
-			if (m_tParticleDesc.m_eSpawnType == 1 && m_fCurrentParticleCount == 0 && m_bDidBurst)
+			if (m_tParticleDesc.m_eSpawnType == 1 && m_iCurrentParticleCount == 0 && m_bDidBurst)
 				m_bPreDead = true;
 		}
 	}
-
-	return;
-}
-
-HRESULT CParticleSystem::UpdateBuffers()
-{
-	int index, i;
-	HRESULT result;
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	VertexType* verticesPtr;
-
-	/* Initialize vertex array to zeros at first. */
-	memset(m_Vertices, 0, (sizeof(VertexType) * m_iVertexCount));
-
-	/* Now build the vertex array from the particle list array.  Each particle is a quad made out of two triangles. */
-	index = 0;
-
-	for (i = 0; i < m_fCurrentParticleCount; i++)
-	{
-		/* Bottom Left */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_Particles[i].fSize, m_Particles[i].fPositionY - m_Particles[i].fSize, m_Particles[i].fPositionZ);
-		m_Vertices[index].vTexture = _float2(0.0f, 1.0f);
-		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
-		index++;
-		/* Top Left */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_Particles[i].fSize, m_Particles[i].fPositionY + m_Particles[i].fSize, m_Particles[i].fPositionZ);
-		m_Vertices[index].vTexture = _float2(0.0f, 0.0f);
-		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
-		index++;
-		/* Bottom Right */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_Particles[i].fSize, m_Particles[i].fPositionY - m_Particles[i].fSize, m_Particles[i].fPositionZ);
-		m_Vertices[index].vTexture = _float2(1.0f, 1.0f);
-		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
-		index++;
-		/* Bottom right. */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_Particles[i].fSize, m_Particles[i].fPositionY - m_Particles[i].fSize, m_Particles[i].fPositionZ);
-		m_Vertices[index].vTexture = _float2(1.0f, 1.0f);
-		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
-		index++;
-		/* Top left. */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX - m_Particles[i].fSize, m_Particles[i].fPositionY + m_Particles[i].fSize, m_Particles[i].fPositionZ);
-		m_Vertices[index].vTexture = _float2(0.0f, 0.0f);
-		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
-		index++;
-		/* Top right. */
-		m_Vertices[index].vPosition = _float3(m_Particles[i].fPositionX + m_Particles[i].fSize, m_Particles[i].fPositionY + m_Particles[i].fSize, m_Particles[i].fPositionZ);
-		m_Vertices[index].vTexture = _float2(1.0f, 0.0f);
-		m_Vertices[index].fAlpha = m_Particles[i].fAlpha;
-		m_Vertices[index].vColor = _float3(m_Particles[i].fRed, m_Particles[i].fGreen, m_Particles[i].fBlue);
-		index++;
-	}
-
-	/* Lock the Vertex Buffer. */
-	result = m_pContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	/* Get a pointer to the data in the vertex buffer. */
-	verticesPtr = (VertexType*)mappedResource.pData;
-
-	/* Copy the data into the Vertex Buffer. */
-	memcpy(verticesPtr, (void*)m_Vertices, (sizeof(VertexType) * m_iVertexCount));
-
-	/* Unlock the vertex buffer. */
-	m_pContext->Unmap(m_pVertexBuffer, 0);
-
-	return S_OK;
-}
-
-void CParticleSystem::RenderBuffers()
-{
-	unsigned int stride;
-	unsigned int offset;
-
-	/* Set Vertex Buffer stride and offset. */
-	stride = sizeof(VertexType);
-	offset = 0;
-
-	/* Set the vertex buffer to active in the input assembler so it can be rendered. */
-	m_pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-
-	/* Set the index buffer to active in the input assembler so it can be rendered. */
-	m_pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	/* Set the type of primitive that should be rendered from this vertex buffer. */
-	m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	/* Draw */
-	m_pContext->DrawIndexed(m_iIndexCount, 0, 0);
-
-	return;
 }
 
 CParticleSystem * CParticleSystem::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -787,7 +625,7 @@ CParticleSystem * CParticleSystem::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CParticleSystem"));
+		ERR_MSG(TEXT("Failed to Create: CParticleSystem"));
 		Safe_Release(pInstance);
 	}
 
@@ -800,7 +638,7 @@ CGameObject * CParticleSystem::Clone(void * pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CParticleSystem"));
+		ERR_MSG(TEXT("Failed to Clone: CParticleSystem"));
 		Safe_Release(pInstance);
 	}
 
@@ -811,11 +649,8 @@ void CParticleSystem::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pVertexBuffer);
-	Safe_Release(m_pIndexBuffer);
-	
 	Safe_Delete_Array(m_Particles);
-	Safe_Delete_Array(m_Vertices);
 
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pVIBufferPointInstance);
 }

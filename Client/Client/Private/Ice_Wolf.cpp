@@ -265,6 +265,8 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	case ANIM_ATTACK_STEP_BACK:
 	case ANIM_ATTACK_SOMERSAULT_END:
 	case ANIM_ATTACK_BITE:
+	case ANIM_DOWN_F:
+	case ANIM_ARISE_F:
 		return false;
 	}
 
@@ -277,42 +279,72 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
-
-	if (iHp <= 0)
+	
+	if (m_bOnGoingDown == false)
 	{
-		m_pModelCom->Set_TimeReset();
-		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-		
-		return 0;
-	}
-	else
-	{
-		m_iBeDamaged_Cnt++;
-
-		if (m_bOnGoing_Bite == false)
+		if (iHp <= 0)
 		{
-			if (m_bSomeSauling == false)
-			{
-				//m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
-				m_pState = m_pState->ChangeState(m_pState, pState);
-
-
-			}
-			if (m_iBeDamaged_Cnt >= 3)
-			{
-
-				m_pModelCom->Set_TimeReset();
-				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED, true);
-				m_pState = m_pState->ChangeState(m_pState, pState);
-				m_iBeDamaged_Cnt = 0;
-				m_bSomeSauling = true;
-
-			}
+			m_pModelCom->Set_TimeReset();
+			CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+			return 0;
 		}
 		else
-			return iHp;
+		{
+			m_iBeDamaged_Cnt++;
+
+			if (m_bDownState == false)
+			{
+				if (m_bOnGoing_Bite == false)
+				{
+					if (m_bSomeSauling == false)
+					{
+						if (m_bBedamageAnim_Delay == false)
+						{
+							//m_pModelCom->Set_TimeReset();
+							if (m_bBedamageAnim == true)
+							{
+								CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
+								m_pState = m_pState->ChangeState(m_pState, pState);
+							}
+
+							else if (m_bBedamageAnim == false)
+							{
+								return iHp;
+							}
+						}
+
+						else if (m_bBedamageAnim_Delay == true)
+						{
+							return iHp;
+						}
+
+					}
+					//if (m_iBeDamaged_Cnt >= 3)
+					//{
+					//	m_pModelCom->Set_TimeReset();
+					//	CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED, true);
+					//	m_pState = m_pState->ChangeState(m_pState, pState);
+					//	m_iBeDamaged_Cnt = 0;
+					//	m_bSomeSauling = true;
+					//}
+				}
+				else
+				{
+					return iHp;
+				}
+			}
+			else if (m_bDownState == true)
+			{
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DOWN);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+			}
+		}
+	}
+
+	else
+	{
+		return iHp;
 	}
 
 	return iHp;

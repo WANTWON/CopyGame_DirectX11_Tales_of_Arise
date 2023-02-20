@@ -256,6 +256,8 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_BRAVE:
 	case SYMBOL_DETECT_STOP:
 	case ATTACK_CHARGE:
+	case DOWN_F:
+	case ARISE_F:
 		return false;
 	}
 
@@ -270,26 +272,59 @@ _int CHawk::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 		_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
-		if (m_bDead == false)
+		if (m_bOnGoingDown == false)
 		{
 			if (iHp <= 0)
 			{
 				m_pModelCom->Set_TimeReset();
 				CHawkState* pState = new CBattle_DeadState(this);
 				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-
-
 				return 0;
 			}
 
 			else
 			{
-				m_pModelCom->Set_TimeReset();
-				CHawkState* pState = new CBattle_Damage_LargeB_State(this);
-				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+				if (m_bDownState == false)
+				{
+					if (m_bBedamageAnim_Delay == false)
+					{
+						if (m_bBedamageAnim == true)
+						{
+							//m_pModelCom->Set_TimeReset();
+							CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_TAKE_DAMAGE);
+							m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+						}
+
+						else if (m_bBedamageAnim == false)
+						{
+							return iHp;
+						}
+					}
+
+					else if (m_bBedamageAnim_Delay == true)
+					{
+						return iHp;
+					}
+
+				}
+
+				else if (m_bDownState == true)
+				{
+					CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_ID::STATE_DOWN);
+					m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+				}
+
 			}
 
 		}
+		
+
+		else
+		{
+			return iHp;
+		}
+
+
 	return iHp;
 
 	

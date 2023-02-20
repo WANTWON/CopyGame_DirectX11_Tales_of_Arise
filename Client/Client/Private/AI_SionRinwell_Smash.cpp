@@ -123,6 +123,7 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 
 void CAI_SionRinwell_Smash::Enter()
 {
+	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::SION:
@@ -155,6 +156,7 @@ void CAI_SionRinwell_Smash::Enter()
 
 void CAI_SionRinwell_Smash::Exit()
 {
+	m_pOwner->Set_StrikeAttack(false);
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)

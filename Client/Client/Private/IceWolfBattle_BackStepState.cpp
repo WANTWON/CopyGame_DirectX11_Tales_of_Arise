@@ -53,7 +53,7 @@ CIceWolfState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 		switch (m_iRand)
 		{
 		case 0:
-			return new CAttack_Elemental_Charge(m_pOwner, CIceWolfState::STATE_ID::STATE_CHARGE_START);
+			return new CAttack_Elemental_Charge(m_pOwner, CIceWolfState::STATE_ID::STATE_CHARGE_START, false, false);
 
 		case 1:
 			return new CBattle_RunState(m_pOwner, CIceWolfState::STATE_ID::STATE_BACKSTEP);

@@ -83,7 +83,7 @@ vector<CEffect*> CEffect::PlayEffectAtLocation(_tchar * wcEffectName, _matrix mW
 
 			CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc;
 			CEffectMesh::MESHEFFECTDESC tMeshEffectDesc;
-			CParticleSystem::PARTICLEDESC tParticleDesc;
+			PARTICLEDESC tParticleDesc;
 
 			/* Read Effect Type-specific Description. */
 			switch (eType)
@@ -112,7 +112,7 @@ vector<CEffect*> CEffect::PlayEffectAtLocation(_tchar * wcEffectName, _matrix mW
 				}
 				case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
 				{
-					ReadFile(hFileEffect, &tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
+					ReadFile(hFileEffect, &tParticleDesc, sizeof(PARTICLEDESC), &dwByte, nullptr);
 
 					if (!dwByte)
 						break;

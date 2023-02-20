@@ -80,7 +80,7 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 				if (!m_bFisrtSound)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Peck.wav"), SOUND_VOICE, 0.4f);
+					//CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Peck.wav"), SOUND_VOICE, 0.4f);
 					m_bFisrtSound = true;
 				}
 
@@ -157,5 +157,7 @@ void CBattle_PeckState::Enter()
 
 void CBattle_PeckState::Exit()
 {
-	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+
+	Safe_Release(m_pAtkColliderCom);
 }

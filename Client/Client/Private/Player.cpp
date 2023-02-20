@@ -147,8 +147,14 @@ int CPlayer::Tick(_float fTimeDelta)
 	switch (eMode)
 	{
 	case Client::ACTIVE:
-		HandleInput();
-		Tick_State(fTimeDelta);
+		if (!m_bStrikeAttack)
+		{
+			HandleInput();
+			Tick_State(fTimeDelta);
+		}
+		else
+			Tick_AIState(fTimeDelta);
+		
 		break;
 	case Client::AI_MODE:
 		Tick_AIState(fTimeDelta);
@@ -211,7 +217,10 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	switch (eMode)
 	{
 	case Client::ACTIVE:
+		if (!m_bStrikeAttack)
 		LateTick_State(fTimeDelta);
+		else
+			LateTick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
 		LateTick_AIState(fTimeDelta);

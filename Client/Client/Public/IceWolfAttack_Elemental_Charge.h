@@ -8,7 +8,7 @@ BEGIN(IceWolf)
 class CAttack_Elemental_Charge : public CIceWolfState
 {
 public:
-	CAttack_Elemental_Charge(class CIce_Wolf* pIceWolf, STATE_ID eStateType, CBaseObj* pCurTarget = nullptr);
+	CAttack_Elemental_Charge(class CIce_Wolf* pIceWolf, STATE_ID eStateType, _bool bPreDownState, CBaseObj* pCurTarget = nullptr);
 	
 	virtual CIceWolfState* AI_Behaviour(_float fTimeDelta) override;
 	virtual CIceWolfState* Tick(_float fTimeDelta) override;
@@ -33,7 +33,7 @@ private:
 	_float		m_fRandTime = 0.f;
 	_bool		m_bAnimFinish = false;
 	_bool		m_bTargetSetting = false;
-
+	_bool		m_bPreDownState = false;
 	CBaseObj*	m_pCurTarget = nullptr;
 	
 private:

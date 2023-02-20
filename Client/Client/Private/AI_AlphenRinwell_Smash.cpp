@@ -124,6 +124,7 @@ CAIState * CAI_AlphenRinwell_Smash::LateTick(_float fTimeDelta)
 
 void CAI_AlphenRinwell_Smash::Enter()
 {
+	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
@@ -157,6 +158,7 @@ void CAI_AlphenRinwell_Smash::Enter()
 
 void CAI_AlphenRinwell_Smash::Exit()
 {
+	m_pOwner->Set_StrikeAttack(false);
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)

@@ -63,6 +63,9 @@ public: /* Getter &  Setter */
 	void            Set_Overlimit(_bool tof) { m_bOverLimit = tof; }
 	_bool           Get_Overlimit() {	return m_bOverLimit;}
 
+	/* STRIKEATTACK */
+	void           Set_StrikeAttack(_bool tof) { m_bStrikeAttack = tof;}
+	//_bool          Get_StrikeAttack() { return m_bStrikeAttack; }
 
 
 
@@ -140,6 +143,8 @@ protected: /* for 4 Player */
 	/* Over Limit */
 	_bool          m_bOverLimit = false;
 	_float         m_fOverLimitTimer = 0.f;
+	/* STIRKEATTACK */
+	_bool          m_bStrikeAttack = false;
 
 private:
 	_bool m_bLevelup = false;

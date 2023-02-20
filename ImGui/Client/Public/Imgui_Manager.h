@@ -228,7 +228,7 @@ private:
 
 	CEffectTexture::TEXTUREEFFECTDESC m_tTextureEffectDesc;
 	CEffectMesh::MESHEFFECTDESC m_tMeshEffectDesc;
-	CParticleSystem::PARTICLEDESC m_tParticleDesc;
+	PARTICLEDESC m_tParticleDesc;
 
 	string m_sSelectedMaskTexture = "";
 	string m_sSelectedNoiseTexture = "";

@@ -37,10 +37,10 @@ HRESULT CVIBuffer_Point::Initialize_Prototype()
 	pVertices->vPosition = _float3(0.f, 0.f, 0.f);
 	pVertices->vPSize = _float2(1.f, 1.f);
 
-	pVertices->vRight = _float4(0.5f, 0.f, 0.f, 0.f);
+	/*pVertices->vRight = _float4(0.5f, 0.f, 0.f, 0.f);
 	pVertices->vUp = _float4(0.f, 0.5f, 0.f, 0.f);
 	pVertices->vLook = _float4(0.f, 0.f, 0.5f, 0.f);
-	pVertices->vTranslation = _float4(0.f, 0.f, 0.f, 1.f);
+	pVertices->vTranslation = _float4(0.f, 0.f, 0.f, 1.f);*/
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pVertices;

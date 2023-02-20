@@ -125,6 +125,7 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 
 void CAI_AlphenSion_Smash::Enter()
 {
+	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
@@ -165,18 +166,21 @@ void CAI_AlphenSion_Smash::Enter()
 
 void CAI_AlphenSion_Smash::Exit()
 {
-
+	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
-
-	if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 	{
-		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
-		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+		{
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
+		else
+		{
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
 	}
-	else
-	{
-		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
-	}
+	
 		
 
 	if (!m_pEffects.empty())

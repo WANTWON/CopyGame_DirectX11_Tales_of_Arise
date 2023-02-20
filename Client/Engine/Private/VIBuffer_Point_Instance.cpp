@@ -1,4 +1,5 @@
 #include "VIBuffer_Point_Instance.h"
+#include "GameInstance.h"
 
 CVIBuffer_Point_Instance::CVIBuffer_Point_Instance(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer_Instance(pDevice, pContext)
@@ -7,16 +8,12 @@ CVIBuffer_Point_Instance::CVIBuffer_Point_Instance(ID3D11Device * pDevice, ID3D1
 
 CVIBuffer_Point_Instance::CVIBuffer_Point_Instance(const CVIBuffer_Point_Instance & rhs)
 	: CVIBuffer_Instance(rhs)
-	, m_pSpeedPerSec(rhs.m_pSpeedPerSec)
 {
 }
 
-HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
+HRESULT CVIBuffer_Point_Instance::Initialize_Prototype()
 {
-	if (FAILED(__super::Initialize_Prototype(iNumInstance)))
-		return E_FAIL;
-
-#pragma region VERTICES
+#pragma region Vertices
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
 
 	m_iStride = sizeof(VTXPOINT);
@@ -37,7 +34,7 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 
 	pVertices->vPosition = _float3(0.0f, 0.f, 0.f);
 	pVertices->vPSize = _float2(1.f, 1.f);
-	
+
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pVertices;
 
@@ -47,6 +44,16 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 	Safe_Delete_Array(pVertices);
 #pragma endregion
 
+	return S_OK;
+}
+
+HRESULT CVIBuffer_Point_Instance::Initialize(void * pArg)
+{
+	if (!pArg)
+		return E_FAIL;
+	
+	memcpy(&m_iNumInstance, (_int*)pArg, sizeof(_int));
+	
 #pragma region Indices
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
 
@@ -73,7 +80,7 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 	Safe_Delete_Array(pIndices);
 #pragma endregion
 
-#pragma region INSTANCE_BUFFER
+#pragma region Instance_Buffer
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
 
 	m_iInstanceStride = sizeof(VTXMATRIX);
@@ -88,17 +95,13 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 	m_BufferDesc.StructureByteStride = m_iInstanceStride;
 
 	VTXMATRIX* pInstanceVtx = new VTXMATRIX[m_iNumVertices];
-	m_pSpeedPerSec = new _float[m_iNumInstance];
-	ZeroMemory(m_pSpeedPerSec, sizeof(_float) * m_iNumInstance);
-
+	ZeroMemory(pInstanceVtx, sizeof(VTXMATRIX) * m_iNumVertices);
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
 		pInstanceVtx[i].vRight = _float4(0.5f, 0.f, 0.f, 0.f);
 		pInstanceVtx[i].vUp = _float4(0.f, 0.5f, 0.f, 0.f);
 		pInstanceVtx[i].vLook = _float4(0.f, 0.f, 0.5f, 0.f);
-		pInstanceVtx[i].vPosition = _float4(rand() % 7 - 3, 0.0f, rand() % 7 - 3, 1.f);
-
-		m_pSpeedPerSec[i] = rand() % 5 + 1;
+		pInstanceVtx[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -113,39 +116,44 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(_uint iNumInstance)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Point_Instance::Initialize(void * pArg)
-{
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-void CVIBuffer_Point_Instance::Update(_float fTimeDelta)
+void CVIBuffer_Point_Instance::Update(_float fTimeDelta, Particle* Particles, _int iCurrentParticlesCount)
 {
 	D3D11_MAPPED_SUBRESOURCE MappedSubResource;
 	ZeroMemory(&MappedSubResource, sizeof MappedSubResource);
 
+	m_iNumInstance = iCurrentParticlesCount;
 	m_pContext->Map(m_pInstanceBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubResource);
 
-	for (_uint i = 0; i < m_iNumInstance; ++i)
+	for (_uint i = 0; i < iCurrentParticlesCount; ++i)
 	{
-		((VTXMATRIX*)MappedSubResource.pData)[i].vPosition.y += m_pSpeedPerSec[i] * fTimeDelta;
+		VTXMATRIX* pVertexData = static_cast<VTXMATRIX*>(MappedSubResource.pData);
 
-		if (((VTXMATRIX*)MappedSubResource.pData)[i].vPosition.y > 5.0f)
-			((VTXMATRIX*)MappedSubResource.pData)[i].vPosition.y = 0.0f;
+		XMStoreFloat4(&pVertexData[i].vRight, (XMVector4Normalize(XMVectorSet(0.5f, 0.f, 0.f, 0.f)) * Particles[i].fSize));
+		XMStoreFloat4(&pVertexData[i].vUp, (XMVector4Normalize(XMVectorSet(0.f, 0.5f, 0.f, 0.f)) * Particles[i].fSize));
+		XMStoreFloat4(&pVertexData[i].vLook, (XMVector4Normalize(XMVectorSet(0.f, 0.f, 0.5f, 0.f)) * Particles[i].fSize));
+		pVertexData[i].vPosition = _float4(Particles[i].fPositionX, Particles[i].fPositionY, Particles[i].fPositionZ, 1.f);
+		pVertexData[i].fAlpha = Particles[i].fAlpha;
+		pVertexData[i].vColor = _float3(Particles[i].fRed, Particles[i].fGreen, Particles[i].fBlue);
 	}
 
 	m_pContext->Unmap(m_pInstanceBuffer, 0);
 }
 
-CVIBuffer_Point_Instance * CVIBuffer_Point_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iNumInstance)
+void CVIBuffer_Point_Instance::Reset(void* pArg)
+{
+	Safe_Release(m_pIB);
+	Safe_Release(m_pInstanceBuffer);
+
+	Initialize(pArg);
+}
+
+CVIBuffer_Point_Instance * CVIBuffer_Point_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CVIBuffer_Point_Instance* pInstance = new CVIBuffer_Point_Instance(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(iNumInstance)))
+	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CVIBuffer_Point_Instance"));
+		ERR_MSG(TEXT("Failed to Create: CVIBuffer_Point_Instance"));
 		Safe_Release(pInstance);
 	}
 
@@ -158,7 +166,7 @@ CComponent * CVIBuffer_Point_Instance::Clone(void * pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CVIBuffer_Point_Instance"));
+		ERR_MSG(TEXT("Failed to Clone: CVIBuffer_Point_Instance"));
 		Safe_Release(pInstance);
 	}
 
@@ -168,7 +176,4 @@ CComponent * CVIBuffer_Point_Instance::Clone(void * pArg)
 void CVIBuffer_Point_Instance::Free()
 {
 	__super::Free();
-
-	if (m_isCloned ==  false)
-		Safe_Delete_Array(m_pSpeedPerSec);
 }
