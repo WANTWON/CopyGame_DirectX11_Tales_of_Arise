@@ -22,6 +22,8 @@ private:
 	_float		m_fIdleAttackTimer = 1.5f;
 	_float		m_fTarget_Distance;
 	STATE_ID	m_eState_Id = STATE_END;
+	CCollider*  m_pAtkColliderCom = nullptr;
+	CCollider*	m_p2th_AtkColliderCom = nullptr;
 private:
 	_matrix m_StartMatrix;
 };

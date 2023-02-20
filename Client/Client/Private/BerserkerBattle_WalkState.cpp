@@ -7,6 +7,7 @@
 #include "BerserkerBattle_Shock_WaveState.h"
 #include "BerserkerBattle_BackStepState.h"
 #include "BerserkerBattle_HowLingState.h"
+#include "BerserkerBattle_PouncingState.h"
 
 using namespace Berserker;
 
@@ -94,7 +95,7 @@ CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 	m_fTimeDeltaAcc += fTimeDelta;
 
 	if (m_fTimeDeltaAcc > m_fRandTime)
-		m_iRand = rand() % 2;
+		m_iRand = rand() % 3;
 	//if (m_pTarget == nullptr)
 	//	return nullptr;
 
@@ -103,16 +104,35 @@ CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 
 	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	
-	if (6.5f < m_fTarget_Distance)
+	if (m_fTarget_Distance > 11.5f)
 	{
 		m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.2f, m_pOwner->Get_Navigation());
 	}
 
-	else
+	else if (m_fTarget_Distance <= 11.5f)
+	{
+		if(m_bAngry == false)
 		return new CBattle_Double_ClawState(m_pOwner);
-	
 
+		else
+		{
+			switch (m_iRand)
+			{
+			case 0:
+				return new CBattle_PouncingState(m_pOwner);
+
+			case 1:
+				return new CBattle_Shock_WaveState(m_pOwner);
+
+			case 2:
+				return new CBattle_Double_ClawState(m_pOwner);
+			default:
+				break;
+			}
+		}
+	}
+	
 	
 
 
@@ -134,5 +154,5 @@ void CBattle_WalkState::Enter()
 
 void CBattle_WalkState::Exit()
 {
-
+		
 }

@@ -467,10 +467,26 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Floor_A_200_01.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor_A_200_01/", PivotMatrix))))
 		//	return E_FAIL;
 
+		//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Pillar01_Lod1"),
+		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Pillar01_Lod1.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Pillar/Bld_Pillar01_Lod1/", PivotMatrix))))
+		//	return E_FAIL;
+
+		//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_outer_Pillar_Lod1"),
+		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_outer_Pillar_Lod1.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Pillar/Bld_outer_Pillar_Lod1/", PivotMatrix))))
+		//	return E_FAIL;
+
+		//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Wall01"),
+		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Wall01.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall01/", PivotMatrix))))
+		//	return E_FAIL;
+
 		PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Wall03_Lod1"),
-			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Wall03_Lod1.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall03_Lod1/", PivotMatrix))))
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D03_Throne"),
+			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_D03_Throne.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Throne/Bld_D03_Throne/", PivotMatrix))))
 			return E_FAIL;
+		
 
 	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));
 

@@ -103,7 +103,7 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc;
 
-					ColliderDesc.vScale = _float3(2.f, 2.f, 2.f);
+					ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
 					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
@@ -119,7 +119,7 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc2th;
 
-					ColliderDesc2th.vScale = _float3(2.f, 2.f, 2.f);
+					ColliderDesc2th.vScale = _float3(6.f, 6.f, 6.f);
 					ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
 
 					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);

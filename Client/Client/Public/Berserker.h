@@ -193,6 +193,10 @@ public: /*For.State*/
 		/*For Navigation*/
 	virtual void Check_Navigation() override;
 	
+public:
+	void Set_AngryOn() { m_bAngry = true; }
+	_bool Get_IsAngry() { return m_bAngry; }
+	
 
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -206,6 +210,7 @@ private:
 	_bool m_bBerserkerMode = false;
 	_bool m_bDoneChangeState = false;
 	_int  m_iBeDamaged_Cnt = 0;
+	_bool m_bAngry = false;
 public:
 	static CBerserker* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
