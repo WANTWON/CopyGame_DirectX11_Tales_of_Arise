@@ -101,6 +101,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		m_bStrikeon = true;
 	else
 	{
+		m_bEffectSpawned = false;
 		m_bStrikeSmallonetime = true;
 		m_bStrikeScaler = 10.f;
 		m_bRenderDiamond = true;

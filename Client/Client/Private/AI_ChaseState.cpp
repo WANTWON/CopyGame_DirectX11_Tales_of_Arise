@@ -33,18 +33,30 @@ CAI_ChaseState::CAI_ChaseState(CPlayer* pPlayer, STATE_ID eStateType, _uint play
 
 CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 {
-	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
-		return nullptr;
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN || m_eCurrentPlayerID == CPlayer::LAW)
+	{
+		if (CheckTarget() == false)
+			return nullptr;
+	}
+	else
+	{
+		if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+			return nullptr;
 
+		CBattleManager* pBattleManager = GET_INSTANCE(CBattleManager);
+		CBaseObj* pLockOn = pBattleManager->Get_LackonMonster();
+		if (nullptr != pLockOn)
+			m_pTarget = pLockOn;
+		else
+			m_pTarget = pBattleManager->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
+
+		RELEASE_INSTANCE(CBattleManager);
+
+		if (m_pTarget == nullptr)
+			return nullptr;
+	}
+		
 	
-	if (CheckTarget() == false)
-		return nullptr;
-
-
-	
-
-	if (m_pTarget == nullptr)
-		return nullptr;
 
 	
 	if (m_bStopRunning)
@@ -82,11 +94,28 @@ CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 
 CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 {
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN || m_eCurrentPlayerID == CPlayer::LAW)
+	{
+		if (CheckTarget() == false)
+			return nullptr;
+	}
+	else
+	{
+		if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+			return nullptr;
 
+		CBattleManager* pBattleManager = GET_INSTANCE(CBattleManager);
+		CBaseObj* pLockOn = pBattleManager->Get_LackonMonster();
+		if (nullptr != pLockOn)
+			m_pTarget = pLockOn;
+		else
+			m_pTarget = pBattleManager->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
-	if (CheckTarget() == false)
-		return nullptr;
+		RELEASE_INSTANCE(CBattleManager);
 
+		if (m_pTarget == nullptr)
+			return nullptr;
+	}
 
 	if (!m_bStopRunning)
 	{
@@ -276,7 +305,6 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 		{
 			if (CheckTarget() == false)
 				return nullptr;
-
 
 			if (m_pOwner->Get_Info().fCurrentMp < 1.f)
 			{
