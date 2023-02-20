@@ -1598,9 +1598,6 @@
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
@@ -1795,6 +1792,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerOverlimit.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

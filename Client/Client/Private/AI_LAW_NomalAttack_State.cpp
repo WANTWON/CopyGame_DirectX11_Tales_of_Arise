@@ -31,6 +31,8 @@ AI_LAW_NomalAttack_State::AI_LAW_NomalAttack_State(CPlayer* pPlayer, STATE_ID eS
 
 CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 {
+	if (CheckTarget() == false)
+		return nullptr;
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;
 
@@ -259,6 +261,8 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 
 CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 {
+	if (CheckTarget() == false)
+		return nullptr;
 	if (nullptr != m_pLeftHandCollider)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -337,6 +341,8 @@ CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 
 void AI_LAW_NomalAttack_State::Enter()
 {
+	if (CheckTarget() == false)
+		return;
 	//__super::Enter();
 
 	//__super::Enter();

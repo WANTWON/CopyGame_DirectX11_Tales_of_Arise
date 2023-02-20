@@ -101,6 +101,8 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		m_bStrikeon = true;
 	else
 	{
+		m_bStrikeSmallonetime = true;
+		m_bStrikeScaler = 10.f;
 		m_bRenderDiamond = true;
 		m_bStrikefonton = false;
 		m_bStrikeon = false;
@@ -138,7 +140,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 	{
 		m_bStrikeScaler -= 1.f;
 		m_fLockonScaler -= 1.f;
-		m_fDiamondShooter += 1.f;
+		m_fDiamondShooter += 3.f;
 		m_fAlphaDiamond -= 0.1f;
 		if (m_bStrikeScaler <= 1.f)
 		{
