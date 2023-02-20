@@ -4061,7 +4061,7 @@ void CImgui_Manager::Set_Effect()
 					{
 						if (!m_sSelectedResource.empty())
 						{
-							CParticleSystem::PARTICLEDESC tParticleDesc;
+							PARTICLEDESC tParticleDesc;
 
 							wstring wsTexturePrototype = wstring(m_sSelectedResource.begin(), m_sSelectedResource.end());
 							wcscpy_s(tParticleDesc.wcPrototypeId, MAX_PATH, wsTexturePrototype.c_str());
@@ -4385,8 +4385,8 @@ _bool CImgui_Manager::Save_Effect()
 		}
 		case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
 		{
-			CParticleSystem::PARTICLEDESC tParticleDesc = static_cast<CParticleSystem*>(Effects[i])->Get_ParticleDesc();
-			WriteFile(hFileEffect, &tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
+			PARTICLEDESC tParticleDesc = static_cast<CParticleSystem*>(Effects[i])->Get_ParticleDesc();
+			WriteFile(hFileEffect, &tParticleDesc, sizeof(PARTICLEDESC), &dwByte, nullptr);
 			break;
 		}
 		}
@@ -4509,7 +4509,7 @@ _bool CImgui_Manager::Load_Effect(_bool bUpgrade)
 			CEffectTexture::TEXTUREEFFECTDESC tTextureEffectDesc;
 			CEffectMesh::MESHEFFECTDESC tMeshEffectDesc; // Actual Logic
 			CEffectMesh::MESHEFFECTDESC_OLD tMeshEffectDescOld; // Upgrade Logic
-			CParticleSystem::PARTICLEDESC tParticleDesc;
+			PARTICLEDESC tParticleDesc;
 			CEffect* pEffect = nullptr;
 
 			/* Read Effect Type-specific Description. */
@@ -4561,7 +4561,7 @@ _bool CImgui_Manager::Load_Effect(_bool bUpgrade)
 			}
 			case CEffect::EFFECT_TYPE::TYPE_PARTICLE:
 			{
-				ReadFile(hFileEffect, &tParticleDesc, sizeof(CParticleSystem::PARTICLEDESC), &dwByte, nullptr);
+				ReadFile(hFileEffect, &tParticleDesc, sizeof(PARTICLEDESC), &dwByte, nullptr);
 
 				if (!dwByte)
 					break;

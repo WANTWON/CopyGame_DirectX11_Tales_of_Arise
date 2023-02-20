@@ -89,13 +89,8 @@ namespace Engine
 
 	typedef struct tagVertexPoint
 	{
-		XMFLOAT3		vPosition;
-		XMFLOAT2		vPSize;
-
-		XMFLOAT4		vRight;
-		XMFLOAT4		vUp;
-		XMFLOAT4		vLook;
-		XMFLOAT4		vTranslation;
+		XMFLOAT3 vPosition;
+		XMFLOAT2 vPSize;
 	}VTXPOINT;
 
 	typedef struct ENGINE_DLL tagVertexPoint_Declaration
@@ -106,10 +101,12 @@ namespace Engine
 
 	typedef struct tagVertexMatrix
 	{
-		XMFLOAT4		vRight;
-		XMFLOAT4		vUp; 
-		XMFLOAT4		vLook;
-		XMFLOAT4		vPosition;
+		XMFLOAT4 vRight;
+		XMFLOAT4 vUp; 
+		XMFLOAT4 vLook;
+		XMFLOAT4 vPosition;
+		float fAlpha;
+		XMFLOAT3 vColor;
 	}VTXMATRIX;
 
 	typedef struct ENGINE_DLL tagVertexRectInstance_Declaration
@@ -120,7 +117,7 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagVertexPointInstance_Declaration
 	{
-		static const unsigned int iNumElements = 6;
+		static const unsigned int iNumElements = 8;
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXPOINTINSTANCE_DECLARATION;
 
@@ -330,4 +327,44 @@ namespace Engine
 		EVENTTYPE eType;
 		char szName[MAX_PATH];
 	}ANIMEVENT;
+
+	typedef struct tagParticleDesc
+	{
+		wchar_t wcPrototypeId[MAX_PATH] = TEXT("");
+		unsigned int m_eSpawnType = 0;
+		bool m_bBillboard = false;
+		XMFLOAT3 m_vColor = XMFLOAT3(0.f, 0.f, 0.f);
+		float m_fAlpha = 1.f;
+		float m_fAlphaDiscard = 0.f;
+		bool m_bGlow = false;
+		XMFLOAT3 vGlowColor = XMFLOAT3(1.f, 1.f, 1.f);
+		int m_iMaxParticles = 1000;
+		float m_fParticlesLifetime = 1.f;
+		float m_fParticleStartAfter = 0.f;
+		float m_fParticlesPerSecond = 1.f;
+		float m_fParticleDeviationX = 0.f;
+		float m_fParticleDeviationY = 0.f;
+		float m_fParticleDeviationZ = 0.f;
+		XMFLOAT3 m_vParticleDirection = XMFLOAT3(0.f, 0.f, 0.f);
+		bool m_bRandomDirectionX = false;
+		bool m_bRandomDirectionY = false;
+		bool m_bRandomDirectionZ = false;
+		float m_fParticleVelocity = 1.f;
+		float m_fParticleVelocityVariation = 0.f;
+		float m_fParticleSize = 1.f;
+		float m_fParticleSizeVariation = 0.f;
+	} PARTICLEDESC;
+
+	struct Particle
+	{
+		float fPositionX = 0.f, fPositionY = 0.f, fPositionZ = 0.f;
+		XMFLOAT3 vDirection = XMFLOAT3(0.f, 0.f, 0.f);
+		XMFLOAT3 vInitialColor = XMFLOAT3(0.f, 0.f, 0.f);
+		float fRed = 0.f, fGreen = 0.f, fBlue = 0.f;
+		float fInitialAlpha = 0.f, fAlpha = 0.f;
+		float fInitialVelocity = 0.f, fVelocity = 0.f;
+		float fInitialSize = 0.f, fSize = 0.f;
+		float fLife = 0.f;
+		bool bActive = false;
+	};
 }
