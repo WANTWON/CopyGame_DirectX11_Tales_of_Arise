@@ -11,9 +11,10 @@
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
 #include "AiRinwell.h"
+#include "PlayerIdleState.h"
 
 using namespace AIPlayer;
-
+using namespace Player;
 CAI_AlphenSion_Smash::CAI_AlphenSion_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 {
 	//m_ePreStateID = eStateType;
@@ -100,7 +101,7 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 	if (m_bIsStateEvent)
 	{
 		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		
+
 	}
 
 	for (auto& iter : m_pEffects)
@@ -114,17 +115,37 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
 			m_pOwner->Set_IsActionMode(false);
-			return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
 
+			PLAYER_MODE eMode = CPlayerManager::Get_Instance()->Check_ActiveMode(m_pOwner);
+			switch (eMode)
+			{
+			case Client::ACTIVE:
+			{
+				CPlayerState* pState = nullptr;
+
+				pState = new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
+				m_pOwner->Set_PlayerState(m_pOwner->Get_PlayerState()->ChangeState(m_pOwner->Get_PlayerState(), pState));
+			}
+
+
+
+			case Client::AI_MODE:
+			{
+				return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+			}
+
+			}
 		}
+
+
+		
 	}
-
-
 	return nullptr;
 }
 
 void CAI_AlphenSion_Smash::Enter()
 {
+	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
@@ -165,18 +186,21 @@ void CAI_AlphenSion_Smash::Enter()
 
 void CAI_AlphenSion_Smash::Exit()
 {
-
+	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
-
-	if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 	{
-		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
-		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+		{
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
+		else
+		{
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
 	}
-	else
-	{
-		dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
-	}
+	
 		
 
 	if (!m_pEffects.empty())

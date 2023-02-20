@@ -100,6 +100,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	if (m_bOverLimit)
 	{
+		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 		m_fOverLimitTimer += fTimeDelta;
 		if (m_fOverLimitTimer > 0.2f)
 		{
@@ -147,8 +148,14 @@ int CPlayer::Tick(_float fTimeDelta)
 	switch (eMode)
 	{
 	case Client::ACTIVE:
-		HandleInput();
-		Tick_State(fTimeDelta);
+		if (!m_bStrikeAttack)
+		{
+			HandleInput();
+			Tick_State(fTimeDelta);
+		}
+		else
+			Tick_AIState(fTimeDelta);
+		
 		break;
 	case Client::AI_MODE:
 		Tick_AIState(fTimeDelta);
@@ -211,7 +218,10 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	switch (eMode)
 	{
 	case Client::ACTIVE:
+		if (!m_bStrikeAttack)
 		LateTick_State(fTimeDelta);
+		else
+			LateTick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
 		LateTick_AIState(fTimeDelta);
@@ -226,45 +236,29 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			pParts->Late_Tick(fTimeDelta);
 	}
 
-	if ((ALPHEN == m_ePlayerID) && CPlayerState::STATE_SKILL_ATTACK_F == m_pPlayerState->Get_StateId() && !m_bIsFly)
+	if (LEVEL_BATTLE == m_eLevel)
 	{
-		int a = 10;
-	}
-	else if (LEVEL_BATTLE == m_eLevel)
-	{
-		CBaseObj* pMonster = nullptr;
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pMonster))
+		vector<CBaseObj*> Monsters = CBattleManager::Get_Instance()->Get_BattleMonster();
+
+		_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+		for (auto& Monster : Monsters)
 		{
-			_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-			_vector vMonsterPos = pMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
+			_vector vMonsterPos = Monster->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 			_vector vDirection = XMVectorSetY(vPlayerPos, XMVectorGetY(vMonsterPos)) - vMonsterPos;
 
-			_float fRadiusSum = m_pSPHERECom->Get_SphereRadius() + pMonster->Get_SPHERECollider()->Get_SphereRadius();
+			_float fRadiusSum = m_pSPHERECom->Get_SphereRadius() + Monster->Get_SPHERECollider()->Get_SphereRadius();
 
 			_float fCollDistance = fRadiusSum - XMVectorGetX(XMVector4Length(vDirection));
 
 			if (fCollDistance > 0)
 			{
-				_vector vCross = XMVector3Cross(XMVector4Normalize(pMonster->Get_TransformState(CTransform::STATE_LOOK)), XMVector4Normalize(vDirection));
-				_float4 fCross;
-				XMStoreFloat4(&fCross, vCross);
-
-				_vector vNewDir;
-				if (-0.5f > fCross.y)
-					vNewDir = XMVector4Transform(vDirection, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(3.f)));
-				else if (0.5f < fCross.y)
-					vNewDir = XMVector4Transform(vDirection, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-3.f)));
-				else
-					vNewDir = vDirection;
-
-				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vNewDir) * fRadiusSum);
-
+				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vDirection) * fRadiusSum);
 				_vector vLerpPos = XMVectorLerp(vPlayerPos, XMVectorSetY(vNewPos, XMVectorGetY(vPlayerPos)), 0.5f);
 
-				if (true == m_pNavigationCom->isMove(vLerpPos))
-					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
-
+				//if (true == m_pNavigationCom->isMove(vLerpPos))
+				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
 			}
 		}
 	}
@@ -369,8 +363,11 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		switch (eMode)
 		{
 		case Client::ACTIVE:
-			pState = new CHitState(this);
-			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+			if (CPlayerState::STATE_HIT != m_pPlayerState->Get_StateId())
+			{
+				pState = new CHitState(this);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+			}
 			break;
 		case Client::AI_MODE:
 			pAIState = new AIPlayer::CAI_HitState(this);
@@ -473,7 +470,7 @@ void CPlayer::AI_check()
 {
 	CAIState* pAIState = nullptr;
 
-	pAIState = new CAiState_WakeUp(this);
+	pAIState = new CAICheckState(this,CAIState::STATE_IDLE);
    m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
 }
@@ -649,6 +646,10 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 	case Client::LEVEL_SNOWFIELD:
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_FieldNavigation"), m_ePlayerID));
 		break;
+	case Client::LEVEL_BOSS:
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BossNavigation"), m_ePlayerID));
+		break;
+
 	}
 
 	RELEASE_INSTANCE(CGameInstance);

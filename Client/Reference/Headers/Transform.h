@@ -77,7 +77,7 @@ public: /* Use Sliding while Animation */
 	bool Sliding_Anim_To_Target(_vector vAt, _vector vecMove, _float fRotation, class CNavigation* pNavigation = nullptr);
 
 public:
-	void Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight, _float fEndiHeight);
+	void Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight);
 	bool Go_PosTarget(_float fTimeDelta, _vector TargetPos, class CNavigation* pNavigation = nullptr);
 	bool Go_PosDir(_float fTimeDelta, _vector vecDir, class CNavigation* pNavigation = nullptr);
 	bool Go_PosLerp(_float fTimeDelta, _vector TargetPos, _float fVecOffset);

@@ -428,7 +428,7 @@ HRESULT CModel::Create_Materials_Binary(HANDLE hFile, _ulong * pdwByte)
 			char szFullPath[MAX_PATH] = "";
 			ReadFile(hFile, szFullPath, sizeof(char) * MAX_PATH, pdwByte, nullptr);
 
-			if (!strcmp(szFullPath, ""))
+ 			if (!strcmp(szFullPath, ""))
 				continue;
 
 			_tchar szTFullPath[MAX_PATH] = TEXT("");

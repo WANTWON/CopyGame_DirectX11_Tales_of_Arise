@@ -56,9 +56,6 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
 	}
 
-
-
-
 	if (!m_bIsAnimationFinished)
 	{
 		_vector vecTranslation;
@@ -134,7 +131,7 @@ CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 	//	m_bTargetSetting = true;
 	//}
 
-	/*if (nullptr != m_pAtkColliderCom)
+	if (nullptr != m_pAtkColliderCom)
 	{
 		CBaseObj* pCollisionTarget = nullptr;
 
@@ -144,7 +141,7 @@ CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 			if (pCollided)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
-	}*/
+	}
 
 	if (m_bIsAnimationFinished)
 	{
@@ -172,9 +169,4 @@ void CBattle_DashState::Enter()
 void CBattle_DashState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
-
-
-	Safe_Release(m_pAtkColliderCom);
-
-
 }

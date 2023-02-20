@@ -1417,7 +1417,7 @@ PS_OUT PS_UI_GLOW(PS_IN In)
 		Out.vColor.a = Out.vColor.r;
 		Out.vColor.rgb = g_vGlowColor;
 
-		Out.vColor *=  min(cos(g_fGlowTimer * 4) + 1.2f, 1.f);
+		Out.vColor *=  min(cos(g_fGlowTimer * 4) + 1.5f, 1.f);
 	}
 
 	Out.vColor.a *= g_fAlpha;

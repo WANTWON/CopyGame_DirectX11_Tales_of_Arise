@@ -351,7 +351,7 @@ bool CTransform::Sliding_Anim_To_Target(_vector vAt, _vector vecMove, _float fRo
 	return true;
 }
 
-void CTransform::Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight, _float fEndiHeight)
+void CTransform::Jump(_float fTimeDelta, _float fVelocity, _float fGravity, _float fStartiHeight)
 {
 	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
 	float fPosY = fStartiHeight + fVelocity * fTimeDelta - (0.5f * fGravity * fTimeDelta * fTimeDelta);

@@ -10,7 +10,7 @@
 
 
 using namespace Hawk;
-\
+
 CIdleState::CIdleState(CHawk* pIceWolf, FIELD_STATE_ID ePreState)
 {
 	m_pOwner = pIceWolf;

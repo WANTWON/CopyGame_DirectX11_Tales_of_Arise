@@ -151,8 +151,6 @@ void CBullet::Collision_Check()
 	}
 }
 
-
-
 void CBullet::Free()
 {
 	__super::Free();

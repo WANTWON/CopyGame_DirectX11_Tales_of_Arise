@@ -142,14 +142,21 @@ _bool CNonAnim_Instance::IsRenderShadow()
 		!strcmp(m_ModelDesc.pModeltag, "SmallRock2") || 
 		!strcmp(m_ModelDesc.pModeltag, "Bush") ||
 		!strcmp(m_ModelDesc.pModeltag, "Snow2") ||
-		!strcmp(m_ModelDesc.pModeltag, "Birch2"))
+		!strcmp(m_ModelDesc.pModeltag, "Birch2") ||
+		!strcmp(m_ModelDesc.pModeltag, "Bld_WallB") ||
+		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01") || 
+		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01_B02_Lod1"))
 		return false;
-		
+
 	return true;
 }
 
 _float CNonAnim_Instance::Check_CullingRadius()
 {
+	if (!strcmp(m_ModelDesc.pModeltag, "Bld_WallB") ||
+		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01") ||
+		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01_B02_Lod1"))
+		return 25.f;
 
 	return 5.f;
 }

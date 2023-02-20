@@ -29,8 +29,9 @@ CRunState::CRunState(CPlayer* pPlayer, DIRID eDir, _bool isDash)
 CPlayerState * CRunState::HandleInput()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CBattleManager* pBattleManager = CBattleManager::Get_Instance();
 
-	if (LEVEL_BATTLE == m_pOwner->Get_Level())
+	if (pBattleManager->Get_IsBattleMode())
 	{
 		switch (m_ePlayerID)
 		{
@@ -91,35 +92,34 @@ CPlayerState * CRunState::HandleInput()
 			}
 		}
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
-			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_BATTLE);
+			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE);
 
-		if (pGameInstance->Key_Down(DIK_LSHIFT))
-		{
-			switch (m_eDirection)
-			{
-			case Client::DIR_STRAIGHT:
-			case Client::DIR_LEFT:
-			case Client::DIR_RIGHT:
-			case Client::DIR_STRAIGHT_LEFT:
-			case Client::DIR_STRAIGHT_RIGHT:
-			case Client::DIR_BACKWARD_LEFT:
-			case Client::DIR_BACKWARD_RIGHT:
-			case Client::DIR_BACKWARD:
-				return new CDodgeState(m_pOwner, DIR_STRAIGHT);
-				break;
-			case Client::DIR_END:
-				return new CDodgeState(m_pOwner, DIR_BACKWARD);
-				break;
-			}
-		}
+		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT);
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT_RIGHT);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD_LEFT);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD_RIGHT);
+		else if (pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_LEFT);
+		else if (pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_RIGHT);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD);
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT);
+		else if (pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_END);
 	}
-	else if (LEVEL_SNOWFIELD == m_pOwner->Get_Level())
+	else if (!pBattleManager->Get_IsBattleMode())
 	{
 		if (pGameInstance->Key_Down(DIK_E))
 			return new CCollectState(m_pOwner);
 
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
-			return new CJumpState(m_pOwner, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), STATETYPE_START, 0.f, CJumpState::JUMP_RUN);
+			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_RUN);
 	}
 
 	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
@@ -141,7 +141,7 @@ CPlayerState * CRunState::HandleInput()
 	else
 		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 
-	if ((LEVEL_SNOWFIELD == m_pOwner->Get_Level()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+	if ((!pBattleManager->Get_IsBattleMode()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
 		if (!m_bIsDash)
 		{
@@ -186,7 +186,7 @@ CPlayerState * CRunState::HandleInput()
 
 		m_bIsDash = false;
 
-		if (m_pOwner->Get_Level() == LEVEL_SNOWFIELD)
+		if (!pBattleManager->Get_IsBattleMode())
 		{
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(false);
@@ -239,6 +239,7 @@ void CRunState::Enter()
 {
 	__super::Enter();
 
+	CBattleManager* pBattleManager = CBattleManager::Get_Instance();
 	m_eStateId = STATE_ID::STATE_RUN;
 
 	if (m_bIsDash)
@@ -246,22 +247,22 @@ void CRunState::Enter()
 		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
-			if (LEVEL_BATTLE != m_pOwner->Get_Level())
+			if (!pBattleManager->Get_IsBattleMode())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::SION:
-			if (LEVEL_BATTLE != m_pOwner->Get_Level())
+			if (!pBattleManager->Get_IsBattleMode())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::RINWELL:
-			if (LEVEL_BATTLE != m_pOwner->Get_Level())
+			if (!pBattleManager->Get_IsBattleMode())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::LAW:
-			if (LEVEL_BATTLE != m_pOwner->Get_Level())
+			if (!pBattleManager->Get_IsBattleMode())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
@@ -272,7 +273,7 @@ void CRunState::Enter()
 		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
-			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+			if (pBattleManager->Get_IsBattleMode())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_RUN);
 			else
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
@@ -280,21 +281,21 @@ void CRunState::Enter()
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_RunSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::SION:
-			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+			if (pBattleManager->Get_IsBattleMode())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
 			else
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::RINWELL:
-			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+			if (pBattleManager->Get_IsBattleMode())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
 			else
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::LAW:
-			if (LEVEL_BATTLE == m_pOwner->Get_Level())
+			if (pBattleManager->Get_IsBattleMode())
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_RUN);
 			else
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
@@ -373,7 +374,7 @@ void CRunState::Move(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 4.f, m_pOwner->Get_Navigation());
 	else
 	{
-		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+		if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f, m_pOwner->Get_Navigation());
 		else
 			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2.f, m_pOwner->Get_Navigation());

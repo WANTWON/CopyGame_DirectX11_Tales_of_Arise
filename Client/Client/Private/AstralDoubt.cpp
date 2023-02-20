@@ -56,7 +56,7 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 
 	m_eMonsterID = ASTRAL_DOUBT;
 
-	m_tStats.m_fMaxHp = 2500;
+	m_tStats.m_fMaxHp = 900000;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -87,6 +87,9 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 	m_fTimeDeltaAcc = 0;
 	m_fCntChanceTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
 	m_bDone_HitAnimState = false;
+
+	CBattleManager::Get_Instance()->Out_Monster(this);
+
 	return S_OK;
 }
 
@@ -143,8 +146,10 @@ HRESULT CAstralDoubt::Ready_Components(void * pArg)
 
 	if (FAILED(__super::Add_Components(TEXT("Com_BattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_vecNavigation[LEVEL_BATTLE])))
 		return E_FAIL;
+	if (FAILED(__super::Add_Components(TEXT("Com_BossNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_Boss_Navigation"), (CComponent**)&m_vecNavigation[LEVEL_BOSS])))
+		return E_FAIL;
 
-	m_pNavigationCom = m_vecNavigation[iLevel];
+	m_pNavigationCom = m_vecNavigation[LEVEL_BOSS];
 
 	return S_OK;
 }
@@ -153,17 +158,19 @@ int CAstralDoubt::Tick(_float fTimeDelta)
 {
 	if (m_bDead)
 		return OBJ_DEAD;
-		
+
+	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_eLevel == LEVEL_SNOWFIELD)
+		return OBJ_NOEVENT;
+
+	if(CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+		return OBJ_NOEVENT;
+
 	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
 
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
-		return OBJ_NOEVENT;
-
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
-		return OBJ_NOEVENT;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOEVENT;
@@ -180,46 +187,21 @@ int CAstralDoubt::Tick(_float fTimeDelta)
 	if (m_fTimeDeltaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
 
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_U))
-	//{
-	//	CAstralDoubt_State* pState = new CBattle_HeadBeamState(this);
-	//	m_pState = m_pState->ChangeState(m_pState, pState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
-	//{
-	//	CAstralDoubt_State* pState = new CBattle_SpearMultiState(this);
-	//	m_pState = m_pState->ChangeState(m_pState, pState);
-	//}
-	//
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
-	//{
-	//	CAstralDoubt_State* pState = new CBattle_UpperState(this);
-	//	m_pState = m_pState->ChangeState(m_pState, pState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_P))
-	//{
-	//	CAstralDoubt_State* pState = new CBattle_720Spin_FirstState(this);
-	//	m_pState = m_pState->ChangeState(m_pState, pState);
-	//}
-
 	return OBJ_NOEVENT;
 }
 
 void CAstralDoubt::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_eLevel == LEVEL_SNOWFIELD)
+		return;
+
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 		return;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
-
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
-		return;
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
@@ -332,13 +314,17 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 
 _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-	if (fDamage <= 0 || m_bDead || m_bDissolve || m_tStats.m_fCurrentHp <= 0.f)
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_tStats.m_fCurrentHp <= 0.f || m_bTakeDamage)
 		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
 	if (iHp <= 0)
 	{
+		m_tStats.m_fCurrentHp = 0;
+		CBattleManager::Get_Instance()->Update_LockOn();
+		Check_AmILastMoster();
+
 		m_pModelCom->Set_TimeReset();
 		CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DEAD);
 		m_pState = m_pState->ChangeState(m_pState, pState);

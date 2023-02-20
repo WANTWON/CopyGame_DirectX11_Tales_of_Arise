@@ -10,8 +10,11 @@
 #include "SionSkills.h"
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
+#include "PlayerIdleState.h"
+
 
 using namespace AIPlayer;
+using namespace Player;
 
 CAI_SionRinwell_Smash::CAI_SionRinwell_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 {
@@ -100,7 +103,7 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 {
 	if (m_bIsStateEvent)
 	{
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
 
@@ -112,8 +115,31 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+
+		PLAYER_MODE eMode = CPlayerManager::Get_Instance()->Check_ActiveMode(m_pOwner);
+		switch (eMode)
+		{
+		case Client::ACTIVE:
+		{
+			CPlayerState* pState = nullptr;
+
+			pState = new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
+			m_pOwner->Set_PlayerState(m_pOwner->Get_PlayerState()->ChangeState(m_pOwner->Get_PlayerState(), pState));
+		}
+			
+			
+
+		case Client::AI_MODE:
+		{
+			return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+		}
+			
+	}
+
+
+
+		
+		//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
 
@@ -123,6 +149,7 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 
 void CAI_SionRinwell_Smash::Enter()
 {
+	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::SION:
@@ -146,15 +173,16 @@ void CAI_SionRinwell_Smash::Enter()
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	////	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-	//pCamera->Set_Target(m_pOwner);
+//	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+//	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
 }
 
 void CAI_SionRinwell_Smash::Exit()
 {
+	m_pOwner->Set_StrikeAttack(false);
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)

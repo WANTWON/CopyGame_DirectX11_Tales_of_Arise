@@ -384,7 +384,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_BATTLE, TEXT("Layer_Terrain"), TEXT("Prototype_BattleZone_Terrain"))))
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_BATTLE, pLayerTag, TEXT("Prototype_BattleZone_Terrain"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_BATTLE, pLayerTag, nullptr)))
@@ -419,7 +419,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 	CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
 	CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_BATTLE, pLayerTag, &CameraDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_BOSS, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 
@@ -437,7 +437,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
 	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CameraAction"), LEVEL_BATTLE, pLayerTag, &ActionCameraDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CameraAction"), LEVEL_BOSS, pLayerTag, &ActionCameraDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);

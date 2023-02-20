@@ -82,6 +82,7 @@ PS_OUT PS_EFFECT(PS_IN In)
 
 	Out.vColor.a *= Out.vColor.r; // Set Alpha based on Alpha Mask
 	Out.vColor.rgb *= In.vColor; // Set Color
+	Out.vColor.rgb /= Out.vColor.a;
 
 	Out.vColor.a *= In.fAlpha; // Set Alpha from Input
 

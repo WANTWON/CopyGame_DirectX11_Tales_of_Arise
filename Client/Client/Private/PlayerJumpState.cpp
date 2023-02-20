@@ -22,14 +22,13 @@
 
 using namespace Player;
 
-CJumpState::CJumpState(CPlayer* pPlayer, _float fStartHeight, STATETYPE eType, _float fTime, JUMPTYPE eJumpType)
+CJumpState::CJumpState(CPlayer* pPlayer, STATETYPE eType, JUMPTYPE eJumpType, _float fTime)
 {
 	m_pOwner = pPlayer;
-	m_fStartHeight = fStartHeight;
 	m_eStateType = eType;
-	m_fTime = fTime;
 	m_eJumpType = eJumpType;
 	m_ePlayerID = m_pOwner->Get_PlayerID();
+	m_fTime = fTime;
 }
 
 CPlayerState * CJumpState::HandleInput()
@@ -38,19 +37,24 @@ CPlayerState * CJumpState::HandleInput()
 
 	if (LEVEL_BATTLE == m_pOwner->Get_Level())
 	{
-		if (GetKeyState(VK_LBUTTON) < 0)
+		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+		{
 			switch (m_ePlayerID)
 			{
 			case CPlayer::ALPHEN:
-				return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
+				return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
+				break;
 			case CPlayer::SION:
-				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
+				return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
+				break;
 			case CPlayer::RINWELL:
-				return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
+				return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
 				break;
 			case CPlayer::LAW:
-				return new CLawAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fStartHeight, m_fTime);
+				return new CLawAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
+				break;
 			}
+		}
 
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
@@ -59,55 +63,52 @@ CPlayerState * CJumpState::HandleInput()
 			{
 			case CPlayer::ALPHEN:
 				if (pGameInstance->Key_Down(DIK_E))
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
-				else if (pGameInstance->Key_Down(DIK_R))
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
-				else if (pGameInstance->Key_Down(DIK_F))
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fTime);
+				else if (pGameInstance->Key_Down(DIK_R))					   
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fTime);
+				else if (pGameInstance->Key_Down(DIK_F))					   
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fTime);
 				break;
 			case CPlayer::SION:
 				if (pGameInstance->Key_Down(DIK_E))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_E, m_fTime);
 				else if (pGameInstance->Key_Down(DIK_R))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R, m_fTime);
 				else if (pGameInstance->Key_Down(DIK_F))
-					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
+					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F, m_fTime);
 				break;
 			case CPlayer::RINWELL:
 				break;
 			case CPlayer::LAW:
 				if (pGameInstance->Key_Down(DIK_E))
-					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fStartHeight, m_fTime);
+					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fTime);
 				else if (pGameInstance->Key_Down(DIK_R))
-					return new CLawAirRSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fStartHeight, m_fTime);
+					return new CLawAirRSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 				else if (pGameInstance->Key_Down(DIK_F))
-					return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fStartHeight, m_fTime);
+					return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
 				break;
 			}
 		}
 
-		if (pGameInstance->Key_Pressing(DIK_LSHIFT))
-		{
-			switch (m_eDirection)
-			{
-			case Client::DIR_STRAIGHT:
-			case Client::DIR_LEFT:
-			case Client::DIR_RIGHT:
-			case Client::DIR_STRAIGHT_LEFT:
-			case Client::DIR_STRAIGHT_RIGHT:
-			case Client::DIR_BACKWARD_LEFT:
-			case Client::DIR_BACKWARD_RIGHT:
-			case Client::DIR_BACKWARD:
-				return new CDodgeState(m_pOwner, DIR_STRAIGHT);
-				break;
-			case Client::DIR_END:
-				return new CDodgeState(m_pOwner, DIR_BACKWARD);
-				break;
-			}
-		}
+		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT_RIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD_LEFT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD_RIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_LEFT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_RIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
 	}
 
-	if (JUMP_RUN == m_eJumpType)
+	if (JUMP_IDLE != m_eJumpType)
 	{
 		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 			m_eDirection = DIR_STRAIGHT_LEFT;
@@ -134,7 +135,7 @@ CPlayerState * CJumpState::HandleInput()
 
 CPlayerState * CJumpState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.f);
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -211,7 +212,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 {
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-		return new CHitState(m_pOwner, m_fStartHeight, m_fTime);
+		return new CHitState(m_pOwner, m_fTime);
 
 	switch (m_eStateType)
 	{
@@ -265,7 +266,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 			case Client::Player::CJumpState::JUMP_RUN:
 				if (CPlayer::ALPHEN == m_ePlayerID)
 				{
-					if (Check_JumpEnd(1.25f))
+					if (Check_JumpEnd(1.75f))
 					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LAND);
 						m_eStateType = STATETYPE_END;
@@ -437,6 +438,25 @@ CPlayerState * CJumpState::EventInput(void)
 				break;
 			}
 		}
+
+		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT_RIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD_LEFT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD_RIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_LEFT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_RIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_LSHIFT) && !m_bIsFly)
+			return new CDodgeState(m_pOwner, DIR_END, m_fTime);
 	}
 
 	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
@@ -574,6 +594,14 @@ void CJumpState::Enter()
 		}
 	}
 
+	if (0.f != m_fTime)
+	{
+		m_fStartHeight = XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)) + (((7.f * 7.f) * (5.f / 23.f)) * -0.5f);
+		m_fTime = 7.f / 4.6f;
+	}
+	else
+		m_fStartHeight = XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
+
 	m_pOwner->Set_Manarecover(true);
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_JumpStart.wav"), SOUND_FOOT, 0.4f);
@@ -581,7 +609,7 @@ void CJumpState::Enter()
 
 void CJumpState::Exit()
 {
-	if (STATETYPE_END == m_eStateType && Check_JumpEnd(0.1f))
+	if (STATETYPE_END == m_eStateType && Check_JumpEnd(1.f))
 	{
  		m_pOwner->Off_IsFly();
 		m_fTime = 0.f;
@@ -595,9 +623,9 @@ void CJumpState::Exit()
 _bool CJumpState::Check_JumpEnd(_float fOffset)
 {
 	_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_fEndHeight = m_pOwner->Get_Navigation()->Compute_Height(vPosition, 0.f);
+	_float EndHeight = m_pOwner->Get_Navigation()->Compute_Height(vPosition, 0.f);
 
-	if (m_fEndHeight + fOffset > XMVectorGetY(vPosition))
+	if (EndHeight + fOffset > XMVectorGetY(vPosition))
 		return true;
 
 	return false;
@@ -608,7 +636,7 @@ void CJumpState::Move(_float fTimeDelta)
 	_vector vPrePos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 
 	m_fTime += fTimeDelta * 3.5f;
-	m_pOwner->Get_Transform()->Jump(m_fTime, 7.f, 4.6f, m_fStartHeight, m_fEndHeight);
+	m_pOwner->Get_Transform()->Jump(m_fTime, 7.0f, 4.6f, m_fStartHeight);
 
 	_vector vCurPos = m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 
@@ -620,6 +648,8 @@ void CJumpState::Move(_float fTimeDelta)
 	else
 		m_bIsDrop = false;
 
-	if ((JUMP_IDLE != m_eJumpType) && (m_eDirection != DIR_END))
+	if ((JUMP_RUN == m_eJumpType) && (m_eDirection != DIR_END))
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 3.f);
+	else if ((JUMP_BATTLE == m_eJumpType) && (m_eDirection != DIR_END) && (STATETYPE_END != m_eStateType))
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 3.f);
 }

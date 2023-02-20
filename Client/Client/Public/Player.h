@@ -63,6 +63,9 @@ public: /* Getter &  Setter */
 	void            Set_Overlimit(_bool tof) { m_bOverLimit = tof; }
 	_bool           Get_Overlimit() {	return m_bOverLimit;}
 
+	/* STRIKEATTACK */
+	void           Set_StrikeAttack(_bool tof) { m_bStrikeAttack = tof;}
+	//_bool          Get_StrikeAttack() { return m_bStrikeAttack; }
 
 
 
@@ -94,8 +97,9 @@ public: /*For.State*/
 	void			LateTick_AIState(_float fTimeDelta);
 	void            SmashAttack(_uint smashtype);
 	void            BoostAttack();
-
-
+	CPlayerState* Get_PlayerState() { return m_pPlayerState; }
+	//void Set_PlayerState(CPlayerState* state) { m_pPlayerState = state; }
+	
 	void Set_BoostGuage(_float boostguage) { m_tInfo.fCurrentBoostGuage = boostguage; }
 	_float Get_BoostGuage() { return m_tInfo.fCurrentBoostGuage; }
 	void Plus_Overcount() { ++m_tInfo.idodgecount; }
@@ -140,6 +144,8 @@ protected: /* for 4 Player */
 	/* Over Limit */
 	_bool          m_bOverLimit = false;
 	_float         m_fOverLimitTimer = 0.f;
+	/* STIRKEATTACK */
+	_bool          m_bStrikeAttack = false;
 
 private:
 	_bool m_bLevelup = false;

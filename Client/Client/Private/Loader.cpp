@@ -115,6 +115,9 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	case LEVEL_SNOWFIELD:
 		pLoader->Loading_ForSnowFieldLevel();
 		break;
+	case LEVEL_BOSS:
+		pLoader->Loading_ForBossLevel();
+		break;
 	}
 
 	LeaveCriticalSection(&pLoader->Get_CriticalSection());
@@ -648,7 +651,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 
 	/*For.Prototype_Component_VIBuffer_PointInstance*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_PointInstance"),
-		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, 50))))
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_VIBuffer_Point*/
@@ -790,6 +793,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	/* For.Prototype_Component_Navigation */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"),
 		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/Field_Data/Field_Navi.dat")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Navigation */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Boss_Navigation"),
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/BattleZoneData/BossMap/Navigation.dat")))))
 		return E_FAIL;
 #pragma endregion Navigation Loading
 
@@ -969,6 +977,47 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 
 	/* For.Prototype_Component_Collider_SPHERE */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_SPHERE"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
+		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Loading Finished"));
+
+
+	Safe_Release(pGameInstance);
+
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForBossLevel()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	Safe_AddRef(pGameInstance);
+
+	/*For.Prototype_Component_Texture_Sky */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Sky"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_SpaceBlue2.dds"), 1))))
+		return E_FAIL;
+
+	/* Loading Collider */
+	lstrcpy(m_szLoadingText, TEXT("Loading Collider"));
+
+	/* For.Prototype_Component_Collider_AABB */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Collider_AABB"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_AABB))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Collider_OBB */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Collider_OBB"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Collider_SPHERE */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"),
 		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
 		return E_FAIL;
 
@@ -1205,7 +1254,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Monstername"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/monstername/monstername%d.dds"), 5))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/monstername/monstername%d.dds"), 6))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Battlestart"),
@@ -2245,6 +2294,32 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 
 #pragma endregion Deco NonAnim Object
 
+#pragma region Deco BossMap Object
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ceiling"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Ceiling/Ceiling.dat"))))
+		return E_FAIL;       
+	
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Chandelier_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Chandelier/Bld_Chandelier_Lod1/Bld_Chandelier_Lod1.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Floor_A_200_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor_A_200_01/Bld_Floor_A_200_01.dat"))))
+		return E_FAIL;
+	
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Floor01_"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor01_/Bld_Floor01_.dat"))))
+		return E_FAIL;
+	
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_D04_Door01_Wall_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_D04_Door01_Wall_Lod1/Bld_D04_Door01_Wall_Lod1.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Floor01_outside_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor01_outside_Lod1/Bld_Floor01_outside_Lod1.dat"))))
+		return E_FAIL;
+#pragma endregion Deco BossMap Object
+
 
 #pragma region Instancing SnowField
 	/* Loading Instancing */
@@ -2368,6 +2443,36 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 		return E_FAIL;
 
 #pragma endregion Instancing Battle
+
+#pragma region Instancing Boss
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prop_Light02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Light/Prop_Light02_Lod1/Prop_Light02_Lod1.dat",
+			"../../../Bin/Data/BattleZoneData/BossMap/LightPillar.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Wall01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall01/Bld_Wall01.dat",
+			"../../../Bin/Data/BattleZoneData/BossMap/Wall.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Wall01_B02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall01_B02_Lod1/Bld_Wall01_B02_Lod1.dat",
+			"../../../Bin/Data/BattleZoneData/BossMap/Wall_B.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_WallB"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_WallB/Bld_WallB.dat",
+			"../../../Bin/Data/BattleZoneData/BossMap/Wall_BB.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Pillar01_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Pillar/Bld_Pillar01_Lod1/Bld_Pillar01_Lod1.dat",
+			"../../../Bin/Data/BattleZoneData/BossMap/Pillar.dat"))))
+		return E_FAIL;
+
+#pragma endregion Instancing Boss
+
 
 
 	RELEASE_INSTANCE(CGameInstance);
