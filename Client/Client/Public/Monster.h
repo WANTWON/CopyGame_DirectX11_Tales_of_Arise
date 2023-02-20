@@ -100,6 +100,7 @@ public: // Get & Set
 	_vector	 Get_LastPosition() { return m_vLastPos; }
 	void	Set_LastStrikeAttack(_bool type) { m_bLastStrikeAttack = type; }
 	_bool Get_LastStrikeAttack() { return m_bLastStrikeAttack; }
+	
 
 protected:
 	DMG_DIR Calculate_DmgDirection();

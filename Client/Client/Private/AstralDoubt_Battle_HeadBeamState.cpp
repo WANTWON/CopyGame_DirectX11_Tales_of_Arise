@@ -79,10 +79,8 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 					ColliderDesc.vScale = _float3(1.5f, 1.0f, 60.1f);
 					ColliderDesc.vPosition = _float3(0.f, 0.f, -30.f);
 
-					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_SNOWFIELD, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_BOSS, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-					int a = 0;
 				}
 				else
 					m_pAtkColliderCom->Update(matWorld);
@@ -97,8 +95,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
-
-			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}

@@ -397,6 +397,9 @@
     <Filter Include="02.GameObjects\01.Actor\02.NPC\SnowFieldNpc">
       <UniqueIdentifier>{ec4f57e9-3244-4a8c-b9e6-728d39635f29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\04.BossZone">
+      <UniqueIdentifier>{882c4b8d-339b-446a-b62f-4e2a6620b558}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1114,6 +1117,9 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AI_JumpState.h" />
+    <ClInclude Include="..\Public\Level_BossZone.h">
+      <Filter>01.Levels\04.BossZone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1793,6 +1799,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerOverlimit.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_BossZone.cpp">
+      <Filter>01.Levels\04.BossZone</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>

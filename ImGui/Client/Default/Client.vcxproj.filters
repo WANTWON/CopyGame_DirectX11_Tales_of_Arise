@@ -97,6 +97,12 @@
     <Filter Include="96.Camera\Action">
       <UniqueIdentifier>{983ceae7-83b5-44a8-bd9a-7d629cfa397a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\06. AnimModel">
+      <UniqueIdentifier>{4c40b864-0388-46ab-b335-b0cb47641837}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\06. AnimModel\Weapon">
+      <UniqueIdentifier>{6f0b889e-9c9b-45bd-97cd-2adf39537a6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -216,6 +222,12 @@
     <ClInclude Include="..\Public\Camera_Action.h">
       <Filter>96.Camera\Action</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Anim.h">
+      <Filter>02.GameObjects\06. AnimModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon.h">
+      <Filter>02.GameObjects\06. AnimModel\Weapon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -316,6 +328,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Action.cpp">
       <Filter>96.Camera\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Anim.cpp">
+      <Filter>02.GameObjects\06. AnimModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon.cpp">
+      <Filter>02.GameObjects\06. AnimModel\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

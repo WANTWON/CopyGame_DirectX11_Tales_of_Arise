@@ -288,6 +288,90 @@ void CAnimation::Set_TimeReset()
 	//m_fCurrentTime = 0.f;
 }
 
+void CAnimation::Add_TickPerSecond(_float fTime, _float fTick)
+{
+	m_ChangeTickTimes.push_back(fTime);
+	m_TickPerSeconds.push_back(fTick);
+
+	for (_int i = 1; i < m_ChangeTickTimes.size(); ++i)
+	{
+		for (_int j = 0; j < i; ++j)
+		{
+			if (m_ChangeTickTimes[i] < m_ChangeTickTimes[j])
+			{
+				_float fTemp = m_ChangeTickTimes[i];
+				m_ChangeTickTimes[i] = m_ChangeTickTimes[j];
+				m_ChangeTickTimes[j] = fTemp;
+
+				fTemp = m_TickPerSeconds[i];
+				m_TickPerSeconds[i] = m_TickPerSeconds[j];
+				m_TickPerSeconds[j] = fTemp;
+			}
+		}
+	}
+}
+
+void CAnimation::Fix_TickPerSecond(_int iTimeChoice, _float fAnimationTickTime, _float fAnimationTick)
+{
+	m_ChangeTickTimes[iTimeChoice] = fAnimationTickTime;
+	m_TickPerSeconds[iTimeChoice] = fAnimationTick;
+}
+
+void CAnimation::Delete_TickPerSecond(_int iTimeChoice)
+{
+	auto iterTime = m_ChangeTickTimes.begin();
+	auto iterTick = m_TickPerSeconds.begin();
+
+	for (_int i = 0; i < iTimeChoice; ++i)
+	{
+		++iterTime;
+		++iterTick;
+	}
+
+	m_ChangeTickTimes.erase(iterTime);
+	m_TickPerSeconds.erase(iterTick);
+
+	Reset();
+}
+
+void CAnimation::Delete_Event(_int iIndex)
+{
+	auto iter = m_vecAnimEvent.begin();
+
+	for (_int i = 0; i < iIndex; ++i)
+		++iter;
+
+	m_vecAnimEvent.erase(iter);
+}
+
+void CAnimation::Change_Duration(_float fDuration)
+{
+	for (auto& pChannel : m_Channels)
+		pChannel->ChangeKeyFrameTime(fDuration / m_fDuration);
+
+	for (_int i = 0; i < m_TickPerSeconds.size(); ++i)
+	{
+		m_TickPerSeconds[i] *= (fDuration / m_fDuration);
+		m_ChangeTickTimes[i] *= (fDuration / m_fDuration);
+	}
+
+	for (_int i = 0; i < m_vecAnimEvent.size(); ++i)
+	{
+		m_vecAnimEvent[i].fStartTime *= (fDuration / m_fDuration);
+		m_vecAnimEvent[i].fEndTime *= (fDuration / m_fDuration);
+	}
+
+	m_fDuration = fDuration;
+}
+
+void CAnimation::Reset_NonLoop(void)
+{
+	for (auto& pChannel : m_Channels)
+		pChannel->Reset();
+
+	m_isFinished = false;
+}
+
 void CAnimation::Reset(void)
 {
 	for (auto& pChannel : m_Channels)

@@ -119,6 +119,9 @@ public:
 
 	void Set_Play(_bool bPlay) { m_bIsPlaying = bPlay; }
 
+	/* For Animation*/
+	void Set_Animation();
+
 public:
 	void Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype = false);
 	void Add_PrototypeTag(_tchar* TempTag) { m_TempLayerTags.push_back(TempTag); }
@@ -239,6 +242,41 @@ private:
 	_uint m_iSelectedColorCurve = 0, m_iSelectedVelocityCurve = 0, m_iSelectedSizeCurve = 0, m_iSelectedScaleCurve = 0, m_iSelectedAlphaCurve = 0, 
 		m_iSelectedTurnVelocityCurve = 0, m_iSelectedNoisePowerCurve = 0, m_iSelectedDistortPowerCurve = 0;
 	_float m_fEditorAlpha = 0.9f;
+
+/* For. Animation */
+public:
+	_bool m_isLoad = false;
+	_bool m_isSaveComplete = false;
+
+	vector<char*> m_AnimObj;
+	vector<char*> m_WeaponObj;
+
+	_int m_iLoadModel = -1;
+	_int m_iPreModel = -1;
+
+	_int m_iBoneChoice = -1;
+	_int m_iAnimationChoice = -1;
+
+	_float m_fAnimationDuration = 0.f;
+	_float m_fAnimationTime = 0.f;
+
+	_bool m_isAnimationPlay = false;
+	_bool m_isAnimationEdit = false;
+
+	_int m_iTickChoice = -1;
+	_int m_iTimeChoice = -1;
+
+	_float m_fAnimationTickTime = 0.f;
+	_float m_fAnimationTick = 0.f;
+
+	_bool m_isWeaponWindow = false;
+	_int m_iWeaponChoice = -1;
+
+	_bool m_isEventWindow = false;
+	_float m_fEventStartTime = 0.f;
+	_float m_fEventEndTime = 0.f;
+	_int m_iEventType = 0;
+	_int m_iEventChoice = -1;
 
 public:
 	virtual void Free() override;

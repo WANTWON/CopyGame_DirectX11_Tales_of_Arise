@@ -24,7 +24,7 @@ private:
 	_bool		m_bTargetSetting = false;
 	_bool		m_bAddGoDistance = false;
 	STATE_ID	m_ePreState;
-
+	CCollider*  m_pAtkColliderCom = false;
 private:
 	_matrix m_StartMatrix;
 };

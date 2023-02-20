@@ -7,6 +7,8 @@
 #include "BaseObj.h"
 #include <windows.h>
 #include <string.h>
+#include "Anim.h"
+#include "Animation.h"
 
 //This is needed for virtually everything in BrowseFolder.
 #include <shlobj.h> 
@@ -303,6 +305,11 @@ void CImgui_Manager::Tick_Imgui()
 		if (ImGui::BeginTabItem("Effect Tool"))
 		{
 			Set_Effect();
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Animation Tool"))
+		{
+			Set_Animation();
 			ImGui::EndTabItem();
 		}
 		ImGui::EndTabBar();
@@ -5771,6 +5778,236 @@ void CImgui_Manager::Show_ParticleCustomization()
 		if (pParticleSystem)
 			pParticleSystem->Set_ParticleDesc(m_tParticleDesc);
 	}
+}
+
+void CImgui_Manager::Set_Animation()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	if (ImGui::Button("Load Model"))
+		m_isLoad = true;
+	ImGui::SameLine();
+	if (ImGui::Button("Save Animation"))
+	{
+		_tchar pAnimationDataFilePath[MAX_PATH] = TEXT("../../../Bin/Bin_Data/Anim/");
+
+		/*CPlayer::PLAYERDESC Pivot;
+		memcpy(&Pivot, &((CPlayer*)(pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Player")).front()))->Get_Pivot(), sizeof(CPlayer::PLAYERDESC));
+
+		switch (Pivot.eModel)
+		{
+		case MODEL_ALPHEN:
+		lstrcat(pAnimationDataFilePath, TEXT("Alphen/Alphen_Animation_Add.dat"));
+		break;
+		case MODEL_ICEWOLF:
+		lstrcat(pAnimationDataFilePath, TEXT("Ice_Wolf/Ice_Wolf_Animation_Add.dat"));
+		break;
+		case MODEL_SION:
+		lstrcat(pAnimationDataFilePath, TEXT("Sion/Sion_Animation_Add.dat"));
+		break;
+
+		case MODEL_BERSERKER:
+		lstrcat(pAnimationDataFilePath, TEXT("Berserker/Berserker_Animation_Add.dat"));
+		break;
+
+		case MODEL_HAWK:
+		lstrcat(pAnimationDataFilePath, TEXT("Hawk/Hawk_Animation_Add.dat"));
+		break;
+
+		case MODEL_ASTRAL_DOUBT:
+		lstrcat(pAnimationDataFilePath, TEXT("Astral_Doubt/Astral_Doubt_Animation_Add.dat"));
+		break;
+
+		case MODEL_RINWELL:
+		lstrcat(pAnimationDataFilePath, TEXT("Rinwell/Rinwell_Animation_Add.dat"));
+		break;
+
+		case MODEL_LAW:
+		lstrcat(pAnimationDataFilePath, TEXT("Law/Law_Animation_Add.dat"));
+		break;
+		}*/
+
+		//CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
+		/*if (nullptr != pPlayerModel)
+		{
+		_ulong dwByte = 0;
+		HANDLE hFile = CreateFile(pAnimationDataFilePath, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+		if (0 == hFile)
+		{
+		ERR_MSG(TEXT("Failed to Save : Animation_Add"));
+		return;
+		}*/
+
+		/*for (auto& Animation : pPlayerModel->Get_Animations())
+		{
+		vector<_float> TickPerSeconds = Animation->Get_TickPerSeconds();
+		vector<_float> ChangeTimes = Animation->Get_ChangeTickTimes();
+		vector<ANIMEVENT> AnimEvent = Animation->Get_AnimEvents();
+
+		_int TickPerSecondsSize = TickPerSeconds.size();
+		_int ChangeTimesSize = ChangeTimes.size();
+		_int EventsSize = AnimEvent.size();
+
+		_float fDuration = Animation->Get_Duration();
+		WriteFile(hFile, &fDuration, sizeof(_float), &dwByte, nullptr);
+
+		WriteFile(hFile, &TickPerSecondsSize, sizeof(_int), &dwByte, nullptr);
+		for (_int i = 0; i < TickPerSecondsSize; ++i)
+		WriteFile(hFile, &TickPerSeconds[i], sizeof(_float), &dwByte, nullptr);
+
+		WriteFile(hFile, &ChangeTimesSize, sizeof(_int), &dwByte, nullptr);
+		for (_int i = 0; i < ChangeTimesSize; ++i)
+		WriteFile(hFile, &ChangeTimes[i], sizeof(_float), &dwByte, nullptr);
+
+		WriteFile(hFile, &EventsSize, sizeof(_int), &dwByte, nullptr);
+		for (_int i = 0; i < EventsSize; ++i)
+		WriteFile(hFile, &AnimEvent[i], sizeof(ANIMEVENT), &dwByte, nullptr);
+		}*/
+
+		/*CloseHandle(hFile);
+		}*/
+
+		//m_isSaveComplete = true;
+	}
+
+	if (m_isLoad)
+	{
+		ImGui::Begin("Load", &m_isLoad);
+
+		char** pItems = new char*[m_AnimObj.size()];
+
+		for (_int i = 0; i < m_AnimObj.size(); ++i)
+			pItems[i] = m_AnimObj[i];
+
+		if (ImGui::ListBox("Load Model", &m_iLoadModel, pItems, _int(m_AnimObj.size())))
+		{
+			list<CGameObject*>* pPlayerList = pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+
+			if ((nullptr != pPlayerList) && !pPlayerList->empty())
+				((CAnim*)(pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front()))->Set_Dead(true);
+
+			CAnim::PLAYERDESC Pivot;
+			ZeroMemory(&Pivot, sizeof(CAnim::PLAYERDESC));
+
+			Pivot.vPosition = _float3(0.f, 0.f, 0.f);
+			Pivot.vScale = _float3(1.f, 1.f, 1.f);
+			Pivot.vRotation = _float3(0.f, 0.f, 0.f);
+
+			Pivot.eModel = (MODEL)m_iLoadModel;
+
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Anim"), LEVEL_GAMEPLAY, TEXT("Layer_Player"), &Pivot)))
+				return;
+
+			if (m_iPreModel != m_iLoadModel)
+			{
+				m_iBoneChoice = -1;
+				m_iAnimationChoice = -1;
+			}
+
+			m_iPreModel = m_iLoadModel;
+		}
+
+		Safe_Delete_Array(pItems);
+
+		if (ImGui::Button("Close"))
+		{
+			m_isLoad = false;
+			m_iLoadModel = -1;
+		}
+
+		ImGui::End();
+	}
+
+	CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
+	if (nullptr != pPlayerModel)
+	{
+		vector<CHierarchyNode*> ModelBones = pPlayerModel->Get_Bones();
+		vector<CAnimation*> ModelAnimations = pPlayerModel->Get_Animations();
+
+		char** pBoneItems = new char*[ModelBones.size()];
+		char** pAnimItems = new char*[ModelAnimations.size()];
+
+		for (_int i = 0; i < ModelBones.size(); ++i)
+		{
+			pBoneItems[i] = new char[MAX_PATH];
+			strcpy_s(pBoneItems[i], sizeof(char) * MAX_PATH, ModelBones[i]->Get_Name());
+		}
+
+		ImGui::CollapsingHeader("Bone");
+
+		if (ImGui::ListBox("", &m_iBoneChoice, pBoneItems, _int(ModelBones.size())))
+		{
+			_matrix BoneTransformation = ModelBones[m_iBoneChoice]->Get_TransformationMatrix();
+
+			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Change_Bone(ModelBones[m_iBoneChoice]->Get_Name());
+		}
+
+		for (_int i = 0; i < ModelBones.size(); ++i)
+			Safe_Delete_Array(pBoneItems[i]);
+
+		Safe_Delete_Array(pBoneItems);
+
+		if (ImGui::Button("Weapon"))
+		{
+
+		}
+
+		ImGui::CollapsingHeader("Animation");
+
+		for (_int i = 0; i < ModelAnimations.size(); ++i)
+		{
+			pAnimItems[i] = new char[MAX_PATH];
+			strcpy_s(pAnimItems[i], sizeof(char) * MAX_PATH, ModelAnimations[i]->Get_Name());
+		}
+		ImGui::SetNextItemWidth(600.f);
+		if (ImGui::ListBox("Animation", &m_iAnimationChoice, pAnimItems, _int(ModelAnimations.size())))
+		{
+			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Set_AnimIndex(m_iAnimationChoice);
+
+			m_fAnimationDuration = ModelAnimations[m_iAnimationChoice]->Get_Duration();
+
+			m_iEventChoice = -1;
+		}
+
+		for (_int i = 0; i < ModelAnimations.size(); ++i)
+			Safe_Delete_Array(pAnimItems[i]);
+
+		Safe_Delete_Array(pAnimItems);
+
+		if (ImGui::DragFloat("Duration", &m_fAnimationDuration, 0.005f, 0.001f, 200.f))
+			ModelAnimations[m_iAnimationChoice]->Change_Duration(m_fAnimationDuration);
+		ImGui::SameLine();
+		ImGui::Checkbox("Animation Play", &m_isAnimationPlay);
+
+		if (m_isAnimationPlay)
+		{
+			if (-1 != m_iAnimationChoice)
+			{
+				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StartAnim();
+				m_fAnimationTime = ModelAnimations[m_iAnimationChoice]->Get_CurrentTime();
+				if (m_fAnimationTime > m_fAnimationDuration)
+					m_fAnimationTime = 0.f;
+			}
+		}
+		else
+			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
+
+		if (ImGui::SliderFloat("Playing", &m_fAnimationTime, 0.f, m_fAnimationDuration))
+		{
+			ModelAnimations[m_iAnimationChoice]->Reset();
+			ModelAnimations[m_iAnimationChoice]->Set_CurrentTime(m_fAnimationTime);
+			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->PlayAnimation();
+		}
+
+		if (ImGui::Button("Animation Edit"))
+			m_isAnimationEdit = true;
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Animation Event"))
+			m_isEventWindow = true;
+	}
+
 }
 
 void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype)

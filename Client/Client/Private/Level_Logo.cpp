@@ -35,6 +35,9 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_SnowDecoObject(TEXT("Layer_Deco"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_BossMapObject(TEXT("Layer_Deco"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Npc(TEXT("Layer_Npc"))))
 		return E_FAIL;
 
@@ -186,9 +189,28 @@ HRESULT CLevel_Logo::Ready_InstancingForPooling(const _tchar* pLayerTag)
 		return E_FAIL;
 #pragma endregion SnowField
 
+#pragma region BossZone
+	strcpy(stModelDesc.pModeltag, "Prop_Light02_Lod1");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BOSS, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+	strcpy(stModelDesc.pModeltag, "Bld_Wall01");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BOSS, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+	strcpy(stModelDesc.pModeltag, "Bld_WallB");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BOSS, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+	strcpy(stModelDesc.pModeltag, "Bld_Pillar01_Lod1");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BOSS, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+	strcpy(stModelDesc.pModeltag, "Bld_Wall01_B02_Lod1");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BOSS, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+#pragma endregion BossZone
+
 
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_Instancing"));
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -449,6 +471,43 @@ HRESULT CLevel_Logo::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 
 	RELEASE_INSTANCE(CGameInstance);
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Logo::Ready_Layer_BossMapObject(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC  ModelDesc;
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/BossMap/Floor.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_BOSS, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+	}
+
+	CloseHandle(hFile);
+
+	RELEASE_INSTANCE(CGameInstance);
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Deco"));
+
+	ModelDesc;
+	strcpy(ModelDesc.pModeltag, "Astral_Doubt");
+	ModelDesc.vPosition = _float3(50, 0.f, 50.f);
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_Boss"), &ModelDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
 
 	return S_OK;
 }

@@ -177,6 +177,34 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		CBattleManager::Get_Instance()->Set_BattleMode(true, RINWELL, true);
 	}
 
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_0))
+	{
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		if (pPlayer)
+			pPlayer->Get_Renderer()->Set_ZoomBlur(false);
+
+		CPlayerManager::Get_Instance()->Save_LastPosition();
+		m_pCollision_Manager->Clear_AllCollisionGroup();
+
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Camera"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		LEVEL eNextLevel = LEVEL_BOSS;
+		pGameInstance->Set_DestinationLevel(eNextLevel);
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
+			return;
+
+		RELEASE_INSTANCE(CGameInstance);
+
+		m_fBlurTimer = 0.f;
+	}
+
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
@@ -921,41 +949,6 @@ HRESULT CLevel_SnowField::Ready_Layer_Trigger(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-
-HRESULT CLevel_SnowField::Ready_Layer_Test(const _tchar * pLayerTag)
-{
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	HANDLE hFile = 0;
-	_ulong dwByte = 0;
-	NONANIMDESC  ModelDesc;
-	_uint iNum = 0;
-
-	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Boss.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	/* 타일의 개수 받아오기 */
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
-		_tchar pModeltag[MAX_PATH];
-		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
-
-		if (!wcscmp(pModeltag, TEXT("Astral_Doubt")))
-		{
-			////여기서 몬스터 생성하세요
-			//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
-			//	return E_FAIL;
-		}
-	}
-
-	CloseHandle(hFile);
-
-	RELEASE_INSTANCE(CGameInstance);
-	return S_OK;
-}
 
 CLevel_SnowField * CLevel_SnowField::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

@@ -240,6 +240,7 @@
     <ClInclude Include="..\Public\LawAirRSkillState.h" />
     <ClInclude Include="..\Public\LawAttackState.h" />
     <ClInclude Include="..\Public\LawSkillState.h" />
+    <ClInclude Include="..\Public\Level_BossZone.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\PlayerOverlimit.h" />
@@ -478,6 +479,7 @@
     <ClCompile Include="..\Private\LawAirRSkillState.cpp" />
     <ClCompile Include="..\Private\LawAttackState.cpp" />
     <ClCompile Include="..\Private\LawSkillState.cpp" />
+    <ClCompile Include="..\Private\Level_BossZone.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\PlayerOverlimit.cpp" />

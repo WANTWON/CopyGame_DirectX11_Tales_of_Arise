@@ -63,7 +63,7 @@ HRESULT CBerserker::Initialize(void * pArg)
 		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
 	}
 
-	m_tStats.m_fMaxHp = 30000;
+	m_tStats.m_fMaxHp = 10000;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 	m_eMonsterID = BERSERKER;
@@ -307,6 +307,8 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	case DAMAGE_SMALL_L:
 	case DAMAGE_SMALL_R:
 	case SYMBOL_TURN_LEFT:
+	case DOWN_F:
+	case ARISE_F:
 		return false;
 	}
 
@@ -315,62 +317,86 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 
 _int CBerserker::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-	if (fDamage <= 0 || m_bDead || m_bTakeDamage)
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_tStats.m_fCurrentHp <= 0)
 		return 0;
 	
 	m_iBeDamaged_Cnt++;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
-			if (iHp <= 0)
+	if (m_bOnGoingDown == false)
+	{
+		if (iHp <= 0)
+		{
+			m_pModelCom->Set_TimeReset();
+			CBerserkerState* pState = new CBattle_DeadState(this);
+			m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+			iHp = 0;
+			return 0;
+		}
+		else
+		{
+			++m_iBeDamaged_Cnt;
+			if (m_bOnGoingHowLing == false)
 			{
-				m_pModelCom->Set_TimeReset(); 
-				CBerserkerState* pState = new CBattle_DeadState(this);
-				m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-
-				return 0;
-			}
-			else
-			{
-				++m_iBeDamaged_Cnt;
-
-				if (m_bOnGoingHowLing == false)
+				if (m_bDownState == false)
 				{
-					if (iHp <= 15000)
+					if (iHp <= 8000)
 					{
 						_bool pAngry = true;
-
-						m_pModelCom->Set_TimeReset();
-						CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, pAngry, m_bBerserkerMode);
-						m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-
-
-						if (m_iBeDamaged_Cnt >= 3)
+						
+						if (m_bBedamageAnim_Delay == false)
 						{
 							m_pModelCom->Set_TimeReset();
-							CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, true, m_bBerserkerMode, true);
+							CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, true, m_bBerserkerMode, false, CBerserkerState::STATE_ID::STATE_TAKE_DAMAGE);
 							m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-							m_iBeDamaged_Cnt = 0;
+
+
+							if (m_iBeDamaged_Cnt >= 20)
+							{
+								m_pModelCom->Set_TimeReset();
+								CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, true, m_bBerserkerMode, true, CBerserkerState::STATE_ID::STATE_TAKE_DAMAGE);
+								m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+								m_iBeDamaged_Cnt = 0;
+							}
 						}
+
+						else
+							return iHp;
 					}
-					
+
 					else
 					{
-						m_pModelCom->Set_TimeReset();
-						CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, false, m_bBerserkerMode);
-						m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+						if (m_bBedamageAnim_Delay == false)
+						{
+							m_pModelCom->Set_TimeReset();
+							CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, false, m_bBerserkerMode, false, CBerserkerState::STATE_ID::STATE_TAKE_DAMAGE);
+							m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+						}
+						else
+							return iHp;
 					}
-
-
 
 				}
 
 				else
-					return iHp;
-			
+				{
+					CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, false, false, false, CBerserkerState::STATE_ID::STATE_DOWN);
+					m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+				}
 			}
 
-			return iHp;
+			else
+				return iHp;
+		}
+	}
+	
+	else
+	{
+		return iHp;
+	}
+
+		return iHp;
 }
 
 HRESULT CBerserker::SetUp_ShaderID()

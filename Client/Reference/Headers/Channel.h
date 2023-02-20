@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-class CChannel final : public CBase
+class ENGINE_DLL CChannel final : public CBase
 {
 private:
 	CChannel();
@@ -27,9 +27,11 @@ public: /*Get*/
 	KEYFRAME	Get_LinearKeyFrame(void) { return m_KeyFrame_Linear; }
 	vector<KEYFRAME> Get_KeyFrames(void) { return m_KeyFrames; }
 	class CHierarchyNode* Get_BoneNode(void) { return m_pBoneNode; }
+	const char* Get_Name(void) const { return m_szName; }
 
 public: /*Set*/
 	void Set_KeyFrame(_float fDurationRatio);
+	void ChangeKeyFrameTime(_float fDuration);
 
 private:
 	char					m_szName[MAX_PATH] = "";

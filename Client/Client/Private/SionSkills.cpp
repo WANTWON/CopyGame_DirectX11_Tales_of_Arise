@@ -298,7 +298,7 @@ void CSionSkills::Collision_Check()
 			else
 				vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
 
-			pCollisionTarget->Get_Transform()->Go_PosDir(0.1f, vDirection);
+			pCollisionTarget->Get_Transform()->Go_PosDir(0.05f, vDirection, dynamic_cast<CMonster*>(pCollisionTarget)->Get_Navigation());
 		}
 		break;
 	}

@@ -323,6 +323,6 @@ protected:
 	CBaseObj*	m_pOriginTarget = nullptr;
 	CBaseObj*	m_pCurTarget = nullptr;
 	_vector		m_vCurTargetPos;
-	CCollider*  m_pAtkColliderCom = false;
+
 };
 END
