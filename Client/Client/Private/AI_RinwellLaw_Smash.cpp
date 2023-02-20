@@ -124,6 +124,7 @@ CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 
 void CAI_RinwellLaw_Smash::Enter()
 {
+	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::RINWELL:
@@ -156,6 +157,7 @@ void CAI_RinwellLaw_Smash::Enter()
 
 void CAI_RinwellLaw_Smash::Exit()
 {
+	m_pOwner->Set_StrikeAttack(false);
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)
