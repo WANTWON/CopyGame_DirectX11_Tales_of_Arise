@@ -81,7 +81,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_BOSS, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
-					int a = 0;
 				}
 				else
 					m_pAtkColliderCom->Update(matWorld);

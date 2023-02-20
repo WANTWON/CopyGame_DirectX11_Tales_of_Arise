@@ -507,7 +507,7 @@ HRESULT CLevel_Logo::Ready_Layer_BossMapObject(const _tchar * pLayerTag)
 	ModelDesc.vPosition = _float3(50, 0.f, 50.f);
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_Boss"), &ModelDesc)))
 		return E_FAIL;
-	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Boss"));
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
 
 	return S_OK;
 }

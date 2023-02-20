@@ -311,7 +311,7 @@ HRESULT CLevel_BossZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CBattleManager*			pBattleManager = GET_INSTANCE(CBattleManager);
 	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
 
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Boss"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
 	CBaseObj* pBossMonster = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Boss")));
 	pBattleManager->Add_BattleMonster(pBossMonster);
 	pBattleManager->Set_BossMonster(pBossMonster);

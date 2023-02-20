@@ -89,7 +89,7 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 	m_bDone_HitAnimState = false;
 
 	CBattleManager::Get_Instance()->Out_Monster(this);
-
+	
 	return S_OK;
 }
 
