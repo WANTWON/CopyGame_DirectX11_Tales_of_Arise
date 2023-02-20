@@ -41,7 +41,7 @@ int CUI_font_Damage_number::Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
-	m_fDietimer += fTimeDelta;
+	m_fDietimer += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));;
 	if (m_fDietimer > 5.f)
 		m_bfadeout = true;
 

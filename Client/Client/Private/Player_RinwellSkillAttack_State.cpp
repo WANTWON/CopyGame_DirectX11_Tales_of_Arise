@@ -71,12 +71,6 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 			if (iter != nullptr && iter->Get_PreDead())
 				iter = nullptr;
 
-			if (iter != nullptr)
-			{
-				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
-				if (pParticleSystem != nullptr)
-					pParticleSystem->Set_Stop(true);
-			}
 		}
 	}
 

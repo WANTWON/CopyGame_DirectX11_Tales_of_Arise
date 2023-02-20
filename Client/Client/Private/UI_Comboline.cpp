@@ -41,7 +41,7 @@ int CUI_Comboline::Tick(_float fTimeDelta)
 {
 
 	//if(CGameInstance::Get_Instance()->Key_Up(DIK_3))
-	m_fDietimer += fTimeDelta;
+	m_fDietimer += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));;
 
 	if (m_fDietimer > 5.f)
 		m_bfadeout = true;

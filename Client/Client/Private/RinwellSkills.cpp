@@ -79,9 +79,8 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		//m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("DivineFloor.dat"), mWorldMatrix);
 
 		memcpy(&OriginLightDesc, CGameInstance::Get_Instance()->Get_LightDesc(0), sizeof(LIGHTDESC));
-	//	memcpy(&OriginLightDesc2, CGameInstance::Get_Instance()->Get_LightDesc(10), sizeof(LIGHTDESC));
 		memcpy(&DevineLightDesc, &OriginLightDesc, sizeof(LIGHTDESC));
-		memcpy(&DevineLightDesc2, &OriginLightDesc2, sizeof(LIGHTDESC));
+
 		break;
 	case DIVINE_SABER_BULLET:
 	{
@@ -122,7 +121,6 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
 		m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("HolyLanceBullet.dat"), mWorldMatrix);
 		break;
 	case HOLY_RANCE_LASTBULLET:
@@ -196,42 +194,44 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
+	_float fTime = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+
 	switch (m_BulletDesc.eBulletType)
 	{
 	case PHOTON_FLASH:
-		Tick_PhotonFlash(fTimeDelta);
+		Tick_PhotonFlash(fTime);
 		break;
 	case METEORDEAD:
 	case BANGEONDEAD:
 	case GALE_FORCE:
-		Tick_GaleForce(fTimeDelta);
+		Tick_GaleForce(fTime);
 		break;
 	case THUNDER_FIELD:
-		Tick_ThunderField(fTimeDelta);
+		Tick_ThunderField(fTime);
 		break;
 	case METEOR:
-		Tick_Meteor(fTimeDelta);
+		Tick_Meteor(fTime);
 		break;
 	case DIVINE_SABER:
-		Tick_DivineSaber(fTimeDelta);
+		Tick_DivineSaber(fTime);
 		break;
 	case DIVINE_SABER_BULLET:
-		Tick_DivineSaberBullet(fTimeDelta);
+		Tick_DivineSaberBullet(fTime);
 		break;
 
 	case HOlY_RANCE:
-		Tick_HolyRance(fTimeDelta);
+		Tick_HolyRance(fTime);
 		break;
 	case HOLY_RANCE_FISRTBULLET:
 	case HOLY_RANCE_LASTBULLET:
-		Tick_HolyRanceBullet2(fTimeDelta);
+		Tick_HolyRanceBullet2(fTime);
 		break;
 	case HOLY_RANCE_BULLET:
-		Tick_HolyRanceBullet(fTimeDelta);
+		Tick_HolyRanceBullet(fTime);
 		break;
 
 	case BANGJEON:
-		Tick_BangJeon(fTimeDelta);
+		Tick_BangJeon(fTime);
 		break;
 
 	}
@@ -279,7 +279,7 @@ void CRinwellSkills::Collision_Check()
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
 		}
 		else
 		{
@@ -316,7 +316,7 @@ void CRinwellSkills::Collision_Check()
 	case DIVINE_SABER_BULLET:
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
 		{
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
 			m_bDead = true;
 		}
 		break;
@@ -352,6 +352,9 @@ void CRinwellSkills::Dead_Effect()
 		BulletDesc.fDeadTime = 1.f;
 		BulletDesc.vInitPositon = Get_TransformState(CTransform::STATE_TRANSLATION);
 		BulletDesc.pOwner = m_BulletDesc.pOwner;
+
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
@@ -599,12 +602,8 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 		DevineLightDesc.vDiffuse.x = OriginLightDesc.vDiffuse.x + LightOffset.x;
 		DevineLightDesc.vDiffuse.y = OriginLightDesc.vDiffuse.y + LightOffset.y;
 		DevineLightDesc.vDiffuse.z = OriginLightDesc.vDiffuse.z + LightOffset.z;
-		DevineLightDesc2.vDiffuse.x = OriginLightDesc2.vDiffuse.x + LightOffset.x*2.f;
-		DevineLightDesc2.vDiffuse.y = OriginLightDesc2.vDiffuse.y + LightOffset.y*2.f;
-		DevineLightDesc2.vDiffuse.z = OriginLightDesc2.vDiffuse.z + LightOffset.z*2.f;
-
+		
 		CGameInstance::Get_Instance()->Set_LightDesc(0, &DevineLightDesc);
-		//CGameInstance::Get_Instance()->Set_LightDesc(10, &DevineLightDesc2);
 	}
 
 
@@ -649,12 +648,8 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 		DevineLightDesc.vDiffuse.x = OriginLightDesc.vDiffuse.x + LightOffset.x;
 		DevineLightDesc.vDiffuse.y = OriginLightDesc.vDiffuse.y + LightOffset.y;
 		DevineLightDesc.vDiffuse.z = OriginLightDesc.vDiffuse.z + LightOffset.z;
-		DevineLightDesc2.vDiffuse.x = OriginLightDesc2.vDiffuse.x + LightOffset.x*2.f;
-		DevineLightDesc2.vDiffuse.y = OriginLightDesc2.vDiffuse.y + LightOffset.y*2.f;
-		DevineLightDesc2.vDiffuse.z = OriginLightDesc2.vDiffuse.z + LightOffset.z*2.f;
 
 		CGameInstance::Get_Instance()->Set_LightDesc(0, &DevineLightDesc);
-		//CGameInstance::Get_Instance()->Set_LightDesc(10, &DevineLightDesc2);
 	}
 
 	if (bulletcount <= 0)

@@ -127,7 +127,7 @@ HRESULT CPlayerCreater::Cloning_ForPlayer2()
 		return E_FAIL;
 
 
-	/*if (CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
+	if (CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
 	{
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
@@ -139,7 +139,7 @@ HRESULT CPlayerCreater::Cloning_ForPlayer2()
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 		pPlayer->Change_Level(LEVEL_SNOWFIELD);
 
-	}*/
+	}
 	m_isFinished = true;
 
 	RELEASE_INSTANCE(CGameInstance);

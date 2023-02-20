@@ -62,6 +62,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_60"))))
 		return FALSE;
+	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Object"))))
+		return FALSE;
+
 
 	_float			fTimeAcc = 0.f;
 
@@ -88,8 +91,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			fTimeAcc = 0.f;
 
 			pGameInstance->Update_TimeDelta(TEXT("Timer_60"));
+			pGameInstance->Update_TimeDelta(TEXT("Timer_Object"));
 
-			pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
+			pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_Object")));
 			pMainApp->Render();
 		}
 

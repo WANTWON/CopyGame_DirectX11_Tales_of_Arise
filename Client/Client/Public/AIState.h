@@ -109,6 +109,8 @@ public:
 			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 		}
+
+		return true;
 	}
 	
 

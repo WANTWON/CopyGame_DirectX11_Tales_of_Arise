@@ -167,8 +167,8 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
-	/*if (FAILED(Loading_ForMaptoolSnowFieldModel()))
-		return E_FAIL;*/
+	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+	//	return E_FAIL;
 
 	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
 	//	return E_FAIL;
@@ -1044,10 +1044,12 @@ HRESULT CLoader::Loading_ForActor()
 		return E_FAIL;
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen"));
 
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Rinwell/Rinwell.dat"))))
 		return E_FAIL;
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell"));
+
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NpcFemaleYoung"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Npc/NpcFemaleYoung.dat"))))
@@ -1409,7 +1411,9 @@ HRESULT CLoader::Loading_ForEffect()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CrystalPts_rt_05"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Crystal/CrystalPts_rt_05.dat"))))
 		return E_FAIL;
-
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FreezeLance"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Ice/FreezeLance.dat"))))
+		return E_FAIL;
 	
 	RELEASE_INSTANCE(CGameInstance);
 

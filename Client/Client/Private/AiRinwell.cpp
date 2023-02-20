@@ -348,7 +348,7 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 
 _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
-	if (fDamage <= 0 || m_bDead || m_bTakeDamage)
+	if (fDamage <= 0 || m_bDead || m_bTakeDamage )
 		return 0;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
@@ -359,7 +359,7 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		if (!m_bLastStrikeAttack)
 		{
 			m_tStats.m_fLockonSmashGuage = 4.f;
-		
+			m_tStats.m_fCurrentHp = 0;
 			m_bTakeDamage = true;
 			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 			m_pState = m_pState->ChangeState(m_pState, pState);

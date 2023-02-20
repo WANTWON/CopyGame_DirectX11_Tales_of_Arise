@@ -27,7 +27,10 @@ void CPlayerManager::Set_ActivePlayer(CPlayer * pPlayer)
 		m_pActivePlayer->Set_State(CTransform::STATE_TRANSLATION, vPosition);	
 	}
 	else
+	{
 		m_pActivePlayer = pPlayer;
+	}
+	
 
 	m_pActivePlayer->Change_Navigation(iLevel);
 	m_pActivePlayer->Compute_CurrentIndex(iLevel);

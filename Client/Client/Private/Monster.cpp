@@ -70,7 +70,7 @@ int CMonster::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	if (m_bTakeDamage)
-		m_fTime_TakeDamageDeltaAcc += fTimeDelta;
+		m_fTime_TakeDamageDeltaAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 
 	if (0.2f <= m_fTime_TakeDamageDeltaAcc)
 	{
@@ -78,7 +78,7 @@ int CMonster::Tick(_float fTimeDelta)
 		m_fTime_TakeDamageDeltaAcc = 0.f;
 	}
 
-	m_fTimeDeltaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 
 	return OBJ_NOEVENT;
 }
@@ -393,7 +393,7 @@ void CMonster::Make_DeadEffect(CBaseObj * Target)
 }
 
 
-_int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
+_int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnChange)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
@@ -454,7 +454,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 			return E_FAIL;
 	}
 
-	m_tStats.m_fLockonSmashGuage += 0.2f;
+	m_tStats.m_fLockonSmashGuage += 0.01f;
 	
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
@@ -477,7 +477,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 
 	
 
-	if(DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+	if(DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer() && bLockOnChange)
 		CBattleManager::Get_Instance()->Set_LackonMonster(this);
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
@@ -496,6 +496,8 @@ void CMonster::Collision_Object(_float fTimeDelta)
 	CBaseObj* pCollisionMonster = nullptr;
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionMonster))
 	{
+		if (pCollisionMonster == this)
+			return;
 		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 		if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))

@@ -114,7 +114,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		m_fTimeOffset += 0.1f;
 		if (m_fTimeOffset >= 1.f)
 			m_fTimeOffset = 1.f;
-		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_60"), m_fTimeOffset);
+		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), m_fTimeOffset);
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(false);
 		RELEASE_INSTANCE(CGameInstance);
@@ -132,7 +132,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		m_fTimeOffset -= 0.1f;
 		if (m_fTimeOffset <= 0.1f)
 			m_fTimeOffset = 0.1f;		
-		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_60"), m_fTimeOffset);
+		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), m_fTimeOffset);
 		RELEASE_INSTANCE(CGameInstance);
 		
 	}

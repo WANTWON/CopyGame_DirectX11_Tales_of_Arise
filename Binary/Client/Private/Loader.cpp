@@ -467,10 +467,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Floor_A_200_01.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor_A_200_01/", PivotMatrix))))
 		//	return E_FAIL;
 
-		/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Wall03_Lod1"),
-			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Wall03_Lod1.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall03_Lod1/", PivotMatrix))))
-			return E_FAIL;*/
+		PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FreezeLance"),
+			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/FreezeLance.fbx", "../../../Bin/Bin_Data/NonAnim/Effect/", PivotMatrix))))
+			return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));
 

@@ -49,7 +49,7 @@ void CBullet::Late_Tick(_float fTimeDelta)
 		__super::Late_Tick(fTimeDelta);
 	}
 
-	m_fTime += fTimeDelta;
+	m_fTime += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 	if (m_fTime >= m_BulletDesc.fDeadTime)
 		m_bDeadEffect = true;
 

@@ -17,12 +17,12 @@ CRinwellState * CMoveState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
-	/*switch (m_eStateType)
+	switch (m_eStateType)
 	{
 	case Client::STATETYPE_START:
 		Find_ActiveTarget();
 		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta*0.5f);
 		break;
 	case Client::STATETYPE_MAIN:
 		m_fTarget_Distance = Find_Target(4);
@@ -41,7 +41,7 @@ CRinwellState * CMoveState::Tick(_float fTimeDelta)
 
 		}
 		break;
-	}*/
+	}
 
 	return nullptr;
 }
@@ -61,10 +61,10 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 			m_iChangeCount++;
 			m_ChangedDir = true;
 
-			/*if (m_iChangeCount >= 3)
+			if (m_iChangeCount >= 3)
 				return new CMoveState(m_pOwner, STATETYPE_END, m_iChangeCount);
 			else
-				return new CMoveState(m_pOwner, STATETYPE_MAIN, m_iChangeCount);*/
+				return new CMoveState(m_pOwner, STATETYPE_MAIN, m_iChangeCount);
 		}
 		break;
 	}
@@ -73,7 +73,7 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 		if (m_bIsAnimationFinished)
 		{
 			_uint iSkillIndex = m_pOwner->Get_SkillIndex();
-			/*switch (iSkillIndex)
+			switch (iSkillIndex)
 			{
 			case PHOTONFLASH:
 				iSkillIndex++;
@@ -85,7 +85,7 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 					iSkillIndex = PHOTONFLASH;
 				m_pOwner->Set_SkillIndex(iSkillIndex);
 				return new CSkillState(m_pOwner, GALEFORCE);
-			}*/
+			}
 		}		
 		break;
 	}
@@ -94,6 +94,9 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 	}
 
 	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
+
+	if (m_pOwner->Get_Stats().m_fCurrentHp <= 0)
+		m_pOwner->Take_Damage(10, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 
 	return nullptr;
 }
