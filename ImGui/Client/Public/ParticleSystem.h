@@ -42,7 +42,6 @@ private:
 	void EmitParticles(_float fTimeDelta);
 	void UpdateParticles(_float fTimeDelta);
 	void SortParticles();
-	void SortGlow();
 	
 	void ColorLerp(_uint iParticleIndex);
 	void VelocityLerp(_uint iParticleIndex);
