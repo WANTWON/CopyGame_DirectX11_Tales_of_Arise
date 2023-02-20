@@ -36,6 +36,9 @@ public:
 		STATE_POUNCING,
 		STATE_FIREBALL,
 		STATE_HIT,
+		STATE_TAKE_DAMAGE,
+		STATE_DOWN,
+		STATE_ARISE,
 		STATE_DEAD,
 		STATE_END
 	};
@@ -258,8 +261,8 @@ protected:
 	CBaseObj*	m_pCurTarget = nullptr;
 	_vector		m_vCurTargetPos;
 
-	CCollider*  m_pAtkColliderCom = false;
-	CCollider*	m_p2th_AtkColliderCom = false;
+	//CCollider*  m_pAtkColliderCom = false;
+	//CCollider*	m_p2th_AtkColliderCom = false;
 
 	CBerserker* m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */

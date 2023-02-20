@@ -35,7 +35,7 @@ private:
 	_bool		m_bTargetSetting = false;
 	_bool		m_bPreDownState = false;
 	CBaseObj*	m_pCurTarget = nullptr;
-	
+	CCollider*  m_pAtkColliderCom = false;
 private:
 	_matrix m_StartMatrix;
 };

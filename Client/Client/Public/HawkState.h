@@ -161,7 +161,6 @@ protected:
 	CBaseObj*	m_pCurTarget = nullptr;
 	_vector		m_vCurTargetPos;
 	_bool		m_bIsATK = false;
-	CCollider*  m_pAtkColliderCom = nullptr;
-	CCollider*	m_p2th_AtkColliderCom = nullptr;
+
 };
 END

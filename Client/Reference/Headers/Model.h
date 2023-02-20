@@ -25,6 +25,9 @@ public:
 	}
 	class CHierarchyNode* Get_BonePtr(const char* pBoneName) const;
 
+	vector<class CHierarchyNode*> Get_Bones(void) { return m_Bones; }
+	vector<class CAnimation*> Get_Animations(void) { return m_Animations; }
+
 	_uint Get_CurrentAnimIndex() { return m_iCurrentAnimIndex; }
 
 	vector<ANIMEVENT> Get_Events(void);

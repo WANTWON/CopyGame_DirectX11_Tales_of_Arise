@@ -54,12 +54,6 @@ CBerserkerState * CBattle_HowLingState::LateTick(_float fTimeDelta)
 		
 	}
 
-	else
-	{
-			
-
-			m_pOwner->Set_OnGoingHowling();
-	}
 
 
 
@@ -75,11 +69,12 @@ void CBattle_HowLingState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ATTACK_HOWLING);
 
-	
+	m_pOwner->Set_OnGoingHowling();
 
 }
 
 void CBattle_HowLingState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	m_pOwner->SetOff_BedamageCount_Delay();
 }

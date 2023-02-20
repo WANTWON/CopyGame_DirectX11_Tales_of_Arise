@@ -53,7 +53,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	}
 
 	m_eMonsterID = HAWK;
-	m_tStats.m_fMaxHp = 20000;
+	m_tStats.m_fMaxHp = 6500;//20000;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 
@@ -267,7 +267,7 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 _int CHawk::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 {
 
-		if (fDamage <= 0 || m_bDead || m_bTakeDamage)
+		if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_tStats.m_fCurrentHp <= 0 )
 		return 0;
 
 		_int iHp = __super::Take_Damage(fDamage, DamageCauser);

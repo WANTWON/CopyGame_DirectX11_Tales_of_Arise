@@ -99,4 +99,5 @@ void CBattle_Multiple_FireState::Enter()
 void CBattle_Multiple_FireState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	m_pOwner->SetOff_BedamageCount_Delay();
 }

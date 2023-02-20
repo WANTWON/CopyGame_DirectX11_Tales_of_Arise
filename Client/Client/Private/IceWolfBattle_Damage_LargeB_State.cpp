@@ -157,4 +157,7 @@ void CBattle_Damage_LargeB_State::Exit()
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 	if(m_eStateId == Client::CIceWolfState::STATE_BE_DAMAGED)
 		m_pOwner->SetOff_BedamageCount_Delay();
+
+
+	Safe_Release(m_pAtkColliderCom);
 }

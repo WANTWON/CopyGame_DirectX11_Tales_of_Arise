@@ -13,6 +13,7 @@ public:
 		STATE_RUN,
 		STATE_ATTACK,
 		STATE_BOOSTATTACK,
+		STATE_JUMP,
 		STATE_DEAD,
 		STATE_HIT,
 		STATE_DODGE,
@@ -132,7 +133,7 @@ protected:
 
 	_bool m_bLookatOnetime = true;
 
-	
+	//_bool m_bIsFly = false;
 	
 };
 END

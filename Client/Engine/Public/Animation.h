@@ -4,14 +4,35 @@
 
 BEGIN(Engine)
 
-class CAnimation final : public CBase
+class ENGINE_DLL CAnimation final : public CBase
 {
 private:
 	CAnimation();
 	virtual ~CAnimation() = default;
 
 public:
-	vector<ANIMEVENT> Get_Events(void) { return m_vecAnimEvent; }
+	const char* Get_Name(void) const { return m_szName; }
+	_bool Get_Finished(void) const { return m_isFinished; }
+	_float Get_Duration(void) const { return m_fDuration; }
+	_float Get_TickPerSecond(void) const { return m_fTickPerSecond; }
+	vector<_float> Get_TickPerSeconds(void) const { return m_TickPerSeconds; }
+	vector<_float> Get_ChangeTickTimes(void) const { return m_ChangeTickTimes; }
+	_float Get_CurrentTime(void) const { return m_fCurrentTime; }
+	vector<ANIMEVENT> Get_Events(void) const { return m_vecAnimEvent; }
+	_float Get_OriginalTickPerSecond(void) const { return m_fOriTickPerSecond; }
+
+	void Add_EventCall(ANIMEVENT eEvent) { m_vecAnimEvent.push_back(eEvent); }
+	void Add_TickPerSecond(_float fTime, _float fTick);
+	void Fix_TickPerSecond(_int iTimeChoice, _float fAnimationTickTime, _float fAnimationTick);
+	void Delete_TickPerSecond(_int iTimeChoice);
+	void Add_Event(ANIMEVENT tEvent) { m_vecAnimEvent.push_back(tEvent); }
+	void Fix_Event(_int iIndex, ANIMEVENT tEvent) { memcpy(&m_vecAnimEvent[iIndex], &tEvent, sizeof(ANIMEVENT)); }
+	void Delete_Event(_int iIndex);
+
+public:
+	void Change_Duration(_float fDuration);
+
+	void Reset_NonLoop(void);
 
 public:
 	HRESULT Initialize(HANDLE hFile, _ulong* pdwByte, class CModel* pModel, HANDLE hAddFile, _ulong* pdwAddByte);

@@ -8,7 +8,7 @@ BEGIN(AIPlayer)
 class CAI_Alphen_SkillAttackState final : public CAIState
 {
 public:
-	CAI_Alphen_SkillAttackState(class CPlayer* pPlayer, STATE_ID eStateType, CBaseObj* pTarget, _uint skillindex);//, _float fStartHeight = 0.f, _float fTime = 0.f);
+	CAI_Alphen_SkillAttackState(class CPlayer* pPlayer, STATE_ID eStateType, CBaseObj* pTarget, _uint skillindex , _float ftime = 0.f);//, _float fStartHeight = 0.f, _float fTime = 0.f);
 
 	virtual CAIState* Tick(_float fTimeDelta) override;
 	virtual CAIState* LateTick(_float fTimeDelta) override;

@@ -162,6 +162,12 @@ void CChannel::Set_KeyFrame(_float fDurationRatio)
 		m_KeyFrames[i].fTime *= fDurationRatio;
 }
 
+void CChannel::ChangeKeyFrameTime(_float fDuration)
+{
+	for (auto& pKeyFrame : m_KeyFrames)
+		pKeyFrame.fTime *= fDuration;
+}
+
 CChannel * CChannel::Create(HANDLE hFile, _ulong * pdwByte, CModel * pModel)
 {
 	CChannel* pInstance = new CChannel();

@@ -11,11 +11,12 @@
 
 using namespace Berserker;
 
-CBattle_IdleState::CBattle_IdleState(CBerserker* pBerserker)
+CBattle_IdleState::CBattle_IdleState(CBerserker* pBerserker, STATE_ID eStateId)
 {
 	m_pOwner = pBerserker;
 	m_fRandTime = ((rand() % 5000 + 2000) *0.001f)*((rand() % 100) * 0.01f);
 	m_fCosignTimeAcc = 0.f;
+	m_eStateId = eStateId;
 }
 
 CBerserkerState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
@@ -26,7 +27,7 @@ CBerserkerState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 CBerserkerState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
 	
-	m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
@@ -105,22 +106,48 @@ CBerserkerState * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (m_fTimeDeltaAcc > m_fRandTime)
-		return new CBattle_WalkState(m_pOwner);
+	if (m_eStateId == STATE_ID::STATE_ARISE)
+	{
+		if (m_bIsAnimationFinished)
+		{
+			return new CBattle_WalkState(m_pOwner);
+		}
 
+		else
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
 
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+			m_pOwner->Check_Navigation();
+		}
+
+	}
+		
+	else
+	{
+		if (m_fTimeDeltaAcc > m_fRandTime)
+			return new CBattle_WalkState(m_pOwner);
+	}
 
 	return nullptr;
 }
 
 void CBattle_IdleState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_IDLE;
+	if(m_eStateId == STATE_ID::STATE_ARISE)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ARISE_F);
 
+	else
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_IDLE);
 }
 
 void CBattle_IdleState::Exit()
 {
-
+	if (m_eStateId == STATE_ID::STATE_ARISE)
+	{
+		m_pOwner->Set_FinishGoingDown();
+		m_pOwner->Set_FinishDownState();
+	}
 }

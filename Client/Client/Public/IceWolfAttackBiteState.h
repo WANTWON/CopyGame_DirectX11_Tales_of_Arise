@@ -24,6 +24,7 @@ private:
 	_float		m_fIdleAttackTimer = 0.f;
 	_bool		m_bTargetSetting = false;
 	_bool		m_bCollision = false;
+	CCollider*  m_pAtkColliderCom = false;
 private:
 	_matrix m_StartMatrix;
 };

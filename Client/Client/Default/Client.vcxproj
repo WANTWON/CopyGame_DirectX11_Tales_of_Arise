@@ -189,6 +189,7 @@
     <ClInclude Include="..\Public\AI_DodgeState.h" />
     <ClInclude Include="..\Public\AI_HitState.h" />
     <ClInclude Include="..\Public\AI_BoostAttackState.h" />
+    <ClInclude Include="..\Public\AI_JumpState.h" />
     <ClInclude Include="..\Public\AI_LAW_NomalAttack_State.h" />
     <ClInclude Include="..\Public\AI_LAW_SkillAttack_State.h" />
     <ClInclude Include="..\Public\AI_Overlimit_State.h" />
@@ -428,6 +429,7 @@
     <ClCompile Include="..\Private\AI_DodgeState.cpp" />
     <ClCompile Include="..\Private\AI_HitState.cpp" />
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp" />
+    <ClCompile Include="..\Private\AI_JumpState.cpp" />
     <ClCompile Include="..\Private\AI_LAW_NomalAttack_State.cpp" />
     <ClCompile Include="..\Private\AI_LAW_SkillAttack_State.cpp" />
     <ClCompile Include="..\Private\AI_Overlimit_State.cpp" />
