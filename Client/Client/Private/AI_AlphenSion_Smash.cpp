@@ -10,6 +10,7 @@
 #include "SionSkills.h"
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
+#include "AiRinwell.h"
 
 using namespace AIPlayer;
 
@@ -28,8 +29,6 @@ CAI_AlphenSion_Smash::CAI_AlphenSion_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 {
-	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
-		return nullptr;
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
@@ -112,9 +111,12 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
+			m_pOwner->Set_IsActionMode(false);
+			return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+
+		}
 	}
 
 
@@ -123,6 +125,7 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 
 void CAI_AlphenSion_Smash::Enter()
 {
+	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
@@ -137,28 +140,48 @@ void CAI_AlphenSion_Smash::Enter()
 
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-	if (nullptr == m_pTarget)
+	if (!CBattleManager::Get_Instance()->Get_IsBossBattle())
 	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		if (nullptr == m_pTarget)
+		{
+			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		}
+		else
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
-	else
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-	pCamera->Set_Target(m_pOwner);
+	/*else
+	{
+		if (nullptr == m_pTarget)
+		{
+		}
+	}*/
+	
 
 	m_pOwner->Set_Manarecover(false);
+
+
 }
 
 void CAI_AlphenSion_Smash::Exit()
 {
-
-
-
-
+	m_pOwner->Set_StrikeAttack(false);
+	m_pOwner->Set_IsActionMode(false);
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+	{
+		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+		{
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
+		else
+		{
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
+	}
+	
+		
 
 	if (!m_pEffects.empty())
 	{
@@ -173,6 +196,6 @@ void CAI_AlphenSion_Smash::Exit()
 		}
 	}
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+	
 	__super::Exit();
 }

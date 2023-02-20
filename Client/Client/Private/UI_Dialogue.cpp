@@ -189,6 +189,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					break;
 
 				case 5:
+					CUI_Manager::Get_Instance()->Set_QuestIndex(3);
 					CUI_QuestClear::QUESTCLEARDESC garr;
 					ZeroMemory(&garr, sizeof(CUI_QuestClear::QUESTCLEARDESC));
 					garr.eName1 = ITEMNAME_REDSAGE;
@@ -197,7 +198,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC, (TEXT("ssss")), &garr)))
 						return OBJ_NOEVENT;
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY, false, false);
-					CUI_Manager::Get_Instance()->Set_QuestComplete(0, true);
+					CUI_Manager::Get_Instance()->Set_QuestComplete(2, true);
 						
 
 
@@ -1087,6 +1088,23 @@ void CUI_Dialogue::Read_TextFiles_for_Quest3Clear()
 		std::cout << "Unable to open file\n";
 	}
 
+	std::ifstream file6("../../../Bin/quest3clear6.txt");
+	if (file6.is_open())
+	{
+		while (file6.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge5[6].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file6.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
 	//m_vCurrentDialogue.
 
 
@@ -1102,7 +1120,8 @@ void CUI_Dialogue::Read_TextFiles_for_Quest3Clear()
 	matrix.push_back(m_vDialouge5[2]);
 	matrix.push_back(m_vDialouge5[3]);
 	matrix.push_back(m_vDialouge5[4]);
-	matrix.push_back(m_vDialouge5[5]);
+	matrix.push_back(m_vDialouge5[5]); 
+	matrix.push_back(m_vDialouge5[6]);
 
 
 	m_vCurrentDialogue.push_back(matrix);

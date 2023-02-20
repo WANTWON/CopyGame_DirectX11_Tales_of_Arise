@@ -184,6 +184,16 @@ void CSnowFieldNpc::Talk_with_Npc()
 		break;
 	case MAN_PLC:
 		break;
+
+	case RINWELL_NPC:
+		switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
+		{
+		case 5:
+			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(5);
+		}
+		break;
+
+
 	default:
 		break;
 	}

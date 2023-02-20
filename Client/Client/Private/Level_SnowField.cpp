@@ -77,8 +77,10 @@ HRESULT CLevel_SnowField::Initialize()
 		{
 			if (iter == RINWELL)
 			{
+				CUI_Manager::Get_Instance()->Set_Dialogue_section(5);
 				CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("LayerNpcRinwell"));
 				break;
+				
 			}
 		}
 	
@@ -638,8 +640,7 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Dialogue_Caption"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
+
 	
 	
 

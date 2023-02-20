@@ -120,6 +120,8 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 	if (m_bStrikeon)        // f
 	{
+		
+		m_fGlowtimer += fTimeDelta*30.f;
 		m_bStrikefonton = true;
 		if(CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(true);
@@ -153,7 +155,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 	if (m_bStrikeon && !m_bStrikeSmallonetime) //jansang
 	{
-		m_bStrikeFakeScaler += 0.01f;
+		m_bStrikeFakeScaler += 0.015f;
 		if (m_bStrikeFakeScaler >= 1.2f)
 			m_bStrikeFakeScaler = 1.f;
 
@@ -260,6 +262,9 @@ HRESULT CUI_LOCKON::Render()
 		m_pShaderCom->Begin(UI_PROGRESSBAR);
 
 		m_pVIBufferCom->Render();
+
+		m_fGlowPosition[0] = m_fPosition;
+		m_fGlowSize[0] = m_fSize;
 	}
 	
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlphaNomal, sizeof(_float))))
@@ -306,6 +311,9 @@ HRESULT CUI_LOCKON::Render()
 		m_pShaderCom->Begin(0);
 
 		m_pVIBufferCom->Render();
+
+		m_fGlowPosition[1] = m_fPosition;
+		m_fGlowSize[1] = m_fSize;
 	}
 
 	
@@ -393,6 +401,7 @@ HRESULT CUI_LOCKON::Render_Glow()
 	if (!m_pShaderCom || !m_pVIBufferCom)
 		return E_FAIL; 
 	
+
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
@@ -411,28 +420,45 @@ HRESULT CUI_LOCKON::Render_Glow()
 	// TODO: Position Change.
 	// ..
 
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-	
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", m_pTextureGlowCom->Get_SRV(0))))
-		return E_FAIL;
+	if (m_bRenderDiamond)
+	{
 
-	m_pShaderCom->Begin(UI_GLOW);
-	m_pVIBufferCom->Render();
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fGlowSize[0].x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fGlowSize[0].y);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fGlowPosition[0].x - g_iWinSizeX * 0.5f, -m_fGlowPosition[0].y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", m_pTextureGlowCom->Get_SRV(0))))
+			return E_FAIL;
+
+		m_pShaderCom->Begin(UI_GLOW);
+		m_pVIBufferCom->Render();
+
+	}
 
 	/* Keys Glow */
 	
 	// TODO: Position Change.
 	// ..
 
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-	
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", m_pTextureGlowCom->Get_SRV(1))))
-		return E_FAIL;
+	if (m_bStrikefonton)
+	{
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fGlowSize[1].x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fGlowSize[1].y);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fGlowPosition[1].x - g_iWinSizeX * 0.5f, -m_fGlowPosition[1].y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
-	m_pShaderCom->Begin(UI_GLOW);
-	m_pVIBufferCom->Render();
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", m_pTextureGlowCom->Get_SRV(1))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fGlowTimer", &m_fGlowtimer, sizeof(_float))))
+			return E_FAIL;
+		m_pShaderCom->Begin(UI_GLOW);
+		m_pVIBufferCom->Render();
+	}
+	
 
 	return S_OK;
 }

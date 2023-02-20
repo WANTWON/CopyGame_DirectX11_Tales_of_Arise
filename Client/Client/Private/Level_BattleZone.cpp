@@ -84,16 +84,21 @@ HRESULT CLevel_BattleZone::Initialize()
 		break;
 	}
 
+	CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 	
-	pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-	pCameraManager->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
 	return S_OK;
 }
 
 void CLevel_BattleZone::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	CPlayerManager::Get_Instance()->Set_SmashAttack();
+
+	CBattleManager* pBattleManager = GET_INSTANCE(CBattleManager);
+	if(pBattleManager->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
+		CPlayerManager::Get_Instance()->Set_SmashAttack();
+
+
+	
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
 	{
@@ -126,9 +131,11 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
 			return;
 		Safe_Release(pGameInstance);
+
 	}
 
 
+	RELEASE_INSTANCE(CBattleManager);
 }
 
 void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
@@ -640,8 +647,8 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_BATTLE, pLayerTag)))
 			return E_FAIL;
 	}
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_BATTLE, pLayerTag)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;*/
 
 	/**/
 	

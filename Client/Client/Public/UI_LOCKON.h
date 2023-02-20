@@ -71,6 +71,15 @@ private:
 	_bool m_bEffectSpawned = false;
 
 	_float m_fTimeOffset = 1.f;
+
+	_float2 m_fGlowPosition[2] = { { 0.f, 0.f }  , {0.f,0.f} };
+	_float2 m_fGlowSize[2] = { { 0.f, 0.f }  ,{ 0.f,0.f } };
+
+	_float m_fGlowtimer = 0.f;
+
+
+
+
 };
 
 END

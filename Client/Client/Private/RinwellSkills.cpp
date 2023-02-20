@@ -76,7 +76,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("DivineFloor.dat"), mWorldMatrix);
+		//m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("DivineFloor.dat"), mWorldMatrix);
 
 		memcpy(&OriginLightDesc, CGameInstance::Get_Instance()->Get_LightDesc(0), sizeof(LIGHTDESC));
 		memcpy(&OriginLightDesc2, CGameInstance::Get_Instance()->Get_LightDesc(10), sizeof(LIGHTDESC));
@@ -120,7 +120,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 	case HOLY_RANCE_BULLET:
 		vLocation = m_BulletDesc.vInitPositon;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
-
+		m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("HolyLanceBullet.dat"), mWorldMatrix);
@@ -136,7 +136,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 	case HOLY_RANCE_FISRTBULLET:
 		vLocation = m_BulletDesc.vInitPositon;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
-
+		
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("HolyLanceUpBullet.dat"), mWorldMatrix);
@@ -811,7 +811,6 @@ void CRinwellSkills::Tick_HolyRanceBullet(_float fTimeDelta)
 {
 	_vector vDir = XMVector3Normalize(m_BulletDesc.vTargetPosition - m_BulletDesc.vInitPositon);
 
-	m_pTransformCom->LookAt(XMVectorSetY(m_BulletDesc.vTargetPosition,-1.f));
 	m_pTransformCom->Go_PosDir(fTimeDelta, vDir);
 
 	for (auto& iter : m_pEffects)
@@ -822,9 +821,6 @@ void CRinwellSkills::Tick_HolyRanceBullet(_float fTimeDelta)
 		if (iter != nullptr)
 		{
 			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
-			iter->Set_State(CTransform::STATE_RIGHT, Get_TransformState(CTransform::STATE_RIGHT));
-			iter->Set_State(CTransform::STATE_UP, Get_TransformState(CTransform::STATE_UP));
-			iter->Set_State(CTransform::STATE_LOOK, Get_TransformState(CTransform::STATE_LOOK));
 		}
 			
 	}
