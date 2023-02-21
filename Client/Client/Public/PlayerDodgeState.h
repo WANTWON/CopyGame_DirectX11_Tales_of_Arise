@@ -24,6 +24,8 @@ private:
 	DIRID m_eDirection = DIRID::DIR_END;
 
 	_float m_fTime = 0.f;
+
+	CCollider* m_pDodgeCollider = nullptr;
 };
 END
 END
