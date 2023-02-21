@@ -12,7 +12,7 @@ BEGIN(Client)
 class CNonAnim_Instance : public CBaseObj
 {
 public:
-	enum SHADER_INSTANCEID {DEFAULT, SNOW, SHADOW};
+	enum SHADER_INSTANCEID {DEFAULT, SNOW, SHADOW, GLOW};
 protected:
 	CNonAnim_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CNonAnim_Instance(const CNonAnim_Instance& rhs);
@@ -25,12 +25,15 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() override;
+	virtual HRESULT Render_Glow() override;
+
 public:
 	const char* Get_Modeltag() { return m_ModelDesc.pModeltag; }
 	const NONANIMDESC Get_ModelDesc() {return m_ModelDesc;}
 
 private:
 	_bool IsRenderShadow();
+	_bool IsRenderGlow();
 	_float Check_CullingRadius();
 
 protected:

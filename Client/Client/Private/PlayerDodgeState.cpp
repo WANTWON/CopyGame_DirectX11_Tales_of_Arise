@@ -223,6 +223,8 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
 	for (auto& pEvent : pEvents)
 	{
 		if (pEvent.isPlay)
@@ -231,25 +233,60 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 			{
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
 				m_pOwner->On_JustDodge();
+
+				if (nullptr == m_pDodgeCollider)
+				{
+					CCollider::COLLIDERDESC		ColliderDesc;
+
+					ColliderDesc.vScale = _float3(2.5f, 2.5f, 2.5f);
+					ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+					ColliderDesc.vPosition = _float3(0.f, 2.5f, 0.f);
+
+					m_pDodgeCollider = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+				}
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
 		}
 		else
 		{
-			if (m_pOwner->Get_IsJustDodge() == true)
+			if ((ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType) && (m_pOwner->Get_IsJustDodge() == true))
 			{
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 				m_pOwner->Off_JustDodge();
+
+				if (nullptr != m_pDodgeCollider)
+				{
+					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pDodgeCollider);
+					m_pDodgeCollider = nullptr;
+				}
 			}
 		}
 	}
+
+	if (nullptr != m_pDodgeCollider)
+		m_pDodgeCollider->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 	return nullptr;
 }
 
 CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 {
+	if (nullptr != m_pDodgeCollider)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pDodgeCollider, &pCollisionTarget))
+		{
+			int a = 10;
+		}
+
+#ifdef _DEBUG
+		m_pOwner->Get_Renderer()->Add_Debug(m_pDodgeCollider);
+#endif
+	}
+
 	if (m_bIsAnimationFinished)
 	{
 		if (m_pOwner->Get_Info().idodgecount >= 3)
@@ -258,7 +295,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 			
 			m_pOwner->Set_Overcount(0);
-			return new CPlayerOverlimit(m_pOwner);
+			//return new CPlayerOverlimit(m_pOwner);
 
 		}
 

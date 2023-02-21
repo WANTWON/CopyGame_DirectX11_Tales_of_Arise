@@ -59,6 +59,9 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 		if(IsRenderShadow())
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 
+		if (IsRenderGlow())
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
 #ifdef _DEBUG
 		if (m_pAABBCom != nullptr)
 			m_pRendererCom->Add_Debug(m_pAABBCom);
@@ -69,7 +72,6 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 #endif
 	}
 
-
 	Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 	
 	RELEASE_INSTANCE(CGameInstance);
@@ -78,7 +80,6 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 
 HRESULT CNonAnim_Instance::Render()
 {
-
 	if (nullptr == m_pShaderCom ||
 		nullptr == m_pModelCom)
 		return E_FAIL;
@@ -89,14 +90,15 @@ HRESULT CNonAnim_Instance::Render()
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
-
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
@@ -136,6 +138,38 @@ HRESULT CNonAnim_Instance::Render_ShadowDepth()
 	return S_OK;
 }
 
+HRESULT CNonAnim_Instance::Render_Glow()
+{
+	if (!m_pShaderCom || !m_pModelCom)
+		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	_bool bUseDiffuseColor = true;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_bUseDiffuseColor", &bUseDiffuseColor, sizeof(_bool))))
+		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", nullptr)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, GLOW)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 _bool CNonAnim_Instance::IsRenderShadow()
 {
 	if (!strcmp(m_ModelDesc.pModeltag, "Dead_Grass") ||
@@ -149,6 +183,15 @@ _bool CNonAnim_Instance::IsRenderShadow()
 		return false;
 
 	return true;
+}
+
+_bool CNonAnim_Instance::IsRenderGlow()
+{
+	if (!strcmp(m_ModelDesc.pModeltag, "Bld_WallB") ||
+		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01"))
+		return true;
+
+	return false;
 }
 
 _float CNonAnim_Instance::Check_CullingRadius()

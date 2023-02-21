@@ -73,9 +73,8 @@ int CWeapon::Tick(_float fTimeDelta)
 
 			CCollider::COLLIDERDESC		ColliderDesc;
 
-			ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
-
-			ColliderDesc.vPosition = _float3(0.f, 0.f, -2.f);
+			ColliderDesc.vScale = _float3(3.f, 3.f, 3.f);
+			ColliderDesc.vPosition = _float3(0.f, 0.f, -3.f);
 
 			m_pSPHERECom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
@@ -129,7 +128,9 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
+			{
 				pCollided->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
+			}
 
 			if (!m_bSoundStart)
 			{
