@@ -23,6 +23,13 @@ private:
 	STATE_ID		m_ePreTurn_Id;
 
 	_float			m_fIdleTime;
+
+	CCollider*  m_pAtkColliderCom = false;
+	CCollider*	m_p2th_AtkColliderCom = false;
+	CCollider*	m_p3th_AtkColliderCom = false;
+	CCollider*	m_p4th_AtkColliderCom = false;
+	CCollider*	m_p5th_AtkColliderCom = false;
+	CCollider*	m_p6th_AtkColliderCom = false;
 };
 END
 END

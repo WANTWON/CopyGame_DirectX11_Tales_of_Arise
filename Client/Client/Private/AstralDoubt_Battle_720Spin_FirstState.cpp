@@ -71,6 +71,12 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 	{
 		if (pEvent.isPlay)
 		{
+			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+			{
+				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+					dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.6f, 0.01f);
+			}
+
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
 				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
@@ -110,8 +116,8 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc;
 
-					ColliderDesc.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc.vScale = _float3(30.f, 30.f, 30.f);
+					ColliderDesc.vPosition = _float3(0.f, -8.f, 0.f);
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
@@ -126,8 +132,8 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc2th;
 
-					ColliderDesc2th.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc2th.vScale = _float3(30.f, 30.f, 30.f);
+					ColliderDesc2th.vPosition = _float3(0.f, -8.f, 0.f);
 
 					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 					m_p2th_AtkColliderCom->Update(matWorld_2th);
@@ -142,8 +148,8 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc3th;
 
-					ColliderDesc3th.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc3th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc3th.vScale = _float3(30.f, 30.f, 30.f);
+					ColliderDesc3th.vPosition = _float3(0.f, -8.f, 0.f);
 
 					m_p3th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc3th);
 					m_p3th_AtkColliderCom->Update(matWorld_3th);
@@ -158,8 +164,8 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc4th;
 
-					ColliderDesc4th.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc4th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc4th.vScale = _float3(30.f, 30.f, 30.f);
+					ColliderDesc4th.vPosition = _float3(0.f, -8.f, 0.f);
 
 					m_p4th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc4th);
 					m_p4th_AtkColliderCom->Update(matWorld_4th);
@@ -174,8 +180,8 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc5th;
 
-					ColliderDesc5th.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc5th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc5th.vScale = _float3(30.f, 30.f, 30.f);
+					ColliderDesc5th.vPosition = _float3(0.f, -8.f, 0.f);
 
 					m_p5th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc5th);
 					m_p5th_AtkColliderCom->Update(matWorld_5th);
@@ -190,8 +196,8 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc6th;
 
-					ColliderDesc6th.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc6th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc6th.vScale = _float3(30.f, 30.f, 30.f);
+					ColliderDesc6th.vPosition = _float3(0.f, -8.f, 0.f);
 
 					m_p6th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc6th);
 					m_p6th_AtkColliderCom->Update(matWorld_6th);
