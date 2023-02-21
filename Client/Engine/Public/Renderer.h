@@ -20,7 +20,7 @@ public:
 	class CShader* Get_ShaderPostProcessing() { return m_pShaderPostProcessing; }
 	void Set_Fog(_bool bFog) { m_bFog = bFog; }
 	void Set_Distort(_bool bDistort) { m_bDistort = bDistort; }
-	void Set_ZoomBlur(_bool bZoomBlur, _float fFocusPower = 3.f, _uint iFocusDetail = 0) { m_bZoomBlur = bZoomBlur; m_fFocusPower = fFocusPower; m_iFocusDetail = iFocusDetail; }
+	void Set_ZoomBlur(_bool bZoomBlur, _float fFocusPower = 3.f, _uint iFocusDetail = 0); 
 
 public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
