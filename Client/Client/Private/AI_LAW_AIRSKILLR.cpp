@@ -299,9 +299,13 @@ void CAI_LAW_AIRSKILLR::Exit()
 {
 	__super::Exit();
 
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
+	Safe_Release(m_pLeftFootCollider);
+	Safe_Release(m_pLeftHandCollider);
+	Safe_Release(m_pRightHandCollider);
+
+	/*m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
 	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);
+	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);*/
 }
 
 
