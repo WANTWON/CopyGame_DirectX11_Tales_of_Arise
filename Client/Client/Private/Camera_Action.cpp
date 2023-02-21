@@ -90,13 +90,14 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 
 		if (m_iIndex >= m_CamDatas.size())
 		{
-			m_CamDatas.clear();
 			m_iIndex = 0;
 			m_bPlay = false;
+			m_CamDatas.clear();
 			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
 			CCameraManager::Get_Instance()->Clear_ActionList();
 		}
 	}
+
 
 	return OBJ_NOEVENT;
 }
