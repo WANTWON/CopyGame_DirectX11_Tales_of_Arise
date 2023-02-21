@@ -119,19 +119,10 @@ CAIState * CAI_Overlimit_State::LateTick(_float fTimeDelta)
 		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
 
-	for (auto& iter : m_pEffects)
+	for (auto& pEffect : m_pEffects)
 	{
-		if (iter != nullptr && iter->Get_PreDead())
-			iter = nullptr;
-
-	
-		if (iter != nullptr && iter->Get_PreDead() == true)
-		{
-			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
-			if (pParticleSystem != nullptr)
-				pParticleSystem->Set_Stop(true);	
-		}
-		
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
 	}
 
 	if (m_bIsAnimationFinished)
@@ -197,16 +188,13 @@ void CAI_Overlimit_State::Enter()
 
 void CAI_Overlimit_State::Exit()
 {
-	if (!m_pEffects.empty())
+	for (auto& pEffect : m_pEffects)
 	{
-		for (auto& iter : m_pEffects)
+		if (pEffect)
 		{
-			if (iter != nullptr)
-			{
-				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
-				if (pParticleSystem != nullptr)
-					pParticleSystem->Set_Stop(true);
-			}
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(pEffect);
+			if (pParticleSystem != nullptr)
+				pParticleSystem->Set_Stop(true);
 		}
 	}
 
