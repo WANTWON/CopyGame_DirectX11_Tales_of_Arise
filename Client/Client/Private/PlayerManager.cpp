@@ -144,8 +144,17 @@ void CPlayerManager::Set_SmashAttack()
 			Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 			Get_EnumPlayer(1)->SmashAttack(CPlayer::ALPHEN_SION);
 
-			Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
-			Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+			if (Get_EnumPlayer(2) != nullptr)
+			{
+				Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
+				Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+			}
+			
+			if (Get_EnumPlayer(3) != nullptr)
+			{
+				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
+				Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+			}
 
 			CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 			pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);

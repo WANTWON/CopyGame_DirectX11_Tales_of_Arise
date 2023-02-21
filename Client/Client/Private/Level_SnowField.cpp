@@ -554,111 +554,7 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	CUI_Manager::Get_Instance()->Set_Mainmenuon(false);
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI"), LEVEL_SNOWFIELD, pLayerTag)))
-		return E_FAIL;*/
 
-
-
-	/*_int numcreate = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
-
-	for (int i = 0; i < numcreate; ++i)
-	{
-		_uint number = i;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar"), LEVEL_STATIC, pLayerTag, &i)))
-			return E_FAIL;
-
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont"), LEVEL_STATIC, pLayerTag, &i)))
-			return E_FAIL;
-
-	}
-*/
-
-
-//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Comboline"), LEVEL_STATIC, pLayerTag)))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Damagesfont"), LEVEL_STATIC, pLayerTag)))
-//		return E_FAIL;
-//
-//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_font"), LEVEL_STATIC, pLayerTag)))
-//		return E_FAIL;
-//
-//	/*for (int i = 0; i < 6; ++i)
-//	{
-//		_uint number = i;
-//*/
-//		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag)))
-//			return E_FAIL;
-	
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_DAMAGES_fontnum"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;*/
-
-
-	//}
-
-
-	//	for (int i = 0; i < 3; ++i)
-	//	{
-	//		_uint number = i;
-
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_fontnum"), LEVEL_STATIC, pLayerTag)))
-	//	return E_FAIL;
-
-	////	}
-
-	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_STATIC, pLayerTag)))
-	//	return E_FAIL;
-
-	//for (int i = 0; i < 7; ++i)
-	//{
-	//	_uint number = i;
-
-	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_STATIC, pLayerTag, &i)))//, &i)))
-	//		return E_FAIL;
-
-	//}
-
-
-
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MPguage"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;*/
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar_World"), LEVEL_SNOWFIELD, pLayerTag)))
-		return E_FAIL;*/
-
-		//	for (int i = 0; i < 4; ++i)
-		//	{
-		//		_uint number = i;
-
-		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont_World"), LEVEL_SNOWFIELD, pLayerTag, &i)))
-		//			return E_FAIL;
-				/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont_World"), LEVEL_SNOWFIELD, pLayerTag)))
-					return E_FAIL;*/
-
-					//	}
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitback"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_top"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_right"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_bottom"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_left"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_button"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_change_button"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_LOCKON"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;*/
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MENU_BACK"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
@@ -679,35 +575,6 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Dialogue_Caption"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-
-	
-	
-
-	/*_float exp = 500.f;
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BattleResult"), LEVEL_STATIC, pLayerTag , &exp)))
-		return E_FAIL;*/
-
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Levelup"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;*/
-	
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Skillmsg"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;*/
-	
-
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_itemmsgbox"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;*/
-	
-
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;*/
-
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTMESSAGE"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;
-*/
-	
-	
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, pLayerTag)))
-		return E_FAIL;*/
 
 
 

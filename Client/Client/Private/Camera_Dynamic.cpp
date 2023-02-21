@@ -436,7 +436,7 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 		_float fDot = XMVectorGetX(XMVector3Dot(vPlayerLockonDir, vLook));
 		_float fRightDot = XMVectorGetX(XMVector3Dot(vCameraLockonDir, vRight));
 		_float fDistance = XMVectorGetX(XMVector3Length(vLockOnPosition - vPlayerPosition));
-		if (pLockOnMonster->Check_IsinBattleZoneFrustum() == false )
+		//if (pLockOnMonster->Check_IsinBattleZoneFrustum() == false )
 			m_bTurn = true;
 
 		if(m_bTurn)
@@ -445,17 +445,33 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 			{
 				if (fRightDot > 0.f)
 				{
-					if(fDistance < 15.f)
+					if(fDot > 0.7 )
+						m_fAngle -= (0.8f - fDot)* 2.f;
+					else if (fDot > 0.5)
+						m_fAngle -= (0.8f - fDot)* 3.f;
+					else if (fDot > 0.3)
+						m_fAngle -= (0.8f - fDot)* 5.f;
+					else
+						m_fAngle -= (0.8f - fDot)* 7.f;
+				/*	else if(fDistance < 15.f)
 						m_fAngle -= (0.8f - fDot)* 2.f;
 					else
-						m_fAngle -= (0.8f - fDot)* 5.f;
+						m_fAngle -= (0.8f - fDot)* 5.f;*/
 				}
 				else
 				{
-					if (fDistance < 15.f)
+					/*if (fDistance < 15.f)
 						m_fAngle += (0.8f - fDot)* 2.f;
 					else
+						m_fAngle += (0.8f - fDot)* 5.f;*/
+					if (fDot > 0.7)
+						m_fAngle += (0.8f - fDot)* 2.f;
+					else if (fDot > 0.5)
+						m_fAngle += (0.8f - fDot)* 3.f;
+					else if (fDot > 0.3)
 						m_fAngle += (0.8f - fDot)* 5.f;
+					else
+						m_fAngle += (0.8f - fDot)* 7.f;
 				}
 					
 			}
@@ -468,7 +484,7 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 		
 		if (fDistance > 30.f)
 		{
-			fLength -= 0.02f;
+			fLength -= 0.1f;
 			m_fCameraOffsetY -= 0.2f;
 			
 		}
@@ -485,14 +501,14 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 		}
 		else if(fDistance < 15.f)
 		{
-			fLength += 0.02f;
+			fLength += 0.1f;
 			m_fCameraOffsetY += 0.2f;
 		}
 
 		if (fLength >= 10.f)
 			fLength = 10.f;
-		if (fLength <= 5.f)
-			fLength = 5.f;
+		if (fLength <= 7.f)
+			fLength = 7.f;
 		if (m_fCameraOffsetY >= 5.f)
 			m_fCameraOffsetY = 5.f;
 		else if (m_fCameraOffsetY <= 1.f)

@@ -22,7 +22,7 @@ CRinwellState * CMoveState::Tick(_float fTimeDelta)
 	case Client::STATETYPE_START:
 		Find_ActiveTarget();
 		m_pOwner->Get_Transform()->LookAt(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta*0.5f);
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
 		break;
 	case Client::STATETYPE_MAIN:
 		m_fTarget_Distance = Find_Target(4);

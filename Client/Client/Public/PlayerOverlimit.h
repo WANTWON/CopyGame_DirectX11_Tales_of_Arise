@@ -4,6 +4,7 @@
 #include "InteractObject.h"
 
 BEGIN(Client)
+class CEffect;
 BEGIN(Player)
 class CPlayerOverlimit final : public CPlayerState
 {
@@ -19,6 +20,7 @@ public:
 
 private:
 	CInteractObject* m_pObject = nullptr;
+	vector<CEffect*> m_pEffects;
 };
 END
 END
