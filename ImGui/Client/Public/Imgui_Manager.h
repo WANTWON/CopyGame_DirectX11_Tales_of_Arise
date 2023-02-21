@@ -278,6 +278,9 @@ public:
 	_int m_iEventType = 0;
 	_int m_iEventChoice = -1;
 
+	_float m_Position[3] = { 0.f, 0.f, 0.f };
+	_float m_Rotation[3] = { 0.f, 0.f, 0.f };
+
 public:
 	virtual void Free() override;
 };

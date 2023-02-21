@@ -206,11 +206,8 @@ void CImgui_Manager::Tick_Imgui()
 		ImGui::EndMenuBar();
 	}
 
-	const char* Level[] = { "Level_GamePlay", "Level_Boss" };
 	static int iCurrentLevel = (int)m_iCurrentLevel;
-	ImGui::Combo("##0", &iCurrentLevel, Level, IM_ARRAYSIZE(Level));
 	m_iCurrentLevel = (LEVEL)iCurrentLevel;
-	ImGui::NewLine();
 
 	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 	if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
@@ -279,19 +276,24 @@ void CImgui_Manager::Tick_Imgui()
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Create Camera Symbol"); ImGui::SameLine();
 			ImGui::RadioButton("##Picking for Camera", &m_PickingType, PICKING_CAMERA);
 
-			if (ImGui::RadioButton("Target Mode(Radian)", &m_eCameraType, 0))
-			{
-				CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::DYNAMIC);
-				m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
-			}
+			ImGui::RadioButton("Target Mode(Radian)", &m_eCameraType, 0);
 			ImGui::SameLine();
 			ImGui::RadioButton("Action Mode(Position)", &m_eCameraType, 1);
 			
 
 			if (m_eCameraType == ACTION)
+			{
+				CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::ACTION);
+				m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
 				Set_ActionCamera();
-			else if(m_eCameraType == TARGETMODE)
+			}
+			else if (m_eCameraType == TARGETMODE)
+			{
+				CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::DYNAMIC);
+				m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
 				Set_TargetCamera();
+			}
+				
 
 			ImGui::EndTabItem();
 		}
@@ -309,6 +311,7 @@ void CImgui_Manager::Tick_Imgui()
 		}
 		if (ImGui::BeginTabItem("Animation Tool"))
 		{
+
 			Set_Animation();
 			ImGui::EndTabItem();
 		}
@@ -1969,32 +1972,7 @@ void CImgui_Manager::Set_ActionCamera()
 				m_sCurrentCamera += ".dat";
 				memset(cCameraName, 0, MAX_PATH);
 				ImGui::OpenPopup("Create Camera");
-
-				if (CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), ACTION) == nullptr)
-				{
-					CCamera_Action::ACTIONCAMDESC				CameraDesc;
-					ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
-					CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
-					CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-
-					CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
-					CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-					CameraDesc.CameraDesc.fNear = 0.2f;
-					CameraDesc.CameraDesc.fFar = 1000.f;
-
-					CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
-					CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-
-					CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_GAMEPLAY, TEXT("Layer_Camera"), &CameraDesc);
-				}
-				else
-				{
-					ZeroMemory(&m_ActionCamDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
-					CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::ACTION);
-					m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
-					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Remove_AllCamdata();
-				}
-				
+			
 			}
 		}
 		ImGui::NewLine();
@@ -2042,10 +2020,19 @@ void CImgui_Manager::Set_ActionCamera()
 		{
 			if (m_pCurrentCamera)
 			{
-				CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::ACTION);
-				dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_PlayTime(m_fPlayTime);
 				m_bIsPlaying = !m_bIsPlaying;
-				dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
+				if (m_bIsPlaying)
+				{
+					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_CamMode(CCamera_Action::CAM_ACTION);
+					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_PlayTime(m_fPlayTime);
+					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
+				}
+				else
+				{
+					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_CamMode(CCamera_Action::CAM_DEBUG);
+					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
+				}
+				
 			}
 		}
 	}
@@ -2423,9 +2410,10 @@ void CImgui_Manager::Set_TargetCamera()
 			if (ImGui::Button("Capture Current"))
 			{
 				CGameObject* pPickedObj = CPickingMgr::Get_Instance()->Get_PickedObj();
-				CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pPickedObj);
-				if (pTarget == nullptr)
+				if (pPickedObj == nullptr)
 					return;
+				CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pPickedObj);
+				
 				dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_Target(pTarget);
 
 				_float4x4 vCamMatrix = CGameInstance::Get_Instance()->Get_CamWorldMatrix();
@@ -2538,7 +2526,7 @@ _bool CImgui_Manager::Save_Camera()
 {
 	
 	/* Create Effect Data File */
-	wstring wsCurrentCamera = wstring(m_sCurrentCamera.begin(), m_sCurrentCamera.end());
+	//wstring wsCurrentCamera = wstring(m_sCurrentCamera.begin(), m_sCurrentCamera.end());
 
 	OPENFILENAME OFN;
 	TCHAR filePathName[300] = L"";
@@ -2551,7 +2539,7 @@ _bool CImgui_Manager::Save_Camera()
 	OFN.lpstrFilter = filter;
 	OFN.lpstrFile = lpstrFile;
 	OFN.nMaxFile = 300;
-	OFN.lpstrInitialDir = L".";
+	OFN.lpstrInitialDir = L"../../../Bin/Data/CameraData/";
 	OFN.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
 
 	if (GetSaveFileName(&OFN))
@@ -2610,98 +2598,101 @@ _bool CImgui_Manager::Save_Camera()
 	}
 
 
-	m_SavedCameras.push_back(m_sCurrentCamera);
+	//m_SavedCameras.push_back(m_sCurrentCamera);
 
 	return true;
 }
 
 _bool CImgui_Manager::Load_Camera()
 {
-	wstring wsSelectedSavedCamera = wstring(m_SavedCameras[m_iSavedCamera].begin(), m_SavedCameras[m_iSavedCamera].end());
+	//wstring wsSelectedSavedCamera = wstring(m_SavedCameras[m_iSavedCamera].begin(), m_SavedCameras[m_iSavedCamera].end());
 
-	/* Load Camera File. */
-	HANDLE hFileCamera = nullptr;
-	_tchar LoadPathCamera[MAX_PATH] = TEXT("../../../Bin/Data/CameraData/");
-	wcscat_s(LoadPathCamera, MAX_PATH, wsSelectedSavedCamera.c_str());
+	OPENFILENAME OFN;
+	TCHAR filePathName[300] = L"";
+	TCHAR lpstrFile[300] = L"";
+	static TCHAR filter[] = L"데이터 파일\0*.dat\0텍스트 파일\0*.txt";
 
-	hFileCamera = CreateFile(LoadPathCamera, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	memset(&OFN, 0, sizeof(OPENFILENAME));
+	OFN.lStructSize = sizeof(OPENFILENAME);
+	OFN.hwndOwner = g_hWnd;
+	OFN.lpstrFilter = filter;
+	OFN.lpstrFile = lpstrFile;
+	OFN.nMaxFile = 300;
+	OFN.lpstrInitialDir = L"../../../Bin/Data/CameraData/";
 
-	if (hFileCamera == INVALID_HANDLE_VALUE)
-		return false;
+	if (GetOpenFileName(&OFN) != 0) {
+		wsprintf(filePathName, L"%s 파일을 열겠습니까?", OFN.lpstrFile);
+		MessageBox(g_hWnd, filePathName, L"열기 선택", MB_OK);
 
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+		//ERR_MSG(TEXT("save-as  '%s'\n"), ofn.lpstrFile); //경로// 파일이름.확장자
+		//ERR_MSG(TEXT("filename '%s'\n"), ofn.lpstrFile + ofn.nFileOffset); 
 
-	DWORD dwByte = 0;
-	_uint iCameraCount = 0;
-	_int iCameratype = 0;
+		HANDLE hFileCamera = 0;
+		_ulong dwByte = 0;
+		_uint iNum = 0;
 
-	/* Read CameraType. */
-	ReadFile(hFileCamera, &iCameratype, sizeof(_int), &dwByte, nullptr);
-
-	if (m_eCameraType == ACTION)
-	{
-		CCamera_Action::ACTIONCAMDESC				CameraDesc;
-		ZeroMemory(&CameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
-		CameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
-		CameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-
-		CameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
-		CameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-		CameraDesc.CameraDesc.fNear = 0.2f;
-		CameraDesc.CameraDesc.fFar = 1000.f;
-
-		CameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
-		CameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-
-		if(CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), ACTION) == nullptr)
-			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_GAMEPLAY, TEXT("Layer_Camera"), &CameraDesc);
-		CCamera* pActionCamera = dynamic_cast<CCamera*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), ACTION));
-
-		/* Read how many Effects there are in this File. */
-		_float fPlayTime = 0.f;
-		ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
-		dynamic_cast<CCamera_Action*>(pActionCamera)->Set_PlayTime(fPlayTime);
-		m_fPlayTime = fPlayTime;
-		CCamera_Action::TOOLDESC CamToolData;
+		hFileCamera = CreateFile(OFN.lpstrFile, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		if (0 == hFileCamera)
+			return E_FAIL;
 
 
-		ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
-		/* For every Effect in this File: */
-		for (_uint i = 0; i < iCameraCount; i++)
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		_uint iCameraCount = 0;
+		_int iCameratype = 0;
+
+		/* Read CameraType. */
+		ReadFile(hFileCamera, &iCameratype, sizeof(_int), &dwByte, nullptr);
+
+		if (m_eCameraType == ACTION)
 		{
+			CCamera* pActionCamera = dynamic_cast<CCamera*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Camera"), ACTION));
 
-			ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
-			dynamic_cast<CCamera_Action*>(pActionCamera)->Add_CamData(CamToolData);
+			/* Read how many Effects there are in this File. */
+			_float fPlayTime = 0.f;
+			ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+			dynamic_cast<CCamera_Action*>(pActionCamera)->Set_PlayTime(fPlayTime);
+			m_fPlayTime = fPlayTime;
+			CCamera_Action::TOOLDESC CamToolData;
+
+
+			ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
+			/* For every Effect in this File: */
+			for (_uint i = 0; i < iCameraCount; i++)
+			{
+
+				ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Action::TOOLDESC), &dwByte, nullptr);
+				dynamic_cast<CCamera_Action*>(pActionCamera)->Add_CamData(CamToolData);
+			}
 		}
-	}
-	else
-	{
-		m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
-		/* Read how many Effects there are in this File. */
-		_float fPlayTime = 0.f;
-		ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
-		dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_PlayTime(fPlayTime);
-		m_fPlayTime = fPlayTime;
-		CCamera_Dynamic::TOOLDESC CamToolData;
-
-
-		ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
-		/* For every Effect in this File: */
-		for (_uint i = 0; i < iCameraCount; i++)
+		else
 		{
+			m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
+			/* Read how many Effects there are in this File. */
+			_float fPlayTime = 0.f;
+			ReadFile(hFileCamera, &fPlayTime, sizeof(_float), &dwByte, nullptr);
+			dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_PlayTime(fPlayTime);
+			m_fPlayTime = fPlayTime;
+			CCamera_Dynamic::TOOLDESC CamToolData;
 
-			ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Dynamic::TOOLDESC), &dwByte, nullptr);
-			dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Add_CamData(CamToolData);
+
+			ReadFile(hFileCamera, &iCameraCount, sizeof(_uint), &dwByte, nullptr);
+			/* For every Effect in this File: */
+			for (_uint i = 0; i < iCameraCount; i++)
+			{
+
+				ReadFile(hFileCamera, &CamToolData, sizeof(CCamera_Dynamic::TOOLDESC), &dwByte, nullptr);
+				dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Add_CamData(CamToolData);
+			}
 		}
+
+
+
+		RELEASE_INSTANCE(CGameInstance);
+
+		CloseHandle(hFileCamera);
 	}
-	
-	
-
-	RELEASE_INSTANCE(CGameInstance);
-
-	CloseHandle(hFileCamera);
-
-	m_sCurrentCamera = m_SavedCameras[m_iSavedCamera];
+	//m_sCurrentCamera = m_SavedCameras[m_iSavedCamera];
 
 	return true;
 }
@@ -5921,93 +5912,108 @@ void CImgui_Manager::Set_Animation()
 	CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
 	if (nullptr != pPlayerModel)
 	{
+		ImGuiTreeNodeFlags TreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
+
+		if (ImGui::CollapsingHeader("World Transform", TreeNodeFlags))
+		{
+			if (ImGui::DragFloat3("Rotation", m_Rotation, 0.01f, 0.f, 360.f))
+				((CAnim*)(pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front()))->Get_Transform()->Set_Rotation(_float3(m_Rotation[0], m_Rotation[1], m_Rotation[2]));
+			if (ImGui::DragFloat3("Position", m_Position, 0.01f))
+			{
+				_vector vPos = XMVectorSet(m_Position[0], m_Position[1], m_Position[2], 1.f);
+				((CAnim*)(pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front()))->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPos);
+			}
+		}
+
 		vector<CHierarchyNode*> ModelBones = pPlayerModel->Get_Bones();
 		vector<CAnimation*> ModelAnimations = pPlayerModel->Get_Animations();
 
-		char** pBoneItems = new char*[ModelBones.size()];
-		char** pAnimItems = new char*[ModelAnimations.size()];
-
-		for (_int i = 0; i < ModelBones.size(); ++i)
+		if (ImGui::CollapsingHeader("Bone", TreeNodeFlags))
 		{
-			pBoneItems[i] = new char[MAX_PATH];
-			strcpy_s(pBoneItems[i], sizeof(char) * MAX_PATH, ModelBones[i]->Get_Name());
-		}
+			char** pBoneItems = new char*[ModelBones.size()];
 
-		ImGui::CollapsingHeader("Bone");
-
-		if (ImGui::ListBox("", &m_iBoneChoice, pBoneItems, _int(ModelBones.size())))
-		{
-			_matrix BoneTransformation = ModelBones[m_iBoneChoice]->Get_TransformationMatrix();
-
-			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Change_Bone(ModelBones[m_iBoneChoice]->Get_Name());
-		}
-
-		for (_int i = 0; i < ModelBones.size(); ++i)
-			Safe_Delete_Array(pBoneItems[i]);
-
-		Safe_Delete_Array(pBoneItems);
-
-		if (ImGui::Button("Weapon"))
-		{
-
-		}
-
-		ImGui::CollapsingHeader("Animation");
-
-		for (_int i = 0; i < ModelAnimations.size(); ++i)
-		{
-			pAnimItems[i] = new char[MAX_PATH];
-			strcpy_s(pAnimItems[i], sizeof(char) * MAX_PATH, ModelAnimations[i]->Get_Name());
-		}
-		ImGui::SetNextItemWidth(600.f);
-		if (ImGui::ListBox("Animation", &m_iAnimationChoice, pAnimItems, _int(ModelAnimations.size())))
-		{
-			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Set_AnimIndex(m_iAnimationChoice);
-
-			m_fAnimationDuration = ModelAnimations[m_iAnimationChoice]->Get_Duration();
-
-			m_iEventChoice = -1;
-		}
-
-		for (_int i = 0; i < ModelAnimations.size(); ++i)
-			Safe_Delete_Array(pAnimItems[i]);
-
-		Safe_Delete_Array(pAnimItems);
-
-		if (ImGui::DragFloat("Duration", &m_fAnimationDuration, 0.005f, 0.001f, 200.f))
-			ModelAnimations[m_iAnimationChoice]->Change_Duration(m_fAnimationDuration);
-		ImGui::SameLine();
-		ImGui::Checkbox("Animation Play", &m_isAnimationPlay);
-
-		if (m_isAnimationPlay)
-		{
-			if (-1 != m_iAnimationChoice)
+			for (_int i = 0; i < ModelBones.size(); ++i)
 			{
-				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StartAnim();
-				m_fAnimationTime = ModelAnimations[m_iAnimationChoice]->Get_CurrentTime();
-				if (m_fAnimationTime > m_fAnimationDuration)
-					m_fAnimationTime = 0.f;
+				pBoneItems[i] = new char[MAX_PATH];
+				strcpy_s(pBoneItems[i], sizeof(char) * MAX_PATH, ModelBones[i]->Get_Name());
+			}
+
+			if (ImGui::ListBox("", &m_iBoneChoice, pBoneItems, _int(ModelBones.size())))
+			{
+				_matrix BoneTransformation = ModelBones[m_iBoneChoice]->Get_TransformationMatrix();
+
+				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Change_Bone(ModelBones[m_iBoneChoice]->Get_Name());
+			}
+
+			for (_int i = 0; i < ModelBones.size(); ++i)
+				Safe_Delete_Array(pBoneItems[i]);
+
+			Safe_Delete_Array(pBoneItems);
+
+			if (ImGui::Button("Weapon"))
+			{
+
 			}
 		}
-		else
-			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
 
-		if (ImGui::SliderFloat("Playing", &m_fAnimationTime, 0.f, m_fAnimationDuration))
+		if (ImGui::CollapsingHeader("Animation", TreeNodeFlags))
 		{
-			ModelAnimations[m_iAnimationChoice]->Reset();
-			ModelAnimations[m_iAnimationChoice]->Set_CurrentTime(m_fAnimationTime);
-			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->PlayAnimation();
+			char** pAnimItems = new char*[ModelAnimations.size()];
+
+			for (_int i = 0; i < ModelAnimations.size(); ++i)
+			{
+				pAnimItems[i] = new char[MAX_PATH];
+				strcpy_s(pAnimItems[i], sizeof(char) * MAX_PATH, ModelAnimations[i]->Get_Name());
+			}
+			ImGui::SetNextItemWidth(600.f);
+			if (ImGui::ListBox("Animation", &m_iAnimationChoice, pAnimItems, _int(ModelAnimations.size())))
+			{
+				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Set_AnimIndex(m_iAnimationChoice);
+
+				m_fAnimationDuration = ModelAnimations[m_iAnimationChoice]->Get_Duration();
+
+				m_iEventChoice = -1;
+			}
+
+			for (_int i = 0; i < ModelAnimations.size(); ++i)
+				Safe_Delete_Array(pAnimItems[i]);
+
+			Safe_Delete_Array(pAnimItems);
+
+			if (ImGui::DragFloat("Duration", &m_fAnimationDuration, 0.005f, 0.001f, 200.f))
+				ModelAnimations[m_iAnimationChoice]->Change_Duration(m_fAnimationDuration);
+			ImGui::SameLine();
+			ImGui::Checkbox("Animation Play", &m_isAnimationPlay);
+
+			if (m_isAnimationPlay)
+			{
+				if (-1 != m_iAnimationChoice)
+				{
+					((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StartAnim();
+					m_fAnimationTime = ModelAnimations[m_iAnimationChoice]->Get_CurrentTime();
+					if (m_fAnimationTime > m_fAnimationDuration)
+						m_fAnimationTime = 0.f;
+				}
+			}
+			else
+				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
+
+			if (ImGui::SliderFloat("Playing", &m_fAnimationTime, 0.f, m_fAnimationDuration))
+			{
+				ModelAnimations[m_iAnimationChoice]->Reset();
+				ModelAnimations[m_iAnimationChoice]->Set_CurrentTime(m_fAnimationTime);
+				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->PlayAnimation();
+			}
+
+			if (ImGui::Button("Animation Edit"))
+				m_isAnimationEdit = true;
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Animation Event"))
+				m_isEventWindow = true;
 		}
-
-		if (ImGui::Button("Animation Edit"))
-			m_isAnimationEdit = true;
-
-		ImGui::SameLine();
-
-		if (ImGui::Button("Animation Event"))
-			m_isEventWindow = true;
 	}
-
 }
 
 void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype)
