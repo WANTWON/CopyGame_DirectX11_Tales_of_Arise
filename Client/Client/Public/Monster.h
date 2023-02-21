@@ -128,7 +128,6 @@ protected:
 	_bool m_bMakeEffect = false;
 	_bool m_bTakeDamage = false;
 	_bool m_bBattleMode = false;
-	_bool m_bDestinationMode = false;
 	_bool m_bDownState = false;
 	_bool m_bOnGoingDown = false;
 	_bool m_bBedamageAnim = false;

@@ -307,6 +307,7 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 	case SYMBOL_TURN_RIGHT:
 	case ATTACK_SWING_360:
 	case DOWN_B:
+	case DOWN_UNIQUE:
 	case ARISE_B:
 		return false;
 	}
@@ -320,7 +321,6 @@ _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockO
 		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
-	int a = 0;
 	if (m_bOnGoingDown == false)
 	{
 		if (iHp <= 0)
