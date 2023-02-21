@@ -204,6 +204,12 @@ void CRenderer::Set_ZoomBlur(_bool bZoomBlur, _float fFocusPower, _uint iFocusDe
 	m_iFocusDetail = iFocusDetail;
 }
 
+void CRenderer::Set_Saturation(_bool bSaturation, _float fSaturationPower)
+{
+	m_bSaturation = bSaturation;
+	m_fSaturationPower = fSaturationPower;
+}
+
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGameObject)
 {
 	if (nullptr == pGameObject)
@@ -678,7 +684,7 @@ HRESULT CRenderer::Render_PostProcessing()
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
 		return E_FAIL;
 
-	m_pShaderPostProcessing->Begin(7); /* Final Pass */
+	m_pShaderPostProcessing->Begin(7); /* Depth Of Field */
 	m_pVIBuffer->Render();
 
 	/* Fog */
@@ -711,7 +717,7 @@ HRESULT CRenderer::Render_PostProcessing()
 	/* Distortion */
 	/* This Distortion is a Post Processing Effect applied to the entire Screen. 
 	Unlike the Distortion Effect computed in the Render_Distortion() function which renders just Distorted Objects. */
-	if (m_bDistort)
+	/*if (m_bDistort)
 	{
 		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
 		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
@@ -729,7 +735,7 @@ HRESULT CRenderer::Render_PostProcessing()
 
 		m_pShaderPostProcessing->Begin(5);
 		m_pVIBuffer->Render();
-	}
+	}*/
 
 	/* Zoom Blur */
 	if (m_bZoomBlur)
@@ -744,6 +750,20 @@ HRESULT CRenderer::Render_PostProcessing()
 			return E_FAIL;
 
 		m_pShaderPostProcessing->Begin(8); /* Zoom Blur */
+		m_pVIBuffer->Render();
+	}
+
+	/* Saturation */
+	if (m_bSaturation)
+	{
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fSaturation", &m_fSaturationPower, sizeof(_float))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(9); /* Saturation */
 		m_pVIBuffer->Render();
 	}
 

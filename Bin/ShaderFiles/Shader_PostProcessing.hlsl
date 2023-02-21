@@ -42,6 +42,9 @@ float g_fMaxBlurDepth = 400.f;
 float g_fFocusPower;
 int g_iFocusDetail;
 
+/* Saturation */
+float g_fSaturation = 1.f;
+
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_Linear;
@@ -317,6 +320,35 @@ PS_OUT PS_ZOOMBLUR(PS_IN In) // 8
 	return Out;
 }
 
+PS_OUT PS_SATURATE(PS_IN In) // 9
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float3 fLuminance = float3(0.3086, 0.6094, 0.0820);
+	float fSaturationInverse = 1.0 - g_fSaturation;
+
+	float3 fRed = float3(fLuminance.x * fSaturationInverse, fLuminance.x * fSaturationInverse, fLuminance.x * fSaturationInverse);
+	fRed += float3(g_fSaturation, 0, 0);
+
+	float3 fGreen = float3(fLuminance.y * fSaturationInverse, fLuminance.y * fSaturationInverse, fLuminance.y * fSaturationInverse);
+	fGreen += float3(0, g_fSaturation, 0);
+
+	float3 fBlue = float3(fLuminance.z * fSaturationInverse, fLuminance.z * fSaturationInverse, fLuminance.z * fSaturationInverse);
+	fBlue += float3(0, 0, g_fSaturation);
+
+	float4x4 mSaturationMatrix = float4x4(	fRed, 0,
+											fGreen, 0,
+											fBlue, 0,
+											0, 0, 0, 1	);
+
+	float4 vColor = g_BackBufferTexture.Sample(LinearSampler, In.vTexUV);
+	vColor = mul(vColor, mSaturationMatrix);
+
+	Out.vColor = vColor;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default // 0
@@ -416,5 +448,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ZOOMBLUR();
+	}
+
+	pass Saturation // 9
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_SATURATE();
 	}
 }
