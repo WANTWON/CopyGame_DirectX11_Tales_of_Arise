@@ -117,38 +117,20 @@ HRESULT CHawk::Ready_Components(void * pArg)
 
 int CHawk::Tick(_float fTimeDelta)
 {
-	if (m_bDead)
+
+	_int iSuperTick = __super::Tick(fTimeDelta);
+	if (iSuperTick == OBJ_DEAD)
 		return OBJ_DEAD;
 
-	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+	if (iSuperTick == OBJ_NOSHOW)
+		return OBJ_NOSHOW;
 
-	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
-		return OBJ_NOEVENT;
-
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
-		return OBJ_NOEVENT;
-
-	if(!Check_IsinFrustum(2.f) && !m_bBattleMode)
-		return OBJ_NOEVENT;
-	
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return OBJ_NOEVENT;
-
-	__super::Tick(fTimeDelta);
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
+		return OBJ_NOSHOW;
 
 	
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
-
-	//RELEASE_INSTANCE(CCollision_Manager);
-	
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	//{
-	//	CHawkState* pState = new CBattle_TornadeState(this);
-	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-	//}
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 

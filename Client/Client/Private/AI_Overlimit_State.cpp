@@ -33,6 +33,20 @@ CAIState * CAI_Overlimit_State::Tick(_float fTimeDelta)
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;
 
+	
+		for (auto& iter : m_pEffects)
+		{
+			if (iter != nullptr && iter->Get_PreDead() == true)
+			{
+				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+				if (pParticleSystem != nullptr)
+					pParticleSystem->Set_Stop(true);
+
+				iter = nullptr;
+			}
+		}
+	
+
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
 		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();

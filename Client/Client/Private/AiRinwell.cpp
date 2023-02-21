@@ -136,25 +136,19 @@ int CAiRinwell::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
-	__super::Tick(fTimeDelta);
 
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
 		return OBJ_NOEVENT;
 
-	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
-		return OBJ_NOEVENT;
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return OBJ_NOEVENT;
+	_int iSuperTick = __super::Tick(fTimeDelta);
+	if (iSuperTick == OBJ_DEAD)
+		return OBJ_DEAD;
 
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
-		return OBJ_NOEVENT;
+	if (iSuperTick == OBJ_NOSHOW)
+		return OBJ_NOSHOW;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
-		return OBJ_NOEVENT;
-
-	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+		return OBJ_NOSHOW;
 
 	AI_Behavior(fTimeDelta);
 	Tick_State(fTimeDelta);

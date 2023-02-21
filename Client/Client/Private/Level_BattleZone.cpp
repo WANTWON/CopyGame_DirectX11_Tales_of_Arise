@@ -85,7 +85,9 @@ HRESULT CLevel_BattleZone::Initialize()
 	}
 
 	CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
-	
+
+	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
+
 	return S_OK;
 }
 

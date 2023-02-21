@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\SionSkills.h"
 #include "Monster.h"
-#include "ParticleSystem.h"
+
 
 CSionSkills::CSionSkills(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBullet(pDevice, pContext)
@@ -136,7 +136,8 @@ int CSionSkills::Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 
-	if (m_bDead)
+
+	if (__super::Tick(fTimeDelta) == OBJ_DEAD || m_bDead)
 	{
 		Dead_Effect();
 		return OBJ_DEAD;

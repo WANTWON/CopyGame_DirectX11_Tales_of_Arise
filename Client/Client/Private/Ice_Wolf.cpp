@@ -112,27 +112,17 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
-	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if (m_bDead )
-		return OBJ_DEAD;
-		
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
-		return OBJ_NOEVENT;
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return OBJ_NOEVENT;
-
-	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
-
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
-		return OBJ_NOEVENT;
-
-	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
-		return OBJ_NOEVENT;
-
-	__super::Tick(fTimeDelta);
 	
+	_int iSuperTick = __super::Tick(fTimeDelta);
+	if (iSuperTick == OBJ_DEAD)
+		return OBJ_DEAD;
+
+	if (iSuperTick == OBJ_NOSHOW)
+		return OBJ_NOSHOW;
+	
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
+		return OBJ_NOSHOW;
+
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 

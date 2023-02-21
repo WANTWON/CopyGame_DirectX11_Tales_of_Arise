@@ -186,8 +186,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
-		return;
+	
 
 	if (m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
@@ -209,6 +208,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 
 	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
+		return;
+
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
 		return;
 
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
@@ -507,6 +509,21 @@ void CPlayer::LateTick_State(_float fTimeDelta)
 
 void CPlayer::Tick_AIState(_float fTimeDelta)
 {
+
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON || eCamMode == CCamera_Dynamic::CAM_AIBOOSTOFF)
+		{
+			if(dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_Target() != this)
+			return;
+		}
+			
+	}
+
+
 	CAIState* pNewState = m_pAIState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pAIState = m_pAIState->ChangeState(m_pAIState, pNewState);
