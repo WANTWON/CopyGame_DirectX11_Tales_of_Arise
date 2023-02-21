@@ -64,8 +64,10 @@ HRESULT CMonster::Initialize(void* pArg)
 
 int CMonster::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
-		return OBJ_NOEVENT;
+	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+
+	if (m_bDead)
+		return OBJ_DEAD;
 
 	__super::Tick(fTimeDelta);
 
@@ -80,14 +82,34 @@ int CMonster::Tick(_float fTimeDelta)
 
 	m_fTimeDeltaAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 
+
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON)
+				return OBJ_NOSHOW;
+
+	}
+
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
+		return OBJ_NOSHOW;
+
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return OBJ_NOSHOW;
+
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+
+	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+		return OBJ_NOSHOW;
+
 	return OBJ_NOEVENT;
 }
 
 void CMonster::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
-		return;
-
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)

@@ -57,6 +57,7 @@ public:
 	void Set_TargetPosition(_vector vPosition) { m_vTargetPos = vPosition; }
 	void Set_Zoom(_bool type) { m_bZoom = type; }
 	CAMERAMODE Get_CamMode() { return m_eCamMode; }
+	CBaseObj* Get_Target() { return  m_pTarget; }
 
 public:
 	void					Add_CamData(TOOLDESC CamDesc) { m_CamDatas.push_back(CamDesc); }

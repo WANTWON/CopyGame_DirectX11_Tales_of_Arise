@@ -85,7 +85,9 @@ HRESULT CLevel_BattleZone::Initialize()
 	}
 
 	CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
-	
+
+	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
+
 	return S_OK;
 }
 
@@ -306,6 +308,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Check_Navigation();
 	pPlayer->Off_IsFly();
 	pPlayer->Change_Level(LEVEL_BATTLE);
+	pPlayer->Set_IsActionMode(true);
 
 	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
 	_vector vPosition[3] = { XMVectorSetW(XMLoadFloat3(&ModelDesc2.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc3.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc4.vPosition), 1.f) };
@@ -317,6 +320,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Compute_CurrentIndex(LEVEL_BATTLE);
 		iter->Check_Navigation();
 		iter->Change_Level(LEVEL_BATTLE);
+		iter->Set_IsActionMode(true);
 		i++;
 	}
 	

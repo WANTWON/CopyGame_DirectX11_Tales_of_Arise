@@ -386,7 +386,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.fVelocity = 5.f;
 						BulletDesc.fDeadTime = 10.f;
-						BulletDesc.eBulletType = CRinwellSkills::HOlY_RANCE;
+						BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE;
 						if (pTarget != nullptr)
 						{
 							BulletDesc.vTargetPosition = (pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -499,8 +499,8 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK4:
 		{
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); //얼음떨구기
-																							/* Make Effect */
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); 
+																							
 			_vector vOffset = { 0.f,3.f,0.f,0.f };
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
@@ -514,10 +514,8 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		}
 			
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
-			//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
-			//				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
 			break;
 		}
 	}
@@ -574,7 +572,8 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			mWorldMatrix.r[3] = vLocation;
 
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartFlash.dat"), mWorldMatrix);
-			m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellBoostEffect.dat"), mWorldMatrix);
+			m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
+			break;
 
 			break;
 		}
@@ -600,14 +599,16 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			mWorldMatrix.r[3] = vLocation;
 
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellDevineSabor.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartFlash.dat"), mWorldMatrix);
-			m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellBoostEffect.dat"), mWorldMatrix);
+			m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
 			break;
 		}
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK6:
 		{
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); // 비가우수수
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); 
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_F.mp3"), SOUND_EFFECT_ALPHEN, 1.0f);
 			//dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_R.wav"), SOUND_EFFECT, 0.5f);
@@ -619,7 +620,8 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			mWorldMatrix.r[3] = vLocation;
 
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartFlash.dat"), mWorldMatrix);
-			m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellBoostEffect.dat"), mWorldMatrix);
+			m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
+			break;
 			break;
 		}
 		}

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\SionSkills.h"
 #include "Monster.h"
-#include "ParticleSystem.h"
+
 
 CSionSkills::CSionSkills(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBullet(pDevice, pContext)
@@ -136,7 +136,8 @@ int CSionSkills::Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 
-	if (m_bDead)
+
+	if (__super::Tick(fTimeDelta) == OBJ_DEAD || m_bDead)
 	{
 		Dead_Effect();
 		return OBJ_DEAD;
@@ -270,8 +271,14 @@ void CSionSkills::Collision_Check()
 	case TRESVENTOS:
 	case NORMALATTACK:
 	case GRAVITY_DEAD:
-	case GLACIA_DEAD:
 		__super::Collision_Check();
+		break;
+	case GLACIA_DEAD:
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+		{
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+			m_bDead = true;
+		}
 		break;
 	case AQUA_LUINA_BULLET:
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))

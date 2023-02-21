@@ -28,6 +28,7 @@ public:
 
 	}ACTIONCAMDESC;
 	
+	enum CAM_MODE { CAM_DEBUG, CAM_ACTION };
 
 private:
 	CCamera_Action(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -43,6 +44,7 @@ public:
 	void Remove_AllCamdata() { m_CamDatas.clear(); };
 
 public:
+	void					Set_CamMode(CAM_MODE eMode) { m_eCamMode = eMode; }
 	void					Set_Play(_bool type);
 	void					Set_PlayTime(_float fTime) { m_fPlayTime = fTime; m_fTime = 0.f; }
 	_bool					Get_Play() { return m_bPlay; }
@@ -51,6 +53,7 @@ public:
 	int						PlayCamera(_float fTimeDelta);
 	_float4					Get_CurrentEye() { return m_CameraDesc.vEye; }
 	_float4					Get_CurrentAt() { return m_CameraDesc.vAt; }
+	int						DebugVCamera(_float fTimeDelta);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -60,6 +63,7 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	_uint		m_eCamMode = CAM_DEBUG;
 	_bool		m_bIsSelected = true;
 	_float		m_fPlayTime = 0.f;
 	_bool		m_bPlay = false;
