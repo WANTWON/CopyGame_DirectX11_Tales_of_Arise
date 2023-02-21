@@ -137,8 +137,6 @@ int CAiRinwell::Tick(_float fTimeDelta)
 	}
 
 
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
-		return OBJ_NOEVENT;
 
 	_int iSuperTick = __super::Tick(fTimeDelta);
 	if (iSuperTick == OBJ_DEAD)
