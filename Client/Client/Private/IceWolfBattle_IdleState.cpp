@@ -87,8 +87,6 @@ CIceWolfState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	{
 		if (m_fTimeDeltaAcc > m_fIdleTime)
 			return new CAttack_Elemental_Charge(m_pOwner, STATE_ID::STATE_CHARGE_START, false, m_pCurTarget);
-
-	
 	}
 
 	return nullptr;

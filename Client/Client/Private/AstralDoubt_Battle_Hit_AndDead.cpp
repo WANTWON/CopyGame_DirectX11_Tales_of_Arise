@@ -2,6 +2,7 @@
 #include "..\Public\AstralDoubt_Battle_Hit_AndDead.h"
 #include "AstralDoubt_Battle_WalkState.h"
 #include "AstralDoubt_Battle_720Spin_FirstState.h"
+#include "AstralDoubt_Battle_IdleState.h"
 
 using namespace Astral_Doubt;
 
@@ -27,6 +28,21 @@ CAstralDoubt_State * CBattle_Hit_AndDead::Tick(_float fTimeDelta)
 	case Client::CAstralDoubt_State::STATE_BE_DAMAGED:
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
+
+	case Client::CAstralDoubt_State::STATE_DOWN:
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+		
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+			m_pOwner->Check_Navigation();
+		}
+		
+		break;
 	default:
 		break;
 	}
@@ -45,14 +61,21 @@ CAstralDoubt_State * CBattle_Hit_AndDead::LateTick(_float fTimeDelta)
 	
 	if (m_bIsAnimationFinished)
 	{
-		m_pOwner->Set_Finish_HitAnimState();
-		
 		switch (m_eStateId)
 		{
 		case Client::CAstralDoubt_State::STATE_DEAD:
 			m_bDeadAnimFinish = true;
 			if (m_bDeadAnimFinish)
+			{
 				m_pOwner->Set_GlowUp();
+				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
+				m_pAtkColliderCom = nullptr;
+
+				pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+			}
+
 			return new CBattle_Hit_AndDead(m_pOwner, STATE_DEAD, true);
 			break;
 		case Client::CAstralDoubt_State::STATE_BE_DAMAGED:
@@ -71,6 +94,9 @@ CAstralDoubt_State * CBattle_Hit_AndDead::LateTick(_float fTimeDelta)
 				}
 			}
 			break;
+
+		case Client::CAstralDoubt_State::STATE_DOWN:
+			return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_DOWN);
 		}	
 	}
 	
@@ -97,6 +123,8 @@ void CBattle_Hit_AndDead::Enter()
 
 	case Client::CAstralDoubt_State::STATE_BE_DAMAGED:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::DOWN_UNIQUE);
+		m_pOwner->SetOff_BedamagedCount();
+		m_pOwner->Set_BedamageCount_Delay();
 
 		//if (!m_bAnimFinish)
 		//{
@@ -105,11 +133,20 @@ void CBattle_Hit_AndDead::Enter()
 		//	break;
 		//}
 		break;
+
+	case Client::CAstralDoubt_State::STATE_DOWN:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::DOWN_B);
+		m_pOwner->Set_OnGoingDown();
+		break;
 	}
 
 }
 
 void CBattle_Hit_AndDead::Exit()
 {
-	//CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	if (m_eStateId == Client::CAstralDoubt_State::STATE_BE_DAMAGED)
+		m_pOwner->SetOff_BedamageCount_Delay();
+
+	Safe_Release(m_pAtkColliderCom);
+
 }

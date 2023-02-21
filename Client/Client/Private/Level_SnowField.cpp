@@ -197,6 +197,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 		LEVEL eNextLevel = LEVEL_BOSS;
 		pGameInstance->Set_DestinationLevel(eNextLevel);
+		CBattleManager::Get_Instance()->Set_BattleMode(true, ASTRAL_DOUBT, true);
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
 			return;
 
