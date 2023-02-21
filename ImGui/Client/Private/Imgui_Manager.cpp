@@ -5912,93 +5912,108 @@ void CImgui_Manager::Set_Animation()
 	CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
 	if (nullptr != pPlayerModel)
 	{
+		ImGuiTreeNodeFlags TreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
+
+		if (ImGui::CollapsingHeader("World Transform", TreeNodeFlags))
+		{
+			if (ImGui::DragFloat3("Rotation", m_Rotation, 0.01f, 0.f, 360.f))
+				((CAnim*)(pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front()))->Get_Transform()->Set_Rotation(_float3(m_Rotation[0], m_Rotation[1], m_Rotation[2]));
+			if (ImGui::DragFloat3("Position", m_Position, 0.01f))
+			{
+				_vector vPos = XMVectorSet(m_Position[0], m_Position[1], m_Position[2], 1.f);
+				((CAnim*)(pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front()))->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPos);
+			}
+		}
+
 		vector<CHierarchyNode*> ModelBones = pPlayerModel->Get_Bones();
 		vector<CAnimation*> ModelAnimations = pPlayerModel->Get_Animations();
 
-		char** pBoneItems = new char*[ModelBones.size()];
-		char** pAnimItems = new char*[ModelAnimations.size()];
-
-		for (_int i = 0; i < ModelBones.size(); ++i)
+		if (ImGui::CollapsingHeader("Bone", TreeNodeFlags))
 		{
-			pBoneItems[i] = new char[MAX_PATH];
-			strcpy_s(pBoneItems[i], sizeof(char) * MAX_PATH, ModelBones[i]->Get_Name());
-		}
+			char** pBoneItems = new char*[ModelBones.size()];
 
-		ImGui::CollapsingHeader("Bone");
-
-		if (ImGui::ListBox("", &m_iBoneChoice, pBoneItems, _int(ModelBones.size())))
-		{
-			_matrix BoneTransformation = ModelBones[m_iBoneChoice]->Get_TransformationMatrix();
-
-			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Change_Bone(ModelBones[m_iBoneChoice]->Get_Name());
-		}
-
-		for (_int i = 0; i < ModelBones.size(); ++i)
-			Safe_Delete_Array(pBoneItems[i]);
-
-		Safe_Delete_Array(pBoneItems);
-
-		if (ImGui::Button("Weapon"))
-		{
-
-		}
-
-		ImGui::CollapsingHeader("Animation");
-
-		for (_int i = 0; i < ModelAnimations.size(); ++i)
-		{
-			pAnimItems[i] = new char[MAX_PATH];
-			strcpy_s(pAnimItems[i], sizeof(char) * MAX_PATH, ModelAnimations[i]->Get_Name());
-		}
-		ImGui::SetNextItemWidth(600.f);
-		if (ImGui::ListBox("Animation", &m_iAnimationChoice, pAnimItems, _int(ModelAnimations.size())))
-		{
-			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Set_AnimIndex(m_iAnimationChoice);
-
-			m_fAnimationDuration = ModelAnimations[m_iAnimationChoice]->Get_Duration();
-
-			m_iEventChoice = -1;
-		}
-
-		for (_int i = 0; i < ModelAnimations.size(); ++i)
-			Safe_Delete_Array(pAnimItems[i]);
-
-		Safe_Delete_Array(pAnimItems);
-
-		if (ImGui::DragFloat("Duration", &m_fAnimationDuration, 0.005f, 0.001f, 200.f))
-			ModelAnimations[m_iAnimationChoice]->Change_Duration(m_fAnimationDuration);
-		ImGui::SameLine();
-		ImGui::Checkbox("Animation Play", &m_isAnimationPlay);
-
-		if (m_isAnimationPlay)
-		{
-			if (-1 != m_iAnimationChoice)
+			for (_int i = 0; i < ModelBones.size(); ++i)
 			{
-				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StartAnim();
-				m_fAnimationTime = ModelAnimations[m_iAnimationChoice]->Get_CurrentTime();
-				if (m_fAnimationTime > m_fAnimationDuration)
-					m_fAnimationTime = 0.f;
+				pBoneItems[i] = new char[MAX_PATH];
+				strcpy_s(pBoneItems[i], sizeof(char) * MAX_PATH, ModelBones[i]->Get_Name());
+			}
+
+			if (ImGui::ListBox("", &m_iBoneChoice, pBoneItems, _int(ModelBones.size())))
+			{
+				_matrix BoneTransformation = ModelBones[m_iBoneChoice]->Get_TransformationMatrix();
+
+				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Change_Bone(ModelBones[m_iBoneChoice]->Get_Name());
+			}
+
+			for (_int i = 0; i < ModelBones.size(); ++i)
+				Safe_Delete_Array(pBoneItems[i]);
+
+			Safe_Delete_Array(pBoneItems);
+
+			if (ImGui::Button("Weapon"))
+			{
+
 			}
 		}
-		else
-			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
 
-		if (ImGui::SliderFloat("Playing", &m_fAnimationTime, 0.f, m_fAnimationDuration))
+		if (ImGui::CollapsingHeader("Animation", TreeNodeFlags))
 		{
-			ModelAnimations[m_iAnimationChoice]->Reset();
-			ModelAnimations[m_iAnimationChoice]->Set_CurrentTime(m_fAnimationTime);
-			((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->PlayAnimation();
+			char** pAnimItems = new char*[ModelAnimations.size()];
+
+			for (_int i = 0; i < ModelAnimations.size(); ++i)
+			{
+				pAnimItems[i] = new char[MAX_PATH];
+				strcpy_s(pAnimItems[i], sizeof(char) * MAX_PATH, ModelAnimations[i]->Get_Name());
+			}
+			ImGui::SetNextItemWidth(600.f);
+			if (ImGui::ListBox("Animation", &m_iAnimationChoice, pAnimItems, _int(ModelAnimations.size())))
+			{
+				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Set_AnimIndex(m_iAnimationChoice);
+
+				m_fAnimationDuration = ModelAnimations[m_iAnimationChoice]->Get_Duration();
+
+				m_iEventChoice = -1;
+			}
+
+			for (_int i = 0; i < ModelAnimations.size(); ++i)
+				Safe_Delete_Array(pAnimItems[i]);
+
+			Safe_Delete_Array(pAnimItems);
+
+			if (ImGui::DragFloat("Duration", &m_fAnimationDuration, 0.005f, 0.001f, 200.f))
+				ModelAnimations[m_iAnimationChoice]->Change_Duration(m_fAnimationDuration);
+			ImGui::SameLine();
+			ImGui::Checkbox("Animation Play", &m_isAnimationPlay);
+
+			if (m_isAnimationPlay)
+			{
+				if (-1 != m_iAnimationChoice)
+				{
+					((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StartAnim();
+					m_fAnimationTime = ModelAnimations[m_iAnimationChoice]->Get_CurrentTime();
+					if (m_fAnimationTime > m_fAnimationDuration)
+						m_fAnimationTime = 0.f;
+				}
+			}
+			else
+				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
+
+			if (ImGui::SliderFloat("Playing", &m_fAnimationTime, 0.f, m_fAnimationDuration))
+			{
+				ModelAnimations[m_iAnimationChoice]->Reset();
+				ModelAnimations[m_iAnimationChoice]->Set_CurrentTime(m_fAnimationTime);
+				((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->PlayAnimation();
+			}
+
+			if (ImGui::Button("Animation Edit"))
+				m_isAnimationEdit = true;
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Animation Event"))
+				m_isEventWindow = true;
 		}
-
-		if (ImGui::Button("Animation Edit"))
-			m_isAnimationEdit = true;
-
-		ImGui::SameLine();
-
-		if (ImGui::Button("Animation Event"))
-			m_isEventWindow = true;
 	}
-
 }
 
 void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLayerTag, _bool bCreatePrototype)
