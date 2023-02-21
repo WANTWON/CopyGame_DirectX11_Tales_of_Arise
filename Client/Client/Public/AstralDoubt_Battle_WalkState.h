@@ -24,6 +24,11 @@ private:
 	_float  m_fMoveTime = 0;
 	STATE_ID	m_ePreState_Id;
 	_bool	m_Testbool;
+	_bool  m_bBeamTargetOn = false;
+	_bool  m_bTargetPickOn = false;
+	CCollider*  m_pAtkColliderCom = false;
+	CCollider*	m_p2th_AtkColliderCom = false;
+
 
 };
 END

@@ -36,6 +36,9 @@ public: /* Getter */
 	vector<CBaseObj*> Get_BattleMonster() { return m_BattleMonster; }
 	CBaseObj* Get_MinDistance_Monster(_vector vPosition);
 
+	_bool Get_IsStrike() { return m_bStrike; }
+	void Set_IsStrike(_bool tof) { m_bStrike = tof; }
+
 	_bool IsAllMonsterDead();
 
 public: /* For Lock On */
@@ -58,6 +61,7 @@ private:
 	
 	CBaseObj* m_pLockon = nullptr;
 	CBaseObj* m_pBoss = nullptr;
+	_bool m_bStrike = false;
 
 public:
 	virtual void Free() override;

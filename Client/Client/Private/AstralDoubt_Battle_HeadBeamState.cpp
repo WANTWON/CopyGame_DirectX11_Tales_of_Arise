@@ -62,6 +62,11 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 	{
 		if (pEvent.isPlay)
 		{
+			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+			{
+				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+					dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.5f, 0.1f);
+			}
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
@@ -95,6 +100,9 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
+
+
+			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
@@ -185,7 +193,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 			
 	else if (m_bIsAnimationFinished)
 	{
-		if (m_fTarget_Distance <= 5.5f)
+		if (m_fTarget_Distance <= 8.f)
 		{
 			return new CBattle_720Spin_FirstState(m_pOwner);
 		}

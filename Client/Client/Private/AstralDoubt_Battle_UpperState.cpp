@@ -117,8 +117,8 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc;
 
-					ColliderDesc.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
@@ -131,8 +131,8 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc2th;
 
-					ColliderDesc2th.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc2th.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc2th.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 					m_p2th_AtkColliderCom->Update(matWorld_2th);
@@ -145,8 +145,8 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc3th;
 
-					ColliderDesc3th.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc3th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc3th.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc3th.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_p3th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc3th);
 					m_p3th_AtkColliderCom->Update(matWorld_3th);
@@ -159,8 +159,8 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc4th;
 
-					ColliderDesc4th.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc4th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc4th.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc4th.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_p4th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc4th);
 					m_p4th_AtkColliderCom->Update(matWorld_4th);
@@ -173,8 +173,8 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc5th;
 
-					ColliderDesc5th.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc5th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc5th.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc5th.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_p5th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc5th);
 					m_p5th_AtkColliderCom->Update(matWorld_5th);
@@ -187,8 +187,8 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc6th;
 
-					ColliderDesc6th.vScale = _float3(7.5f, 7.5f, 7.5f);
-					ColliderDesc6th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc6th.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc6th.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_p6th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc6th);
 					m_p6th_AtkColliderCom->Update(matWorld_6th);
@@ -218,6 +218,9 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 			m_p5th_AtkColliderCom = nullptr;
 			m_p6th_AtkColliderCom = nullptr;
 
+
+			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
 	}
@@ -234,7 +237,7 @@ CAstralDoubt_State * CBattle_UpperState::LateTick(_float fTimeDelta)
 	
 	if (m_bIsAnimationFinished)
 	{
-		if (m_fTarget_Distance <= 5.5f)
+		if (m_fTarget_Distance <= 8.f)
 		{
 			return new CBattle_720Spin_FirstState(m_pOwner);
 		}

@@ -306,12 +306,12 @@ protected:
 	_vector		m_vBeginTargetPos;
 	_vector		m_vCurTargetPos;
 
-	CCollider*  m_pAtkColliderCom = false;
-	CCollider*	m_p2th_AtkColliderCom = false;
-	CCollider*	m_p3th_AtkColliderCom = false;
-	CCollider*	m_p4th_AtkColliderCom = false;
-	CCollider*	m_p5th_AtkColliderCom = false;
-	CCollider*	m_p6th_AtkColliderCom = false;
+	//CCollider*  m_pAtkColliderCom = false;
+	//CCollider*	m_p2th_AtkColliderCom = false;
+	//CCollider*	m_p3th_AtkColliderCom = false;
+	//CCollider*	m_p4th_AtkColliderCom = false;
+	//CCollider*	m_p5th_AtkColliderCom = false;
+	//CCollider*	m_p6th_AtkColliderCom = false;
 
 	
 };
