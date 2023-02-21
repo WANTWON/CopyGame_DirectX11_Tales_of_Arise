@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Player.h"
+#include "BattleManager.h"
 
 
 CMP_Guage::CMP_Guage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -50,7 +51,7 @@ HRESULT CMP_Guage::Initialize(void * pArg)
 int CMP_Guage::Tick(_float fTimeDelta)
 {
 	
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if(CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
 		
@@ -125,7 +126,7 @@ int CMP_Guage::Tick(_float fTimeDelta)
 
 void CMP_Guage::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return ;
 
 	m_fcurrent_render_slot_mp = m_fcurrentmp - (_uint)m_fcurrentmp;

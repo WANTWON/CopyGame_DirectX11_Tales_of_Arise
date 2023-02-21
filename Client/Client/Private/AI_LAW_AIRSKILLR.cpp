@@ -266,7 +266,9 @@ CAIState * CAI_LAW_AIRSKILLR::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (STATETYPE_END == m_eStateType)
+		if (STATETYPE_MAIN == m_eStateType)
+			m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
+       		if (STATETYPE_END == m_eStateType)
 		{
 			m_pOwner->Off_IsFly();
 			return new CAICheckState(m_pOwner, STATE_ATTACK);
@@ -294,8 +296,9 @@ void CAI_LAW_AIRSKILLR::Enter()
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_R.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
-
-
+	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SANHWAMANGSUP);
+	
+	
 }
 
 void CAI_LAW_AIRSKILLR::Exit()

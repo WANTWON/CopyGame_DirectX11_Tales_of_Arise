@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "PlayerManager.h"
 #include "UI_Get_item_Popup.h"
-
+#include "BattleManager.h"
 CHP_Font::CHP_Font(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -115,7 +115,7 @@ HRESULT CHP_Font::Initialize(void * pArg)
 int CHP_Font::Tick(_float fTimeDelta)
 {
 	//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 	for (_uint i = 0; i < 4; ++i)
 		m_fbrightpos_hp[i] += 0.015f;
@@ -309,7 +309,7 @@ void CHP_Font::Late_Tick(_float fTimeDelta)
 {
 	if (m_bRenderoff)
 		return;
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return;
 
 	if (m_fStart_timer > 0.8f)

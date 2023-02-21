@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\UI_Portraitback.h"
 #include "GameInstance.h"
+#include "BattleManager.h"
 
 CPortraitback::CPortraitback(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
@@ -42,7 +43,7 @@ int CPortraitback::Tick(_float fTimeDelta)
 	/*if (m_bmoveleft)
 		moveleft();*/
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
 
@@ -78,7 +79,7 @@ int CPortraitback::Tick(_float fTimeDelta)
 
 void CPortraitback::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return ;
 
 	/*if (m_fPosition.x <= 1200.f)

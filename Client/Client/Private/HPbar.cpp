@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Player.h"
+#include "BattleManager.h"
 CHPbar::CHPbar(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -43,7 +44,7 @@ HRESULT CHPbar::Initialize(void * pArg)
 
 int CHPbar::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
 	switch (m_iIndex)
@@ -136,7 +137,7 @@ int CHPbar::Tick(_float fTimeDelta)
 
 void CHPbar::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return ;
 	__super::Late_Tick(fTimeDelta);
 

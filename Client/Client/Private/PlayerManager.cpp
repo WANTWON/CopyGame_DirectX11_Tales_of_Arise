@@ -153,6 +153,7 @@ void CPlayerManager::Set_SmashAttack()
 
 			if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+			CBattleManager::Get_Instance()->Set_IsStrike(true);
 		}
 
 
@@ -164,6 +165,7 @@ void CPlayerManager::Set_SmashAttack()
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::ALPHEN_RINWELL);
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				CBattleManager::Get_Instance()->Set_IsStrike(true);
 			}
 
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_3))
@@ -172,6 +174,7 @@ void CPlayerManager::Set_SmashAttack()
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::SION_RINWELL);
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				CBattleManager::Get_Instance()->Set_IsStrike(true);
 			}
 		}
 
@@ -183,6 +186,7 @@ void CPlayerManager::Set_SmashAttack()
 				Get_EnumPlayer(3)->SmashAttack(CPlayer::ALPHEN_LAW);
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				CBattleManager::Get_Instance()->Set_IsStrike(true);
 			}
 
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
@@ -191,6 +195,7 @@ void CPlayerManager::Set_SmashAttack()
 				Get_EnumPlayer(3)->SmashAttack(CPlayer::SION_LAW);
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				CBattleManager::Get_Instance()->Set_IsStrike(true);
 			}
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_3) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			{
@@ -198,6 +203,7 @@ void CPlayerManager::Set_SmashAttack()
 				Get_EnumPlayer(4)->SmashAttack(CPlayer::RINWELL_LAW);
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				CBattleManager::Get_Instance()->Set_IsStrike(true);
 			}
 		}
 	}

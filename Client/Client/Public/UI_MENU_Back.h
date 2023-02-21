@@ -262,6 +262,8 @@ private:
 	_bool m_bfadeout_quest = false;
 	_float m_fQuestAlpha = 0.f;
 	_bool m_bfadein_Quest = false;
+
+	
 //	_uint m_iRecoveringPlayer = 0;
 };
 

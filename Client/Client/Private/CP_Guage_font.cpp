@@ -2,6 +2,7 @@
 #include "..\Public\CP_Guage_font.h"
 
 #include "GameInstance.h"
+#include "BattleManager.h"
 
 CCP_Guage_font::CCP_Guage_font(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
@@ -70,7 +71,7 @@ HRESULT CCP_Guage_font::Initialize(void * pArg)
 
 int CCP_Guage_font::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
 	m_iMaxcp = CUI_Manager::Get_Instance()->Get_MAXCP();
@@ -212,7 +213,7 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 
 void CCP_Guage_font::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return ;
 
 	if (!m_bRender)

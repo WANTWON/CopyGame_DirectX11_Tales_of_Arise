@@ -177,6 +177,7 @@ void CAI_SionLaw_Smash::Enter()
 void CAI_SionLaw_Smash::Exit()
 {
 	m_pOwner->Set_StrikeAttack(false);
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)

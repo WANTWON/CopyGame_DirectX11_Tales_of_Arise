@@ -6,6 +6,7 @@
 #include "PlayerManager.h"
 #include "Player.h"
 #include "UI_Skillmessage.h"
+//#include "..\Public\UI_MENU_BACK_part1.h"
 
 CUI_MENU_Back::CUI_MENU_Back(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
@@ -25,7 +26,7 @@ HRESULT CUI_MENU_Back::Initialize_Prototype()
 HRESULT CUI_MENU_Back::Initialize(void * pArg)
 {
 	m_eShaderID = 0;
-
+	
 	m_fSize.x = 1280;
 	m_fSize.y = 720.f;
 	m_fPosition.x = 640.f;
@@ -6233,6 +6234,8 @@ void CUI_MENU_Back::fadeinMain()
 
 
 }
+
+
 
 void CUI_MENU_Back::pingpong()
 {
