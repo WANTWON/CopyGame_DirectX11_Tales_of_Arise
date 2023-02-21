@@ -77,10 +77,10 @@ protected:
 		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		pPlayerList.push_back(pPlayer);
 
-		if (Index >= pPlayerList.size() || pPlayerList[Index]->Get_Dead())
+		//if (Index >= pPlayerList.size() || pPlayerList[Index]->Get_Dead())
 			m_pTarget = pPlayer;
-		else
-			m_pTarget = pPlayerList[Index];
+		//else
+			//m_pTarget = pPlayerList[Index];
 
 		_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);

@@ -124,7 +124,7 @@ int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 		else
 			m_eShaderID = UI_POTRAIT_DARK;
 
-		if (m_bfirst1 && CUI_Manager::Get_Instance()->Get_Arrived_Count() == 4)
+		if (m_bfirst1 && CUI_Manager::Get_Instance()->Get_Arrived_Count() == (_uint)(CPlayerManager::Get_Instance()->Get_AIPlayers().size()) + 1)
 		{
 			
 			

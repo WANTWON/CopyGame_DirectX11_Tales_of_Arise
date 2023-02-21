@@ -132,16 +132,6 @@ int CPlayer::Tick(_float fTimeDelta)
 			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
 				BoostAttack();
 		}
-
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
-		{
-			CUI_Manager::Get_Instance()->MinusCP(10);
-			m_tInfo.fCurrentHp += 100.f;
-			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
-			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
-		}
-		else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-			Take_Damage(m_tInfo.fCurrentHp, nullptr);
 	}
 	
 

@@ -253,6 +253,10 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 {
 	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		return E_FAIL;
+
+
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	NONANIMDESC ModelDesc1;
