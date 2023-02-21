@@ -202,66 +202,12 @@ int CHP_Font::Tick(_float fTimeDelta)
 			m_fAlpha += 0.01f;
 
 
-		//if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-		//{
-		//	CUI_RuneEffect::RUNEDESC desc;
-		//	desc.position.x = 1130.f;
-		//	desc.position.y = 375.f;
-		////	desc.m_etype = 1;
-		//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
-		//		return E_FAIL;
-		//	desc.position.y = 435.f;
-		//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
-		//		return E_FAIL;
-		//	desc.position.y = 495.f;
-		//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_GAMEPLAY, TEXT("test"), &desc)))
-		//		return E_FAIL;
-		//}
-
-		/*if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-		{
-			CUI_RuneEffect::RUNEDESC desc;
-			desc.position.x = 1130.f;
-			desc.position.y = 375.f;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-				return E_FAIL;
-			desc.position.y = 435.f;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-				return E_FAIL;
-			desc.position.y = 495.f;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-				return E_FAIL;
-		}*/
 
 		
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-		{
-			
-			
-			/*testdesc.iIndex = 0;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"),&testdesc)))
-				return E_FAIL;
-			testdesc.iIndex = 1;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
-				return E_FAIL;
-			testdesc.iIndex = 2;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
-				return E_FAIL;
-			testdesc.iIndex = 3;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_GetITEMPOPUP"), LEVEL_STATIC, TEXT("TETE"), &testdesc)))
-				return E_FAIL;*/
-
-		}
-			
-
-		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
-			--m_iCurrenthp;
-
-		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_J))
-			++m_iCurrenthp;
 
 		if (!m_bforMainPlayer)
 		{
+
 			m_fSize.x = 16.f;
 			m_fSize.y = 20.f;
 			m_fPosition.x = 1180.f;
@@ -281,7 +227,8 @@ int CHP_Font::Tick(_float fTimeDelta)
 			Compute_CamDistance(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));//Get_State(CTransform::STATE_TRANSLATION));
 			m_fPosition.x = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().x + 44.f;
 			m_fPosition.y = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_ProjPosition().y + 31.f - (m_fCamDistance / 5.f);
-
+			m_iCurrenthp = (_uint)CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
+			m_iCharactername = (_uint)CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();//alpen0  , sion 1
 			if (m_fCamDistance > 20.f)
 			{
 				m_fNext = 14.f / m_fCamDistance * 20;

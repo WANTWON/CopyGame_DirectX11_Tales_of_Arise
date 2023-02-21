@@ -103,6 +103,8 @@ int CHPbar::Tick(_float fTimeDelta)
 	
 	if (m_bforMainPlayer)
 	{
+		m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
+		m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp;
 		/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 		CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));*/
 		Compute_CamDistance(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));

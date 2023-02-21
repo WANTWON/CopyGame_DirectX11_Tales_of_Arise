@@ -47,6 +47,7 @@ public:
 	HRESULT Render_Player4_Status_useitem();
 	HRESULT Render_CP();
 	HRESULT Render_Mainbottombutton();
+	HRESULT Render_Orderbottombutton();
 	HRESULT Render_bottmline();
 	
 	HRESULT Render_Itembottombutton_useable();
@@ -274,6 +275,8 @@ private:
 	_bool m_bfadein_Quest = false;
 
 	_uint m_iOrdercursor = 0;
+
+	_bool m_bAIcanuseItem = true;
 
 	
 //	_uint m_iRecoveringPlayer = 0;

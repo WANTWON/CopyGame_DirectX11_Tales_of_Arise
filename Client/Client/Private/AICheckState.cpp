@@ -121,21 +121,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 		else
 			m_bRangerRunaway = false;
 
-		ITEM_NAME item;
-		switch (rand() % 3)
-		{
-		case 0:
-			item = ITEMNAME_GRAPEJELLY;
-			break;
-		case 1:
-			item = ITEMNAME_LEMONJELLY;
-			break;
-		case 2:
-			item = ITEMNAME_LIFEBOTTLE;
-			break;
-			
-		}
-		return new CAI_Item_Use_State(m_pOwner , item);
+		
 		switch (m_eCurrentPlayerID)
 		{
 		case CPlayer::ALPHEN:
@@ -376,28 +362,50 @@ CAIState * CAICheckState::RandomAttackChoose_Sion()
 
 
 
-		switch (rand() % 6)
+		switch (rand() % 7)
 		{
 
-	case 0:
-		return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
-		
-	case 1:
-		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
-	
-	case 2:
-		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
-	
-	case 3:
-		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
+		case 0:
+			return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 
-	case 4:
-		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+		case 1:
+			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
 
-	case 5:
-		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
-	
-	}
+		case 2:
+			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
+
+		case 3:
+			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
+
+		case 4:
+			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+
+		case 5:
+			return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+
+		case 6:
+			if (CBattleManager::Get_Instance()->Get_AIuseItem())
+			{
+				ITEM_NAME item;
+				switch (rand() % 3)
+				{
+				case 0:
+					item = ITEMNAME_GRAPEJELLY;
+					break;
+				case 1:
+					item = ITEMNAME_LEMONJELLY;
+					break;
+				case 2:
+					item = ITEMNAME_LIFEBOTTLE;
+					break;
+
+				}
+				return new CAI_Item_Use_State(m_pOwner, item);
+			}
+			else
+				return nullptr;
+
+		}
 		return nullptr;
 }
 
@@ -429,7 +437,7 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 
 
 
-	switch (rand() % 8)
+	switch (rand() % 9)
 	{
 
 	case 0:
@@ -455,6 +463,28 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 
 	case 7:
 		return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
+	case 8:
+		if (CBattleManager::Get_Instance()->Get_AIuseItem())
+		{
+			ITEM_NAME item;
+			switch (rand() % 3)
+			{
+			case 0:
+				item = ITEMNAME_GRAPEJELLY;
+				break;
+			case 1:
+				item = ITEMNAME_LEMONJELLY;
+				break;
+			case 2:
+				item = ITEMNAME_LIFEBOTTLE;
+				break;
+
+			}
+			return new CAI_Item_Use_State(m_pOwner, item);
+		}
+		else
+			return nullptr;
 
 	/*case 5:
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);*/
@@ -484,7 +514,7 @@ CAIState * CAICheckState::RandomAttackChoose_Law()
 	}
 
 
-	switch (rand() % 6)
+	switch (rand() % 7)
 	{
 
 	case 0:
@@ -503,6 +533,28 @@ CAIState * CAICheckState::RandomAttackChoose_Law()
 
 	case 5:
 		return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
+	case 6:
+		if (CBattleManager::Get_Instance()->Get_AIuseItem())
+		{
+			ITEM_NAME item;
+			switch (rand() % 3)
+			{
+			case 0:
+				item = ITEMNAME_GRAPEJELLY;
+				break;
+			case 1:
+				item = ITEMNAME_LEMONJELLY;
+				break;
+			case 2:
+				item = ITEMNAME_LIFEBOTTLE;
+				break;
+
+			}
+			return new CAI_Item_Use_State(m_pOwner, item);
+		}
+		else
+			return nullptr;
 
 	}
 	return nullptr;
@@ -529,7 +581,7 @@ CAIState * CAICheckState::RandomAttackChoose()
 	}
 		
 
-	switch (rand() % 6)
+	switch (rand() % 7)
 	{
 
 	case 0:
@@ -547,6 +599,27 @@ CAIState * CAICheckState::RandomAttackChoose()
 		return new CAI_DodgeState(m_pOwner, m_pTarget);
 	case 5:
 		return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+	case 6:
+		if (CBattleManager::Get_Instance()->Get_AIuseItem())
+		{
+			ITEM_NAME item;
+			switch (rand() % 3)
+			{
+			case 0:
+				item = ITEMNAME_GRAPEJELLY;
+				break;
+			case 1:
+				item = ITEMNAME_LEMONJELLY;
+				break;
+			case 2:
+				item = ITEMNAME_LIFEBOTTLE;
+				break;
+
+			}
+			return new CAI_Item_Use_State(m_pOwner, item);
+		}
+		else
+			return nullptr;
 
 	}
 	return nullptr;

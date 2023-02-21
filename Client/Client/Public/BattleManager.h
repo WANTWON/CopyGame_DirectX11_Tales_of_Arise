@@ -52,6 +52,9 @@ public: /* For Lock On */
 	_int Get_AImode(){return m_eAImode;}
 	void Set_AImode(_int mode) { m_eAImode = mode; }
 
+	_bool Get_AIuseItem() { return m_bAIuseItem; }
+	void Set_AIuseItem(_bool tof) { m_bAIuseItem = tof; }
+
 	
 
 public:
@@ -70,6 +73,8 @@ private:
 	_bool m_bStrike = false;
 
 	_int m_eAImode = 0;
+
+	_bool m_bAIuseItem = false;
 	//CAIState::AI_MODE m_eAImode = ATTACK_FREEMODE;
 
 public:
