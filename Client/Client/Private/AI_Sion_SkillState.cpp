@@ -12,6 +12,7 @@
 #include "AIAttackNormalState.h"
 #include "AI_DodgeState.h"
 #include "AI_JumpState.h"
+#include "AI_JumpState.h"
 
 
 
@@ -567,6 +568,10 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
 				break;
+
+			case 5:
+				return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
 
 			default:
 				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);

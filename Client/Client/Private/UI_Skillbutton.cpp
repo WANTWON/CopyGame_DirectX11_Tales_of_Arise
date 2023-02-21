@@ -104,6 +104,9 @@ int CUI_Skillbutton::Tick(_float fTimeDelta)
 		break;
 
 	case CPlayer::PLAYERID::RINWELL:
+		m_bSkill1non = true;
+		m_bSkill2non = true;
+		m_bSkill3non = true;
 		m_iSkill1name1 = CUI_Skillmessage::SKILLNAME::SKILLNAME_THUNDERFIELD;
 		m_iSkill1name2 = CUI_Skillmessage::SKILLNAME::SKILLNAME_GALEFORCE;
 		m_iSkill1name3 = CUI_Skillmessage::SKILLNAME::SKILLNAME_METEORSWARM;

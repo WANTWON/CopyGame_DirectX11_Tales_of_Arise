@@ -9,6 +9,7 @@
 #include "UI_Skillmessage.h"
 #include "ParticleSystem.h"
 #include "AI_JumpState.h"
+#include "AI_DodgeState.h"
 
 
 using namespace AIPlayer;
@@ -346,51 +347,70 @@ CAIState * CAI_Alphen_SkillAttackState::LateTick(_float fTimeDelta)
 
 		if (Get_Target_Distance() <= 3.f)
 		{
-			switch (rand() % 3)
+			if (m_pOwner->Get_Info().fCurrentMp > 1)
 			{
-			case 0: //Client::CAIState::STATE_NORMAL_ATTACK1:
-				__super::Exit();
-				m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_HIENZIN;
-				if (nullptr == m_pTarget)
+				switch (rand() % 4)
 				{
-					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+				case 0: //Client::CAIState::STATE_NORMAL_ATTACK1:
+					__super::Exit();
+					m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_HIENZIN;
+					if (nullptr == m_pTarget)
+					{
+						m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+						(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					}
+					else
+						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+					dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
+					break;
+				case 1:
+					__super::Exit();
+					m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_AKIZAME;
+					if (nullptr == m_pTarget)
+					{
+						m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+						(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					}
+					else
+						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+					dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOOSAWOO);
+					break;
+				case 2:
+					__super::Exit();
+					m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN;
+					if (nullptr == m_pTarget)
+					{
+						m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+						(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					}
+					else
+						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+					dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BOONGSUPGEEAKJIN);
+					break;
+
+				case 3:
+					return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
 				}
-				else
-				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
-				break;
-			case 1:
-				__super::Exit();
-				m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_AKIZAME;
-				if (nullptr == m_pTarget)
-				{
-					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-				}
-				else
-				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOOSAWOO);
-				break;
-			case 2:
-				__super::Exit();
-				m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN;
-				if (nullptr == m_pTarget)
-				{
-					m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-					(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-				}
-				else
-				m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BOONGSUPGEEAKJIN);
-				break;
+			
 			}
+			else
+				switch (rand() % 2)
+				{
+				case 0:
+					return new CAICheckState(m_pOwner, m_eStateId);
+					break;
+				case 1:
+					return new CAI_DodgeState(m_pOwner, m_pTarget, true);
+				}
+				
+			
 		}
 		else
 			return new CAICheckState(m_pOwner, m_eStateId);

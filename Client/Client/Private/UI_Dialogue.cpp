@@ -257,13 +257,28 @@ void CUI_Dialogue::Late_Tick(_float fTimeDelta)
 HRESULT CUI_Dialogue::Render()
 {
 
-
+	_float alpha = m_fAlpha * 2.f;
 
 	if (nullptr == m_pShaderCom ||
 		nullptr == m_pVIBufferCom)
 		return E_FAIL;
 
 	
+	
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	
+
+
+
+	if(FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
+		return E_FAIL;
+
 
 	m_fSize.x = 900.f;
 	m_fSize.y = 150.f;
@@ -273,9 +288,9 @@ HRESULT CUI_Dialogue::Render()
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
-
-	if (FAILED(SetUp_ShaderResources()))
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
+	
 
 	m_pShaderCom->Begin(UI_DIALOGUEBOX);
 
@@ -298,7 +313,7 @@ HRESULT CUI_Dialogue::Render()
 	//m_fSize.y = 28.f;
 	//m_fPosition.x = 430.f;
 	//m_fPosition.y = 545.f + m_fFade;
-	_float alpha = m_fAlpha * 2.f;
+	//_float alpha = m_fAlpha * 2.f;
 	//if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
 	//	return E_FAIL;
 	//m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
@@ -406,6 +421,12 @@ HRESULT CUI_Dialogue::Ready_Components(void * pArg)
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_charactername"), (CComponent**)&m_pTextureCom2)))
 		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture3"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_dialogueportrait"), (CComponent**)&m_pTextureCom3)))
+		return E_FAIL;
+
+	
 
 	
 
@@ -1176,13 +1197,54 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	
 	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size()-1], XMVectorSet(390.f, 535.f+m_fFade, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
 	
-	/*CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vDialogue[index][0], XMVectorSet(m_fFontPos.x, m_fFontPos.y, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
-	if (m_vDialogue[index].size() == 1)
-		return;
-	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vDialogue[index][1], XMVectorSet(m_fFontPos.x, m_fFontPos.y + 35.f, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
-	if (m_vDialogue[index].size() == 2)
-		return;
-	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vDialogue[index][2], XMVectorSet(m_fFontPos.x, m_fFontPos.y + 70.f, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);*/
+	
+	if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("¾ËÆæ")))
+	{
+		m_iPortraitnum = 0;
+	}
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("½Ã¿Â")))
+	{
+		m_iPortraitnum = 1;
+	}
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("¸°À£")))
+	{
+		m_iPortraitnum = 2;
+	}
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("·Î¿ì")))
+	{
+		m_iPortraitnum = 3;
+	}
+	else
+		m_iPortraitnum = 100;
+
+	if(m_iPortraitnum <= 3)
+	{
+
+		m_fSize.x = 512.f;
+		m_fSize.y = 512.f;
+		m_fPosition.x = 160.f;
+		m_fPosition.y = 600.f + m_fFade;
+
+		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		_float alpha = m_fAlpha * 2.f;
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+			return;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom3->Get_SRV(m_iPortraitnum))))
+			return;
+	
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return;
+		m_pShaderCom->Begin(UI_ALPHASET);
+
+		m_pVIBufferCom->Render();
+	}
+
+	
+
+
+
 
 }
 
@@ -1235,6 +1297,7 @@ void CUI_Dialogue::Free()
 
 	Safe_Release(m_pTextureCom1);
 	Safe_Release(m_pTextureCom2);
+	Safe_Release(m_pTextureCom3);
 	//for (int j = 0; j < m_vDialogue[j].size(); ++j)
 	//{
 	//	for (int i = 0; i<m_vDialogue[i].size(); ++i)

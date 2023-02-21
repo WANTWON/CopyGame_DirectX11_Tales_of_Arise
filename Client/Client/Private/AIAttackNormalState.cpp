@@ -32,6 +32,7 @@ CAIAttackNormalState::CAIAttackNormalState(CPlayer* pPlayer , STATE_ID eStateTyp
 
 CAIState * CAIAttackNormalState::Tick(_float fTimeDelta)
 {
+	//m_pOwner->Get_Model()->Reset();
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;
 

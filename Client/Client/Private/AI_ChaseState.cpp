@@ -14,7 +14,7 @@
 #include "AI_LAW_NomalAttack_State.h"
 #include "AI_Rinwell_SkillState.h"
 #include "AI_LAW_SkillAttack_State.h"
-
+#include "AI_JumpState.h"
 
 
 using namespace AIPlayer;
@@ -122,7 +122,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 		switch (m_eCurrentPlayerID)
 		{
 		case CPlayer::ALPHEN:
-			if (Get_Target_Distance() <= 3.f)
+			if (Get_Target_Distance() <= 4.5f)
 			{
 				__super::Exit();
 				m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_BATTLE_MOVE_BREAK;
@@ -153,7 +153,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			break;
 
 		case CPlayer::LAW:
-			if (Get_Target_Distance() <= 4.f)
+			if (Get_Target_Distance() <= 4.5f)
 			{
 				__super::Exit();
 				m_iCurrentAnimIndex = CLaw::ANIM::BTL_MOVE_BRAKE;
@@ -187,18 +187,19 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			{
 				switch (rand() % 4)
 				{
+
+
 				case 0:
-					return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
-
-
-				case 1:
 					return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 
-				case 2:
+				case 1:
 					return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
 
-				case 3:
+				case 2:
 					return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
+
+				case 3:
+					return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
 
 				}
 			}
@@ -223,7 +224,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			}
 			else
 			{
-				switch (rand() % 6)
+				switch (rand() % 7)
 				{
 
 				case 0:
@@ -243,6 +244,9 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 
 				case 5:
 					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+
+				case 6:
+					return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
 
 				}
 			}
@@ -267,7 +271,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			}
 			else
 			{
-				switch (rand() % 8)
+				switch (rand() % 9)
 				{
 
 				case 0:
@@ -293,6 +297,10 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 
 				case 7:
 					return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+				case 8:
+					return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
 
 
 				}
@@ -321,7 +329,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			}
 
 
-			switch (rand() % 5)
+			switch (rand() % 6)
 			{
 
 			case 0:
@@ -337,6 +345,9 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 				return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
 			case 4:
 				return new CAI_DodgeState(m_pOwner, m_pTarget);
+			case 5:
+				return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
 
 			}
 		}

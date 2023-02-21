@@ -19,6 +19,7 @@
 #include "LawSkillState.h"
 #include "LawAirRSkillState.h"
 #include "LawAirFSkillState.h"
+#include "Player_RinwellSkillAttack_State.h"
 
 using namespace Player;
 
@@ -78,6 +79,8 @@ CPlayerState * CJumpState::HandleInput()
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F, m_fTime);
 				break;
 			case CPlayer::RINWELL:
+				if (pGameInstance->Key_Down(DIK_E))
+					return new CPlayer_RinwellSkillAttack_State(m_pOwner, STATE_SKILL_ATTACK4, m_fTime);
 				break;
 			case CPlayer::LAW:
 				if (pGameInstance->Key_Down(DIK_E))
@@ -435,6 +438,11 @@ CPlayerState * CJumpState::EventInput(void)
 				else if (pGameInstance->Key_Down(DIK_F))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
 
+				break;
+
+			case CPlayer::RINWELL:
+				if (pGameInstance->Key_Down(DIK_E))
+				return new CPlayer_RinwellSkillAttack_State(m_pOwner, STATE_SKILL_ATTACK4, m_fTime);
 				break;
 			}
 		}
