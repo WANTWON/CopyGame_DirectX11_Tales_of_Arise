@@ -65,11 +65,6 @@ HRESULT CRenderer::Initialize_Prototype()
 		DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(1.0f, 1.0f, 1.0f, 1.0f))))
 		return E_FAIL;
 
-	/* For.Target_ShadowDepth_Blur */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_ShadowDepth_Blur"), ViewportDesc.Width, ViewportDesc.Height,
-		DXGI_FORMAT_R32G32B32A32_FLOAT, &_float4(1.0f, 1.0f, 1.0f, 1.0f))))
-		return E_FAIL;
-
 	/* Copy Back Buffer */
 	if (FAILED(m_pTarget_Manager->Ready_BackBufferCopyTexture(m_pDevice, m_pContext, ViewportDesc.Width, ViewportDesc.Height)))
 		return E_FAIL;
@@ -121,10 +116,6 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	/* For.MRT_LightDepth */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_LightDepth"), TEXT("Target_ShadowDepth"))))
-		return E_FAIL;
-
-	/* For.MRT_LightDepth_Blur */
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_LightDepth_Blur"), TEXT("Target_ShadowDepth_Blur"))))
 		return E_FAIL;
 
 	/* For.MRT_Blur_Horizontal */
@@ -183,8 +174,6 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth"), 225.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_ShadowDepth_Blur"), 225.f, 525.f, 150.f, 150.f)))
-		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow"), 375.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Distortion"), 375.f, 225.f, 150.f, 150.f)))
@@ -206,6 +195,19 @@ HRESULT CRenderer::Initialize_Prototype()
 HRESULT CRenderer::Initialize(void* pArg)
 {
 	return S_OK;
+}
+
+void CRenderer::Set_ZoomBlur(_bool bZoomBlur, _float fFocusPower, _uint iFocusDetail)
+{
+	m_bZoomBlur = bZoomBlur; 
+	m_fFocusPower = fFocusPower; 
+	m_iFocusDetail = iFocusDetail;
+}
+
+void CRenderer::Set_Saturation(_bool bSaturation, _float fSaturationPower)
+{
+	m_bSaturation = bSaturation;
+	m_fSaturationPower = fSaturationPower;
 }
 
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGameObject)
@@ -330,24 +332,6 @@ HRESULT CRenderer::Render_ShadowDepth()
 
 	m_GameObjects[RENDER_SHADOWDEPTH].clear();
 
-	//if (FAILED(m_pTarget_Manager->Begin_ShadowMRT(m_pContext, TEXT("MRT_LightDepth_Blur"))))
-	//	return E_FAIL;
-
-	//if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_ShadowDepth"), m_pShaderPostProcessing, "g_BlurTexture")))
-	//	return E_FAIL;
-
-	//m_pShaderPostProcessing->Begin(8); /* Horizontal Blur Shadow */
-	//m_pVIBuffer->Render();
-
-	//if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_ShadowDepth_Blur"), m_pShaderPostProcessing, "g_BlurTexture")))
-	//	return E_FAIL;
-
-	//m_pShaderPostProcessing->Begin(9); /* Vertical Blur Shadow */
-	//m_pVIBuffer->Render();
-
-	//if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-	//	return E_FAIL;
-
 	return S_OK;
 }
 
@@ -461,8 +445,6 @@ HRESULT CRenderer::Render_Blend()
 
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_ShadowDepth"), m_pShaderDeferred, "g_ShadowDepthTexture")))
 		return E_FAIL;
-	/*if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_ShadowDepth_Blur"), m_pShaderDeferred, "g_ShadowDepthTexture")))
-		return E_FAIL;*/
 
 	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
 
@@ -702,7 +684,7 @@ HRESULT CRenderer::Render_PostProcessing()
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
 		return E_FAIL;
 
-	m_pShaderPostProcessing->Begin(7); /* Final Pass */
+	m_pShaderPostProcessing->Begin(7); /* Depth Of Field */
 	m_pVIBuffer->Render();
 
 	/* Fog */
@@ -735,7 +717,7 @@ HRESULT CRenderer::Render_PostProcessing()
 	/* Distortion */
 	/* This Distortion is a Post Processing Effect applied to the entire Screen. 
 	Unlike the Distortion Effect computed in the Render_Distortion() function which renders just Distorted Objects. */
-	if (m_bDistort)
+	/*if (m_bDistort)
 	{
 		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
 		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
@@ -753,7 +735,7 @@ HRESULT CRenderer::Render_PostProcessing()
 
 		m_pShaderPostProcessing->Begin(5);
 		m_pVIBuffer->Render();
-	}
+	}*/
 
 	/* Zoom Blur */
 	if (m_bZoomBlur)
@@ -767,7 +749,21 @@ HRESULT CRenderer::Render_PostProcessing()
 		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_iFocusDetail", &m_iFocusDetail, sizeof(_int))))
 			return E_FAIL;
 
-		m_pShaderPostProcessing->Begin(10); /* Zoom Blur */
+		m_pShaderPostProcessing->Begin(8); /* Zoom Blur */
+		m_pVIBuffer->Render();
+	}
+
+	/* Saturation */
+	if (m_bSaturation)
+	{
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fSaturation", &m_fSaturationPower, sizeof(_float))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(9); /* Saturation */
 		m_pVIBuffer->Render();
 	}
 
@@ -816,8 +812,6 @@ HRESULT CRenderer::Render_Debug()
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_LightAcc"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_LightDepth"), m_pShaderDeferred, m_pVIBuffer)))
-			return E_FAIL;
-		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_LightDepth_Blur"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Glow"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;

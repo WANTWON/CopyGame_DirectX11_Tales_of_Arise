@@ -42,6 +42,9 @@ float g_fMaxBlurDepth = 400.f;
 float g_fFocusPower;
 int g_iFocusDetail;
 
+/* Saturation */
+float g_fSaturation = 1.f;
+
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_Linear;
@@ -137,7 +140,7 @@ struct PS_OUT
 	float4 vColor : SV_TARGET0;
 };
 
-PS_OUT PS_MAIN(PS_IN In)
+PS_OUT PS_MAIN(PS_IN In) // 0
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -149,7 +152,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_HORIZONTAL_BLUR(PS_IN In)
+PS_OUT PS_HORIZONTAL_BLUR(PS_IN In) // 1
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -167,7 +170,7 @@ PS_OUT PS_HORIZONTAL_BLUR(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_VERTICAL_BLUR(PS_IN In)
+PS_OUT PS_VERTICAL_BLUR(PS_IN In) // 2
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -185,7 +188,7 @@ PS_OUT PS_VERTICAL_BLUR(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_FOG(PS_IN In)
+PS_OUT PS_FOG(PS_IN In) // 3
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -219,7 +222,7 @@ PS_OUT PS_FOG(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_FOG_BLEND(PS_IN In)
+PS_OUT PS_FOG_BLEND(PS_IN In) // 4
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -230,7 +233,7 @@ PS_OUT PS_FOG_BLEND(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_SCREEN_DISTORTION(PS_IN In)
+PS_OUT PS_SCREEN_DISTORTION(PS_IN In) // 5
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -242,7 +245,7 @@ PS_OUT PS_SCREEN_DISTORTION(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_DISTORTION(PS_IN In)
+PS_OUT PS_DISTORTION(PS_IN In) // 6
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -270,7 +273,7 @@ PS_OUT PS_DISTORTION(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_DEPTHOFFIELD(PS_IN In)
+PS_OUT PS_DEPTHOFFIELD(PS_IN In) // 7
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -296,51 +299,7 @@ PS_OUT PS_DEPTHOFFIELD(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_HORIZONTAL_BLUR_SHADOW(PS_IN In)
-{
-	PS_OUT Out = (PS_OUT)0;
-
-	float4 vBlurTexture = g_BlurTexture.Sample(LinearSampler, In.vTexUV);
-	if (vBlurTexture.g == 0 && vBlurTexture.b == 0)
-		discard;
-
-	float2 vTexUVOffset = 0;
-	float texelSizeX = 1 / (1280.f * 12.5f); /* Get the size of a Texel Horizontally. */
-
-	for (int i = -WeightCount; i < WeightCount; ++i)
-	{
-		vTexUVOffset = In.vTexUV + float2(texelSizeX * i, 0); /* Get the UV coordinates for the Offsetted Pixel. */
-		Out.vColor.r += Weight[WeightCount + i] * g_BlurTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
-	}
-
-	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
-	Out.vColor.a = 0.f;
-	return Out;
-}
-
-PS_OUT PS_VERTICAL_BLUR_SHADOW(PS_IN In)
-{
-	PS_OUT Out = (PS_OUT)0;
-
-	float4 vBlurTexture = g_BlurTexture.Sample(LinearSampler, In.vTexUV);
-	if (vBlurTexture.g == 0 && vBlurTexture.b == 0)
-		discard;
-
-	float2 vTexUVOffset = 0;
-	float texelSizeY = 1 / (720.f * 12.5f); /* Get the size of a Texel Vertically. */
-
-	for (int i = -WeightCount; i < WeightCount; ++i)
-	{
-		vTexUVOffset = In.vTexUV + float2(0, texelSizeY * i); /* Get the UV coordinates for the Offsetted Pixel. */
-		Out.vColor.r += Weight[WeightCount + i] * g_BlurTexture.Sample(LinearSampler, vTexUVOffset); /* Multiply the Pixel Color with his corresponding Weight and add it to the final Color. */
-	}
-
-	Out.vColor /= WeightSum; /* Average the final Color by the Weight Sum. */
-	Out.vColor.a = 0.f;
-	return Out;
-}
-
-PS_OUT PS_ZOOMBLUR(PS_IN In)
+PS_OUT PS_ZOOMBLUR(PS_IN In) // 8
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -357,6 +316,35 @@ PS_OUT PS_ZOOMBLUR(PS_IN In)
 	}
 
 	Out.vColor.rgb *= 1.0 / float(g_iFocusDetail);
+
+	return Out;
+}
+
+PS_OUT PS_SATURATE(PS_IN In) // 9
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float3 fLuminance = float3(0.3086, 0.6094, 0.0820);
+	float fSaturationInverse = 1.0 - g_fSaturation;
+
+	float3 fRed = float3(fLuminance.x * fSaturationInverse, fLuminance.x * fSaturationInverse, fLuminance.x * fSaturationInverse);
+	fRed += float3(g_fSaturation, 0, 0);
+
+	float3 fGreen = float3(fLuminance.y * fSaturationInverse, fLuminance.y * fSaturationInverse, fLuminance.y * fSaturationInverse);
+	fGreen += float3(0, g_fSaturation, 0);
+
+	float3 fBlue = float3(fLuminance.z * fSaturationInverse, fLuminance.z * fSaturationInverse, fLuminance.z * fSaturationInverse);
+	fBlue += float3(0, 0, g_fSaturation);
+
+	float4x4 mSaturationMatrix = float4x4(	fRed, 0,
+											fGreen, 0,
+											fBlue, 0,
+											0, 0, 0, 1	);
+
+	float4 vColor = g_BackBufferTexture.Sample(LinearSampler, In.vTexUV);
+	vColor = mul(vColor, mSaturationMatrix);
+
+	Out.vColor = vColor;
 
 	return Out;
 }
@@ -451,29 +439,7 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_DEPTHOFFIELD();
 	}
 
-	pass Horizontal_Blur_Shadow // 8
-	{
-		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_HORIZONTAL_BLUR_SHADOW();
-	}
-
-	pass Vertical_Blur_Shadow // 9
-	{
-		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_VERTICAL_BLUR_SHADOW();
-	}
-
-	pass Zoom_Blur // 10
+	pass Zoom_Blur // 8
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -482,5 +448,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ZOOMBLUR();
+	}
+
+	pass Saturation // 9
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_SATURATE();
 	}
 }
