@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "..\Public\AI_JumpState.h"
-#include "stdafx.h"
 
 #include "GameInstance.h"
 

@@ -129,6 +129,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Dynamic"), LEVEL_GAMEPLAY, pLayerTag, &CameraDesc)))
 		return E_FAIL;
 
+	CCamera_Action::ACTIONCAMDESC				ActionCameraDesc;
+	ZeroMemory(&ActionCameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
+	ActionCameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+	ActionCameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+
+	ActionCameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	ActionCameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	ActionCameraDesc.CameraDesc.fNear = 0.2f;
+	ActionCameraDesc.CameraDesc.fFar = 1000.f;
+
+	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_Action"), LEVEL_GAMEPLAY, pLayerTag, &ActionCameraDesc)))
+		return E_FAIL;
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;

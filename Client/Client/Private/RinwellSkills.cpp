@@ -105,7 +105,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		//m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("AquaImpact.dat"), mWorldMatrix);
 		break;
 	}
-	case HOlY_RANCE:
+	case HOLY_RANCE:
 		vOffset = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 		vLocation = XMVectorSetY(m_BulletDesc.vTargetPosition, 1.f) ;
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -165,12 +165,14 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		break;
 
 	case BANGJEON:
-		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+	{
+		_float4 vCamView = (_float4)CGameInstance::Get_Instance()->Get_CamWorldMatrix().m[2];
+		m_pTransformCom->LookDir(XMLoadFloat4(&vCamView));
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBall.dat"), mWorldMatrix);
 		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeThunder.dat"), mWorldMatrix);
 		break;
+	}
 	case BANGEONDEAD:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -188,7 +190,7 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 
-	if (m_bDead)
+	if (__super::Tick(fTimeDelta) == OBJ_DEAD || m_bDead)
 	{
 		Dead_Effect();
 		return OBJ_DEAD;
@@ -219,7 +221,7 @@ int CRinwellSkills::Tick(_float fTimeDelta)
 		Tick_DivineSaberBullet(fTime);
 		break;
 
-	case HOlY_RANCE:
+	case HOLY_RANCE:
 		Tick_HolyRance(fTime);
 		break;
 	case HOLY_RANCE_FISRTBULLET:
@@ -400,6 +402,24 @@ void CRinwellSkills::Dead_Effect()
 			return;
 		break;
 	}
+	case HOLY_RANCE:
+	{
+		if (!m_pBlastEffects.empty())
+		{
+			for (auto& iter : m_pBlastEffects)
+			{
+				if (iter != nullptr)
+				{
+					CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+					if (pParticleSystem != nullptr)
+						pParticleSystem->Set_Stop(true);
+				}
+			}
+		}
+		m_pBlastEffects.clear();
+
+		break;
+	}
 	case HOLY_RANCE_LASTBULLET:
 	{
 		_vector vOffset = XMVectorSet(0.f, m_fRadius+ 2, 0.f, 0.f);
@@ -459,7 +479,7 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 		break;
 
-	case HOlY_RANCE:
+	case HOLY_RANCE:
 		ColliderDesc.vScale = _float3(0.5f, 7.f, 0.5f);
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
@@ -588,9 +608,9 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 
 	if (bulletcount > 30)
 	{
-		LightOffset.x += 0.01f;
-		LightOffset.y -= 0.01f;
-		LightOffset.z += 0.01f;
+		LightOffset.x += 0.001f;
+		LightOffset.y -= 0.001f;
+		LightOffset.z += 0.001f;
 
 		if (LightOffset.x >= 0.1f)
 			LightOffset.x = 0.1f;
@@ -627,6 +647,21 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
+
+			bulletcount -= 1;
+
+		BulletDesc.iDamage = rand() % 150 + 1;
+		BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
+		BulletDesc.vTargetPosition.m128_f32[0] += offsetx;
+		BulletDesc.vTargetPosition.m128_f32[2] += offsetz;
+		BulletDesc.eCollisionGroup = PLAYER;
+		BulletDesc.pOwner = m_BulletDesc.pOwner;
+		BulletDesc.eBulletType = CRinwellSkills::DIVINE_SABER_BULLET;
+		BulletDesc.fDeadTime = 0.5f;
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+
 		bulletcount -= 1;
 		m_fDivineOffset -= 1;
 		m_fDivineTimer = 0.f;
@@ -634,6 +669,7 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 
 	if (bulletcount < 30)
 	{
+		
 		LightOffset.x -= 0.01f;
 		LightOffset.y += 0.01f;
 		LightOffset.z -= 0.01f;
@@ -656,7 +692,6 @@ void CRinwellSkills::Tick_DivineSaber(_float fTimeDelta)
 	{
 		m_bDead = true;
 		CGameInstance::Get_Instance()->Set_LightDesc(0, &OriginLightDesc);
-		//CGameInstance::Get_Instance()->Set_LightDesc(10, &OriginLightDesc2);
 	}
 		
 }
@@ -800,6 +835,12 @@ void CRinwellSkills::Tick_HolyRance(_float fTimeDelta)
 	}
 
 
+	for (auto& iter : m_pBlastEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
 }
 
 void CRinwellSkills::Tick_HolyRanceBullet(_float fTimeDelta)
@@ -847,7 +888,11 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 			iter = nullptr;
 
 		if (iter != nullptr)
-			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+		{
+			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
+		}
+			
 	}
 
 	for (auto& iter : m_pBlastEffects)
@@ -856,7 +901,11 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 			iter = nullptr;
 
 		if (iter != nullptr)
-			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+		{
+			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
+		}
+			
 	}
 }
 
