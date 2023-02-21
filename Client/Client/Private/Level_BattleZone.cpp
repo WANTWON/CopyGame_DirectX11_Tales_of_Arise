@@ -346,6 +346,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		{
 			pBattleManager->Out_Monster(iter);
 			pBattleManager->Add_BattleMonster(iter);
+			iter->Set_IsActionMode(true);
 		}
 		else
 			pGameInstance->Out_GameObject(LEVEL_STATIC, TEXT("Layer_Monster"), iter);

@@ -3,7 +3,6 @@
 #include "RinwellMoveState.h"
 #include "CameraManager.h"
 #include "UI_Dialogue_Caption.h"
-#include "RinwellAttackState.h"
 
 using namespace AiRinwell;
 
@@ -54,8 +53,7 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 			{
 				m_pOwner->Set_IsActionMode(false);
-				return new CAttackState(m_pOwner, STATETYPE_START);
-				//return new CMoveState(m_pOwner, STATETYPE_START, 0);
+				return new CMoveState(m_pOwner, STATETYPE_START, 0);
 				
 			}	
 			else
@@ -64,12 +62,10 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 		case Client::CRinwellState::STATE_MOVE:
 			break;
 		case Client::CRinwellState::STATE_HP50DOWN:
-			return new CAttackState(m_pOwner, STATETYPE_START);
-			//return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
+			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
 			break;
 		case Client::CRinwellState::STATE_BATTLESTART:
-			return new CAttackState(m_pOwner, STATETYPE_START);
-			//return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
+			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
 		}
 	}
 

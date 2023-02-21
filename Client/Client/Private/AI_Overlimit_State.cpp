@@ -177,8 +177,12 @@ void CAI_Overlimit_State::Enter()
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 	{
 		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-		pCamera->Set_Target(m_pOwner);
+		if (pCamera->Get_CamMode() == CCamera_Dynamic::CAM_BATTLEZONE)
+		{
+			pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+			pCamera->Set_Target(m_pOwner);
+		}
+		
 	}
 
 	m_pOwner->Set_Manarecover(false);
