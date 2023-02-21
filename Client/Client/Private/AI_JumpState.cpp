@@ -85,7 +85,7 @@ CAIState * CAI_JumpState::LateTick(_float fTimeDelta)
 			}
 			break;
 		case CPlayer::LAW:
-			switch (rand() % 2)
+			switch (0/*rand() % 2*/)
 			{
 			case 0:
 				return new CAI_LAW_AIRSKILLR(m_pOwner, STATE_SKILL_ATTACK_R);
