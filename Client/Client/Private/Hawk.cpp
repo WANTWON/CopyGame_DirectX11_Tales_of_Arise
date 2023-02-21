@@ -246,7 +246,7 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CHawk::Take_Damage(int fDamage, CBaseObj * DamageCauser)
+_int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
 {
 
 		if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_tStats.m_fCurrentHp <= 0 )

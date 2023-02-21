@@ -271,8 +271,14 @@ void CSionSkills::Collision_Check()
 	case TRESVENTOS:
 	case NORMALATTACK:
 	case GRAVITY_DEAD:
-	case GLACIA_DEAD:
 		__super::Collision_Check();
+		break;
+	case GLACIA_DEAD:
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+		{
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+			m_bDead = true;
+		}
 		break;
 	case AQUA_LUINA_BULLET:
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))

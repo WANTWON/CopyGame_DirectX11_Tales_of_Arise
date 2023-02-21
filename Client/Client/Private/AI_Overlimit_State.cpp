@@ -123,6 +123,15 @@ CAIState * CAI_Overlimit_State::LateTick(_float fTimeDelta)
 	{
 		if (iter != nullptr && iter->Get_PreDead())
 			iter = nullptr;
+
+	
+		if (iter != nullptr && iter->Get_PreDead() == true)
+		{
+			CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+			if (pParticleSystem != nullptr)
+				pParticleSystem->Set_Stop(true);	
+		}
+		
 	}
 
 	if (m_bIsAnimationFinished)

@@ -340,7 +340,7 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 	return true;
 }
 
-_int CAiRinwell::Take_Damage(int fDamage, CBaseObj * DamageCauser)
+_int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
 {
 	if (fDamage <= 0 || m_bDead || m_bTakeDamage )
 		return 0;

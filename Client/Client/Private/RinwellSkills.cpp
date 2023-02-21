@@ -888,7 +888,11 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 			iter = nullptr;
 
 		if (iter != nullptr)
-			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
+		{
+			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
+		}
+			
 	}
 
 	for (auto& iter : m_pBlastEffects)
@@ -897,7 +901,11 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 			iter = nullptr;
 
 		if (iter != nullptr)
-			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
+		{
+			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
+		}
+			
 	}
 }
 

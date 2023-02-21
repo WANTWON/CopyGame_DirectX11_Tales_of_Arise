@@ -484,7 +484,7 @@ void CPlayer::HandleInput()
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 	{
 		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
-		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON || eCamMode == CCamera_Dynamic::CAM_AIBOOSTOFF)
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON )
 			return;
 	}
 
@@ -515,7 +515,7 @@ void CPlayer::Tick_AIState(_float fTimeDelta)
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 	{
 		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
-		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON || eCamMode == CCamera_Dynamic::CAM_AIBOOSTOFF)
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON )
 		{
 			if(dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_Target() != this)
 			return;
