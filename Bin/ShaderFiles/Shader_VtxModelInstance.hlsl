@@ -2,10 +2,13 @@
 #include "Client_Shader_Defines.hpp"
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
+texture2D g_GlowTexture;
 
-
+bool g_bUseDiffuseColor;
+float3 g_vGlowColor;
 
 float g_Far = 1000.f;
 
@@ -94,6 +97,10 @@ struct PS_OUT_SHADOW
 	float4 vLightDepth : SV_TARGET0;
 };
 
+struct PS_OUT_GLOW
+{
+	float4 vGlow : SV_TARGET0;
+};
 
 /* 이렇게 만들어진 픽셀을 PS_MAIN함수의 인자로 던진다. */
 /* 리턴하는 색은 Target0 == 장치에 0번째에 바인딩되어있는 렌더타겟(일반적으로 백버퍼)에 그린다. */
@@ -162,6 +169,24 @@ PS_OUT_SHADOW PS_SHADOWDEPTH(PS_IN In)
 	return Out;
 }
 
+PS_OUT_GLOW PS_GLOW(PS_IN In)
+{
+	PS_OUT_GLOW Out = (PS_OUT_GLOW)0;
+
+	if (g_bUseDiffuseColor)
+		Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV);
+	else
+	{
+		Out.vGlow.gba = Out.vGlow.r;
+		Out.vGlow.rgb *= g_vGlowColor;
+	}
+
+	if (Out.vGlow.a == 0)
+		discard;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default
@@ -195,5 +220,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_SHADOWDEPTH();
+	}
+
+	pass Glow
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_GLOW();
 	}
 };

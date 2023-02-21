@@ -250,7 +250,7 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		}
 		else
 		{
-			if (m_pOwner->Get_IsJustDodge() == true)
+			if ((ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType) && (m_pOwner->Get_IsJustDodge() == true))
 			{
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 				m_pOwner->Off_JustDodge();
@@ -295,7 +295,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 			
 			m_pOwner->Set_Overcount(0);
-			return new CPlayerOverlimit(m_pOwner);
+			//return new CPlayerOverlimit(m_pOwner);
 
 		}
 
