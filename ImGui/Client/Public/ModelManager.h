@@ -5,7 +5,6 @@
 #include "NonAnim.h"
 #include "TreasureBox.h"
 
-
 BEGIN(Client)
 
 class CModelManager final : public CBase

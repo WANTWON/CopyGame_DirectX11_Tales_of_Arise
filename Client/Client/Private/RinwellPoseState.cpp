@@ -69,6 +69,8 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 		}
 	}
 
+	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 	m_pOwner->Check_Navigation();
 	return nullptr;
 }

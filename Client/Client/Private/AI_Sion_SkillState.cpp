@@ -11,12 +11,14 @@
 #include "SionSkills.h"
 #include "AIAttackNormalState.h"
 #include "AI_DodgeState.h"
+#include "AI_JumpState.h"
+#include "AI_JumpState.h"
 
 
 
 using namespace AIPlayer;
 
-CAI_Sion_SkillState::CAI_Sion_SkillState(CPlayer* pPlayer, STATE_ID eStateType, CBaseObj* pTarget, _uint skillindex)//, _float fStartHeight, _float fTime)
+CAI_Sion_SkillState::CAI_Sion_SkillState(CPlayer* pPlayer, STATE_ID eStateType, CBaseObj* pTarget, _uint skillindex ,_float fTime)//, _float fStartHeight, _float fTime)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
@@ -27,6 +29,7 @@ CAI_Sion_SkillState::CAI_Sion_SkillState(CPlayer* pPlayer, STATE_ID eStateType, 
 	}
 	m_pTarget = pTarget;
 	m_iCurrentAnimIndex = skillindex;
+	m_fTime = fTime;
 	//m_fStartHeight = fStartHeight;
 	//m_fTime = fTime;
 }
@@ -62,18 +65,34 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-
-	if (!m_bIsAnimationFinished)
+	if (CSion::ANIM::BTL_ATTACK_TRESVENTOS)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
-		m_pOwner->Check_Navigation();
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+		}
+		else
+			m_pOwner->Check_Navigation_Jump();
 	}
 	else
-		m_pOwner->Check_Navigation();
+	{
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+		}
+		else
+			m_pOwner->Check_Navigation();
+	}
 
 
 
@@ -123,8 +142,8 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 							return nullptr;
 						m_fEventStart = pEvent.fStartTime;
 					}
-						
-					     
+
+
 				}
 
 
@@ -200,7 +219,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 					}
 				}
 
-					break;
+				break;
 
 			case CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET:
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -238,7 +257,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 					}
 				}
 
-					break;
+				break;
 
 			case CSion::ANIM::BTL_ATTACK_THUNDER_BOLT:
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -275,20 +294,20 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 						BulletDesc.vInitPositon.m128_f32[1] = 8.f;
 						BulletDesc.pOwner = m_pOwner;
 
-					//	if (!m_bBulletMade)
-					//	{
-							/* Make Effect */
-							_vector vOffset = { 0.f,0.f,0.f,0.f };
-							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-							mWorldMatrix.r[3] = BulletDesc.vInitPositon;
-							m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GlacioStart.dat"), mWorldMatrix);
+						//	if (!m_bBulletMade)
+						//	{
+								/* Make Effect */
+						_vector vOffset = { 0.f,0.f,0.f,0.f };
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+						mWorldMatrix.r[3] = BulletDesc.vInitPositon;
+						m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GlacioStart.dat"), mWorldMatrix);
 
-							/*_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - BulletDesc.vInitPositon);
-							mWorldMatrix.r[3] = BulletDesc.vInitPositon - vCamDir*1.5f;
-							m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("GlacioStartSmoke.dat"), mWorldMatrix);
-							*/
-					//		m_bBulletMade = true;
-					//	}
+						/*_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - BulletDesc.vInitPositon);
+						mWorldMatrix.r[3] = BulletDesc.vInitPositon - vCamDir*1.5f;
+						m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("GlacioStartSmoke.dat"), mWorldMatrix);
+						*/
+						//		m_bBulletMade = true;
+						//	}
 
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
@@ -363,17 +382,61 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 					}
 				}
 
-					break;
+				break;
+
+			case CSion::ANIM::BTL_ATTACK_TRESVENTOS:
+				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+				{
+
+
+					m_bIsStateEvent = true;
+
 				}
+				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+				{
+
+					if ((m_fEventStart != pEvent.fStartTime))
+					{
+						_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+						_vector vRight = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_RIGHT));
+						_vector vPostion = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.eBulletType = CSionSkills::TRESVENTOS;
+						BulletDesc.vInitPositon = XMVectorSetY(vPostion, XMVectorGetY(vPostion) + 3.f) + vLook*2.f;
+						if (m_iCount == 0)
+							BulletDesc.vInitPositon -= vRight*2.f;
+						if (m_iCount == 1)
+							BulletDesc.vInitPositon += vRight*2.f;
+
+						BulletDesc.pOwner = m_pOwner;
+						BulletDesc.fVelocity = 5.f;
+						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+						if (pTarget == nullptr)
+							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+						BulletDesc.vTargetDir = vLook;
+						BulletDesc.pTarget = pTarget;
+
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+						m_fEventStart = pEvent.fStartTime;
+						m_iCount++;
+					}
+
+				}
+				}
+
+				break;
+			}
 
 			}
 
 		}
 
-		
-	}
-	return nullptr;
+		return nullptr;
 }
+	
+
 
 CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 {
@@ -412,6 +475,9 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 		m_bIsStateEvent = false;
 		m_bBulletMake = false;
 		//m_fEventStart = -1.f;
+
+		if (m_pOwner->Get_IsFly())
+			return new CAI_JumpState(m_pOwner, STATETYPE_START ,false ,  m_fTime);
 
 		if (m_pOwner->Get_Info().fCurrentMp < 1)
 		{
@@ -503,6 +569,10 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 				dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
 				break;
 
+			case 5:
+				return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
+
 			default:
 				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 
@@ -546,6 +616,9 @@ void CAI_Sion_SkillState::Enter()
 		break;
 	case CSion::ANIM::BTL_ATTACK_THUNDER_BOLT:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
+		break;
+	case CSion::ANIM::BTL_ATTACK_TRESVENTOS:
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS);
 		break;
 	}
 

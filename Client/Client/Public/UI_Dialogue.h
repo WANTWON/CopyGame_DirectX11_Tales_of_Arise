@@ -52,6 +52,7 @@ public:
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
 	CTexture*               m_pTextureCom2 = nullptr;
+	CTexture*               m_pTextureCom3 = nullptr;
 	_bool m_bfadein = false;
 	_bool m_bfadeout = false;
 
@@ -92,7 +93,7 @@ private:
 
 	_uint m_iDialogueindex = 0;
 
-
+	_uint m_iPortraitnum = 0;
 
 	_bool m_bpingdown = true;
 	_float m_fbrightpos = 0.f;

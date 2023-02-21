@@ -58,7 +58,7 @@ protected:
 
 	_float	m_fTime = 0;
 	_bool	m_bDeadEffect = false;
-
+	
 public:
 	virtual void Free() override;
 };

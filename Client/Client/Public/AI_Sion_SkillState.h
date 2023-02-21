@@ -8,7 +8,7 @@ BEGIN(AIPlayer)
 class CAI_Sion_SkillState final : public CAIState
 {
 public:
-	CAI_Sion_SkillState(class CPlayer* pPlayer, STATE_ID eStateType, CBaseObj* pTarget, _uint skillindex);//, _float fStartHeight = 0.f, _float fTime = 0.f);
+	CAI_Sion_SkillState(class CPlayer* pPlayer, STATE_ID eStateType, CBaseObj* pTarget, _uint skillindex , _float ftime = 0.f);//, _float fStartHeight = 0.f, _float fTime = 0.f);
 
 	virtual CAIState* Tick(_float fTimeDelta) override;
 	virtual CAIState* LateTick(_float fTimeDelta) override;
@@ -29,6 +29,10 @@ private:
 	_bool m_bBulletMake = false;
 	vector<CEffect*> m_pBlastEffect;
 	vector<CEffect*> m_pSmokeEffect;
+
+	_uint m_iCount = 0;
+
+	//_float m_fTime = 0.f;
 };
 END
 END

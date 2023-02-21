@@ -79,7 +79,7 @@ int CCriticalFont::Tick(_float fTimeDelta)
 
 
 
-	m_fStart_timer += fTimeDelta;
+	m_fStart_timer += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));;
 
 
 

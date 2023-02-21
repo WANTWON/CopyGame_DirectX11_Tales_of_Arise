@@ -38,9 +38,12 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		break;
 	case GLACIA:
 		vLocation = m_BulletDesc.vInitPositon;
-		//mWorldMatrix.r[]
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
-		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians((_float)(rand() % 180)));
+		m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
+
+		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("GlacioBullet.dat"), mWorldMatrix);
 		break;
 	case BOOST:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
@@ -138,36 +141,36 @@ int CSionSkills::Tick(_float fTimeDelta)
 		Dead_Effect();
 		return OBJ_DEAD;
 	}
-
+	_float fTime = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 
 	switch (m_BulletDesc.eBulletType)
 	{
 	case NORMALATTACK:
-		Tick_NormalAttack(fTimeDelta);
+		Tick_NormalAttack(fTime);
 		break;
 	case GLACIA:
-		Tick_GlaciaAttack(fTimeDelta);
+		Tick_GlaciaAttack(fTime);
 		break;
 	case BOOST:
 	case GRAVITY_DEAD:
 	case GLACIA_DEAD:
 	case MAGNA_RAY:
-		Tick_BoostAttack(fTimeDelta);
+		Tick_BoostAttack(fTime);
 		break;
 	case GRAVITY:
-		Tick_GravityAttack(fTimeDelta);
+		Tick_GravityAttack(fTime);
 		break;
 	case TRESVENTOS:
-		Tick_TresVentos(fTimeDelta);
+		Tick_TresVentos(fTime);
 		break;
 	case AQUA_LUINA:
-		Tick_AQUA_LUINA(fTimeDelta);
+		Tick_AQUA_LUINA(fTime);
 		break;
 	case AQUA_LUINA_BULLET:
-		Tick_AQUA_LUINA_BULLET(fTimeDelta);
+		Tick_AQUA_LUINA_BULLET(fTime);
 		break;
 	case EXPLOSION:
-		Tick_Explosion(fTimeDelta);
+		Tick_Explosion(fTime);
 		break;
 
 
@@ -228,14 +231,14 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 	case EXPLOSION:
 		if (XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - m_BulletDesc.vTargetPosition)) < 1.f)
 		{
-			m_fTime += fTimeDelta;
+			m_fTime += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));;
 
 			if (m_fTime > 3.f)
 				m_bDead = true;
 		}
 		else
 		{
-			m_fExplosionGroundTimer += fTimeDelta;
+			m_fExplosionGroundTimer += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));;
 
 			if (m_fExplosionGroundTimer > 5.f)
 			{
@@ -273,7 +276,7 @@ void CSionSkills::Collision_Check()
 	case AQUA_LUINA_BULLET:
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
 		{
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
 			m_bDead = true;
 		}
 		break;
@@ -281,7 +284,7 @@ void CSionSkills::Collision_Check()
 	case GLACIA:
 	case EXPLOSION:
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
 		break;
 	case MAGNA_RAY:
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
@@ -290,7 +293,7 @@ void CSionSkills::Collision_Check()
 	case GRAVITY:
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
 			_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 			if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
@@ -493,26 +496,6 @@ HRESULT CSionSkills::Ready_Components(void * pArg)
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 			return E_FAIL;
-
-
-		_int iRand = rand() % 3;
-		if (iRand == 0)
-		{
-			if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Ice0"), (CComponent**)&m_pModelCom)))
-				return E_FAIL;
-		}
-		else if (iRand == 1)
-		{
-			if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Ice1"), (CComponent**)&m_pModelCom)))
-				return E_FAIL;
-		}
-		else
-		{
-			if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Ice1"), (CComponent**)&m_pModelCom)))
-				return E_FAIL;
-
-			break;
-		}
 	}
 	case GRAVITY_DEAD:
 	case GRAVITY:
@@ -591,6 +574,12 @@ void CSionSkills::Tick_GlaciaAttack(_float fTimeDelta)
 		m_bDead = true;
 
 	m_pTransformCom->Go_PosTarget(fTimeDelta, m_BulletDesc.vTargetPosition);
+
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr)
+			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
 }
 
 void CSionSkills::Tick_BoostAttack(_float fTimeDelta)

@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
+    <ClInclude Include="..\Public\Anim.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\BaseObj.h" />
     <ClInclude Include="..\Public\Camera_Action.h" />
@@ -203,12 +204,14 @@
     <ClInclude Include="..\Public\Terrain_Manager.h" />
     <ClInclude Include="..\Public\Trail.h" />
     <ClInclude Include="..\Public\TreasureBox.h" />
+    <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Anim.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\BaseObj.cpp" />
     <ClCompile Include="..\Private\Camera_Action.cpp" />
@@ -240,6 +243,7 @@
     <ClCompile Include="..\Private\Terrain_Manager.cpp" />
     <ClCompile Include="..\Private\Trail.cpp" />
     <ClCompile Include="..\Private\TreasureBox.cpp" />
+    <ClCompile Include="..\Private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

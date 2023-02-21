@@ -11,15 +11,16 @@
 #include "RinwellSkills.h"
 #include "AIAttackNormalState.h"
 #include "AI_DodgeState.h"
-
+#include "AI_JumpState.h"
 
 
 using namespace AIPlayer;
 
-CAI_Rinwell_SkillState::CAI_Rinwell_SkillState(CPlayer* pPlayer, STATE_ID eStateType, CBaseObj* pTarget)//, _float fStartHeight, _float fTime)
+CAI_Rinwell_SkillState::CAI_Rinwell_SkillState(CPlayer* pPlayer, STATE_ID eStateType, CBaseObj* pTarget ,_float fTime)//, _float fStartHeight, _float fTime)
 {
 	m_eStateId = eStateType;
 	m_pOwner = pPlayer;
+	m_fTime = fTime;
 	if (nullptr == pTarget)
 	{
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
@@ -62,18 +63,34 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-
-	if (!m_bIsAnimationFinished)
+	if (m_eStateId == STATE_BANGJEON && m_pOwner->Get_IsFly())
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
-		m_pOwner->Check_Navigation();
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+		}
+		else
+			m_pOwner->Check_Navigation_Jump();
 	}
 	else
-		m_pOwner->Check_Navigation();
+	{
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
+		}
+		else
+			m_pOwner->Check_Navigation();
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////
 
@@ -399,6 +416,10 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 		//	m_fEventStart = -1.f;
 		if (m_bStateFinish)
 		{
+			if (m_pOwner->Get_IsFly())
+				return new CAI_JumpState(m_pOwner, STATETYPE_START, false, m_fTime);
+
+
 			m_bStateFinish = false;
 			if (m_pOwner->Get_Info().fCurrentMp < 1)
 			{
@@ -418,7 +439,7 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 			{
 
 
-				switch (rand() % 7)
+				switch (rand() % 8)
 				{
 
 				case 0: //Client::CAIState::STATE_NORMAL_ATTACK1:
@@ -512,6 +533,10 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 						m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 					}
 					break;
+
+				case 6:
+					return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
 				default:
 					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 

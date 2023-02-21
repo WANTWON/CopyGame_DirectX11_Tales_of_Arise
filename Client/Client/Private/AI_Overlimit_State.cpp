@@ -144,6 +144,11 @@ void CAI_Overlimit_State::Enter()
 
 	}
 
+	/* Make Effect */
+	_vector vOffset = { 0.f,3.f,0.f,0.f };
+	_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Overlimit.dat"), mWorldMatrix);
+
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)

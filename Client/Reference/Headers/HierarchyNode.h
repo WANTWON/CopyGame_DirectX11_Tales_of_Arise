@@ -31,7 +31,7 @@ public:
 	_matrix Get_OffsetMatrix() const {
 		return XMLoadFloat4x4(&m_OffsetMatrix);
 	}
-
+	_matrix Get_TransformationMatrix(void) const { return XMLoadFloat4x4(&m_TransformationMatrix); }
 	_matrix Get_CombinedTransformationMatrix() const {
 		return XMLoadFloat4x4(&m_CombinedTransformationMatrix);
 	}

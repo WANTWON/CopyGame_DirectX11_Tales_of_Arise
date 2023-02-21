@@ -5,6 +5,7 @@
 #include "AIAttackNormalState.h"
 #include "AIRunawayfromTarget.h"
 #include "Rinwell.h"
+#include "Law.h"
 #include "AI_ChaseState.h"
 #include "AI_BoostAttackState.h"
 #include "AI_Alphen_NormalAttackState.h"
@@ -14,6 +15,7 @@
 #include "AI_Rinwell_SkillState.h"
 #include "AI_LAW_NomalAttack_State.h"
 #include "AI_LAW_SkillAttack_State.h"
+#include "AI_JumpState.h"
 
 using namespace AIPlayer;
 
@@ -109,8 +111,8 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 	m_fTimer += fTimeDelta;
 
 	
-	if (m_fTimer > 0.5f)
-	{
+//	if (m_fTimer > 0.5f)
+//	{
 		if (Get_Target_Distance() <= 3.f)
 		{
 			m_bRangerRunaway = true; // for ranger runaway
@@ -288,7 +290,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 		}
 		
 
-	}
+//	}
 	
 
 
@@ -312,7 +314,8 @@ void CAICheckState::Enter()
 	case CPlayer::RINWELL:
 		m_iCurrentAnimIndex = CRinwell::ANIM::IDLE;
 		break;
-	default:
+	case CPlayer::LAW:
+		m_iCurrentAnimIndex = CLaw::ANIM::IDLE;
 		break;
 	}
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
@@ -413,7 +416,7 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 
 
 
-	switch (rand() % 7)
+	switch (rand() % 8)
 	{
 
 	case 0:
@@ -436,6 +439,9 @@ CAIState * CAICheckState::RandomAttackChoose_Rinwell()
 
 	case 6:
 		return new CAI_Rinwell_SkillState(m_pOwner, STATE_BANGJEON, m_pTarget);
+
+	case 7:
+		return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
 
 	/*case 5:
 		return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);*/
@@ -465,7 +471,7 @@ CAIState * CAICheckState::RandomAttackChoose_Law()
 	}
 
 
-	switch (rand() % 5)
+	switch (rand() % 6)
 	{
 
 	case 0:
@@ -481,6 +487,9 @@ CAIState * CAICheckState::RandomAttackChoose_Law()
 		return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
 	case 4:
 		return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+	case 5:
+		return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
 
 	}
 	return nullptr;
@@ -507,7 +516,7 @@ CAIState * CAICheckState::RandomAttackChoose()
 	}
 		
 
-	switch (rand() % 5)
+	switch (rand() % 6)
 	{
 
 	case 0:
@@ -523,6 +532,8 @@ CAIState * CAICheckState::RandomAttackChoose()
 		return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
 	case 4:
 		return new CAI_DodgeState(m_pOwner, m_pTarget);
+	case 5:
+		return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
 
 	}
 	return nullptr;
