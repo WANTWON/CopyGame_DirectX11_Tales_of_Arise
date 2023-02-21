@@ -16,6 +16,7 @@
 #include "AI_LAW_NomalAttack_State.h"
 #include "AI_LAW_SkillAttack_State.h"
 #include "AI_JumpState.h"
+#include "AI_Item_Use_State.h"
 
 using namespace AIPlayer;
 
@@ -120,9 +121,21 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 		else
 			m_bRangerRunaway = false;
 
-		
-
-
+		ITEM_NAME item;
+		switch (rand() % 3)
+		{
+		case 0:
+			item = ITEMNAME_GRAPEJELLY;
+			break;
+		case 1:
+			item = ITEMNAME_LEMONJELLY;
+			break;
+		case 2:
+			item = ITEMNAME_LIFEBOTTLE;
+			break;
+			
+		}
+		return new CAI_Item_Use_State(m_pOwner , item);
 		switch (m_eCurrentPlayerID)
 		{
 		case CPlayer::ALPHEN:

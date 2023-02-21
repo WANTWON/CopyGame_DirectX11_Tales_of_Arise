@@ -477,6 +477,13 @@ void CPlayer::AI_check()
 
 }
 
+void CPlayer::RecoverHP(_float hp)
+{
+	 m_tInfo.fCurrentHp += hp;
+	 if (m_tInfo.fCurrentHp > m_tInfo.fMaxHp)
+		 m_tInfo.fCurrentHp = m_tInfo.fMaxHp; 
+}
+
 void CPlayer::HandleInput()
 {
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
