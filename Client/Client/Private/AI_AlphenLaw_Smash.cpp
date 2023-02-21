@@ -29,8 +29,6 @@ CAI_AlphenLaw_Smash::CAI_AlphenLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 {
-	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
-		return nullptr;
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
@@ -113,7 +111,8 @@ CAIState * CAI_AlphenLaw_Smash::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		
-			
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
 
 			PLAYER_MODE eMode = CPlayerManager::Get_Instance()->Check_ActiveMode(m_pOwner);
 			switch (eMode)
@@ -134,6 +133,7 @@ CAIState * CAI_AlphenLaw_Smash::LateTick(_float fTimeDelta)
 			}
 
 			}
+		}
 		
 	}
 
@@ -177,6 +177,20 @@ void CAI_AlphenLaw_Smash::Enter()
 void CAI_AlphenLaw_Smash::Exit()
 {
 	m_pOwner->Set_StrikeAttack(false);
+	m_pOwner->Set_IsActionMode(false);
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+	{
+		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+		{
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
+		else
+		{
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
+	}
+
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)

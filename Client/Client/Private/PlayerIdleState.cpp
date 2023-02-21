@@ -33,7 +33,7 @@ CPlayerState * CIdleState::HandleInput()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (LEVEL_BATTLE == m_pOwner->Get_Level())
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
 		if ((CPlayer::ALPHEN == m_pOwner->Get_PlayerID()) || (CPlayer::LAW == m_pOwner->Get_PlayerID()))
 		{
@@ -146,13 +146,13 @@ CPlayerState * CIdleState::Tick(_float fTimeDelta)
 
 CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 {
-	if (LEVEL_BATTLE == m_pOwner->Get_Level())
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
 			return new CHitState(m_pOwner);
 	}
 
-	if (m_bIsAnimationFinished && LEVEL_BATTLE != m_pOwner->Get_Level())
+	if (m_bIsAnimationFinished && !CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
 		switch (m_eIdleType)
 		{
@@ -204,7 +204,7 @@ void CIdleState::Enter()
 	switch (m_pOwner->Get_PlayerID())
 	{
 	case CPlayer::ALPHEN:
-		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+		if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_IDLE);
 		else
 		{
@@ -220,7 +220,7 @@ void CIdleState::Enter()
 		}
 		break;
 	case CPlayer::SION:
-		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+		if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_IDLE);
 		else
 		{
@@ -235,7 +235,7 @@ void CIdleState::Enter()
 		}
 		break;
 	case CPlayer::RINWELL:
-		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+		if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_LOOP);
 		else
 		{
@@ -250,7 +250,7 @@ void CIdleState::Enter()
 		}
 		break;
 	case CPlayer::LAW:
-		if (LEVEL_BATTLE == m_pOwner->Get_Level())
+		if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_IDLE);
 		else
 		{

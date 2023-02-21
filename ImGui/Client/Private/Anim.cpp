@@ -119,8 +119,12 @@ int CAnim::Tick(_float fTimeDelta)
 	if (__super::Tick(fTimeDelta))
 		return OBJ_DEAD;
 	
+	
 	if (m_isPlayAnim)
-		m_pModelCom->Play_Animation(fTimeDelta);
+		m_bisFinshed = m_pModelCom->Play_Animation(fTimeDelta, false);
+
+	if (m_bisFinshed)
+		m_isPlayAnim = false;
 
 	for (auto& pParts : m_Parts)
 	{

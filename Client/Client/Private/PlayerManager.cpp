@@ -133,7 +133,6 @@ void CPlayerManager::Set_SmashAttack()
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
 			CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
-
 			Get_EnumPlayer(0)->Set_IsActionMode(true);
 			Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
 			Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
@@ -169,16 +168,68 @@ void CPlayerManager::Set_SmashAttack()
 		{
 			if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_3))
 			{
+				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(0)->Set_IsActionMode(true);
+				Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
+				Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(0)->SmashAttack(CPlayer::ALPHEN_RINWELL);
+
+
+				Get_EnumPlayer(2)->Set_IsActionMode(true);
+				Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
+				Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::ALPHEN_RINWELL);
+
+				if (Get_EnumPlayer(1) != nullptr)
+				{
+					Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
+					Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				}
+
+				if (Get_EnumPlayer(3) != nullptr)
+				{
+					Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
+					Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				}
+
+				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+				pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
+
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 			}
 
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_3))
 			{
+				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(1)->Set_IsActionMode(true);
+				Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
+				Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(1)->SmashAttack(CPlayer::SION_RINWELL);
+
+				Get_EnumPlayer(2)->Set_IsActionMode(true);
+				Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
+				Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::SION_RINWELL);
+
+				if (Get_EnumPlayer(0) != nullptr)
+				{				  
+					Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
+					Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				}
+
+				if (Get_EnumPlayer(3) != nullptr)
+				{
+					Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
+					Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				}
+
+				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+				pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
+
+
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 			}
@@ -188,23 +239,98 @@ void CPlayerManager::Set_SmashAttack()
 		{
 			if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			{
+				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(0)->Set_IsActionMode(true);
+				Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
+				Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(0)->SmashAttack(CPlayer::ALPHEN_LAW);
+
+				Get_EnumPlayer(3)->Set_IsActionMode(true);
+				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
+				Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(3)->SmashAttack(CPlayer::ALPHEN_LAW);
+
+				if (Get_EnumPlayer(1) != nullptr)
+				{
+					Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
+					Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				}
+
+				if (Get_EnumPlayer(2) != nullptr)
+				{
+					Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
+					Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				}
+
+				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+				pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
+
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 			}
 
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			{
+				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(1)->Set_IsActionMode(true);
+				Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
+				Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(1)->SmashAttack(CPlayer::SION_LAW);
+
+				Get_EnumPlayer(3)->Set_IsActionMode(true);
+				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
+				Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(3)->SmashAttack(CPlayer::SION_LAW);
+
+				if (Get_EnumPlayer(0) != nullptr)
+				{
+					Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
+					Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				}
+
+				if (Get_EnumPlayer(2) != nullptr)
+				{
+					Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
+					Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				}
+
+				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+				pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
+
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 			}
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_3) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			{
-				Get_EnumPlayer(1)->SmashAttack(CPlayer::RINWELL_LAW);
-				Get_EnumPlayer(4)->SmashAttack(CPlayer::RINWELL_LAW);
+				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(2)->Set_IsActionMode(true);
+				Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
+				Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(2)->SmashAttack(CPlayer::RINWELL_LAW);
+
+				Get_EnumPlayer(3)->Set_IsActionMode(true);
+				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
+				Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(3)->SmashAttack(CPlayer::RINWELL_LAW);
+
+				if (Get_EnumPlayer(0) != nullptr)
+				{
+					Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
+					Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				}
+
+				if (Get_EnumPlayer(1) != nullptr)
+				{
+					Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
+					Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				}
+
+				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+				pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
+
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 			}

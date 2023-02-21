@@ -52,7 +52,7 @@ private:
 	vector<class CGameObject*> m_Parts;
 	_bool m_isPlayAnim = false;
 	PLAYERDESC m_ModelDesc;
-
+	_bool m_bisFinshed = false;
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT SetUp_ShaderResources(void) override;
