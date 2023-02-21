@@ -314,6 +314,8 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		return 0;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	if (eMode == ACTIVE)
+		int a = 0;
 	m_tInfo.fCurrentHp -= (int)fDamage;
 
 	/*CDamageFont::DMGDESC testdesc;

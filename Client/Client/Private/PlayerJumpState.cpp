@@ -36,7 +36,7 @@ CPlayerState * CJumpState::HandleInput()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (LEVEL_BATTLE == m_pOwner->Get_Level())
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
 		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
 		{
@@ -391,7 +391,7 @@ CPlayerState * CJumpState::EventInput(void)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (LEVEL_BATTLE == m_pOwner->Get_Level())
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
 		if (GetKeyState(VK_LBUTTON) < 0)
 		{

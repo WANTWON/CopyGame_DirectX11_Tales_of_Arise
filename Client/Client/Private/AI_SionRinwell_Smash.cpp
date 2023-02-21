@@ -31,8 +31,6 @@ CAI_SionRinwell_Smash::CAI_SionRinwell_Smash(CPlayer* pPlayer, CBaseObj* pTarget
 
 CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 {
-	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
-		return nullptr;
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
@@ -115,30 +113,32 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-
-		PLAYER_MODE eMode = CPlayerManager::Get_Instance()->Check_ActiveMode(m_pOwner);
-		switch (eMode)
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
-		case Client::ACTIVE:
-		{
-			CPlayerState* pState = nullptr;
+			PLAYER_MODE eMode = CPlayerManager::Get_Instance()->Check_ActiveMode(m_pOwner);
+			switch (eMode)
+			{
+			case Client::ACTIVE:
+			{
+				CPlayerState* pState = nullptr;
 
-			pState = new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
-			m_pOwner->Set_PlayerState(m_pOwner->Get_PlayerState()->ChangeState(m_pOwner->Get_PlayerState(), pState));
+				pState = new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
+				m_pOwner->Set_PlayerState(m_pOwner->Get_PlayerState()->ChangeState(m_pOwner->Get_PlayerState(), pState));
+			}
+
+
+
+			case Client::AI_MODE:
+			{
+				return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+			}
+			}
+
 		}
-			
-			
-
-		case Client::AI_MODE:
-		{
-			return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
-		}
-			
-	}
 
 
 
-		
+
 		//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
@@ -173,9 +173,9 @@ void CAI_SionRinwell_Smash::Enter()
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-//	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-//	pCamera->Set_Target(m_pOwner);
+	//	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+	//	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
 }
@@ -183,7 +183,21 @@ void CAI_SionRinwell_Smash::Enter()
 void CAI_SionRinwell_Smash::Exit()
 {
 	m_pOwner->Set_StrikeAttack(false);
-	CBattleManager::Get_Instance()->Set_IsStrike(false);
+	m_pOwner->Set_IsActionMode(false);
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+	{
+		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+		{
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
+		else
+		{
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
+	}
+
+
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)

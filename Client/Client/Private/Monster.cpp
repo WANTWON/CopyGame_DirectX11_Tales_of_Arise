@@ -88,7 +88,7 @@ int CMonster::Tick(_float fTimeDelta)
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 	{
 		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
-		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON)
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON || eCamMode == CCamera_Dynamic::CAM_AIBOOSTOFF)
 				return OBJ_NOSHOW;
 
 	}

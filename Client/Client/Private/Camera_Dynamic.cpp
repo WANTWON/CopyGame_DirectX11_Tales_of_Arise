@@ -130,7 +130,6 @@ void CCamera_Dynamic::Set_CamMode(CAMERAMODE _eCamMode)
 
 	m_vDistance = (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pTransform->Get_State(CTransform::STATE_TRANSLATION));
 	m_eCamMode = _eCamMode;
-	m_fAngle = 0.f;
 	m_fTime = 0.f;
 	m_vInitPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 	m_bLerp = true;
@@ -441,16 +440,16 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 
 		if(m_bTurn)
 		{
-			if (fDot < 0.8f)
+			if (fDot < 0.9f)
 			{
 				if (fRightDot > 0.f)
 				{
-					if(fDot > 0.7 )
-						m_fAngle -= (0.8f - fDot)* 2.f;
+					if(fDot > 0.8 )
+						m_fAngle -= (0.9f - fDot)* 2.f;
 					else if (fDot > 0.5)
-						m_fAngle -= (0.8f - fDot)* 3.f;
+						m_fAngle -= (0.9f - fDot)* 3.f;
 					else if (fDot > 0.3)
-						m_fAngle -= (0.8f - fDot)* 5.f;
+						m_fAngle -= (0.9f - fDot)* 5.f;
 					else
 						m_fAngle -= (0.8f - fDot)* 7.f;
 				/*	else if(fDistance < 15.f)
@@ -460,18 +459,14 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 				}
 				else
 				{
-					/*if (fDistance < 15.f)
-						m_fAngle += (0.8f - fDot)* 2.f;
-					else
-						m_fAngle += (0.8f - fDot)* 5.f;*/
-					if (fDot > 0.7)
-						m_fAngle += (0.8f - fDot)* 2.f;
+					if (fDot > 0.8)
+						m_fAngle += (0.9f - fDot)* 2.f;
 					else if (fDot > 0.5)
-						m_fAngle += (0.8f - fDot)* 3.f;
+						m_fAngle += (0.9f - fDot)* 3.f;
 					else if (fDot > 0.3)
-						m_fAngle += (0.8f - fDot)* 5.f;
+						m_fAngle += (0.9f - fDot)* 5.f;
 					else
-						m_fAngle += (0.8f - fDot)* 7.f;
+						m_fAngle += (0.9f - fDot)* 7.f;
 				}
 					
 			}
@@ -505,10 +500,10 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 			m_fCameraOffsetY += 0.2f;
 		}
 
-		if (fLength >= 10.f)
-			fLength = 10.f;
-		if (fLength <= 7.f)
-			fLength = 7.f;
+		if (fLength >= 8.f)
+			fLength = 8.f;
+		if (fLength <= 5.f)
+			fLength = 5.f;
 		if (m_fCameraOffsetY >= 5.f)
 			m_fCameraOffsetY = 5.f;
 		else if (m_fCameraOffsetY <= 1.f)
@@ -690,7 +685,7 @@ void CCamera_Dynamic::AIBoostOn_Camera(_float fTimeDelta)
 		m_fTime = 0.f;
 	}
 
-
+	m_vLastLookPos = FinalPos + m_pTransform->Get_State(CTransform::STATE_LOOK);
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -729,7 +724,9 @@ void CCamera_Dynamic::AIBoostOff_Camera(_float fTimeDelta)
 		Set_CamMode(CAM_BATTLEZONE);
 	}
 
-
+	vPlayerPosition = XMVectorSetY(vPlayerPosition, XMVectorGetY(vPlayerPosition) + m_fLookOffsetY);
+	_vector vLookPos = XMVectorLerp(m_vLastLookPos, vPlayerPosition, m_fTime);
+	//m_pTransform->LookAt(vLookPos);
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 	RELEASE_INSTANCE(CGameInstance);
 }
