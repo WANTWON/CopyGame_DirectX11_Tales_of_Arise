@@ -690,7 +690,7 @@ void CCamera_Dynamic::AIBoostOn_Camera(_float fTimeDelta)
 		m_fTime = 0.f;
 	}
 
-
+	m_vLastLookPos = FinalPos + m_pTransform->Get_State(CTransform::STATE_LOOK);
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -708,7 +708,7 @@ void CCamera_Dynamic::AIBoostOff_Camera(_float fTimeDelta)
 	m_vNewPos = vPlayerPosition - m_vLasrDirwithPlayer;
 
 
-	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f)
 		m_bLerp = false;
 
 	_vector FinalPos = { 0.f,0.f,0.f,0.f };
@@ -729,7 +729,9 @@ void CCamera_Dynamic::AIBoostOff_Camera(_float fTimeDelta)
 		Set_CamMode(CAM_BATTLEZONE);
 	}
 
-
+	vPlayerPosition = XMVectorSetY(vPlayerPosition, XMVectorGetY(vPlayerPosition) + m_fLookOffsetY);
+	_vector vLookPos = XMVectorLerp(m_vLastLookPos, vPlayerPosition, m_fTime);
+	//m_pTransform->LookAt(vLookPos);
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 	RELEASE_INSTANCE(CGameInstance);
 }
