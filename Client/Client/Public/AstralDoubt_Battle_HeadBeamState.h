@@ -39,7 +39,7 @@ private:
 
 
 	CTransform* m_pMonSterTransform;
-
+	CCollider*  m_pAtkColliderCom = false;
 
 };
 END
