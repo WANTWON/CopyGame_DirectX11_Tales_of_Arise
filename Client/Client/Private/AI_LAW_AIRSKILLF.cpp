@@ -131,13 +131,10 @@ CAIState * CAI_LAW_AIRSKILLF::LateTick(_float fTimeDelta)
 #endif
 	}
 
-	if (STATETYPE_MAIN == m_eStateType)
+	if ((STATETYPE_MAIN == m_eStateType) && m_pOwner->Check_Navigation_Jump())
 	{
-		if (m_pOwner->Check_Navigation_Jump())
-		{
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_END);
-			m_eStateType = STATETYPE_END;
-		}
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_END);
+		m_eStateType = STATETYPE_END;
 	}
 
 	if (m_bIsAnimationFinished)
@@ -155,6 +152,9 @@ CAIState * CAI_LAW_AIRSKILLF::LateTick(_float fTimeDelta)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_END);
 				m_eStateType = STATETYPE_END;
 			}
+			break;
+		case Client::STATETYPE_MAIN:
+			m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
 			break;
 		case Client::STATETYPE_END:
 			return new CAICheckState(m_pOwner, STATE_ATTACK);
@@ -194,9 +194,11 @@ void CAI_LAW_AIRSKILLF::Exit()
 	if (m_pOwner->Get_IsFly())
 		m_pOwner->Off_IsFly();
 
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
+	Safe_Release(m_pLandCollider);
+
+	/*m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
 	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);
+	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);*/
 }
 
 

@@ -121,13 +121,10 @@ CPlayerState * CLawAirFSkillState::LateTick(_float fTimeDelta)
 #endif
 	}
 
-	if (STATETYPE_MAIN == m_eStateType)
+	if ((STATETYPE_MAIN == m_eStateType) && m_pOwner->Check_Navigation_Jump())
 	{
-		if (m_pOwner->Check_Navigation_Jump())
-		{
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_END);
-			m_eStateType = STATETYPE_END;
-		}
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_END);
+		m_eStateType = STATETYPE_END;
 	}
 
 	if (m_bIsAnimationFinished)
@@ -145,6 +142,9 @@ CPlayerState * CLawAirFSkillState::LateTick(_float fTimeDelta)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_END);
 				m_eStateType = STATETYPE_END;
 			}
+			break;
+		case Client::STATETYPE_MAIN:
+			m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
 			break;
 		case Client::STATETYPE_END:
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);

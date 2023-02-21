@@ -534,6 +534,8 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 
 
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
+
+	
 	m_pTransform->LookAt(vCenterPos);
 
 
@@ -649,7 +651,7 @@ void CCamera_Dynamic::LockOff_Camera(_float fTimeDelta)
 void CCamera_Dynamic::AIBoostOn_Camera(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
+	m_pTarget->Set_IsActionMode(true);
 	_vector vPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_vDistance;
 
 	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - vPosition)) <= 0.2f && m_fTime <= 0.2f)
@@ -689,6 +691,10 @@ void CCamera_Dynamic::AIBoostOff_Camera(_float fTimeDelta)
 	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	m_vNewPos = vPlayerPosition - m_vLasrDirwithPlayer;
 
+
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+		m_bLerp = false;
+
 	_vector FinalPos = { 0.f,0.f,0.f,0.f };
 	if (m_bLerp)
 	{
@@ -701,6 +707,7 @@ void CCamera_Dynamic::AIBoostOff_Camera(_float fTimeDelta)
 	}
 	else
 	{
+		m_pTarget->Set_IsActionMode(false);
 		FinalPos = m_vNewPos;
 		m_fTime = 0.f;
 		Set_CamMode(CAM_BATTLEZONE);

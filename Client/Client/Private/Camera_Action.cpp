@@ -94,6 +94,7 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 			m_iIndex = 0;
 			m_bPlay = false;
 			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
+			CCameraManager::Get_Instance()->Clear_ActionList();
 		}
 	}
 

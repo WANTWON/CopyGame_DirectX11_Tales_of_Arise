@@ -99,8 +99,6 @@ CAIState * CAI_LAW_AIRSKILLR::Tick(_float fTimeDelta)
 				}
 				break;
 			}
-
-			pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 		}
 		else
 		{
@@ -113,8 +111,6 @@ CAIState * CAI_LAW_AIRSKILLR::Tick(_float fTimeDelta)
 					{
 						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftFootCollider);
 						m_pLeftFootCollider = nullptr;
-
-						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 					}
 				}
 				break;
@@ -143,8 +139,6 @@ CAIState * CAI_LAW_AIRSKILLR::Tick(_float fTimeDelta)
 						m_pLeftHandCollider = nullptr;
 					}
 				}
-
-				pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 				break;
 			}
 		}
@@ -268,7 +262,10 @@ CAIState * CAI_LAW_AIRSKILLR::LateTick(_float fTimeDelta)
 	{
 		if (STATETYPE_MAIN == m_eStateType)
 			m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
-       		if (STATETYPE_END == m_eStateType)
+
+
+
+		if (STATETYPE_END == m_eStateType)
 		{
 			m_pOwner->Off_IsFly();
 			return new CAICheckState(m_pOwner, STATE_ATTACK);
@@ -305,9 +302,13 @@ void CAI_LAW_AIRSKILLR::Exit()
 {
 	__super::Exit();
 
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
+	Safe_Release(m_pLeftFootCollider);
+	Safe_Release(m_pLeftHandCollider);
+	Safe_Release(m_pRightHandCollider);
+
+	/*m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
 	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);
+	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);*/
 }
 
 

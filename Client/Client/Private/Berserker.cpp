@@ -130,51 +130,20 @@ HRESULT CBerserker::Ready_Components(void * pArg)
 
 int CBerserker::Tick(_float fTimeDelta)
 {
-	if (m_bDead)
+	_int iSuperTick = __super::Tick(fTimeDelta);
+	if (iSuperTick == OBJ_DEAD)
 		return OBJ_DEAD;
 
-	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
-		return OBJ_NOEVENT;
-
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
-		return OBJ_NOEVENT;
+	if (iSuperTick == OBJ_NOSHOW)
+		return OBJ_NOSHOW;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
-		return OBJ_NOEVENT;
+		return OBJ_NOSHOW;
 
-	if (m_pCameraManager->Get_CamState()== CCameraManager::CAM_DYNAMIC && 
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return OBJ_NOEVENT;
-
-	__super::Tick(fTimeDelta);
-
-	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 	AI_Behavior(fTimeDelta);
 	Tick_State(fTimeDelta);
 
 	
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
-	//{
-	//	CBerserkerState* pState = new CBattle_Shock_WaveState(this);
-	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	//{
-	//	CBerserkerState* pState = new CBattle_PouncingState(this);
-	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	//{
-	//	CBerserkerState* pState = new CBattle_FireBallState(this);
-	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-	//}
-
-
-
-
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	
 
@@ -197,9 +166,6 @@ void CBerserker::Late_Tick(_float fTimeDelta)
 
 	if (m_pRendererCom && m_bGlowUp)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
-
-	//if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-	//	return;
 
 	LateTick_State(fTimeDelta);
 }
@@ -315,7 +281,7 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CBerserker::Take_Damage(int fDamage, CBaseObj * DamageCauser)
+_int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
 {
 	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_tStats.m_fCurrentHp <= 0)
 		return 0;

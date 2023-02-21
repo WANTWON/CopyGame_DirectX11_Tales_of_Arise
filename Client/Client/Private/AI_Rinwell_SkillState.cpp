@@ -296,7 +296,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.fVelocity = 5.f;
 						BulletDesc.fDeadTime = 10.f;
-						BulletDesc.eBulletType = CRinwellSkills::HOlY_RANCE;
+						BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE;
 						if (m_pTarget != nullptr)
 						{
 							BulletDesc.vTargetPosition = (m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));

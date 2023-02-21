@@ -2,6 +2,7 @@
 #include "BaseObj.h"
 #include "GameInstance.h"
 #include "Effect.h"
+#include "ParticleSystem.h"
 
 BEGIN(Engine)
 class CModel;
@@ -41,6 +42,7 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual int Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
@@ -49,6 +51,7 @@ protected:
 	virtual HRESULT SetUp_ShaderResources();
 	virtual HRESULT SetUp_ShaderID();
 	virtual void Collision_Check();
+	
 
 protected:
 	BULLETDESC m_BulletDesc;

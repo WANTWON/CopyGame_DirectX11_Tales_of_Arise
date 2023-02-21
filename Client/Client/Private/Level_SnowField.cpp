@@ -197,6 +197,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 		LEVEL eNextLevel = LEVEL_BOSS;
 		pGameInstance->Set_DestinationLevel(eNextLevel);
+		//CBattleManager::Get_Instance()->Set_BattleMode(true, ASTRAL_DOUBT, true);
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
 			return;
 
@@ -205,11 +206,15 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		m_fBlurTimer = 0.f;
 	}
 
-
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
-		if (m_fBlurTimer >= 1.5f)
+		_float fDuration = 1.5f;
+		_float fBlurDuration = fDuration / 3;
+
+		if (m_fBlurTimer >= fDuration)
 		{
+			m_fBlurTimer = 0.f;
+
 			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 			if (pPlayer)
 				pPlayer->Get_Renderer()->Set_ZoomBlur(false);
@@ -232,24 +237,22 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 				return;
 
 			RELEASE_INSTANCE(CGameInstance);
-
-			m_fBlurTimer = 0.f;
 		}
 		else
 		{
-			if (m_fBlurTimer < 1.5f / 3)
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			if (pPlayer)
 			{
-				CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-				if (pPlayer)
-				{
-					_float fFocusPower = 15.f;
+				_float fFocusPower = 15.f;
 
-					_float fInterpFactor = m_fBlurTimer / (1.5f / 3);
-					_int iFocusDetailLerp = 1 + (_int)fInterpFactor * (10 - 1);
+				_float fInterpFactor = m_fBlurTimer / fBlurDuration;
+				if (fInterpFactor > 1.f)
+					fInterpFactor = 1.f;
 
-					pPlayer->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
-				}
-			}
+				_int iFocusDetailLerp = 1 + fInterpFactor * (10 - 1);
+
+				pPlayer->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+			}	
 				
 			m_fBlurTimer += fTimeDelta;
 		}

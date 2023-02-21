@@ -148,6 +148,7 @@ void CSnowFieldNpc::Talk_with_Npc()
 	switch (m_NpcDesc.eNpcType)
 	{
 	case FEMALE_YOUNG:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcYoungFemail.dat"), Get_Transform()->Get_WorldMatrix());
 
 		switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
 		{

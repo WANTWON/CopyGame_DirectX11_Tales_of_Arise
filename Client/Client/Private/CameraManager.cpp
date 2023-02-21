@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\CameraManager.h"
 #include "GameInstance.h"
+#include "BaseObj.h"
 
 IMPLEMENT_SINGLETON(CCameraManager);
 
@@ -111,6 +112,16 @@ HRESULT CCameraManager::Play_ActionCamera(_tchar * wcCameraDataName, _matrix mWo
 
 	return S_OK;
 }
+
+void CCameraManager::Clear_ActionList()
+{
+	for (auto& iter : m_pActionObjects)
+	{
+		iter->Set_IsActionMode(false);
+	}
+	m_pActionObjects.clear();
+}
+
 
 
 HRESULT CCameraManager::Ready_Camera(LEVEL eLevelIndex)

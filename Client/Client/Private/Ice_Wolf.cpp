@@ -112,27 +112,17 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
-	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if (m_bDead )
-		return OBJ_DEAD;
-		
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
-		return OBJ_NOEVENT;
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return OBJ_NOEVENT;
-
-	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
-
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
-		return OBJ_NOEVENT;
-
-	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
-		return OBJ_NOEVENT;
-
-	__super::Tick(fTimeDelta);
 	
+	_int iSuperTick = __super::Tick(fTimeDelta);
+	if (iSuperTick == OBJ_DEAD)
+		return OBJ_DEAD;
+
+	if (iSuperTick == OBJ_NOSHOW)
+		return OBJ_NOSHOW;
+	
+	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
+		return OBJ_NOSHOW;
+
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
@@ -155,6 +145,16 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
+
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON)
+			return;
+
+	}
 
 	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
 		return;
@@ -273,9 +273,9 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CIce_Wolf::Take_Damage(int fDamage, CBaseObj * DamageCauser)
+_int CIce_Wolf::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange )
 {
-	if (fDamage <= 0 || m_bDead || m_bDissolve || m_tStats.m_fCurrentHp <= 0.f || m_bTakeDamage)
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage)
 		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
