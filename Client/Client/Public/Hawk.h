@@ -75,7 +75,7 @@ public:
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 
-	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange = true) override;
 
 	HRESULT CHawk::SetUp_ShaderID();
 private:

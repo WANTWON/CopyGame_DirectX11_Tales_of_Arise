@@ -84,6 +84,7 @@ using namespace physx;
 #define OBJ_POOL 2
 #define OBJ_DEAD 1
 #define OBJ_NOEVENT 0
+#define OBJ_NOSHOW 3
 
 using namespace Engine;
 using namespace TriangleTests;

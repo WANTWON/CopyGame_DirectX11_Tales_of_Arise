@@ -97,11 +97,39 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 			m_iIndex = 0;
 			m_bPlay = false;
 			CImgui_Manager::Get_Instance()->Set_Play(false);
-			CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::DYNAMIC);
+			Set_CamMode(CAM_DEBUG);
 		}
 	}
 
 	return OBJ_NOEVENT;
+}
+
+int CCamera_Action::DebugVCamera(_float fTimeDelta)
+{
+	/* Debug Camera*/
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (pGameInstance->Key_Pressing(DIK_LSHIFT))
+	{
+		/* Camera Inputs */
+		if (pGameInstance->Key_Pressing(DIK_W))
+			m_pTransform->Go_Straight(fTimeDelta * 2);
+		if (pGameInstance->Key_Pressing(DIK_S))
+			m_pTransform->Go_Backward(fTimeDelta * 2);
+		if (pGameInstance->Key_Pressing(DIK_A))
+			m_pTransform->Go_Left(fTimeDelta * 2);
+		if (pGameInstance->Key_Pressing(DIK_D))
+			m_pTransform->Go_Right(fTimeDelta * 2);
+
+		_long MouseMove = 0;
+		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+			m_pTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * 0.1f);
+		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+			m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
+	return 0;
 }
 
 HRESULT CCamera_Action::Initialize_Prototype()
@@ -133,10 +161,22 @@ int CCamera_Action::Tick(_float fTimeDelta)
 	/* Debug Camera*/
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (m_bPlay)
+	switch (m_eCamMode)
 	{
-		PlayCamera(fTimeDelta);
+	case CAM_DEBUG:
+		DebugVCamera(fTimeDelta);
+		break;
+	case CAM_ACTION:
+		if (m_bPlay)
+		{
+			PlayCamera(fTimeDelta);
+		}
+		break;
+	default:
+		break;
 	}
+
+	
 
 
 

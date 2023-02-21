@@ -38,6 +38,17 @@ HRESULT CBullet::Initialize(void * pArg)
 	return S_OK;
 }
 
+int CBullet::Tick(_float fTimeDelta)
+{
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		if (pCamera->Get_CamMode() == CCamera_Dynamic::CAM_BATTLE_CLEAR)
+			return OBJ_DEAD;
+	}
+	return OBJ_NOEVENT;
+}
+
 void CBullet::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick())

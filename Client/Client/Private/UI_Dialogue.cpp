@@ -7,6 +7,7 @@
 #include <string>
 #include "UI_QuestClear.h"
 #include "UI_Dialoguepopup.h"
+#include "CameraManager.h"
 
 
 CUI_Dialogue::CUI_Dialogue(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -137,6 +138,13 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 			if (m_iDialogueindex == vectorsize)
 			{
 				m_bfadeout = true;
+				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+				if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
+				{
+					CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+					dynamic_cast<CCamera_Action*>(pCamera)->Set_Play(false);
+					CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
+				}
 				
 				--m_iDialogueindex;
 				CUI_QuestClear::QUESTCLEARDESC cleardesc;
