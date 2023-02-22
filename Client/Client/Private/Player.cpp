@@ -342,6 +342,8 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		return 0;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	if (eMode == ACTIVE)
+		int a = 0;
 	m_tInfo.fCurrentHp -= (int)fDamage;
 
 	/*CDamageFont::DMGDESC testdesc;
@@ -494,6 +496,13 @@ void CPlayer::AI_check()
 	pAIState = new CAICheckState(this,CAIState::STATE_IDLE);
    m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
+}
+
+void CPlayer::RecoverHP(_float hp)
+{
+	 m_tInfo.fCurrentHp += hp;
+	 if (m_tInfo.fCurrentHp > m_tInfo.fMaxHp)
+		 m_tInfo.fCurrentHp = m_tInfo.fMaxHp; 
 }
 
 void CPlayer::HandleInput()

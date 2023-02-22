@@ -67,6 +67,13 @@ public:
 		SKILLNAME_YUMPAEFUCKSAY
 	};
 
+	enum ITEMNMAE
+	{
+		ITEMNAME_LIFEBOTTLE,
+		ITEMNAME_LEMONJELLY,
+		ITEMNAME_GRAPEJELLY
+	};
+
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
 	CTexture*               m_pTextureCom2 = nullptr;

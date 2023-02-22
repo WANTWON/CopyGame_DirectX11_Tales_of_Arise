@@ -2010,6 +2010,10 @@ void CImgui_Manager::Set_ActionCamera()
 			Save_Camera();
 		}
 			
+	
+		ImGui::Text("DebugCameraSpeed"); ImGui::SameLine();
+		ImGui::DragFloat("##Speed", &m_fCameraSpeed, 0.05f);
+
 
 
 		ImGui::Text("PlayTime"); ImGui::SameLine();
@@ -2025,17 +2029,34 @@ void CImgui_Manager::Set_ActionCamera()
 				{
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_CamMode(CCamera_Action::CAM_ACTION);
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_PlayTime(m_fPlayTime);
+					
+
+					vector<CAnimation*> ModelAnimations;
+					CModel* pPlayerModel = (CModel*)CGameInstance::Get_Instance()->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
+					if (pPlayerModel != nullptr)
+					{
+						ModelAnimations = pPlayerModel->Get_Animations();
+						if (dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_Finished() == true)
+							pPlayerModel->Reset();
+					}
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
+					((CAnim*)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StartAnim();
+					
 				}
 				else
 				{
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_CamMode(CCamera_Action::CAM_DEBUG);
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
+
+
+					((CAnim*)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
 				}
 				
 			}
 		}
 	}
+
+	
 
 
 #pragma endregion Create Camera
@@ -2073,6 +2094,7 @@ void CImgui_Manager::Set_ActionCamera()
 					{
 						m_iCamCurvedIndex = i;
 						m_ActionCamDesc = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_CamData(m_iCamCurvedIndex);
+						dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_PositionToCurrentData(i);
 					}
 					ImGui::TableNextColumn();
 					string sSection = CameraCurves[i].bNewSection == true ? "NewSection" : " ";

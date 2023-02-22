@@ -400,6 +400,9 @@
     <Filter Include="01.Levels\04.BossZone">
       <UniqueIdentifier>{882c4b8d-339b-446a-b62f-4e2a6620b558}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\Common">
+      <UniqueIdentifier>{05c5ecaa-3e29-4aa5-9462-792382ea51e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -894,35 +897,17 @@
     <ClInclude Include="..\Public\AIAttackNormalState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AICheckState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AIRunawayfromTarget.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObjects\07.Bullet</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SionSkills.h">
       <Filter>02.GameObjects\07.Bullet\SionSkills</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AIDeadState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AI_HitState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\RinwellSkills.h">
       <Filter>02.GameObjects\07.Bullet\RinwellSkills</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerHitState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AI_ChaseState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AI_BoostAttackState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Damagefont_Critical.h">
       <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
@@ -1044,12 +1029,6 @@
     <ClInclude Include="..\Public\UI_Dialogue_Caption.h">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AiState_WakeUp.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AI_DodgeState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\LawAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
     </ClInclude>
@@ -1119,9 +1098,6 @@
     <ClInclude Include="..\Public\Level_BossZone.h">
       <Filter>01.Levels\04.BossZone</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AI_JumpState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\AI_LAW_AIRSKILLR.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
     </ClInclude>
@@ -1133,6 +1109,36 @@
     </ClInclude>
     <ClInclude Include="..\Public\AIPoseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_BoostAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_ChaseState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_DodgeState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_HitState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_JumpState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AICheckState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIDeadState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIRunawayfromTarget.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AiState_WakeUp.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_Item_Use_State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1589,35 +1595,17 @@
     <ClCompile Include="..\Private\AIAttackNormalState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AICheckState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\AIRunawayfromTarget.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Bullet.cpp">
       <Filter>02.GameObjects\07.Bullet</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SionSkills.cpp">
       <Filter>02.GameObjects\07.Bullet\SionSkills</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AIDeadState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\AI_HitState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\RinwellSkills.cpp">
       <Filter>02.GameObjects\07.Bullet\RinwellSkills</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\PlayerHitState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\AI_ChaseState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
@@ -1742,12 +1730,6 @@
     <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AI_DodgeState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\AiState_WakeUp.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\LawAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law</Filter>
     </ClCompile>
@@ -1820,9 +1802,6 @@
     <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\AI_JumpState.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\AI_LAW_AIRSKILLR.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
     </ClCompile>
@@ -1834,6 +1813,36 @@
     </ClCompile>
     <ClCompile Include="..\Private\AIPoseState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_ChaseState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_DodgeState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_HitState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_JumpState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AICheckState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AIDeadState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AIRunawayfromTarget.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AiState_WakeUp.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AI_Item_Use_State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -48,7 +48,7 @@ public:
 	virtual void AI_Behaviour(_float fTimeDelta) { };
 	virtual void Find_Target();
 	virtual CBaseObj* Find_MinDistance_Target();
-	virtual _float Target_Distance(CBaseObj*);
+	virtual _float Target_Distance(CBaseObj* pTarget);
 	virtual void Follow_Target(_float fTimeDelta) { };
 	virtual void Make_GetAttacked_Effect(CBaseObj* DamageCauser = nullptr);
 	virtual void Make_DeadEffect(CBaseObj* Target = nullptr);
@@ -94,8 +94,10 @@ public: // Get & Set
 	void SetOff_BedamagedCount() { m_bBedamageAnim = false; }
 	void Set_BedamageCount_Delay() { m_bBedamageAnim_Delay = true; }
 	void SetOff_BedamageCount_Delay() { m_bBedamageAnim_Delay = false; }
+	void Set_OrginDamageCauser(CBaseObj* pOrginDamageCauser) { m_pOrginDamageCauser = pOrginDamageCauser; }
 	CBaseObj* Get_Trigger() { return m_pTrigger; }
 	CBaseObj* Get_DamageCauser() { return m_pTarget; }
+	CBaseObj* Get_OrginDamageCauser() { return m_pOrginDamageCauser; }
 	void	 Save_LastPosition();
 	_vector	 Get_LastPosition() { return m_vLastPos; }
 	void	Set_LastStrikeAttack(_bool type) { m_bLastStrikeAttack = type; }
@@ -156,6 +158,7 @@ protected: /* For.Components */
 	CModel* m_pModelCom = nullptr;
 	CNavigation* m_pNavigationCom = nullptr;
 	CBaseObj* m_pTarget = nullptr;
+	CBaseObj* m_pOrginDamageCauser = nullptr;
 	CNavigation* m_vecNavigation[LEVEL_END] = { nullptr };
 
 	/* Dissolve */

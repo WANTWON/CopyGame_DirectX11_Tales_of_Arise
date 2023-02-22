@@ -1,3 +1,4 @@
++-
 #include "stdafx.h"
 
 #include "AstralDoubt_Battle_WalkState.h"
@@ -5,6 +6,7 @@
 #include "AstralDoubt_Battle_HeadBeamState.h"
 #include "AstralDoubt_Battle_UpperState.h"
 #include "AstralDoubt_Battle_RushState.h"
+#include "AstralDoubt_Battle_720Spin_FirstState.h"
 
 using namespace Astral_Doubt;
 
@@ -31,47 +33,101 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
-	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+	//CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
-	//if (m_bTargetPickOn == false)
-	//{
-		if (pDamageCauser == nullptr)
+	////if (m_bTargetPickOn == false)
+	////{
+	//	if (pDamageCauser == nullptr)
+	//	{
+	//		if (m_pCurTarget == nullptr)
+	//		{
+	//			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+	//			//if (m_pCurTarget == nullptr)
+	//			//	return nullptr;
+
+	//			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+	//			m_bTargetPickOn = true;
+	//		}
+	//		else
+	//		{
+	//			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+	//			m_bTargetPickOn = true;
+	//		}
+	//	}
+
+	//	else if (pDamageCauser != nullptr)
+	//	{
+	//		if (m_pCurTarget == nullptr)
+	//		{
+	//			m_pCurTarget = pDamageCauser;
+	//			m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//			m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
+	//			m_bTargetPickOn = true;
+	//		}
+
+	//		else
+	//		{
+	//			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+	//			m_bTargetPickOn = true;
+	//		}
+	//	}
+
+	CBaseObj* pOrigin_DamageCause = nullptr;
+	pOrigin_DamageCause = m_pOwner->Get_OrginDamageCauser();
+
+
+	if (m_pCurTarget == nullptr)
+	{
+		if (pOrigin_DamageCause == nullptr)
 		{
-			if (m_pCurTarget == nullptr)
+			CBaseObj* pDamageCauser = nullptr;
+			pDamageCauser = m_pOwner->Get_DamageCauser();
+
+			if (pDamageCauser == nullptr)
 			{
 				m_pCurTarget = m_pOwner->Find_MinDistance_Target();
-				//if (m_pCurTarget == nullptr)
-				//	return nullptr;
 
 				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-				m_bTargetPickOn = true;
+				m_fTarget_Distance = m_pOwner->ForTheBossTarget_Distance(m_pCurTarget);
 			}
-			else
-			{
-				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-				m_bTargetPickOn = true;
-			}
-		}
 
-		else if (pDamageCauser != nullptr)
-		{
-			if (m_pCurTarget == nullptr)
+			else if (pDamageCauser != nullptr)
 			{
+				CBaseObj* pDamageCauser = nullptr;
+				pDamageCauser = m_pOwner->Get_DamageCauser();
+				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
+
 				m_pCurTarget = pDamageCauser;
-				m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
-				m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
-				m_bTargetPickOn = true;
-			}
 
-			else
-			{
 				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-				m_bTargetPickOn = true;
+				m_fTarget_Distance = m_pOwner->ForTheBossTarget_Distance(m_pCurTarget);
 			}
 		}
+
+		else if (pOrigin_DamageCause != nullptr)
+		{
+			m_pCurTarget = m_pOwner->Get_OrginDamageCauser(); 
+
+
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->ForTheBossTarget_Distance(m_pCurTarget);
+		}
+	}
+	
+	else
+	{
+		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->ForTheBossTarget_Distance(m_pCurTarget);
+	}
+	
+	
+	
+
+	
+
 	//}
 
 	//if (m_pCurTarget == nullptr)
@@ -254,22 +310,30 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 			m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
 
-			if (m_fTarget_Distance <= 8.f)
+			if (m_fTarget_Distance <= 10.f)
 			{
-				if (m_fTimeDeltaAcc >= m_fMoveTime)
+				/*if (m_fTarget_Distance <= 7.f)
 				{
-					switch (rand() %2)
-					{
-					case 0:
-						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-					
-					case 1:
-						return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-						
-					default:
-						break;
-					}
+					return new CBattle_720Spin_FirstState(m_pOwner);
 				}
+
+				else
+				{*/
+					if (m_fTimeDeltaAcc >= m_fMoveTime)
+					{
+						switch (rand() % 2)
+						{
+						case 0:
+							return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+
+						case 1:
+							return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+
+						default:
+							break;
+						}
+					}
+				/*}*/
 			}
 		}
 	}

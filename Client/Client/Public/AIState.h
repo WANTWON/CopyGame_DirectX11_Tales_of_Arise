@@ -2,6 +2,7 @@
 
 #include "Player.h"
 #include "Monster.h"
+
 BEGIN(Client)
 class CAIState
 {
@@ -86,6 +87,8 @@ public:
 
 	_bool CheckTarget()
 	{
+
+		m_eAIMode = CBattleManager::Get_Instance()->Get_AImode();
 		if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 			return false;
 		if (nullptr == CBattleManager::Get_Instance()->Get_LackonMonster())
@@ -120,7 +123,7 @@ protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
 	STATE_ID m_eStateId = STATE_END;
 	STATE_ID m_ePreStateID = STATE_END;
-	AI_MODE m_eAIMode = ATTACK_FREEMODE;
+	_uint m_eAIMode = ATTACK_FREEMODE;
 	_uint m_iCurrentAnimIndex = 0;
 	_uint m_eCurrentPlayerID = CPlayer::PLAYERID::SION;
 	CPlayer* m_pOwner = nullptr;

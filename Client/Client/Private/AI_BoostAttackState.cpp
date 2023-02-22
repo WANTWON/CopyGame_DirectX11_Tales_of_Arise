@@ -151,19 +151,6 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 									
 									
 								}
-								
-								//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Plus_HP()
-								/*_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
-								CBullet::BULLETDESC BulletDesc;
-								BulletDesc.eCollisionGroup = PLAYER;
-								BulletDesc.fDeadTime = 5.f;
-								BulletDesc.eBulletType = CSionSkills::BOOST;
-								BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook*2.f;
-								BulletDesc.pOwner = m_pOwner;
-								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
-
-								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-									return nullptr;*/
 
 								m_fEventStart = pEvent.fStartTime;
 							}
@@ -195,6 +182,18 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 	}
 
 	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
+	for (auto& iter : m_pEffects2)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
+	for (auto& iter : m_pEffects3)
 	{
 		if (iter != nullptr && iter->Get_PreDead())
 			iter = nullptr;
@@ -238,8 +237,14 @@ void CAI_BoostAttack::Enter()
 		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)) * 2;
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
-		m_pEffects2 = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartFlash.dat"), mWorldMatrix);
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartFlash.dat"), mWorldMatrix);
+		m_pEffects3 = CEffect::PlayEffectAtLocation(TEXT("Rinwell_Boost_Effect.dat"), mWorldMatrix);
+
+		vOffset = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+		vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)) * 2;
+		mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pEffects2 = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
 
 		break;
 	}
@@ -281,6 +286,33 @@ void CAI_BoostAttack::Exit()
 			}
 		}
 	}
+
+	if (!m_pEffects2.empty())
+	{
+		for (auto& iter : m_pEffects2)
+		{
+			if (iter != nullptr)
+			{
+				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+				if (pParticleSystem != nullptr)
+					pParticleSystem->Set_Stop(true);
+			}
+		}
+	}
+
+	if (!m_pEffects3.empty())
+	{
+		for (auto& iter : m_pEffects3)
+		{
+			if (iter != nullptr)
+			{
+				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+				if (pParticleSystem != nullptr)
+					pParticleSystem->Set_Stop(true);
+			}
+		}
+	}
+
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	__super::Exit();
 }

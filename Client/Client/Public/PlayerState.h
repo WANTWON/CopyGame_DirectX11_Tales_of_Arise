@@ -6,6 +6,7 @@
 #include "Weapon.h"
 #include "Rinwell.h"
 #include "Law.h"
+#include "BattleManager.h"
 
 BEGIN(Engine)
 class CModel;

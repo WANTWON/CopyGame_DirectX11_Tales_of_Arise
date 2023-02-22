@@ -190,6 +190,7 @@
     <ClInclude Include="..\Public\AI_DodgeState.h" />
     <ClInclude Include="..\Public\AI_HitState.h" />
     <ClInclude Include="..\Public\AI_BoostAttackState.h" />
+    <ClInclude Include="..\Public\AI_Item_Use_State.h" />
     <ClInclude Include="..\Public\AI_JumpState.h" />
     <ClInclude Include="..\Public\AI_LAW_AIRSKILLF.h" />
     <ClInclude Include="..\Public\AI_LAW_AIRSKILLR.h" />
@@ -434,6 +435,7 @@
     <ClCompile Include="..\Private\AI_DodgeState.cpp" />
     <ClCompile Include="..\Private\AI_HitState.cpp" />
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp" />
+    <ClCompile Include="..\Private\AI_Item_Use_State.cpp" />
     <ClCompile Include="..\Private\AI_JumpState.cpp" />
     <ClCompile Include="..\Private\AI_LAW_AIRSKILLF.cpp" />
     <ClCompile Include="..\Private\AI_LAW_AIRSKILLR.cpp" />

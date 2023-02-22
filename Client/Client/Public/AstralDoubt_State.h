@@ -27,6 +27,7 @@ public:
 
 	enum STATE_ID
 	{
+		STATE_ADVENT,
 		START_BATTLE,
 		STATE_IDLE,
 		STATE_RUN,

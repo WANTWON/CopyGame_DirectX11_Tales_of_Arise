@@ -88,13 +88,18 @@ int CMonster::Tick(_float fTimeDelta)
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 	{
 		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
-		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON)
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON || eCamMode == CCamera_Dynamic::CAM_AIBOOSTOFF)
 				return OBJ_NOSHOW;
 
 	}
 
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return OBJ_NOSHOW;
+
+
+	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return OBJ_NOSHOW;
+
 
 	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
@@ -360,10 +365,10 @@ CBaseObj* CMonster::Find_MinDistance_Target()
 
 _float  CMonster::Target_Distance(CBaseObj* pTarget)
 {
-	//_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	_vector fDir = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - Get_TransformState(CTransform::STATE_TRANSLATION);
+	_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
+	/*_vector fDir = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - Get_TransformState(CTransform::STATE_TRANSLATION);
 	XMVectorSetY(fDir, 0.f);
-	_float fDistance = XMVectorGetX(XMVector3Length(fDir));
+	_float fDistance = XMVectorGetX(XMVector3Length(fDir));*/
 	return fDistance;
 }
 

@@ -88,6 +88,8 @@ public: /* Getter &  Setter */
 	//ai to checkstate
 	void AI_check();
 
+	void RecoverHP(_float hp);
+
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;
 	void			HandleInput();

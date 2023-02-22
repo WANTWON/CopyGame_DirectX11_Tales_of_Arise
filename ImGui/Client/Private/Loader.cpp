@@ -172,8 +172,8 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
-	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
-		return E_FAIL;
+//	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+//		return E_FAIL;
 
 	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
 	//	return E_FAIL;
@@ -181,12 +181,12 @@ HRESULT CLoader::Loading_ForClient()
 	//if (FAILED(Loading_ForMaptoolVillageModel()))
 	//	return E_FAIL;
 
-	////For Effect
-	//if (FAILED(Loading_ForEffect()))
-	//	return E_FAIL;
-	// 
-	//if (FAILED(Loading_ForEffectTexture()))
-	//	return E_FAIL;
+	//For Effect
+	if (FAILED(Loading_ForEffect()))
+		return E_FAIL;
+	 
+	if (FAILED(Loading_ForEffectTexture()))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
 
@@ -1046,40 +1046,45 @@ HRESULT CLoader::Loading_ForActor()
 	CImgui_Manager* pImgui = GET_INSTANCE(CImgui_Manager);
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Alphen/Alphen.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen"));
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen_Anim"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Alphen/Alphen.dat"))))
 		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Alphen_Anim");
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Rinwell/Rinwell.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell"));
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell_Anim"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
-		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Rinwell_Anim");
-
+	pImgui->m_AnimObj.push_back("Alphen");
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sion"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/Sion.dat"))))
 		return E_FAIL;
-//	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Sion"));
+	//	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Sion"));
 	pImgui->m_AnimObj.push_back("Sion");
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Rinwell");
+
+
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Law"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Law/Law.dat"))))
 		return E_FAIL;
 	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Law"));
 	pImgui->m_AnimObj.push_back("Law");
+
+
+
+
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Alphen/Alphen.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen"));
+
+
+	
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Rinwell/Rinwell.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell"));*/
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NpcFemaleYoung"),

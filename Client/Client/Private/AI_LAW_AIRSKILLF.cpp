@@ -183,7 +183,7 @@ void CAI_LAW_AIRSKILLF::Enter()
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_F.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
-
+	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YUMPAEFUCKSAY);
 
 }
 

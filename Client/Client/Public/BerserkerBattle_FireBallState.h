@@ -23,7 +23,7 @@ private:
 	_uint		m_iRand = 0;
 	_bool		m_bDonLookAt = false;
 	_bool		m_bTargetSetting = false;
-	CCollider*  m_pAtkColliderCom = false;
+	CCollider*  m_pAtkColliderCom = nullptr;
 
 
 private:

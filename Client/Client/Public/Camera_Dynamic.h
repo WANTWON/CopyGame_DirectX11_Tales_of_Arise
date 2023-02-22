@@ -98,6 +98,7 @@ private:
 	_long			m_lMouseWheel = 0;
 	_vector			m_vTargetPos = { 0.f,0.f,0.f,0.f };
 	_vector			m_vLasrDirwithPlayer = { 0.f,0.f,0.f,0.f };
+	_vector			m_vLastLookPos = { 0.f,0.f,0.f,0.f };
 	_float			m_fTime = 0.f;
 	_float			m_fLookOffsetY = 4.f;
 	_float			m_fCameraOffsetY = 5.f;

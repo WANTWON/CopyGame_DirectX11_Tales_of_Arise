@@ -231,14 +231,15 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 			{
-				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
+				
 				m_pOwner->On_JustDodge();
 
 				if (nullptr == m_pDodgeCollider)
 				{
+					CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
 					CCollider::COLLIDERDESC		ColliderDesc;
 
-					ColliderDesc.vScale = _float3(2.5f, 2.5f, 2.5f);
+					ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
 					ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 					ColliderDesc.vPosition = _float3(0.f, 2.5f, 0.f);
 
@@ -252,11 +253,12 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		{
 			if ((ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType) && (m_pOwner->Get_IsJustDodge() == true))
 			{
-				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
+				
 				m_pOwner->Off_JustDodge();
 
 				if (nullptr != m_pDodgeCollider)
 				{
+					CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pDodgeCollider);
 					m_pDodgeCollider = nullptr;
 				}
@@ -279,7 +281,13 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pDodgeCollider, &pCollisionTarget))
 		{
-			int a = 10;
+
+			pCollisionTarget->Set_Dead(true);
+			CCollision_Manager::Get_Instance()->Collect_Collider(CCollider::TYPE_SPHERE, m_pDodgeCollider);
+			m_pDodgeCollider = nullptr;
+
+			m_pOwner->Plus_Overcount();
+
 		}
 
 #ifdef _DEBUG
@@ -289,7 +297,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (m_pOwner->Get_Info().idodgecount >= 3)
+		if (m_pOwner->Get_Info().idodgecount >= 5)
 		{
 		    CBaseObj* pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
@@ -399,7 +407,7 @@ CPlayerState * CDodgeState::EventInput(void)
 void CDodgeState::Enter(void)
 {
 
-	m_pOwner->Plus_Overcount();
+	
 	__super::Enter();
 
 	m_eStateId = STATE_ID::STATE_DODGE;

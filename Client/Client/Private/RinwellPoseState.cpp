@@ -3,7 +3,6 @@
 #include "RinwellMoveState.h"
 #include "CameraManager.h"
 #include "UI_Dialogue_Caption.h"
-#include "RinwellAttackState.h"
 
 using namespace AiRinwell;
 
