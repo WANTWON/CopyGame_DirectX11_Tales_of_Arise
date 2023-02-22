@@ -148,7 +148,7 @@ void CSion::Change_Level(LEVEL eLevel)
 
 		CHierarchyNode* pSocket = nullptr;
 
-		if (LEVEL_SNOWFIELD == eLevel)
+		if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel)
 		{
 			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 			if (nullptr == pSocket)

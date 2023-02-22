@@ -2132,6 +2132,10 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 
 
 #pragma region Deco NonAnim Object
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Vehicle_Boat"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Vehicle_Boat/Vehicle_Boat.dat"))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffRock"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/CliffRock/CliffRock.dat"))))
 		return E_FAIL;
