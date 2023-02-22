@@ -314,10 +314,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Hurricane4.fbx", "../../../Bin/Bin_Data/Effect/Water/", PivotMatrix))))
 	//	return E_FAIL;
 
-	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Law"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Law.fbx", "../../../Bin/Bin_Data/Anim/Law/", PivotMatrix))))
-	//	return E_FAIL;
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Law"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Law.fbx", "../../../Bin/Bin_Data/Anim/Law/", PivotMatrix))))
+		return E_FAIL;
 
 	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("HalfSphere_ak_04.fbx"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/HalfSphere_ak_04.fbx", "../../../Bin/Bin_Data/Effect/Sphere/", PivotMatrix))))
@@ -384,10 +384,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Hurricane4.fbx", "../../../Bin/Bin_Data/Effect/Water/", PivotMatrix))))
 		return E_FAIL;*/
 
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Rinwell.fbx", "../../../Bin/Bin_Data/Anim/Rinwell/", PivotMatrix))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NpcFemaleYoung"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NpcFemaleYoung.fbx", "../../../Bin/Bin_Data/Anim/NpcFemaleYoung/", PivotMatrix))))
@@ -467,10 +467,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Floor_A_200_01.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor_A_200_01/", PivotMatrix))))
 		//	return E_FAIL;
 
-		PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FreezeLance"),
 			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/FreezeLance.fbx", "../../../Bin/Bin_Data/NonAnim/Effect/", PivotMatrix))))
-			return E_FAIL;
+			return E_FAIL;*/
 
 	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));
 
