@@ -28,7 +28,7 @@ CAICheckState::CAICheckState(CPlayer* pPlayer, STATE_ID eStateType)
 
 CAIState * CAICheckState::Tick(_float fTimeDelta)
 {
-	
+	return nullptr;
 	//if(m_ePreStateID =
 
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN || m_eCurrentPlayerID == CPlayer::LAW)
@@ -102,6 +102,8 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 
 CAIState * CAICheckState::LateTick(_float fTimeDelta)
 {
+	return nullptr;
+
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;
 
