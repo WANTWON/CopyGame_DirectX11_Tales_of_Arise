@@ -125,12 +125,6 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 
 CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 {
-	//if (m_bTargetSetting)
-	//{
-	//	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
-	//	m_bTargetSetting = true;
-	//}
-
 	if (nullptr != m_pAtkColliderCom)
 	{
 		CBaseObj* pCollisionTarget = nullptr;
@@ -146,7 +140,7 @@ CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_DASH);
-		//return new CBattle_DashState(m_pOwner);
+
 	}
 	
 #ifdef _DEBUG
@@ -169,4 +163,5 @@ void CBattle_DashState::Enter()
 void CBattle_DashState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	Safe_Release(m_pAtkColliderCom);
 }

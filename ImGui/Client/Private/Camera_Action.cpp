@@ -30,11 +30,18 @@ void CCamera_Action::Add_CamData(TOOLDESC CamDesc)
 		m_CamDatas.push_back(CamDesc);
 }
 
+void CCamera_Action::Set_PositionToCurrentData(_int iIndex)
+{
+	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&m_CamDatas[iIndex].vEyePosition));
+	m_pTransform->LookAt(XMLoadFloat4(&m_CamDatas[iIndex].vAtPosition));
+}
+
 
 
 void CCamera_Action::Set_Play(_bool type)
 {
 	 m_bPlay = type; 
+	 m_bFinished = false;
 	 if (m_bPlay)
 	 {
 		 m_vInitPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION); 
@@ -98,6 +105,7 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 			m_bPlay = false;
 			CImgui_Manager::Get_Instance()->Set_Play(false);
 			Set_CamMode(CAM_DEBUG);
+			m_bFinished = true;
 		}
 	}
 
@@ -111,15 +119,16 @@ int CCamera_Action::DebugVCamera(_float fTimeDelta)
 
 	if (pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
+		_float fSpeedOffSet = CImgui_Manager::Get_Instance()->Get_CameraDebugSpeed();
 		/* Camera Inputs */
 		if (pGameInstance->Key_Pressing(DIK_W))
-			m_pTransform->Go_Straight(fTimeDelta*0.25f );
+			m_pTransform->Go_Straight(fTimeDelta * fSpeedOffSet);
 		if (pGameInstance->Key_Pressing(DIK_S))
-			m_pTransform->Go_Backward(fTimeDelta*0.25f );
+			m_pTransform->Go_Backward(fTimeDelta * fSpeedOffSet);
 		if (pGameInstance->Key_Pressing(DIK_A))
-			m_pTransform->Go_Left(fTimeDelta * 0.25f);
+			m_pTransform->Go_Left(fTimeDelta * fSpeedOffSet);
 		if (pGameInstance->Key_Pressing(DIK_D))
-			m_pTransform->Go_Right(fTimeDelta * 0.25f );
+			m_pTransform->Go_Right(fTimeDelta * fSpeedOffSet);
 
 		_long MouseMove = 0;
 		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))

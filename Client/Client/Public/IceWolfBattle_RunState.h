@@ -25,6 +25,7 @@ private:
 	_bool		m_bTargetSetting = false;
 	_bool		m_bAttacknormal = false;
 	_bool		m_b_IsTargetInsight = false;
+	_bool		m_bStartTarget = false;
 	STATE_ID	m_ePreState_Id;
 	
 };

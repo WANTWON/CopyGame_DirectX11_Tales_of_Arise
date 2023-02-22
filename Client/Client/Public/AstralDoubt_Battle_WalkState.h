@@ -26,8 +26,8 @@ private:
 	_bool	m_Testbool;
 	_bool  m_bBeamTargetOn = false;
 	_bool  m_bTargetPickOn = false;
-	CCollider*  m_pAtkColliderCom = false;
-	CCollider*	m_p2th_AtkColliderCom = false;
+	CCollider*  m_pAtkColliderCom = nullptr;
+	CCollider*	m_p2th_AtkColliderCom = nullptr;
 
 
 };

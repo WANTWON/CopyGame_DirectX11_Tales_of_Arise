@@ -151,19 +151,6 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 									
 									
 								}
-								
-								//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Plus_HP()
-								/*_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
-								CBullet::BULLETDESC BulletDesc;
-								BulletDesc.eCollisionGroup = PLAYER;
-								BulletDesc.fDeadTime = 5.f;
-								BulletDesc.eBulletType = CSionSkills::BOOST;
-								BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook*2.f;
-								BulletDesc.pOwner = m_pOwner;
-								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
-
-								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-									return nullptr;*/
 
 								m_fEventStart = pEvent.fStartTime;
 							}

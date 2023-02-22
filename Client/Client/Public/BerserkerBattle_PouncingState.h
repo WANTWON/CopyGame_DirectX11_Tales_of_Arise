@@ -23,8 +23,8 @@ private:
 	_bool		m_bAnimFinish = false;
 	_bool		m_bTargetSetting = false;
 
-	CCollider*  m_pAtkColliderCom = false;
-	CCollider*	m_p2th_AtkColliderCom = false;
+	CCollider*  m_pAtkColliderCom = nullptr;
+	CCollider*	m_p2th_AtkColliderCom = nullptr;
 private:
 	_matrix m_StartMatrix;
 };

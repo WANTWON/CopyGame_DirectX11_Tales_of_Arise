@@ -124,7 +124,6 @@ int CAnim::Tick(_float fTimeDelta)
 		m_bisFinshed = m_pModelCom->Play_Animation(fTimeDelta, true);
 
 
-
 	for (auto& pParts : m_Parts)
 	{
 		if (nullptr != pParts)
