@@ -40,6 +40,7 @@ private:
 	 
 	vector<class CEffect*> m_SnowParticles1;
 	vector<class CEffect*> m_SnowParticles2;
+	vector<class CEffect*> m_WindParticles;
 
 public:
 	static CLevel_SnowField* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

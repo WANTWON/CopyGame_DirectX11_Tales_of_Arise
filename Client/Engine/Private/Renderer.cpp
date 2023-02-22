@@ -717,6 +717,7 @@ HRESULT CRenderer::Render_PostProcessing()
 	m_pVIBuffer->Render();
 #pragma endregion Edge_Detection
 
+#pragma region Depth_Of_Field
 	/* Depth of Field */
 	m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
 	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
@@ -752,7 +753,9 @@ HRESULT CRenderer::Render_PostProcessing()
 
 	m_pShaderPostProcessing->Begin(7); /* Depth Of Field */
 	m_pVIBuffer->Render();
-
+#pragma endregion Depth_Of_Field
+	
+#pragma region Fog
 	/* Fog */
 	if (m_bFog)
 	{
@@ -779,30 +782,34 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_pShaderPostProcessing->Begin(4);
 		m_pVIBuffer->Render();
 	}
-
+#pragma endregion Fog
+	
+#pragma region Distortion
 	/* Distortion */
-	/* This Distortion is a Post Processing Effect applied to the entire Screen. 
+	/* This Distortion is a Post Processing Effect applied to the entire Screen.
 	Unlike the Distortion Effect computed in the Render_Distortion() function which renders just Distorted Objects. */
 	/*if (m_bDistort)
 	{
-		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
-			return E_FAIL;
+	m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+	return E_FAIL;
 
-		if (!m_pScreenDistortionTexture)
-			m_pScreenDistortionTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Screen_Distortion"));
+	if (!m_pScreenDistortionTexture)
+	m_pScreenDistortionTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Screen_Distortion"));
 
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_ScreenDistortionTexture", m_pScreenDistortionTexture->Get_SRV())))
-			return E_FAIL;
+	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_ScreenDistortionTexture", m_pScreenDistortionTexture->Get_SRV())))
+	return E_FAIL;
 
-		m_fScreenDistortionTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
-		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fScreenDistortionTimer", &m_fScreenDistortionTimer, sizeof(_float))))
-			return E_FAIL;
+	m_fScreenDistortionTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+	if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fScreenDistortionTimer", &m_fScreenDistortionTimer, sizeof(_float))))
+	return E_FAIL;
 
-		m_pShaderPostProcessing->Begin(5);
-		m_pVIBuffer->Render();
+	m_pShaderPostProcessing->Begin(5);
+	m_pVIBuffer->Render();
 	}*/
-
+#pragma endregion Distortion
+	
+#pragma region Zoom_Blur
 	/* Zoom Blur */
 	if (m_bZoomBlur)
 	{
@@ -818,7 +825,9 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_pShaderPostProcessing->Begin(8); /* Zoom Blur */
 		m_pVIBuffer->Render();
 	}
+#pragma endregion Zoom_Blur
 
+#pragma region Saturation
 	/* Saturation */
 	if (m_bSaturation)
 	{
@@ -832,6 +841,7 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_pShaderPostProcessing->Begin(9); /* Saturation */
 		m_pVIBuffer->Render();
 	}
+#pragma endregion Saturation
 
 	return S_OK;
 }

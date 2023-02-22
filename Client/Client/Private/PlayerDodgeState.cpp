@@ -24,6 +24,7 @@
 #include "LawSkillState.h"
 #include "LawAirRSkillState.h"
 #include "LawAirFSkillState.h"
+#include "Animation.h"
 
 using namespace Player;
 
@@ -233,8 +234,36 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 			{
-				
 				m_pOwner->On_JustDodge();
+
+#pragma region Dodge Effect
+				_float fDuration = pEvent.fEndTime - pEvent.fStartTime;
+				_float fCurrentTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
+				
+				_float fInterpTimer = fDuration * .15;
+
+				/* Saturation Lerp */
+				_float fSaturationInterpFactor = fCurrentTime / fInterpTimer;
+				if (fSaturationInterpFactor > 1.f)
+					fSaturationInterpFactor = 1.f;
+
+				_float fSaturationStart = 1.f;
+				_float fSaturationEnd = 2.f;
+				_float fSaturationLerp = fSaturationStart + fSaturationInterpFactor * (fSaturationEnd - fSaturationStart);
+				m_pOwner->Get_Renderer()->Set_Saturation(true, fSaturationLerp);
+
+				/* Zoom Blur Lerp */
+				_float fFocusPower = 5.f;
+
+				_float fBlurInterpFactor = fCurrentTime / fInterpTimer;
+				if (fBlurInterpFactor > 1.f)
+					fBlurInterpFactor = 1.f;
+
+				_int iDetailStart = 1;
+				_int iDetailEnd = 10;
+				_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+				m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+#pragma endregion Dodge Effect
 
 				if (nullptr == m_pDodgeCollider)
 				{
@@ -263,6 +292,8 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 					CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pDodgeCollider);
 					m_pDodgeCollider = nullptr;
+
+					m_pOwner->Set_DodgeEffect(true);
 				}
 			}
 		}
