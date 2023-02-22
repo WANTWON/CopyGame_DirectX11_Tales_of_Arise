@@ -2217,12 +2217,12 @@ void CImgui_Manager::Set_ActionCamera()
 				m_ActionCamDesc.bLerp = !m_ActionCamDesc.bLerp;
 			}
 			ImGui::SetNextItemWidth(200);
-			if (ImGui::DragFloat("##Start", &m_ActionCamDesc.fStartTime, 0.01f, 0.f, 1.f, "Start: %.02f"))
+			if (ImGui::DragFloat("##Start", &m_ActionCamDesc.fStartTime, 0.01f, 0.f, 1.f, "Start: %f"))
 			{
 			}
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(200);
-			if (ImGui::DragFloat("##End", &m_ActionCamDesc.fEndTime, 0.01f, 0.f, 1.f, "End: %.02f"))
+			if (ImGui::DragFloat("##End", &m_ActionCamDesc.fEndTime, 0.01f, 0.f, 1.f, "End: %f"))
 			{
 			}
 
