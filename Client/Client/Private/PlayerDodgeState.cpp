@@ -29,10 +29,10 @@ using namespace Player;
 
 CDodgeState::CDodgeState(CPlayer * pPlayer, DIRID eDir, _float fTime)
 	: m_eDirection(eDir)
-	, m_fTime(fTime)
 {
 	m_pOwner = pPlayer;
 	m_ePlayerID = m_pOwner->Get_PlayerID();
+	m_fTime = fTime;
 }
 
 CPlayerState * CDodgeState::HandleInput(void)
@@ -177,6 +177,8 @@ CPlayerState * CDodgeState::HandleInput(void)
 			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
 		else if (pGameInstance->Key_Pressing(DIK_LSHIFT) && !m_bIsFly)
 			return new CDodgeState(m_pOwner, DIR_END, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_LSHIFT) && m_bIsFly)
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
 
 		if (!m_bIsFly)
 		{

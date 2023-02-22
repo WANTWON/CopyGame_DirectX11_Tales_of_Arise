@@ -336,7 +336,7 @@ HRESULT CPlayer::Render_ShadowDepth()
 } 
 
 
-_int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
+_int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 {
 	if (fDamage <= 0 || m_bDead || m_bIsJustDodge)
 		return 0;
@@ -388,7 +388,8 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		case Client::ACTIVE:
 			if (CPlayerState::STATE_HIT != m_pPlayerState->Get_StateId())
 			{
-				pState = new CHitState(this);
+				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+				pState = new CHitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time());
 				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 			}
 			break;
