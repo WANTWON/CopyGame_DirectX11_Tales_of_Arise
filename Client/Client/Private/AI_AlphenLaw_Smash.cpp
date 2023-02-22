@@ -89,7 +89,8 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	m_pOwner->Check_Navigation();
+	//m_pOwner->Check_Navigation();
+	m_pOwner->Check_Navigation_Jump();
 
 	return nullptr;
 }
@@ -151,7 +152,7 @@ void CAI_AlphenLaw_Smash::Enter()
 
 		break;
 	case CPlayer::LAW:
-		m_iCurrentAnimIndex = CLaw::ANIM::BTL_ATTACK_STRIKE;
+		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_ZINRAIROUEIKYAKU;
 		break;
 
 	}
@@ -167,9 +168,9 @@ void CAI_AlphenLaw_Smash::Enter()
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-	pCamera->Set_Target(m_pOwner);
+	//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+	////	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+	//pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
 }
@@ -178,6 +179,7 @@ void CAI_AlphenLaw_Smash::Exit()
 {
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 	{
 		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())

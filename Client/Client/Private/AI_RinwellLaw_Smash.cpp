@@ -90,7 +90,7 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	m_pOwner->Check_Navigation();
+	m_pOwner->Check_Navigation_Jump();
 
 	return nullptr;
 }
@@ -151,7 +151,7 @@ void CAI_RinwellLaw_Smash::Enter()
 		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_STRIKE;
 		break;
 	case CPlayer::LAW:
-		m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
+		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_GURENTENSYOU;
 
 		break;
 
@@ -177,6 +177,7 @@ void CAI_RinwellLaw_Smash::Enter()
 
 void CAI_RinwellLaw_Smash::Exit()
 {
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)

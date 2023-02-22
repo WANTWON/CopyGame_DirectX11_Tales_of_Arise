@@ -192,6 +192,7 @@ void CAI_SionLaw_Smash::Enter()
 
 void CAI_SionLaw_Smash::Exit()
 {
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
