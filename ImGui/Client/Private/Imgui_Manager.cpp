@@ -1707,7 +1707,7 @@ void CImgui_Manager::Show_ModelList()
 	// ------------------------ Left-----------------------------------
 	static int selected = 0;
 	{
-		ImGui::BeginChild("left pane", ImVec2(150, 0), true);
+		ImGui::BeginChild("left pane", ImVec2(200, 0), true);
 
 		int i = 0;
 
@@ -2655,7 +2655,7 @@ _bool CImgui_Manager::Load_Camera()
 
 		hFileCamera = CreateFile(OFN.lpstrFile, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 		if (0 == hFileCamera)
-			return E_FAIL;
+			return false;
 
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

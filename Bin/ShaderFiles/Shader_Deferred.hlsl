@@ -143,10 +143,10 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
 	///////
 	float NdotL = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal)));
 
-	NdotL = pow((NdotL * 0.5f) + 0.5f, 2);
-	float step = 2;
-	NdotL = ceil(NdotL * step) / step;
-	///////
+	if (NdotL < 0.5f)
+		NdotL = 0.3f;
+	else
+		NdotL = 1.f;
 
 	Out.vShade = g_vLightDiffuse * (NdotL + (g_vLightAmbient));
 	Out.vShade.a = 1.f;
