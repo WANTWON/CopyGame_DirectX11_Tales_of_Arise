@@ -45,6 +45,7 @@ public:
 	virtual HRESULT Render(void);
 	
 public:
+	PLAYERDESC Get_Desc(void) { return m_ModelDesc; }
 	void Set_ModelDesc(NONANIMDESC* NonAnimDesc) { memcpy(&m_ModelDesc, NonAnimDesc, sizeof(NONANIMDESC)); }
 
 private:
