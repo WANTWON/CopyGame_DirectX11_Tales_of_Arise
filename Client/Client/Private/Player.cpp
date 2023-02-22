@@ -192,7 +192,8 @@ int CPlayer::Tick(_float fTimeDelta)
 		if(pParts != nullptr)
 			pParts->Tick(fTimeDelta);
 	}
-		
+
+	Reset_DodgeEffect(fTimeDelta);
 	
 	return OBJ_NOEVENT;
 }
@@ -699,6 +700,46 @@ HRESULT CPlayer::SetUp_ShaderResources()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+void CPlayer::Reset_DodgeEffect(_float fTimeDelta)
+{
+	if (!m_bDodgeEffect)
+		return;
+
+	if (m_fResetTimer < m_fResetDuration)
+	{
+		/* Saturation Lerp */
+		_float fSaturationInterpFactor = m_fResetTimer / m_fResetDuration;
+		if (fSaturationInterpFactor > 1.f)
+			fSaturationInterpFactor = 1.f;
+
+		_float fSaturationStart = 2.f;
+		_float fSaturationEnd = 1.f;
+		_float fSaturationLerp = fSaturationStart + fSaturationInterpFactor * (fSaturationEnd - fSaturationStart);
+		m_pRendererCom->Set_Saturation(true, fSaturationLerp);
+
+		/* Zoom Blur Lerp */
+		_float fFocusPower = 5.f;
+
+		_float fBlurInterpFactor = m_fResetTimer / m_fResetDuration;
+		if (fBlurInterpFactor > 1.f)
+			fBlurInterpFactor = 1.f;
+
+		_int iDetailStart = 10;
+		_int iDetailEnd = 1;
+		_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+		m_pRendererCom->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+
+		m_fResetTimer += fTimeDelta;
+	}
+	else
+	{
+		m_fResetTimer = 0.f;
+		m_bDodgeEffect = false;
+		m_pRendererCom->Set_ZoomBlur(false);
+		m_pRendererCom->Set_Saturation(false);
+	}
 }
 
 void CPlayer::Change_Navigation(LEVEL eLevel)

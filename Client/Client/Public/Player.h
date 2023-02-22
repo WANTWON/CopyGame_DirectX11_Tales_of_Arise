@@ -108,7 +108,8 @@ public: /*For.State*/
 	void Plus_Overcount() { ++m_tInfo.idodgecount; }
 	void Set_Overcount(_uint count) { m_tInfo.idodgecount = count; }
 
-	
+	void Set_DodgeEffect(_bool bDodgeEffect) { m_bDodgeEffect = bDodgeEffect; }	
+	void Reset_DodgeEffect(_float fTimeDelta);
 
 public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);
@@ -152,6 +153,10 @@ protected: /* for 4 Player */
 
 	/* Pose */
 	_bool m_bIsPose = false;
+
+	_bool m_bDodgeEffect = false;
+	_float m_fResetDuration = .25f;
+	_float m_fResetTimer = 0.f;
 
 private:
 	_bool m_bLevelup = false;

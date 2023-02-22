@@ -158,11 +158,14 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_SnowParticles1.empty() && m_SnowParticles2.empty())
+	if (m_SnowParticles1.empty() && m_SnowParticles2.empty() && m_WindParticles.empty())
 	{
 		_matrix mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 128.f);
 		m_SnowParticles1 = CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_1.dat"), mWorldMatrix);
 		m_SnowParticles2 = CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_2.dat"), mWorldMatrix);
+
+		mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 256.f);
+		m_WindParticles = CEffect::PlayEffectAtLocation(TEXT("Wind.dat"), mWorldMatrix);
 	}
 	
 	g_fSoundVolume += 0.001f;
