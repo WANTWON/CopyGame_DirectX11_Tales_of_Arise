@@ -90,8 +90,8 @@ public:
 	CCamera_Action::TOOLDESC Get_CameraToolDesc() { return m_ActionCamDesc; }
 	void Set_CameraToolDesc(CCamera_Action::TOOLDESC Desc) { memcpy(&m_ActionCamDesc, &Desc, sizeof(CCamera_Action::TOOLDESC)); }
 	_int Get_TargetMode() { return m_eCameraType; }
+	_float Get_CameraDebugSpeed() { return m_fCameraSpeed; }
 	
-
 	/* For Light Tool */
 	void Set_Light();
 	void Save_Light();
@@ -196,7 +196,7 @@ private:
 	_uint									m_iCamCurvedIndex = 0;
 	_int 									m_eCameraType = 0;
 	_float4									vDynamicPos;
-
+	_float									m_fCameraSpeed = 1.f;
 
 	/*For Light */
 	_bool									m_bMakeLight = false;

@@ -1050,16 +1050,18 @@ HRESULT CLoader::Loading_ForActor()
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("Alphen");
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
-		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Rinwell");
-
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sion"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/Sion.dat"))))
 		return E_FAIL;
 	//	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Sion"));
 	pImgui->m_AnimObj.push_back("Sion");
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Rinwell");
+
+
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Law"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Law/Law.dat"))))
