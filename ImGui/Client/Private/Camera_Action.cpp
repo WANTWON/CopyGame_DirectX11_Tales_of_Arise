@@ -113,13 +113,13 @@ int CCamera_Action::DebugVCamera(_float fTimeDelta)
 	{
 		/* Camera Inputs */
 		if (pGameInstance->Key_Pressing(DIK_W))
-			m_pTransform->Go_Straight(fTimeDelta * 2);
+			m_pTransform->Go_Straight(fTimeDelta*0.25f );
 		if (pGameInstance->Key_Pressing(DIK_S))
-			m_pTransform->Go_Backward(fTimeDelta * 2);
+			m_pTransform->Go_Backward(fTimeDelta*0.25f );
 		if (pGameInstance->Key_Pressing(DIK_A))
-			m_pTransform->Go_Left(fTimeDelta * 2);
+			m_pTransform->Go_Left(fTimeDelta * 0.25f);
 		if (pGameInstance->Key_Pressing(DIK_D))
-			m_pTransform->Go_Right(fTimeDelta * 2);
+			m_pTransform->Go_Right(fTimeDelta * 0.25f );
 
 		_long MouseMove = 0;
 		if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
