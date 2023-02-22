@@ -89,7 +89,8 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	m_pOwner->Check_Navigation();
+	//m_pOwner->Check_Navigation();
+	m_pOwner->Check_Navigation_Jump();
 
 	return nullptr;
 }
@@ -151,7 +152,7 @@ void CAI_AlphenLaw_Smash::Enter()
 
 		break;
 	case CPlayer::LAW:
-		m_iCurrentAnimIndex = CLaw::ANIM::BTL_ATTACK_STRIKE;
+		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_ZINRAIROUEIKYAKU;
 		break;
 
 	}

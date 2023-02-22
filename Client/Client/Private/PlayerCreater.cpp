@@ -130,19 +130,19 @@ HRESULT CPlayerCreater::Cloning_ForPlayer2()
 		return E_FAIL;
 
 
-	//if (CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
-	//{
-	//	//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-	//	//	return E_FAIL;
+	if (CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player")) == nullptr)
+	{
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+			return E_FAIL;
 
-	//	CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
-	//	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
-	//	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));
+		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));
 
-	//	CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
-	//	pPlayer->Change_Level(LEVEL_SNOWFIELD);
+		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
+		pPlayer->Change_Level(LEVEL_SNOWFIELD);
 
-	//}
+	}
 	m_isFinished = true;
 
 	RELEASE_INSTANCE(CGameInstance);
