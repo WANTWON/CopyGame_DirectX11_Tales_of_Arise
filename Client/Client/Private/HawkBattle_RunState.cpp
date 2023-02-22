@@ -14,7 +14,7 @@ CBattle_RunState::CBattle_RunState(CHawk* pHawk, STATE_ID ePreBattleState)
 	m_pOwner          = pHawk;
 	m_ePreBattleState = ePreBattleState;
 
-	m_fRandTime = ((rand() % 4000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CHawkState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
@@ -64,31 +64,50 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 
 CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 {
+	if (m_pCurTarget == nullptr)
+	{
+		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+	}
+
 	m_pOwner->Check_Navigation();
+
+	m_b_IsTargetInsight = Is_TargetInSight(m_vCurTargetPos, 35);
+
+
+	m_fTimeDeltaAcc += fTimeDelta;
+
+	if (m_fTimeDeltaAcc > m_fRandTime)
+		m_iRand = rand() % 3;
 
 	if (m_fTarget_Distance > 4.5f)
 	{
-		////회전 코드 
-		CTransform* pMonSterTransform = m_pOwner->Get_Transform();
+		if (m_b_IsTargetInsight == true)
+		{
+			m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
+			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.3f);
+			//m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
+		}
 
-		_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
-		_vector vLook = XMVector3Normalize(pMonSterTransform->Get_State(CTransform::STATE_LOOK));
+		else
+		{
+			////회전 코드 
+			CTransform* pMonSterTransform = m_pOwner->Get_Transform();
 
-		vLook = XMVectorSetY(vLook, 0.f);
-		vTargetDir = XMVectorSetY(vTargetDir, 0.f);
+			_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
+			_vector vLook = XMVector3Normalize(pMonSterTransform->Get_State(CTransform::STATE_LOOK));
 
-		_float fDot = XMVectorGetX(XMVector3Dot(vTargetDir, vLook));
+			vLook = XMVectorSetY(vLook, 0.f);
+			vTargetDir = XMVectorSetY(vTargetDir, 0.f);
 
-		if (fDot < 0.8f)
-			pMonSterTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.03f);
+			_float fDot = XMVectorGetX(XMVector3Dot(vTargetDir, vLook));
 
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
+			if (fDot < 0.8f)
+				pMonSterTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.07f);
 
-		m_fTimeDeltaAcc += fTimeDelta;
-
-		if (m_fTimeDeltaAcc > m_fRandTime)
-			m_iRand = rand() % 3;
-
+			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
+		}
 	}
 	else if (m_fTarget_Distance <= 4.5f)
 	{
@@ -110,89 +129,6 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 	}
 	
 	
-
-
-	return nullptr;
-
-
-
-
-	///////////0202 14:29 원본코드
-	//if (m_fTarget_Distance > 10.5f)
-	//{
-
-	//	////회전 코드 
-	//	CTransform* pMonSterTransform = m_pOwner->Get_Transform();
-
-	//	_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
-	//	_vector vLook = XMVector3Normalize(pMonSterTransform->Get_State(CTransform::STATE_LOOK));
-
-	//	vLook = XMVectorSetY(vLook, 0.f);
-	//	vTargetDir = XMVectorSetY(vTargetDir, 0.f);
-
-	//	_float fDot = XMVectorGetX(XMVector3Dot(vTargetDir, vLook));
-
-	//	if (fDot < 0.8f)
-	//		pMonSterTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.03f);
-
-	//	//m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
-	//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.1f, m_pOwner->Get_Navigation());
-
-
-
-	//	/*m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-
-	//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);*/
-	//}
-	//else
-	//{
-	//	if (m_fTimeDeltaAcc > m_fRandTime)
-	//	{
-	//		switch (m_ePreBattleState)
-	//		{
-
-	//		case CHawkState::STATE_ID::STATE_DASH:
-	//			return new CBattle_PeckState(m_pOwner);
-
-	//		case CHawkState::STATE_ID::STATE_PECK:
-	//			return new CBattle_TornadeState(m_pOwner);
-	//			break;
-
-	//			//case CHawkState::STATE_ID::STATE_TORNADE:
-	//			//	return new CBattle_DashState(m_pOwner);
-
-	//		default:
-	//			break;
-	//		}
-	//	}
-	//}
-
-	//return nullptr;
-
-
-	/*m_iRand = rand() % 1;
-
-	CCollider* pCollider = m_pOwner->Get_Collider();
-	pCollider->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
-	
-
-		if (10.f <= m_fIdleAttackTimer)
-		{
-			return new CBattle_ChargeState(m_pOwner);
-		}
-
-		else
-		{
-			if (6.f > m_fTarget_Distance)
-				return new CBattle_GrabStartState(m_pOwner);
-			
-
-			m_fIdleAttackTimer += fTimeDelta;
-		}
-		*/
-
-
-
 	return nullptr;
 }
 

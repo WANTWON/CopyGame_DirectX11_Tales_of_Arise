@@ -21,6 +21,8 @@ private:
 	_float		m_fIdleMoveTimer = 0.f;
 	_float		m_fIdleAttackTimer = 1.5f;
 	_float		m_fTarget_Distance;
+	_bool		m_b_IsTargetInsight = false;
+
 	STATE_ID	m_ePreBattleState;
 private:
 	_matrix m_StartMatrix;

@@ -84,7 +84,7 @@ CIceWolfState * CAttackBiteState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc;
 
-					ColliderDesc.vScale = _float3(4.f, 4.f, 4.f);
+					ColliderDesc.vScale = _float3(7.f, 7.f, 7.f);
 					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
@@ -117,6 +117,18 @@ CIceWolfState * CAttackBiteState::LateTick(_float fTimeDelta)
 	//	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 	//	m_bTargetSetting = true;
 	//}
+
+	if (nullptr != m_pAtkColliderCom)
+	{
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+	}
 
 	if (m_pCurTarget == nullptr)
 	{

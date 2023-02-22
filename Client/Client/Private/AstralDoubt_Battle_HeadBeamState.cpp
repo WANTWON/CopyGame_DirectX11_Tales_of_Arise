@@ -102,8 +102,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 			m_pAtkColliderCom = nullptr;
 
 
-			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
 	}
@@ -120,6 +118,17 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 		AimTarget(fTimeDelta);
 
 
+	if (nullptr != m_pAtkColliderCom)
+	{
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+	}
 
 
 	//_bool bIs_TargetInFront = false;d

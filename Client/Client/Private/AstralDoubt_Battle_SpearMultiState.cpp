@@ -199,7 +199,6 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					m_p6th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc6th);
 					m_p6th_AtkColliderCom->Update(matWorld_6th);
 
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 				else if (nullptr != m_p6th_AtkColliderCom)
 					m_p6th_AtkColliderCom->Update(matWorld_6th);
@@ -226,9 +225,6 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 			m_p5th_AtkColliderCom = nullptr;
 			m_p6th_AtkColliderCom = nullptr;
 
-
-			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
 	}
@@ -240,6 +236,19 @@ CAstralDoubt_State * CBattle_SpearMultiState::LateTick(_float fTimeDelta)
 {
 
 	m_pOwner->Check_Navigation();
+
+	if (nullptr != m_pAtkColliderCom)
+	{
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+	}
+
 
 	if (m_bIsAnimationFinished)
 	{

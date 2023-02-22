@@ -60,8 +60,6 @@ CAIState * CAI_JumpState::Tick(_float fTimeDelta)
 
 CAIState * CAI_JumpState::LateTick(_float fTimeDelta)
 {
-	/*if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-		return new CHitState(m_pOwner, m_fTime);*/
 	if (m_fTime >= 7.f / 4.6f && m_bUseskill)
 	{
 		switch (m_eCurrentPlayerID)

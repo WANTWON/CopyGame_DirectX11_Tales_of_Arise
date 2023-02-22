@@ -25,6 +25,20 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
+	if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
+	{
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
+
+			m_pOwner->Check_Navigation();
+		}
+	}
 
 	return nullptr;
 }
@@ -56,6 +70,14 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 		}
 	}
 
+	else if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
+	{
+		if (m_bIsAnimationFinished)
+		{
+			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_IDLE);
+		}
+	}
+
 	else
 	{
 		if (m_fTimeDeltaAcc > m_fRandTime)
@@ -67,8 +89,11 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 void CBattle_IdleState::Enter()
 {
-	if(m_ePreState_Id)
+	if(m_ePreState_Id == STATE_ID::STATE_DOWN)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ARISE_B);
+
+	else if(m_ePreState_Id == STATE_ID::STATE_ADVENT)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::EVENT_ADVENT);
 
 	else
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::MOVE_IDLE);

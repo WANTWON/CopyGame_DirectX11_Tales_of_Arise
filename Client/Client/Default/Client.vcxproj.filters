@@ -1104,6 +1104,12 @@
     <ClInclude Include="..\Public\AI_LAW_AIRSKILLF.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerPoseState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIPoseState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AI_BoostAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
     </ClInclude>
@@ -1801,6 +1807,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI_LAW_AIRSKILLF.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerPoseState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AIPoseState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>

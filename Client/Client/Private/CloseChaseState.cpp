@@ -67,9 +67,6 @@ CPlayerState * CCloseChaseState::Tick(_float fTimeDelta)
 
 CPlayerState * CCloseChaseState::LateTick(_float fTimeDelta)
 {
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-		return new CHitState(m_pOwner);
-
 	if (nullptr != m_pTarget)
 	{
 		_vector vToTargetDir = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
@@ -85,13 +82,16 @@ CPlayerState * CCloseChaseState::LateTick(_float fTimeDelta)
 					return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
+					if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
+					if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
-					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
+					if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+						return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
 					break;
 				}
 			}
@@ -105,13 +105,16 @@ CPlayerState * CCloseChaseState::LateTick(_float fTimeDelta)
 					return new CLawAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
-					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
+					if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+						return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
-					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
+					if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+						return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
-					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
+					if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+						return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
 					break;
 				}
 			}

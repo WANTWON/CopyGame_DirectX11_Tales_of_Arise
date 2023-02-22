@@ -365,10 +365,10 @@ CBaseObj* CMonster::Find_MinDistance_Target()
 
 _float  CMonster::Target_Distance(CBaseObj* pTarget)
 {
-	//_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	_vector fDir = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - Get_TransformState(CTransform::STATE_TRANSLATION);
+	_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
+	/*_vector fDir = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - Get_TransformState(CTransform::STATE_TRANSLATION);
 	XMVectorSetY(fDir, 0.f);
-	_float fDistance = XMVectorGetX(XMVector3Length(fDir));
+	_float fDistance = XMVectorGetX(XMVector3Length(fDir));*/
 	return fDistance;
 }
 

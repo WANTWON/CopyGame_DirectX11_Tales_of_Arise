@@ -58,7 +58,7 @@ CAstralDoubt_State * CWalkState::LateTick(_float fTimeDelta)
 			_vector vPosition = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.5f, m_pOwner->Get_Navigation());
 			m_pOwner->Get_Transform()->LookAt(vTrigger_Pos);
-			
+			//m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
 		}
 	}
 

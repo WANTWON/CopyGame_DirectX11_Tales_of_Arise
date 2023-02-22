@@ -150,6 +150,9 @@ protected: /* for 4 Player */
 	/* STIRKEATTACK */
 	_bool          m_bStrikeAttack = false;
 
+	/* Pose */
+	_bool m_bIsPose = false;
+
 private:
 	_bool m_bLevelup = false;
 
