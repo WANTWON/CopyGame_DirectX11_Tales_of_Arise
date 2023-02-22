@@ -161,6 +161,7 @@ void CPlayerManager::Set_SmashAttack()
 
 			if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+			CBattleManager::Get_Instance()->Set_IsStrike(true);
 		}
 
 
@@ -198,6 +199,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				CBattleManager::Get_Instance()->Set_IsStrike(true);
 			}
 
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_3))
@@ -232,6 +234,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				CBattleManager::Get_Instance()->Set_IsStrike(true);
 			}
 		}
 
@@ -268,6 +271,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				CBattleManager::Get_Instance()->Set_IsStrike(true);
 			}
 
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
@@ -301,6 +305,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				CBattleManager::Get_Instance()->Set_IsStrike(true);
 			}
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_3) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			{
@@ -333,6 +338,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
+				CBattleManager::Get_Instance()->Set_IsStrike(true);
 			}
 		}
 	}

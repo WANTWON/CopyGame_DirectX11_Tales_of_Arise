@@ -275,7 +275,7 @@ HRESULT CUI_Skillmessage::Render()
 	//m_pVIBufferCom->Render();
 	if (m_bUseItem)
 	{
-		m_fPosition.x = 650.f - m_fFadeX;
+		m_fPosition.x = 670.f - m_fFadeX;
 		m_fSize.x = 400.f;
 		m_fSize.y = 28.f;
 	}

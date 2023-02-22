@@ -1,6 +1,7 @@
 #pragma once
 #include "Base.h"
 #include "Client_Defines.h"
+//#include "AIState.h"
 
 BEGIN(Engine)
 class CGameObject;
@@ -21,7 +22,7 @@ private:
 public: /* Settter */
 	void Set_BattleMode(_bool type, MONSTER_ID eMonsterType = MONSTER_END, _bool IsBossBattle = false);
 	void Add_Monster(CBaseObj* pMonster) { m_FieldMonster.push_back(pMonster); }
-	void Out_Monster(CBaseObj* pMonster); 
+	void Out_Monster(CBaseObj* pMonster);
 
 	void Add_BattleMonster(CBaseObj* pMonster) { m_BattleMonster.push_back(pMonster); }
 	void Out_BattleMonster(CBaseObj* pMonster);
@@ -48,6 +49,14 @@ public: /* For Lock On */
 	CBaseObj* Get_BossMonster() { return m_pBoss; }
 	void Update_LockOn();
 
+	_int Get_AImode(){return m_eAImode;}
+	void Set_AImode(_int mode) { m_eAImode = mode; }
+
+	_bool Get_AIuseItem() { return m_bAIuseItem; }
+	void Set_AIuseItem(_bool tof) { m_bAIuseItem = tof; }
+
+	
+
 public:
 	void Clear_Monster() { m_FieldMonster.clear(); };
 
@@ -62,6 +71,11 @@ private:
 	CBaseObj* m_pLockon = nullptr;
 	CBaseObj* m_pBoss = nullptr;
 	_bool m_bStrike = false;
+
+	_int m_eAImode = 0;
+
+	_bool m_bAIuseItem = false;
+	//CAIState::AI_MODE m_eAImode = ATTACK_FREEMODE;
 
 public:
 	virtual void Free() override;

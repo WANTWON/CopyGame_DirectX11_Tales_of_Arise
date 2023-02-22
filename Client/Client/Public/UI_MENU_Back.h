@@ -47,6 +47,7 @@ public:
 	HRESULT Render_Player4_Status_useitem();
 	HRESULT Render_CP();
 	HRESULT Render_Mainbottombutton();
+	HRESULT Render_Orderbottombutton();
 	HRESULT Render_bottmline();
 	
 	HRESULT Render_Itembottombutton_useable();
@@ -58,6 +59,8 @@ public:
 	HRESULT Render_Inven_armor();
 	HRESULT Render_Inven_category();
 	HRESULT Render_Flags();
+
+	HRESULT Render_OrderFlags();
 
 	HRESULT Render_inven_bottom_item_forUseitem();
 
@@ -86,7 +89,12 @@ public:
 	HRESULT Render_Quest1TODO();
 	HRESULT Render_Quest2TODO();
 	HRESULT Render_Quest3TODO();
+
+	HRESULT Render_BattleOrder();
 	void Return_to_MainMenu();
+
+	HRESULT Render_bottmline_Battleorder();
+
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
@@ -122,6 +130,8 @@ private:
 	CTexture*               m_pTextureCom25 = nullptr; //lighteffect;
 
 	CTexture*               m_pTextureCom26 = nullptr; //expbar;
+
+	CTexture*               m_pTextureCom27 = nullptr; //battleorder;
 	
 	
 	
@@ -142,7 +152,7 @@ private:
 
 	_bool m_bInventory1 = false;
 
-	enum Renderpase {MENU_MAIN , MENU_INVENTORY1 , MENU_QUEST, MENU_END};
+	enum Renderpase {MENU_MAIN , MENU_INVENTORY1 , MENU_QUEST, MENU_BATTLEORDER, MENU_END};
 	enum Inventorytype {INVEN_MAIN , INVEN_USABLE, INVEN_MATERIAL , INVEN_WEAPON , INVEN_ARMOR , INVEN_ELSE , INVEN_END};
 	_uint m_eInventory_type = INVEN_MAIN;
 	Renderpase m_etype = MENU_MAIN;
@@ -194,6 +204,7 @@ private:
 	_float m_ficonposition1 = 600.f;
 	_float m_ficonposition2 = 600.f;
 	_float m_ficonposition3 = 600.f;
+	_float m_ficonposition4 = 600.f;
 
 	_uint m_igaldnum = 0;
 	_uint m_ihpnum = 0;
@@ -262,6 +273,12 @@ private:
 	_bool m_bfadeout_quest = false;
 	_float m_fQuestAlpha = 0.f;
 	_bool m_bfadein_Quest = false;
+
+	_uint m_iOrdercursor = 0;
+
+	_bool m_bAIcanuseItem = true;
+
+	
 //	_uint m_iRecoveringPlayer = 0;
 };
 

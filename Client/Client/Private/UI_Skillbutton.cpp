@@ -5,6 +5,7 @@
 #include "PlayerManager.h"
 #include "Player.h" 
 #include "UI_Skillmessage.h"
+#include "BattleManager.h"
 CUI_Skillbutton::CUI_Skillbutton(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -41,7 +42,7 @@ HRESULT CUI_Skillbutton::Initialize(void * pArg)
 
 int CUI_Skillbutton::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 	switch (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID())
 	{
@@ -170,10 +171,7 @@ int CUI_Skillbutton::Tick(_float fTimeDelta)
 		m_fAlpha += 0.0483f;
 
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
-	{
-		m_bfadeout = true;
-	}
+
 
 
 
@@ -191,7 +189,7 @@ int CUI_Skillbutton::Tick(_float fTimeDelta)
 
 void CUI_Skillbutton::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return ;
 
 

@@ -20,6 +20,8 @@ private:
 	_bool m_bbackstep = false;
 	_bool m_bLookat = true;
 
+	CCollider* m_pDodgeCollider = nullptr;
+
 };
 END
 END

@@ -281,9 +281,13 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pDodgeCollider, &pCollisionTarget))
 		{
+
 			pCollisionTarget->Set_Dead(true);
-		CCollision_Manager::Get_Instance()->Collect_Collider(CCollider::TYPE_SPHERE, m_pDodgeCollider);
+			CCollision_Manager::Get_Instance()->Collect_Collider(CCollider::TYPE_SPHERE, m_pDodgeCollider);
 			m_pDodgeCollider = nullptr;
+
+			m_pOwner->Plus_Overcount();
+
 		}
 
 #ifdef _DEBUG
@@ -293,7 +297,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (m_pOwner->Get_Info().idodgecount >= 3)
+		if (m_pOwner->Get_Info().idodgecount >= 5)
 		{
 		    CBaseObj* pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
@@ -403,7 +407,7 @@ CPlayerState * CDodgeState::EventInput(void)
 void CDodgeState::Enter(void)
 {
 
-	m_pOwner->Plus_Overcount();
+	
 	__super::Enter();
 
 	m_eStateId = STATE_ID::STATE_DODGE;

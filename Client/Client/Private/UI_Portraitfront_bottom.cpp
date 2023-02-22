@@ -44,7 +44,7 @@ HRESULT CUI_Portraitfront_bottom::Initialize(void * pArg)
 
 int CUI_Portraitfront_bottom::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
 
@@ -118,7 +118,8 @@ int CUI_Portraitfront_bottom::Tick(_float fTimeDelta)
 		else
 			m_eShaderID = UI_POTRAIT_DARK;
 		//UpdateShaderID();
-		if (m_bfirst1 && CUI_Manager::Get_Instance()->Get_Arrived_Count() == (_uint)(CPlayerManager::Get_Instance()->Get_AIPlayers().size()) + 1)
+
+		if (m_bfirst1 && CUI_Manager::Get_Instance()->Get_Arrived_Count() == (_uint)(CPlayerManager::Get_Instance()->Get_AIPlayers().size()) +1)
 		{
 			UpdateShaderID();
 			m_bfirst1 = false;
@@ -193,7 +194,7 @@ int CUI_Portraitfront_bottom::Tick(_float fTimeDelta)
 
 void CUI_Portraitfront_bottom::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return ;
 	/*if (m_fPosition.x <= 1200.f)
 	m_bmoveleft = false;*/

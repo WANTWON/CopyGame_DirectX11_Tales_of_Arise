@@ -49,9 +49,9 @@ HRESULT CUI_Portraitfront_top::Initialize(void * pArg)
 
 int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 {
-
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
+	
 
 	if(m_fCurrentBoost <= 10)
 		m_bfirstglow = true;
@@ -193,8 +193,8 @@ int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 
 void CUI_Portraitfront_top::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
-		return ;
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
+		return;
 
 	/*if (m_fPosition.x <= 1200.f)
 	m_bmoveleft = false;*/
