@@ -1410,16 +1410,16 @@ HRESULT CLoader::Loading_ForActor()
 
 
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Alphen/Alphen.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen"));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Alphen/Alphen.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen"));
 
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Rinwell/Rinwell.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell"));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Rinwell/Rinwell.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell"));
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NpcFemaleYoung"),
