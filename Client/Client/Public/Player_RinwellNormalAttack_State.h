@@ -22,8 +22,6 @@ public:
 private:
 	_matrix m_StartMatrix;
 
-	_float m_fTime = 0.f;
-
 	_bool m_bEffectSlashSpawned = false;
 	_bool m_bSoundStart = false;
 	vector<CEffect*> m_pEffects;

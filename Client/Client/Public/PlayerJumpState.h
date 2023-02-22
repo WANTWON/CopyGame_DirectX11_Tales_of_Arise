@@ -26,7 +26,6 @@ private:
 private:
 	void Move(_float fTimeDelta);
 	_float m_fStartHeight = 0.f;
-	_float m_fTime = 0.f;
 
 	_bool m_bIsJump = false;
 	_bool m_bIsDrop = false;

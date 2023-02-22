@@ -45,6 +45,7 @@ public:
 	};
 
 	STATE_ID Get_StateId() { return m_eStateId; }
+	_float Get_Time(void) { return m_fTime; }
 
 	virtual ~CPlayerState() {};
 	virtual CPlayerState* HandleInput() { return nullptr; };
@@ -92,5 +93,6 @@ protected:
 	// 공중인지 판단하는 변수
 	_bool m_bIsFly = false;
 	_uint m_ePlayerID = 0;
+	_float m_fTime = 0.f;
 };
 END

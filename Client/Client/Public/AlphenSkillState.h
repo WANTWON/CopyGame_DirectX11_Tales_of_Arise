@@ -22,8 +22,6 @@ private:
 	void Reset_Skill();
 
 private:
-	_float m_fTime = 0.f;
-
 	/* Effects */
 	/* E */
 	_bool m_bHienzinFirstEffect = false;

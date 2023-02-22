@@ -22,8 +22,6 @@ private:
 	void Reset_Skill(void);
 
 private:
-	_float m_fTime;
-
 	CCollider* m_pLeftHandCollider = nullptr;
 	CCollider* m_pRightHandCollider = nullptr;
 	CCollider* m_pLeftFootCollider = nullptr;
