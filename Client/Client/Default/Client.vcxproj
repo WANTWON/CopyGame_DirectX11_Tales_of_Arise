@@ -177,6 +177,7 @@
     <ClInclude Include="..\..\..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
     <ClInclude Include="..\Public\AIAttackNormalState.h" />
     <ClInclude Include="..\Public\AICheckState.h" />
+    <ClInclude Include="..\Public\AIPoseState.h" />
     <ClInclude Include="..\Public\AiRinwell.h" />
     <ClInclude Include="..\Public\AIRunawayfromTarget.h" />
     <ClInclude Include="..\Public\AiState_WakeUp.h" />
@@ -248,6 +249,7 @@
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\PlayerOverlimit.h" />
+    <ClInclude Include="..\Public\PlayerPoseState.h" />
     <ClInclude Include="..\Public\Player_RinwellNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_RinwellSkillAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
@@ -421,6 +423,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\AIAttackNormalState.cpp" />
     <ClCompile Include="..\Private\AICheckState.cpp" />
+    <ClCompile Include="..\Private\AIPoseState.cpp" />
     <ClCompile Include="..\Private\AiRinwell.cpp" />
     <ClCompile Include="..\Private\AIRunawayfromTarget.cpp" />
     <ClCompile Include="..\Private\AiState_WakeUp.cpp" />
@@ -491,6 +494,7 @@
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\PlayerOverlimit.cpp" />
+    <ClCompile Include="..\Private\PlayerPoseState.cpp" />
     <ClCompile Include="..\Private\Player_RinwellNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_RinwellSkillAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />

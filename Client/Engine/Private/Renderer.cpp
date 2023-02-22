@@ -77,6 +77,10 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Distortion"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
 		return E_FAIL;
+	/* For.Target_Edge_Detection */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Edge_Detection"), ViewportDesc.Width, ViewportDesc.Height,
+		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.f, 0.f, 0.f, 0.0f))))
+		return E_FAIL;
 
 	/* For.Target_Glow_UI */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Glow_UI"), ViewportDesc.Width, ViewportDesc.Height,
@@ -95,6 +99,10 @@ HRESULT CRenderer::Initialize_Prototype()
 	/* For.Target_Fog */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Fog"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
+		return E_FAIL;
+	/* For.Target_Edge_Detection_Compute */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Edge_Detection_Compute"), ViewportDesc.Width, ViewportDesc.Height,
+		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(1.0f, 1.0f, 1.0f, 1.0f))))
 		return E_FAIL;
 
 	/**
@@ -118,26 +126,31 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_LightDepth"), TEXT("Target_ShadowDepth"))))
 		return E_FAIL;
 
-	/* For.MRT_Blur_Horizontal */
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Blur_Horizontal"), TEXT("Target_Blur_Horizontal"))))
-		return E_FAIL;
-	/* For.MRT_Blur_Vertical */
-	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Blur_Vertical"), TEXT("Target_Blur_Vertical"))))
-		return E_FAIL;
-
 	/* For.MRT_Glow */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Glow"), TEXT("Target_Glow"))))
 		return E_FAIL;
 	/* For.MRT_Distortion */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Distortion"), TEXT("Target_Distortion"))))
 		return E_FAIL;
+	/* For.MRT_Edge_Detection */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Edge_Detection"), TEXT("Target_Edge_Detection"))))
+		return E_FAIL;
 
 	/* For.MRT_Glow_UI */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Glow_UI"), TEXT("Target_Glow_UI"))))
 		return E_FAIL;
 
+	/* For.MRT_Blur_Horizontal */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Blur_Horizontal"), TEXT("Target_Blur_Horizontal"))))
+		return E_FAIL;
+	/* For.MRT_Blur_Vertical */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Blur_Vertical"), TEXT("Target_Blur_Vertical"))))
+		return E_FAIL;
 	/* For.MRT_Fog */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_Fog"))))
+		return E_FAIL;
+	/* For.MRT_Edge_Detection_Compute */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Edge_Detection_Compute"), TEXT("Target_Edge_Detection_Compute"))))
 		return E_FAIL;
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
@@ -178,7 +191,9 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Distortion"), 375.f, 225.f, 150.f, 150.f)))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Fog"), 375.f, 375.f, 150.f, 150.f)))
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Edge_Detection"), 375.f, 375.f, 150.f, 150.f)))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Fog"), 375.f, 525.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Glow_UI"), 525.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
@@ -186,6 +201,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Blur_Horizontal"), 1205.f, 75.f, 150.f, 150.f)))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Blur_Vertical"), 1205.f, 225.f, 150.f, 150.f)))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_Debug(TEXT("Target_Edge_Detection_Compute"), 1205.f, 375.f, 150.f, 150.f)))
 		return E_FAIL;
 #endif
 
@@ -248,6 +265,8 @@ HRESULT CRenderer::Render_GameObjects()
 	if (FAILED(Render_Glow()))
 		return E_FAIL;
 	if (FAILED(Render_Distortion()))
+		return E_FAIL;
+	if (FAILED(Render_EdgeDetection()))
 		return E_FAIL;
 
 	/* Post Processing */
@@ -646,11 +665,59 @@ HRESULT CRenderer::Render_Distortion()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_EdgeDetection()
+{
+	/* If there are not Edge Detection Objects return. */
+	if (m_GameObjects[RENDER_EDGE_DETECTION].empty())
+		return S_OK;
+	else
+	{
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Edge_Detection"))))
+			return E_FAIL;
+
+		for (auto& pGameObject : m_GameObjects[RENDER_EDGE_DETECTION])
+		{
+			pGameObject->Render_EdgeDetection();
+			Safe_Release(pGameObject);
+		}
+
+		m_GameObjects[RENDER_EDGE_DETECTION].clear();
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_PostProcessing()
 {
 	if (!m_pTarget_Manager)
 		return E_FAIL;
 
+#pragma region Edge_Detection
+	/* Edge Detection Compute */
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Edge_Detection"), m_pShaderPostProcessing, "g_EdgeDetectionTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Edge_Detection_Compute"))))
+		return E_FAIL;
+
+	m_pShaderPostProcessing->Begin(10); /* Edge Detection Compute */
+	m_pVIBuffer->Render();
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	/* Edge Detection Blend */
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Edge_Detection_Compute"), m_pShaderPostProcessing, "g_EdgeDetectionComputeTexture")))
+		return E_FAIL;
+	
+	m_pShaderPostProcessing->Begin(11); /* Edge Detection Blend */
+	m_pVIBuffer->Render();
+#pragma endregion Edge_Detection
+
+#pragma region Depth_Of_Field
 	/* Depth of Field */
 	m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
 	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
@@ -686,7 +753,9 @@ HRESULT CRenderer::Render_PostProcessing()
 
 	m_pShaderPostProcessing->Begin(7); /* Depth Of Field */
 	m_pVIBuffer->Render();
-
+#pragma endregion Depth_Of_Field
+	
+#pragma region Fog
 	/* Fog */
 	if (m_bFog)
 	{
@@ -713,30 +782,34 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_pShaderPostProcessing->Begin(4);
 		m_pVIBuffer->Render();
 	}
-
+#pragma endregion Fog
+	
+#pragma region Distortion
 	/* Distortion */
-	/* This Distortion is a Post Processing Effect applied to the entire Screen. 
+	/* This Distortion is a Post Processing Effect applied to the entire Screen.
 	Unlike the Distortion Effect computed in the Render_Distortion() function which renders just Distorted Objects. */
 	/*if (m_bDistort)
 	{
-		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
-			return E_FAIL;
+	m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+	return E_FAIL;
 
-		if (!m_pScreenDistortionTexture)
-			m_pScreenDistortionTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Screen_Distortion"));
+	if (!m_pScreenDistortionTexture)
+	m_pScreenDistortionTexture = (CTexture*)CComponent_Manager::Get_Instance()->Clone_Component(0, TEXT("Screen_Distortion"));
 
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_ScreenDistortionTexture", m_pScreenDistortionTexture->Get_SRV())))
-			return E_FAIL;
+	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_ScreenDistortionTexture", m_pScreenDistortionTexture->Get_SRV())))
+	return E_FAIL;
 
-		m_fScreenDistortionTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
-		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fScreenDistortionTimer", &m_fScreenDistortionTimer, sizeof(_float))))
-			return E_FAIL;
+	m_fScreenDistortionTimer += CTimer_Manager::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+	if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fScreenDistortionTimer", &m_fScreenDistortionTimer, sizeof(_float))))
+	return E_FAIL;
 
-		m_pShaderPostProcessing->Begin(5);
-		m_pVIBuffer->Render();
+	m_pShaderPostProcessing->Begin(5);
+	m_pVIBuffer->Render();
 	}*/
-
+#pragma endregion Distortion
+	
+#pragma region Zoom_Blur
 	/* Zoom Blur */
 	if (m_bZoomBlur)
 	{
@@ -752,7 +825,9 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_pShaderPostProcessing->Begin(8); /* Zoom Blur */
 		m_pVIBuffer->Render();
 	}
+#pragma endregion Zoom_Blur
 
+#pragma region Saturation
 	/* Saturation */
 	if (m_bSaturation)
 	{
@@ -766,6 +841,7 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_pShaderPostProcessing->Begin(9); /* Saturation */
 		m_pVIBuffer->Render();
 	}
+#pragma endregion Saturation
 
 	return S_OK;
 }
@@ -817,14 +893,19 @@ HRESULT CRenderer::Render_Debug()
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Distortion"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Edge_Detection"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Fog"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
+
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Glow_UI"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Blur_Horizontal"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Blur_Vertical"), m_pShaderDeferred, m_pVIBuffer)))
+			return E_FAIL;
+		if (FAILED(m_pTarget_Manager->Render_Debug(TEXT("MRT_Edge_Detection_Compute"), m_pShaderDeferred, m_pVIBuffer)))
 			return E_FAIL;
 	}
 

@@ -19,8 +19,6 @@ public:
 	virtual void Exit() override;
 
 private:
-	_float m_fTime = 0.f;
-
 	CCollider* m_pLeftHandCollider = nullptr;
 	CCollider* m_pRightHandCollider = nullptr;
 	CCollider* m_pLeftFootCollider = nullptr;

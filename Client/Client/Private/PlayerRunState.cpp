@@ -198,7 +198,7 @@ CPlayerState * CRunState::HandleInput()
 
 CPlayerState * CRunState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
 
 	Move(fTimeDelta);
 
@@ -229,9 +229,6 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 
 CPlayerState * CRunState::LateTick(_float fTimeDelta)
 {
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-		return new CHitState(m_pOwner);
-
 	return nullptr;
 }
 

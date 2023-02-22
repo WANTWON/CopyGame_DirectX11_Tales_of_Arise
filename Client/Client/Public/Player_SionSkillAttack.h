@@ -17,8 +17,6 @@ public:
 	virtual void Exit(void) override;
 
 private:
-	_float m_fTime = 0.f;
-
 	_bool m_bBulletMade = false;
 	vector<CEffect*> m_pBlastEffect;
 	vector<CEffect*> m_pSmokeEffect;

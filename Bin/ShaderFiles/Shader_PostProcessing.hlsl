@@ -45,6 +45,10 @@ int g_iFocusDetail;
 /* Saturation */
 float g_fSaturation = 1.f;
 
+/* Edge Detection */
+texture2D g_EdgeDetectionTexture;
+texture2D g_EdgeDetectionComputeTexture;
+
 sampler LinearSampler = sampler_state
 {
 	filter = min_mag_mip_Linear;
@@ -282,8 +286,7 @@ PS_OUT PS_DEPTHOFFIELD(PS_IN In) // 7
 	
 	float4 vDepthTexture = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
 	
-	/* 0 ~ 1 */
-	float fViewZ = (vDepthTexture.y * 1000); /* Why subtract 0.0001 (C:\Users\giuse\OneDrive\Desktop\Giuseppe\Dev\Jusin_Game_Academy\DepthTexture.txt) */
+	float fViewZ = (vDepthTexture.y * 1000);
 
 	if (fViewZ < g_fMinBlurDepth) /* SkyBox is not computed inside the DepthTexture. */
 		Out.vColor = vBackBufferTexture; /* Just render BackBuffer color. */
@@ -345,6 +348,41 @@ PS_OUT PS_SATURATE(PS_IN In) // 9
 	vColor = mul(vColor, mSaturationMatrix);
 
 	Out.vColor = vColor;
+
+	return Out;
+}
+
+PS_OUT PS_EDGE_DETECTION(PS_IN In) // 10
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float4 vCenter = g_EdgeDetectionTexture.Sample(LinearSampler, In.vTexUV);
+	float4 vLeft = g_EdgeDetectionTexture.Sample(LinearSampler, In.vTexUV - float2(1, 0) / float2(g_fWinSizeX, g_fWinSizeY));
+	float4 vRight = g_EdgeDetectionTexture.Sample(LinearSampler, In.vTexUV + float2(1, 0) / float2(g_fWinSizeX, g_fWinSizeY));
+	float4 vUp = g_EdgeDetectionTexture.Sample(LinearSampler, In.vTexUV - float2(0, 1) / float2(g_fWinSizeX, g_fWinSizeY));
+	float4 vDown = g_EdgeDetectionTexture.Sample(LinearSampler, In.vTexUV + float2(0, 1) / float2(g_fWinSizeX, g_fWinSizeY));
+
+	if (vCenter.a == 1 && vLeft.a == 0 ||
+		vCenter.a == 1 && vRight.a == 0 ||
+		vCenter.a == 1 && vUp.a == 0 ||
+		vCenter.a == 1 && vDown.a == 0)
+		Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+	else
+		Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+
+	return Out;
+}
+
+PS_OUT PS_EDGE_DETECTION_BLEND(PS_IN In) // 11
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float4 vEdgeDetectionCompute = g_EdgeDetectionComputeTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (vEdgeDetectionCompute.r == 1 && vEdgeDetectionCompute.g == 1.f && vEdgeDetectionCompute.b == 1.f)
+		discard;
+
+	Out.vColor = vEdgeDetectionCompute;
 
 	return Out;
 }
@@ -459,5 +497,27 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_SATURATE();
+	}
+
+	pass EdgeDetection // 10
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_EDGE_DETECTION();
+	}
+
+	pass EdgeDetectionBlend // 11
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_EDGE_DETECTION_BLEND();
 	}
 }
