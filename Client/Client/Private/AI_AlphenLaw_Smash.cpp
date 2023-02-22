@@ -179,6 +179,7 @@ void CAI_AlphenLaw_Smash::Exit()
 {
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 	{
 		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
