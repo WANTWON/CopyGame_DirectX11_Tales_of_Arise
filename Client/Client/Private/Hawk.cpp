@@ -53,7 +53,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	}
 
 	m_eMonsterID = HAWK;
-	m_tStats.m_fMaxHp = 600;//6500;//20000;
+	m_tStats.m_fMaxHp = 6500;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 
