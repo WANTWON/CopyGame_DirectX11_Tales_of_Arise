@@ -36,6 +36,7 @@ public:
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() override;
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool isDown = false);
+	virtual HRESULT Render_EdgeDetection() override;
 
 public: /* Getter &  Setter */
 	CModel*			Get_Model() { return m_pModelCom; }

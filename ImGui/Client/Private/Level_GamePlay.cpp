@@ -136,7 +136,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	ActionCameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	ActionCameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-	ActionCameraDesc.CameraDesc.fNear = 0.2f;
+	ActionCameraDesc.CameraDesc.fNear = 0.001f;
 	ActionCameraDesc.CameraDesc.fFar = 1000.f;
 
 	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 3.f;
