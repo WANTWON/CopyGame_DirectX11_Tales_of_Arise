@@ -65,7 +65,7 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 	//	m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
 	//}
 
-	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+	/*vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 	for (auto& pEvent : pEvents)
 	{
@@ -234,7 +234,60 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
+	}*/
+
+vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+for (auto& pEvent : pEvents)
+{
+	if (pEvent.isPlay && m_bAnimFinish == false)
+	{
+
+		if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+		{
+			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+				dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.6f, 0.01f);
+		}
+
+
+		if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+		{
+			CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+			_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("HEAD1_C")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
+			matWorld.r[0] = XMVector4Normalize(matWorld.r[0]);
+			matWorld.r[1] = XMVector4Normalize(matWorld.r[1]);
+			matWorld.r[2] = XMVector4Normalize(matWorld.r[2]);
+
+			if (nullptr == m_pAtkColliderCom)
+			{
+				CCollider::COLLIDERDESC		ColliderDesc;
+
+				ColliderDesc.vScale = _float3(30.f, 30.f, 30.f);
+				ColliderDesc.vPosition = _float3(0.f, -10.f, 0.f);
+
+				m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+				m_pAtkColliderCom->Update(matWorld);
+				//pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_ASU_PUSH, m_pOwner);
+			}
+			else
+				m_pAtkColliderCom->Update(matWorld);
+		}
 	}
+
+	else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
+	{
+		CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
+		m_pAtkColliderCom = nullptr;
+
+		//pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_ASU_PUSH, m_pOwner);
+	}
+}
+
+
+
 
 	return nullptr;
 }
@@ -244,6 +297,18 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::LateTick(_float fTimeDelta)
 	m_pOwner->Check_Navigation();
 
 	m_fTimeDeltaAcc += fTimeDelta;
+
+	if (nullptr != m_pAtkColliderCom)
+	{
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+	}
 
 	if (m_bIsAnimationFinished)
 	{
@@ -255,20 +320,20 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::LateTick(_float fTimeDelta)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
 
 
-	if (nullptr != m_p2th_AtkColliderCom)
-		m_pOwner->Get_Renderer()->Add_Debug(m_p2th_AtkColliderCom);
+	//if (nullptr != m_p2th_AtkColliderCom)
+	//	m_pOwner->Get_Renderer()->Add_Debug(m_p2th_AtkColliderCom);
 
-	if (nullptr != m_p3th_AtkColliderCom)
-		m_pOwner->Get_Renderer()->Add_Debug(m_p3th_AtkColliderCom);
+	//if (nullptr != m_p3th_AtkColliderCom)
+	//	m_pOwner->Get_Renderer()->Add_Debug(m_p3th_AtkColliderCom);
 
-	if (nullptr != m_p4th_AtkColliderCom)
-		m_pOwner->Get_Renderer()->Add_Debug(m_p4th_AtkColliderCom);
+	//if (nullptr != m_p4th_AtkColliderCom)
+	//	m_pOwner->Get_Renderer()->Add_Debug(m_p4th_AtkColliderCom);
 
-	if (nullptr != m_p5th_AtkColliderCom)
-		m_pOwner->Get_Renderer()->Add_Debug(m_p5th_AtkColliderCom);
+	//if (nullptr != m_p5th_AtkColliderCom)
+	//	m_pOwner->Get_Renderer()->Add_Debug(m_p5th_AtkColliderCom);
 
-	if (nullptr != m_p6th_AtkColliderCom)
-		m_pOwner->Get_Renderer()->Add_Debug(m_p6th_AtkColliderCom);
+	//if (nullptr != m_p6th_AtkColliderCom)
+	//	m_pOwner->Get_Renderer()->Add_Debug(m_p6th_AtkColliderCom);
 #endif 
 
 
@@ -291,9 +356,9 @@ void CBattle_720Spin_FirstState::Enter()
 void CBattle_720Spin_FirstState::Exit()
 {
 	Safe_Release(m_pAtkColliderCom);
-	Safe_Release(m_p2th_AtkColliderCom);
-	Safe_Release(m_p3th_AtkColliderCom);
-	Safe_Release(m_p4th_AtkColliderCom);
-	Safe_Release(m_p5th_AtkColliderCom);
-	Safe_Release(m_p6th_AtkColliderCom);
+	//Safe_Release(m_p2th_AtkColliderCom);
+	//Safe_Release(m_p3th_AtkColliderCom);
+	//Safe_Release(m_p4th_AtkColliderCom);
+	//Safe_Release(m_p5th_AtkColliderCom);
+	//Safe_Release(m_p6th_AtkColliderCom);
 }

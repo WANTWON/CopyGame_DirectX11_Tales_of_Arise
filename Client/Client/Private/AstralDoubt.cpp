@@ -210,6 +210,18 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 		return;
 
 	LateTick_State(fTimeDelta);
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	{
+		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_ADVENT);
+		m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	{
+		CAstralDoubt_State* pBattleState = new CBattle_720Spin_FirstState(this);
+		m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	}
 }
 
 HRESULT CAstralDoubt::Render_Glow()
@@ -270,7 +282,7 @@ void CAstralDoubt::Set_BattleMode(_bool type)
 	if (m_bBattleMode)
 	{
 		/* Set_Battle State */
-		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::START_BATTLE);
+		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_ADVENT);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
 	else 
@@ -397,6 +409,16 @@ void CAstralDoubt::Check_Navigation()
 
 	vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+}
+
+_float CAstralDoubt::ForTheBossTarget_Distance(CBaseObj* pTarget)
+{
+	_vector fDir = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - Get_TransformState(CTransform::STATE_TRANSLATION);
+	XMVectorSetY(fDir, 0.f);
+	_float fDistance = XMVectorGetX(XMVector3Length(fDir));
+	
+
+	return fDistance;
 }
 
 CAstralDoubt * CAstralDoubt::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

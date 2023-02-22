@@ -145,7 +145,7 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 			m_p2th_AtkColliderCom = nullptr;
 
 			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+			/*pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);*/
 		}
 	}
 
@@ -158,7 +158,17 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 {
 	
+	if (nullptr != m_pAtkColliderCom)
+	{
+		CBaseObj* pCollisionTarget = nullptr;
 
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+	}
 
 	if (m_bIsAnimationFinished)
 			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_TORNADE);

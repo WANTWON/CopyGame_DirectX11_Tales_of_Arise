@@ -99,7 +99,7 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc;
 
-					ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
+					ColliderDesc.vScale = _float3(4.f, 4.f, 4.f);
 					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
@@ -117,7 +117,6 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
-
 			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 		}
 	}
@@ -129,12 +128,17 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
 {
+	if (nullptr != m_pAtkColliderCom)
+	{
+		CBaseObj* pCollisionTarget = nullptr;
 
-	//if (m_bTargetSetting)
-	//{
-	//	m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
-	//	m_bTargetSetting = true;
-	//}
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+	}
 
 	if (m_bIsAnimationFinished)
 		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_PECK);
