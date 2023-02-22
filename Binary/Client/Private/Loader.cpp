@@ -467,14 +467,9 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Floor_A_200_01.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor_A_200_01/", PivotMatrix))))
 		//	return E_FAIL;
 
-		/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FreezeLance"),
-			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/FreezeLance.fbx", "../../../Bin/Bin_Data/NonAnim/Effect/", PivotMatrix))))
-			return E_FAIL;*/
-
-		PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Spiral_rm_07"),
-			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Spiral_rm_07.fbx", "../../../Bin/Bin_Data/NonAnim/Effect/Spiral", PivotMatrix))))
+		PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Vehicle_Boat"),
+			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Vehicle_Boat.fbx", "../../../Bin/Bin_Data/NonAnim/Vehicle_Boat/", PivotMatrix))))
 			return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));

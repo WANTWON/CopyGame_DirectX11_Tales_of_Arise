@@ -172,21 +172,21 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
-//	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
-//		return E_FAIL;
+	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+	//	return E_FAIL;
 
 	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
 	//	return E_FAIL;
 
-	//if (FAILED(Loading_ForMaptoolVillageModel()))
-	//	return E_FAIL;
+	if (FAILED(Loading_ForMaptoolVillageModel()))
+		return E_FAIL;
 
 	//For Effect
-	if (FAILED(Loading_ForEffect()))
+	/*if (FAILED(Loading_ForEffect()))
 		return E_FAIL;
 	 
 	if (FAILED(Loading_ForEffectTexture()))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
 
@@ -203,6 +203,10 @@ HRESULT CLoader::Loading_ForMaptoolSnowFieldModel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Vehicle_Boat"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Vehicle_Boat/Vehicle_Boat.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Vehicle_Boat"));
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CliffRock"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/CliffRock/CliffRock.dat"))))
@@ -1037,6 +1041,315 @@ HRESULT CLoader::Loading_ForMaptoolBossRoomModel()
 
 HRESULT CLoader::Loading_ForMaptoolVillageModel()
 {
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Beam02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Beam/Beam02/Beam02.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Beam02"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bridge_base"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Bridge_base/Bridge_base.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bridge_base"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("CurveCeiling_01_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Ceiling/CurveCeiling_01_Lod1/CurveCeiling_01_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("CurveCeiling_01_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("D01_Ceiling02_350x430_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Ceiling/D01_Ceiling02_350x430_Lod1/D01_Ceiling02_350x430_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("D01_Ceiling02_350x430_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Meal_Ceiling_01_A_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Ceiling/Meal_Ceiling_01_A_Lod1/Meal_Ceiling_01_A_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Meal_Ceiling_01_A_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Chandelier01_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Chandelier/Chandelier01_Lod1/Chandelier01_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Chandelier01_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("D04_Door_01_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Door/D04_Door_01_Lod1/D04_Door_01_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("D04_Door_01_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Gim_Door_02_L_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Door/Gim_Door_02_L_Lod1/Gim_Door_02_L_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Gim_Door_02_L_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Gim_Door_02_R_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Door/Gim_Door_02_R_Lod1/Gim_Door_02_R_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Gim_Door_02_R_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Gim_Door01_01_L_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Door/Gim_Door01_01_L_Lod1/Gim_Door01_01_L_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Gim_Door01_01_L_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Gim_Door01_01_R_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Door/Gim_Door01_01_R_Lod1/Gim_Door01_01_R_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Gim_Door01_01_R_Lod1"));
+
+
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("MRG_Meal_Wall_Door_01_Set_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Door/MRG_Meal_Wall_Door_01_Set_Lod1/MRG_Meal_Wall_Door_01_Set_Lod1.dat"))))
+		return E_FAIL;*/
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("MRG_Meal_Wall_Door_01_Set_Lod1"));
+
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("MRG_Meal_Window_Wall_01_B_Library_Set"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Window/MRG_Meal_Window_Wall_01_B_Library_Set/MRG_Meal_Window_Wall_01_B_Library_Set.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("MRG_Meal_Window_Wall_01_B_Library_Set"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Stairs_Deco_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Stairs_Deco_01/Bld_Stairs_Deco_01/Bld_Stairs_Deco_01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Stairs_Deco_01"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SultanDungeon_04_co"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/SultanDungeon_04_co/SultanDungeon_04_co.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("SultanDungeon_04_co"));
+
+#pragma region Floor
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_CurveFloor_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_CurveFloor_01/Bld_CurveFloor_01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_CurveFloor_01"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_Floor_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_D04_Floor_01/Bld_D04_Floor_01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_Floor_01"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_Floor_03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_D04_Floor_03/Bld_D04_Floor_03.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_Floor_03"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_Floor_04"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_D04_Floor_04/Bld_D04_Floor_04.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_Floor_04"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_Floor_300x600"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_D04_Floor_300x600/Bld_D04_Floor_300x600.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_Floor_300x600"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_FloorSide_03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_D04_FloorSide_03/Bld_D04_FloorSide_03.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_FloorSide_03"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Door01_SecondFloorA_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Door01_SecondFloorA_Lod1/Bld_Door01_SecondFloorA_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Door01_SecondFloorA_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor_01_C_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Floor_01_C_Lod1/Bld_Floor_01_C_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor_01_C_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor_01_Center_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Floor_01_Center_Lod1/Bld_Floor_01_Center_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor_01_Center_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor_01_D"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Floor_01_D/Bld_Floor_01_D.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor_01_D"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor_02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Floor_02/Bld_Floor_02.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor_02"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor_02_300x600"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Floor_02_300x600/Bld_Floor_02_300x600.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor_02_300x600"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor_03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Floor_03/Bld_Floor_03.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor_03"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor_B_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Floor_B_Lod1/Bld_Floor_B_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor_B_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor_Stairs_02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Floor_Stairs_02/Bld_Floor_Stairs_02.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Floor_Stairs_02"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Meal_Floor_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Meal_Floor_01/Bld_Meal_Floor_01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Meal_Floor_01"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Meal_Floor_02_A"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/Bld_Meal_Floor_02_A/Bld_Meal_Floor_02_A.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Meal_Floor_02_A"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("MRG_Meal_Floor_01_Set"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Floor/MRG_Meal_Floor_01_Set/MRG_Meal_Floor_01_Set.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("MRG_Meal_Floor_01_Set"));
+#pragma endregion Floor
+
+#pragma region Wall
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_CurveWall_01_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_CurveWall_01_Lod1/Bld_CurveWall_01_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_CurveWall_01_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D01_Bookshelf_02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_D01_Bookshelf_02_Lod1/Bld_D01_Bookshelf_02_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D01_Bookshelf_02_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_FrontWall_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_D04_FrontWall_01/Bld_D04_FrontWall_01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_FrontWall_01"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_WallFrontSide_01_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_D04_WallFrontSide_01_Lod1/Bld_D04_WallFrontSide_01_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_D04_WallFrontSide_01_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Door01_Wall"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_Door01_Wall/Bld_Door01_Wall.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Door01_Wall"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_OgiOrnament01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_OgiOrnament01/Bld_OgiOrnament01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_OgiOrnament01"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Wall_Door02_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_Wall_Door02_Lod1/Bld_Wall_Door02_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Wall_Door02_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_WallCurve_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_WallCurve_01/Bld_WallCurve_01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_WallCurve_01"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_WallParts_01_C_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_WallParts_01_C_Lod1/Bld_WallParts_01_C_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_WallParts_01_C_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_WallParts_03_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_WallParts_03_Lod1/Bld_WallParts_03_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_WallParts_03_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_WallParts_base"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/Bld_WallParts_base/Bld_WallParts_base.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_WallParts_base"));
+
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("MRG_CurveWall_01_Set_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/MRG_CurveWall_01_Set_Lod1/MRG_CurveWall_01_Set_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("MRG_CurveWall_01_Set_Lod1"));*/
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("MRG_D04_Meal_Wall_02_1p_Set_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/MRG_D04_Meal_Wall_02_1p_Set_Lod1/MRG_D04_Meal_Wall_02_1p_Set_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("MRG_D04_Meal_Wall_02_1p_Set_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("MRG_Wall_Simple_1p_Library_Set_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/MRG_Wall_Simple_1p_Library_Set_Lod1/MRG_Wall_Simple_1p_Library_Set_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("MRG_Wall_Simple_1p_Library_Set_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("MRG_Wall01_Set_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/MRG_Wall01_Set_Lod1/MRG_Wall01_Set_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("MRG_Wall01_Set_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("MRG_Wall02_Set1_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Wall/MRG_Wall02_Set1_Lod1/MRG_Wall02_Set1_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("MRG_Wall02_Set1_Lod1"));
+#pragma endregion Wall
+
+
+#pragma region OutSide
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("house01_2F_0800x0800"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/House/house01_2F_0800x0800/house01_2F_0800x0800.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("house01_2F_0800x0800"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("house01_2F_1200x0800_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/House/house01_2F_1200x0800_Lod1/house01_2F_1200x0800_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("house01_2F_1200x0800_Lod1"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("house01_3F_1200x1200"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/House/house01_3F_1200x1200/house01_3F_1200x1200.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("house01_3F_1200x1200"));
+
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sidewalk01_0400x0400"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/Floor/Sidewalk01_0400x0400/Sidewalk01_0400x0400.dat"))))
+		return E_FAIL;*/
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Sidewalk01_0400x0400"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sidewalk01_0400x0800"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/Floor/Sidewalk01_0400x0800/Sidewalk01_0400x0800.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Sidewalk01_0400x0800"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SidewalkCorner01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/Floor/SidewalkCorner01/SidewalkCorner01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("SidewalkCorner01"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("BigGate01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/BigGate/BigGate01/BigGate01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("BigGate01"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("castle01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/Castle/castle01/castle01.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("castle01"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("PRO_SGDTown"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/Castle/PRO_SGDTown/PRO_SGDTown.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("PRO_SGDTown"));
+#pragma endregion OutSide
+
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
@@ -1045,46 +1358,68 @@ HRESULT CLoader::Loading_ForActor()
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	CImgui_Manager* pImgui = GET_INSTANCE(CImgui_Manager);
 
+
+#pragma region Animaition
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Alphen/Alphen.dat"))))
+	//	return E_FAIL;
+	//pImgui->m_AnimObj.push_back("Alphen");
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sion"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/Sion.dat"))))
+	//	return E_FAIL;
+	////	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Sion"));
+	//pImgui->m_AnimObj.push_back("Sion");
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
+	//	return E_FAIL;
+	//pImgui->m_AnimObj.push_back("Rinwell");
+
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Law"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Law/Law.dat"))))
+	//	return E_FAIL;
+	////CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Law"));
+	//pImgui->m_AnimObj.push_back("Law");
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf_Anim"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
+	//	return E_FAIL;
+	//pImgui->m_AnimObj.push_back("Ice_Wolf_Anim");
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Hawk"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Hawk/Hawk.dat"))))
+	//	return E_FAIL;
+	//pImgui->m_AnimObj.push_back("Hawk");
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Berserker"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Berserker/Berserker.dat"))))
+	//	return E_FAIL;
+	//pImgui->m_AnimObj.push_back("Berserker");
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Astral_Doubt"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Astral_Doubt/Astral_Doubt.dat"))))
+	//	return E_FAIL;
+	//pImgui->m_AnimObj.push_back("Astral_Doubt");
+
+#pragma endregion Animaition
+
+
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Alphen/Alphen.dat"))))
-		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Alphen");
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sion"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/Sion.dat"))))
-		return E_FAIL;
-	//	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Sion"));
-	pImgui->m_AnimObj.push_back("Sion");
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
-		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Rinwell");
-
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Law"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Law/Law.dat"))))
-		return E_FAIL;
-	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Law"));
-	pImgui->m_AnimObj.push_back("Law");
-
-
-
-
-	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Alphen/Alphen.dat"))))
 		return E_FAIL;
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen"));
 
 
-	
-
-
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Rinwell/Rinwell.dat"))))
 		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell"));*/
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell"));
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NpcFemaleYoung"),
@@ -1111,31 +1446,7 @@ HRESULT CLoader::Loading_ForActor()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/MonsterforMaptool/Ice_Wolf.dat"))))
 		return E_FAIL;
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Ice_Wolf"));
-	
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf_Anim"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))
-		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Ice_Wolf_Anim");
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Hawk"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Hawk/Hawk.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Hawk"));
-	pImgui->m_AnimObj.push_back("Hawk");
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Berserker"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Berserker/Berserker.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Berserker"));
-	pImgui->m_AnimObj.push_back("Berserker");
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Astral_Doubt"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Astral_Doubt/Astral_Doubt.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Astral_Doubt"));
-	pImgui->m_AnimObj.push_back("Astral_Doubt");
 
 	RELEASE_INSTANCE(CImgui_Manager);
 	RELEASE_INSTANCE(CGameInstance);

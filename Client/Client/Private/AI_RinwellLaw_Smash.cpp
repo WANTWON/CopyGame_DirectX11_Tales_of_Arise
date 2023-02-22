@@ -151,7 +151,7 @@ void CAI_RinwellLaw_Smash::Enter()
 		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_STRIKE;
 		break;
 	case CPlayer::LAW:
-		m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
+		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_GURENTENSYOU;
 
 		break;
 

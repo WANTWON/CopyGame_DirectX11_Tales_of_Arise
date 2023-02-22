@@ -758,6 +758,9 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 	case Client::LEVEL_BOSS:
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BossNavigation"), m_ePlayerID));
 		break;
+	case Client::LEVEL_CITY:
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BossNavigation"), m_ePlayerID));
+		break;
 
 	}
 

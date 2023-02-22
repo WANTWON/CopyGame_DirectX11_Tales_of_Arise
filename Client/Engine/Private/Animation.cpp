@@ -31,10 +31,13 @@ HRESULT CAnimation::Initialize(HANDLE hFile, _ulong * pdwByte, CModel * pModel, 
 		m_Channels.push_back(pChannel);
 	}
 
-	if (INVALID_HANDLE_VALUE != hAddFile)
+	if (INVALID_HANDLE_VALUE != hAddFile && (pdwAddByte != 0))
 	{
 		_float fDuration;
-		ReadFile(hAddFile, &fDuration, sizeof(_float), pdwAddByte, nullptr);
+		_bool isReadDuration = ReadFile(hAddFile, &fDuration, sizeof(_float), pdwAddByte, nullptr);
+
+		if (isReadDuration && (0 == (*pdwAddByte)))
+			return S_OK;
 
 		_float fDurationRatio = fDuration / m_fDuration;
 
