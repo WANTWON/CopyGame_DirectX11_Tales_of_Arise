@@ -323,6 +323,19 @@ PS_EFFECT_OUT PS_DISTORTION(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EDGE_DETECTION(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (Out.vDiffuse.a <= 0.3f)
+		discard;
+
+	return Out;
+}
+
+
 technique11 DefaultTechnique
 {
 	pass Default // 0
@@ -400,5 +413,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DISTORTION();
+	}
+
+	pass Edge_Detection // 7
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_EDGE_DETECTION();
 	}
 }
