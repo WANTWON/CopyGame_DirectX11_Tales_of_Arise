@@ -303,18 +303,25 @@ _bool CMonster::Check_AmILastMoster()
 	{
 		if (dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0 || iter->Get_Dead())
 		{
-			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-			pCamera->Set_TargetPosition(Get_TransformState(CTransform::STATE_TRANSLATION));
+			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			{
+				CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+				pCamera->Set_TargetPosition(Get_TransformState(CTransform::STATE_TRANSLATION));	
+			}
 			iCheckIsDead++;
 		}
 	}
 
 	if ((iMonsterSize - iCheckIsDead) <= 0)
 	{
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_TargetPosition(Get_TransformState(CTransform::STATE_TRANSLATION));
-		pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLE_CLEAR);
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_TargetPosition(Get_TransformState(CTransform::STATE_TRANSLATION));
+			pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLE_CLEAR);
 
+		}
+	
 		if(CUI_Manager::Get_Instance()->Get_LockOn() != nullptr)
 			CUI_Manager::Get_Instance()->Get_LockOn()->Set_Dead(true);
 		return true;
