@@ -5,6 +5,7 @@
 #include "GameInstance.h"
 #include "BattleManager.h"
 #include "Monster.h"
+#include "Effect.h"
 
 using namespace Player;
 
@@ -54,6 +55,12 @@ CPlayerState * CPlayerOverlimit::Tick(_float fTimeDelta)
 CPlayerState * CPlayerOverlimit::LateTick(_float fTimeDelta)
 {
 
+	for (auto& pEffect : m_pEffects)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+
 	if (m_bIsAnimationFinished)
 	{
 		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
@@ -72,6 +79,12 @@ void CPlayerOverlimit::Enter(void)
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
 
+
+	/* Make Effect */
+	_vector vOffset = { 0.f,3.f,0.f,0.f };
+	_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Overlimit.dat"), mWorldMatrix);
+	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("OverLimit.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())

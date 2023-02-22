@@ -139,8 +139,16 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
 	float fViewZ = vDepthDesc.y * 1000.f;
 
 	vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+	
+	///////
+	float NdotL = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal)));
 
-	Out.vShade = g_vLightDiffuse * (saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal))) + (g_vLightAmbient));
+	NdotL = pow((NdotL * 0.5f) + 0.5f, 2);
+	float step = 2;
+	NdotL = ceil(NdotL * step) / step;
+	///////
+
+	Out.vShade = g_vLightDiffuse * (NdotL + (g_vLightAmbient));
 	Out.vShade.a = 1.f;
 
 	vector vWorldPos = (vector)0.f;
@@ -156,7 +164,8 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
 	vector vReflect = reflect(normalize(g_vLightDir), normalize(vNormal));
 	vector vLook = vWorldPos - g_vCamPosition;
 
-	Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vReflect) * -1.f, normalize(vLook))), 30.f);
+	//Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vReflect) * -1.f, normalize(vLook))), 30.f);
+	Out.vSpecular.rgb = 0.f;
 	Out.vSpecular.a = 0.f;
 	return Out;
 }

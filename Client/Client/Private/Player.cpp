@@ -132,16 +132,6 @@ int CPlayer::Tick(_float fTimeDelta)
 			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
 				BoostAttack();
 		}
-
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
-		{
-			CUI_Manager::Get_Instance()->MinusCP(10);
-			m_tInfo.fCurrentHp += 100.f;
-			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
-			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
-		}
-		else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-			Take_Damage(m_tInfo.fCurrentHp, nullptr);
 	}
 	
 
@@ -324,6 +314,8 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		return 0;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	if (eMode == ACTIVE)
+		int a = 0;
 	m_tInfo.fCurrentHp -= (int)fDamage;
 
 	/*CDamageFont::DMGDESC testdesc;
@@ -475,6 +467,13 @@ void CPlayer::AI_check()
 	pAIState = new CAICheckState(this,CAIState::STATE_IDLE);
    m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 
+}
+
+void CPlayer::RecoverHP(_float hp)
+{
+	 m_tInfo.fCurrentHp += hp;
+	 if (m_tInfo.fCurrentHp > m_tInfo.fMaxHp)
+		 m_tInfo.fCurrentHp = m_tInfo.fMaxHp; 
 }
 
 void CPlayer::HandleInput()

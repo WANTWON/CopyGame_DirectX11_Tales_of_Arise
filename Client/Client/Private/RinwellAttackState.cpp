@@ -50,7 +50,8 @@ CRinwellState * CAttackState::LateTick(_float fTimeDelta)
 		case Client::STATETYPE_MAIN:
 			return new CAttackState(m_pOwner, STATETYPE_END);
 		case Client::STATETYPE_END:
-			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
+			return new CAttackState(m_pOwner, STATETYPE_START);
+			//return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
 		}
 	}
 
@@ -72,7 +73,7 @@ void CAttackState::Enter()
 	{
 	case Client::STATETYPE_START:
 	{
-		Find_Target(rand() % 4);
+		Find_Target(0/*rand() % 4*/);
 		m_vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 		_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
 		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize( XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));

@@ -572,15 +572,18 @@ void CAI_Rinwell_SkillState::Enter()
 	//__super::Enter();
 	m_bBulletMake = false;
 	//m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_NORMAL_0;
-	
-	if (nullptr == m_pTarget)
+	if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
 	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		if (nullptr == m_pTarget)
+		{
+			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		}
+		else
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
-	else
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	
 	switch (m_eStateId)
 	{
 	case STATE_GALEFORCE:

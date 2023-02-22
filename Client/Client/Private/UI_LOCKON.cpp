@@ -54,7 +54,7 @@ HRESULT CUI_LOCKON::Initialize(void * pArg)
 int CUI_LOCKON::Tick(_float fTimeDelta)
 {
 	
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
 	if (m_bDead || CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)
@@ -109,15 +109,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		m_bStrikeon = false;
 		m_fAlphaDiamond = 1.f;
 		m_fDiamondShooter = 1.f;
-
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-		m_fTimeOffset += 0.1f;
-		if (m_fTimeOffset >= 1.f)
-			m_fTimeOffset = 1.f;
-		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), m_fTimeOffset);
-		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(false);
-		RELEASE_INSTANCE(CGameInstance);
+		
 	}
 	
 
@@ -198,7 +190,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return;
 
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)

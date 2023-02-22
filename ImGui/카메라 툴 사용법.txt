@@ -1,0 +1,51 @@
+------------------준비 단계 -----------------
+1. Client 폴더 밑에 Imgui 폴더 들어가서 실행
+ 카메라 이동 Shift + WASD , 카메라 회전 shift + 마우스 이동
+
+2. 먼저 타겟으로 잡을 애니메이션을 로드한다.
+Animation Tab 가서 모델을 로드하고, 애니메이션까지 선택해준다 (준비단계)
+
+3. StrikePosition 을 로드한다 : 맨 위에 File -> Open 누르고 Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat 를 부른다
+Active 1 Player 좌표 :  60, 54, 0.15
+Active 2 Player 좌표 :  63, 54, 0.11
+
+위 좌표 중에 하나로 애니메이션 모델 위치를 변경시켜주면 됨
+
+
+4. Terrain을 부른다 :  탭에 들어가서 TerrainTool을 누르면 중간에 Load Terrain이라고 있음 .
+	그거 누르고 똑같이 Bin/Data/BattleZoneData/SnowPlane/Terrain.dat 을 부른다.
+	처음엔 와이어 프레임으로 렌더되는데 Terrian 툴에서 WireFrame 체크박스 해제해주면 됨.
+
+
+--------------- 카메라 세팅 ------------------------
+1. 카메라 툴로 들어가서 체크박스 중 "ActionMode" 선택
+
+2. Data이름을 적어주고 "Create Camera" 버튼 누르기
+밑에 Add 탭을 누르면 세팅을 위한 툴들이 나옴
+
+3. PlayTime 정할 것, 
+
+4. 카메라를 쉬프트키 누르면서 이동하다가 원하는 각도와 구간이 있으면 "Capture Current" 누르기
+   -> 그러면 현재 카메라에 대한 정보가 담김. 해당 정보를 Start 타임과 End 타임을 정하고 Add 하면 됨
+
+5. Section Start 체크 박스는 섹션을 나누는 용도인데, 이건 시간값에 따라 이동하는게 아니라 그냥 해당 좌표로 바로 이동시키는 거임
+***** 가장 첫번째 정보는 무조건 처음 시작 좌표 => Section Start  체크를 누르고 데이터를 Add 해주면 됨
+***** 또는 A 섹션에서 B 섹션으로 나누고 싶을 때 체크해서 Add 해주면 됨
+
+6. CatRom/Lerp 모드는 카메라가 시간에 따라 어떻게 보간하며 이동할지를 정하는 것
+Lerp : 선형 보간
+CatRom : 곡선 보간 
+
+어떤 부분에서는 LEp가 더 자연스러운 곳이 있고, 어떤 곳에서는 CatRom이 자연스러운 곳이 있어서 직접 재생하고 수정하면서 확인해야함
+
+
+7. 데이터 저장 불러오기 -> Save/Load
+데이터 폴더는 무조건 Bin/Data/CameraData/ 안에 넣어둘 것
+******************************저장할 때 끝에 .dat 무조건 붙여야함
+
+
+
+
+
+
+

@@ -44,7 +44,7 @@ int CUI_Combo_font_Damages::Tick(_float fTimeDelta)
 	if (m_bmoveleft)
 		moveleft();
 
-	m_fDietimer += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));;
+	m_fDietimer += fTimeDelta; // CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));;
 	if (m_fDietimer > 5.f)
 		m_bfadeout = true;
 	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_3))

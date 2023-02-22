@@ -346,6 +346,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		{
 			pBattleManager->Out_Monster(iter);
 			pBattleManager->Add_BattleMonster(iter);
+			iter->Set_IsActionMode(true);
 		}
 		else
 			pGameInstance->Out_GameObject(LEVEL_STATIC, TEXT("Layer_Monster"), iter);
@@ -572,7 +573,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	_int numcreate = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
-
+	_int PlayerNum = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1);
 	for (int i = 0; i < numcreate; ++i)
 	{
 		_uint number = i;
@@ -614,17 +615,31 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitback"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
 
+	
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_top"), LEVEL_BATTLE, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_right"), LEVEL_BATTLE, pLayerTag)))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_bottom"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_left"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
+	
+	if (PlayerNum == 3)
+	{
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_bottom"), LEVEL_BATTLE, pLayerTag)))
+			return E_FAIL;
+	}
+	
+	
+	if (PlayerNum == 4)
+	{
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_right"), LEVEL_BATTLE, pLayerTag)))
+			return E_FAIL;
+
+	}
+	
+
+	
+
+	
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_button"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
