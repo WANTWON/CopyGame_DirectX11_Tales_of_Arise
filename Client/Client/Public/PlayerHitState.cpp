@@ -5,11 +5,12 @@
 
 using namespace Player;
 
-CHitState::CHitState(CPlayer * pPlayer, _float fTime)
+CHitState::CHitState(CPlayer * pPlayer, _bool isDown, _float fTime)
 {
 	m_pOwner = pPlayer;
 	m_ePlayerID = m_pOwner->Get_PlayerID();
 	m_fTime = fTime;
+	m_bIsDown = isDown;
 }
 
 CPlayerState * CHitState::HandleInput()
@@ -22,20 +23,18 @@ CPlayerState * CHitState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 	m_pOwner->Check_Navigation();
 
-	if(!m_bIsBack)
+	if (m_bIsDown)
 	{
-		m_pOwner->Get_Transform()->Sliding_Backward(fTimeDelta, m_pOwner->Get_Navigation());
-		m_bIsBack = true;
+
 	}
+	else
+		m_pOwner->Get_Transform()->Sliding_Backward(fTimeDelta, m_pOwner->Get_Navigation());
 
 	return nullptr;
 }
 
 CPlayerState * CHitState::LateTick(_float fTimeDelta)
 {
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-		return new CHitState(m_pOwner, m_fTime);
-
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
@@ -57,8 +56,21 @@ void CHitState::Enter()
 	{
 	case CPlayer::ALPHEN:
 		if (m_bIsFly)
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_AIR_SMALL_B);
+		{
+			if (m_bIsDown)
+			{
+
+			}
+			else
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_AIR_SMALL_B);
+		}
 		else
+		{
+			if (m_bIsDown)
+			{
+
+			}
+		}
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_SMALL_B);
 		break;
 	case CPlayer::SION:
@@ -88,5 +100,5 @@ void CHitState::Exit()
 {
 	__super::Exit();
 
-	m_bIsBack = false;
+	m_bIsDown = false;
 }

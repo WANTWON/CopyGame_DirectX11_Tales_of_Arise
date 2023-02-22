@@ -234,9 +234,7 @@ _float CCollision_Manager::Calculate_DmgDirection(CBaseObj* Sour, CBaseObj* Dest
 void CCollision_Manager::Free()
 {
 	for (_uint i = 0; i < COLLISION_END; ++i)
-	{
 		m_GameObjects[i].clear();
-	}
 
 	for (_uint i = 0; i < COLLIDER_END; ++i)
 	{

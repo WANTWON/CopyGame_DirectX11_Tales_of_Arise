@@ -6,7 +6,7 @@ BEGIN(Player)
 class CHitState final : public CPlayerState
 {
 public:
-	CHitState(class CPlayer* pPlayer, _float fTime = 0.f);
+	CHitState(class CPlayer* pPlayer, _bool isDown = false, _float fTime = 0.f);
 
 	virtual CPlayerState* HandleInput() override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -18,7 +18,7 @@ public:
 private:
 	_float m_fTime = 0.f;
 
-	_bool m_bIsBack = false;
+	_bool m_bIsDown = false;
 };
 END
 END
