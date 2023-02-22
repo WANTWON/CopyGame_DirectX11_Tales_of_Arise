@@ -10,6 +10,7 @@
 #include "AICheckState.h"
 #include "PlayerDeadState.h"
 #include "PlayerHitState.h"
+#include "PlayerPoseState.h"
 
 #include "AI_HitState.h"
 #include "AIDeadState.h"
@@ -24,7 +25,7 @@
 #include "AI_RinwellLaw_Smash.h"
 //////////////////////////////////
 #include "AI_Overlimit_State.h"
-
+#include "AIPoseState.h"
 
 using namespace Player;
 using namespace AIPlayer;
@@ -124,8 +125,20 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 
 
-	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{	
+		if (!m_bIsPose)
+		{
+			m_bIsPose = true;
+
+			/* Set State */
+			CPlayerState* pPlayerState = new Player::CPlayerPoseState(this, CPlayerState::STATE_POSE);
+			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+
+			CAIState* pAIState = new AIPlayer::CAIPoseState(this, CAIState::STATE_POSE);
+			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		}
+
 		if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
 		{
 			/*_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;*/
@@ -137,13 +150,16 @@ int CPlayer::Tick(_float fTimeDelta)
 		{
 			CUI_Manager::Get_Instance()->MinusCP(10);
 			m_tInfo.fCurrentHp += 100.f;
+			if (m_bDead)
+				m_bDead = false;
 			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
 			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 		}
 		else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
 			Take_Damage(m_tInfo.fCurrentHp, nullptr);
 	}
-	
+	else if (m_bIsPose)
+		m_bIsPose = false;
 
 	switch (eMode)
 	{
@@ -238,9 +254,11 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			pParts->Late_Tick(fTimeDelta);
 	}
 
-	if (LEVEL_BATTLE == m_eLevel)
+	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
+
+	if (pBattleMgr->Get_IsBattleMode())
 	{
-		vector<CBaseObj*> Monsters = CBattleManager::Get_Instance()->Get_BattleMonster();
+		vector<CBaseObj*> Monsters = pBattleMgr->Get_BattleMonster();
 
 		_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
@@ -259,8 +277,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vDirection) * fRadiusSum);
 				_vector vLerpPos = XMVectorLerp(vPlayerPos, XMVectorSetY(vNewPos, XMVectorGetY(vPlayerPos)), 0.5f);
 
-				//if (true == m_pNavigationCom->isMove(vLerpPos))
-				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
+				if (true == m_pNavigationCom->isMove(vLerpPos))
+					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
 			}
 		}
 	}
@@ -344,6 +362,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		CAIState* pAIState = nullptr;
 
 		m_tInfo.fCurrentHp = 0;
+		m_bDead = true;
 		switch (eMode)
 		{
 		case Client::ACTIVE:

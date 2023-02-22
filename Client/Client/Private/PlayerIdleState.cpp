@@ -146,12 +146,6 @@ CPlayerState * CIdleState::Tick(_float fTimeDelta)
 
 CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 {
-	if (LEVEL_BATTLE == m_pOwner->Get_Level())
-	{
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-			return new CHitState(m_pOwner);
-	}
-
 	if (m_bIsAnimationFinished && LEVEL_BATTLE != m_pOwner->Get_Level())
 	{
 		switch (m_eIdleType)

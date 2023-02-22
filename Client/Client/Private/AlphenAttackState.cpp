@@ -27,7 +27,10 @@ CPlayerState * CAlphenAttackState::HandleInput()
 
 CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	if ((Client::CPlayerState::STATE_NORMAL_ATTACK3 == m_eStateId) && !m_bIsFly)
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.2f);
+	else
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	if (!m_bIsAnimationFinished)
 	{

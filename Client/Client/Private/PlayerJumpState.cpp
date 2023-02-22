@@ -214,9 +214,6 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 {
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-		return new CHitState(m_pOwner, m_fTime);
-
 	switch (m_eStateType)
 	{
 	case Client::STATETYPE_START:
