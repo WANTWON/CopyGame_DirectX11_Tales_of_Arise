@@ -60,6 +60,20 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 		return;
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+		{
+			if (strcmp(m_ModelDesc.pModeltag, "Snow_Mountain") )
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return;
+			}
+
+		
+		}
+	
+
+
 	_float fRadius = Check_CullingRadius();
 
 	if (Check_IsinFrustum(fRadius) == false)
@@ -157,7 +171,9 @@ _float CNonAnim::Check_CullingRadius()
 	if (!strcmp(m_ModelDesc.pModeltag, "CliffRock") ||
 		!strcmp(m_ModelDesc.pModeltag, "CliffRock2") ||
 		!strcmp(m_ModelDesc.pModeltag, "CliffRock3") ||
-		!strcmp(m_ModelDesc.pModeltag, "CliffRock4"))
+		!strcmp(m_ModelDesc.pModeltag, "CliffRock4") ||
+		!strcmp(m_ModelDesc.pModeltag, "Ground01") ||
+		!strcmp(m_ModelDesc.pModeltag, "Ground02") )
 		return 25.f;
 	else if (!strcmp(m_ModelDesc.pModeltag, "Hut"))
 		return 20.f;
@@ -168,7 +184,19 @@ _float CNonAnim::Check_CullingRadius()
 		!strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_outside_Lod1") ||
 		!strcmp(m_ModelDesc.pModeltag, "Bld_D04_Door01_Wall_Lod1"))
 		return 50.f;
-	
+	else if (!strcmp(m_ModelDesc.pModeltag, "House01_2F_1200x800") ||
+		!strcmp(m_ModelDesc.pModeltag, "House01_2F") ||
+		!strcmp(m_ModelDesc.pModeltag, "house01_3F_1200x1200") ||
+		!strcmp(m_ModelDesc.pModeltag, "CliffWall01") ||
+		!strcmp(m_ModelDesc.pModeltag, "CliffWall02") ||
+		!strcmp(m_ModelDesc.pModeltag, "Castle01_Lod1") ||
+		!strcmp(m_ModelDesc.pModeltag, "BigGateArch01") ||
+		!strcmp(m_ModelDesc.pModeltag, "Vehicle_Boat"))
+		return 10.f;
+	else if (!strcmp(m_ModelDesc.pModeltag, "Ground03") ||
+		!strcmp(m_ModelDesc.pModeltag, "Ground04"))
+		return 1000.f;
+		
 	return 3.f;
 }
 

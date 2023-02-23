@@ -28,6 +28,7 @@ public:
 	enum STATE_ID
 	{
 		STATE_ADVENT,
+		STATE_BRAVE,
 		START_BATTLE,
 		STATE_IDLE,
 		STATE_RUN,
@@ -35,8 +36,7 @@ public:
 		STATE_SPEARMULTI,
 		STATE_HEADBEAM,
 		STATE_UPPER,
-		STATE_720SPIN_START,
-		STATE_720SPIN_END,
+		STATE_SPIN,
 		STATE_RUSH_START,
 		STATE_RUSH_LOOP,
 		STATE_RUSH_END,
@@ -287,6 +287,45 @@ protected:
 			pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.2f);
 	}
 
+	_bool Is_TargetInSight(_fvector vAt, _float vSightAngle)
+	{
+		_vector		vMonPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_vector		vMonLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+
+
+		_vector		vTargetDir = XMVector3Normalize(vAt - vMonPos);
+		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		_vector		vMonRight = XMVector3Cross(vAxisY, vMonLook);
+		_vector		vMonUp = XMVector3Cross(vMonLook, vMonRight);
+
+
+		_float fDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
+
+		_float fRadian = acos(fDot) * (180 / XM_PI);
+
+		//앞쪽인지 뒤쪽인지 
+		_float fLookDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
+
+
+		_float fSightAngle = vSightAngle;
+
+		//앞쪽에 있고 시야각 안에 있다
+		if (fLookDot > 0)
+		{
+			if (fRadian <= fSightAngle)
+				return true;
+
+			else
+				return false;
+		}
+
+		else
+			return false;
+
+		return false;
+	}
+
 protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
 	STATE_ID m_eStateId = STATE_END;
@@ -300,6 +339,7 @@ protected:
 	_float		m_fTarget_Distance;
 	_float		m_fDegreeToTarget;
 	_float		m_fOutPutTarget_Distance;
+
 	CAstralDoubt * m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
 

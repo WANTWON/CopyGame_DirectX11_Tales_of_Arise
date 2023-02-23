@@ -20,15 +20,18 @@ public:
 
 
 private:
+	_uint m_iRand = 0;
 	_float m_fWalkMoveTimeAcc = 0.f;
 	_float  m_fMoveTime = 0;
 	STATE_ID	m_ePreState_Id;
 	_bool	m_Testbool;
 	_bool  m_bBeamTargetOn = false;
 	_bool  m_bTargetPickOn = false;
+	_bool		m_b_IsTargetInsight = false;
+	_bool  m_PreState_IsSpin = false;
 	CCollider*  m_pAtkColliderCom = nullptr;
 	CCollider*	m_p2th_AtkColliderCom = nullptr;
-
+	
 
 };
 END

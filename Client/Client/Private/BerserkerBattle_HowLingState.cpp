@@ -20,7 +20,7 @@ CBerserkerState * CBattle_HowLingState::AI_Behaviour(_float fTimeDelta)
 CBerserkerState * CBattle_HowLingState::Tick(_float fTimeDelta)
 {
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.1f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 	
 

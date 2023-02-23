@@ -106,7 +106,7 @@ void CBattle_IdleState::Enter()
 void CBattle_IdleState::Exit()
 {
 	
-	
+	m_pOwner->Set_IsActionMode(false);
 }
 
 

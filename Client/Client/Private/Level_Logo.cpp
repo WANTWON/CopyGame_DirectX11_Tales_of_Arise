@@ -38,6 +38,9 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_BossMapObject(TEXT("Layer_Deco"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_CityMapObject(TEXT("Layer_Deco"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Npc(TEXT("Layer_Npc"))))
 		return E_FAIL;
 
@@ -207,10 +210,49 @@ HRESULT CLevel_Logo::Ready_InstancingForPooling(const _tchar* pLayerTag)
 		return E_FAIL;
 #pragma endregion BossZone
 
+#pragma region CityZone
+	strcpy(stModelDesc.pModeltag, "CIty_BigWall");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_CITY, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "City_Grass03");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_CITY, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "CIty_Grass04");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_CITY, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "City_Ivy1");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_CITY, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+
+	strcpy(stModelDesc.pModeltag, "City_LightPillar");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_CITY, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "City_Palm");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_CITY, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "City_Planter");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_CITY, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "SAT_Wall02");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_CITY, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+
+
+#pragma endregion CityZone
+
 
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -508,6 +550,93 @@ HRESULT CLevel_Logo::Ready_Layer_BossMapObject(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_Boss"), &ModelDesc)))
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Logo::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC  ModelDesc;
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/CIffWall.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_CITY, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+	}
+
+	CloseHandle(hFile);
+
+	hFile = 0;
+	dwByte = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/Deco.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_CITY, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+	}
+
+	CloseHandle(hFile);
+
+	hFile = 0;
+	dwByte = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/House01_2F.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_CITY, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+	}
+	CloseHandle(hFile);
+
+
+	hFile = 0;
+	dwByte = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/Ground.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_CITY, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+	}
+	CloseHandle(hFile);
+
+
+	RELEASE_INSTANCE(CGameInstance);
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco"));
 
 	return S_OK;
 }

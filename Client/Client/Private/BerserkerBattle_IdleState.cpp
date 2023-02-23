@@ -150,4 +150,6 @@ void CBattle_IdleState::Exit()
 		m_pOwner->Set_FinishGoingDown();
 		m_pOwner->Set_FinishDownState();
 	}
+
+	m_pOwner->Set_IsActionMode(false);
 }

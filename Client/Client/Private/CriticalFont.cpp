@@ -24,11 +24,13 @@ HRESULT CCriticalFont::Initialize_Prototype()
 HRESULT CCriticalFont::Initialize(void * pArg)
 {
 
+
 	if (pArg != nullptr)
-		m_fPosition = *(_float2*)pArg;
+		memcpy(&m_damagedesc, pArg, sizeof(DMGDESC));
 
 	//m_fTargetPos = m_damagedesc.fposition;
-	
+	m_fPosition = m_damagedesc.position;
+	          
 	m_fPosition.x += 40.f;
 	m_fPosition.y += 40.f;
 	
@@ -223,9 +225,9 @@ HRESULT CCriticalFont::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(1))))
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(m_damagedesc.itype))))
 		return E_FAIL;
-
+	
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;

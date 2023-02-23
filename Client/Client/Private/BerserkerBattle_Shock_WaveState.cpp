@@ -78,7 +78,7 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 					ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
 					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
-					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
 
 					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
@@ -94,7 +94,7 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 					ColliderDesc2th.vScale = _float3(5.f, 5.f, 5.f);
 					ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
 
-					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
+					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 					m_p2th_AtkColliderCom->Update(R_matWorld);
 
 					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
@@ -139,8 +139,8 @@ CBerserkerState * CBattle_Shock_WaveState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (m_bAngry)
-		{
+		/*if (m_bAngry)
+		{*/
 			switch (m_iRand)
 			{
 			case 0:
@@ -151,6 +151,18 @@ CBerserkerState * CBattle_Shock_WaveState::LateTick(_float fTimeDelta)
 				return new CBattle_WalkState(m_pOwner);
 				break;
 			}
+		//}
+	}
+
+	if (nullptr != m_pAtkColliderCom)
+	{
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 	}
 
@@ -180,4 +192,6 @@ void CBattle_Shock_WaveState::Exit()
 
 	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);
+
+	m_pOwner->SetOff_BedamageCount_Delay();
 }

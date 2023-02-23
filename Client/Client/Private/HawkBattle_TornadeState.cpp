@@ -106,10 +106,8 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 					ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
 					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
-					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 
 				else if (nullptr != m_pAtkColliderCom)
@@ -122,10 +120,8 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 					ColliderDesc2th.vScale = _float3(6.f, 6.f, 6.f);
 					ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
 
-					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
+					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 					m_p2th_AtkColliderCom->Update(R_matWorld);
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 
 				else if (nullptr != m_p2th_AtkColliderCom)
@@ -143,9 +139,6 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 			m_pAtkColliderCom = nullptr;
 			m_p2th_AtkColliderCom = nullptr;
-
-			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-			/*pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);*/
 		}
 	}
 

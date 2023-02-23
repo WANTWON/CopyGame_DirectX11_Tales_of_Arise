@@ -180,6 +180,59 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		CBattleManager::Get_Instance()->Set_BattleMode(true, RINWELL, true);
 	}
 
+
+	if (m_bNextNevel)
+	{
+		_float fDuration = 1.5f;
+		_float fBlurDuration = fDuration / 3;
+
+		if (m_fBlurTimer >= fDuration)
+		{
+			m_fBlurTimer = 0.f;
+
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			if (pPlayer)
+				pPlayer->Get_Renderer()->Set_ZoomBlur(false);
+
+			m_pCollision_Manager->Clear_AllCollisionGroup();
+
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Camera"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
+			CGameInstance::Get_Instance()->Clear_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			LEVEL eNextLevel = LEVEL_CITY;
+			pGameInstance->Set_DestinationLevel(eNextLevel);
+			if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
+				return;
+
+			RELEASE_INSTANCE(CGameInstance);
+		}
+		else
+		{
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			if (pPlayer)
+			{
+				_float fFocusPower = 15.f;
+
+				_float fInterpFactor = m_fBlurTimer / fBlurDuration;
+				if (fInterpFactor > 1.f)
+					fInterpFactor = 1.f;
+
+				_int iFocusDetailLerp = 1 + fInterpFactor * (10 - 1);
+
+				pPlayer->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+			}
+
+			m_fBlurTimer += fTimeDelta;
+		}
+	}
+
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_0))
 	{
 		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();

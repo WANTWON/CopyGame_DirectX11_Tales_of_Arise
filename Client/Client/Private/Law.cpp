@@ -34,6 +34,10 @@ HRESULT CLaw::Initialize(void * pArg)
 	m_tInfo.iDamage = 100;
 	m_tInfo.fCurrentBoostGuage = 50.f;
 
+	m_tInfo.iCurrentExp = 500;
+	m_tInfo.iMaxExp = 1000;
+	m_tInfo.iLevel = 47;
+
 	return S_OK;
 }
 
@@ -103,7 +107,9 @@ HRESULT CLaw::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_FieldNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 	m_vecNavigations.push_back(m_pNavigationCom);
-
+	if (FAILED(__super::Add_Components(TEXT("Com_CityNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_City_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+	m_vecNavigations.push_back(m_pNavigationCom);
 	return S_OK;
 }
 
