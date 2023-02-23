@@ -584,7 +584,7 @@ void CRinwellSkills::Tick_ThunderField(_float fTimeDelta)
 		if (iter != nullptr)
 		{
 			_vector vOffset = XMVectorSet(0.f, m_fRadius + 6.f, 0.f, 0.f);
-			//iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
+			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
 		}
 			
 	}
@@ -595,8 +595,8 @@ void CRinwellSkills::Tick_ThunderField(_float fTimeDelta)
 			iter = nullptr;
 
 		_vector vOffset = XMVectorSet(0.f, m_fRadius + 0.5f, 0.f, 0.f);
-		//if (iter != nullptr)
-		//	iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
+		if (iter != nullptr)
+			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
 	}
 
 }

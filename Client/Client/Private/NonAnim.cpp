@@ -63,10 +63,7 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 	
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 		{
-			if (!strcmp(m_ModelDesc.pModeltag, "CliffRock") ||
-				!strcmp(m_ModelDesc.pModeltag, "CliffRock2") ||
-				!strcmp(m_ModelDesc.pModeltag, "CliffRock3") ||
-				!strcmp(m_ModelDesc.pModeltag, "CliffRock4") )
+			if (strcmp(m_ModelDesc.pModeltag, "Snow_Mountain") )
 			{
 				RELEASE_INSTANCE(CGameInstance);
 				return;
