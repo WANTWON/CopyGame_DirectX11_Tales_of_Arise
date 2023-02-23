@@ -60,6 +60,23 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 		return;
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+		{
+			if (!strcmp(m_ModelDesc.pModeltag, "CliffRock") ||
+				!strcmp(m_ModelDesc.pModeltag, "CliffRock2") ||
+				!strcmp(m_ModelDesc.pModeltag, "CliffRock3") ||
+				!strcmp(m_ModelDesc.pModeltag, "CliffRock4") )
+			{
+				RELEASE_INSTANCE(CGameInstance);
+				return;
+			}
+
+		
+		}
+	
+
+
 	_float fRadius = Check_CullingRadius();
 
 	if (Check_IsinFrustum(fRadius) == false)

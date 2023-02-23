@@ -390,6 +390,8 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 	m_bfadeout = false;
 	m_fYFadeout = 0.f;
 	m_fScaler = 2.f;
+	m_bfontmaker = true;
+	m_balphaup = false;
 
 	m_fbrightpos_hp[0] = 0.f;
 	m_fbrightpos_hp[1] = -0.5f;

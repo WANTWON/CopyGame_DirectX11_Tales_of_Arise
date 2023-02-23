@@ -44,6 +44,13 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
+
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+	{
+			return;
+	}
+		
+
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	m_fRadius = Check_CullingRadius();
