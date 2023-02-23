@@ -88,6 +88,23 @@ CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 		}
 	}
 
+	else if (m_ePreBattleState == STATE_ID:: STATE_BRAVE)
+	{
+		if (m_bIsAnimationFinished)
+		{
+			CBaseObj* p2thCorpseNearby = nullptr;
+			p2thCorpseNearby = m_pOwner->Find_MinDistance_Target();
+
+			if (p2thCorpseNearby->Get_Info().fCurrentHp > 0)
+			{
+				return new CBattle_RunState(m_pOwner, STATE_ID::STATE_END);
+			}
+
+			else
+				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
+		}
+	}
+
 	else
 	{
 		if (m_fTimeDeltaAcc > m_fRandTime)
@@ -122,6 +139,9 @@ void CBattle_IdleState::Enter()
 	if (m_ePreBattleState == STATE_ID::STATE_DOWN)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ARISE_F);
 
+	else if (m_ePreBattleState == STATE_ID::STATE_BRAVE)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_BRAVE);
+
 	else
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::SYMBOL_IDLE);
 	
@@ -134,4 +154,7 @@ void CBattle_IdleState::Exit()
 		m_pOwner->Set_FinishGoingDown();
 		m_pOwner->Set_FinishDownState();
 	}
+
+	m_pOwner->Set_IsActionMode(false);
+
 }

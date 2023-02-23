@@ -123,15 +123,18 @@ int CCamera_Action::Tick(_float fTimeDelta)
 {
 	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_ACTION)
 		return OBJ_NOEVENT;
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	__super::Tick(fTimeDelta);
+	_float fTime = pGameInstance->Get_TimeDelta(TEXT("Timer_60"));
+
+	__super::Tick(fTime);
 
 	/* Debug Camera*/
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 
 	if (m_bPlay)
 	{
-		PlayCamera(fTimeDelta);
+		PlayCamera(fTime);
 	}
 
 
@@ -147,7 +150,8 @@ void CCamera_Action::Late_Tick(_float fTimeDelta)
 {
 	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_ACTION)
 		return;
-	__super::Late_Tick(fTimeDelta);
+
+	__super::Late_Tick(CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60")));
 
 }
 

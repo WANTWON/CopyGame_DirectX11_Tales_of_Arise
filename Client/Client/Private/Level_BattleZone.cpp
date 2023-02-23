@@ -228,6 +228,27 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKOFF);
 	}
+
+	/* Fog Shader */
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	if (pPlayer)
+	{
+		pPlayer->Get_Renderer()->Set_Fog(true);
+
+		CShader* pShaderPostProcessing = pPlayer->Get_Renderer()->Get_ShaderPostProcessing();
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+			return;
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+			return;
+
+		_float3 vPlayerPosition;
+		XMStoreFloat3(&vPlayerPosition, pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vPlayerPosition", &vPlayerPosition, sizeof(_float3))))
+			return;
+	}
 }
 
 HRESULT CLevel_BattleZone::Ready_Lights()
@@ -320,7 +341,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Compute_CurrentIndex(LEVEL_BATTLE);
 		iter->Check_Navigation();
 		iter->Change_Level(LEVEL_BATTLE);
-	//	iter->Set_IsActionMode(true);
+		iter->Set_IsActionMode(true);
 		i++;
 	}
 	
@@ -346,7 +367,6 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		{
 			pBattleManager->Out_Monster(iter);
 			pBattleManager->Add_BattleMonster(iter);
-			iter->Set_IsActionMode(true);
 		}
 		else
 			pGameInstance->Out_GameObject(LEVEL_STATIC, TEXT("Layer_Monster"), iter);
@@ -430,17 +450,16 @@ HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	CCamera_Action::ACTIONCAMDESC				ActionCameraDesc;
 	ZeroMemory(&ActionCameraDesc, sizeof(CCamera_Action::ACTIONCAMDESC));
-
 	ActionCameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
 	ActionCameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
 
 	ActionCameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	ActionCameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-	ActionCameraDesc.CameraDesc.fNear = 0.1f;
+	ActionCameraDesc.CameraDesc.fNear = 0.001f;
 	ActionCameraDesc.CameraDesc.fFar = 1000.f;
 
 	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 3.f;
-	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
+	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CameraAction"), LEVEL_BATTLE, pLayerTag, &ActionCameraDesc)))
 		return E_FAIL;

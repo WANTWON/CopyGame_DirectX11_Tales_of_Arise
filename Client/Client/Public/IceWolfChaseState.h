@@ -16,7 +16,11 @@ public:
 
 	virtual void Enter() override;
 	virtual void Exit() override;
-
+	
+private:
+	_bool m_bTriggerTurn = false;
+	_float m_fRandTime = 0.f;
+	
 
 };
 

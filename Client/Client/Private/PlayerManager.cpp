@@ -128,15 +128,13 @@ void CPlayerManager::Set_Ai_Check()
 void CPlayerManager::Set_SmashAttack()
 {
 	CMonster* pLockonMonster = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster());
+
 	if ((nullptr != pLockonMonster) && (pLockonMonster->Get_Stats().m_fLockonSmashGuage >= 4.f))
 	{
+		pLockonMonster->Set_IsActionMode(true);
+
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
-			
-		
-			
-			
-
 			CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
 			Get_EnumPlayer(0)->Set_IsActionMode(true);
 			Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
@@ -152,12 +150,15 @@ void CPlayerManager::Set_SmashAttack()
 			{
 				Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
 				Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(2)->Set_IsActionMode(false);
 			}
 			
 			if (Get_EnumPlayer(3) != nullptr)
 			{
 				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
 				Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(3)->Set_IsActionMode(false);
+
 			}
 			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
@@ -193,12 +194,14 @@ void CPlayerManager::Set_SmashAttack()
 				{
 					Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
 					Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+					Get_EnumPlayer(1)->Set_IsActionMode(false);
 				}
 
 				if (Get_EnumPlayer(3) != nullptr)
 				{
 					Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
 					Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+					Get_EnumPlayer(3)->Set_IsActionMode(false);
 				}
 
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
@@ -231,12 +234,14 @@ void CPlayerManager::Set_SmashAttack()
 				{				  
 					Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
 					Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+					Get_EnumPlayer(0)->Set_IsActionMode(false);
 				}
 
 				if (Get_EnumPlayer(3) != nullptr)
 				{
 					Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
 					Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+					Get_EnumPlayer(3)->Set_IsActionMode(false);
 				}
 
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
@@ -273,12 +278,14 @@ void CPlayerManager::Set_SmashAttack()
 				{
 					Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
 					Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+					Get_EnumPlayer(1)->Set_IsActionMode(false);
 				}
 
 				if (Get_EnumPlayer(2) != nullptr)
 				{
 					Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
 					Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+					Get_EnumPlayer(2)->Set_IsActionMode(false);
 				}
 
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
@@ -311,12 +318,14 @@ void CPlayerManager::Set_SmashAttack()
 				{
 					Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
 					Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+					Get_EnumPlayer(0)->Set_IsActionMode(false);
 				}
 
 				if (Get_EnumPlayer(2) != nullptr)
 				{
 					Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
 					Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+					Get_EnumPlayer(2)->Set_IsActionMode(false);
 				}
 
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
@@ -340,7 +349,7 @@ void CPlayerManager::Set_SmashAttack()
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::RINWELL_LAW);
 
 				Get_EnumPlayer(3)->Set_IsActionMode(true);
-				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
+				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(63.f, 0.11f, 54.f, 1.f));
 				Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(3)->SmashAttack(CPlayer::RINWELL_LAW);
 
@@ -348,12 +357,14 @@ void CPlayerManager::Set_SmashAttack()
 				{
 					Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
 					Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+					Get_EnumPlayer(0)->Set_IsActionMode(false);
 				}
 
 				if (Get_EnumPlayer(1) != nullptr)
 				{
 					Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
 					Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+					Get_EnumPlayer(1)->Set_IsActionMode(false);
 				}
 
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);

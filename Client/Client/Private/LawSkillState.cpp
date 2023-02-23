@@ -113,6 +113,91 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				switch (m_eStateId)
+				{
+					case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+					{
+						if (m_bIsFly)
+						{
+							if (!strcmp(pEvent.szName, ""))
+							{
+								if (!true)
+								{
+									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
+									// 
+								}
+							}
+						}
+						else
+						{
+							if (!strcmp(pEvent.szName, ""))
+							{
+								if (!true)
+								{
+									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
+									//
+								}
+							}
+						}
+						break;
+					}
+					case Client::CPlayerState::STATE_SKILL_ATTACK_R:
+					{
+						if (m_bIsFly)
+						{
+							if (!strcmp(pEvent.szName, ""))
+							{
+								if (!true)
+								{
+									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
+									// 
+								}
+							}
+						}
+						else
+						{
+							if (!strcmp(pEvent.szName, ""))
+							{
+								if (!true)
+								{
+									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
+									//
+								}
+							}
+						}
+						break;
+					}
+					case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+					{
+						if (m_bIsFly)
+						{
+							if (!strcmp(pEvent.szName, ""))
+							{
+								if (!true)
+								{
+									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
+									// 
+								}
+							}
+						}
+						else
+						{
+							if (!strcmp(pEvent.szName, ""))
+							{
+								if (!true)
+								{
+									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
+									//
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
 		}
 		else
 		{

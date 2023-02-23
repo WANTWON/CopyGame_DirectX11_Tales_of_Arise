@@ -25,9 +25,7 @@ CAstralDoubt_State * CBattle_Hit_AndDead::Tick(_float fTimeDelta)
 		if(!m_bThirdHit)
 			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
-	case Client::CAstralDoubt_State::STATE_BE_DAMAGED:
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-		break;
+
 
 	case Client::CAstralDoubt_State::STATE_DOWN:
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
@@ -77,26 +75,10 @@ CAstralDoubt_State * CBattle_Hit_AndDead::LateTick(_float fTimeDelta)
 			}
 
 			return new CBattle_Hit_AndDead(m_pOwner, STATE_DEAD, true);
-			break;
-		case Client::CAstralDoubt_State::STATE_BE_DAMAGED:
-			m_pOwner->Set_Done_HitAnimState();
-			if (m_bThirdHit)
-				return new CBattle_720Spin_FirstState(m_pOwner);
-			else
-			{
-				switch (m_iRand)
-				{
-				case 0:
-					return new CBattleWalkState(m_pOwner, STATE_ID::STATE_END);
 
-				default:
-					break;
-				}
-			}
-			break;
 
 		case Client::CAstralDoubt_State::STATE_DOWN:
-			return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_DOWN);
+			return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_IDLE);
 		}	
 	}
 	
@@ -121,21 +103,8 @@ void CBattle_Hit_AndDead::Enter()
 		//}
 		break;
 
-	case Client::CAstralDoubt_State::STATE_BE_DAMAGED:
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::DOWN_UNIQUE);
-		m_pOwner->SetOff_BedamagedCount();
-		m_pOwner->Set_BedamageCount_Delay();
-
-		//if (!m_bAnimFinish)
-		//{
-		//	CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Hit.wav"), SOUND_VOICE, 0.4f);
-		//	m_bAnimFinish = true;
-		//	break;
-		//}
-		break;
-
 	case Client::CAstralDoubt_State::STATE_DOWN:
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::DOWN_B);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::DOWN_UNIQUE);
 		m_pOwner->Set_OnGoingDown();
 		break;
 	}
@@ -144,9 +113,11 @@ void CBattle_Hit_AndDead::Enter()
 
 void CBattle_Hit_AndDead::Exit()
 {
-	if (m_eStateId == Client::CAstralDoubt_State::STATE_BE_DAMAGED)
-		m_pOwner->SetOff_BedamageCount_Delay();
 
 	Safe_Release(m_pAtkColliderCom);
-
+	if (m_eStateId == STATE_ID::STATE_DOWN)
+	{
+		m_pOwner->Set_FinishGoingDown();
+		m_pOwner->Set_FinishDownState();
+	}
 }
