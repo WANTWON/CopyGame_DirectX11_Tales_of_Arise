@@ -115,6 +115,9 @@ void CItem::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
+	if (!m_bIsGain)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
+
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (!pPlayer)
 		return;
@@ -277,6 +280,24 @@ HRESULT CItem::Render()
 	__super::Render();
 
 	return S_OK;
+}
+
+HRESULT CItem::Render_EdgeDetection()
+{
+	if (nullptr == m_pShaderCom || nullptr == m_pModelCom)
+		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 7)))
+			return E_FAIL;
+	}
 }
 
 HRESULT CItem::Ready_Components(void * pArg)
