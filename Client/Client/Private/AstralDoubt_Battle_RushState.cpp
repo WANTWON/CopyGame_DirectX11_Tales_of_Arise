@@ -105,7 +105,7 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 		}
 
 		else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_END)
-			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
+			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
 	}
 
 
