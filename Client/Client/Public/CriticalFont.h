@@ -59,12 +59,16 @@ private:
 	_bool m_balphaup = false;
 
 public:
+	enum DMGTYPE {NON ,CRITICAL , RESIST , WEAKNESS};
+
 	typedef struct tagdamagefont
 	{
-		//_float2 position = { 0.f,0.f };
+		_float2 position = { 0.f,0.f };
 		_uint iDamage = 0;
+		
 		//_float2 fposition = { 0.f,0.f };
 		CBaseObj* pPointer = nullptr;
+		_uint itype = 1;
 
 	}DMGDESC;
 

@@ -358,7 +358,7 @@ HRESULT CUI_LOCKON::Render()
 
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(7))))
 			return E_FAIL;
-		m_pShaderCom->Begin(UI_POTRAIT_ALLBLUE);
+		m_pShaderCom->Begin(UI_ALPHASET);
 
 		m_pVIBufferCom->Render();
 
@@ -380,7 +380,7 @@ HRESULT CUI_LOCKON::Render()
 
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(7))))
 			return E_FAIL;
-		m_pShaderCom->Begin(UI_POTRAIT_ALLBLUE);
+		m_pShaderCom->Begin(UI_ALPHASET);
 
 		m_pVIBufferCom->Render();
 	}
