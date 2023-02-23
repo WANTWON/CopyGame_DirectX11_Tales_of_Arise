@@ -15,7 +15,7 @@ using namespace Berserker;
 CBattle_WalkState::CBattle_WalkState(CBerserker* pBerserker)
 {
 	m_pOwner = pBerserker;
-	m_fRandTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 500) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CBerserkerState * CBattle_WalkState::AI_Behaviour(_float fTimeDelta)
@@ -254,10 +254,10 @@ CBerserkerState * CBattle_WalkState::LateTick(_float fTimeDelta)
 					switch (m_iRand)
 					{
 					case 0:
-						return new CBattle_PouncingState(m_pOwner);
+						return new CBattle_Shock_WaveState(m_pOwner);
 
 					case 1:
-						return new CBattle_Shock_WaveState(m_pOwner);
+						return new CBattle_PouncingState(m_pOwner);
 
 					case 2:
 						return new CBattle_Double_ClawState(m_pOwner);

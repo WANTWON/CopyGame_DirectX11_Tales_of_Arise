@@ -12,7 +12,7 @@
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
 #include "PlayerIdleState.h"
-
+#include "UI_Dialogue_Caption.h"
 using namespace AIPlayer;
 using namespace Player;
 CAI_RinwellLaw_Smash::CAI_RinwellLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
@@ -43,7 +43,7 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 	if (m_pTarget == nullptr)
 		return nullptr;
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta,false);
 	if (!m_bIsAnimationFinished)
 	{
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -83,11 +83,6 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 			}
 		}
 
-		_vector vecTranslation;
-		_float fRotationRadian;
-
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
 	m_pOwner->Check_Navigation_Jump();
@@ -152,6 +147,7 @@ void CAI_RinwellLaw_Smash::Enter()
 		break;
 	case CPlayer::LAW:
 		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_GURENTENSYOU;
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
 
 		break;
 

@@ -33,6 +33,7 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;
 
+
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
 		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -76,8 +77,8 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 									BulletDesc.pOwner = m_pOwner;
 									BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
-									if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-										return nullptr;
+									//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+									//	return nullptr;
 
 									m_bAlphenStrike_1 = true;
 								}
@@ -96,8 +97,8 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 									BulletDesc.pOwner = m_pOwner;
 									BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
-									if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-										return nullptr;
+									//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+									//	return nullptr;
 
 									m_bAlphenStrike_2 = true;
 								}
@@ -123,8 +124,8 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 								BulletDesc.pOwner = m_pOwner;
 								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
-								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-									return nullptr;
+							/*	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+									return nullptr;*/
 
 								m_fEventStart = pEvent.fStartTime;
 							}
@@ -274,11 +275,29 @@ void CAI_BoostAttack::Enter()
 
 void CAI_BoostAttack::Exit()
 {
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
+	for (auto& iter : m_pEffects2)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
+	for (auto& iter : m_pEffects3)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)
 		{
-			if (iter != nullptr)
+			if (iter != nullptr && iter->Get_PreDead() )
 			{
 				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
 				if (pParticleSystem != nullptr)

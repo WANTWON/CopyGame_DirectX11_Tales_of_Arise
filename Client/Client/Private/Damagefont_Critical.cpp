@@ -5,6 +5,7 @@
 #include "UI_RuneEffect.h"
 #include "Player.h"
 #include "PlayerManager.h"
+#include "CriticalFont.h"
 CDamagefont_Critical::CDamagefont_Critical(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
 {
@@ -225,7 +226,11 @@ int CDamagefont_Critical::Tick(_float fTimeDelta)
 	{
 		if (m_bfontmaker)
 		{
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Critical"), LEVEL_STATIC, TEXT("dddd"), &m_fPosition)))
+			CCriticalFont::DMGDESC fontdesc;
+			ZeroMemory(&fontdesc, sizeof(CCriticalFont::DMGDESC));
+			fontdesc.itype = m_damagedesc.itype;
+			fontdesc.position = m_fPosition;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Critical"), LEVEL_STATIC, TEXT("dddd"), &fontdesc)))
 				return OBJ_NOEVENT;
 			m_bfontmaker = false;
 		}
@@ -390,6 +395,8 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 	m_bfadeout = false;
 	m_fYFadeout = 0.f;
 	m_fScaler = 2.f;
+	m_bfontmaker = true;
+	m_balphaup = false;
 
 	m_fbrightpos_hp[0] = 0.f;
 	m_fbrightpos_hp[1] = -0.5f;

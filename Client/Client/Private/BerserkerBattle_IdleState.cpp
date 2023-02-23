@@ -27,55 +27,9 @@ CBerserkerState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 CBerserkerState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
 	
-	switch (m_eStateId)
-	{
-	case Client::CBerserkerState::STATE_ARISE:
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-		
-		if (!m_bIsAnimationFinished)
-		{
-			_vector vecTranslation;
-			_float fRotationRadian;
-
-			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-			m_pOwner->Check_Navigation();
-		}
-		break;
-	case Client::CBerserkerState::STATE_LOOKOUT:
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-		
-		if (!m_bIsAnimationFinished)
-		{
-			_vector vecTranslation;
-			_float fRotationRadian;
-
-			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-			m_pOwner->Check_Navigation();
-		}
-		break;
-	case Client::CBerserkerState::STATE_DOWN:
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-
-		if (!m_bIsAnimationFinished)
-		{
-			_vector vecTranslation;
-			_float fRotationRadian;
-
-			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-			m_pOwner->Check_Navigation();
-		}
-		break;
-
-	default:
-		break;
-	}
-
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
-	/*CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
 	if (pDamageCauser == nullptr)
 	{
@@ -104,7 +58,7 @@ CBerserkerState * CBattle_IdleState::Tick(_float fTimeDelta)
 	
 	
 	m_fTarget_Cosign = Find_ToTargetCosign(m_vCurTargetPos);
-	m_bTarget_isRight = Find_ToTargetRightSide(m_vCurTargetPos);*/
+	m_bTarget_isRight = Find_ToTargetRightSide(m_vCurTargetPos);
 
 	////ÄÚ½Î
 	//
@@ -147,8 +101,8 @@ CBerserkerState * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation();
 
-	/*if (m_pCurTarget == nullptr)
-		return nullptr;*/
+	if (m_pCurTarget == nullptr)
+		return nullptr;
 
 	m_fTimeDeltaAcc += fTimeDelta;
 
@@ -171,23 +125,6 @@ CBerserkerState * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 	}
 		
-	else if (m_eStateId == STATE_ID::STATE_LOOKOUT)
-	{
-		if (m_bIsAnimationFinished)
-		{
-			CBaseObj* p2thCorpseNearby = nullptr;
-			p2thCorpseNearby = m_pOwner->Find_MinDistance_Target();
-
-			if (p2thCorpseNearby->Get_Info().fCurrentHp > 0)
-			{
-				return new CBattle_RunState(m_pOwner, STATE_ID::STATE_END);
-			}
-
-			else
-				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_LOOKOUT);
-		}
-	}
-
 	else
 	{
 		if (m_fTimeDeltaAcc > m_fRandTime)
@@ -202,11 +139,6 @@ void CBattle_IdleState::Enter()
 	if(m_eStateId == STATE_ID::STATE_ARISE)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ARISE_F);
 
-	else if (m_eStateId == STATE_ID::STATE_LOOKOUT)
-	{
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::SYMBOL_LOOKOUT);
-	}
-
 	else
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_IDLE);
 }
@@ -219,5 +151,5 @@ void CBattle_IdleState::Exit()
 		m_pOwner->Set_FinishDownState();
 	}
 
-	
+	m_pOwner->Set_IsActionMode(false);
 }

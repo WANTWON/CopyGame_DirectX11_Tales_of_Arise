@@ -40,8 +40,8 @@ HRESULT CSion::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_tInfo.fMaxHp = 80.f;
-	m_tInfo.fCurrentHp = 80.f;
+	m_tInfo.fMaxHp = 1500.f;
+	m_tInfo.fCurrentHp = 1500.f;
 	m_tInfo.fMaxMp = 5.f;
 	m_tInfo.fCurrentMp = 2.3f;
 	m_tInfo.iDamage = 100;
@@ -133,7 +133,9 @@ HRESULT CSion::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_FieldNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 	m_vecNavigations.push_back(m_pNavigationCom);
-	
+	if (FAILED(__super::Add_Components(TEXT("Com_CityNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_City_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+	m_vecNavigations.push_back(m_pNavigationCom);
 	return S_OK;
 }
 

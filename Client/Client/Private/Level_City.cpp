@@ -25,11 +25,28 @@ HRESULT CLevel_City::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Camera")) == false)
+	{
+		if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+			return E_FAIL;
+	}
+
+
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
+
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Backgorund"))))
+		return E_FAIL;
+
+	
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing")) == false)
+		int a = 0;
+
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco")) == false)
+		int a = 0;
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_CITY);
@@ -65,14 +82,12 @@ void CLevel_City::Tick(_float fTimeDelta)
 
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Camera"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Backgorund"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Insteract"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-		LEVEL eNextLevel = LEVEL_CITY;
+		LEVEL eNextLevel = LEVEL_BOSS;
 		pGameInstance->Set_DestinationLevel(eNextLevel);
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
 			return;
@@ -81,58 +96,6 @@ void CLevel_City::Tick(_float fTimeDelta)
 
 		m_fBlurTimer = 0.f;
 	}
-
-	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
-	{
-		_float fDuration = 1.5f;
-		_float fBlurDuration = fDuration / 3;
-
-		if (m_fBlurTimer >= fDuration)
-		{
-			m_fBlurTimer = 0.f;
-
-			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-			if (pPlayer)
-				pPlayer->Get_Renderer()->Set_ZoomBlur(false);
-
-			CPlayerManager::Get_Instance()->Save_LastPosition();
-			m_pCollision_Manager->Clear_AllCollisionGroup();
-
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Camera"));
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Backgorund"));
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Insteract"));
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco"));
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
-
-			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-			LEVEL eNextLevel = LEVEL_BATTLE;
-			pGameInstance->Set_DestinationLevel(eNextLevel);
-			if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
-				return;
-
-			RELEASE_INSTANCE(CGameInstance);
-		}
-		else
-		{
-			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-			if (pPlayer)
-			{
-				_float fFocusPower = 15.f;
-
-				_float fInterpFactor = m_fBlurTimer / fBlurDuration;
-				if (fInterpFactor > 1.f)
-					fInterpFactor = 1.f;
-
-				_int iFocusDetailLerp = 1 + fInterpFactor * (10 - 1);
-
-				pPlayer->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
-			}
-
-			m_fBlurTimer += fTimeDelta;
-		}
-	}
 }
 
 void CLevel_City::Late_Tick(_float fTimeDelta)
@@ -140,9 +103,6 @@ void CLevel_City::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	SetWindowText(g_hWnd, TEXT("Level_City"));
-
-
-	RELEASE_INSTANCE(CGameInstance);
 }
 
 HRESULT CLevel_City::Ready_Lights()
@@ -155,7 +115,7 @@ HRESULT CLevel_City::Ready_Lights()
 	_ulong dwByte = 0;
 	_uint iNum = 0;
 
-	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/BossMap/Light.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/Light.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -191,45 +151,10 @@ HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 {
 	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::RINWELL) == nullptr)
-	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;
-	
-	}
-	if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::LAW) == nullptr)
-	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;
-	}
-
-	HANDLE hFile = 0;
-	_ulong dwByte = 0;
-	NONANIMDESC ModelDesc1;
-	NONANIMDESC ModelDesc2;
-	NONANIMDESC ModelDesc3;
-	NONANIMDESC ModelDesc4;
-
-	_uint iNum = 0;
-
-	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/PlayerPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	/* 타일의 개수 받아오기 */
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-
-	ReadFile(hFile, &(ModelDesc1), sizeof(NONANIMDESC), &dwByte, nullptr);
-	ReadFile(hFile, &(ModelDesc2), sizeof(NONANIMDESC), &dwByte, nullptr);
-	ReadFile(hFile, &(ModelDesc3), sizeof(NONANIMDESC), &dwByte, nullptr);
-	ReadFile(hFile, &(ModelDesc4), sizeof(NONANIMDESC), &dwByte, nullptr);
-
-	CloseHandle(hFile);
 
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
-	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&ModelDesc1.vPosition), 1.f));
+	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20.f, 0.f, -135.f, 1.f));
 	pPlayer->Change_Navigation(LEVEL_CITY);
 	pPlayer->Compute_CurrentIndex(LEVEL_CITY);
 	pPlayer->Check_Navigation();
@@ -237,11 +162,10 @@ HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Change_Level(LEVEL_CITY);
 
 	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
-	_vector vPosition[3] = { XMVectorSetW(XMLoadFloat3(&ModelDesc2.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc3.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc4.vPosition), 1.f) };
 	_int i = 0;
 	for (auto& iter : pAIPlayers)
 	{
-		iter->Set_State(CTransform::STATE_TRANSLATION, vPosition[i]);
+		iter->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20.f, 0.f, -135.f, 1.f));
 		iter->Change_Navigation(LEVEL_CITY);
 		iter->Compute_CurrentIndex(LEVEL_CITY);
 		iter->Check_Navigation();
@@ -250,7 +174,6 @@ HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 	}
 	
 	CPlayerManager::Get_Instance()->Set_BattleMode(false);
-	CPlayerManager::Get_Instance()->Set_Ai_Check();
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -260,8 +183,31 @@ HRESULT CLevel_City::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	RELEASE_INSTANCE(CGameInstance);
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_CITY, pLayerTag, nullptr)))
+		return E_FAIL;
 
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC  ModelDesc;
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/Water.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Water"), LEVEL_CITY, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+	}
+
+	CloseHandle(hFile);
+
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
@@ -303,7 +249,7 @@ HRESULT CLevel_City::Ready_Layer_Camera(const _tchar * pLayerTag)
 	ActionCameraDesc.CameraDesc.fNear = 0.1f;
 	ActionCameraDesc.CameraDesc.fFar = 1000.f;
 
-	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 3.f;
 	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CameraAction"), LEVEL_CITY, pLayerTag, &ActionCameraDesc)))

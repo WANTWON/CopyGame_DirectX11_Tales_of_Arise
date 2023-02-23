@@ -18,7 +18,7 @@ CBattle_RunState::CBattle_RunState(CBerserker* pBerserker, STATE_ID ePreState)
 {
 	m_pOwner   = pBerserker;
 	m_ePreState_Id = ePreState;
-	m_fRandTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 500) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CBerserkerState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
@@ -288,13 +288,13 @@ CBerserkerState * CBattle_RunState::LateTick(_float fTimeDelta)
 				switch (m_iRand)
 				{
 				case 0:
-					return new CBattle_PouncingState(m_pOwner);
-
+					return new CBattle_Double_ClawState(m_pOwner);
+					
 				case 1:
 					return new CBattle_Shock_WaveState(m_pOwner);
 
 				case 2:
-					return new CBattle_Double_ClawState(m_pOwner);
+					return new CBattle_PouncingState(m_pOwner);
 				default:
 					break;
 				}

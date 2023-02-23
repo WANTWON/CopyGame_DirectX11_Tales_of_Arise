@@ -2,12 +2,12 @@
 #include "..\Public\SnowFieldNpc.h"
 #include "GameInstance.h"
 #include "Player.h"
-//#include "Level_Manager.h"
 #include "PlayerManager.h"
 #include "UI_Manager.h"
 #include "UI_Dialogue.h"
 #include "UI_InterectMsg.h"
 #include "Rinwell.h"
+#include "Level.h"
 
 CSnowFieldNpc::CSnowFieldNpc(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CNpc(pDevice, pContext)
@@ -82,6 +82,12 @@ void CSnowFieldNpc::Late_Tick(_float fTimeDelta)
 
    if (m_bCollision)
    {
+	   if (CGameInstance::Get_Instance()->Key_Up(DIK_8))
+	   {
+		   CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
+		   pCurrentLevel->Set_NextLevel(true, LEVEL_CITY);
+	   }
+
 	   dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Open_sysmsg(2);
 	   m_bIsFirst_conversation = true;
 

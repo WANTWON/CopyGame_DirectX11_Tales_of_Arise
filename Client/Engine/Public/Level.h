@@ -16,9 +16,19 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 
+	void		Set_NextLevel(_bool type, _uint iLevelIndex) {
+		m_bNextNevel = type; m_iNextLevelIndex
+			= iLevelIndex;
+	}
+
+	_bool Get_NextLevel() { return m_bNextNevel; }
+	_uint Get_NextLevelIndex() { return m_iNextLevelIndex; }
+
 protected:
 	ID3D11Device* m_pDevice = nullptr; 
 	ID3D11DeviceContext* m_pContext = nullptr;
+	_bool		m_bNextNevel = false;
+	_uint		m_iNextLevelIndex = 0;
 
 public:
 	virtual void Free() override;
