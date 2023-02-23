@@ -22,7 +22,7 @@ CIceWolfState * CBattle_HowLingState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 
-	Find_BattleTarget();
+	//Find_BattleTarget();
 	m_pOwner->Check_Navigation();
 
 
@@ -33,17 +33,32 @@ CIceWolfState * CBattle_HowLingState::Tick(_float fTimeDelta)
 
 CIceWolfState * CBattle_HowLingState::LateTick(_float fTimeDelta)
 {
+
+	if (m_bIsAnimationFinished)
+	{
+		CBaseObj* p2thCorpseNearby = nullptr;
+			p2thCorpseNearby = m_pOwner->Find_MinDistance_Target();
+
+			if (p2thCorpseNearby->Get_Info().fCurrentHp > 0)
+			{
+				return new CBattle_RunState(m_pOwner, STATE_ID::STATE_END);
+			}
+
+			else
+				return new CBattle_HowLingState(m_pOwner);
+	}
+
 	srand((_uint)time(NULL));
 	m_iRand = rand() % 2;
 
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	/*_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	if (false == m_bTargetSetting)
 	{
 		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
 		
 		
 		m_bTargetSetting = true;
-	}
+	}*/
 
 	//
 	//if (m_bIsAnimationFinished)
@@ -65,14 +80,14 @@ CIceWolfState * CBattle_HowLingState::LateTick(_float fTimeDelta)
 	//}
 	
 
-	else
-	{
-	//	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
+	//else
+	//{
+	////	_matrix RootMatrix = m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone");
 
-	//	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
+	////	m_pOwner->Get_Transform()->Sliding_Anim(RootMatrix * m_StartMatrix, m_pOwner->Get_Navigation());
 
-		m_pOwner->Check_Navigation();
-	}
+	//	m_pOwner->Check_Navigation();
+	//}
 
 
 	return nullptr;

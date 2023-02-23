@@ -228,7 +228,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			pParts->Late_Tick(fTimeDelta);
 	}
 
-	if (LEVEL_BATTLE == m_eLevel)
+	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
+
+	if (pBattleMgr->Get_IsBattleMode())
 	{
 		vector<CBaseObj*> Monsters = CBattleManager::Get_Instance()->Get_BattleMonster();
 
@@ -249,8 +251,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vDirection) * fRadiusSum);
 				_vector vLerpPos = XMVectorLerp(vPlayerPos, XMVectorSetY(vNewPos, XMVectorGetY(vPlayerPos)), 0.5f);
 
-				//if (true == m_pNavigationCom->isMove(vLerpPos))
-				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
+				if (true == m_pNavigationCom->isMove(vLerpPos))
+					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLerpPos);
 			}
 		}
 	}

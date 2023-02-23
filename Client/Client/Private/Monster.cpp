@@ -351,6 +351,9 @@ CBaseObj* CMonster::Find_MinDistance_Target()
 	m_fMinLengh = MAXDISTANCE;
 	for (auto& iter : *pPlayerList)
 	{
+		if (dynamic_cast<CPlayer*>(iter)->Get_Info().fCurrentHp <= 0)
+			continue;
+
 		_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
 		if (m_fMinLengh > fDistance)
 		{
@@ -358,8 +361,25 @@ CBaseObj* CMonster::Find_MinDistance_Target()
 			m_pTarget = dynamic_cast<CBaseObj*>(iter);
 		}
 	}
-	
+
 	m_fMinLengh = MAXDISTANCE;
+	return m_pTarget;
+}
+
+CBaseObj * CMonster::Check_FiledTarget()
+{
+	list<CGameObject*>* pPlayerList = CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player"));
+
+	for (auto& iter : *pPlayerList)
+	{
+		_float fDistance = XMVectorGetX(XMVector3Length(Get_TransformState(CTransform::STATE_TRANSLATION) - dynamic_cast<CBaseObj*>(iter)->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		if (fDistance <= 10.f)
+		{
+			m_pTarget = dynamic_cast<CBaseObj*>(iter);
+		}
+
+	}
+
 	return m_pTarget;
 }
 
@@ -427,13 +447,13 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
-
+	
 	m_pTarget = DamageCauser;
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 	
 	++m_tStats.m_iHitcount;
 	//if (m_tStats.m_iHitcount >= 200) //원본코드
-	if (m_tStats.m_iHitcount >= 90)
+	if (m_tStats.m_iHitcount >= 150)
 	{
 		m_bDownState = true;
 		m_tStats.m_iHitcount = 0;
@@ -515,6 +535,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 
 	return _int(m_tStats.m_fCurrentHp);
 }
+
 
 void CMonster::Collision_Object(_float fTimeDelta)
 {

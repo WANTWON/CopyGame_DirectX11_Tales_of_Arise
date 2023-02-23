@@ -183,5 +183,6 @@ void CBattle_Damage_LargeB_State::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 
-\
+	//if (m_eStateId == Client::CBerserkerState::STATE_TAKE_DAMAGE)
+	//	m_pOwner->SetOff_BedamageCount_Delay();
 }

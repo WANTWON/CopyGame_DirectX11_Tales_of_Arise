@@ -48,6 +48,7 @@ public:
 	virtual void AI_Behaviour(_float fTimeDelta) { };
 	virtual void Find_Target();
 	virtual CBaseObj* Find_MinDistance_Target();
+	virtual CBaseObj* Check_FiledTarget();
 	virtual _float Target_Distance(CBaseObj* pTarget);
 	virtual void Follow_Target(_float fTimeDelta) { };
 	virtual void Make_GetAttacked_Effect(CBaseObj* DamageCauser = nullptr);

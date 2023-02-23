@@ -27,17 +27,17 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.3f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
-	//if (!m_bIsAnimationFinished)
-	//{
-	//	_vector vecTranslation;
-	//	_float fRotationRadian;
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
 
-	//	m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 
-	//	m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
 
-	//	m_pOwner->Check_Navigation();
-	//}
+		m_pOwner->Check_Navigation();
+	}
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -76,10 +76,8 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 						ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
 						ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
-						m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+						m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 						m_pAtkColliderCom->Update(matWorld);
-
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 					}
 
 					else if (nullptr != m_pAtkColliderCom)
@@ -92,10 +90,8 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 						ColliderDesc2th.vScale = _float3(6.f, 6.f, 6.f);
 						ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
 
-						m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BATTLE, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
+						m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 						m_p2th_AtkColliderCom->Update(R_matWorld);
-
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 					}
 
 					else if (nullptr != m_p2th_AtkColliderCom)
@@ -114,8 +110,6 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 
 			m_pAtkColliderCom = nullptr;
 			m_p2th_AtkColliderCom = nullptr;
-
-			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
@@ -136,13 +130,13 @@ CBerserkerState * CBattle_Double_ClawState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{	
-		if (m_bAngry == false)
+	/*	if (m_bAngry == false)
 		{
 			return new CBattle_WalkState(m_pOwner);
 		}
 
 		else
-		{
+		{*/
 			switch (m_iRand)
 			{
 			case 0:
@@ -151,9 +145,21 @@ CBerserkerState * CBattle_Double_ClawState::LateTick(_float fTimeDelta)
 			case 1:
 				return new CBattle_RunState(m_pOwner);
 			}
-		}
+		/*}*/
 	}
 	
+	if (nullptr != m_pAtkColliderCom)
+	{
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+	}
+
 #ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);

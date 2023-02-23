@@ -22,9 +22,11 @@ private:
 	_uint		m_iRand = 0;
 	_bool		m_bAnimFinish = false;
 	_bool		m_bTargetSetting = false;
+	_bool		m_b_IsTargetInsight = false;
 	_float		m_fRedayAttackTimer = 0.f;
 	_float		m_fTarget_Distance;
 	STATE_ID	m_ePreState_Id;
+
 };
 END
 END

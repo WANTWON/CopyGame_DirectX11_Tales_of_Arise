@@ -23,9 +23,21 @@ CAstralDoubt_State * CBattle_RushState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 {
-	/*m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		m_pOwner->Check_Navigation();
+	}
+
+	/*CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
 	if (pDamageCauser == nullptr)
 	{
@@ -64,16 +76,16 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_START)
+		if (m_ePreState_Id == CAstralDoubt_State::STATE_BE_DAMAGED)
 			return new CBattle_RushState(m_pOwner, CAstralDoubt_State::STATE_RUSH_LOOP);
 
 		else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_LOOP)
 		{
-			return new CBattleWalkState(m_pOwner);
+			return new CBattle_RushState(m_pOwner, CAstralDoubt_State::STATE_RUSH_END);
 		}
 
 		else
-			return new CBattle_RushState(m_pOwner, CAstralDoubt_State::STATE_RUSH_START);
+			return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_RUSH_START);
 	}
 
 
@@ -89,6 +101,16 @@ void CBattle_RushState::Enter()
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_LOOP);
 
 	else if  (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_LOOP)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_LOOP);
+
+	else if (m_ePreState_Id == CAstralDoubt_State::STATE_BE_DAMAGED)
+	{
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_START);
+		m_pOwner->SetOff_BedamagedCount();
+		m_pOwner->Set_BedamageCount_Delay();
+	}
+
+	else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_END)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_END);
 
 	else
@@ -99,5 +121,6 @@ void CBattle_RushState::Enter()
 
 void CBattle_RushState::Exit()
 {
-
+	if (m_eStateId == Client::CAstralDoubt_State::STATE_BE_DAMAGED)
+		m_pOwner->SetOff_BedamageCount_Delay();
 }

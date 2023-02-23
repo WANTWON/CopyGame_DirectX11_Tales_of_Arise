@@ -25,12 +25,15 @@ private:
 	STATE_ID	m_ePreState_Id;
 	STATE_ID	m_ePreTurn_Id;
 
-	_float		m_fIdleTime;
+
+	_uint		m_iRand = 0.f;
+	_float		m_fRandTime = 0.f;
 	_float		m_fDot;
 
 	_bool		m_bUpdatTargetPos = false;
 	_bool		m_bStartTargetPos = false;
 	_bool		m_bIs_TargetInRight = false;
+
 
 	_vector		m_vTargetPos;
 	_vector     m_vTargetUpdatPos;
@@ -40,7 +43,7 @@ private:
 
 	CTransform* m_pMonSterTransform;
 	CCollider*  m_pAtkColliderCom = false;
-
+	_bool		m_b_IsTargetInsight = false;
 };
 END
 END
