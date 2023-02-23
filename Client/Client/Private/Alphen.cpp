@@ -154,7 +154,7 @@ void CAlphen::Change_Level(LEVEL eLevel)
 
 		CHierarchyNode* pSocket = nullptr; 
 
-		if (LEVEL_SNOWFIELD == eLevel)
+		if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel)
 		{
 			pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L");
 			if (nullptr == pSocket)

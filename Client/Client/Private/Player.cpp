@@ -10,6 +10,7 @@
 #include "AICheckState.h"
 #include "PlayerDeadState.h"
 #include "PlayerHitState.h"
+#include "PlayerPoseState.h"
 
 #include "AI_HitState.h"
 #include "AIDeadState.h"
@@ -24,7 +25,7 @@
 #include "AI_RinwellLaw_Smash.h"
 //////////////////////////////////
 #include "AI_Overlimit_State.h"
-
+#include "AIPoseState.h"
 
 using namespace Player;
 using namespace AIPlayer;
@@ -124,16 +125,41 @@ int CPlayer::Tick(_float fTimeDelta)
 		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 
 
-	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{	
+		if (!m_bIsPose)
+		{
+			m_bIsPose = true;
+
+			/* Set State */
+			CPlayerState* pPlayerState = new Player::CPlayerPoseState(this, CPlayerState::STATE_POSE);
+			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+
+			CAIState* pAIState = new AIPlayer::CAIPoseState(this, CAIState::STATE_POSE);
+			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		}
+
 		if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
 		{
 			/*_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;*/
 			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
 				BoostAttack();
 		}
+
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
+		{
+			CUI_Manager::Get_Instance()->MinusCP(10);
+			m_tInfo.fCurrentHp += 100.f;
+			if (m_bDead)
+				m_bDead = false;
+			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
+			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+		}
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
+			Take_Damage(m_tInfo.fCurrentHp, nullptr);
 	}
-	
+	else if (m_bIsPose)
+		m_bIsPose = false;
 
 	switch (eMode)
 	{
@@ -166,7 +192,8 @@ int CPlayer::Tick(_float fTimeDelta)
 		if(pParts != nullptr)
 			pParts->Tick(fTimeDelta);
 	}
-		
+
+	Reset_DodgeEffect(fTimeDelta);
 	
 	return OBJ_NOEVENT;
 }
@@ -191,6 +218,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		if(CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_ACTION)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, m_Parts[PARTS_WEAPON]);
 #ifdef _DEBUG
 		m_pRendererCom->Add_Debug(m_pNavigationCom);
 		__super::Late_Tick(fTimeDelta);
@@ -232,7 +261,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (pBattleMgr->Get_IsBattleMode())
 	{
-		vector<CBaseObj*> Monsters = CBattleManager::Get_Instance()->Get_BattleMonster();
+		vector<CBaseObj*> Monsters = pBattleMgr->Get_BattleMonster();
 
 		_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
@@ -307,10 +336,30 @@ HRESULT CPlayer::Render_ShadowDepth()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
-} 
+}
+
+HRESULT CPlayer::Render_EdgeDetection()
+{
+	if (nullptr == m_pShaderCom || nullptr == m_pModelCom)
+		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 5)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
 
 
-_int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
+_int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 {
 	if (fDamage <= 0 || m_bDead || m_bIsJustDodge)
 		return 0;
@@ -338,6 +387,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		CAIState* pAIState = nullptr;
 
 		m_tInfo.fCurrentHp = 0;
+		m_bDead = true;
 		switch (eMode)
 		{
 		case Client::ACTIVE:
@@ -361,7 +411,8 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser)
 		case Client::ACTIVE:
 			if (CPlayerState::STATE_HIT != m_pPlayerState->Get_StateId())
 			{
-				pState = new CHitState(this);
+				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+				pState = new CHitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time());
 				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 			}
 			break;
@@ -652,6 +703,46 @@ HRESULT CPlayer::SetUp_ShaderResources()
 	return S_OK;
 }
 
+void CPlayer::Reset_DodgeEffect(_float fTimeDelta)
+{
+	if (!m_bDodgeEffect)
+		return;
+
+	if (m_fResetTimer < m_fResetDuration)
+	{
+		/* Saturation Lerp */
+		_float fSaturationInterpFactor = m_fResetTimer / m_fResetDuration;
+		if (fSaturationInterpFactor > 1.f)
+			fSaturationInterpFactor = 1.f;
+
+		_float fSaturationStart = 2.f;
+		_float fSaturationEnd = 1.f;
+		_float fSaturationLerp = fSaturationStart + fSaturationInterpFactor * (fSaturationEnd - fSaturationStart);
+		m_pRendererCom->Set_Saturation(true, fSaturationLerp);
+
+		/* Zoom Blur Lerp */
+		_float fFocusPower = 5.f;
+
+		_float fBlurInterpFactor = m_fResetTimer / m_fResetDuration;
+		if (fBlurInterpFactor > 1.f)
+			fBlurInterpFactor = 1.f;
+
+		_int iDetailStart = 10;
+		_int iDetailEnd = 1;
+		_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+		m_pRendererCom->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+
+		m_fResetTimer += fTimeDelta;
+	}
+	else
+	{
+		m_fResetTimer = 0.f;
+		m_bDodgeEffect = false;
+		m_pRendererCom->Set_ZoomBlur(false);
+		m_pRendererCom->Set_Saturation(false);
+	}
+}
+
 void CPlayer::Change_Navigation(LEVEL eLevel)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -665,6 +756,9 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_FieldNavigation"), m_ePlayerID));
 		break;
 	case Client::LEVEL_BOSS:
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BossNavigation"), m_ePlayerID));
+		break;
+	case Client::LEVEL_CITY:
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_BossNavigation"), m_ePlayerID));
 		break;
 

@@ -83,7 +83,7 @@ CImgui_Manager::CImgui_Manager()
 	m_stLayerTags.push_back(LayerTag);
 	m_stLayerTags.push_back(LayerTag2);
 	m_stLayerTags.push_back(LayerTag3);
-	
+
 	ZeroMemory(&m_BoxDesc, sizeof(CTreasureBox::BOXTAG));
 	ZeroMemory(&m_ActionCamDesc, sizeof(CCamera_Action::TOOLDESC));
 	ZeroMemory(&m_DynamicCamDesc, sizeof(CCamera_Dynamic::TOOLDESC));
@@ -279,7 +279,7 @@ void CImgui_Manager::Tick_Imgui()
 			ImGui::RadioButton("Target Mode(Radian)", &m_eCameraType, 0);
 			ImGui::SameLine();
 			ImGui::RadioButton("Action Mode(Position)", &m_eCameraType, 1);
-			
+
 
 			if (m_eCameraType == ACTION)
 			{
@@ -293,7 +293,7 @@ void CImgui_Manager::Tick_Imgui()
 				m_pCurrentCamera = CCamera_Manager::Get_Instance()->Get_CurrentCamera();
 				Set_TargetCamera();
 			}
-				
+
 
 			ImGui::EndTabItem();
 		}
@@ -432,7 +432,7 @@ void CImgui_Manager::BrowseForFolder()
 				CloseHandle(hFile);
 				return;
 			}
-				
+
 
 			/* 타일의 개수 받아오기 */
 			ReadFile(hFile, &(iNum), sizeof(_int), &dwByte, nullptr);
@@ -1482,8 +1482,14 @@ void CImgui_Manager::ShowPickedObj()
 	{
 		DirectX::XMStoreFloat3(&m_vPickedObjPos, dynamic_cast<CBaseObj*>(pPickedObj)->Get_Position());
 		m_vPickedObjScale = dynamic_cast<CBaseObj*>(pPickedObj)->Get_Scale();
-		m_vPickedRotAxis = dynamic_cast<CNonAnim*>(pPickedObj)->Get_ModelDesc().vRotation;
-		m_fRotAngle = dynamic_cast<CNonAnim*>(pPickedObj)->Get_ModelDesc().m_fAngle;
+
+		if (dynamic_cast<CBaseObj*>(pPickedObj)->Get_ObjectID() != OBJ_BACKGROUND)
+		{
+
+			m_vPickedRotAxis = dynamic_cast<CNonAnim*>(pPickedObj)->Get_ModelDesc().vRotation;
+			m_fRotAngle = dynamic_cast<CNonAnim*>(pPickedObj)->Get_ModelDesc().m_fAngle;
+		}
+
 	}
 	else
 	{
@@ -1686,7 +1692,7 @@ void CImgui_Manager::Show_PopupBox()
 	if (ImGui::BeginPopupModal("Create Camera", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		ImGui::Text("Camera Created!");
-		
+
 		_float fButtonSize = 100.f;
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2) - (fButtonSize / 2));
 
@@ -1707,7 +1713,7 @@ void CImgui_Manager::Show_ModelList()
 	// ------------------------ Left-----------------------------------
 	static int selected = 0;
 	{
-		ImGui::BeginChild("left pane", ImVec2(150, 0), true);
+		ImGui::BeginChild("left pane", ImVec2(200, 0), true);
 
 		int i = 0;
 
@@ -1972,7 +1978,7 @@ void CImgui_Manager::Set_ActionCamera()
 				m_sCurrentCamera += ".dat";
 				memset(cCameraName, 0, MAX_PATH);
 				ImGui::OpenPopup("Create Camera");
-			
+
 			}
 		}
 		ImGui::NewLine();
@@ -1996,9 +2002,9 @@ void CImgui_Manager::Set_ActionCamera()
 		{
 			Load_Camera();
 		}
-			
 
-			ImGui::NewLine();
+
+		ImGui::NewLine();
 		ImGui::Separator();
 
 		ImGui::Text("Current Camera:");
@@ -2009,7 +2015,11 @@ void CImgui_Manager::Set_ActionCamera()
 		{
 			Save_Camera();
 		}
-			
+
+
+		ImGui::Text("DebugCameraSpeed"); ImGui::SameLine();
+		ImGui::DragFloat("##Speed", &m_fCameraSpeed, 0.05f);
+
 
 
 		ImGui::Text("PlayTime"); ImGui::SameLine();
@@ -2025,14 +2035,19 @@ void CImgui_Manager::Set_ActionCamera()
 				{
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_CamMode(CCamera_Action::CAM_ACTION);
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_PlayTime(m_fPlayTime);
-					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
+
 
 					vector<CAnimation*> ModelAnimations;
 					CModel* pPlayerModel = (CModel*)CGameInstance::Get_Instance()->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
 					if (pPlayerModel != nullptr)
+					{
 						ModelAnimations = pPlayerModel->Get_Animations();
+						if (dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_Finished() == true)
+							pPlayerModel->Reset();
+					}
+					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
 					((CAnim*)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StartAnim();
-					
+
 				}
 				else
 				{
@@ -2042,12 +2057,12 @@ void CImgui_Manager::Set_ActionCamera()
 
 					((CAnim*)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
 				}
-				
+
 			}
 		}
 	}
 
-	
+
 
 
 #pragma endregion Create Camera
@@ -2085,6 +2100,7 @@ void CImgui_Manager::Set_ActionCamera()
 					{
 						m_iCamCurvedIndex = i;
 						m_ActionCamDesc = dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_CamData(m_iCamCurvedIndex);
+						dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_PositionToCurrentData(i);
 					}
 					ImGui::TableNextColumn();
 					string sSection = CameraCurves[i].bNewSection == true ? "NewSection" : " ";
@@ -2097,12 +2113,12 @@ void CImgui_Manager::Set_ActionCamera()
 						sLerp = " ";
 					ImGui::Text(sLerp.c_str());
 
-					ImGui::TableNextColumn(); 
-					string sEye = CutOnSpecificDecimalPt( to_string(CameraCurves[i].vEyePosition.x), 2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.y),2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.z),2);
-					ImGui::Text(sEye.c_str()); 
+					ImGui::TableNextColumn();
+					string sEye = CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.x), 2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.y), 2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vEyePosition.z), 2);
+					ImGui::Text(sEye.c_str());
 
 					ImGui::TableNextColumn();
-					string sAt = CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.x),2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.y),2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.z),2);
+					string sAt = CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.x), 2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.y), 2) + ", " + CutOnSpecificDecimalPt(to_string(CameraCurves[i].vAtPosition.z), 2);
 					ImGui::Text(sAt.c_str());
 
 
@@ -2110,12 +2126,12 @@ void CImgui_Manager::Set_ActionCamera()
 					ImGui::Text(CameraCurves[i].bNewSection == false ? to_string(CameraCurves[i].fStartTime).c_str() : " "); /* Start */
 
 					ImGui::TableNextColumn();
-					ImGui::Text(CameraCurves[i].bNewSection == false ? to_string(CameraCurves[i].fEndTime).c_str() : " " ); /* End */
+					ImGui::Text(CameraCurves[i].bNewSection == false ? to_string(CameraCurves[i].fEndTime).c_str() : " "); /* End */
 				}
 				ImGui::EndTable();
 			}
-			
-			
+
+
 			if (ImGui::Button("Add"))
 			{
 				if (m_pCurrentCamera)
@@ -2138,7 +2154,7 @@ void CImgui_Manager::Set_ActionCamera()
 				if (dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_AllCamData().size() > m_iCamCurvedIndex)
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_CamData(m_iCamCurvedIndex, m_ActionCamDesc);
 			}
-				
+
 
 
 			ImGui::SameLine();
@@ -2152,18 +2168,18 @@ void CImgui_Manager::Set_ActionCamera()
 				_float4 vPosition = (_float4)vCamMatrix.m[3];
 				_float4 vLook = (_float4)vCamMatrix.m[2];
 				m_ActionCamDesc.vEyePosition = vPosition;
-				m_ActionCamDesc.vAtPosition = _float4( vPosition.x + vLook.x , vPosition.y + vLook.y, vPosition.z + vLook.z, 1.f);
+				m_ActionCamDesc.vAtPosition = _float4(vPosition.x + vLook.x, vPosition.y + vLook.y, vPosition.z + vLook.z, 1.f);
 			}
-				
+
 
 			ImGui::NewLine();
 
 
 			ImGui::BulletText("EyePosition");
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::DragFloat("##EyeX", &m_ActionCamDesc.vEyePosition.x, 0.05f,NULL, NULL, "X: %.02f"))
+			if (ImGui::DragFloat("##EyeX", &m_ActionCamDesc.vEyePosition.x, 0.05f, NULL, NULL, "X: %.02f"))
 			{
-				
+
 			}
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(100);
@@ -2175,7 +2191,7 @@ void CImgui_Manager::Set_ActionCamera()
 			if (ImGui::DragFloat("##EyeZ", &m_ActionCamDesc.vEyePosition.z, 0.05f, NULL, NULL, "Z: %.02f"))
 			{
 			}
-	
+
 			ImGui::BulletText("AtPosition");
 			ImGui::SetNextItemWidth(100);
 			if (ImGui::DragFloat("##AtX", &m_ActionCamDesc.vAtPosition.x, 0.05f, NULL, NULL, "X: %.02f"))
@@ -2207,12 +2223,12 @@ void CImgui_Manager::Set_ActionCamera()
 				m_ActionCamDesc.bLerp = !m_ActionCamDesc.bLerp;
 			}
 			ImGui::SetNextItemWidth(200);
-			if (ImGui::DragFloat("##Start", &m_ActionCamDesc.fStartTime, 0.01f, 0.f, 1.f, "Start: %.02f"))
+			if (ImGui::DragFloat("##Start", &m_ActionCamDesc.fStartTime, 0.01f, 0.f, 1.f, "Start: %f"))
 			{
 			}
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(200);
-			if (ImGui::DragFloat("##End", &m_ActionCamDesc.fEndTime, 0.01f, 0.f, 1.f, "End: %.02f"))
+			if (ImGui::DragFloat("##End", &m_ActionCamDesc.fEndTime, 0.01f, 0.f, 1.f, "End: %f"))
 			{
 			}
 
@@ -2260,9 +2276,9 @@ void CImgui_Manager::Set_TargetCamera()
 				m_sCurrentCamera = cCameraName; // Set Current Effect
 				m_sCurrentCamera += ".dat";
 				memset(cCameraName, 0, MAX_PATH);
-				ImGui::OpenPopup("Create Camera");	
+				ImGui::OpenPopup("Create Camera");
 			}
-			
+
 		}
 		ImGui::NewLine();
 		ImGui::Separator();
@@ -2425,7 +2441,7 @@ void CImgui_Manager::Set_TargetCamera()
 				if (pPickedObj == nullptr)
 					return;
 				CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pPickedObj);
-				
+
 				dynamic_cast<CCamera_Dynamic*>(m_pCurrentCamera)->Set_Target(pTarget);
 
 				_float4x4 vCamMatrix = CGameInstance::Get_Instance()->Get_CamWorldMatrix();
@@ -2442,12 +2458,12 @@ void CImgui_Manager::Set_TargetCamera()
 				_vector vCross = XMVector3Cross(vTargetLook, XMVectorSetY(vTargettoCamDir, 0.f));
 
 				_float  fLength = XMVectorGetX(XMVector3Length(vTargettoCamDir));
-				_float  fRadian =  acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(vTargetLook), XMVector3Normalize(vTargettoCamDir))));
+				_float  fRadian = acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(vTargetLook), XMVector3Normalize(vTargettoCamDir))));
 				_float  fCross = XMVectorGetY(vCross);
-			
+
 				_float4 vLook = (_float4)vCamMatrix.m[2];
 
-				if(fCross >= 0.f)
+				if (fCross >= 0.f)
 					m_DynamicCamDesc.fRadian = fRadian;
 				else
 					m_DynamicCamDesc.fRadian = -fRadian;
@@ -2536,7 +2552,7 @@ void CImgui_Manager::Set_TargetCamera()
 
 _bool CImgui_Manager::Save_Camera()
 {
-	
+
 	/* Create Effect Data File */
 	//wstring wsCurrentCamera = wstring(m_sCurrentCamera.begin(), m_sCurrentCamera.end());
 
@@ -2645,7 +2661,7 @@ _bool CImgui_Manager::Load_Camera()
 
 		hFileCamera = CreateFile(OFN.lpstrFile, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 		if (0 == hFileCamera)
-			return E_FAIL;
+			return false;
 
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -3546,7 +3562,7 @@ void CImgui_Manager::Draw_EffectModals()
 				{
 					if (m_pSelectedEffect)
 						m_pSelectedEffect->Add_NoisePowerCurve(_float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
-					
+
 					_float fValue = m_fCurveEnd - m_fCurveStart;
 					m_fCurveStart = m_fCurveEnd;
 					m_fCurveEnd += fValue;
@@ -4418,16 +4434,16 @@ _bool CImgui_Manager::Save_Effect()
 	{
 		switch (m_pSelectedEffect->Get_EffectType())
 		{
-			case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
-			{
-				((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDescTool(m_tTextureEffectDesc);
-				break;
-			}
-			case CEffect::EFFECT_TYPE::TYPE_MESH:
-			{
-				((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDescTool(m_tMeshEffectDesc);
-				break;
-			}
+		case CEffect::EFFECT_TYPE::TYPE_TEXTURE:
+		{
+			((CEffectTexture*)m_pSelectedEffect)->Set_TextureEffectDescTool(m_tTextureEffectDesc);
+			break;
+		}
+		case CEffect::EFFECT_TYPE::TYPE_MESH:
+		{
+			((CEffectMesh*)m_pSelectedEffect)->Set_MeshEffectDescTool(m_tMeshEffectDesc);
+			break;
+		}
 		}
 	}
 
@@ -4577,7 +4593,7 @@ _bool CImgui_Manager::Load_Effect(_bool bUpgrade)
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
- 	DWORD dwByte = 0;
+	DWORD dwByte = 0;
 	_uint iEffectsCount = 0;
 
 	/* Read how many Effects there are in this File. */
@@ -4821,35 +4837,35 @@ CEffectMesh::MESHEFFECTDESC CImgui_Manager::UpgradeMeshStruct(CEffectMesh::MESHE
 	wcscpy_s(tMeshEffectDesc.wcPrototypeId, MAX_PATH, tMeshEffectDescOld.wcPrototypeId);
 	wcscpy_s(tMeshEffectDesc.wcMaskTexture, MAX_PATH, tMeshEffectDescOld.wcMaskTexture);
 	wcscpy_s(tMeshEffectDesc.wcNoiseTexture, MAX_PATH, tMeshEffectDescOld.wcNoiseTexture);
-	tMeshEffectDesc.vColorInitial =			tMeshEffectDescOld.vColorInitial;
-	tMeshEffectDesc.vColor =				tMeshEffectDescOld.vColor;
-	tMeshEffectDesc.fAlphaInitial =			tMeshEffectDescOld.fAlphaInitial;
-	tMeshEffectDesc.fAlpha =				tMeshEffectDescOld.fAlpha;
-	tMeshEffectDesc.bGlow =					tMeshEffectDescOld.bGlow;
-	tMeshEffectDesc.vGlowColor =			tMeshEffectDescOld.vGlowColor;
-	tMeshEffectDesc.fGlowPower =			tMeshEffectDescOld.fGlowPower;
-	tMeshEffectDesc.bDistort =				tMeshEffectDescOld.bDistort;
-	tMeshEffectDesc.fDistortPowerInitial =	tMeshEffectDescOld.fDistortPowerInitial;
-	tMeshEffectDesc.fDistortPower =			tMeshEffectDescOld.fDistortPower;
-	tMeshEffectDesc.fDistortSpeed =			tMeshEffectDescOld.fDistortSpeed;
-	tMeshEffectDesc.fLifetime =				tMeshEffectDescOld.fLifetime;
-	tMeshEffectDesc.fStartAfter =			tMeshEffectDescOld.fStartAfter;
-	tMeshEffectDesc.vPosition =				tMeshEffectDescOld.vPosition;
-	tMeshEffectDesc.vRotation =				tMeshEffectDescOld.vRotation;
-	tMeshEffectDesc.vScaleInitial =			tMeshEffectDescOld.vScaleInitial;
-	tMeshEffectDesc.vScale =				tMeshEffectDescOld.vScale;
-	tMeshEffectDesc.vTurn =					tMeshEffectDescOld.vTurn;
-	tMeshEffectDesc.fTurnVelocityInitial =	tMeshEffectDescOld.fTurnVelocityInitial;
-	tMeshEffectDesc.fTurnVelocity =			tMeshEffectDescOld.fTurnVelocity;
-	tMeshEffectDesc.fMaskSpeed =			tMeshEffectDescOld.fMaskSpeed;
-	tMeshEffectDesc.fMaskDirectionX =		tMeshEffectDescOld.fMaskDirectionX;
-	tMeshEffectDesc.fMaskDirectionY =		tMeshEffectDescOld.fMaskDirectionY;
-	tMeshEffectDesc.fNoiseSpeed =			tMeshEffectDescOld.fNoiseSpeed;
-	tMeshEffectDesc.fNoiseDirectionX =		tMeshEffectDescOld.fNoiseDirectionX;
-	tMeshEffectDesc.fNoiseDirectionY =		tMeshEffectDescOld.fNoiseDirectionY;
-	tMeshEffectDesc.fNoisePowerInitial =	tMeshEffectDescOld.fNoisePowerInitial;
-	tMeshEffectDesc.fNoisePower =			tMeshEffectDescOld.fNoisePower;
-	
+	tMeshEffectDesc.vColorInitial = tMeshEffectDescOld.vColorInitial;
+	tMeshEffectDesc.vColor = tMeshEffectDescOld.vColor;
+	tMeshEffectDesc.fAlphaInitial = tMeshEffectDescOld.fAlphaInitial;
+	tMeshEffectDesc.fAlpha = tMeshEffectDescOld.fAlpha;
+	tMeshEffectDesc.bGlow = tMeshEffectDescOld.bGlow;
+	tMeshEffectDesc.vGlowColor = tMeshEffectDescOld.vGlowColor;
+	tMeshEffectDesc.fGlowPower = tMeshEffectDescOld.fGlowPower;
+	tMeshEffectDesc.bDistort = tMeshEffectDescOld.bDistort;
+	tMeshEffectDesc.fDistortPowerInitial = tMeshEffectDescOld.fDistortPowerInitial;
+	tMeshEffectDesc.fDistortPower = tMeshEffectDescOld.fDistortPower;
+	tMeshEffectDesc.fDistortSpeed = tMeshEffectDescOld.fDistortSpeed;
+	tMeshEffectDesc.fLifetime = tMeshEffectDescOld.fLifetime;
+	tMeshEffectDesc.fStartAfter = tMeshEffectDescOld.fStartAfter;
+	tMeshEffectDesc.vPosition = tMeshEffectDescOld.vPosition;
+	tMeshEffectDesc.vRotation = tMeshEffectDescOld.vRotation;
+	tMeshEffectDesc.vScaleInitial = tMeshEffectDescOld.vScaleInitial;
+	tMeshEffectDesc.vScale = tMeshEffectDescOld.vScale;
+	tMeshEffectDesc.vTurn = tMeshEffectDescOld.vTurn;
+	tMeshEffectDesc.fTurnVelocityInitial = tMeshEffectDescOld.fTurnVelocityInitial;
+	tMeshEffectDesc.fTurnVelocity = tMeshEffectDescOld.fTurnVelocity;
+	tMeshEffectDesc.fMaskSpeed = tMeshEffectDescOld.fMaskSpeed;
+	tMeshEffectDesc.fMaskDirectionX = tMeshEffectDescOld.fMaskDirectionX;
+	tMeshEffectDesc.fMaskDirectionY = tMeshEffectDescOld.fMaskDirectionY;
+	tMeshEffectDesc.fNoiseSpeed = tMeshEffectDescOld.fNoiseSpeed;
+	tMeshEffectDesc.fNoiseDirectionX = tMeshEffectDescOld.fNoiseDirectionX;
+	tMeshEffectDesc.fNoiseDirectionY = tMeshEffectDescOld.fNoiseDirectionY;
+	tMeshEffectDesc.fNoisePowerInitial = tMeshEffectDescOld.fNoisePowerInitial;
+	tMeshEffectDesc.fNoisePower = tMeshEffectDescOld.fNoisePower;
+
 	/* The "new" Data will get automatically populated since its default initialized. */
 
 	return tMeshEffectDesc;
@@ -5794,83 +5810,90 @@ void CImgui_Manager::Set_Animation()
 	{
 		_tchar pAnimationDataFilePath[MAX_PATH] = TEXT("../../../Bin/Bin_Data/Anim/");
 
-		/*CPlayer::PLAYERDESC Pivot;
-		memcpy(&Pivot, &((CPlayer*)(pGameInstance->Get_GameObjects(LEVEL_GAMEPLAY, TEXT("Layer_Player")).front()))->Get_Pivot(), sizeof(CPlayer::PLAYERDESC));
+		CAnim::PLAYERDESC Pivot;
+		memcpy(&Pivot, &((CAnim*)(pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front()))->Get_Desc(), sizeof(CAnim::PLAYERDESC));
 
 		switch (Pivot.eModel)
 		{
 		case MODEL_ALPHEN:
-		lstrcat(pAnimationDataFilePath, TEXT("Alphen/Alphen_Animation_Add.dat"));
-		break;
+			lstrcat(pAnimationDataFilePath, TEXT("Alphen/Alphen_Animation_Add.dat"));
+			break;
 		case MODEL_ICEWOLF:
-		lstrcat(pAnimationDataFilePath, TEXT("Ice_Wolf/Ice_Wolf_Animation_Add.dat"));
-		break;
+			lstrcat(pAnimationDataFilePath, TEXT("Ice_Wolf/Ice_Wolf_Animation_Add.dat"));
+			break;
 		case MODEL_SION:
-		lstrcat(pAnimationDataFilePath, TEXT("Sion/Sion_Animation_Add.dat"));
-		break;
-
+			lstrcat(pAnimationDataFilePath, TEXT("Sion/Sion_Animation_Add.dat"));
+			break;
 		case MODEL_BERSERKER:
-		lstrcat(pAnimationDataFilePath, TEXT("Berserker/Berserker_Animation_Add.dat"));
-		break;
-
+			lstrcat(pAnimationDataFilePath, TEXT("Berserker/Berserker_Animation_Add.dat"));
+			break;
 		case MODEL_HAWK:
-		lstrcat(pAnimationDataFilePath, TEXT("Hawk/Hawk_Animation_Add.dat"));
-		break;
-
+			lstrcat(pAnimationDataFilePath, TEXT("Hawk/Hawk_Animation_Add.dat"));
+			break;
 		case MODEL_ASTRAL_DOUBT:
-		lstrcat(pAnimationDataFilePath, TEXT("Astral_Doubt/Astral_Doubt_Animation_Add.dat"));
-		break;
-
+			lstrcat(pAnimationDataFilePath, TEXT("Astral_Doubt/Astral_Doubt_Animation_Add.dat"));
+			break;
 		case MODEL_RINWELL:
-		lstrcat(pAnimationDataFilePath, TEXT("Rinwell/Rinwell_Animation_Add.dat"));
-		break;
-
+			lstrcat(pAnimationDataFilePath, TEXT("Rinwell/Rinwell_Animation_Add.dat"));
+			break;
 		case MODEL_LAW:
-		lstrcat(pAnimationDataFilePath, TEXT("Law/Law_Animation_Add.dat"));
-		break;
-		}*/
+			lstrcat(pAnimationDataFilePath, TEXT("Law/Law_Animation_Add.dat"));
+			break;
+		}
 
-		//CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
-		/*if (nullptr != pPlayerModel)
+		CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
+		if (nullptr != pPlayerModel)
 		{
-		_ulong dwByte = 0;
-		HANDLE hFile = CreateFile(pAnimationDataFilePath, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-		if (0 == hFile)
-		{
-		ERR_MSG(TEXT("Failed to Save : Animation_Add"));
-		return;
-		}*/
+			_ulong dwByte = 0;
+			HANDLE hFile = CreateFile(pAnimationDataFilePath, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+			if (0 == hFile)
+			{
+				ERR_MSG(TEXT("Failed to Save : Animation_Add"));
+				return;
+			}
 
-		/*for (auto& Animation : pPlayerModel->Get_Animations())
-		{
-		vector<_float> TickPerSeconds = Animation->Get_TickPerSeconds();
-		vector<_float> ChangeTimes = Animation->Get_ChangeTickTimes();
-		vector<ANIMEVENT> AnimEvent = Animation->Get_AnimEvents();
+			for (auto& Animation : pPlayerModel->Get_Animations())
+			{
+				vector<_float> TickPerSeconds = Animation->Get_TickPerSeconds();
+				vector<_float> ChangeTimes = Animation->Get_ChangeTickTimes();
+				vector<ANIMEVENT> AnimEvent = Animation->Get_Events();
 
-		_int TickPerSecondsSize = TickPerSeconds.size();
-		_int ChangeTimesSize = ChangeTimes.size();
-		_int EventsSize = AnimEvent.size();
+				_int TickPerSecondsSize = TickPerSeconds.size();
+				_int ChangeTimesSize = ChangeTimes.size();
+				_int EventsSize = AnimEvent.size();
 
-		_float fDuration = Animation->Get_Duration();
-		WriteFile(hFile, &fDuration, sizeof(_float), &dwByte, nullptr);
+				_float fDuration = Animation->Get_Duration();
+				WriteFile(hFile, &fDuration, sizeof(_float), &dwByte, nullptr);
 
-		WriteFile(hFile, &TickPerSecondsSize, sizeof(_int), &dwByte, nullptr);
-		for (_int i = 0; i < TickPerSecondsSize; ++i)
-		WriteFile(hFile, &TickPerSeconds[i], sizeof(_float), &dwByte, nullptr);
+				WriteFile(hFile, &TickPerSecondsSize, sizeof(_int), &dwByte, nullptr);
+				for (_int i = 0; i < TickPerSecondsSize; ++i)
+					WriteFile(hFile, &TickPerSeconds[i], sizeof(_float), &dwByte, nullptr);
 
-		WriteFile(hFile, &ChangeTimesSize, sizeof(_int), &dwByte, nullptr);
-		for (_int i = 0; i < ChangeTimesSize; ++i)
-		WriteFile(hFile, &ChangeTimes[i], sizeof(_float), &dwByte, nullptr);
+				WriteFile(hFile, &ChangeTimesSize, sizeof(_int), &dwByte, nullptr);
+				for (_int i = 0; i < ChangeTimesSize; ++i)
+					WriteFile(hFile, &ChangeTimes[i], sizeof(_float), &dwByte, nullptr);
 
-		WriteFile(hFile, &EventsSize, sizeof(_int), &dwByte, nullptr);
-		for (_int i = 0; i < EventsSize; ++i)
-		WriteFile(hFile, &AnimEvent[i], sizeof(ANIMEVENT), &dwByte, nullptr);
-		}*/
+				WriteFile(hFile, &EventsSize, sizeof(_int), &dwByte, nullptr);
+				for (_int i = 0; i < EventsSize; ++i)
+					WriteFile(hFile, &AnimEvent[i], sizeof(ANIMEVENT), &dwByte, nullptr);
+			}
 
-		/*CloseHandle(hFile);
-		}*/
+			CloseHandle(hFile);
+		}
 
-		//m_isSaveComplete = true;
+		m_isSaveComplete = true;
+	}
+
+	if (m_isSaveComplete)
+	{
+		ImGui::Begin("Save Animation", &m_isSaveComplete);
+
+		ImGui::Text("Save Complete");
+
+		if (ImGui::Button("Close"))
+			m_isSaveComplete = false;
+
+		ImGui::End();
 	}
 
 	if (m_isLoad)
@@ -5963,9 +5986,46 @@ void CImgui_Manager::Set_Animation()
 			Safe_Delete_Array(pBoneItems);
 
 			if (ImGui::Button("Weapon"))
-			{
+				m_isWeaponWindow = true;
+		}
 
+		if (m_isWeaponWindow)
+		{
+			ImGui::Begin("Weapon", &m_isWeaponWindow);
+
+			char** pWeapon = new char*[m_WeaponObj.size()];
+
+			for (_int i = 0; i < m_WeaponObj.size(); ++i)
+				pWeapon[i] = m_WeaponObj[i];
+
+			if (ImGui::ListBox("Weapon List", &m_iWeaponChoice, pWeapon, m_WeaponObj.size()))
+			{
+				CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
+				if (nullptr != pPlayerModel)
+				{
+					_tchar ModelName[MAX_PATH] = TEXT("");
+					MultiByteToWideChar(CP_ACP, 0, m_WeaponObj[m_iWeaponChoice], (int)strlen(m_WeaponObj[m_iWeaponChoice]), ModelName, MAX_PATH);
+
+					_tchar ModelTag[MAX_PATH] = TEXT("Prototype_Component_Model_");
+
+					lstrcat(ModelTag, ModelName);
+
+					vector<CHierarchyNode*> ModelBones = pPlayerModel->Get_Bones();
+
+					if (-1 != m_iBoneChoice)
+						((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->Ready_Parts(ModelBones[m_iBoneChoice]->Get_Name(), ModelTag);
+				}
 			}
+
+			Safe_Delete_Array(pWeapon);
+
+			if (ImGui::Button("Close"))
+			{
+				m_iWeaponChoice = -1;
+				m_isWeaponWindow = false;
+			}
+
+			ImGui::End();
 		}
 
 		if (ImGui::CollapsingHeader("Animation", TreeNodeFlags))
@@ -6019,11 +6079,240 @@ void CImgui_Manager::Set_Animation()
 
 			if (ImGui::Button("Animation Edit"))
 				m_isAnimationEdit = true;
-
+				
 			ImGui::SameLine();
 
 			if (ImGui::Button("Animation Event"))
 				m_isEventWindow = true;
+		}
+
+		if (m_isAnimationEdit)
+		{
+			ImGui::Begin("Animation Edit", &m_isAnimationEdit);
+
+			CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
+			if ((nullptr != pPlayerModel) && (-1 != m_iAnimationChoice))
+			{
+				CAnimation* ChoiceModelAnimation = pPlayerModel->Get_Animations()[m_iAnimationChoice];
+
+				vector<_float> TimeVector = ChoiceModelAnimation->Get_ChangeTickTimes();
+				vector<_float> TickVector = ChoiceModelAnimation->Get_TickPerSeconds();
+
+				char** pTime = new char*[TimeVector.size()];
+				char** pTick = new char*[TickVector.size()];
+
+				for (_int i = 0; i < TimeVector.size(); ++i)
+				{
+					pTime[i] = new char[MAX_PATH];
+					snprintf(pTime[i], MAX_PATH, "%f", TimeVector[i]);
+				}
+
+				for (_int i = 0; i < TickVector.size(); ++i)
+				{
+					pTick[i] = new char[MAX_PATH];
+					snprintf(pTick[i], MAX_PATH, "%f", TickVector[i]);
+				}
+
+				if (ImGui::ListBox("Time", &m_iTimeChoice, pTime, TimeVector.size()))
+				{
+					m_iTickChoice = m_iTimeChoice;
+
+					m_fAnimationTickTime = TimeVector[m_iTimeChoice];
+					m_fAnimationTick = TickVector[m_iTimeChoice];
+				}
+
+				if (ImGui::ListBox("TickPerSecond", &m_iTickChoice, pTick, TickVector.size()))
+				{
+					m_iTimeChoice = m_iTickChoice;
+
+					m_fAnimationTickTime = TimeVector[m_iTickChoice];
+					m_fAnimationTick = TickVector[m_iTickChoice];
+				}
+
+				ImGui::DragFloat("Playing Time", &m_fAnimationTickTime, 0.05f, 0.f, m_fAnimationDuration);
+				ImGui::DragFloat("Playing TickPerSecond", &m_fAnimationTick, 0.05f, 0.f, 100.f);
+
+				_float fOriginalTickPerSecond = ChoiceModelAnimation->Get_OriginalTickPerSecond();
+				ImGui::InputFloat("Original TickPerSecond", &fOriginalTickPerSecond);
+
+				if (ImGui::Button("Add"))
+					ChoiceModelAnimation->Add_TickPerSecond(m_fAnimationTickTime, m_fAnimationTick);
+				ImGui::SameLine();
+				if (ImGui::Button("Fix"))
+					ChoiceModelAnimation->Fix_TickPerSecond(m_iTimeChoice, m_fAnimationTickTime, m_fAnimationTick);
+				ImGui::SameLine();
+				if (ImGui::Button("Delete"))
+				{
+					ChoiceModelAnimation->Delete_TickPerSecond(m_iTimeChoice);
+
+					m_fAnimationTickTime = 0.f;
+					m_fAnimationTick = 0.f;
+				}
+
+				for (_int i = 0; i < TimeVector.size(); ++i)
+					Safe_Delete_Array(pTime[i]);
+				Safe_Delete_Array(pTime);
+
+				for (_int i = 0; i < TickVector.size(); ++i)
+					Safe_Delete_Array(pTick[i]);
+				Safe_Delete_Array(pTick);
+			}
+
+			if (ImGui::Button("Close"))
+			{
+				m_iTickChoice = -1;
+				m_iTimeChoice = -1;
+
+				m_isAnimationEdit = false;
+			}
+			ImGui::End();
+		}
+
+		if (m_isEventWindow)
+		{
+			m_isEventWindow = true;
+			ImGui::Begin("Event", &m_isEventWindow);
+
+			CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
+			if ((nullptr != pPlayerModel) && (-1 != m_iAnimationChoice))
+			{
+				CAnimation* ChoiceModelAnimation = pPlayerModel->Get_Animations()[m_iAnimationChoice];
+
+				vector<ANIMEVENT> AnimEventVector = ChoiceModelAnimation->Get_Events();
+				_int iAnimEvents = AnimEventVector.size();
+
+				char** pStartTime = new char*[iAnimEvents];
+				char** pEndTime = new char*[iAnimEvents];
+				char** pEventType = new char*[iAnimEvents];
+
+				for (_int i = 0; i < iAnimEvents; ++i)
+				{
+					pStartTime[i] = new char[MAX_PATH];
+					snprintf(pStartTime[i], MAX_PATH, "%f", AnimEventVector[i].fStartTime);
+				}
+
+				for (_int i = 0; i < iAnimEvents; ++i)
+				{
+					pEndTime[i] = new char[MAX_PATH];
+					snprintf(pEndTime[i], MAX_PATH, "%f", AnimEventVector[i].fEndTime);
+				}
+
+				for (_int i = 0; i < iAnimEvents; ++i)
+				{
+					switch (AnimEventVector[i].eType)
+					{
+					case ANIMEVENT::EVENT_SOUND:
+						pEventType[i] = "EVENT_SOUND";
+						break;
+					case ANIMEVENT::EVENT_EFFECT:
+						pEventType[i] = "EVENT_EFFECT";
+						break;
+					case ANIMEVENT::EVENT_COLLIDER:
+						pEventType[i] = "EVENT_COLLIDER";
+						break;
+					case ANIMEVENT::EVENT_STATE:
+						pEventType[i] = "EVENT_STATE";
+						break;
+					case ANIMEVENT::EVENT_INPUT:
+						pEventType[i] = "EVENT_INPUT";
+						break;
+					}
+				}
+
+				if (ImGui::ListBox("Event Start", &m_iEventChoice, pStartTime, iAnimEvents))
+				{
+					m_fEventStartTime = AnimEventVector[m_iEventChoice].fStartTime;
+					m_fEventEndTime = AnimEventVector[m_iEventChoice].fEndTime;
+				}
+				if (ImGui::ListBox("Event End", &m_iEventChoice, pEndTime, iAnimEvents))
+				{
+					m_fEventStartTime = AnimEventVector[m_iEventChoice].fStartTime;
+					m_fEventEndTime = AnimEventVector[m_iEventChoice].fEndTime;
+				}
+				if (ImGui::ListBox("Event Type", &m_iEventChoice, pEventType, iAnimEvents))
+				{
+					m_fEventStartTime = AnimEventVector[m_iEventChoice].fStartTime;
+					m_fEventEndTime = AnimEventVector[m_iEventChoice].fEndTime;
+				}
+
+				ImGui::DragFloat("Start Time", &m_fEventStartTime, 0.05f, 0.f, m_fAnimationDuration);
+				ImGui::DragFloat("End Time", &m_fEventEndTime, 0.05f, 0.f, m_fAnimationDuration);
+
+				static char szEventName[MAX_PATH] = "";
+				if (-1 != m_iEventChoice && m_iEventChoice < AnimEventVector.size())
+					memcpy(szEventName, AnimEventVector[m_iEventChoice].szName, sizeof(char) * MAX_PATH);
+
+				ImGui::SetNextItemWidth(175);
+				ImGui::InputText("##Event Tag", szEventName, MAX_PATH);
+
+				ImGui::RadioButton("Event_Sound", &m_iEventType, 0);
+				ImGui::SameLine();
+				ImGui::RadioButton("Event_Effect", &m_iEventType, 1);
+				ImGui::SameLine();
+				ImGui::RadioButton("Event_Collider", &m_iEventType, 2);
+				ImGui::RadioButton("Event_State", &m_iEventType, 3);
+				ImGui::SameLine();
+				ImGui::RadioButton("Event_Input", &m_iEventType, 4);
+
+				ImGui::Text("Event Name");
+				static char cEventName[MAX_PATH] = "";
+				ImGui::SetNextItemWidth(175);
+				ImGui::InputText("##InputEvent", cEventName, MAX_PATH);
+
+				if (ImGui::Button("Add"))
+				{
+					ANIMEVENT AnimEvent;
+					ZeroMemory(&AnimEvent, sizeof(ANIMEVENT));
+
+					AnimEvent.eType = (ANIMEVENT::EVENTTYPE)m_iEventType;
+					AnimEvent.fStartTime = m_fEventStartTime;
+					AnimEvent.fEndTime = m_fEventEndTime;
+					memcpy(AnimEvent.szName, cEventName, sizeof(char) * MAX_PATH);
+
+					ChoiceModelAnimation->Add_Event(AnimEvent);
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Fix"))
+				{
+					ANIMEVENT AnimEvent;
+					ZeroMemory(&AnimEvent, sizeof(ANIMEVENT));
+
+					AnimEvent.eType = (ANIMEVENT::EVENTTYPE)m_iEventType;
+					AnimEvent.fStartTime = m_fEventStartTime;
+					AnimEvent.fEndTime = m_fEventEndTime;
+					memcpy(AnimEvent.szName, cEventName, sizeof(char) * MAX_PATH);
+
+					ChoiceModelAnimation->Fix_Event(m_iEventChoice, AnimEvent);
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Delete"))
+				{
+					ChoiceModelAnimation->Delete_Event(m_iEventChoice);
+
+					m_fEventStartTime = 0.f;
+					m_fEventEndTime = 0.f;
+					m_iEventType = ANIMEVENT::EVENTTYPE::EVENT_END;
+					m_iEventChoice = -1;
+				}
+
+				for (_int i = 0; i < iAnimEvents; ++i)
+				{
+					Safe_Delete_Array(pStartTime[i]);
+					Safe_Delete_Array(pEndTime[i]);
+				}
+
+				Safe_Delete_Array(pStartTime);
+				Safe_Delete_Array(pEndTime);
+				Safe_Delete_Array(pEventType);
+			}
+
+			if (ImGui::Button("Close"))
+			{
+				m_isEventWindow = false;
+				m_iEventChoice = -1;
+			}
+
+			ImGui::End();
 		}
 	}
 }

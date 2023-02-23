@@ -109,6 +109,10 @@ CPlayerState * CJumpState::HandleInput()
 			return new CDodgeState(m_pOwner, DIR_BACKWARD, m_fTime);
 		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_LSHIFT) && m_bIsFly)
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_LSHIFT) && !m_bIsFly)
+			return new CDodgeState(m_pOwner, DIR_END, m_fTime);
 	}
 
 	if (JUMP_IDLE != m_eJumpType)
@@ -214,9 +218,6 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 {
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner->Get_SPHERECollider()))
-		return new CHitState(m_pOwner, m_fTime);
-
 	switch (m_eStateType)
 	{
 	case Client::STATETYPE_START:

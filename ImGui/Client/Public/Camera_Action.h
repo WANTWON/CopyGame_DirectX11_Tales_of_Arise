@@ -38,6 +38,7 @@ private:
 public:
 	void Add_CamData(TOOLDESC CamDesc);
 	void Set_CamData(_int iIndex, TOOLDESC CamDesc) { memcpy(&m_CamDatas[iIndex], &CamDesc, sizeof(TOOLDESC)); }
+	void Set_PositionToCurrentData(_int iIndex);
 	TOOLDESC Get_CamData(_int iIndex) { return m_CamDatas[iIndex]; }
 	vector<TOOLDESC> Get_AllCamData() { return m_CamDatas; }
 	void Remove_Camdata(_int iIndex) { m_CamDatas.erase(m_CamDatas.begin() + iIndex); };
@@ -48,6 +49,7 @@ public:
 	void					Set_Play(_bool type);
 	void					Set_PlayTime(_float fTime) { m_fPlayTime = fTime; m_fTime = 0.f; }
 	_bool					Get_Play() { return m_bPlay; }
+	_bool					Get_Finished() { return m_bFinished; }
 	_float					Get_PlayTime() { return m_fPlayTime; }
 	_tchar*					Get_CameraName() { return m_CameraName; }
 	int						PlayCamera(_float fTimeDelta);
@@ -72,6 +74,7 @@ private:
 	_int		m_iIndex = 0;
 	_vector		m_vInitPosition;
 	_vector		m_vInitAt;
+	_bool		m_bFinished = false;
 
 	vector<TOOLDESC> m_CamDatas;
 

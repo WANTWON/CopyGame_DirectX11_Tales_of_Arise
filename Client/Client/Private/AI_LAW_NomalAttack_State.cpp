@@ -433,13 +433,13 @@ CCollider * AI_LAW_NomalAttack_State::Get_Collider(CCollider::TYPE eType, _float
 	switch (eType)
 	{
 	case Engine::CCollider::TYPE_AABB:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
-		break;
-	case Engine::CCollider::TYPE_OBB:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
-		break;
-	case Engine::CCollider::TYPE_SPHERE:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
+		break;										
+	case Engine::CCollider::TYPE_OBB:				
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+		break;										
+	case Engine::CCollider::TYPE_SPHERE:			
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 		break;
 	}
 

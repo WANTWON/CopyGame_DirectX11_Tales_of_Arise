@@ -397,11 +397,14 @@
     <Filter Include="02.GameObjects\01.Actor\02.NPC\SnowFieldNpc">
       <UniqueIdentifier>{ec4f57e9-3244-4a8c-b9e6-728d39635f29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\04.BossZone">
-      <UniqueIdentifier>{882c4b8d-339b-446a-b62f-4e2a6620b558}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\Common">
       <UniqueIdentifier>{05c5ecaa-3e29-4aa5-9462-792382ea51e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\05.BossZone">
+      <UniqueIdentifier>{882c4b8d-339b-446a-b62f-4e2a6620b558}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\04.City">
+      <UniqueIdentifier>{b1b916cb-4ac4-4ecd-8279-8da200cca2a3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1096,13 +1099,19 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_BossZone.h">
-      <Filter>01.Levels\04.BossZone</Filter>
+      <Filter>01.Levels\05.BossZone</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AI_LAW_AIRSKILLR.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AI_LAW_AIRSKILLF.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerPoseState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIPoseState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AI_BoostAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
@@ -1133,6 +1142,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\AI_Item_Use_State.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_City.h">
+      <Filter>01.Levels\04.City</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1791,7 +1803,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_BossZone.cpp">
-      <Filter>01.Levels\04.BossZone</Filter>
+      <Filter>01.Levels\05.BossZone</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
@@ -1801,6 +1813,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI_LAW_AIRSKILLF.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerPoseState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AIPoseState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AI_BoostAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
@@ -1831,6 +1849,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AI_Item_Use_State.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_City.cpp">
+      <Filter>01.Levels\04.City</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
