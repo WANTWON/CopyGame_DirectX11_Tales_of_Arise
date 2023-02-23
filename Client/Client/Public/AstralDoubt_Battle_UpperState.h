@@ -7,7 +7,7 @@ BEGIN(Astral_Doubt)
 class CBattle_UpperState : public CAstralDoubt_State
 {
 public:
-	CBattle_UpperState(class CAstralDoubt* pAstral_Doubt, STATE_ID ePreState = STATE_ID::STATE_END);
+	CBattle_UpperState(class CAstralDoubt* pAstral_Doubt, STATE_ID ePreState = STATE_ID::STATE_IDLE);
 
 	virtual CAstralDoubt_State* AI_Behaviour(_float fTimeDelta) override;
 	virtual CAstralDoubt_State* Tick(_float fTimeDelta) override;

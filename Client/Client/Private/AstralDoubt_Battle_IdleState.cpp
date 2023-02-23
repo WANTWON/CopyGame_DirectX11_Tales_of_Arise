@@ -18,7 +18,7 @@ CBattle_IdleState::CBattle_IdleState(CAstralDoubt* pAstralDoubt, STATE_ID  ePreS
 	m_ePreState_Id = ePreState;
 
 	m_fTimeDeltaAcc = 0;
-	m_fRandTime = ((rand() % 4000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 100) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CAstralDoubt_State * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
@@ -256,7 +256,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 	else
 	{
 		
-		if (m_fTarget_Distance > 24.f)
+		if (m_fTarget_Distance > 30.f)
 		{
 			if (m_ePreState_Id != CAstralDoubt_State::STATE_HEADBEAM)
 			{
@@ -288,164 +288,55 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 			else if (m_ePreState_Id == CAstralDoubt_State::STATE_HEADBEAM)
 			{
-				if(m_ePreState_Id == CAstralDoubt_State::STATE_SPEARMULTI)
-					return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-				else if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER);
-					return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
+				return new CBattleWalkState(m_pOwner);
 			}
 		}
 
-		else if (m_fTarget_Distance <= 24.f)
+		else if (m_fTarget_Distance <= 30.f)
 		{
-			if (m_fTarget_Distance <= 20.f)
+			_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			m_pOwner->Get_Transform()->LookAt(vPosition);
+			if (m_fTarget_Distance <= 14.f)
 			{
-				if (m_fTarget_Distance <= 6.f)
+
+				if (m_PreState_IsSpin == false)
 				{
-					if(m_PreState_IsSpin == false)
-						return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-					else
-					{
-						if (bIs_TargetInFront)
-						{
-							switch (m_ePreState_Id)
-							{
-							case CAstralDoubt_State::STATE_UPPER:
-							{
-								if (m_iRand == 0)
-									return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-								else if (m_iRand == 1)
-									return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-							}
-
-							case CAstralDoubt_State::STATE_SPEARMULTI:
-							{
-								if (m_iRand == 0)
-									return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-								else if (m_iRand == 1)
-									return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-							}
-
-							default:
-								break;
-							}
-						}
-						else
-						{
-							_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-							m_pOwner->Get_Transform()->LookAt(vPosition);
-
-							if (m_b_IsTargetInsight)
-							{
-								switch (m_ePreState_Id)
-								{
-								case CAstralDoubt_State::STATE_UPPER:
-								{
-									if (m_iRand == 0)
-										return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-									else if (m_iRand == 1)
-										return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-								}
-
-								case CAstralDoubt_State::STATE_SPEARMULTI:
-								{
-									if (m_iRand == 0)
-										return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-									else if (m_iRand == 1)
-										return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-								}
-
-								default:
-									break;
-								}
-							}
-						}
-							
-					}
+					return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_SPIN);
 				}
 
 				else
-				{ 
-					if (bIs_TargetInFront)
-					{
-						switch (m_ePreState_Id)
-						{
-						case CAstralDoubt_State::STATE_UPPER:
-						{
-							if (m_iRand == 0)
-								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-							else if (m_iRand == 1)
-								return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-						}
-
-						case CAstralDoubt_State::STATE_SPEARMULTI:
-						{
-							if (m_iRand == 0)
-								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-							else if (m_iRand == 1)
-								return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-						}
-
-						default:
-							break;
-						}
-					}
-					else
-					{
-						_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-						m_pOwner->Get_Transform()->LookAt(vPosition);
-
-						switch (m_ePreState_Id)
-						{
-						case CAstralDoubt_State::STATE_UPPER:
-						{
-							if (m_iRand == 0)
-								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-							else if (m_iRand == 1)
-								return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-						}
-
-						case CAstralDoubt_State::STATE_SPEARMULTI:
-						{
-							if (m_iRand == 0)
-								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-							else if (m_iRand == 1)
-								return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-						}
-
-						default:
-							break;
-						}
-					
-
-						/*else if(m_b_IsTargetInsight == false)
-						{
-							_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-							m_pOwner->Get_Transform()->LookAt(vPosition);
-
-							switch (m_ePreState_Id)
-							{
-							case CAstralDoubt_State::STATE_UPPER:
-								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-							case CAstralDoubt_State::STATE_SPEARMULTI:
-								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-
-
-							default:
-								break;
-							}
-						}*/
-					}
+				{
+					return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_FOOTPRESS);
 				}
 			}
-
-			
-			
 			else 
 			{
-				if (m_ePreState_Id == CAstralDoubt_State::STATE_SPEARMULTI)
-					return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-				else if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER);
-					return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
+				switch (m_ePreState_Id)
+				{
+				case CAstralDoubt_State::STATE_UPPER:
+				{
+					/*if (m_iRand == 0)*/
+					return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+					/*else if (m_iRand == 1)
+						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_FOOTPRESS);
+					*/	//return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
+				}
+
+				case CAstralDoubt_State::STATE_SPEARMULTI:
+				{
+					//if (m_iRand == 0)
+					return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
+					/*else if (m_iRand == 1)
+						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_FOOTPRESS);
+						*///return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
+				}
+
+				default:
+					break;
+
+				}
+
+
 			}
 
 		}
@@ -472,6 +363,9 @@ void CBattle_IdleState::Enter()
 
 	if (m_ePreState_Id == STATE_ID::STATE_SPIN)
 		m_PreState_IsSpin = true;
+
+	if (m_ePreState_Id == STATE_ID::STATE_FOOTPRESS)
+		m_PreState_FootPress = true;
 }
 
 void CBattle_IdleState::Exit()

@@ -344,6 +344,7 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_SPEAR_RUSH_START:
 	case ATTACK_SPEAR_RUSH_LOOP:
 	case ATTACK_SPEAR_RUSH_END:
+	case ATTACK_SPEAR_HANDSTAND_FOOTPRESS:
 		return false;
 	}
 

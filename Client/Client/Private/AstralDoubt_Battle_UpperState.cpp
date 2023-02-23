@@ -282,9 +282,12 @@ CAstralDoubt_State * CBattle_UpperState::LateTick(_float fTimeDelta)
 
 void CBattle_UpperState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_IDLE;
 
+
+	
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_IN_OUT_UPPER);
+
+	
 }
 
 void CBattle_UpperState::Exit()

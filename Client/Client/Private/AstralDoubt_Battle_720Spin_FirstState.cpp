@@ -345,7 +345,7 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::LateTick(_float fTimeDelta)
 void CBattle_720Spin_FirstState::Enter()
 {
 	
-	m_eStateId = STATE_ID::STATE_IDLE;
+	
 	
 //	if(m_ePreState_Id == CAstralDoubt_State::STATE_720SPIN_START)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SWING_360);
