@@ -4,6 +4,9 @@
 #include "GameInstance.h"
 #include "AstralDoubt_Battle_WalkState.h"
 #include "AstralDoubt_Battle_720Spin_FirstState.h"
+#include "AstralDoubt_Battle_IdleState.h"
+#include "AstralDoubt_Battle_SpearMultiState.h"
+#include "AstralDoubt_Battle_UpperState.h"
 
 using namespace Astral_Doubt;
 
@@ -13,7 +16,7 @@ CBattle_HeadBeamState::CBattle_HeadBeamState(CAstralDoubt* pAstralDoubt, STATE_I
 	m_ePreState_Id = ePreState;
 
 	m_fTimeDeltaAcc = 0;
-	m_fIdleTime = ((rand() % 4000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 4000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CAstralDoubt_State * CBattle_HeadBeamState::AI_Behaviour(_float fTimeDelta)
@@ -23,38 +26,144 @@ CAstralDoubt_State * CBattle_HeadBeamState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 {
-	Find_Target();
-	m_fTarget_Distance = m_fOutPutTarget_Distance;
+
 
   	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	m_vCurTargetPos = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+	
+	CBaseObj* pOrigin_DamageCause = nullptr;
+	pOrigin_DamageCause = m_pOwner->Get_OrginDamageCauser();
 
-	//if (pDamageCauser == nullptr)
-	//{
-	//	if (m_pCurTarget == nullptr)
-	//	{
-	//		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
-	//		if (m_pCurTarget == nullptr)
-	//			return nullptr;
 
-	//		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//	}
-	//	else
-	//	{
-	//		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//	}
+	if (m_pCurTarget == nullptr)
+	{
+		if (pOrigin_DamageCause == nullptr)
+		{
+			CBaseObj* pDamageCauser = nullptr;
+			pDamageCauser = m_pOwner->Get_DamageCauser();
 
-	//}
-	//else
-	//{
-	//	m_pCurTarget = pDamageCauser;
-	//	m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//	m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
-	//}
+			if (pDamageCauser == nullptr)
+			{
+				m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+			}
+
+			else if (pDamageCauser != nullptr)
+			{
+				CBaseObj* pDamageCauser = nullptr;
+				pDamageCauser = m_pOwner->Get_DamageCauser();
+				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
+
+				m_pCurTarget = pDamageCauser;
+
+				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+			}
+		}
+
+		else if (pOrigin_DamageCause != nullptr)
+		{
+			if (pOrigin_DamageCause->Get_Info().fCurrentHp <= 0)
+			{
+				CBaseObj* pDamageCauser = nullptr;
+				pDamageCauser = m_pOwner->Get_DamageCauser();
+
+				if (pDamageCauser == nullptr)
+				{
+					CBaseObj* pCorpseNearby = nullptr;
+					pCorpseNearby = m_pOwner->Find_MinDistance_Target();
+
+					if (pCorpseNearby->Get_Info().fCurrentHp > 0)
+					{
+						m_pCurTarget = pCorpseNearby;
+						m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+						m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+					}
+
+					else
+						return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
+
+				}
+
+				else if (pDamageCauser != nullptr)
+				{
+					if (pDamageCauser->Get_Info().fCurrentHp > 0)
+					{
+						pDamageCauser = m_pOwner->Get_DamageCauser();
+						m_pOwner->Set_OrginDamageCauser(pDamageCauser);
+
+						m_pCurTarget = pDamageCauser;
+
+						m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+						m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+					}
+
+					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
+				}
+			}
+
+			else if (pOrigin_DamageCause->Get_Info().fCurrentHp > 0)
+			{
+				m_pCurTarget = pOrigin_DamageCause;
+				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+			}
+		}
+	}
+
+	else
+	{
+		if (m_pCurTarget->Get_Info().fCurrentHp <= 0)
+		{
+			CBaseObj* pDamageCauser = nullptr;
+			pDamageCauser = m_pOwner->Get_DamageCauser();
+
+			if (pDamageCauser == nullptr)
+			{
+				CBaseObj* pCorpseNearby = nullptr;
+				pCorpseNearby = m_pOwner->Find_MinDistance_Target();
+
+				if (pCorpseNearby->Get_Info().fCurrentHp > 0)
+				{
+					m_pCurTarget = pCorpseNearby;
+					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+				}
+
+				else
+					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
+			}
+
+			else if (pDamageCauser != nullptr)
+			{
+				if (pDamageCauser->Get_Info().fCurrentHp > 0)
+				{
+					pDamageCauser = m_pOwner->Get_DamageCauser();
+					m_pOwner->Set_OrginDamageCauser(pDamageCauser);
+
+					m_pCurTarget = pDamageCauser;
+
+					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+				}
+
+				else
+					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
+				//return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_LOOKOUT);
+			}
+		}
+
+		else if (m_pCurTarget->Get_Info().fCurrentHp > 0)
+		{
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+	}
+
+
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -84,7 +193,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 					ColliderDesc.vScale = _float3(1.5f, 1.0f, 60.1f);
 					ColliderDesc.vPosition = _float3(0.f, 0.f, -30.f);
 
-					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_BOSS, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
 				}
 				else
@@ -113,10 +222,40 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 	
+	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (m_bUpdatTargetPos)
-		AimTarget(fTimeDelta);
+	if (m_fTimeDeltaAcc > m_fRandTime)
+		m_iRand = rand() % 3;
 
+	_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+	m_pOwner->Get_Transform()->LookAt(vPosition);
+
+	//if (m_bUpdatTargetPos)
+	//	AimTarget(fTimeDelta);
+
+
+	if (m_bIsAnimationFinished)
+	{
+		if (m_fTarget_Distance <= 10.f)
+		{
+			switch (m_iRand)
+			{
+			case 0:
+				return new CBattle_720Spin_FirstState(m_pOwner);
+			case 1:
+				return new CBattle_SpearMultiState(m_pOwner);
+			case 2:
+				return new CBattle_UpperState(m_pOwner);
+
+			default:
+				break;
+			}
+			
+		}
+
+		else
+			return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_HEADBEAM);
+	}
 
 	if (nullptr != m_pAtkColliderCom)
 	{
@@ -126,7 +265,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 		{
 			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 1, m_pOwner);
 		}
 	}
 
@@ -200,16 +339,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 			//}
 		//}
 			
-	else if (m_bIsAnimationFinished)
-	{
-		if (m_fTarget_Distance <= 8.f)
-		{
-			return new CBattle_720Spin_FirstState(m_pOwner);
-		}
-
-		else
-		return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_HEADBEAM);
-	}
 
 #ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
