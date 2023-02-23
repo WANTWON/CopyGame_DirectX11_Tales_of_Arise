@@ -3,6 +3,7 @@
 #include "AstralDoubt_Battle_720Spin_FirstState.h"
 #include "GameInstance.h"
 #include "AstralDoubt_Battle_WalkState.h"
+#include "AstralDoubt_Battle_IdleState.h"
 
 using namespace Astral_Doubt;
 
@@ -312,7 +313,7 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-			return new CBattleWalkState(m_pOwner);
+			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_SPIN);
 	}
 
 #ifdef _DEBUG

@@ -26,7 +26,7 @@ private:
 	STATE_ID	m_ePreTurn_Id;
 
 
-	_uint		m_iRand = 0.f;
+	_uint		m_iRand = 0;
 	_float		m_fRandTime = 0.f;
 	_float		m_fDot;
 

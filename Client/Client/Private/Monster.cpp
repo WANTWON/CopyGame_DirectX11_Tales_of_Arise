@@ -461,7 +461,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	
 	++m_tStats.m_iHitcount;
 	//if (m_tStats.m_iHitcount >= 200) //원본코드
-	if (m_tStats.m_iHitcount >= 150)
+	if (m_tStats.m_iHitcount >= 80)
 	{
 		m_bDownState = true;
 		m_tStats.m_iHitcount = 0;
