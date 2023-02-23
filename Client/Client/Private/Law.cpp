@@ -34,6 +34,10 @@ HRESULT CLaw::Initialize(void * pArg)
 	m_tInfo.iDamage = 100;
 	m_tInfo.fCurrentBoostGuage = 50.f;
 
+	m_tInfo.iCurrentExp = 500;
+	m_tInfo.iMaxExp = 1000;
+	m_tInfo.iLevel = 47;
+
 	return S_OK;
 }
 
