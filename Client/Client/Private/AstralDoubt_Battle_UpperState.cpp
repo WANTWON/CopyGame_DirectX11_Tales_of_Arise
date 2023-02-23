@@ -7,6 +7,7 @@
 #include "AstralDoubt_DetectStopState.h"
 #include "AstralDoubt_Battle_WalkState.h"
 #include "AstralDoubt_Battle_720Spin_FirstState.h"
+#include "AstralDoubt_Battle_IdleState.h"
 
 using namespace Astral_Doubt;
 
@@ -246,13 +247,13 @@ CAstralDoubt_State * CBattle_UpperState::LateTick(_float fTimeDelta)
 	
 	if (m_bIsAnimationFinished)
 	{
-		if (m_fTarget_Distance <= 10.f)
+		/*if (m_fTarget_Distance <= 10.f)
 		{
 			return new CBattle_720Spin_FirstState(m_pOwner);
 		}
 
-		else
-		return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_UPPER);
+		else*/
+		return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_UPPER);
 	}
 
 #ifdef _DEBUG

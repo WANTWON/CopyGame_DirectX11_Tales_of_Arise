@@ -122,7 +122,7 @@ HRESULT CAstralDoubt::Ready_Components(void * pArg)
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(7.f, 7.f, 7.f);
+	ColliderDesc.vScale = _float3(8.f, 8.f, 8.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))

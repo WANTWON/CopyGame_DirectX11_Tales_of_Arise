@@ -23,7 +23,26 @@ CAstralDoubt_State * CBattle_RushState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	
+	
+	switch (m_ePreState_Id)
+	{
+	case CAstralDoubt_State::STATE_RUSH_START:
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+		break;
+
+	case CAstralDoubt_State::STATE_RUSH_LOOP:
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
+		break;
+
+	case CAstralDoubt_State::STATE_RUSH_END:
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
+		break;
+
+	default:
+		break;
+	}
+
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -74,6 +93,7 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 
 	m_fTimeDeltaAcc += fTimeDelta;
 
+
 	if (m_bIsAnimationFinished)
 	{
 		if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_START)
@@ -89,13 +109,13 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 	}
 
 
-
 	return nullptr;
 }
 
 void CBattle_RushState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
+
 
 	if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_START)
 	{
@@ -110,8 +130,6 @@ void CBattle_RushState::Enter()
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_END);
 
 
-
-	
 }
 
 void CBattle_RushState::Exit()

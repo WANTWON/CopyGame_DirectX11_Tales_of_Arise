@@ -392,17 +392,27 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 							return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
 						else
 						{
-							switch (m_iRand)
+							if(m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
+								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
+
+							else if(CAstralDoubt_State::STATE_SPEARMULTI)
+								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
+
+							else
 							{
-							case 0:
-								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-							case 1:
-								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+								switch (m_iRand)
+								{
+								case 0:
+									return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
 
+								case 1:
+									return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
 
-							default:
-								break;
+								default:
+									break;
+								}
 							}
+							
 						}
 					}
 
@@ -410,17 +420,25 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 					{
 						if (bIs_TargetInFront == true)
 						{
-							switch (m_iRand)
+							if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
+								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
+
+							else if (CAstralDoubt_State::STATE_SPEARMULTI)
+								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
+
+							else
 							{
-							case 0:
-								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-							case 1:
-								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+								switch (m_iRand)
+								{
+								case 0:
+									return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
 
+								case 1:
+									return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
 
-
-							default:
-								break;
+								default:
+									break;
+								}
 							}
 						}
 
@@ -428,15 +446,25 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 						{
 							m_pOwner->Get_Transform()->LookAt(vPosition);
 
-							switch (m_iRand)
-							{
-							case 0:
-								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-							case 1:
-								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+							if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
+								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
 
-							default:
-								break;
+							else if (CAstralDoubt_State::STATE_SPEARMULTI)
+								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
+
+							else
+							{
+								switch (m_iRand)
+								{
+								case 0:
+									return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
+
+								case 1:
+									return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
+
+								default:
+									break;
+								}
 							}
 						}
 					}
