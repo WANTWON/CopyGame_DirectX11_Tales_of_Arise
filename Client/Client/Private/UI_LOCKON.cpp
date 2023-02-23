@@ -289,8 +289,8 @@ HRESULT CUI_LOCKON::Render()
 	}
 	else
 	{
-		m_fSize.x = 80.f;
-		m_fSize.y = 80.f;
+		m_fSize.x = 80.f * m_bStrikeScaler;
+		m_fSize.y = 80.f * m_bStrikeScaler;
 		//	m_fPosition.x -= 3.f;
 
 		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);

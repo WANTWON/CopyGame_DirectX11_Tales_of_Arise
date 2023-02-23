@@ -33,6 +33,7 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;
 
+
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
 		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -274,11 +275,29 @@ void CAI_BoostAttack::Enter()
 
 void CAI_BoostAttack::Exit()
 {
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
+	for (auto& iter : m_pEffects2)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
+	for (auto& iter : m_pEffects3)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)
 		{
-			if (iter != nullptr)
+			if (iter != nullptr && iter->Get_PreDead() )
 			{
 				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
 				if (pParticleSystem != nullptr)

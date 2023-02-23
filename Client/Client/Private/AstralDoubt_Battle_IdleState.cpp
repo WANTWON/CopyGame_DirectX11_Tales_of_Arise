@@ -290,7 +290,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 			{
 				if(m_ePreState_Id == CAstralDoubt_State::STATE_SPEARMULTI)
 					return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-				else if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER);
+				else if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
 					return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
 			}
 		}
@@ -404,7 +404,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 			{
 				if (m_ePreState_Id == CAstralDoubt_State::STATE_SPEARMULTI)
 					return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-				else if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER);
+				else if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
 					return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
 			}
 
