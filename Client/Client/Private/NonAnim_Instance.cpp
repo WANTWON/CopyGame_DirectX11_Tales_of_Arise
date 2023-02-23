@@ -53,9 +53,9 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	m_fRadius = Check_CullingRadius();
+	//m_fRadius = Check_CullingRadius();
 
-	m_pModelCom->Update(m_fRadius);
+	//m_pModelCom->Update(m_fRadius);
 
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 
