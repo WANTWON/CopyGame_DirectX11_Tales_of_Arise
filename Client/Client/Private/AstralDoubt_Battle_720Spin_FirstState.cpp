@@ -266,7 +266,7 @@ for (auto& pEvent : pEvents)
 				ColliderDesc.vScale = _float3(30.f, 30.f, 30.f);
 				ColliderDesc.vPosition = _float3(0.f, -10.f, 0.f);
 
-				m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_BOSS, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+				m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 				m_pAtkColliderCom->Update(matWorld);
 				//pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_ASU_PUSH, m_pOwner);
 			}

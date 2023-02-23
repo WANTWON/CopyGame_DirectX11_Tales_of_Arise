@@ -9,6 +9,7 @@
 #include "IceWolfTurnLeftState.h"
 #include "IceWolfBattle_IdleState.h"
 #include "IceWolfBattle_SomerSaultState.h"
+#include "IceWolfBattle_HowLingState.h"
 
 using namespace IceWolf;
 
@@ -17,7 +18,7 @@ CBattle_RunState::CBattle_RunState(class CIce_Wolf* pIceWolf, STATE_ID ePreState
 	m_pOwner = pIceWolf;
 	m_ePreState_Id = ePreState;
 	m_fTimeDeltaAcc = 0;
-	m_fRandTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 200) *0.001f)*((rand() % 100) * 0.01f);
 	m_pCurTarget = pCurTarget;
 
 }
@@ -32,7 +33,138 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 
-	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+	CBaseObj* pOrigin_DamageCause = nullptr;
+	pOrigin_DamageCause = m_pOwner->Get_OrginDamageCauser();
+
+
+	if (m_pCurTarget == nullptr)
+	{
+		if (pOrigin_DamageCause == nullptr)
+		{
+			CBaseObj* pDamageCauser = nullptr;
+			pDamageCauser = m_pOwner->Get_DamageCauser();
+
+			if (pDamageCauser == nullptr)
+			{
+				m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+
+				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+			}
+
+			else if (pDamageCauser != nullptr)
+			{
+				CBaseObj* pDamageCauser = nullptr;
+				pDamageCauser = m_pOwner->Get_DamageCauser();
+				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
+
+				m_pCurTarget = pDamageCauser;
+
+				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+			}
+		}
+
+		else if (pOrigin_DamageCause != nullptr)
+		{
+			if (pOrigin_DamageCause->Get_Info().fCurrentHp <= 0)
+			{
+				CBaseObj* pDamageCauser = nullptr;
+				pDamageCauser = m_pOwner->Get_DamageCauser();
+
+				if (pDamageCauser == nullptr)
+				{
+					CBaseObj* pCorpseNearby = nullptr;
+					pCorpseNearby = m_pOwner->Find_MinDistance_Target();
+
+					if (pCorpseNearby->Get_Info().fCurrentHp > 0)
+					{
+						m_pCurTarget = pCorpseNearby;
+						m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+						m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+					}
+
+				}
+				//
+				else if (pDamageCauser != nullptr)
+				{
+					if (pDamageCauser->Get_Info().fCurrentHp > 0)
+					{
+						pDamageCauser = m_pOwner->Get_DamageCauser();
+						m_pOwner->Set_OrginDamageCauser(pDamageCauser);
+
+						m_pCurTarget = pDamageCauser;
+
+						m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+						m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+					}
+
+					return new CBattle_HowLingState(m_pOwner);
+				}
+			}
+
+			else if (pOrigin_DamageCause->Get_Info().fCurrentHp > 0)
+			{ 
+				m_pCurTarget = pOrigin_DamageCause;
+
+				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+			}
+		}
+	}
+
+	else
+	{
+		if (m_pCurTarget->Get_Info().fCurrentHp <= 0)
+		{
+			CBaseObj* pDamageCauser = nullptr;
+			pDamageCauser = m_pOwner->Get_DamageCauser();
+
+			if (pDamageCauser == nullptr)
+			{
+				CBaseObj* pCorpseNearby = nullptr;
+				pCorpseNearby = m_pOwner->Find_MinDistance_Target();
+
+				if (pCorpseNearby->Get_Info().fCurrentHp > 0)
+				{
+					m_pCurTarget = pCorpseNearby;
+					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+				}
+
+				else
+					return new CBattle_HowLingState(m_pOwner);
+			}
+
+			else if (pDamageCauser != nullptr)
+			{
+				int a = 0;
+				if (pDamageCauser->Get_Info().fCurrentHp > 0)
+				{
+					pDamageCauser = m_pOwner->Get_DamageCauser();
+					m_pOwner->Set_OrginDamageCauser(pDamageCauser);
+
+					m_pCurTarget = pDamageCauser;
+
+					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+				}
+
+				else
+					return new CBattle_HowLingState(m_pOwner);	
+			}
+		}
+
+		else if (m_pCurTarget->Get_Info().fCurrentHp > 0)
+		{	
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+	}
+
+	/////////02-22-1523//
+	/*CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
 	if (pDamageCauser == nullptr)
 	{
@@ -58,7 +190,9 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 		m_pCurTarget = pDamageCauser;
 		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
 		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
-	}
+	}*/
+
+
 
 	//if (m_pCurTarget == nullptr)
 	//{
@@ -132,15 +266,16 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 
 	else
 	{		
-		if (m_b_IsTargetInsight == true)
+		if (m_b_IsTargetInsight == true && m_bOnGoing_Rotation == false)
 		{
-			m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
-			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+			_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			m_pOwner->Get_Transform()->LookAt(vPosition);
+			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f);
 			//m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
 
 			if (m_fTarget_Distance <= 7.5f)
 			{
-				if (m_b_IsTargetInsight == true)
+				if (m_b_IsTargetInsight == true )
 				{
 					switch (m_iRand)
 					{
@@ -162,6 +297,7 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 		
 		else
 		{
+			m_bOnGoing_Rotation = true;
 			////회전 코드 
 			CTransform* pMonSterTransform = m_pOwner->Get_Transform();
 

@@ -346,7 +346,6 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		{
 			pBattleManager->Out_Monster(iter);
 			pBattleManager->Add_BattleMonster(iter);
-			iter->Set_IsActionMode(true);
 		}
 		else
 			pGameInstance->Out_GameObject(LEVEL_STATIC, TEXT("Layer_Monster"), iter);
@@ -439,7 +438,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Camera(const _tchar * pLayerTag)
 	ActionCameraDesc.CameraDesc.fNear = 0.1f;
 	ActionCameraDesc.CameraDesc.fFar = 1000.f;
 
-	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+	ActionCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 3.f;
 	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CameraAction"), LEVEL_BATTLE, pLayerTag, &ActionCameraDesc)))

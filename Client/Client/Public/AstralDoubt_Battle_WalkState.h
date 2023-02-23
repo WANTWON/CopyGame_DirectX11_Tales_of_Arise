@@ -20,6 +20,7 @@ public:
 
 
 private:
+	_uint m_iRand = 0;
 	_float m_fWalkMoveTimeAcc = 0.f;
 	_float  m_fMoveTime = 0;
 	STATE_ID	m_ePreState_Id;
@@ -28,7 +29,7 @@ private:
 	_bool  m_bTargetPickOn = false;
 	CCollider*  m_pAtkColliderCom = nullptr;
 	CCollider*	m_p2th_AtkColliderCom = nullptr;
-
+	
 
 };
 END

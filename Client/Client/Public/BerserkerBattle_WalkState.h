@@ -24,7 +24,7 @@ private:
 	_bool		m_bTargetSetting = false;
 	_float		m_fRedayAngryTimer = 0.f;
 	_float		m_fTarget_Distance;
-
+	_bool		m_b_IsTargetInsight = false;
 private:
 	_matrix m_StartMatrix;
 };
