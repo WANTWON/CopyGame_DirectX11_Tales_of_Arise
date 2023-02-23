@@ -3,7 +3,7 @@
 #include "AstralDoubt_Battle_RushState.h"
 #include "GameInstance.h"
 #include "AstralDoubt_Battle_WalkState.h"
-
+#include "AstralDoubt_Battle_IdleState.h"
 
 using namespace Astral_Doubt;
 
@@ -76,7 +76,7 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (m_ePreState_Id == CAstralDoubt_State::STATE_BE_DAMAGED)
+		if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_START)
 			return new CBattle_RushState(m_pOwner, CAstralDoubt_State::STATE_RUSH_LOOP);
 
 		else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_LOOP)
@@ -84,8 +84,8 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 			return new CBattle_RushState(m_pOwner, CAstralDoubt_State::STATE_RUSH_END);
 		}
 
-		else
-			return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_RUSH_START);
+		else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_END)
+			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
 	}
 
 
@@ -98,29 +98,27 @@ void CBattle_RushState::Enter()
 	m_eStateId = STATE_ID::STATE_IDLE;
 
 	if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_START)
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_LOOP);
+	{
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_START);
+	}
 
 	else if  (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_LOOP)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_LOOP);
 
-	else if (m_ePreState_Id == CAstralDoubt_State::STATE_BE_DAMAGED)
-	{
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_START);
-		m_pOwner->SetOff_BedamagedCount();
-		m_pOwner->Set_BedamageCount_Delay();
-	}
 
 	else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_END)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_END);
 
-	else
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_START);
+
 
 	
 }
 
 void CBattle_RushState::Exit()
 {
-	if (m_eStateId == Client::CAstralDoubt_State::STATE_BE_DAMAGED)
-		m_pOwner->SetOff_BedamageCount_Delay();
+	if (m_eStateId == Client::CAstralDoubt_State::STATE_RUSH_END)
+	{
+		m_pOwner->Set_FinishGoingDown();
+		m_pOwner->Set_FinishDownState();
+	}
 }
