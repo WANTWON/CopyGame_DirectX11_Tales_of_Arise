@@ -46,6 +46,9 @@ int CBullet::Tick(_float fTimeDelta)
 		if (pCamera->Get_CamMode() == CCamera_Dynamic::CAM_BATTLE_CLEAR)
 			return OBJ_DEAD;
 	}
+
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+		return OBJ_DEAD;
 	return OBJ_NOEVENT;
 }
 

@@ -85,7 +85,6 @@ CAIState * CAI_DodgeState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 			{
-				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
 				m_pOwner->On_JustDodge();
 
 				if (nullptr == m_pDodgeCollider)
@@ -106,7 +105,6 @@ CAIState * CAI_DodgeState::Tick(_float fTimeDelta)
 		{
 			if ((ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType) && (m_pOwner->Get_IsJustDodge() == true))
 			{
-				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 				m_pOwner->Off_JustDodge();
 
 				if (nullptr != m_pDodgeCollider)
