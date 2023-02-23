@@ -289,8 +289,8 @@ HRESULT CUI_LOCKON::Render()
 	}
 	else
 	{
-		m_fSize.x = 80.f;
-		m_fSize.y = 80.f;
+		m_fSize.x = 80.f * m_bStrikeScaler;
+		m_fSize.y = 80.f * m_bStrikeScaler;
 		//	m_fPosition.x -= 3.f;
 
 		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
@@ -358,7 +358,7 @@ HRESULT CUI_LOCKON::Render()
 
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(7))))
 			return E_FAIL;
-		m_pShaderCom->Begin(UI_POTRAIT_ALLBLUE);
+		m_pShaderCom->Begin(UI_ALPHASET);
 
 		m_pVIBufferCom->Render();
 
@@ -380,7 +380,7 @@ HRESULT CUI_LOCKON::Render()
 
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(7))))
 			return E_FAIL;
-		m_pShaderCom->Begin(UI_POTRAIT_ALLBLUE);
+		m_pShaderCom->Begin(UI_ALPHASET);
 
 		m_pVIBufferCom->Render();
 	}

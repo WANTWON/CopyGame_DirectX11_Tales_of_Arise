@@ -51,6 +51,10 @@ HRESULT CRinwell::Initialize(void * pArg)
 	m_tInfo.iDamage = 100;
 	m_tInfo.fCurrentBoostGuage = 50.f;
 
+	m_tInfo.iCurrentExp = 500;
+	m_tInfo.iMaxExp = 1000;
+	m_tInfo.iLevel = 58;
+
 	return S_OK;
 }
 

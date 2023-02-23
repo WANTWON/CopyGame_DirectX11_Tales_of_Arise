@@ -78,8 +78,11 @@ CAstralDoubt_State * CBattle_Hit_AndDead::LateTick(_float fTimeDelta)
 
 
 		case Client::CAstralDoubt_State::STATE_DOWN:
-			return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_IDLE);
+			m_pOwner->Set_OnGoingDown();
+			return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_DOWN);
 		}	
+
+		
 	}
 	
 
@@ -115,9 +118,5 @@ void CBattle_Hit_AndDead::Exit()
 {
 
 	Safe_Release(m_pAtkColliderCom);
-	if (m_eStateId == STATE_ID::STATE_DOWN)
-	{
-		m_pOwner->Set_FinishGoingDown();
-		m_pOwner->Set_FinishDownState();
-	}
+
 }

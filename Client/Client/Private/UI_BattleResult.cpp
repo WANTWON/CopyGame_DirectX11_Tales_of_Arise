@@ -280,10 +280,11 @@ int CUI_BattleResult::Tick(_float fTimeDelta)
 	if (m_PlayersHPAlphadown[2])
 	{
 		m_PlayersHPAlpha[2] -= 0.1f;
-		if (m_PlayersHPAlpha[2] <= 0.f)
+		if (m_PlayersHPAlpha[2] <= -5.f)
 		{
 			m_PlayersHPAlpha[2] = 0.f;
 			m_PlayersHPAlphadown[2] = false;
+			m_PlayersHPAlphaup[2] = true;
 		}
 
 	}
@@ -291,10 +292,11 @@ int CUI_BattleResult::Tick(_float fTimeDelta)
 	if (m_PlayersHPAlphadown[3])
 	{
 		m_PlayersHPAlpha[3] -= 0.1f;
-		if (m_PlayersHPAlpha[3] <= 0.f)
+		if (m_PlayersHPAlpha[3] <= -5.f)
 		{
 			m_PlayersHPAlpha[3] = 0.f;
-			m_PlayersHPAlphadown[4] = false;
+			m_PlayersHPAlphadown[3] = false;
+			m_PlayersHPAlphaup[3] = true;
 		}
 
 	}

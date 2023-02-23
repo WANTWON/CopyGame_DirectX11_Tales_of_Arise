@@ -47,7 +47,8 @@ HRESULT CUI_Dialogue_Caption::Initialize(void * pArg)
 	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_DULLSWORD, ITEMTYPE_SWORD, false, false);
 	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_PYOGOMUSHROOM, ITEMTYPE_ARMOR, false, false);*/
 
-	Read_TextFiles_for_dialogue();
+	Read_TextFiles_for_BossRinwell();
+	Read_TextFiles_for_Strike_RinwellLaw();
 	/*Read_TextFiles_for_Quest1Clear();
 	Read_TextFiles_for_Quest2Strat();
 	Read_TextFiles_for_Quest2Clear();
@@ -66,15 +67,37 @@ int CUI_Dialogue_Caption::Tick(_float fTimeDelta)
 
 		m_fTimer += fTimeDelta;
 
-		if (m_fTimer > 4.f)
+
+		switch (m_iVectorIndex)
 		{
-			if (m_iDialogueindex < vectorsize)
+		case 0:
+			if (m_fTimer > 4.f)
 			{
-				++m_iDialogueindex;
-				m_fTimer = 0.f;
+				if (m_iDialogueindex < vectorsize)
+				{
+					++m_iDialogueindex;
+					m_fTimer = 0.f;
+				}
+
 			}
-			
+
+			break;
+		case 1:
+
+			if (m_fTimer > 1.5f)
+			{
+				if (m_iDialogueindex < vectorsize)
+				{
+					++m_iDialogueindex;
+					m_fTimer = 0.f;
+				}
+
+			}
+
+			break;
 		}
+		
+		
 		
 
 		if (m_iDialogueindex == vectorsize)
@@ -224,7 +247,7 @@ HRESULT CUI_Dialogue_Caption::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CUI_Dialogue_Caption::Read_TextFiles_for_dialogue()
+void CUI_Dialogue_Caption::Read_TextFiles_for_BossRinwell()
 {
 	std::ifstream file("../../../Bin/Resources/Caption/Linwell0.txt");
 	if (file.is_open())
@@ -273,9 +296,9 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_dialogue()
 
 }
 
-void CUI_Dialogue_Caption::Read_TextFiles_for_Quest1Clear()
+void CUI_Dialogue_Caption::Read_TextFiles_for_Strike_RinwellLaw()
 {
-	std::ifstream file("../../../Bin/quest1clear0.txt");
+	std::ifstream file("../../../Bin/Resources/Caption/RinwellLawST0.txt");
 	if (file.is_open())
 	{
 		while (file.getline(fuck, 256))
@@ -294,7 +317,7 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest1Clear()
 	}
 
 
-	std::ifstream file1("../../../Bin/quest1clear1.txt");
+	std::ifstream file1("../../../Bin/Resources/Caption/RinwellLawST1.txt");
 	if (file1.is_open())
 	{
 		while (file1.getline(fuck, 256))
@@ -313,7 +336,7 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest1Clear()
 	}
 
 	//m_vCurrentDialogue.
-	std::ifstream file2("../../../Bin/quest1clear2.txt");
+	std::ifstream file2("../../../Bin/Resources/Caption/RinwellLawST2.txt");
 	if (file2.is_open())
 	{
 		while (file2.getline(fuck, 256))
@@ -331,7 +354,7 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest1Clear()
 		std::cout << "Unable to open file\n";
 	}
 
-	std::ifstream file3("../../../Bin/quest1clear3.txt");
+	std::ifstream file3("../../../Bin/Resources/Caption/RinwellLawST3.txt");
 	if (file3.is_open())
 	{
 		while (file3.getline(fuck, 256))
@@ -349,49 +372,7 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest1Clear()
 		std::cout << "Unable to open file\n";
 	}
 
-	std::ifstream file4("../../../Bin/quest1clear4.txt");
-	if (file4.is_open())
-	{
-		while (file4.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge1[4].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file4.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-
-	std::ifstream file5("../../../Bin/quest1clear5.txt");
-	if (file5.is_open())
-	{
-		while (file5.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge1[5].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file5.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-
-
-
-
-
-
+	
 
 
 	vector<vector<_tchar*>> matrix;
@@ -399,8 +380,7 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest1Clear()
 	matrix.push_back(m_vDialouge1[1]);
 	matrix.push_back(m_vDialouge1[2]);
 	matrix.push_back(m_vDialouge1[3]);
-	matrix.push_back(m_vDialouge1[4]);
-	matrix.push_back(m_vDialouge1[5]);
+
 
 
 	m_vCurrentDialogue.push_back(matrix);

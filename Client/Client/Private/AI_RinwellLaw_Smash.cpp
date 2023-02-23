@@ -12,7 +12,7 @@
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
 #include "PlayerIdleState.h"
-
+#include "UI_Dialogue_Caption.h"
 using namespace AIPlayer;
 using namespace Player;
 CAI_RinwellLaw_Smash::CAI_RinwellLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
@@ -147,6 +147,7 @@ void CAI_RinwellLaw_Smash::Enter()
 		break;
 	case CPlayer::LAW:
 		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_GURENTENSYOU;
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
 
 		break;
 

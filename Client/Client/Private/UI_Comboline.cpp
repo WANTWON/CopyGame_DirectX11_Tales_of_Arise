@@ -39,9 +39,10 @@ HRESULT CUI_Comboline::Initialize(void * pArg)
 
 int CUI_Comboline::Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
 	//if(CGameInstance::Get_Instance()->Key_Up(DIK_3))
-	m_fDietimer += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));;
+	m_fDietimer += fTimeDelta;// CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 
 	if (m_fDietimer > 5.f)
 		m_bfadeout = true;
@@ -111,7 +112,8 @@ int CUI_Comboline::Tick(_float fTimeDelta)
 void CUI_Comboline::Late_Tick(_float fTimeDelta)
 {
 
-
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return;
 
 	/*if (m_fAlpha < 0.275f)
 	{

@@ -1146,6 +1146,9 @@
     <ClInclude Include="..\Public\Level_City.h">
       <Filter>01.Levels\04.City</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BreakFont.h">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1852,6 +1855,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_City.cpp">
       <Filter>01.Levels\04.City</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BreakFont.cpp">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
