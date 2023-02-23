@@ -173,7 +173,7 @@ HRESULT CLoader::Loading_ForClient()
 		return E_FAIL;
 
 	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
-	//	return E_FAIL;
+		//return E_FAIL;
 
 	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
 	//	return E_FAIL;
@@ -181,8 +181,8 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolVillageModel()))
 		return E_FAIL;*/
 
-	//if (FAILED(Loading_ForMaptoolCityModel()))
-	//	return E_FAIL;
+	if (FAILED(Loading_ForMaptoolCityModel()))
+		return E_FAIL;
 
 	//For Effect
 	/*if (FAILED(Loading_ForEffect()))
