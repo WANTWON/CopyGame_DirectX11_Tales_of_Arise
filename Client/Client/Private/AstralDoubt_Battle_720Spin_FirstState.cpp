@@ -231,62 +231,6 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 		}
 	}
 
-//vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-//
-//for (auto& pEvent : pEvents)
-//{
-//	if (pEvent.isPlay)
-//	{
-//
-//		//if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-//		//{
-//		//	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-//		//		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.6f, 0.01f);
-//		//}
-//
-//
-//		if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-//		{
-//			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-//				dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.6f, 0.01f);
-//
-//			CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
-//
-//			_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("EX_CLAW2_3_L")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
-//			matWorld.r[0] = XMVector4Normalize(matWorld.r[0]);
-//			matWorld.r[1] = XMVector4Normalize(matWorld.r[1]);
-//			matWorld.r[2] = XMVector4Normalize(matWorld.r[2]);
-//
-//			if (nullptr == m_pAtkColliderCom)
-//			{
-//				CCollider::COLLIDERDESC		ColliderDesc;
-//
-//				ColliderDesc.vScale = _float3(80.f, 80.f, 80.f);
-//				ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-//
-//				m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
-//				m_pAtkColliderCom->Update(matWorld);
-//				//pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_ASU_PUSH, m_pOwner);
-//			}
-//			else
-//				m_pAtkColliderCom->Update(matWorld);
-//		}
-//	}
-//
-//	else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
-//	{
-//		CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
-//
-//		pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
-//		m_pAtkColliderCom = nullptr;
-//
-//		//pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_ASU_PUSH, m_pOwner);
-//	}
-//}
-
-
-
-
 	return nullptr;
 }
 
@@ -418,9 +362,9 @@ void CBattle_720Spin_FirstState::Enter()
 void CBattle_720Spin_FirstState::Exit()
 {
 
-	//Safe_Release(m_p2th_AtkColliderCom);
-	//Safe_Release(m_p3th_AtkColliderCom);
-	//Safe_Release(m_p4th_AtkColliderCom);
-	//Safe_Release(m_p5th_AtkColliderCom);
-	//Safe_Release(m_p6th_AtkColliderCom);
+	Safe_Release(m_p2th_AtkColliderCom);
+	Safe_Release(m_p3th_AtkColliderCom);
+	Safe_Release(m_p4th_AtkColliderCom);
+	Safe_Release(m_p5th_AtkColliderCom);
+	Safe_Release(m_p6th_AtkColliderCom);
 }

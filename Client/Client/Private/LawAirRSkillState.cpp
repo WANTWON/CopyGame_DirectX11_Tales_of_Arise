@@ -271,7 +271,7 @@ CPlayerState * CLawAirRSkillState::EventInput(void)
 	if (GetKeyState(VK_LBUTTON) < 0)
 		return new CLawAttackState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1);
 
-	if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
+	if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
 	{
 		if (GetKeyState('E') < 0)
 			return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
@@ -327,6 +327,10 @@ void CLawAirRSkillState::Enter(void)
 void CLawAirRSkillState::Exit(void)
 {
 	__super::Exit();
+
+	Safe_Release(m_pLeftFootCollider);
+	Safe_Release(m_pLeftHandCollider);
+	Safe_Release(m_pRightHandCollider);
 
 	//m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
 	//m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
