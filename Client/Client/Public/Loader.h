@@ -37,6 +37,7 @@ public:
 	HRESULT Loading_ForPrototype();
 	HRESULT Loading_ForStaticLevel();
 	HRESULT Loading_ForBattleLevel();
+	HRESULT Loading_ForCityLevel();
 	HRESULT Loading_ForSnowFieldLevel();
 	HRESULT Loading_ForBossLevel();
 	HRESULT Loading_ForUITexture();

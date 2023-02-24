@@ -375,8 +375,10 @@ HRESULT CLevel_BossZone::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	RELEASE_INSTANCE(CGameInstance);
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_BOSS, pLayerTag, nullptr)))
+		return E_FAIL;
 
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 

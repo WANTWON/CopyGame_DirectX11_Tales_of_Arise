@@ -53,9 +53,9 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	m_fRadius = Check_CullingRadius();
+	//m_fRadius = Check_CullingRadius();
 
-	m_pModelCom->Update(m_fRadius);
+	//m_pModelCom->Update(m_fRadius);
 
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 
@@ -186,7 +186,12 @@ _bool CNonAnim_Instance::IsRenderShadow()
 		!strcmp(m_ModelDesc.pModeltag, "Birch2") ||
 		!strcmp(m_ModelDesc.pModeltag, "Bld_WallB") ||
 		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01") || 
-		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01_B02_Lod1"))
+		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01_B02_Lod1") ||
+		!strcmp(m_ModelDesc.pModeltag, "CIty_BigWall") ||
+		!strcmp(m_ModelDesc.pModeltag, "City_Grass03") ||
+		!strcmp(m_ModelDesc.pModeltag, "CIty_Grass04") ||
+		!strcmp(m_ModelDesc.pModeltag, "City_Planter") ||
+		!strcmp(m_ModelDesc.pModeltag, "City_Ivy1"))
 		return false;
 
 	return true;
@@ -207,6 +212,12 @@ _float CNonAnim_Instance::Check_CullingRadius()
 		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01") ||
 		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01_B02_Lod1"))
 		return 25.f;
+	else if (!strcmp(m_ModelDesc.pModeltag, "SAT_Wall02"))
+		return 25.f;
+	else if (!strcmp(m_ModelDesc.pModeltag, "City_Ivy1"))
+		return 35.f;
+	else if (!strcmp(m_ModelDesc.pModeltag, "City_Palm"))
+		return 10.f;
 
 	return 5.f;
 }
