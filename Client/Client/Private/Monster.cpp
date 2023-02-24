@@ -456,11 +456,12 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 	
+
 	m_pTarget = DamageCauser;
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 	
 	++m_tStats.m_iHitcount;
-	//if (m_tStats.m_iHitcount >= 200) //원본코드
+
 	if (m_tStats.m_iHitcount >= 80)
 	{
 		m_bDownState = true;

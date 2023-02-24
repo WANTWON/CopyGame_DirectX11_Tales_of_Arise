@@ -136,7 +136,7 @@ protected:
 	_bool m_bBedamageAnim = false;
 	_bool m_bBedamageAnim_Delay = false;
 	_bool  m_bLastStrikeAttack = false;
-	
+	_bool m_bKillerSkill = false;
 
 	_uint m_eCurLevel = LEVEL_END;
 	_uint m_iRand = 0;

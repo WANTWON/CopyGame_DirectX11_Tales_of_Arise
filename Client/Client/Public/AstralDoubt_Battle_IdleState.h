@@ -30,6 +30,7 @@ private:
 	_bool			bIs_TargetInFront = false;
 	_bool			m_bBeamTargetOn = false;
 	_bool			m_PreState_IsSpin = false;
+	_bool			m_PreState_FootPress = false;
 };
 END
 END
