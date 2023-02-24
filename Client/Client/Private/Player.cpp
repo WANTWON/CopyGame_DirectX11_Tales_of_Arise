@@ -26,6 +26,7 @@
 //////////////////////////////////
 #include "AI_Overlimit_State.h"
 #include "AIPoseState.h"
+#include "Damagefont_Critical.h"
 
 using namespace Player;
 using namespace AIPlayer;
@@ -156,7 +157,7 @@ int CPlayer::Tick(_float fTimeDelta)
 			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 		}
 		else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-			Take_Damage(m_tInfo.fCurrentHp, nullptr);
+			Take_Damage((_int)m_tInfo.fCurrentHp, nullptr);
 	}
 	else if (m_bIsPose)
 		m_bIsPose = false;
@@ -368,6 +369,20 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	if (eMode == ACTIVE)
 		int a = 0;
 	m_tInfo.fCurrentHp -= (int)fDamage;
+
+
+	CDamagefont_Critical::DMGDESC testdesc;
+	ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
+	testdesc.iDamage = fDamage;
+	testdesc.pPointer = this;
+	testdesc.itype = 4;
+
+	if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+	{
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+			return OBJ_NOEVENT;
+	}
 
 	/*CDamageFont::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));

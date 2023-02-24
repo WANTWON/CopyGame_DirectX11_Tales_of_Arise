@@ -69,12 +69,35 @@ HRESULT CDamagefont_Critical::Initialize(void * pArg)
 
 	m_fSize.x = 30.f * m_fScaler;
 	m_fSize.y = 30.f * m_fScaler;
-	m_fNext = 34.f;
+	
 	//m_fPosition.y -= m_fYFadeout;
 
 
 
-	
+	if (m_damagedesc.itype >= 3)
+	{
+		m_bfontmaker = false;
+	}
+	else
+		m_bfontmaker = true;
+
+	if (m_damagedesc.itype == 3)
+	{
+		m_eShaderID = UI_RECOVERFONT;
+		m_fNext = 23.f;
+	}
+	else if (m_damagedesc.itype == 4)
+	{
+		m_eShaderID = UI_PlayerHitfont;
+		m_fNext = 23.f;
+
+	}
+	else
+	{
+		m_fNext = 38.f;
+		m_eShaderID = UI_BRIGHT;
+	}
+		
 
 
 
@@ -159,7 +182,7 @@ int CDamagefont_Critical::Tick(_float fTimeDelta)
 	}
 
 
-	if (m_damagedesc.itype == 3)
+	if (m_damagedesc.itype == 3 || m_damagedesc.itype == 4)
 	{
 		m_fSize.x = 30.f * m_fScaler;
 		m_fSize.y = 30.f * m_fScaler;
@@ -230,6 +253,13 @@ void CDamagefont_Critical::Late_Tick(_float fTimeDelta)
 
 
 	}*/
+
+	if (m_bTest)
+	{
+		m_bTest = false;
+		return;
+	}
+
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
 
@@ -370,7 +400,7 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 
 	m_fSize.x = 30.f * m_fScaler;
 	m_fSize.y = 30.f * m_fScaler;
-	m_fNext = 34.f;
+	m_fNext = 38.f;
 
 	if (m_damagedesc.itype >= 3)
 	{
@@ -382,7 +412,12 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 	if (m_damagedesc.itype == 3)
 	{
 		m_eShaderID = UI_RECOVERFONT;
-		m_fNext = 17.f;
+		m_fNext = 23.f;
+	}
+	else if (m_damagedesc.itype == 4)
+	{
+		m_eShaderID = UI_PlayerHitfont;
+		m_fNext = 23.f;
 	}
 	else
 		m_eShaderID = UI_BRIGHT;
@@ -395,7 +430,14 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
-	
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+		return;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+		return;
+
+	m_bTest = true;
 }
 
 HRESULT CDamagefont_Critical::Ready_Components(void * pArg)
@@ -413,7 +455,7 @@ HRESULT CDamagefont_Critical::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_font"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_battlefont"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */

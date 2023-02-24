@@ -60,6 +60,8 @@ private:
 	_bool m_balphaup = false;
 	_bool m_bfontmaker = true;
 
+	_bool m_bTest = true;
+
 public:
 	enum DMGTYPE { NON, CRITICAL, RESIST, WEAKNESS , HEAL , HIT };
 	typedef struct tagdamagefont

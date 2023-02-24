@@ -62,7 +62,7 @@ HRESULT CDamageFont::Initialize(void * pArg)
 
 	m_fSize.x = 30.f * m_fScaler;
 	m_fSize.y = 30.f * m_fScaler;
-	m_fNext = 17.f;
+	m_fNext = 23.f;
 	//m_fPosition.y -= m_fYFadeout;
 
 
@@ -79,7 +79,7 @@ HRESULT CDamageFont::Initialize(void * pArg)
 
 	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
 	//		return E_FAIL;
-
+	 
 	//	desc.position.x = 1060.f;
 	//	desc.position.y = m_fnumberY - 34.f;
 	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
@@ -338,6 +338,13 @@ void CDamageFont::Late_Tick(_float fTimeDelta)
 
 		
 	}*/
+
+	if (m_bnorend)
+	{
+		m_bnorend = false;
+		return;
+	}
+
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
 
@@ -475,7 +482,7 @@ void CDamageFont::ReUse_Setting(void * pArg)
 	m_fSize.x = 30.f * m_fScaler;
 	m_fSize.y = 30.f * m_fScaler;
 
-	m_fNext = 17.f;
+	m_fNext = 23.f;
 	m_fStart_timer = 0.f; 
 	m_bfadeout = false;
 	m_bfadein = true;
@@ -488,7 +495,7 @@ void CDamageFont::ReUse_Setting(void * pArg)
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
-
+	m_bnorend = true;
 }
 
 HRESULT CDamageFont::Ready_Components(void * pArg)
@@ -506,7 +513,7 @@ HRESULT CDamageFont::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_font"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_battlefont"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
