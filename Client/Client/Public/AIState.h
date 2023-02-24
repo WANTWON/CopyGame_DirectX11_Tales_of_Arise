@@ -1,72 +1,29 @@
 #pragma once
 
-#include "Player.h"
+#include "State.h"
 #include "Monster.h"
 
 BEGIN(Client)
-class CAIState
+class CAIState : public CState
 {
 public:
-	enum STATE_ID
-	{
-		STATE_IDLE,
-		STATE_WALK,
-		STATE_RUN,
-		STATE_ATTACK,
-		STATE_BOOSTATTACK,
-		STATE_JUMP,
-		STATE_DEAD,
-		STATE_HIT,
-		STATE_DODGE,
-		STATE_THUNDERFIELD,
-		STATE_METEOR,
-		STATE_GALEFORCE,
-		STATE_DIVINE_SABER,
-		STATE_HOLYRANCE,
-		STATE_BANGJEON,
-		STATE_NORMAL_ATTACK1,
-		STATE_NORMAL_ATTACK2,
-		STATE_NORMAL_ATTACK3,
-		STATE_NORMAL_ATTACK4,
-		STATE_NORMAL_ATTACK5,
-		STATE_SKILL_ATTACK_E,
-		STATE_SKILL_ATTACK_R,
-		STATE_SKILL_ATTACK_F,
-		STATE_POSE,
-		STATE_END
-		
-	};
-
 	enum AI_MODE
 	{
 		ATTACK_LOCKONMODE,
 		ATTACK_FREEMODE
 	};
 
-	STATE_ID Get_StateId() { return m_eStateId; }
-
+public:
 	virtual ~CAIState() {};
-	virtual CAIState* HandleInput() { return nullptr; };
+	
+public:
+	virtual CAIState* HandleInput() PURE;
 	virtual CAIState* Tick(_float fTimeDelta) PURE;
-	virtual CAIState* LateTick(_float fTimeDelta) PURE;
-
+	virtual CAIState* Late_Tick(_float fTimeDelta) PURE;
+	virtual CAIState* EventInput(void) PURE;
 	virtual void Enter() PURE;
-	virtual void Exit() {m_pOwner->Get_Model()->Reset();}
 
-	CAIState* ChangeState(CAIState* pCurrentState, CAIState* pNewState)
-	{
-		if (pCurrentState)
-		{
-			pCurrentState->Exit();
-			Safe_Delete(pCurrentState);
-		}
-
-		pCurrentState = pNewState;
-		pCurrentState->Enter();
-
-		return pCurrentState;
-	}
-
+public:
 	_float Get_Target_Distance()
 	{
 		if (!m_pTarget)
@@ -88,7 +45,7 @@ public:
 	_bool CheckTarget()
 	{
 
-		m_eAIMode = CBattleManager::Get_Instance()->Get_AImode();
+		m_eAIMode = AI_MODE(CBattleManager::Get_Instance()->Get_AImode());
 		if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 			return false;
 		if (nullptr == CBattleManager::Get_Instance()->Get_LackonMonster())
@@ -120,26 +77,17 @@ public:
 	
 
 protected:
-	STATETYPE m_eStateType = STATETYPE_DEFAULT;
-	STATE_ID m_eStateId = STATE_END;
 	STATE_ID m_ePreStateID = STATE_END;
-	_uint m_eAIMode = ATTACK_FREEMODE;
+	AI_MODE m_eAIMode = ATTACK_FREEMODE;
 	_uint m_iCurrentAnimIndex = 0;
 	_uint m_eCurrentPlayerID = CPlayer::PLAYERID::SION;
-	CPlayer* m_pOwner = nullptr;
 
 	_float m_fTimer = 0.f;
 
-	_bool m_bIsAnimationFinished = false;
 	_bool m_bRangerRunaway = false;
 	_bool m_bIsStateEvent = false;
 	CBaseObj* m_pTarget = nullptr;
 
 	_bool m_bLookatOnetime = true;
-
-	// 공중인지 판단하는 변수
-	_bool m_bIsFly = false;
-	_float m_fTime = 0.f;
-	
 };
 END

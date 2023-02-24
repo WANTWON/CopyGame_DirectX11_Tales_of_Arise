@@ -24,6 +24,9 @@ private:
 	vector<CEffect*> m_SlashEffect;
 
 	CCollider* m_pAttackCollider = nullptr;
+
+private:
+	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
 };
 END
 END

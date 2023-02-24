@@ -216,7 +216,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CPlayerState * CJumpState::LateTick(_float fTimeDelta)
+CPlayerState * CJumpState::Late_Tick(_float fTimeDelta)
 {
 	switch (m_eStateType)
 	{
@@ -492,7 +492,7 @@ void CJumpState::Enter()
 {
 	__super::Enter();
 
-	m_eStateId = STATE_ID::STATE_JUMP;
+	m_eStateID = STATE_ID::STATE_JUMP;
 
 	m_pOwner->On_IsFly();
 

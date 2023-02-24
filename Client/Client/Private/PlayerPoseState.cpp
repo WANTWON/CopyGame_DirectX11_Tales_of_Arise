@@ -9,7 +9,7 @@ CPlayerPoseState::CPlayerPoseState(CPlayer * pPlayer, STATE_ID eStateID)
 {
 	m_pOwner = pPlayer;
 	m_ePlayerID = m_pOwner->Get_PlayerID();
-	m_eStateId = eStateID;
+	m_eStateID = eStateID;
 }
 
 CPlayerState * CPlayerPoseState::HandleInput(void)
@@ -26,11 +26,16 @@ CPlayerState * CPlayerPoseState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CPlayerState * CPlayerPoseState::LateTick(_float fTimeDelta)
+CPlayerState * CPlayerPoseState::Late_Tick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
 		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 
+	return nullptr;
+}
+
+CPlayerState * CPlayerPoseState::EventInput(void)
+{
 	return nullptr;
 }
 

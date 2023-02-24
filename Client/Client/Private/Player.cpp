@@ -379,7 +379,6 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 
 	if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
 	{
-
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
 			return OBJ_NOEVENT;
 	}
@@ -424,7 +423,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 		switch (eMode)
 		{
 		case Client::ACTIVE:
-			if (CPlayerState::STATE_HIT != m_pPlayerState->Get_StateId())
+			if (CPlayerState::STATE_HIT != m_pPlayerState->Get_StateID())
 			{
 				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
 				pState = new CHitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time());
@@ -432,7 +431,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 			}
 			break;
 		case Client::AI_MODE:
-			if (CAIState::STATE_HIT != m_pAIState->Get_StateId())
+			if (CAIState::STATE_HIT != m_pAIState->Get_StateID())
 			{
 				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
 				pAIState = new AIPlayer::CAI_HitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time());

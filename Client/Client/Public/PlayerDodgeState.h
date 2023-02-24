@@ -11,7 +11,7 @@ public:
 	
 	virtual CPlayerState* HandleInput(void) override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
-	virtual CPlayerState* LateTick(_float ftimeDelta) override;
+	virtual CPlayerState* Late_Tick(_float ftimeDelta) override;
 	virtual CPlayerState* EventInput(void) override;
 
 	virtual void Enter(void) override;

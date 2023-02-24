@@ -4,7 +4,6 @@
 #include "BaseObj.h"
 #include "PlayerManager.h"
 
-
 BEGIN(Engine)
 class CNavigation;
 class CModel;

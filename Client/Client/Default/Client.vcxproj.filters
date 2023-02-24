@@ -1149,6 +1149,9 @@
     <ClInclude Include="..\Public\BreakFont.h">
       <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1858,6 +1861,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BreakFont.cpp">
       <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

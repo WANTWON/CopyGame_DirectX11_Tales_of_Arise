@@ -53,7 +53,9 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 		if (pEvent.isPlay)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+			{
 				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
@@ -303,7 +305,6 @@ void CAlphenAttackState::Enter()
 	if (nullptr != pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	//m_pOwner->Use_Mana(1.f);
 	m_pOwner->Set_Manarecover(false);
 }
 
@@ -312,4 +313,11 @@ void CAlphenAttackState::Exit()
 	__super::Exit();
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+
+	Safe_Release(m_pAttackCollider);
+}
+
+CCollider * CAlphenAttackState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)
+{
+	return nullptr;
 }

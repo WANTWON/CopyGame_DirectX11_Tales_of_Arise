@@ -39,7 +39,12 @@ CPlayerState * CHitState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CPlayerState * CHitState::LateTick(_float fTimeDelta)
+CPlayerState * CHitState::EventInput(void)
+{
+	return nullptr;
+}
+
+CPlayerState * CHitState::Late_Tick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
 	{
@@ -61,7 +66,7 @@ void CHitState::Enter()
 {
 	__super::Enter();
 
-	m_eStateId = STATE_ID::STATE_HIT;
+	m_eStateID = STATE_ID::STATE_HIT;
 
 	if (m_bIsDown)
 	{

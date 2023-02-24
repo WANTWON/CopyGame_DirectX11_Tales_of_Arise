@@ -305,7 +305,7 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
+CPlayerState * CDodgeState::Late_Tick(_float ftimeDelta)
 {
 	if (nullptr != m_pDodgeCollider)
 	{
@@ -439,11 +439,9 @@ CPlayerState * CDodgeState::EventInput(void)
 
 void CDodgeState::Enter(void)
 {
-
-	
 	__super::Enter();
 
-	m_eStateId = STATE_ID::STATE_DODGE;
+	m_eStateID = STATE_ID::STATE_DODGE;
 
 	switch (m_pOwner->Get_PlayerID())
 	{

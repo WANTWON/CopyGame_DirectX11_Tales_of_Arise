@@ -227,7 +227,12 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CPlayerState * CRunState::LateTick(_float fTimeDelta)
+CPlayerState * CRunState::Late_Tick(_float fTimeDelta)
+{
+	return nullptr;
+}
+
+CPlayerState * CRunState::EventInput(void)
 {
 	return nullptr;
 }
@@ -237,7 +242,7 @@ void CRunState::Enter()
 	__super::Enter();
 
 	CBattleManager* pBattleManager = CBattleManager::Get_Instance();
-	m_eStateId = STATE_ID::STATE_RUN;
+	m_eStateID = STATE_ID::STATE_RUN;
 
 	if (m_bIsDash)
 	{

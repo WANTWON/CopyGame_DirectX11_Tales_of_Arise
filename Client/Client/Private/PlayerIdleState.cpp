@@ -139,12 +139,17 @@ CPlayerState * CIdleState::HandleInput()
 CPlayerState * CIdleState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-	m_pOwner->Check_Navigation();
+	//m_pOwner->Check_Navigation();
 
 	return nullptr;
 }
 
-CPlayerState * CIdleState::LateTick(_float fTimeDelta)
+CPlayerState * CIdleState::EventInput(void)
+{
+	return nullptr;
+}
+
+CPlayerState * CIdleState::Late_Tick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished && !CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
@@ -193,7 +198,7 @@ void CIdleState::Enter()
 {
 	__super::Enter();
 
-	m_eStateId = STATE_ID::STATE_IDLE;
+	m_eStateID = STATE_ID::STATE_IDLE;
 
 	switch (m_pOwner->Get_PlayerID())
 	{

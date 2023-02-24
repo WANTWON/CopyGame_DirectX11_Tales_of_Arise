@@ -33,13 +33,9 @@ CPlayerState * CPlayerOverlimit::Tick(_float fTimeDelta)
 		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 	}
 
-
-
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 	if (!m_bIsAnimationFinished)
 	{
-		
-
 		_vector vecTranslation;
 		_float fRotationRadian;
 
@@ -52,7 +48,12 @@ CPlayerState * CPlayerOverlimit::Tick(_float fTimeDelta)
 	return nullptr;
 }
 
-CPlayerState * CPlayerOverlimit::LateTick(_float fTimeDelta)
+CPlayerState * CPlayerOverlimit::EventInput(void)
+{
+	return nullptr;
+}
+
+CPlayerState * CPlayerOverlimit::Late_Tick(_float fTimeDelta)
 {
 
 	for (auto& pEffect : m_pEffects)
@@ -75,7 +76,7 @@ void CPlayerOverlimit::Enter(void)
 {
 	__super::Enter();
 
-	m_eStateId = STATE_ID::STATE_OVERLIMIT;
+	m_eStateID = STATE_ID::STATE_OVERLIMIT;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
 
@@ -117,6 +118,5 @@ void CPlayerOverlimit::Enter(void)
 
 void CPlayerOverlimit::Exit(void)
 {
-
 	__super::Exit();
 }

@@ -44,6 +44,9 @@ private:
 	_bool m_bEngetuSecondEffect = false;
 	
 	vector<CEffect*> m_SenkusyourepaParticles;
+
+private:
+	CCollider* m_pAttackCollider = nullptr;
 };
 END
 END
