@@ -367,8 +367,12 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 	if (eMode == ACTIVE)
 		int a = 0;
-	m_tInfo.fCurrentHp -= (int)fDamage;
-
+	
+	if (m_bTakeDamage_Delay == false)
+	{
+		m_tInfo.fCurrentHp -= (int)fDamage;
+		m_bTakeDamage_Delay = true;
+	}
 	/*CDamageFont::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
 	testdesc.iDamage = fDamage;
@@ -380,7 +384,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 		return E_FAIL;
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
 		return E_FAIL;*/
-
+	
 	if (m_tInfo.fCurrentHp <= 0)
 	{
 		CPlayerState* pState = nullptr;

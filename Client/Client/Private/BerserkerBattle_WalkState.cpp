@@ -15,7 +15,7 @@ using namespace Berserker;
 CBattle_WalkState::CBattle_WalkState(CBerserker* pBerserker)
 {
 	m_pOwner = pBerserker;
-	m_fRandTime = ((rand() % 500) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 100) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CBerserkerState * CBattle_WalkState::AI_Behaviour(_float fTimeDelta)

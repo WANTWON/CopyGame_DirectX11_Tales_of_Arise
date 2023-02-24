@@ -161,5 +161,5 @@ void CBattle_PeckState::Exit()
 {
 	//CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 
-	//Safe_Release(m_pAtkColliderCom);
+	Safe_Release(m_pAtkColliderCom);
 }

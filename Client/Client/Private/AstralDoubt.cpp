@@ -10,6 +10,7 @@
 #include "AstralDoubt_Battle_720Spin_FirstState.h"
 #include "AstralDoubt_Battle_HeadBeamState.h"
 #include "AstralDoubt_Battle_RushState.h"
+#include "AstralDoubt_TurnState.h"
 
 using namespace Astral_Doubt;
 
@@ -233,7 +234,7 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
 	{
-		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_ADVENT);
+		CAstralDoubt_State* pBattleState = new CTurnState(this);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
 

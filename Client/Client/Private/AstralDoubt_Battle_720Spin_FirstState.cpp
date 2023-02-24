@@ -362,6 +362,8 @@ void CBattle_720Spin_FirstState::Enter()
 void CBattle_720Spin_FirstState::Exit()
 {
 
+	
+	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);
 	Safe_Release(m_p3th_AtkColliderCom);
 	Safe_Release(m_p4th_AtkColliderCom);

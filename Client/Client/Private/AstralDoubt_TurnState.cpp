@@ -26,7 +26,7 @@ CAstralDoubt_State * CTurnState::Tick(_float fTimeDelta)
 {
 	Find_Target();
 	
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.8f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.8f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -50,49 +50,6 @@ CAstralDoubt_State * CTurnState::LateTick(_float fTimeDelta)
 
 	m_fTimeDeltaAcc += fTimeDelta;
 
-
-	
-	CBaseObj* pTrigger = m_pOwner->Get_Trigger();
-	_vector vTrigger_Pos = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
-
-	_bool bIs_TargetInFront = false;
-	bIs_TargetInFront = Is_TargetInFront(vTrigger_Pos);
-
-
-	if (m_bIsAnimationFinished)
-	{
-		//나의 트리거 박스랑 충돌해 있을때(트리거 박스 안에 있을 때)
-		if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == true)
-		{
-			if (m_pTarget)
-			{
-				return new CChaseState(m_pOwner);
-			}
-
-			else
-			{
-				if (m_fTimeDeltaAcc > m_fRandTime)
-				{
-					switch (rand() % 2)
-					{
-					case 0:
-						return new CWalkState(m_pOwner, FIELD_STATE_END);
-					case 1:
-						return new CDetectStop_State(m_pOwner);
-					}
-				}
-			}
-		}
-
-		else
-		{
-			if (bIs_TargetInFront)
-				return new CWalkState(m_pOwner, FIELD_STATE_ID::STATE_TURN, true);
-
-			else
-				return new CTurnState(m_pOwner);
-		}
-	}
 
 	return nullptr;
 }

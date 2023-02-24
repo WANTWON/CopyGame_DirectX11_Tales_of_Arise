@@ -353,4 +353,11 @@ void CBattle_RushState::Exit()
 		m_pOwner->Set_FinishGoingDown();
 		m_pOwner->Set_FinishDownState();
 	}
+
+	Safe_Release(m_pAtkColliderCom);
+	Safe_Release(m_p2th_AtkColliderCom);
+	Safe_Release(m_p3th_AtkColliderCom);
+	Safe_Release(m_p4th_AtkColliderCom);
+	Safe_Release(m_p5th_AtkColliderCom);
+	Safe_Release(m_p6th_AtkColliderCom);
 }
