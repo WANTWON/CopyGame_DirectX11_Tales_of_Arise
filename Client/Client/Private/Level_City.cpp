@@ -31,7 +31,6 @@ HRESULT CLevel_City::Initialize()
 			return E_FAIL;
 	}
 
-
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
@@ -41,13 +40,10 @@ HRESULT CLevel_City::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_Backgorund"))))
 		return E_FAIL;
 
-	
-	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing")) == false)
-		int a = 0;
-
-	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco")) == false)
-		int a = 0;
-
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
+		
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_CITY);
 	m_pCamera = dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera());
@@ -57,7 +53,6 @@ HRESULT CLevel_City::Initialize()
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
-	
 	return S_OK;
 }
 
@@ -65,11 +60,37 @@ void CLevel_City::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-
 	g_fSoundVolume += 0.001f;
 	if (g_fSoundVolume >= 0.3f)
 		g_fSoundVolume = 0.3f;
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
+
+
+	if (m_bNextNevel)
+	{
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		if (pPlayer)
+			pPlayer->Get_Renderer()->Set_ZoomBlur(false);
+
+		CPlayerManager::Get_Instance()->Save_LastPosition();
+		m_pCollision_Manager->Clear_AllCollisionGroup();
+
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Camera"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Backgorund"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
+
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		LEVEL eNextLevel = (LEVEL)m_iNextLevelIndex;
+		pGameInstance->Set_DestinationLevel(eNextLevel);
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
+			return;
+
+		RELEASE_INSTANCE(CGameInstance);
+	}
+
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_0))
 	{
@@ -84,6 +105,7 @@ void CLevel_City::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Backgorund"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -96,6 +118,7 @@ void CLevel_City::Tick(_float fTimeDelta)
 
 		m_fBlurTimer = 0.f;
 	}
+
 }
 
 void CLevel_City::Late_Tick(_float fTimeDelta)
@@ -103,7 +126,41 @@ void CLevel_City::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	SetWindowText(g_hWnd, TEXT("Level_City"));
+
+	/* Fog Shader */
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	if (pPlayer)
+	{
+		pPlayer->Get_Renderer()->Set_Fog(true);
+
+		CShader* pShaderPostProcessing = pPlayer->Get_Renderer()->Get_ShaderPostProcessing();
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+			return;
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+			return;
+
+		_float3 FogColor = _float3(1.f, 1.f, 1.f);
+		_float FogminRange = 20.f;
+		_float FogmaxRange = 140.f;
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vFogColor", &FogColor, sizeof(_float3))))
+			return;
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_fMinRange", &FogminRange, sizeof(_float))))
+			return;
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_fMaxRange", &FogmaxRange, sizeof(_float))))
+			return;
+
+		_float3 vPlayerPosition;
+		XMStoreFloat3(&vPlayerPosition, pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vPlayerPosition", &vPlayerPosition, sizeof(_float3))))
+			return;
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
 }
+
 
 HRESULT CLevel_City::Ready_Lights()
 {

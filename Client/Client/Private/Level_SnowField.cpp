@@ -65,11 +65,7 @@ HRESULT CLevel_SnowField::Initialize()
 			return E_FAIL;
 	}
 
-	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract")) == false)
-	{
-		if (FAILED(Ready_Layer_Interact_Object(TEXT("Layer_Insteract"))))
-			return E_FAIL;
-	}
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Interact"));
 
 
 
@@ -198,11 +194,11 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Camera"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund"));
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Interact"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
+			//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
 			CGameInstance::Get_Instance()->Clear_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
 			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -333,6 +329,10 @@ void CLevel_SnowField::Late_Tick(_float fTimeDelta)
 		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
 			return;
 		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+			return;
+
+		_float3 FogColor = _float3(0.2, 0.4, 0.9f);
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vFogColor", &FogColor, sizeof(_float3))))
 			return;
 
 		_float3 vPlayerPosition;
@@ -639,110 +639,6 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_SnowField::Ready_Layer_Interact_Object(const _tchar * pLayerTag)
-{
-	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
-	Safe_AddRef(pGameInstance);
-
-	HANDLE hFile = 0;
-	_ulong dwByte = 0;
-	CItem::ITEMDESC ItemDesc;
-
-	_uint iNum = 0;
-
-	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Interact.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	/* 타일의 개수 받아오기 */
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(ItemDesc.ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
-		_tchar pModeltag[MAX_PATH];
-		MultiByteToWideChar(CP_ACP, 0, ItemDesc.ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
-		if (!wcscmp(pModeltag, TEXT("Apple")))
-		{
-			ItemDesc.etype = CItem::APPLE;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("Mushroom")))
-		{
-			ItemDesc.etype = CItem::MUSHROOM;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("Lettuce_002")))
-		{
-			ItemDesc.etype = CItem::LETTUCE;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("Jewel")))
-		{
-			ItemDesc.etype = CItem::JEWEL;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("GroundPlant")))
-		{
-			ItemDesc.etype = CItem::PLANT;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("SlimPlant")))
-		{
-			ItemDesc.etype = CItem::SLIMPLANT;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("Box")))
-		{
-			ItemDesc.etype = CItem::BOX;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("Box3")))
-		{
-			ItemDesc.etype = CItem::BOX;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-				return E_FAIL;
-		}
-		else if (!wcscmp(pModeltag, TEXT("Crystal")))
-		{
-			ItemDesc.etype = CItem::CRYSTAL;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-				return E_FAIL;
-		}
-	}
-	CloseHandle(hFile);
-
-
-	CTreasureBox::BOXDESC m_TreasureBoxDesc;
-	hFile = 0;
-	dwByte = 0;
-	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/treasurebox.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	/* 타일의 개수 받아오기 */
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(m_TreasureBoxDesc), sizeof(CTreasureBox::BOXDESC), &dwByte, nullptr);
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_TreasureBox"), LEVEL_SNOWFIELD, pLayerTag, &m_TreasureBoxDesc)))
-			return E_FAIL;
-	}
-	CloseHandle(hFile);
-
-
-	RELEASE_INSTANCE(CGameInstance);
-
-	return S_OK;
-}
 
 HRESULT CLevel_SnowField::Ready_Layer_DecoObject(const _tchar * pLayerTag)
 {

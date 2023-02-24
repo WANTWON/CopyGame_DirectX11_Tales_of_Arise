@@ -30,8 +30,6 @@ private:
 
 	_float m_fBlurTimer = 0.f;
 
-	vector<class CEffect*> m_SnowParticles1;
-	vector<class CEffect*> m_SnowParticles2;
 public:
 	static CLevel_City* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

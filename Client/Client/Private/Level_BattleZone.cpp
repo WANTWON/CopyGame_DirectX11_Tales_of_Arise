@@ -243,6 +243,11 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 			return;
 
+		_float3 FogColor = _float3(0.2, 0.4, 0.9f);
+		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vFogColor", &FogColor, sizeof(_float3))))
+			return;
+
+
 		_float3 vPlayerPosition;
 		XMStoreFloat3(&vPlayerPosition, pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
 

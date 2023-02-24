@@ -6,6 +6,9 @@
 #include "Object_Pool_Manager.h"
 #include "Npc.h"
 #include "SnowFieldNpc.h"
+#include "Portal.h"
+#include "Item.h"
+#include "TreasureBox.h"
 
 float g_fSoundVolume = 0.0f;
 
@@ -41,8 +44,17 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_CityMapObject(TEXT("Layer_Deco"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_RestaurantObject(TEXT("Layer_Deco"))))
+		return E_FAIL;
+
+
 	if (FAILED(Ready_Layer_Npc(TEXT("Layer_Npc"))))
 		return E_FAIL;
+	if (FAILED(Ready_Layer_Interact_SnowField(TEXT("Layer_Interact"))))
+		return E_FAIL;
+	if (FAILED(Ready_Layer_Interact_Restaurant(TEXT("Layer_Interact"))))
+		return E_FAIL;
+
 
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("LogoSong.wav"), g_fSoundVolume);
 	
@@ -248,11 +260,80 @@ HRESULT CLevel_Logo::Ready_InstancingForPooling(const _tchar* pLayerTag)
 
 #pragma endregion CityZone
 
+#pragma region RestuarantZone
+	strcpy(stModelDesc.pModeltag, "houseFloor_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "InteriorWall_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Plate_mdl_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Potted_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "WallDeco_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Vase_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Table_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Chair_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Window_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+
+
+	strcpy(stModelDesc.pModeltag, "Apple_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Banana_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Carrot_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Mango_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Potato_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "RedOnion_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+	strcpy(stModelDesc.pModeltag, "Broccoli_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
+#pragma endregion RestuarantZone
 
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BATTLE, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Instancing"));
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -517,6 +598,75 @@ HRESULT CLevel_Logo::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_Logo::Ready_Layer_RestaurantObject(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC  ModelDesc;
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Deco.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_RESTAURANT, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+	}
+
+	CloseHandle(hFile);
+
+
+	hFile = 0;
+	dwByte = 0;
+	iNum = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Ceil.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_RESTAURANT, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+	}
+
+	CloseHandle(hFile);
+
+	hFile = 0;
+	dwByte = 0;
+	iNum = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Interact.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_RESTAURANT, pLayerTag, &ModelDesc)))
+			return E_FAIL;
+	}
+
+	CloseHandle(hFile);
+
+	RELEASE_INSTANCE(CGameInstance);
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Deco"));
+
+	return S_OK;
+}
+
 HRESULT CLevel_Logo::Ready_Layer_BossMapObject(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -547,10 +697,9 @@ HRESULT CLevel_Logo::Ready_Layer_BossMapObject(const _tchar * pLayerTag)
 	ModelDesc;
 	strcpy(ModelDesc.pModeltag, "Astral_Doubt");
 	ModelDesc.vPosition = _float3(50, 0.f, 50.f);
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_Boss"), &ModelDesc)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_RESTAURANT, TEXT("Layer_Boss"), &ModelDesc)))
 		return E_FAIL;
-	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
-
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Boss"));
 	return S_OK;
 }
 
@@ -635,8 +784,342 @@ HRESULT CLevel_Logo::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 
+	hFile = 0;
+	dwByte = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/PortalPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	CPortal::PORTALDESC PortalDesc;
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	
+	ReadFile(hFile, &(PortalDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+	PortalDesc.iNextLevel = LEVEL_RESTAURANT;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_CITY, TEXT("Layer_Portal"), &PortalDesc)))
+		return E_FAIL;
+
+
+	ReadFile(hFile, &(PortalDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+	PortalDesc.iNextLevel = LEVEL_RESTAURANT;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_CITY, TEXT("Layer_Portal"), &PortalDesc)))
+		return E_FAIL;
+	
+	CloseHandle(hFile);
+
+
 	RELEASE_INSTANCE(CGameInstance);
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco"));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Logo::Ready_Layer_Interact_SnowField(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	CItem::ITEMDESC ItemDesc;
+
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Interact.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, ItemDesc.m_ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+		if (!wcscmp(pModeltag, TEXT("Apple")))
+		{
+			ItemDesc.etype = CItem::APPLE;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Mushroom")))
+		{
+			ItemDesc.etype = CItem::MUSHROOM;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Lettuce_002")))
+		{
+			ItemDesc.etype = CItem::LETTUCE;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Jewel")))
+		{
+			ItemDesc.etype = CItem::JEWEL;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("GroundPlant")))
+		{
+			ItemDesc.etype = CItem::PLANT;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("SlimPlant")))
+		{
+			ItemDesc.etype = CItem::SLIMPLANT;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Box")))
+		{
+			ItemDesc.etype = CItem::BOX;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Box3")))
+		{
+			ItemDesc.etype = CItem::BOX;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Crystal")))
+		{
+			ItemDesc.etype = CItem::CRYSTAL;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+	}
+	CloseHandle(hFile);
+
+
+	CTreasureBox::BOXDESC m_TreasureBoxDesc;
+	hFile = 0;
+	dwByte = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/treasurebox.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(m_TreasureBoxDesc), sizeof(CTreasureBox::BOXDESC), &dwByte, nullptr);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_TreasureBox"), LEVEL_SNOWFIELD, pLayerTag, &m_TreasureBoxDesc)))
+			return E_FAIL;
+	}
+	CloseHandle(hFile);
+
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Interact"));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Logo::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = CGameInstance::Get_Instance();
+	Safe_AddRef(pGameInstance);
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	CItem::ITEMDESC ItemDesc;
+
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Interact.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, ItemDesc.m_ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+		if (!wcscmp(pModeltag, TEXT("Apple")))
+		{
+			ItemDesc.etype = CItem::APPLE;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else
+		{
+			ItemDesc.etype = CItem::APPLE;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+	}
+	CloseHandle(hFile);
+
+	//hFile = 0;
+	//dwByte = 0;
+	//iNum = 0;
+
+	//hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Apple.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//if (0 == hFile)
+	//	return E_FAIL;
+
+	///* 타일의 개수 받아오기 */
+	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	//for (_uint i = 0; i < iNum; ++i)
+	//{
+	//	ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+	//	
+	//	ItemDesc.etype = CItem::APPLE;
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+	//		return E_FAIL;
+	//	
+	//}
+	//CloseHandle(hFile);
+
+	//hFile = 0;
+	//dwByte = 0;
+	//iNum = 0;
+
+	//hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Banana.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//if (0 == hFile)
+	//	return E_FAIL;
+
+	///* 타일의 개수 받아오기 */
+	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	//for (_uint i = 0; i < iNum; ++i)
+	//{
+	//	ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+	//	ItemDesc.etype = CItem::APPLE;
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+	//		return E_FAIL;
+
+	//}
+	//CloseHandle(hFile);
+
+	//hFile = 0;
+	//dwByte = 0;
+	//iNum = 0;
+
+	//hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Bread_French.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//if (0 == hFile)
+	//	return E_FAIL;
+
+	///* 타일의 개수 받아오기 */
+	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	//for (_uint i = 0; i < iNum; ++i)
+	//{
+	//	ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+	//	ItemDesc.etype = CItem::APPLE;
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+	//		return E_FAIL;
+
+	//}
+	//CloseHandle(hFile);
+
+	//hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Carrot.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//if (0 == hFile)
+	//	return E_FAIL;
+
+	///* 타일의 개수 받아오기 */
+	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	//for (_uint i = 0; i < iNum; ++i)
+	//{
+	//	ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+	//	ItemDesc.etype = CItem::APPLE;
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+	//		return E_FAIL;
+
+	//}
+	//CloseHandle(hFile);
+
+	//hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/mango.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//if (0 == hFile)
+	//	return E_FAIL;
+
+	///* 타일의 개수 받아오기 */
+	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	//for (_uint i = 0; i < iNum; ++i)
+	//{
+	//	ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+	//	ItemDesc.etype = CItem::APPLE;
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+	//		return E_FAIL;
+
+	//}
+	//CloseHandle(hFile);
+
+	//hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/PineApple.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//if (0 == hFile)
+	//	return E_FAIL;
+
+	///* 타일의 개수 받아오기 */
+	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	//for (_uint i = 0; i < iNum; ++i)
+	//{
+	//	ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+	//	ItemDesc.etype = CItem::APPLE;
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+	//		return E_FAIL;
+
+	//}
+	//CloseHandle(hFile);
+
+
+	//hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Potato.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//if (0 == hFile)
+	//	return E_FAIL;
+
+	///* 타일의 개수 받아오기 */
+	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	//for (_uint i = 0; i < iNum; ++i)
+	//{
+	//	ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+	//	ItemDesc.etype = CItem::APPLE;
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+	//		return E_FAIL;
+
+	//}
+	//CloseHandle(hFile);
+
+	//hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/RedOnion.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//if (0 == hFile)
+	//	return E_FAIL;
+
+	///* 타일의 개수 받아오기 */
+	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	//for (_uint i = 0; i < iNum; ++i)
+	//{
+	//	ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+	//	ItemDesc.etype = CItem::APPLE;
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+	//		return E_FAIL;
+
+	//}
+	//CloseHandle(hFile);
+
+	RELEASE_INSTANCE(CGameInstance);
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Interact"));
 
 	return S_OK;
 }

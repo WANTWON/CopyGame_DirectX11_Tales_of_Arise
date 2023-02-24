@@ -247,6 +247,7 @@
     <ClInclude Include="..\Public\LawSkillState.h" />
     <ClInclude Include="..\Public\Level_BossZone.h" />
     <ClInclude Include="..\Public\Level_City.h" />
+    <ClInclude Include="..\Public\Level_Restaurant.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\PlayerOverlimit.h" />
@@ -255,6 +256,7 @@
     <ClInclude Include="..\Public\Player_RinwellSkillAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
+    <ClInclude Include="..\Public\Portal.h" />
     <ClInclude Include="..\public\ScreenDistortion.h" />
     <ClInclude Include="..\Public\SnowFieldNpc.h" />
     <ClInclude Include="..\Public\HawkBattle_PeckState.h" />
@@ -493,6 +495,7 @@
     <ClCompile Include="..\Private\LawSkillState.cpp" />
     <ClCompile Include="..\Private\Level_BossZone.cpp" />
     <ClCompile Include="..\Private\Level_City.cpp" />
+    <ClCompile Include="..\Private\Level_Restaurant.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\PlayerOverlimit.cpp" />
@@ -501,6 +504,7 @@
     <ClCompile Include="..\Private\Player_RinwellSkillAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />
+    <ClCompile Include="..\Private\Portal.cpp" />
     <ClCompile Include="..\private\ScreenDistortion.cpp" />
     <ClCompile Include="..\Private\SnowFieldNpc.cpp" />
     <ClCompile Include="..\Private\HawkBattle_PeckState.cpp" />
