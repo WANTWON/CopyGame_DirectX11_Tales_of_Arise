@@ -11,7 +11,7 @@ using namespace Astral_Doubt;
 CBattle_SpearMultiState::CBattle_SpearMultiState(CAstralDoubt* pAstralDoubt, STATE_ID eState)
 {
 	m_pOwner = pAstralDoubt;
-	m_eState_Id = eState;
+	m_eStateId = eState;
 
 	m_fTimeDeltaAcc = 0;
 	m_fIdleTime = ((rand() % 4000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
@@ -79,7 +79,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 				{
 					//Camera Shaking 
 					if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-						dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.7f, 0.1f);
+						dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.4f, 0.1f);
 				}
 
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
@@ -122,12 +122,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						CCollider::COLLIDERDESC		ColliderDesc;
 
 						ColliderDesc.vScale = _float3(15.f, 15.f, 15.f);
-						ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+						ColliderDesc.vPosition = _float3(-5.f, 0.f, 0.f);
 
 						m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 						m_pAtkColliderCom->Update(matWorld);
 
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+						
 					}
 					else if (nullptr != m_pAtkColliderCom)
 						m_pAtkColliderCom->Update(matWorld);
@@ -138,12 +138,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						CCollider::COLLIDERDESC		ColliderDesc2th;
 
 						ColliderDesc2th.vScale = _float3(15.f, 15.f, 15.f);
-						ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
+						ColliderDesc2th.vPosition = _float3(-5.f, 0.f, 0.f);
 
 						m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 						m_p2th_AtkColliderCom->Update(matWorld_2th);
 
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+						
 					}
 					else if (nullptr != m_p2th_AtkColliderCom)
 						m_p2th_AtkColliderCom->Update(matWorld_2th);
@@ -154,12 +154,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						CCollider::COLLIDERDESC		ColliderDesc3th;
 
 						ColliderDesc3th.vScale = _float3(15.f, 15.f, 15.f);
-						ColliderDesc3th.vPosition = _float3(0.f, 0.f, 0.f);
+						ColliderDesc3th.vPosition = _float3(-5.f, 0.f, 0.f);
 
 						m_p3th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc3th);
 						m_p3th_AtkColliderCom->Update(matWorld_3th);
 
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+		
 					}
 					else if (nullptr != m_p3th_AtkColliderCom)
 						m_p3th_AtkColliderCom->Update(matWorld_3th);
@@ -170,12 +170,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						CCollider::COLLIDERDESC		ColliderDesc4th;
 
 						ColliderDesc4th.vScale = _float3(15.f, 15.f, 15.f);
-						ColliderDesc4th.vPosition = _float3(0.f, 0.f, 0.f);
+						ColliderDesc4th.vPosition = _float3(-5.f, 0.f, 0.f);
 
 						m_p4th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc4th);
 						m_p4th_AtkColliderCom->Update(matWorld_4th);
 
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+						
 					}
 
 					else if (nullptr != m_p4th_AtkColliderCom)
@@ -186,12 +186,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						CCollider::COLLIDERDESC		ColliderDesc5th;
 
 						ColliderDesc5th.vScale = _float3(15.f, 15.f, 15.f);
-						ColliderDesc5th.vPosition = _float3(0.f, 0.f, 0.f);
+						ColliderDesc5th.vPosition = _float3(-5.f, 0.f, 0.f);
 
 						m_p5th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc5th);
 						m_p5th_AtkColliderCom->Update(matWorld_5th);
 
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+						
 					}
 					else if (nullptr != m_p5th_AtkColliderCom)
 						m_p5th_AtkColliderCom->Update(matWorld_5th);
@@ -202,11 +202,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						CCollider::COLLIDERDESC		ColliderDesc6th;
 
 						ColliderDesc6th.vScale = _float3(15.f, 15.f, 15.f);
-						ColliderDesc6th.vPosition = _float3(0.f, 0.f, 0.f);
+						ColliderDesc6th.vPosition = _float3(-5.f, 0.f, 0.f);
 
 						m_p6th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc6th);
 						m_p6th_AtkColliderCom->Update(matWorld_6th);
 
+						
 					}
 					else if (nullptr != m_p6th_AtkColliderCom)
 						m_p6th_AtkColliderCom->Update(matWorld_6th);
@@ -289,7 +290,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 						m_pAtkColliderCom->Update(matWorld);
 
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+						
 					}
 					else if (nullptr != m_pAtkColliderCom)
 						m_pAtkColliderCom->Update(matWorld);
@@ -305,7 +306,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 						m_p2th_AtkColliderCom->Update(matWorld_2th);
 
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+						
 					}
 					else if (nullptr != m_p2th_AtkColliderCom)
 						m_p2th_AtkColliderCom->Update(matWorld_2th);
@@ -321,7 +322,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_p3th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc3th);
 						m_p3th_AtkColliderCom->Update(matWorld_3th);
 
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+						
 					}
 					else if (nullptr != m_p3th_AtkColliderCom)
 						m_p3th_AtkColliderCom->Update(matWorld_3th);
@@ -337,7 +338,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_p4th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc4th);
 						m_p4th_AtkColliderCom->Update(matWorld_4th);
 
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+						
 					}
 
 					else if (nullptr != m_p4th_AtkColliderCom)
@@ -353,8 +354,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_p5th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc5th);
 						m_p5th_AtkColliderCom->Update(matWorld_5th);
 
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-					}
+						
 					else if (nullptr != m_p5th_AtkColliderCom)
 						m_p5th_AtkColliderCom->Update(matWorld_5th);
 
@@ -369,6 +369,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_p6th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc6th);
 						m_p6th_AtkColliderCom->Update(matWorld_6th);
 
+						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 					}
 					else if (nullptr != m_p6th_AtkColliderCom)
 						m_p6th_AtkColliderCom->Update(matWorld_6th);
@@ -417,6 +418,41 @@ CAstralDoubt_State * CBattle_SpearMultiState::LateTick(_float fTimeDelta)
 			if (pCollided)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p2th_AtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p3th_AtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p4th_AtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p5th_AtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p6th_AtkColliderCom, &pCollisionTarget))
+		{
+			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
 	}
 
 
@@ -428,7 +464,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::LateTick(_float fTimeDelta)
 		//}
 
 		//else
-		switch (m_eState_Id)
+		switch (m_eStateId)
 		{
 		case CAstralDoubt_State::STATE_SPEARMULTI:
 			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
@@ -475,7 +511,7 @@ void CBattle_SpearMultiState::Enter()
 {
 	
 	
-	switch (m_eState_Id)
+	switch (m_eStateId)
 	{
 	case CAstralDoubt_State::STATE_SPEARMULTI:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_MULTI);

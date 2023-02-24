@@ -214,7 +214,7 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_P))
 	{
-		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_BRAVE);
+		CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_FOOTPRESS);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
 

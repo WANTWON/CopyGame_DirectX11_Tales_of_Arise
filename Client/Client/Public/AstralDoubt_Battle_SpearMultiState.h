@@ -19,7 +19,7 @@ public:
 private:
 	//_float			m_fTimeDeltaAcc = 0.f;
 	_float			m_fIdleAttackTimer = 1.5f;
-	STATE_ID	m_eState_Id;
+	//STATE_ID	m_eState_Id;
 	STATE_ID	m_ePreTurn_Id;
 
 	_float			m_fIdleTime;
