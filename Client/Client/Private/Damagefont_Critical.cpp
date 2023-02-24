@@ -40,6 +40,11 @@ HRESULT CDamagefont_Critical::Initialize(void * pArg)
 	else
 		m_bplusminus = false;
 
+
+	
+
+
+
 	//m_fFirstPos = m_fPosition = { m_fTargetPos.x -= rand() % 150  , m_fTargetPos.y -= rand() % 150 };
 
 
@@ -56,68 +61,43 @@ HRESULT CDamagefont_Critical::Initialize(void * pArg)
 	/*if (m_iIndex == CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1)
 	m_bforMainPlayer = true;*/
 
-	m_eShaderID = UI_BRIGHT;
+	
+
+
 	m_fAlpha = 1.f;
 
 
 	m_fSize.x = 30.f * m_fScaler;
 	m_fSize.y = 30.f * m_fScaler;
-	m_fNext = 34.f;
+	
 	//m_fPosition.y -= m_fYFadeout;
 
 
 
-	//desc.position.x = 1130.f;
-	//m_fPosition.x = 1180.f;
-	//if (m_iIndex == 0)
-	//{
-	//	//		m_fPosition.x = 1180.f + (m_iIndex * 14);
+	if (m_damagedesc.itype >= 3)
+	{
+		m_bfontmaker = false;
+	}
+	else
+		m_bfontmaker = true;
 
+	if (m_damagedesc.itype == 3)
+	{
+		m_eShaderID = UI_RECOVERFONT;
+		m_fNext = 23.f;
+	}
+	else if (m_damagedesc.itype == 4)
+	{
+		m_eShaderID = UI_PlayerHitfont;
+		m_fNext = 23.f;
 
-	//	m_fnumberY = desc.position.y = m_fPosition.y = 375.f;
-
-
-	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-	//		return E_FAIL;
-
-	//	desc.position.x = 1060.f;
-	//	desc.position.y = m_fnumberY - 34.f;
-	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-	//		return E_FAIL;
-
-	//}
-	//if (m_iIndex == 1)
-	//{
-
-	//	m_fnumberY = desc.position.y = m_fPosition.y = 435.f;
-
-
-	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-	//		return E_FAIL;
-	//	desc.position.x = 1060.f;
-	//	desc.position.y = m_fnumberY - 34.f;
-	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-	//		return E_FAIL;
-	//}
-	//if (m_iIndex == 2)
-	//{
-
-	//	m_fnumberY = desc.position.y = m_fPosition.y = 495.f;
-
-
-	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-	//		return E_FAIL;
-	//	desc.position.x = 1060.f;
-	//	desc.position.y = m_fnumberY - 34.f;
-	//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-	//		return E_FAIL;
-
-	//}
-	//	if (m_iIndex == 3)
-	//	{
-	////		m_fPosition.x = 1180.f + (m_iIndex * 14);
-	//		m_fnumberY = desc.position.y = m_fPosition.y = 555;
-	//	}
+	}
+	else
+	{
+		m_fNext = 38.f;
+		m_eShaderID = UI_BRIGHT;
+	}
+		
 
 
 
@@ -202,9 +182,17 @@ int CDamagefont_Critical::Tick(_float fTimeDelta)
 	}
 
 
-
-	m_fSize.x = 60.f * m_fScaler;
-	m_fSize.y = 60.f * m_fScaler;
+	if (m_damagedesc.itype == 3 || m_damagedesc.itype == 4)
+	{
+		m_fSize.x = 30.f * m_fScaler;
+		m_fSize.y = 30.f * m_fScaler;
+	}
+	else
+	{
+		m_fSize.x = 60.f * m_fScaler;
+		m_fSize.y = 60.f * m_fScaler;
+	}
+	
 	if (m_bplusminus)
 	{
 	m_fPosition.x = m_fTargetPos.x + m_fRandomOffset.x;
@@ -265,6 +253,13 @@ void CDamagefont_Critical::Late_Tick(_float fTimeDelta)
 
 
 	}*/
+
+	if (m_bTest)
+	{
+		m_bTest = false;
+		return;
+	}
+
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
 
@@ -395,7 +390,7 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 	m_bfadeout = false;
 	m_fYFadeout = 0.f;
 	m_fScaler = 2.f;
-	m_bfontmaker = true;
+	//m_bfontmaker = true;
 	m_balphaup = false;
 
 	m_fbrightpos_hp[0] = 0.f;
@@ -405,7 +400,27 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 
 	m_fSize.x = 30.f * m_fScaler;
 	m_fSize.y = 30.f * m_fScaler;
-	m_fNext = 34.f;
+	m_fNext = 38.f;
+
+	if (m_damagedesc.itype >= 3)
+	{
+		m_bfontmaker = false;
+	}
+	else
+		m_bfontmaker = true;
+
+	if (m_damagedesc.itype == 3)
+	{
+		m_eShaderID = UI_RECOVERFONT;
+		m_fNext = 23.f;
+	}
+	else if (m_damagedesc.itype == 4)
+	{
+		m_eShaderID = UI_PlayerHitfont;
+		m_fNext = 23.f;
+	}
+	else
+		m_eShaderID = UI_BRIGHT;
 
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixTranspose(XMMatrixIdentity()));
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f)));
@@ -415,7 +430,14 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 
-	
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+		return;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+		return;
+
+	m_bTest = true;
 }
 
 HRESULT CDamagefont_Critical::Ready_Components(void * pArg)
@@ -433,7 +455,7 @@ HRESULT CDamagefont_Critical::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_font"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_battlefont"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */

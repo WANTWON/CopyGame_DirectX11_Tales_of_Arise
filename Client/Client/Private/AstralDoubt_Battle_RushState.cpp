@@ -250,7 +250,7 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 		{
 			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, true);
 		}
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p3th_AtkColliderCom, &pCollisionTarget))
