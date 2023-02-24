@@ -39,12 +39,14 @@ HRESULT CLevel_Restaurant::Initialize()
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Deco"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Interact"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Portal"));
+
 		
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_RESTAURANT);
 	m_pCamera = dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera());
-	m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
+	m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_ROOM);
 	m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, -10.f, 0.f));
 
 	g_fSoundVolume = 0.f;
@@ -70,7 +72,6 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 		if (pPlayer)
 			pPlayer->Get_Renderer()->Set_ZoomBlur(false);
 
-		CPlayerManager::Get_Instance()->Save_LastPosition();
 		m_pCollision_Manager->Clear_AllCollisionGroup();
 
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Camera"));
@@ -97,7 +98,30 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 
 	SetWindowText(g_hWnd, TEXT("LEVEL_RESTAURANT"));
 
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_SPACE))
+	{
+		m_bMinigameStart = !m_bMinigameStart;
 
+		if (m_bMinigameStart)
+		{
+			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_MINIGAME);
+			dynamic_cast<CCamera_MiniGame*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_CamMode(CCamera_MiniGame::MINIGAME_SLASH);
+
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(18, 0.f, 31.f, 1.f));
+			pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
+			pPlayer->Check_Navigation();
+		}
+		else
+		{
+			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
+
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
+			pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
+			pPlayer->Check_Navigation();
+		}
+	}
 
 }
 
@@ -249,6 +273,27 @@ HRESULT CLevel_Restaurant::Ready_Layer_Camera(const _tchar * pLayerTag)
 	ActionCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CameraAction"), LEVEL_RESTAURANT, pLayerTag, &ActionCameraDesc)))
+		return E_FAIL;
+
+
+	CCamera_MiniGame::CAMERADESC_DERIVED				MiniGameCameraDesc;
+	ZeroMemory(&CameraDesc, sizeof(CCamera_MiniGame::CAMERADESC_DERIVED));
+
+	MiniGameCameraDesc.InitPostion = _float4(0.f, 0.f, 0.f, 1.f);
+	MiniGameCameraDesc.vDistance = _float4(0, 10, -10, 0.f);
+
+	MiniGameCameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
+	MiniGameCameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+
+	MiniGameCameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	MiniGameCameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	MiniGameCameraDesc.CameraDesc.fNear = 0.1f;
+	MiniGameCameraDesc.CameraDesc.fFar = 1000.f;
+
+	MiniGameCameraDesc.CameraDesc.TransformDesc.fSpeedPerSec = 10.f;
+	MiniGameCameraDesc.CameraDesc.TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera_MiniGame"), LEVEL_RESTAURANT, pLayerTag, &MiniGameCameraDesc)))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);

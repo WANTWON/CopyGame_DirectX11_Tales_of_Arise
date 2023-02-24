@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Camera_Dynamic.h"
 #include "Camera_Action.h"
+#include "Camera_MiniGame.h"
 #include "Terrain.h"
 #include "Weapon.h"
 #include "Sky.h"
@@ -193,6 +194,11 @@ HRESULT CLoader::Loading_ForPrototype()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	/*For.Prototype_Portal */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_MiniGame"),
+		CCamera_MiniGame::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_Portal */
@@ -2552,6 +2558,10 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 #pragma endregion Deco BossMap Object
 
 #pragma region Deco Restaurant Object
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("AugustDoor"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/AugustDoor.dat"))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cabinet"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/Cabinet.dat"))))
 		return E_FAIL;

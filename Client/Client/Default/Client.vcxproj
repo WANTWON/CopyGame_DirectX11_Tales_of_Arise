@@ -236,6 +236,7 @@
     <ClInclude Include="..\Public\BreakFont.h" />
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\Public\Camera_Action.h" />
+    <ClInclude Include="..\Public\Camera_MiniGame.h" />
     <ClInclude Include="..\Public\CloseChaseState.h" />
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
@@ -484,6 +485,7 @@
     <ClCompile Include="..\Private\BreakFont.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\Private\Camera_Action.cpp" />
+    <ClCompile Include="..\Private\Camera_MIniGame.cpp" />
     <ClCompile Include="..\Private\CloseChaseState.cpp" />
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />

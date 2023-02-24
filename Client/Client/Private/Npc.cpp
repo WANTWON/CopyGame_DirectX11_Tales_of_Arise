@@ -41,8 +41,8 @@ HRESULT CNpc::Initialize(void * pArg)
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 		Set_Scale(m_NpcDesc.Modeldesc.vScale);
 
-		if (m_ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_ModelDesc.m_fAngle));
+		if (m_NpcDesc.Modeldesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_NpcDesc.Modeldesc.m_fAngle));
 	}
 
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_INTERACT, this);

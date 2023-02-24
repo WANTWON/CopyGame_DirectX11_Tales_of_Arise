@@ -642,27 +642,19 @@ HRESULT CLevel_Logo::Ready_Layer_RestaurantObject(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	hFile = 0;
-	dwByte = 0;
-	iNum = 0;
-	hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Interact.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
 
+	CPortal::PORTALDESC PortalDesc;
 	/* 타일의 개수 받아오기 */
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_RESTAURANT, pLayerTag, &ModelDesc)))
-			return E_FAIL;
-	}
-
-	CloseHandle(hFile);
+	PortalDesc.m_ModelDesc.vPosition.x = 16.7f;
+	PortalDesc.m_ModelDesc.vPosition.y = 0.f;
+	PortalDesc.m_ModelDesc.vPosition.z = -4.f;
+	PortalDesc.iNextLevel = LEVEL_CITY;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_RESTAURANT, TEXT("Layer_Portal"), &PortalDesc)))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Deco"));
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Portal"));
 
 	return S_OK;
 }

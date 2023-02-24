@@ -421,6 +421,9 @@
     <Filter Include="01.Levels\07.ArenaZone %28LawBattle%29">
       <UniqueIdentifier>{0b21e4a1-a00c-4231-adfd-45977878d9c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Camera\02.MiniGame_Camera">
+      <UniqueIdentifier>{e1b5614f-9d2f-48ec-ad63-127f549cc725}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1170,6 +1173,9 @@
     <ClInclude Include="..\Public\Level_Restaurant.h">
       <Filter>01.Levels\05.Restaurant %28MiniGame1%29</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Camera_MiniGame.h">
+      <Filter>03.Camera\02.MiniGame_Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1885,6 +1891,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Restaurant.cpp">
       <Filter>01.Levels\05.Restaurant %28MiniGame1%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_MIniGame.cpp">
+      <Filter>03.Camera\02.MiniGame_Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

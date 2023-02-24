@@ -39,15 +39,15 @@ HRESULT CItem::Initialize(void* pArg)
 
 	if (pArg != nullptr)
 	{
-		m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&m_ModelDesc.WorldMatrix));
-		_vector vPosition = XMLoadFloat3(&m_ModelDesc.vPosition);
+		m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&m_ItemDesc.m_ModelDesc.WorldMatrix));
+		_vector vPosition = XMLoadFloat3(&m_ItemDesc.m_ModelDesc.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-		m_pTransformCom->Set_Rotation(m_ModelDesc.vRotation);
-		Set_Scale(m_ModelDesc.vScale);
+		m_pTransformCom->Set_Rotation(m_ItemDesc.m_ModelDesc.vRotation);
+		Set_Scale(m_ItemDesc.m_ModelDesc.vScale);
 
-		if (m_ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_ModelDesc.m_fAngle));
+		if (m_ItemDesc.m_ModelDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_ItemDesc.m_ModelDesc.m_fAngle));
 
 	}
 

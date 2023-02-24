@@ -8,15 +8,11 @@ END
 
 BEGIN(Client)
 class CMonster;
-class CCamera_Dynamic final : public CCamera
+class CCamera_MiniGame final : public CCamera
 {
 public:
 
-	enum CAMERAMODE {CAM_DEBUG, CAM_PLAYER,
-		CAM_BATTLEZONE, CAM_BATTLE_CLEAR, CAM_LOCKON, CAM_LOCKOFF,
-		CAM_AIBOOSTON, CAM_AIBOOSTOFF, CAM_TARGETMODE, CAM_TARGETMODE_OFF,
-		CAM_ROOM,
-		CAM_END};
+	enum CAMERAMODE { CAM_DEBUG, CAM_ROOM, MINIGAME_SLASH, CAM_TARGETMODE, CAM_TARGETMODE_OFF, CAM_END };
 	
 
 	typedef struct tagCameraTool
@@ -40,9 +36,9 @@ public:
 	}CAMERADESC_DERIVED;
 
 private:
-	CCamera_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CCamera_Dynamic(const CCamera_Dynamic& rhs);
-	virtual ~CCamera_Dynamic() = default;
+	CCamera_MiniGame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCamera_MiniGame(const CCamera_MiniGame& rhs);
+	virtual ~CCamera_MiniGame() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -73,28 +69,21 @@ public:
 
 public:
 	void Debug_Camera(_float fTimeDelta);
+	void Room_Camera(_float fTimeDelta);
 	void MiniGameSlash_Camera(_float fTimeDelta);
-	void Battle_Camera(_float fTimeDelta);
-	void BattleClear_Camera(_float fTimeDelta);
-	void LockOn_Camera(_float fTimeDelta);
-	void LockOff_Camera(_float fTimeDelta);
 
-	void AIBoostOn_Camera(_float fTimeDelta);
-	void AIBoostOff_Camera(_float fTimeDelta);
-
-	void Change_LockOn(_uchar eKeyID);
 	void TargetTool_Camera(_float fTimeDelta);
 	void TargetTool_CameraOff(_float fTimeDelta);
 
-	void Room_Camera(_float fTimeDelta);
+	
 private:
 	void ZoomSetting(_float fDistance, _float fSpeed);
 	void Shaking_Camera(_float fTimeDelta);
 
 private:
 	class CBaseObj*	m_pTarget = nullptr;
-	CAMERAMODE		m_ePreCamMode = CAM_PLAYER;
-	CAMERAMODE		m_eCamMode = CAM_PLAYER;
+	CAMERAMODE		m_ePreCamMode = MINIGAME_SLASH;
+	CAMERAMODE		m_eCamMode = MINIGAME_SLASH;
 	
 	_vector			m_vDistance = { 0.f,0.f,0.f,0.f };
 	_long			m_lMouseWheel = 0;
@@ -143,7 +132,7 @@ private:
 	vector<CMonster*> vecLeftMonster;
 
 public:
-	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CCamera_MiniGame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
 };

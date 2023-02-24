@@ -211,7 +211,11 @@ HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
-	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20.f, 0.f, -135.f, 1.f));
+
+	if(pGameInstance->Get_PastLevelIndex() == LEVEL_SNOWFIELD)
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20.f, 0.f, -135.f, 1.f));
+	else
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
 	pPlayer->Change_Navigation(LEVEL_CITY);
 	pPlayer->Compute_CurrentIndex(LEVEL_CITY);
 	pPlayer->Check_Navigation();
@@ -222,7 +226,10 @@ HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 	_int i = 0;
 	for (auto& iter : pAIPlayers)
 	{
-		iter->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20.f, 0.f, -135.f, 1.f));
+		if (pGameInstance->Get_PastLevelIndex() == LEVEL_SNOWFIELD)
+			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20.f, 0.f, -135.f, 1.f));
+		else
+			pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
 		iter->Change_Navigation(LEVEL_CITY);
 		iter->Compute_CurrentIndex(LEVEL_CITY);
 		iter->Check_Navigation();

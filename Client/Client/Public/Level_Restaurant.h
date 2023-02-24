@@ -28,7 +28,8 @@ private:
 	CCamera_Dynamic*	m_pCamera = nullptr;
 	_float	   m_fMinLength = MAXDISTANCE;
 
-	_float m_fBlurTimer = 0.f;
+	_float		m_fBlurTimer = 0.f;
+	_bool		m_bMinigameStart = false;
 
 	vector<class CEffect*> m_SnowParticles1;
 	vector<class CEffect*> m_SnowParticles2;
