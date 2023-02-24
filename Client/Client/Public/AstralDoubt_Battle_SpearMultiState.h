@@ -22,7 +22,8 @@ private:
 	//STATE_ID	m_eState_Id;
 	STATE_ID	m_ePreTurn_Id;
 
-	_float			m_fIdleTime;
+	_float		m_fIdleTime;
+	_float		m_fColliderStart = -1.f;
 
 	CCollider*  m_pAtkColliderCom = nullptr;
 	CCollider*	m_p2th_AtkColliderCom = nullptr;
@@ -30,6 +31,11 @@ private:
 	CCollider*	m_p4th_AtkColliderCom = nullptr;
 	CCollider*	m_p5th_AtkColliderCom = nullptr;
 	CCollider*	m_p6th_AtkColliderCom = nullptr;
+	CCollider*  m_pFootColliderCom = nullptr;
+	CCollider*  m_p2th_FootColliderCom = nullptr;
+
+	_bool		m_bCausedDamage= false;
+	_bool		m_bFootCauseDamage = false;
 };
 END
 END

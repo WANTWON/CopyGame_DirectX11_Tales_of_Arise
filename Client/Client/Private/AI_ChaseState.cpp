@@ -214,7 +214,8 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 				switch (rand() % 3)
 				{
 				case 0:
-					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+					//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+					break;
 				case 1:
 					return new CAICheckState(m_pOwner, m_eStateId);
 				case 2:
@@ -228,23 +229,23 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 				{
 
 				case 0:
-					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
-
+					//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+					break;
 				case 1:
-					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
-
+					//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+					break;
 				case 2:
-					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
-
+					//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
+					break;
 				case 3:
-					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
-
+					//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
+					break;
 				case 4:
-					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
-
+					//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+					break;
 				case 5:
-					return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
-
+					//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+					break;
 				case 6:
 					return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
 
@@ -263,8 +264,8 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 				case 0:
 					return new CAI_DodgeState(m_pOwner, m_pTarget, true);
 				case 1:
-					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
-
+					//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+					break;
 				}
 
 
@@ -275,26 +276,26 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 				{
 
 				case 0:
-					return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
-
+					//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+					break;
 				case 1:
-					return new CAI_Rinwell_SkillState(m_pOwner, STATE_GALEFORCE, m_pTarget);
-
+					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_GALEFORCE, m_pTarget);
+					break;
 				case 2:
-					return new CAI_Rinwell_SkillState(m_pOwner, STATE_THUNDERFIELD, m_pTarget);
-
+					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_THUNDERFIELD, m_pTarget);
+					break;
 				case 3:
-					return new CAI_Rinwell_SkillState(m_pOwner, STATE_METEOR, m_pTarget);
-
+					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_METEOR, m_pTarget);
+					break;
 				case 4:
-					return new CAI_Rinwell_SkillState(m_pOwner, STATE_DIVINE_SABER, m_pTarget);
-
+					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_DIVINE_SABER, m_pTarget);
+					break;
 				case 5:
-					return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
-
+					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
+					break;
 				case 6:
-					return new CAI_Rinwell_SkillState(m_pOwner, STATE_BANGJEON, m_pTarget);
-
+					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_BANGJEON, m_pTarget);
+					break;
 				case 7:
 					return new CAI_DodgeState(m_pOwner, m_pTarget);
 
@@ -322,7 +323,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 					return new CAI_DodgeState(m_pOwner, m_pTarget);
 					break;
 				case  1:
-					return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+					return new AI_LAW_NomalAttack_State(m_pOwner, STATE_ATTACK, m_pTarget);
 					break;
 				}
 

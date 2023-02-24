@@ -137,7 +137,9 @@ protected:
 
 	_bool m_bLookatOnetime = true;
 
-	//_bool m_bIsFly = false;
+	// 공중인지 판단하는 변수
+	_bool m_bIsFly = false;
+	_float m_fTime = 0.f;
 	
 };
 END

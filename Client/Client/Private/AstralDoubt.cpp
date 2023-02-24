@@ -212,6 +212,13 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 
 	LateTick_State(fTimeDelta);
 
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
+	{
+		CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
+		m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	}
+
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_P))
 	{
 		CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_FOOTPRESS);
@@ -321,6 +328,7 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 	case MOVE_WALK_F:
 	case SYMBOL_RUN:
 	case MOVE_IDLE:
+	case SYMBOL_LOOKOUT:
 		return true;
 
 
@@ -333,7 +341,6 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 	case ATTACK_HEAD_BEAM:
 	case ATTACK_IN_OUT_UPPER:
 	case ATTACK_SPEAR_MULTI:
-	case SYMBOL_LOOKOUT:
 	case SYMBOL_TURN_LEFT:
 	case SYMBOL_TURN_RIGHT:
 	case ATTACK_SWING_360:

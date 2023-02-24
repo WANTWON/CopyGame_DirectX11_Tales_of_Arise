@@ -80,8 +80,6 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 
 				else if (nullptr != m_pAtkColliderCom)
@@ -96,8 +94,6 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 
 					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 					m_p2th_AtkColliderCom->Update(R_matWorld);
-
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 
 				else if (nullptr != m_p2th_AtkColliderCom)
@@ -116,8 +112,6 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 
 			m_pAtkColliderCom = nullptr;
 			m_p2th_AtkColliderCom = nullptr;
-
-			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}

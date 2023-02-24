@@ -115,7 +115,6 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
-
 		}
 	}
 	return nullptr;

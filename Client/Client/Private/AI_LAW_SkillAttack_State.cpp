@@ -44,7 +44,11 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	m_pOwner->Check_Navigation_Jump();
+	if (m_pOwner->Get_IsFly())
+		m_pOwner->Check_Navigation_Jump();
+	else
+		m_pOwner->Check_Navigation();
+	
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -340,10 +344,6 @@ void CAI_LAW_SkillAttack_State::Enter(void)
 			break;
 		}
 
-	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
-
-	
-
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 }
@@ -351,6 +351,11 @@ void CAI_LAW_SkillAttack_State::Enter(void)
 void CAI_LAW_SkillAttack_State::Exit(void)
 {
 	__super::Exit();
+
+	Safe_Release(m_pLeftFootCollider);
+	Safe_Release(m_pLeftHandCollider);
+	Safe_Release(m_pRightFootCollider);
+	Safe_Release(m_pRightHandCollider);
 }
 
 void CAI_LAW_SkillAttack_State::Reset_Skill(void)
