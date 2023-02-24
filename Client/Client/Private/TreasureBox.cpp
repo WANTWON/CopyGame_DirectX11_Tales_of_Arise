@@ -100,6 +100,8 @@ void CTreasureBox::Late_Tick(_float fTimeDelta)
 		return ;
 	__super::Late_Tick(fTimeDelta);
 
+	m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
+
 	if (m_bOpenFinish)
 		return;
 
@@ -210,6 +212,24 @@ HRESULT CTreasureBox::Render_ShadowDepth()
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+HRESULT CTreasureBox::Render_EdgeDetection()
+{
+	if (nullptr == m_pShaderCom || nullptr == m_pModelCom)
+		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 5)))
+			return E_FAIL;
+	}
 }
 
 

@@ -13,6 +13,7 @@ vector g_vColor = vector(1.f, 1.f, 1.f, 1);
 
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
+texture2D g_DepthTexture;
 
 /* Glow */
 texture2D g_GlowTexture;
@@ -329,7 +330,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_Priority, 0);
+		SetDepthStencilState(DSS_Default, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;

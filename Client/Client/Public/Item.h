@@ -25,6 +25,7 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_EdgeDetection() override;
 
 protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;

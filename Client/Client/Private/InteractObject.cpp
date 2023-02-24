@@ -128,7 +128,6 @@ HRESULT CInteractObject::Render_ShadowDepth()
 	return S_OK;
 }
 
-
 HRESULT CInteractObject::Drop_Items()
 {
 	int iRadomItem = rand() % 3;
