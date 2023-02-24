@@ -28,7 +28,7 @@ CPlayerState * CAlphenSkillState::HandleInput(void)
 
 CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.1f);
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -309,7 +309,7 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 
 CPlayerState * CAlphenSkillState::EventInput(void)
 {
-	if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
+	if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
 	{
 		if (GetKeyState('E') < 0)
 		{

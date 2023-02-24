@@ -160,7 +160,7 @@ CPlayerState * CLawAirFSkillState::EventInput(void)
 	if (GetKeyState(VK_LBUTTON) < 0)
 		return new CLawAttackState(m_pOwner, STATE_ID::STATE_NORMAL_ATTACK1);
 
-	if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
+	if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
 	{
 		if (GetKeyState('E') < 0)
 			return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
@@ -219,10 +219,8 @@ void CLawAirFSkillState::Exit(void)
 
 	if (m_bIsFly)
 		m_pOwner->Off_IsFly();
-
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_START);
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_LOOP);
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_ENHABAKUSAIKEN_END);
+	
+	Safe_Release(m_pLandCollider);
 }
 
 CCollider * CLawAirFSkillState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)

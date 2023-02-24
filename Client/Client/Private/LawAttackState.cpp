@@ -32,7 +32,7 @@ CPlayerState * CLawAttackState::HandleInput()
 
 CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -430,7 +430,7 @@ CPlayerState * CLawAttackState::EventInput(void)
 
 	if (m_bIsFly)
 	{
-		if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
+		if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
 		{
 			if (GetKeyState('E') < 0)
 				return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fTime);
@@ -448,7 +448,7 @@ CPlayerState * CLawAttackState::EventInput(void)
 	}
 	else
 	{
-		if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
+		if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
 		{
 			if (GetKeyState('E') < 0)
 				return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
