@@ -22,6 +22,8 @@ private:
 	_bool m_bEffectSlashSpawned = false;
 	_bool m_bEffectKickSpawned = false;
 	vector<CEffect*> m_SlashEffect;
+
+	CCollider* m_pAttackCollider = nullptr;
 };
 END
 END
