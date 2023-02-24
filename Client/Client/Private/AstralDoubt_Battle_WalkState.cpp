@@ -337,9 +337,11 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 	_bool bIs_TargetInFront = false;
 	bIs_TargetInFront = Is_TargetInFront(m_vCurTargetPos);
 
-	if (m_Testbool)
-	{
-		if (m_fTarget_Distance > 24.f)
+	_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+	m_pOwner->Get_Transform()->LookAt(vPosition);
+	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
+
+		if (m_fTarget_Distance > 30.f)
 		{
 			if (m_ePreState_Id != CAstralDoubt_State::STATE_HEADBEAM)
 			{
@@ -368,114 +370,80 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 
 			}
 
-			else if (m_ePreState_Id == CAstralDoubt_State::STATE_HEADBEAM)
-			{
-				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-				m_pOwner->Get_Transform()->LookAt(vPosition);
-				m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
-			}
+			//else if (m_ePreState_Id == CAstralDoubt_State::STATE_HEADBEAM)
+			//{
+			//	_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			//	m_pOwner->Get_Transform()->LookAt(vPosition);
+			//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
+			//}
 		}
 			
 
 		else
 		{
-			_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-			m_pOwner->Get_Transform()->LookAt(vPosition);
-			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
+			//_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			//m_pOwner->Get_Transform()->LookAt(vPosition);
+			//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
 
-			
-				if (m_fTarget_Distance <= 20.f)
-				{
-					if (m_fTarget_Distance <= 6.f)
+			//
+			//if (m_fTarget_Distance <= 24.f)
+			//{
+			if (m_fTarget_Distance <= 8.f)
+			{
+	
+					_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+					m_pOwner->Get_Transform()->LookAt(vPosition);
+					switch (m_iRand)
 					{
-						if (m_PreState_IsSpin == false)
-							return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_IDLE);
-						else
-						{
-							if(m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
-								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
+					case 0:
+						return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_SPIN);
 
-							else if(CAstralDoubt_State::STATE_SPEARMULTI)
-								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
+					case 1:
+						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_FOOTPRESS);
 
-							else
-							{
-								switch (m_iRand)
-								{
-								case 0:
-									return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
-
-								case 1:
-									return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
-
-								default:
-									break;
-								}
-							}
-							
-						}
+					default:
+						break;
 					}
-
-					else
+				
+			}
+			else
+			{
+				if (bIs_TargetInFront == true)
+				{
+					switch (m_iRand)
 					{
-						if (bIs_TargetInFront == true)
-						{
-							if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
-								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
+					case 0:
+						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
 
-							else if (CAstralDoubt_State::STATE_SPEARMULTI)
-								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
+					case 1:
+						return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
 
-							else
-							{
-								switch (m_iRand)
-								{
-								case 0:
-									return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
-
-								case 1:
-									return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
-
-								default:
-									break;
-								}
-							}
-						}
-
-						else
-						{
-							m_pOwner->Get_Transform()->LookAt(vPosition);
-
-							if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
-								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
-
-							else if (CAstralDoubt_State::STATE_SPEARMULTI)
-								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
-
-							else
-							{
-								switch (m_iRand)
-								{
-								case 0:
-									return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_END);
-
-								case 1:
-									return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_END);
-
-								default:
-									break;
-								}
-							}
-						}
+					default:
+						break;
 					}
 				}
 
-				/*else
-					return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_IDLE);*/
-				/*}*/
-			
+				else if (bIs_TargetInFront == false)
+				{
+					_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+					m_pOwner->Get_Transform()->LookAt(vPosition);
+
+					switch (m_iRand)
+					{
+					case 0:
+						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+
+					case 1:
+						return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
+
+					default:
+						break;
+					}
+				}
+			}
+			//}			
 		}
-	}
+
 
 #ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
@@ -491,7 +459,6 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 
 void CBattleWalkState::Enter()
 {
-	m_eStateId = STATE_ID::STATE_MOVE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::MOVE_WALK_F);
 	

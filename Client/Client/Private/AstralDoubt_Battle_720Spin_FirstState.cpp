@@ -264,7 +264,7 @@ for (auto& pEvent : pEvents)
 			{
 				CCollider::COLLIDERDESC		ColliderDesc;
 
-				ColliderDesc.vScale = _float3(30.f, 30.f, 30.f);
+				ColliderDesc.vScale = _float3(40.f, 40.f, 40.f);
 				ColliderDesc.vPosition = _float3(0.f, -10.f, 0.f);
 
 				m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
@@ -288,7 +288,21 @@ for (auto& pEvent : pEvents)
 }
 
 
+if (nullptr != m_pAtkColliderCom)
+{
+	CBaseObj* pCollisionTarget = nullptr;
 
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+	{
+		CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+		if (pCollided)
+		{
+			pCollided->Take_Damage(rand() % 100, m_pOwner);
+
+
+		}
+	}
+}
 
 	return nullptr;
 }
@@ -299,17 +313,6 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::LateTick(_float fTimeDelta)
 
 	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (nullptr != m_pAtkColliderCom)
-	{
-		CBaseObj* pCollisionTarget = nullptr;
-
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
-		{
-			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
-		}
-	}
 
 	if (m_bIsAnimationFinished)
 	{
@@ -345,7 +348,7 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::LateTick(_float fTimeDelta)
 void CBattle_720Spin_FirstState::Enter()
 {
 	
-	m_eStateId = STATE_ID::STATE_IDLE;
+	
 	
 //	if(m_ePreState_Id == CAstralDoubt_State::STATE_720SPIN_START)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SWING_360);
@@ -356,7 +359,7 @@ void CBattle_720Spin_FirstState::Enter()
 
 void CBattle_720Spin_FirstState::Exit()
 {
-	Safe_Release(m_pAtkColliderCom);
+
 	//Safe_Release(m_p2th_AtkColliderCom);
 	//Safe_Release(m_p3th_AtkColliderCom);
 	//Safe_Release(m_p4th_AtkColliderCom);

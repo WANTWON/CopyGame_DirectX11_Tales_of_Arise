@@ -28,7 +28,8 @@ private:
 	_bool  m_bBeamTargetOn = false;
 	_bool  m_bTargetPickOn = false;
 	_bool		m_b_IsTargetInsight = false;
-	_bool  m_PreState_IsSpin = false;
+	_bool		m_PreState_IsSpin = false;
+	_bool		m_PreState_FootPress = false;
 	CCollider*  m_pAtkColliderCom = nullptr;
 	CCollider*	m_p2th_AtkColliderCom = nullptr;
 	

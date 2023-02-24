@@ -192,4 +192,7 @@ void CBattle_TornadeState::Enter()
 void CBattle_TornadeState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	
+	/*Safe_Release(m_pAtkColliderCom);
+	Safe_Release(m_p2th_AtkColliderCom);*/
 }
