@@ -76,7 +76,6 @@ CAIState * CAI_LAW_AIRSKILLF::Tick(_float fTimeDelta)
 					if (nullptr == m_pLandCollider)
 					{
 						m_pLandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(10.f, 10.f, 10.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-						pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 
 						m_ColliderMatrix = m_pOwner->Get_Model()->Get_BonePtr("SLA_GNT_00_E_R")->Get_CombinedTransformationMatrix() *
 							XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
@@ -97,8 +96,6 @@ CAIState * CAI_LAW_AIRSKILLF::Tick(_float fTimeDelta)
 					{
 						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLandCollider);
 						m_pLandCollider = nullptr;
-
-						pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 					}
 				}
 			}
@@ -195,10 +192,6 @@ void CAI_LAW_AIRSKILLF::Exit()
 		m_pOwner->Off_IsFly();
 
 	Safe_Release(m_pLandCollider);
-
-	/*m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);*/
 }
 
 
