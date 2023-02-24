@@ -104,7 +104,6 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 				else
 					m_pAtkColliderCom->Update(matWorld);
@@ -117,7 +116,6 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
-			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 		}
 	}
 

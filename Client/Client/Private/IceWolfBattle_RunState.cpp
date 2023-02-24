@@ -18,7 +18,7 @@ CBattle_RunState::CBattle_RunState(class CIce_Wolf* pIceWolf, STATE_ID ePreState
 	m_pOwner = pIceWolf;
 	m_ePreState_Id = ePreState;
 	m_fTimeDeltaAcc = 0;
-	m_fRandTime = ((rand() % 200) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 100) *0.001f)*((rand() % 100) * 0.01f);
 	m_pCurTarget = pCurTarget;
 
 }
@@ -268,6 +268,7 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 	{		
 		if (m_b_IsTargetInsight == true && m_bOnGoing_Rotation == false)
 		{
+
 			_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 			m_pOwner->Get_Transform()->LookAt(vPosition);
 			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f);
@@ -300,8 +301,10 @@ CIceWolfState * CBattle_RunState::LateTick(_float fTimeDelta)
 			m_bOnGoing_Rotation = true;
 			////회전 코드 
 			CTransform* pMonSterTransform = m_pOwner->Get_Transform();
+			
+			_vector vTargetPos= XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 
-			_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
+			_vector vTargetDir = XMVector3Normalize(vTargetPos/*m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION)*/ - pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
 			_vector vLook = XMVector3Normalize(pMonSterTransform->Get_State(CTransform::STATE_LOOK));
 
 			vLook = XMVectorSetY(vLook, 0.f);

@@ -51,7 +51,7 @@ private:
 private:
 	WEAPONDESC				m_WeaponDesc;
 	_float4x4				m_CombinedWorldMatrix;
-
+	_matrix					m_SocketMatrix;
 
 private:
 	virtual HRESULT Ready_Components(void* pArg);

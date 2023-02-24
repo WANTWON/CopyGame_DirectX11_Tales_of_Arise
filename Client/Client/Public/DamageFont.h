@@ -58,6 +58,8 @@ private:
 
 	_bool m_bplusminus = false;
 
+	_bool m_bnorend = true;
+
 public:
 	typedef struct tagdamagefont
 	{

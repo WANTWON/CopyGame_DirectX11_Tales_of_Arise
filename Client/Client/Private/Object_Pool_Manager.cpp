@@ -10,8 +10,6 @@
 
 IMPLEMENT_SINGLETON(CObject_Pool_Manager)
 
-
-
 CObject_Pool_Manager::CObject_Pool_Manager()
 {
 	m_pObjects = new POOLINGOJECTS[LEVEL_END];
