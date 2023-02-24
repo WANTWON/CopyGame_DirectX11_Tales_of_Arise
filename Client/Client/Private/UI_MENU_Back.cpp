@@ -1223,7 +1223,7 @@ HRESULT CUI_MENU_Back::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture13"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_smallfont"), (CComponent**)&m_pTextureCom13)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture13"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_font"), (CComponent**)&m_pTextureCom13)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
