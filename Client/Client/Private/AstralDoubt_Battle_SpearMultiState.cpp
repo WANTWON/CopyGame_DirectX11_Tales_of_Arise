@@ -290,7 +290,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 						m_pAtkColliderCom->Update(matWorld);
 
-						
+
 					}
 					else if (nullptr != m_pAtkColliderCom)
 						m_pAtkColliderCom->Update(matWorld);
@@ -306,7 +306,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 						m_p2th_AtkColliderCom->Update(matWorld_2th);
 
-						
+
 					}
 					else if (nullptr != m_p2th_AtkColliderCom)
 						m_p2th_AtkColliderCom->Update(matWorld_2th);
@@ -322,7 +322,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_p3th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc3th);
 						m_p3th_AtkColliderCom->Update(matWorld_3th);
 
-						
+
 					}
 					else if (nullptr != m_p3th_AtkColliderCom)
 						m_p3th_AtkColliderCom->Update(matWorld_3th);
@@ -338,7 +338,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_p4th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc4th);
 						m_p4th_AtkColliderCom->Update(matWorld_4th);
 
-						
+
 					}
 
 					else if (nullptr != m_p4th_AtkColliderCom)
@@ -353,8 +353,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 						m_p5th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc5th);
 						m_p5th_AtkColliderCom->Update(matWorld_5th);
-
-						
+					}
 					else if (nullptr != m_p5th_AtkColliderCom)
 						m_p5th_AtkColliderCom->Update(matWorld_5th);
 
@@ -375,28 +374,29 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						m_p6th_AtkColliderCom->Update(matWorld_6th);
 
 					RELEASE_INSTANCE(CCollision_Manager);
+					}
+				
+
+				else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
+				{
+					CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+
+					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
+					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p2th_AtkColliderCom);
+					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p3th_AtkColliderCom);
+					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p4th_AtkColliderCom);
+					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p5th_AtkColliderCom);
+					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p6th_AtkColliderCom);
+
+					m_pAtkColliderCom = nullptr;
+					m_p2th_AtkColliderCom = nullptr;
+					m_p3th_AtkColliderCom = nullptr;
+					m_p4th_AtkColliderCom = nullptr;
+					m_p5th_AtkColliderCom = nullptr;
+					m_p6th_AtkColliderCom = nullptr;
+
+					RELEASE_INSTANCE(CCollision_Manager);
 				}
-			}
-
-			else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
-			{
-				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
-
-				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
-				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p2th_AtkColliderCom);
-				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p3th_AtkColliderCom);
-				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p4th_AtkColliderCom);
-				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p5th_AtkColliderCom);
-				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p6th_AtkColliderCom);
-
-				m_pAtkColliderCom = nullptr;
-				m_p2th_AtkColliderCom = nullptr;
-				m_p3th_AtkColliderCom = nullptr;
-				m_p4th_AtkColliderCom = nullptr;
-				m_p5th_AtkColliderCom = nullptr;
-				m_p6th_AtkColliderCom = nullptr;
-
-				RELEASE_INSTANCE(CCollision_Manager);
 			}
 		}
 	}
