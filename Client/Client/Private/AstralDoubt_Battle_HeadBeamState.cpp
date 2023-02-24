@@ -190,7 +190,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc;
 
-					ColliderDesc.vScale = _float3(4.5f, 1.0f, 60.1f);
+					ColliderDesc.vScale = _float3(4.5f, 1.0f, 80.1f);
 					ColliderDesc.vPosition = _float3(0.f, 0.f, -30.f);
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);

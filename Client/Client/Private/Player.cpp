@@ -417,10 +417,13 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 			}
 			break;
 		case Client::AI_MODE:
-			pAIState = new AIPlayer::CAI_HitState(this);
-			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-			break;
-
+			if (CAIState::STATE_HIT != m_pAIState->Get_StateId())
+			{
+				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+				pAIState = new AIPlayer::CAI_HitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time());
+				m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+				break;
+			}
 		}
 	}
 
