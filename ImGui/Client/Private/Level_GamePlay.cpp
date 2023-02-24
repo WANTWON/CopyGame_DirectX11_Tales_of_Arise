@@ -91,8 +91,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	CTerrain_Manager::TERRAINDESC TerrainDesc;
 	TerrainDesc = CTerrain_Manager::Get_Instance()->Get_TerrainDesc();
-	TerrainDesc.TerrainDesc.m_iVerticeNumX = 20	;
-	TerrainDesc.TerrainDesc.m_iVerticeNumZ = 20;
+	TerrainDesc.TerrainDesc.m_iVerticeNumX = 50	;
+	TerrainDesc.TerrainDesc.m_iVerticeNumZ = 50;
+	TerrainDesc.TerrainDesc.m_iPositionX = -5.f;
+	TerrainDesc.TerrainDesc.m_iPositionZ = -5.f;
 	TerrainDesc.m_eDebugTerrain = CTerrain_Manager::DEBUG_SOILD;
 	TerrainDesc.m_bShowWireFrame = true;
 

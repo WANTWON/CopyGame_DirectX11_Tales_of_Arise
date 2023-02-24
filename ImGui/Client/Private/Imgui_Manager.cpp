@@ -1172,25 +1172,35 @@ void CImgui_Manager::Set_Object_Map()
 
 	static _float OffsetPos[3] = { m_vfOffset.x , m_vfOffset.y, m_vfOffset.z };
 	ImGui::Text("Offset"); ImGui::SameLine();
-	ImGui::InputFloat3("##1", Position);
+	ImGui::InputFloat3("##PosOffset", OffsetPos);
 	m_vfOffset = _float3(OffsetPos[0], OffsetPos[1], OffsetPos[2]);
-	m_InitDesc.vPosition = _float3(Position[0], Position[1], Position[2]);
+	m_InitDesc.vPosition = _float3(Position[0] + OffsetPos[0], Position[1] + OffsetPos[1], Position[2] + OffsetPos[2]);
 
 	static _float Scale[3] = { m_InitDesc.vScale.x , m_InitDesc.vScale.y, m_InitDesc.vScale.z };
 	ImGui::Text("Scale"); ImGui::SameLine();
 	ImGui::InputFloat3("##Scale", Scale);
 	m_InitDesc.vScale = _float3(Scale[0], Scale[1], Scale[2]);
 
+
+	
+
 	static _float Rotation[3] = { m_InitDesc.vRotation.x , m_InitDesc.vRotation.y, m_InitDesc.vRotation.z };
 	ImGui::Text("Rotation axis"); ImGui::SameLine();
-	ImGui::InputFloat3("##2", Rotation);
-	m_InitDesc.vRotation = _float3(Rotation[0], Rotation[1], Rotation[2]);
+	ImGui::DragFloat3("##2", Rotation);
+	
+	ImGui::Checkbox("RandomRotX", &m_bRandomX);
+	ImGui::Checkbox("RandomRotY", &m_bRandomY);
+	ImGui::Checkbox("RandomRotZ", &m_bRandomZ);
 
-	static _float Offset[2] = { m_InitDesc.m_fAngle , m_fDist };
-	ImGui::Text("Rotaion Angle / dist"); ImGui::SameLine();
-	ImGui::InputFloat2("##3", Offset);
-	m_InitDesc.m_fAngle = Offset[0];
-	m_fDist = Offset[1];
+	if (m_bRandomX == true)
+		Rotation[0] = rand() % 180;
+	if (m_bRandomY == true)
+		Rotation[1] = rand() % 180;
+	if (m_bRandomZ == true)
+		Rotation[2] = rand() % 180;
+	
+
+	m_InitDesc.vRotation = _float3(Rotation[0], Rotation[1], Rotation[2]);
 
 }
 
@@ -1503,7 +1513,7 @@ void CImgui_Manager::ShowPickedObj()
 	ImGui::BulletText("Position");
 	ImGui::Text("Position X");
 	ImGui::SameLine();
-	ImGui::DragFloat("##PositionX", &m_vPickedObjPos.x, 0.01f);
+	ImGui::DragFloat("##PositionX", &m_vPickedObjPos.x, 0.1f);
 
 	ImGui::Text("Position Z");
 	ImGui::SameLine();
@@ -1524,19 +1534,40 @@ void CImgui_Manager::ShowPickedObj()
 
 	ImGui::Text("Scale");
 	ImGui::SameLine();
-	ImGui::InputFloat3("##SettingScale", Pos);
+	ImGui::DragFloat3("##SettingScale", Pos);
 	m_vPickedObjScale = _float3(Pos[0], Pos[1], Pos[2]);
 
 	ImGui::BulletText("Rotation");
 	static _float Rotation[3] = { m_vPickedRotAxis.x , m_vPickedRotAxis.y, m_vPickedRotAxis.z };
 	ImGui::Text("Rotation axis"); ImGui::SameLine();
-	ImGui::InputFloat3("##Setting RotAxis", Rotation);
+	ImGui::DragFloat3("##Setting RotAxis", Rotation);
+	if (ImGui::Button("Random RotX"))
+	{
+		m_bRandomX = !m_bRandomX;
+
+		if(m_bRandomX)
+			Rotation[0] = rand() % 180;
+	}
+	
+	if (ImGui::Button("Random RotY"))
+	{
+		m_bRandomY = !m_bRandomY;
+
+		if (m_bRandomY)
+			Rotation[1] = rand() % 180;
+	}
+		
+	if (ImGui::Button("Random RotZ"))
+	{
+		m_bRandomZ = !m_bRandomZ;
+
+		if (m_bRandomZ)
+			Rotation[2] = rand() % 180;
+	}
+		
 	m_vPickedRotAxis = _float3(Rotation[0], Rotation[1], Rotation[2]);
 
-	ImGui::Text("Rotaion Angle"); ImGui::SameLine();
-	ImGui::DragFloat("##Setting Rot", &m_fRotAngle, 0.1f);
-	//m_fRotAngle = RotAngle;
-
+	
 
 	if (pPickedObj != nullptr)
 	{
@@ -1544,7 +1575,7 @@ void CImgui_Manager::ShowPickedObj()
 		vSettingPosition = XMVectorSetW(vSettingPosition, 1.f);
 		dynamic_cast<CBaseObj*>(pPickedObj)->Set_State(CTransform::STATE_TRANSLATION, vSettingPosition);
 		dynamic_cast<CBaseObj*>(pPickedObj)->Set_Scale(m_vPickedObjScale);
-		dynamic_cast<CNonAnim*>(pPickedObj)->Turn(m_vPickedRotAxis, m_fRotAngle);
+		dynamic_cast<CNonAnim*>(pPickedObj)->Turn(m_vPickedRotAxis, 0.f);
 	}
 
 	if (ImGui::Button("Delete Object"))
@@ -6324,6 +6355,7 @@ void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLa
 	m_InitDesc.vPosition.x += m_vfOffset.x;
 	m_InitDesc.vPosition.y += m_vfOffset.y;
 	m_InitDesc.vPosition.z += m_vfOffset.z;
+	XMStoreFloat4x4(&m_InitDesc.WorldMatrix, XMMatrixIdentity());
 	m_pModel_Manager->Set_InitModelDesc(m_InitDesc);
 
 	_matrix			PivotMatrix = XMMatrixIdentity();
