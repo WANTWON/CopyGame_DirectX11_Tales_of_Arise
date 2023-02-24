@@ -115,7 +115,6 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
-
 		}
 	}
 	return nullptr;
@@ -161,5 +160,5 @@ void CBattle_DashState::Enter()
 void CBattle_DashState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
-	//Safe_Release(m_pAtkColliderCom);
+	Safe_Release(m_pAtkColliderCom);
 }

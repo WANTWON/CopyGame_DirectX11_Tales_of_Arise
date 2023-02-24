@@ -81,7 +81,7 @@ CPlayerState * CDodgeState::HandleInput(void)
 		}
 
 		/* Skill */
-		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+		if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
 		{
 			if (m_bIsFly)
 			{
@@ -370,7 +370,7 @@ CPlayerState * CDodgeState::EventInput(void)
 	}
 
 	/* Skill */
-	if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+	if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
 	{
 		switch (m_ePlayerID)
 		{
@@ -549,6 +549,8 @@ void CDodgeState::Enter(void)
 void CDodgeState::Exit(void)
 {
 	__super::Exit();
+
+	Safe_Release(m_pDodgeCollider);
 }
 
 void CDodgeState::Move(_float fTimeDelta)

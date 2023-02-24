@@ -42,7 +42,7 @@ private:
 
 
 	CTransform* m_pMonSterTransform;
-	CCollider*  m_pAtkColliderCom = false;
+	CCollider*  m_pAtkColliderCom = nullptr;
 	_bool		m_b_IsTargetInsight = false;
 };
 END

@@ -15,7 +15,7 @@ CBattle_RunState::CBattle_RunState(CHawk* pHawk, STATE_ID ePreBattleState)
 	m_pOwner          = pHawk;
 	m_ePreBattleState = ePreBattleState;
 
-	m_fRandTime = ((rand() % 10000) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 100) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CHawkState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)

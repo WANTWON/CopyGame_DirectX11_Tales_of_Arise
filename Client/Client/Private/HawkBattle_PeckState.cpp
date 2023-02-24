@@ -115,9 +115,7 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 			CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
-			Safe_Release(m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
-			
 		}
 	}
 
@@ -163,5 +161,5 @@ void CBattle_PeckState::Exit()
 {
 	//CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 
-	//Safe_Release(m_pAtkColliderCom);
+	Safe_Release(m_pAtkColliderCom);
 }

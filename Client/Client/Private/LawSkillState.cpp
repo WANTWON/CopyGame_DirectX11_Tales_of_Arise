@@ -418,7 +418,7 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 
 CPlayerState * CLawSkillState::EventInput(void)
 {
-	if (floor(m_pOwner->Get_Info().fCurrentMp) > 1)
+	if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
 	{
 		if (GetKeyState('E') < 0)
 		{
@@ -541,6 +541,11 @@ void CLawSkillState::Enter(void)
 void CLawSkillState::Exit(void)
 {
 	__super::Exit();
+
+	Safe_Release(m_pLeftFootCollider);
+	Safe_Release(m_pLeftHandCollider);
+	Safe_Release(m_pRightFootCollider);
+	Safe_Release(m_pRightHandCollider);
 }
 
 void CLawSkillState::Reset_Skill(void)

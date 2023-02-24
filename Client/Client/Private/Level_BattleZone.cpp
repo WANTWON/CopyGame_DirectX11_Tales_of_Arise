@@ -249,6 +249,8 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vPlayerPosition", &vPlayerPosition, sizeof(_float3))))
 			return;
 	}
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 HRESULT CLevel_BattleZone::Ready_Lights()

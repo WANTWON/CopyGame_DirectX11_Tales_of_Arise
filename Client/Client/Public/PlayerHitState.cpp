@@ -132,6 +132,8 @@ void CHitState::Exit()
 
 	if (m_bIsFly)
 		m_pOwner->Off_IsFly();
+
+	m_pOwner->Set_TakeDamage_DelayFinish();
 }
 
 _bool CHitState::Move(_float fTimeDelta)

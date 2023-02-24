@@ -104,6 +104,21 @@ CAIState * CAICheckState::Tick(_float fTimeDelta)
 CAIState * CAICheckState::LateTick(_float fTimeDelta)
 {
 	//return nullptr;
+	ITEM_NAME item;
+	switch (rand() % 3)
+	{
+	case 0:
+		item = ITEMNAME_LEMONJELLY;
+		break;
+	case 1:
+		item = ITEMNAME_LEMONJELLY;
+		break;
+	case 2:
+		item = ITEMNAME_LEMONJELLY;
+		break;
+
+	}
+	return new CAI_Item_Use_State(m_pOwner, item);
 
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return nullptr;

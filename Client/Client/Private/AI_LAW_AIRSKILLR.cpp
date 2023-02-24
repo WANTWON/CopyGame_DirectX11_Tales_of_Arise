@@ -251,7 +251,7 @@ CAIState * CAI_LAW_AIRSKILLR::LateTick(_float fTimeDelta)
 
 		m_bIsLoop = false;
 	}
-
+	
 	if ((STATETYPE_MAIN == m_eStateType) && m_pOwner->Check_Navigation_Jump())
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);
@@ -262,8 +262,6 @@ CAIState * CAI_LAW_AIRSKILLR::LateTick(_float fTimeDelta)
 	{
 		if (STATETYPE_MAIN == m_eStateType)
 			m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
-
-
 
 		if (STATETYPE_END == m_eStateType)
 		{
@@ -305,10 +303,6 @@ void CAI_LAW_AIRSKILLR::Exit()
 	Safe_Release(m_pLeftFootCollider);
 	Safe_Release(m_pLeftHandCollider);
 	Safe_Release(m_pRightHandCollider);
-
-	/*m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
-	m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);*/
 }
 
 

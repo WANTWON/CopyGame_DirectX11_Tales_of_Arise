@@ -327,4 +327,6 @@ void CAI_DodgeState::Enter()
 void CAI_DodgeState::Exit(void)
 {
 	__super::Exit();
+
+	Safe_Release(m_pDodgeCollider);
 }

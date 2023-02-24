@@ -18,7 +18,7 @@ CBattle_RunState::CBattle_RunState(CBerserker* pBerserker, STATE_ID ePreState)
 {
 	m_pOwner   = pBerserker;
 	m_ePreState_Id = ePreState;
-	m_fRandTime = ((rand() % 500) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 100) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CBerserkerState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
