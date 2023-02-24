@@ -1053,6 +1053,7 @@ HRESULT CLoader::Loading_ForMaptoolVillageModel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Beam02"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Beam/Beam02/Beam02.dat"))))
 		return E_FAIL;
@@ -1782,7 +1783,24 @@ HRESULT CLoader::Loading_ForMaptoolInteriorModel()
 
 
 
-	
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Ceil_A_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Bld_Ceil_A_Lod1/Bld_Ceil_A_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Ceil_A_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Ceil_A2_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Bld_Ceil_A2_Lod1/Bld_Ceil_A2_Lod1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Ceil_A2_Lod1"));
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ceiling"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Ceiling/Ceiling.dat"))))
+		return E_FAIL;        // 위쪽 바라보면 있음 
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Ceiling"));
+
+
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("BedDouble"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/BedDouble.dat"))))

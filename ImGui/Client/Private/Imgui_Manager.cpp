@@ -1539,29 +1539,27 @@ void CImgui_Manager::ShowPickedObj()
 
 	ImGui::BulletText("Rotation");
 	static _float Rotation[3] = { m_vPickedRotAxis.x , m_vPickedRotAxis.y, m_vPickedRotAxis.z };
+	Rotation[0] = m_vPickedRotAxis.x;
+	Rotation[1] = m_vPickedRotAxis.y;
+	Rotation[2] = m_vPickedRotAxis.z;
 	ImGui::Text("Rotation axis"); ImGui::SameLine();
+	
 	ImGui::DragFloat3("##Setting RotAxis", Rotation);
 	if (ImGui::Button("Random RotX"))
 	{
-		m_bRandomX = !m_bRandomX;
-
-		if(m_bRandomX)
+	
 			Rotation[0] = rand() % 180;
 	}
 	
 	if (ImGui::Button("Random RotY"))
 	{
-		m_bRandomY = !m_bRandomY;
-
-		if (m_bRandomY)
+	
 			Rotation[1] = rand() % 180;
 	}
 		
 	if (ImGui::Button("Random RotZ"))
 	{
-		m_bRandomZ = !m_bRandomZ;
-
-		if (m_bRandomZ)
+		
 			Rotation[2] = rand() % 180;
 	}
 		
