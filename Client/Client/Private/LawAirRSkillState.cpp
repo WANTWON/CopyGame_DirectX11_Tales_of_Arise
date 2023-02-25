@@ -30,6 +30,8 @@ CPlayerState * CLawAirRSkillState::HandleInput(void)
 
 CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 {
+	Update_Skill();
+
 	if ((STATETYPE_END == m_eStateType) && (nullptr != m_pTarget))
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
@@ -71,6 +73,18 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 					if (nullptr == m_pLeftFootCollider)
 						m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 				}
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_1"))
+					{
+						if (!m_bSankamousyuukyaku_1)
+						{
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							m_Sankamousyuukyaku_1 = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_1.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_1 = true;
+						}
+					}
+				}
 				break;
 			case Client::STATETYPE_END:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
@@ -89,6 +103,60 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 					{
 						if (nullptr == m_pLeftHandCollider)
 							m_pLeftHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+				}
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Punch_1"))
+					{
+						if (!m_bSankamousyuukyaku_Punch_1)
+						{
+							m_Sankamousyuukyaku_Punch_1 = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_Punch_1.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_Punch_1 = true;
+
+							if (m_Sankamousyuukyaku_Punch_1[1])
+								m_vPunchPosition_1 = m_Sankamousyuukyaku_Punch_1[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						}
+					}
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Particles_1"))
+					{
+						if (!m_bSankamousyuukyaku_Particles_1)
+						{
+							mWorldMatrix.r[3] = m_vPunchPosition_1;
+
+							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_2.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_Particles_1 = true;
+						}
+					}
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Punch_2"))
+					{
+						if (!m_bSankamousyuukyaku_Punch_2)
+						{
+							m_Sankamousyuukyaku_Punch_2 = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_Punch_2.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_Punch_2 = true;
+
+							if (m_Sankamousyuukyaku_Punch_2[1])
+								m_vPunchPosition_2 = m_Sankamousyuukyaku_Punch_2[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						}
+					}
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Particles_2"))
+					{
+						if (!m_bSankamousyuukyaku_Particles_2)
+						{
+							mWorldMatrix.r[3] = m_vPunchPosition_2;
+
+							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_2.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_Particles_2 = true;
+						}
+					}
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_3"))
+					{
+						if (!m_bSankamousyuukyaku_2)
+						{
+							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_3.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_2 = true;
+						}
 					}
 				}
 				break;
@@ -179,6 +247,8 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 
 CPlayerState * CLawAirRSkillState::LateTick(_float fTimeDelta)
 {
+	Remove_Skill();
+
 	if (nullptr != m_pLeftHandCollider)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -307,6 +377,8 @@ void CLawAirRSkillState::Enter(void)
 {
 	__super::Enter();
 
+	Reset_Skill();
+
 	m_pOwner->Use_Mana(1.f);
 	m_pOwner->Set_Manarecover(false);
 
@@ -336,6 +408,46 @@ void CLawAirRSkillState::Exit(void)
 	//m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
 	//m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_END);
 }
+
+void CLawAirRSkillState::Update_Skill(void)
+{
+	for (auto& pEffect : m_Sankamousyuukyaku_1)
+	{
+		if (!pEffect || wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
+			continue;
+		
+		_float4 vPlayerPosition;
+		XMStoreFloat4(&vPlayerPosition, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+		_float4 vPlayerLook;
+		XMStoreFloat4(&vPlayerLook, m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
+		
+		_float4 vEffectPosition;
+		vEffectPosition.y = vPlayerPosition.y + 3.f;
+		
+		XMStoreFloat4(&vEffectPosition, XMLoadFloat4(&vPlayerPosition) + XMLoadFloat4(&vPlayerLook) * 4);
+		
+		pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vEffectPosition));
+	}
+}
+
+void CLawAirRSkillState::Remove_Skill(void)
+{
+	for (auto& pEffect : m_Sankamousyuukyaku_1)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+}
+
+void CLawAirRSkillState::Reset_Skill(void)
+{
+	m_bSankamousyuukyaku_1 = false;
+	m_bSankamousyuukyaku_2 = false;
+	m_bSankamousyuukyaku_Punch_1 = false;
+	m_bSankamousyuukyaku_Punch_2 = false;
+	m_bSankamousyuukyaku_Particles_1 = false;
+	m_bSankamousyuukyaku_Particles_2 = false;
+}	
 
 CCollider * CLawAirRSkillState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)
 {

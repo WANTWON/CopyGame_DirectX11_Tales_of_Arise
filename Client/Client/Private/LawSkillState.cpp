@@ -6,6 +6,7 @@
 #include "BattleManager.h"
 #include "UI_Skillmessage.h"
 #include "Effect.h"
+#include "EffectMesh.h"
 #include "ParticleSystem.h"
 
 #include "LawAttackState.h"
@@ -32,6 +33,8 @@ CPlayerState * CLawSkillState::HandleInput(void)
 
 CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 {
+	Update_Skill(); 
+
 	if ((m_eStateId == CPlayerState::STATE_SKILL_ATTACK_F) && (nullptr != m_pTarget))
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
@@ -44,7 +47,10 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		if ((m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_R || m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_F) && !m_bIsFly)
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
+		else
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
 	m_pOwner->Check_Navigation_Jump();
@@ -122,23 +128,36 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 					{
 						if (m_bIsFly)
 						{
-							if (!strcmp(pEvent.szName, ""))
+							if (!strcmp(pEvent.szName, "Burn_Knuckle"))
 							{
-								if (!true)
+								if (!m_bBurnKnuckle)
 								{
-									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
-									// 
+									m_BurnKnuckle = CEffect::PlayEffectAtLocation(TEXT("Burn_Knuckle.dat"), mWorldMatrix);
+									m_bBurnKnuckle = true;
+
+									if (m_BurnKnuckle[1])
+										m_vBurnKnucklePosition = m_BurnKnuckle[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								}
+							}
+							if (!strcmp(pEvent.szName, "Burn_Knuckle_Particles"))
+							{
+								if (!m_bBurnKnuckleParticles)
+								{
+									mWorldMatrix.r[3] = m_vBurnKnucklePosition;
+
+									CEffect::PlayEffectAtLocation(TEXT("Burn_Knuckle_Particles.dat"), mWorldMatrix);
+									m_bBurnKnuckleParticles = true;
 								}
 							}
 						}
 						else
 						{
-							if (!strcmp(pEvent.szName, ""))
+							if (!strcmp(pEvent.szName, "Rondsenpu"))
 							{
-								if (!true)
+								if (!m_bRondsenpu)
 								{
-									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
-									//
+									CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_1.dat"), mWorldMatrix);
+									m_bRondsenpu = true;
 								}
 							}
 						}
@@ -153,18 +172,18 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 								if (!true)
 								{
 									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
-									// 
+									//
 								}
 							}
 						}
 						else
 						{
-							if (!strcmp(pEvent.szName, ""))
+							if (!strcmp(pEvent.szName, "Garyoukuuha"))
 							{
-								if (!true)
+								if (!m_bGaryoukuuha)
 								{
-									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
-									//
+									m_Garyoukuuha = CEffect::PlayEffectAtLocation(TEXT("Garyoukuuha.dat"), mWorldMatrix);
+									m_bGaryoukuuha = true;
 								}
 							}
 						}
@@ -185,12 +204,65 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 						}
 						else
 						{
-							if (!strcmp(pEvent.szName, ""))
+							if (!strcmp(pEvent.szName, "Tyourengadan_1"))
 							{
-								if (!true)
+								if (!m_bTyourengadan_1)
 								{
-									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
-									//
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_1.dat"), mWorldMatrix);
+									m_bTyourengadan_1 = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_2"))
+							{
+								if (!m_bTyourengadan_2)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_2.dat"), mWorldMatrix);
+									m_bTyourengadan_2 = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_3"))
+							{
+								if (!m_bTyourengadan_3)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_3.dat"), mWorldMatrix);
+									m_bTyourengadan_3 = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_4"))
+							{
+								if (!m_bTyourengadan_4)
+								{
+									mWorldMatrix.r[3] = m_vPunchPosition;
+
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_4.dat"), mWorldMatrix);
+									m_bTyourengadan_4 = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_5"))
+							{
+								if (!m_bTyourengadan_5)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
+									m_bTyourengadan_5 = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_Kick"))
+							{
+								if (!m_bTyourengadan_Kick)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Kick.dat"), mWorldMatrix);
+									m_bTyourengadan_Kick = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_Punch"))
+							{
+								if (!m_bTyourengadan_Punch)
+								{
+									m_TyourengadanPunch = CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Punch.dat"), mWorldMatrix);
+									m_bTyourengadan_Punch = true;
+
+									if (m_TyourengadanPunch[1])
+										m_vPunchPosition = m_TyourengadanPunch[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								}
 							}
 						}
@@ -337,6 +409,8 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 {
+	Remove_Skill();
+
 	if (nullptr != m_pLeftHandCollider)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -548,9 +622,49 @@ void CLawSkillState::Exit(void)
 	Safe_Release(m_pRightHandCollider);
 }
 
+void CLawSkillState::Update_Skill(void)
+{
+	for (auto& pEffect : m_Garyoukuuha)
+	{
+		if (pEffect && !wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
+		{
+			_float4 vPlayerPosition;
+			XMStoreFloat4(&vPlayerPosition, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+			_float4 vEffectPosition;
+			XMStoreFloat4(&vEffectPosition, pEffect->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+			vEffectPosition.y = vPlayerPosition.y + 7.f;
+
+			pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vEffectPosition));
+		}
+	}
+}
+
+void CLawSkillState::Remove_Skill(void)
+{
+	for (auto& pEffect : m_Garyoukuuha)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+}
+
 void CLawSkillState::Reset_Skill(void)
 {
+	m_bRondsenpu = false;
+	m_bGaryoukuuha = false;
+	m_bTyourengadan_1 = false;
+	m_bTyourengadan_2 = false;
+	m_bTyourengadan_3 = false;
+	m_bTyourengadan_4 = false;
+	m_bTyourengadan_5 = false;
+	m_bTyourengadan_Kick = false;
+	m_bTyourengadan_Punch = false;
 
+	m_bBurnKnuckle = false;
+	m_bBurnKnuckleParticles = false;
+	m_bEnhaBakusaiken = false;
 }
 
 CCollider * CLawSkillState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)
