@@ -157,7 +157,7 @@ CPlayerState * CRunState::HandleInput()
 
 		m_bIsDash = true;
 
-		if (!CBattleManager::Get_Instance()->Get_IsBattleMode())
+		if (!CBattleManager::Get_Instance()->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(true);
@@ -186,7 +186,7 @@ CPlayerState * CRunState::HandleInput()
 
 		m_bIsDash = false;
 
-		if (!pBattleManager->Get_IsBattleMode())
+		if (!pBattleManager->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(false);

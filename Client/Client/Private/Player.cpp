@@ -28,6 +28,8 @@
 #include "AIPoseState.h"
 #include "Damagefont_Critical.h"
 
+#include "Level_Restaurant.h"
+
 using namespace Player;
 using namespace AIPlayer;
 
@@ -789,8 +791,18 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_CityNavigation"), m_ePlayerID));
 		break;
 	case Client::LEVEL_RESTAURANT:
-		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_RestaurantNavigation"), m_ePlayerID));
+	{
+		CLevel_Restaurant* pLevel = dynamic_cast<CLevel_Restaurant*>(CGameInstance::Get_Instance()->Get_CurrentLevel());
+		if (pLevel == nullptr || pLevel->Get_MiniGameStart() == false)
+			m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_RestaurantNavigation"), m_ePlayerID));
+		else
+			m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_RestaurantMIniGameNavigation"), m_ePlayerID));
+
 		break;
+
+	}
+		
+		
 	}
 	
 	RELEASE_INSTANCE(CGameInstance);

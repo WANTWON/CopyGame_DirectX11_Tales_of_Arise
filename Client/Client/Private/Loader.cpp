@@ -829,6 +829,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_Navigation"),
 		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Navigation.dat")))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_Navigation */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_MIniGameNavigation"),
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/MIniGameNavigation.dat")))))
+		return E_FAIL;
 #pragma endregion Navigation Loading
 
 
