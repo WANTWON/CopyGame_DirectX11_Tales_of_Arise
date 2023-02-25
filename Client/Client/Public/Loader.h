@@ -40,12 +40,16 @@ public:
 	HRESULT Loading_ForCityLevel();
 	HRESULT Loading_ForSnowFieldLevel();
 	HRESULT Loading_ForRestaurantLevel();
+	HRESULT Loading_ForWorkToolLevel();
 	HRESULT Loading_ForBossLevel();
 
 	HRESULT Loading_ForUITexture();
 	HRESULT Loading_ForEffect();
 	HRESULT Loading_ForEffectTexture();
 	HRESULT Loading_ForStaticMapObject();
+
+	HRESULT Loading_ForInteract();
+
 
 
 private:

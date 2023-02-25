@@ -12,7 +12,7 @@ class CCamera_MiniGame final : public CCamera
 {
 public:
 
-	enum CAMERAMODE { CAM_DEBUG, CAM_ROOM, MINIGAME_SLASH, CAM_TARGETMODE, CAM_TARGETMODE_OFF, CAM_END };
+	enum CAMERAMODE { CAM_DEBUG, CAM_ROOM, MINIGAME_SLASH, MINIGAME_SHOOTING, CAM_TARGETMODE, CAM_TARGETMODE_OFF, CAM_END };
 	
 
 	typedef struct tagCameraTool
@@ -70,7 +70,8 @@ public:
 public:
 	void Debug_Camera(_float fTimeDelta);
 	void Room_Camera(_float fTimeDelta);
-	void MiniGameSlash_Camera(_float fTimeDelta);
+	void Player_Camera(_float fTimeDelta);
+	void MiniGameShooting_Camera(_float fTimeDelta);
 
 	void TargetTool_Camera(_float fTimeDelta);
 	void TargetTool_CameraOff(_float fTimeDelta);

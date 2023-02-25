@@ -801,7 +801,9 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 		break;
 
 	}
-		
+	case Client::LEVEL_WORKTOOL:
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_WorkToolNavigation"), m_ePlayerID));
+		break;
 		
 	}
 	

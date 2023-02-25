@@ -249,6 +249,7 @@
     <ClInclude Include="..\Public\Level_BossZone.h" />
     <ClInclude Include="..\Public\Level_City.h" />
     <ClInclude Include="..\Public\Level_Restaurant.h" />
+    <ClInclude Include="..\Public\Level_WorkTool.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\PlayerOverlimit.h" />
@@ -498,6 +499,7 @@
     <ClCompile Include="..\Private\Level_BossZone.cpp" />
     <ClCompile Include="..\Private\Level_City.cpp" />
     <ClCompile Include="..\Private\Level_Restaurant.cpp" />
+    <ClCompile Include="..\Private\Level_WorkTool.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\PlayerOverlimit.cpp" />

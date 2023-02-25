@@ -55,12 +55,15 @@ int CCamera_MiniGame::Tick(_float fTimeDelta)
 			m_ePreCamMode = CAM_DEBUG;
 		}
 	}
-	
+
 
 	switch (m_eCamMode)
 	{
 	case Client::CCamera_MiniGame::MINIGAME_SLASH:
-		MiniGameSlash_Camera(fTimeDelta);
+		Player_Camera(fTimeDelta);
+		break;
+	case Client::CCamera_MiniGame::MINIGAME_SHOOTING:
+		MiniGameShooting_Camera(fTimeDelta);
 		break;
 	case Client::CCamera_MiniGame::CAM_DEBUG:
 		Debug_Camera(fTimeDelta);
@@ -107,7 +110,7 @@ void CCamera_MiniGame::Set_CamMode(CAMERAMODE _eCamMode)
 	if (m_ePreCamMode != m_eCamMode)
 		m_ePreCamMode = m_eCamMode;
 
-	if( _eCamMode ==  CAM_TARGETMODE)
+	if (_eCamMode == CAM_TARGETMODE)
 		m_vLasrDirwithPlayer = (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pTransform->Get_State(CTransform::STATE_TRANSLATION));
 
 	m_vDistance = (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pTransform->Get_State(CTransform::STATE_TRANSLATION));
@@ -140,10 +143,10 @@ void CCamera_MiniGame::Set_Play(_bool type)
 
 void CCamera_MiniGame::Set_ShakingMode(_bool type, _float fPower, _float fMinusPower)
 {
-	 m_bShakingMode = type; 
-	 m_fVelocity = fPower;
-	 m_fMinusVelocity = fMinusPower;
-	 m_vShakingStartPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	m_bShakingMode = type;
+	m_fVelocity = fPower;
+	m_fMinusVelocity = fMinusPower;
+	m_vShakingStartPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 }
 
 void CCamera_MiniGame::TargetTool_Camera(_float fTimeDelta)
@@ -170,7 +173,7 @@ void CCamera_MiniGame::TargetTool_Camera(_float fTimeDelta)
 
 	_vector vCenterPos = XMVectorSetY(pTargetPosition, XMVectorGetY(pTargetPosition) + m_fLookOffsetY);
 	m_pTransform->LookAt(vCenterPos);
-	
+
 
 	if (m_fTime >= fEndTime)
 	{
@@ -384,13 +387,83 @@ void CCamera_MiniGame::Debug_Camera(_float fTimeDelta)
 	RELEASE_INSTANCE(CGameInstance);
 }
 
-void CCamera_MiniGame::MiniGameSlash_Camera(_float fTimeDelta)
+void CCamera_MiniGame::Player_Camera(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	
+
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(18.f, 18.f, 20.f, 1.f));
 	m_pTransform->LookAt(XMVectorSet(18, 0.f, 31.f, 1.f));
+
+
+	RELEASE_INSTANCE(CGameInstance);
+}
+
+void CCamera_MiniGame::MiniGameShooting_Camera(_float fTimeDelta)
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	//if (m_pTarget == nullptr)
+	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+
+	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vDir = (vCameraPosition - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	m_lMouseWheel = pGameInstance->Get_DIMMoveState(DIMM_WHEEL);
+	if (m_lMouseWheel > 0)
+		m_bZoom = true;
+	else
+		m_bZoom = false;
+
+	ZoomSetting(-5.f, 0.25f);
+
+
+	// 항상 플레이어 위치 바라보게 하기
+	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_vector vPlayerRight = XMVector3Normalize(m_pTarget->Get_TransformState(CTransform::STATE_RIGHT));
+	_vector vPlayerUp = XMVector3Normalize(m_pTarget->Get_TransformState(CTransform::STATE_UP));
+	_vector vPlayerLook = XMVector3Normalize(m_pTarget->Get_TransformState(CTransform::STATE_LOOK));
+
+	_vector vCenterPos = vPlayerPosition + vPlayerRight - vPlayerLook*2.f;
+	vCameraPosition = vCenterPos;
+	fLength = 3.f;
+	m_vNewPos = vCameraPosition;
+	m_fCameraOffsetY = 3.f;
+
+	//vPlayerPosition = XMVectorSetY(vPlayerPosition, XMVectorGetY(vPlayerPosition) + m_fLookOffsetY);
+	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vPlayerPosition) + m_fCameraOffsetY);
+
+
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+		m_bLerp = false;
+
+	_vector FinalPos = { 0.f,0.f,0.f,0.f };
+	if (m_bLerp)
+	{
+		m_fTime += fTimeDelta*0.3f;
+
+		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos + vZoomDir*m_fZoomOffset), m_fTime); //_float4 저장 y올리기 
+
+		if (m_fTime >= 1.f)
+			m_bLerp = false;
+	}
+	else
+	{
+		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = m_vNewPos + vZoomDir*m_fZoomOffset;
+		m_fTime = 0.f;
+	}
+
+
+
+	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
+
+	_long MouseMove = 0;
+	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+		m_pTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * 0.1f);
+	if (MouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+		m_pTransform->Turn(m_pTransform->Get_State(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * 0.1f);
 
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -411,7 +484,7 @@ void CCamera_MiniGame::ZoomSetting(_float fDistance, _float fSpeed)
 		if (m_fZoomOffset >= 0.f)
 			m_fZoomOffset = 0.f;
 	}
-	
+
 	/* Zoom Blur */
 	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (m_pTarget)
@@ -431,7 +504,7 @@ void CCamera_MiniGame::ZoomSetting(_float fDistance, _float fSpeed)
 		}
 		else
 		{
-			m_pTarget->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);	
+			m_pTarget->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
 			m_bBlurResetted = false;
 		}
 	}
@@ -462,7 +535,7 @@ void CCamera_MiniGame::Shaking_Camera(_float fTimeDelta)
 		else
 			m_fCameraOffsetY += m_fVelocity*0.1f;
 	}
-	
+
 
 	m_fVelocity -= m_fMinusVelocity;
 

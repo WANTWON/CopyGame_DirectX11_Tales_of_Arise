@@ -215,6 +215,18 @@ _float CNonAnim::Check_CullingRadius()
 		else if (!strcmp(m_ModelDesc.pModeltag, "InteriorFloor"))
 			return 1000.f;
 		break;
+	case Client::LEVEL_WORKTOOL:
+		if (!strcmp(m_ModelDesc.pModeltag, "CookingTable"))
+			return 25.f;
+		if (!strcmp(m_ModelDesc.pModeltag, "Carpet3") ||
+			!strcmp(m_ModelDesc.pModeltag, "Banner") || 
+			!strcmp(m_ModelDesc.pModeltag, "Road"))
+			return 10.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "InteriorFloor"))
+			return 1000.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "Ceiling"))
+			return 1000.f;
+		break;
 	case Client::LEVEL_BOSS:
 		if (!strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_") ||
 			!strcmp(m_ModelDesc.pModeltag, "Ceiling") ||
