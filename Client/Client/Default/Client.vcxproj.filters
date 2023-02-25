@@ -912,9 +912,6 @@
     <ClInclude Include="..\Public\UI_Portraitfront.h">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AIAttackNormalState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObjects\07.Bullet</Filter>
     </ClInclude>
@@ -1125,9 +1122,6 @@
     <ClInclude Include="..\Public\PlayerPoseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AIPoseState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\AI_BoostAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
     </ClInclude>
@@ -1175,6 +1169,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Camera_MiniGame.h">
       <Filter>03.Camera\02.MiniGame_Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIAttackNormalState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIPoseState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
