@@ -246,22 +246,30 @@ private:
 /* For. Animation */
 public:
 	_bool m_isLoad = false;
+	_bool m_isSecondLoad = false;
 	_bool m_isSaveComplete = false;
 
 	vector<char*> m_AnimObj;
 	vector<char*> m_WeaponObj;
 
 	_int m_iLoadModel = -1;
+	_int m_iLoadSecondModel = -1;
 	_int m_iPreModel = -1;
+	_int m_iPreSecondModel = -1;
 
 	_int m_iBoneChoice = -1;
 	_int m_iAnimationChoice = -1;
+	_int m_iSecondAnimationChoice = -1;
 
 	_float m_fAnimationDuration = 0.f;
 	_float m_fAnimationTime = 0.f;
+	_float m_fSecondAnimationDuration = 0.f;
+	_float m_fSecondAnimationTime = 0.f;
 
 	_bool m_isAnimationPlay = false;
 	_bool m_isAnimationEdit = false;
+	_bool m_isSecondAnimationPlay = false;
+	_bool m_isStrikePlay = false;
 
 	_int m_iTickChoice = -1;
 	_int m_iTimeChoice = -1;
@@ -280,6 +288,9 @@ public:
 
 	_float m_Position[3] = { 0.f, 0.f, 0.f };
 	_float m_Rotation[3] = { 0.f, 0.f, 0.f };
+
+	_float m_SecondPosition[3] = { 0.f, 0.f, 0.f };
+	_float m_SecondRotation[3] = { 0.f, 0.f, 0.f };
 
 public:
 	virtual void Free() override;

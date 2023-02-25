@@ -13,6 +13,7 @@
 #include "ParticleSystem.h"
 #include "PlayerIdleState.h"
 #include "UI_Dialogue_Caption.h"
+#include "UI_Skillmessage.h"
 using namespace AIPlayer;
 using namespace Player;
 CAI_RinwellLaw_Smash::CAI_RinwellLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
@@ -30,6 +31,7 @@ CAI_RinwellLaw_Smash::CAI_RinwellLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 {
+
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
 		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -42,6 +44,29 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 
 	if (m_pTarget == nullptr)
 		return nullptr;
+
+	m_fTimer += fTimeDelta;
+
+	if (m_pOwner->Get_PlayerID() == CPlayer::RINWELL)
+	{
+		if (m_fTimer > 2.f)
+		{
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+			m_fTimer = -100.f;
+		}
+
+	}
+
+	if (m_pOwner->Get_PlayerID() == CPlayer::LAW)
+	{
+		if (m_fTimer > 4.f)
+		{
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RINWELLLAWSTRIKE);
+			m_fTimer = -100.f;
+		}
+
+	}
+
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta,false);
 	if (!m_bIsAnimationFinished)
@@ -147,6 +172,7 @@ void CAI_RinwellLaw_Smash::Enter()
 		break;
 	case CPlayer::LAW:
 		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_GURENTENSYOU;
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RAINOUI);
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
 
 		break;

@@ -24,6 +24,7 @@ private:
 	DIRID m_eDirection = DIRID::DIR_END;
 
 	CCollider* m_pDodgeCollider = nullptr;
+	_bool m_bJustEffectOnce = true;
 };
 END
 END

@@ -24,6 +24,7 @@ private:
 ;
 
 	_float m_fEventStart = -1.f;
+	_float m_fTimer = 0.f;
 };
 END
 END

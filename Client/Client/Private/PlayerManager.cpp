@@ -166,7 +166,7 @@ void CPlayerManager::Set_SmashAttack()
 
 			CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 			pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-			pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
+			pCameraManager->Play_ActionCamera(TEXT("AlphenSion.dat"), XMMatrixIdentity());
 
 			if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
@@ -210,7 +210,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-				pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
+				pCameraManager->Play_ActionCamera(TEXT("AlphenRinwell.dat"), XMMatrixIdentity());
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
@@ -250,7 +250,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-				pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
+				pCameraManager->Play_ActionCamera(TEXT("SionRinwell2.dat"), XMMatrixIdentity());
 
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
@@ -334,7 +334,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-				pCameraManager->Play_ActionCamera(TEXT("Striketest.dat"), XMMatrixIdentity());
+				pCameraManager->Play_ActionCamera(TEXT("SionLaw.dat"), XMMatrixIdentity());
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();

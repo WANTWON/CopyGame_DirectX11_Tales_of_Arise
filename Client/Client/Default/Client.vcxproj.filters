@@ -406,6 +406,15 @@
     <Filter Include="01.Levels\04.City">
       <UniqueIdentifier>{b1b916cb-4ac4-4ecd-8279-8da200cca2a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\27.UI_DODGEEFFECT">
+      <UniqueIdentifier>{44a6e8f4-3f5d-4bba-9a29-2a5084acd0a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\28.UI_STRIKEFINISH">
+      <UniqueIdentifier>{35e43a39-e0a1-407a-86fc-1f10a2fd1441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\29.UI_SystemMsgbox">
+      <UniqueIdentifier>{539d4fc3-fdcf-4703-8bd8-e2473b546e71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1149,6 +1158,15 @@
     <ClInclude Include="..\Public\BreakFont.h">
       <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_JustDodgeEffect.h">
+      <Filter>02.GameObjects\04.UI\27.UI_DODGEEFFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_StrikeFinish.h">
+      <Filter>02.GameObjects\04.UI\28.UI_STRIKEFINISH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SystemMessageBox.h">
+      <Filter>02.GameObjects\04.UI\29.UI_SystemMsgbox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1858,6 +1876,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\BreakFont.cpp">
       <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_JustDodgeEffect.cpp">
+      <Filter>02.GameObjects\04.UI\27.UI_DODGEEFFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_StrikeFinish.cpp">
+      <Filter>02.GameObjects\04.UI\28.UI_STRIKEFINISH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SystemMessageBox.cpp">
+      <Filter>02.GameObjects\04.UI\29.UI_SystemMsgbox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

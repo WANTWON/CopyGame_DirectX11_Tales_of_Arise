@@ -2045,8 +2045,22 @@ void CImgui_Manager::Set_ActionCamera()
 						if (dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_Finished() == true)
 							pPlayerModel->Reset();
 					}
+
+					vector<CAnimation*> ModelAnimations2;
+					CModel* pPlayerModel2 = (CModel*)CGameInstance::Get_Instance()->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"), 1);
+					if (pPlayerModel2 != nullptr)
+					{
+						ModelAnimations2 = pPlayerModel2->Get_Animations();
+						if (dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Get_Finished() == true)
+							pPlayerModel2->Reset();
+					}
+
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
-					((CAnim*)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StartAnim();
+
+					if (pPlayerModel != nullptr)
+						((CAnim*)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StartAnim();
+					if (pPlayerModel2 != nullptr)
+						((CAnim*)CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 1))->StartAnim();
 
 				}
 				else
@@ -2056,6 +2070,7 @@ void CImgui_Manager::Set_ActionCamera()
 
 
 					((CAnim*)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
+					((CAnim*)CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 1))->StopAnim();
 				}
 
 			}
@@ -5806,6 +5821,9 @@ void CImgui_Manager::Set_Animation()
 	if (ImGui::Button("Load Model"))
 		m_isLoad = true;
 	ImGui::SameLine();
+	if (ImGui::Button("Load Second Model"))
+		m_isSecondLoad = true;
+	ImGui::SameLine();
 	if (ImGui::Button("Save Animation"))
 	{
 		_tchar pAnimationDataFilePath[MAX_PATH] = TEXT("../../../Bin/Bin_Data/Anim/");
@@ -5944,7 +5962,58 @@ void CImgui_Manager::Set_Animation()
 		ImGui::End();
 	}
 
+	if (m_isSecondLoad)
+	{
+		ImGui::Begin("Second Load", &m_isSecondLoad);
+
+		char** pItems = new char*[m_AnimObj.size()];
+
+		for (_int i = 0; i < m_AnimObj.size(); ++i)
+			pItems[i] = m_AnimObj[i];
+
+		if (ImGui::ListBox("Load Second Model", &m_iLoadSecondModel, pItems, _int(m_AnimObj.size())))
+		{
+			list<CGameObject*>* pPlayerList = pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"));
+
+			if ((nullptr != pPlayerList) && (1 < pPlayerList->size()))
+			{
+				auto iter = pPlayerList->begin();
+				++iter;
+				(*iter)->Set_Dead(true);	
+			}
+
+			CAnim::PLAYERDESC Pivot;
+			ZeroMemory(&Pivot, sizeof(CAnim::PLAYERDESC));
+
+			Pivot.vPosition = _float3(0.f, 0.f, 0.f);
+			Pivot.vScale = _float3(1.f, 1.f, 1.f);
+			Pivot.vRotation = _float3(0.f, 0.f, 0.f);
+
+			Pivot.eModel = (MODEL)m_iLoadSecondModel;
+
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Anim"), LEVEL_GAMEPLAY, TEXT("Layer_Player"), &Pivot)))
+				return;
+
+			if (m_iPreSecondModel != m_iLoadSecondModel)
+				m_iSecondAnimationChoice = -1;
+
+			m_iPreSecondModel = m_iLoadSecondModel;
+		}
+
+		Safe_Delete_Array(pItems);
+
+		if (ImGui::Button("Close"))
+		{
+			m_isSecondLoad = false;
+			m_iLoadSecondModel = -1;
+		}
+
+		ImGui::End();
+	}
+
 	CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
+	CModel* pSecondPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"), 1);
+
 	if (nullptr != pPlayerModel)
 	{
 		ImGuiTreeNodeFlags TreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
@@ -5958,10 +6027,24 @@ void CImgui_Manager::Set_Animation()
 				_vector vPos = XMVectorSet(m_Position[0], m_Position[1], m_Position[2], 1.f);
 				((CAnim*)(pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front()))->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPos);
 			}
+
+			if (nullptr != pSecondPlayerModel)
+			{
+				if (ImGui::DragFloat3("Second Rotation", m_SecondRotation, 0.01f, 0.f, 360.f))
+					((CAnim*)(*(++pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->begin())))->Get_Transform()->Set_Rotation(_float3(m_SecondRotation[0], m_SecondRotation[1], m_SecondRotation[2]));
+				if (ImGui::DragFloat3("Second Position", m_SecondPosition, 0.01f))
+				{
+					_vector vPos = XMVectorSet(m_SecondPosition[0], m_SecondPosition[1], m_SecondPosition[2], 1.f);
+					((CAnim*)(*(++pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->begin())))->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPos);
+				}
+			}
 		}
 
 		vector<CHierarchyNode*> ModelBones = pPlayerModel->Get_Bones();
 		vector<CAnimation*> ModelAnimations = pPlayerModel->Get_Animations();
+		vector<CAnimation*> SecondModelAnimations;
+		if (nullptr != pSecondPlayerModel)
+			SecondModelAnimations = pSecondPlayerModel->Get_Animations();
 
 		if (ImGui::CollapsingHeader("Bone", TreeNodeFlags))
 		{
@@ -6079,11 +6162,91 @@ void CImgui_Manager::Set_Animation()
 
 			if (ImGui::Button("Animation Edit"))
 				m_isAnimationEdit = true;
-				
+
 			ImGui::SameLine();
 
 			if (ImGui::Button("Animation Event"))
 				m_isEventWindow = true;
+
+			/* Second */
+			if (nullptr != pSecondPlayerModel)
+			{
+				char** pAnimItems = new char*[SecondModelAnimations.size()];
+
+				for (_int i = 0; i < SecondModelAnimations.size(); ++i)
+				{
+					pAnimItems[i] = new char[MAX_PATH];
+					strcpy_s(pAnimItems[i], sizeof(char) * MAX_PATH, SecondModelAnimations[i]->Get_Name());
+				}
+				ImGui::SetNextItemWidth(600.f);
+				if (ImGui::ListBox("Second Animation", &m_iSecondAnimationChoice, pAnimItems, _int(SecondModelAnimations.size())))
+				{
+					((CAnim*)(*(++pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->begin())))->Set_AnimIndex(m_iSecondAnimationChoice);
+
+					m_fSecondAnimationDuration = SecondModelAnimations[m_iSecondAnimationChoice]->Get_Duration();
+				}
+
+				for (_int i = 0; i < SecondModelAnimations.size(); ++i)
+					Safe_Delete_Array(pAnimItems[i]);
+
+				Safe_Delete_Array(pAnimItems);
+
+				if (ImGui::DragFloat("Second Duration", &m_fSecondAnimationDuration, 0.005f, 0.001f, 200.f))
+					SecondModelAnimations[m_iSecondAnimationChoice]->Change_Duration(m_fSecondAnimationDuration);
+				ImGui::SameLine();
+				ImGui::Checkbox("Second Animation Play", &m_isSecondAnimationPlay);
+
+				if (m_isSecondAnimationPlay)
+				{
+					if (-1 != m_iSecondAnimationChoice)
+					{
+						((CAnim*)(*(++pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->begin())))->StartAnim();
+						m_fSecondAnimationTime = SecondModelAnimations[m_iSecondAnimationChoice]->Get_CurrentTime();
+						if (m_fSecondAnimationTime > m_fSecondAnimationDuration)
+							m_fSecondAnimationTime = 0.f;
+					}
+				}
+				else
+					((CAnim*)(*(++pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->begin())))->StopAnim();
+
+				if (ImGui::SliderFloat("Second Playing", &m_fSecondAnimationTime, 0.f, m_fSecondAnimationDuration))
+				{
+					SecondModelAnimations[m_iSecondAnimationChoice]->Reset();
+					SecondModelAnimations[m_iSecondAnimationChoice]->Set_CurrentTime(m_fSecondAnimationTime);
+					((CAnim*)(*(++pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->begin())))->PlayAnimation();
+				}
+
+				ImGui::Checkbox("Strike Play", &m_isStrikePlay);
+
+				if (m_isStrikePlay)
+				{
+					if (-1 != m_iAnimationChoice && -1 != m_iSecondAnimationChoice)
+					{
+						((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StartAnim();
+						m_fAnimationTime = ModelAnimations[m_iAnimationChoice]->Get_CurrentTime();
+
+						((CAnim*)(*(++pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->begin())))->StartAnim();
+						m_fSecondAnimationTime = SecondModelAnimations[m_iSecondAnimationChoice]->Get_CurrentTime();
+					}
+				}
+				else if (!m_isStrikePlay && !m_isAnimationPlay && !m_isSecondAnimationPlay)
+				{
+					((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
+					((CAnim*)(*(++pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->begin())))->StopAnim();
+
+					if (-1 != m_iAnimationChoice && -1 != m_iSecondAnimationChoice)
+					{
+						ModelAnimations[m_iAnimationChoice]->Reset();
+						SecondModelAnimations[m_iSecondAnimationChoice]->Reset();
+					}
+
+					if (m_fAnimationTime > m_fAnimationDuration)
+						m_fAnimationTime = 0.f;
+
+					if (m_fSecondAnimationTime > m_fSecondAnimationDuration)
+						m_fSecondAnimationTime = 0.f;
+				}
+			}
 		}
 
 		if (m_isAnimationEdit)

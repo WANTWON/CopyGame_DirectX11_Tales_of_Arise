@@ -11,6 +11,7 @@
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
 #include "PlayerIdleState.h"
+#include "UI_Skillmessage.h"
 
 
 using namespace AIPlayer;
@@ -32,6 +33,18 @@ CAI_SionRinwell_Smash::CAI_SionRinwell_Smash(CPlayer* pPlayer, CBaseObj* pTarget
 CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 {
 
+	m_fTimer += fTimeDelta;
+
+
+	if (m_pOwner->Get_PlayerID() == CPlayer::ALPHEN)
+	{
+		if (m_fTimer > 4.f)
+		{
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SIONRINWELLSTRIKE);
+			m_fTimer = -100.f;
+		}
+	}
+
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
 		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -45,7 +58,7 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 	if (m_pTarget == nullptr)
 		return nullptr;
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
 	if (!m_bIsAnimationFinished)
 	{
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -88,8 +101,7 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 		_vector vecTranslation;
 		_float fRotationRadian;
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		
 	}
 
 	m_pOwner->Check_Navigation();
@@ -153,10 +165,10 @@ void CAI_SionRinwell_Smash::Enter()
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::SION:
-		m_iCurrentAnimIndex = CSion::ANIM::BTL_ATTACK_STRIKE;
+		m_iCurrentAnimIndex = CSion::ANIM::ANIM_RINWELLSION_STRIKE;
 		break;
 	case CPlayer::RINWELL:
-		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_STRIKE;
+		m_iCurrentAnimIndex = CRinwell::ANIM::ANIM_SIONRINWELL_STRIKE;
 
 
 
@@ -182,6 +194,16 @@ void CAI_SionRinwell_Smash::Enter()
 
 void CAI_SionRinwell_Smash::Exit()
 {
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
+	{
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
+			return;
+
+	}
+
+
+	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+
 	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
