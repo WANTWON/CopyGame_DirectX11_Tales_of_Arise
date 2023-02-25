@@ -129,6 +129,128 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				switch (m_eStateId)
+				{
+					case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+						if (m_bIsFly)
+						{
+							if (!m_bNormalAttackAir_1)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_Air_1.dat"), mWorldMatrix);
+								m_bNormalAttackAir_1 = true;
+							}
+						}
+						else
+						{
+							if (!m_bNormalAttack_1)
+							{
+								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_1.dat"), mWorldMatrix);
+
+								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								mWorldMatrix.r[3] = vPosition;
+								
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								m_bNormalAttack_1 = true;
+							}
+						}
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+						if (m_bIsFly)
+						{
+							if (!m_bNormalAttackAir_2)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_Air_2.dat"), mWorldMatrix);
+								m_bNormalAttackAir_2 = true;
+							}
+						}
+						else
+						{
+							if (!m_bNormalAttack_2)
+							{
+								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_2.dat"), mWorldMatrix);
+
+								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								mWorldMatrix.r[3] = vPosition;
+
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								m_bNormalAttack_2 = true;
+							}
+						}
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+						if (m_bIsFly)
+						{
+							if (!m_bNormalAttackAir_3)
+							{
+								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_Air_3.dat"), mWorldMatrix);
+								
+								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								mWorldMatrix.r[3] = vPosition;
+
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								m_bNormalAttackAir_3 = true;
+							}
+						}
+						else
+						{
+							if (!m_bNormalAttack_3)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_3.dat"), mWorldMatrix);
+								m_bNormalAttack_3 = true;
+							}
+						}
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+						if (m_bIsFly)
+						{
+							if (!m_bNormalAttackAir_4)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_Air_4.dat"), mWorldMatrix);
+								m_bNormalAttackAir_4 = true;
+							}
+						}
+						else
+						{
+							if (!m_bNormalAttack_4)
+							{
+								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_4.dat"), mWorldMatrix);
+
+								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								mWorldMatrix.r[3] = vPosition;
+
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								m_bNormalAttack_4 = true;
+							}
+						}
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK5:
+						if (m_bIsFly)
+						{
+							if (!m_bNormalAttackAir_5)
+							{
+								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_Air_5.dat"), mWorldMatrix);
+
+								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								mWorldMatrix.r[3] = vPosition;
+
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								m_bNormalAttackAir_5 = true;
+							}
+						}
+						else
+						{
+							if (!m_bNormalAttack_5)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_5.dat"), mWorldMatrix);
+								m_bNormalAttack_5 = true;
+							}
+						}
+						break;
+				}
+			}
 		}
 		else
 		{
@@ -491,6 +613,8 @@ void CLawAttackState::Enter()
 {
 	__super::Enter();
 
+	Reset_Skill();
+
 	if (m_bIsFly)
 	{
 		switch (m_eStateId)
@@ -564,6 +688,20 @@ void CLawAttackState::Exit()
 	Safe_Release(m_pRightFootCollider);
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+}
+
+void CLawAttackState::Reset_Skill(void)
+{
+	m_bNormalAttack_1 = false;
+	m_bNormalAttack_2 = false;
+	m_bNormalAttack_3 = false;
+	m_bNormalAttack_4 = false;
+	m_bNormalAttack_5 = false;
+	m_bNormalAttackAir_1 = false;
+	m_bNormalAttackAir_2 = false;
+	m_bNormalAttackAir_3 = false;
+	m_bNormalAttackAir_4 = false;
+	m_bNormalAttackAir_5 = false;
 }
 
 CCollider * CLawAttackState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)
