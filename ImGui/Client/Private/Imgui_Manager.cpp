@@ -6214,7 +6214,7 @@ void CImgui_Manager::Set_Animation()
 						m_fSecondAnimationTime = SecondModelAnimations[m_iSecondAnimationChoice]->Get_CurrentTime();
 					}
 				}
-				else if (!m_isStrikePlay)
+				else if (!m_isStrikePlay && !m_isAnimationPlay && !m_isSecondAnimationPlay)
 				{
 					((CAnim*)pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
 					((CAnim*)(*(++pGameInstance->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->begin())))->StopAnim();
