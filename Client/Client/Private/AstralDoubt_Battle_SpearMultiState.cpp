@@ -647,7 +647,7 @@ void CBattle_SpearMultiState::Enter()
 
 void CBattle_SpearMultiState::Exit()
 {
-	/*Safe_Release(m_pAtkColliderCom);
+	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);
 	Safe_Release(m_p3th_AtkColliderCom);
 	Safe_Release(m_p4th_AtkColliderCom);
@@ -655,5 +655,5 @@ void CBattle_SpearMultiState::Exit()
 	Safe_Release(m_p6th_AtkColliderCom);
 	
 	m_bCausedDamage = false;
-	m_bFootCauseDamage = false;*/
+	m_bFootCauseDamage = false;
 }

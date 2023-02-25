@@ -136,6 +136,14 @@ HRESULT CSion::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_CityNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_City_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 	m_vecNavigations.push_back(m_pNavigationCom);
+
+	if (FAILED(__super::Add_Components(TEXT("Com_RestaurantNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+	m_vecNavigations.push_back(m_pNavigationCom);
+	if (FAILED(__super::Add_Components(TEXT("Com_RestaurantMIniGameNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_MIniGameNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+	m_vecNavigations.push_back(m_pNavigationCom);
+
 	return S_OK;
 }
 
@@ -150,7 +158,7 @@ void CSion::Change_Level(LEVEL eLevel)
 
 		CHierarchyNode* pSocket = nullptr;
 
-		if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel)
+		if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel || LEVEL_RESTAURANT == eLevel )
 		{
 			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 			if (nullptr == pSocket)

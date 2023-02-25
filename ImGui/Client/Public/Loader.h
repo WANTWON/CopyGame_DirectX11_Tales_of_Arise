@@ -40,6 +40,8 @@ public:
 	HRESULT Loading_ForMaptoolBossRoomModel();
 	HRESULT Loading_ForMaptoolVillageModel();
 	HRESULT Loading_ForMaptoolCityModel();
+	HRESULT Loading_ForMaptoolInteriorModel();
+	HRESULT Loading_ForMaptoolKitchenModel();
 	
 	HRESULT Loading_ForActor();
 	HRESULT Loading_ForEffect();

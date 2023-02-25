@@ -18,7 +18,7 @@ CBattle_RunState::CBattle_RunState(class CIce_Wolf* pIceWolf, STATE_ID ePreState
 	m_pOwner = pIceWolf;
 	m_ePreState_Id = ePreState;
 	m_fTimeDeltaAcc = 0;
-	m_fRandTime = ((rand() % 200) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 100) *0.001f)*((rand() % 100) * 0.01f);
 	m_pCurTarget = pCurTarget;
 
 }
@@ -54,7 +54,7 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 
 			else if (pDamageCauser != nullptr)
 			{
-				CBaseObj* pDamageCauser = nullptr;
+				//CBaseObj* pDamageCauser = nullptr;
 				pDamageCauser = m_pOwner->Get_DamageCauser();
 				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
 
@@ -84,6 +84,8 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 						m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 					}
 
+					else
+						return new CBattle_HowLingState(m_pOwner);
 				}
 				//
 				else if (pDamageCauser != nullptr)

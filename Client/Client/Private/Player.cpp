@@ -28,6 +28,8 @@
 #include "AIPoseState.h"
 #include "Damagefont_Critical.h"
 
+#include "Level_Restaurant.h"
+
 using namespace Player;
 using namespace AIPlayer;
 
@@ -368,6 +370,14 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 	if (eMode == ACTIVE)
 		int a = 0;
+
+	
+	if (m_bTakeDamage_Delay == false)
+	{
+		m_tInfo.fCurrentHp -= (int)fDamage;
+		m_bTakeDamage_Delay = true;
+	}
+
 	m_tInfo.fCurrentHp -= (int)fDamage;
 
 
@@ -383,6 +393,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 			return OBJ_NOEVENT;
 	}
 
+
 	/*CDamageFont::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
 	testdesc.iDamage = fDamage;
@@ -394,7 +405,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 		return E_FAIL;
 	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("dmg"), &testdesc)))
 		return E_FAIL;*/
-
+	
 	if (m_tInfo.fCurrentHp <= 0)
 	{
 		CPlayerState* pState = nullptr;
@@ -778,6 +789,19 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 	case Client::LEVEL_CITY:
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_CityNavigation"), m_ePlayerID));
 		break;
+	case Client::LEVEL_RESTAURANT:
+	{
+		CLevel_Restaurant* pLevel = dynamic_cast<CLevel_Restaurant*>(CGameInstance::Get_Instance()->Get_CurrentLevel());
+		if (pLevel == nullptr || pLevel->Get_MiniGameStart() == false)
+			m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_RestaurantNavigation"), m_ePlayerID));
+		else
+			m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_RestaurantMIniGameNavigation"), m_ePlayerID));
+
+		break;
+
+	}
+		
+		
 	}
 	
 	RELEASE_INSTANCE(CGameInstance);

@@ -23,10 +23,15 @@ public:
 	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_SnowDecoObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_BossMapObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_RestaurantObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_CityMapObject(const _tchar* pLayerTag);
+
+	HRESULT Ready_Layer_Interact_SnowField(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Interact_Restaurant(const _tchar* pLayerTag);
 
 
 private:
+
 
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -39,13 +39,16 @@ HRESULT CItem::Initialize(void* pArg)
 
 	if (pArg != nullptr)
 	{
-		_vector vPosition = XMLoadFloat3(&m_ItemDesc.ModelDesc.vPosition);
+		m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&m_ItemDesc.m_ModelDesc.WorldMatrix));
+		_vector vPosition = XMLoadFloat3(&m_ItemDesc.m_ModelDesc.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-		Set_Scale(m_ItemDesc.ModelDesc.vScale);
+		m_pTransformCom->Set_Rotation(m_ItemDesc.m_ModelDesc.vRotation);
+		Set_Scale(m_ItemDesc.m_ModelDesc.vScale);
 
-		if (m_ItemDesc.ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMLoadFloat3(&m_ItemDesc.ModelDesc.vRotation), XMConvertToRadians(m_ItemDesc.ModelDesc.m_fAngle));
+		if (m_ItemDesc.m_ModelDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_ItemDesc.m_ModelDesc.m_fAngle));
+
 	}
 
 	switch (m_ItemDesc.etype)
@@ -114,6 +117,9 @@ void CItem::Late_Tick(_float fTimeDelta)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
+
+	if (!m_bIsGain)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
 
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (!pPlayer)
@@ -279,6 +285,24 @@ HRESULT CItem::Render()
 	return S_OK;
 }
 
+HRESULT CItem::Render_EdgeDetection()
+{
+	if (nullptr == m_pShaderCom || nullptr == m_pModelCom)
+		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 7)))
+			return E_FAIL;
+	}
+}
+
 HRESULT CItem::Ready_Components(void * pArg)
 {
 	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
@@ -316,7 +340,7 @@ HRESULT CItem::Ready_Components(void * pArg)
 
 	/* For.Com_Model*/
 	_tchar szModeltag[MAX_PATH] = TEXT("");
-	MultiByteToWideChar(CP_ACP, 0, m_ItemDesc.ModelDesc.pModeltag, (int)strlen(m_ItemDesc.ModelDesc.pModeltag), szModeltag, MAX_PATH);
+	MultiByteToWideChar(CP_ACP, 0, m_ItemDesc.m_ModelDesc.pModeltag, (int)strlen(m_ItemDesc.m_ModelDesc.pModeltag), szModeltag, MAX_PATH);
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, szModeltag, (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 

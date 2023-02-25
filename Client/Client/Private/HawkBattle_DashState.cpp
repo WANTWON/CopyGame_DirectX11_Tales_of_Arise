@@ -79,7 +79,7 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 			{
 				if (!m_bAnimFinish)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Dash.wav"), SOUND_VOICE, 0.6f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Dash.wav"), SOUND_VOICE, 0.4f);
 					m_bAnimFinish = true;
 				}
 			}
@@ -160,5 +160,5 @@ void CBattle_DashState::Enter()
 void CBattle_DashState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
-	//Safe_Release(m_pAtkColliderCom);
+	Safe_Release(m_pAtkColliderCom);
 }

@@ -44,6 +44,7 @@ public: /* Getter &  Setter */
 	PLAYERID		Get_PlayerID() { return m_ePlayerID; }
 	CGameObject*	Get_Parts(_int iIndex) { return m_Parts[iIndex]; }
 	LEVEL			Get_Level(void) { return m_eLevel; }
+	void			Set_TakeDamage_DelayFinish() { m_bTakeDamage_Delay = false; }
 
 	/* 지상 스킬 */
 	_uint			Get_GroundSkillAnimIndex(GROUNDSKILL SkillIndex) { return m_eGroundSkills[SkillIndex]; }
@@ -157,9 +158,12 @@ protected: /* for 4 Player */
 	_float m_fResetDuration = .25f;
 	_float m_fResetTimer = 0.f;
 
+	/* 무한피격 방지 */
+	_bool m_bTakeDamage_Delay = false;
+
 private:
 	_bool m_bLevelup = false;
-
+	
 protected:
 	vector<class CGameObject*> m_Parts;
 	

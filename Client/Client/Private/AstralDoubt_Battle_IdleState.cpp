@@ -205,6 +205,8 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 	}
 
 
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
 
 
 	return nullptr;
@@ -312,7 +314,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 			{
 				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 				m_pOwner->Get_Transform()->LookAt(vPosition);
-				if (m_fTarget_Distance <= 10.f)
+				if (m_fTarget_Distance <= 12.f)
 				{
 
 					if (m_PreState_IsSpin == false)
@@ -362,12 +364,44 @@ void CBattle_IdleState::Enter()
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::MOVE_IDLE);
 		
 	}
-	else if(m_ePreState_Id == STATE_ID::STATE_ADVENT)
+	else if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
+	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::EVENT_ADVENT);
 
-	else if(m_ePreState_Id == STATE_ID::STATE_BRAVE)
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay && m_bAdventSound == false)
+			{
+
+				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Advent.wav"), SOUND_VOICE, 0.6f);
+					m_bAdventSound = true;
+				}
+			}
+		}
+	}
+
+
+	else if (m_ePreState_Id == STATE_ID::STATE_BRAVE)
+	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_BRAVE);
-	
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Howling.wav"), SOUND_VOICE, 0.6f);
+		/*vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay && m_bAdventSound == false)
+			{
+
+				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Howling.wav"), SOUND_VOICE, 0.6f);
+					m_bAdventSound = true;
+				}
+			}
+		}*/
+	}
 	else if(m_ePreState_Id == STATE_ID::STATE_ALLPLAYER_DEAD)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_BRAVE);
 

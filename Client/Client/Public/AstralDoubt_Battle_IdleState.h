@@ -31,6 +31,7 @@ private:
 	_bool			m_bBeamTargetOn = false;
 	_bool			m_PreState_IsSpin = false;
 	_bool			m_PreState_FootPress = false;
+	_bool			m_bAdventSound = false;
 };
 END
 END
