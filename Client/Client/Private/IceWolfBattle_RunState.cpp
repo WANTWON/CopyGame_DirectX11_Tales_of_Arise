@@ -54,7 +54,7 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 
 			else if (pDamageCauser != nullptr)
 			{
-				CBaseObj* pDamageCauser = nullptr;
+				//CBaseObj* pDamageCauser = nullptr;
 				pDamageCauser = m_pOwner->Get_DamageCauser();
 				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
 
@@ -84,6 +84,8 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 						m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 					}
 
+					else
+						return new CBattle_HowLingState(m_pOwner);
 				}
 				//
 				else if (pDamageCauser != nullptr)

@@ -95,7 +95,7 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 
 			else if (pDamageCauser != nullptr)
 			{
-				CBaseObj* pDamageCauser = nullptr;
+				//CBaseObj* pDamageCauser = nullptr;
 				pDamageCauser = m_pOwner->Get_DamageCauser();
 				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
 
@@ -382,7 +382,7 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 			//
 			//if (m_fTarget_Distance <= 24.f)
 			//{
-			if (m_fTarget_Distance <= 8.f)
+			if (m_fTarget_Distance <= 12.f)
 			{
 	
 					_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));

@@ -52,7 +52,7 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 
 			else if (pDamageCauser != nullptr)
 			{
-				CBaseObj* pDamageCauser = nullptr;
+	
 				pDamageCauser = m_pOwner->Get_DamageCauser();
 				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
 
@@ -82,6 +82,8 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 						m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 					}
 
+					else
+						return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
 				}
 				//
 				else if (pDamageCauser != nullptr)
@@ -133,6 +135,8 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 				}
 
+				else
+					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
 			}
 
 			else if (pDamageCauser != nullptr)
@@ -151,34 +155,9 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 
 				else
 				{
-					//if (pDamageCauser->Get_Info().fCurrentHp > 0)
-					//{
-					//	pDamageCauser = m_pOwner->Get_DamageCauser();
-					//	m_pOwner->Set_OrginDamageCauser(pDamageCauser);
-
-					//	m_pCurTarget = pDamageCauser;
-
-					//	m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-					//	m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-					//}
-
-					//else
-					//{
-					//	CBaseObj* p2thCorpseNearby = nullptr;
-					//	p2thCorpseNearby = m_pOwner->Find_MinDistance_Target();
-
-					//	if (p2thCorpseNearby->Get_Info().fCurrentHp > 0)
-					//	{
-					//		m_pCurTarget = p2thCorpseNearby;
-					//		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-					//		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-					//	}
-
-					//	else
-					//		return new CBattle_HowLingState(m_pOwner);
-					//}
+					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
 				}
-				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
+				
 			}
 		}
 
