@@ -15,6 +15,7 @@ public:
 	enum CAMERAMODE {CAM_DEBUG, CAM_PLAYER,
 		CAM_BATTLEZONE, CAM_BATTLE_CLEAR, CAM_LOCKON, CAM_LOCKOFF,
 		CAM_AIBOOSTON, CAM_AIBOOSTOFF, CAM_TARGETMODE, CAM_TARGETMODE_OFF,
+		CAM_ROOM,
 		CAM_END};
 	
 
@@ -72,7 +73,7 @@ public:
 
 public:
 	void Debug_Camera(_float fTimeDelta);
-	void Player_Camera(_float fTimeDelta);
+	void MiniGameSlash_Camera(_float fTimeDelta);
 	void Battle_Camera(_float fTimeDelta);
 	void BattleClear_Camera(_float fTimeDelta);
 	void LockOn_Camera(_float fTimeDelta);
@@ -85,6 +86,7 @@ public:
 	void TargetTool_Camera(_float fTimeDelta);
 	void TargetTool_CameraOff(_float fTimeDelta);
 
+	void Room_Camera(_float fTimeDelta);
 private:
 	void ZoomSetting(_float fDistance, _float fSpeed);
 	void Shaking_Camera(_float fTimeDelta);

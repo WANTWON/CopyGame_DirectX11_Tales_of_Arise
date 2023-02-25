@@ -1,6 +1,7 @@
 #pragma once
 #include "Camera_Dynamic.h"
 #include "Camera_Action.h"
+#include "Camera_MiniGame.h"
 
 BEGIN(Client)
 class CBaseObj;
@@ -8,7 +9,7 @@ class CCameraManager final : public CBase
 {
 	DECLARE_SINGLETON(CCameraManager)
 public:
-	enum CAM_STATE { CAM_DYNAMIC, CAM_ACTION, CAM_END };
+	enum CAM_STATE { CAM_DYNAMIC, CAM_ACTION, CAM_MINIGAME, CAM_END };
 	enum LOAD_CAMERATYPE { TARGETMODE, ACTION };
 public:
 	CCameraManager();

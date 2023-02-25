@@ -13,15 +13,20 @@ CNonAnim::CNonAnim(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CNonAnim::CNonAnim(const CNonAnim & rhs)
 	: CBaseObj(rhs)
 {
+	memcpy(&m_ModelDesc, &rhs.m_ModelDesc , sizeof(NONANIMDESC));
 }
 
 HRESULT CNonAnim::Initialize_Prototype()
 {
+	//ZeroMemory(&m_ModelDesc, sizeof(NONANIMDESC));
+	XMStoreFloat4x4(&m_ModelDesc.WorldMatrix, XMMatrixIdentity());
 	return S_OK;
 }
 
 HRESULT CNonAnim::Initialize(void * pArg)
 {
+	
+
 	if(pArg != nullptr)
 		memcpy(&m_ModelDesc, pArg, sizeof(NONANIMDESC));
 
@@ -36,13 +41,17 @@ HRESULT CNonAnim::Initialize(void * pArg)
 
 	if (pArg != nullptr)
 	{
+		
+		m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&m_ModelDesc.WorldMatrix));
 		_vector vPosition = XMLoadFloat3(&m_ModelDesc.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		m_pTransformCom->Set_Rotation(m_ModelDesc.vRotation);
 		Set_Scale(m_ModelDesc.vScale);
 
-		if(m_ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMLoadFloat3(&m_ModelDesc.vRotation), XMConvertToRadians(m_ModelDesc.m_fAngle));
+		if (m_ModelDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMVectorSet(0.f,1.f,0.f,0.f), XMConvertToRadians(m_ModelDesc.m_fAngle));
+
 	}
 	
 
@@ -210,9 +219,11 @@ void CNonAnim::Turn(_float3 vAxis, _float fAngle)
 	if (fInputAngle > 180)
 		fInputAngle = 360 - fInputAngle;
 
-	m_pTransformCom->Rotation(XMLoadFloat3(&vAxis), XMConvertToRadians(fInputAngle));
 	m_ModelDesc.vRotation = vAxis;
 	m_ModelDesc.m_fAngle = fAngle;
+
+	m_pTransformCom->Set_Rotation(m_ModelDesc.vRotation);
+	
 }
 
 HRESULT CNonAnim::Ready_Components(void* pArg)
