@@ -78,8 +78,18 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 			//		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.6f, 0.01f);
 			//}
 
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+				if (!m_bAnimFinish)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_Spin.wav"), SOUND_VOICE, 0.6f);
+					m_bAnimFinish = true;
+				}
+			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
+
+
 				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 					dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.6f, 0.01f);
 
@@ -361,7 +371,7 @@ void CBattle_720Spin_FirstState::Enter()
 
 void CBattle_720Spin_FirstState::Exit()
 {
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 	
 	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);

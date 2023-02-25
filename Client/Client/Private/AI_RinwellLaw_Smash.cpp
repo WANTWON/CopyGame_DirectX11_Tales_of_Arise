@@ -169,6 +169,8 @@ void CAI_RinwellLaw_Smash::Enter()
 	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_2stKillertechnique.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CAI_RinwellLaw_Smash::Exit()

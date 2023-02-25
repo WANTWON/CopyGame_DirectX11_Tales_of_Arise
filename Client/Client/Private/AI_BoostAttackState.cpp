@@ -246,7 +246,7 @@ void CAI_BoostAttack::Enter()
 		mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects2 = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
-
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Booster.wav"), SOUND_EFFECT, 0.5f);
 		break;
 	}
 	}

@@ -30,6 +30,8 @@ private:
 	CCollider*	m_p4th_AtkColliderCom = false;
 	CCollider*	m_p5th_AtkColliderCom = false;
 	CCollider*	m_p6th_AtkColliderCom = false;
+
+	_bool		m_bAnimFinish = false;
 };
 END
 END
