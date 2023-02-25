@@ -7,21 +7,33 @@ BEGIN(Client)
 class CAIState
 {
 public:
+	enum STATE_ID
+	{
+		STATE_IDLE,
+		STATE_WALK,
+		STATE_RUN,
+		STATE_ATTACK,
+		STATE_BOOSTATTACK,
+		STATE_DEAD,
+		STATE_HIT,
+		STATE_END
+	};
+
 	enum AI_MODE
 	{
 		ATTACK_LOCKONMODE,
 		ATTACK_FREEMODE
 	};
 
-public:
+	STATE_ID Get_StateId() { return m_eStateId; }
+
 	virtual ~CAIState() {};
-	
-public:
-	virtual CAIState* HandleInput() PURE;
+	virtual CAIState* HandleInput() { return nullptr; };
 	virtual CAIState* Tick(_float fTimeDelta) PURE;
-	virtual CAIState* Late_Tick(_float fTimeDelta) PURE;
-	virtual CAIState* EventInput(void) PURE;
+	virtual CAIState* LateTick(_float fTimeDelta) PURE;
+
 	virtual void Enter() PURE;
+	virtual void Exit() { m_pOwner->Get_Model()->Reset(); }
 
 public:
 	_float Get_Target_Distance()
@@ -77,17 +89,24 @@ public:
 	
 
 protected:
+	STATETYPE m_eStateType = STATETYPE_DEFAULT;
+	STATE_ID m_eStateId = STATE_END;
 	STATE_ID m_ePreStateID = STATE_END;
-	AI_MODE m_eAIMode = ATTACK_FREEMODE;
+	_uint m_eAIMode = ATTACK_FREEMODE;
 	_uint m_iCurrentAnimIndex = 0;
 	_uint m_eCurrentPlayerID = CPlayer::PLAYERID::SION;
+	CPlayer* m_pOwner = nullptr;
 
 	_float m_fTimer = 0.f;
 
+	_bool m_bIsAnimationFinished = false;
 	_bool m_bRangerRunaway = false;
 	_bool m_bIsStateEvent = false;
 	CBaseObj* m_pTarget = nullptr;
 
 	_bool m_bLookatOnetime = true;
+
+	_bool m_bIsFly = false;
+	_float m_fTime = 0.f;
 };
 END
