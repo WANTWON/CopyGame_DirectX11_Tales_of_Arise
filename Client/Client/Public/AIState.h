@@ -1,10 +1,10 @@
 #pragma once
 
-#include "State.h"
+#include "Player.h"
 #include "Monster.h"
 
 BEGIN(Client)
-class CAIState : public CState
+class CAIState
 {
 public:
 	enum AI_MODE

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GameInstance.h"
-#include "State.h"
 #include "Alphen.h"
 #include "Sion.h"
 #include "Rinwell.h"
@@ -10,12 +9,12 @@
 #include "BattleManager.h"
 
 BEGIN(Client)
-class CPlayerState : public CState
+class CPlayerState
 {
 public:
 	enum STATE_ID_PLAYER
 	{
-		STATE_COM = STATE_END,
+		
 		STATE_COLLECT,
 		STATE_PLAYER_END
 	};

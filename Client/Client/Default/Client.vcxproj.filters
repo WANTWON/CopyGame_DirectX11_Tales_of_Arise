@@ -1164,9 +1164,6 @@
     <ClInclude Include="..\Public\BreakFont.h">
       <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Trigger.h">
       <Filter>02.GameObjects\05.Trigger\MonsterTrigger</Filter>
     </ClInclude>
@@ -1886,10 +1883,6 @@
     <ClCompile Include="..\Private\BreakFont.cpp">
       <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
     </ClCompile>
-
-    <ClCompile Include="..\Private\State.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\State</Filter>
-    </ClInclude>
     <ClCompile Include="..\Private\Trigger.cpp">
       <Filter>02.GameObjects\05.Trigger\MonsterTrigger</Filter>
     </ClCompile>
