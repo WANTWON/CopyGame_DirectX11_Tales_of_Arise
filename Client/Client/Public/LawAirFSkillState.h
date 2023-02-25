@@ -19,9 +19,21 @@ public:
 	virtual void Exit(void) override;
 
 private:
+	void Update_Skill(void);
+	void Remove_Skill(void);
+	void Reset_Skill(void);
+
+private:
 	CCollider* m_pLandCollider = nullptr;
 
 	_matrix m_ColliderMatrix = XMMatrixIdentity();
+
+	/* Effect Booleans */
+	_bool m_bEnhaBakusaiken_1 = false;	// F (Air)
+	_bool m_bEnhaBakusaiken_2 = false;	// F (Air)
+
+	/* Effect Vectors */
+	vector<class CEffect*> m_EnhaBakusaiken_1;
 
 private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);

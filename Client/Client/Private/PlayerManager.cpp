@@ -66,12 +66,16 @@ void CPlayerManager::Set_ActivePlayer(_uint iIndex)
 		m_pActivePlayer->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	}
 	else
+	{
+		if (m_pActivePlayer->Get_IsFly())
+			m_pActivePlayer->Off_IsFly();
+		
 		m_pActivePlayer = m_AllPlayers[index];
+	}
 
 	m_pActivePlayer->Change_Navigation(iLevel);
 	m_pActivePlayer->Compute_CurrentIndex(iLevel);
-	m_pActivePlayer->Check_Navigation();
-
+	m_pActivePlayer->Check_Navigation_Jump();
 
 	m_pAIPlayers.clear();
 	for (auto& iter : *pPlayerLists)

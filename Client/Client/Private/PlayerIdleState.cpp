@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include "GameInstance.h"
-
 #include "PlayerIdleState.h"
 #include "PlayerRunState.h"
 #include "PlayerHitState.h"
@@ -13,12 +11,14 @@
 #include "PlayerCollectState.h"
 
 #include "CloseChaseState.h"
+#include "AlphenAttackState.h"
 
 #include "Player_SionNormalAttack_State.h"
 #include "Player_SionSkillAttack.h"
 #include "Player_RinwellNormalAttack_State.h"
 #include "Player_RinwellSkillAttack_State.h"
 
+#include "Level_Restaurant.h"
 
 using namespace Player;
 
@@ -106,6 +106,11 @@ CPlayerState * CIdleState::HandleInput()
 
 		if (pGameInstance->Key_Pressing(DIK_LSHIFT))
 			return new CDodgeState(m_pOwner, DIR_STRAIGHT);
+	}
+	else if ((LEVEL_RESTAURANT == pGameInstance->Get_CurrentLevelIndex()) && ((CLevel_Restaurant*)(pGameInstance->Get_CurrentLevel()))->Get_MiniGameStart())
+	{
+		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+			return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
 	}
 	else
 	{
@@ -199,6 +204,8 @@ void CIdleState::Enter()
 	{
 	case CPlayer::ALPHEN:
 		if (CBattleManager::Get_Instance()->Get_IsBattleMode())
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_IDLE);
+		else if ((LEVEL_RESTAURANT == CGameInstance::Get_Instance()->Get_CurrentLevelIndex()) && ((CLevel_Restaurant*)(CGameInstance::Get_Instance()->Get_CurrentLevel()))->Get_MiniGameStart())
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_IDLE);
 		else
 		{
