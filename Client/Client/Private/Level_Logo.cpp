@@ -315,6 +315,11 @@ HRESULT CLevel_Logo::Ready_InstancingForPooling(const _tchar* pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
 		return E_FAIL;
 
+	
+	strcpy(stModelDesc.pModeltag, "PineApple_Restaurant");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+
 	strcpy(stModelDesc.pModeltag, "Potato_Restaurant");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_RESTAURANT, pLayerTag, &stModelDesc)))
 		return E_FAIL;

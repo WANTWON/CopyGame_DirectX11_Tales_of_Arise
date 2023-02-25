@@ -389,7 +389,7 @@ void CCamera_MiniGame::MiniGameSlash_Camera(_float fTimeDelta)
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	
-	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(18, 20.f, 20.f, 1.f));
+	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(18.f, 18.f, 20.f, 1.f));
 	m_pTransform->LookAt(XMVectorSet(18, 0.f, 31.f, 1.f));
 
 

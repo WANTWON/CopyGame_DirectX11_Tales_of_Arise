@@ -144,6 +144,9 @@ HRESULT CAlphen::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_RestaurantNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 	m_vecNavigations.push_back(m_pNavigationCom);
+	if (FAILED(__super::Add_Components(TEXT("Com_RestaurantMIniGameNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_MIniGameNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+	m_vecNavigations.push_back(m_pNavigationCom);
 
 	
 

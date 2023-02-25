@@ -154,14 +154,60 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 	if (nullptr != m_pAtkColliderCom)
 	{
 		CBaseObj* pCollisionTarget = nullptr;
-
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+		
+		if (m_bCollision == false)
 		{
-			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+			{
+				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+				if (pCollided)
+					pCollided->Take_Damage(rand() % 100, m_pOwner);
+
+				m_bCollision = true;
+			}
 		}
 	}
+
+	if (m_bCollision)
+	{
+		m_fAtkCollision_Delay += fTimeDelta;
+
+		if (m_fAtkCollision_Delay >= 5.f)
+		{
+			m_fAtkCollision_Delay = 0.f;
+			m_bCollision = false;
+		}
+	}
+
+
+	if (nullptr != m_p2th_AtkColliderCom)
+	{
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (m_b2th_Collision == false)
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+			{
+				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+				if (pCollided)
+					pCollided->Take_Damage(rand() % 100, m_pOwner);
+
+				m_b2th_Collision = true;
+			}
+		}
+	}
+
+	if (m_b2th_Collision)
+	{
+		m_f2th_AtkCollision_Delay += fTimeDelta;
+
+		if (m_f2th_AtkCollision_Delay >= 5.f)
+		{
+			m_f2th_AtkCollision_Delay = 0.f;
+			m_b2th_Collision = false;
+		}
+	}
+
 
 	if (m_bIsAnimationFinished)
 			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_TORNADE);
@@ -195,4 +241,7 @@ void CBattle_TornadeState::Exit()
 
 	Safe_Release(m_p2th_AtkColliderCom);
 	Safe_Release(m_pAtkColliderCom);
+
+	m_bCollision = false;
+	m_b2th_Collision = false;
 }

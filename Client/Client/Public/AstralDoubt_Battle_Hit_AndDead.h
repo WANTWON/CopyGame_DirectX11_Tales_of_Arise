@@ -39,6 +39,7 @@ private:
 	_bool			m_bThirdHit = false;
 	_bool			m_bDeadAnimFinish = false;
 	_bool			m_bDeadSound = false;
+	_bool			m_bAnimFinish = false;
 	CCollider*		m_pAtkColliderCom = nullptr;
 private:
 	_matrix m_StartMatrix;

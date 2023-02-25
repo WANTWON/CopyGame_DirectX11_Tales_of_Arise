@@ -109,6 +109,7 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 
 			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(18, 0.f, 31.f, 1.f));
+			pPlayer->Change_Navigation(LEVEL_RESTAURANT);
 			pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
 			pPlayer->Check_Navigation();
 		}
@@ -118,6 +119,8 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 
 			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
+			pPlayer->Change_Navigation(LEVEL_RESTAURANT);
+
 			pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
 			pPlayer->Check_Navigation();
 		}
