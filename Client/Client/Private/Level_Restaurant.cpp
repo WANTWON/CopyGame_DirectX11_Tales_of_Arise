@@ -112,6 +112,9 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 			pPlayer->Change_Navigation(LEVEL_RESTAURANT);
 			pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
 			pPlayer->Check_Navigation();
+			pPlayer->Change_Level(LEVEL_RESTAURANT);
+			if (pPlayer->Get_IsFly())
+				pPlayer->Off_IsFly();
 		}
 		else
 		{
@@ -123,9 +126,11 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 
 			pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
 			pPlayer->Check_Navigation();
+			pPlayer->Change_Level(LEVEL_RESTAURANT);
+			if (pPlayer->Get_IsFly())
+				pPlayer->Off_IsFly();
 		}
 	}
-
 }
 
 HRESULT CLevel_Restaurant::Ready_Lights()
