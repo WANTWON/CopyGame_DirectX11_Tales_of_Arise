@@ -11,7 +11,7 @@ public:
 	typedef struct ItemTag
 	{
 		ITEMTYPE etype = APPLE;
-		NONANIMDESC ModelDesc;
+		NONANIMDESC m_ModelDesc;
 	}ITEMDESC;
 
 protected:

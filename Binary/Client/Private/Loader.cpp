@@ -434,8 +434,13 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 
 	PivotMatrix = XMMatrixScaling(0.03f, 0.03f, 0.03f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("InteriorWall"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/InteriorWall.fbx", "../../../Bin/Bin_Data/NonAnim/Interior/", PivotMatrix))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Door"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Door.fbx", "../../../Bin/Bin_Data/NonAnim/Interior/", PivotMatrix))))
+		return E_FAIL;
+
+	PivotMatrix = XMMatrixScaling(0.03f, 0.03f, 0.03f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("AugustDoor"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/AugustDoor.fbx", "../../../Bin/Bin_Data/NonAnim/Interior/", PivotMatrix))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));

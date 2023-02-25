@@ -46,14 +46,11 @@ HRESULT CNonAnim::Initialize(void * pArg)
 		_vector vPosition = XMLoadFloat3(&m_ModelDesc.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
-		m_pTransformCom->Turn(XMVectorSet(1.f, 0.f, 0.f, 0.f), m_ModelDesc.vRotation.x);
-		if(m_ModelDesc.vRotation.y != 1.f)
-			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_ModelDesc.vRotation.y);
-		m_pTransformCom->Turn(XMVectorSet(0.f,0.f,1.f,0.f), m_ModelDesc.vRotation.z);
+		m_pTransformCom->Set_Rotation(m_ModelDesc.vRotation);
 		Set_Scale(m_ModelDesc.vScale);
 
 		if (m_ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMLoadFloat3(&m_ModelDesc.vRotation), XMConvertToRadians(m_ModelDesc.m_fAngle));
+			m_pTransformCom->Rotation(XMVectorSet(0.f,1.f,0.f,0.f), XMConvertToRadians(m_ModelDesc.m_fAngle));
 
 	}
 	

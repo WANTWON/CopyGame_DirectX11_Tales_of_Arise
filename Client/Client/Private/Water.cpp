@@ -36,7 +36,7 @@ HRESULT CWater::Initialize(void * pArg)
 		Set_Scale(ModelDesc.vScale);
 
 		if (ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMLoadFloat3(&ModelDesc.vRotation), XMConvertToRadians(ModelDesc.m_fAngle));
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(ModelDesc.m_fAngle));
 	}
 
 	return S_OK;
@@ -127,6 +127,19 @@ HRESULT CWater::SetUp_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fScrollingTimer", &m_fScrollingTimer, sizeof(_float))))
 		return E_FAIL;
+
+	if (pGameInstance->Get_CurrentLevelIndex() == LEVEL_CITY)
+	{
+		_float4 WaterColorDeep = _float4(0.3f, 0.8f, 0.8f, 1.f);
+		_float4 WaterColorShallow = _float4(0.3f, 0.8f, 0.8f, 1.f);
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WaterColorDeep", &WaterColorDeep, sizeof(_float4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WaterColorShallow", &WaterColorShallow, sizeof(_float4))))
+			return E_FAIL;
+
+	}
 
 	return S_OK;
 }

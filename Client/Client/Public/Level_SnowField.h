@@ -23,7 +23,6 @@ public:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_UI(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Interact_Object(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Trigger(const _tchar* pLayerTag);
 

@@ -1781,26 +1781,10 @@ HRESULT CLoader::Loading_ForMaptoolInteriorModel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Ceil_A_Lod1"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Bld_Ceil_A_Lod1/Bld_Ceil_A_Lod1.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("AugustDoor"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/AugustDoor.dat"))))
 		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Ceil_A_Lod1"));
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Ceil_A2_Lod1"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Bld_Ceil_A2_Lod1/Bld_Ceil_A2_Lod1.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Bld_Ceil_A2_Lod1"));
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ceiling"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Ceiling/Ceiling.dat"))))
-		return E_FAIL;        // 위쪽 바라보면 있음 
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Ceiling"));
-
-
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("AugustDoor"));
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("BedDouble"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/BedDouble.dat"))))
@@ -1944,6 +1928,11 @@ HRESULT CLoader::Loading_ForMaptoolInteriorModel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/Cupboard5.dat"))))
 		return E_FAIL;
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Cupboard5"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Door"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/Door.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Door"));
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Drawer"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/Drawer.dat"))))
