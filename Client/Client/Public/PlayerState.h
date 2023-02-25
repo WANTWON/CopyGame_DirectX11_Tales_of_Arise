@@ -46,6 +46,7 @@ public:
 
 	STATE_ID Get_StateId() { return m_eStateId; }
 	_float Get_Time(void) { return m_fTime; }
+	CPlayer* Get_Owner(void) { return m_pOwner; }
 
 	virtual ~CPlayerState() {};
 	virtual CPlayerState* HandleInput() { return nullptr; };
@@ -59,8 +60,6 @@ public:
 	}
 	virtual void Exit() 
 	{ 
-		//m_pOwner->Get_Model()->Reset();
-
 		if (0 != m_iSkillEvent)
 			m_iSkillEvent = 0;
 	}

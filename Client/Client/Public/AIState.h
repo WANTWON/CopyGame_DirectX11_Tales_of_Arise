@@ -44,6 +44,8 @@ public:
 	};
 
 	STATE_ID Get_StateId() { return m_eStateId; }
+	_float Get_Time(void) { return m_fTime; }
+	CPlayer* Get_Owner(void) { return m_pOwner; }
 
 	virtual ~CAIState() {};
 	virtual CAIState* HandleInput() { return nullptr; };

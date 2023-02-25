@@ -547,8 +547,7 @@ void CPlayer::AI_check()
 	CAIState* pAIState = nullptr;
 
 	pAIState = new CAICheckState(this,CAIState::STATE_IDLE);
-   m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-
+	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 }
 
 void CPlayer::RecoverHP(_float hp)
