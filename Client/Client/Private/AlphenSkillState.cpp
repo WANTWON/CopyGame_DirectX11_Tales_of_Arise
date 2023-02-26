@@ -383,8 +383,10 @@ void CAlphenSkillState::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_RYUUSEIZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YOUSEONGJIN);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 0.6f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 0.6f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_Jump_E.wav"), SOUND_EFFECT, 1.0f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 0.3f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 0.25f);
+			
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("AlphenAirE.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			break;
@@ -392,16 +394,16 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_SENKUSYOUREPA);
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SUMGONGSANGEULPA);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_R.wav"), SOUND_EFFECT, 0.6f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_R.wav"), SOUND_EFFECT, 0.6f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_R.wav"), SOUND_EFFECT, 0.3f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_R.wav"), SOUND_EFFECT, 0.3f);
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("AlphenAirR.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_ENGETU);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ONEWALL);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_F.wav"), SOUND_EFFECT, 0.6f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_F.wav"), SOUND_EFFECT, 0.6f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_F.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_F.wav"), SOUND_EFFECT, 0.3f);
 
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
@@ -418,16 +420,19 @@ void CAlphenSkillState::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_E.wav"), SOUND_EFFECT, 0.6f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_E.wav"), SOUND_EFFECT, 1.0f);
+			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_E.wav"), SOUND_EFFECT, 0.3f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);*/
+			
+			
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOOSAWOO);
-
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R_Test2.wav"), SOUND_EFFECT, 0.6f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.6f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_R.wav"), SOUND_EFFECT, 1.0f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R_Test2.wav"), SOUND_EFFECT, 0.3f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.3f);
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("TestSkill.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
@@ -435,8 +440,8 @@ void CAlphenSkillState::Enter(void)
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BOONGSUPGEEAKJIN);
 
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.6f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_EFFECT, 0.6f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.3f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_EFFECT, 0.3f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_STRIKE);
@@ -456,7 +461,7 @@ void CAlphenSkillState::Exit(void)
 {
 	__super::Exit();
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_ALPHEN);
+	
 }
 
 void CAlphenSkillState::Reset_Skill()

@@ -1104,12 +1104,6 @@ HRESULT CLevel_Logo::Ready_Layer_Interact_SnowField(const _tchar * pLayerTag)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
 				return E_FAIL;
 		}
-		else if (!wcscmp(pModeltag, TEXT("SlimPlant")))
-		{
-			ItemDesc.etype = CItem::SLIMPLANT;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
-				return E_FAIL;
-		}
 		else if (!wcscmp(pModeltag, TEXT("Box")))
 		{
 			ItemDesc.etype = CItem::BOX;

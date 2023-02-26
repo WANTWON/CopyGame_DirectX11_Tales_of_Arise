@@ -188,6 +188,8 @@ void CAI_SionLaw_Smash::Enter()
 	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSion_Smash.wav"), SOUND_VOICE, 0.5f);
 }
 
 void CAI_SionLaw_Smash::Exit()

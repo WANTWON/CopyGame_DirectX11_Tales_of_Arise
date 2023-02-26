@@ -239,12 +239,30 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 	{
 		if (pEvent.isPlay)
 		{
+			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+			{
+				if (m_fSoundStart != pEvent.fStartTime)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_WalkSound.wav"), SOUND_VOICE, 0.2f);
+					m_fSoundStart = pEvent.fStartTime;
+				}
+
+				//if (!m_bAnimFinish)
+				//{
+				//	CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_WalkSound.wav"), SOUND_VOICE, 0.2f);
+				//	m_bAnimFinish = true;
+				//}
+			}
+
+
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
 				//Camera Shaking 
 				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 					dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.5f, 0.1f);
 			
+
+
 				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
 				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("EX_CLAW2_3_L")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
@@ -460,6 +478,8 @@ void CBattleWalkState::Enter()
 
 void CBattleWalkState::Exit()
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+
 	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);
 }

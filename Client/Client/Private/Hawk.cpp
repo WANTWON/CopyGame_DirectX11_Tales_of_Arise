@@ -134,11 +134,13 @@ int CHawk::Tick(_float fTimeDelta)
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_N))
-	{
-		CHawkState* pBattleState = new CBattle_TornadeState(this);
-		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pBattleState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_N))
+	//{
+	//	CHawkState* pBattleState = new CBattle_TornadeState(this);
+	//	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pBattleState);
+	//}
+
+
 
 	return OBJ_NOEVENT;
 }

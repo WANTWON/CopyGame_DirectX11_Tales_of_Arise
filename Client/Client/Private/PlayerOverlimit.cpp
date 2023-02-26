@@ -6,13 +6,13 @@
 #include "BattleManager.h"
 #include "Monster.h"
 #include "Effect.h"
+#include "ParticleSystem.h"
 
 using namespace Player;
 
 CPlayerOverlimit::CPlayerOverlimit(CPlayer * pPlayer)
 {
 	m_pOwner = pPlayer;
-	
 }
 
 CPlayerState * CPlayerOverlimit::HandleInput(void)
@@ -26,20 +26,16 @@ CPlayerState * CPlayerOverlimit::Tick(_float fTimeDelta)
 		return nullptr;
 
 	if(!CBattleManager::Get_Instance()->Get_LackonMonster())
-	CBaseObj* pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-     else
+		CBaseObj* pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+    else
 	{
-		CBaseObj*	pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		CBaseObj* pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 	}
-
-
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 	if (!m_bIsAnimationFinished)
 	{
-		
-
 		_vector vecTranslation;
 		_float fRotationRadian;
 
@@ -54,13 +50,6 @@ CPlayerState * CPlayerOverlimit::Tick(_float fTimeDelta)
 
 CPlayerState * CPlayerOverlimit::LateTick(_float fTimeDelta)
 {
-
-	for (auto& pEffect : m_pEffects)
-	{
-		if (pEffect && pEffect->Get_PreDead())
-			pEffect = nullptr;
-	}
-
 	if (m_bIsAnimationFinished)
 	{
 		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
@@ -76,16 +65,9 @@ void CPlayerOverlimit::Enter(void)
 	__super::Enter();
 
 	m_eStateId = STATE_ID::STATE_OVERLIMIT;
-
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
 
-
-	/* Make Effect */
-	_vector vOffset = { 0.f,3.f,0.f,0.f };
-	_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-	m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Overlimit.dat"), mWorldMatrix);
 	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("OverLimit.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
-
 
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return;
@@ -95,28 +77,21 @@ void CPlayerOverlimit::Enter(void)
 		CBaseObj* pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
-		
 	else
 	{
-		CBaseObj*	pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+		CBaseObj* pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 
-
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+	//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
 	pCamera->Set_Target(m_pOwner);
-
 	m_pOwner->Set_Manarecover(false);
-
 	m_pOwner->Set_Overlimit(true);
-	
-	
 }
 
 void CPlayerOverlimit::Exit(void)
 {
-
 	__super::Exit();
 }

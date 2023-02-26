@@ -11,6 +11,7 @@
 #include "AstralDoubt_Battle_HeadBeamState.h"
 #include "AstralDoubt_Battle_RushState.h"
 #include "AstralDoubt_TurnState.h"
+#include "AstralDoubt_Battle_WalkState.h"
 
 using namespace Astral_Doubt;
 
@@ -216,7 +217,7 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
 	{
-		CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
+		CAstralDoubt_State* pBattleState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_ID::STATE_DOWN);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
 
@@ -234,7 +235,7 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
 	{
-		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_ADVENT);
+		CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
 
@@ -252,15 +253,15 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_M))
 	{
-		CAstralDoubt_State* pBattleState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_ID::STATE_DOWN);
+		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_BRAVE);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
 
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_N))
-	//{
-	//	CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_BRAVE);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
+	{
+		CAstralDoubt_State* pBattleState = new CBattle_UpperState(this);
+		m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	}
 }
 
 HRESULT CAstralDoubt::Render_Glow()

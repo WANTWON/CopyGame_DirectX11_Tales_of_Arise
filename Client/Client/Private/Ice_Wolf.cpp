@@ -11,6 +11,7 @@
 #include "IceWolfBattle_HowLingState.h"
 #include "IceWolfBattle_RunState.h"
 
+
 using namespace IceWolf;
 
 CIce_Wolf::CIce_Wolf(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -132,6 +133,21 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	
 	if (m_fTimeDeltaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
+
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	//{
+	//	CIceWolfState* pBattleState = new CAttackBiteState(this);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	//{
+	//	CIceWolfState* pBattleState = new CAttackNormalState(this, CIceWolfState::STATE_ID::START_BATTLE);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
+
+
 
 	return OBJ_NOEVENT;
 }
