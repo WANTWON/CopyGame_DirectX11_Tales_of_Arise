@@ -414,4 +414,5 @@ void CAIAttackNormalState::Exit()
 {
 	__super::Exit();
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
 }

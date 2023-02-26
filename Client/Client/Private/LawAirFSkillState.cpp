@@ -255,7 +255,7 @@ void CLawAirFSkillState::Enter(void)
 	if (nullptr != pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_F.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_F.wav"), SOUND_EFFECT, 1.0f);
 }
 
 void CLawAirFSkillState::Exit(void)
@@ -266,6 +266,8 @@ void CLawAirFSkillState::Exit(void)
 		m_pOwner->Off_IsFly();
 	
 	Safe_Release(m_pLandCollider);
+
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
 void CLawAirFSkillState::Update_Skill(void)

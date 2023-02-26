@@ -81,6 +81,8 @@ HRESULT CLevel_BattleZone::Initialize()
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
 		break;
 	default:
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
+
 		break;
 	}
 
@@ -246,7 +248,7 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 			return;
 
-		_float3 FogColor = _float3(0.2, 0.4, 0.9f);
+		_float3 FogColor = _float3(0.2f, 0.4f, 0.9f);
 		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vFogColor", &FogColor, sizeof(_float3))))
 			return;
 

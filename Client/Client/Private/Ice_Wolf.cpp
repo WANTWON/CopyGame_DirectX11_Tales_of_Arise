@@ -11,6 +11,7 @@
 #include "IceWolfBattle_HowLingState.h"
 #include "IceWolfBattle_RunState.h"
 
+
 using namespace IceWolf;
 
 CIce_Wolf::CIce_Wolf(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -133,6 +134,21 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	if (m_fTimeDeltaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
 
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
+	//{
+	//	CIceWolfState* pBattleState = new CAttackBiteState(this);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	//{
+	//	CIceWolfState* pBattleState = new CAttackNormalState(this, CIceWolfState::STATE_ID::START_BATTLE);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
+
+
+
 	return OBJ_NOEVENT;
 }
 
@@ -146,28 +162,11 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
-	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
-	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
-	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-	{
-		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
-		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON)
-			return;
-
-	}
-
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+	if (ExceptionHanding() == false)
 		return;
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return;
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
-		return;
 
 	LateTick_State(fTimeDelta);
 }

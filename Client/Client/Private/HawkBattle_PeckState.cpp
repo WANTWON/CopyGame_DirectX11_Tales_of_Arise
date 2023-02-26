@@ -130,11 +130,27 @@ CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
 	{
 		CBaseObj* pCollisionTarget = nullptr;
 
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+		if (m_bCollision == false)
 		{
-			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+			{
+				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+				if (pCollided)
+					pCollided->Take_Damage(rand() % (250 - 150 + 1) + 150, m_pOwner);
+
+				m_bCollision = true;
+			}
+		}
+	}
+
+	if (m_bCollision)
+	{
+		m_fAtkCollision_Delay += fTimeDelta;
+
+		if (m_fAtkCollision_Delay >= 0.5f)
+		{
+			m_fAtkCollision_Delay = 0.f;
+			m_bCollision = false;
 		}
 	}
 

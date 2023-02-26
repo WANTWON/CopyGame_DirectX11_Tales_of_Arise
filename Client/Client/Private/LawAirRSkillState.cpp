@@ -393,16 +393,18 @@ void CLawAirRSkillState::Enter(void)
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_R.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_R.wav"), SOUND_EFFECT, 1.0f);
 }
 
 void CLawAirRSkillState::Exit(void)
 {
 	__super::Exit();
 
+	
 	Safe_Release(m_pLeftFootCollider);
 	Safe_Release(m_pLeftHandCollider);
 	Safe_Release(m_pRightHandCollider);
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 
 	//m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
 	//m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);

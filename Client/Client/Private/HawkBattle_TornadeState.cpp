@@ -75,14 +75,14 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 	{
 		if (pEvent.isPlay)
 		{
-			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
-			{
-				if (!m_bAnimFinish)
-				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Dash.wav"), SOUND_VOICE, 0.6f);
-					m_bAnimFinish = true;
-				}
-			}
+			//if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			//{
+			//	if (!m_bAnimFinish)
+			//	{
+			//		CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Tornade.wav"), SOUND_VOICE, 0.6f);
+			//		m_bAnimFinish = true;
+			//	}
+			//}
 
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
@@ -161,7 +161,7 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 			{
 				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 				if (pCollided)
-					pCollided->Take_Damage(rand() % 100, m_pOwner);
+					pCollided->Take_Damage(rand() % (170-50+1)+50, m_pOwner);
 
 				m_bCollision = true;
 			}
@@ -172,7 +172,7 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 	{
 		m_fAtkCollision_Delay += fTimeDelta;
 
-		if (m_fAtkCollision_Delay >= 5.f)
+		if (m_fAtkCollision_Delay >= 0.8f)
 		{
 			m_fAtkCollision_Delay = 0.f;
 			m_bCollision = false;
@@ -190,7 +190,7 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 			{
 				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 				if (pCollided)
-					pCollided->Take_Damage(rand() % 100, m_pOwner);
+					pCollided->Take_Damage(rand() % (200 - 100 + 1) + 100, m_pOwner);
 
 				m_b2th_Collision = true;
 			}
@@ -201,7 +201,7 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 	{
 		m_f2th_AtkCollision_Delay += fTimeDelta;
 
-		if (m_f2th_AtkCollision_Delay >= 5.f)
+		if (m_f2th_AtkCollision_Delay >= 0.8f)
 		{
 			m_f2th_AtkCollision_Delay = 0.f;
 			m_b2th_Collision = false;
@@ -232,12 +232,12 @@ void CBattle_TornadeState::Enter()
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_TORNADE);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Tornade.wav"), SOUND_VOICE, 1.0f);
+	//CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Tornade.wav"), SOUND_VOICE, 1.0f);
 }
 
 void CBattle_TornadeState::Exit()
 {
-	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 
 	Safe_Release(m_p2th_AtkColliderCom);
 	Safe_Release(m_pAtkColliderCom);

@@ -2309,9 +2309,6 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/CliffRock/CliffRock4.dat"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Lattice"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Lattice.dat"))))
-		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("MapRock1"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Rock1.dat"))))
@@ -2392,17 +2389,7 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Bld/Bowl.dat"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Box"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Bld/Box.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Box2"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Bld/Box2.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Box3"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Bld/Box3.dat"))))
-		return E_FAIL;
+	
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bucket"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Bld/Bucket.dat"))))
@@ -2465,82 +2452,6 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 		return E_FAIL;
 
 
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Stair01"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Stair01.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LineNew01"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/LineNew01.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LineNew02"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/LineNew02.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LineNew03"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/LineNew03.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ground01"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Ground01.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ground02"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Ground02.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ground03"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Ground03.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ground04"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Ground04.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("House01_2F"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/House01_2F.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("House01_2F_1200x800"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/House01_2F_1200x800.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("house01_3F_1200x1200"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/House/house01_3F_1200x1200/house01_3F_1200x1200.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bridge_base"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Bridge_base/Bridge_base.dat"))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffWall01"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/CliffWall01.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffWall02"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/CliffWall02.dat"))))
-		return E_FAIL;
-	
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("castleHouse"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/castleHouse.dat"))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffWall03"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/CliffWall03.dat"))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Castle01_Lod1"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Castle01_Lod1.dat"))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("BigTower01"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/BigTower01.dat"))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("BridgeLight"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/BridgeLight.dat"))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("BigGateArch01"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/BigGateArch01.dat"))))
-		return E_FAIL;
 #pragma endregion Deco NonAnim Object
 
 #pragma region Deco BossMap Object
@@ -2841,6 +2752,131 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 	
 #pragma endregion Deco WorkTool Object
 
+#pragma region Deco CityMap Object
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Stair01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Stair01.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LineNew01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/LineNew01.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LineNew02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/LineNew02.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LineNew03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/LineNew03.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ground01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Ground01.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ground02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Ground02.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ground03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Ground03.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ground04"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Ground04.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("House01_2F"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/House01_2F.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("House01_2F_1200x800"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/House01_2F_1200x800.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("house01_3F_1200x1200"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Outside/House/house01_3F_1200x1200/house01_3F_1200x1200.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bridge_base"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Castle_Inside/Bridge_base/Bridge_base.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffWall01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/CliffWall01.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffWall02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/CliffWall02.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("castleHouse"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/castleHouse.dat"))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffWall03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/CliffWall03.dat"))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Castle01_Lod1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Castle01_Lod1.dat"))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("BigTower01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/BigTower01.dat"))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("BridgeLight"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/BridgeLight.dat"))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("BigGateArch01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/BigGateArch01.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fountain"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Fountain.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ShopShader01A"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/ShopShader01A.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ShopShader01B"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/ShopShader01B.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ShopShader01C"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/ShopShader01C.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("MarketProps01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/MarketProps01.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("MarketProps02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/MarketProps02.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("MarketProps02B"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/MarketProps02B.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("MarketProps03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/MarketProps03.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("MineProps01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/MineProps01.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("MineProps02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/MineProps02.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ModeLine"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/ModeLine.dat"))))
+		return E_FAIL;
+#pragma endregion Deco CityMap Object
+
+
 #pragma region Instancing SnowField
 	/* Loading Instancing */
 	lstrcpy(m_szLoadingText, TEXT("Loading Instancing "));
@@ -2999,14 +3035,25 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 			"../../../Bin/Data/City_Data/BigWall.dat"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("City_Grass03"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Saternas/Grass03.dat",
-			"../../../Bin/Data/City_Data/Grass03.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CIty_Bench"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Saternas/Bench.dat",
+			"../../../Bin/Data/City_Data/Bench.dat"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CIty_Grass04"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Saternas/Grass04.dat",
-			"../../../Bin/Data/City_Data/Grass04.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CIty_Chair"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Saternas/Chair.dat",
+			"../../../Bin/Data/City_Data/Chair.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("City_Grass0"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Grass/Grass0.dat",
+			"../../../Bin/Data/City_Data/Grass0.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CIty_Grass10"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Grass/Grass10.dat",
+			"../../../Bin/Data/City_Data/Grass10.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("City_Ivy1"),
@@ -3027,6 +3074,11 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("City_Planter"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Saternas/Planter01.dat",
 			"../../../Bin/Data/City_Data/Planter.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("City_Table"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Saternas/table01.dat",
+			"../../../Bin/Data/City_Data/Table.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SAT_Wall02"),
@@ -3200,9 +3252,25 @@ HRESULT CLoader::Loading_ForInteract()
 
 #pragma region Interact Object 
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Box"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Bld/Box.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Box2"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Bld/Box2.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Box3"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Bld/Box3.dat"))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Model_Apple*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Apple"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Apple/Apple.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Lattice"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Lattice.dat"))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Model_Egg*/

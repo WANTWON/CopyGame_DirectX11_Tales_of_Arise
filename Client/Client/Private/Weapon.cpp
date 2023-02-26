@@ -80,11 +80,11 @@ int CWeapon::Tick(_float fTimeDelta)
 			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 			pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, this);
 
-			if (!m_bSoundStart)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.2f);
-				m_bSoundStart = true;
-			}
+			//if (!m_bSoundStart)
+			//{
+			//	CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.2f);
+			//	m_bSoundStart = true;
+			//}
 		}
 		else
 			m_pSPHERECom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
@@ -117,11 +117,11 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 
 		m_fSoundStopTimeDelta += fTimeDelta;
 
-		if ((m_fSoundStopTimeDelta > 1.5f))
-		{
-			CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-			m_fSoundStopTimeDelta = 0.f;
-		}
+		//if ((m_fSoundStopTimeDelta > 1.5f))
+		//{
+		//	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+		//	m_fSoundStopTimeDelta = 0.f;
+		//}
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
@@ -132,26 +132,26 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_WeaponDesc.pOwner);
 			}
 
-			if (!m_bSoundStart)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.4f);
-				m_bSoundStart = true;
-			}
+			//if (!m_bSoundStart)
+			//{
+			//	CGameInstance::Get_Instance()->PlaySounds(TEXT("StrikeSound.wav"), SOUND_EFFECT, 0.4f);
+			//	m_bSoundStart = true;
+			//}
 
-			//SkillSound 
-			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK_E)
-			{
-				m_fTimeDeltaAcc += 0.4f;
-				_bool bSoundStart = false;
-				if (!bSoundStart)
-				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
-					bSoundStart = true;
-				}
-			}
+			////SkillSound 
+			//if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK_E)
+			//{
+			//	m_fTimeDeltaAcc += 0.4f;
+			//	_bool bSoundStart = false;
+			//	if (!bSoundStart)
+			//	{
+			//		CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);
+			//		bSoundStart = true;
+			//	}
+			//}
 		}
 
-		else
+		/*else
 		{
 			if (ePlayerState == CPlayerState::STATE_ID::STATE_SKILL_ATTACK_E)
 			{
@@ -168,7 +168,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 					bSoundStart = true;
 				}
 			}
-		}
+		}*/
 	}
 
 	else

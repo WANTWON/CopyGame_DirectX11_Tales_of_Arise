@@ -21,7 +21,10 @@ private:
 	_float		m_fIdleMoveTimer = 0.f;
 	_float		m_fIdleAttackTimer = 1.5f;
 	_float		m_fTarget_Distance;
+	_float		m_fAtkCollision_Delay = 0.f;
+	_bool		m_bCollision = false;
 	_bool		m_bTargetSetting = false;
+
 	CCollider*  m_pAtkColliderCom = nullptr;
 
 private:

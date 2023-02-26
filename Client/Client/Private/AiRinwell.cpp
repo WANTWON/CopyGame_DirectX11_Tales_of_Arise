@@ -163,14 +163,7 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
-		return;
-
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
-		return;
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if (ExceptionHanding() == false)
 		return;
 
 	if (m_pRendererCom && m_bGlowUp)
