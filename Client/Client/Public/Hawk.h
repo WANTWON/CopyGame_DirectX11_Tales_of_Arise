@@ -63,8 +63,6 @@ public:
 
 	};
 
-
-
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	CTransform* Get_Transform() { return m_pTransformCom; }

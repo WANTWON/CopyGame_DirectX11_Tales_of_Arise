@@ -293,6 +293,7 @@
     <ClInclude Include="..\Public\RinwellSkillState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\SionSkills.h" />
+    <ClInclude Include="..\Public\ThrowingObject.h" />
     <ClInclude Include="..\Public\UI_AlphaScreen.h" />
     <ClInclude Include="..\Public\UI_BattleResult.h" />
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h" />
@@ -540,6 +541,7 @@
     <ClCompile Include="..\Private\RinwellSkills.cpp" />
     <ClCompile Include="..\Private\RinwellSkillState.cpp" />
     <ClCompile Include="..\Private\SionSkills.cpp" />
+    <ClCompile Include="..\Private\ThrowingObject.cpp" />
     <ClCompile Include="..\Private\UI_AlphaScreen.cpp" />
     <ClCompile Include="..\Private\UI_BattleResult.cpp" />
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp" />

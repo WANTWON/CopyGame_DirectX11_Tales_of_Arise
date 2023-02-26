@@ -91,8 +91,12 @@ CPlayerState * CRunState::HandleInput()
 				break;
 			}
 		}
-		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
-			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE);
+
+		if (LEVEL_RESTAURANT != pGameInstance->Get_CurrentLevelIndex())
+		{
+			if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
+				return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE);
+		}
 
 		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT);

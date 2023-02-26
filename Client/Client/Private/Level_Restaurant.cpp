@@ -9,6 +9,7 @@
 #include "BattleManager.h"
 #include "Monster.h"
 #include "Level_Loading.h"
+#include "ThrowingObject.h"
 
 CLevel_Restaurant::CLevel_Restaurant(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -20,7 +21,7 @@ CLevel_Restaurant::CLevel_Restaurant(ID3D11Device* pDevice, ID3D11DeviceContext*
 HRESULT CLevel_Restaurant::Initialize()
 {
 	CBattleManager::Get_Instance()->Set_BattleMode(false);
-	
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -35,13 +36,13 @@ HRESULT CLevel_Restaurant::Initialize()
 
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
-	
+
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Deco"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Interact"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Portal"));
 
-		
+
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_RESTAURANT);
@@ -52,14 +53,13 @@ HRESULT CLevel_Restaurant::Initialize()
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
-	
+
 	return S_OK;
 }
 
 void CLevel_Restaurant::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
 
 	g_fSoundVolume += 0.001f;
 	if (g_fSoundVolume >= 0.3f)
@@ -91,6 +91,179 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 	}
 
+	if (m_bMinigameStart)
+	{
+		if (m_fLimitTime >= m_fTotalTime)
+		{
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			CThrowingObject::THROWDESC ThrowDesc;
+
+			for (_int i = 0; i < 4; ++i)
+			{
+				if (m_fSpwanTime < m_fCreateTime[i])
+				{
+					_int iPhase = _int(floor(m_fTotalTime) / 20) + 1;
+					_int iNumCreate = rand() % (iPhase + 1);
+
+					for (_int j = 0; j < iNumCreate;)
+					{
+						_int iIndex = rand() % 3;
+
+						if (m_bIsSpwan[i][iIndex])
+							continue;
+
+						ZeroMemory(&ThrowDesc, sizeof(CThrowingObject::THROWDESC));
+
+						_int iModel;
+						
+						switch (iPhase)
+						{
+						case 1:
+							iModel = rand() % 12;
+							break;
+						case 2:
+							iModel = rand() % 17;
+							break;
+						case 3:
+							iModel = rand() % 18;
+							break;
+						default:
+							iModel = 0;
+							break;
+						}
+						
+						switch (iModel)
+						{
+						case 0:
+						case 1:
+						case 2:
+							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "Fruit_Pineapple");
+							ThrowDesc.eType = CThrowingObject::TYPE_PINEAPPLE;
+							ThrowDesc.tNonDesc.vScale = _float3(2.f, 2.f, 2.f);
+							break;
+						case 3:
+						case 4:
+						case 5:
+						case 6:
+						case 7:
+							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "Food_Potato");
+							ThrowDesc.eType = CThrowingObject::TYPE_POTATO;
+							ThrowDesc.tNonDesc.vScale = _float3(3.f, 3.f, 3.f);
+							break;
+						case 8:
+						case 9:
+						case 10:
+						case 11:
+							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "Apple");
+							ThrowDesc.eType = CThrowingObject::TYPE_APPLE;
+							ThrowDesc.tNonDesc.vScale = _float3(5.f, 5.f, 5.f);
+							break;
+						case 12:
+						case 13:
+						case 14:
+							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "RedOnion");
+							ThrowDesc.eType = CThrowingObject::TYPE_REDONION;
+							ThrowDesc.tNonDesc.vScale = _float3(2.f, 2.f, 2.f);
+							break;
+						case 15:
+						case 16:
+							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "Bread_Croissant");
+							ThrowDesc.eType = CThrowingObject::TYPE_BREAD;
+							ThrowDesc.tNonDesc.vScale = _float3(3.f, 3.f, 3.f);
+							break;
+						case 17:
+							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "Fruit_Mango");
+							ThrowDesc.eType = CThrowingObject::TYPE_MANGO;
+							ThrowDesc.tNonDesc.vScale = _float3(3.f, 3.f, 3.f);
+							break;
+						}
+
+						switch (i)
+						{
+						case 0:
+							switch (iIndex)
+							{
+							case 0:
+								ThrowDesc.tNonDesc.vPosition = _float3(8.f, 5.f, 17.f);
+								break;
+							case 1:
+								ThrowDesc.tNonDesc.vPosition = _float3(18.f, 5.f, 17.f);
+								break;
+							case 2:
+								ThrowDesc.tNonDesc.vPosition = _float3(28.f, 5.f, 17.f);
+								break;
+							}
+							break;
+						case 1:
+							switch (iIndex)
+							{
+							case 0:
+								ThrowDesc.tNonDesc.vPosition = _float3(35.f, 5.f, 40.f);
+								break;
+							case 1:
+								ThrowDesc.tNonDesc.vPosition = _float3(35.f, 5.f, 33.f);
+								break;
+							case 2:
+								ThrowDesc.tNonDesc.vPosition = _float3(35.f, 5.f, 26.f);
+								break;
+							}
+							break;
+						case 2:
+							switch (iIndex)
+							{
+							case 0:
+								ThrowDesc.tNonDesc.vPosition = _float3(1.f, 5.f, 40.f);
+								break;
+							case 1:
+								ThrowDesc.tNonDesc.vPosition = _float3(1.f, 5.f, 33.f);
+								break;
+							case 2:
+								ThrowDesc.tNonDesc.vPosition = _float3(1.f, 5.f, 26.f);
+								break;
+							}
+							break;
+						case 3:
+							switch (iIndex)
+							{
+							case 0:
+								ThrowDesc.tNonDesc.vPosition = _float3(8.f, 5.f, 49.f);
+								break;
+							case 1:
+								ThrowDesc.tNonDesc.vPosition = _float3(18.f, 5.f, 49.f);
+								break;
+							case 2:
+								ThrowDesc.tNonDesc.vPosition = _float3(28.f, 5.f, 49.f);
+								break;
+							}
+							break;
+						}
+
+						ThrowDesc.fTime = ((rand() % 15) + 5) * 0.1f;
+
+						if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ThrowingObject"), LEVEL_RESTAURANT, TEXT("Layer_ThrowingObject"), &ThrowDesc)))
+						{
+							ERR_MSG(TEXT("Failed Create MiniGame Object"));
+							return;
+						}
+
+						++j;
+					}
+
+					m_fCreateTime[i] = 0.f;
+
+					for (_int j = 0; j < 3; ++j)
+						m_bIsSpwan[i][j] = false;
+				}
+				else
+					m_fCreateTime[i] += fTimeDelta + ((rand() % 100) * 0.001f);
+			}
+
+			RELEASE_INSTANCE(CGameInstance);
+		}
+
+		m_fTotalTime += fTimeDelta;
+	}
 }
 
 void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
@@ -132,6 +305,25 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 				pPlayer->Off_IsFly();
 		}
 	}
+
+	if (m_fTotalTime >= m_fLimitTime)
+	{
+		m_bMinigameStart = false;
+
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
+
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
+		pPlayer->Change_Navigation(LEVEL_RESTAURANT);
+
+		pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
+		pPlayer->Check_Navigation();
+		pPlayer->Change_Level(LEVEL_RESTAURANT);
+		if (pPlayer->Get_IsFly())
+			pPlayer->Off_IsFly();
+
+		m_fTotalTime = 0.f;
+	}
 }
 
 HRESULT CLevel_Restaurant::Ready_Lights()
@@ -170,7 +362,7 @@ HRESULT CLevel_Restaurant::Ready_Lights()
 
 	pGameInstance->Set_ShadowLightView(vLightEye, vLightAt);
 
-	
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -201,7 +393,7 @@ HRESULT CLevel_Restaurant::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Change_Level(LEVEL_RESTAURANT);
 		i++;
 	}
-	
+
 	CPlayerManager::Get_Instance()->Set_BattleMode(false);
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -292,9 +484,9 @@ HRESULT CLevel_Restaurant::Ready_Layer_Camera(const _tchar * pLayerTag)
 	MiniGameCameraDesc.vDistance = _float4(0, 10, -10, 0.f);
 
 	MiniGameCameraDesc.CameraDesc.vEye = _float4(0.f, 10.0f, -10.f, 1.f);
-	MiniGameCameraDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+	MiniGameCameraDesc.CameraDesc.vAt = _float4(0.f, 1.f, 0.f, 1.f);
 
-	MiniGameCameraDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	MiniGameCameraDesc.CameraDesc.fFovy = XMConvertToRadians(50.0f);
 	MiniGameCameraDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	MiniGameCameraDesc.CameraDesc.fNear = 0.1f;
 	MiniGameCameraDesc.CameraDesc.fFar = 1000.f;
