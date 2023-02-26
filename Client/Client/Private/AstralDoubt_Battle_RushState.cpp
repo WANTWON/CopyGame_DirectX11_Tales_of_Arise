@@ -416,7 +416,7 @@ void CBattle_RushState::Enter()
 
 	else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_LOOP)
 	{
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_Rush.wav"), SOUND_VOICE, 0.4f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_Rush.wav"), SOUND_VOICE, 0.6f);
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_LOOP);
 	}
 
