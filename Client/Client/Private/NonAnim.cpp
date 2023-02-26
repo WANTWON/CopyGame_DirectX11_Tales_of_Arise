@@ -193,19 +193,25 @@ _float CNonAnim::Check_CullingRadius()
 			return 10.f;
 		break;
 	case Client::LEVEL_CITY:
-		if (!strcmp(m_ModelDesc.pModeltag, "Ground01") ||
-			!strcmp(m_ModelDesc.pModeltag, "Ground02"))
-			return 25.f;
-		else if (!strcmp(m_ModelDesc.pModeltag, "House01_2F_1200x800") ||
-			!strcmp(m_ModelDesc.pModeltag, "House01_2F") ||
-			!strcmp(m_ModelDesc.pModeltag, "house01_3F_1200x1200") ||
-			!strcmp(m_ModelDesc.pModeltag, "Castle01_Lod1") ||
-			!strcmp(m_ModelDesc.pModeltag, "BigGateArch01") ||
-			!strcmp(m_ModelDesc.pModeltag, "Vehicle_Boat"))
+		if (!strcmp(m_ModelDesc.pModeltag, "Vehicle_Boat"))
 			return 10.f;
 		else if (!strcmp(m_ModelDesc.pModeltag, "Ground03") ||
-			!strcmp(m_ModelDesc.pModeltag, "Ground04"))
+			!strcmp(m_ModelDesc.pModeltag, "Ground02") ||
+			!strcmp(m_ModelDesc.pModeltag, "Ground04") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffWall01") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffWall02") ||
+			!strcmp(m_ModelDesc.pModeltag, "Castle01_Lod1"))
 			return 1000.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "Fountain") ||
+			!strcmp(m_ModelDesc.pModeltag, "House01_2F_1200x800") || 
+			!strcmp(m_ModelDesc.pModeltag, "House01_2F") || 
+			!strcmp(m_ModelDesc.pModeltag, "house01_3F_1200x1200"))
+			return 20.f;
+		else if(!strcmp(m_ModelDesc.pModeltag, "LineNew01") ||
+			!strcmp(m_ModelDesc.pModeltag, "LineNew02") ||
+			!strcmp(m_ModelDesc.pModeltag, "LineNew03") ||
+			!strcmp(m_ModelDesc.pModeltag, "BigGateArch01"))
+			return 30.f;
 		break;
 	case Client::LEVEL_RESTAURANT:
 		if (!strcmp(m_ModelDesc.pModeltag, "CookingTable"))

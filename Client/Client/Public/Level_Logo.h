@@ -33,8 +33,10 @@ public:
 
 
 private:
-
-
+	class CPlayerCreater*	m_pLoader = nullptr;
+	class CPlayerCreater*	m_pPlayerLoader = nullptr;
+	class CPlayerCreater*	m_pMonsterLoader = nullptr;
+	
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

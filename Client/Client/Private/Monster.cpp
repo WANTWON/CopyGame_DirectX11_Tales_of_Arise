@@ -67,6 +67,9 @@ int CMonster::Tick(_float fTimeDelta)
 {
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 
+	if (m_eLevel == LEVEL_SNOWFIELD &&  m_pTrigger == nullptr)
+		Check_NearTrigger();
+
 	if (m_bDead)
 		return OBJ_DEAD;
 
@@ -83,32 +86,7 @@ int CMonster::Tick(_float fTimeDelta)
 
 	m_fTimeDeltaAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 
-
-	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
-	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
-	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-	{
-		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
-		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON || eCamMode == CCamera_Dynamic::CAM_AIBOOSTOFF)
-				return OBJ_NOSHOW;
-
-	}
-
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
-		return OBJ_NOSHOW;
-
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
-		return OBJ_NOSHOW;
-
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return OBJ_NOSHOW;
-
-	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
-
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+	if (ExceptionHanding() == false)
 		return OBJ_NOSHOW;
 
 	return OBJ_NOEVENT;
@@ -260,6 +238,39 @@ HRESULT CMonster::Render_EdgeDetection()
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 5)))
 			return E_FAIL;
 	}
+	return S_OK;
+}
+
+_bool CMonster::ExceptionHanding()
+{
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON || eCamMode == CCamera_Dynamic::CAM_AIBOOSTOFF)
+			return false;
+
+	}
+
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
+		return false;
+
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return false;
+
+
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return false;
+
+	
+
+	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+		return false;
+
+	return true;
 }
 
 CMonster::DMG_DIR CMonster::Calculate_DmgDirection()
@@ -610,9 +621,9 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 
 void CMonster::Collision_Object(_float fTimeDelta)
 {
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 
 	CBaseObj* pCollisionMonster = nullptr;
@@ -630,18 +641,6 @@ void CMonster::Collision_Object(_float fTimeDelta)
 		m_pTransformCom->Go_PosDir(fTimeDelta*0.5f, vDirection, m_pNavigationCom);
 	}
 
-	/*CBaseObj* pPlayer = nullptr;
-	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionMonster))
-	{
-		_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionMonster->Get_TransformState(CTransform::STATE_TRANSLATION);
-
-		if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
-			vDirection = XMVectorSet(XMVectorGetX(vDirection), 0.f, 0.f, 0.f);
-		else
-			vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
-
-		m_pTransformCom->Go_PosDir(fTimeDelta, vDirection, m_pNavigationCom);
-	}*/
 }
 
 void CMonster::Compute_CurrentIndex()
