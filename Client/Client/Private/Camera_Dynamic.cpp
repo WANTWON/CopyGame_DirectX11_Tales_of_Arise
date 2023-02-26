@@ -60,7 +60,7 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 	switch (m_eCamMode)
 	{
 	case Client::CCamera_Dynamic::CAM_PLAYER:
-		MiniGameSlash_Camera(fTimeDelta);
+		Player_Camera(fTimeDelta);
 		break;
 	case Client::CCamera_Dynamic::CAM_DEBUG:
 		Debug_Camera(fTimeDelta);
@@ -417,7 +417,7 @@ void CCamera_Dynamic::Debug_Camera(_float fTimeDelta)
 	RELEASE_INSTANCE(CGameInstance);
 }
 
-void CCamera_Dynamic::MiniGameSlash_Camera(_float fTimeDelta)
+void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 

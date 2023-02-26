@@ -19,6 +19,11 @@ public:
 	virtual void Exit(void) override;
 
 private:
+	void Update_Skill(void);
+	void Remove_Skill(void);
+	void Reset_Skill(void);
+
+private:
 	CCollider* m_pLeftHandCollider = nullptr;
 	CCollider* m_pRightHandCollider = nullptr;
 	CCollider* m_pLeftFootCollider = nullptr;
@@ -28,6 +33,22 @@ private:
 	_bool m_bIsLoop = false;
 
 	CBaseObj* m_pTarget = nullptr;
+
+	/* Effect Booleans */
+	_bool m_bSankamousyuukyaku_1 = false;				// R (Air)
+	_bool m_bSankamousyuukyaku_2 = false;				// R (Air)
+	_bool m_bSankamousyuukyaku_Punch_1 = false;			// R (Air)
+	_bool m_bSankamousyuukyaku_Punch_2 = false;			// R (Air)
+	_bool m_bSankamousyuukyaku_Particles_1 = false;		// R (Air)
+	_bool m_bSankamousyuukyaku_Particles_2 = false;		// R (Air)
+
+	_vector m_vPunchPosition_1;
+	_vector m_vPunchPosition_2;
+
+	/* Effect Vectors */
+	vector<class CEffect*> m_Sankamousyuukyaku_1;
+	vector<class CEffect*> m_Sankamousyuukyaku_Punch_1;
+	vector<class CEffect*> m_Sankamousyuukyaku_Punch_2;
 
 private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);

@@ -73,7 +73,7 @@ public:
 
 public:
 	void Debug_Camera(_float fTimeDelta);
-	void MiniGameSlash_Camera(_float fTimeDelta);
+	void Player_Camera(_float fTimeDelta);
 	void Battle_Camera(_float fTimeDelta);
 	void BattleClear_Camera(_float fTimeDelta);
 	void LockOn_Camera(_float fTimeDelta);

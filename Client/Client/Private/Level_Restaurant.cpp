@@ -79,6 +79,7 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Instancing"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Deco"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Portal"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Interact"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -109,8 +110,12 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 
 			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(18, 0.f, 31.f, 1.f));
+			pPlayer->Change_Navigation(LEVEL_RESTAURANT);
 			pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
 			pPlayer->Check_Navigation();
+			pPlayer->Change_Level(LEVEL_RESTAURANT);
+			if (pPlayer->Get_IsFly())
+				pPlayer->Off_IsFly();
 		}
 		else
 		{
@@ -118,11 +123,15 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 
 			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
+			pPlayer->Change_Navigation(LEVEL_RESTAURANT);
+
 			pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
 			pPlayer->Check_Navigation();
+			pPlayer->Change_Level(LEVEL_RESTAURANT);
+			if (pPlayer->Get_IsFly())
+				pPlayer->Off_IsFly();
 		}
 	}
-
 }
 
 HRESULT CLevel_Restaurant::Ready_Lights()

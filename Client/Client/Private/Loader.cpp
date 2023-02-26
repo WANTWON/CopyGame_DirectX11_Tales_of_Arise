@@ -127,6 +127,9 @@ unsigned int APIENTRY Thread_Main(void* pArg)
 	case LEVEL_RESTAURANT:
 		pLoader->Loading_ForRestaurantLevel();
 		break;
+	case LEVEL_WORKTOOL:
+		pLoader->Loading_ForWorkToolLevel();
+		break;
 	}
 
 	LeaveCriticalSection(&pLoader->Get_CriticalSection());
@@ -159,6 +162,10 @@ HRESULT CLoader::Loading_ForLogoLevel()
 	/* Static Resource */
 	lstrcpy(m_szLoadingText, TEXT("Static Resource Loading"));
 	if (FAILED(Loading_ForStaticLevel()))
+		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Interact Object Loading"));
+	if (FAILED(Loading_ForInteract()))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Static Map Object Loading"));
@@ -565,56 +572,6 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;
 	
 
-
-#pragma region Interact Object 
-
-	/*For.Prototype_Component_Model_Apple*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Apple"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Apple/Apple.dat"))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Model_Egg*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Egg"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Egg/Egg.dat"))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Model_Mushroom*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Mushroom"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Mushroom/Mushroom.dat"))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Model_Water_Plane*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Jewel"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/ORE_003/ORE_003.dat"))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Model_Water_Plane*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Lettuce_001"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Lettuce/Lettuce_001.dat"))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Model_Water_Plane*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Lettuce_002"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Lettuce/Lettuce_002.dat"))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Model_Water_Plane*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("GroundPlant"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Plant/GroundPlant.dat"))))
-		return E_FAIL;
-
-	/*For.Prototype_Component_Model_Water_Plane*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SlimPlant"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Plant/SlimPlant.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Crystal"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Crystal/Crystal.dat"))))
-		return E_FAIL;
-
-#pragma endregion Interact Object 
-
-
 #pragma region Static Shader Loading
 	/* For.Prototype_Component_Shader_VtxNorTex*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
@@ -828,6 +785,17 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	/* For.Prototype_Component_Navigation */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_Navigation"),
 		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Navigation.dat")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Navigation */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_MIniGameNavigation"),
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/MIniGameNavigation.dat")))))
+		return E_FAIL;
+
+
+	/* For.Prototype_Component_Navigation */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_WorkTool_Navigation"),
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/MiniGameRoom_Data/ShootingGame/Navigation.dat")))))
 		return E_FAIL;
 #pragma endregion Navigation Loading
 
@@ -1108,6 +1076,46 @@ HRESULT CLoader::Loading_ForRestaurantLevel()
 
 	/* For.Prototype_Component_Collider_SPHERE */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_RESTAURANT, TEXT("Prototype_Component_Collider_SPHERE"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
+		return E_FAIL;
+
+	lstrcpy(m_szLoadingText, TEXT("Loading Finished"));
+
+
+	Safe_Release(pGameInstance);
+
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForWorkToolLevel()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+	Safe_AddRef(pGameInstance);
+
+	/*For.Prototype_Component_Texture_Sky */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_WORKTOOL, TEXT("Prototype_Component_Texture_Sky"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/City_SkyBox.dds"), 1))))
+		return E_FAIL;
+
+	/* Loading Collider */
+	lstrcpy(m_szLoadingText, TEXT("Loading Collider"));
+
+	/* For.Prototype_Component_Collider_AABB */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_WORKTOOL, TEXT("Prototype_Component_Collider_AABB"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_AABB))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Collider_OBB */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_WORKTOOL, TEXT("Prototype_Component_Collider_OBB"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Collider_SPHERE */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_WORKTOOL, TEXT("Prototype_Component_Collider_SPHERE"),
 		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
 		return E_FAIL;
 
@@ -2262,11 +2270,9 @@ HRESULT CLoader::Loading_ForEffectTexture()
 
 HRESULT CLoader::Loading_ForStaticMapObject()
 {
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
 		return E_FAIL;
-
-	Safe_AddRef(pGameInstance);
 
 
 #pragma region Deco NonAnim Object
@@ -2666,108 +2672,7 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 		return E_FAIL;
 
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_Challah"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_Challah.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_Croissant"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_Croissant.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_French"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_French.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_French_Slice"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_French_Slice.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_Loaf_Sourdough"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_Loaf_Sourdough.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_Muffin"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_Muffin.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_Pizza"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_Pizza.dat"))))
-		return E_FAIL;
-
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Carrot"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Carrot.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Carrot_Set"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Carrot_Set.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cauldron"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Cauldron.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Food_Broccoli"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Food_Broccoli.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Food_Potato"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Food_Potato.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Apple"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Apple.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Apple_Green"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Apple_Green.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Apple_Quarter"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Apple_Quarter.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Apple_Red"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Apple_Red.dat"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Avocado"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Avocado.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Banana"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Banana.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Mandarin"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Mandarin.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Mango"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Mango.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Pineapple"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Pineapple.dat"))))
-		return E_FAIL;
+	
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fryigpan"),
@@ -2796,25 +2701,14 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 		return E_FAIL;
 
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("RedOnion"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/RedOnion.dat"))))
-		return E_FAIL;
-
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Sausage"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Sausage.dat"))))
-		return E_FAIL;
+	
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ServingPlate"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/ServingPlate.dat"))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Steak"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Steak.dat"))))
-		return E_FAIL;
-
-
+	
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("tray"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/tray.dat"))))
 		return E_FAIL;
@@ -2824,11 +2718,127 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 		return E_FAIL;
 #pragma endregion Deco Restaurant Object
 
+#pragma region Deco WorkTool Object
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ShelfLarge"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/ShelfLarge.dat"))))
+		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Table06"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/Table06.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Shelf02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/Shelf02.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Door"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/Door.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Banner"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Banner.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Anvil"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Anvil.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Broom"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Broom.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Furnace"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Furnace.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("FurnaceB"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/FurnaceB.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Hammer"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Hammer.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Nail"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Nail.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Pitchfork"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Pitchfork.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Rake"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Rake.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Shovel"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Shovel.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Tannery"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Tannery.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Tong"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Tong.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bow"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Bow.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("BreastPlate"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/BreastPlate.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("DisPlayStand"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/DisPlayStand.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Gun"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Gun.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Halberd"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Halberd.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Helmet"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Helmet.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Mace"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Helmet.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Road"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Road.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Scabbard"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Scabbard.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Shield"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Shield.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Spear"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Spear.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Sword"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Sword.dat"))))
+		return E_FAIL;
+
+	
+	
+#pragma endregion Deco WorkTool Object
 
 #pragma region Instancing SnowField
 	/* Loading Instancing */
 	lstrcpy(m_szLoadingText, TEXT("Loading Instancing "));
+
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bush_SnowField"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Bush.dat",
@@ -3115,6 +3125,251 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 		return E_FAIL;
 
 #pragma endregion Instancing Restuarant
+
+#pragma region Instancing WorkTool
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("BenchSmall_WorkTool"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Interior/BenchSmall.dat",
+			"../../../Bin/Data/MiniGameRoom_Data/ShootingGame/Chair.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Floor_WorkTool"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/WorkshopFloor.dat",
+			"../../../Bin/Data/MiniGameRoom_Data/ShootingGame/Floor.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Furnace_WorkTool"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Furnace.dat",
+			"../../../Bin/Data/MiniGameRoom_Data/ShootingGame/Furnace.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Pillow_WorkTool"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Interior/PillowBlue.dat",
+			"../../../Bin/Data/MiniGameRoom_Data/ShootingGame/Pillow.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Pillow2_WorkTool"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Interior/PillowRed.dat",
+			"../../../Bin/Data/MiniGameRoom_Data/ShootingGame/Pillow2.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Railing_WorkTool"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Railing.dat",
+			"../../../Bin/Data/MiniGameRoom_Data/ShootingGame/Railing.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Rubble_WorkTool"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/Floor_Rubble.dat",
+			"../../../Bin/Data/MiniGameRoom_Data/ShootingGame/Rubble.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ShopCounter_WorkTool"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Interior/ShopCounter.dat",
+			"../../../Bin/Data/MiniGameRoom_Data/ShootingGame/ShopCounter.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SmallRock2_WorkTool"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Bld/SmallRock2.dat",
+			"../../../Bin/Data/MiniGameRoom_Data/ShootingGame/SmallRock2.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Wall_WorkTool"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WorkToolRoom/WorkshopWall.dat",
+			"../../../Bin/Data/MiniGameRoom_Data/ShootingGame/Wall.dat"))))
+		return E_FAIL;
+
+#pragma endregion Instancing WorkTool
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ForInteract()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+
+
+#pragma region Interact Object 
+
+	/*For.Prototype_Component_Model_Apple*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Apple"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Apple/Apple.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Egg*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Egg"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Egg/Egg.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Mushroom*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Mushroom"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Mushroom/Mushroom.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Water_Plane*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Jewel"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/ORE_003/ORE_003.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Water_Plane*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Lettuce_001"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Lettuce/Lettuce_001.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Water_Plane*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Lettuce_002"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Lettuce/Lettuce_002.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Water_Plane*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("GroundPlant"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Plant/GroundPlant.dat"))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Model_Water_Plane*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SlimPlant"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Plant/SlimPlant.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Crystal"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Crystal/Crystal.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("GlassJar"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/GlassJar.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Potion"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/Potion.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cigar"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/Cigar.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Chess"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Interior/Chess.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_Challah"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_Challah.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_Croissant"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_Croissant.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_French"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_French.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_French_Slice"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_French_Slice.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_Loaf_Sourdough"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_Loaf_Sourdough.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_Muffin"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_Muffin.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bread_Pizza"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Bread_Pizza.dat"))))
+		return E_FAIL;
+
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Carrot"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Carrot.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Carrot_Set"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Carrot_Set.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cauldron"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Cauldron.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Food_Broccoli"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Food_Broccoli.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Food_Potato"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Food_Potato.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Apple"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Apple.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Apple_Green"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Apple_Green.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Apple_Quarter"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Apple_Quarter.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Apple_Red"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Apple_Red.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Avocado"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Avocado.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Banana"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Banana.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Mandarin"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Mandarin.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Mango"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Mango.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Fruit_Pineapple"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Fruit_Pineapple.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Steak"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Steak.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("RedOnion"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/RedOnion.dat"))))
+		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Sausage"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Food_Kichen/Sausage.dat"))))
+		return E_FAIL;
+#pragma endregion Interact Object 
 
 	RELEASE_INSTANCE(CGameInstance);
 

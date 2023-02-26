@@ -220,13 +220,16 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 				return;
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_X);
 		}
-			
-
 	}
 	else
 	{
 		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		{
+			if (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_IsFly())
+				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Off_IsFly();
+
 			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKOFF);
+		}
 	}
 
 	/* Fog Shader */

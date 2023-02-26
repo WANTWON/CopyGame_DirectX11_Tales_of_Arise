@@ -9,6 +9,7 @@
 #include "Level_BossZone.h"
 #include "Level_City.h"
 #include "Level_Restaurant.h"
+#include "Level_WorkTool.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -62,6 +63,9 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 		case LEVEL_RESTAURANT:
 			pNewLevel = CLevel_Restaurant::Create(m_pDevice, m_pContext);
 			break;
+		case LEVEL_WORKTOOL:
+			pNewLevel = CLevel_WorkTool::Create(m_pDevice, m_pContext);
+			break;
 		}
 
 		if (!pNewLevel)
@@ -82,19 +86,7 @@ void CLevel_Loading::Late_Tick(_float fTimeDelta)
 
 	SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
 
-	//if (m_eNextLevel == LEVEL_BATTLE)
-	//{
-	//	/* Distortion Shader */
-	//	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	//	CRenderer* pRenderer = (CRenderer*)pGameInstance->Clone_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), nullptr);
-	//	if (!pRenderer)
-	//		return;
-
-	//	pRenderer->Set_Distort(true);
-
-	//	Safe_Release(pRenderer);
-	//}
+	
 }
 
 CLevel_Loading * CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevel)

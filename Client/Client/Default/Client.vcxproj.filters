@@ -415,14 +415,14 @@
     <Filter Include="01.Levels\05.Restaurant %28MiniGame1%29">
       <UniqueIdentifier>{34acfbf8-f5c2-456e-ad10-3a89c7f58820}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\06.NoName %28MiniGame2%29">
-      <UniqueIdentifier>{de37e414-2ed5-40df-81c1-9b5e5e17f1b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\07.ArenaZone %28LawBattle%29">
       <UniqueIdentifier>{0b21e4a1-a00c-4231-adfd-45977878d9c8}</UniqueIdentifier>
     </Filter>
     <Filter Include="03.Camera\02.MiniGame_Camera">
       <UniqueIdentifier>{e1b5614f-9d2f-48ec-ad63-127f549cc725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\06.WorkTool %28MiniGame2%29">
+      <UniqueIdentifier>{de37e414-2ed5-40df-81c1-9b5e5e17f1b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -912,9 +912,6 @@
     <ClInclude Include="..\Public\UI_Portraitfront.h">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AIAttackNormalState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObjects\07.Bullet</Filter>
     </ClInclude>
@@ -1125,9 +1122,6 @@
     <ClInclude Include="..\Public\PlayerPoseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AIPoseState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\AI_BoostAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
     </ClInclude>
@@ -1175,6 +1169,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Camera_MiniGame.h">
       <Filter>03.Camera\02.MiniGame_Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIAttackNormalState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIPoseState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_WorkTool.h">
+      <Filter>01.Levels\06.WorkTool %28MiniGame2%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1894,6 +1897,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_MIniGame.cpp">
       <Filter>03.Camera\02.MiniGame_Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_WorkTool.cpp">
+      <Filter>01.Levels\06.WorkTool %28MiniGame2%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

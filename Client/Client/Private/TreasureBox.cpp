@@ -230,6 +230,8 @@ HRESULT CTreasureBox::Render_EdgeDetection()
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 5)))
 			return E_FAIL;
 	}
+
+	return S_OK;
 }
 
 

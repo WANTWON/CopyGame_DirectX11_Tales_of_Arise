@@ -25,9 +25,11 @@ public:
 	HRESULT Ready_Layer_BossMapObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_RestaurantObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_CityMapObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_WorkToolMapObject(const _tchar* pLayerTag);
 
 	HRESULT Ready_Layer_Interact_SnowField(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Interact_Restaurant(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Interact_WorkTool(const _tchar* pLayerTag);
 
 
 private:
