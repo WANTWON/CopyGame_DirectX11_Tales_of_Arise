@@ -21,8 +21,12 @@ private:
 	_uint		m_iRand = 0;
 	_float		m_fTarget_Distance;
 	_float		m_fRandTime = 0.f;
+	_float		m_fAtkCollision_Delay = 0.f;
+
+	_bool		m_bCollision = false;
 	_bool		m_bTargetSetting = false;
 	_bool		m_bAddGoDistance = false;
+	
 	STATE_ID	m_ePreState;
 	CCollider*  m_pAtkColliderCom = false;
 private:

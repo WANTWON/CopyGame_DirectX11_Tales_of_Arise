@@ -24,6 +24,15 @@ private:
 
 	_float		m_fIdleTime;
 	_float		m_fColliderStart = -1.f;
+	_float		m_fAtkCollision_Delay = 0.f;
+	_float		m_f2th_AtkCollision_Delay = 0.f;
+	_float		m_f3th_AtkCollision_Delay = 0.f;
+	_float		m_f4th_AtkCollision_Delay = 0.f;
+	_float		m_f5th_AtkCollision_Delay = 0.f;
+	_float		m_f6th_AtkCollision_Delay = 0.f;
+
+	_float		m_fAtkFootCollision_Delay = 0.f;
+	_float		m_f2th_AtkFootCollision_Delay = 0.f;
 
 	CCollider*  m_pAtkColliderCom = nullptr;
 	CCollider*	m_p2th_AtkColliderCom = nullptr;
@@ -36,6 +45,18 @@ private:
 
 	_bool		m_bCausedDamage= false;
 	_bool		m_bFootCauseDamage = false;
+	_bool		m_bAdventSound = false;
+	_bool		m_bSpearMultiEndSound = false;
+
+	_bool		m_bCollision = false;
+	_bool		m_b2th_Collision = false;
+	_bool		m_b3th_Collision = false;
+	_bool		m_b4th_Collision = false;
+	_bool		m_b5th_Collision = false;
+	_bool		m_b6th_Collision = false;
+
+	_bool		m_bFootCollision = false;
+	_bool		m_b2th_FootCollision = false;
 };
 END
 END

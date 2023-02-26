@@ -244,12 +244,10 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 		LEVEL eNextLevel = LEVEL_BOSS;
 		pGameInstance->Set_DestinationLevel(eNextLevel);
-		//CBattleManager::Get_Instance()->Set_BattleMode(true, ASTRAL_DOUBT, true);
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
 			return;
 

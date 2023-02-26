@@ -170,7 +170,7 @@ void CAI_RinwellLaw_Smash::Enter()
 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_2stKillertechnique.wav"), SOUND_VOICE, 1.0f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawRinwell_Smash.wav"), SOUND_VOICE, 0.7f);
 }
 
 void CAI_RinwellLaw_Smash::Exit()

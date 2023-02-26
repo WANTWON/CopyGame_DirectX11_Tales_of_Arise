@@ -178,6 +178,8 @@ void CAI_SionRinwell_Smash::Enter()
 	//	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("SionRinwell_Smash.wav"), SOUND_VOICE, 0.4f);
 }
 
 void CAI_SionRinwell_Smash::Exit()

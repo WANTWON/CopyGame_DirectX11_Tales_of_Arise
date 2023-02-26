@@ -505,7 +505,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_E.mp3"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_E.mp3"), SOUND_EFFECT, 1.0f);
 			break;
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS);
@@ -537,7 +537,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_EFFECT, 0.5f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_EFFECT, 0.5f);*/
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GALEFORCE);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_E.mp3"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_E.mp3"), SOUND_EFFECT, 1.0f);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
@@ -554,14 +554,14 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_R.wav"), SOUND_EFFECT, 0.5f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_R.wav"), SOUND_EFFECT, 0.5f);*/
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_THUNDERFIELD);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_R.mp3"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_R.mp3"), SOUND_EFFECT, 1.0f);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); // 메테오
 
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_F.mp3"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_F.mp3"), SOUND_EFFECT, 1.0f);
 
 			/*dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_METEOR);
 			break;*/
@@ -585,14 +585,14 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_E.mp3"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_E.mp3"), SOUND_EFFECT, 1.0f);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK5:
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); // 비가우수수
 		//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); // 비가우수수
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_R.mp3"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_R.mp3"), SOUND_EFFECT, 1.0f);
 
 			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
 			_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)) * 2;
@@ -609,7 +609,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK6:
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); 
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_F.mp3"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_F.mp3"), SOUND_EFFECT, 1.0f);
 			//dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_R.wav"), SOUND_EFFECT, 0.5f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_R.wav"), SOUND_EFFECT, 0.5f);
