@@ -29,6 +29,8 @@
 #include "Damagefont_Critical.h"
 
 #include "Level_Restaurant.h"
+#include "PlayerOverlimit.h"
+#include "ParticleSystem.h"
 
 using namespace Player;
 using namespace AIPlayer;
@@ -104,18 +106,33 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	if (m_bOverLimit)
 	{
+		/* Overlimit Effect */
+		if (!m_bIsOverlimiEffectSpawned)
+		{
+			EffectSpawn_Overlimit();
+			m_bIsOverlimiEffectSpawned = true;
+		}
+
+		EffectUpdate_Overlimit();
+		m_fAuraTimer += fTimeDelta;
+
+		/* Mana Bar */
 		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 		m_fOverLimitTimer += fTimeDelta;
 		if (m_fOverLimitTimer > 0.2f)
 		{
-
 			m_fOverLimitTimer = 0.f;
 			m_tInfo.fCurrentOverlimitGauge -= 1.f;
+
+			/* Reset */
 			if (m_tInfo.fCurrentOverlimitGauge <= 0.f)
 			{
 				m_tInfo.fCurrentOverlimitGauge = 100.f;
 				m_bOverLimit = false;
 				m_fOverLimitTimer = 0.f;
+				m_bIsOverlimiEffectSpawned = false;
+				m_fAuraTimer = 0.f;
+				EffectStop_Overlimit();
 			}
 		}
 	}
@@ -160,6 +177,15 @@ int CPlayer::Tick(_float fTimeDelta)
 		}
 		else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
 			Take_Damage((_int)m_tInfo.fCurrentHp, nullptr);
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+		{
+			if (CPlayerManager::Get_Instance()->Get_ActivePlayer() == this)
+			{
+				CPlayerState* pState = new CPlayerOverlimit(this);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+			}
+		}
+
 	}
 	else if (m_bIsPose)
 		m_bIsPose = false;
@@ -204,9 +230,7 @@ int CPlayer::Tick(_float fTimeDelta)
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
-		return ;
-
-	
+		return;
 
 	if (m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
@@ -223,6 +247,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, m_Parts[PARTS_WEAPON]);
+
 #ifdef _DEBUG
 		m_pRendererCom->Add_Debug(m_pNavigationCom);
 		__super::Late_Tick(fTimeDelta);
@@ -288,6 +313,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			}
 		}
 	}
+
+	if (m_bOverLimit)
+		EffectRemove_Overlimit();
 }
 
 HRESULT CPlayer::Render()
@@ -296,6 +324,21 @@ HRESULT CPlayer::Render()
 		return E_FAIL;
 
 	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	/* Rim Light */
+	Get_AuraColor();
+	if (FAILED(m_pShaderCom->Set_RawValue("g_bRimLight", &m_bOverLimit, sizeof(_bool))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimColor", &m_vAuraColor, sizeof(_float3))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimTimer", &m_fAuraTimer, sizeof(_float))))
+		return E_FAIL;
+
+	_float4 vCameraLook = (_float4)(CGameInstance::Get_Instance()->Get_CamWorldMatrix().m[2]);
+	_float3 vCamLook = _float3(vCameraLook.x, vCameraLook.y, vCameraLook.z);
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vCameraLook", &vCamLook, sizeof(_float3))))
 		return E_FAIL;
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
@@ -311,6 +354,10 @@ HRESULT CPlayer::Render()
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 0)))
 			return E_FAIL;
 	}
+
+	_bool bRimLight = false;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_bRimLight", &bRimLight, sizeof(_bool))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -454,6 +501,92 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	}
 
 	return (_uint)m_tInfo.fCurrentHp;
+}
+
+void CPlayer::Get_AuraColor()
+{
+	switch (m_ePlayerID)
+	{
+	case CPlayer::PLAYERID::ALPHEN:
+		m_vAuraColor = _float3(1.f, .35f, 0.f);
+		break;
+	case CPlayer::PLAYERID::LAW:
+		m_vAuraColor = _float3(0.f, .3f, 1.f);
+		break;
+	case CPlayer::PLAYERID::RINWELL:
+		m_vAuraColor = _float3(0.f, 1.f, .4f);
+		break;
+	case CPlayer::PLAYERID::SION:
+		m_vAuraColor = _float3(1.f, .5f, .7f);
+		break;
+	}
+}
+
+void CPlayer::EffectSpawn_Overlimit()
+{
+	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	_tchar wcAuraName[MAX_PATH] = TEXT("");
+
+	switch (m_ePlayerID)
+	{
+	case CPlayer::PLAYERID::ALPHEN:
+		wcscpy_s(wcAuraName, MAX_PATH, TEXT("Alphen_Aura.dat"));
+		break;
+	case CPlayer::PLAYERID::LAW:
+		wcscpy_s(wcAuraName, MAX_PATH, TEXT("Law_Aura.dat"));
+		break;
+	case CPlayer::PLAYERID::RINWELL:
+		wcscpy_s(wcAuraName, MAX_PATH, TEXT("Rinwell_Aura.dat"));
+		break;
+	case CPlayer::PLAYERID::SION:
+		wcscpy_s(wcAuraName, MAX_PATH, TEXT("Sion_Aura.dat"));
+		break;
+	}
+
+	m_Aura = CEffect::PlayEffectAtLocation(wcAuraName, mWorldMatrix);
+}
+
+void CPlayer::EffectUpdate_Overlimit()
+{
+	for (auto& pEffect : m_Aura)
+	{
+		if (!pEffect)
+			continue;
+
+		_float4 vPlayerPosition;
+		XMStoreFloat4(&vPlayerPosition, m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION));
+		_float4 vPlayerLook;
+		XMStoreFloat4(&vPlayerLook, m_pTransformCom->Get_State(CTransform::STATE::STATE_LOOK));
+
+		_vector vEffectPosition = XMLoadFloat4(&vPlayerPosition) + (XMVector4Normalize(XMLoadFloat4(&vPlayerLook)) * .5f);
+
+		pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vEffectPosition);
+	}
+}
+
+void CPlayer::EffectRemove_Overlimit()
+{
+	for (auto& pEffect : m_Aura)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+}
+
+void CPlayer::EffectStop_Overlimit()
+{
+	for (auto& pEffect : m_Aura)
+	{
+		if (!pEffect)
+			continue;
+
+		CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(pEffect);
+		if (!pParticleSystem)
+			continue;
+
+		pParticleSystem->Set_Stop(true);
+		pEffect = nullptr;
+	}
 }
 
 void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)
@@ -712,21 +845,19 @@ void CPlayer::BoostAttack()
 
 HRESULT CPlayer::SetUp_ShaderResources()
 {
-	if (nullptr == m_pShaderCom)
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	if (!m_pShaderCom)
 		return E_FAIL;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
 		return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
-	RELEASE_INSTANCE(CGameInstance);
+	RELEASE_INSTANCE(CGameInstance);	
 
 	return S_OK;
 }

@@ -336,8 +336,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 			
 			m_pOwner->Set_Overcount(0);
-			//return new CPlayerOverlimit(m_pOwner);
-
+			return new CPlayerOverlimit(m_pOwner);
 		}
 
 		if (m_bIsFly)
