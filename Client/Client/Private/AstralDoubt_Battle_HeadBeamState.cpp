@@ -178,7 +178,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 				if (!m_bAnimFinish)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_HeadBeam.wav"), SOUND_VOICE, 0.6f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_HeadBeam.wav"), SOUND_VOICE, 0.2f);
 					m_bAnimFinish = true;
 				}
 			}
@@ -272,7 +272,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 		{
 			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % (700 - 500 + 1) + 500, m_pOwner);
 		}
 	}
 

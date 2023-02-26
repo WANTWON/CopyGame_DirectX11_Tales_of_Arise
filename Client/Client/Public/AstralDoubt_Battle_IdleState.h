@@ -22,6 +22,7 @@ private:
 	_float			m_fIdleAttackTimer = 1.5f;
 	_float			m_fToTargetDot_Begin = 0.f;
 	_float			m_fToTargetDot_Later = 0.f;
+	_float			m_fSoundStart = 0.f;
 	STATE_ID		m_ePreState_Id;
 	FIELD_STATE_ID	m_ePreTurn_Id;
 	

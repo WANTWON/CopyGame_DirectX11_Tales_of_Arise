@@ -21,8 +21,7 @@ HRESULT CLevel_BossZone::Initialize()
 {
 	MONSTER_ID eMonsterID = CBattleManager::Get_Instance()->Get_MonsterType();
 
-	CBattleManager::Get_Instance()->Set_BattleMode(true, eMonsterID, true);
-	
+	CBattleManager::Get_Instance()->Set_BattleMode(true, ASTRAL_DOUBT, true);
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -57,8 +56,8 @@ HRESULT CLevel_BossZone::Initialize()
 	CGameInstance::Get_Instance()->StopAll();
 	
 
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
-	
+	//CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("Boss_Asu_BackGorundSound.wav"), g_fSoundVolume);
 
 	CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();

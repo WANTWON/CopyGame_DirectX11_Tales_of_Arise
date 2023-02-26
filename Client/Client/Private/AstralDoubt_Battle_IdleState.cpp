@@ -245,6 +245,28 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 	else if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
 	{
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					if (m_bAdventSound == false)
+					{
+						m_fSoundStart = pEvent.fStartTime;
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Howling.wav"), SOUND_VOICE, 0.6f);
+						m_bAdventSound = true;
+					}
+				}
+
+				else
+				{
+					CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+				}
+			}
+		}
+
 		if (m_bIsAnimationFinished)
 		{
 			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_UPPER);
@@ -254,7 +276,27 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 	else if (m_ePreState_Id == STATE_ID::STATE_BRAVE)
 	{
-		
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					if (m_bAdventSound == false)
+					{
+						
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Howling.wav"), SOUND_VOICE, 0.6f);
+						m_bAdventSound = true;
+					}
+				}
+
+				else
+				{
+					CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+				}
+			}
+		}
 
 		if (m_bIsAnimationFinished)
 		{
@@ -368,26 +410,14 @@ void CBattle_IdleState::Enter()
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::EVENT_ADVENT);
 
-		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-		for (auto& pEvent : pEvents)
-		{
-			if (pEvent.isPlay && m_bAdventSound == false)
-			{
-
-				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
-				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Advent.wav"), SOUND_VOICE, 0.6f);
-					m_bAdventSound = true;
-				}
-			}
-		}
+		
 	}
 
 
 	else if (m_ePreState_Id == STATE_ID::STATE_BRAVE)
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_BRAVE);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Howling.wav"), SOUND_VOICE, 0.6f);
+		
 		/*vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 		for (auto& pEvent : pEvents)
 		{
@@ -417,5 +447,6 @@ void CBattle_IdleState::Enter()
 
 void CBattle_IdleState::Exit()
 {
-
+	if (m_ePreState_Id == STATE_ID::STATE_BRAVE || m_ePreState_Id == STATE_ID::STATE_ADVENT)
+		CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

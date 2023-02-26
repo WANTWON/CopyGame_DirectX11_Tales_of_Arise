@@ -22,8 +22,10 @@ private:
 	_uint		 m_iRand = 0;
 	_uint		m_iCollisionCount = 0;
 	_float		m_fIdleAttackTimer = 0.f;
-	_bool		m_bTargetSetting = false;
+	_float		m_fAtkCollision_Delay = 0.f;
+
 	_bool		m_bCollision = false;
+	_bool		m_bTargetSetting = false;
 	CCollider*  m_pAtkColliderCom = false;
 private:
 	_matrix m_StartMatrix;
