@@ -1319,7 +1319,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_SnowField(const _tchar * pLayerTag)
 		}
 		else if (!wcscmp(pModeltag, TEXT("SlimPlant")))
 		{
-			ItemDesc.etype = CItem::SLIMPLANT;
+			ItemDesc.etype = CItem::PLANT;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_SNOWFIELD, pLayerTag, &ItemDesc)))
 				return E_FAIL;
 		}
