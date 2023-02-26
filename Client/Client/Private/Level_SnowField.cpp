@@ -66,6 +66,8 @@ HRESULT CLevel_SnowField::Initialize()
 	}
 
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Interact"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Effects"));
+
 
 
 
@@ -198,6 +200,8 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Effects"));
+
 			//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
 			CGameInstance::Get_Instance()->Clear_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
 			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -240,10 +244,11 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Camera"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Interact"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Effects"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -273,13 +278,15 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 
 			CPlayerManager::Get_Instance()->Save_LastPosition();
 			m_pCollision_Manager->Clear_AllCollisionGroup();
+			
 
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Camera"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund"));
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Insteract"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Interact"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Effects"));
 
 			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
