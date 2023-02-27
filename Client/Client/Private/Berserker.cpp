@@ -146,6 +146,23 @@ int CBerserker::Tick(_float fTimeDelta)
 	
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 	
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_N))
+	//{
+	//	CBerserkerState* pBattleState = new CBattle_Shock_WaveState(this);
+	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pBattleState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_M))
+	//{
+	//	CBerserkerState* pBattleState = new CBattle_Double_ClawState(this);
+	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pBattleState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	//{
+	//	CBerserkerState* pBattleState = new CBattle_PouncingState(this);
+	//	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pBattleState);
+	//}
 
 	return OBJ_NOEVENT;
 }
@@ -161,7 +178,7 @@ void CBerserker::Late_Tick(_float fTimeDelta)
 		return;
 	__super::Late_Tick(fTimeDelta);
 
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+	if (ExceptionHanding() == false)
 		return;
 
 	if (m_pRendererCom && m_bGlowUp)

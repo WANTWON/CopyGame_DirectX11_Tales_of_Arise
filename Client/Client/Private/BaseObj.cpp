@@ -15,9 +15,7 @@ CBaseObj::CBaseObj(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CBaseObj::CBaseObj(const CBaseObj & rhs)
 	: CGameObject(rhs)
 	, m_tInfo(rhs.m_tInfo)
-	, m_pCameraManager(CCameraManager::Get_Instance())
 {
-	Safe_AddRef(m_pCameraManager);
 }
 
 HRESULT CBaseObj::Initialize_Prototype()
@@ -174,5 +172,4 @@ void CBaseObj::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pShaderCom);
 
-	Safe_Release(m_pCameraManager);
 }

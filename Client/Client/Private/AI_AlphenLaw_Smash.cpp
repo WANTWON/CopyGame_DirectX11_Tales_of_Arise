@@ -197,6 +197,8 @@ void CAI_AlphenLaw_Smash::Enter()
 	//pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_VOICE, 0.5f);
 }
 
 void CAI_AlphenLaw_Smash::Exit()

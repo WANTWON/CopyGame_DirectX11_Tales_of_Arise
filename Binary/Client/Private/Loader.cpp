@@ -353,10 +353,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ring_hn_02.fbx", "../../../Bin/Bin_Data/Effect/Ring/", PivotMatrix))))
 		return E_FAIL;*/
 
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Sion"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Sion.fbx", "../../../Bin/Bin_Data/Anim/Sion/", PivotMatrix))))
-		return E_FAIL;
 
 	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
@@ -437,42 +433,27 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	
 
 
-	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FreezeLance"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/FreezeLance.fbx", "../../../Bin/Bin_Data/NonAnim/Alltexture/", PivotMatrix))))
-		return E_FAIL;*/
+	PivotMatrix = XMMatrixScaling(0.02f, 0.02f, 0.02f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Fountain"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Fountain.fbx", "../../../Bin/Bin_Data/NonAnim/Saternas/", PivotMatrix))))
+		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Grass0"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Grass0.fbx", "../../../Bin/Bin_Data/NonAnim/Grass/", PivotMatrix))))
+		return E_FAIL;
 
-		//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Chandelier_Lod1"),
-		//CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Chandelier_Lod1.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Chandelier/Bld_Chandelier_Lod1/", PivotMatrix))))
-		//return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Grass2"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Grass2.fbx", "../../../Bin/Bin_Data/NonAnim/Grass/", PivotMatrix))))
+		return E_FAIL;
 
-		//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Fence_01"),
-		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Fence_01.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Fence/Bld_Fence_01/", PivotMatrix))))
-		//	return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Grass10"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Grass10.fbx", "../../../Bin/Bin_Data/NonAnim/Grass/", PivotMatrix))))
+		return E_FAIL;
 
-		//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D04_Terrace_Floor01_Pts_Lod1"),
-		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_D04_Terrace_Floor01_Pts_Lod1.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_D04_Terrace_Floor01_Pts_Lod1/", PivotMatrix))))
-		//	return E_FAIL;
-
-		//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_D01_EntStairs"),
-		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_D01_EntStairs.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_D01_EntStairs/", PivotMatrix))))
-		//	return E_FAIL;
-
-		//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Floor_A_200_01"),
-		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Floor_A_200_01.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Floor/Bld_Floor_A_200_01/", PivotMatrix))))
-		//	return E_FAIL;
-
-		/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Vehicle_Boat"),
-			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Vehicle_Boat.fbx", "../../../Bin/Bin_Data/NonAnim/Vehicle_Boat/", PivotMatrix))))
-			return E_FAIL;*/
-
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FountainWater"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/FountainWater.fbx", "../../../Bin/Bin_Data/NonAnim/Fountain/", PivotMatrix))))
+		return E_FAIL;
+	
 	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));
 
 	m_isFinished = true;

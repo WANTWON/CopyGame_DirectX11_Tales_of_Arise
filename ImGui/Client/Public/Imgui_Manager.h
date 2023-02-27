@@ -159,7 +159,10 @@ private:
 	_int									m_iSeletecLayerNum = 0;
 	_int									m_iBmpTerrainNum = 0;
 	_float									m_fDist = 1.f;
-	_float3									m_vfOffset = _float3(0.f, 0.f, 0.f);
+	_float3									m_vfOffset = _float3(0.f, 0.f, 0.f);	
+	_bool									m_bRandomX = false;
+	_bool									m_bRandomY = false;
+	_bool									m_bRandomZ = false;
 
 	//TreasureBox
 	CTreasureBox::BOXTAG					m_BoxDesc;

@@ -59,6 +59,7 @@ public: /* For Lock On */
 
 public:
 	void Clear_Monster() { m_FieldMonster.clear(); };
+	void Clear_AllMonster() { m_FieldMonster.clear(); };
 
 private:
 	_bool	   m_isBattleMode = false;

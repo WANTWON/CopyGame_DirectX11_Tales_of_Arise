@@ -400,9 +400,6 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\Common">
       <UniqueIdentifier>{05c5ecaa-3e29-4aa5-9462-792382ea51e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\05.BossZone">
-      <UniqueIdentifier>{882c4b8d-339b-446a-b62f-4e2a6620b558}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\04.City">
       <UniqueIdentifier>{b1b916cb-4ac4-4ecd-8279-8da200cca2a3}</UniqueIdentifier>
     </Filter>
@@ -414,6 +411,30 @@
     </Filter>
     <Filter Include="02.GameObjects\04.UI\29.UI_SystemMsgbox">
       <UniqueIdentifier>{539d4fc3-fdcf-4703-8bd8-e2473b546e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05.Trigger\MonsterTrigger">
+      <UniqueIdentifier>{cd961470-4b1b-48a8-8c40-249b074bac0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05.Trigger\Portal">
+      <UniqueIdentifier>{812a13f8-1bcd-4f00-a11e-50404cb274e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\08.BossZone">
+      <UniqueIdentifier>{882c4b8d-339b-446a-b62f-4e2a6620b558}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\05.Restaurant %28MiniGame1%29">
+      <UniqueIdentifier>{34acfbf8-f5c2-456e-ad10-3a89c7f58820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\07.ArenaZone %28LawBattle%29">
+      <UniqueIdentifier>{0b21e4a1-a00c-4231-adfd-45977878d9c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Camera\02.MiniGame_Camera">
+      <UniqueIdentifier>{e1b5614f-9d2f-48ec-ad63-127f549cc725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\06.WorkTool %28MiniGame2%29">
+      <UniqueIdentifier>{de37e414-2ed5-40df-81c1-9b5e5e17f1b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\06.InteractObject\02. MiniGame1">
+      <UniqueIdentifier>{29fcaa07-73e4-4a3e-9a2b-e1169e513950}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -846,9 +867,6 @@
     <ClInclude Include="..\Public\UI_Get_item_Popup.h">
       <Filter>02.GameObjects\04.UI\14.UI_Get_Item_Popup</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Trigger.h">
-      <Filter>02.GameObjects\05.Trigger</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\BattleManager.h">
       <Filter>06.BattleManager</Filter>
     </ClInclude>
@@ -905,9 +923,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_Portraitfront.h">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AIAttackNormalState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Bullet.h">
       <Filter>02.GameObjects\07.Bullet</Filter>
@@ -1108,7 +1123,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_BossZone.h">
-      <Filter>01.Levels\05.BossZone</Filter>
+      <Filter>01.Levels\08.BossZone</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AI_LAW_AIRSKILLR.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Law</Filter>
@@ -1118,9 +1133,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\PlayerPoseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AIPoseState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AI_BoostAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
@@ -1166,6 +1178,30 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_SystemMessageBox.h">
       <Filter>02.GameObjects\04.UI\29.UI_SystemMsgbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Trigger.h">
+      <Filter>02.GameObjects\05.Trigger\MonsterTrigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Portal.h">
+      <Filter>02.GameObjects\05.Trigger\Portal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Restaurant.h">
+      <Filter>01.Levels\05.Restaurant %28MiniGame1%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_MiniGame.h">
+      <Filter>03.Camera\02.MiniGame_Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIAttackNormalState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AIPoseState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_WorkTool.h">
+      <Filter>01.Levels\06.WorkTool %28MiniGame2%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ThrowingObject.h">
+      <Filter>02.GameObjects\06.InteractObject\02. MiniGame1</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1562,9 +1598,6 @@
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp">
       <Filter>02.GameObjects\04.UI\14.UI_Get_Item_Popup</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Trigger.cpp">
-      <Filter>02.GameObjects\05.Trigger</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\BattleManager.cpp">
       <Filter>06.BattleManager</Filter>
     </ClCompile>
@@ -1824,7 +1857,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_BossZone.cpp">
-      <Filter>01.Levels\05.BossZone</Filter>
+      <Filter>01.Levels\08.BossZone</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AI_Alphen_SkillAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen</Filter>
@@ -1885,6 +1918,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_SystemMessageBox.cpp">
       <Filter>02.GameObjects\04.UI\29.UI_SystemMsgbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Trigger.cpp">
+      <Filter>02.GameObjects\05.Trigger\MonsterTrigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Portal.cpp">
+      <Filter>02.GameObjects\05.Trigger\Portal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Restaurant.cpp">
+      <Filter>01.Levels\05.Restaurant %28MiniGame1%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_MIniGame.cpp">
+      <Filter>03.Camera\02.MiniGame_Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_WorkTool.cpp">
+      <Filter>01.Levels\06.WorkTool %28MiniGame2%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ThrowingObject.cpp">
+      <Filter>02.GameObjects\06.InteractObject\02. MiniGame1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

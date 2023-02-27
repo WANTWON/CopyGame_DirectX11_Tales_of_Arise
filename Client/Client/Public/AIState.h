@@ -12,9 +12,14 @@ public:
 		STATE_IDLE,
 		STATE_WALK,
 		STATE_RUN,
+		STATE_JUMP,
+		STATE_NORMAL_ATTACK1,
+		STATE_NORMAL_ATTACK2,
+		STATE_NORMAL_ATTACK3,
+		STATE_NORMAL_ATTACK4,
+		STATE_NORMAL_ATTACK5,
 		STATE_ATTACK,
 		STATE_BOOSTATTACK,
-		STATE_JUMP,
 		STATE_DEAD,
 		STATE_HIT,
 		STATE_DODGE,
@@ -24,11 +29,7 @@ public:
 		STATE_DIVINE_SABER,
 		STATE_HOLYRANCE,
 		STATE_BANGJEON,
-		STATE_NORMAL_ATTACK1,
-		STATE_NORMAL_ATTACK2,
-		STATE_NORMAL_ATTACK3,
-		STATE_NORMAL_ATTACK4,
-		STATE_NORMAL_ATTACK5,
+		
 		STATE_SKILL_ATTACK_E,
 		STATE_SKILL_ATTACK_R,
 		STATE_SKILL_ATTACK_F,
@@ -44,6 +45,8 @@ public:
 	};
 
 	STATE_ID Get_StateId() { return m_eStateId; }
+	_float Get_Time(void) { return m_fTime; }
+	CPlayer* Get_Owner(void) { return m_pOwner; }
 
 	virtual ~CAIState() {};
 	virtual CAIState* HandleInput() { return nullptr; };

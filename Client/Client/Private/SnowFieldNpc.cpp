@@ -82,7 +82,7 @@ void CSnowFieldNpc::Late_Tick(_float fTimeDelta)
 
    if (m_bCollision)
    {
-	   if (CGameInstance::Get_Instance()->Key_Up(DIK_8))
+	   if (CGameInstance::Get_Instance()->Key_Up(DIK_SPACE))
 	   {
 		   CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
 		   pCurrentLevel->Set_NextLevel(true, LEVEL_CITY);

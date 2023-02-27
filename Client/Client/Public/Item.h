@@ -6,12 +6,12 @@ BEGIN(Client)
 class CItem final : public CInteractObject
 {
 public:
-	enum ITEMTYPE { APPLE, JEWEL, MUSHROOM, LETTUCE, PLANT, SLIMPLANT, BOX, CRYSTAL};
+	enum ITEMTYPE { APPLE, JEWEL, MUSHROOM, LETTUCE, PLANT, BOX, CRYSTAL };
 
 	typedef struct ItemTag
 	{
 		ITEMTYPE etype = APPLE;
-		NONANIMDESC ModelDesc;
+		NONANIMDESC m_ModelDesc;
 	}ITEMDESC;
 
 protected:
@@ -25,22 +25,30 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_Glow() override;
+	virtual HRESULT Render_EdgeDetection() override;
 
 protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
-	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
+	virtual _bool Is_AnimationLoop(_uint eAnimId) override { return true; }
+	virtual HRESULT SetUp_ShaderResources() override;
 	virtual HRESULT SetUp_ShaderID() override;
 
 private:
+	void Spawn_Particles();
 
-	ITEMDESC	m_ItemDesc;
-	_bool		m_bIsGain = false;
+private:
+	ITEMDESC m_ItemDesc;
+	_bool m_bIsGain = false;
 
 	_bool m_bfirst = false;
 	_float m_fTimeDeltaAcc = 0.f;
 
 	vector<class CEffect*> m_pPickupFlares;
 	vector<class CEffect*> m_pGetItem;
+
+	_float m_fDissolveTimer = 0.f;
+	_float m_fDissolveLifespan = 3.f;
 
 public:
 	static CItem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

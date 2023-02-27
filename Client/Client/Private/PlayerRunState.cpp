@@ -91,8 +91,12 @@ CPlayerState * CRunState::HandleInput()
 				break;
 			}
 		}
-		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
-			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE);
+
+		if (LEVEL_RESTAURANT != pGameInstance->Get_CurrentLevelIndex())
+		{
+			if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
+				return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE);
+		}
 
 		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT);
@@ -157,7 +161,7 @@ CPlayerState * CRunState::HandleInput()
 
 		m_bIsDash = true;
 
-		if (!CBattleManager::Get_Instance()->Get_IsBattleMode())
+		if (!CBattleManager::Get_Instance()->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(true);
@@ -186,7 +190,7 @@ CPlayerState * CRunState::HandleInput()
 
 		m_bIsDash = false;
 
-		if (!pBattleManager->Get_IsBattleMode())
+		if (!pBattleManager->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(false);

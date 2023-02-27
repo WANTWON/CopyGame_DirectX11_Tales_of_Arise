@@ -33,7 +33,7 @@ private:
 	_bool		m_bUpdatTargetPos = false;
 	_bool		m_bStartTargetPos = false;
 	_bool		m_bIs_TargetInRight = false;
-
+	_bool		m_bAnimFinish = false;
 
 	_vector		m_vTargetPos;
 	_vector     m_vTargetUpdatPos;

@@ -42,7 +42,7 @@ HRESULT CNpc::Initialize(void * pArg)
 		Set_Scale(m_NpcDesc.Modeldesc.vScale);
 
 		if (m_NpcDesc.Modeldesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMLoadFloat3(&m_NpcDesc.Modeldesc.vRotation), XMConvertToRadians(m_NpcDesc.Modeldesc.m_fAngle));
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_NpcDesc.Modeldesc.m_fAngle));
 	}
 
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_INTERACT, this);
@@ -71,6 +71,7 @@ void CNpc::Late_Tick(_float fTimeDelta)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
 	}
 
 }
@@ -126,6 +127,25 @@ HRESULT CNpc::Render_ShadowDepth()
 	}
 
 	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CNpc::Render_EdgeDetection()
+{
+	if (nullptr == m_pShaderCom || nullptr == m_pModelCom)
+		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 5)))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 

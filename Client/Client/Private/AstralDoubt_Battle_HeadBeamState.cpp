@@ -175,10 +175,17 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 			{
 				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 					dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.5f, 0.1f);
+
+				if (!m_bAnimFinish)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_HeadBeam.wav"), SOUND_VOICE, 0.2f);
+					m_bAnimFinish = true;
+				}
 			}
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
+
 				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
 				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("HEAD1_C")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
@@ -265,7 +272,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 		{
 			CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % (700 - 500 + 1) + 500, m_pOwner);
 		}
 	}
 
@@ -357,6 +364,8 @@ void CBattle_HeadBeamState::Enter()
 
 void CBattle_HeadBeamState::Exit()
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+
 	Safe_Release(m_pAtkColliderCom);
 }
 

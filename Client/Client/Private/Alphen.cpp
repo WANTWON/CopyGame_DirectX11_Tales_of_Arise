@@ -3,7 +3,7 @@
 
 #include "GameInstance.h"
 #include "Weapon.h"
-
+#include "Level_Restaurant.h"
 
 _bool CAlphen::Is_AnimationLoop(_uint eAnimId)
 {
@@ -141,7 +141,15 @@ HRESULT CAlphen::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_CityNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_City_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 	m_vecNavigations.push_back(m_pNavigationCom);
-
+	if (FAILED(__super::Add_Components(TEXT("Com_RestaurantNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+	m_vecNavigations.push_back(m_pNavigationCom);
+	if (FAILED(__super::Add_Components(TEXT("Com_RestaurantMIniGameNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_MIniGameNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+	m_vecNavigations.push_back(m_pNavigationCom);
+	if (FAILED(__super::Add_Components(TEXT("Com_WorkToolNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_WorkTool_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+	m_vecNavigations.push_back(m_pNavigationCom);
 	
 
 	return S_OK;
@@ -158,7 +166,7 @@ void CAlphen::Change_Level(LEVEL eLevel)
 
 		CHierarchyNode* pSocket = nullptr; 
 
-		if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel)
+		if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel || LEVEL_WORKTOOL == eLevel)
 		{
 			pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L");
 			if (nullptr == pSocket)
@@ -183,6 +191,33 @@ void CAlphen::Change_Level(LEVEL eLevel)
 			XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixIdentity());
 			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixIdentity());
 		}
+		else if (LEVEL_RESTAURANT == eLevel)
+		{
+			if (((CLevel_Restaurant*)CGameInstance::Get_Instance()->Get_CurrentLevel())->Get_MiniGameStart())
+			{
+				pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
+				if (nullptr == pSocket)
+				{
+					ERR_MSG(TEXT("Failed to Get BonePtr"));
+					return;
+				}
+
+				XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixIdentity());
+				XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixIdentity());
+			}
+			else
+			{
+				pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L");
+				if (nullptr == pSocket)
+				{
+					ERR_MSG(TEXT("Failed to Get BonePtr"));
+					return;
+				}
+
+				XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixRotationX(XMConvertToRadians(180.f)));
+				XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 50.f));
+			}
+		}
 		
 		WeaponDesc.pSocket = pSocket;
 		WeaponDesc.SocketPivotMatrix = m_pModelCom->Get_PivotFloat4x4();
@@ -197,17 +232,15 @@ void CAlphen::Change_Level(LEVEL eLevel)
 
 HRESULT CAlphen::SetUp_ShaderResources()
 {
-	if (nullptr == m_pShaderCom)
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+	if (!m_pShaderCom)
 		return E_FAIL;
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ViewMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
 		return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 

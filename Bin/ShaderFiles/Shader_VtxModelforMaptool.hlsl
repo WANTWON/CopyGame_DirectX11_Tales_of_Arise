@@ -180,9 +180,11 @@ PS_EFFECT_OUT PS_EFFECT(PS_IN In)
 		float4 vMaskTexture = g_MaskTexture.Sample(LinearSampler, vOffsettedUV);
 
 		Out.vColor.a = vMaskTexture.r;
+		Out.vColor.rgb = g_vColor;
+		Out.vColor.rgb /= Out.vColor.a;
 		Out.vColor *= g_fAlpha;
 
-		Out.vColor.rgb = g_vColor;
+		
 	}
 	
 	/* Noise Texture */
@@ -303,7 +305,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default_NoCull);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_Default, 0);
+		SetDepthStencilState(DSS_NoWrite, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;

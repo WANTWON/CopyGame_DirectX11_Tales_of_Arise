@@ -260,15 +260,15 @@ HRESULT CRenderer::Render_GameObjects()
 
 	if (FAILED(Render_NonLight()))
 		return E_FAIL;
+	if (FAILED(Render_EdgeDetection()))
+		return E_FAIL;
 	if (FAILED(Render_AlphaBlend()))
 		return E_FAIL;
 	if (FAILED(Render_Glow()))
 		return E_FAIL;
 	if (FAILED(Render_Distortion()))
 		return E_FAIL;
-	if (FAILED(Render_EdgeDetection()))
-		return E_FAIL;
-
+	
 	/* Post Processing */
 	if (FAILED(Render_PostProcessing()))
 		return E_FAIL;
@@ -687,14 +687,6 @@ HRESULT CRenderer::Render_EdgeDetection()
 			return E_FAIL;
 	}
 
-	return S_OK;
-}
-
-HRESULT CRenderer::Render_PostProcessing()
-{
-	if (!m_pTarget_Manager)
-		return E_FAIL;
-
 #pragma region Edge_Detection
 	/* Edge Detection Compute */
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Edge_Detection"), m_pShaderPostProcessing, "g_EdgeDetectionTexture")))
@@ -712,10 +704,18 @@ HRESULT CRenderer::Render_PostProcessing()
 	/* Edge Detection Blend */
 	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Edge_Detection_Compute"), m_pShaderPostProcessing, "g_EdgeDetectionComputeTexture")))
 		return E_FAIL;
-	
+
 	m_pShaderPostProcessing->Begin(11); /* Edge Detection Blend */
 	m_pVIBuffer->Render();
 #pragma endregion Edge_Detection
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_PostProcessing()
+{
+	if (!m_pTarget_Manager)
+		return E_FAIL;
 
 #pragma region Depth_Of_Field
 	/* Depth of Field */

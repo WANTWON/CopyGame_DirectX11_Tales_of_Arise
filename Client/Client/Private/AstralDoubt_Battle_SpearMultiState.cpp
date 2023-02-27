@@ -75,13 +75,19 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
+				//물구나무 섰다가 찍는 공격
 				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 				{
 					//Camera Shaking 
 					if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 						dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.4f, 0.1f);
 
-
+					if (m_bAdventSound == false)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.25f);
+						m_bAdventSound = true;
+					}
+					
 					/*CCollider* pSpherCollider = m_pOwner->Get_SPHERECollider();
 					if (pSpherCollider)
 					{
@@ -328,6 +334,18 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					//Camera Shaking 
+					if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+						dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.4f, 0.1f);
+
+					if (m_bSpearMultiEndSound == false)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_SpearMultiEnd.wav"), SOUND_VOICE, 0.4f);
+						m_bSpearMultiEndSound = true;
+					}
+				}
 
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 				{
@@ -463,6 +481,8 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 				else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
 				{
+
+
 					CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
 					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
@@ -493,79 +513,213 @@ CAstralDoubt_State * CBattle_SpearMultiState::LateTick(_float fTimeDelta)
 	m_pOwner->Check_Navigation();
 
 	
-	if (!m_bCausedDamage)
-	{
+
 		if (nullptr != m_pAtkColliderCom)
 		{
 			CBaseObj* pCollisionTarget = nullptr;
 			//m_bCausedDamage = true;
 
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+			if (m_bCollision == false)
 			{
-				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-				if (pCollided)
-					pCollided->Take_Damage(rand() % 100, m_pOwner);
+				if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
+				{
+					CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+					if (pCollided)
+						pCollided->Take_Damage(rand() % (600 - 400 +1) + 400, m_pOwner);
+
+					m_bCollision = true;
+				}
 			}
 
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p2th_AtkColliderCom, &pCollisionTarget))
+			if (m_b2th_Collision == false)
 			{
-				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-				if (pCollided)
-					pCollided->Take_Damage(rand() % 100, m_pOwner);
+				if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p2th_AtkColliderCom, &pCollisionTarget))
+				{
+					CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+					if (pCollided)
+						pCollided->Take_Damage(rand() % (600 - 400 + 1) + 400, m_pOwner);
+
+					m_b2th_Collision = true;
+				}
 			}
 
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p3th_AtkColliderCom, &pCollisionTarget))
+			if (m_b3th_Collision == false)
 			{
-				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-				if (pCollided)
-					pCollided->Take_Damage(rand() % 100, m_pOwner);
+				if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p3th_AtkColliderCom, &pCollisionTarget))
+				{
+					CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+					if (pCollided)
+						pCollided->Take_Damage(rand() % (600 - 400 + 1) + 400, m_pOwner);
+
+					m_b3th_Collision = true;
+				}
 			}
 
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p4th_AtkColliderCom, &pCollisionTarget))
+			if (m_b4th_Collision == false)
 			{
-				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-				if (pCollided)
-					pCollided->Take_Damage(rand() % 100, m_pOwner);
+				if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p4th_AtkColliderCom, &pCollisionTarget))
+				{
+					CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+					if (pCollided)
+						pCollided->Take_Damage(rand() % (600 - 400 + 1) + 400, m_pOwner);
+
+					m_b4th_Collision = true;
+				}
 			}
 
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p5th_AtkColliderCom, &pCollisionTarget))
+
+			if (m_b5th_Collision == false)
 			{
-				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-				if (pCollided)
-					pCollided->Take_Damage(rand() % 100, m_pOwner);
+				if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p5th_AtkColliderCom, &pCollisionTarget))
+				{
+					CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+					if (pCollided)
+						pCollided->Take_Damage(rand() % (600 - 400 + 1) + 400, m_pOwner);
+
+					m_b5th_Collision = true;
+				}
 			}
 
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p6th_AtkColliderCom, &pCollisionTarget))
+
+			if (m_b6th_Collision == false)
 			{
-				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-				if (pCollided)
-					pCollided->Take_Damage(rand() % 100, m_pOwner);
+				if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p6th_AtkColliderCom, &pCollisionTarget))
+				{
+					CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
+					if (pCollided)
+						pCollided->Take_Damage(rand() % (600 - 400 + 1) + 400, m_pOwner);
+
+					m_b6th_Collision = true;
+				}
 			}
 		}
-	}
-	//FootAttack
-	if (!m_bFootCauseDamage)
-	{
-		if (nullptr != m_pFootColliderCom)
+	
+		if (m_bCollision)
 		{
-			CBaseObj* pFootCollisionTarget = nullptr;
-			//m_bFootCauseDamage = true;
+			m_fAtkCollision_Delay += fTimeDelta;
 
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pFootColliderCom, &pFootCollisionTarget))
+			if (m_fAtkCollision_Delay >= 1.5f)
 			{
-				CPlayer* pCollided = dynamic_cast<CPlayer*>(pFootCollisionTarget);
-				if (pCollided)
-					pCollided->Take_Damage(rand() % 100, m_pOwner, true);
-			}
-
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p2th_FootColliderCom, &pFootCollisionTarget))
-			{
-				CPlayer* pCollided = dynamic_cast<CPlayer*>(pFootCollisionTarget);
-				if (pCollided)
-					pCollided->Take_Damage(rand() % 100, m_pOwner, true);
+				m_fAtkCollision_Delay = 0.f;
+				m_bCollision = false;
 			}
 		}
-	}
+
+		if (m_b2th_Collision)
+		{
+			m_f2th_AtkCollision_Delay += fTimeDelta;
+
+			if (m_f2th_AtkCollision_Delay >= 1.5f)
+			{
+				m_f2th_AtkCollision_Delay = 0.f;
+				m_b2th_Collision = false;
+			}
+		}
+
+		if (m_b3th_Collision)
+		{
+			m_f3th_AtkCollision_Delay += fTimeDelta;
+
+			if (m_f3th_AtkCollision_Delay >= 1.5f)
+			{
+				m_f3th_AtkCollision_Delay = 0.f;
+				m_b3th_Collision = false;
+			}
+		}
+
+		if (m_b4th_Collision)
+		{
+			m_f4th_AtkCollision_Delay += fTimeDelta;
+
+			if (m_f4th_AtkCollision_Delay >= 1.5f)
+			{
+				m_f4th_AtkCollision_Delay = 0.f;
+				m_b2th_Collision = false;
+			}
+		}
+
+
+		if (m_b5th_Collision)
+		{
+			m_f5th_AtkCollision_Delay += fTimeDelta;
+
+			if (m_f5th_AtkCollision_Delay >= 1.5f)
+			{
+				m_f5th_AtkCollision_Delay = 0.f;
+				m_b5th_Collision = false;
+			}
+		}
+
+
+		if (m_b6th_Collision)
+		{
+			m_f6th_AtkCollision_Delay += fTimeDelta;
+
+			if (m_f6th_AtkCollision_Delay >= 1.5f)
+			{
+				m_f6th_AtkCollision_Delay = 0.f;
+				m_b6th_Collision = false;
+			}
+		}
+
+
+
+
+	//FootAttack
+		if (m_eStateId == CAstralDoubt_State::STATE_FOOTPRESS)
+		{
+			if (nullptr != m_pFootColliderCom)
+			{
+				CBaseObj* pFootCollisionTarget = nullptr;
+				//m_bFootCauseDamage = true;
+				if (m_bFootCollision == false)
+				{
+					if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pFootColliderCom, &pFootCollisionTarget))
+					{
+						CPlayer* pCollided = dynamic_cast<CPlayer*>(pFootCollisionTarget);
+						if (pCollided)
+							pCollided->Take_Damage(rand() % (1100 - 1000 + 1) + 1000, m_pOwner, true);
+
+						m_bFootCollision = true;
+					}
+				}
+
+				if (m_b2th_FootCollision == false)
+				{
+					if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p2th_FootColliderCom, &pFootCollisionTarget))
+					{
+						CPlayer* pCollided = dynamic_cast<CPlayer*>(pFootCollisionTarget);
+						if (pCollided)
+							pCollided->Take_Damage(rand() % (1100 - 1000 + 1) + 1000, m_pOwner, true);
+
+						m_b2th_FootCollision = true;
+					}
+				}
+			}
+
+			if (m_bFootCollision)
+			{
+				m_fAtkFootCollision_Delay += fTimeDelta;
+
+				if (m_fAtkFootCollision_Delay >= 0.8f)
+				{
+					m_fAtkFootCollision_Delay = 0.f;
+					m_bFootCollision = false;
+				}
+			}
+
+			if (m_b2th_FootCollision)
+			{
+				m_f2th_AtkFootCollision_Delay += fTimeDelta;
+
+				if (m_f2th_AtkFootCollision_Delay >= 0.8f)
+				{
+					m_f2th_AtkFootCollision_Delay = 0.f;
+					m_b2th_FootCollision = false;
+				}
+			}
+
+		}
 
 	if (m_bIsAnimationFinished)
 	{
@@ -647,7 +801,9 @@ void CBattle_SpearMultiState::Enter()
 
 void CBattle_SpearMultiState::Exit()
 {
-	/*Safe_Release(m_pAtkColliderCom);
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+
+	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);
 	Safe_Release(m_p3th_AtkColliderCom);
 	Safe_Release(m_p4th_AtkColliderCom);
@@ -655,5 +811,5 @@ void CBattle_SpearMultiState::Exit()
 	Safe_Release(m_p6th_AtkColliderCom);
 	
 	m_bCausedDamage = false;
-	m_bFootCauseDamage = false;*/
+	m_bFootCauseDamage = false;
 }

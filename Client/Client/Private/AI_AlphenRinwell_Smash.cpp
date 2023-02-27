@@ -187,6 +187,8 @@ void CAI_AlphenRinwell_Smash::Enter()
 //	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
+
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenRinwell_Smash.wav"), SOUND_VOICE, 0.5f);
 }
 
 void CAI_AlphenRinwell_Smash::Exit()

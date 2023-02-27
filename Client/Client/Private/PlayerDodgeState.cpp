@@ -345,8 +345,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 			
 			m_pOwner->Set_Overcount(0);
-			//return new CPlayerOverlimit(m_pOwner);
-
+			return new CPlayerOverlimit(m_pOwner);
 		}
 
 		if (m_bIsFly)
@@ -461,6 +460,7 @@ void CDodgeState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DODGE_AIR);
 		else
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DodgeSound.wav"), SOUND_EFFECT, 1.0f);
 			switch (m_eDirection)
 			{
 			case Client::DIR_STRAIGHT:
@@ -484,6 +484,7 @@ void CDodgeState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_AIR);
 		else
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DodgeSound.wav"), SOUND_EFFECT, 1.0f);
 			switch (m_eDirection)
 			{
 			case Client::DIR_STRAIGHT:
@@ -508,6 +509,7 @@ void CDodgeState::Enter(void)
 
 		else
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DodgeSound.wav"), SOUND_EFFECT, 1.0f);
 			switch (m_eDirection)
 			{
 			case Client::DIR_STRAIGHT:
@@ -531,6 +533,7 @@ void CDodgeState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_AIR);
 		else
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DodgeSound.wav"), SOUND_EFFECT, 1.0f);
 			switch (m_eDirection)
 			{
 			case Client::DIR_STRAIGHT:
@@ -560,6 +563,8 @@ void CDodgeState::Exit(void)
 	__super::Exit();
 
 	Safe_Release(m_pDodgeCollider);
+
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
 void CDodgeState::Move(_float fTimeDelta)

@@ -13,6 +13,7 @@ vector g_vColor = vector(1.f, 1.f, 1.f, 1);
 
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
+texture2D g_DepthTexture;
 
 /* Glow */
 texture2D g_GlowTexture;
@@ -27,6 +28,12 @@ float g_DissolveTimer;
 float g_DissolveLifespan;
 vector g_DissolveColor = vector(1.f, .95f, .6f, 1.f);
 vector g_DissolveHighlight = vector(.92f, .36f, .2f, 1);
+
+/* Rim Light */
+bool g_bRimLight = false;
+float g_vRimTimer;
+float3 g_vRimColor;
+float3 g_vCameraLook;
 
 struct VS_IN
 {
@@ -113,6 +120,7 @@ struct PS_OUT_GLOW
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
+
 	/*float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
 	float3 vNormal;
 
@@ -120,12 +128,11 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
 	vNormal = mul(vNormal, WorldMatrix);*/
-	float3   vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
 
+	float3   vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
 	vNormal = vNormal * 2.f - 1.f;
 
 	float3x3   WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-
 	vNormal = mul(vNormal, WorldMatrix);
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
@@ -134,6 +141,15 @@ PS_OUT PS_MAIN(PS_IN In)
 	
 	if (Out.vDiffuse.a <= 0.3f)
 		discard;
+
+	/* Rim Light */
+	if (g_bRimLight)
+	{
+		float fFresnel = (1 - dot(-g_vCameraLook, vNormal));
+
+		float3 vLerpColor = lerp(Out.vDiffuse.rgb, g_vRimColor, fFresnel);
+		Out.vDiffuse.rgb = vLerpColor;
+	}
 
 	return Out;
 }
@@ -329,7 +345,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_Priority, 0);
+		SetDepthStencilState(DSS_Default, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;

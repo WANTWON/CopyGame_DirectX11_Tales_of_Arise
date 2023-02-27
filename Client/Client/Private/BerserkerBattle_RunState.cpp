@@ -18,7 +18,7 @@ CBattle_RunState::CBattle_RunState(CBerserker* pBerserker, STATE_ID ePreState)
 {
 	m_pOwner   = pBerserker;
 	m_ePreState_Id = ePreState;
-	m_fRandTime = ((rand() % 500) *0.001f)*((rand() % 100) * 0.01f);
+	m_fRandTime = ((rand() % 100) *0.001f)*((rand() % 100) * 0.01f);
 }
 
 CBerserkerState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
@@ -30,7 +30,7 @@ CBerserkerState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
 CBerserkerState * CBattle_RunState::Tick(_float fTimeDelta)
 {
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 
 
@@ -332,7 +332,7 @@ CBerserkerState * CBattle_RunState::LateTick(_float fTimeDelta)
 	{
 		_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 		m_pOwner->Get_Transform()->LookAt(vPosition);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.2f, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.4f, m_pOwner->Get_Navigation());
 
 		if (m_fTarget_Distance <= 11.5f)
 		{

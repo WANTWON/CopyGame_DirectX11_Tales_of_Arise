@@ -29,13 +29,18 @@ HRESULT CNonAnim::Initialize(void * pArg)
 
 	if (pArg != nullptr)
 	{
+
+		m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&m_ModelDesc.WorldMatrix));
 		_vector vPosition = XMLoadFloat3(&m_ModelDesc.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		m_pTransformCom->Set_Rotation(m_ModelDesc.vRotation);
 		Set_Scale(m_ModelDesc.vScale);
 
-		if(m_ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMLoadFloat3(&m_ModelDesc.vRotation), XMConvertToRadians(m_ModelDesc.m_fAngle));
+		if (m_ModelDesc.m_fAngle != 0)
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_ModelDesc.m_fAngle));
+
+
 	}
 
 
@@ -168,35 +173,78 @@ HRESULT CNonAnim::Render_ShadowDepth()
 
 _float CNonAnim::Check_CullingRadius()
 {
-	if (!strcmp(m_ModelDesc.pModeltag, "CliffRock") ||
-		!strcmp(m_ModelDesc.pModeltag, "CliffRock2") ||
-		!strcmp(m_ModelDesc.pModeltag, "CliffRock3") ||
-		!strcmp(m_ModelDesc.pModeltag, "CliffRock4") ||
-		!strcmp(m_ModelDesc.pModeltag, "Ground01") ||
-		!strcmp(m_ModelDesc.pModeltag, "Ground02") )
-		return 25.f;
-	else if (!strcmp(m_ModelDesc.pModeltag, "Hut"))
-		return 20.f;
-	else if (!strcmp(m_ModelDesc.pModeltag, "CommonBridge") ||
-		!strcmp(m_ModelDesc.pModeltag, "Snow_Mountain") ||
-		!strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_") ||
-		!strcmp(m_ModelDesc.pModeltag, "Ceiling") ||
-		!strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_outside_Lod1") ||
-		!strcmp(m_ModelDesc.pModeltag, "Bld_D04_Door01_Wall_Lod1"))
-		return 50.f;
-	else if (!strcmp(m_ModelDesc.pModeltag, "House01_2F_1200x800") ||
-		!strcmp(m_ModelDesc.pModeltag, "House01_2F") ||
-		!strcmp(m_ModelDesc.pModeltag, "house01_3F_1200x1200") ||
-		!strcmp(m_ModelDesc.pModeltag, "CliffWall01") ||
-		!strcmp(m_ModelDesc.pModeltag, "CliffWall02") ||
-		!strcmp(m_ModelDesc.pModeltag, "Castle01_Lod1") ||
-		!strcmp(m_ModelDesc.pModeltag, "BigGateArch01") ||
-		!strcmp(m_ModelDesc.pModeltag, "Vehicle_Boat"))
-		return 10.f;
-	else if (!strcmp(m_ModelDesc.pModeltag, "Ground03") ||
-		!strcmp(m_ModelDesc.pModeltag, "Ground04"))
-		return 1000.f;
-		
+	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
+
+	switch (iLevel)
+	{
+	case Client::LEVEL_SNOWFIELD:
+	case Client::LEVEL_BATTLE:
+		if (!strcmp(m_ModelDesc.pModeltag, "CliffRock") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock2") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock3") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock4") )
+			return 25.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "Hut"))
+			return 20.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "CommonBridge") ||
+			!strcmp(m_ModelDesc.pModeltag, "Snow_Mountain"))
+			return 50.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "Vehicle_Boat"))
+			return 10.f;
+		break;
+	case Client::LEVEL_CITY:
+		if (!strcmp(m_ModelDesc.pModeltag, "Vehicle_Boat"))
+			return 10.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "Ground03") ||
+			!strcmp(m_ModelDesc.pModeltag, "Ground02") ||
+			!strcmp(m_ModelDesc.pModeltag, "Ground04") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffWall01") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffWall02") ||
+			!strcmp(m_ModelDesc.pModeltag, "Castle01_Lod1"))
+			return 1000.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "Fountain") ||
+			!strcmp(m_ModelDesc.pModeltag, "House01_2F_1200x800") || 
+			!strcmp(m_ModelDesc.pModeltag, "House01_2F") || 
+			!strcmp(m_ModelDesc.pModeltag, "house01_3F_1200x1200"))
+			return 20.f;
+		else if(!strcmp(m_ModelDesc.pModeltag, "LineNew01") ||
+			!strcmp(m_ModelDesc.pModeltag, "LineNew02") ||
+			!strcmp(m_ModelDesc.pModeltag, "LineNew03") ||
+			!strcmp(m_ModelDesc.pModeltag, "BigGateArch01"))
+			return 30.f;
+		break;
+	case Client::LEVEL_RESTAURANT:
+		if (!strcmp(m_ModelDesc.pModeltag, "CookingTable"))
+			return 25.f;
+		if (!strcmp(m_ModelDesc.pModeltag, "Carpet"))
+			return 10.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "InteriorFloor"))
+			return 1000.f;
+		break;
+	case Client::LEVEL_WORKTOOL:
+		if (!strcmp(m_ModelDesc.pModeltag, "CookingTable"))
+			return 25.f;
+		if (!strcmp(m_ModelDesc.pModeltag, "Carpet3") ||
+			!strcmp(m_ModelDesc.pModeltag, "Banner") || 
+			!strcmp(m_ModelDesc.pModeltag, "Road"))
+			return 10.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "InteriorFloor"))
+			return 1000.f;
+		else if (!strcmp(m_ModelDesc.pModeltag, "Ceiling"))
+			return 1000.f;
+		break;
+	case Client::LEVEL_BOSS:
+		if (!strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_") ||
+			!strcmp(m_ModelDesc.pModeltag, "Ceiling") ||
+			!strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_outside_Lod1") ||
+			!strcmp(m_ModelDesc.pModeltag, "Bld_D04_Door01_Wall_Lod1"))
+			return 50.f;
+		break;
+	default:
+		break;
+	}
+
+	
 	return 3.f;
 }
 

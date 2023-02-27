@@ -1172,25 +1172,35 @@ void CImgui_Manager::Set_Object_Map()
 
 	static _float OffsetPos[3] = { m_vfOffset.x , m_vfOffset.y, m_vfOffset.z };
 	ImGui::Text("Offset"); ImGui::SameLine();
-	ImGui::InputFloat3("##1", Position);
+	ImGui::InputFloat3("##PosOffset", OffsetPos);
 	m_vfOffset = _float3(OffsetPos[0], OffsetPos[1], OffsetPos[2]);
-	m_InitDesc.vPosition = _float3(Position[0], Position[1], Position[2]);
+	m_InitDesc.vPosition = _float3(Position[0] + OffsetPos[0], Position[1] + OffsetPos[1], Position[2] + OffsetPos[2]);
 
 	static _float Scale[3] = { m_InitDesc.vScale.x , m_InitDesc.vScale.y, m_InitDesc.vScale.z };
 	ImGui::Text("Scale"); ImGui::SameLine();
 	ImGui::InputFloat3("##Scale", Scale);
 	m_InitDesc.vScale = _float3(Scale[0], Scale[1], Scale[2]);
 
+
+	
+
 	static _float Rotation[3] = { m_InitDesc.vRotation.x , m_InitDesc.vRotation.y, m_InitDesc.vRotation.z };
 	ImGui::Text("Rotation axis"); ImGui::SameLine();
-	ImGui::InputFloat3("##2", Rotation);
-	m_InitDesc.vRotation = _float3(Rotation[0], Rotation[1], Rotation[2]);
+	ImGui::DragFloat3("##2", Rotation);
+	
+	ImGui::Checkbox("RandomRotX", &m_bRandomX);
+	ImGui::Checkbox("RandomRotY", &m_bRandomY);
+	ImGui::Checkbox("RandomRotZ", &m_bRandomZ);
 
-	static _float Offset[2] = { m_InitDesc.m_fAngle , m_fDist };
-	ImGui::Text("Rotaion Angle / dist"); ImGui::SameLine();
-	ImGui::InputFloat2("##3", Offset);
-	m_InitDesc.m_fAngle = Offset[0];
-	m_fDist = Offset[1];
+	if (m_bRandomX == true)
+		Rotation[0] = rand() % 180;
+	if (m_bRandomY == true)
+		Rotation[1] = rand() % 180;
+	if (m_bRandomZ == true)
+		Rotation[2] = rand() % 180;
+	
+
+	m_InitDesc.vRotation = _float3(Rotation[0], Rotation[1], Rotation[2]);
 
 }
 
@@ -1503,7 +1513,7 @@ void CImgui_Manager::ShowPickedObj()
 	ImGui::BulletText("Position");
 	ImGui::Text("Position X");
 	ImGui::SameLine();
-	ImGui::DragFloat("##PositionX", &m_vPickedObjPos.x, 0.01f);
+	ImGui::DragFloat("##PositionX", &m_vPickedObjPos.x, 0.1f);
 
 	ImGui::Text("Position Z");
 	ImGui::SameLine();
@@ -1524,19 +1534,38 @@ void CImgui_Manager::ShowPickedObj()
 
 	ImGui::Text("Scale");
 	ImGui::SameLine();
-	ImGui::InputFloat3("##SettingScale", Pos);
+	ImGui::DragFloat3("##SettingScale", Pos);
 	m_vPickedObjScale = _float3(Pos[0], Pos[1], Pos[2]);
 
 	ImGui::BulletText("Rotation");
 	static _float Rotation[3] = { m_vPickedRotAxis.x , m_vPickedRotAxis.y, m_vPickedRotAxis.z };
+	Rotation[0] = m_vPickedRotAxis.x;
+	Rotation[1] = m_vPickedRotAxis.y;
+	Rotation[2] = m_vPickedRotAxis.z;
 	ImGui::Text("Rotation axis"); ImGui::SameLine();
-	ImGui::InputFloat3("##Setting RotAxis", Rotation);
+	
+	ImGui::DragFloat3("##Setting RotAxis", Rotation);
+	if (ImGui::Button("Random RotX"))
+	{
+	
+			Rotation[0] = rand() % 180;
+	}
+	
+	if (ImGui::Button("Random RotY"))
+	{
+	
+			Rotation[1] = rand() % 180;
+	}
+		
+	if (ImGui::Button("Random RotZ"))
+	{
+		
+			Rotation[2] = rand() % 180;
+	}
+		
 	m_vPickedRotAxis = _float3(Rotation[0], Rotation[1], Rotation[2]);
 
-	ImGui::Text("Rotaion Angle"); ImGui::SameLine();
-	ImGui::DragFloat("##Setting Rot", &m_fRotAngle, 0.1f);
-	//m_fRotAngle = RotAngle;
-
+	
 
 	if (pPickedObj != nullptr)
 	{
@@ -1544,7 +1573,7 @@ void CImgui_Manager::ShowPickedObj()
 		vSettingPosition = XMVectorSetW(vSettingPosition, 1.f);
 		dynamic_cast<CBaseObj*>(pPickedObj)->Set_State(CTransform::STATE_TRANSLATION, vSettingPosition);
 		dynamic_cast<CBaseObj*>(pPickedObj)->Set_Scale(m_vPickedObjScale);
-		dynamic_cast<CNonAnim*>(pPickedObj)->Turn(m_vPickedRotAxis, m_fRotAngle);
+		dynamic_cast<CNonAnim*>(pPickedObj)->Turn(m_vPickedRotAxis, 0.f);
 	}
 
 	if (ImGui::Button("Delete Object"))
@@ -3018,9 +3047,10 @@ void CImgui_Manager::Draw_EffectModals()
 		{
 			if (ImGui::BeginTabItem("Color Curves"))
 			{
-				if (ImGui::BeginTable("ColorCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("ColorCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Color");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3089,9 +3119,10 @@ void CImgui_Manager::Draw_EffectModals()
 			}
 			if (ImGui::BeginTabItem("Alpha Curves"))
 			{
-				if (ImGui::BeginTable("AlphaCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("AlphaCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Alpha");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3105,8 +3136,11 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < AlphaCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						if (ImGui::Selectable(to_string(AlphaCurves[i].x).c_str(), i == m_iSelectedAlphaCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedAlphaCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
 							m_iSelectedAlphaCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(AlphaCurves[i].x).c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(AlphaCurves[i].y).c_str()); /* Start */
@@ -3154,9 +3188,10 @@ void CImgui_Manager::Draw_EffectModals()
 			}
 			if (ImGui::BeginTabItem("Size Curves"))
 			{
-				if (ImGui::BeginTable("SizeCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("SizeCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Size");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3170,8 +3205,11 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < SizeCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						if (ImGui::Selectable(to_string(SizeCurves[i].x).c_str(), i == m_iSelectedSizeCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Size */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedSizeCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Size */
 							m_iSelectedSizeCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(SizeCurves[i].x).c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(SizeCurves[i].y).c_str()); /* Start */
@@ -3239,9 +3277,10 @@ void CImgui_Manager::Draw_EffectModals()
 		{
 			if (ImGui::BeginTabItem("Color Curves"))
 			{
-				if (ImGui::BeginTable("ColorCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("ColorCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Color");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3255,9 +3294,12 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < ColorCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						string sColor = to_string(ColorCurves[i][0]) + ", " + to_string(ColorCurves[i][1]) + ", " + to_string(ColorCurves[i][2]);
-						if (ImGui::Selectable(sColor.c_str(), i == m_iSelectedVelocityCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Color */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedVelocityCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Color */
 							m_iSelectedVelocityCurve = i;
+
+						ImGui::TableNextColumn();
+						string sColor = to_string(ColorCurves[i][0]) + ", " + to_string(ColorCurves[i][1]) + ", " + to_string(ColorCurves[i][2]);
+						ImGui::Text(sColor.c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(ColorCurves[i][3]).c_str()); /* Start */
@@ -3316,9 +3358,10 @@ void CImgui_Manager::Draw_EffectModals()
 			}
 			if (ImGui::BeginTabItem("Alpha Curves"))
 			{
-				if (ImGui::BeginTable("AlphaCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("AlphaCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Alpha");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3332,8 +3375,11 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < AlphaCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						if (ImGui::Selectable(to_string(AlphaCurves[i].x).c_str(), i == m_iSelectedAlphaCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedAlphaCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
 							m_iSelectedAlphaCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(AlphaCurves[i].x).c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(AlphaCurves[i].y).c_str()); /* Start */
@@ -3381,9 +3427,10 @@ void CImgui_Manager::Draw_EffectModals()
 			}
 			if (ImGui::BeginTabItem("Scale Curves"))
 			{
-				if (ImGui::BeginTable("ScaleCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("ScaleCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Scale");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3397,9 +3444,12 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < ScaleCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						string sScale = to_string(ScaleCurves[i][0]) + ", " + to_string(ScaleCurves[i][1]) + ", " + to_string(ScaleCurves[i][2]);
-						if (ImGui::Selectable(sScale.c_str(), i == m_iSelectedScaleCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Scale */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedScaleCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Scale */
 							m_iSelectedScaleCurve = i;
+
+						ImGui::TableNextColumn();
+						string sScale = to_string(ScaleCurves[i][0]) + ", " + to_string(ScaleCurves[i][1]) + ", " + to_string(ScaleCurves[i][2]);
+						ImGui::Text(sScale.c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(ScaleCurves[i][3]).c_str()); /* Start */
@@ -3458,9 +3508,10 @@ void CImgui_Manager::Draw_EffectModals()
 			}
 			if (ImGui::BeginTabItem("Turn Velocity Curves"))
 			{
-				if (ImGui::BeginTable("TurnVelocityCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("TurnVelocityCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Turn Velocity");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3474,8 +3525,11 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < TurnVelocityCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						if (ImGui::Selectable(to_string(TurnVelocityCurves[i].x).c_str(), i == m_iSelectedTurnVelocityCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedTurnVelocityCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
 							m_iSelectedTurnVelocityCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(TurnVelocityCurves[i].x).c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(TurnVelocityCurves[i].y).c_str()); /* Start */
@@ -3523,9 +3577,10 @@ void CImgui_Manager::Draw_EffectModals()
 			}
 			if (ImGui::BeginTabItem("Noise Power Curves"))
 			{
-				if (ImGui::BeginTable("NoisePowerCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("NoisePowerCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Noise Power");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3539,8 +3594,11 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < NoisePowerCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						if (ImGui::Selectable(to_string(NoisePowerCurves[i].x).c_str(), i == m_iSelectedNoisePowerCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedNoisePowerCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
 							m_iSelectedNoisePowerCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(NoisePowerCurves[i].x).c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(NoisePowerCurves[i].y).c_str()); /* Start */
@@ -3589,9 +3647,10 @@ void CImgui_Manager::Draw_EffectModals()
 
 			if (ImGui::BeginTabItem("Distort Power Curves"))
 			{
-				if (ImGui::BeginTable("DistortPowerCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("DistortPowerCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Distort Power");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3605,8 +3664,11 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < DistortPowerCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						if (ImGui::Selectable(to_string(DistortPowerCurves[i].x).c_str(), i == m_iSelectedDistortPowerCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedDistortPowerCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
 							m_iSelectedDistortPowerCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(DistortPowerCurves[i].x).c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(DistortPowerCurves[i].y).c_str()); /* Start */
@@ -3673,9 +3735,10 @@ void CImgui_Manager::Draw_EffectModals()
 		{
 			if (ImGui::BeginTabItem("Color Curves"))
 			{
-				if (ImGui::BeginTable("ColorCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("ColorCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Color");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3689,9 +3752,12 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < ColorCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						string sColor = to_string(ColorCurves[i][0]) + ", " + to_string(ColorCurves[i][1]) + ", " + to_string(ColorCurves[i][2]);
-						if (ImGui::Selectable(sColor.c_str(), i == m_iSelectedVelocityCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Color */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedVelocityCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Color */
 							m_iSelectedVelocityCurve = i;
+
+						ImGui::TableNextColumn();
+						string sColor = to_string(ColorCurves[i][0]) + ", " + to_string(ColorCurves[i][1]) + ", " + to_string(ColorCurves[i][2]);
+						ImGui::Text(sColor.c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(ColorCurves[i][3]).c_str()); /* Start */
@@ -3750,9 +3816,10 @@ void CImgui_Manager::Draw_EffectModals()
 			}
 			if (ImGui::BeginTabItem("Alpha Curves"))
 			{
-				if (ImGui::BeginTable("AlphaCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("AlphaCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Alpha");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3766,9 +3833,12 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < AlphaCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						if (ImGui::Selectable(to_string(AlphaCurves[i].x).c_str(), i == m_iSelectedAlphaCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedAlphaCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
 							m_iSelectedAlphaCurve = i;
 
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(AlphaCurves[i].x).c_str()); /* Start */
+					
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(AlphaCurves[i].y).c_str()); /* Start */
 
@@ -3814,9 +3884,10 @@ void CImgui_Manager::Draw_EffectModals()
 			}
 			if (ImGui::BeginTabItem("Size Curves"))
 			{
-				if (ImGui::BeginTable("SizeCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("SizeCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
 					ImGui::TableSetupColumn("Size");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3830,8 +3901,11 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < SizeCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						if (ImGui::Selectable(to_string(SizeCurves[i].x).c_str(), i == m_iSelectedSizeCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Size */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedSizeCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Size */
 							m_iSelectedSizeCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(SizeCurves[i].x).c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(SizeCurves[i].y).c_str()); /* Start */
@@ -3879,9 +3953,11 @@ void CImgui_Manager::Draw_EffectModals()
 			}
 			if (ImGui::BeginTabItem("Velocity Curves"))
 			{
-				if (ImGui::BeginTable("VelocityCurvesTable", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
+				if (ImGui::BeginTable("VelocityCurvesTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchSame, ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6)))
 				{
 					ImGui::TableSetupScrollFreeze(0, 1);
+					ImGui::TableSetupColumn("ID");
+
 					ImGui::TableSetupColumn("Velocity");
 					ImGui::TableSetupColumn("Start");
 					ImGui::TableSetupColumn("End");
@@ -3895,8 +3971,11 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < VelocityCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						if (ImGui::Selectable(to_string(VelocityCurves[i].x).c_str(), i == m_iSelectedVelocityCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Velocity */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedVelocityCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Velocity */
 							m_iSelectedVelocityCurve = i;
+
+						ImGui::TableNextColumn();
+						ImGui::Text(to_string(VelocityCurves[i].x).c_str()); /* Start */
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(VelocityCurves[i].y).c_str()); /* Start */
@@ -6487,6 +6566,7 @@ void CImgui_Manager::Create_Model(const _tchar* pPrototypeTag, const _tchar* pLa
 	m_InitDesc.vPosition.x += m_vfOffset.x;
 	m_InitDesc.vPosition.y += m_vfOffset.y;
 	m_InitDesc.vPosition.z += m_vfOffset.z;
+	XMStoreFloat4x4(&m_InitDesc.WorldMatrix, XMMatrixIdentity());
 	m_pModel_Manager->Set_InitModelDesc(m_InitDesc);
 
 	_matrix			PivotMatrix = XMMatrixIdentity();

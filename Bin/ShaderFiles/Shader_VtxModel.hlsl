@@ -6,6 +6,7 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
 texture2D g_DepthTexture;
+texture2D g_GlowTexture;
 
 float4 g_vColor;
 float g_fAlpha = 1.f;
@@ -32,8 +33,13 @@ texture2D g_NoiseTexture;
 /* Dissolve */
 bool g_bDissolve;
 texture2D g_DissolveTexture;
+float g_DissolveTimer;
+float g_DissolveLifespan;
+vector g_DissolveColor = vector(1.f, .95f, .6f, 1.f);
+vector g_DissolveHighlight = vector(.92f, .36f, .2f, 1);
 
 /* Glow */
+bool g_bUseDiffuseColor;
 float3 g_vGlowColor;
 float g_fGlowPower;
 
@@ -110,6 +116,11 @@ struct PS_EFFECT_OUT
 	float4 vDepth : SV_TARGET2;
 };
 
+struct PS_GLOW_OUT
+{
+	float4 vGlow : SV_TARGET0;
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
@@ -182,33 +193,36 @@ PS_OUT PS_DISSOLVE(PS_IN In)
 {
 	PS_OUT Out = (PS_OUT)0;
 
-	//float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
-	//float3 vNormal;
-
-	//vNormal = float3(vTextureNormal.x, vTextureNormal.y, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
-	////vNormal = normalize(vNormal);
-	//float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-	//vNormal = mul(vNormal, WorldMatrix);
-	
-
 	float3	vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
-
 	vNormal = vNormal * 2.f - 1.f;
 
 	float3x3	WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-
 	vNormal = mul(vNormal, WorldMatrix);
 
-
-	float4 vDissolve = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
-
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	Out.vDiffuse.a = Out.vDiffuse.r;
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
-	
-	if (vDissolve.r < g_fDissolveAlpha)
+
+	/* Dissolve with Highlight */
+	float dissolveFactor = lerp(0, 1, g_DissolveTimer / g_DissolveLifespan); /* If dissolveFactor:
+																			 == 0:	Should not Dissolve
+																			 == 1:	Should Dissolve Everything. */
+	float4 dissolveColor = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
+	dissolveColor.a = dissolveColor.y;
+	dissolveColor.yz = dissolveColor.x;
+
+	float dissolveValue = dissolveColor.r - dissolveFactor; /* If dissolveValue:
+															> .1:		No Dissolve
+															0 ~ .1f:	Highlight
+															<= 0:		Dissolve. */
+
+	if (dissolveValue <= 0)
 		discard;
+	else if (dissolveValue < .1f)
+	{
+		float3 lerpColor = lerp(g_DissolveColor, g_DissolveHighlight, dissolveValue / .1f);
+		Out.vDiffuse.rgb = lerpColor;
+	}
 
 	return Out;
 }
@@ -260,7 +274,7 @@ PS_EFFECT_OUT PS_EFFECT(PS_IN In)
 	return Out;
 }
 
-PS_EFFECT_OUT PS_GLOW(PS_IN In)
+PS_EFFECT_OUT PS_GLOW_EFFECT(PS_IN In)
 {
 	PS_EFFECT_OUT Out = (PS_EFFECT_OUT)0;
 
@@ -335,6 +349,64 @@ PS_OUT PS_EDGE_DETECTION(PS_IN In)
 	return Out;
 }
 
+PS_GLOW_OUT PS_GLOW(PS_IN In)
+{
+	PS_GLOW_OUT Out = (PS_GLOW_OUT)0;
+
+	if (g_bUseDiffuseColor)
+		Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV);
+	else
+	{
+		Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV);
+		Out.vGlow.gba = Out.vGlow.r;
+		Out.vGlow.rgb *= g_vGlowColor;
+	}
+
+	if (Out.vGlow.a == 0)
+		discard;
+
+	return Out;
+}
+
+PS_GLOW_OUT PS_GLOW_DISSOLVE(PS_IN In)
+{
+	PS_GLOW_OUT Out = (PS_GLOW_OUT)0;
+
+	if (g_bUseDiffuseColor)
+		Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV);
+	else
+	{
+		Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV);
+		Out.vGlow.gba = Out.vGlow.r;
+		Out.vGlow.rgb *= g_vGlowColor;
+	}
+
+	if (Out.vGlow.a == 0)
+		discard;
+
+	/* Dissolve Glow with Highlight */
+	float dissolveFactor = lerp(0, 1, g_DissolveTimer / g_DissolveLifespan); /* If dissolveFactor:
+																			 == 0:	Should not Dissolve
+																			 == 1:	Should Dissolve Everything. */
+	float4 dissolveColor = g_DissolveTexture.Sample(LinearSampler, In.vTexUV);
+	dissolveColor.a = dissolveColor.y;
+	dissolveColor.yz = dissolveColor.x;
+
+	float dissolveValue = dissolveColor.r - dissolveFactor; /* If dissolveValue:
+															> .1:		No Dissolve
+															0 ~ .1f:	Highlight
+															<= 0:		Dissolve. */
+
+	if (dissolveValue <= 0)
+		discard;
+	else if (dissolveValue < .1f)
+	{
+		float3 lerpColor = lerp(g_DissolveColor, g_DissolveHighlight, dissolveValue / .1f);
+		Out.vGlow.rgb = lerpColor;
+	}
+
+	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -386,14 +458,14 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default_NoCull);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_Default, 0);
+		SetDepthStencilState(DSS_NoWrite, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_EFFECT();
 	}
 
-	pass Glow // 5
+	pass Glow_Effect // 5
 	{
 		SetRasterizerState(RS_Default_NoCull);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
@@ -401,7 +473,7 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_GLOW();
+		PixelShader = compile ps_5_0 PS_GLOW_EFFECT();
 	}
 
 	pass Distortion // 6
@@ -424,5 +496,27 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_EDGE_DETECTION();
+	}
+	
+	pass Glow // 8
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_GLOW();
+	}
+
+	pass Glow_Dissolve // 9
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_GLOW_DISSOLVE();
 	}
 }

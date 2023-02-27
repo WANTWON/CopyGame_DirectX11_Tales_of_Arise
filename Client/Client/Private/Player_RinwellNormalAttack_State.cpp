@@ -466,12 +466,15 @@ void CPlayer_RinwellNormalAttack_State::Enter()
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_AIR_0);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack1.wav"), SOUND_EFFECT, 1.0f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_AIR_1);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack2.wav"), SOUND_EFFECT, 1.0f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_AIR_2);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack3.wav"), SOUND_EFFECT, 1.0f);
 			break;
 
 		}
@@ -482,19 +485,19 @@ void CPlayer_RinwellNormalAttack_State::Enter()
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_0);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack1.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack1.wav"), SOUND_EFFECT, 1.0f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_1);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack2.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack2.wav"), SOUND_EFFECT, 1.0f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_2);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack3.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack3.wav"), SOUND_EFFECT, 1.0f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_3);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack4.wav"), SOUND_EFFECT_ALPHEN, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack4.wav"), SOUND_EFFECT, 1.0f);
 			break;
 		}
 	}

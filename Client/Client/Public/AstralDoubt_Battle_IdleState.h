@@ -22,6 +22,7 @@ private:
 	_float			m_fIdleAttackTimer = 1.5f;
 	_float			m_fToTargetDot_Begin = 0.f;
 	_float			m_fToTargetDot_Later = 0.f;
+	_float			m_fSoundStart = 0.f;
 	STATE_ID		m_ePreState_Id;
 	FIELD_STATE_ID	m_ePreTurn_Id;
 	
@@ -31,6 +32,7 @@ private:
 	_bool			m_bBeamTargetOn = false;
 	_bool			m_PreState_IsSpin = false;
 	_bool			m_PreState_FootPress = false;
+	_bool			m_bAdventSound = false;
 };
 END
 END

@@ -57,34 +57,41 @@ CAstralDoubt_State * CBattle_Hit_AndDead::LateTick(_float fTimeDelta)
 	if(m_fTimeDeltaAcc > m_fCntChanceTime)
 	m_iRand = rand() % 1;
 	
-	if (m_bIsAnimationFinished)
-	{
-		switch (m_eStateId)
+
+
+		if (m_bIsAnimationFinished)
 		{
-		case Client::CAstralDoubt_State::STATE_DEAD:
-			m_bDeadAnimFinish = true;
-			if (m_bDeadAnimFinish)
+			switch (m_eStateId)
 			{
-				m_pOwner->Set_GlowUp();
-				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+			case Client::CAstralDoubt_State::STATE_DEAD:
+				m_bDeadAnimFinish = false;
+				if (m_bDeadAnimFinish == false)
+				{
+					
+					CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
-				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
-				m_pAtkColliderCom = nullptr;
+					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
+					m_pAtkColliderCom = nullptr;
 
-				pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+					pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+
+					m_bDeadAnimFinish = true;
+					m_pOwner->Set_GlowUp();
+				}
+
+				//eturn new CBattle_Hit_AndDead(m_pOwner, STATE_DEAD, true);
+
+
+			case Client::CAstralDoubt_State::STATE_DOWN:
+				m_pOwner->Set_OnGoingDown();
+				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_DOWN);
 			}
-
-			return new CBattle_Hit_AndDead(m_pOwner, STATE_DEAD, true);
-
-
-		case Client::CAstralDoubt_State::STATE_DOWN:
-			m_pOwner->Set_OnGoingDown();
-			return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_DOWN);
-		}	
-
-		
-	}
+		}
 	
+
+
+	
+
 
 	return nullptr;
 }
@@ -104,11 +111,13 @@ void CBattle_Hit_AndDead::Enter()
 		//	m_bDeadSound = true;
 		//	break;
 		//}
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAus_Dead.wav"), SOUND_VOICE, 0.8f);
 		break;
 
 	case Client::CAstralDoubt_State::STATE_DOWN:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::DOWN_UNIQUE);
 		m_pOwner->Set_OnGoingDown();
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Hit.wav"), SOUND_VOICE, 0.5f);
 		break;
 	}
 
@@ -116,6 +125,7 @@ void CBattle_Hit_AndDead::Enter()
 
 void CBattle_Hit_AndDead::Exit()
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 
 	Safe_Release(m_pAtkColliderCom);
 

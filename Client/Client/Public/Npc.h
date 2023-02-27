@@ -33,7 +33,7 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() override;
-
+	virtual HRESULT Render_EdgeDetection() override;
 
 public: /*For.State*/
 	virtual _bool	Is_AnimationLoop(_uint eAnimId) PURE;

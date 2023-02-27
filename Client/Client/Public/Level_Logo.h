@@ -23,11 +23,20 @@ public:
 	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_SnowDecoObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_BossMapObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_RestaurantObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_CityMapObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_WorkToolMapObject(const _tchar* pLayerTag);
+
+	HRESULT Ready_Layer_Interact_SnowField(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Interact_Restaurant(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Interact_WorkTool(const _tchar* pLayerTag);
 
 
 private:
-
+	class CPlayerCreater*	m_pLoader = nullptr;
+	class CPlayerCreater*	m_pPlayerLoader = nullptr;
+	class CPlayerCreater*	m_pMonsterLoader = nullptr;
+	
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

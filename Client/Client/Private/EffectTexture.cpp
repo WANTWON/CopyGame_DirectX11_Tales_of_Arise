@@ -34,6 +34,9 @@ HRESULT CEffectTexture::Initialize(void * pArg)
 
 int CEffectTexture::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+
 	if (m_bDead)
 		return OBJ_DEAD;
 	else if (m_bPreDead)

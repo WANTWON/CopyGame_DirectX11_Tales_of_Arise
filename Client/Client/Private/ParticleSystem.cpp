@@ -2,6 +2,7 @@
 
 #include "ParticleSystem.h"
 #include "GameInstance.h"
+#include "BattleManager.h"
 
 void CParticleSystem::Set_WorldPosition(_matrix mWorldMatrix)
 {
@@ -36,6 +37,12 @@ HRESULT CParticleSystem::Initialize(void * pArg)
 
 int CParticleSystem::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOEVENT;
+
+	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
+		return OBJ_NOEVENT;
+
 	if (m_bDead)
 		return OBJ_DEAD;
 	else if (m_bPreDead)
@@ -74,6 +81,9 @@ int CParticleSystem::Tick(_float fTimeDelta)
 
 void CParticleSystem::Late_Tick(_float fTimeDelta)
 {
+	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
+		return;
+
 	if (m_pRendererCom)
 	{
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));

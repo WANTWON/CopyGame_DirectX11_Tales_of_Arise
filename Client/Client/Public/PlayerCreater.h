@@ -35,14 +35,27 @@ public:
 	HRESULT Initialize(THREAD_ID eNextLevel);
 
 	HRESULT Cloning_ForPlayer();
-	HRESULT Cloning_ForPlayer2();
 	HRESULT Cloning_ForNpc();
 	HRESULT Cloning_ForMonster();
 	HRESULT Cloning_ForNonAnim();
 
 	HRESULT Loading_MonsterAtFirst();
-	HRESULT Loading_Monster();
+	
 
+
+private: /* For NonAnim */
+	HRESULT Ready_InstancingForPooling(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Npc(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_SnowDecoObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_BossMapObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_RestaurantObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_CityMapObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_WorkToolMapObject(const _tchar* pLayerTag);
+
+	HRESULT Ready_Layer_Interact_SnowField(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Interact_Restaurant(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Interact_WorkTool(const _tchar* pLayerTag);
 
 private:
 	THREAD_ID				m_eCloneType = THREAD_END;
