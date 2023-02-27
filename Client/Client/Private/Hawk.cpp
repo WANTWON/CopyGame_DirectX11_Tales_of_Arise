@@ -329,7 +329,7 @@ void CHawk::Check_Navigation()
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 2.f);
 
-	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD)
+	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD || CHawkState::STATE_TAKE_DAMAGE)
 		m_fWalkingHeight -= 2.f;
 
 	if (CHawkState::STATE_BRAVE != m_pHawkState->Get_StateId())

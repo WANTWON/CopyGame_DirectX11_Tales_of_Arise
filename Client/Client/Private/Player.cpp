@@ -154,8 +154,16 @@ int CPlayer::Tick(_float fTimeDelta)
 			m_bIsPose = true;
 
 			/* Set State */
-			CPlayerState* pPlayerState = new Player::CPlayerPoseState(this, CPlayerState::STATE_POSE);
-			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			if (this == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+			{
+				CPlayerState* pPlayerState = new Player::CPlayerPoseState(this, CPlayerState::STATE_POSE);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			}
+			else
+			{
+				CPlayerState* pPlayerState = new Player::CIdleState(this, CIdleState::IDLE_MAIN);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			}
 
 			CAIState* pAIState = new AIPlayer::CAIPoseState(this, CAIState::STATE_POSE);
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
