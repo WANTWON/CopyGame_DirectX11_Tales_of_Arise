@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "PlayerManager.h"
 #include "Player.h"
+#include "Level.h"
 
 
 
@@ -67,6 +68,13 @@ int CUI_SystemMessageBox::Tick(_float fTimeDelta)
 	{
 		if (m_iCursor == 1)
 			m_bfadeout = true;
+		else
+		{
+		
+				CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
+				pCurrentLevel->Set_NextLevel(true, LEVEL_CITY);
+			
+		}
 
 	}
 

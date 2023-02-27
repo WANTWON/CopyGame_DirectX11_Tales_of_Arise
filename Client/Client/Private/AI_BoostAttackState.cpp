@@ -149,9 +149,25 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 										if (CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp < CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fCurrentHp)
 											CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Set_HP(CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fMaxHp);
 									}
-									
-									
+
+
 								}
+
+								m_fEventStart = pEvent.fStartTime;
+							}
+						}
+						break;
+					}
+
+					case CPlayer::LAW:
+					{
+						if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+							m_bIsStateEvent = true;
+						else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+						{
+							if ((m_fEventStart != pEvent.fStartTime))
+							{
+								
 
 								m_fEventStart = pEvent.fStartTime;
 							}
