@@ -43,12 +43,11 @@ private:
 	_bool m_bTyourengadan_5 = false;		// F
 	_bool m_bTyourengadan_Kick = false;		// F
 	_bool m_bTyourengadan_Punch = false;	// F
-	_vector m_vPunchPosition;
+	_vector m_vPunchPosition;				// F
 
 	_bool m_bBurnKnuckle = false;			// E (Air)
-	_bool m_bBurnKnuckleParticles = false;
-	_vector m_vBurnKnucklePosition;
-	
+	_bool m_bBurnKnuckleParticles = false;	// E (Air)
+	_vector m_vBurnKnucklePosition;			// E (Air)
 	_bool m_bEnhaBakusaiken = false;		// F (Air)
 
 	/* Effect Vectors */

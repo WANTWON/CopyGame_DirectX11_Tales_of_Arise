@@ -33,7 +33,7 @@ CPlayerState * CLawSkillState::HandleInput(void)
 
 CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 {
-	Update_Skill(); 
+	Update_Skill();
 
 	if ((m_eStateId == CPlayerState::STATE_SKILL_ATTACK_F) && (nullptr != m_pTarget))
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
