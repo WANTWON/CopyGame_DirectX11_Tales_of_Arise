@@ -34,7 +34,7 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	}
 	else
 	{
-		if (CFrustum::Get_Instance()->isIn_WorldFrustum(XMLoadFloat4(&m_LightDesc.vPosition), m_LightDesc.fRange*1.5f) == false)
+		if (CFrustum::Get_Instance()->isIn_WorldFrustum(XMLoadFloat4(&m_LightDesc.vPosition), m_LightDesc.fRange*2.f) == false)
 			return E_FAIL;
 
 		iPassIndex = 2;
