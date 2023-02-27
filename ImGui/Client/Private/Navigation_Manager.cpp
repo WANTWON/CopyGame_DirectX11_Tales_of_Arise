@@ -371,6 +371,7 @@ HRESULT CNavigation_Manager::Render()
 	RELEASE_INSTANCE(CGameInstance);
 
 
+#ifdef _DEBUG
 	for (auto& pCell : m_Cells)
 	{
 		if (nullptr != pCell)
@@ -398,6 +399,7 @@ HRESULT CNavigation_Manager::Render()
 		}
 
 	}
+#endif // _DEBUG
 	return S_OK;
 }
 

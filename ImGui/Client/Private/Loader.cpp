@@ -169,8 +169,8 @@ HRESULT CLoader::Loading_ForClient()
 		return E_FAIL;
 
 	//For Maptool
-	if (FAILED(Loading_ForActor()))
-		return E_FAIL;
+	//if (FAILED(Loading_ForActor()))
+	//	return E_FAIL;
 
 	//For Maptool
 	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
