@@ -156,14 +156,7 @@ void CHawk::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
-		return;
-
-	if (m_pRendererCom && m_bGlowUp)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if (ExceptionHanding() == false)
 		return;
 
 	LateTick_State(fTimeDelta);

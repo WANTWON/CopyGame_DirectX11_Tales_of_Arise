@@ -101,7 +101,7 @@ void CLevel_WorkTool::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_SPACE))
 	{
-		m_bMinigameStart = !m_bMinigameStart;
+		Set_MiniGameStart(!m_bMinigameStart);
 
 		if (m_bMinigameStart)
 		{
@@ -268,6 +268,37 @@ HRESULT CLevel_WorkTool::Ready_Layer_Camera(const _tchar * pLayerTag)
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+void CLevel_WorkTool::Set_MiniGameStart(_bool type)
+{
+	m_bMinigameStart = type;
+
+	if (m_bMinigameStart)
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+		HANDLE hFile = 0;
+		_ulong dwByte = 0;
+		NONANIMDESC  ModelDesc;
+		_uint iNum = 0;
+
+		hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/ShootingGame/GameItemPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		if (0 == hFile)
+			return;
+
+		/* 타일의 개수 받아오기 */
+		ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+		for (_uint i = 0; i < iNum; ++i)
+		{
+			ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+			m_vItemPosition[i] = ModelDesc.vPosition;
+		}
+
+		CloseHandle(hFile);
+		RELEASE_INSTANCE(CGameInstance);
+	}
+
 }
 
 

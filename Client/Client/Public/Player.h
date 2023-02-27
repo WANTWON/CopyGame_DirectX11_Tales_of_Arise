@@ -62,14 +62,20 @@ public: /* Getter &  Setter */
 	void			On_JustDodge(void) { m_bIsJustDodge = true; }
 	void			Off_JustDodge(void) { m_bIsJustDodge = false; }
 	/* OverLimit */
-	void            Set_Overlimit(_bool tof) { m_bOverLimit = tof; }
-	_bool           Get_Overlimit() {	return m_bOverLimit;}
+	void            Set_Overlimit(_bool bOverlimit) { m_bOverLimit = bOverlimit; }
+	_bool           Get_Overlimit() { return m_bOverLimit; }
+	void			Get_AuraColor();
+	void			EffectSpawn_Overlimit();
+	void			EffectUpdate_Overlimit();
+	void			EffectRemove_Overlimit();
+	void			EffectStop_Overlimit();
 
 	/* STRIKEATTACK */
-	void           Set_StrikeAttack(_bool tof) { m_bStrikeAttack = tof;}
+	void           Set_StrikeAttack(_bool tof) { m_bStrikeAttack = tof; }
+	_bool           Get_StrikeAttack() {return m_bStrikeAttack;}
 	//_bool          Get_StrikeAttack() { return m_bStrikeAttack; }
 
-
+	
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
@@ -147,8 +153,13 @@ protected: /* for 4 Player */
 	_bool           m_bManaRecover = true;
 
 	/* Over Limit */
-	_bool          m_bOverLimit = false;
-	_float         m_fOverLimitTimer = 0.f;
+	_bool			m_bOverLimit = false;
+	_float			m_fOverLimitTimer = 0.f;
+	_bool			m_bIsOverlimiEffectSpawned = false;
+	_float3			m_vAuraColor;
+	_float			m_fAuraTimer = 0.f;
+	vector<class CEffect*> m_Aura;
+
 	/* STIRKEATTACK */
 	_bool          m_bStrikeAttack = false;
 

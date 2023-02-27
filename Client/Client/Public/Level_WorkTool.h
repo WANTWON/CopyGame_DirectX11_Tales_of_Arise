@@ -22,6 +22,7 @@ public:
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
+	void Set_MiniGameStart(_bool type);
 	_bool Get_MiniGameStart() { return m_bMinigameStart; }
 
 private:
@@ -31,6 +32,8 @@ private:
 
 	_float		m_fBlurTimer = 0.f;
 	_bool		m_bMinigameStart = false;
+
+	_float3		m_vItemPosition[8];
 
 public:
 	static CLevel_WorkTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -31,6 +31,7 @@ CBerserkerState * CChaseState::Tick(_float fTimeDelta)
 
 CBerserkerState * CChaseState::LateTick(_float fTimeDelta)
 {
+	Find_Target();
 	m_pOwner->Check_Navigation();
 
 	CBaseObj* pTrigger = m_pOwner->Get_Trigger();

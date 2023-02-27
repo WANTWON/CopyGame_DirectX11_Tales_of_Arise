@@ -275,7 +275,16 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 					ColliderDesc.vPosition = _float3(0.f, 2.5f, 0.f);
 
 					m_pDodgeCollider = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+					if (m_bJustEffectOnce)
+					{
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_JustDodgeEffect"), LEVEL_STATIC, TEXT("ddd"), &m_pOwner)))
+							return OBJ_NOEVENT;
+						m_bJustEffectOnce = false;
+
+					}
+					
 				}
+
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
@@ -336,8 +345,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 			
 			m_pOwner->Set_Overcount(0);
-			//return new CPlayerOverlimit(m_pOwner);
-
+			return new CPlayerOverlimit(m_pOwner);
 		}
 
 		if (m_bIsFly)
@@ -440,9 +448,9 @@ CPlayerState * CDodgeState::EventInput(void)
 void CDodgeState::Enter(void)
 {
 
-	
-	__super::Enter();
 
+	__super::Enter();
+	m_bJustEffectOnce = true;
 	m_eStateId = STATE_ID::STATE_DODGE;
 
 	switch (m_pOwner->Get_PlayerID())

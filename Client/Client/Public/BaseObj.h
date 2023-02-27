@@ -85,7 +85,6 @@ protected:
 	_float			m_fRadius = 0.f;
 
 	OBJINFO  m_tInfo;
-	CCameraManager* m_pCameraManager = nullptr;
 public:
 	virtual void Free() override;
 };

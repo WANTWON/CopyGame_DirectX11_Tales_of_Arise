@@ -293,6 +293,7 @@
     <ClInclude Include="..\Public\RinwellSkillState.h" />
     <ClInclude Include="..\Public\RinwellState.h" />
     <ClInclude Include="..\Public\SionSkills.h" />
+    <ClInclude Include="..\Public\ThrowingObject.h" />
     <ClInclude Include="..\Public\UI_AlphaScreen.h" />
     <ClInclude Include="..\Public\UI_BattleResult.h" />
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h" />
@@ -375,6 +376,7 @@
     <ClInclude Include="..\Public\UI_Changebutton.h" />
     <ClInclude Include="..\Public\UI_Dialogue.h" />
     <ClInclude Include="..\Public\UI_Dialoguepopup.h" />
+    <ClInclude Include="..\Public\UI_JustDodgeEffect.h" />
     <ClInclude Include="..\Public\UI_LevelUp.h" />
     <ClInclude Include="..\Public\UI_LOCKON.h" />
     <ClInclude Include="..\Public\UI_font_Damage_number.h" />
@@ -417,6 +419,8 @@
     <ClInclude Include="..\Public\UI_Portrait.h" />
     <ClInclude Include="..\Public\UI_SidePopup.h" />
     <ClInclude Include="..\Public\UI_Skillmessage.h" />
+    <ClInclude Include="..\Public\UI_StrikeFinish.h" />
+    <ClInclude Include="..\Public\UI_SystemMessageBox.h" />
     <ClInclude Include="..\public\Water.h" />
     <ClInclude Include="..\Public\UI_Skillbutton.h" />
     <ClInclude Include="..\Public\Weapon.h" />
@@ -540,6 +544,7 @@
     <ClCompile Include="..\Private\RinwellSkills.cpp" />
     <ClCompile Include="..\Private\RinwellSkillState.cpp" />
     <ClCompile Include="..\Private\SionSkills.cpp" />
+    <ClCompile Include="..\Private\ThrowingObject.cpp" />
     <ClCompile Include="..\Private\UI_AlphaScreen.cpp" />
     <ClCompile Include="..\Private\UI_BattleResult.cpp" />
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp" />
@@ -617,6 +622,7 @@
     <ClCompile Include="..\Private\UI_Changebutton.cpp" />
     <ClCompile Include="..\Private\UI_Dialogue.cpp" />
     <ClCompile Include="..\Private\UI_Dialoguepopup.cpp" />
+    <ClCompile Include="..\Private\UI_JustDodgeEffect.cpp" />
     <ClCompile Include="..\Private\UI_LevelUp.cpp" />
     <ClCompile Include="..\Private\UI_LOCKON.cpp" />
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp" />
@@ -658,6 +664,8 @@
     <ClCompile Include="..\Private\UI_Portrait.cpp" />
     <ClCompile Include="..\Private\UI_SidePopup.cpp" />
     <ClCompile Include="..\Private\UI_Skillmessage.cpp" />
+    <ClCompile Include="..\Private\UI_StrikeFinish.cpp" />
+    <ClCompile Include="..\Private\UI_SystemMessageBox.cpp" />
     <ClCompile Include="..\private\Water.cpp" />
     <ClCompile Include="..\Private\UI_Skillbutton.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />

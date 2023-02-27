@@ -162,28 +162,11 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
-	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
-	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
-	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-	{
-		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
-		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON)
-			return;
-
-	}
-
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+	if (ExceptionHanding() == false)
 		return;
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(m_pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return;
-
-	if (m_pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
-		return;
 
 	LateTick_State(fTimeDelta);
 }

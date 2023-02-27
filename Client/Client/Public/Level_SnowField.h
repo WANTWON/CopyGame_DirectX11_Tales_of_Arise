@@ -31,10 +31,6 @@ private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
 
 private:
-	class CPlayerCreater*	m_pPlayerLoader = nullptr;
-	class CPlayerCreater*	m_pMonsterLoader1 = nullptr;
-	class CPlayerCreater*	m_pPlayer2Loader = nullptr;
-
 	_float m_fBlurTimer = 0.f;
 	 
 	vector<class CEffect*> m_SnowParticles1;

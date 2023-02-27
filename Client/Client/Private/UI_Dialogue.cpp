@@ -52,6 +52,7 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 	Read_TextFiles_for_Quest2Clear();
 	Read_TextFiles_for_Quest3Start();
 	Read_TextFiles_for_Quest3Clear();
+	Read_TextFiles_for_Stage1Last();
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -153,7 +154,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 				{
 				case 0:
 					CUI_Manager::Get_Instance()->Set_QuestIndex(1);
-					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, (TEXT("ssssss")))))
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_SNOWFIELD, (TEXT("ssssss")))))
 						return OBJ_NOEVENT;
 					
 					//CGame
@@ -164,7 +165,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					cleardesc.eName1 = ITEMNAME_LEMONJELLY;
 					cleardesc.eType1 = ITEMTYPE_JELLY;
 					cleardesc.iGaingald = 700;
-					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC, (TEXT("ssss")), &cleardesc)))
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_SNOWFIELD, (TEXT("ssss")), &cleardesc)))
 						return OBJ_NOEVENT;
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY,false,false);
 					CUI_Manager::Get_Instance()->Set_QuestComplete(0, true);
@@ -172,7 +173,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 				case 2:
 					CUI_Manager::Get_Instance()->Set_QuestIndex(2);
-					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, (TEXT("ssssss")))))
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_SNOWFIELD, (TEXT("ssssss")))))
 						return OBJ_NOEVENT;
 
 					break;
@@ -182,7 +183,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					cleardesc.eName1 = ITEMNAME_PYOGOMUSHROOM;
 					cleardesc.eType1 = ITEMTYPE_MATERIAL;
 					cleardesc.iGaingald = 100;
-					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC, (TEXT("ssss")), &cleardesc)))
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_SNOWFIELD, (TEXT("ssss")), &cleardesc)))
 						return OBJ_NOEVENT;
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY, false, false);
 					CUI_Manager::Get_Instance()->Set_QuestComplete(1, true);
@@ -191,22 +192,33 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 				case 4:
 
 					CUI_Manager::Get_Instance()->Set_QuestIndex(3);
-					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_STATIC, (TEXT("ssssss")))))
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_SNOWFIELD, (TEXT("ssssss")))))
 						return OBJ_NOEVENT;
 
 					break;
 
 				case 5:
+				{
 					CUI_Manager::Get_Instance()->Set_QuestIndex(3);
 					CUI_QuestClear::QUESTCLEARDESC garr;
 					ZeroMemory(&garr, sizeof(CUI_QuestClear::QUESTCLEARDESC));
 					garr.eName1 = ITEMNAME_REDSAGE;
 					garr.eType1 = ITEMTYPE_LEAVES;
 					garr.iGaingald = 500;
-					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_STATIC, (TEXT("ssss")), &garr)))
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_SNOWFIELD, (TEXT("ssss")), &garr)))
 						return OBJ_NOEVENT;
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY, false, false);
 					CUI_Manager::Get_Instance()->Set_QuestComplete(2, true);
+
+					break;
+				}
+					
+
+				case 6:
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_SystemMessagebox"), LEVEL_SNOWFIELD, (TEXT("ssss")))))
+						return OBJ_NOEVENT;
+
+					break;
 						
 
 
@@ -1156,6 +1168,115 @@ void CUI_Dialogue::Read_TextFiles_for_Quest3Clear()
 	m_vCurrentDialogue.push_back(matrix);
 }
 
+void CUI_Dialogue::Read_TextFiles_for_Stage1Last()
+{
+
+	std::ifstream file("../../../Bin/stage1last0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge6[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/stage1last1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge6[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/stage1last2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge6[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/stage1last3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge6[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file4("../../../Bin/stage1last4.txt");
+	if (file4.is_open())
+	{
+		while (file4.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge6[4].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file4.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialouge6[0]);
+	matrix.push_back(m_vDialouge6[1]);
+	matrix.push_back(m_vDialouge6[2]);
+	matrix.push_back(m_vDialouge6[3]);
+	matrix.push_back(m_vDialouge6[4]);
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
 wchar_t * CUI_Dialogue::ConverCtoWC(char * str)
 {
 
@@ -1228,9 +1349,9 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	if(m_iPortraitnum <= 3)
 	{
 
-		m_fSize.x = 512.f;
-		m_fSize.y = 512.f;
-		m_fPosition.x = 160.f;
+		m_fSize.x = 600.f;
+		m_fSize.y = 540.f;
+		m_fPosition.x = 190.f;
 		m_fPosition.y = 600.f + m_fFade;
 
 		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);

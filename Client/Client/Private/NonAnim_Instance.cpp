@@ -45,17 +45,15 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 
-	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
-	{
-			return;
-	}
+	//if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION
+	//	&& CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
+	//{
+	//	return;
+	//}
 		
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	//m_fRadius = Check_CullingRadius();
-
-	//m_pModelCom->Update(m_fRadius);
 
 	LEVEL iLevel = (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 
@@ -179,20 +177,55 @@ HRESULT CNonAnim_Instance::Render_Glow()
 
 _bool CNonAnim_Instance::IsRenderShadow()
 {
-	if (!strcmp(m_ModelDesc.pModeltag, "Dead_Grass") ||
-		!strcmp(m_ModelDesc.pModeltag, "SmallRock2") || 
-		!strcmp(m_ModelDesc.pModeltag, "Bush") ||
-		!strcmp(m_ModelDesc.pModeltag, "Snow2") ||
-		!strcmp(m_ModelDesc.pModeltag, "Birch2") ||
-		!strcmp(m_ModelDesc.pModeltag, "Bld_WallB") ||
-		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01") || 
-		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01_B02_Lod1") ||
-		!strcmp(m_ModelDesc.pModeltag, "CIty_BigWall") ||
-		!strcmp(m_ModelDesc.pModeltag, "City_Grass03") ||
-		!strcmp(m_ModelDesc.pModeltag, "CIty_Grass04") ||
-		!strcmp(m_ModelDesc.pModeltag, "City_Planter") ||
-		!strcmp(m_ModelDesc.pModeltag, "City_Ivy1"))
-		return false;
+	LEVEL eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+
+
+	switch (eLevel)
+	{
+	case Client::LEVEL_SNOWFIELD:
+		if (!strcmp(m_ModelDesc.pModeltag, "Dead_Grass_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "SmallRock2_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "Bush_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "Snow2_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "Birch2_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "Broken_Tree_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "BushWood_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "Snow1_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "Stalagmite5_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "Stalagmite4_SnowField"))
+			return false;
+		break;
+	case Client::LEVEL_BATTLE:
+		if (!strcmp(m_ModelDesc.pModeltag, "Dead_Grass_BattleZone") ||
+			!strcmp(m_ModelDesc.pModeltag, "SmallRock2_BattleZone") ||
+			!strcmp(m_ModelDesc.pModeltag, "Bush_BattleZone") ||
+			!strcmp(m_ModelDesc.pModeltag, "Snow2_BattleZone") ||
+			!strcmp(m_ModelDesc.pModeltag, "Birch2_BattleZone") ||
+			!strcmp(m_ModelDesc.pModeltag, "Broken_Tree_BattleZone"))
+			return false;
+		break;
+	case Client::LEVEL_CITY:
+		if (!strcmp(m_ModelDesc.pModeltag, "Bld_WallB") ||
+			!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01") ||
+			!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01_B02_Lod1") ||
+			!strcmp(m_ModelDesc.pModeltag, "CIty_BigWall") ||
+			!strcmp(m_ModelDesc.pModeltag, "City_Grass03") ||
+			!strcmp(m_ModelDesc.pModeltag, "CIty_Grass04") ||
+			!strcmp(m_ModelDesc.pModeltag, "City_Planter") ||
+			!strcmp(m_ModelDesc.pModeltag, "City_Ivy1"))
+			return false;
+		break;
+	case Client::LEVEL_RESTAURANT:
+		break;
+	case Client::LEVEL_WORKTOOL:
+		break;
+	case Client::LEVEL_LAWARENA:
+		break;
+	case Client::LEVEL_BOSS:
+		break;
+	}
+
+	
 
 	return true;
 }

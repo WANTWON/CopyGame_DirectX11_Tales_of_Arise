@@ -178,7 +178,7 @@ void CBerserker::Late_Tick(_float fTimeDelta)
 		return;
 	__super::Late_Tick(fTimeDelta);
 
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+	if (ExceptionHanding() == false)
 		return;
 
 	if (m_pRendererCom && m_bGlowUp)

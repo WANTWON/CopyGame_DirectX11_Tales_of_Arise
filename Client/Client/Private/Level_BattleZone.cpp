@@ -81,6 +81,8 @@ HRESULT CLevel_BattleZone::Initialize()
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
 		break;
 	default:
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
+
 		break;
 	}
 
@@ -155,110 +157,10 @@ void CLevel_BattleZone::Late_Tick(_float fTimeDelta)
 
 	}
 		
-	if (CGameInstance::Get_Instance()->Key_Down(DIK_CAPSLOCK))
-	{
-		CUI_RuneEffect::RUNEDESC desc;
-		desc.position.x = 80.f;
-		desc.position.y = 35.f;
-		desc.m_etype = 1;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-			return;
-	}
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_CAPSLOCK))
-	{
-		
 
-		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
-		if (pLockOn != nullptr)
-		{
-			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKON);
-			m_pCamera->Set_TargetPosition(pLockOn->Get_TransformState(CTransform::STATE_TRANSLATION));
-		}
+	Update_LockOnSetting();
+	Set_FogShader();
 
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
-		{
-			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
-			if (!m_bZumIn)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
-				m_bZumIn = true;
-			}
-		}
-
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
-		{
-			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
-			if (!m_bZumIn)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
-				m_bZumIn = true;
-			}
-		}
-
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
-			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
-			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
-		{
-			CUI_RuneEffect::RUNEDESC desc;
-			desc.position.x = 100.f;
-			desc.position.y = 100.f;
-			desc.m_etype = 1;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-				return;
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_Z);
-		}
-			
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_X))
-		{
-			CUI_RuneEffect::RUNEDESC desc;
-			desc.position.x = 100.f;
-			desc.position.y = 100.f;
-			desc.m_etype = 1;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
-				return;
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_X);
-		}
-	}
-	else
-	{
-		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		{
-			if (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_IsFly())
-				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Off_IsFly();
-
-			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKOFF);
-		}
-	}
-
-	/* Fog Shader */
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-	if (pPlayer)
-	{
-		pPlayer->Get_Renderer()->Set_Fog(true);
-
-		CShader* pShaderPostProcessing = pPlayer->Get_Renderer()->Get_ShaderPostProcessing();
-		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-			return;
-		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
-			return;
-
-		_float3 FogColor = _float3(0.2, 0.4, 0.9f);
-		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vFogColor", &FogColor, sizeof(_float3))))
-			return;
-
-
-		_float3 vPlayerPosition;
-		XMStoreFloat3(&vPlayerPosition, pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-
-		if (FAILED(pShaderPostProcessing->Set_RawValue("g_vPlayerPosition", &vPlayerPosition, sizeof(_float3))))
-			return;
-	}
-
-	RELEASE_INSTANCE(CGameInstance);
 }
 
 HRESULT CLevel_BattleZone::Ready_Lights()
@@ -704,6 +606,127 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+void CLevel_BattleZone::Set_FogShader()
+{
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	if(pPlayer->Get_StrikeAttack() == false)
+	{
+		/* Fog Shader */
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+		if (pPlayer)
+		{
+			pPlayer->Get_Renderer()->Set_Fog(true);
+
+			CShader* pShaderPostProcessing = pPlayer->Get_Renderer()->Get_ShaderPostProcessing();
+			if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+				return;
+			if (FAILED(pShaderPostProcessing->Set_RawValue("g_ProjMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+				return;
+
+			_float3 FogColor = _float3(0.2f, 0.4f, 0.9f);
+			if (FAILED(pShaderPostProcessing->Set_RawValue("g_vFogColor", &FogColor, sizeof(_float3))))
+				return;
+
+
+			_float3 vPlayerPosition;
+			XMStoreFloat3(&vPlayerPosition, pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+			if (FAILED(pShaderPostProcessing->Set_RawValue("g_vPlayerPosition", &vPlayerPosition, sizeof(_float3))))
+				return;
+		}
+
+		RELEASE_INSTANCE(CGameInstance);
+	}
+	else
+	{
+		if (pPlayer)
+			pPlayer->Get_Renderer()->Set_Fog(false);
+	}
+	
+
+}
+
+void CLevel_BattleZone::Update_LockOnSetting()
+{
+	if (CGameInstance::Get_Instance()->Key_Down(DIK_CAPSLOCK))
+	{
+		CUI_RuneEffect::RUNEDESC desc;
+		desc.position.x = 80.f;
+		desc.position.y = 35.f;
+		desc.m_etype = 1;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
+			return;
+	}
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_CAPSLOCK))
+	{
+
+
+		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+		if (pLockOn != nullptr)
+		{
+			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKON);
+			m_pCamera->Set_TargetPosition(pLockOn->Get_TransformState(CTransform::STATE_TRANSLATION));
+		}
+
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
+		{
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
+			if (!m_bZumIn)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
+				m_bZumIn = true;
+			}
+		}
+
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
+		{
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
+			if (!m_bZumIn)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
+				m_bZumIn = true;
+			}
+		}
+
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
+		{
+			CUI_RuneEffect::RUNEDESC desc;
+			desc.position.x = 100.f;
+			desc.position.y = 100.f;
+			desc.m_etype = 1;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
+				return;
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_Z);
+		}
+
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_X))
+		{
+			CUI_RuneEffect::RUNEDESC desc;
+			desc.position.x = 100.f;
+			desc.position.y = 100.f;
+			desc.m_etype = 1;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
+				return;
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_X);
+		}
+	}
+	else
+	{
+		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		{
+			if (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_IsFly())
+				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Off_IsFly();
+
+			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKOFF);
+		}
+	}
 }
 
 

@@ -11,6 +11,7 @@
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
 #include "PlayerIdleState.h"
+#include "UI_Skillmessage.h"
 
 using namespace AIPlayer;
 using namespace Player;
@@ -29,6 +30,28 @@ CAI_AlphenLaw_Smash::CAI_AlphenLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 {
+	m_fTimer += fTimeDelta;
+
+	if (m_pOwner->Get_PlayerID() == CPlayer::ALPHEN)
+	{
+		if (m_fTimer > 2.f)
+		{
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+			m_fTimer = -100.f;
+		}
+
+	}
+
+	if (m_pOwner->Get_PlayerID() == CPlayer::LAW)
+	{
+		if (m_fTimer > 4.f)
+		{
+			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ALPHENLAWSTRIKE);
+			m_fTimer = -100.f;
+		}
+
+	}
+	
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
@@ -153,6 +176,7 @@ void CAI_AlphenLaw_Smash::Enter()
 		break;
 	case CPlayer::LAW:
 		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_ZINRAIROUEIKYAKU;
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RAINOUI);
 		break;
 
 	}
@@ -179,6 +203,16 @@ void CAI_AlphenLaw_Smash::Enter()
 
 void CAI_AlphenLaw_Smash::Exit()
 {
+	if (m_eCurrentPlayerID == CPlayer::LAW)
+	{
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
+			return;
+
+	}
+	
+
+	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
 	CBattleManager::Get_Instance()->Set_IsStrike(false);

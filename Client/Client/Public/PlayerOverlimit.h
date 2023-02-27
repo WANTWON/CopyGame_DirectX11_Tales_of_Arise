@@ -17,10 +17,6 @@ public:
 
 	virtual void Enter(void) override;
 	virtual void Exit(void) override;
-
-private:
-	CInteractObject* m_pObject = nullptr;
-	vector<CEffect*> m_pEffects;
 };
 END
 END

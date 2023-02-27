@@ -428,7 +428,7 @@ void CCamera_MiniGame::MiniGameShooting_Camera(_float fTimeDelta)
 	vCameraPosition = vCenterPos;
 	fLength = 3.f;
 	m_vNewPos = vCameraPosition;
-	m_fCameraOffsetY = 3.f;
+	m_fCameraOffsetY = 4.5f;
 
 	//vPlayerPosition = XMVectorSetY(vPlayerPosition, XMVectorGetY(vPlayerPosition) + m_fLookOffsetY);
 	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vPlayerPosition) + m_fCameraOffsetY);
