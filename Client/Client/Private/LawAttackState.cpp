@@ -123,8 +123,6 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 					break;
 				}
 
-				pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
 				m_fEventStartTime = pEvent.fStartTime;
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -266,8 +264,6 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 							m_pRightFootCollider = nullptr;
 
-							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
 							m_fEventStartTime = -1.f;
 						}
 					}
@@ -277,8 +273,6 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftHandCollider);
 							m_pLeftHandCollider = nullptr;
-
-							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 
 							m_fEventStartTime = -1.f;
 						}
@@ -292,8 +286,6 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftFootCollider);
 							m_pLeftFootCollider = nullptr;
 
-							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
 							m_fEventStartTime = -1.f;
 						}
 					}
@@ -303,8 +295,6 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
 							m_pRightHandCollider = nullptr;
-
-							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 
 							m_fEventStartTime = -1.f;
 						}
@@ -318,8 +308,6 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
 							m_pRightHandCollider = nullptr;
 
-							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
 							m_fEventStartTime = -1.f;
 						}
 					}
@@ -329,9 +317,7 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 							m_pRightFootCollider = nullptr;
-
-							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
+							
 							m_fEventStartTime = -1.f;
 						}
 					}
@@ -344,8 +330,6 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
 							m_pRightFootCollider = nullptr;
 
-							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
 							m_fEventStartTime = -1.f;
 						}
 					}
@@ -355,8 +339,6 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftHandCollider);
 							m_pLeftHandCollider = nullptr;
-
-							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 
 							m_fEventStartTime = -1.f;
 						}
@@ -370,8 +352,6 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
 							m_pRightHandCollider = nullptr;
 
-							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
-
 							m_fEventStartTime = -1.f;
 						}
 					}
@@ -381,8 +361,6 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 						{
 							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pLeftFootCollider);
 							m_pLeftFootCollider = nullptr;
-
-							pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 
 							m_fEventStartTime = -1.f;
 						}

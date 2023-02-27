@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\AlphenAttackState.h"
 
+#include "Monster.h"
+
 #include "GameInstance.h"
 #include "BattleManager.h"
 
@@ -48,12 +50,21 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 	}
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
 	for (auto& pEvent : pEvents)
 	{
 		if (pEvent.isPlay)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+			{
+				if (nullptr == m_pSwordCollider)
+				{
+					m_pSwordCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.5f, 2.5f, 2.5f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, -3.f));
+					m_fColEventStartTime = pEvent.fStartTime;
+				}
+			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
@@ -128,8 +139,31 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 		else
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
+			{
+				if (nullptr != m_pSwordCollider && (m_fColEventStartTime == pEvent.fStartTime))
+				{
+					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSwordCollider);
+					m_pSwordCollider = nullptr;
+
+
+					m_fColEventStartTime = -1.f;
+				}
+			}
 		}
+	}
+
+	_matrix WorldBoneMatrix = XMMatrixIdentity();
+
+	if (nullptr != m_pSwordCollider)
+	{
+		WorldBoneMatrix = m_pOwner->Get_Model()->Get_BonePtr("pinky_03_R")->Get_CombinedTransformationMatrix() * 
+			XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+		WorldBoneMatrix.r[0] = XMVector4Normalize(WorldBoneMatrix.r[0]);
+		WorldBoneMatrix.r[1] = XMVector4Normalize(WorldBoneMatrix.r[1]);
+		WorldBoneMatrix.r[2] = XMVector4Normalize(WorldBoneMatrix.r[2]);
+
+		m_pSwordCollider->Update(WorldBoneMatrix);
 	}
 
 	return nullptr;
@@ -137,6 +171,23 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 
 CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 {
+	if (nullptr != m_pSwordCollider)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSwordCollider, &pCollisionTarget))
+		{
+			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+
+#ifdef _DEBUG
+		m_pOwner->Get_Renderer()->Add_Debug(m_pSwordCollider);
+#endif
+	}
+
 	for (auto& pEffect : m_SlashEffect)
 	{
 		if (pEffect)
@@ -311,5 +362,33 @@ void CAlphenAttackState::Exit()
 {
 	__super::Exit();
 
+	Safe_Release(m_pSwordCollider);
+
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+}
+
+CCollider * CAlphenAttackState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)
+{
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+	CCollider::COLLIDERDESC		ColliderDesc;
+
+	ColliderDesc.vScale = vScale;
+	ColliderDesc.vRotation = vRotation;
+	ColliderDesc.vPosition = vPosition;
+
+	switch (eType)
+	{
+	case Engine::CCollider::TYPE_AABB:
+		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
+		break;
+	case Engine::CCollider::TYPE_OBB:
+		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+		break;
+	case Engine::CCollider::TYPE_SPHERE:
+		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+		break;
+	}
+
+	return nullptr;
 }
