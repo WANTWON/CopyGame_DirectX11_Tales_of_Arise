@@ -112,12 +112,23 @@ void CLevel_WorkTool::Late_Tick(_float fTimeDelta)
 			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(13.f, 0.f, 22.f, 1.f));
 			pPlayer->Change_Level(LEVEL_WORKTOOL);
+			pPlayer->Change_ShootState();
 			if (pPlayer->Get_IsFly())
 				pPlayer->Off_IsFly();
 		}
 		else
 		{
 			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
+
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
+			pPlayer->Change_Navigation(LEVEL_WORKTOOL);
+
+			pPlayer->Compute_CurrentIndex(LEVEL_WORKTOOL);
+			pPlayer->Check_Navigation();
+			pPlayer->Change_Level(LEVEL_WORKTOOL);
+			if (pPlayer->Get_IsFly())
+				pPlayer->Off_IsFly();
 		}
 	}
 
