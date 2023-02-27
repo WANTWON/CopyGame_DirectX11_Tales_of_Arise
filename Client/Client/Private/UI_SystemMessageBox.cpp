@@ -245,10 +245,10 @@ HRESULT CUI_SystemMessageBox::Render()
 
 	m_pVIBufferCom->Render();
 
-	m_fSize.x = 320.f;
-	m_fSize.y = 40.f;
-	m_fPosition.x = 700.f;
-	m_fPosition.y = 340.f;// +m_fFadeY;
+	m_fSize.x = 300.f;
+	m_fSize.y = 36.f;
+	m_fPosition.x = 670.f;
+	m_fPosition.y = 350.f;// +m_fFadeY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -261,10 +261,10 @@ HRESULT CUI_SystemMessageBox::Render()
 
 	m_pVIBufferCom->Render();
 
-	m_fSize.x = 320.f;
-	m_fSize.y = 40.f;
-	m_fPosition.x = 700.f;
-	m_fPosition.y = 360.f;// +m_fFadeY;
+	m_fSize.x = 300.f;
+	m_fSize.y = 36.f;
+	m_fPosition.x = 670.f;
+	m_fPosition.y = 380.f;// +m_fFadeY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -281,17 +281,17 @@ HRESULT CUI_SystemMessageBox::Render()
 
 
 	
-
+	m_fPosition.x = 480.f;
 	m_fSize.x = 64.f ;
 	m_fSize.y = 64.f ;
 
 	if (m_iCursor == 0 )
 
-		m_fPosition.y = 230.f;
+		m_fPosition.y = 350.f;
 
 
 	else if(m_iCursor == 1)
-		m_fPosition.y = 260.f;
+		m_fPosition.y = 380.f;
 	
 
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
