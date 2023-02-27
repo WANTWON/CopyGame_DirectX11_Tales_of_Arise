@@ -274,44 +274,8 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 
 	SetWindowText(g_hWnd, TEXT("LEVEL_RESTAURANT"));
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_SPACE))
-	{
-		m_bMinigameStart = !m_bMinigameStart;
-
-		if (m_bMinigameStart)
-		{
-			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_MINIGAME);
-			dynamic_cast<CCamera_MiniGame*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_CamMode(CCamera_MiniGame::MINIGAME_SLASH);
-
-			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(18, 0.f, 31.f, 1.f));
-			pPlayer->Change_Navigation(LEVEL_RESTAURANT);
-			pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
-			pPlayer->Check_Navigation();
-			pPlayer->Change_Level(LEVEL_RESTAURANT);
-			if (pPlayer->Get_IsFly())
-				pPlayer->Off_IsFly();
-
-             m_iScore = 0;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_minigame1"), LEVEL_RESTAURANT, TEXT("score"))))
-				return ;
-			
-		}
-		else
-		{
-			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
-
-			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
-			pPlayer->Change_Navigation(LEVEL_RESTAURANT);
-
-			pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
-			pPlayer->Check_Navigation();
-			pPlayer->Change_Level(LEVEL_RESTAURANT);
-			if (pPlayer->Get_IsFly())
-				pPlayer->Off_IsFly();
-		}
-	}
+	
+		
 
 	if (m_fTotalTime >= m_fLimitTime)
 	{
@@ -507,6 +471,45 @@ HRESULT CLevel_Restaurant::Ready_Layer_Camera(const _tchar * pLayerTag)
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
+}
+
+void CLevel_Restaurant::Set_MiniGameStart(_bool tof)
+{
+	 m_bMinigameStart = tof;
+	if (m_bMinigameStart)
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_MINIGAME);
+		dynamic_cast<CCamera_MiniGame*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_CamMode(CCamera_MiniGame::MINIGAME_SLASH);
+
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(18, 0.f, 31.f, 1.f));
+		pPlayer->Change_Navigation(LEVEL_RESTAURANT);
+		pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
+		pPlayer->Check_Navigation();
+		pPlayer->Change_Level(LEVEL_RESTAURANT);
+		if (pPlayer->Get_IsFly())
+			pPlayer->Off_IsFly();
+
+		m_iScore = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_minigame1"), LEVEL_RESTAURANT, TEXT("score"))))
+			return;
+
+	}
+	else
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
+
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
+		pPlayer->Change_Navigation(LEVEL_RESTAURANT);
+
+		pPlayer->Compute_CurrentIndex(LEVEL_RESTAURANT);
+		pPlayer->Check_Navigation();
+		pPlayer->Change_Level(LEVEL_RESTAURANT);
+		if (pPlayer->Get_IsFly())
+			pPlayer->Off_IsFly();
+	}
+	
 }
 
 

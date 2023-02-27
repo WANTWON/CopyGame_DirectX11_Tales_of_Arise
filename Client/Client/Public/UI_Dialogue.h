@@ -43,6 +43,8 @@ public:
 	void Read_TextFiles_for_Quest3Start();
 	void Read_TextFiles_for_Quest3Clear();
 	void Read_TextFiles_for_Stage1Last();
+	void Read_TextFiles_for_Quest4Start();
+	void Read_TextFiles_for_Minigame1start();
 
 	wchar_t* ConverCtoWC(char* str);
 
@@ -85,6 +87,10 @@ private:
 	vector<_tchar*> m_vDialouge5[7]; // quest 3 clear
 
 	vector<_tchar*> m_vDialouge6[5]; // stage1 last
+
+	vector<_tchar*> m_vDialouge7[6]; // quest 4 start;
+
+	vector<_tchar*> m_vDialogue8[3]; // minigame 1 start;
 
 	
 

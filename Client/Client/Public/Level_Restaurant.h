@@ -23,6 +23,7 @@ public:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	_bool Get_MiniGameStart() { return m_bMinigameStart; }
+	void Set_MiniGameStart(_bool tof);
 
 	void Increase_Score(_int iScore) { m_iScore += iScore; }
 	_int Get_Score() { return m_iScore; }
