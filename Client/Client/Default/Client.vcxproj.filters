@@ -1206,6 +1206,9 @@
     <ClInclude Include="..\Public\Player_SionShooterState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_SionMiniAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1941,6 +1944,9 @@
       <Filter>02.GameObjects\06.InteractObject\02. MiniGame1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_SionShooterState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SionMiniAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClCompile>
   </ItemGroup>
