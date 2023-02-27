@@ -2,6 +2,7 @@
 #include "..\Public\AlphenAttackState.h"
 
 #include "Monster.h"
+#include "ThrowingObject.h"
 
 #include "GameInstance.h"
 #include "BattleManager.h"
@@ -29,10 +30,7 @@ CPlayerState * CAlphenAttackState::HandleInput()
 
 CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 {
-	if ((Client::CPlayerState::STATE_NORMAL_ATTACK3 == m_eStateId) && !m_bIsFly)
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.1f);
-	else
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.1f);
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.1f);
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -42,12 +40,9 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-
-		if (!m_bIsFly)
-			m_pOwner->Check_Navigation();
-		else
-			m_pOwner->Check_Navigation_Jump();
 	}
+
+	m_pOwner->Check_Navigation_Jump();
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -59,11 +54,18 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-				if (nullptr == m_pSwordCollider)
+				if (!strcmp(pEvent.szName, "Foot"))
 				{
-					m_pSwordCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.5f, 2.5f, 2.5f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, -3.f));
-					m_fColEventStartTime = pEvent.fStartTime;
+					if (nullptr == m_pFootCollider)
+						m_pFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.5f, 2.5f, 2.5f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 				}
+				else
+				{
+					if (nullptr == m_pSwordCollider)
+						m_pSwordCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.5f, 2.5f, 2.5f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, -3.f));
+				}
+
+				m_fColEventStartTime = pEvent.fStartTime;
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
@@ -140,11 +142,18 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-				if (nullptr != m_pSwordCollider && (m_fColEventStartTime == pEvent.fStartTime))
+				if (m_fColEventStartTime == pEvent.fStartTime)
 				{
-					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSwordCollider);
-					m_pSwordCollider = nullptr;
-
+					if (nullptr != m_pSwordCollider)
+					{
+						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSwordCollider);
+						m_pSwordCollider = nullptr;
+					}
+					else if (nullptr != m_pFootCollider)
+					{
+						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pFootCollider);
+						m_pFootCollider = nullptr;
+					}
 
 					m_fColEventStartTime = -1.f;
 				}
@@ -166,6 +175,18 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 		m_pSwordCollider->Update(WorldBoneMatrix);
 	}
 
+	if (nullptr != m_pFootCollider)
+	{
+		WorldBoneMatrix = m_pOwner->Get_Model()->Get_BonePtr("ball_R")->Get_CombinedTransformationMatrix() *
+			XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+		WorldBoneMatrix.r[0] = XMVector4Normalize(WorldBoneMatrix.r[0]);
+		WorldBoneMatrix.r[1] = XMVector4Normalize(WorldBoneMatrix.r[1]);
+		WorldBoneMatrix.r[2] = XMVector4Normalize(WorldBoneMatrix.r[2]);
+
+		m_pFootCollider->Update(WorldBoneMatrix);
+	}
+
 	return nullptr;
 }
 
@@ -183,8 +204,31 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 				pCollided->Take_Damage(rand() % 100, m_pOwner);
 		}
 
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MINIGAME1, m_pSwordCollider, &pCollisionTarget))
+		{
+			CThrowingObject* pCollied = dynamic_cast<CThrowingObject*>(pCollisionTarget);
+			if (pCollied)
+				pCollied->Set_Dead(true);
+		}
+
 #ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pSwordCollider);
+#endif
+	}
+
+	if (nullptr != m_pFootCollider)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pFootCollider, &pCollisionTarget))
+		{
+			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+#ifdef _DEBUG
+		m_pOwner->Get_Renderer()->Add_Debug(m_pFootCollider);
 #endif
 	}
 

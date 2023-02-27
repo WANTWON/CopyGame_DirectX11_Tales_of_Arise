@@ -24,6 +24,7 @@ private:
 	vector<CEffect*> m_SlashEffect;
 
 	CCollider* m_pSwordCollider = nullptr;
+	CCollider* m_pFootCollider = nullptr;
 	_float m_fColEventStartTime = 0.f;
 
 private:

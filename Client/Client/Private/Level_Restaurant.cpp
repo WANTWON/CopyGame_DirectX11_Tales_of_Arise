@@ -289,6 +289,8 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 			pPlayer->Change_Level(LEVEL_RESTAURANT);
 			if (pPlayer->Get_IsFly())
 				pPlayer->Off_IsFly();
+
+			m_iScore = 0;
 		}
 		else
 		{
