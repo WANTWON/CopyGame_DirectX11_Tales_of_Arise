@@ -95,6 +95,8 @@ public:
 
 	HRESULT Render_bottmline_Battleorder();
 
+	_int m_iMenubackSection = 0;
+
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
