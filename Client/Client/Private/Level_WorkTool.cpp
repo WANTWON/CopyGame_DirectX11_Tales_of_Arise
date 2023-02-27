@@ -40,6 +40,7 @@ HRESULT CLevel_WorkTool::Initialize()
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Deco"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Interact"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Portal"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Npc"));
 
 		
 
@@ -80,6 +81,7 @@ void CLevel_WorkTool::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Deco"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Portal"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Interact"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Npc"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 

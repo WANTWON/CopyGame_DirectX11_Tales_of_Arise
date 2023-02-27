@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\Npc.h"
 #include "GameInstance.h"
-
-
+#include "PlayerManager.h"
+#include "Player.h"
 
 CNpc::CNpc(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -36,9 +36,11 @@ HRESULT CNpc::Initialize(void * pArg)
 
 	if (pArg != nullptr)
 	{
+		m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&m_NpcDesc.Modeldesc.WorldMatrix));
 		_vector vPosition = XMLoadFloat3(&m_NpcDesc.Modeldesc.vPosition);
 		vPosition = XMVectorSetW(vPosition, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		m_pTransformCom->Set_Rotation(m_NpcDesc.Modeldesc.vRotation);
 		Set_Scale(m_NpcDesc.Modeldesc.vScale);
 
 		if (m_NpcDesc.Modeldesc.m_fAngle != 0)
@@ -61,6 +63,11 @@ int CNpc::Tick(_float fTimeDelta)
 void CNpc::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || Check_IsinFrustum(2.f) == false)
+		return;
+
+	_vector vPosition = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_float fDistance = XMVectorGetX(XMVector3Length(vPosition - Get_TransformState(CTransform::STATE_TRANSLATION)));
+	if (fDistance > 50.f)
 		return;
 	__super::Late_Tick(fTimeDelta);
 
