@@ -208,7 +208,7 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MINIGAME1, m_pSwordCollider, &pCollisionTarget))
 		{
-			
+
 			CThrowingObject* pCollied = dynamic_cast<CThrowingObject*>(pCollisionTarget);
 			if (pCollied)
 			{
@@ -243,20 +243,20 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 				pCollied->Set_Dead(true);
 
 
-			_bool bSound = false;
-			if (!bSound)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut.wav"), SOUND_EFFECT, 1.0f);
-				//bSound = true;
+				_bool bSound = false;
+				if (!bSound)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut.wav"), SOUND_EFFECT, 1.0f);
+					//bSound = true;
 
+				}
 			}
-		}
 
 #ifdef _DEBUG
-		m_pOwner->Get_Renderer()->Add_Debug(m_pSwordCollider);
+			m_pOwner->Get_Renderer()->Add_Debug(m_pSwordCollider);
 #endif
+		}
 	}
-
 	if (nullptr != m_pFootCollider)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -389,8 +389,8 @@ void CAlphenAttackState::Enter()
 
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 	_uint iCurLevelIndex = pGameInstance->Get_CurrentLevelIndex();
-	
-	
+
+
 
 
 	if (m_bIsFly)
