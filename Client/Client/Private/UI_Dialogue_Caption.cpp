@@ -160,10 +160,10 @@ HRESULT CUI_Dialogue_Caption::Render()
 
 
 
-	m_fSize.x = 900.f;
-	m_fSize.y = 150.f;
-	m_fPosition.x = 650.f;
-	m_fPosition.y = 620.f + m_fFade;;
+	m_fSize.x = 1280;
+	m_fSize.y = 720.f;
+	m_fPosition.x = 640.f;
+	m_fPosition.y = 360.f;// +m_fFade;;
 
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
@@ -172,6 +172,10 @@ HRESULT CUI_Dialogue_Caption::Render()
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
+	
+	m_pShaderCom->Begin();
+
+	m_pVIBufferCom->Render();
 	
 
 	Render_Fonts(m_iDialogueindex);
@@ -208,7 +212,7 @@ HRESULT CUI_Dialogue_Caption::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_charactername"), (CComponent**)&m_pTextureCom2)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Captionback"), (CComponent**)&m_pTextureCom2)))
 		return E_FAIL;
 
 
@@ -228,7 +232,7 @@ HRESULT CUI_Dialogue_Caption::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(0))))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GradationTexture", m_pTextureCom1->Get_SRV(0))))

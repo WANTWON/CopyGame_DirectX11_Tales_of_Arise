@@ -523,8 +523,9 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Dialogue_Caption"), LEVEL_STATIC, pLayerTag)))
 		return E_FAIL;
 
-
-
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SystemMessagebox"), LEVEL_STATIC, pLayerTag)))
+		return E_FAIL;
+	
 
 	RELEASE_INSTANCE(CGameInstance);
 

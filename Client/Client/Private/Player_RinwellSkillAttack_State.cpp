@@ -220,7 +220,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 						BulletDesc.vTargetDir = { -0.3f, -1.f, -0.1f, 0.f };
 
 
-						for (int i = 0; i < 14; ++i)
+						for (int i = 0; i < 30; ++i)
 						{
 							BulletDesc.fVelocity = 4.f + ((_float)(rand() % 20 + 1))*0.1f;
 							_vector pos = { (_float)(rand() % 40 + 40) , 12.f + i*2.5f , (_float)(rand() % 40 + 40), 1.f };

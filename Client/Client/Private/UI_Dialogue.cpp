@@ -1228,9 +1228,9 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	if(m_iPortraitnum <= 3)
 	{
 
-		m_fSize.x = 512.f;
-		m_fSize.y = 512.f;
-		m_fPosition.x = 160.f;
+		m_fSize.x = 600.f;
+		m_fSize.y = 540.f;
+		m_fPosition.x = 190.f;
 		m_fPosition.y = 600.f + m_fFade;
 
 		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);

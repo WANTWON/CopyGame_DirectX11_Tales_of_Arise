@@ -133,6 +133,7 @@ public:
 		BTL_ATTACK_RONDSENPU,
 		BTL_ATTACK_GARYOUKUUHA,
 		BTL_ATTACK_EISYOUTAI,
+			ANIM_SIONLAW_STRIKE
 	};
 private:
 	CLaw(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

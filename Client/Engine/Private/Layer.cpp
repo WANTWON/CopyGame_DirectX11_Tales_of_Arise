@@ -7,6 +7,9 @@ CLayer::CLayer()
 
 CComponent * CLayer::Get_Component(const _tchar * pComponentTag, _uint iIndex)
 {
+	if (iIndex >= m_GameObjects.size())
+		return nullptr;
+	
 	auto	iter = m_GameObjects.begin();
 
 	for (_uint i = 0; i < iIndex; ++i)

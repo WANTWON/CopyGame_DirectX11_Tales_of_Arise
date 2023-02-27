@@ -162,7 +162,7 @@ void CSion::Change_Level(LEVEL eLevel)
 
 		if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel || LEVEL_RESTAURANT == eLevel || LEVEL_WORKTOOL == eLevel)
 		{
-			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
+			/*pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 			if (nullptr == pSocket)
 			{
 				ERR_MSG(TEXT("Failed to Get BonePtr"));
@@ -170,7 +170,7 @@ void CSion::Change_Level(LEVEL eLevel)
 			}
 
 			XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixRotationX(XMConvertToRadians(180.f)));
-			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 50.f));
+			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 50.f));*/
 
 		}
 		else if (LEVEL_BATTLE == eLevel || LEVEL_BOSS == eLevel)

@@ -81,6 +81,9 @@
 #include "UI_Dialogue_Caption.h"
 #include "UI_AlphaScreen.h"
 #include "UI_PartyjoinMsg.h"
+#include "UI_JustDodgeEffect.h"
+#include "UI_StrikeFinish.h"
+#include "UI_SystemMessageBox.h"
 
 //Monster
 #include "Ice_Wolf.h"
@@ -92,6 +95,7 @@
 //InteractObject
 #include "TreasureBox.h"
 #include "Item.h"
+#include "ThrowingObject.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -452,6 +456,21 @@ HRESULT CLoader::Loading_ForPrototype()
 		CUI_PartyjoinMsg::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_JustDodgeEffect"),
+		CUI_JustDodgeEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_StrikeFinish"),
+		CUI_StrikeFinish::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SystemMessagebox"),
+		CUI_SystemMessageBox::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+
+
 
 
 	/*For.Prototype_GameObject_Sky */                                
@@ -558,6 +577,11 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_GameObject_TreasureBox*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Item"),
 		CItem::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_GameObject_ThrowingObject*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ThrowingObject"),
+		CThrowingObject::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -1282,7 +1306,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENU_BACK"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/menuback/menuback%d.dds"), 3))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/menuback/menuback%d.dds"), 14))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENU_ICON"),
@@ -1375,7 +1399,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 	
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Skillname"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillmsg/skillname%d.dds"), 24))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillmsg/skillname%d.dds"), 31))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_QUESTMENU"),
@@ -1428,13 +1452,24 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_dialogueportrait"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/dialogue/dialogueport%d.dds"), 4))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/dialogue/TalkUI_%d.dds"), 4))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_battleorder"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/battleorder/battleorder%d.dds"), 8))))
 		return E_FAIL;
-	
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_JustDodge"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/justdodge/justdodge.dds"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Captionback"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/dialogue/Captionback.dds"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_systemmessage"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/sysmsg/sysmsg%d.dds"), 3))))
+		return E_FAIL;
 	
 	
 	return S_OK;

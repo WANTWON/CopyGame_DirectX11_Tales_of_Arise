@@ -1595,7 +1595,7 @@ PS_OUT PS_Hithpfont(PS_IN In)
 	discard;*/
 	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
-	if (origincolor.r != 0.f)
+	if (origincolor.g != 0.f)
 	{
 		if (origincolor.a > 0.4f)
 		{
@@ -1608,6 +1608,8 @@ PS_OUT PS_Hithpfont(PS_IN In)
 		else
 			discard;
 	}
+	else
+		Out.vColor = origincolor;
 
 	
 	//	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
@@ -1616,6 +1618,24 @@ PS_OUT PS_Hithpfont(PS_IN In)
 
 	/*if (Out.vColor.a<0.3f)
 	discard;*/
+
+	Out.vColor.a *= g_fAlpha;
+
+	return Out;
+}
+
+PS_OUT PS_JUSTDODGE(PS_IN In)
+{
+	
+
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	
+
+	Out.vColor.a = Out.vColor.rgb;
+
+	Out.vColor.rg -= 0.3f;
 
 	Out.vColor.a *= g_fAlpha;
 
@@ -2221,7 +2241,16 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_Hithpfont();
 	}
 
+	pass UI_JUSTDODGE // 54
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
 
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_JUSTDODGE();
+	}
 	
 	
 }
