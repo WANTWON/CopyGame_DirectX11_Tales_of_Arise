@@ -71,6 +71,7 @@ CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 			if (m_bDeadAnimFinish)
 			{
 				m_pOwner->Set_GlowUp();
+				m_pOwner->Set_Dissolve();
 				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
