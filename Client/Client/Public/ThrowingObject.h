@@ -38,6 +38,9 @@ protected:
 	virtual HRESULT SetUp_ShaderID() override;
 
 private:
+	CNavigation*			m_pNavigationCom = nullptr;
+
+private:
 	_vector m_vStartPos;
 	_vector m_vTargetPos;
 	_float	m_fTime = 0.f;

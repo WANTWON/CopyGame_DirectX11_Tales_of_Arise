@@ -30,7 +30,7 @@ HRESULT CLevel_Logo::Initialize()
 
 	cout << " Player Clone start" << endl;
 	m_pPlayerLoader =  CPlayerCreater::Create(m_pDevice, m_pContext, CLONE_PLAYER);
-	if (nullptr == m_pLoader)
+	if (nullptr == m_pPlayerLoader)
 		return E_FAIL;
 
 	cout << " Monster Group1 Clone start" << endl;
@@ -38,18 +38,29 @@ HRESULT CLevel_Logo::Initialize()
 	if (nullptr == m_pMonsterLoader)
 		return E_FAIL;
 
+	DWORD fTimeDelta = GetTickCount();
 
 	while (m_pMonsterLoader->Get_Finished() == false ||
 		m_pPlayerLoader->Get_Finished() == false)
 	{
-		int a = 0;
+		if (fTimeDelta + 1000 < GetTickCount())
+		{
+
+			if (m_pPlayerLoader->Get_Finished() == false)
+				cout << "Player cloning" << endl;
+			if (m_pPlayerLoader->Get_Finished() == false)
+				cout << "Player cloning" << endl;
+
+			fTimeDelta = GetTickCount();
+		}
+
 	}
 
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("LogoSong.wav"), g_fSoundVolume);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LOGO.wav"), g_fSoundVolume);
 	
 	return S_OK;
 }

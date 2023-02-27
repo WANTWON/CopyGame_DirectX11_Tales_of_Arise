@@ -237,6 +237,7 @@
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\Public\Camera_Action.h" />
     <ClInclude Include="..\Public\Camera_MiniGame.h" />
+    <ClInclude Include="..\Public\CityNpc.h" />
     <ClInclude Include="..\Public\CloseChaseState.h" />
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
@@ -250,6 +251,7 @@
     <ClInclude Include="..\Public\Level_City.h" />
     <ClInclude Include="..\Public\Level_Restaurant.h" />
     <ClInclude Include="..\Public\Level_WorkTool.h" />
+    <ClInclude Include="..\Public\MiniGameNpc.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\PlayerOverlimit.h" />
@@ -257,6 +259,7 @@
     <ClInclude Include="..\Public\Player_RinwellNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_RinwellSkillAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
+    <ClInclude Include="..\Public\Player_SionShooterState.h" />
     <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
     <ClInclude Include="..\Public\Portal.h" />
     <ClInclude Include="..\public\ScreenDistortion.h" />
@@ -491,6 +494,7 @@
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\Private\Camera_Action.cpp" />
     <ClCompile Include="..\Private\Camera_MIniGame.cpp" />
+    <ClCompile Include="..\Private\CityNpc.cpp" />
     <ClCompile Include="..\Private\CloseChaseState.cpp" />
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
@@ -504,6 +508,7 @@
     <ClCompile Include="..\Private\Level_City.cpp" />
     <ClCompile Include="..\Private\Level_Restaurant.cpp" />
     <ClCompile Include="..\Private\Level_WorkTool.cpp" />
+    <ClCompile Include="..\Private\MiniGameNpc.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\PlayerOverlimit.cpp" />
@@ -511,6 +516,7 @@
     <ClCompile Include="..\Private\Player_RinwellNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_RinwellSkillAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
+    <ClCompile Include="..\Private\Player_SionShooterState.cpp" />
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />
     <ClCompile Include="..\Private\Portal.cpp" />
     <ClCompile Include="..\private\ScreenDistortion.cpp" />

@@ -41,6 +41,7 @@ HRESULT CLevel_Restaurant::Initialize()
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Deco"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Interact"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Portal"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Npc"));
 
 
 
@@ -52,7 +53,7 @@ HRESULT CLevel_Restaurant::Initialize()
 
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_Restaurant.wav"), g_fSoundVolume);
 
 	return S_OK;
 }
@@ -80,6 +81,7 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Deco"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Portal"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Interact"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, TEXT("Layer_Npc"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -289,6 +291,8 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 			pPlayer->Change_Level(LEVEL_RESTAURANT);
 			if (pPlayer->Get_IsFly())
 				pPlayer->Off_IsFly();
+
+			m_iScore = 0;
 		}
 		else
 		{

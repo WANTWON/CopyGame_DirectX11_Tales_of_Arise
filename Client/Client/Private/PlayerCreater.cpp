@@ -5,6 +5,7 @@
 #include "Camera_Dynamic.h"
 #include "Player.h"
 #include "SnowFieldNpc.h"
+#include "CItyNpc.h"
 #include "BattleManager.h"
 #include "TreasureBox.h"
 #include "Item.h"
@@ -12,6 +13,7 @@
 #include "Object_Pool_Manager.h"
 #include "Npc.h"
 #include "Portal.h"
+#include "MiniGameNpc.h"
 
 
 CPlayerCreater::CPlayerCreater(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -107,73 +109,15 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 
 HRESULT CPlayerCreater::Cloning_ForNpc()
 {
-	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
-
-	HANDLE hFile = 0;
-	_ulong dwByte = 0;
-	CNpc::NPCDESC NpcDesc;
-
-	_uint iNum = 0;
-
-	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
+	if (FAILED(Ready_Layer_NpcSnowField(TEXT("Layer_Npc"))))
 		return E_FAIL;
 
-	/* 타일의 개수 받아오기 */
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	if (FAILED(Ready_Layer_NpcCity(TEXT("Layer_Npc"))))
+		return E_FAIL;
 
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(NpcDesc.Modeldesc), sizeof(NONANIMDESC), &dwByte, nullptr);
-		_tchar pModeltag[MAX_PATH];
-		MultiByteToWideChar(CP_ACP, 0, NpcDesc.Modeldesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+	if (FAILED(Ready_Layer_NpcMIniGame(TEXT("Layer_Npc"))))
+		return E_FAIL;
 
-		if (!wcscmp(pModeltag, TEXT("NpcFemaleYoung")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::FEMALE_YOUNG;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, TEXT("Layer_Npc"), &NpcDesc)))
-				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
-		}
-		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_GLD;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, TEXT("Layer_Npc"), &NpcDesc)))
-				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
-		}
-		else if (!wcscmp(pModeltag, TEXT("NPC_NMO_DOK")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_OLD;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, TEXT("Layer_Npc"), &NpcDesc)))
-				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
-		}
-		else if (!wcscmp(pModeltag, TEXT("NPC_NMY_PLC")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_PLC;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, TEXT("Layer_Npc"), &NpcDesc)))
-				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
-		}
-		else if (!wcscmp(pModeltag, TEXT("Rinwell")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::RINWELL_NPC;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, TEXT("LayerNpcRinwell"), &NpcDesc)))
-				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("LayerNpcRinwell"));
-
-		}
-
-	}
-
-	CloseHandle(hFile);
-
-	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
@@ -675,78 +619,6 @@ HRESULT CPlayerCreater::Ready_InstancingForPooling(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CPlayerCreater::Ready_Layer_Npc(const _tchar * pLayerTag)
-{
-	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
-
-	HANDLE hFile = 0;
-	_ulong dwByte = 0;
-	CNpc::NPCDESC NpcDesc;
-
-	_uint iNum = 0;
-
-	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	/* 타일의 개수 받아오기 */
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
-
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(NpcDesc.Modeldesc), sizeof(NONANIMDESC), &dwByte, nullptr);
-		_tchar pModeltag[MAX_PATH];
-		MultiByteToWideChar(CP_ACP, 0, NpcDesc.Modeldesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
-
-		if (!wcscmp(pModeltag, TEXT("NpcFemaleYoung")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::FEMALE_YOUNG;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
-				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
-		}
-		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_GLD;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
-				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
-		}
-		else if (!wcscmp(pModeltag, TEXT("NPC_NMO_DOK")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_OLD;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
-				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
-		}
-		else if (!wcscmp(pModeltag, TEXT("NPC_NMY_PLC")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_PLC;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
-				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
-
-		}
-		else if (!wcscmp(pModeltag, TEXT("Rinwell")))
-		{
-			NpcDesc.eNpcType = CSnowFieldNpc::RINWELL_NPC;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, TEXT("LayerNpcRinwell"), &NpcDesc)))
-				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("LayerNpcRinwell"));
-
-		}
-
-	}
-
-	CloseHandle(hFile);
-
-	RELEASE_INSTANCE(CGameInstance);
-
-	return S_OK;
-}
 
 HRESULT CPlayerCreater::Ready_Layer_DecoObject(const _tchar * pLayerTag)
 {
@@ -1615,6 +1487,275 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_WorkTool(const _tchar * pLayerTag)
 
 	}
 	CloseHandle(hFile);
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CPlayerCreater::Ready_Layer_NpcSnowField(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	CNpc::NPCDESC NpcDesc;
+
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(NpcDesc.Modeldesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, NpcDesc.Modeldesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+
+		if (!wcscmp(pModeltag, TEXT("NpcFemaleYoung")))
+		{
+			NpcDesc.eNpcType = CSnowFieldNpc::FEMALE_YOUNG;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
+		{
+			NpcDesc.eNpcType = CSnowFieldNpc::MAN_GLD;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMO_DOK")))
+		{
+			NpcDesc.eNpcType = CSnowFieldNpc::MAN_OLD;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMY_PLC")))
+		{
+			NpcDesc.eNpcType = CSnowFieldNpc::MAN_PLC;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("Rinwell")))
+		{
+			NpcDesc.eNpcType = CSnowFieldNpc::RINWELL_NPC;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, TEXT("LayerNpcRinwell"), &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("LayerNpcRinwell"));
+
+		}
+
+	}
+
+	CloseHandle(hFile);
+
+	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CPlayerCreater::Ready_Layer_NpcCity(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	CNpc::NPCDESC NpcDesc;
+
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(NpcDesc.Modeldesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, NpcDesc.Modeldesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+
+		if (!wcscmp(pModeltag, TEXT("NPC_NFC_SLV_000")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NFC_SLV_000;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
+		{
+			NpcDesc.eNpcType = CCityNpc::MAN_GLD;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NFC_SLV_000_2th")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NFC_SLV_000_2th;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMY_PLC")))
+		{
+			NpcDesc.eNpcType = CCityNpc::MAN_PLC;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NFM_SLV_000")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NFM_SLV_000;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag);
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NFY_FIA_000")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NFY_FIA_000;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag);
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_BEF_000")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NMM_BEF_000;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag);
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_BLS_000")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NMM_BLS_000;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag);
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_DIM_000")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NMM_DIM_000;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag , &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag );
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_MHB_000")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NMM_MHB_000;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag , &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag);
+
+		}
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_SLV_000")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NMM_SLV_000;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag);
+
+		}
+
+	}
+
+	CloseHandle(hFile);
+
+	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CPlayerCreater::Ready_Layer_NpcMIniGame(const _tchar * pLayerTag)
+{
+	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	CNpc::NPCDESC NpcDesc;
+
+	_uint iNum = 0;
+	
+	hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/ShootingGame/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(NpcDesc.Modeldesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, NpcDesc.Modeldesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+
+		if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
+		{
+			NpcDesc.eNpcType = CMiniGameNpc::NPC_NMM_BLS_000;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniGameNpc"), LEVEL_WORKTOOL, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, pLayerTag);
+
+		}
+		if (!wcscmp(pModeltag, TEXT("NPC_NMM_BEF_000")))
+		{
+			NpcDesc.eNpcType = CMiniGameNpc::NPC_NMM_BEF_000;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniGameNpc"), LEVEL_WORKTOOL, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, pLayerTag);
+
+		}
+	}
+
+	CloseHandle(hFile);
+
+	 hFile = 0;
+	 dwByte = 0;
+	 iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/MiniGameRoom_Data/FoodSliceGame/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(NpcDesc.Modeldesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, NpcDesc.Modeldesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+
+		if (!wcscmp(pModeltag, TEXT("NPC_NMM_BLS_000")))
+		{
+			NpcDesc.eNpcType = CMiniGameNpc::MAN_GLD;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniGameNpc"), LEVEL_RESTAURANT, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, pLayerTag);
+
+		}
+	}
+
+	CloseHandle(hFile);
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;

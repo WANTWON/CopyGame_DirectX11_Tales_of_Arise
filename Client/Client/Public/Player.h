@@ -71,10 +71,11 @@ public: /* Getter &  Setter */
 	void			EffectStop_Overlimit();
 
 	/* STRIKEATTACK */
-	void           Set_StrikeAttack(_bool tof) { m_bStrikeAttack = tof;}
+	void           Set_StrikeAttack(_bool tof) { m_bStrikeAttack = tof; }
+	_bool           Get_StrikeAttack() {return m_bStrikeAttack;}
 	//_bool          Get_StrikeAttack() { return m_bStrikeAttack; }
 
-
+	
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
@@ -126,12 +127,14 @@ public: /*For.Navigation*/
 public:	/* For.Weapon */
 	virtual void Change_Level(LEVEL eLevel);
 
+public: /* For. MiniGame2 */
+	void Change_ShootState(void);
+
 protected: /* For Component */
 	CModel*					m_pModelCom = nullptr;
 	CNavigation*			m_pNavigationCom = nullptr;
 	vector<CNavigation*>	m_vecNavigations;
 	_bool	m_bIsFirst = true;
-	
 
 protected: /* for 4 Player */
 	PLAYERID			m_ePlayerID = ALPHEN;
@@ -174,7 +177,8 @@ protected: /* for 4 Player */
 
 private:
 	_bool m_bLevelup = false;
-	
+	_bool m_bIsSionWeapon = true;
+
 protected:
 	vector<class CGameObject*> m_Parts;
 	

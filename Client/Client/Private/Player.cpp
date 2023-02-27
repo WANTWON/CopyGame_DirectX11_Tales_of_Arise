@@ -11,6 +11,7 @@
 #include "PlayerDeadState.h"
 #include "PlayerHitState.h"
 #include "PlayerPoseState.h"
+#include "Player_SionShooterState.h"
 
 #include "AI_HitState.h"
 #include "AIDeadState.h"
@@ -29,6 +30,8 @@
 #include "Damagefont_Critical.h"
 
 #include "Level_Restaurant.h"
+#include "Level_WorkTool.h"
+
 #include "PlayerOverlimit.h"
 #include "ParticleSystem.h"
 
@@ -154,8 +157,16 @@ int CPlayer::Tick(_float fTimeDelta)
 			m_bIsPose = true;
 
 			/* Set State */
-			CPlayerState* pPlayerState = new Player::CPlayerPoseState(this, CPlayerState::STATE_POSE);
-			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			if (this == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+			{
+				CPlayerState* pPlayerState = new Player::CPlayerPoseState(this, CPlayerState::STATE_POSE);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			}
+			else
+			{
+				CPlayerState* pPlayerState = new Player::CIdleState(this, CIdleState::IDLE_MAIN);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			}
 
 			CAIState* pAIState = new AIPlayer::CAIPoseState(this, CAIState::STATE_POSE);
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
@@ -218,10 +229,39 @@ int CPlayer::Tick(_float fTimeDelta)
 	if (nullptr != m_pSPHERECom)
 		m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
-	for (auto& pParts : m_Parts)
+	if (CPlayer::SION == m_ePlayerID)
 	{
-		if(pParts != nullptr)
-			pParts->Tick(fTimeDelta);
+		LEVEL eLevel = LEVEL(CGameInstance::Get_Instance()->Get_CurrentLevelIndex());
+		if (LEVEL_BATTLE == eLevel || LEVEL_BOSS == eLevel)
+		{
+			m_bIsSionWeapon = true;
+
+			for (auto& pParts : m_Parts)
+			{
+				if (pParts != nullptr)
+					pParts->Tick(fTimeDelta);
+			}
+		}
+		else if (LEVEL_WORKTOOL == eLevel && dynamic_cast<CLevel_WorkTool*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Get_MiniGameStart())
+		{
+			m_bIsSionWeapon = true;
+
+			for (auto& pParts : m_Parts)
+			{
+				if (pParts != nullptr)
+					pParts->Tick(fTimeDelta);
+			}
+		}
+		else
+			m_bIsSionWeapon = false;
+	}
+	else
+	{
+		for (auto& pParts : m_Parts)
+		{
+			if (pParts != nullptr)
+				pParts->Tick(fTimeDelta);
+		}
 	}
 
 	Reset_DodgeEffect(fTimeDelta);
@@ -242,16 +282,21 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return;
+
 	if (nullptr != m_pRendererCom && eMode != UNVISIBLE)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
+		if (m_bIsSionWeapon)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, m_Parts[PARTS_WEAPON]);
 
 		if(CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_ACTION)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, m_Parts[PARTS_WEAPON]);
+		if (m_bIsSionWeapon)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, m_Parts[PARTS_WEAPON]);
 
 #ifdef _DEBUG
 		m_pRendererCom->Add_Debug(m_pNavigationCom);
@@ -260,9 +305,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 
 	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
-		return;
-
-	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
 		return;
 
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
@@ -284,12 +326,41 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		return;
 	}
 
-	for (auto& pParts : m_Parts)
+	if (CPlayer::SION == m_ePlayerID)
 	{
-		if (pParts != nullptr)
-			pParts->Late_Tick(fTimeDelta);
-	}
+		LEVEL eLevel = LEVEL(CGameInstance::Get_Instance()->Get_CurrentLevelIndex());
+		if (LEVEL_BATTLE == eLevel || LEVEL_BOSS == eLevel)
+		{
+			for (auto& pParts : m_Parts)
+			{
+				m_bIsSionWeapon = true;
 
+				if (pParts != nullptr)
+					pParts->Late_Tick(fTimeDelta);
+			}
+		}
+		else if (LEVEL_WORKTOOL == eLevel && dynamic_cast<CLevel_WorkTool*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Get_MiniGameStart())
+		{
+			for (auto& pParts : m_Parts)
+			{
+				m_bIsSionWeapon = true;
+
+				if (pParts != nullptr)
+					pParts->Late_Tick(fTimeDelta);
+			}
+		}
+		else
+			m_bIsSionWeapon = false;
+	}
+	else
+	{
+		for (auto& pParts : m_Parts)
+		{
+			if (pParts != nullptr)
+				pParts->Late_Tick(fTimeDelta);
+		}
+	}
+	
 	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
 	if (pBattleMgr->Get_IsBattleMode())
@@ -673,9 +744,6 @@ void CPlayer::Revive()
 			CAIState* pAIState =  new CAiState_WakeUp(this);
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 		}
-		
-			
-	
 }
 
 void CPlayer::AI_check()
@@ -738,7 +806,6 @@ void CPlayer::Tick_AIState(_float fTimeDelta)
 		}
 			
 	}
-
 
 	CAIState* pNewState = m_pAIState->Tick(fTimeDelta);
 	if (pNewState)
@@ -980,6 +1047,13 @@ void CPlayer::Change_Level(LEVEL eLevel)
 	m_eLevel = eLevel;
 
 	CPlayerState* pNewState = new Player::CIdleState(this, CIdleState::IDLE_SIDE);
+	if (pNewState)
+		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
+}
+
+void CPlayer::Change_ShootState(void)
+{
+	CPlayerState* pNewState = new Player::CPlayer_SionShooterState(this);
 	if (pNewState)
 		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
 }
