@@ -1482,14 +1482,12 @@ HRESULT CLoader::Loading_ForEffect()
 	if (!pGameInstance)
 		return E_FAIL;
 
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Plane"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Plane/Plane.dat"))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("FloorCircle"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Plane/FloorCircle.dat"))))
-		return E_FAIL;
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("FreezeLance"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Ice/FreezeLance.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CrossPlane"),
@@ -1623,6 +1621,11 @@ HRESULT CLoader::Loading_ForEffect()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("waterhorn2"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Water/waterhorn2.dat"))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("FountainWater"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Water/FountainWater.dat"))))
+		return E_FAIL;
+
+
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Akizame"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Akizame/Akizame.dat"))))
@@ -1646,6 +1649,9 @@ HRESULT CLoader::Loading_ForEffect()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Spiral_hn04"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Spiral/Spiral_hn04.dat"))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Spiral_rm_07"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Spiral/Spiral_rm_07.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Spiral_is01"),
@@ -1797,6 +1803,9 @@ HRESULT CLoader::Loading_ForEffect()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CrystalPts_rt_05"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Crystal/CrystalPts_rt_05.dat"))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("FreezeLance"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Ice/FreezeLance.dat"))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);

@@ -28,6 +28,10 @@ public:
 	HRESULT Ready_Layer_Battle_UI(const _tchar* pLayerTag);
 
 private:
+	void Set_FogShader();
+	void Update_LockOnSetting();
+
+private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
 	CCamera_Dynamic*	m_pCamera = nullptr;
 	_float	   m_fMinLength = MAXDISTANCE;

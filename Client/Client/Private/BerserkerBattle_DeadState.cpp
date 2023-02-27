@@ -49,7 +49,7 @@ CBerserkerState * CBattle_DeadState::LateTick(_float fTimeDelta)
 
 		m_bDeadAnimFinish = true;
 		m_pOwner->Set_GlowUp();
-
+		m_pOwner->Set_Dissolve();
 	}
 
 	return nullptr;
