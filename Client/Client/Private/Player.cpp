@@ -154,8 +154,16 @@ int CPlayer::Tick(_float fTimeDelta)
 			m_bIsPose = true;
 
 			/* Set State */
-			CPlayerState* pPlayerState = new Player::CPlayerPoseState(this, CPlayerState::STATE_POSE);
-			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			if (this == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+			{
+				CPlayerState* pPlayerState = new Player::CPlayerPoseState(this, CPlayerState::STATE_POSE);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			}
+			else
+			{
+				CPlayerState* pPlayerState = new Player::CIdleState(this, CIdleState::IDLE_MAIN);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			}
 
 			CAIState* pAIState = new AIPlayer::CAIPoseState(this, CAIState::STATE_POSE);
 			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
@@ -242,6 +250,9 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+		return;
+
 	if (nullptr != m_pRendererCom && eMode != UNVISIBLE)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
@@ -260,9 +271,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	}
 
 	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
-		return;
-
-	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
 		return;
 
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&

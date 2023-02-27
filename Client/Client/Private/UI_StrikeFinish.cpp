@@ -69,12 +69,17 @@ int CUI_StrikeFinish::Tick(_float fTimeDelta)
 void CUI_StrikeFinish::Late_Tick(_float fTimeDelta)
 {
 
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_FRONT, this);
 
 
 
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_FRONT, this);
+
+	//__super::Late_Tick(fTimeDelta);
+
 
 
 

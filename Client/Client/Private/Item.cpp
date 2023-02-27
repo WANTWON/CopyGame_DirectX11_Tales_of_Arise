@@ -348,6 +348,8 @@ HRESULT CItem::SetUp_ShaderResources()
 	_float4 vDissolveHighlight = _float4(0.55f, 0.9f, 1.f, 1.f);
 	if (FAILED(m_pShaderCom->Set_RawValue("g_DissolveHighlight", &vDissolveHighlight, sizeof(_float4))))
 		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CItem::SetUp_ShaderID()

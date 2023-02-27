@@ -2,6 +2,7 @@
 #include "..\Public\ThrowingObject.h"
 #include "PlayerManager.h"
 #include "Player.h"
+#include "Level_Restaurant.h"
 
 CThrowingObject::CThrowingObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CInteractObject(pDevice, pContext)
@@ -51,7 +52,43 @@ int CThrowingObject::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 
 	if (m_bDead)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		
+		if (LEVEL_RESTAURANT == pGameInstance->Get_CurrentLevelIndex())
+		{
+			_int m_iScore = 0;
+
+			switch (m_tThrowDesc.eType)
+			{
+			case TYPE_POTATO:
+				m_iScore = 5;
+				break;
+			case TYPE_APPLE:
+				m_iScore = 10;
+				break;
+			case TYPE_REDONION:
+				m_iScore = 15;
+				break;
+			case TYPE_BREAD:
+				m_iScore = 20;
+				break;
+			case TYPE_MANGO:
+				m_iScore = 25;
+				break;
+			case TYPE_PINEAPPLE:
+				m_iScore = -10;
+				break;
+			}
+
+			dynamic_cast<CLevel_Restaurant*>(pGameInstance->Get_CurrentLevel())->Increase_Score(m_iScore);
+		}
+
+		CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_MINIGAME1, this);
+
 		return OBJ_DEAD;
+	}
+		
 
 	__super::Tick(fTimeDelta);
 
@@ -86,7 +123,14 @@ int CThrowingObject::Tick(_float fTimeDelta)
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(XMVectorGetX(m_vStartPos) + (fVelocityX * m_fTime), XMVectorGetY(m_vStartPos) + (fVelocityY * m_fTime) - (0.5f * fGravity * m_fTime * m_fTime), XMVectorGetZ(m_vStartPos) + (fVelocityZ * m_fTime), 1.f));
 	
-	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	WorldMatrix.r[0] = XMVector4Normalize(WorldMatrix.r[0]);
+	WorldMatrix.r[1] = XMVector4Normalize(WorldMatrix.r[1]);
+	WorldMatrix.r[2] = XMVector4Normalize(WorldMatrix.r[2]);
+
+	m_pSPHERECom->Update(WorldMatrix);
+
+	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MINIGAME1, this);
 
 	return OBJ_NOEVENT;
 }
@@ -98,8 +142,16 @@ void CThrowingObject::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
-	if (m_bDown && (XMVectorGetY(m_vTargetPos) > XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION))))
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
+
+	if (m_fWalkingHeight >= XMVectorGetY(vPosition))
+	{
+		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+
 		Set_Dead(true);
+	}
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
@@ -159,7 +211,7 @@ HRESULT CThrowingObject::Ready_Components(void * pArg)
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(1.f, 1.f, 1.f);
+	ColliderDesc.vScale = _float3(3.f, 3.f, 3.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
@@ -169,6 +221,12 @@ HRESULT CThrowingObject::Ready_Components(void * pArg)
 	_tchar szModeltag[MAX_PATH] = TEXT("");
 	MultiByteToWideChar(CP_ACP, 0, m_tThrowDesc.tNonDesc.pModeltag, (int)strlen(m_tThrowDesc.tNonDesc.pModeltag), szModeltag, MAX_PATH);
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, szModeltag, (CComponent**)&m_pModelCom)))
+		return E_FAIL;
+
+	/* For.Com_Navigation */
+	CNavigation::NAVIDESC NaviDesc;
+	ZeroMemory(&NaviDesc, sizeof NaviDesc);
+	if (FAILED(__super::Add_Components(TEXT("Com_RestaurantMIniGameNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_Restaurant_MIniGameNavigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 
 	return S_OK;

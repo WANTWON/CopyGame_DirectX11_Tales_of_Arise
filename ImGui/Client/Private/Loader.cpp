@@ -169,12 +169,12 @@ HRESULT CLoader::Loading_ForClient()
 		return E_FAIL;
 
 	//For Maptool
-	if (FAILED(Loading_ForActor()))
-		return E_FAIL;
+	//if (FAILED(Loading_ForActor()))
+	//	return E_FAIL;
 
 	//For Maptool
-	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
-	//	return E_FAIL;
+	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+		return E_FAIL;
 
 
 	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
@@ -183,11 +183,11 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolVillageModel()))
 		return E_FAIL;*/
 	
-	// if (FAILED(Loading_ForMaptoolCityModel()))
-	// 	return E_FAIL;
+	/* if (FAILED(Loading_ForMaptoolCityModel()))
+	 	return E_FAIL;
 
-	// if (FAILED(Loading_ForMaptoolPlant()))
-	// 	return E_FAIL;
+	 if (FAILED(Loading_ForMaptoolPlant()))
+	 	return E_FAIL;*/
 
 	/*if (FAILED(Loading_ForMaptoolInteriorModel()))
 		return E_FAIL;
@@ -199,12 +199,12 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolKitchenModel()))
 		return E_FAIL;*/
 
-	////For Effect
-	//if (FAILED(Loading_ForEffect()))
-	//	return E_FAIL;
-	// 
-	//if (FAILED(Loading_ForEffectTexture()))
-	//	return E_FAIL;
+	//For Effect
+	/*if (FAILED(Loading_ForEffect()))
+		return E_FAIL;
+	 
+	if (FAILED(Loading_ForEffectTexture()))
+		return E_FAIL;*/
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
 
@@ -2785,6 +2785,11 @@ HRESULT CLoader::Loading_ForEffect()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("waterhorn2"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Water/waterhorn2.dat"))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FountainWater"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Water/FountainWater.dat"))))
+		return E_FAIL;
+
+	
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Akizame"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Akizame/Akizame.dat"))))

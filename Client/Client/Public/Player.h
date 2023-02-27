@@ -71,10 +71,11 @@ public: /* Getter &  Setter */
 	void			EffectStop_Overlimit();
 
 	/* STRIKEATTACK */
-	void           Set_StrikeAttack(_bool tof) { m_bStrikeAttack = tof;}
+	void           Set_StrikeAttack(_bool tof) { m_bStrikeAttack = tof; }
+	_bool           Get_StrikeAttack() {return m_bStrikeAttack;}
 	//_bool          Get_StrikeAttack() { return m_bStrikeAttack; }
 
-
+	
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);

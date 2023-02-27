@@ -95,6 +95,7 @@ HRESULT CLevel_SnowField::Initialize()
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
+	CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_StrikeAttack(false);
 
 	if (vecFightedMonster.size() != 0)
 	{

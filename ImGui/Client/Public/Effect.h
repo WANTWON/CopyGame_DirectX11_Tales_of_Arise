@@ -27,7 +27,9 @@ public:
 	vector<_float3> Get_VelocityCurves() { return m_VelocityCurves; }
 	vector<_float3> Get_SizeCurves() { return m_SizeCurves; }
 	vector<array<_float, 5>> Get_ScaleCurves() { return m_ScaleCurves; }
+	array<_float, 5> Get_ScaleCurveIndex(_int iIndex) { return m_ScaleCurves[iIndex]; }
 	vector<_float3> Get_AlphaCurves() { return m_AlphaCurves; }
+	_float3 Get_AlphaCurveIndex(_int iIndex) { return m_AlphaCurves[iIndex]; }
 	vector<_float3> Get_TurnVelocityCurves() { return m_TurnVelocityCurves; }
 	vector<_float3> Get_NoisePowerCurves() { return m_NoisePowerCurves; }
 	vector<_float3> Get_DistortPowerCurves() { return m_DistortPowerCurves; }
@@ -57,6 +59,11 @@ public:
 	void Add_TurnVelocityCurve(_float3 TurnVelocityCurve) { m_TurnVelocityCurves.push_back(TurnVelocityCurve); }
 	void Add_NoisePowerCurve(_float3 NoisePowerCurve) { m_NoisePowerCurves.push_back(NoisePowerCurve); }
 	void Add_DistortPowerCurve(_float3 DistortPowerCurve) { m_DistortPowerCurves.push_back(DistortPowerCurve); }
+
+	void Edit_SizeCurve(_int iIndex, _float3 SizeCurve) { m_SizeCurves[iIndex] = SizeCurve; }
+	void Edit_ScaleCurve(_int iIndex, array<_float, 5> ScaleCurve) { m_ScaleCurves[iIndex] = ScaleCurve; }
+	void Edit_AlphaCurve(_int iIndex, _float3 AlphaCurve) { m_AlphaCurves[iIndex] = AlphaCurve; }
+
 
 	void Remove_ColorCurve(_uint iIndex) { m_ColorCurves.erase(m_ColorCurves.begin() + iIndex); }
 	void Remove_VelocityCurve(_uint iIndex) { m_VelocityCurves.erase(m_VelocityCurves.begin() + iIndex); };

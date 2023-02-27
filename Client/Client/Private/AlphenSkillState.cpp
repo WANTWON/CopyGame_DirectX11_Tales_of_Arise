@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\AlphenSkillState.h"
 
+#include "Monster.h"
+
 #include "BattleManager.h"
 #include "UI_Skillmessage.h"
 #include "Effect.h"
@@ -42,24 +44,32 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
-	else if (m_bIsFly)
-		m_fTime += fTimeDelta;
 		
 	m_pOwner->Check_Navigation_Jump();
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 	for (auto& pEvent : pEvents)
 	{
 		if (pEvent.isPlay)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->On_Collider();
+			{
+				if (nullptr == m_pSwordCollider)
+				{
+					m_pSwordCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.5f, 2.5f, 2.5f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, -3.f));
+					m_fColEventStartTime = pEvent.fStartTime;
+				}
+			}
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
-				return EventInput();
-			
-
+			{
+				CPlayerState* pState = EventInput();
+				if (nullptr != pState)
+					return pState;
+			}
 		
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 			{
@@ -122,95 +132,95 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
-					if (m_bIsFly)
-					{
-						if (!strcmp(pEvent.szName, "Senkusyourepa_Particles"))
-						{
-							if (!m_bSenkusyourepaParticle)
-							{
-								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+					//if (m_bIsFly)
+					//{
+					//	if (!strcmp(pEvent.szName, "Senkusyourepa_Particles"))
+					//	{
+					//		if (!m_bSenkusyourepaParticle)
+					//		{
+					//			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-								_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-								_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+					//			_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+					//			_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
 
-								vPosition += vOffset;
-								mWorldMatrix.r[3] = vPosition;
+					//			vPosition += vOffset;
+					//			mWorldMatrix.r[3] = vPosition;
 
-								m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Particles.dat"), mWorldMatrix);
+					//			m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Particles.dat"), mWorldMatrix);
 
-								m_bSenkusyourepaParticle = true;
-							}
-						}
-						else if (!strcmp(pEvent.szName, "Senkusyourepa_1"))
-						{
-							if (!m_bSenkusyourepaFirstEffect)
-							{
-								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-								CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_1.dat"), mWorldMatrix);
+					//			m_bSenkusyourepaParticle = true;
+					//		}
+					//	}
+					//	else if (!strcmp(pEvent.szName, "Senkusyourepa_1"))
+					//	{
+					//		if (!m_bSenkusyourepaFirstEffect)
+					//		{
+					//			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+					//			CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_1.dat"), mWorldMatrix);
 
-								m_bSenkusyourepaFirstEffect = true;
-							}
-						}
-						else if (!strcmp(pEvent.szName, "Senkusyourepa_2"))
-						{
-							if (!m_bSenkusyourepaSecondEffect)
-							{
-								/* Destroy Particles first. */
-								if (!m_SenkusyourepaParticles.empty())
-								{
-									for (auto& iter : m_SenkusyourepaParticles)
-									{
-										if (iter)
-										{
-											CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
-											if (pParticleSystem != nullptr)
-												pParticleSystem->Set_Stop(true);
-										}
-									}
-								}
+					//			m_bSenkusyourepaFirstEffect = true;
+					//		}
+					//	}
+					//	else if (!strcmp(pEvent.szName, "Senkusyourepa_2"))
+					//	{
+					//		if (!m_bSenkusyourepaSecondEffect)
+					//		{
+					//			/* Destroy Particles first. */
+					//			if (!m_SenkusyourepaParticles.empty())
+					//			{
+					//				for (auto& iter : m_SenkusyourepaParticles)
+					//				{
+					//					if (iter)
+					//					{
+					//						CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+					//						if (pParticleSystem != nullptr)
+					//							pParticleSystem->Set_Stop(true);
+					//					}
+					//				}
+					//			}
 
-								/* Then Spawn Particles Effect */
-								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+					//			/* Then Spawn Particles Effect */
+					//			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-								_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-								_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+					//			_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+					//			_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
 
-								vPosition += vOffset;
-								mWorldMatrix.r[3] = vPosition;
+					//			vPosition += vOffset;
+					//			mWorldMatrix.r[3] = vPosition;
 
-								CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Explosion_Particles.dat"), mWorldMatrix);
+					//			CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Explosion_Particles.dat"), mWorldMatrix);
 
-								/* Then Spawn Effect */
-								mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-								CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_2.dat"), mWorldMatrix);
+					//			/* Then Spawn Effect */
+					//			mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+					//			CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_2.dat"), mWorldMatrix);
 
-								m_bSenkusyourepaSecondEffect = true;
-							}
-						}
-					}
-					else
-					{
-						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+					//			m_bSenkusyourepaSecondEffect = true;
+					//		}
+					//	}
+					//}
+					//else
+					//{
+					//	_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-						if (!strcmp(pEvent.szName, "Akizame_1"))
-						{
-							if (!m_bAkizameFirstEffect)
-							{
-								CEffect::PlayEffectAtLocation(TEXT("Akizame_1.dat"), mWorldMatrix);
+					//	if (!strcmp(pEvent.szName, "Akizame_1"))
+					//	{
+					//		if (!m_bAkizameFirstEffect)
+					//		{
+					//			CEffect::PlayEffectAtLocation(TEXT("Akizame_1.dat"), mWorldMatrix);
 
-								m_bAkizameFirstEffect = true;
-							}
-						}
-						else if (!strcmp(pEvent.szName, "Akizame_2"))
-						{
-							if (!m_bAkizameSecondEffect)
-							{
-								CEffect::PlayEffectAtLocation(TEXT("Akizame_2.dat"), mWorldMatrix);
+					//			m_bAkizameFirstEffect = true;
+					//		}
+					//	}
+					//	else if (!strcmp(pEvent.szName, "Akizame_2"))
+					//	{
+					//		if (!m_bAkizameSecondEffect)
+					//		{
+					//			CEffect::PlayEffectAtLocation(TEXT("Akizame_2.dat"), mWorldMatrix);
 
-								m_bAkizameSecondEffect = true;
-							}
-						}
-					}
+					//			m_bAkizameSecondEffect = true;
+					//		}
+					//	}
+					//}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 					if (m_bIsFly)
@@ -278,15 +288,53 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 		else
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-				dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Off_Collider();
+			{
+				if ((nullptr != m_pSwordCollider) && (m_fColEventStartTime == pEvent.fStartTime))
+				{
+					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pSwordCollider);
+					m_pSwordCollider = nullptr;
+
+					m_fColEventStartTime = -1.f;
+				}
+			}
 		}
+	}
+
+	_matrix WorldBoneMatrix = XMMatrixIdentity();
+
+	if (nullptr != m_pSwordCollider)
+	{
+		WorldBoneMatrix = m_pOwner->Get_Model()->Get_BonePtr("pinky_03_R")->Get_CombinedTransformationMatrix() *
+			XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+		WorldBoneMatrix.r[0] = XMVector4Normalize(WorldBoneMatrix.r[0]);
+		WorldBoneMatrix.r[1] = XMVector4Normalize(WorldBoneMatrix.r[1]);
+		WorldBoneMatrix.r[2] = XMVector4Normalize(WorldBoneMatrix.r[2]);
+
+		m_pSwordCollider->Update(WorldBoneMatrix);
 	}
 
 	return nullptr;
 }
 
 CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
-{
+{	if (nullptr != m_pSwordCollider)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		CBaseObj* pCollisionTarget = nullptr;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSwordCollider, &pCollisionTarget))
+		{
+			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
+			if (pCollided)
+				pCollided->Take_Damage(rand() % 100, m_pOwner);
+		}
+
+#ifdef _DEBUG
+		m_pOwner->Get_Renderer()->Add_Debug(m_pSwordCollider);
+#endif
+	}
+
 	for (auto& pEffect : m_SenkusyourepaParticles)
 	{
 		if (pEffect)
@@ -460,8 +508,10 @@ void CAlphenSkillState::Enter(void)
 void CAlphenSkillState::Exit(void)
 {
 	__super::Exit();
+
+	Safe_Release(m_pSwordCollider);
+
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	
 }
 
 void CAlphenSkillState::Reset_Skill()
@@ -487,4 +537,30 @@ void CAlphenSkillState::Reset_Skill()
 	m_bEngetuSecondEffect = false;
 
 	m_SenkusyourepaParticles.clear();
+}
+
+CCollider * CAlphenSkillState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)
+{
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+	CCollider::COLLIDERDESC		ColliderDesc;
+
+	ColliderDesc.vScale = vScale;
+	ColliderDesc.vRotation = vRotation;
+	ColliderDesc.vPosition = vPosition;
+
+	switch (eType)
+	{
+	case Engine::CCollider::TYPE_AABB:
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
+		break;
+	case Engine::CCollider::TYPE_OBB:
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+		break;
+	case Engine::CCollider::TYPE_SPHERE:
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+		break;
+	}
+
+	return nullptr;
 }

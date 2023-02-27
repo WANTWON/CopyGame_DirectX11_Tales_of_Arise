@@ -45,9 +45,9 @@ CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 		m_pAtkColliderCom = nullptr;
 
 		pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
-
-		m_bDeadAnimFinish = true;
 		m_pOwner->Set_GlowUp();
+		m_pOwner->Set_Dissolve();
+		m_bDeadAnimFinish = true;
 		m_fTimeDeltaAcc = 0.f;
 		m_pOwner->Set_Dissolve();
 	}

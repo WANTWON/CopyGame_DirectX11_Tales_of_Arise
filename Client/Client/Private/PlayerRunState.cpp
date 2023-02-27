@@ -15,6 +15,9 @@
 #include "Player_RinwellNormalAttack_State.h"
 #include "Player_RinwellSkillAttack_State.h"
 #include "CloseChaseState.h"
+#include "AlphenAttackState.h"
+
+#include "Level_Restaurant.h"
 
 using namespace Player;
 
@@ -92,11 +95,10 @@ CPlayerState * CRunState::HandleInput()
 			}
 		}
 
-		if (LEVEL_RESTAURANT != pGameInstance->Get_CurrentLevelIndex())
-		{
-			if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
-				return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE);
-		}
+
+		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
+			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE);
+
 
 		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT);
@@ -117,13 +119,23 @@ CPlayerState * CRunState::HandleInput()
 		else if (pGameInstance->Key_Pressing(DIK_LSHIFT))
 			return new CDodgeState(m_pOwner, DIR_END);
 	}
+
 	else if (!pBattleManager->Get_IsBattleMode())
 	{
-		if (pGameInstance->Key_Down(DIK_E))
-			return new CCollectState(m_pOwner);
+		if ((LEVEL_RESTAURANT == pGameInstance->Get_CurrentLevelIndex()) && ((CLevel_Restaurant*)pGameInstance->Get_CurrentLevel())->Get_MiniGameStart())
+		{
+			if (CPlayer::ALPHEN == m_ePlayerID && pGameInstance->Mouse_Down(DIMK_LBUTTON))
+				return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
+		}
 
-		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
-			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_RUN);
+		else
+		{
+			if (pGameInstance->Key_Down(DIK_E))
+				return new CCollectState(m_pOwner);
+
+			if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
+				return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_RUN);
+		}
 	}
 
 	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
@@ -301,7 +313,7 @@ void CRunState::Enter()
 			else
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
-				break;
+			break;
 		}
 	}
 
