@@ -127,12 +127,14 @@ public: /*For.Navigation*/
 public:	/* For.Weapon */
 	virtual void Change_Level(LEVEL eLevel);
 
+public: /* For. MiniGame2 */
+	void Change_ShootState(void);
+
 protected: /* For Component */
 	CModel*					m_pModelCom = nullptr;
 	CNavigation*			m_pNavigationCom = nullptr;
 	vector<CNavigation*>	m_vecNavigations;
 	_bool	m_bIsFirst = true;
-	
 
 protected: /* for 4 Player */
 	PLAYERID			m_ePlayerID = ALPHEN;
@@ -175,7 +177,8 @@ protected: /* for 4 Player */
 
 private:
 	_bool m_bLevelup = false;
-	
+	_bool m_bIsSionWeapon = true;
+
 protected:
 	vector<class CGameObject*> m_Parts;
 	

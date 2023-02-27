@@ -53,42 +53,10 @@ int CThrowingObject::Tick(_float fTimeDelta)
 
 	if (m_bDead)
 	{
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		
-		if (LEVEL_RESTAURANT == pGameInstance->Get_CurrentLevelIndex())
-		{
-			_int m_iScore = 0;
-
-			switch (m_tThrowDesc.eType)
-			{
-			case TYPE_POTATO:
-				m_iScore = 5;
-				break;
-			case TYPE_APPLE:
-				m_iScore = 10;
-				break;
-			case TYPE_REDONION:
-				m_iScore = 15;
-				break;
-			case TYPE_BREAD:
-				m_iScore = 20;
-				break;
-			case TYPE_MANGO:
-				m_iScore = 25;
-				break;
-			case TYPE_PINEAPPLE:
-				m_iScore = -10;
-				break;
-			}
-
-			dynamic_cast<CLevel_Restaurant*>(pGameInstance->Get_CurrentLevel())->Increase_Score(m_iScore);
-		}
-
 		CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_MINIGAME1, this);
 
 		return OBJ_DEAD;
 	}
-		
 
 	__super::Tick(fTimeDelta);
 
@@ -211,7 +179,7 @@ HRESULT CThrowingObject::Ready_Components(void * pArg)
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(3.f, 3.f, 3.f);
+	ColliderDesc.vScale = _float3(4.f, 4.f, 4.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
@@ -276,4 +244,6 @@ CGameObject * CThrowingObject::Clone(void * pArg)
 void CThrowingObject::Free(void)
 {
 	__super::Free();
+
+	Safe_Release(m_pNavigationCom);
 }

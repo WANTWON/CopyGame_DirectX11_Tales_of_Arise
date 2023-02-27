@@ -40,6 +40,7 @@ HRESULT CLevel_WorkTool::Initialize()
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Deco"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Interact"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Portal"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Npc"));
 
 		
 
@@ -80,6 +81,7 @@ void CLevel_WorkTool::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Deco"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Portal"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Interact"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Npc"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -112,12 +114,23 @@ void CLevel_WorkTool::Late_Tick(_float fTimeDelta)
 			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(13.f, 0.f, 22.f, 1.f));
 			pPlayer->Change_Level(LEVEL_WORKTOOL);
+			pPlayer->Change_ShootState();
 			if (pPlayer->Get_IsFly())
 				pPlayer->Off_IsFly();
 		}
 		else
 		{
 			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
+
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
+			pPlayer->Change_Navigation(LEVEL_WORKTOOL);
+
+			pPlayer->Compute_CurrentIndex(LEVEL_WORKTOOL);
+			pPlayer->Check_Navigation();
+			pPlayer->Change_Level(LEVEL_WORKTOOL);
+			if (pPlayer->Get_IsFly())
+				pPlayer->Off_IsFly();
 		}
 	}
 
