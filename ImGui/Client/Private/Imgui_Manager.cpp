@@ -3254,6 +3254,13 @@ void CImgui_Manager::Draw_EffectModals()
 						m_fCurveEnd = 1.f;
 				}
 
+				ImGui::SameLine();
+				if (ImGui::Button("Edit"))
+				{
+					if (m_pSelectedEffect)
+						m_pSelectedEffect->Edit_SizeCurve(m_iSelectedSizeCurve, _float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+				}
+
 				ImGui::EndTabItem();
 			}
 
@@ -3445,7 +3452,17 @@ void CImgui_Manager::Draw_EffectModals()
 					{
 						ImGui::TableNextColumn();
 						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedScaleCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Scale */
+						{
 							m_iSelectedScaleCurve = i;
+							array<_float, 5> SelectedCurve  = m_pSelectedEffect->Get_ScaleCurveIndex(m_iSelectedScaleCurve);
+							m_fCurveScaleX = SelectedCurve[0];
+							m_fCurveScaleY = SelectedCurve[1];
+							m_fCurveScaleZ = SelectedCurve[2];
+							m_fCurveStart = SelectedCurve[3];
+							m_fCurveEnd = SelectedCurve[4];
+
+						}
+							
 
 						ImGui::TableNextColumn();
 						string sScale = to_string(ScaleCurves[i][0]) + ", " + to_string(ScaleCurves[i][1]) + ", " + to_string(ScaleCurves[i][2]);
@@ -3463,6 +3480,13 @@ void CImgui_Manager::Draw_EffectModals()
 				if (ImGui::Button("Delete"))
 					if (m_pSelectedEffect->Get_ScaleCurves().size() > m_iSelectedScaleCurve)
 						m_pSelectedEffect->Remove_ScaleCurve(m_iSelectedScaleCurve);
+				ImGui::SameLine();
+
+				if (ImGui::Button("Edit"))
+				{
+					if (m_pSelectedEffect)
+						m_pSelectedEffect->Edit_ScaleCurve(m_iSelectedScaleCurve,{ m_fCurveScaleX, m_fCurveScaleY, m_fCurveScaleZ, m_fCurveStart, m_fCurveEnd });
+				}
 
 				ImGui::NewLine();
 
@@ -3503,6 +3527,8 @@ void CImgui_Manager::Draw_EffectModals()
 					if (m_fCurveEnd > 1.f)
 						m_fCurveEnd = 1.f;
 				}
+
+				
 
 				ImGui::EndTabItem();
 			}
@@ -3948,6 +3974,13 @@ void CImgui_Manager::Draw_EffectModals()
 					if (m_fCurveEnd > 1.f)
 						m_fCurveEnd = 1.f;
 				}
+
+				if (ImGui::Button("Edit"))
+				{
+					if (m_pSelectedEffect)
+						m_pSelectedEffect->Edit_SizeCurve(m_iSelectedSizeCurve, _float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+				}
+
 
 				ImGui::EndTabItem();
 			}
