@@ -82,11 +82,11 @@ void CSnowFieldNpc::Late_Tick(_float fTimeDelta)
 
    if (m_bCollision)
    {
-	   if (CGameInstance::Get_Instance()->Key_Up(DIK_SPACE))
+	  /* if (CGameInstance::Get_Instance()->Key_Up(DIK_SPACE))
 	   {
 		   CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
 		   pCurrentLevel->Set_NextLevel(true, LEVEL_CITY);
-	   }
+	   }*/
 
 	   dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Open_sysmsg(2);
 	   m_bIsFirst_conversation = true;
@@ -166,6 +166,9 @@ void CSnowFieldNpc::Talk_with_Npc()
 			break;
 		case 2:
 			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(2);
+			break;
+		case 6:
+			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(6);
 			break;
 
 		}
