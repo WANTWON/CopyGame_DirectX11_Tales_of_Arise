@@ -436,6 +436,9 @@
     <Filter Include="02.GameObjects\06.InteractObject\02. MiniGame1">
       <UniqueIdentifier>{29fcaa07-73e4-4a3e-9a2b-e1169e513950}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\30.UI_MiniGame1">
+      <UniqueIdentifier>{712cafc0-90b6-445f-80ca-491be53c41a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1203,6 +1206,12 @@
     <ClInclude Include="..\Public\ThrowingObject.h">
       <Filter>02.GameObjects\06.InteractObject\02. MiniGame1</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Damagefont_Break.h">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Minigame1.h">
+      <Filter>02.GameObjects\04.UI\30.UI_MiniGame1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1936,6 +1945,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\ThrowingObject.cpp">
       <Filter>02.GameObjects\06.InteractObject\02. MiniGame1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Damagefont_Break.cpp">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Minigame1.cpp">
+      <Filter>02.GameObjects\04.UI\30.UI_MiniGame1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -289,6 +289,9 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 			pPlayer->Change_Level(LEVEL_RESTAURANT);
 			if (pPlayer->Get_IsFly())
 				pPlayer->Off_IsFly();
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_minigame1"), LEVEL_RESTAURANT, TEXT("score"))))
+				return ;
 		}
 		else
 		{

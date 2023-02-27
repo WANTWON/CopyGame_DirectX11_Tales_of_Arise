@@ -38,6 +38,8 @@ public:
 public:
 	void Read_TextFiles_for_dialogue();
 	void Read_TextFiles_for_dialogue_first_battle();
+	void Read_TextFiles_for_dialogue_jelous();
+	void Read_TextFiles_for_dialougeStage2Start();
 
 	wchar_t* ConverCtoWC(char* str);
 
@@ -79,6 +81,11 @@ private:
 	vector<_tchar*> m_vDialoguepopup[2];
 	vector<_tchar*> m_vDialoguepopup1[2];
 	vector<_tchar*> m_vDialoguepopup_firstbattle[2];
+	vector<_tchar*> m_vDialoguepopup_jelous[2];
+
+	vector<_tchar*> m_vDialoguepopup_Stage2Start1[2];
+	vector<_tchar*> m_vDialoguepopup_Stage2Start2[2];
+
 	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;
 	_uint m_iDialogueindex = 0;
 

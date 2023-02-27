@@ -25,6 +25,8 @@ public:
 	_bool Get_MiniGameStart() { return m_bMinigameStart; }
 
 	void Increase_Score(_int iScore) { m_iScore += iScore; }
+	_int Get_Score() { return m_iScore; }
+	_float Get_TotalTime() {return m_fTotalTime	;}
 
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;

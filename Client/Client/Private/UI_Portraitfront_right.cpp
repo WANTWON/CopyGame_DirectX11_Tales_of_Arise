@@ -78,7 +78,7 @@ int CUI_Portraitfront_right::Tick(_float fTimeDelta)
 	}
 
 
-	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_Info().fCurrentBoostGuage;
+	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(3)->Get_Info().fCurrentBoostGuage;
 	if (m_fBoostGuageMax == false)
 	{
 		m_fPrevBoostGuage = m_fCurrentBoost;

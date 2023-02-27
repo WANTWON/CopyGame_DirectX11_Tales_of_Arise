@@ -84,7 +84,8 @@
 #include "UI_JustDodgeEffect.h"
 #include "UI_StrikeFinish.h"
 #include "UI_SystemMessageBox.h"
-
+#include "UI_Damagefont_Break.h"
+#include "UI_Minigame1.h"
 //Monster
 #include "Ice_Wolf.h"
 #include "Berserker.h"
@@ -466,6 +467,14 @@ HRESULT CLoader::Loading_ForPrototype()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SystemMessagebox"),
 		CUI_SystemMessageBox::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_damagefontbreak"),
+		CUI_Damagefont_Break::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_minigame1"),
+		CUI_Minigame1::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -1470,7 +1479,24 @@ HRESULT CLoader::Loading_ForUITexture()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_systemmessage"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/sysmsg/sysmsg%d.dds"), 3))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_break"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/break/break.dds"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Minigame_pointnum"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/MinigameCount/PointNum/MIniGameBlueNum_%d.dds"), 11))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Minigame_timenum"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/MinigameCount/TimeNum/MIniGameNum_%d.dds"), 11))))
+		return E_FAIL;
+
 	
+
+	
+
+
 	
 	return S_OK;
 }

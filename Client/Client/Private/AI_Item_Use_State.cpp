@@ -157,7 +157,7 @@ void CAI_Item_Use_State::Use_Item(ITEM_NAME item)
 				ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
 				testdesc.iDamage = recoverpower;
 				testdesc.pPointer = CPlayerManager::Get_Instance()->Get_EnumPlayer(random);
-				testdesc.itype = 3;
+				testdesc.itype = 4;
 
 				if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
 				{
@@ -183,6 +183,19 @@ void CAI_Item_Use_State::Use_Item(ITEM_NAME item)
 			if (CPlayerManager::Get_Instance()->Get_EnumPlayer(random)->Get_Info().fCurrentHp > 0)
 			{
 				CPlayerManager::Get_Instance()->Get_EnumPlayer(random)->RecoverHP(recoverpower);
+				CDamagefont_Critical::DMGDESC testdesc;
+				ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
+				testdesc.iDamage = recoverpower;
+				testdesc.pPointer = CPlayerManager::Get_Instance()->Get_EnumPlayer(random);
+				testdesc.itype = 4;
+
+				if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+				{
+
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+						return;
+				}
+				break;
 				bfindtarget = false;
 			}
 
@@ -199,6 +212,20 @@ void CAI_Item_Use_State::Use_Item(ITEM_NAME item)
 			CPlayerManager::Get_Instance()->Get_EnumPlayer(random)->Revive();
 
 		CPlayerManager::Get_Instance()->Get_EnumPlayer(random)->RecoverHP(recoverpower);
+
+		CDamagefont_Critical::DMGDESC testdesc;
+		ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
+		testdesc.iDamage = recoverpower;
+		testdesc.pPointer = CPlayerManager::Get_Instance()->Get_EnumPlayer(random);
+		testdesc.itype = 4;
+
+		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+		{
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+				return;
+		}
+		break;
 
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(0, true);
 
