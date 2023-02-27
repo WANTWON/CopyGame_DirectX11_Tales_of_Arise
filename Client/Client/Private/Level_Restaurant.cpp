@@ -52,7 +52,7 @@ HRESULT CLevel_Restaurant::Initialize()
 
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_Restaurant.wav"), g_fSoundVolume);
 
 	return S_OK;
 }

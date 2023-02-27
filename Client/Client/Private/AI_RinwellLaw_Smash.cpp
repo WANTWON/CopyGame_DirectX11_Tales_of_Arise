@@ -196,7 +196,7 @@ void CAI_RinwellLaw_Smash::Enter()
 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawRinwell_Smash.wav"), SOUND_VOICE, 0.7f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawRinwell_Smash.wav"), SOUND_VOICE, 0.85f);
 }
 
 void CAI_RinwellLaw_Smash::Exit()
