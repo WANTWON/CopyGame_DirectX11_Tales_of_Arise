@@ -65,14 +65,14 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 						{
 							if (!strcmp(pEvent.szName, "Alphen_Strike_1"))
 							{
-								if (!m_bAlphenStrike_1)
+								if (!m_bAlphenBoost_1)
 								{
 									_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
 
 									CBullet::BULLETDESC BulletDesc;
 									BulletDesc.eCollisionGroup = PLAYER;
 									BulletDesc.fDeadTime = 3.f;
-									BulletDesc.eBulletType = CAlphenSkills::STRIKE_1;
+									BulletDesc.eBulletType = CAlphenSkills::BOOST_1;
 									BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
 									BulletDesc.pOwner = m_pOwner;
 									BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
@@ -80,19 +80,19 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 									//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 									//	return nullptr;
 
-									m_bAlphenStrike_1 = true;
+									m_bAlphenBoost_1 = true;
 								}
 							}
 							if (!strcmp(pEvent.szName, "Alphen_Strike_2"))
 							{
-								if (!m_bAlphenStrike_2)
+								if (!m_bAlphenBoost_2)
 								{
 									_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
 
 									CBullet::BULLETDESC BulletDesc;
 									BulletDesc.eCollisionGroup = PLAYER;
 									BulletDesc.fDeadTime = 3.f;
-									BulletDesc.eBulletType = CAlphenSkills::STRIKE_2;
+									BulletDesc.eBulletType = CAlphenSkills::BOOST_2;
 									BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
 									BulletDesc.pOwner = m_pOwner;
 									BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
@@ -100,7 +100,7 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 									//if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_AlphenSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 									//	return nullptr;
 
-									m_bAlphenStrike_2 = true;
+									m_bAlphenBoost_2 = true;
 								}
 							}
 						}
@@ -166,10 +166,25 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 						else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 						{
 							if ((m_fEventStart != pEvent.fStartTime))
-							{
-								
-
 								m_fEventStart = pEvent.fStartTime;
+						}
+
+						if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+						{
+							if (!strcmp(pEvent.szName, "Law_Boost"))
+							{
+								if (!m_bLawBoost)
+								{
+									_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+									vector<CEffect*> Boost = CEffect::PlayEffectAtLocation(TEXT("Law_Boost.dat"), mWorldMatrix);
+
+									_vector vPosition = Boost.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+									mWorldMatrix.r[3] = vPosition;
+
+									CEffect::PlayEffectAtLocation(TEXT("Law_Boost_Impact.dat"), mWorldMatrix);
+									
+									m_bLawBoost = true;
+								}
 							}
 						}
 						break;

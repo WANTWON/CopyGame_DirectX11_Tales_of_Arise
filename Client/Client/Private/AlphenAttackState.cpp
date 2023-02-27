@@ -93,7 +93,6 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 					if (!m_bEffectSlashSpawned && !m_bEffectKickSpawned)
 					{
 						CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
-
 						m_bEffectSlashSpawned = true;
 					}
 				}

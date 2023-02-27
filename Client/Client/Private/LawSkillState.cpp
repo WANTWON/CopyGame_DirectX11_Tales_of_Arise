@@ -228,7 +228,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 									m_bTyourengadan_3 = true;
 								}
 							}
-							if (!strcmp(pEvent.szName, "Tyourengadan_4"))
+							/*if (!strcmp(pEvent.szName, "Tyourengadan_4"))
 							{
 								if (!m_bTyourengadan_4)
 								{
@@ -237,7 +237,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_4.dat"), mWorldMatrix);
 									m_bTyourengadan_4 = true;
 								}
-							}
+							}*/
 							if (!strcmp(pEvent.szName, "Tyourengadan_5"))
 							{
 								if (!m_bTyourengadan_5)

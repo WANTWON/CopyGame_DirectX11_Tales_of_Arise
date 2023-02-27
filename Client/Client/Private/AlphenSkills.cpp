@@ -30,7 +30,7 @@ HRESULT CAlphenSkills::Initialize(void * pArg)
 
 	switch (m_BulletDesc.eBulletType)
 	{
-		case STRIKE_1:
+		case BOOST_1:
 		{
 			vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 			mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
@@ -38,7 +38,7 @@ HRESULT CAlphenSkills::Initialize(void * pArg)
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Alphen_Strike_1.dat"), mWorldMatrix);
 			break;
 		}
-		case STRIKE_2:
+		case BOOST_2:
 		{
 			vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 			mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
@@ -64,8 +64,8 @@ int CAlphenSkills::Tick(_float fTimeDelta)
 
 	switch (m_BulletDesc.eBulletType)
 	{
-		case STRIKE_1:
-		case STRIKE_2:
+		case BOOST_1:
+		case BOOST_2:
 		{
 			Tick_Strike(fTimeDelta);
 			break;
@@ -94,7 +94,7 @@ void CAlphenSkills::Late_Tick(_float fTimeDelta)
 
 	switch (m_BulletDesc.eBulletType)
 	{
-		case STRIKE_1:
+		case BOOST_1:
 		{
 			if (m_fTime >= m_BulletDesc.fDeadTime)
 				m_bDead = true;
@@ -108,7 +108,7 @@ void CAlphenSkills::Collision_Check()
 	CBaseObj* pCollisionTarget = nullptr;
 	switch (m_BulletDesc.eBulletType)
 	{
-		case STRIKE_1:
+		case BOOST_1:
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
 			break;
@@ -125,7 +125,7 @@ void CAlphenSkills::Dead_Effect()
 
 	switch (m_BulletDesc.eBulletType)
 	{
-		case STRIKE_1:
+		case BOOST_1:
 		{
 			if (!m_pEffects.empty())
 			{
@@ -157,7 +157,7 @@ HRESULT CAlphenSkills::Ready_Components(void * pArg)
 
 	switch (m_BulletDesc.eBulletType)
 	{
-		case STRIKE_1:
+		case BOOST_1:
 		{
 			ColliderDesc.vScale = _float3(30, 30, 30);
 			ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);

@@ -446,11 +446,11 @@ HRESULT CMonster::Drop_Items()
 
 void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 {
-	/*if (m_bMakeEffect)
-		return;*/
-
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(DamageCauser);
+	if (!pPlayer)
+		return;
 
 	_vector vOffset = XMVectorSet(0.f, m_fRadius + 1.5f, 0.f, 0.f);
 	_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
@@ -458,9 +458,19 @@ void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	mWorldMatrix.r[3] = vLocation;
 
-	CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
-
-	/*m_bMakeEffect = true;*/
+	switch (pPlayer->Get_PlayerID())
+	{
+	case CPlayer::PLAYERID::ALPHEN:
+		CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
+		break;
+	case CPlayer::PLAYERID::LAW:
+		CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
+		break;
+	case CPlayer::PLAYERID::RINWELL:
+	case CPlayer::PLAYERID::SION:
+		CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
+		break;
+	}
 
 	RELEASE_INSTANCE(CGameInstance);
 }

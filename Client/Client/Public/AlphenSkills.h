@@ -5,7 +5,7 @@ BEGIN(Client)
 class CAlphenSkills final : public CBullet
 {
 public:
-	enum TYPE { STRIKE_1, STRIKE_2 };
+	enum TYPE { BOOST_1, BOOST_2 };
 
 public:
 	CAlphenSkills(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -34,9 +34,5 @@ public:
 	static CAlphenSkills* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
 	virtual void Free() override;
-
-private:
-	_uint bulletcount = 30;
-	_float m_fAquaTImer = 0.f;
 };
 END
