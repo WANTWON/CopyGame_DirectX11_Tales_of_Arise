@@ -29,6 +29,7 @@ public:
 	vector<array<_float, 5>> Get_ScaleCurves() { return m_ScaleCurves; }
 	array<_float, 5> Get_ScaleCurveIndex(_int iIndex) { return m_ScaleCurves[iIndex]; }
 	vector<_float3> Get_AlphaCurves() { return m_AlphaCurves; }
+	_float3 Get_AlphaCurveIndex(_int iIndex) { return m_AlphaCurves[iIndex]; }
 	vector<_float3> Get_TurnVelocityCurves() { return m_TurnVelocityCurves; }
 	vector<_float3> Get_NoisePowerCurves() { return m_NoisePowerCurves; }
 	vector<_float3> Get_DistortPowerCurves() { return m_DistortPowerCurves; }
@@ -61,6 +62,7 @@ public:
 
 	void Edit_SizeCurve(_int iIndex, _float3 SizeCurve) { m_SizeCurves[iIndex] = SizeCurve; }
 	void Edit_ScaleCurve(_int iIndex, array<_float, 5> ScaleCurve) { m_ScaleCurves[iIndex] = ScaleCurve; }
+	void Edit_AlphaCurve(_int iIndex, _float3 AlphaCurve) { m_AlphaCurves[iIndex] = AlphaCurve; }
 
 
 	void Remove_ColorCurve(_uint iIndex) { m_ColorCurves.erase(m_ColorCurves.begin() + iIndex); }

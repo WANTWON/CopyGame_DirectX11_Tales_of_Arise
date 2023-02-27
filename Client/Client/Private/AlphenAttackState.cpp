@@ -13,6 +13,8 @@
 #include "AlphenSkillState.h"
 #include "Effect.h"
 
+#include "Level_Restaurant.h"
+
 using namespace Player;
 
 CAlphenAttackState::CAlphenAttackState(CPlayer * pPlayer, STATE_ID eStateType, _float fTime)
@@ -73,34 +75,34 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 			{
 				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 				_tchar wcEffectName[MAX_PATH] = TEXT("");
-			
+
 				if (m_bIsFly)
 				{
 					switch (m_eStateId)
 					{
-						case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_1.dat"));
-							break;
-						case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_2.dat"));
-							break;
-						case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+					case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_1.dat"));
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_2.dat"));
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+					{
+						if (!strcmp(pEvent.szName, "Jump_Normal_Attack_3"))
+							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_3.dat"));
+						if (!strcmp(pEvent.szName, "Jump_Normal_Attack_4"))
 						{
-							if (!strcmp(pEvent.szName, "Jump_Normal_Attack_3"))
-								wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_3.dat"));
-							if (!strcmp(pEvent.szName, "Jump_Normal_Attack_4"))
+							if (!m_bEffectKickSpawned)
 							{
-								if (!m_bEffectKickSpawned)
-								{
-									CEffect::PlayEffectAtLocation(TEXT("Jump_Normal_Attack_4.dat"), mWorldMatrix);
-									m_bEffectKickSpawned = true;
-								}
+								CEffect::PlayEffectAtLocation(TEXT("Jump_Normal_Attack_4.dat"), mWorldMatrix);
+								m_bEffectKickSpawned = true;
 							}
-							break;
 						}
-						case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_5.dat"));
-							break;
+						break;
+					}
+					case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Jump_Normal_Attack_5.dat"));
+						break;
 					}
 
 					if (!m_bEffectSlashSpawned && !m_bEffectKickSpawned)
@@ -114,16 +116,16 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 				{
 					switch (m_eStateId)
 					{
-						case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-						case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
-							break;
-						case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
-							break;
-						case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-							wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
-							break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+					case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
+						break;
+					case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
+						break;
 					}
 
 					if (!m_bEffectSlashSpawned)
@@ -134,7 +136,7 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 							CEffect::PlayEffectAtLocation(wcEffectName, mWorldMatrix);
 
 						m_bEffectSlashSpawned = true;
-					}	
+					}
 				}
 			}
 		}
@@ -165,7 +167,7 @@ CPlayerState * CAlphenAttackState::Tick(_float fTimeDelta)
 
 	if (nullptr != m_pSwordCollider)
 	{
-		WorldBoneMatrix = m_pOwner->Get_Model()->Get_BonePtr("pinky_03_R")->Get_CombinedTransformationMatrix() * 
+		WorldBoneMatrix = m_pOwner->Get_Model()->Get_BonePtr("pinky_03_R")->Get_CombinedTransformationMatrix() *
 			XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
 
 		WorldBoneMatrix.r[0] = XMVector4Normalize(WorldBoneMatrix.r[0]);
@@ -209,13 +211,44 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 			
 			CThrowingObject* pCollied = dynamic_cast<CThrowingObject*>(pCollisionTarget);
 			if (pCollied)
+			{
+				CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+				_int m_iScore = 0;
+
+				switch (dynamic_cast<CThrowingObject*>(pCollied)->Get_Type())
+				{
+				case CThrowingObject::TYPE_POTATO:
+					m_iScore = 5;
+					break;
+				case CThrowingObject::TYPE_APPLE:
+					m_iScore = 10;
+					break;
+				case CThrowingObject::TYPE_REDONION:
+					m_iScore = 15;
+					break;
+				case CThrowingObject::TYPE_BREAD:
+					m_iScore = 20;
+					break;
+				case CThrowingObject::TYPE_MANGO:
+					m_iScore = 25;
+					break;
+				case CThrowingObject::TYPE_PINEAPPLE:
+					m_iScore = -10;
+					break;
+				}
+
+				dynamic_cast<CLevel_Restaurant*>(pGameInstance->Get_CurrentLevel())->Increase_Score(m_iScore);
+
 				pCollied->Set_Dead(true);
+
 
 			_bool bSound = false;
 			if (!bSound)
 			{
 				CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut.wav"), SOUND_EFFECT, 1.0f);
 				//bSound = true;
+
 			}
 		}
 

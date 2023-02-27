@@ -45,7 +45,6 @@ public:
 
 private: /* For NonAnim */
 	HRESULT Ready_InstancingForPooling(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Npc(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_SnowDecoObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_BossMapObject(const _tchar* pLayerTag);
@@ -56,6 +55,10 @@ private: /* For NonAnim */
 	HRESULT Ready_Layer_Interact_SnowField(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Interact_Restaurant(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Interact_WorkTool(const _tchar* pLayerTag);
+
+	HRESULT Ready_Layer_NpcSnowField(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_NpcCity(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_NpcMIniGame(const _tchar* pLayerTag);
 
 private:
 	THREAD_ID				m_eCloneType = THREAD_END;
