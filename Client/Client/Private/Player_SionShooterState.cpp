@@ -41,7 +41,7 @@ void CPlayer_SionShooterState::Enter(void)
 {
 	__super::Enter();
 
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_IDLE);
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 }
 
@@ -55,15 +55,22 @@ void CPlayer_SionShooterState::Move(_float fTimeDelta)
 
 	_float4x4 CameraMatrix = pGameInstance->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW);
 
+	_vector vCameraLook = XMVectorSet(CameraMatrix.m[2][0], 0.f, CameraMatrix.m[2][2], CameraMatrix.m[2][3]);
+
+	_matrix NewCameraMatrix = XMMatrixIdentity();
+	NewCameraMatrix.r[1] = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	NewCameraMatrix.r[2] = vCameraLook;
+	NewCameraMatrix.r[0] = XMVector3Cross(NewCameraMatrix.r[1], NewCameraMatrix.r[2]);
+
 	CTransform* pPlayerTransform = m_pOwner->Get_Transform();
 
 	_vector vPlayerScale, vPlayerRotQuat, vPlayerPos;
-	_vector vCamearScale, vCameraRot, vCameraPos;
+	_vector vNewCamearScale, vNewCameraRot, vNewCameraPos;
 
 	XMMatrixDecompose(&vPlayerScale, &vPlayerRotQuat, &vPlayerPos, pPlayerTransform->Get_WorldMatrix());
-	XMMatrixDecompose(&vCamearScale, &vCameraRot, &vCameraPos, XMLoadFloat4x4(&CameraMatrix));
+	XMMatrixDecompose(&vNewCamearScale, &vNewCameraRot, &vNewCameraPos, NewCameraMatrix);
 
-	vPlayerRotQuat = XMQuaternionSlerp(vPlayerRotQuat, XMQuaternionNormalize(vCameraRot), 0.5f);
+	vPlayerRotQuat = XMQuaternionSlerp(vPlayerRotQuat, XMQuaternionNormalize(vNewCameraRot), 0.5f);
 
 	_matrix vPlayerWorld = XMMatrixScalingFromVector(vPlayerScale) * XMMatrixRotationQuaternion(vPlayerRotQuat) * XMMatrixTranslationFromVector(vPlayerPos);
 

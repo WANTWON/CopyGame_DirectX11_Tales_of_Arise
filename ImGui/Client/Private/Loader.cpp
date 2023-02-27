@@ -169,12 +169,12 @@ HRESULT CLoader::Loading_ForClient()
 		return E_FAIL;
 
 	//For Maptool
-	if (FAILED(Loading_ForActor()))
-		return E_FAIL;
+	//if (FAILED(Loading_ForActor()))
+	//	return E_FAIL;
 
 	//For Maptool
-	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
-	//	return E_FAIL;
+	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+		return E_FAIL;
 
 
 	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
@@ -183,21 +183,21 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolVillageModel()))
 		return E_FAIL;*/
 	
-	/* if (FAILED(Loading_ForMaptoolCityModel()))
+	 /*if (FAILED(Loading_ForMaptoolCityModel()))
+	 	return E_FAIL;
+
+	 if (FAILED(Loading_ForMaptoolPlant()))
 	 	return E_FAIL;*/
 
-	/* if (FAILED(Loading_ForMaptoolPlant()))
-	 	return E_FAIL;*/
-
-	if (FAILED(Loading_ForMaptoolInteriorModel()))
+	/*if (FAILED(Loading_ForMaptoolInteriorModel()))
 		return E_FAIL;
 
 	if (FAILED(Loading_ForMaptoolWorkRoomModel()))
-		return E_FAIL;
+		return E_FAIL;*/
 
 
-	if (FAILED(Loading_ForMaptoolKitchenModel()))
-		return E_FAIL;
+	/*if (FAILED(Loading_ForMaptoolKitchenModel()))
+		return E_FAIL;*/
 
 	//For Effect
 	/*if (FAILED(Loading_ForEffect()))
@@ -2630,52 +2630,6 @@ HRESULT CLoader::Loading_ForActor()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Npc/NPC_NMY_PLC.dat"))))
 		return E_FAIL;
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMY_PLC"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NFC_SLV_000"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NFC_SLV_000/NPC_NFC_SLV_000.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NFC_SLV_000"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NFC_SLV_000_2th"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NFC_SLV_000_2th/NPC_NFC_SLV_000_2th.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NFC_SLV_000_2th"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NFM_SLV_000"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NFM_SLV_000/NPC_NFM_SLV_000.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NFM_SLV_000"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NFY_FIA_000"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NFY_FIA_000/NPC_NFY_FIA_000.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NFY_FIA_000"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_BEF_000"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NMM_BEF_000/NPC_NMM_BEF_000.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMM_BEF_000"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_BLS_000"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NMM_BLS_000/NPC_NMM_BLS_000.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMM_BLS_000"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_DIM_000"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NMM_DIM_000/NPC_NMM_DIM_000.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMM_DIM_000"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_MHB_000"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NMM_MHB_000/NPC_NMM_MHB_000.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMM_MHB_000"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_SLV_000"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NMM_SLV_000/NPC_NMM_SLV_000.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMM_SLV_000"));
-
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf_NonAnim"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/MonsterforMaptool/Ice_Wolf.dat"))))
