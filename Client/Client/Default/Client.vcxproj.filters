@@ -1134,9 +1134,6 @@
     <ClInclude Include="..\Public\PlayerPoseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\AI_BoostAttackState.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\AI_ChaseState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States\Common</Filter>
     </ClInclude>
@@ -1202,6 +1199,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\ThrowingObject.h">
       <Filter>02.GameObjects\06.InteractObject\02. MiniGame1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AI_BoostAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

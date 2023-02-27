@@ -230,10 +230,20 @@ HRESULT CSnowFieldNpc::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
-	_tchar			szModeltag[MAX_PATH] = TEXT("");
-	MultiByteToWideChar(CP_ACP, 0, m_NpcDesc.Modeldesc.pModeltag, (int)strlen(m_NpcDesc.Modeldesc.pModeltag), szModeltag, MAX_PATH);
-	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, szModeltag, (CComponent**)&m_pModelCom)))
-		return E_FAIL;
+	if (m_NpcDesc.eNpcType == RINWELL_NPC)
+	{
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("NpcRinwell"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+	}
+	else
+	{
+		_tchar			szModeltag[MAX_PATH] = TEXT("");
+		MultiByteToWideChar(CP_ACP, 0, m_NpcDesc.Modeldesc.pModeltag, (int)strlen(m_NpcDesc.Modeldesc.pModeltag), szModeltag, MAX_PATH);
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, szModeltag, (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+	}
+	
+
 
 	/* For.Com_Navigation */
 	CNavigation::NAVIDESC NaviDesc;

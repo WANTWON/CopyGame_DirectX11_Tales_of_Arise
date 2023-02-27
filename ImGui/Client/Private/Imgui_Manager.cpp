@@ -3137,7 +3137,13 @@ void CImgui_Manager::Draw_EffectModals()
 					{
 						ImGui::TableNextColumn();
 						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedAlphaCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Alpha */
+						{
 							m_iSelectedAlphaCurve = i;
+							m_fCurveValue = m_pSelectedEffect->Get_AlphaCurveIndex(m_iSelectedAlphaCurve).x;
+							m_fCurveStart = m_pSelectedEffect->Get_AlphaCurveIndex(m_iSelectedAlphaCurve).y;
+							m_fCurveEnd = m_pSelectedEffect->Get_AlphaCurveIndex(m_iSelectedAlphaCurve).z;
+						}
+							
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(AlphaCurves[i].x).c_str()); /* Start */
@@ -3154,6 +3160,10 @@ void CImgui_Manager::Draw_EffectModals()
 				if (ImGui::Button("Delete"))
 					if (m_pSelectedEffect->Get_AlphaCurves().size() > m_iSelectedAlphaCurve)
 						m_pSelectedEffect->Remove_AlphaCurve(m_iSelectedAlphaCurve);
+
+				ImGui::SameLine();
+				if (ImGui::Button("Edit"))
+					m_pSelectedEffect->Edit_AlphaCurve(m_iSelectedAlphaCurve, _float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
 
 				ImGui::NewLine();
 

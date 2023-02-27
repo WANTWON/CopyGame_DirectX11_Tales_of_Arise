@@ -736,6 +736,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/AIRinwell/Rinwell.dat"))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Model_Rinwell */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NpcRinwell"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NpcRinwell/Rinwell.dat"))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Model_Water_Plane*/
  	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Water/Plane.dat"))))
