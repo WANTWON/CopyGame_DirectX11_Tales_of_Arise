@@ -42,6 +42,9 @@ private:
 
 	_float3		m_vItemPosition[8];
 
+
+	DWORD m_dwTime = GetTickCount();
+
 	_int m_iScore = 0;
 
 

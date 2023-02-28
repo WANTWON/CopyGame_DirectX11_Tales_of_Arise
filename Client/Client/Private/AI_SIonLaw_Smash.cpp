@@ -95,10 +95,6 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 				}
 			}
 		}
-
-		_vector vecTranslation;
-		_float fRotationRadian;
-
 	
 	}
 

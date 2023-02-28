@@ -445,6 +445,9 @@
     <Filter Include="02.GameObjects\01.Actor\02.NPC\MiniGameNpc">
       <UniqueIdentifier>{7db4473b-9b05-431c-8f11-10f2fac97407}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\06.InteractObject\03. MiniGame2">
+      <UniqueIdentifier>{0351bb96-4faf-4f46-b2a8-e1ce156cec21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1233,6 +1236,12 @@
     <ClInclude Include="..\Public\Player_SionMiniAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Road.h">
+      <Filter>02.GameObjects\06.InteractObject\03. MiniGame2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ShootingObject.h">
+      <Filter>02.GameObjects\06.InteractObject\03. MiniGame2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1987,6 +1996,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_SionMiniAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Road.cpp">
+      <Filter>02.GameObjects\06.InteractObject\03. MiniGame2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ShootingObject.cpp">
+      <Filter>02.GameObjects\06.InteractObject\03. MiniGame2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
