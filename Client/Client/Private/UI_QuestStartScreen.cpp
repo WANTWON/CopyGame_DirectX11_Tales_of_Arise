@@ -164,12 +164,22 @@ int CUI_QuestStartScreen::Tick(_float fTimeDelta)
 
 	if (m_fDietimer > 2.f)
 	{
-		if(CUI_Manager::Get_Instance()->Get_QuestIndex() == 1)
-		dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(0, false, 1, 0); //first popup
 
-
-		if (CUI_Manager::Get_Instance()->Get_QuestIndex() == 2)
+		switch (CUI_Manager::Get_Instance()->Get_QuestIndex())
+		{
+		case 1:
+			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(0, false, 1, 0); //first popup
+			break;
+		case 2:
 			CUI_Manager::Get_Instance()->Set_Dialogue_section(3);
+			break;
+
+		case 4:
+			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(6, false, 0, 2); //jelous popup
+			break;
+
+		}
+			
 
 
 		return OBJ_DEAD;

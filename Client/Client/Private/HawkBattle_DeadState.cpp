@@ -49,7 +49,7 @@ CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 		m_pOwner->Set_Dissolve();
 		m_bDeadAnimFinish = true;
 		m_fTimeDeltaAcc = 0.f;
-
+		m_pOwner->Set_Dissolve();
 	}
 
 	return nullptr;

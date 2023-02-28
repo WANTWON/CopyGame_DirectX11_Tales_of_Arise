@@ -333,7 +333,7 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 
 _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
 {
-	if (fDamage <= 0 || m_bDead || m_bTakeDamage || m_tStats.m_fCurrentHp <= 0 )
+	if (fDamage <= 0 || m_bDead || m_bTakeDamage )
 		return 0;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);

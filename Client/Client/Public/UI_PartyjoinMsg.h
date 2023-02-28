@@ -41,10 +41,7 @@ public:
 
 
 private:
-	CTexture*				m_pTextureCom1 = nullptr;
-	CTexture*               m_pTextureCom2 = nullptr;
-	CTexture*				m_pTextureCom3 = nullptr;
-	CTexture*               m_pTextureCom4 = nullptr;
+
 	CTexture*				m_pTextureCom5 = nullptr;
 
 	_bool m_bfadein = true;

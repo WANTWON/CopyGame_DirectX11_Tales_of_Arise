@@ -86,7 +86,8 @@
 #include "UI_JustDodgeEffect.h"
 #include "UI_StrikeFinish.h"
 #include "UI_SystemMessageBox.h"
-
+#include "UI_Damagefont_Break.h"
+#include "UI_Minigame1.h"
 //Monster
 #include "Ice_Wolf.h"
 #include "Berserker.h"
@@ -478,6 +479,14 @@ HRESULT CLoader::Loading_ForPrototype()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SystemMessagebox"),
 		CUI_SystemMessageBox::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_damagefontbreak"),
+		CUI_Damagefont_Break::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_minigame1"),
+		CUI_Minigame1::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -1428,7 +1437,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SYSTEM_MSG"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/interectmsg/sysmsg%d.dds"), 3))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/interectmsg/sysmsg%d.dds"), 4))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_QUEST"),
@@ -1436,7 +1445,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_QUESTNAME"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/quest/questname%d.dds"), 3))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/quest/questname%d.dds"), 4))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_QUESTMSG"),
@@ -1523,7 +1532,24 @@ HRESULT CLoader::Loading_ForUITexture()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_systemmessage"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/sysmsg/sysmsg%d.dds"), 3))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_break"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/break/break.dds"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Minigame_pointnum"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/MinigameCount/PointNum/MIniGameBlueNum_%d.dds"), 11))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Minigame_timenum"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/MinigameCount/TimeNum/MIniGameNum_%d.dds"), 11))))
+		return E_FAIL;
+
 	
+
+	
+
+
 	
 	return S_OK;
 }
@@ -1919,6 +1945,13 @@ HRESULT CLoader::Loading_ForEffectTexture()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Line"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line.png"), 1))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SpellText"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line/SpellText.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SpellText_rm"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line/SpellText_rm.png"), 1))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_Aura_ak_01"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Aura/TO14_T_FX_Aura_ak_01.png"), 1))))
 		return E_FAIL;

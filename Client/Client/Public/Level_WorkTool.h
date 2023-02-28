@@ -25,6 +25,13 @@ public:
 	void Set_MiniGameStart(_bool type);
 	_bool Get_MiniGameStart() { return m_bMinigameStart; }
 
+
+	void Increase_Score(_int iScore) { m_iScore += iScore; }
+	_int Get_Score() { return m_iScore; }
+
+
+
+
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
 	CCamera_Dynamic*	m_pCamera = nullptr;
@@ -34,6 +41,9 @@ private:
 	_bool		m_bMinigameStart = false;
 
 	_float3		m_vItemPosition[8];
+
+	_int m_iScore = 0;
+
 
 public:
 	static CLevel_WorkTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

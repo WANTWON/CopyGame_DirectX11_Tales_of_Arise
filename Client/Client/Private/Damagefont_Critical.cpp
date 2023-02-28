@@ -74,30 +74,49 @@ HRESULT CDamagefont_Critical::Initialize(void * pArg)
 
 
 
-	if (m_damagedesc.itype >= 3)
+	if (m_damagedesc.itype >= 4)
 	{
 		m_bfontmaker = false;
 	}
 	else
 		m_bfontmaker = true;
 
-	if (m_damagedesc.itype == 3)
+
+
+	 if (m_damagedesc.itype == 1)
+	{
+		m_eShaderID = UI_BRIGHT;
+		m_fNext = 38.f;
+	}
+	 else if (m_damagedesc.itype == 2)
+	 {
+		 m_eShaderID = UI_RESISTDAMAGEFONT;
+		 m_fNext = 23.f;
+	 }
+	 else if (m_damagedesc.itype == 3)
+	 {
+		 m_eShaderID = UI_PlayerHitfont;
+		 m_fNext = 23.f;
+	 }
+
+
+	else if (m_damagedesc.itype == 4)
 	{
 		m_eShaderID = UI_RECOVERFONT;
 		m_fNext = 23.f;
 	}
-	else if (m_damagedesc.itype == 4)
+	else if (m_damagedesc.itype == 5)
 	{
 		m_eShaderID = UI_PlayerHitfont;
 		m_fNext = 23.f;
 
 	}
-	else
+	/*else
 	{
 		m_fNext = 38.f;
 		m_eShaderID = UI_BRIGHT;
 	}
-		
+		*/
 
 
 
@@ -182,7 +201,7 @@ int CDamagefont_Critical::Tick(_float fTimeDelta)
 	}
 
 
-	if (m_damagedesc.itype == 3 || m_damagedesc.itype == 4)
+	if (m_damagedesc.itype == 2 || m_damagedesc.itype == 3 || m_damagedesc.itype == 5)
 	{
 		m_fSize.x = 30.f * m_fScaler;
 		m_fSize.y = 30.f * m_fScaler;
@@ -402,25 +421,44 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 	m_fSize.y = 30.f * m_fScaler;
 	m_fNext = 38.f;
 
-	if (m_damagedesc.itype >= 3)
+
+	if (m_damagedesc.itype >= 4)
 	{
 		m_bfontmaker = false;
 	}
 	else
 		m_bfontmaker = true;
 
-	if (m_damagedesc.itype == 3)
+
+
+	if (m_damagedesc.itype == 1)
 	{
-		m_eShaderID = UI_RECOVERFONT;
+		m_eShaderID = UI_BRIGHT;
+		m_fNext = 38.f;
+	}
+	else if (m_damagedesc.itype == 2)
+	{
+		m_eShaderID = UI_RESISTDAMAGEFONT;
 		m_fNext = 23.f;
 	}
-	else if (m_damagedesc.itype == 4)
+	else if (m_damagedesc.itype == 3)
 	{
 		m_eShaderID = UI_PlayerHitfont;
 		m_fNext = 23.f;
 	}
-	else
-		m_eShaderID = UI_BRIGHT;
+
+
+	else if (m_damagedesc.itype == 4)
+	{
+		m_eShaderID = UI_RECOVERFONT;
+		m_fNext = 23.f;
+	}
+	else if (m_damagedesc.itype == 5)
+	{
+		m_eShaderID = UI_PlayerHitfont;
+		m_fNext = 23.f;
+
+	}
 
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixTranspose(XMMatrixIdentity()));
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f)));

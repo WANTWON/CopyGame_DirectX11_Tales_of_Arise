@@ -96,8 +96,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_Object")));
 			pMainApp->Render();
 		}
-
-		
 	}
 
 	Safe_Release(pGameInstance);

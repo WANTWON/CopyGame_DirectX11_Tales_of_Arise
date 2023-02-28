@@ -258,6 +258,7 @@
     <ClInclude Include="..\Public\PlayerPoseState.h" />
     <ClInclude Include="..\Public\Player_RinwellNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_RinwellSkillAttack_State.h" />
+    <ClInclude Include="..\Public\Player_SionMiniAttackState.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionShooterState.h" />
     <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
@@ -300,6 +301,7 @@
     <ClInclude Include="..\Public\UI_AlphaScreen.h" />
     <ClInclude Include="..\Public\UI_BattleResult.h" />
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h" />
+    <ClInclude Include="..\Public\UI_Damagefont_Break.h" />
     <ClInclude Include="..\Public\UI_Dialogue_Caption.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
     <ClInclude Include="..\Public\UI_InterectMsg.h" />
@@ -385,6 +387,8 @@
     <ClInclude Include="..\Public\UI_font_Damage_number.h" />
     <ClInclude Include="..\Public\UI_MENU_Back.h" />
     <ClInclude Include="..\Public\UI_MENU_Quest.h" />
+    <ClInclude Include="..\Public\UI_Minigame1.h" />
+    <ClInclude Include="..\Public\UI_Minigame2.h" />
     <ClInclude Include="..\Public\UI_Monster_HPbar.h" />
     <ClInclude Include="..\Public\UI_PartyjoinMsg.h" />
     <ClInclude Include="..\Public\UI_Portraitback.h" />
@@ -515,6 +519,7 @@
     <ClCompile Include="..\Private\PlayerPoseState.cpp" />
     <ClCompile Include="..\Private\Player_RinwellNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_RinwellSkillAttack_State.cpp" />
+    <ClCompile Include="..\Private\Player_SionMiniAttackState.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionShooterState.cpp" />
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />
@@ -554,6 +559,7 @@
     <ClCompile Include="..\Private\UI_AlphaScreen.cpp" />
     <ClCompile Include="..\Private\UI_BattleResult.cpp" />
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp" />
+    <ClCompile Include="..\Private\UI_Damagefont_Break.cpp" />
     <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />
     <ClCompile Include="..\Private\UI_InterectMsg.cpp" />
@@ -634,6 +640,8 @@
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Back.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Quest.cpp" />
+    <ClCompile Include="..\Private\UI_Minigame1.cpp" />
+    <ClCompile Include="..\Private\UI_Minigame2.cpp" />
     <ClCompile Include="..\Private\UI_Monster_HPbar.cpp" />
     <ClCompile Include="..\Private\UI_PartyjoinMsg.cpp" />
     <ClCompile Include="..\Private\UI_Portraitback.cpp" />

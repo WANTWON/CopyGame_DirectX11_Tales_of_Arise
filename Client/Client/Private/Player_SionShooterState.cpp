@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Player_SionShooterState.h"
 
-#include "Player_SionNormalAttack_State.h"
+#include "Player_SionMiniAttackState.h"
 
 using namespace Player;
 
@@ -16,7 +16,7 @@ CPlayerState * CPlayer_SionShooterState::HandleInput(void)
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
 	if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-		return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
+		return new CPlayer_SionMiniAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
 
 	return nullptr;
 }

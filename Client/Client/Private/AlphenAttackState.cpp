@@ -207,7 +207,6 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MINIGAME1, m_pSwordCollider, &pCollisionTarget))
 		{
-
 			CThrowingObject* pCollied = dynamic_cast<CThrowingObject*>(pCollisionTarget);
 			if (pCollied)
 			{
@@ -241,20 +240,17 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 
 				pCollied->Set_Dead(true);
 
-
 				_bool bSound = false;
 				if (!bSound)
 				{
 					CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut.wav"), SOUND_EFFECT, 1.0f);
 					//bSound = true;
-
 				}
 			}
-
-#ifdef _DEBUG
-			m_pOwner->Get_Renderer()->Add_Debug(m_pSwordCollider);
-#endif
 		}
+#ifdef _DEBUG
+		m_pOwner->Get_Renderer()->Add_Debug(m_pSwordCollider);
+#endif
 	}
 	if (nullptr != m_pFootCollider)
 	{
@@ -320,61 +316,64 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 		Enter();
 	}
 
-	if (m_bIsFly)
+	if (LEVEL_RESTAURANT != CGameInstance::Get_Instance()->Get_CurrentLevelIndex())
 	{
-		if (GetKeyState('E') < 0)
+		if (m_bIsFly)
 		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fTime);
+			if (GetKeyState('E') < 0)
+			{
+				if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fTime);
+			}
+			else if (GetKeyState('R') < 0)
+			{
+				if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fTime);
+			}
+			else if (GetKeyState('F') < 0)
+			{
+				if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fTime);
+			}
 		}
-		else if (GetKeyState('R') < 0)
+		else
 		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fTime);
-		}
-		else if (GetKeyState('F') < 0)
-		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fTime);
+			if (GetKeyState('E') < 0)
+			{
+				if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
+			}
+			else if (GetKeyState('R') < 0)
+			{
+				if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
+			}
+			else if (GetKeyState('F') < 0)
+			{
+				if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
+			}
 		}
 	}
-	else
-	{
-		if (GetKeyState('E') < 0)
-		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E);
-		}
-		else if (GetKeyState('R') < 0)
-		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
-		}
-		else if (GetKeyState('F') < 0)
-		{
-			if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
-				return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
-		}
 
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
-			return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
-			return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
-			return new CRunState(m_pOwner, DIR_BACKWARD_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
-			return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-		else if (pGameInstance->Key_Pressing(DIK_A))
-			return new CRunState(m_pOwner, DIR_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-		else if (pGameInstance->Key_Pressing(DIK_D))
-			return new CRunState(m_pOwner, DIR_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-		else if (pGameInstance->Key_Pressing(DIK_S))
-			return new CRunState(m_pOwner, DIR_BACKWARD, pGameInstance->Key_Pressing(DIK_LSHIFT));
-		else if (pGameInstance->Key_Pressing(DIK_W))
-			return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	}
+	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
+		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
+		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
+		return new CRunState(m_pOwner, DIR_BACKWARD_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
+		return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_A))
+		return new CRunState(m_pOwner, DIR_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_D))
+		return new CRunState(m_pOwner, DIR_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_S))
+		return new CRunState(m_pOwner, DIR_BACKWARD, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	else if (pGameInstance->Key_Pressing(DIK_W))
+		return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
 
 	return nullptr;
 }
