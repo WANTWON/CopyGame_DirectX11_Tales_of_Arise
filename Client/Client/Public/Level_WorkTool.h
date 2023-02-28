@@ -30,6 +30,8 @@ public:
 	_int Get_Score() { return m_iScore; }
 
 
+
+
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
 	CCamera_Dynamic*	m_pCamera = nullptr;

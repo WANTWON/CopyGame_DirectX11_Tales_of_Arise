@@ -33,8 +33,7 @@ private:
 
 	_float m_fEventStart = -1.f;
 
-	_bool m_bAlphenStrike_1 = false;
-	_bool m_bAlphenStrike_2 = false;
+
 };
 END
 END

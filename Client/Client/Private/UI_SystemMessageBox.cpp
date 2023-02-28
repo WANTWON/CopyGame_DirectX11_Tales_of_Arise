@@ -73,6 +73,7 @@ int CUI_SystemMessageBox::Tick(_float fTimeDelta)
 			CUI_Manager::Get_Instance()->Set_Dialogue_section(7);
 				CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
 				pCurrentLevel->Set_NextLevel(true, LEVEL_CITY);
+				m_bfadeout = true;
 			
 		}
 
