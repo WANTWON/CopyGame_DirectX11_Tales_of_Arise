@@ -96,7 +96,7 @@ private:
 
 	vector<_tchar*> m_vDialogue9[6]; // minigame 1 end;
 
-	vector<_tchar*> m_vDialogue10[4]; // minigame 1 end;
+	vector<_tchar*> m_vDialogue10[4]; // minigame 1 start;
 
 	
 
