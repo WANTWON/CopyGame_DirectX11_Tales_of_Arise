@@ -475,12 +475,13 @@ HRESULT CLevel_Restaurant::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 void CLevel_Restaurant::Set_MiniGameStart(_bool tof)
 {
+
 	 m_bMinigameStart = tof;
 	if (m_bMinigameStart)
 	{
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_MINIGAME);
 		dynamic_cast<CCamera_MiniGame*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_CamMode(CCamera_MiniGame::MINIGAME_SLASH);
-
+		CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
 		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(18, 0.f, 31.f, 1.f));
 		pPlayer->Change_Navigation(LEVEL_RESTAURANT);

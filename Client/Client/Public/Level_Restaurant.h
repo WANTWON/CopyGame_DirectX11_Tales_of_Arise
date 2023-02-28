@@ -25,7 +25,6 @@ public:
 	_bool Get_MiniGameStart() { return m_bMinigameStart; }
 	void Set_MiniGameStart(_bool tof);
 
-	void Increase_Score(_int iScore) { m_iScore += iScore; }
 	_int Get_Score() { return m_iScore; }
 	_float Get_TotalTime() {return m_fTotalTime	;}
 	void Increase_Score(_int iScore)
