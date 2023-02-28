@@ -147,10 +147,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							{
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_1.dat"), mWorldMatrix);
 
-								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;
 								
-								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
 								m_bNormalAttack_1 = true;
 							}
 						}
@@ -170,10 +170,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							{
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_2.dat"), mWorldMatrix);
 
-								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;
 
-								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
 								m_bNormalAttack_2 = true;
 							}
 						}
@@ -185,10 +185,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							{
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_Air_3.dat"), mWorldMatrix);
 								
-								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;
 
-								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
 								m_bNormalAttackAir_3 = true;
 							}
 						}
@@ -216,10 +216,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							{
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_4.dat"), mWorldMatrix);
 
-								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;
 
-								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
 								m_bNormalAttack_4 = true;
 							}
 						}
@@ -231,10 +231,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							{
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_Air_5.dat"), mWorldMatrix);
 
-								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;
 
-								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
 								m_bNormalAttackAir_5 = true;
 							}
 						}
@@ -695,13 +695,13 @@ CCollider * CLawAttackState::Get_Collider(CCollider::TYPE eType, _float3 vScale,
 	switch (eType)
 	{
 	case Engine::CCollider::TYPE_AABB:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
 		break;
 	case Engine::CCollider::TYPE_OBB:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
 		break;
 	case Engine::CCollider::TYPE_SPHERE:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 		break;
 	}
 

@@ -53,7 +53,7 @@ HRESULT CLevel_City::Initialize()
 
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LEVEL_CITY2.wav"), g_fSoundVolume);
 	return S_OK;
 }
 

@@ -1218,6 +1218,9 @@
     <ClInclude Include="..\Public\MiniGameNpc.h">
       <Filter>02.GameObjects\01.Actor\02.NPC\MiniGameNpc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_SionMiniAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1960,6 +1963,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MiniGameNpc.cpp">
       <Filter>02.GameObjects\01.Actor\02.NPC\MiniGameNpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_SionMiniAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

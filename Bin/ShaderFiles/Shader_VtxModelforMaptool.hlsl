@@ -182,9 +182,6 @@ PS_EFFECT_OUT PS_EFFECT(PS_IN In)
 		Out.vColor.a = vMaskTexture.r;
 		Out.vColor *= g_fAlpha;
 		Out.vColor.rgb = g_vColor;
-		//Out.vColor.rgb /= Out.vColor.a;
-
-		
 	}
 	
 	/* Noise Texture */
