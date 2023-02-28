@@ -240,9 +240,11 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					break;
 
 				case 9:
-					dynamic_cast<CLevel_WorkTool*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Set_MiniGameStart(true);
 					CUI_Manager::Get_Instance()->Set_Dialogue_section(10);
-
+					break;
+				case 10:
+					dynamic_cast<CLevel_WorkTool*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Set_MiniGameStart(true);
+					break;
 						
 
 
