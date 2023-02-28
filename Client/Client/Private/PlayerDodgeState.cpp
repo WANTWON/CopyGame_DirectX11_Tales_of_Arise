@@ -234,7 +234,7 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 			{
-				m_pOwner->On_JustDodge();
+				
 
 #pragma region Dodge Effect
 				_float fDuration = pEvent.fEndTime - pEvent.fStartTime;
@@ -267,7 +267,7 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 
 				if (nullptr == m_pDodgeCollider)
 				{
-					CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
+					
 					CCollider::COLLIDERDESC		ColliderDesc;
 
 					ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
@@ -323,6 +323,10 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pDodgeCollider, &pCollisionTarget))
 		{
+			///////
+			m_pOwner->On_JustDodge();
+
+			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
 
 			pCollisionTarget->Set_Dead(true);
 			CCollision_Manager::Get_Instance()->Collect_Collider(CCollider::TYPE_SPHERE, m_pDodgeCollider);
@@ -339,7 +343,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (m_pOwner->Get_Info().idodgecount >= 5)
+		if (m_pOwner->Get_Info().idodgecount >= 2)
 		{
 		    CBaseObj* pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
 			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
@@ -570,4 +574,8 @@ void CDodgeState::Exit(void)
 void CDodgeState::Move(_float fTimeDelta)
 {
 
+}
+
+void CDodgeState::DodgeEffect()
+{
 }

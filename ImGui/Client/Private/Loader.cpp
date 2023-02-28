@@ -169,12 +169,12 @@ HRESULT CLoader::Loading_ForClient()
 		return E_FAIL;
 
 	//For Maptool
-	//if (FAILED(Loading_ForActor()))
-	//	return E_FAIL;
-
-	//For Maptool
-	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
+
+	////For Maptool
+	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+	//	return E_FAIL;
 
 
 	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
@@ -3238,6 +3238,14 @@ HRESULT CLoader::Loading_ForEffectTexture()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LineUnique_ym_01"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line/LineUnique_ym_01.png"), 1))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SpellText"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line/SpellText.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SpellText_rm"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line/SpellText_rm.png"), 1))))
+		return E_FAIL;
+
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_trail_ny_08"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line/TO14_T_FX_trail_ny_08.png"), 1))))
 		return E_FAIL;
