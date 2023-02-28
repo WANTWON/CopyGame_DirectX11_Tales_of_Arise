@@ -480,7 +480,7 @@ HRESULT CLevel_Logo::Ready_Layer_Npc(const _tchar * pLayerTag)
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	CNpc::NPCDESC NpcDesc;
-
+	
 	_uint iNum = 0;
 
 	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);

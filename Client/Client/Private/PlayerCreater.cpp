@@ -1590,25 +1590,35 @@ HRESULT CPlayerCreater::Ready_Layer_NpcCity(const _tchar * pLayerTag)
 		if (!wcscmp(pModeltag, TEXT("NPC_NFC_SLV_000")))
 		{
 			NpcDesc.eNpcType = CCityNpc::NPC_NFC_SLV_000;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_Child"), &NpcDesc)))
 				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Child"));
 
 		}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
 		{
 			NpcDesc.eNpcType = CCityNpc::MAN_GLD;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_Gld"), &NpcDesc)))
 				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Gld"));
 
 		}
+
+		//else if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
+		//{
+		//	NpcDesc.eNpcType = CCityNpc::MAN_GLD;
+		//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+		//		return E_FAIL;
+		//	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
+
+		//}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NFC_SLV_000_2th")))
 		{
 			NpcDesc.eNpcType = CCityNpc::NPC_NFC_SLV_000_2th;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_Child"), &NpcDesc)))
 				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Child"));
+
 
 		}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMY_PLC")))
