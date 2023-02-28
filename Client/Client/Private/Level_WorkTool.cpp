@@ -109,7 +109,7 @@ void CLevel_WorkTool::Late_Tick(_float fTimeDelta)
 
 		CShootingObject::SHOOTINGDEC tShootingDesc;
 		tShootingDesc.eType = CShootingObject::TYPE_A;
-		tShootingDesc.fVelocity = 3.f;
+		tShootingDesc.fVelocity = 1.f;
 		strcpy_s(tShootingDesc.tNonDesc.pModeltag, "Bow");
 
 		_int iRand = rand() % 4;

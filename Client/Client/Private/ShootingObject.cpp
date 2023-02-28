@@ -78,6 +78,21 @@ void CShootingObject::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
+
+	CBaseObj* pCollisionTarget = nullptr;
+	CBaseObj* pBullet = nullptr;
+
+	if (!CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MINIGAME2, m_pSPHERECom, &pCollisionTarget))
+	{
+		//Collision
+		int a = 0;
+	}
+
+	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PBULLET, m_pSPHERECom, &pBullet))
+	{
+		//Collision
+		int a = 0;
+	}
 }
 
 HRESULT CShootingObject::Render()
