@@ -29,6 +29,12 @@ private:
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
 
+	CTexture*				m_pTextureCom2 = nullptr;
+
+	CTexture*				m_pTextureCom3 = nullptr;
+
+	CTexture*				m_pTextureCom4 = nullptr;
+
 
 public:
 	static CDamagefont_Critical* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

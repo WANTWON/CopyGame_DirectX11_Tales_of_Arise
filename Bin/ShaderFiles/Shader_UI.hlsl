@@ -759,8 +759,8 @@ PS_OUT PS_Bright(PS_IN In)
 	Out.vColor.rgb += fLerp;   //fLerpValue;
 
 
-	if (Out.vColor.a<0.3f)
-		discard;
+	/*if (Out.vColor.a<0.3f)
+		discard;*/
 
 	Out.vColor.a *= g_fAlpha;
 
