@@ -436,6 +436,9 @@
     <Filter Include="02.GameObjects\06.InteractObject\02. MiniGame1">
       <UniqueIdentifier>{29fcaa07-73e4-4a3e-9a2b-e1169e513950}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\30.UI_MiniGame1">
+      <UniqueIdentifier>{712cafc0-90b6-445f-80ca-491be53c41a6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\01.Actor\02.NPC\CityNpc">
       <UniqueIdentifier>{96b05882-da93-410d-927b-3a973b361c8f}</UniqueIdentifier>
     </Filter>
@@ -1206,6 +1209,12 @@
     <ClInclude Include="..\Public\ThrowingObject.h">
       <Filter>02.GameObjects\06.InteractObject\02. MiniGame1</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Damagefont_Break.h">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Minigame1.h">
+      <Filter>02.GameObjects\04.UI\30.UI_MiniGame1</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AI_BoostAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState\States</Filter>
     </ClInclude>
@@ -1217,6 +1226,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\MiniGameNpc.h">
       <Filter>02.GameObjects\01.Actor\02.NPC\MiniGameNpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Minigame2.h">
+      <Filter>02.GameObjects\04.UI\30.UI_MiniGame1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_SionMiniAttackState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
@@ -1955,6 +1967,12 @@
     <ClCompile Include="..\Private\ThrowingObject.cpp">
       <Filter>02.GameObjects\06.InteractObject\02. MiniGame1</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UI_Damagefont_Break.cpp">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Minigame1.cpp">
+      <Filter>02.GameObjects\04.UI\30.UI_MiniGame1</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Player_SionShooterState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>
     </ClCompile>
@@ -1963,6 +1981,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MiniGameNpc.cpp">
       <Filter>02.GameObjects\01.Actor\02.NPC\MiniGameNpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Minigame2.cpp">
+      <Filter>02.GameObjects\04.UI\30.UI_MiniGame1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_SionMiniAttackState.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States\LongRanged\Sion</Filter>

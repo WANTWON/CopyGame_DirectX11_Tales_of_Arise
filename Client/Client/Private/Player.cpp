@@ -508,7 +508,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
 	testdesc.iDamage = fDamage;
 	testdesc.pPointer = this;
-	testdesc.itype = 4;
+	testdesc.itype = 5;
 
 	if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
 	{

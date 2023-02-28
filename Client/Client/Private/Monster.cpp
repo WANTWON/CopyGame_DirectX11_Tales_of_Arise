@@ -502,18 +502,22 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	
 	++m_tStats.m_iHitcount;
 
-	if (m_tStats.m_iHitcount >= 80)
+	if (m_tStats.m_iHitcount >= 10)
 	{
 		m_bDownState = true;
 		m_tStats.m_iHitcount = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+			return E_FAIL;
 	}
 		
 	++m_tStats.m_iBedamagedCount;
 	
-	if (m_tStats.m_iBedamagedCount >= 60)
+	if (m_tStats.m_iBedamagedCount >= 20)
 	{
 		m_bBedamageAnim = true;
 		m_tStats.m_iBedamagedCount = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+			return E_FAIL;
 	}
 
 
@@ -547,6 +551,11 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	fontdesc.itype = 1;
 	fontdesc.iDamage = fDamage;
 	fontdesc.pPointer = this;
+
+	
+	//_float2 pos = Get_ProjPosition();
+
+
 	switch (rand() % 8)
 	{
 		
@@ -596,8 +605,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	
 	
 
-	m_tStats.m_fLockonSmashGuage += 0.2f;
-	
+	m_tStats.m_fLockonSmashGuage += 0.02f;
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
 		m_tStats.m_fLockonSmashGuage = 4.f;

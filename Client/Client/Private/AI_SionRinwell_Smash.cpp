@@ -165,7 +165,7 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 	{
 		m_fFadeTime += fTimeDelta;
 
-		if (m_fFadeTime > 3.5f)
+		if (m_fFadeTime > 4.5f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::SION)
 			{
