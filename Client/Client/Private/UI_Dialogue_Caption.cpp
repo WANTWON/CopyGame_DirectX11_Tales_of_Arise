@@ -173,7 +173,7 @@ HRESULT CUI_Dialogue_Caption::Render()
 		return E_FAIL;
 
 	
-	m_pShaderCom->Begin();
+	m_pShaderCom->Begin(1);
 
 	m_pVIBufferCom->Render();
 	
