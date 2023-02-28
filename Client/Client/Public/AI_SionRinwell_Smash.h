@@ -20,6 +20,7 @@ private:
 	vector<CEffect*> m_pEffects;
 
 	_float m_fTime = 0.f;
+	_float m_fFadeTime = 0.f;
 	_bool  m_bBullet = false;
 
 	_bool m_bAlphenStrike_1 = false;

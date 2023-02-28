@@ -180,9 +180,9 @@ PS_EFFECT_OUT PS_EFFECT(PS_IN In)
 		float4 vMaskTexture = g_MaskTexture.Sample(LinearSampler, vOffsettedUV);
 
 		Out.vColor.a = vMaskTexture.r;
-		Out.vColor.rgb = g_vColor;
-		Out.vColor.rgb /= Out.vColor.a;
 		Out.vColor *= g_fAlpha;
+		Out.vColor.rgb = g_vColor;
+		//Out.vColor.rgb /= Out.vColor.a;
 
 		
 	}
