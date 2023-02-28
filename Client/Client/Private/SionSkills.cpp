@@ -125,7 +125,6 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ExplosionGround.dat"), mWorldMatrix);
 		break;
-		
 	}
 
 	return S_OK;
@@ -173,8 +172,9 @@ int CSionSkills::Tick(_float fTimeDelta)
 	case EXPLOSION:
 		Tick_Explosion(fTime);
 		break;
-
-
+	case NAILBULLET:
+		Tick_NailBullet(fTime);
+		break;
 	}
 
 	if (m_pAABBCom != nullptr)
@@ -214,6 +214,7 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 	case GRAVITY:
 	case AQUA_LUINA_BULLET:
 	case EXPLOSIONGROUND:
+	case NAILBULLET:
 		if (m_fTime >= m_BulletDesc.fDeadTime)
 			m_bDead = true;
 		break;
@@ -311,6 +312,14 @@ void CSionSkills::Collision_Check()
 			pCollisionTarget->Get_Transform()->Go_PosDir(0.05f, vDirection, dynamic_cast<CMonster*>(pCollisionTarget)->Get_Navigation());
 		}
 		break;
+	case NAILBULLET:
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+		{
+			_vector vDirection = pCollisionTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+			pCollisionTarget->Get_Transform()->Go_PosDir(0.05f, vDirection, dynamic_cast<CMonster*>(pCollisionTarget)->Get_Navigation());
+		}
+		break;
 	}
 }
 
@@ -324,6 +333,7 @@ void CSionSkills::Dead_Effect()
 
 	switch (m_BulletDesc.eBulletType)
 	{
+	case NAILBULLET:
 	case NORMALATTACK:
 	{
 		if (!m_pEffects.empty())
@@ -464,7 +474,6 @@ void CSionSkills::Dead_Effect()
 
 HRESULT CSionSkills::Ready_Components(void * pArg)
 {
-
 	if (FAILED(__super::Ready_Components(pArg)))
 		return E_FAIL;
 
@@ -543,14 +552,16 @@ HRESULT CSionSkills::Ready_Components(void * pArg)
 			return E_FAIL;
 		break;
 
+	case NAILBULLET:
+		ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+			return E_FAIL;
 
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Nail"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
 	}
-
-
-
-
-
-
 
 	return S_OK;
 	}
@@ -761,6 +772,22 @@ void CSionSkills::Tick_Explosion(_float fTimeDelta)
 		}
 
 	}
+}
+
+void CSionSkills::Tick_NailBullet(_float fTimeDelta)
+{
+	if (m_bDeadEffect)
+		m_bDead = true;
+
+	m_pTransformCom->LookDir(m_BulletDesc.vTargetDir);
+	m_pTransformCom->Go_PosDir(fTimeDelta, m_BulletDesc.vTargetDir);
+
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr)
+			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+	return;
 }
 
 CSionSkills * CSionSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

@@ -258,6 +258,7 @@
     <ClInclude Include="..\Public\PlayerPoseState.h" />
     <ClInclude Include="..\Public\Player_RinwellNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_RinwellSkillAttack_State.h" />
+    <ClInclude Include="..\Public\Player_SionMiniAttackState.h" />
     <ClInclude Include="..\Public\Player_SionNormalAttack_State.h" />
     <ClInclude Include="..\Public\Player_SionShooterState.h" />
     <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
@@ -518,6 +519,7 @@
     <ClCompile Include="..\Private\PlayerPoseState.cpp" />
     <ClCompile Include="..\Private\Player_RinwellNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_RinwellSkillAttack_State.cpp" />
+    <ClCompile Include="..\Private\Player_SionMiniAttackState.cpp" />
     <ClCompile Include="..\Private\Player_SionNormalAttack_State.cpp" />
     <ClCompile Include="..\Private\Player_SionShooterState.cpp" />
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />

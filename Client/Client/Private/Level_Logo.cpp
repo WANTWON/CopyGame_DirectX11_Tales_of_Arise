@@ -41,15 +41,18 @@ HRESULT CLevel_Logo::Initialize()
 	DWORD fTimeDelta = GetTickCount();
 
 	while (m_pMonsterLoader->Get_Finished() == false ||
-		m_pPlayerLoader->Get_Finished() == false)
+		m_pPlayerLoader->Get_Finished() == false ||
+		m_pLoader->Get_Finished() == false )
 	{
 		if (fTimeDelta + 1000 < GetTickCount())
 		{
 
 			if (m_pPlayerLoader->Get_Finished() == false)
 				cout << "Player cloning" << endl;
-			if (m_pPlayerLoader->Get_Finished() == false)
-				cout << "Player cloning" << endl;
+			if (m_pMonsterLoader->Get_Finished() == false)
+				cout << "Monster cloning" << endl;
+			if (m_pLoader->Get_Finished() == false)
+				cout << "NonAnim cloning" << endl;
 
 			fTimeDelta = GetTickCount();
 		}
@@ -74,8 +77,7 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 
 
-	if (m_pLoader->Get_Finished() == true &&
-		GetKeyState(VK_SPACE) & 0x8000)
+	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);

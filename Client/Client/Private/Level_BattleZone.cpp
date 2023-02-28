@@ -611,7 +611,16 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 void CLevel_BattleZone::Set_FogShader()
 {
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-	if(pPlayer->Get_StrikeAttack() == false)
+	CPlayer* pPlayer1 = CPlayerManager::Get_Instance()->Get_EnumPlayer(CPlayer::ALPHEN);
+	CPlayer* pPlayer2 = CPlayerManager::Get_Instance()->Get_EnumPlayer(CPlayer::SION);
+	CPlayer* pPlayer3 = CPlayerManager::Get_Instance()->Get_EnumPlayer(CPlayer::RINWELL);
+	CPlayer* pPlayer4 = CPlayerManager::Get_Instance()->Get_EnumPlayer(CPlayer::LAW);
+	
+
+	if(pPlayer1->Get_StrikeAttack() == false &&
+		pPlayer2->Get_StrikeAttack() == false &&
+		pPlayer3->Get_StrikeAttack() == false &&
+		pPlayer4->Get_StrikeAttack() == false)
 	{
 		/* Fog Shader */
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
