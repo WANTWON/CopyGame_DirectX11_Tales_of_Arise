@@ -234,7 +234,11 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 					}
 					else if (m_bIsAnimationFinished)
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_LOOP);
+						m_eStateType = STATETYPE_MAIN;
+					}
+						
 				}
 				else if (CPlayer::SION == m_ePlayerID)
 				{
@@ -244,7 +248,10 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 					}
 					else if (m_bIsAnimationFinished)
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LOOP);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
 				else if (CPlayer::RINWELL == m_ePlayerID)
 				{
@@ -254,7 +261,10 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 					}
 					else if (m_bIsAnimationFinished)
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_LOOP);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
 				else if (CPlayer::LAW == m_ePlayerID)
 				{
@@ -264,7 +274,10 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 					}
 					else if (m_bIsAnimationFinished)
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::JUMP_LOOP);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
 				break;
 			case Client::Player::CJumpState::JUMP_RUN:
@@ -276,7 +289,10 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 					}
 					else if (m_bIsAnimationFinished)
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LOOP);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
 				else if (CPlayer::SION == m_ePlayerID)
 				{
@@ -286,7 +302,10 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 					}
 					else if (m_bIsAnimationFinished)
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_LOOP);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
 				else if (CPlayer::RINWELL == m_ePlayerID)
 				{
@@ -296,7 +315,10 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 					}
 					else if (m_bIsAnimationFinished)
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_LOOP);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
 				else if (CPlayer::LAW == m_ePlayerID)
 				{
@@ -306,7 +328,10 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_eStateType = STATETYPE_END;
 					}
 					else if (m_bIsAnimationFinished)
+					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::JUMP_RUN_LOOP);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
 				break;
 			case Client::Player::CJumpState::JUMP_BATTLE:
@@ -317,7 +342,11 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
 						m_eStateType = STATETYPE_END;
 					}
-						
+					else if (m_bIsAnimationFinished)
+					{
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_FALL);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
 				else if (CPlayer::SION == m_ePlayerID)
 				{
@@ -326,7 +355,11 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
 						m_eStateType = STATETYPE_END;
 					}
-						
+					else if (m_bIsAnimationFinished)
+					{
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_FALL);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
 				else if (CPlayer::RINWELL == m_ePlayerID)
 				{
@@ -335,7 +368,11 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
 						m_eStateType = STATETYPE_END;
 					}
-						
+					else if (m_bIsAnimationFinished)
+					{
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_FALL);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
 				else if (CPlayer::LAW == m_ePlayerID)
 				{
@@ -344,14 +381,18 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_LAND);
 						m_eStateType = STATETYPE_END;
 					}
+					else if (m_bIsAnimationFinished)
+					{
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_FALL);
+						m_eStateType = STATETYPE_MAIN;
+					}
 				}
-				
 				break;
 			}
 		}
 		break;
 	case Client::STATETYPE_MAIN:
-		if (Check_JumpEnd(1.5f))
+		if (Check_JumpEnd(1.f))
 		{
 			m_eStateType = STATETYPE_END;
 			switch (m_eJumpType)
@@ -375,6 +416,16 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_LANDING);
 				else if (CPlayer::LAW == m_pOwner->Get_PlayerID())
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::JUMP_RUN_LANDING);
+				break;
+			case Client::Player::CJumpState::JUMP_BATTLE:
+				if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
+				else if (CPlayer::SION == m_pOwner->Get_PlayerID())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
+				else if (CPlayer::RINWELL == m_pOwner->Get_PlayerID())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
+				else if (CPlayer::LAW == m_pOwner->Get_PlayerID())
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_LAND);
 				break;
 			}
 		}
@@ -579,24 +630,32 @@ void CJumpState::Enter()
 		case CPlayer::ALPHEN:
 			if (m_eStateType == STATETYPE_START)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_JUMP);
+			else if (m_eStateType == STATETYPE_MAIN)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_FALL);
 			else if (m_eStateType == STATETYPE_END)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
 			break;
 		case CPlayer::SION:
 			if (m_eStateType == STATETYPE_START)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_JUMP);
+			else if (m_eStateType == STATETYPE_MAIN)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_FALL);
 			else if (m_eStateType == STATETYPE_END)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
 			break;
 		case CPlayer::RINWELL:
 			if (m_eStateType == STATETYPE_START)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_JUMP);
+			else if (m_eStateType == STATETYPE_MAIN)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_FALL);
 			else if (m_eStateType == STATETYPE_END)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
 			break;
 		case CPlayer::LAW:
-			if (STATETYPE_START == m_eStateType)
+			if (m_eStateType == STATETYPE_START)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_JUMP);
+			else if (m_eStateType == STATETYPE_MAIN)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_FALL);
 			else if (STATETYPE_END == m_eStateType)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_LAND);
 			break;

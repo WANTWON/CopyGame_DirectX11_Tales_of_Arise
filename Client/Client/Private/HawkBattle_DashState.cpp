@@ -12,20 +12,16 @@ CBattle_DashState::CBattle_DashState(CHawk* pHawk)
 	m_pOwner = pHawk;
 	
 	m_fRandTime = ((rand() % 4000 + 1000) *0.001f)*((rand() % 100) * 0.01f);
-	
 }
 
 CHawkState * CBattle_DashState::AI_Behaviour(_float fTimeDelta)
 {
-	
 	return nullptr;
 }
 
 CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 {
-
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.1f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-
 
 	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
@@ -44,9 +40,7 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 		}
-
 	}
-
 
 	else if (pDamageCauser != nullptr)
 	{
@@ -68,7 +62,6 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 	for (auto& pEvent : pEvents)
@@ -83,7 +76,6 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 					m_bAnimFinish = true;
 				}
 			}
-
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
@@ -103,6 +95,8 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
+
+					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 				else
 					m_pAtkColliderCom->Update(matWorld);
@@ -115,6 +109,8 @@ CHawkState * CBattle_DashState::Tick(_float fTimeDelta)
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
+
+			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 		}
 	}
 	return nullptr;
@@ -151,10 +147,7 @@ CHawkState * CBattle_DashState::LateTick(_float fTimeDelta)
 	}
 
 	if (m_bIsAnimationFinished)
-	{
 		return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_DASH);
-
-	}
 	
 #ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
@@ -169,8 +162,6 @@ void CBattle_DashState::Enter()
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_DASH);
-
-	
 }
 
 void CBattle_DashState::Exit()

@@ -16,11 +16,7 @@ CBattle_PeckState::CBattle_PeckState(CHawk* pHawk)
 
 CHawkState * CBattle_PeckState::AI_Behaviour(_float fTimeDelta)
 {
-	
-
 	return nullptr;
-
-
 }
 
 CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
@@ -42,9 +38,7 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 		}
-
 	}
-
 
 	else if (pDamageCauser != nullptr)
 	{
@@ -54,7 +48,6 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
 	}
 
-	
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.3f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
@@ -77,13 +70,8 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 			{
-
 				if (!m_bFisrtSound)
-				{
-					//CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Peck.wav"), SOUND_VOICE, 0.4f);
 					m_bFisrtSound = true;
-				}
-
 			}
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
@@ -104,6 +92,7 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
+					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 				}
 				else
 					m_pAtkColliderCom->Update(matWorld);
@@ -116,12 +105,12 @@ CHawkState * CBattle_PeckState::Tick(_float fTimeDelta)
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
+
+			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 		}
 	}
 
-
 	return nullptr;
-
 }
 
 CHawkState * CBattle_PeckState::LateTick(_float fTimeDelta)
@@ -170,12 +159,9 @@ void CBattle_PeckState::Enter()
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_PECK);
-	
 }
 
 void CBattle_PeckState::Exit()
 {
-	//CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
-
 	Safe_Release(m_pAtkColliderCom);
 }

@@ -234,8 +234,6 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 			{
-				m_pOwner->On_JustDodge();
-
 #pragma region Dodge Effect
 				_float fDuration = pEvent.fEndTime - pEvent.fStartTime;
 				_float fCurrentTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
@@ -267,7 +265,6 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 
 				if (nullptr == m_pDodgeCollider)
 				{
-					CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
 					CCollider::COLLIDERDESC		ColliderDesc;
 
 					ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
@@ -280,11 +277,8 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_JustDodgeEffect"), LEVEL_STATIC, TEXT("ddd"), &m_pOwner)))
 							return OBJ_NOEVENT;
 						m_bJustEffectOnce = false;
-
 					}
-					
 				}
-
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
@@ -293,8 +287,9 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		{
 			if ((ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType) && (m_pOwner->Get_IsJustDodge() == true))
 			{
-				
 				m_pOwner->Off_JustDodge();
+
+				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
 
 				if (nullptr != m_pDodgeCollider)
 				{
@@ -323,8 +318,8 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pDodgeCollider, &pCollisionTarget))
 		{
+			m_pOwner->On_JustDodge();
 
-			pCollisionTarget->Set_Dead(true);
 			CCollision_Manager::Get_Instance()->Collect_Collider(CCollider::TYPE_SPHERE, m_pDodgeCollider);
 			m_pDodgeCollider = nullptr;
 

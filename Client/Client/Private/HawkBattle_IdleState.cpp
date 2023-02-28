@@ -21,14 +21,11 @@ CBattle_IdleState::CBattle_IdleState(CHawk* pHawk, STATE_ID ePreBattleState, CBa
 
 CHawkState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 {
-
 	return nullptr;
 }
 
 CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
-	//Find_BattleTarget();
-
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
@@ -51,7 +48,6 @@ CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 
 	}
 
-
 	else if (pDamageCauser != nullptr)
 	{
 		m_pCurTarget = pDamageCauser;
@@ -66,17 +62,13 @@ CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 {	
 	m_pOwner->Check_Navigation();
-	//m_pOwner->Get_Transform()->LookAt(m_vCurTargetPos);
 
 	m_fTimeDeltaAcc += fTimeDelta;
 
 	if (m_ePreBattleState == STATE_ID::STATE_DOWN)
 	{
 		if (m_bIsAnimationFinished)
-		{
 			return new CBattle_DashState(m_pOwner);
-		}
-
 		else
 		{
 			_vector vecTranslation;
@@ -96,10 +88,7 @@ CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 			p2thCorpseNearby = m_pOwner->Find_MinDistance_Target();
 
 			if (p2thCorpseNearby->Get_Info().fCurrentHp > 0)
-			{
 				return new CBattle_RunState(m_pOwner, STATE_ID::STATE_END);
-			}
-
 			else
 				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
 		}
@@ -109,24 +98,7 @@ CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 	{
 		if (m_fTimeDeltaAcc > m_fRandTime)
 			return new CBattle_DashState(m_pOwner);
-
-
 	}
-
-	
-	/*m_fTimeDeltaAcc += fTimeDelta;
-
-	if (m_fTimeDeltaAcc > m_fRandTime)
-	{
-		switch (m_ePreBattleState)
-		{
-		case CHawkState::STATE_ID::START_BATTLEMODE:
-			return new CBattle_DashState(m_pOwner);
-			
-		default:
-			break;
-		}
-	}*/
 
 	return nullptr;
 }
@@ -134,7 +106,6 @@ CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 void CBattle_IdleState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_BATTLE;
-
 
 	if (m_ePreBattleState == STATE_ID::STATE_DOWN)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ARISE_F);
@@ -156,5 +127,4 @@ void CBattle_IdleState::Exit()
 	}
 
 	m_pOwner->Set_IsActionMode(false);
-
 }

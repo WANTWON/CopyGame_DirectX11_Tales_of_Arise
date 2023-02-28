@@ -17,16 +17,11 @@ CBattle_TornadeState::CBattle_TornadeState(CHawk* pHawk)
 
 CHawkState * CBattle_TornadeState::AI_Behaviour(_float fTimeDelta)
 {
-	
-
 	return nullptr;
-
-
 }
 
 CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 {
-
 	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
 	if (pDamageCauser == nullptr)
@@ -127,6 +122,7 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p2th_AtkColliderCom)
 					m_p2th_AtkColliderCom->Update(R_matWorld);
 
+				pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 			}
 		}
 
@@ -139,9 +135,10 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 			m_pAtkColliderCom = nullptr;
 			m_p2th_AtkColliderCom = nullptr;
+
+			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 		}
 	}
-
 
 	m_pOwner->Get_Transform()->LookAt(XMVectorSetY(m_vCurTargetPos, 2.f));
 
@@ -150,7 +147,6 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 {
-	
 	if (nullptr != m_pAtkColliderCom)
 	{
 		CBaseObj* pCollisionTarget = nullptr;
@@ -207,7 +203,6 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 			m_b2th_Collision = false;
 		}
 	}
-
 
 	if (m_bIsAnimationFinished)
 			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_TORNADE);
