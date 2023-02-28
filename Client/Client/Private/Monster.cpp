@@ -446,11 +446,11 @@ HRESULT CMonster::Drop_Items()
 
 void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 {
-	/*if (m_bMakeEffect)
-		return;*/
-
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	CBaseObj* pTarget = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
+
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(DamageCauser);
+	if (!pPlayer)
+		return;
 
 	_vector vOffset = XMVectorSet(0.f, m_fRadius + 1.5f, 0.f, 0.f);
 	_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
@@ -458,9 +458,19 @@ void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	mWorldMatrix.r[3] = vLocation;
 
-	CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
-
-	/*m_bMakeEffect = true;*/
+	switch (pPlayer->Get_PlayerID())
+	{
+	case CPlayer::PLAYERID::ALPHEN:
+		CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
+		break;
+	case CPlayer::PLAYERID::LAW:
+		CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
+		break;
+	case CPlayer::PLAYERID::RINWELL:
+	case CPlayer::PLAYERID::SION:
+		CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
+		break;
+	}
 
 	RELEASE_INSTANCE(CGameInstance);
 }
@@ -492,18 +502,22 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	
 	++m_tStats.m_iHitcount;
 
-	if (m_tStats.m_iHitcount >= 80)
+	if (m_tStats.m_iHitcount >= 10)
 	{
 		m_bDownState = true;
 		m_tStats.m_iHitcount = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+			return E_FAIL;
 	}
 		
 	++m_tStats.m_iBedamagedCount;
 	
-	if (m_tStats.m_iBedamagedCount >= 60)
+	if (m_tStats.m_iBedamagedCount >= 20)
 	{
 		m_bBedamageAnim = true;
 		m_tStats.m_iBedamagedCount = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+			return E_FAIL;
 	}
 
 
@@ -537,6 +551,11 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	fontdesc.itype = 1;
 	fontdesc.iDamage = fDamage;
 	fontdesc.pPointer = this;
+
+	
+	//_float2 pos = Get_ProjPosition();
+
+
 	switch (rand() % 8)
 	{
 		
@@ -586,8 +605,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	
 	
 
-	m_tStats.m_fLockonSmashGuage += 0.2f;
-	
+	m_tStats.m_fLockonSmashGuage += 0.002f;
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
 		m_tStats.m_fLockonSmashGuage = 4.f;

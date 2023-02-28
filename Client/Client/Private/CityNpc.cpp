@@ -263,6 +263,18 @@ void CCityNpc::Talk_with_Npc()
 
 		switch (m_NpcDesc.eNpcType)
 		{
+		case NPC_NMM_MHB_000:
+			break;
+
+		case MAN_GLD:
+			switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
+			{
+			case 7:
+				dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(7);
+				CUI_Manager::Get_Instance()->Set_Dialogue_section(8);
+			}
+			break;
+
 		case NPC_NMM_DIM_000:
 			m_pModelCom->Set_CurrentAnimIndex(1);
 			break;
@@ -283,6 +295,7 @@ _float CCityNpc::Find_Target()
 {
 	if (m_NpcDesc.eNpcType == NPC_NFC_SLV_000)
 	{
+
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("Layer_Child"), 0);
 		if (pGameObject == this)
@@ -301,6 +314,7 @@ _float CCityNpc::Find_Target()
 		_float fDistance = XMVectorGetX(XMVector3Length(vChasePosition - vPosition));
 
 		m_fDistance = fDistance;
+
 	}
 
 	else if (m_NpcDesc.eNpcType == NPC_NFC_SLV_000_2th)

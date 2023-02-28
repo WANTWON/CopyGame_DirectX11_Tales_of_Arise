@@ -20,12 +20,12 @@ CAI_LAW_SkillAttack_State::CAI_LAW_SkillAttack_State(CPlayer * pPlayer, STATE_ID
 {
 	m_eStateId = eStaetType;
 	m_pOwner = pPlayer;
-
 }
-
 
 CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 {
+	Update_Skill();
+
 	if (CheckTarget() == false)
 		return nullptr;
 
@@ -128,6 +128,157 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 					case 1:
 						//m_pOwner->Get_Model()->Reset();
 						return new CAI_DodgeState(m_pOwner, m_pTarget);
+						break;
+					}
+				}
+			}
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				switch (m_eStateId)
+				{
+					case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+					{
+						if (m_bIsFly)
+						{
+							if (!strcmp(pEvent.szName, "Burn_Knuckle"))
+							{
+								if (!m_bBurnKnuckle)
+								{
+									m_BurnKnuckle = CEffect::PlayEffectAtLocation(TEXT("Burn_Knuckle.dat"), mWorldMatrix);
+									m_bBurnKnuckle = true;
+
+									if (m_BurnKnuckle[1])
+										m_vBurnKnucklePosition = m_BurnKnuckle[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								}
+							}
+							if (!strcmp(pEvent.szName, "Burn_Knuckle_Particles"))
+							{
+								if (!m_bBurnKnuckleParticles)
+								{
+									mWorldMatrix.r[3] = m_vBurnKnucklePosition;
+
+									CEffect::PlayEffectAtLocation(TEXT("Burn_Knuckle_Particles.dat"), mWorldMatrix);
+									m_bBurnKnuckleParticles = true;
+								}
+							}
+						}
+						else
+						{
+							if (!strcmp(pEvent.szName, "Rondsenpu"))
+							{
+								if (!m_bRondsenpu)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_1.dat"), mWorldMatrix);
+									m_bRondsenpu = true;
+								}
+							}
+						}
+						break;
+					}
+					case Client::CPlayerState::STATE_SKILL_ATTACK_R:
+					{
+						if (m_bIsFly)
+						{
+							if (!strcmp(pEvent.szName, ""))
+							{
+								if (!true)
+								{
+									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
+									//
+								}
+							}
+						}
+						else
+						{
+							if (!strcmp(pEvent.szName, "Garyoukuuha"))
+							{
+								if (!m_bGaryoukuuha)
+								{
+									m_Garyoukuuha = CEffect::PlayEffectAtLocation(TEXT("Garyoukuuha.dat"), mWorldMatrix);
+									m_bGaryoukuuha = true;
+								}
+							}
+						}
+						break;
+					}
+					case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+					{
+						if (m_bIsFly)
+						{
+							if (!strcmp(pEvent.szName, ""))
+							{
+								if (!true)
+								{
+									CEffect::PlayEffectAtLocation(TEXT(".dat"), mWorldMatrix);
+									// 
+								}
+							}
+						}
+						else
+						{
+							if (!strcmp(pEvent.szName, "Tyourengadan_1"))
+							{
+								if (!m_bTyourengadan_1)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_1.dat"), mWorldMatrix);
+									m_bTyourengadan_1 = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_2"))
+							{
+								if (!m_bTyourengadan_2)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_2.dat"), mWorldMatrix);
+									m_bTyourengadan_2 = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_3"))
+							{
+								if (!m_bTyourengadan_3)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_3.dat"), mWorldMatrix);
+									m_bTyourengadan_3 = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_4"))
+							{
+								if (!m_bTyourengadan_4)
+								{
+									mWorldMatrix.r[3] = m_vPunchPosition;
+
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_4.dat"), mWorldMatrix);
+									m_bTyourengadan_4 = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_5"))
+							{
+								if (!m_bTyourengadan_5)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
+									m_bTyourengadan_5 = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_Kick"))
+							{
+								if (!m_bTyourengadan_Kick)
+								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Kick.dat"), mWorldMatrix);
+									m_bTyourengadan_Kick = true;
+								}
+							}
+							if (!strcmp(pEvent.szName, "Tyourengadan_Punch"))
+							{
+								if (!m_bTyourengadan_Punch)
+								{
+									m_TyourengadanPunch = CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Punch.dat"), mWorldMatrix);
+									m_bTyourengadan_Punch = true;
+
+									if (m_TyourengadanPunch[1])
+										m_vPunchPosition = m_TyourengadanPunch[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								}
+							}
+						}
 						break;
 					}
 				}
@@ -240,6 +391,8 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 
 CAIState * CAI_LAW_SkillAttack_State::LateTick(_float fTimeDelta)
 {
+	Remove_Skill();
+
 	if (CheckTarget() == false)
 		return nullptr;
 
@@ -327,9 +480,10 @@ void CAI_LAW_SkillAttack_State::Enter(void)
 	m_pOwner->Use_Mana(1.f);
 	m_pOwner->Set_Manarecover(false);
 
+	Reset_Skill();
 
-		switch (m_eStateId)
-		{
+	switch (m_eStateId)
+	{
 		case Client::CAIState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_RONDSENPU);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_WARYUNGGONGPA);
@@ -342,7 +496,7 @@ void CAI_LAW_SkillAttack_State::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_TYOURENGADAN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOYUNATAN);
 			break;
-		}
+	}
 
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -358,9 +512,49 @@ void CAI_LAW_SkillAttack_State::Exit(void)
 	Safe_Release(m_pRightHandCollider);
 }
 
+void CAI_LAW_SkillAttack_State::Update_Skill(void)
+{
+	for (auto& pEffect : m_Garyoukuuha)
+	{
+		if (pEffect && !wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
+		{
+			_float4 vPlayerPosition;
+			XMStoreFloat4(&vPlayerPosition, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+			_float4 vEffectPosition;
+			XMStoreFloat4(&vEffectPosition, pEffect->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+			vEffectPosition.y = vPlayerPosition.y + 7.f;
+
+			pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vEffectPosition));
+		}
+	}
+}
+
+void CAI_LAW_SkillAttack_State::Remove_Skill(void)
+{
+	for (auto& pEffect : m_Garyoukuuha)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+}
+
 void CAI_LAW_SkillAttack_State::Reset_Skill(void)
 {
+	m_bRondsenpu = false;
+	m_bGaryoukuuha = false;
+	m_bTyourengadan_1 = false;
+	m_bTyourengadan_2 = false;
+	m_bTyourengadan_3 = false;
+	m_bTyourengadan_4 = false;
+	m_bTyourengadan_5 = false;
+	m_bTyourengadan_Kick = false;
+	m_bTyourengadan_Punch = false;
 
+	m_bBurnKnuckle = false;
+	m_bBurnKnuckleParticles = false;
+	m_bEnhaBakusaiken = false;
 }
 
 CCollider * CAI_LAW_SkillAttack_State::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)

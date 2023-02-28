@@ -169,13 +169,12 @@ HRESULT CLoader::Loading_ForClient()
 		return E_FAIL;
 
 	//For Maptool
-	//if (FAILED(Loading_ForActor()))
-	//	return E_FAIL;
-
-	//For Maptool
-	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
+	////For Maptool
+	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+	//	return E_FAIL;
 
 	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
 	//	return E_FAIL;
@@ -199,12 +198,13 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolKitchenModel()))
 		return E_FAIL;*/
 
-	//For Effect
-	/*if (FAILED(Loading_ForEffect()))
+	////For Effect
+	if (FAILED(Loading_ForEffect()))
 		return E_FAIL;
 	 
 	if (FAILED(Loading_ForEffectTexture()))
-		return E_FAIL;*/
+		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
 
@@ -2727,6 +2727,10 @@ HRESULT CLoader::Loading_ForEffect()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Ring/Ring_Warp.dat"))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cone01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cone/Cone01.dat"))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cylinder0"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/Cylinder0.dat"))))
 		return E_FAIL;
@@ -3233,6 +3237,14 @@ HRESULT CLoader::Loading_ForEffectTexture()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LineUnique_ym_01"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line/LineUnique_ym_01.png"), 1))))
 		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SpellText"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line/SpellText.png"), 1))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SpellText_rm"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line/SpellText_rm.png"), 1))))
+		return E_FAIL;
+
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TO14_T_FX_trail_ny_08"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Line/TO14_T_FX_trail_ny_08.png"), 1))))
 		return E_FAIL;

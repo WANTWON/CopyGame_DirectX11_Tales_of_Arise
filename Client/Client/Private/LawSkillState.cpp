@@ -33,7 +33,7 @@ CPlayerState * CLawSkillState::HandleInput(void)
 
 CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 {
-	Update_Skill(); 
+	Update_Skill();
 
 	if ((m_eStateId == CPlayerState::STATE_SKILL_ATTACK_F) && (nullptr != m_pTarget))
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -228,7 +228,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 									m_bTyourengadan_3 = true;
 								}
 							}
-							if (!strcmp(pEvent.szName, "Tyourengadan_4"))
+							/*if (!strcmp(pEvent.szName, "Tyourengadan_4"))
 							{
 								if (!m_bTyourengadan_4)
 								{
@@ -237,7 +237,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_4.dat"), mWorldMatrix);
 									m_bTyourengadan_4 = true;
 								}
-							}
+							}*/
 							if (!strcmp(pEvent.szName, "Tyourengadan_5"))
 							{
 								if (!m_bTyourengadan_5)
@@ -484,7 +484,12 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 		if (m_bIsFly)
 			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, m_fTime);
 		else
-			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
+		{
+			if (CPlayerState::STATE_SKILL_ATTACK_R == m_eStateId || CPlayerState::STATE_SKILL_ATTACK_F == m_eStateId)
+				return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, 1.f);
+			else
+				return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
+		}
 	}
 
 	return nullptr;
@@ -492,6 +497,12 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 
 CPlayerState * CLawSkillState::EventInput(void)
 {
+	if (!m_bIsFly)
+	{
+		if (CPlayerState::STATE_SKILL_ATTACK_R == m_eStateId || CPlayerState::STATE_SKILL_ATTACK_F == m_eStateId)
+			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, 1.f);
+	}
+
 	if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
 	{
 		if (GetKeyState('E') < 0)
@@ -682,13 +693,13 @@ CCollider * CLawSkillState::Get_Collider(CCollider::TYPE eType, _float3 vScale, 
 	switch (eType)
 	{
 	case Engine::CCollider::TYPE_AABB:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
 		break;
 	case Engine::CCollider::TYPE_OBB:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
 		break;
 	case Engine::CCollider::TYPE_SPHERE:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 		break;
 	}
 

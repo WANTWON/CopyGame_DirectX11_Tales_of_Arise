@@ -57,10 +57,10 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 	case METEOR:
 		vLocation = m_BulletDesc.vInitPositon;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
-		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(_float(rand() % 180)));
+		m_pTransformCom->LookDir(m_BulletDesc.vTargetDir);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorBall.dat"), mWorldMatrix);
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorBall_Old.dat"), mWorldMatrix);
 
 		break;
 	case DIVINE_SABER:

@@ -508,7 +508,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
 	testdesc.iDamage = fDamage;
 	testdesc.pPointer = this;
-	testdesc.itype = 4;
+	testdesc.itype = 5;
 
 	if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
 	{
@@ -677,6 +677,7 @@ void CPlayer::Play_AISkill(PLAYERID ePlayer)
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 	if (m_tInfo.fCurrentBoostGuage < 100.f || eMode != Client::AI_MODE)
 		return;
+
 	switch (ePlayer)
 	{
 	case Client::CPlayer::ALPHEN:
@@ -695,16 +696,13 @@ void CPlayer::Play_AISkill(PLAYERID ePlayer)
 	{
 		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
 		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-	}
-		
-		
 		break;
+	}
 	case Client::CPlayer::LAW:
 		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
 		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 		break;
 	}
-
 }
 
 
@@ -910,6 +908,8 @@ void CPlayer::BoostAttack()
 		Play_AISkill(SION);
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_pPlayerManager->Get_EnumPlayer(2)->Get_BoostGuage() >= 100.f)
 		Play_AISkill(RINWELL);
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage() >= 100.f)
+		Play_AISkill(LAW);
 }
 
 

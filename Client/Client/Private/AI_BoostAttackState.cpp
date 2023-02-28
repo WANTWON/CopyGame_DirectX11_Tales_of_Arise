@@ -5,6 +5,7 @@
 #include "Alphen.h"
 #include "Sion.h"
 #include "Rinwell.h"
+#include "Law.h"
 #include "AICheckState.h"
 #include "CameraManager.h"
 #include "Effect.h"
@@ -278,6 +279,14 @@ void CAI_BoostAttack::Enter()
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects2 = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Booster.wav"), SOUND_EFFECT, 0.5f);
+		break;
+	}
+	case CPlayer::LAW:
+	{
+		CPlayerManager::Get_Instance()->Get_EnumPlayer(3)->Set_BoostGuage(0);
+		m_iCurrentAnimIndex = CLaw::ANIM::BTL_ATTACK_STRIKE;
+		
+		// Sound
 		break;
 	}
 	}

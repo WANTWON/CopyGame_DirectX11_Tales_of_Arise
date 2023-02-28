@@ -17,7 +17,7 @@ CRinwellState * CMoveState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
-	/*switch (m_eStateType)
+	switch (m_eStateType)
 	{
 	case Client::STATETYPE_START:
 		Find_ActiveTarget();
@@ -41,7 +41,7 @@ CRinwellState * CMoveState::Tick(_float fTimeDelta)
 
 		}
 		break;
-	}*/
+	}
 
 	return nullptr;
 }

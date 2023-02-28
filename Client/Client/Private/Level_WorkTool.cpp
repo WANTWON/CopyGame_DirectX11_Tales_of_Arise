@@ -101,38 +101,10 @@ void CLevel_WorkTool::Late_Tick(_float fTimeDelta)
 
 	SetWindowText(g_hWnd, TEXT("LEVEL_WORKTOOL"));
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_SPACE))
-	{
-		Set_MiniGameStart(!m_bMinigameStart);
+	
 
-		if (m_bMinigameStart)
-		{
-			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_MINIGAME);
-			dynamic_cast<CCamera_MiniGame*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_CamMode(CCamera_MiniGame::MINIGAME_SHOOTING);
-
-			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
-			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(13.f, 0.f, 22.f, 1.f));
-			pPlayer->Change_Level(LEVEL_WORKTOOL);
-			pPlayer->Change_ShootState();
-			if (pPlayer->Get_IsFly())
-				pPlayer->Off_IsFly();
-		}
-		else
-		{
-			CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
-
-			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
-			pPlayer->Change_Navigation(LEVEL_WORKTOOL);
-
-			pPlayer->Compute_CurrentIndex(LEVEL_WORKTOOL);
-			pPlayer->Check_Navigation();
-			pPlayer->Change_Level(LEVEL_WORKTOOL);
-			if (pPlayer->Get_IsFly())
-				pPlayer->Off_IsFly();
-		}
-	}
+		
+	
 
 }
 
@@ -292,6 +264,7 @@ HRESULT CLevel_WorkTool::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 void CLevel_WorkTool::Set_MiniGameStart(_bool type)
 {
+
 	m_bMinigameStart = type;
 
 	if (m_bMinigameStart)
@@ -317,6 +290,37 @@ void CLevel_WorkTool::Set_MiniGameStart(_bool type)
 
 		CloseHandle(hFile);
 		RELEASE_INSTANCE(CGameInstance);
+	}
+
+
+
+
+	if (m_bMinigameStart)
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_MINIGAME);
+		dynamic_cast<CCamera_MiniGame*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_CamMode(CCamera_MiniGame::MINIGAME_SHOOTING);
+
+		CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(13.f, 0.f, 22.f, 1.f));
+		pPlayer->Change_Level(LEVEL_WORKTOOL);
+		pPlayer->Change_ShootState();
+		if (pPlayer->Get_IsFly())
+			pPlayer->Off_IsFly();
+	}
+	else
+	{
+		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
+
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
+		pPlayer->Change_Navigation(LEVEL_WORKTOOL);
+
+		pPlayer->Compute_CurrentIndex(LEVEL_WORKTOOL);
+		pPlayer->Check_Navigation();
+		pPlayer->Change_Level(LEVEL_WORKTOOL);
+		if (pPlayer->Get_IsFly())
+			pPlayer->Off_IsFly();
 	}
 
 }

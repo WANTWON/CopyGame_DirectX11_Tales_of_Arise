@@ -38,6 +38,9 @@ public:
 public:
 	void Read_TextFiles_for_dialogue();
 	void Read_TextFiles_for_dialogue_first_battle();
+	void Read_TextFiles_for_dialogue_jelous();
+	void Read_TextFiles_for_dialougeStage2Start();
+	void Read_TextFiles_for_dialogue_jelous2();
 
 	wchar_t* ConverCtoWC(char* str);
 
@@ -78,7 +81,14 @@ private:
 	char fuck[256];
 	vector<_tchar*> m_vDialoguepopup[2];
 	vector<_tchar*> m_vDialoguepopup1[2];
-	vector<_tchar*> m_vDialoguepopup_firstbattle[2];
+	vector<_tchar*> m_vDialoguepopup_firstbattle[2];//wolf
+	vector<_tchar*> m_vDialoguepopup_jelous[2];//after rinwellparty
+
+	vector<_tchar*> m_vDialoguepopup_Stage2Start1[2]; // stage2 begin
+	vector<_tchar*> m_vDialoguepopup_Stage2Start2[2]; // stage 2 begin2
+
+	vector<_tchar*> m_vDialoguepopup_jelous2[2];  // bjb
+
 	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;
 	_uint m_iDialogueindex = 0;
 
