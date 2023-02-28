@@ -199,12 +199,13 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolKitchenModel()))
 		return E_FAIL;*/
 
-	//For Effect
-	/*if (FAILED(Loading_ForEffect()))
+	////For Effect
+	if (FAILED(Loading_ForEffect()))
 		return E_FAIL;
 	 
 	if (FAILED(Loading_ForEffectTexture()))
-		return E_FAIL;*/
+		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
 
@@ -2725,6 +2726,10 @@ HRESULT CLoader::Loading_ForEffect()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ring_Warp"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Ring/Ring_Warp.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cone01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cone/Cone01.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cylinder0"),

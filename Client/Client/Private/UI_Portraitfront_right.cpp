@@ -78,7 +78,7 @@ int CUI_Portraitfront_right::Tick(_float fTimeDelta)
 	}
 
 
-	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Get_Info().fCurrentBoostGuage;
+	m_fCurrentBoost = CPlayerManager::Get_Instance()->Get_EnumPlayer(3)->Get_Info().fCurrentBoostGuage;
 	if (m_fBoostGuageMax == false)
 	{
 		m_fPrevBoostGuage = m_fCurrentBoost;
@@ -179,7 +179,6 @@ int CUI_Portraitfront_right::Tick(_float fTimeDelta)
 
 void CUI_Portraitfront_right::Late_Tick(_float fTimeDelta)
 {
-	
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return ;
 	/*if (m_fPosition.x <= 1200.f)

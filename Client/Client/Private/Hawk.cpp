@@ -156,6 +156,9 @@ void CHawk::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
+	if (m_pRendererCom && m_bGlowUp)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
 	if (ExceptionHanding() == false)
 		return;
 
