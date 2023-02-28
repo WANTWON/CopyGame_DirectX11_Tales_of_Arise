@@ -484,7 +484,12 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 		if (m_bIsFly)
 			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, m_fTime);
 		else
-			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
+		{
+			if (CPlayerState::STATE_SKILL_ATTACK_R == m_eStateId || CPlayerState::STATE_SKILL_ATTACK_F == m_eStateId)
+				return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, 1.f);
+			else
+				return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
+		}
 	}
 
 	return nullptr;
@@ -492,6 +497,12 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 
 CPlayerState * CLawSkillState::EventInput(void)
 {
+	if (!m_bIsFly)
+	{
+		if (CPlayerState::STATE_SKILL_ATTACK_R == m_eStateId || CPlayerState::STATE_SKILL_ATTACK_F == m_eStateId)
+			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, 1.f);
+	}
+
 	if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)
 	{
 		if (GetKeyState('E') < 0)

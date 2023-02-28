@@ -41,6 +41,9 @@ HRESULT CUI_Dialoguepopup::Initialize(void * pArg)
 
 	Read_TextFiles_for_dialogue();
 	Read_TextFiles_for_dialogue_first_battle();
+	Read_TextFiles_for_dialogue_jelous();
+	Read_TextFiles_for_dialougeStage2Start();
+	Read_TextFiles_for_dialogue_jelous2();
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -434,7 +437,7 @@ HRESULT CUI_Dialoguepopup::SetUp_ShaderResources()
 
 void CUI_Dialoguepopup::Read_TextFiles_for_dialogue()
 {
-	std::ifstream file("../../../Bin/popup0.txt");
+	std::ifstream file("../../../Bin/Resources/popup/popup0.txt");
 	if (file.is_open())
 	{
 		while (file.getline(fuck, 256))
@@ -452,7 +455,7 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialogue()
 		std::cout << "Unable to open file\n";
 	}
 
-	std::ifstream file1("../../../Bin/popup1.txt");
+	std::ifstream file1("../../../Bin/Resources/popup/popup1.txt");
 	if (file1.is_open())
 	{
 		while (file1.getline(fuck, 256))
@@ -476,7 +479,7 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialogue()
 
 	m_vCurrentDialogue.push_back(matrix);
 
-	std::ifstream file2("../../../Bin/popup2.txt");
+	std::ifstream file2("../../../Bin/Resources/popup/popup2.txt");
 	if (file2.is_open())
 	{
 		while (file2.getline(fuck, 256))
@@ -494,7 +497,7 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialogue()
 		std::cout << "Unable to open file\n";
 	}
 
-	std::ifstream file3("../../../Bin/popup3.txt");
+	std::ifstream file3("../../../Bin/Resources/popup/popup3.txt");
 	if (file3.is_open())
 	{
 		while (file3.getline(fuck, 256))
@@ -525,10 +528,10 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialogue()
 void CUI_Dialoguepopup::Read_TextFiles_for_dialogue_first_battle()
 {
 
-	std::ifstream file4("../../../Bin/firstbt0.txt");
-	if (file4.is_open())
+	std::ifstream file("../../../Bin/Resources/popup/firstbt0.txt");
+	if (file.is_open())
 	{
-		while (file4.getline(fuck, 256))
+		while (file.getline(fuck, 256))
 		{
 			_tchar* pszDialog = new _tchar[MAX_PATH];
 			m_vDialoguepopup_firstbattle[0].push_back(pszDialog);
@@ -536,17 +539,17 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialogue_first_battle()
 			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
 			//		Safe_Delete_Array(pszDialog);
 		}
-		file4.close();
+		file.close();
 	}
 	else
 	{
 		std::cout << "Unable to open file\n";
 	}
 
-	std::ifstream file5("../../../Bin/firstbt1.txt");
-	if (file5.is_open())
+	std::ifstream file1("../../../Bin/Resources/popup/firstbt1.txt");
+	if (file1.is_open())
 	{
-		while (file5.getline(fuck, 256))
+		while (file1.getline(fuck, 256))
 		{
 			_tchar* pszDialog = new _tchar[MAX_PATH];
 			m_vDialoguepopup_firstbattle[1].push_back(pszDialog);
@@ -554,7 +557,7 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialogue_first_battle()
 			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
 			//	Safe_Delete_Array(pszDialog);
 		}
-		file5.close();
+		file1.close();
 	}
 	else
 	{
@@ -564,6 +567,183 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialogue_first_battle()
 	vector<vector<_tchar*>> matrix1;
 	matrix1.push_back(m_vDialoguepopup_firstbattle[0]);
 	matrix1.push_back(m_vDialoguepopup_firstbattle[1]);
+
+	m_vCurrentDialogue.push_back(matrix1);
+}
+
+void CUI_Dialoguepopup::Read_TextFiles_for_dialogue_jelous()
+{
+	std::ifstream file("../../../Bin/Resources/popup/popup_jel0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_jelous[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file1("../../../Bin/Resources/popup/popup_jel1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_jelous[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix1;
+	matrix1.push_back(m_vDialoguepopup_jelous[0]);
+	matrix1.push_back(m_vDialoguepopup_jelous[1]);
+
+	m_vCurrentDialogue.push_back(matrix1);
+}
+
+void CUI_Dialoguepopup::Read_TextFiles_for_dialougeStage2Start()
+{
+	std::ifstream file("../../../Bin/Resources/popup/stage2start0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Stage2Start1[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file1("../../../Bin/Resources/popup/stage2start1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Stage2Start1[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialoguepopup_Stage2Start1[0]);
+	matrix.push_back(m_vDialoguepopup_Stage2Start1[1]);
+
+	m_vCurrentDialogue.push_back(matrix);
+
+	std::ifstream file2("../../../Bin/Resources/popup/stage2start2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Stage2Start2[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/Resources/popup/stage2start3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Stage2Start2[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix1;
+	matrix1.push_back(m_vDialoguepopup_Stage2Start2[0]);
+	matrix1.push_back(m_vDialoguepopup_Stage2Start2[1]);
+
+	m_vCurrentDialogue.push_back(matrix1);
+}
+
+void CUI_Dialoguepopup::Read_TextFiles_for_dialogue_jelous2()
+{
+	std::ifstream file("../../../Bin/Resources/popup/popup_jel2.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_jelous2[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file1("../../../Bin/Resources/popup/popup_jel3.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_jelous2[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix1;
+	matrix1.push_back(m_vDialoguepopup_jelous2[0]);
+	matrix1.push_back(m_vDialoguepopup_jelous2[1]);
 
 	m_vCurrentDialogue.push_back(matrix1);
 }

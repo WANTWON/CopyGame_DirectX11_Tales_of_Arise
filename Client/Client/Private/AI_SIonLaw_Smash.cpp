@@ -186,14 +186,18 @@ void CAI_SionLaw_Smash::Enter()
 
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
-	if (nullptr == m_pTarget)
+	if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
 	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		if (nullptr == m_pTarget)
+		{
+			m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+			(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		}
+		else
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
-	else
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	
 
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);

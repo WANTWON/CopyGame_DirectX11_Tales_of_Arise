@@ -1642,6 +1642,39 @@ PS_OUT PS_JUSTDODGE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_ResistDamagefont(PS_IN In)
+{
+
+
+	PS_OUT      Out = (PS_OUT)0;
+
+	/*if (In.vTexUV.y > (1.4f - In.vTexUV.x) + (In.vTexUV.y))
+	discard;*/
+	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (origincolor.g != 0.f)
+	{
+		if (origincolor.a > 0.4f)
+		{
+			float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+
+			float4 lerpcolor = lerp(float4(0.5764705882352941f, 0.6666666666666667f, 0.8274509803921569f, 1.f), float4(0.8f, 0.8f, 1.f, 1.f), maskcolor);
+
+			Out.vColor = lerpcolor;
+		}
+		else
+			discard;
+	}
+	else
+		Out.vColor = origincolor;
+
+
+
+	Out.vColor.a *= g_fAlpha;
+
+	return Out;
+}
+
 
 
 technique11 DefaultTechnique
@@ -2252,5 +2285,16 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_JUSTDODGE();
 	}
 	
+
+	pass UI_RESISTDAMAGEFONT // 55
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Priority, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_ResistDamagefont();
+	}
 	
 }

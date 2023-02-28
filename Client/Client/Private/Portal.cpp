@@ -4,6 +4,7 @@
 #include "PlayerManager.h"
 #include "Player.h"
 #include "Level.h"
+#include "UI_InterectMsg.h"
 
 CPortal::CPortal(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -62,12 +63,15 @@ void CPortal::Late_Tick(_float fTimeDelta)
 	
 	if (m_pSPHERECom->Collision(pPlayer->Get_Collider()))
 	{
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_SPACE))
+		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Open_sysmsg(3);
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_E))
 		{
 			CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
 			pCurrentLevel->Set_NextLevel(true, m_PortalDesc.iNextLevel);
 		}
 	}
+	else
+		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 
 }
 
