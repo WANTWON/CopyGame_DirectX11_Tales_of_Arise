@@ -28,6 +28,13 @@ public:
 	void Increase_Score(_int iScore) { m_iScore += iScore; }
 	_int Get_Score() { return m_iScore; }
 	_float Get_TotalTime() {return m_fTotalTime	;}
+	void Increase_Score(_int iScore)
+	{
+		m_iScore += iScore;
+
+		if (0 > m_iScore)
+			m_iScore = 0;
+	}
 
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;

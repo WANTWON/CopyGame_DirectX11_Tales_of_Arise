@@ -339,7 +339,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				}
 				else if (CPlayer::LAW == m_ePlayerID)
 				{
-					if (Check_JumpEnd(0.f))
+					if (Check_JumpEnd(0.1f))
 					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_LAND);
 						m_eStateType = STATETYPE_END;
