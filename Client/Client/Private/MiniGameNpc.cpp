@@ -101,7 +101,20 @@ void CMiniGameNpc::Talk_with_Npc()
 	switch (m_NpcDesc.eNpcType)
 	{
 	case MAN_GLD:
-		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(8);
+		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(CUI_Manager::Get_Instance()->Get_Dialogue_section());
+		/*switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
+		{
+		case 8:
+			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(8);
+			break;
+
+		case 9:
+			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(8);
+			break;
+
+		}*/
+
+		
 		break;
 	default:
 		break;

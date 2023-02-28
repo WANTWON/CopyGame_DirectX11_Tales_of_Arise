@@ -56,6 +56,7 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 	Read_TextFiles_for_Stage1Last();
 	Read_TextFiles_for_Quest4Start();
 	Read_TextFiles_for_Minigame1start();
+	Read_TextFiles_for_Minigame1end();
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -233,6 +234,12 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 				case 8:
 					dynamic_cast<CLevel_Restaurant*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Set_MiniGameStart(true);
+					CUI_Manager::Get_Instance()->Set_Dialogue_section(9);
+					break;
+
+				case 9:
+					CUI_Manager::Get_Instance()->Set_Dialogue_section(10);
+
 						
 
 
@@ -1489,6 +1496,139 @@ void CUI_Dialogue::Read_TextFiles_for_Minigame1start()
 	matrix.push_back(m_vDialogue8[0]);
 	matrix.push_back(m_vDialogue8[1]);
 	matrix.push_back(m_vDialogue8[2]);
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
+void CUI_Dialogue::Read_TextFiles_for_Minigame1end()
+{
+	std::ifstream file("../../../Bin/minigameend0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue9[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/minigameend1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue9[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/minigameend2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue9[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/minigameend3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue9[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file4("../../../Bin/minigameend4.txt");
+	if (file4.is_open())
+	{
+		while (file4.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue9[4].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file4.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file5("../../../Bin/minigameend5.txt");
+	if (file5.is_open())
+	{
+		while (file5.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue9[5].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file5.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+
+
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialogue9[0]);
+	matrix.push_back(m_vDialogue9[1]);
+	matrix.push_back(m_vDialogue9[2]);
+	matrix.push_back(m_vDialogue9[3]);
+	matrix.push_back(m_vDialogue9[4]);
+	matrix.push_back(m_vDialogue9[5]);
 
 
 	m_vCurrentDialogue.push_back(matrix);

@@ -1227,6 +1227,9 @@
     <ClInclude Include="..\Public\MiniGameNpc.h">
       <Filter>02.GameObjects\01.Actor\02.NPC\MiniGameNpc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Minigame2.h">
+      <Filter>02.GameObjects\04.UI\30.UI_MiniGame1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1975,6 +1978,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MiniGameNpc.cpp">
       <Filter>02.GameObjects\01.Actor\02.NPC\MiniGameNpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Minigame2.cpp">
+      <Filter>02.GameObjects\04.UI\30.UI_MiniGame1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
