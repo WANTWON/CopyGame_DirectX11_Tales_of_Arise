@@ -147,7 +147,7 @@ void CPlayerManager::Set_SmashAttack()
 			Get_EnumPlayer(0)->Get_Transform()->LookDir(XMVectorSet(0.f,0.f,1.f,0.f));
 			Get_EnumPlayer(0)->Check_Navigation();
 			Get_EnumPlayer(0)->SmashAttack(CPlayer::ALPHEN_SION);
-
+			
 			Get_EnumPlayer(1)->Set_IsActionMode(true);
 			Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
 			Get_EnumPlayer(1)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));

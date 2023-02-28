@@ -118,7 +118,11 @@ CLayer * CLayer::Create(_uint iIndex)
 void CLayer::Free()
 {
 	for (auto& pGameObject : m_GameObjects)
-		Safe_Release(pGameObject);
+	{
+		if(pGameObject != nullptr)
+			Safe_Release(pGameObject);
+	}
+		
 
 	m_GameObjects.clear();
 }

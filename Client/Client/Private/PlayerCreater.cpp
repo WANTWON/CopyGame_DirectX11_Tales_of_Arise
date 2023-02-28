@@ -1111,7 +1111,7 @@ HRESULT CPlayerCreater::Ready_Layer_WorkToolMapObject(const _tchar * pLayerTag)
 		_tchar pModeltag[MAX_PATH];
 		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_WORKTOOL, pLayerTag, &ModelDesc)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Road"), LEVEL_WORKTOOL, pLayerTag, &ModelDesc)))
 			return E_FAIL;
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Deco"));
 

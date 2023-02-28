@@ -9,6 +9,7 @@
 #include "BattleManager.h"
 #include "Monster.h"
 #include "Level_Loading.h"
+#include "ShootingObject.h"
 
 CLevel_WorkTool::CLevel_WorkTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -102,7 +103,44 @@ void CLevel_WorkTool::Late_Tick(_float fTimeDelta)
 	SetWindowText(g_hWnd, TEXT("LEVEL_WORKTOOL"));
 
 	
+	if (m_bMinigameStart && m_dwTime + 3000 < GetTickCount())
+	{
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+		CShootingObject::SHOOTINGDEC tShootingDesc;
+		tShootingDesc.eType = CShootingObject::TYPE_A;
+		tShootingDesc.fVelocity = 1.f;
+		strcpy_s(tShootingDesc.tNonDesc.pModeltag, "Bow");
+
+		_int iRand = rand() % 4;
+		switch (iRand)
+		{
+		case 0: 
+			tShootingDesc.tNonDesc.vPosition = m_vItemPosition[0];
+			break;
+		case 1:
+			tShootingDesc.tNonDesc.vPosition = m_vItemPosition[2];
+			break;
+		case 2:
+			tShootingDesc.tNonDesc.vPosition = m_vItemPosition[4];
+			break;
+		case 3:
+			tShootingDesc.tNonDesc.vPosition = m_vItemPosition[6];
+			break;
+		default:
+			break;
+		}
+		
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingObject"), LEVEL_WORKTOOL, TEXT("Layer_ShootingObject"), &tShootingDesc)))
+		{
+			ERR_MSG(TEXT("Failed Create MiniGame Object"));
+			return;
+		}
+
+		RELEASE_INSTANCE(CGameInstance);
+		m_dwTime = GetTickCount();
+	}
 		
 	
 
@@ -269,6 +307,8 @@ void CLevel_WorkTool::Set_MiniGameStart(_bool type)
 
 	if (m_bMinigameStart)
 	{
+		m_dwTime = GetTickCount();
+
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 		HANDLE hFile = 0;
 		_ulong dwByte = 0;

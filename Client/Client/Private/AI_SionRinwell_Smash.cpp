@@ -36,7 +36,7 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 	m_fTimer += fTimeDelta;
 
 
-	if (m_pOwner->Get_PlayerID() == CPlayer::ALPHEN)
+	if (m_pOwner->Get_PlayerID() == CPlayer::SION)
 	{
 		if (m_fTimer > 4.f)
 		{
@@ -117,12 +117,7 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 
 CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 {
-	if (m_bIsStateEvent)
-	{
-		//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
-	}
-
+	
 	for (auto& iter : m_pEffects)
 	{
 		if (iter != nullptr && iter->Get_PreDead())
@@ -145,7 +140,6 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 			}
 
 
-
 			case Client::AI_MODE:
 			{
 				return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
@@ -154,11 +148,6 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 
 		}
 
-
-
-
-		//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
 
 	if (m_bBullet)
@@ -192,6 +181,8 @@ void CAI_SionRinwell_Smash::Enter()
 
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+	m_pOwner->Get_Model()->Reset();
+
 	if (nullptr == m_pTarget)
 	{
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
@@ -200,10 +191,6 @@ void CAI_SionRinwell_Smash::Enter()
 	}
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
-	//	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-	//	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
 
