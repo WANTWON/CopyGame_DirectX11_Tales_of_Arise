@@ -35,6 +35,7 @@ private:
 
 
 
+
 public:
 	static CUI_Minigame1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
@@ -57,9 +58,12 @@ private:
 	_bool m_bRenderoff = false;
 
 	_bool m_bGameStart = false;
+	
+	_bool m_bGameStartUI = false;
 
+	_float m_fScaler = 0.1f;
 
-
+	
 	_float m_fbrightpos_hp[4] = { 0.f , -0.5f, -1.f, -1.5f };
 
 };

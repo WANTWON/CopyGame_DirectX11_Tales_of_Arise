@@ -93,7 +93,7 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 	}
 
-	if (m_bMinigameStart)
+	if (m_bMinigameStart && !m_bMinigameUI)
 	{
 		if (m_fLimitTime >= m_fTotalTime)
 		{

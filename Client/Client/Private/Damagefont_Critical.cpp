@@ -511,7 +511,7 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 	if (m_damagedesc.itype == 1)
 	{
 //		m_eShaderID = UI_CRITICALDAMAGEFONT;
-		m_fNext = 38.f;
+		m_fNext = 42.f;
 	}
 	else if (m_damagedesc.itype == 2)
 	{
