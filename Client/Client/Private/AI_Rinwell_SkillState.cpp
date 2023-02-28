@@ -209,8 +209,10 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.eBulletType = CRinwellSkills::METEOR;
 						BulletDesc.pOwner = m_pOwner;
-						BulletDesc.vTargetDir = { -0.3f, -1.f, -0.1f, 0.f };
-
+						_int XRand = rand() % 2 == 0 ? 1.f : -1.f;
+						_int ZRand = rand() % 2 == 0 ? 1.f : -1.f;
+						BulletDesc.vTargetDir = { rand() % 6 * 0.1f *XRand, -1.f, rand() % 6 * 0.1f*ZRand, 0.f };
+						
 
 						for (int i = 0; i < 14; ++i)
 						{

@@ -19,7 +19,7 @@ public:
 
 private:
 	void Move(_float fTimeDelta);
-
+	void DodgeEffect();
 private:
 	DIRID m_eDirection = DIRID::DIR_END;
 
