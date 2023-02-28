@@ -147,10 +147,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							{
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_1.dat"), mWorldMatrix);
 
-								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;
 								
-								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
 								m_bNormalAttack_1 = true;
 							}
 						}
@@ -170,10 +170,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							{
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_2.dat"), mWorldMatrix);
 
-								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;
 
-								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
 								m_bNormalAttack_2 = true;
 							}
 						}
@@ -185,10 +185,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							{
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_Air_3.dat"), mWorldMatrix);
 								
-								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;
 
-								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
 								m_bNormalAttackAir_3 = true;
 							}
 						}
@@ -216,10 +216,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							{
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_4.dat"), mWorldMatrix);
 
-								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;
 
-								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
 								m_bNormalAttack_4 = true;
 							}
 						}
@@ -231,10 +231,10 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 							{
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_Air_5.dat"), mWorldMatrix);
 
-								_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;
 
-								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
 								m_bNormalAttackAir_5 = true;
 							}
 						}

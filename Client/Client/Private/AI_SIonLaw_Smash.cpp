@@ -205,7 +205,7 @@ void CAI_SionLaw_Smash::Enter()
 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSion_Smash.wav"), SOUND_VOICE, 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSion_Smash.wav"), SOUND_VOICE, 0.7f);
 }
 
 void CAI_SionLaw_Smash::Exit()

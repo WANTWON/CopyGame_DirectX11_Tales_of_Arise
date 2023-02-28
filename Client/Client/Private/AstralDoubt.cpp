@@ -279,6 +279,9 @@ HRESULT CAstralDoubt::Render_Glow()
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GlowTexture", nullptr)))
+			return E_FAIL;
+
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
 			return E_FAIL;
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
