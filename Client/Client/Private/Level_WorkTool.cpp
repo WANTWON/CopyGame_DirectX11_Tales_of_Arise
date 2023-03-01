@@ -62,7 +62,18 @@ void CLevel_WorkTool::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-
+	switch (m_iPhase)
+	{
+	case 1:
+		m_fSpawnTime = 1.5f;
+		break;
+	case 2:
+		m_fSpawnTime = 1.f;
+		break;
+	case 3:
+		m_fSpawnTime = 0.2f;
+		break;
+	}
 	g_fSoundVolume += 0.001f;
 	if (g_fSoundVolume >= 0.3f)
 		g_fSoundVolume = 0.3f;
@@ -102,47 +113,211 @@ void CLevel_WorkTool::Late_Tick(_float fTimeDelta)
 
 	SetWindowText(g_hWnd, TEXT("LEVEL_WORKTOOL"));
 
-	
-	if (m_bMinigameStart && m_dwTime + 3000 < GetTickCount())
+	if (!m_bMinigamseStartUI)
 	{
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-		CShootingObject::SHOOTINGDEC tShootingDesc;
-		tShootingDesc.eType = CShootingObject::TYPE_A;
-		tShootingDesc.fVelocity = 1.f;
-		strcpy_s(tShootingDesc.tNonDesc.pModeltag, "Bow");
-
-		_int iRand = rand() % 4;
-		switch (iRand)
+		if (m_fLimitTime > 0)
 		{
-		case 0: 
-			tShootingDesc.tNonDesc.vPosition = m_vItemPosition[0];
-			break;
-		case 1:
-			tShootingDesc.tNonDesc.vPosition = m_vItemPosition[2];
-			break;
-		case 2:
-			tShootingDesc.tNonDesc.vPosition = m_vItemPosition[4];
-			break;
-		case 3:
-			tShootingDesc.tNonDesc.vPosition = m_vItemPosition[6];
-			break;
-		default:
-			break;
-		}
-		
+			m_fSpawnTimer += fTimeDelta;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingObject"), LEVEL_WORKTOOL, TEXT("Layer_ShootingObject"), &tShootingDesc)))
-		{
-			ERR_MSG(TEXT("Failed Create MiniGame Object"));
-			return;
-		}
+			if (m_bMinigameStart && m_fSpawnTimer > m_fSpawnTime)
+			{
+			
 
-		RELEASE_INSTANCE(CGameInstance);
-		m_dwTime = GetTickCount();
+
+
+				CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+				CShootingObject::SHOOTINGDEC tShootingDesc;
+				switch (rand()%3)
+				{
+				case 0:
+					tShootingDesc.eType = CShootingObject::TYPE_A;
+					break;
+				case 1:
+					tShootingDesc.eType = CShootingObject::TYPE_B;
+					break;
+				case 2:
+					tShootingDesc.eType = CShootingObject::TYPE_C;
+					break;
+			/*	case 3:
+					tShootingDesc.eType = CShootingObject::TYPE_D;
+					break;
+				case 4:
+					tShootingDesc.eType = CShootingObject::TYPE_E;
+					break;*/
+
+
+				}
+				
+
+				tShootingDesc.tNonDesc.vScale = { 1.5f , 1.5f , 1.5f };
+
+				tShootingDesc.fVelocity = (_float)(rand() % (3*m_iPhase) + 1);//1.f;
+
+
+
+
+				_int iRand = rand() % 4;
+
+				switch (m_iPhase)
+				{
+				case 1:
+					switch (iRand)
+					{
+					case 0:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[0];
+						tShootingDesc.m_bGoRight = true;
+						tShootingDesc.m_iScore = 5;
+						break;
+					case 1:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[2];
+						tShootingDesc.m_bGoRight = true;
+						tShootingDesc.m_iScore = 10;
+						break;
+					case 2:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[4];
+						tShootingDesc.m_bGoRight = true;
+						tShootingDesc.m_iScore = 15;
+						break;
+					case 3:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[6];
+						tShootingDesc.m_bGoRight = true;
+						tShootingDesc.m_iScore = 20;
+						break;
+					default:
+						break;
+					}
+					break;
+
+				case 2:
+					switch (iRand)
+					{
+					case 0:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[0];
+						tShootingDesc.m_bGoRight = true;
+						tShootingDesc.m_iScore = 5;
+						break;
+					case 1:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[3];
+						tShootingDesc.m_bGoRight = false;
+						tShootingDesc.m_iScore = 10;
+						break;
+					case 2:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[4];
+						tShootingDesc.m_bGoRight = true;
+						tShootingDesc.m_iScore = 15;
+						break;
+					case 3:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[7];
+						tShootingDesc.m_bGoRight = false;
+						tShootingDesc.m_iScore = 20;
+						break;
+					default:
+						break;
+					}
+					break;
+
+
+				case 3:
+					switch (iRand)
+					{
+					case 0:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[1];
+						tShootingDesc.m_bGoRight = false;
+						tShootingDesc.m_iScore = 5;
+						break;
+					case 1:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[2];
+						tShootingDesc.m_bGoRight = true;
+						tShootingDesc.m_iScore = 10;
+						break;
+					case 2:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[5];
+						tShootingDesc.m_bGoRight = false;
+						tShootingDesc.m_iScore = 15;
+						break;
+					case 3:
+						tShootingDesc.tNonDesc.vPosition = m_vItemPosition[6];
+						tShootingDesc.m_bGoRight = true;
+						tShootingDesc.m_iScore = 20;
+						break;
+					default:
+						break;
+					}
+					break;
+				}
+
+				switch (rand() % 3)
+				{
+				case 0:
+					strcpy_s(tShootingDesc.tNonDesc.pModeltag, "Bow");
+					break;
+				case 1:
+					strcpy_s(tShootingDesc.tNonDesc.pModeltag, "Helmet");
+					tShootingDesc.tNonDesc.vScale = { 5.f , 5.f , 5.f };
+					tShootingDesc.tNonDesc.vPosition.y += 0.7f;
+					break;
+				case 2:
+					strcpy_s(tShootingDesc.tNonDesc.pModeltag, "Shield");
+					tShootingDesc.tNonDesc.vPosition.y += 1.7f;
+					break;
+					/*case 3:
+					strcpy_s(tShootingDesc.tNonDesc.pModeltag, "Gun");
+					break;
+					case 4:
+					strcpy_s(tShootingDesc.tNonDesc.pModeltag, "Halberd");
+					tShootingDesc.tNonDesc.vPosition.y += 3.5f;
+					break;
+					case 5:
+					strcpy_s(tShootingDesc.tNonDesc.pModeltag, "Helmet");
+					break;
+					case 6:
+					strcpy_s(tShootingDesc.tNonDesc.pModeltag, "Mace");
+					break;*/
+
+
+					//if(tShootingDesc.tNonDesc.vPosition == m_vItemPosition[0] || )
+
+
+
+				}
+				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_ShootingObject"), LEVEL_WORKTOOL, TEXT("Layer_ShootingObject"), &tShootingDesc)))
+				{
+					ERR_MSG(TEXT("Failed Create MiniGame Object"));
+					return;
+				}
+
+				RELEASE_INSTANCE(CGameInstance);
+
+				m_fSpawnTimer = 0.f;
+			}
+
+			
+		}
+		m_fLimitTime -= fTimeDelta;
 	}
-		
+
 	
+	if (!m_bMinigameStart)
+	{
+		m_bGameFinish = false;
+		m_fLimitTime = 20.f;
+		m_bMinigamseStartUI = true;
+		m_iPhase = 1.f; 
+	}
+
+	if (m_fLimitTime <= 0 && CUI_Manager::Get_Instance()->Get_Minigamecaptionindex() == 3)
+	{
+
+	m_bGameFinish = true;
+		//m_bMinigameStart = false;
+		
+	CUI_Manager::Get_Instance()->Reset_Minigamecaptionindex();
+		
+		
+	}
+	
+
 
 }
 
@@ -347,6 +522,9 @@ void CLevel_WorkTool::Set_MiniGameStart(_bool type)
 		pPlayer->Change_ShootState();
 		if (pPlayer->Get_IsFly())
 			pPlayer->Off_IsFly();
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_minigame2"), LEVEL_RESTAURANT, TEXT("score"))))
+			return;
 	}
 	else
 	{

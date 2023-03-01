@@ -13,6 +13,8 @@ public:
 	{
 		TYPE eType;
 		_float fVelocity;
+		_bool m_bGoRight = true;
+		_int m_iScore = 0;
 		NONANIMDESC tNonDesc;
 	}SHOOTINGDEC;
 
@@ -48,7 +50,12 @@ private:
 	_vector m_vTurnAxis;
 	_bool	m_bDown = false;
 
+	_bool  m_bhit = false;
+
+	_vector m_vDir;
 	SHOOTINGDEC m_tShootingDesc;
+
+	_float m_fDeadtimer = 0.f;
 
 public:
 	static CShootingObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

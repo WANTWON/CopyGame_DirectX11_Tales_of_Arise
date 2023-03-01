@@ -463,6 +463,9 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\Player\03. Law">
       <UniqueIdentifier>{6de98e5a-c150-4bac-8985-ef2513782efc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04.UI\31.UI_MainPlayerMark">
+      <UniqueIdentifier>{f0a5b304-cb9a-4ce4-88f9-84c37526f074}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1272,6 +1275,9 @@
     <ClInclude Include="..\Public\MonsterLawState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_MainPlayerMark.h">
+      <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2044,6 +2050,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monster_LawPoseState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MainPlayerMark.cpp">
+      <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

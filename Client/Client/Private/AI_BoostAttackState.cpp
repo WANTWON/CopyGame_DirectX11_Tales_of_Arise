@@ -199,8 +199,34 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 							m_fEventStart = pEvent.fStartTime;
 						}
 					}
+
+					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					{
+						if (!strcmp(pEvent.szName, "Law_Boost"))
+						{
+
+							if (!m_bLawBoost)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								vector<CEffect*> Boost = CEffect::PlayEffectAtLocation(TEXT("Law_Boost.dat"), mWorldMatrix);
+
+
+								_vector vPosition = Boost.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								mWorldMatrix.r[3] = vPosition;
+
+								CEffect::PlayEffectAtLocation(TEXT("Law_Boost_Impact.dat"), mWorldMatrix);
+
+								m_bLawBoost = true;
+							}
+						}
+					}
+
+
+
+
+
 					break;
-				}
+				 }
 				}
 			}
 		}
