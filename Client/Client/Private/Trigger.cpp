@@ -2,6 +2,7 @@
 #include "..\Public\Trigger.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "UI_Dialoguepopup.h"
 
 CTrigger::CTrigger(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -67,11 +68,12 @@ void CTrigger::Late_Tick(_float fTimeDelta)
 		{
 			if (m_TriggerDesc.iIndex == 0)
 			{
-				int a = 0;
+
+				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(4, false, 1, 2);
 			}
 			else if (m_TriggerDesc.iIndex == 1)
 			{
-				int a = 0;
+				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(5, false, 0, 2);
 			}
 		}
 		break;

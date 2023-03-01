@@ -70,7 +70,7 @@ int CUI_MainPlayerMark::Tick(_float fTimeDelta)
 	//vpos = XMVectorSetW(vpos, 1.f);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vpos);
 
-	if (m_fCamDistance < 14.6579256)
+	if (m_fCamDistance < 14.6579256f)
 		Set_Scale({ m_fWorldsizeX*m_fCamDistance / 13.f, m_fWorldsizeY*m_fCamDistance / 13.f, 1.f });
 	else
 		Set_Scale({ m_fWorldsizeX, m_fWorldsizeY, 1.f });

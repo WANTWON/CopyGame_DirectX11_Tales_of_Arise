@@ -701,6 +701,49 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialougeStage2Start()
 	matrix1.push_back(m_vDialoguepopup_Stage2Start2[1]);
 
 	m_vCurrentDialogue.push_back(matrix1);
+
+
+	std::ifstream file4("../../../Bin/Resources/popup/stage2start4.txt");
+	if (file4.is_open())
+	{
+		while (file4.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Stage2Start3[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file4.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file5("../../../Bin/Resources/popup/stage2start5.txt");
+	if (file5.is_open())
+	{
+		while (file5.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Stage2Start3[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file5.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix2;
+	matrix2.push_back(m_vDialoguepopup_Stage2Start3[0]);
+	matrix2.push_back(m_vDialoguepopup_Stage2Start3[1]);
+
+	m_vCurrentDialogue.push_back(matrix2);
 }
 
 void CUI_Dialoguepopup::Read_TextFiles_for_dialogue_jelous2()
@@ -782,6 +825,10 @@ void CUI_Dialoguepopup::Open_Dialogue(_uint index , _bool tof , _uint who , _uin
 		m_fFade1Y = -20.f;
 	}
 	
+
+	m_fFadeX = -50.f;
+	m_fFade1X = -50.f;
+
 	m_bfadein = true;
 	m_itexnum = who;
 	m_itexnum1 = who1;

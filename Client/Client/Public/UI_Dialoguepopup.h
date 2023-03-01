@@ -86,6 +86,7 @@ private:
 
 	vector<_tchar*> m_vDialoguepopup_Stage2Start1[2]; // stage2 begin
 	vector<_tchar*> m_vDialoguepopup_Stage2Start2[2]; // stage 2 begin2
+	vector<_tchar*> m_vDialoguepopup_Stage2Start3[2]; // stage 2 begin2
 
 	vector<_tchar*> m_vDialoguepopup_jelous2[2];  // bjb
 

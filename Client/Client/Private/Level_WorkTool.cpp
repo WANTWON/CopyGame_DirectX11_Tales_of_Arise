@@ -300,6 +300,11 @@ void CLevel_WorkTool::Late_Tick(_float fTimeDelta)
 	
 	if (!m_bMinigameStart)
 	{
+		if(m_iScore >= 80.f)
+		CUI_Manager::Get_Instance()->Set_Dialogue_section(11);
+
+		m_iScore = 0.f;
+
 		m_bGameFinish = false;
 		m_fLimitTime = 20.f;
 		m_bMinigamseStartUI = true;

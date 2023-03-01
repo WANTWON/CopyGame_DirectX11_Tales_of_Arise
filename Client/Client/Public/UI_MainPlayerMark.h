@@ -25,7 +25,7 @@ private:
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
 
 private:
-	CTexture*				m_pTextureCom1 = nullptr;
+	//CTexture*				m_pTextureCom1 = nullptr;
 	//CTexture*				m_pTextureCom2 = nullptr;
 
 	_float 	m_fcurrenthp = 2000.f;
