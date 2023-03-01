@@ -74,8 +74,18 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 						m_bIsStateEvent = true;
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
-					
-						
+						if ((m_fEventStart != pEvent.fStartTime) && !m_bBullet)
+						{
+
+							/* Make Effect */
+							_vector vOffset = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] += vOffset*7.f + XMVectorSet(0.f, 0.f, 0.f, 0.f);
+							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Element.dat"), mWorldMatrix);
+							m_fFadeTime = 0.f;
+							m_bBullet = true;
+							m_fEventStart = pEvent.fStartTime;
+						}
 					}
 					break;
 				}
@@ -84,12 +94,25 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
-						if ((m_fEventStart != pEvent.fStartTime))
+						if ((m_fEventStart != pEvent.fStartTime) && !m_bBullet)
 						{
-							
+							/* Make Effect */
+							_vector vOffset = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = mWorldMatrix.r[3] + vOffset*-20.f + XMVectorSet(0.f, 10.f, 0.f, 0.f);
+							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ElementBlue.dat"), mWorldMatrix);
 
+							mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = mWorldMatrix.r[3] + vOffset*-20.f + XMVectorSet(3.f, 5.f, 0.f, 0.f);
+							m_pEffects2 = CEffect::PlayEffectAtLocation(TEXT("ElementGreen.dat"), mWorldMatrix);
+
+							mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = mWorldMatrix.r[3] +  vOffset*-20.f + XMVectorSet(-3.f, 5.f, 0.f, 0.f);
+							m_pEffects3 = CEffect::PlayEffectAtLocation(TEXT("ElementYellow.dat"), mWorldMatrix);
+							m_fFadeTime = 0.f;
+							m_bBullet = true;
 							m_fEventStart = pEvent.fStartTime;
 						}
 					}
@@ -98,10 +121,6 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 			}
 		}
 
-		_vector vecTranslation;
-		_float fRotationRadian;
-
-		
 	}
 
 	m_pOwner->Check_Navigation();
@@ -118,6 +137,18 @@ CAIState * CAI_AlphenRinwell_Smash::LateTick(_float fTimeDelta)
 	}
 
 	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
+	for (auto& iter : m_pEffects2)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
+	for (auto& iter : m_pEffects3)
 	{
 		if (iter != nullptr && iter->Get_PreDead())
 			iter = nullptr;
@@ -151,7 +182,19 @@ CAIState * CAI_AlphenRinwell_Smash::LateTick(_float fTimeDelta)
 		
 	}
 
+	if (m_bBullet)
+	{
+		m_fFadeTime += fTimeDelta;
 
+		if (m_fFadeTime > 2.f)
+		{
+			if (m_eCurrentPlayerID == CPlayer::ALPHEN)
+			{
+				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
+			}
+
+		}
+	}
 	return nullptr;
 }
 
@@ -171,7 +214,6 @@ void CAI_AlphenRinwell_Smash::Enter()
 
 	}
 
-
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)
 	{
@@ -182,9 +224,6 @@ void CAI_AlphenRinwell_Smash::Enter()
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-//	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-//	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
 
@@ -202,27 +241,72 @@ void CAI_AlphenRinwell_Smash::Exit()
 
 
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
-
-	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
-	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
+	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+	if (pLockOn != nullptr)
 	{
-		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+		_vector vLastPosition = dynamic_cast<CMonster*>(pLockOn)->Get_LastPosition();
+		if (!dynamic_cast<CMonster*>(pLockOn)->Get_LastStrikeAttack())
 		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+			dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
+			dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+			dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 		}
 		else
 		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+			dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+			dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 		}
 	}
 
 
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+	for (auto& iter : m_pEffects2)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+	for (auto& iter : m_pEffects3)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)
+		{
+			if (iter != nullptr)
+			{
+				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+				if (pParticleSystem != nullptr)
+					pParticleSystem->Set_Stop(true);
+			}
+		}
+	}
+
+	if (!m_pEffects2.empty())
+	{
+		for (auto& iter : m_pEffects2)
+		{
+			if (iter != nullptr)
+			{
+				CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+				if (pParticleSystem != nullptr)
+					pParticleSystem->Set_Stop(true);
+			}
+		}
+	}
+
+	if (!m_pEffects3.empty())
+	{
+		for (auto& iter : m_pEffects3)
 		{
 			if (iter != nullptr)
 			{

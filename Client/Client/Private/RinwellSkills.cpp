@@ -259,10 +259,17 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 		if (XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) <= 2.f)
 			m_bDead = true;
 		break;
+	case HOLY_RANCE_FISRTBULLET:
+		if (m_fTime >= m_BulletDesc.fDeadTime)
+			m_bDead = true;
+		break;
+	default:
+		if (XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) <= -0.5f)
+			m_bDead = true;
+		break;
 	}
 
-	if (XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) <= 0)
-		m_bDead = true;
+	
 }
 
 void CRinwellSkills::Collision_Check()
@@ -723,6 +730,7 @@ void CRinwellSkills::Tick_HolyRance(_float fTimeDelta)
 		CBullet::BULLETDESC BulletDesc;
 		BulletDesc.eCollisionGroup = PLAYER;
 		BulletDesc.fVelocity = 5.f;
+		BulletDesc.fDeadTime = 10.f;
 		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE_FISRTBULLET;
 		BulletDesc.vInitPositon = m_BulletDesc.vTargetPosition;
 		BulletDesc.vInitPositon.m128_f32[1] -= 4.f;

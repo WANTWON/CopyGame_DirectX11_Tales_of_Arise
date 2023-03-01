@@ -14,6 +14,7 @@
 #include "Npc.h"
 #include "Portal.h"
 #include "MiniGameNpc.h"
+#include "Trigger.h"
 
 
 CPlayerCreater::CPlayerCreater(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -129,6 +130,7 @@ HRESULT CPlayerCreater::Cloning_ForMonster()
 	
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
+	CTrigger::TRIGGERDESC TriggerDesc;
 	NONANIMDESC ModelDesc;
 
 	_uint iNum = 0;
@@ -142,11 +144,11 @@ HRESULT CPlayerCreater::Cloning_ForMonster()
 
 	for (_uint i = 0; i < iNum; ++i)
 	{
-		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
-		_tchar pModeltag[MAX_PATH];
-		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+		ReadFile(hFile, &(TriggerDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		TriggerDesc.eType = CTrigger::MONSTER_TRIGGER;
+		TriggerDesc.iIndex = i;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trigger"), LEVEL_SNOWFIELD, TEXT("Layer_Trigger"), &ModelDesc)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trigger"), LEVEL_SNOWFIELD, TEXT("Layer_Trigger"), &TriggerDesc)))
 			return E_FAIL;
 		
 		
@@ -1064,6 +1066,35 @@ HRESULT CPlayerCreater::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
+
+	hFile = 0;
+	dwByte = 0;
+	iNum = 0;
+	CTrigger::TRIGGERDESC TriggerDesc;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/Trigger.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(TriggerDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		TriggerDesc.eType = CTrigger::UI_TRIGGER;
+		TriggerDesc.iIndex = i;
+		TriggerDesc.m_ModelDesc.vScale = _float3(10.f, 10.f, 10.f);
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trigger"), LEVEL_CITY, TEXT("Layer_Trigger"), &TriggerDesc)))
+			return E_FAIL;
+
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Trigger"));
+
+	}
+
+	CloseHandle(hFile);
+	
 
 	RELEASE_INSTANCE(CGameInstance);
 
