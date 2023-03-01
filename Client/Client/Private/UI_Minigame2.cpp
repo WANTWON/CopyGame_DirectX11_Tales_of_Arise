@@ -325,8 +325,10 @@ HRESULT CUI_Minigame2::Render()
 
 				m_itexnum = (((_uint)m_fGametime % 100) / 10);
 
+				m_fPosition.x = 640.f;
+				m_fPosition.y = 80.f;
 
-				m_fPosition.x += m_fNext;
+				//m_fPosition.x += m_fNext;
 				m_fSize.x = 80.f;
 				m_fSize.y = 120.f;
 				m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
