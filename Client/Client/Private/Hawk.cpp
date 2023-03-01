@@ -276,7 +276,6 @@ _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange
 					{
 						if (m_bBedamageAnim == true)
 						{
-							//m_pModelCom->Set_TimeReset();
 							CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_TAKE_DAMAGE);
 							m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 						}
