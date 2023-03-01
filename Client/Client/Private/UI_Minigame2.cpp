@@ -318,7 +318,9 @@ HRESULT CUI_Minigame2::Render()
 			if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 				return E_FAIL;
 
+
 			m_fPosition.x = 570.f;
+
 			m_fPosition.y = 80.f;
 
 			if (m_fGametime >= 10)
