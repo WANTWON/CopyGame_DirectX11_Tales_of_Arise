@@ -371,9 +371,9 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cone01"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Cone01.fbx", "../../../Bin/Bin_Data/Effect/Cone/", PivotMatrix))))
-		return E_FAIL;
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cone01"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Cone01.fbx", "../../../Bin/Bin_Data/Effect/Cone/", PivotMatrix))))
+	//	return E_FAIL;
 
 	/*
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Hurricane4"),
@@ -453,6 +453,77 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/FountainWater.fbx", "../../../Bin/Bin_Data/NonAnim/Fountain/", PivotMatrix))))
 		return E_FAIL;*/
 	
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMY_Plc"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/NPC_NMY_PLC.fbx", "../../../Bin/Bin_Data/NonAnim/NPC_NMY_Plc/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMY_Plc"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NPC_NMY_PLC.fbx", "../../../Bin/Bin_Data/Anim/NPC_NMY_Plc/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_Gld"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/NPC_NMM_Gld.fbx", "../../../Bin/Bin_Data/NonAnim/NPC_NMM_Gld/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_Gld"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NPC_NMM_Gld.fbx", "../../../Bin/Bin_Data/Anim/NPC_NMM_Gld/", PivotMatrix))))
+	//	return E_FAIL;
+
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_MHB_000"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/NPC_NMM_MHB_000.fbx", "../../../Bin/Bin_Data/NonAnim/NPC_NMM_MHB_000/", PivotMatrix))))
+	//	return E_FAIL;
+
+//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_MHB_000"),
+//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NPC_NMM_MHB_000.fbx", "../../../Bin/Bin_Data/Anim/NPC_NMM_MHB_000/", PivotMatrix))))
+//	return E_FAIL;
+
+
+//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_DIM_000"),
+//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NPC_NMM_DIM_000.fbx", "../../../Bin/Bin_Data/Anim/NPC_NMM_DIM_000/", PivotMatrix))))
+//	return E_FAIL;
+
+//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NFY_FIA_000"),
+//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NPC_NFY_FIA_000.fbx", "../../../Bin/Bin_Data/Anim/NPC_NFY_FIA_000/", PivotMatrix))))
+//	return E_FAIL;
+
+//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMY_GNL"),
+//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NPC_NMY_GNL.fbx", "../../../Bin/Bin_Data/Anim/NPC_NMY_GNL/", PivotMatrix))))
+//	return E_FAIL;
+
+//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NFY_WAC"),
+//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NPC_NFY_WAC.fbx", "../../../Bin/Bin_Data/Anim/NPC_NFY_WAC/", PivotMatrix))))
+//	return E_FAIL;
+
+//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Dog"),
+//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Dog.fbx", "../../../Bin/Bin_Data/NonAnim/Dog/", PivotMatrix))))
+//	return E_FAIL;
+
+PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Dog"),
+	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Dog.fbx", "../../../Bin/Bin_Data/Anim/Dog/", PivotMatrix))))
+	return E_FAIL;
+
+//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Duck"),
+//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Duck.fbx", "../../../Bin/Bin_Data/NonAnim/Duck/", PivotMatrix))))
+//	return E_FAIL;
+
+PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Duck"),
+	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Duck.fbx", "../../../Bin/Bin_Data/Anim/Duck/", PivotMatrix))))
+	return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));
 
 	m_isFinished = true;

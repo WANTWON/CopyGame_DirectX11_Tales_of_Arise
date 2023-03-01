@@ -46,6 +46,8 @@ HRESULT CLevel_City::Initialize()
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Child"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Gld"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NMM_SLV"));
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NFM"));
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_CITY);
@@ -86,6 +88,9 @@ void CLevel_City::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Child"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Gld"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NMM_SLV"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NFM"));
+
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -115,6 +120,8 @@ void CLevel_City::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Child"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Gld"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NMM_SLV"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NFM"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 

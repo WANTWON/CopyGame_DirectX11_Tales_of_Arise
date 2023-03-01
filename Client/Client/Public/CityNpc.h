@@ -68,24 +68,42 @@ public: /*For.State*/
 	void			Talk_with_Npc();
 
 public:
-	_float Find_Target();
+	_float Find_Friend();
 	_float Find_MAN_GLD();
+	_float Find_NMM_SLV();
+	_float Find_NFM();
 
 private:
 	virtual HRESULT Ready_Components(void* pArg);
 	_uint m_eState = 0;
-	class CCityNpc * m_pTarget = nullptr;
+	_uint m_ePreState = 0;
+	class CCityNpc * m_pChildFriend = nullptr;
 	class CCityNpc * m_pGld = nullptr;
-	_float			m_fDistance = 0.f;
-	_float			m_fGldDistance = 0.f;
+	class CCityNpc * m_pNMM_SLV = nullptr;
+	class CCityNpc * m_pNFM = nullptr;
+
+	_float			m_fFriendDistance = 0.f;
+	_float			m_fGLD_Distance = 0.f;
+	_float			m_fNMM_SLV_Distance = 0.f;
+	_float			m_fNFM_Distance = 0.f;
+
 	_float			m_fChild_TimeDleta = 0.f;
 	_float			m_fChild_2thTimeDleta = 0.f;
 	_float			m_fTimeDelta = 0.f;
 	_float			m_fChildSpeed = 0.f;
 
-	_bool			m_chaseGldFinish = false;
+	_bool			m_bchaseGLDFinish = false;
+	_bool			m_bchaseNMM_SLV_Start = false;
+	_bool			m_bChaseNFMStart = false;
+	_bool			m_bChaseFriend_Start= false;
+	
+	_bool			m_bFriendBye = false;
+	_bool			m_bListenFinish = false;
+	_bool			m_bTurn = false;
 	_bool			m_bTired = false;
-
+	_bool			m_bHappyStart = false;
+	_bool			m_bHappyLoop = false;
+	_bool			m_bHappyEnd = false;
 	_bool			m_bIsAnimationFinished = false;
 public:
 	static CCityNpc* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

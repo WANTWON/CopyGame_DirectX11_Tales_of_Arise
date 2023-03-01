@@ -331,11 +331,16 @@ void CHawk::Check_Navigation()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 2.f);
+	_float m_fDeadHeight = m_pNavigationCom->Compute_Height(vPosition, -2.f);
 
-	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD || CHawkState::STATE_TAKE_DAMAGE)
-		m_fWalkingHeight -= 2.f;
+	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD || CHawkState::STATE_DOWN)
+	{
+		vPosition = XMVectorSetY(vPosition, m_fDeadHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
-	if (CHawkState::STATE_BRAVE != m_pHawkState->Get_StateId())
+	}
+
+	if (CHawkState::STATE_BRAVE != m_pHawkState->Get_StateId() && CHawkState::STATE_DEAD != m_pHawkState->Get_StateId() && CHawkState::STATE_DOWN != m_pHawkState->Get_StateId())
 	{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);

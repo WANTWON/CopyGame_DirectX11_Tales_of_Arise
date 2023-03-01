@@ -52,6 +52,7 @@ protected: /* For Component */
 	_bool  m_bCollision = false;
 
 	_bool m_bIsFirst_conversation = false;
+	_bool	m_bWhispe_Finish = false;
 protected:
 	virtual HRESULT Ready_Components(void* pArg) PURE;
 	virtual HRESULT SetUp_ShaderResources();
