@@ -77,7 +77,6 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 
 void CPoseState::Enter()
 {
-
 	switch (m_eStateId)
 	{
 	case Client::CRinwellState::STATE_IDLE:
@@ -104,9 +103,6 @@ void CPoseState::Enter()
 	default:
 		break;
 	}
-
-
-		
 }
 
 void CPoseState::Exit()

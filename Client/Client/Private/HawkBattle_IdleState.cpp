@@ -35,6 +35,8 @@ CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 		if (m_pCurTarget == nullptr)
 		{
 			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+			if (nullptr == m_pCurTarget)
+				return nullptr;
 
 			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);

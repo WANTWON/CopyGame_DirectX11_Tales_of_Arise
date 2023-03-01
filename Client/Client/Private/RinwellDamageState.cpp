@@ -15,7 +15,7 @@ CDamageState::CDamageState(CAiRinwell* pRinwell, _uint eDir, STATE_ID eStateID)
 
 CRinwellState * CDamageState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta*2.f, false, "TransN");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, false, "TransN");
 	
 	return nullptr;
 }
@@ -26,7 +26,7 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 	{
 		if (m_eStateId == STATE_DAMAGE)
 		{
-			if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp*0.5f)
+			if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
 				return new CPoseState(m_pOwner, CRinwellState::STATE_HP50DOWN);
 			else
 				return new CMoveState(m_pOwner, STATETYPE_MAIN, 2);
@@ -67,8 +67,6 @@ void CDamageState::Enter()
 	}
 	else if(m_eStateId == STATE_DEAD)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DEAD);
-
-
 }
 
 void CDamageState::Exit()

@@ -508,9 +508,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_E.mp3"), SOUND_EFFECT, 1.0f);
-			break;
-
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS);
+			
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("SionTresShot.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 			break;
 		}

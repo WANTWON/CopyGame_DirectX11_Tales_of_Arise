@@ -67,7 +67,8 @@ CBerserkerState * CBattle_FireBallState::Tick(_float fTimeDelta)
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
-					pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+
+					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
 				}
 				else
 					m_pAtkColliderCom->Update(matWorld);
@@ -80,10 +81,10 @@ CBerserkerState * CBattle_FireBallState::Tick(_float fTimeDelta)
 		{
 			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
+			pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
+
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 			m_pAtkColliderCom = nullptr;
-
-			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}

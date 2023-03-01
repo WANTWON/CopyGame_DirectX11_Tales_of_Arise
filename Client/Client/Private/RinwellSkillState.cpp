@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "RinwellIdleState.h"
 #include "RinwellSkillState.h"
 #include "RinwellMoveState.h"
 #include "RinwellSkills.h"
@@ -12,7 +13,6 @@ CSkillState::CSkillState(CAiRinwell* pRinwell, _uint eType)
 	m_eSkillType = eType;
 }
 
-
 CRinwellState * CSkillState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
@@ -24,11 +24,8 @@ CRinwellState * CSkillState::Tick(_float fTimeDelta)
 
 CRinwellState * CSkillState::LateTick(_float fTimeDelta)
 {
-	
 	if (m_bIsAnimationFinished)
-	{
-		return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
-	}
+		return new CRinwellIdleState(m_pOwner);
 
 	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
@@ -49,6 +46,72 @@ void CSkillState::Enter()
 	{
 	case Client::CRinwellState::PHOTONFLASH:
 		break;
+	case Client::CRinwellState::METEOR:
+	{
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_MAGIC_START);
+
+		Find_Target(rand() % 4);
+		m_vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+		//Bullet
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = MONSTER;
+		BulletDesc.eBulletType = CRinwellSkills::METEOR;
+		BulletDesc.vTargetDir = XMVector3Normalize(m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
+		BulletDesc.fVelocity = 10.f;
+		BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + BulletDesc.vTargetDir*2.f;
+		BulletDesc.vTargetPosition = m_vTargetPosition;
+		BulletDesc.fDeadTime = 2.f;
+		BulletDesc.pOwner = m_pOwner;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+
+		break;
+	}
+	case Client::CRinwellState::HOLY:
+	{
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_MAGIC_START);
+
+		Find_Target(rand() % 4);
+		m_vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+		//Bullet
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = MONSTER;
+		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE;
+		BulletDesc.vTargetDir = XMVector3Normalize(m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
+		BulletDesc.fVelocity = 10.f;
+		BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + BulletDesc.vTargetDir*2.f;
+		BulletDesc.vTargetPosition = m_vTargetPosition;
+		BulletDesc.fDeadTime = 2.f;
+		BulletDesc.pOwner = m_pOwner;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+
+		break;
+	}
+	case Client::CRinwellState::THUNDERFIELD:
+	{
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_ATTACK_DENGEKISYOUHEKI);
+
+		Find_Target(rand() % 4);
+		m_vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+		//Bullet
+		CBullet::BULLETDESC BulletDesc;
+		BulletDesc.eCollisionGroup = MONSTER;
+		BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
+		BulletDesc.vTargetDir = XMVector3Normalize(m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
+		BulletDesc.fVelocity = 10.f;
+		BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + BulletDesc.vTargetDir*2.f;
+		BulletDesc.vTargetPosition = m_vTargetPosition;
+		BulletDesc.fDeadTime = 2.f;
+		BulletDesc.pOwner = m_pOwner;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+			return;
+
+		break;
+	}
 	case Client::CRinwellState::GALEFORCE:
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_ATTACK_GALEFORCE);
@@ -71,20 +134,10 @@ void CSkillState::Enter()
 
 		break;
 	}
-	case Client::CRinwellState::SKILL_END:
-		break;
-	default:
-		break;
 	}
-	
-	
-
 }
-
 
 void CSkillState::Exit()
 {
-	
-
 }
 

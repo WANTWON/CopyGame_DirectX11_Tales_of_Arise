@@ -270,14 +270,12 @@ void CRinwellSkills::Collision_Check()
 	CBaseObj* pCollisionTarget = nullptr;
 	switch (m_BulletDesc.eBulletType)
 	{
-	
 	case PHOTON_FLASH:
 		__super::Collision_Check();
 		break;
 	case HOLY_RANCE_BULLET:
 	case HOLY_RANCE_FISRTBULLET:
 	case HOLY_RANCE_LASTBULLET:
-	case METEOR:
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
@@ -289,6 +287,18 @@ void CRinwellSkills::Collision_Check()
 				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
 		}
 		break;
+	case METEOR:
+		if (m_BulletDesc.eCollisionGroup == PLAYER)
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+		}
+		else
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);
+		}
+		break;
 	case THUNDER_FIELD:
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
@@ -298,7 +308,7 @@ void CRinwellSkills::Collision_Check()
 		else
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAABBCom, &pCollisionTarget))
-				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);
 		}
 		break;
 	case GALE_FORCE:
