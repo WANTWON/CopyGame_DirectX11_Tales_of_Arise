@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "RinwellIdleState.h"
 #include "RinwellAttackState.h"
 #include "RinwellMoveState.h"
 #include "RinwellSkills.h"
@@ -30,7 +31,6 @@ CRinwellState * CAttackState::Tick(_float fTimeDelta)
 		case Client::STATETYPE_END:
 			break;
 		}
-
 	}
 	
 	m_pOwner->Check_Navigation();
@@ -49,7 +49,7 @@ CRinwellState * CAttackState::LateTick(_float fTimeDelta)
 		case Client::STATETYPE_MAIN:
 			return new CAttackState(m_pOwner, STATETYPE_END);
 		case Client::STATETYPE_END:
-			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
+			return new CRinwellIdleState(m_pOwner, 2.f);
 		}
 	}
 
@@ -62,7 +62,7 @@ void CAttackState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_ATTACK;
 
-	if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp*0.5f)
+	if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
 		m_bAirMove = true;
 	else
 		m_bAirMove = false;

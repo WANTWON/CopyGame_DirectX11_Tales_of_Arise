@@ -8,7 +8,7 @@ BEGIN(AiRinwell)
 class CRinwellIdleState final :	public CRinwellState
 {
 public:
-	CRinwellIdleState(class CAiRinwell* pRinwell);
+	CRinwellIdleState(class CAiRinwell* pRinwell, _float fTime);
 	
 	virtual CRinwellState* Tick(_float fTimeDelta) override;
 	virtual CRinwellState* LateTick(_float fTimeDelta);
@@ -19,6 +19,7 @@ public:
 private:
 	_bool	m_bAirMove = false;
 	_float	m_fTime = 0.f;
+	_float	m_fWaitingTime = 0.f;
 };
 
 END

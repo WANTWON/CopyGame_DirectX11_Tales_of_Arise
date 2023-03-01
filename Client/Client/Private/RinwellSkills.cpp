@@ -319,6 +319,17 @@ void CRinwellSkills::Collision_Check()
 		}
 		break;
 	case GALE_FORCE:
+		if (m_BulletDesc.eCollisionGroup == PLAYER)
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		}
+		else
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);
+		}
+		break;
 	case BANGJEON:
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{

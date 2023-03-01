@@ -25,7 +25,7 @@ CRinwellState * CSkillState::Tick(_float fTimeDelta)
 CRinwellState * CSkillState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
-		return new CRinwellIdleState(m_pOwner);
+		return new CRinwellIdleState(m_pOwner, 3.5f);
 
 	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
@@ -57,14 +57,23 @@ void CSkillState::Enter()
 		CBullet::BULLETDESC BulletDesc;
 		BulletDesc.eCollisionGroup = MONSTER;
 		BulletDesc.eBulletType = CRinwellSkills::METEOR;
-		BulletDesc.vTargetDir = XMVector3Normalize(m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
-		BulletDesc.fVelocity = 10.f;
-		BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + BulletDesc.vTargetDir*2.f;
+
+		_int XRand = rand() % 2 == 0 ? 1.f : -1.f;
+		_int ZRand = rand() % 2 == 0 ? 1.f : -1.f;
+		BulletDesc.vTargetDir = { rand() % 6 * 0.1f *XRand, -1.f, rand() % 6 * 0.1f*ZRand, 0.f };
+
 		BulletDesc.vTargetPosition = m_vTargetPosition;
-		BulletDesc.fDeadTime = 2.f;
 		BulletDesc.pOwner = m_pOwner;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-			return;
+
+		for (int i = 0; i < 30; ++i)
+		{
+			BulletDesc.fVelocity = 4.f + ((_float)(rand() % 20 + 1))*0.1f;
+			_vector pos = { (_float)(rand() % 40 + 40) , 12.f + i*2.5f , (_float)(rand() % 40 + 40), 1.f };
+			BulletDesc.vInitPositon = pos;
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+				return;
+		}
 
 		break;
 	}
@@ -80,10 +89,10 @@ void CSkillState::Enter()
 		BulletDesc.eCollisionGroup = MONSTER;
 		BulletDesc.eBulletType = CRinwellSkills::HOLY_RANCE;
 		BulletDesc.vTargetDir = XMVector3Normalize(m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
-		BulletDesc.fVelocity = 10.f;
-		BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + BulletDesc.vTargetDir*2.f;
+		BulletDesc.fVelocity = 5.f;
+		BulletDesc.vInitPositon = XMVectorSetY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION), 15.f);
 		BulletDesc.vTargetPosition = m_vTargetPosition;
-		BulletDesc.fDeadTime = 2.f;
+		BulletDesc.fDeadTime = 10.f;
 		BulletDesc.pOwner = m_pOwner;
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
@@ -102,13 +111,17 @@ void CSkillState::Enter()
 		BulletDesc.eCollisionGroup = MONSTER;
 		BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
 		BulletDesc.vTargetDir = XMVector3Normalize(m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
-		BulletDesc.fVelocity = 10.f;
-		BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + BulletDesc.vTargetDir*2.f;
+		BulletDesc.fVelocity = 0.5f;
+		BulletDesc.vInitPositon = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
 		BulletDesc.vTargetPosition = m_vTargetPosition;
-		BulletDesc.fDeadTime = 2.f;
+		BulletDesc.fDeadTime = 6.f;
 		BulletDesc.pOwner = m_pOwner;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-			return;
+		for (_uint i = 0; i < 12; ++i)
+		{
+			m_pOwner->Get_Transform()->Set_Rotation({ 0.f,0.f + i * 30.f , 0.f });
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+				return;
+		}
 
 		break;
 	}

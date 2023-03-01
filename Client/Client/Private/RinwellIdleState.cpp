@@ -6,14 +6,18 @@
 
 using namespace AiRinwell;
 
-CRinwellIdleState::CRinwellIdleState(CAiRinwell * pRinwell)
+CRinwellIdleState::CRinwellIdleState(CAiRinwell * pRinwell, _float fTime)
 {
 	m_pOwner = pRinwell;
+	m_fWaitingTime = fTime;
 }
 
 CRinwellState * CRinwellIdleState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	if (m_bAirMove)
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 1.5f);
+	else
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -32,7 +36,7 @@ CRinwellState * CRinwellIdleState::Tick(_float fTimeDelta)
 
 CRinwellState * CRinwellIdleState::LateTick(_float fTimeDelta)
 {
-	if (10.f < m_fTime)
+	if (m_fWaitingTime < m_fTime)
 	{
 		_float fDistance = XMVectorGetX(XMVector3Length(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
 		if (fDistance < 0.5f)

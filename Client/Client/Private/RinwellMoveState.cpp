@@ -38,7 +38,6 @@ CRinwellState * CMoveState::Tick(_float fTimeDelta)
 
 			LookAtPlayer(fTimeDelta);
 			m_pOwner->Check_Navigation();
-
 		}
 		break;
 	}
@@ -73,7 +72,7 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 		{
 			_uint iSkill = rand() % 2;
 
-			if (0.2f > Find_ActiveTarget())
+			if (5.f > Find_ActiveTarget())
 			{
 				switch (iSkill)
 				{
@@ -154,6 +153,21 @@ void CMoveState::Enter()
 		m_iDir = 1;
 	else
 		m_iDir = 0;
+
+	if (0.f > XMVectorGetX(XMVector4Dot(m_pOwner->Get_TransformState(CTransform::STATE_LOOK), vTargetDir)))
+	{
+		if (m_bAirMove)
+			m_fTurnDegree = 0.2f;
+		else
+			m_fTurnDegree = 0.1f;
+	}
+	else
+	{
+		if (m_bAirMove)
+			m_fTurnDegree = 0.1f;
+		else
+			m_fTurnDegree = 0.05f;
+	}
 }
 
 void CMoveState::Exit()
@@ -179,10 +193,10 @@ void CMoveState::Move(_float fTimeDelta, _int iDir)
 			switch (m_iDir)
 			{
 			case 0:
-				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.1f);
+				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fTurnDegree);
 				break;
 			case 1:
-				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -0.1f);
+				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -m_fTurnDegree);
 				break;
 			}
 		}
@@ -199,10 +213,10 @@ void CMoveState::Move(_float fTimeDelta, _int iDir)
 			switch (m_iDir)
 			{
 			case 0:
-				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.05f);
+				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fTurnDegree);
 				break;
 			case 1:
-				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -0.05f);
+				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -m_fTurnDegree);
 				break;
 			}
 		}

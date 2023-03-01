@@ -630,12 +630,12 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 			m_fCameraOffsetY += 0.2f;
 		}
 
-		if (fLength >= 8.f)
-			fLength = 8.f;
+		if (fLength >= 6.f)
+			fLength = 6.f;
 		if (fLength <= 5.f)
 			fLength = 5.f;
-		if (m_fCameraOffsetY >= 5.f)
-			m_fCameraOffsetY = 5.f;
+		if (m_fCameraOffsetY >= 4.f)
+			m_fCameraOffsetY = 4.f;
 		else if (m_fCameraOffsetY <= 1.f)
 			m_fCameraOffsetY = 1.f;
 	}

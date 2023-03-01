@@ -26,6 +26,7 @@ private:
 	_bool	m_ChangedDir = false;
 	_bool	m_bAirMove = false;
 	_int	m_iDir = 0;
+	_float  m_fTurnDegree = 0.f;
 };
 
 END
