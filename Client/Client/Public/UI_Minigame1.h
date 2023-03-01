@@ -62,8 +62,9 @@ private:
 	_bool m_bGameStartUI = false;
 
 	_float m_fScaler = 0.1f;
+	_float m_fStopTimer = 0.f;
 
-	
+	_int m_iStartEndtexnum = 0;
 	_float m_fbrightpos_hp[4] = { 0.f , -0.5f, -1.f, -1.5f };
 
 };

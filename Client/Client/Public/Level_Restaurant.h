@@ -27,7 +27,7 @@ public:
 	void Set_MiniGameUI(_bool tof) { m_bMinigameUI = tof; }
 
 	_int Get_Score() { return m_iScore; }
-	_float Get_TotalTime() {return m_fTotalTime	;}
+	_float Get_LimitTime() {return m_fLimitTime;}
 	void Increase_Score(_int iScore)
 	{
 		m_iScore += iScore;
