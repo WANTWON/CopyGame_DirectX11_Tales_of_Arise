@@ -135,7 +135,7 @@ void CPlayerManager::Set_SmashAttack()
 
 	if ((nullptr != pLockonMonster) && (pLockonMonster->Get_Stats().m_fLockonSmashGuage >= 4.f))
 	{
-		pLockonMonster->Set_IsActionMode(true);
+		//pLockonMonster->Set_IsActionMode(true);
 		pLockonMonster->Save_LastPosition();
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_2))
@@ -147,7 +147,7 @@ void CPlayerManager::Set_SmashAttack()
 			Get_EnumPlayer(0)->Get_Transform()->LookDir(XMVectorSet(0.f,0.f,1.f,0.f));
 			Get_EnumPlayer(0)->Check_Navigation();
 			Get_EnumPlayer(0)->SmashAttack(CPlayer::ALPHEN_SION);
-
+			
 			Get_EnumPlayer(1)->Set_IsActionMode(true);
 			Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
 			Get_EnumPlayer(1)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
@@ -184,18 +184,20 @@ void CPlayerManager::Set_SmashAttack()
 
 		if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 2)
 		{
+			//AlphenRinwell
 			if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_3))
 			{
+				Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(0)->Set_IsActionMode(true);
 				Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
-				Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(0)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 				Get_EnumPlayer(0)->SmashAttack(CPlayer::ALPHEN_RINWELL);
 
 
 				Get_EnumPlayer(2)->Set_IsActionMode(true);
 				Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
-				Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(2)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::ALPHEN_RINWELL);
 
 				if (Get_EnumPlayer(1) != nullptr)
@@ -218,7 +220,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-				pCameraManager->Play_ActionCamera(TEXT("AlphenRinwell.dat"), XMMatrixIdentity());
+				pCameraManager->Play_ActionCamera(TEXT("AlphenRinwell2.dat"), XMMatrixIdentity());
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
@@ -314,15 +316,16 @@ void CPlayerManager::Set_SmashAttack()
 
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			{
+				Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(1)->Set_IsActionMode(true);
 				Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
-				Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(1)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 				Get_EnumPlayer(1)->SmashAttack(CPlayer::SION_LAW);
 
 				Get_EnumPlayer(3)->Set_IsActionMode(true);
 				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
-				Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(3)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 				Get_EnumPlayer(3)->SmashAttack(CPlayer::SION_LAW);
 
 				if (Get_EnumPlayer(0) != nullptr)

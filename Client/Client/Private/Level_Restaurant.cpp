@@ -93,7 +93,7 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 		RELEASE_INSTANCE(CGameInstance);
 	}
 
-	if (m_bMinigameStart)
+	if (m_bMinigameStart && !m_bMinigameUI)
 	{
 		if (m_fLimitTime >= m_fTotalTime)
 		{
@@ -118,7 +118,7 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 						ZeroMemory(&ThrowDesc, sizeof(CThrowingObject::THROWDESC));
 
 						_int iModel;
-						
+
 						switch (iPhase)
 						{
 						case 1:
@@ -134,7 +134,7 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 							iModel = 0;
 							break;
 						}
-						
+
 						switch (iModel)
 						{
 						case 0:

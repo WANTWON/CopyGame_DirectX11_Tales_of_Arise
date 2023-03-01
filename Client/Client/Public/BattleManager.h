@@ -55,7 +55,8 @@ public: /* For Lock On */
 	_bool Get_AIuseItem() { return m_bAIuseItem; }
 	void Set_AIuseItem(_bool tof) { m_bAIuseItem = tof; }
 
-	
+	_bool Get_IsOneonOneMode() { return m_bIsOneonOneMode; }
+	void Set_OneonOneMode(_bool tof) { m_bIsOneonOneMode = tof; }
 
 public:
 	void Clear_Monster() { m_FieldMonster.clear(); };
@@ -77,6 +78,9 @@ private:
 
 	_bool m_bAIuseItem = false;
 	//CAIState::AI_MODE m_eAImode = ATTACK_FREEMODE;
+
+	//For Only LawbattleMode == (1:1 BattleMode)
+	_bool m_bIsOneonOneMode = false;
 
 public:
 	virtual void Free() override;

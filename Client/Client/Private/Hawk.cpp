@@ -253,8 +253,8 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
 {
 
-		if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_tStats.m_fCurrentHp <= 0 )
-		return 0;
+		if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD)
+			return 0;
 
 		_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 

@@ -10,6 +10,7 @@
 #include "ParticleSystem.h"
 #include "AI_JumpState.h"
 #include "AI_DodgeState.h"
+#include "AI_Item_Use_State.h"
 
 
 using namespace AIPlayer;
@@ -401,13 +402,37 @@ CAIState * CAI_Alphen_SkillAttackState::LateTick(_float fTimeDelta)
 			
 			}
 			else
-				switch (rand() % 2)
+				switch (rand() % 3)
 				{
 				case 0:
 					return new CAICheckState(m_pOwner, m_eStateId);
 					break;
 				case 1:
 					return new CAI_DodgeState(m_pOwner, m_pTarget, true);
+				case 2:
+
+					if (CBattleManager::Get_Instance()->Get_AIuseItem())
+					{
+						ITEM_NAME item;
+						switch (rand() % 3)
+						{
+						case 0:
+							item = ITEMNAME_LEMONJELLY;
+							break;
+						case 1:
+							item = ITEMNAME_LEMONJELLY;
+							break;
+						case 2:
+							item = ITEMNAME_LEMONJELLY;
+							break;
+
+						}
+						return new CAI_Item_Use_State(m_pOwner, item);
+					}
+					else
+						return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+					break;
 				}
 				
 			

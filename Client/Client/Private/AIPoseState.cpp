@@ -27,8 +27,13 @@ CAIState * CAIPoseState::Tick(_float fTimeDelta)
 CAIState * CAIPoseState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
-		return new CAICheckState(m_pOwner, m_eStateId);
-
+	{
+		if (CBattleManager::Get_Instance()->Get_IsOneonOneMode() == true)
+			return nullptr;
+		else
+			return new CAICheckState(m_pOwner, m_eStateId);
+	}
+	
 	return nullptr;
 }
 

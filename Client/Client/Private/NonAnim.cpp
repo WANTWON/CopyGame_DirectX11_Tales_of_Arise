@@ -68,13 +68,19 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 	
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 		{
-			if (strcmp(m_ModelDesc.pModeltag, "Snow_Mountain") )
+			if (strcmp(m_ModelDesc.pModeltag, "Snow_Mountain") &&
+				strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_") &&
+				strcmp(m_ModelDesc.pModeltag, "Ceiling") &&
+				strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_outside_Lod1") &&
+				strcmp(m_ModelDesc.pModeltag, "Bld_D04_Door01_Wall_Lod1")  &&
+				strcmp(m_ModelDesc.pModeltag, "FountainDel") &&
+				strcmp(m_ModelDesc.pModeltag, "StoneBlock") &&
+				strcmp(m_ModelDesc.pModeltag, "StoneBlockA")
+				)
 			{
 				RELEASE_INSTANCE(CGameInstance);
 				return;
 			}
-
-		
 		}
 	
 
@@ -210,7 +216,10 @@ _float CNonAnim::Check_CullingRadius()
 		else if(!strcmp(m_ModelDesc.pModeltag, "LineNew01") ||
 			!strcmp(m_ModelDesc.pModeltag, "LineNew02") ||
 			!strcmp(m_ModelDesc.pModeltag, "LineNew03") ||
-			!strcmp(m_ModelDesc.pModeltag, "BigGateArch01"))
+			!strcmp(m_ModelDesc.pModeltag, "BigGateArch01") ||
+			!strcmp(m_ModelDesc.pModeltag, "Stair01") ||
+			!strcmp(m_ModelDesc.pModeltag, "castleHouse") ||
+			!strcmp(m_ModelDesc.pModeltag, "Bridge_base"))
 			return 30.f;
 		break;
 	case Client::LEVEL_RESTAURANT:
@@ -239,6 +248,13 @@ _float CNonAnim::Check_CullingRadius()
 			!strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_outside_Lod1") ||
 			!strcmp(m_ModelDesc.pModeltag, "Bld_D04_Door01_Wall_Lod1"))
 			return 50.f;
+		break;
+	case Client::LEVEL_LAWBATTLE:
+		if (!strcmp(m_ModelDesc.pModeltag, "FountainDel") ||
+			!strcmp(m_ModelDesc.pModeltag, "StoneBlock") ||
+			!strcmp(m_ModelDesc.pModeltag, "StoneBlockA") ||
+			!strcmp(m_ModelDesc.pModeltag, "Bld_D04_Door01_Wall_Lod1"))
+			return 1000.f;
 		break;
 	default:
 		break;

@@ -67,6 +67,7 @@ int CUI_PartyjoinMsg::Tick(_float fTimeDelta)
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_RETURN))
 	{
 		m_bfadeout = true;
+		CUI_Manager::Get_Instance()->Set_Dialogue_section(6);
 
 	}
 

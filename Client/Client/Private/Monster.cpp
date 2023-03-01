@@ -58,8 +58,6 @@ HRESULT CMonster::Initialize(void* pArg)
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CBattleManager::Get_Instance()->Add_Monster(this);
-
 	return S_OK;
 }
 
@@ -525,7 +523,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	{
 		if (dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() <= 100.f)
 
-			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 3.f);
+			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 20.f);
 
 	}
 	
@@ -603,9 +601,8 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 
 	
 	
-	
+	m_tStats.m_fLockonSmashGuage += 0.2f;
 
-	m_tStats.m_fLockonSmashGuage += 0.002f;
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
 		m_tStats.m_fLockonSmashGuage = 4.f;
@@ -755,6 +752,7 @@ void CMonster::Free()
 		Safe_Release(iter);
 
 	CBattleManager::Get_Instance()->Out_BattleMonster(this);
+	CBattleManager::Get_Instance()->Out_Monster(this);
 	Safe_Release(m_pDissolveTexture);
 	Safe_Release(m_pModelCom);
 	

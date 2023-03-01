@@ -902,17 +902,17 @@ void CPlayer::BoostAttack()
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::ACTION)
 		return;
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_pPlayerManager->Get_EnumPlayer(0)->Get_BoostGuage() >= 100.f)
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == ALPHEN)
 		Play_AISkill(ALPHEN);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_pPlayerManager->Get_EnumPlayer(1)->Get_BoostGuage() >= 100.f)
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == SION)
 		Play_AISkill(SION);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_pPlayerManager->Get_EnumPlayer(2)->Get_BoostGuage() >= 100.f)
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == RINWELL)
 		Play_AISkill(RINWELL);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage() >= 100.f)
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_tInfo.fCurrentBoostGuage>= 100.f && m_ePlayerID == LAW)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
 		Play_AISkill(LAW);
 }
 
-
+//m_powner
 
 
 HRESULT CPlayer::SetUp_ShaderResources()
@@ -1005,6 +1005,9 @@ void CPlayer::Change_Navigation(LEVEL eLevel)
 	}
 	case Client::LEVEL_WORKTOOL:
 		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_WorkToolNavigation"), m_ePlayerID));
+		break;
+	case Client::LEVEL_LAWBATTLE:
+		m_pNavigationCom = dynamic_cast<CNavigation*>(pGameInstance->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_LawBattleNavigation"), m_ePlayerID));
 		break;
 		
 	}

@@ -83,6 +83,11 @@ int CCityNpc::Tick(_float fTimeDelta)
 
 void CCityNpc::Late_Tick(_float fTimeDelta)
 {
+	_vector vPosition = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_float fDistance = XMVectorGetX(XMVector3Length(vPosition - Get_TransformState(CTransform::STATE_TRANSLATION)));
+	if (fDistance > 50.f)
+		return;
+
 	__super::Late_Tick(fTimeDelta);
    LateTick_State(fTimeDelta);
 

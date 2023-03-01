@@ -178,6 +178,7 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 
 void CAI_AlphenSion_Smash::Enter()
 {
+	
 	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
@@ -193,6 +194,8 @@ void CAI_AlphenSion_Smash::Enter()
 
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+	m_pOwner->Get_Model()->Reset();
+
 	if (!CBattleManager::Get_Instance()->Get_IsBossBattle())
 	{
 		if (nullptr == m_pTarget)

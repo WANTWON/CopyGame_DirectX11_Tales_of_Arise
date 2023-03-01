@@ -20,7 +20,7 @@ public:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_InstancingForPooling(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Npc(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Deco_SnowField(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_SnowDecoObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_BossMapObject(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_RestaurantObject(const _tchar* pLayerTag);
