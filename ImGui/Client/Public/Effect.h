@@ -26,6 +26,7 @@ public:
 	vector<array<_float, 5>> Get_ColorCurves() { return m_ColorCurves; }
 	vector<_float3> Get_VelocityCurves() { return m_VelocityCurves; }
 	vector<_float3> Get_SizeCurves() { return m_SizeCurves; }
+	_float3 Get_SizeCurveIndex(_int iIndex) { return m_SizeCurves[iIndex]; }
 	vector<array<_float, 5>> Get_ScaleCurves() { return m_ScaleCurves; }
 	array<_float, 5> Get_ScaleCurveIndex(_int iIndex) { return m_ScaleCurves[iIndex]; }
 	vector<_float3> Get_AlphaCurves() { return m_AlphaCurves; }

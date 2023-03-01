@@ -6,6 +6,17 @@ BEGIN(Client)
 
 class CTrigger : public CBaseObj
 {
+public:
+	enum TYPE { MONSTER_TRIGGER, UI_TRIGGER};
+	typedef struct Triggertag
+	{
+		NONANIMDESC m_ModelDesc;
+		TYPE eType = MONSTER_TRIGGER;
+		_uint iIndex = 0;
+
+	}TRIGGERDESC; 
+	
+
 private:
 	CTrigger(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTrigger(const CTrigger& rhs);
@@ -20,8 +31,10 @@ public:
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT SetUp_ShaderResources();
+
+
 private:
-	NONANIMDESC m_ModelDesc;
+	TRIGGERDESC m_TriggerDesc;
 
 public:
 	static CTrigger* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
