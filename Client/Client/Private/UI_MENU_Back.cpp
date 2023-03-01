@@ -154,13 +154,13 @@ int CUI_MENU_Back::Tick(_float fTimeDelta)
 
 	pingpong();
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
+	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
 	{
 		m_fPosition.x = g_iWinSizeX - m_fSize.x * 0.5f - 45 + 160;
 		m_bmoveleft = true;
 		m_bfadein = true;
 		m_fAlpha = 1;
-	}
+	}*/
 
 	if (m_bfadein)
 		m_fAlpha -= 0.04f; //생길때
@@ -168,10 +168,10 @@ int CUI_MENU_Back::Tick(_float fTimeDelta)
 		m_fAlpha += 0.0483f;
 
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
-	{
-		m_bfadeout = true;
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
+	//{
+	//	m_bfadeout = true;
+	//}
 
 
 

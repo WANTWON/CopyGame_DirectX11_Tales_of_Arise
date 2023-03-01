@@ -88,6 +88,8 @@
 #include "UI_SystemMessageBox.h"
 #include "UI_Damagefont_Break.h"
 #include "UI_Minigame1.h"
+#include "UI_Minigame2.h"
+#include "UI_MainPlayerMark.h"
 //Monster
 #include "Ice_Wolf.h"
 #include "Berserker.h"
@@ -99,6 +101,9 @@
 #include "TreasureBox.h"
 #include "Item.h"
 #include "ThrowingObject.h"
+
+#include "ShootingObject.h"
+#include "Road.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -208,6 +213,16 @@ HRESULT CLoader::Loading_ForPrototype()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	/*For.Prototype_Portal */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ShootingObject"),
+		CShootingObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_Portal */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Road"),
+		CRoad::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_Portal */
@@ -487,6 +502,14 @@ HRESULT CLoader::Loading_ForPrototype()
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_minigame1"),
 		CUI_Minigame1::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_minigame2"),
+		CUI_Minigame2::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MainPlayerMark"),
+		CUI_MainPlayerMark::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

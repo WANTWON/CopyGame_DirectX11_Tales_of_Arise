@@ -128,11 +128,11 @@ int CHPbar::Tick(_float fTimeDelta)
 	}
 
 
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
+	/*if (CGameInstance::Get_Instance()->Key_Pressing(DIK_K))
 		--m_fcurrenthp;
 
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_J))
-		++m_fcurrenthp;
+		++m_fcurrenthp;*/
 
 	return OBJ_NOEVENT;
 }

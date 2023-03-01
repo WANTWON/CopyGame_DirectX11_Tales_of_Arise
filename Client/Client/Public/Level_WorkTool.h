@@ -29,8 +29,15 @@ public:
 	void Increase_Score(_int iScore) { m_iScore += iScore; }
 	_int Get_Score() { return m_iScore; }
 
+	_float Get_LimitTime() { return m_fLimitTime; }
+	void   Set_LimitTime(_float time) { m_fLimitTime = time; }
 
+	void Set_MiniGameUI(_bool tof) { m_bMinigamseStartUI = tof; }
 
+	_int Get_Phase() { return m_iPhase; }
+	void Plus_Phase(_int phase) { m_iPhase += phase; }
+
+	_bool Get_Finished() { return m_bGameFinish; }
 
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
@@ -39,7 +46,7 @@ private:
 
 	_float		m_fBlurTimer = 0.f;
 	_bool		m_bMinigameStart = false;
-
+	_bool       m_bMinigamseStartUI = true;
 	_float3		m_vItemPosition[8];
 
 
@@ -47,6 +54,16 @@ private:
 
 	_int m_iScore = 0;
 
+	_int m_iPhase = 1;
+
+	
+	_float m_fLimitTime = 20.f;
+
+	_float m_fSpawnTimer = 0.f;
+
+	_bool m_bGameFinish = false;
+
+	_float m_fSpawnTime = 0.f;
 
 public:
 	static CLevel_WorkTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

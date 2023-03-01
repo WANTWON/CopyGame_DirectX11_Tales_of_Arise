@@ -387,6 +387,7 @@
     <ClInclude Include="..\Public\UI_LevelUp.h" />
     <ClInclude Include="..\Public\UI_LOCKON.h" />
     <ClInclude Include="..\Public\UI_font_Damage_number.h" />
+    <ClInclude Include="..\Public\UI_MainPlayerMark.h" />
     <ClInclude Include="..\Public\UI_MENU_Back.h" />
     <ClInclude Include="..\Public\UI_MENU_Quest.h" />
     <ClInclude Include="..\Public\UI_Minigame1.h" />
@@ -642,6 +643,7 @@
     <ClCompile Include="..\Private\UI_LevelUp.cpp" />
     <ClCompile Include="..\Private\UI_LOCKON.cpp" />
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp" />
+    <ClCompile Include="..\Private\UI_MainPlayerMark.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Back.cpp" />
     <ClCompile Include="..\Private\UI_MENU_Quest.cpp" />
     <ClCompile Include="..\Private\UI_Minigame1.cpp" />

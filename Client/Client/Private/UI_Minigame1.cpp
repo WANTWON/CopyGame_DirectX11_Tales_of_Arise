@@ -76,6 +76,7 @@ int CUI_Minigame1::Tick(_float fTimeDelta)
 			m_fScaler = 1.f;
 			m_bGameStartUI = false;
 			m_bGameStart = true;
+			dynamic_cast<CLevel_Restaurant*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Set_MiniGameUI(false);
 
 		}
 			
