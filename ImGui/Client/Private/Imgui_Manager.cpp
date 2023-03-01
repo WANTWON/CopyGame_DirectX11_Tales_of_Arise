@@ -3215,8 +3215,14 @@ void CImgui_Manager::Draw_EffectModals()
 					for (_uint i = 0; i < SizeCurves.size(); i++)
 					{
 						ImGui::TableNextColumn();
-						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedSizeCurve, ImGuiSelectableFlags_SpanAllColumns)) /* Size */
+						if (ImGui::Selectable(to_string(i).c_str(), i == m_iSelectedSizeCurve, ImGuiSelectableFlags_SpanAllColumns))
+						{
+							/* Size */
 							m_iSelectedSizeCurve = i;
+							m_fCurveValue = m_pSelectedEffect->Get_SizeCurveIndex(m_iSelectedSizeCurve).x;
+							m_fCurveStart = m_pSelectedEffect->Get_SizeCurveIndex(m_iSelectedSizeCurve).y;
+							m_fCurveEnd = m_pSelectedEffect->Get_SizeCurveIndex(m_iSelectedSizeCurve).z;
+						}
 
 						ImGui::TableNextColumn();
 						ImGui::Text(to_string(SizeCurves[i].x).c_str()); /* Start */
@@ -3233,7 +3239,12 @@ void CImgui_Manager::Draw_EffectModals()
 				if (ImGui::Button("Delete"))
 					if (m_pSelectedEffect->Get_SizeCurves().size() > m_iSelectedSizeCurve)
 						m_pSelectedEffect->Remove_SizeCurve(m_iSelectedSizeCurve);
-
+				ImGui::SameLine();
+				if (ImGui::Button("Edit"))
+				{
+					if (m_pSelectedEffect)
+						m_pSelectedEffect->Edit_SizeCurve(m_iSelectedSizeCurve, _float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
+				}
 				ImGui::NewLine();
 
 				ImGui::SetNextItemWidth(100);
@@ -3264,12 +3275,7 @@ void CImgui_Manager::Draw_EffectModals()
 						m_fCurveEnd = 1.f;
 				}
 
-				ImGui::SameLine();
-				if (ImGui::Button("Edit"))
-				{
-					if (m_pSelectedEffect)
-						m_pSelectedEffect->Edit_SizeCurve(m_iSelectedSizeCurve, _float3(m_fCurveValue, m_fCurveStart, m_fCurveEnd));
-				}
+				
 
 				ImGui::EndTabItem();
 			}
