@@ -17,7 +17,7 @@ CBattle_Double_ClawState::CBattle_Double_ClawState(CBerserker* pBerserker)
 
 CBerserkerState * CBattle_Double_ClawState::AI_Behaviour(_float fTimeDelta)
 {
-	
+
 	return nullptr;
 }
 
@@ -26,7 +26,7 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 	//Find_BattleTarget();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.3f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	
+
 	if (!m_bIsAnimationFinished)
 	{
 		_vector vecTranslation;
@@ -69,33 +69,35 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 				R_matWorld.r[1] = XMVector4Normalize(R_matWorld.r[1]);
 				R_matWorld.r[2] = XMVector4Normalize(R_matWorld.r[2]);
 
-					if (nullptr == m_pAtkColliderCom)
-					{
-						CCollider::COLLIDERDESC		ColliderDesc;
+				if (nullptr == m_pAtkColliderCom)
+				{
+					CCollider::COLLIDERDESC		ColliderDesc;
 
-						ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
-						ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
+					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
-						m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
-						m_pAtkColliderCom->Update(matWorld);
-					}
+					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+					m_pAtkColliderCom->Update(matWorld);
+				}
 
-					else if (nullptr != m_pAtkColliderCom)
-						m_pAtkColliderCom->Update(matWorld);
+				else if (nullptr != m_pAtkColliderCom)
+					m_pAtkColliderCom->Update(matWorld);
 
-					if (nullptr == m_p2th_AtkColliderCom)
-					{
-						CCollider::COLLIDERDESC		ColliderDesc2th;
+				if (nullptr == m_p2th_AtkColliderCom)
+				{
+					CCollider::COLLIDERDESC		ColliderDesc2th;
 
-						ColliderDesc2th.vScale = _float3(6.f, 6.f, 6.f);
-						ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
+					ColliderDesc2th.vScale = _float3(6.f, 6.f, 6.f);
+					ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
 
-						m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
-						m_p2th_AtkColliderCom->Update(R_matWorld);
-					}
+					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
+					m_p2th_AtkColliderCom->Update(R_matWorld);
+				}
 
-					else if (nullptr != m_p2th_AtkColliderCom)
-						m_p2th_AtkColliderCom->Update(R_matWorld);
+				else if (nullptr != m_p2th_AtkColliderCom)
+					m_p2th_AtkColliderCom->Update(R_matWorld);
+
+				pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 
 				RELEASE_INSTANCE(CCollision_Manager);
 			}
@@ -110,6 +112,8 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 
 			m_pAtkColliderCom = nullptr;
 			m_p2th_AtkColliderCom = nullptr;
+
+			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
@@ -129,25 +133,25 @@ CBerserkerState * CBattle_Double_ClawState::LateTick(_float fTimeDelta)
 	m_bAngry = m_pOwner->Get_IsAngry();
 
 	if (m_bIsAnimationFinished)
-	{	
-	/*	if (m_bAngry == false)
-		{
-			return new CBattle_WalkState(m_pOwner);
-		}
-
-		else
-		{*/
-			switch (m_iRand)
+	{
+		/*	if (m_bAngry == false)
 			{
-			case 0:
 				return new CBattle_WalkState(m_pOwner);
-
-			case 1:
-				return new CBattle_RunState(m_pOwner);
 			}
+
+			else
+			{*/
+		switch (m_iRand)
+		{
+		case 0:
+			return new CBattle_WalkState(m_pOwner);
+
+		case 1:
+			return new CBattle_RunState(m_pOwner);
+		}
 		/*}*/
 	}
-	
+
 	if (nullptr != m_pAtkColliderCom)
 	{
 		CBaseObj* pCollisionTarget = nullptr;
@@ -208,7 +212,7 @@ CBerserkerState * CBattle_Double_ClawState::LateTick(_float fTimeDelta)
 #ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
-		
+
 	if (nullptr != m_p2th_AtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_p2th_AtkColliderCom);
 #endif // _DEBUG

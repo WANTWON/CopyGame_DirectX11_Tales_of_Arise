@@ -99,6 +99,8 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p2th_AtkColliderCom)
 					m_p2th_AtkColliderCom->Update(R_matWorld);
 
+				pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
+
 				RELEASE_INSTANCE(CCollision_Manager);
 			}
 		}
@@ -112,6 +114,8 @@ CBerserkerState * CBattle_Shock_WaveState::Tick(_float fTimeDelta)
 
 			m_pAtkColliderCom = nullptr;
 			m_p2th_AtkColliderCom = nullptr;
+
+			pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 
 			RELEASE_INSTANCE(CCollision_Manager);
 		}
