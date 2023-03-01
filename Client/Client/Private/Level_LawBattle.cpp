@@ -56,7 +56,7 @@ HRESULT CLevel_LawBattle::Initialize()
 		CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 		pCameraManager->Ready_Camera(LEVEL::LEVEL_LAWBATTLE);
 		m_pCamera = dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera());
-		m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
+		m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LAWBATTLE);
 		m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, -10.f, 0.f));
 
 		g_fSoundVolume = 0.f;
@@ -74,7 +74,7 @@ HRESULT CLevel_LawBattle::Initialize()
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 
 		if (CGameInstance::Get_Instance() ->Get_PastLevelIndex() == LEVEL_CITY)
-			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(60.f, 0.f, 10.f, 1.f));
+			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(60.f, 0.f, 20.f, 1.f));
 		else
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
 		pPlayer->Change_Navigation(LEVEL_LAWBATTLE);
@@ -102,6 +102,7 @@ HRESULT CLevel_LawBattle::Initialize()
 void CLevel_LawBattle::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
 
 	_bool isBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 	if (isBattleMode)

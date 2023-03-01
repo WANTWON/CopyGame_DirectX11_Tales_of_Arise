@@ -15,10 +15,8 @@ public:
 	enum CAMERAMODE {CAM_DEBUG, CAM_PLAYER,
 		CAM_BATTLEZONE, CAM_BATTLE_CLEAR, CAM_LOCKON, CAM_LOCKOFF,
 		CAM_AIBOOSTON, CAM_AIBOOSTOFF, CAM_TARGETMODE, CAM_TARGETMODE_OFF,
-		CAM_ROOM,
-		CAM_END};
+		CAM_ROOM, CAM_LAWBATTLE, CAM_END};
 	
-
 	typedef struct tagCameraTool
 	{
 		_float					fRadian = 0.f;
@@ -29,7 +27,6 @@ public:
 		_float					fEndTime;
 
 	}TOOLDESC;
-
 
 
 	typedef struct tagCameraDesc_Derived
@@ -68,13 +65,12 @@ public:
 	void					Set_PlayTime(_float fTime) { m_fPlayTime = fTime; m_fTime = 0.f; }
 	void					Set_TargetMatrix(_matrix matTarget) { m_matTarget = matTarget; }
 	void					Set_ShakingMode(_bool type, _float fPower = 1.f, _float fMinusPower = 0.1f);
-public:
-	
 
 public:
 	void Debug_Camera(_float fTimeDelta);
 	void Player_Camera(_float fTimeDelta);
 	void Battle_Camera(_float fTimeDelta);
+	void LawBattle_Camera(_float fTimeDelta);
 	void BattleClear_Camera(_float fTimeDelta);
 	void LockOn_Camera(_float fTimeDelta);
 	void LockOff_Camera(_float fTimeDelta);
