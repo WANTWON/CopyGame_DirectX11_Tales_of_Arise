@@ -24,7 +24,7 @@ public:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Instancing(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_DecoObject(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Deco_SnowField(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Battle_UI(const _tchar* pLayerTag);
 
 private:

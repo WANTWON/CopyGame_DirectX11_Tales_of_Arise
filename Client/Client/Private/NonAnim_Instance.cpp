@@ -219,7 +219,7 @@ _bool CNonAnim_Instance::IsRenderShadow()
 		break;
 	case Client::LEVEL_WORKTOOL:
 		break;
-	case Client::LEVEL_LAWARENA:
+	case Client::LEVEL_LAWBATTLE:
 		break;
 	case Client::LEVEL_BOSS:
 		break;

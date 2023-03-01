@@ -204,6 +204,7 @@ void CAI_SionLaw_Smash::Enter()
 
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+	m_pOwner->Get_Model()->Reset();
 	if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
 	{
 		if (nullptr == m_pTarget)

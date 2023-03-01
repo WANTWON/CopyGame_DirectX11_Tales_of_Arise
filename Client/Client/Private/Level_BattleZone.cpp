@@ -413,7 +413,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Instancing(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_BattleZone::Ready_Layer_DecoObject(const _tchar * pLayerTag)
+HRESULT CLevel_BattleZone::Ready_Layer_Deco_SnowField(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	HANDLE hFile = 0;

@@ -33,6 +33,7 @@ CAI_ChaseState::CAI_ChaseState(CPlayer* pPlayer, STATE_ID eStateType, _uint play
 
 CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 {
+	
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN || m_eCurrentPlayerID == CPlayer::LAW)
 	{
 		if (CheckTarget() == false)

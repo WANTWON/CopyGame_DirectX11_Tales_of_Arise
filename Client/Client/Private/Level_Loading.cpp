@@ -10,6 +10,7 @@
 #include "Level_City.h"
 #include "Level_Restaurant.h"
 #include "Level_WorkTool.h"
+#include "Level_LawBattle.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -23,10 +24,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 
 	m_eNextLevel = eNextLevel;
 
-	/*if (m_eNextLevel == LEVEL_BATTLE)
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_ScreenDistortion"), LEVEL_STATIC, TEXT("Layer_Effect"));
-	else*/
-		CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Loading"), LEVEL_STATIC, TEXT("UI_LOADING"), nullptr);
+	CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Loading"), LEVEL_STATIC, TEXT("UI_LOADING"), nullptr);
 
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, eNextLevel);
 	if (!m_pLoader)
@@ -66,6 +64,9 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 		case LEVEL_WORKTOOL:
 			pNewLevel = CLevel_WorkTool::Create(m_pDevice, m_pContext);
 			break;
+		case LEVEL_LAWBATTLE:
+			pNewLevel = CLevel_LawBattle::Create(m_pDevice, m_pContext);
+			break;
 		}
 
 		if (!pNewLevel)
@@ -85,8 +86,6 @@ void CLevel_Loading::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
-
-	
 }
 
 CLevel_Loading * CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevel)
