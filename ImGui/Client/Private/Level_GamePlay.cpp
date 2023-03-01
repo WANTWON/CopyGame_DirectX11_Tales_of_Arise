@@ -27,7 +27,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 
 	CCamera_Manager::Get_Instance()->Set_CamMode(CCamera_Manager::DYNAMIC);
-	return S_OK;
+	return S_OK; 
 }
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
