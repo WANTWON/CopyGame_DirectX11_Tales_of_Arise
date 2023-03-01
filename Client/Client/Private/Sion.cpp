@@ -146,6 +146,10 @@ HRESULT CSion::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_WorkToolNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_WorkTool_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
 		return E_FAIL;
 	m_vecNavigations.push_back(m_pNavigationCom);
+	if (FAILED(__super::Add_Components(TEXT("Com_LawBattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_LawBattle_Navigation"), (CComponent**)&m_pNavigationCom, &NaviDesc)))
+		return E_FAIL;
+	m_vecNavigations.push_back(m_pNavigationCom);
+
 	return S_OK;
 }
 
@@ -160,7 +164,35 @@ void CSion::Change_Level(LEVEL eLevel)
 
 		CHierarchyNode* pSocket = nullptr;
 
-		if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel || LEVEL_RESTAURANT == eLevel)
+		if (LEVEL_LAWBATTLE == eLevel)
+		{
+			if (CBattleManager::Get_Instance()->Get_IsBattleMode() == true)
+			{
+
+				pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
+				if (nullptr == pSocket)
+				{
+					ERR_MSG(TEXT("Failed to Get BonePtr"));
+					return;
+				}
+
+				XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixIdentity());
+				XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixIdentity());
+			}
+			else
+			{
+				pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L");
+				if (nullptr == pSocket)
+				{
+					ERR_MSG(TEXT("Failed to Get BonePtr"));
+					return;
+				}
+
+				XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixRotationX(XMConvertToRadians(180.f)));
+				XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 50.f));
+			}
+		}
+		else if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel || LEVEL_RESTAURANT == eLevel)
 		{
 			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 			if (nullptr == pSocket)

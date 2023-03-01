@@ -42,6 +42,7 @@ public:
 	HRESULT Loading_ForRestaurantLevel();
 	HRESULT Loading_ForWorkToolLevel();
 	HRESULT Loading_ForBossLevel();
+	HRESULT Loading_ForLawBattleLevel();
 
 	HRESULT Loading_ForUITexture();
 	HRESULT Loading_ForEffect();

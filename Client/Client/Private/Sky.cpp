@@ -112,6 +112,11 @@ HRESULT CSky::Ready_Components()
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_CITY, TEXT("Prototype_Component_Texture_Sky"), (CComponent**)&m_pTextureCom)))
 			return E_FAIL;
 		break;
+	case Client::LEVEL_LAWBATTLE:
+		/* For.Com_Texture */
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_LAWBATTLE, TEXT("Prototype_Component_Texture_Sky"), (CComponent**)&m_pTextureCom)))
+			return E_FAIL;
+		break;
 	default:
 		break;
 	}

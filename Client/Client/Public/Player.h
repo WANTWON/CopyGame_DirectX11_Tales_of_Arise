@@ -3,7 +3,7 @@
 #include "Client_Defines.h"
 #include "BaseObj.h"
 #include "PlayerManager.h"
-
+#include "BattleManager.h"
 
 BEGIN(Engine)
 class CNavigation;

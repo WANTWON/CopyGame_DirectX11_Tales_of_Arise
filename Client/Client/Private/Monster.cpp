@@ -58,8 +58,6 @@ HRESULT CMonster::Initialize(void* pArg)
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CBattleManager::Get_Instance()->Add_Monster(this);
-
 	return S_OK;
 }
 
@@ -754,6 +752,7 @@ void CMonster::Free()
 		Safe_Release(iter);
 
 	CBattleManager::Get_Instance()->Out_BattleMonster(this);
+	CBattleManager::Get_Instance()->Out_Monster(this);
 	Safe_Release(m_pDissolveTexture);
 	Safe_Release(m_pModelCom);
 	
