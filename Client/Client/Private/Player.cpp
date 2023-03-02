@@ -27,13 +27,14 @@
 //////////////////////////////////
 #include "AI_Overlimit_State.h"
 #include "AIPoseState.h"
-#include "Damagefont_Critical.h"
+#include "Damagefont.h"
 
 #include "Level_Restaurant.h"
 #include "Level_WorkTool.h"
 
 #include "PlayerOverlimit.h"
 #include "ParticleSystem.h"
+
 
 using namespace Player;
 using namespace AIPlayer;
@@ -487,35 +488,41 @@ HRESULT CPlayer::Render_EdgeDetection()
 
 _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 {
-	if (fDamage <= 0 || m_bDead || m_bIsJustDodge)
+	if (fDamage <= 0 || m_bDead || m_bIsJustDodge || (CPlayerState::STATE_OVERLIMIT == m_pPlayerState->Get_StateId()))
 		return 0;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 	if (eMode == ACTIVE)
 		int a = 0;
 
-	
 	if (m_bTakeDamage_Delay == false)
 	{
 		m_tInfo.fCurrentHp -= (int)fDamage;
 		m_bTakeDamage_Delay = true;
 	}
+	else
+		return 0;
 
-	m_tInfo.fCurrentHp -= (int)fDamage;
+	
 
-
-	CDamagefont_Critical::DMGDESC testdesc;
-	ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
+	CDamageFont::DMGDESC testdesc;
+	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
 	testdesc.iDamage = fDamage;
 	testdesc.pPointer = this;
 	testdesc.itype = 5;
+	testdesc.bisNormal = false;
 
-	if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+
+	if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 	{
 
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
-			return OBJ_NOEVENT;
+
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
+			return 1;
+
+
 	}
+	
 
 
 	/*CDamageFont::DMGDESC testdesc;
@@ -946,8 +953,8 @@ void CPlayer::Reset_DodgeEffect(_float fTimeDelta)
 		if (fSaturationInterpFactor > 1.f)
 			fSaturationInterpFactor = 1.f;
 
-		_float fSaturationStart = 2.f;
-		_float fSaturationEnd = 1.f;
+		_float fSaturationStart = 0.5f;
+		_float fSaturationEnd = 1.5f;
 		_float fSaturationLerp = fSaturationStart + fSaturationInterpFactor * (fSaturationEnd - fSaturationStart);
 		m_pRendererCom->Set_Saturation(true, fSaturationLerp);
 
@@ -970,7 +977,7 @@ void CPlayer::Reset_DodgeEffect(_float fTimeDelta)
 		m_fResetTimer = 0.f;
 		m_bDodgeEffect = false;
 		m_pRendererCom->Set_ZoomBlur(false);
-		m_pRendererCom->Set_Saturation(false);
+		//m_pRendererCom->Set_Saturation(false);
 	}
 }
 

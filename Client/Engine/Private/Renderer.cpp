@@ -82,6 +82,11 @@ HRESULT CRenderer::Initialize_Prototype()
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.f, 0.f, 0.f, 0.0f))))
 		return E_FAIL;
 
+	/* For.Target_Glow_Environment */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Glow_Environment"), ViewportDesc.Width, ViewportDesc.Height,
+		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
+		return E_FAIL;
+
 	/* For.Target_Glow_UI */
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Glow_UI"), ViewportDesc.Width, ViewportDesc.Height,
 		DXGI_FORMAT_R8G8B8A8_UNORM, &_float4(0.0f, 0.0f, 0.0f, 0.0f))))
@@ -134,6 +139,10 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	/* For.MRT_Edge_Detection */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Edge_Detection"), TEXT("Target_Edge_Detection"))))
+		return E_FAIL;
+
+	/* For.MRT_Glow_Environment */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("MRT_Glow_Environment"), TEXT("Target_Glow_Environment"))))
 		return E_FAIL;
 
 	/* For.MRT_Glow_UI */
@@ -267,6 +276,11 @@ HRESULT CRenderer::Render_GameObjects()
 	if (FAILED(Render_Glow()))
 		return E_FAIL;
 	if (FAILED(Render_Distortion()))
+		return E_FAIL;
+
+	if (FAILED(Render_Environment()))
+		return E_FAIL;
+	if (FAILED(Render_Environment_Glow()))
 		return E_FAIL;
 	
 	/* Post Processing */
@@ -712,6 +726,136 @@ HRESULT CRenderer::Render_EdgeDetection()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_Environment()
+{
+#pragma region Fog
+	/* Fog */
+	if (m_bFog)
+	{
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
+			return E_FAIL;
+
+		/* For.MRT_Fog */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Fog"))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(3);
+		m_pVIBuffer->Render();
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Fog"), m_pShaderPostProcessing, "g_FogTexture")))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(4);
+		m_pVIBuffer->Render();
+	}
+#pragma endregion Fog
+
+	m_GameObjects[RENDER_ENVIRONMENT].sort([](CGameObject* pSour, CGameObject* pDest)
+	{
+		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
+	});
+
+	for (auto& pGameObject : m_GameObjects[RENDER_ENVIRONMENT])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render();
+			Safe_Release(pGameObject);
+		}
+	}
+
+	m_GameObjects[RENDER_ENVIRONMENT].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Environment_Glow()
+{
+	/* If there are not Glow Object return. */
+	if (m_GameObjects[RENDER_ENVIRONMENT_GLOW].empty())
+		return S_OK;
+	else
+	{
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Glow_Environment"))))
+			return E_FAIL;
+
+		m_GameObjects[RENDER_ENVIRONMENT_GLOW].sort([](CGameObject* pSour, CGameObject* pDest)
+		{
+			return pSour->Get_CamDistance() > pDest->Get_CamDistance();
+		});
+
+		for (auto& pGameObject : m_GameObjects[RENDER_ENVIRONMENT_GLOW])
+		{
+			if (pGameObject)
+			{
+				pGameObject->Render_Glow();
+				Safe_Release(pGameObject);
+			}
+		}
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+	}
+
+	/* Glow */
+	if (!m_GameObjects[RENDER_ENVIRONMENT_GLOW].empty())
+	{
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_ViewMatrix", &m_ViewMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
+			return E_FAIL;
+
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Glow_Environment"), m_pShaderPostProcessing, "g_BlurTexture")))
+			return E_FAIL;
+
+		/* Horizontal Blur */
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Horizontal"))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(1);
+		m_pVIBuffer->Render();
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShaderPostProcessing, "g_BlurTexture")))
+			return E_FAIL;
+
+		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Vertical"))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(2); /* Vertical Blur */
+		m_pVIBuffer->Render();
+
+		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+			return E_FAIL;
+
+		/* Bind the Horizontally and Vertically Blurred Image to the Glow Texture. */
+		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShaderPostProcessing, "g_BlendTexture")))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(0);
+		m_pVIBuffer->Render();
+
+		m_GameObjects[RENDER_ENVIRONMENT_GLOW].clear();
+
+		return S_OK;
+	}
+}
+
 HRESULT CRenderer::Render_PostProcessing()
 {
 	if (!m_pTarget_Manager)
@@ -755,35 +899,6 @@ HRESULT CRenderer::Render_PostProcessing()
 	m_pVIBuffer->Render();
 #pragma endregion Depth_Of_Field
 	
-#pragma region Fog
-	/* Fog */
-	if (m_bFog)
-	{
-		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
-			return E_FAIL;
-
-		/* For.MRT_Fog */
-		if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Fog"))))
-			return E_FAIL;
-
-		m_pShaderPostProcessing->Begin(3);
-		m_pVIBuffer->Render();
-
-		if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-			return E_FAIL;
-
-		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
-			return E_FAIL;
-
-		if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Fog"), m_pShaderPostProcessing, "g_FogTexture")))
-			return E_FAIL;
-
-		m_pShaderPostProcessing->Begin(4);
-		m_pVIBuffer->Render();
-	}
-#pragma endregion Fog
-	
 #pragma region Distortion
 	/* Distortion */
 	/* This Distortion is a Post Processing Effect applied to the entire Screen.
@@ -826,22 +941,6 @@ HRESULT CRenderer::Render_PostProcessing()
 		m_pVIBuffer->Render();
 	}
 #pragma endregion Zoom_Blur
-
-#pragma region Saturation
-	/* Saturation */
-	if (m_bSaturation)
-	{
-		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
-			return E_FAIL;
-
-		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fSaturation", &m_fSaturationPower, sizeof(_float))))
-			return E_FAIL;
-
-		m_pShaderPostProcessing->Begin(9); /* Saturation */
-		m_pVIBuffer->Render();
-	}
-#pragma endregion Saturation
 
 	return S_OK;
 }
@@ -1009,6 +1108,22 @@ HRESULT CRenderer::Render_UI_PostProcessing()
 
 		m_GameObjects[RENDER_UI_GLOW].clear();
 	}
+
+#pragma region Saturation
+	/* Saturation */
+	if (m_bSaturation)
+	{
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fSaturation", &m_fSaturationPower, sizeof(_float))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(9); /* Saturation */
+		m_pVIBuffer->Render();
+	}
+#pragma endregion Saturation
 }
 
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

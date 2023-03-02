@@ -234,6 +234,7 @@
     <ClInclude Include="..\Public\BerserkerChaseState.h" />
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
+    <ClInclude Include="..\public\BossSkills.h" />
     <ClInclude Include="..\Public\BreakFont.h" />
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\Public\Camera_Action.h" />
@@ -269,6 +270,8 @@
     <ClInclude Include="..\Public\Player_SionShooterState.h" />
     <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
     <ClInclude Include="..\Public\Portal.h" />
+    <ClInclude Include="..\Public\RinwellDownState.h" />
+    <ClInclude Include="..\Public\RinwellIdleState.h" />
     <ClInclude Include="..\Public\Road.h" />
     <ClInclude Include="..\public\ScreenDistortion.h" />
     <ClInclude Include="..\Public\ShootingObject.h" />
@@ -504,6 +507,7 @@
     <ClCompile Include="..\Private\BerserkerChaseState.cpp" />
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
+    <ClCompile Include="..\private\BossSkills.cpp" />
     <ClCompile Include="..\Private\BreakFont.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\Private\Camera_Action.cpp" />
@@ -538,6 +542,8 @@
     <ClCompile Include="..\Private\Player_SionShooterState.cpp" />
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />
     <ClCompile Include="..\Private\Portal.cpp" />
+    <ClCompile Include="..\Private\RinwellDownState.cpp" />
+    <ClCompile Include="..\Private\RinwellIdleState.cpp" />
     <ClCompile Include="..\Private\Road.cpp" />
     <ClCompile Include="..\private\ScreenDistortion.cpp" />
     <ClCompile Include="..\Private\ShootingObject.cpp" />

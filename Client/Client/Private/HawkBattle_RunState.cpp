@@ -20,20 +20,15 @@ CBattle_RunState::CBattle_RunState(CHawk* pHawk, STATE_ID ePreBattleState)
 
 CHawkState * CBattle_RunState::AI_Behaviour(_float fTimeDelta)
 {
-
 	return nullptr;
 }
 
 CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 {
-	//m_fTarget_Distance = Find_BattleTarget();
-
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-
 
 	CBaseObj* pOrigin_DamageCause = nullptr;
 	pOrigin_DamageCause = m_pOwner->Get_OrginDamageCauser();
-
 
 	if (m_pCurTarget == nullptr)
 	{
@@ -52,7 +47,6 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 
 			else if (pDamageCauser != nullptr)
 			{
-	
 				pDamageCauser = m_pOwner->Get_DamageCauser();
 				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
 
@@ -154,10 +148,7 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 				}
 
 				else
-				{
 					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-				}
-				
 			}
 		}
 
@@ -166,90 +157,7 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 		}
-
 	}
-
-
-	//02-22/1738
-	/*CBaseObj* pOrigin_DamageCause = nullptr;
-	pOrigin_DamageCause = m_pOwner->Get_OrginDamageCauser();
-
-
-	if (m_pCurTarget == nullptr)
-	{
-		if (pOrigin_DamageCause == nullptr)
-		{
-			CBaseObj* pDamageCauser = nullptr;
-			pDamageCauser = m_pOwner->Get_DamageCauser();
-
-			if (pDamageCauser == nullptr)
-			{
-				m_pCurTarget = m_pOwner->Find_MinDistance_Target();
-
-				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-			}
-
-			else if (pDamageCauser != nullptr)
-			{
-				CBaseObj* pDamageCauser = nullptr;
-				pDamageCauser = m_pOwner->Get_DamageCauser();
-				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
-
-				m_pCurTarget = pDamageCauser;
-
-				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-			}
-		}
-
-		else if (pOrigin_DamageCause != nullptr)
-		{
-			m_pCurTarget = m_pOwner->Get_OrginDamageCauser();
-
-
-			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-		}
-	}
-
-	else
-	{
-		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	}*/
-
-
-
-	////02-22 1522
-	//CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
-
-	//if (pDamageCauser == nullptr)
-	//{
-	//	if (m_pCurTarget == nullptr)
-	//	{
-	//		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
-
-	//		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//	}
-
-	//	else if (m_pCurTarget)
-	//	{
-	//		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//	}
-	//
-	//}
-
-
-	//else if (pDamageCauser != nullptr)
-	//{
-	//	m_pCurTarget = pDamageCauser;
-
-	//	m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//	m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
-	//}
 
 	return nullptr;
 }
@@ -282,8 +190,7 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 				m_pOwner->Get_Transform()->LookAt(vPosition);
 				m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.3f, m_pOwner->Get_Navigation());
-				//m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
-
+			
 				if (m_fTarget_Distance <= 4.5f)
 				{
 					if (m_b_IsTargetInsight == true)
@@ -292,16 +199,10 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 						{
 						case 0:
 							return new CBattle_PeckState(m_pOwner);
-
 						case 1:
 							return new CBattle_TornadeState(m_pOwner);
-
 						case 2:
 							return new CBattle_DashState(m_pOwner);
-
-
-						default:
-							break;
 						}
 					}
 				}
@@ -334,16 +235,10 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 				{
 				case 0:
 					return new CBattle_PeckState(m_pOwner);
-
 				case 1:
 					return new CBattle_TornadeState(m_pOwner);
-
 				case 2:
 					return new CBattle_DashState(m_pOwner);
-
-
-				default:
-					break;
 				}
 			}
 
@@ -358,16 +253,10 @@ CHawkState * CBattle_RunState::LateTick(_float fTimeDelta)
 					{
 					case 0:
 						return new CBattle_PeckState(m_pOwner);
-
 					case 1:
 						return new CBattle_TornadeState(m_pOwner);
-
 					case 2:
 						return new CBattle_DashState(m_pOwner);
-
-
-					default:
-						break;
 					}
 				}
 			}
@@ -385,8 +274,6 @@ void CBattle_RunState::Enter()
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::MOVE_RUN);
-
-	
 }
 
 void CBattle_RunState::Exit()

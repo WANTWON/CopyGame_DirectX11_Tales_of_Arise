@@ -532,7 +532,8 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
 	testdesc.iDamage = fDamage;
 	testdesc.pPointer = this;
-	
+	testdesc.itype = 1;
+	testdesc.bisNormal = false;
 
 	//dynamic_cast<CUI_Dialoguepopup*>(m_pUI_Manager->Get_Dialoguepopup())->Open_Dialogue(0, false, 1, 0);
 	
@@ -544,12 +545,12 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	dynamic_cast<CUI_font_Damage_number*>(CUI_Manager::Get_Instance()->Get_DMGNUM())->updatedamage(fDamage);
 	dynamic_cast<CUI_Comboline*>(CUI_Manager::Get_Instance()->Get_Comboline())->setline();
 
-	CCriticalFont::DMGDESC fontdesc;
+	/*CCriticalFont::DMGDESC fontdesc;
 	ZeroMemory(&fontdesc, sizeof(CCriticalFont::DMGDESC));
 	fontdesc.itype = 1;
 	fontdesc.iDamage = fDamage;
 	fontdesc.pPointer = this;
-
+*/
 	
 	//_float2 pos = Get_ProjPosition();
 
@@ -559,37 +560,39 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 		
 	case 0:
 
-		
-		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &fontdesc)))
+		testdesc.itype = 1;
+		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 		{
 			
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &fontdesc)))
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 				return E_FAIL;
 		}
 		break;
 
 	case 1:
 	
-		fontdesc.itype = 2;
-		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &fontdesc)))
+		testdesc.itype = 2;
+		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 		{
 		
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &fontdesc)))
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 				return E_FAIL;
 		}
 		break;
 
 	case 2:
-		fontdesc.itype = 3;
-		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &fontdesc)))
+		testdesc.itype = 3;
+		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 		{
 			
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &fontdesc)))
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 				return E_FAIL;
 		}
 		break;
 
 	default:
+		testdesc.itype = 0;
+		testdesc.bisNormal = true;
 		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 		{
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
@@ -601,7 +604,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 
 	
 	
-	m_tStats.m_fLockonSmashGuage += 0.2f;
+	m_tStats.m_fLockonSmashGuage += 0.1f;
 
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)

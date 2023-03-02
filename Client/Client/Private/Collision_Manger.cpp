@@ -20,6 +20,15 @@ void CCollision_Manager::Add_CollisionGroup(COLLSIONGROUP CollisionGroup, CBaseO
 	m_GameObjects[CollisionGroup].push_back(pGameObject);
 }
 
+void CCollision_Manager::Add_CollisionGroupCollider(COLLSIONGROUP CollisionGroup, CCollider * pCollider, CBaseObj * pGameObject)
+{
+	if (nullptr == pCollider || nullptr == pGameObject)
+		return;
+	
+	m_Colliders[CollisionGroup].push_back(pCollider);
+	m_ColliderGameObjects[CollisionGroup].push_back(pGameObject);
+}
+
 void CCollision_Manager::Out_CollisionGroup(COLLSIONGROUP CollisionGroup, CBaseObj * pGameObject)
 {
 	auto& iter = m_GameObjects[CollisionGroup].begin();
@@ -29,6 +38,28 @@ void CCollision_Manager::Out_CollisionGroup(COLLSIONGROUP CollisionGroup, CBaseO
 			iter = m_GameObjects[CollisionGroup].erase(iter);
 		else
 			++iter;
+	}
+}
+
+void CCollision_Manager::Out_CollisionGroupCollider(COLLSIONGROUP CollisionGroup, CCollider * pCollider, CBaseObj * pGameObject)
+{
+	auto& iterObj = m_ColliderGameObjects[CollisionGroup].begin();
+	auto& iterCol = m_Colliders[CollisionGroup].begin();
+
+	while (iterObj != m_ColliderGameObjects[CollisionGroup].end())
+	{
+		if (*iterObj == pGameObject)
+			iterObj = m_ColliderGameObjects[CollisionGroup].erase(iterObj);
+		else
+			++iterObj;
+	}
+
+	while (iterCol != m_Colliders[CollisionGroup].end())
+	{
+		if (*iterCol == pCollider)
+			iterCol = m_Colliders[CollisionGroup].erase(iterCol);
+		else
+			++iterCol;
 	}
 }
 
@@ -48,6 +79,7 @@ void CCollision_Manager::Clear_CollisionGroupExpect(COLLSIONGROUP CollisionGroup
 	}
 }
 
+
 void CCollision_Manager::Clear_AllCollisionGroup()
 {
 	for (_uint i = 0; i < COLLISION_END; ++i)
@@ -56,8 +88,11 @@ void CCollision_Manager::Clear_AllCollisionGroup()
 			continue;
 
 		m_GameObjects[i].clear();
+		m_ColliderGameObjects[i].clear();
+		m_Colliders[i].clear();
 	}
 }
+
 
 _bool CCollision_Manager::CollisionwithGroup(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj** pOut, COLLIDERTYPE eType)
 {
@@ -92,6 +127,36 @@ _bool CCollision_Manager::CollisionwithGroup(COLLSIONGROUP CollisionGroup, CColl
 			return true;
 		}
 			
+	}
+
+	return false;
+}
+
+_bool CCollision_Manager::CollisionwithGroupCollider(COLLSIONGROUP CollisionGroup, CCollider * pCollider, CBaseObj ** pOut, COLLIDERTYPE eType)
+{
+	if ((0 >= m_ColliderGameObjects[CollisionGroup].size()) || (0 >= m_Colliders[CollisionGroup].size()))
+		return false;
+
+	auto& iterObj = m_ColliderGameObjects[CollisionGroup].begin();
+
+	for (auto& iterCol : m_Colliders[CollisionGroup])
+	{
+		if (nullptr == iterCol)
+		{
+			++iterObj;
+			continue;
+		}
+		
+		if (pCollider->Collision(iterCol))
+		{
+			if (nullptr != pOut)
+				*pOut = *iterObj;
+			
+			return true;
+		}
+
+		if (iterObj != m_ColliderGameObjects[CollisionGroup].end())
+			++iterObj;
 	}
 
 	return false;
@@ -234,7 +299,11 @@ _float CCollision_Manager::Calculate_DmgDirection(CBaseObj* Sour, CBaseObj* Dest
 void CCollision_Manager::Free()
 {
 	for (_uint i = 0; i < COLLISION_END; ++i)
+	{
 		m_GameObjects[i].clear();
+		m_ColliderGameObjects[i].clear();
+		m_Colliders[i].clear();
+	}
 
 	for (_uint i = 0; i < COLLIDER_END; ++i)
 	{

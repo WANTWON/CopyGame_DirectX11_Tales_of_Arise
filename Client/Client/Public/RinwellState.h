@@ -17,6 +17,7 @@ public:
 		STATE_MOVE,
 		STATE_ATTACK,
 		STATE_DAMAGE,
+		STATE_DOWN,
 		STATE_DEAD,
 		STATE_HP50DOWN,
 		STATE_BATTLESTART
@@ -25,8 +26,11 @@ public:
 
 	enum SKILL_TYPE
 	{
-		PHOTONFLASH,
-		GALEFORCE,
+		PHOTONFLASH,		//±âº»°ø°Ý
+		METEOR,				//¸ÞÅ×¿À
+		THUNDERFIELD,		//½ã´õ
+		GALEFORCE,			//Ç³¾Ð
+		HOLY,				//È¦¸®·£½º
 		SKILL_END
 	};
 

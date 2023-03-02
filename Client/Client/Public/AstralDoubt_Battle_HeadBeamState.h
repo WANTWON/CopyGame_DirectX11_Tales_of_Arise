@@ -20,8 +20,13 @@ private:
 	void AimTarget(_float fTimeDelta);
 
 private:
-	_float			m_fBeamTimeDeltaAcc = 0.f;
-	_float			m_fIdleAttackTimer = 1.5f;
+	void Reset_Effect();
+	void Remove_Effect();
+	void Update_Effect();
+
+private:
+	_float		m_fBeamTimeDeltaAcc = 0.f;
+	_float		m_fIdleAttackTimer = 1.5f;
 	STATE_ID	m_ePreState_Id;
 	STATE_ID	m_ePreTurn_Id;
 
@@ -40,10 +45,13 @@ private:
 	_vector		m_vTargetDir;
 	_vector		m_vLook;
 
-
 	CTransform* m_pMonSterTransform;
 	CCollider*  m_pAtkColliderCom = nullptr;
 	_bool		m_b_IsTargetInsight = false;
+
+	/* Effect Booleans */
+	_bool m_bBeam = false;
+	vector<class CEffect*> m_Beam;
 };
 END
 END

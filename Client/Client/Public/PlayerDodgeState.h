@@ -18,13 +18,17 @@ public:
 	virtual void Exit(void) override;
 
 private:
-	void Move(_float fTimeDelta);
 	void DodgeEffect();
 private:
 	DIRID m_eDirection = DIRID::DIR_END;
 
 	CCollider* m_pDodgeCollider = nullptr;
 	_bool m_bJustEffectOnce = true;
+
+	_bool m_bDodgeEffect = false;
+	_float m_fEffectEventCurTime = 0.f;
+	_float m_fEffectEventEndTime = 0.f;
+	_bool m_bIncreaseOverLimit = false;
 };
 END
 END

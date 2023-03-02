@@ -33,7 +33,6 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-
 	m_tStats.m_fMaxHp = 100000.f;
 
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
@@ -66,8 +65,6 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_IDLE);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 	}
-
-
 
 	m_eMonsterID = RINWELL;
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -325,6 +322,7 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 	case Client::CAiRinwell::BTL_STEP_LAND_BACK:
 	case Client::CAiRinwell::BTL_STEP_LAND:
 	case Client::CAiRinwell::BTL_ATTACK_MAGIC_EMIT_AIR:
+	case Client::CAiRinwell::BTL_MAGIC_START:
 		return false;
 	}
 
@@ -337,7 +335,6 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnC
 		return 0;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
-
 
 	if (iHp <= 0)
 	{
@@ -360,18 +357,20 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnC
 			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
 	}
-	else
+	else if ((CRinwellState::STATE_DAMAGE != m_pState->Get_StateId()) && (CRinwellState::STATE_DOWN != m_pState->Get_StateId()))
 	{
 		m_pTarget = DamageCauser;
 		m_eDmg_Direction = Calculate_DmgDirection();
 		m_bTakeDamage = true;
 
-		if (fDamage > 300)
+		m_iDamage += fDamage;
+		if (m_iDamage >= (m_tInfo.fMaxHp * 0.1f))
 		{
 			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 			m_pState = m_pState->ChangeState(m_pState, pState);
-		}
 
+			m_iDamage = 0;
+		}
 	}
 
 	return iHp;

@@ -433,6 +433,9 @@
     <Filter Include="02.GameObjects\06.InteractObject\03. MiniGame2">
       <UniqueIdentifier>{0351bb96-4faf-4f46-b2a8-e1ce156cec21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07.Bullet\BossSkills">
+      <UniqueIdentifier>{917bbb17-1c62-41ef-912d-b124a4a45cec}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Levels\07.LawBattle">
       <UniqueIdentifier>{0b21e4a1-a00c-4231-adfd-45977878d9c8}</UniqueIdentifier>
     </Filter>
@@ -1263,6 +1266,9 @@
     <ClInclude Include="..\Public\ShootingObject.h">
       <Filter>02.GameObjects\06.InteractObject\03. MiniGame2</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BossSkills.h">
+      <Filter>02.GameObjects\07.Bullet\BossSkills</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Level_LawBattle.h">
       <Filter>01.Levels\07.LawBattle</Filter>
     </ClInclude>
@@ -1283,6 +1289,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\EffectObject.h">
       <Filter>02.GameObjects\03.Effect\04.EffectObject%28NotTool%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellDownState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2045,6 +2057,9 @@
     <ClCompile Include="..\Private\ShootingObject.cpp">
       <Filter>02.GameObjects\06.InteractObject\03. MiniGame2</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\BossSkills.cpp">
+      <Filter>02.GameObjects\07.Bullet\BossSkills</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Level_LawBattle.cpp">
       <Filter>01.Levels\07.LawBattle</Filter>
     </ClCompile>
@@ -2062,6 +2077,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\EffectObject.cpp">
       <Filter>02.GameObjects\03.Effect\04.EffectObject%28NotTool%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellDownState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
