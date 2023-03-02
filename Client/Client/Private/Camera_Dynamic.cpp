@@ -739,9 +739,9 @@ void CCamera_Dynamic::LawBattle_Camera(_float fTimeDelta)
 					else if (fDot > 0.5)
 						m_fAngle -= (0.9f - fDot)* 3.f;
 					else if (fDot > 0.3)
-						m_fAngle -= (0.9f - fDot)* 5.f;
+						m_fAngle -= (0.9f - fDot)* 7.f;
 					else
-						m_fAngle -= (0.8f - fDot)* 7.f;
+						m_fAngle -= (0.8f - fDot)* 9.f;
 				}
 				else
 				{
@@ -750,9 +750,9 @@ void CCamera_Dynamic::LawBattle_Camera(_float fTimeDelta)
 					else if (fDot > 0.5)
 						m_fAngle += (0.9f - fDot)* 3.f;
 					else if (fDot > 0.3)
-						m_fAngle += (0.9f - fDot)* 5.f;
-					else
 						m_fAngle += (0.9f - fDot)* 7.f;
+					else
+						m_fAngle += (0.9f - fDot)* 9.f;
 				}
 
 			}
@@ -765,12 +765,13 @@ void CCamera_Dynamic::LawBattle_Camera(_float fTimeDelta)
 
 		if (fDistance > 30.f)
 		{
-			fLength -= 0.1f;
-			m_fCameraOffsetY -= 0.2f;
+			fLength += 0.2f;
+			m_fCameraOffsetY += 0.2f;
 
 		}
 		else if (fDistance >= 15.f && fDistance <= 30.f)
 		{
+			fLength -= 0.05f;
 			if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
 			{
 				if (YMouseMove > 0)
@@ -782,18 +783,18 @@ void CCamera_Dynamic::LawBattle_Camera(_float fTimeDelta)
 		}
 		else if (fDistance < 15.f)
 		{
-			fLength += 0.1f;
-			m_fCameraOffsetY += 0.2f;
+			fLength -= 0.2f;
+			m_fCameraOffsetY -= 0.2f;
 		}
 
-		if (fLength >= 6.f)
-			fLength = 6.f;
-		if (fLength <= 4.f)
-			fLength = 4.f;
-		if (m_fCameraOffsetY >= 4.f)
-			m_fCameraOffsetY = 4.f;
-		else if (m_fCameraOffsetY <= 2.f)
-			m_fCameraOffsetY = 2.f;
+		if (fLength >= 10.f)
+			fLength = 10.f;
+		if (fLength <= 5.f)
+			fLength = 5.f;
+		if (m_fCameraOffsetY >= 8.f)
+			m_fCameraOffsetY = 8.f;
+		else if (m_fCameraOffsetY <= 3.f)
+			m_fCameraOffsetY = 3.f;
 
 		m_fLookOffsetY = 3.f;
 	}

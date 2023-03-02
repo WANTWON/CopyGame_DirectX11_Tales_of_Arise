@@ -10,20 +10,15 @@ using namespace Hawk;
 CBattle_DeadState::CBattle_DeadState(CHawk* pHawk)
 {
 	m_pOwner = pHawk;
-
 }
 
 CHawkState * CBattle_DeadState::AI_Behaviour(_float fTimeDelta)
 {
-
 	return nullptr;
-
-
 }
 
 CHawkState * CBattle_DeadState::Tick(_float fTimeDelta)
 {
-
 	if (false == m_bDeadAnimFinish)
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta*1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
@@ -35,7 +30,6 @@ CHawkState * CBattle_DeadState::Tick(_float fTimeDelta)
 CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 {
 	m_fTimeDeltaAcc += fTimeDelta;
-
 
 	if (m_bIsAnimationFinished && false == m_bDeadAnimFinish)
 	{
@@ -49,7 +43,6 @@ CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 		m_pOwner->Set_Dissolve();
 		m_bDeadAnimFinish = true;
 		m_fTimeDeltaAcc = 0.f;
-		m_pOwner->Set_Dissolve();
 	}
 
 	return nullptr;
@@ -62,7 +55,6 @@ void CBattle_DeadState::Enter()
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::DEAD);
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Hawk_Dead.wav"), SOUND_VOICE, 1.0f);
-
 }
 
 void CBattle_DeadState::Exit()

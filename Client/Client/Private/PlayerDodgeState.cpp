@@ -207,6 +207,9 @@ CPlayerState * CDodgeState::HandleInput(void)
 
 CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 {
+	if (m_bDodgeEffect)
+		DodgeEffect();
+
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.f);
 
 	if (!m_bIsAnimationFinished)
@@ -234,57 +237,19 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 			{
-				
-
-#pragma region Dodge Effect
-				_float fDuration = pEvent.fEndTime - pEvent.fStartTime;
-				_float fCurrentTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
-				
-				_float fInterpTimer = fDuration * .15;
-
-				/* Saturation Lerp */
-				_float fSaturationInterpFactor = fCurrentTime / fInterpTimer;
-				if (fSaturationInterpFactor > 1.f)
-					fSaturationInterpFactor = 1.f;
-
-				_float fSaturationStart = 1.f;
-				_float fSaturationEnd = 2.f;
-				_float fSaturationLerp = fSaturationStart + fSaturationInterpFactor * (fSaturationEnd - fSaturationStart);
-				m_pOwner->Get_Renderer()->Set_Saturation(true, fSaturationLerp);
-
-				/* Zoom Blur Lerp */
-				_float fFocusPower = 5.f;
-
-				_float fBlurInterpFactor = fCurrentTime / fInterpTimer;
-				if (fBlurInterpFactor > 1.f)
-					fBlurInterpFactor = 1.f;
-
-				_int iDetailStart = 1;
-				_int iDetailEnd = 10;
-				_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
-				m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
-#pragma endregion Dodge Effect
-
 				if (nullptr == m_pDodgeCollider)
 				{
-					
+					m_fEffectEventEndTime = pEvent.fEndTime;
+					m_fEffectEventCurTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
+
 					CCollider::COLLIDERDESC		ColliderDesc;
 
 					ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
 					ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 					ColliderDesc.vPosition = _float3(0.f, 2.5f, 0.f);
 
-					m_pDodgeCollider = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
-					if (m_bJustEffectOnce)
-					{
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_JustDodgeEffect"), LEVEL_STATIC, TEXT("ddd"), &m_pOwner)))
-							return OBJ_NOEVENT;
-						m_bJustEffectOnce = false;
-
-					}
-					
+					m_pDodgeCollider = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 				}
-
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
@@ -293,8 +258,9 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		{
 			if ((ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType) && (m_pOwner->Get_IsJustDodge() == true))
 			{
-				
 				m_pOwner->Off_JustDodge();
+
+				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
 
 				if (nullptr != m_pDodgeCollider)
 				{
@@ -321,19 +287,30 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 		CBaseObj* pCollisionTarget = nullptr;
 
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pDodgeCollider, &pCollisionTarget))
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pDodgeCollider, &pCollisionTarget) ||
+			CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MBULLET, m_pDodgeCollider, &pCollisionTarget))
 		{
-			///////
+			m_bDodgeEffect = true;
+
 			m_pOwner->On_JustDodge();
 
 			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
 
-			pCollisionTarget->Set_Dead(true);
+			if (m_bJustEffectOnce)
+			{
+				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_JustDodgeEffect"), LEVEL_STATIC, TEXT("ddd"), &m_pOwner)))
+					return OBJ_NOEVENT;
+				m_bJustEffectOnce = false;
+			}
+
 			CCollision_Manager::Get_Instance()->Collect_Collider(CCollider::TYPE_SPHERE, m_pDodgeCollider);
 			m_pDodgeCollider = nullptr;
 
-			m_pOwner->Plus_Overcount();
-
+			if (!m_bIncreaseOverLimit)
+			{
+				m_pOwner->Plus_Overcount();
+				m_bIncreaseOverLimit = true;
+			}
 		}
 
 #ifdef _DEBUG
@@ -451,8 +428,6 @@ CPlayerState * CDodgeState::EventInput(void)
 
 void CDodgeState::Enter(void)
 {
-
-
 	__super::Enter();
 	m_bJustEffectOnce = true;
 	m_eStateId = STATE_ID::STATE_DODGE;
@@ -559,23 +534,47 @@ void CDodgeState::Enter(void)
 	}
 
 	m_pOwner->Set_Manarecover(true);
-
 }
 
 void CDodgeState::Exit(void)
 {
 	__super::Exit();
 
+	m_bIncreaseOverLimit = false;
+
 	Safe_Release(m_pDodgeCollider);
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
-void CDodgeState::Move(_float fTimeDelta)
-{
-
-}
-
 void CDodgeState::DodgeEffect()
 {
+#pragma region Dodge Effect
+	_float fDuration = m_fEffectEventEndTime - m_fEffectEventCurTime;
+	_float fCurrentTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
+	
+	_float fInterpTimer = fDuration * .15;
+
+	/* Saturation Lerp */
+	_float fSaturationInterpFactor = fCurrentTime / fInterpTimer;
+	if (fSaturationInterpFactor > 1.f)
+		fSaturationInterpFactor = 1.f;
+
+	_float fSaturationStart = 1.f;
+	_float fSaturationEnd = 2.f;
+	_float fSaturationLerp = fSaturationStart + fSaturationInterpFactor * (fSaturationEnd - fSaturationStart);
+	m_pOwner->Get_Renderer()->Set_Saturation(true, fSaturationLerp);
+
+	/* Zoom Blur Lerp */
+	_float fFocusPower = 5.f;
+
+	_float fBlurInterpFactor = fCurrentTime / fInterpTimer;
+	if (fBlurInterpFactor > 1.f)
+		fBlurInterpFactor = 1.f;
+
+	_int iDetailStart = 1;
+	_int iDetailEnd = 10;
+	_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+	m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+#pragma endregion Dodge Effect
 }

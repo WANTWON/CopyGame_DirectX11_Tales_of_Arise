@@ -27,7 +27,7 @@ public:
 	void Set_MiniGameUI(_bool tof) { m_bMinigameUI = tof; }
 
 	_int Get_Score() { return m_iScore; }
-	_float Get_TotalTime() {return m_fTotalTime	;}
+	_float Get_LimitTime() {return m_fLimitTime;}
 	void Increase_Score(_int iScore)
 	{
 		m_iScore += iScore;
@@ -48,7 +48,7 @@ private:
 	vector<class CEffect*> m_SnowParticles2;
 
 	_float m_fTotalTime = 0.f;
-	_float m_fLimitTime = 15.f;
+	_float m_fLimitTime = 30.f;
 	_float m_fCreateTime[4] = { 0.f, };
 	_float m_fSpwanTime = 5.f;
 	_int m_iScore = 0;

@@ -95,7 +95,7 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 
 	if (m_bMinigameStart && !m_bMinigameUI)
 	{
-		if (m_fLimitTime >= m_fTotalTime)
+		if (m_fLimitTime > 0)
 		{
 			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -261,10 +261,11 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 					m_fCreateTime[i] += fTimeDelta + ((rand() % 100) * 0.001f);
 			}
 
+			m_fLimitTime -= fTimeDelta;
 			RELEASE_INSTANCE(CGameInstance);
 		}
 
-		m_fTotalTime += fTimeDelta;
+		
 	}
 }
 
@@ -277,9 +278,9 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 	
 		
 
-	if (m_fTotalTime >= m_fLimitTime)
+	if (m_fLimitTime <= 0.f &&!m_bMinigameStart)
 	{
-		m_bMinigameStart = false;
+	//	m_bMinigameStart = false;
 
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
 
@@ -293,7 +294,7 @@ void CLevel_Restaurant::Late_Tick(_float fTimeDelta)
 		if (pPlayer->Get_IsFly())
 			pPlayer->Off_IsFly();
 
-		m_fTotalTime = 0.f;
+		m_fLimitTime = 30.f;
 	}
 }
 

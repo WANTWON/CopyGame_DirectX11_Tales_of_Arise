@@ -19,17 +19,12 @@ CBattle_Damage_LargeB_State::CBattle_Damage_LargeB_State(CHawk* pHawk, STATE_ID 
 
 CHawkState * CBattle_Damage_LargeB_State::AI_Behaviour(_float fTimeDelta)
 {
-	
-	
 	return nullptr;
-
-
 }
 
 CHawkState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 {
 	AI_Behaviour(fTimeDelta);
-
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
@@ -66,35 +61,12 @@ CHawkState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 		else
 			return new CBattle_RunState(m_pOwner, STATE_END);
 	}
-		//switch (m_iRand)
-		//{
-		////case 0:
-		////	return new CBattle_ChargeState(m_pOwner);
-		////	break;
-
-		////case 0:
-		////	return new CBattle_Flying_BackState(m_pOwner);
-		////	break;
-
-		////case 2:
-		////	return new CBattle_BombingState(m_pOwner);
-		////	break;
-		//	return new CBattle_RunState(m_pOwner, STATE_END);
-		//default:
-		//	break;
-		//}
 	
-
 	return nullptr;
 }
 
 void CBattle_Damage_LargeB_State::Enter()
 {
-	
-
-	
-
-
 	switch (m_eStateId)
 	{
 	case Client::CHawkState::STATE_TAKE_DAMAGE:

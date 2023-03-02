@@ -66,30 +66,56 @@ int CUI_Minigame1::Tick(_float fTimeDelta)
 		if(!m_bGameStart)
 		m_bGameStartUI = true;
 	}
-		//m_bGameStart = true;
 
+
+	m_iScore = dynamic_cast<CLevel_Restaurant*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Get_Score();//999;
+	m_fGametime = dynamic_cast<CLevel_Restaurant*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Get_LimitTime();//99.f;
+
+		//m_bGameStart = true;
 	if (m_bGameStartUI)
 	{
 		m_fScaler += 0.02f;
 		if (m_fScaler >= 1.f)
 		{
 			m_fScaler = 1.f;
+			m_fStopTimer += fTimeDelta;
+
+		}
+
+		if (m_fStopTimer > 2.5f)
+		{
+			//CUI_Manager::Get_Instance()->Plus_Minigamecaptionindex(1);
+			m_fStopTimer = 0.f;
+			m_fScaler = 0.1f;
 			m_bGameStartUI = false;
 			m_bGameStart = true;
 			dynamic_cast<CLevel_Restaurant*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Set_MiniGameUI(false);
 
-		}
+			if (m_fGametime <= 0)
+			{
+				dynamic_cast<CLevel_Restaurant*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Set_MiniGameStart(false);
+				return OBJ_DEAD;
+			}
 			
+
+		}
+
 	}
+
+
+	if (m_fGametime <= 0)
+		m_bGameStartUI = true;
+
+	
 
 	
 	if (m_bGameStart)
 	{
-		m_iScore = dynamic_cast<CLevel_Restaurant*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Get_Score();//999;
-		m_fGametime = dynamic_cast<CLevel_Restaurant*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Get_TotalTime();//99.f;
+		
 
 
-
+		if (m_fGametime <= 0)
+			m_iStartEndtexnum = 1;
 
 		m_fSize.x = 50.f;
 		m_fSize.y = 75.f;
@@ -148,7 +174,7 @@ HRESULT CUI_Minigame1::Render()
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
 			return E_FAIL;
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom4->Get_SRV(0))))
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom4->Get_SRV(m_iStartEndtexnum))))
 			return E_FAIL;
 
 

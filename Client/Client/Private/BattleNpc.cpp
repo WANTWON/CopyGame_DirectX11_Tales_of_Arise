@@ -106,6 +106,7 @@ void CBattleNpc::Talk_with_Npc()
 	switch (m_NpcDesc.eNpcType)
 	{
 	case NPC_LAW:
+		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(CUI_Manager::Get_Instance()->Get_Dialogue_section());
 		break;
 	default:
 		break;
