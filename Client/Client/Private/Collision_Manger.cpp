@@ -79,6 +79,7 @@ void CCollision_Manager::Clear_CollisionGroupExpect(COLLSIONGROUP CollisionGroup
 	}
 }
 
+
 void CCollision_Manager::Clear_AllCollisionGroup()
 {
 	for (_uint i = 0; i < COLLISION_END; ++i)
@@ -91,6 +92,7 @@ void CCollision_Manager::Clear_AllCollisionGroup()
 		m_Colliders[i].clear();
 	}
 }
+
 
 _bool CCollision_Manager::CollisionwithGroup(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj** pOut, COLLIDERTYPE eType)
 {

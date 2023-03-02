@@ -8,7 +8,7 @@
 #include "AICheckState.h"
 #include "AI_LAW_NomalAttack_State.h"
 #include "UI_Skillmessage.h"
-#include "Damagefont_Critical.h"
+#include "DamageFont.h"
 
 using namespace AIPlayer;
 
@@ -153,16 +153,18 @@ void CAI_Item_Use_State::Use_Item(ITEM_NAME item)
 				CPlayerManager::Get_Instance()->Get_EnumPlayer(random)->RecoverHP(recoverpower);
 				
 
-				CDamagefont_Critical::DMGDESC testdesc;
-				ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
+				CDamageFont::DMGDESC testdesc;
+				ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
 				testdesc.iDamage = (_int)recoverpower;
 				testdesc.pPointer = CPlayerManager::Get_Instance()->Get_EnumPlayer(random);
 				testdesc.itype = 4;
+				testdesc.bisNormal = false;
 
-				if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+
+				if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 				{
 
-					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 						return;
 				}
 				break;
@@ -182,17 +184,20 @@ void CAI_Item_Use_State::Use_Item(ITEM_NAME item)
 			_int random = rand() % (CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1);
 			if (CPlayerManager::Get_Instance()->Get_EnumPlayer(random)->Get_Info().fCurrentHp > 0)
 			{
-				CPlayerManager::Get_Instance()->Get_EnumPlayer(random)->RecoverHP(recoverpower);
-				CDamagefont_Critical::DMGDESC testdesc;
-				ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
-				testdesc.iDamage =(_int)recoverpower;
+
+				CDamageFont::DMGDESC testdesc;
+				ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
+				testdesc.iDamage = (_int)recoverpower;
 				testdesc.pPointer = CPlayerManager::Get_Instance()->Get_EnumPlayer(random);
 				testdesc.itype = 4;
+				testdesc.bisNormal = false;
 
-				if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+
+
+				if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 				{
 
-					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 						return;
 				}
 				break;
@@ -213,16 +218,19 @@ void CAI_Item_Use_State::Use_Item(ITEM_NAME item)
 
 		CPlayerManager::Get_Instance()->Get_EnumPlayer(random)->RecoverHP(recoverpower);
 
-		CDamagefont_Critical::DMGDESC testdesc;
-		ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
+		CDamageFont::DMGDESC testdesc;
+		ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
 		testdesc.iDamage = (_int)recoverpower;
 		testdesc.pPointer = CPlayerManager::Get_Instance()->Get_EnumPlayer(random);
 		testdesc.itype = 4;
+		testdesc.bisNormal = false;
 
-		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+
+
+		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 		{
 
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 				return;
 		}
 		break;
