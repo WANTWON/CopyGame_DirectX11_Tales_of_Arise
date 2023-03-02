@@ -165,9 +165,9 @@ HRESULT CUI_InterectMsg::Render()
 	_float alpha = m_fAlpha * 0.1f;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
 		return E_FAIL;
-	m_fSize.x = 300.f;
+	m_fSize.x = 250.f;
 	m_fSize.y = 40.f;
-	m_fPosition.x = 850.f + m_fFadeX;
+	m_fPosition.x = 860.f + m_fFadeX;
 	m_fPosition.y = 500.f + m_fFadeY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
@@ -184,9 +184,9 @@ HRESULT CUI_InterectMsg::Render()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	m_fSize.x = 300.f;
+	m_fSize.x = 250.f;
 	m_fSize.y = 5.f;
-	m_fPosition.x = 850.f + m_fFadeX;
+	m_fPosition.x = 860.f + m_fFadeX;
 	m_fPosition.y = 520.f + m_fFadeY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);

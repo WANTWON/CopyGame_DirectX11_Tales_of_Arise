@@ -58,7 +58,7 @@ int CUI_Dialoguepopup::Tick(_float fTimeDelta)
 		if (m_bfirstarrived)
 			timer += fTimeDelta;
 
-		if (timer > 5.f)
+		if (timer > 3.f)
 		{
 
 
@@ -75,7 +75,7 @@ int CUI_Dialoguepopup::Tick(_float fTimeDelta)
 		{
 			m_fDietimer += fTimeDelta;
 
-			if (m_fDietimer > 4.f)
+			if (m_fDietimer > 2.f)
 			{
 				m_bfadeout = true;
 				m_bfirstarrived = false;

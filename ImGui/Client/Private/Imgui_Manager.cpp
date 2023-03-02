@@ -1567,7 +1567,7 @@ void CImgui_Manager::ShowPickedObj()
 
 	
 
-	if (pPickedObj != nullptr)
+	if (pPickedObj != nullptr && dynamic_cast<CBaseObj*>(pPickedObj)->Get_ObjectID() == OBJ_BLOCK)
 	{
 		_vector vSettingPosition = DirectX::XMLoadFloat3(&m_vPickedObjPos);
 		vSettingPosition = XMVectorSetW(vSettingPosition, 1.f);
@@ -2097,9 +2097,13 @@ void CImgui_Manager::Set_ActionCamera()
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_CamMode(CCamera_Action::CAM_DEBUG);
 					dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(m_bIsPlaying);
 
+					CModel* pPlayerModel = (CModel*)CGameInstance::Get_Instance()->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
+					CModel* pPlayerModel2 = (CModel*)CGameInstance::Get_Instance()->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"), 1);
 
-					((CAnim*)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
-					((CAnim*)CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 1))->StopAnim();
+					if (pPlayerModel != nullptr)
+						((CAnim*)CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_GAMEPLAY, TEXT("Layer_Player"))->front())->StopAnim();
+					if (pPlayerModel2 != nullptr)
+						((CAnim*)CGameInstance::Get_Instance()->Get_Object(LEVEL_GAMEPLAY, TEXT("Layer_Player"), 1))->StopAnim();
 				}
 
 			}

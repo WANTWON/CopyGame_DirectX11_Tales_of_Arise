@@ -115,6 +115,7 @@ public: /*For.State*/
 	void Plus_Overcount() { ++m_tInfo.idodgecount; }
 	void Set_Overcount(_uint count) { m_tInfo.idodgecount = count; }
 
+	_bool Get_DodgeEffect() { return m_bDodgeEffect; }
 	void Set_DodgeEffect(_bool bDodgeEffect) { m_bDodgeEffect = bDodgeEffect; }	
 	void Reset_DodgeEffect(_float fTimeDelta);
 
@@ -169,7 +170,7 @@ protected: /* for 4 Player */
 	_bool m_bIsPose = false;
 
 	_bool m_bDodgeEffect = false;
-	_float m_fResetDuration = .25f;
+	_float m_fResetDuration = .45f;
 	_float m_fResetTimer = 0.f;
 
 	/* 무한피격 방지 */

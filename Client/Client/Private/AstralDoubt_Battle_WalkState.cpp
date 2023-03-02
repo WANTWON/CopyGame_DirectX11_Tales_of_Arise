@@ -1,4 +1,4 @@
-+-
+
 #include "stdafx.h"
 
 #include "AstralDoubt_Battle_WalkState.h"

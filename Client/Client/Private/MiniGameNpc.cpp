@@ -77,6 +77,15 @@ void CMiniGameNpc::Late_Tick(_float fTimeDelta)
 			Talk_with_Npc(); 
 		   
    }
+
+   if (m_bIsFirst_conversation && !m_bCollision)
+   {
+	   m_bIsFirst_conversation = false;
+	   dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
+   }
+  
+
+   
 }
 
 
@@ -101,12 +110,12 @@ void CMiniGameNpc::Talk_with_Npc()
 	switch (m_NpcDesc.eNpcType)
 	{
 	case MAN_GLD:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcFoodSlash.dat"), Get_Transform()->Get_WorldMatrix());
 		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(CUI_Manager::Get_Instance()->Get_Dialogue_section());
-
-		
 		break;
 
 	case NPC_NMM_BEF_000:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcShooting.dat"), Get_Transform()->Get_WorldMatrix());
 		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(CUI_Manager::Get_Instance()->Get_Dialogue_section());
 		break;
 
@@ -153,7 +162,7 @@ HRESULT CMiniGameNpc::Ready_Components(void * pArg)
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(6.f, 6.f, 6.f);
+	ColliderDesc.vScale = _float3(8.f, 8.f, 8.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 3.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))

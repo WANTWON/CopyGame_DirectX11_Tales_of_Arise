@@ -28,6 +28,10 @@ private:
 
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
+	CTexture*				m_pTextureCom2 = nullptr;
+	CTexture*				m_pTextureCom3 = nullptr;
+	CTexture*				m_pTextureCom4 = nullptr;
+
 
 
 public:
@@ -60,13 +64,19 @@ private:
 
 	_bool m_bnorend = true;
 
+	_bool m_balphaup = false;
+	_bool m_bfontmaker = true;
+
 public:
 	typedef struct tagdamagefont
 	{
-		//_float2 position = { 0.f,0.f };
+		_float2 position = { 0.f,0.f };
 		_uint iDamage = 0;
 		//_float2 fposition = { 0.f,0.f };
 		CBaseObj* pPointer = nullptr;
+
+		_uint itype = 1;
+		_bool bisNormal = true;
 
 	}DMGDESC;
 

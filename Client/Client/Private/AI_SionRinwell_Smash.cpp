@@ -74,6 +74,7 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 						m_bIsStateEvent = true;
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType && !m_bBullet)
 					{
+
 						/* Make Effect */
 						_vector vOffset = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
@@ -148,6 +149,23 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 
 		}
 
+	}
+
+	if (!m_bShaking && m_bBullet)
+	{
+		m_fShakingTime += fTimeDelta;
+
+		if (m_fShakingTime > 0.5f)
+		{
+			if (m_eCurrentPlayerID == CPlayer::SION)
+			{
+				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+					dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
+
+				m_bShaking = true;
+			}
+
+		}
 	}
 
 	if (m_bBullet)

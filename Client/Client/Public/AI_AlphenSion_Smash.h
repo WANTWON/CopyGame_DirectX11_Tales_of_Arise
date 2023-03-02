@@ -28,6 +28,9 @@ private:
 	_bool m_bAlphenStrike_2 = false;
 
 	_float m_fEventStart = -1.f;
+
+	_float m_fShakingTime = 0.f;
+	_bool m_bShaking = false;
 };
 END
 END

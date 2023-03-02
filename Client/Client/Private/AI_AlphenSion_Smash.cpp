@@ -73,6 +73,7 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 						m_bIsStateEvent = true;
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType || !m_bBullet)
 					{
+						
 						/* Make Effect */
 						_vector vOffset = { 0.f,0.f,0.f,0.f };
 						CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -101,9 +102,6 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 				}
 			}
 		}
-
-		_vector vecTranslation;
-		_float fRotationRadian;
 
 	
 	}
@@ -160,10 +158,28 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation();
 
+
+	if (!m_bShaking && m_bBullet)
+	{
+		m_fShakingTime += fTimeDelta;
+
+		if (m_fShakingTime > 0.2f)
+		{
+			if (m_eCurrentPlayerID == CPlayer::SION)
+			{
+				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+					dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.02f);
+
+				m_bShaking = true;
+			}
+
+		}
+	}
+
 	if (m_bBullet &&!m_bScreen)
 	{
 		m_fScreenTimer += fTimeDelta;
-		if (m_fScreenTimer > 1.5f)
+		if (m_fScreenTimer > 3.f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 			{

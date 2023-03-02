@@ -173,7 +173,7 @@ HRESULT CUI_Dialogue_Caption::Render()
 		return E_FAIL;
 
 	
-	m_pShaderCom->Begin(1);
+	m_pShaderCom->Begin(UI_CP_GUAGE_BLACK);
 
 	m_pVIBufferCom->Render();
 	

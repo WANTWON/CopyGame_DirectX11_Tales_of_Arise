@@ -82,6 +82,12 @@ void CBattleNpc::Late_Tick(_float fTimeDelta)
 		   pCurrentLevel->Set_NextLevel(true, LEVEL_LAWBATTLE);
 	   }
    }
+
+   if (m_bIsFirst_conversation && !m_bCollision)
+   {
+	   m_bIsFirst_conversation = false;
+	   dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
+   }
 }
 
 
@@ -106,7 +112,8 @@ void CBattleNpc::Talk_with_Npc()
 	switch (m_NpcDesc.eNpcType)
 	{
 	case NPC_LAW:
-		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(CUI_Manager::Get_Instance()->Get_Dialogue_section());
+		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
+		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(12);
 		break;
 	default:
 		break;

@@ -37,6 +37,14 @@ void CCamera_Action::Set_Play(_bool type)
 	
 }
 
+void CCamera_Action::Set_ShakingMode(_bool type, _float fPower, _float fMinusPower)
+{
+	m_bShakingMode = type;
+	m_fVelocity = fPower;
+	m_fMinusVelocity = fMinusPower;
+	m_vShakingStartPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+}
+
 int CCamera_Action::PlayCamera(_float fTimeDelta)
 {
 
@@ -80,6 +88,9 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	m_pTransform->LookAt(vAt);
 
+	if (m_bShakingMode)
+		Shaking_Camera(fTimeDelta);
+
 
 	if (m_fTime >= fEndTime)
 	{
@@ -100,6 +111,71 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 
 
 	return OBJ_NOEVENT;
+}
+
+void CCamera_Action::Shaking_Camera(_float fTimeDelta)
+{
+	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	_vector vCenterPos = vCameraPosition;
+
+	m_fCameraOffsetX = 0.f;
+	m_fCameraOffsetY = 0.f;
+
+
+	++m_iShakingCount;
+	if (m_iShakingCount % 4 == 0)
+	{
+		m_fCameraOffsetX -= m_fVelocity*0.1f;;
+
+		if (rand() % 2 == 0)
+			m_fCameraOffsetY -= m_fVelocity*0.1f;
+		else
+			m_fCameraOffsetY += m_fVelocity*0.1f;
+	}
+	else if (m_iShakingCount % 4 == 1)
+	{
+		m_fCameraOffsetX += m_fVelocity*0.1f;;
+
+		if (rand() % 2 == 0)
+			m_fCameraOffsetY -= m_fVelocity*0.1f;
+		else
+			m_fCameraOffsetY += m_fVelocity*0.1f;
+	}
+
+
+	m_fVelocity -= m_fMinusVelocity;
+	vCameraPosition = vCameraPosition + m_pTransform->Get_State(CTransform::STATE_RIGHT)*m_fCameraOffsetX + m_pTransform->Get_State(CTransform::STATE_UP)*m_fCameraOffsetY;
+	m_vNewPos = vCameraPosition;
+
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+		m_bLerp = false;
+
+	_vector FinalPos = { 0.f,0.f,0.f,0.f };
+	if (m_bLerp)
+	{
+		m_fShakingTime += fTimeDelta*0.3f;
+
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fShakingTime); //_float4 저장 y올리기 
+
+		if (m_fShakingTime >= 1.f)
+			m_bLerp = false;
+	}
+	else
+	{
+		FinalPos = m_vNewPos;
+		m_fShakingTime = 0.f;
+	}
+
+	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
+
+	m_fVelocity -= m_fMinusVelocity;
+	if (m_fVelocity < 0.0f)
+	{
+		m_fVelocity = 0.f;
+		m_iShakingCount = 0;
+		m_bShakingMode = false;
+	}
+
 }
 
 HRESULT CCamera_Action::Initialize_Prototype()
@@ -137,6 +213,7 @@ int CCamera_Action::Tick(_float fTimeDelta)
 		PlayCamera(fTime);
 	}
 
+	
 
 	RELEASE_INSTANCE(CGameInstance);
 

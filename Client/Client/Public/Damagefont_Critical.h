@@ -78,6 +78,7 @@ public:
 		//_float2 fposition = { 0.f,0.f };
 		CBaseObj* pPointer = nullptr;
 		_uint itype = 1;
+		_bool bisNormal = true;
 
 	}DMGDESC;
 

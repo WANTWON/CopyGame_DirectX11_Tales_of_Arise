@@ -267,8 +267,6 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 					CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 					pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pDodgeCollider);
 					m_pDodgeCollider = nullptr;
-
-					m_pOwner->Set_DodgeEffect(true);
 				}
 			}
 		}
@@ -540,6 +538,9 @@ void CDodgeState::Exit(void)
 {
 	__super::Exit();
 
+	if (m_bDodgeEffect)
+		m_pOwner->Set_DodgeEffect(true);
+
 	m_bIncreaseOverLimit = false;
 
 	Safe_Release(m_pDodgeCollider);
@@ -560,8 +561,8 @@ void CDodgeState::DodgeEffect()
 	if (fSaturationInterpFactor > 1.f)
 		fSaturationInterpFactor = 1.f;
 
-	_float fSaturationStart = 1.f;
-	_float fSaturationEnd = 2.f;
+	_float fSaturationStart = 1.5f;
+	_float fSaturationEnd = 0.5f;
 	_float fSaturationLerp = fSaturationStart + fSaturationInterpFactor * (fSaturationEnd - fSaturationStart);
 	m_pOwner->Get_Renderer()->Set_Saturation(true, fSaturationLerp);
 

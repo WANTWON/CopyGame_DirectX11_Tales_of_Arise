@@ -17,6 +17,9 @@ public:
 	virtual void Exit() override;
 
 private:
+	void Reset_Effect();
+
+private:
 	//_float			m_fTimeDeltaAcc = 0.f;
 	_float			m_fIdleAttackTimer = 1.5f;
 	STATE_ID		m_ePreState_Id;
@@ -46,6 +49,11 @@ private:
 	CCollider*	m_p4th_AtkColliderCom = nullptr;
 	CCollider*	m_p5th_AtkColliderCom = nullptr;
 	CCollider*	m_p6th_AtkColliderCom = nullptr;
+
+	/* Effect Booleans */
+	_bool m_bSlash_1 = false;
+	_bool m_bSlash_2 = false;
+	_bool m_bSlash_3 = false;
 };
 END
 END

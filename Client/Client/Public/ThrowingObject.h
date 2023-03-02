@@ -38,6 +38,9 @@ protected:
 	virtual HRESULT SetUp_ShaderID() override;
 
 private:
+	void	Dead_Effect();
+
+private:
 	CNavigation*			m_pNavigationCom = nullptr;
 
 private:

@@ -17,6 +17,9 @@ public:
 	virtual void Exit() override;
 
 private:
+	void Reset_Effect();
+
+private:
 	//_float			m_fTimeDeltaAcc = 0.f;
 	_float			m_fIdleAttackTimer = 1.5f;
 	//STATE_ID	m_eState_Id;
@@ -57,6 +60,25 @@ private:
 
 	_bool		m_bFootCollision = false;
 	_bool		m_b2th_FootCollision = false;
+
+	/* Effect Booleans */
+
+	// Spear_HandStand
+	_bool m_bHit_1 = false; 
+	_bool m_bHit_2 = false;
+	_bool m_bHit_3 = false;
+	_bool m_bHit_4 = false;
+	_bool m_bHit_5 = false;
+	_bool m_bHit_6 = false;
+	_bool m_bHit_7 = false;
+
+	// Spear_Multi
+	_bool m_bBullet_1 = false;
+	_bool m_bBullet_2 = false;
+	_bool m_bBullet_3 = false;
+	_bool m_bBullet_4 = false;
+	_bool m_bBullet_5 = false;
+	_bool m_bBullet_6 = false;
 };
 END
 END

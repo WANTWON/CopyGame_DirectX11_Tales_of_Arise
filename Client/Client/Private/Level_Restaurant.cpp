@@ -105,7 +105,7 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 			{
 				if (m_fSpwanTime < m_fCreateTime[i])
 				{
-					_int iPhase = _int(floor(m_fTotalTime) / 20) + 1;
+					_int iPhase = _int(floor(m_fTotalTime) / 10) + 1;
 					_int iNumCreate = rand() % (iPhase + 1);
 
 					for (_int j = 0; j < iNumCreate;)
@@ -164,15 +164,17 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 						case 12:
 						case 13:
 						case 14:
-							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "RedOnion");
-							ThrowDesc.eType = CThrowingObject::TYPE_REDONION;
-							ThrowDesc.tNonDesc.vScale = _float3(2.f, 2.f, 2.f);
-							break;
-						case 15:
-						case 16:
+
 							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "Bread_Croissant");
 							ThrowDesc.eType = CThrowingObject::TYPE_BREAD;
 							ThrowDesc.tNonDesc.vScale = _float3(3.f, 3.f, 3.f);
+							
+							break;
+						case 15:
+						case 16:
+							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "RedOnion");
+							ThrowDesc.eType = CThrowingObject::TYPE_REDONION;
+							ThrowDesc.tNonDesc.vScale = _float3(2.f, 2.f, 2.f);
 							break;
 						case 17:
 							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "Fruit_Mango");

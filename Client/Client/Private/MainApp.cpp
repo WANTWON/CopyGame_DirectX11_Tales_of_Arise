@@ -13,6 +13,7 @@
 #include "BattleManager.h"
 #include "UI_Dialoguepopup.h"
 #include "UI_Dialogue_Caption.h"
+//#include "Imgui_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::Get_Instance())
@@ -51,6 +52,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
 
+	//if (FAILED(CImgui_Manager::Get_Instance()->Initialize(m_pDevice, m_pContext)))
+	//	return E_FAIL;
+
 	if (FAILED(Open_Level(LEVEL_LOGO)))
 		return E_FAIL;
 
@@ -72,6 +76,11 @@ void CMainApp::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Up(DIK_ESCAPE) && !(m_pUI_Manager->Get_StopTick()))
 		m_pUI_Manager->Set_Mainmenuon(true);
 
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	{
+		CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
+		pCurrentLevel->Set_NextLevel(true, LEVEL_LAWBATTLE);
+	}
 	
 
 	/*if(m_pGameInstance->Key_Up(DIK_7))
@@ -98,25 +107,28 @@ HRESULT CMainApp::Render()
 
 	m_pRenderer->Render_GameObjects();
 
-//#ifdef _DEBUG
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_P))
+		m_bImgui = !m_bImgui;
+
+	
+
+	if (m_bImgui)
+	{
+		/*CImgui_Manager::Get_Instance()->Tick(0.1f);
+		CImgui_Manager::Get_Instance()->Render();*/
+	}
+
 	++m_iNumRender;
 
 	if (m_fTimeAcc > 1.0f)
 	{
-		//wsprintf(m_szFPS, TEXT("�����ǿ��� : %d"), m_iNumRender);
-
 		cout << "FPS : "<< m_iNumRender << "\n" << endl;
 		m_fTimeAcc = 0.f;
 		m_iNumRender = 0;
 	}
 
-	//m_pGameInstance->Render_Font(TEXT("Font_Nexon"), m_szFPS, XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.6f);
-//#endif // _DEBUG
-
-
-
 	m_pGameInstance->Present();
-
 
 	return S_OK;
 }
