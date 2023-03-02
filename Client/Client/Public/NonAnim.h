@@ -25,6 +25,8 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() override;
+	virtual HRESULT Render_EdgeDetection() override;
+
 public:
 	const char* Get_Modeltag() { return m_ModelDesc.pModeltag; }
 	const NONANIMDESC Get_ModelDesc() {return m_ModelDesc;}

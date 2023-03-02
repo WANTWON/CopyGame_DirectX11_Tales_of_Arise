@@ -100,6 +100,11 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		
+		if (!strcmp(m_ModelDesc.pModeltag, "House01_2F_1200x800") ||
+			!strcmp(m_ModelDesc.pModeltag, "House01_2F") ||
+			!strcmp(m_ModelDesc.pModeltag, "house01_3F_1200x1200"))
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
+
 #ifdef _DEBUG
 		if (m_pAABBCom != nullptr)
 			m_pRendererCom->Add_Debug(m_pAABBCom);
@@ -174,6 +179,25 @@ HRESULT CNonAnim::Render_ShadowDepth()
 
 	RELEASE_INSTANCE(CGameInstance);
 
+	return S_OK;
+}
+
+HRESULT CNonAnim::Render_EdgeDetection()
+{
+	if (nullptr == m_pShaderCom || nullptr == m_pModelCom)
+		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 7)))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 
