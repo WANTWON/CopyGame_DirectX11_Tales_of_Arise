@@ -43,18 +43,6 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 		}
 	}
 
-	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
-	{
-		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-	}
-	else
-	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-	}
-
-	if (m_pTarget == nullptr)
-		return nullptr;
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
 	if (!m_bIsAnimationFinished)

@@ -84,7 +84,7 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 							_vector vOffset = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
 							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 							mWorldMatrix.r[3] += vOffset*7.f + XMVectorSet(0.f, 0.f, 0.f, 0.f);
-							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Element.dat"), mWorldMatrix);
+							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Element2.dat"), mWorldMatrix);
 							m_fFadeTime = 0.f;
 							m_bBullet = true;
 							m_fEventStart = pEvent.fStartTime;

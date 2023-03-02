@@ -1227,7 +1227,9 @@ HRESULT CPlayerCreater::Ready_Layer_LawBattleMapObject(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	RELEASE_INSTANCE(CGameInstance);
+
+
+
 
 	ModelDesc;
 	strcpy(ModelDesc.pModeltag, "AILaw");
@@ -1235,6 +1237,7 @@ HRESULT CPlayerCreater::Ready_Layer_LawBattleMapObject(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MonsterLaw"), LEVEL_LAWBATTLE, TEXT("Layer_Boss"), &ModelDesc)))
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Boss"));
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
@@ -1880,13 +1883,27 @@ HRESULT CPlayerCreater::Ready_Layer_NpcLawBattle(const _tchar * pLayerTag)
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	CNpc::NPCDESC NpcDesc;
+	_uint iNum = 0;
 
-	strcpy(NpcDesc.Modeldesc.pModeltag, "NpcLaw");
-	NpcDesc.Modeldesc.vPosition = _float3(64, 0.f, 64);
-	XMStoreFloat4x4(&NpcDesc.Modeldesc.WorldMatrix, XMMatrixIdentity()* XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f)));
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BattleNpc"), LEVEL_LAWBATTLE, TEXT("Layer_Npc"), &NpcDesc)))
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/LawBattle/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
 		return E_FAIL;
-	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Npc"));
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(NpcDesc.Modeldesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		strcpy(NpcDesc.Modeldesc.pModeltag, "NpcLaw");
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BattleNpc"), LEVEL_LAWBATTLE, TEXT("Layer_Npc"), &NpcDesc)))
+			return E_FAIL;
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Npc"));
+	}
+
+	CloseHandle(hFile);
+
+
 
 	RELEASE_INSTANCE(CGameInstance);
 

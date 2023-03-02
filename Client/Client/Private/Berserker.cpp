@@ -300,7 +300,7 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 
 _int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
 {
-	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_tStats.m_fCurrentHp <= 0)
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pBerserkerState->Get_StateId() == CBerserkerState::STATE_DEAD)
 		return 0;
 	
 	m_iBeDamaged_Cnt++;
@@ -378,12 +378,8 @@ _int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnC
 		}
 	}
 	
-	else
-	{
-		return iHp;
-	}
 
-		return iHp;
+	return iHp;
 }
 
 HRESULT CBerserker::SetUp_ShaderID()
