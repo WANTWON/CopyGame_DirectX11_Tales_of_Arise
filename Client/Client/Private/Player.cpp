@@ -27,13 +27,14 @@
 //////////////////////////////////
 #include "AI_Overlimit_State.h"
 #include "AIPoseState.h"
-#include "Damagefont_Critical.h"
+#include "Damagefont.h"
 
 #include "Level_Restaurant.h"
 #include "Level_WorkTool.h"
 
 #include "PlayerOverlimit.h"
 #include "ParticleSystem.h"
+
 
 using namespace Player;
 using namespace AIPlayer;
@@ -503,19 +504,21 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 
 	m_tInfo.fCurrentHp -= (int)fDamage;
 
-
-	CDamagefont_Critical::DMGDESC testdesc;
-	ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
+	CDamageFont::DMGDESC testdesc;
+	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
 	testdesc.iDamage = fDamage;
 	testdesc.pPointer = this;
 	testdesc.itype = 5;
+	testdesc.bisNormal = false;
 
-	if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
+
+	if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 	{
 
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
-			return OBJ_NOEVENT;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
+			return 1;
 	}
+	
 
 
 	/*CDamageFont::DMGDESC testdesc;
