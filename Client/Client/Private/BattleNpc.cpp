@@ -82,6 +82,12 @@ void CBattleNpc::Late_Tick(_float fTimeDelta)
 		   pCurrentLevel->Set_NextLevel(true, LEVEL_LAWBATTLE);
 	   }
    }
+
+   if (m_bIsFirst_conversation && !m_bCollision)
+   {
+	   m_bIsFirst_conversation = false;
+	   dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
+   }
 }
 
 

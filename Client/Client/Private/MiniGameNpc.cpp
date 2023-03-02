@@ -77,6 +77,15 @@ void CMiniGameNpc::Late_Tick(_float fTimeDelta)
 			Talk_with_Npc(); 
 		   
    }
+
+   if (m_bIsFirst_conversation && !m_bCollision)
+   {
+	   m_bIsFirst_conversation = false;
+	   dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
+   }
+  
+
+   
 }
 
 
