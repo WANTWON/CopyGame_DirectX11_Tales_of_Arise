@@ -21,6 +21,7 @@ private:
 
 private:
 	void Reset_Effect();
+	void Remove_Effect();
 	void Update_Effect();
 
 private:

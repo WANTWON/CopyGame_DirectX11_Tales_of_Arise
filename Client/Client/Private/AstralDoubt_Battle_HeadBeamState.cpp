@@ -201,9 +201,15 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 						_matrix ParentWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
 						CHierarchyNode* pBone = m_pOwner->Get_Model()->Get_BonePtr("HEAD1_C");
-						_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
 
-						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Head_Beam.dat"), SocketMatrix);
+						_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+						SocketMatrix.r[0] = XMVector4Normalize(SocketMatrix.r[0]);
+						SocketMatrix.r[1] = XMVector4Normalize(SocketMatrix.r[1]);
+						SocketMatrix.r[2] = XMVector4Normalize(SocketMatrix.r[2]);
+
+						m_Beam = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Head_Beam.dat"), SocketMatrix);
+						Update_Effect();
+
 						m_bBeam = true;
 					}
 				}
@@ -228,6 +234,8 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 {
+	Remove_Effect();
+
 	m_pOwner->Check_Navigation();
 	
 	m_fTimeDeltaAcc += fTimeDelta;
@@ -297,7 +305,7 @@ void CBattle_HeadBeamState::Exit()
 
 void CBattle_HeadBeamState::AimTarget(_float fTimeDelta)
 {
-		m_fTimeDeltaAcc += fTimeDelta;
+	m_fTimeDeltaAcc += fTimeDelta;
 
 	if (m_fTimeDeltaAcc >= 0.5f)
 	{
@@ -311,7 +319,23 @@ void CBattle_HeadBeamState::Reset_Effect()
 	m_bBeam = false;
 }
 
+void CBattle_HeadBeamState::Remove_Effect()
+{
+	for (auto& pEffect : m_Beam)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+}
+
 void CBattle_HeadBeamState::Update_Effect()
 {
+	for (auto& pEffect : m_Beam)
+	{
+		if (!pEffect)
+			continue;
 
+		if (!wcscmp(pEffect->Get_PrototypeId(), TEXT("Cylinder_ko_01")))
+			pEffect->Get_Transform()->Set_Scale(CTransform::STATE::STATE_LOOK, 10.f);
+	}
 }
