@@ -448,6 +448,9 @@
     <Filter Include="02.GameObjects\06.InteractObject\03. MiniGame2">
       <UniqueIdentifier>{0351bb96-4faf-4f46-b2a8-e1ce156cec21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07.Bullet\BossSkills">
+      <UniqueIdentifier>{917bbb17-1c62-41ef-912d-b124a4a45cec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1242,6 +1245,9 @@
     <ClInclude Include="..\Public\ShootingObject.h">
       <Filter>02.GameObjects\06.InteractObject\03. MiniGame2</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BossSkills.h">
+      <Filter>02.GameObjects\07.Bullet\BossSkills</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2002,6 +2008,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ShootingObject.cpp">
       <Filter>02.GameObjects\06.InteractObject\03. MiniGame2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BossSkills.cpp">
+      <Filter>02.GameObjects\07.Bullet\BossSkills</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

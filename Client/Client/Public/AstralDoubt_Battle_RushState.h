@@ -3,6 +3,7 @@
 #include "AstralDoubt_State.h"
 
 BEGIN(Client)
+class CEffect;
 BEGIN(Astral_Doubt)
 class CBattle_RushState : public CAstralDoubt_State
 {
@@ -15,6 +16,10 @@ public:
 
 	virtual void Enter() override;
 	virtual void Exit() override;
+
+private:
+	void Reset_Effect();
+	void Update_Skill();
 
 private:
 	//_float			m_fTimeDeltaAcc = 0.f;
@@ -43,6 +48,13 @@ private:
 	CCollider*	m_p4th_AtkColliderCom = nullptr;
 	CCollider*	m_p5th_AtkColliderCom = nullptr;
 	CCollider*	m_p6th_AtkColliderCom = nullptr;
+
+	/* Effect Booleans */
+	_bool m_bAura = false;
+	_bool m_bRush = false;
+	_bool m_bSlash = false;
+
+	vector<CEffect*> m_Rush;
 };
 END
 END

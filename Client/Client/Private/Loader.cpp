@@ -24,6 +24,7 @@
 #include "RinwellSkills.h"
 #include "SionSkills.h"
 #include "AlphenSkills.h"
+#include "BossSkills.h"
 
 //Actor
 #include "Alphen.h"
@@ -271,6 +272,11 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_AlphenSkills */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AlphenSkills"),
 		CAlphenSkills::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_BossSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BossSkills"),
+		CBossSkills::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_AiRinwell */

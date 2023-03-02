@@ -7,6 +7,7 @@
 #include "AstralDoubt_Battle_IdleState.h"
 #include "AstralDoubt_Battle_SpearMultiState.h"
 #include "AstralDoubt_Battle_UpperState.h"
+#include "Effect.h"
 
 using namespace Astral_Doubt;
 
@@ -26,14 +27,12 @@ CAstralDoubt_State * CBattle_HeadBeamState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 {
-
+	Update_Effect();
 
   	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	
 	CBaseObj* pOrigin_DamageCause = nullptr;
 	pOrigin_DamageCause = m_pOwner->Get_OrginDamageCauser();
-
 
 	if (m_pCurTarget == nullptr)
 	{
@@ -49,7 +48,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 			}
-
 			else if (pDamageCauser != nullptr)
 			{
 				CBaseObj* pDamageCauser = nullptr;
@@ -62,7 +60,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 			}
 		}
-
 		else if (pOrigin_DamageCause != nullptr)
 		{
 			if (pOrigin_DamageCause->Get_Info().fCurrentHp <= 0)
@@ -81,12 +78,9 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 						m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 						m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 					}
-
 					else
 						return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-
 				}
-
 				else if (pDamageCauser != nullptr)
 				{
 					if (pDamageCauser->Get_Info().fCurrentHp > 0)
@@ -103,7 +97,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
 				}
 			}
-
 			else if (pOrigin_DamageCause->Get_Info().fCurrentHp > 0)
 			{
 				m_pCurTarget = pOrigin_DamageCause;
@@ -112,7 +105,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 			}
 		}
 	}
-
 	else
 	{
 		if (m_pCurTarget->Get_Info().fCurrentHp <= 0)
@@ -131,11 +123,9 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 				}
-
 				else
 					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
 			}
-
 			else if (pDamageCauser != nullptr)
 			{
 				if (pDamageCauser->Get_Info().fCurrentHp > 0)
@@ -148,25 +138,18 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 				}
-
 				else
 					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-				//return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_LOOKOUT);
 			}
 		}
-
 		else if (m_pCurTarget->Get_Info().fCurrentHp > 0)
 		{
 			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 		}
-
 	}
 
-
-
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-
 	for (auto& pEvent : pEvents)
 	{
 		if (pEvent.isPlay)
@@ -185,7 +168,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-
 				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
 				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("HEAD1_C")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
@@ -195,7 +177,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 				if (nullptr == m_pAtkColliderCom)
 				{
-					CCollider::COLLIDERDESC		ColliderDesc;
+					CCollider::COLLIDERDESC ColliderDesc;
 
 					ColliderDesc.vScale = _float3(4.5f, 1.0f, 80.1f);
 					ColliderDesc.vPosition = _float3(0.f, 0.f, -30.f);
@@ -208,17 +190,36 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 				RELEASE_INSTANCE(CCollision_Manager);
 			}
+		
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				if (!m_bBeam)
+				{
+					if (!strcmp(pEvent.szName, "Beam"))
+					{
+						_float4x4 PivotMatrix = m_pOwner->Get_Model()->Get_PivotFloat4x4();
+						_matrix ParentWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+						CHierarchyNode* pBone = m_pOwner->Get_Model()->Get_BonePtr("HEAD1_C");
+						_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Head_Beam.dat"), SocketMatrix);
+						m_bBeam = true;
+					}
+				}
+			}
 		}
-
-		else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
+		else
 		{
-			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+			{
+				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
 
-			pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pAtkColliderCom);
-			m_pAtkColliderCom = nullptr;
+				pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pAtkColliderCom);
+				m_pAtkColliderCom = nullptr;
 
-
-			RELEASE_INSTANCE(CCollision_Manager);
+				RELEASE_INSTANCE(CCollision_Manager);
+			}
 		}
 	}
 
@@ -237,10 +238,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 	_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 	m_pOwner->Get_Transform()->LookAt(vPosition);
 
-	//if (m_bUpdatTargetPos)
-	//	AimTarget(fTimeDelta);
-
-
 	if (m_bIsAnimationFinished)
 	{
 		if (m_fTarget_Distance <= 10.f)
@@ -257,9 +254,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 			default:
 				break;
 			}
-			
 		}
-
 		else
 			return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_HEADBEAM);
 	}
@@ -276,77 +271,6 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 		}
 	}
 
-
-	//_bool bIs_TargetInFront = false;d
-	//bIs_TargetInFront = Is_TargetInFront(vTargetPos);
-	
-
-
-	//	////회전 코드 
-	//	 m_pMonSterTransform = m_pOwner->Get_Transform();
-
-	//	 m_vTargetDir = XMVector3Normalize(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
-	//	 m_vLook = XMVector3Normalize(m_pMonSterTransform->Get_State(CTransform::STATE_LOOK));
-
-	//	 m_vLook = XMVectorSetY(m_vLook, 0.f);
-	//	 m_vTargetDir = XMVectorSetY(m_vTargetDir, 0.f);
-	//	 m_fDot = XMVectorGetX(XMVector3Dot(m_vTargetDir, m_vLook));
-
-	//	 m_vTargetPos = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-
-	//	 m_bIs_TargetInRight = Is_TargetRightSide(m_vTargetPos);
-	//	
-
-
-	//if (!m_bIsAnimationFinished)
-	//	{
-	//		m_fBeamTimeDeltaAcc += fTimeDelta;
-
-	//		if (m_bUpdatTargetPos == false)
-	//		{
-	//			if (m_bIs_TargetInRight)
-	//			{
-	//				if (m_fDot < 0.85f)
-	//				{
-	//					/*if (m_fBeamTimeDeltaAcc <= 1.f)
-	//					{*/
-	//						m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.03f);
-	//		/*			}
-	//					else
-	//					{
-	//						m_fBeamTimeDeltaAcc = 0.f;
-	//						m_bUpdatTargetPos = true;
-	//					}*/
-	//				
-	//				}
-	//			}
-	//			else if(m_bIs_TargetInRight == false)
-	//			{
-	//				if (m_fDot < 0.85f)
-	//				{
-	//					//if (m_fBeamTimeDeltaAcc <= 1.f)
-	//					//{
-	//						m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -0.03f);
-	//					//}
-	//					//else
-	//					//{
-	//					//	m_fBeamTimeDeltaAcc = 0.f;
-	//					//	m_bUpdatTargetPos = true;
-	//					//}
-	//				}
-	//			}
-	//		}
-	//	}
-		//	m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
-			//if (m_bUpdatTargetPos == false)
-			//{
-			//	m_pOwner->Get_Transform()->LookAt(vTargetPos);
-			//	m_bUpdatTargetPos = true;
-			//	m_fTimeDeltaAcc = 0.f;
-			//}
-		//}
-			
-
 #ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
@@ -357,6 +281,8 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 
 void CBattle_HeadBeamState::Enter()
 {
+	Reset_Effect();
+
 	m_eStateId = STATE_ID::STATE_IDLE;
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_HEAD_BEAM);
@@ -378,4 +304,14 @@ void CBattle_HeadBeamState::AimTarget(_float fTimeDelta)
 		m_bUpdatTargetPos = false;
 		m_fTimeDeltaAcc = 0.f;
 	}
+}
+
+void CBattle_HeadBeamState::Reset_Effect()
+{
+	m_bBeam = false;
+}
+
+void CBattle_HeadBeamState::Update_Effect()
+{
+
 }

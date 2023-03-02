@@ -371,8 +371,8 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cone01"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Cone01.fbx", "../../../Bin/Bin_Data/Effect/Cone/", PivotMatrix))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cylinder_ko_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Cylinder_ko_01.fbx", "../../../Bin/Bin_Data/Effect/Cylinder/", PivotMatrix))))
 		return E_FAIL;
 
 	/*

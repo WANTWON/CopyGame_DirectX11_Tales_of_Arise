@@ -487,6 +487,8 @@ HRESULT CPlayer::Render_EdgeDetection()
 
 _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 {
+	return 0;
+
 	if (fDamage <= 0 || m_bDead || m_bIsJustDodge)
 		return 0;
 
