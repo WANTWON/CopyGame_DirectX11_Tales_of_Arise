@@ -47,8 +47,10 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-		if ((m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_R || m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_F) && !m_bIsFly)
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
+		if ((m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_R) && !m_bIsFly)
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
+		else if ((m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_F) && !m_bIsFly)
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.02f), fRotationRadian, m_pOwner->Get_Navigation());
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
@@ -482,11 +484,11 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, m_fTime);
+			return new CJumpState(m_pOwner, STATETYPE_MAIN, CJumpState::JUMP_BATTLE, m_fTime);
 		else
 		{
 			if (CPlayerState::STATE_SKILL_ATTACK_R == m_eStateId || CPlayerState::STATE_SKILL_ATTACK_F == m_eStateId)
-				return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, 1.f);
+				return new CJumpState(m_pOwner, STATETYPE_MAIN, CJumpState::JUMP_BATTLE, 1.f);
 			else
 				return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 		}
@@ -500,7 +502,7 @@ CPlayerState * CLawSkillState::EventInput(void)
 	if (!m_bIsFly)
 	{
 		if (CPlayerState::STATE_SKILL_ATTACK_R == m_eStateId || CPlayerState::STATE_SKILL_ATTACK_F == m_eStateId)
-			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, 1.f);
+			return new CJumpState(m_pOwner, STATETYPE_MAIN, CJumpState::JUMP_BATTLE, 1.f);
 	}
 
 	if (floor(m_pOwner->Get_Info().fCurrentMp) >= 1)

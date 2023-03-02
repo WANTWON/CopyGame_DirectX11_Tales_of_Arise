@@ -184,6 +184,8 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
+
+					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
 				}
 				else
 					m_pAtkColliderCom->Update(matWorld);
@@ -220,8 +222,9 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
 				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
-
+				pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
 				pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pAtkColliderCom);
+
 				m_pAtkColliderCom = nullptr;
 
 				RELEASE_INSTANCE(CCollision_Manager);

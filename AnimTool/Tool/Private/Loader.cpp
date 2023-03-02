@@ -137,6 +137,12 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("Law");
 
+	/* For.Prototype_Component_Model_RINWELLWEAPON */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_RINWELLWEAPON"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/RinwellWeapon/RINWELLWEAPON.dat"))))
+		return E_FAIL;
+	pImgui->m_WeaponObj.push_back("RINWELLWEAPON");
+
 
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));

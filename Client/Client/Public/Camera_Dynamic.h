@@ -99,13 +99,13 @@ private:
 	_vector			m_vLastLookPos = { 0.f,0.f,0.f,0.f };
 	_float			m_fTime = 0.f;
 	_float			m_fLookOffsetY = 4.f;
-	_float			m_fCameraOffsetY = 5.f;
+	_float			m_fCameraOffsetY = 4.f;
 	_float			m_fAngle = 0.f;
 	_double			m_fVec = 1.f;
 	_vector			m_OriginPos = { 0.f,0.f,0.f,0.f };
 	_vector			m_vNewPos;
 
-	_float			fLength = 8.f;
+	_float			fLength = 6.f;
 	_long			m_MoveValue = 0;
 	_long			XMouseMove = 0;
 	_long			YMouseMove = 0;
