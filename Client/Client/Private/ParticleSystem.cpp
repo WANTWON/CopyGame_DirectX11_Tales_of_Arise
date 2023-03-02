@@ -88,10 +88,20 @@ void CParticleSystem::Late_Tick(_float fTimeDelta)
 	{
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		if (!wcscmp(m_tParticleDesc.wcPrototypeId, TEXT("TO14_T_FX_Common_Snow_01_M_copy")) ||
+			!wcscmp(m_tParticleDesc.wcPrototypeId, TEXT("TO14_T_FX_Common_SandMist_M")))
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ENVIRONMENT, this);
+		else
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 
 		if (m_tParticleDesc.m_bGlow)
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+		{
+			if (!wcscmp(m_tParticleDesc.wcPrototypeId, TEXT("TO14_T_FX_Common_Snow_01_M_copy")) ||
+				!wcscmp(m_tParticleDesc.wcPrototypeId, TEXT("TO14_T_FX_Common_SandMist_M")))
+				m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ENVIRONMENT_GLOW, this);
+			else
+				m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+		}
 	}
 }
 

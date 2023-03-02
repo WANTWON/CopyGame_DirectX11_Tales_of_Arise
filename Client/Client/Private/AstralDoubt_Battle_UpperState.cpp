@@ -8,6 +8,7 @@
 #include "AstralDoubt_Battle_WalkState.h"
 #include "AstralDoubt_Battle_720Spin_FirstState.h"
 #include "AstralDoubt_Battle_IdleState.h"
+#include "Effect.h"
 
 using namespace Astral_Doubt;
 
@@ -87,7 +88,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 					m_fSoundStart = pEvent.fStartTime;
 				}
 			}
-
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
 				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
@@ -122,7 +122,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				matWorld_6th.r[1] = XMVector4Normalize(matWorld_6th.r[1]);
 				matWorld_6th.r[2] = XMVector4Normalize(matWorld_6th.r[2]);
 
-
 				if (nullptr == m_pAtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc;
@@ -137,7 +136,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				}
 				else if (nullptr != m_pAtkColliderCom)
 					m_pAtkColliderCom->Update(matWorld);
-
 
 				if (nullptr == m_p2th_AtkColliderCom)
 				{
@@ -154,7 +152,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p2th_AtkColliderCom)
 					m_p2th_AtkColliderCom->Update(matWorld_2th);
 
-
 				if (nullptr == m_p3th_AtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc3th;
@@ -170,7 +167,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p3th_AtkColliderCom)
 					m_p3th_AtkColliderCom->Update(matWorld_3th);
 
-
 				if (nullptr == m_p4th_AtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc4th;
@@ -183,7 +179,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 
 					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p4th_AtkColliderCom, m_pOwner);
 				}
-
 				else if (nullptr != m_p4th_AtkColliderCom)
 					m_p4th_AtkColliderCom->Update(matWorld_4th);
 
@@ -202,7 +197,6 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p5th_AtkColliderCom)
 					m_p5th_AtkColliderCom->Update(matWorld_5th);
 
-
 				if (nullptr == m_p6th_AtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc6th;
@@ -219,6 +213,34 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 					m_p6th_AtkColliderCom->Update(matWorld_6th);
 
 				RELEASE_INSTANCE(CCollision_Manager);
+			}
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				if (!m_bSlash_1)
+				{
+					if (!strcmp(pEvent.szName, "Slash_1"))
+					{
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_1.dat"), mWorldMatrix);
+						m_bSlash_1 = true;
+					}
+				}
+				if (!m_bSlash_2)
+				{
+					if (!strcmp(pEvent.szName, "Slash_2"))
+					{
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_2.dat"), mWorldMatrix);
+						m_bSlash_2 = true;
+					}
+				}
+				if (!m_bSlash_3)
+				{
+					if (!strcmp(pEvent.szName, "Slash_3"))
+					{
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_3.dat"), mWorldMatrix);
+						m_bSlash_3 = true;
+					}
+				}
 			}
 		}
 
@@ -446,12 +468,9 @@ CAstralDoubt_State * CBattle_UpperState::LateTick(_float fTimeDelta)
 
 void CBattle_UpperState::Enter()
 {
+	Reset_Effect();
 
-
-	
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_IN_OUT_UPPER);
-
-	
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_IN_OUT_UPPER);	
 }
 
 void CBattle_UpperState::Exit()
@@ -464,4 +483,11 @@ void CBattle_UpperState::Exit()
 	Safe_Release(m_p4th_AtkColliderCom);
 	Safe_Release(m_p5th_AtkColliderCom);
 	Safe_Release(m_p6th_AtkColliderCom);
+}
+
+void CBattle_UpperState::Reset_Effect()
+{
+	m_bSlash_1 = false;
+	m_bSlash_2 = false;
+	m_bSlash_3 = false;
 }

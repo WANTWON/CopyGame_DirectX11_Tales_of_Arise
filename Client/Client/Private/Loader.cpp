@@ -24,6 +24,7 @@
 #include "RinwellSkills.h"
 #include "SionSkills.h"
 #include "AlphenSkills.h"
+#include "BossSkills.h"
 
 //Actor
 #include "Alphen.h"
@@ -290,6 +291,11 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_AlphenSkills */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AlphenSkills"),
 		CAlphenSkills::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_BossSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BossSkills"),
+		CBossSkills::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_AiRinwell */
@@ -1789,6 +1795,9 @@ HRESULT CLoader::Loading_ForEffect()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cylinder_nm_01"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/Cylinder_nm_01.dat"))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cylinder_ko_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/Cylinder_ko_01.dat"))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CylinderSphere_nm_01"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/CylinderSphere_nm_01.dat"))))

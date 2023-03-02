@@ -495,14 +495,15 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	if (eMode == ACTIVE)
 		int a = 0;
 
-	
 	if (m_bTakeDamage_Delay == false)
 	{
 		m_tInfo.fCurrentHp -= (int)fDamage;
 		m_bTakeDamage_Delay = true;
 	}
+	else
+		return 0;
 
-	m_tInfo.fCurrentHp -= (int)fDamage;
+	
 
 	CDamageFont::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
@@ -515,8 +516,11 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 	{
 
+
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 			return 1;
+
+
 	}
 	
 
@@ -949,8 +953,8 @@ void CPlayer::Reset_DodgeEffect(_float fTimeDelta)
 		if (fSaturationInterpFactor > 1.f)
 			fSaturationInterpFactor = 1.f;
 
-		_float fSaturationStart = 2.f;
-		_float fSaturationEnd = 1.f;
+		_float fSaturationStart = 0.5f;
+		_float fSaturationEnd = 1.5f;
 		_float fSaturationLerp = fSaturationStart + fSaturationInterpFactor * (fSaturationEnd - fSaturationStart);
 		m_pRendererCom->Set_Saturation(true, fSaturationLerp);
 
@@ -973,7 +977,7 @@ void CPlayer::Reset_DodgeEffect(_float fTimeDelta)
 		m_fResetTimer = 0.f;
 		m_bDodgeEffect = false;
 		m_pRendererCom->Set_ZoomBlur(false);
-		m_pRendererCom->Set_Saturation(false);
+		//m_pRendererCom->Set_Saturation(false);
 	}
 }
 

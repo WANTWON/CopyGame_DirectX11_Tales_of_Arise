@@ -2,6 +2,7 @@
 #include "RinwellDamageState.h"
 #include "RinwellMoveState.h"
 #include "RinwellPoseState.h"
+#include "RinwellDownState.h"
 
 using namespace AiRinwell;
 
@@ -12,10 +13,9 @@ CDamageState::CDamageState(CAiRinwell* pRinwell, _uint eDir, STATE_ID eStateID)
 	m_eStateId = eStateID;
 }
 
-
 CRinwellState * CDamageState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, false, "TransN");
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false, "TransN");
 	
 	return nullptr;
 }
@@ -29,7 +29,7 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 			if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
 				return new CPoseState(m_pOwner, CRinwellState::STATE_HP50DOWN);
 			else
-				return new CMoveState(m_pOwner, STATETYPE_MAIN, 2);
+				return new CRinwellDownState(m_pOwner);
 		}
 			
 
