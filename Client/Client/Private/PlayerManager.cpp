@@ -97,7 +97,7 @@ PLAYER_MODE CPlayerManager::Check_ActiveMode(CPlayer * pPlayer)
 	if (pPlayer == nullptr)
 		return ACTIVE;
 
-	if (m_bBattleMode == true)
+	if (m_bBattleMode == true && CBattleManager::Get_Instance()->Get_IsOneonOneMode() == false)
 	{
 		return pPlayer == m_pActivePlayer ? ACTIVE : AI_MODE;
 	}

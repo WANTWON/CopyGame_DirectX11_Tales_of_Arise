@@ -72,6 +72,11 @@ void CMainApp::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Up(DIK_ESCAPE) && !(m_pUI_Manager->Get_StopTick()))
 		m_pUI_Manager->Set_Mainmenuon(true);
 
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+	{
+		CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
+		pCurrentLevel->Set_NextLevel(true, LEVEL_LAWBATTLE);
+	}
 	
 
 	/*if(m_pGameInstance->Key_Up(DIK_7))
