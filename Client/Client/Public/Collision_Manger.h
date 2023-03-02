@@ -25,12 +25,15 @@ private:
 
 public:
 	void	Add_CollisionGroup(COLLSIONGROUP CollisionGroup, CBaseObj* pGameObject);
+	void	Add_CollisionGroupCollider(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj* pGameObject);
 	void	Out_CollisionGroup(COLLSIONGROUP CollisionGroup, CBaseObj* pGameObject);
+	void	Out_CollisionGroupCollider(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj* pGameObject);
 	void	Clear_CollisionGroup(COLLSIONGROUP CollisionGroup);
 	void	Clear_CollisionGroupExpect(COLLSIONGROUP CollisionGroup);
 	void	Clear_AllCollisionGroup();
 public:
 	_bool	CollisionwithGroup(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj** pOut = nullptr, COLLIDERTYPE eType = COLLIDER_END);
+	_bool	CollisionwithGroupCollider(COLLSIONGROUP CollisionGroup, CCollider* pCollider, CBaseObj** pOut = nullptr, COLLIDERTYPE eType = COLLIDER_END);
 	_bool	CollisionwithGroup(COLLSIONGROUP SourGroup, COLLSIONGROUP DestGroup, CBaseObj** outSour, CBaseObj** outDest);
 	void	CollisionwithBullet();
 	void	Update_Collider();
@@ -45,6 +48,9 @@ private:
 
 private:
 	list<CBaseObj*>		m_GameObjects[COLLISION_END];
+
+	list<CBaseObj*>		m_ColliderGameObjects[COLLISION_END];
+	list<CCollider*>	m_Colliders[COLLISION_END];
 
 	list<CCollider*> m_ColliderPool[COLLIDER_END];
 

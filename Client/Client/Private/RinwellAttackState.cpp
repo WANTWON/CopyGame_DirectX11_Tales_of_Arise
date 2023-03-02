@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "RinwellIdleState.h"
 #include "RinwellAttackState.h"
 #include "RinwellMoveState.h"
 #include "RinwellSkills.h"
@@ -30,7 +31,6 @@ CRinwellState * CAttackState::Tick(_float fTimeDelta)
 		case Client::STATETYPE_END:
 			break;
 		}
-
 	}
 	
 	m_pOwner->Check_Navigation();
@@ -40,7 +40,6 @@ CRinwellState * CAttackState::Tick(_float fTimeDelta)
 
 CRinwellState * CAttackState::LateTick(_float fTimeDelta)
 {
-	
 	if (m_bIsAnimationFinished)
 	{
 		switch (m_eStateType)
@@ -50,8 +49,7 @@ CRinwellState * CAttackState::LateTick(_float fTimeDelta)
 		case Client::STATETYPE_MAIN:
 			return new CAttackState(m_pOwner, STATETYPE_END);
 		case Client::STATETYPE_END:
-			return new CAttackState(m_pOwner, STATETYPE_START);
-			//return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
+			return new CRinwellIdleState(m_pOwner, 2.f);
 		}
 	}
 
@@ -64,7 +62,7 @@ void CAttackState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_ATTACK;
 
-	if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp*0.5f)
+	if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
 		m_bAirMove = true;
 	else
 		m_bAirMove = false;
@@ -105,13 +103,24 @@ void CAttackState::Enter()
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
 
+		if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
+		{
+			BulletDesc.vTargetDir = XMVector3TransformNormal(BulletDesc.vTargetDir, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(15.f)));
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+				return;
+
+			BulletDesc.vTargetDir = XMVector3TransformNormal(XMVector3Normalize(m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(345.f)));
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+				return;
+		}
+
 		_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
 		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir;
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("PhotonFlashBlast.dat"), mWorldMatrix);
-
-
 
 		if (!m_bAirMove)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_ATTACK_NORMAL_1);
@@ -136,6 +145,19 @@ void CAttackState::Enter()
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
 
+		if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.75f)
+		{
+			BulletDesc.vTargetDir = XMVector3TransformNormal(BulletDesc.vTargetDir, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(15.f)));
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+				return;
+
+			BulletDesc.vTargetDir = XMVector3TransformNormal(XMVector3Normalize(m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)), XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(345.f)));
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+				return;
+		}
+
 		_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
 		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + BulletDesc.vTargetDir;
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
@@ -150,17 +172,10 @@ void CAttackState::Enter()
 		break;
 	}
 	}
-
-	
-	
-
 }
-
 
 void CAttackState::Exit()
 {
-	
-
 }
 
 void CAttackState::Move(_float fTimeDelta)
@@ -180,17 +195,13 @@ void CAttackState::Move(_float fTimeDelta)
 	{
 		if (fDot < 0.95f)
 			pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.5f);
-		
 	}
 	else
 	{
 		if (fDot < 0.7f)
 			pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 1.f);
-
 	}
 
-
 	m_pOwner->Check_Navigation();
-
 }
 

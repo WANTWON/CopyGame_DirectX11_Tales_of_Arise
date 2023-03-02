@@ -12,24 +12,15 @@ using namespace Hawk;
 CBattle_Flying_BackState::CBattle_Flying_BackState(CHawk* pHawk)
 {
 	m_pOwner = pHawk;
-
 }
 
 CHawkState * CBattle_Flying_BackState::AI_Behaviour(_float fTimeDelta)
 {
-	
-	
-
 	return nullptr;
-
-
 }
 
 CHawkState * CBattle_Flying_BackState::Tick(_float fTimeDelta)
 {
-	
-
-	
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
@@ -47,8 +38,6 @@ CHawkState * CBattle_Flying_BackState::Tick(_float fTimeDelta)
 	srand((_uint)time(NULL));
 	m_iRand = rand() % 2;
 
-
-
 	if (m_bIsAnimationFinished)
 	{
 		switch (m_iRand)
@@ -61,17 +50,13 @@ CHawkState * CBattle_Flying_BackState::Tick(_float fTimeDelta)
 			return new CBattle_TornadeState(m_pOwner);
 			break;
 		}
-		
 	}
-
-
 
 	return nullptr;
 }
 
 CHawkState * CBattle_Flying_BackState::LateTick(_float fTimeDelta)
 {
-
 	return nullptr;
 }
 
@@ -86,5 +71,4 @@ void CBattle_Flying_BackState::Enter()
 
 void CBattle_Flying_BackState::Exit()
 {
-
 }
