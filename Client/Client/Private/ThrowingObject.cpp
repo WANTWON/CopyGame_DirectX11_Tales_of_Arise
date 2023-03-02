@@ -220,12 +220,12 @@ HRESULT CThrowingObject::SetUp_ShaderID()
 
 void CThrowingObject::Dead_Effect()
 {
-	_int iRandX = rand() % 2 == 0 ? -1.f : 1.f;
-	_int iRandZ = rand() % 2 == 0 ? -1.f : 1.f;
+	_float iRandX = rand() % 2 == 0 ? -1.f : 1.f;
+	_float iRandZ = rand() % 2 == 0 ? -1.f : 1.f;
 
 	CEffectObject::EFFECTDESC EffectDesc; 
 	ZeroMemory(&EffectDesc, sizeof(CEffectObject::EFFECTDESC));
-	EffectDesc.vInitPositon = Get_TransformState(CTransform::STATE_TRANSLATION);
+	XMStoreFloat3(&EffectDesc.m_ModelDesc.vPosition, Get_TransformState(CTransform::STATE_TRANSLATION));
 	
 
 		
@@ -244,7 +244,7 @@ void CThrowingObject::Dead_Effect()
 		{
 			iRandX = rand() % 2 == 0 ? -1.f : 1.f;
 			iRandZ = rand() % 2 == 0 ? -1.f : 1.f;
-			EffectDesc.vTargetDir = XMVectorSet(rand() % 10 * 0.1f * iRandX, -1.f, rand() % 10 * 0.1f, 0.f * iRandZ);
+			EffectDesc.vTargetDir = XMVectorSet(rand() % 10 * 0.1f * iRandX, 0.5f, rand() % 10 * 0.1f, 0.f * iRandZ);
 			EffectDesc.fVelocity = rand() % 3;
 			EffectDesc.fDeadTime = 1.f;
 			XMStoreFloat4x4(&EffectDesc.m_ModelDesc.WorldMatrix, XMMatrixIdentity());

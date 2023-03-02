@@ -16,7 +16,6 @@ public:
 
 	typedef struct Bullettag
 	{
-		_vector	   vInitPositon = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 		_float	   fDeadTime = 10.f;
 		_float	   fVelocity = 5.f;
 		_vector	   vTargetDir = XMVectorSet(0.f, 0.f, 0.f, 0.f);

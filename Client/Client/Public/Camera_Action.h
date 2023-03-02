@@ -58,6 +58,7 @@ private:
 	_float		m_fPlayTime = 0.f;
 	_bool		m_bPlay = false;
 	_float		m_fTime = 0.f;
+	_float		m_fShakingTime = 0.f;
 	_int		m_iIndex = 0;
 
 	vector<TOOLDESC> m_CamDatas;

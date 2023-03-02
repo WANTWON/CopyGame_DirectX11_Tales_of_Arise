@@ -382,6 +382,8 @@ void CCityNpc::Talk_with_Npc()
 			switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
 			{
 			case 7:
+				CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcGld.dat"), Get_Transform()->Get_WorldMatrix());
+
 				dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(7);
 				CUI_Manager::Get_Instance()->Set_Dialogue_section(8);
 			}

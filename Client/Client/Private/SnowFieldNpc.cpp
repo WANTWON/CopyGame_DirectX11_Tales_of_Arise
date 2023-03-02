@@ -177,6 +177,8 @@ void CSnowFieldNpc::Talk_with_Npc()
 			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(2);
 			break;
 		case 6:
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcYoungFemail_end.dat"), Get_Transform()->Get_WorldMatrix());
+
 			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(6);
 			break;
 
@@ -187,9 +189,13 @@ void CSnowFieldNpc::Talk_with_Npc()
 		switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
 		{
 		case 3:
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcOldMan.dat"), Get_Transform()->Get_WorldMatrix());
+
 			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(3);
 			break;
 		case 4:
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcOldMan.dat"), Get_Transform()->Get_WorldMatrix());
+
 			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(4);
 			break;
 		
@@ -208,6 +214,8 @@ void CSnowFieldNpc::Talk_with_Npc()
 		switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
 		{
 		case 5:
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcRinwell.dat"), Get_Transform()->Get_WorldMatrix());
+
 			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(5);
 		}
 		break;

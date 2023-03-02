@@ -75,7 +75,10 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 				strcmp(m_ModelDesc.pModeltag, "Bld_D04_Door01_Wall_Lod1")  &&
 				strcmp(m_ModelDesc.pModeltag, "FountainDel") &&
 				strcmp(m_ModelDesc.pModeltag, "StoneBlock") &&
-				strcmp(m_ModelDesc.pModeltag, "StoneBlockA")
+				strcmp(m_ModelDesc.pModeltag, "StoneBlockA") &&
+				strcmp(m_ModelDesc.pModeltag, "Ground02") &&
+				strcmp(m_ModelDesc.pModeltag, "Ground03") &&
+				strcmp(m_ModelDesc.pModeltag, "Ground04")
 				)
 			{
 				RELEASE_INSTANCE(CGameInstance);

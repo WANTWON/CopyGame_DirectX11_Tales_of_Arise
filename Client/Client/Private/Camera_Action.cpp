@@ -88,8 +88,8 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	m_pTransform->LookAt(vAt);
 
-	//if (m_bShakingMode)
-	//	Shaking_Camera(fTimeDelta);
+	if (m_bShakingMode)
+		Shaking_Camera(fTimeDelta);
 
 
 	if (m_fTime >= fEndTime)
@@ -153,17 +153,17 @@ void CCamera_Action::Shaking_Camera(_float fTimeDelta)
 	_vector FinalPos = { 0.f,0.f,0.f,0.f };
 	if (m_bLerp)
 	{
-		m_fTime += fTimeDelta*0.3f;
+		m_fShakingTime += fTimeDelta*0.3f;
 
-		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fShakingTime); //_float4 저장 y올리기 
 
-		if (m_fTime >= 1.f)
+		if (m_fShakingTime >= 1.f)
 			m_bLerp = false;
 	}
 	else
 	{
 		FinalPos = m_vNewPos;
-		m_fTime = 0.f;
+		m_fShakingTime = 0.f;
 	}
 
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);

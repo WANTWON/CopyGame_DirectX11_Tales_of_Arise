@@ -160,8 +160,7 @@ _float CEffectObject::Check_CullingRadius()
 
 void CEffectObject::Tick_Direction(_float fTimeDelta)
 {
-	m_pTransformCom->LookDir(m_EffectDesc.vTargetDir);
-	m_pTransformCom->Go_PosDir(fTimeDelta, m_EffectDesc.vTargetDir);
+	m_pTransformCom->Go_PosDir(fTimeDelta*m_EffectDesc.fVelocity, m_EffectDesc.vTargetDir);
 }
 
 
