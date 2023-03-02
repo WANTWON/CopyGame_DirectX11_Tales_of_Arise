@@ -466,6 +466,9 @@
     <Filter Include="02.GameObjects\04.UI\31.UI_MainPlayerMark">
       <UniqueIdentifier>{f0a5b304-cb9a-4ce4-88f9-84c37526f074}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\03.Effect\04.EffectObject%28NotTool%29">
+      <UniqueIdentifier>{89e2a9fa-f6cd-441b-9177-3eb51a1d308c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1278,6 +1281,9 @@
     <ClInclude Include="..\Public\UI_MainPlayerMark.h">
       <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\EffectObject.h">
+      <Filter>02.GameObjects\03.Effect\04.EffectObject%28NotTool%29</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2053,6 +2059,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_MainPlayerMark.cpp">
       <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectObject.cpp">
+      <Filter>02.GameObjects\03.Effect\04.EffectObject%28NotTool%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

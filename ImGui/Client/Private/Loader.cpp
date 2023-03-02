@@ -182,11 +182,11 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolVillageModel()))
 		return E_FAIL;*/
 	
-	 if (FAILED(Loading_ForMaptoolCityModel()))
+	/* if (FAILED(Loading_ForMaptoolCityModel()))
 	 	return E_FAIL;
 
 	 if (FAILED(Loading_ForMaptoolPlant()))
-	 	return E_FAIL;
+	 	return E_FAIL;*/
 
 	/*if (FAILED(Loading_ForMaptoolInteriorModel()))
 		return E_FAIL;

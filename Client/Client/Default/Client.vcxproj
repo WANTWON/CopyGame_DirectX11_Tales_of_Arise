@@ -243,6 +243,7 @@
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
+    <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Law.h" />
     <ClInclude Include="..\Public\LawAirFSkillState.h" />
     <ClInclude Include="..\Public\LawAirRSkillState.h" />
@@ -512,6 +513,7 @@
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
+    <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Law.cpp" />
     <ClCompile Include="..\Private\LawAirFSkillState.cpp" />
     <ClCompile Include="..\Private\LawAirRSkillState.cpp" />

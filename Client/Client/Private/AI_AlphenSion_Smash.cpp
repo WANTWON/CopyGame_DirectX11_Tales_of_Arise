@@ -73,6 +73,9 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 						m_bIsStateEvent = true;
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType || !m_bBullet)
 					{
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+							dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.2f);
+
 						/* Make Effect */
 						_vector vOffset = { 0.f,0.f,0.f,0.f };
 						CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -163,7 +166,7 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 	if (m_bBullet &&!m_bScreen)
 	{
 		m_fScreenTimer += fTimeDelta;
-		if (m_fScreenTimer > 1.5f)
+		if (m_fScreenTimer > 2.5f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 			{

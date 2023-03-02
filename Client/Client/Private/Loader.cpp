@@ -24,6 +24,7 @@
 #include "RinwellSkills.h"
 #include "SionSkills.h"
 #include "AlphenSkills.h"
+#include "EffectObject.h"
 
 //Actor
 #include "Alphen.h"
@@ -220,6 +221,11 @@ HRESULT CLoader::Loading_ForPrototype()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	/*For.Prototype_Portal */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_EffectObject"),
+		CEffectObject::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_Portal */

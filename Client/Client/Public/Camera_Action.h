@@ -42,8 +42,11 @@ public:
 	void					Set_PlayTime(_float fTime) { m_fPlayTime = fTime; m_fTime = 0.f; }
 	void					Set_TargetMatrix(_matrix matTarget) { m_matTarget = matTarget; }
 public:
+	void					Set_ShakingMode(_bool type, _float fPower = 1.f, _float fMinusPower = 0.1f);
+
 	int						PlayCamera(_float fTimeDelta);
-	
+	void					Shaking_Camera(_float fTimeDelta);
+
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg)override;
@@ -62,7 +65,19 @@ private:
 	_vector		m_vInitPosition;
 	_vector		m_vInitAt;
 
-	
+	_bool			m_bShakingMode = false;
+	_float			m_fVelocity = 1.f;
+	_float			m_fMinusVelocity = 1.f;
+	_vector			m_vShakingStartPos = { 0.f, 0.f, 0.f, 0.f };
+	_int			m_iShakingCount = 0;
+
+	_float			m_fLookOffsetY = 0.f;
+	_float			m_fCameraOffsetY = 0.f;
+	_float			m_fCameraOffsetX = 0.f;
+
+	_vector			m_vNewPos;
+
+	_bool			m_bLerp = false;
 public:
 	static CCamera_Action* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

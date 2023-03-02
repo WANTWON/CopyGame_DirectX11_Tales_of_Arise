@@ -106,6 +106,9 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 					CBaseObj* pCorpseNearby = nullptr;
 					pCorpseNearby = m_pOwner->Find_MinDistance_Target();
 
+					if (pCorpseNearby == nullptr)
+						return nullptr;
+
 					if (pCorpseNearby->Get_Info().fCurrentHp > 0)
 					{
 						m_pCurTarget = pCorpseNearby;
