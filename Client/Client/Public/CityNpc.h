@@ -50,6 +50,27 @@ public:
 		FIA_Walk
 	};
 
+	enum NPC_MAN_PLC {
+		PLC_TurnRight,
+		PLC_Idle,
+		PLC_TurnLeft,
+		FlyIntoRage_Start,
+		FlyIntoRage_Loop,
+		FlyIntoRage_End,
+		Talk,
+		Hi_Start,
+		Hi_Loop,
+		Hi_End,
+		Secret_Start,
+		Secret_Loop,
+		Secret_End,
+		GiveitToYou,
+		Shrug,
+		AreyouSerious,
+		PLC_Walk,
+
+	};
+
 private:
 	CCityNpc(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCityNpc(const CCityNpc& rhs);
@@ -68,10 +89,15 @@ public: /*For.State*/
 	void			Talk_with_Npc();
 
 public:
-	_float Find_Friend();
-	_float Find_MAN_GLD();
-	_float Find_NMM_SLV();
-	_float Find_NFM();
+	void Set_eState(_uint eState) { m_eState = eState; }
+
+public:
+	_float		Find_Friend();
+	_float		Find_MAN_GLD();
+	_float		Find_NMM_SLV();
+	_float		Find_NFM();
+	CCityNpc*	Get_PLC();
+	CCityNpc*	Get_GLD();
 
 private:
 	virtual HRESULT Ready_Components(void* pArg);
@@ -81,6 +107,8 @@ private:
 	class CCityNpc * m_pGld = nullptr;
 	class CCityNpc * m_pNMM_SLV = nullptr;
 	class CCityNpc * m_pNFM = nullptr;
+	class CCityNpc * m_pPLC= nullptr;
+
 
 	_float			m_fFriendDistance = 0.f;
 	_float			m_fGLD_Distance = 0.f;
@@ -90,6 +118,7 @@ private:
 	_float			m_fChild_TimeDleta = 0.f;
 	_float			m_fChild_2thTimeDleta = 0.f;
 	_float			m_fTimeDelta = 0.f;
+	_float			m_fPLC_TimeDelta = 0.f;
 	_float			m_fChildSpeed = 0.f;
 
 	_bool			m_bchaseGLDFinish = false;

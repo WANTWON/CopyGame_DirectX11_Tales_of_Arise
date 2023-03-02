@@ -49,6 +49,9 @@ HRESULT CCityNpc::Initialize(void * pArg)
 		case NPC_NFY_FIA_000:
 			m_eState = 0;
 
+		case MAN_PLC:
+			m_eState = PLC_Walk;
+
 		default:
 			m_eState = 0;
 			break;
@@ -128,6 +131,7 @@ _bool CCityNpc::Is_AnimationLoop(_uint eAnimId)
 	{
 	case NPC_NFC_SLV_000_2th_ANIM::Run_2th:
 	case NPC_NFC_SLV_000_2th_ANIM::Cry_Loop_2th:
+	case NPC_MAN_PLC::PLC_Walk:
 		return true;
 
 	
@@ -151,6 +155,74 @@ void CCityNpc::Tick_State(_float fTimeDelta)
 
 	switch (m_NpcDesc.eNpcType)
 	{
+	//case NPC_NMM_DIM_000:
+	//	/*m_fTimeDelta += fTimeDelta;*/
+	//	m_pTransformCom->Sliding_Straight(fTimeDelta *0.3f, m_pNavigationCom);
+		
+		//if (m_fTimeDelta >= 2.0)
+		//{
+		//	m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 180.f);
+		//	m_fTimeDelta = 0.f;
+		//}
+	//case MAN_GLD:
+	//	m_fPLC_TimeDelta += fTimeDelta;
+	//	m_pPLC = Get_GLD();
+	//	m_pPLC->m_pTransformCom->Sliding_Straight(fTimeDelta *1.0f, m_pNavigationCom);
+	//		if (m_fPLC_TimeDelta >= 2.0)
+	//		{
+	//		//m_pPLC->Set_eState(NPC_MAN_PLC::PLC_TurnLeft);
+	//		m_pPLC->m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 180.f);
+	//		m_fPLC_TimeDelta = 0.f;
+	//		}
+
+	case MAN_PLC:
+		m_fTimeDelta += fTimeDelta;
+		
+		if (m_fTimeDelta <= 2.f)
+		{
+			m_eState = NPC_MAN_PLC::PLC_Walk;
+			m_pTransformCom->Go_Straight(fTimeDelta *0.2f, m_pNavigationCom);
+		}
+		
+		else
+		{
+			m_eState = NPC_MAN_PLC::PLC_TurnLeft;
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 180.f);
+			m_fTimeDelta = 0.f;
+		}
+		//m_fPLC_TimeDelta += fTimeDelta;
+		//m_pPLC = Get_PLC();
+		//m_pPLC->Set_eState(NPC_MAN_PLC::PLC_Walk);
+		//m_pPLC->m_pTransformCom->Go_Straight(fTimeDelta *0.2f, m_pNavigationCom);
+		break;
+
+
+	//	if (m_fNFM_Distance >= 4.f)
+	//	{
+	//		Find_NFM();
+	//		_vector vNFM_Position = m_pNFM->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//		m_pTransformCom->LookAt(vNFM_Position);
+	//		m_pPLC->m_pTransformCom->Sliding_Straight(fTimeDelta *1.0f, m_pNavigationCom);
+	//	}
+	//	
+	//	else
+	//	{
+	//		Find_MAN_GLD();
+
+	//		_vector vGldPosition = m_pGld->Get_TransformState(CTransform::STATE_TRANSLATION);
+	//		m_pTransformCom->LookAt(vGldPosition);
+	//		m_pTransformCom->Sliding_Straight(fTimeDelta *1.5f, m_pNavigationCom);
+	//	}
+
+	//	/*if (m_fPLC_TimeDelta >= 2.0)
+	//	{
+	//		m_pPLC->Set_eState(NPC_MAN_PLC::PLC_TurnLeft);
+	//		m_pPLC->m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 180.f);
+	//		m_fPLC_TimeDelta = 0.f;
+	//	}*/
+
+
+
 	case NPC_NFC_SLV_000:
 		
 		if (m_bChaseNFMStart == false)
@@ -414,7 +486,7 @@ _float CCityNpc::Find_Friend()
 		CCityNpc* pCityNpc = dynamic_cast<CCityNpc*>(pGameObject);
 		if (!pCityNpc)
 			return 0;
-
+		
 		m_pChildFriend = pCityNpc;
 
 		_vector vChasePosition = pCityNpc->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
@@ -496,6 +568,33 @@ _float CCityNpc::Find_NFM()
 	m_fNFM_Distance = fDistance;
 
 	return m_fNFM_Distance;
+}
+
+CCityNpc* CCityNpc::Get_PLC()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("Layer_Plc"), 0);
+	if (pGameObject == this)
+		pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("Layer_Plc"), 1);
+
+	CCityNpc* pNpc_Plc= dynamic_cast<CCityNpc*>(pGameObject);
+
+	return pNpc_Plc;
+}
+
+CCityNpc * CCityNpc::Get_GLD()
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("LayerGld"), 0);
+	if (pGameObject == this)
+		pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("Layer_Plc"), 1);
+
+	//if (pGameObject == this)
+	//	pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("LayerGld"), 1);
+
+	CCityNpc* pNpc_Gld = dynamic_cast<CCityNpc*>(pGameObject);
+
+	return pNpc_Gld;
 }
 
 
