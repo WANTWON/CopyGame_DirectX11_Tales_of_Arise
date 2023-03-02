@@ -248,6 +248,8 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 {
+	Remove_Skill();
+
 	m_pOwner->Check_Navigation();
 	m_fTimeDeltaAcc += fTimeDelta;
 
@@ -487,6 +489,15 @@ void CBattle_RushState::Reset_Effect()
 	m_bAura = false;
 	m_bRush = false;
 	m_bSlash = false;
+}
+
+void CBattle_RushState::Remove_Skill()
+{
+	for (auto& pEffect : m_Rush)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
 }
 
 void CBattle_RushState::Update_Skill()

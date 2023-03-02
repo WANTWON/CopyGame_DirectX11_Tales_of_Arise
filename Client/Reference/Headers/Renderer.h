@@ -98,8 +98,8 @@ private:
 	_int m_iFocusDetail = 1;
 
 	/* Saturation */
-	_bool m_bSaturation = false;
-	_float m_fSaturationPower = 1.f;
+	_bool m_bSaturation = true;
+	_float m_fSaturationPower = 1.5f;
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

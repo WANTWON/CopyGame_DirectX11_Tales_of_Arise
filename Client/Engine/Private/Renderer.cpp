@@ -827,22 +827,6 @@ HRESULT CRenderer::Render_PostProcessing()
 	}
 #pragma endregion Zoom_Blur
 
-#pragma region Saturation
-	/* Saturation */
-	if (m_bSaturation)
-	{
-		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
-		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
-			return E_FAIL;
-
-		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fSaturation", &m_fSaturationPower, sizeof(_float))))
-			return E_FAIL;
-
-		m_pShaderPostProcessing->Begin(9); /* Saturation */
-		m_pVIBuffer->Render();
-	}
-#pragma endregion Saturation
-
 	return S_OK;
 }
 
@@ -1009,6 +993,22 @@ HRESULT CRenderer::Render_UI_PostProcessing()
 
 		m_GameObjects[RENDER_UI_GLOW].clear();
 	}
+
+#pragma region Saturation
+	/* Saturation */
+	if (m_bSaturation)
+	{
+		m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+		if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderPostProcessing->Set_RawValue("g_fSaturation", &m_fSaturationPower, sizeof(_float))))
+			return E_FAIL;
+
+		m_pShaderPostProcessing->Begin(9); /* Saturation */
+		m_pVIBuffer->Render();
+	}
+#pragma endregion Saturation
 }
 
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

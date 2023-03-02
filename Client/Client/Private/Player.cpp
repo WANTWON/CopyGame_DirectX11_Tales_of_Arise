@@ -946,8 +946,8 @@ void CPlayer::Reset_DodgeEffect(_float fTimeDelta)
 		if (fSaturationInterpFactor > 1.f)
 			fSaturationInterpFactor = 1.f;
 
-		_float fSaturationStart = 2.f;
-		_float fSaturationEnd = 1.f;
+		_float fSaturationStart = 0.5f;
+		_float fSaturationEnd = 1.5f;
 		_float fSaturationLerp = fSaturationStart + fSaturationInterpFactor * (fSaturationEnd - fSaturationStart);
 		m_pRendererCom->Set_Saturation(true, fSaturationLerp);
 
@@ -970,7 +970,7 @@ void CPlayer::Reset_DodgeEffect(_float fTimeDelta)
 		m_fResetTimer = 0.f;
 		m_bDodgeEffect = false;
 		m_pRendererCom->Set_ZoomBlur(false);
-		m_pRendererCom->Set_Saturation(false);
+		//m_pRendererCom->Set_Saturation(false);
 	}
 }
 

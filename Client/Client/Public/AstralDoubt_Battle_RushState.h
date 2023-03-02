@@ -19,6 +19,7 @@ public:
 
 private:
 	void Reset_Effect();
+	void Remove_Skill();
 	void Update_Skill();
 
 private:
