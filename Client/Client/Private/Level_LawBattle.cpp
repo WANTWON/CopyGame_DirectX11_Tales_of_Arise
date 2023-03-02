@@ -9,6 +9,7 @@
 #include "Level_Loading.h"
 #include "BattleManager.h"
 #include "Monster.h"
+#include "PlayerState.h"
 
 CLevel_LawBattle::CLevel_LawBattle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -254,69 +255,14 @@ void CLevel_LawBattle::BattleLateTick(_float fTimeDelta)
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_LAWBATTLE, TEXT("test"), &desc)))
 			return;
 	}
-	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_CAPSLOCK))
+	
+
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
 	{
+		CPlayer * pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		pPlayer->Take_Damage(10000.f, nullptr);
 
-
-		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
-		if (pLockOn != nullptr)
-		{
-			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKON);
-			m_pCamera->Set_TargetPosition(pLockOn->Get_TransformState(CTransform::STATE_TRANSLATION));
-		}
-
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
-		{
-			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
-			if (!m_bZumIn)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
-				m_bZumIn = true;
-			}
-		}
-
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
-		{
-			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
-			if (!m_bZumIn)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
-				m_bZumIn = true;
-			}
-		}
-
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
-			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
-			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
-		{
-			CUI_RuneEffect::RUNEDESC desc;
-			desc.position.x = 100.f;
-			desc.position.y = 100.f;
-			desc.m_etype = 1;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_LAWBATTLE, TEXT("test"), &desc)))
-				return;
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_Z);
-		}
-
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_X))
-		{
-			CUI_RuneEffect::RUNEDESC desc;
-			desc.position.x = 100.f;
-			desc.position.y = 100.f;
-			desc.m_etype = 1;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_LAWBATTLE, TEXT("test"), &desc)))
-				return;
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_X);
-		}
-
-
-	}
-	else
-	{
-		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKOFF);
 	}
 }
 
@@ -407,8 +353,9 @@ HRESULT CLevel_LawBattle::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
+	
+	CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-	CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 	pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&ModelDesc1.vPosition), 1.f));
 	pPlayer->Change_Navigation(LEVEL_LAWBATTLE);
 	pPlayer->Compute_CurrentIndex(LEVEL_LAWBATTLE);
