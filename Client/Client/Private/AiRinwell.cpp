@@ -357,18 +357,20 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnC
 			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
 	}
-	else
+	else if ((CRinwellState::STATE_DAMAGE != m_pState->Get_StateId()) && (CRinwellState::STATE_DOWN != m_pState->Get_StateId()))
 	{
 		m_pTarget = DamageCauser;
 		m_eDmg_Direction = Calculate_DmgDirection();
 		m_bTakeDamage = true;
 
-		if (fDamage > 300)
+		m_iDamage += fDamage;
+		if (m_iDamage >= (m_tInfo.fMaxHp * 0.1f))
 		{
 			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 			m_pState = m_pState->ChangeState(m_pState, pState);
-		}
 
+			m_iDamage = 0;
+		}
 	}
 
 	return iHp;

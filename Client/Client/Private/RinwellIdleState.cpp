@@ -72,7 +72,7 @@ void CRinwellIdleState::Enter(void)
 		m_bAirMove = false;
 
 	if (m_bAirMove)
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_DAMAGE_AIR_LOOP);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_FALL);
 	else
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_MOVE_IDLE);
 

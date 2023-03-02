@@ -87,6 +87,8 @@ void CCollision_Manager::Clear_AllCollisionGroup()
 			continue;
 
 		m_GameObjects[i].clear();
+		m_ColliderGameObjects[i].clear();
+		m_Colliders[i].clear();
 	}
 }
 

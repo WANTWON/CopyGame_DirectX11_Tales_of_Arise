@@ -1284,6 +1284,12 @@
     <ClInclude Include="..\Public\UI_MainPlayerMark.h">
       <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RinwellDownState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2062,6 +2068,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_MainPlayerMark.cpp">
       <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellDownState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

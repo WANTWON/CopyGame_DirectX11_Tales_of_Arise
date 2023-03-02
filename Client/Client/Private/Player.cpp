@@ -494,15 +494,13 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	if (eMode == ACTIVE)
 		int a = 0;
 
-	
 	if (m_bTakeDamage_Delay == false)
 	{
 		m_tInfo.fCurrentHp -= (int)fDamage;
 		m_bTakeDamage_Delay = true;
 	}
-
-	m_tInfo.fCurrentHp -= (int)fDamage;
-
+	else
+		return 0;
 
 	CDamagefont_Critical::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
@@ -512,7 +510,6 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 
 	if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
 	{
-
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont_Critical"), LEVEL_STATIC, TEXT("Layer_DamageCritical"), &testdesc)))
 			return OBJ_NOEVENT;
 	}
