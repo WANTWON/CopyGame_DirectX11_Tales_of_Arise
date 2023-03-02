@@ -16,6 +16,17 @@ public:
 
 
 public:
+	enum NPC_NFY_FIA_ANIM {
+		FIA_Idle,
+		FIA_Walk_leisurely,
+		FIA_Laugh,
+		FIA_Talk,
+		FIA_whisper,
+		FIA_OKIve_decided,
+		FIA_Hands_onbothwaists,
+		FIA_Walk,
+	};
+
 	enum NPC_NFC_SLV_000_ANIM {
 		Run,
 		Idle,
@@ -44,11 +55,11 @@ public:
 		Walk_2th
 	};
 
-	enum NPC_NFY_FIA_000_ANIM {
-		FIA_Idle,
-		FIA_Laugh,
-		FIA_Walk
-	};
+	//enum NPC_NFY_FIA_000_ANIM {
+	//	FIA_Idle,
+	//	FIA_Laugh,
+	//	FIA_Walk
+	//};
 
 	enum NPC_MAN_PLC {
 		PLC_TurnRight,
@@ -68,6 +79,15 @@ public:
 		Shrug,
 		AreyouSerious,
 		PLC_Walk,
+
+	};
+
+	enum NPC_NMM_DIM_ANIM {
+		DIM_TurnRight,
+		DIM_Idle,
+		DIM_TurnLeft,
+		DIM_Talk,
+		DIM_Walk
 
 	};
 
@@ -96,7 +116,14 @@ public:
 	_float		Find_MAN_GLD();
 	_float		Find_NMM_SLV();
 	_float		Find_NFM();
-	CCityNpc*	Get_PLC();
+	//_float		Find_PLC_Target(_uint iIndex);
+	
+	CCityNpc*	Find_FIA_Target();
+	CCityNpc*	Find_DIM_Target();
+
+
+	CCityNpc*	Get_FIA(_uint iIndex);
+	CCityNpc*	Get_PLC(_uint iIndex);
 	CCityNpc*	Get_GLD();
 
 private:
@@ -107,7 +134,8 @@ private:
 	class CCityNpc * m_pGld = nullptr;
 	class CCityNpc * m_pNMM_SLV = nullptr;
 	class CCityNpc * m_pNFM = nullptr;
-	class CCityNpc * m_pPLC= nullptr;
+	class CCityNpc * m_pFIA_Target = nullptr;
+	class CCityNpc * m_pDIM_Target = nullptr;
 
 
 	_float			m_fFriendDistance = 0.f;
@@ -134,6 +162,34 @@ private:
 	_bool			m_bHappyLoop = false;
 	_bool			m_bHappyEnd = false;
 	_bool			m_bIsAnimationFinished = false;
+	_bool			m_bTurnFinish = false;
+
+
+	//DIM
+	_bool			 m_bTalkAnim = false;
+	_float			 m_fDIM_Target_Distance = 0.f;
+	
+
+	//PLC
+	_float			m_fPLC_One_Target_Distance = 0.f;
+	_float			m_fPLC_Two_Target_Distance = 0.f;
+
+	_bool			m_bPLC_Anim_Hi_End_Begin= false;
+
+	_bool			m_bPLC_SayGoodbye = false;
+	_bool			m_bPLC_Anim_Turn_Left_Begin = false;
+	_bool			m_bPLC_GoToHer = true;
+
+
+	//FIA
+	
+	_float			m_fFIA_Target_Distance = 0.f;
+	_float			m_fFIA_Two_Target_Distance = 0.f;
+
+	_bool			m_bTalk = false;
+	_bool			m_bLaugh = false;
+	_bool			m_bHands_onbothwaists = false;
+
 public:
 	static CCityNpc* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

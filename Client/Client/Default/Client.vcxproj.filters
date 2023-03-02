@@ -1278,6 +1278,8 @@
     <ClInclude Include="..\Public\UI_MainPlayerMark.h">
       <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RinwellDownState.h" />
+    <ClInclude Include="..\Public\RinwellIdleState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2054,6 +2056,8 @@
     <ClCompile Include="..\Private\UI_MainPlayerMark.cpp">
       <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\RinwellDownState.cpp" />
+    <ClCompile Include="..\Private\RinwellIdleState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

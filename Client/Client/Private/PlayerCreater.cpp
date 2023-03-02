@@ -1742,9 +1742,9 @@ HRESULT CPlayerCreater::Ready_Layer_NpcCity(const _tchar * pLayerTag)
 		else if (!wcscmp(pModeltag, TEXT("NPC_NFY_FIA_000")))
 		{
 			NpcDesc.eNpcType = CCityNpc::NPC_NFY_FIA_000;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_FIA"), &NpcDesc)))
 				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag);
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_FIA"));
 
 		}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_BEF_000")))
@@ -1766,9 +1766,9 @@ HRESULT CPlayerCreater::Ready_Layer_NpcCity(const _tchar * pLayerTag)
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_DIM_000")))
 		{
 			NpcDesc.eNpcType = CCityNpc::NPC_NMM_DIM_000;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag , &NpcDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_DIM"), &NpcDesc)))
 				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag );
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_DIM"));
 
 		}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_MHB_000")))
