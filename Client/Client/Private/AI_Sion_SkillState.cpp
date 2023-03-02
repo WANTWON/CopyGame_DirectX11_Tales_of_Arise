@@ -12,7 +12,7 @@
 #include "AIAttackNormalState.h"
 #include "AI_DodgeState.h"
 #include "AI_JumpState.h"
-#include "AI_JumpState.h"
+#include "AI_Item_Use_State.h"
 
 
 
@@ -481,7 +481,7 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 
 		if (m_pOwner->Get_Info().fCurrentMp < 1)
 		{
-			switch (rand() % 3)
+			switch (rand() % 4)
 			{
 			case 0:
 				return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
@@ -489,6 +489,29 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 				return new CAICheckState(m_pOwner, m_eStateId);
 			case 2:
 				return new CAI_DodgeState(m_pOwner, m_pTarget);
+			case 3:
+
+				if (CBattleManager::Get_Instance()->Get_AIuseItem())
+				{
+					ITEM_NAME item;
+					switch (rand() % 3)
+					{
+					case 0:
+						item = ITEMNAME_LEMONJELLY;
+						break;
+					case 1:
+						item = ITEMNAME_LEMONJELLY;
+						break;
+					case 2:
+						item = ITEMNAME_LEMONJELLY;
+						break;
+
+					}
+					return new CAI_Item_Use_State(m_pOwner, item);
+				}
+				else
+					return new CAI_DodgeState(m_pOwner, m_pTarget);
+				break;
 
 			}
 		}

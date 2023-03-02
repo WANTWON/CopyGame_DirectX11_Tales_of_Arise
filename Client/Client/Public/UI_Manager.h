@@ -125,7 +125,10 @@ public: /*Getter Setter*/
 	_uint Get_Dialogue_section() { return m_iDialogueSection;  }
 	void Set_Dialogue_section(_uint num) { m_iDialogueSection = num; }
 
-	
+	_int Get_Minigamecaptionindex() { return m_iMinigame2Caption; }
+	void Plus_Minigamecaptionindex(_int index) {		m_iMinigame2Caption += index	;	}
+
+	void Reset_Minigamecaptionindex() { m_iMinigame2Caption = 0; }
 
 
 	//void Read_TextFiles_for_dialogue();
@@ -186,7 +189,7 @@ private:
 //	_uint iplayer2_hp = 0;
 //	_uint iplayer3_hp = 0;
 	
-
+	_int m_iMinigame2Caption = 0;
 
 public:
 	void Free() override;

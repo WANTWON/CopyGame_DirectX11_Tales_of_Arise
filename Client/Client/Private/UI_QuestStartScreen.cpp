@@ -175,7 +175,7 @@ int CUI_QuestStartScreen::Tick(_float fTimeDelta)
 			break;
 
 		case 4:
-			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(6, false, 0, 2); //jelous popup
+			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(7, false, 0, 2); //jelous popup
 			break;
 
 		}

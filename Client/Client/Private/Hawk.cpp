@@ -253,8 +253,8 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
 {
 
-		if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_tStats.m_fCurrentHp <= 0 )
-		return 0;
+		if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD)
+			return 0;
 
 		_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
@@ -276,7 +276,6 @@ _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange
 					{
 						if (m_bBedamageAnim == true)
 						{
-							//m_pModelCom->Set_TimeReset();
 							CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_TAKE_DAMAGE);
 							m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 						}
@@ -331,11 +330,16 @@ void CHawk::Check_Navigation()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 2.f);
+	_float m_fDeadHeight = m_pNavigationCom->Compute_Height(vPosition, -2.f);
 
-	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD || CHawkState::STATE_TAKE_DAMAGE)
-		m_fWalkingHeight -= 2.f;
+	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD || CHawkState::STATE_DOWN)
+	{
+		vPosition = XMVectorSetY(vPosition, m_fDeadHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
-	if (CHawkState::STATE_BRAVE != m_pHawkState->Get_StateId())
+	}
+
+	if (CHawkState::STATE_BRAVE != m_pHawkState->Get_StateId() && CHawkState::STATE_DEAD != m_pHawkState->Get_StateId() && CHawkState::STATE_DOWN != m_pHawkState->Get_StateId())
 	{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);

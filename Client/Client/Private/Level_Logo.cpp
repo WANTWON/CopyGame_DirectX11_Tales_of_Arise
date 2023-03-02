@@ -482,7 +482,7 @@ HRESULT CLevel_Logo::Ready_Layer_Npc(const _tchar * pLayerTag)
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	CNpc::NPCDESC NpcDesc;
-
+	
 	_uint iNum = 0;
 
 	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -548,7 +548,7 @@ HRESULT CLevel_Logo::Ready_Layer_Npc(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_Logo::Ready_Layer_DecoObject(const _tchar * pLayerTag)
+HRESULT CLevel_Logo::Ready_Layer_Deco_SnowField(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	HANDLE hFile = 0;

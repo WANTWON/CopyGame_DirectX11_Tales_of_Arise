@@ -84,6 +84,30 @@ HRESULT CLevel_SnowField::Initialize()
 
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
 		g_bUIMade = true;
+
+
+		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+		if (nullptr == pGameInstance)
+			return E_FAIL;
+
+		list<CGameObject*>* MonsterList = pGameInstance->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Monster"));
+
+		for (auto& iter : *MonsterList)
+		{
+			CBaseObj* pMonster = dynamic_cast<CBaseObj*>(iter);
+			CBattleManager::Get_Instance()->Add_Monster(pMonster);
+		}
+
+		vector<CBaseObj*> vecAllMonster = CBattleManager::Get_Instance()->Get_AllMonster();
+		for (auto& iter : vecAllMonster)
+		{
+			dynamic_cast<CMonster*>(iter)->Change_Navigation(LEVEL_SNOWFIELD);
+			dynamic_cast<CMonster*>(iter)->Compute_CurrentIndex(LEVEL_SNOWFIELD);
+			dynamic_cast<CMonster*>(iter)->Set_BattleMode(false);
+
+		}
+
+		RELEASE_INSTANCE(CGameInstance);
 	}
 	else
 	{
@@ -541,7 +565,7 @@ HRESULT CLevel_SnowField::Ready_Layer_UI(const _tchar * pLayerTag)
 }
 
 
-HRESULT CLevel_SnowField::Ready_Layer_DecoObject(const _tchar * pLayerTag)
+HRESULT CLevel_SnowField::Ready_Layer_Deco_SnowField(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	HANDLE hFile = 0;

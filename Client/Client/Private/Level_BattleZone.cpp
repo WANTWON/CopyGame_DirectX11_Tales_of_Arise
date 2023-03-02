@@ -413,7 +413,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Instancing(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_BattleZone::Ready_Layer_DecoObject(const _tchar * pLayerTag)
+HRESULT CLevel_BattleZone::Ready_Layer_Deco_SnowField(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 	HANDLE hFile = 0;
@@ -597,6 +597,11 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_BATTLE, pLayerTag)))
 			return E_FAIL;
 	}
+
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MainPlayerMark"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+	
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;*/
 

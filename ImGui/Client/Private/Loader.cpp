@@ -182,11 +182,11 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolVillageModel()))
 		return E_FAIL;*/
 	
-	 /*if (FAILED(Loading_ForMaptoolCityModel()))
+	 if (FAILED(Loading_ForMaptoolCityModel()))
 	 	return E_FAIL;
 
 	 if (FAILED(Loading_ForMaptoolPlant()))
-	 	return E_FAIL;*/
+	 	return E_FAIL;
 
 	/*if (FAILED(Loading_ForMaptoolInteriorModel()))
 		return E_FAIL;
@@ -198,7 +198,7 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolKitchenModel()))
 		return E_FAIL;*/
 
-	////For Effect
+	//For Effect
 	if (FAILED(Loading_ForEffect()))
 		return E_FAIL;
 	 
@@ -1060,6 +1060,26 @@ HRESULT CLoader::Loading_ForMaptoolBossRoomModel()
 HRESULT CLoader::Loading_ForMaptoolVillageModel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FountainDel"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/LawBattle/FountainDel.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("FountainDel"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SkyDome"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/LawBattle/SkyDome.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("SkyDome"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("StoneBlock"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/LawBattle/StoneBlock.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("StoneBlock"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("StoneBlockA"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/LawBattle/StoneBlockA.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("StoneBlockA"));
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Beam02"),
@@ -2599,37 +2619,73 @@ HRESULT CLoader::Loading_ForActor()
 
 
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen_NonAnim"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Alphen/Alphen.dat"))))
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen_NonAnim"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Alphen/Alphen.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen_NonAnim"));
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell_NonAnim"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Rinwell/Rinwell.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell_NonAnim"));
+
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NpcFemaleYoung"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Npc/NpcFemaleYoung.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NpcFemaleYoung"));
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_GLD"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Npc/NPC_NMM_GLD.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMM_GLD"));
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMO_DOK"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Npc/NPC_NMO_DOK.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMO_DOK"));
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMY_PLC"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NMY_Plc/NPC_NMY_PLC.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMY_PLC"));
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_Gld"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NMM_Gld/NPC_NMM_Gld.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMM_Gld"));
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_MHB_000"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NMM_MHB_000/NPC_NMM_MHB_000.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMM_MHB_000"));
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_DIM_000"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NPC_NMM_DIM_000/NPC_NMM_DIM_000.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMM_DIM_000"));
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NFY_FIA_000"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NFY_FIA_000/NPC_NFY_FIA_000.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NFY_FIA_000"));
+
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMY_GNL"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/NPC_NMY_GNL/NPC_NMY_GNL.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMY_GNL"));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Dog"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Dog/Dog.dat"))))
 		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen_NonAnim"));
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Dog"));
 
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell_NonAnim"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Rinwell/Rinwell.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Duck"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Duck/Duck.dat"))))
 		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell_NonAnim"));
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Duck"));
 
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NpcFemaleYoung"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Npc/NpcFemaleYoung.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NpcFemaleYoung"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_GLD"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Npc/NPC_NMM_GLD.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMM_GLD"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMO_DOK"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Npc/NPC_NMO_DOK.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMO_DOK"));
-
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMY_PLC"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Npc/NPC_NMY_PLC.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("NPC_NMY_PLC"));
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Ice_Wolf_NonAnim"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/MonsterforMaptool/Ice_Wolf.dat"))))

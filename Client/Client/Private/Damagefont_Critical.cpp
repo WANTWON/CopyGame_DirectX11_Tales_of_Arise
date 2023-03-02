@@ -81,33 +81,33 @@ HRESULT CDamagefont_Critical::Initialize(void * pArg)
 	else
 		m_bfontmaker = true;
 
-
+	m_eShaderID = UI_BRIGHT;
 
 	 if (m_damagedesc.itype == 1)
 	{
-		m_eShaderID = UI_BRIGHT;
+		//m_eShaderID = UI_BRIGHT;
 		m_fNext = 38.f;
 	}
 	 else if (m_damagedesc.itype == 2)
 	 {
-		 m_eShaderID = UI_RESISTDAMAGEFONT;
+		// m_eShaderID = UI_RESISTDAMAGEFONT;
 		 m_fNext = 23.f;
 	 }
 	 else if (m_damagedesc.itype == 3)
 	 {
-		 m_eShaderID = UI_PlayerHitfont;
+		// m_eShaderID = UI_PlayerHitfont;
 		 m_fNext = 23.f;
 	 }
 
 
 	else if (m_damagedesc.itype == 4)
 	{
-		m_eShaderID = UI_RECOVERFONT;
+	//	m_eShaderID = UI_RECOVERFONT;
 		m_fNext = 23.f;
 	}
 	else if (m_damagedesc.itype == 5)
 	{
-		m_eShaderID = UI_PlayerHitfont;
+	//	m_eShaderID = UI_PlayerHitfont;
 		m_fNext = 23.f;
 
 	}
@@ -201,16 +201,24 @@ int CDamagefont_Critical::Tick(_float fTimeDelta)
 	}
 
 
-	if (m_damagedesc.itype == 2 || m_damagedesc.itype == 3 || m_damagedesc.itype == 5)
-	{
-		m_fSize.x = 30.f * m_fScaler;
-		m_fSize.y = 30.f * m_fScaler;
-	}
-	else
+	if (m_damagedesc.itype == 1)
 	{
 		m_fSize.x = 60.f * m_fScaler;
 		m_fSize.y = 60.f * m_fScaler;
 	}
+	else
+	{
+		m_fSize.x = 30.f * m_fScaler;
+		m_fSize.y = 30.f * m_fScaler;
+	}
+	/*if (m_damagedesc.itype == 2 || m_damagedesc.itype == 3 || m_damagedesc.itype == 5)
+	{
+		
+	}
+	else
+	{
+	
+	}*/
 	
 	if (m_bplusminus)
 	{
@@ -315,8 +323,31 @@ HRESULT CDamagefont_Critical::Render()
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
-			return E_FAIL;
+		if (m_damagedesc.itype == 1)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom3->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else if (m_damagedesc.itype == 2)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else if (m_damagedesc.itype == 4)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom4->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else if (m_damagedesc.itype == 3 || m_damagedesc.itype == 5)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
 		m_pShaderCom->Begin(m_eShaderID);
 
 		m_pVIBufferCom->Render();
@@ -333,8 +364,31 @@ HRESULT CDamagefont_Critical::Render()
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
-			return E_FAIL;
+		if (m_damagedesc.itype == 1)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom3->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else if (m_damagedesc.itype == 2)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else if (m_damagedesc.itype == 4)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom4->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else if (m_damagedesc.itype == 3 || m_damagedesc.itype == 5)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
 		m_pShaderCom->Begin(m_eShaderID);
 
 		m_pVIBufferCom->Render();
@@ -352,8 +406,31 @@ HRESULT CDamagefont_Critical::Render()
 		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
-			return E_FAIL;
+		if (m_damagedesc.itype == 1)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom3->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else if (m_damagedesc.itype == 2)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else if (m_damagedesc.itype == 4)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom4->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else if (m_damagedesc.itype == 3 || m_damagedesc.itype == 5)
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+				return E_FAIL;
+		}
 		m_pShaderCom->Begin(m_eShaderID);
 
 		m_pVIBufferCom->Render();
@@ -433,29 +510,29 @@ void CDamagefont_Critical::ReUse_Setting(void* pArg)
 
 	if (m_damagedesc.itype == 1)
 	{
-		m_eShaderID = UI_CRITICALDAMAGEFONT;
-		m_fNext = 38.f;
+//		m_eShaderID = UI_CRITICALDAMAGEFONT;
+		m_fNext = 42.f;
 	}
 	else if (m_damagedesc.itype == 2)
 	{
-		m_eShaderID = UI_RESISTDAMAGEFONT;
+//		m_eShaderID = UI_RESISTDAMAGEFONT;
 		m_fNext = 23.f;
 	}
 	else if (m_damagedesc.itype == 3)
 	{
-		m_eShaderID = UI_PlayerHitfont;
+//		m_eShaderID = UI_PlayerHitfont;
 		m_fNext = 23.f;
 	}
 
 
 	else if (m_damagedesc.itype == 4)
 	{
-		m_eShaderID = UI_RECOVERFONT;
+//		m_eShaderID = UI_RECOVERFONT;
 		m_fNext = 23.f;
 	}
 	else if (m_damagedesc.itype == 5)
 	{
-		m_eShaderID = UI_PlayerHitfont;
+//		m_eShaderID = UI_PlayerHitfont;
 		m_fNext = 23.f;
 
 	}
@@ -493,16 +570,30 @@ HRESULT CDamagefont_Critical::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_battlefont"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_normalfont"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_charactername"), (CComponent**)&m_pTextureCom1)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_bluefont"), (CComponent**)&m_pTextureCom1)))
+		return E_FAIL;
+	
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture2"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_redfont"), (CComponent**)&m_pTextureCom2)))
+		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture3"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_yellowfont"), (CComponent**)&m_pTextureCom3)))
+		return E_FAIL;
+
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture4"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_greenfont"), (CComponent**)&m_pTextureCom4)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
+
+
 
 	return S_OK;
 }
@@ -519,8 +610,34 @@ HRESULT CDamagefont_Critical::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &m_ProjMatrix, sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
-		return E_FAIL;
+	if (m_damagedesc.itype == 1)
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom3->Get_SRV(m_itexnum))))
+			return E_FAIL;
+	}
+	else if (m_damagedesc.itype == 2)
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(m_itexnum))))
+			return E_FAIL;
+	}
+	else if (m_damagedesc.itype == 4)
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom4->Get_SRV(m_itexnum))))
+			return E_FAIL;
+	}
+	else if (m_damagedesc.itype == 3 || m_damagedesc.itype == 5)
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(m_itexnum))))
+			return E_FAIL;
+	}
+		
+
+	
 
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))

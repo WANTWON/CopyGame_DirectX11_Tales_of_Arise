@@ -3,6 +3,7 @@
 #include "PlayerManager.h"
 #include "Player.h"
 #include "Level_Restaurant.h"
+#include "Level_WorkTool.h"
 
 CShootingObject::CShootingObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CInteractObject(pDevice, pContext)
@@ -51,7 +52,15 @@ int CShootingObject::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 
-	m_pTransformCom->Go_PosDir(fTimeDelta*m_tShootingDesc.fVelocity, XMVectorSet(1.f, 0.f, 0.f, 0.f));
+	if (!m_bhit)
+	{
+		if (m_tShootingDesc.m_bGoRight)
+			m_pTransformCom->Go_PosDir(fTimeDelta*m_tShootingDesc.fVelocity, XMVectorSet(1.f, 0.f, 0.f, 0.f));
+
+		else
+			m_pTransformCom->Go_PosDir(fTimeDelta*m_tShootingDesc.fVelocity, XMVectorSet(-1.f, 0.f, 0.f, 0.f));
+	}
+	
 
 
 
@@ -91,8 +100,50 @@ void CShootingObject::Late_Tick(_float fTimeDelta)
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PBULLET, m_pSPHERECom, &pBullet))
 	{
 		//Collision
-		int a = 0;
+		_vector dir;
+		dir =  Get_TransformState(CTransform::STATE_TRANSLATION) - pBullet->Get_TransformState(CTransform::STATE_TRANSLATION);
+		//
+		m_vDir = XMVector3Normalize(dir);
+		pBullet->Set_Dead(true);
+		//m_pTransformCom->Go_PosDir(fTimeDelta, Get_TransformState(CTransform::STATE_TRANSLATION) - pBullet->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_bhit = true;
+		//m_tShootingDesc.m_iScore;
+		dynamic_cast<CLevel_WorkTool*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Increase_Score(m_tShootingDesc.m_iScore);
+
+		//int a = 0;
 	}
+
+	if (m_bhit)
+	{
+		m_fDeadtimer += fTimeDelta;
+		if (m_fDeadtimer > 4.f)
+			m_bDead = true;
+			
+		switch (m_tShootingDesc.eType)
+		{
+		case TYPE_A:
+	//		m_pTransformCom->Go_PosDir(fTimeDelta*2.5, m_vDir);
+			m_pTransformCom->Go_PosDir(fTimeDelta*2.5, m_vDir);
+			m_pTransformCom->Jump(fTimeDelta, m_tShootingDesc.fVelocity, 2.f, Get_TransformState(CTransform::STATE_TRANSLATION).m128_f32[1]);
+			m_pTransformCom->Turn(Get_TransformState(CTransform::STATE_UP), fTimeDelta*4.f);
+			break;
+
+		case TYPE_B:
+			m_pTransformCom->Go_PosDir(fTimeDelta*2.5, m_vDir);
+			m_pTransformCom->Jump(fTimeDelta, m_tShootingDesc.fVelocity, 2.f, Get_TransformState(CTransform::STATE_TRANSLATION).m128_f32[1]);
+	//		m_pTransformCom->Go_PosDir(fTimeDelta*2.5, m_vDir);
+			m_pTransformCom->Turn(Get_TransformState(CTransform::STATE_RIGHT), fTimeDelta*4.f);
+			break;
+
+		case TYPE_C:
+			m_pTransformCom->Go_PosDir(fTimeDelta*2.5, m_vDir);
+			m_pTransformCom->Jump(fTimeDelta, m_tShootingDesc.fVelocity, 2.f, Get_TransformState(CTransform::STATE_TRANSLATION).m128_f32[1]);
+        	m_pTransformCom->Turn(Get_TransformState(CTransform::STATE_LOOK), fTimeDelta*4.f);
+			break;
+				
+		}
+	}
+	
 }
 
 HRESULT CShootingObject::Render()

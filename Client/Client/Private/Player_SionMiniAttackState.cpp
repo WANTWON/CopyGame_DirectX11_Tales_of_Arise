@@ -66,6 +66,13 @@ CPlayerState * CPlayer_SionMiniAttackState::Tick(_float fTimeDelta)
 
 				m_bIsShot = true;
 			}
+			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+			{
+				if (GetKeyState(VK_LBUTTON) < 0)
+				{
+					return new CPlayer_SionMiniAttackState(m_pOwner, STATE_NORMAL_ATTACK1);
+				}
+			}
 		}
 	}
 

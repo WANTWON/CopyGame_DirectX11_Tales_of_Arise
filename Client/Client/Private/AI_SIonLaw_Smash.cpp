@@ -34,7 +34,7 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 	m_fTimer += fTimeDelta;
 
 
-	if (m_pOwner->Get_PlayerID() == CPlayer::ALPHEN)
+	if (m_pOwner->Get_PlayerID() == CPlayer::LAW)
 	{
 		if (m_fTimer > 4.f)
 		{
@@ -82,12 +82,18 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
-						if ((m_fEventStart != pEvent.fStartTime))
+						if ((m_fEventStart != pEvent.fStartTime) && !m_bBullet)
 						{
 
-
+							/* Make Effect */
+							_vector vOffset = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] +=  vOffset*10.f + XMVectorSet(-10.f, 0.f, 0.f, 0.f);
+							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("BunStrikeBurst.dat"), mWorldMatrix);
+							m_fFadeTime = 0.f;
+							m_bBullet = true;
 							m_fEventStart = pEvent.fStartTime;
 						}
 					}
@@ -100,6 +106,9 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation();
 
+
+
+
 	return nullptr;
 }
 
@@ -108,7 +117,6 @@ CAIState * CAI_SionLaw_Smash::LateTick(_float fTimeDelta)
 	if (m_bIsStateEvent)
 	{
 		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
 
 	for (auto& iter : m_pEffects)
@@ -143,6 +151,20 @@ CAIState * CAI_SionLaw_Smash::LateTick(_float fTimeDelta)
 
 		}
 
+	}
+
+	if (m_bBullet)
+	{
+		m_fFadeTime += fTimeDelta;
+
+		if (m_fFadeTime > 4.f)
+		{
+			if (m_eCurrentPlayerID == CPlayer::LAW)
+			{
+				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
+			}
+
+		}
 	}
 
 	return nullptr;
@@ -182,6 +204,7 @@ void CAI_SionLaw_Smash::Enter()
 
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+	m_pOwner->Get_Model()->Reset();
 	if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
 	{
 		if (nullptr == m_pTarget)
@@ -215,21 +238,29 @@ void CAI_SionLaw_Smash::Exit()
 
 
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
-
-	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
-	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
+	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+	if (pLockOn != nullptr)
 	{
-		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+		_vector vLastPosition = dynamic_cast<CMonster*>(pLockOn)->Get_LastPosition();
+		if (!dynamic_cast<CMonster*>(pLockOn)->Get_LastStrikeAttack())
 		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+			dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
+			dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+			dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 		}
 		else
 		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+			dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+			dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 		}
+	}
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
 	}
 
 	if (!m_pEffects.empty())
@@ -244,7 +275,7 @@ void CAI_SionLaw_Smash::Exit()
 			}
 		}
 	}
+
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	__super::Exit();
 }

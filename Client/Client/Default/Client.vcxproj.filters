@@ -202,9 +202,6 @@
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState">
       <UniqueIdentifier>{8eb08625-fc97-4635-b599-e0aa8af43974}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01.Actor\00.Player\00.Alphen">
-      <UniqueIdentifier>{14241fe6-1678-46b2-9aa5-b9069e722ed1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States">
       <UniqueIdentifier>{01ca6b4e-9be6-4a8d-9d1f-419da47ca73a}</UniqueIdentifier>
     </Filter>
@@ -273,9 +270,6 @@
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell">
       <UniqueIdentifier>{3790b313-d11b-494b-a379-654fc89c4d13}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\01.Actor\00.Player\02.Rinwell">
-      <UniqueIdentifier>{51a6850f-897b-49ff-8b0e-4e7881f875a9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\01.Monster\Rinwell\State">
       <UniqueIdentifier>{60b42f74-e576-4698-a827-121bc87dd00d}</UniqueIdentifier>
@@ -358,17 +352,11 @@
     <Filter Include="02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates">
       <UniqueIdentifier>{b9c0676a-05c5-40ee-b357-1ba01bc1ad0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\01.Actor\00.Player\03. Law">
-      <UniqueIdentifier>{6de98e5a-c150-4bac-8985-ef2513782efc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\PlayerState\States\CloseRanged\Law">
       <UniqueIdentifier>{7aa6e27e-0965-43f8-a61d-7315bbe4bff5}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE\Caption">
       <UniqueIdentifier>{3268bd8d-2beb-4a28-87c6-7db320ea4dc7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\01.Actor\00.Player\01.Sion">
-      <UniqueIdentifier>{07ceaa0b-61ee-4ef4-8bd0-98feee9ed4d2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States\Alphen">
       <UniqueIdentifier>{cf66058e-7edc-421c-a23f-37d9d83207ac}</UniqueIdentifier>
@@ -424,9 +412,6 @@
     <Filter Include="01.Levels\05.Restaurant %28MiniGame1%29">
       <UniqueIdentifier>{34acfbf8-f5c2-456e-ad10-3a89c7f58820}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\07.ArenaZone %28LawBattle%29">
-      <UniqueIdentifier>{0b21e4a1-a00c-4231-adfd-45977878d9c8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Camera\02.MiniGame_Camera">
       <UniqueIdentifier>{e1b5614f-9d2f-48ec-ad63-127f549cc725}</UniqueIdentifier>
     </Filter>
@@ -450,6 +435,39 @@
     </Filter>
     <Filter Include="02.GameObjects\07.Bullet\BossSkills">
       <UniqueIdentifier>{917bbb17-1c62-41ef-912d-b124a4a45cec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\07.LawBattle">
+      <UniqueIdentifier>{0b21e4a1-a00c-4231-adfd-45977878d9c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\02.NPC\BattleNpc">
+      <UniqueIdentifier>{9b28eb55-4ab4-43a5-889b-75b7a146d28e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\MonsterLaw">
+      <UniqueIdentifier>{6854262d-6f38-48ae-a8c2-95b9a4d5572d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\MonsterLaw\State">
+      <UniqueIdentifier>{fb4684b2-4650-4cf6-ad3b-bbbdcefc2411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState">
+      <UniqueIdentifier>{b2847c79-9f43-4dd2-a37f-4733e379098e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Player">
+      <UniqueIdentifier>{286c6ae9-6b3d-4d90-b1fd-7259c7e41352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Player\00.Alphen">
+      <UniqueIdentifier>{14241fe6-1678-46b2-9aa5-b9069e722ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Player\01.Sion">
+      <UniqueIdentifier>{07ceaa0b-61ee-4ef4-8bd0-98feee9ed4d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Player\02.Rinwell">
+      <UniqueIdentifier>{51a6850f-897b-49ff-8b0e-4e7881f875a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Player\03. Law">
+      <UniqueIdentifier>{6de98e5a-c150-4bac-8985-ef2513782efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04.UI\31.UI_MainPlayerMark">
+      <UniqueIdentifier>{f0a5b304-cb9a-4ce4-88f9-84c37526f074}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -766,7 +784,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Alphen.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\00.Alphen</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\00.Alphen</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AIState.h">
       <Filter>02.GameObjects\01.Actor\00.Player\State\AIState</Filter>
@@ -775,7 +793,7 @@
       <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sion.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\01.Sion</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect.h">
       <Filter>02.GameObjects\03.Effect</Filter>
@@ -901,7 +919,7 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Rinwell.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\02.Rinwell</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\RinwellState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State</Filter>
@@ -1066,7 +1084,7 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Law.h">
-      <Filter>02.GameObjects\01.Actor\00.Player\03. Law</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\03. Law</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Dialogue_Caption.h">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
@@ -1247,6 +1265,24 @@
     </ClInclude>
     <ClInclude Include="..\public\BossSkills.h">
       <Filter>02.GameObjects\07.Bullet\BossSkills</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_LawBattle.h">
+      <Filter>01.Levels\07.LawBattle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BattleNpc.h">
+      <Filter>02.GameObjects\01.Actor\02.NPC\BattleNpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterLaw.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster_LawPoseState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterLawState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MainPlayerMark.h">
+      <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1533,13 +1569,13 @@
       <Filter>01.Levels\03.BattleZone</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Alphen.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\00.Alphen</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\00.Alphen</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerManager.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sion.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\01.Sion</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\01.Sion</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect.cpp">
       <Filter>02.GameObjects\03.Effect</Filter>
@@ -1662,7 +1698,7 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Rinwell.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\02.Rinwell</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\02.Rinwell</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\IceWolfBattle_TurnState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
@@ -1830,7 +1866,7 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\FieldStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Law.cpp">
-      <Filter>02.GameObjects\01.Actor\00.Player\03. Law</Filter>
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\03. Law</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp">
       <Filter>02.GameObjects\04.UI\12.UI_DIALOGUE\Caption</Filter>
@@ -2011,6 +2047,21 @@
     </ClCompile>
     <ClCompile Include="..\private\BossSkills.cpp">
       <Filter>02.GameObjects\07.Bullet\BossSkills</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_LawBattle.cpp">
+      <Filter>01.Levels\07.LawBattle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BattleNpc.cpp">
+      <Filter>02.GameObjects\01.Actor\02.NPC\BattleNpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterLaw.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_LawPoseState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MainPlayerMark.cpp">
+      <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

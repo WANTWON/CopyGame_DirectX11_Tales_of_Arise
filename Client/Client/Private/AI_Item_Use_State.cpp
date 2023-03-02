@@ -155,7 +155,7 @@ void CAI_Item_Use_State::Use_Item(ITEM_NAME item)
 
 				CDamagefont_Critical::DMGDESC testdesc;
 				ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
-				testdesc.iDamage = recoverpower;
+				testdesc.iDamage = (_int)recoverpower;
 				testdesc.pPointer = CPlayerManager::Get_Instance()->Get_EnumPlayer(random);
 				testdesc.itype = 4;
 
@@ -185,7 +185,7 @@ void CAI_Item_Use_State::Use_Item(ITEM_NAME item)
 				CPlayerManager::Get_Instance()->Get_EnumPlayer(random)->RecoverHP(recoverpower);
 				CDamagefont_Critical::DMGDESC testdesc;
 				ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
-				testdesc.iDamage = recoverpower;
+				testdesc.iDamage =(_int)recoverpower;
 				testdesc.pPointer = CPlayerManager::Get_Instance()->Get_EnumPlayer(random);
 				testdesc.itype = 4;
 
@@ -215,7 +215,7 @@ void CAI_Item_Use_State::Use_Item(ITEM_NAME item)
 
 		CDamagefont_Critical::DMGDESC testdesc;
 		ZeroMemory(&testdesc, sizeof(CDamagefont_Critical::DMGDESC));
-		testdesc.iDamage = recoverpower;
+		testdesc.iDamage = (_int)recoverpower;
 		testdesc.pPointer = CPlayerManager::Get_Instance()->Get_EnumPlayer(random);
 		testdesc.itype = 4;
 

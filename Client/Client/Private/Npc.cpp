@@ -65,10 +65,7 @@ void CNpc::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || Check_IsinFrustum(2.f) == false)
 		return;
 
-	_vector vPosition = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION);
-	_float fDistance = XMVectorGetX(XMVector3Length(vPosition - Get_TransformState(CTransform::STATE_TRANSLATION)));
-	if (fDistance > 50.f)
-		return;
+	
 	__super::Late_Tick(fTimeDelta);
 
 	
