@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\PlayerDeadState.h"
+#include "Level_LawBattle.h"
 
 using namespace Player;
 
@@ -36,7 +37,49 @@ CPlayerState * CPlayerDeadState::Tick(_float fTimeDelta)
 CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
-		m_bIsStop = true;
+	{
+		if (CBattleManager::Get_Instance()->Get_IsOneonOneMode() == true)
+		{
+			CPlayer::PLAYERID ePlayerID = m_pOwner->Get_PlayerID();
+
+			switch (ePlayerID)
+			{
+			case Client::CPlayer::ALPHEN:
+				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
+				break;
+			case Client::CPlayer::SION:
+				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
+				break;
+			case Client::CPlayer::RINWELL:
+			{
+				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
+				CBattleManager::Get_Instance()->Set_OneonOneMode(false);
+
+				vector<CPlayer*> pAIList = CPlayerManager::Get_Instance()->Get_AIPlayers();
+				for (auto& iter : pAIList)
+				{
+					iter->Set_HP(iter->Get_Info().fMaxHp);
+				}
+				
+				CLevel_LawBattle* pLavel = dynamic_cast<CLevel_LawBattle*>(CGameInstance::Get_Instance()->Get_CurrentLevel());
+				pLavel->Ready_Layer_Player(nullptr);
+
+
+				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
+				CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+				pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
+				break;
+			}
+			default:
+				break;
+			}
+		}
+		else
+			m_bIsStop = true;
+
+
+	}
+		
 
 	return nullptr;
 }
