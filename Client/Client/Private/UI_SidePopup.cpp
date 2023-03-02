@@ -87,49 +87,53 @@ int CUI_SidePopup::Tick(_float fTimeDelta)
 		
 
 
-
+		
 	}*/
-	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_BATTLE)
-	{
-
-		if (CGameInstance::Get_Instance()->Key_Down(DIK_LCONTROL))
+	
+	
+		if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_BATTLE || CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_LAWBATTLE ||
+			CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_BOSS)
 		{
-			CUI_RuneEffect::RUNEDESC desc;
-			desc.position.x = 52.f;
-			desc.position.y = 227.f + 20.f;
-			desc.m_etype = 1;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_STATIC, TEXT("test"), &desc)))
-				return E_FAIL;
-			desc.position.y = 227.f + 70.f;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_STATIC, TEXT("test"), &desc)))
-				return E_FAIL;
-			if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 2)
+			if (CGameInstance::Get_Instance()->Key_Down(DIK_LCONTROL))
 			{
-				desc.position.y = 227.f + 120.f;
+				CUI_RuneEffect::RUNEDESC desc;
+				desc.position.x = 52.f;
+				desc.position.y = 227.f + 20.f;
+				desc.m_etype = 1;
 				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_STATIC, TEXT("test"), &desc)))
 					return E_FAIL;
-			}
-
-
-			if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 3)
-			{
-				desc.position.y = 227.f + 170.f;
+				desc.position.y = 227.f + 70.f;
 				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_STATIC, TEXT("test"), &desc)))
 					return E_FAIL;
+				if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 2)
+				{
+					desc.position.y = 227.f + 120.f;
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_STATIC, TEXT("test"), &desc)))
+						return E_FAIL;
+				}
+
+
+				if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 3)
+				{
+					desc.position.y = 227.f + 170.f;
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_STATIC, TEXT("test"), &desc)))
+						return E_FAIL;
+				}
 			}
+			if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL))
+			{
+				m_bfadein = true;
+				m_bfadeinname = true;
+
+
+
+
+			}
+			else
+				m_bfadeout = true;
 		}
-		if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL))
-		{
-			m_bfadein = true;
-			m_bfadeinname = true;
-
-
-
-
-		}
-		else
-			m_bfadeout = true;
-	}
+		
+	
 
 	
 
