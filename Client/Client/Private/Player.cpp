@@ -487,7 +487,7 @@ HRESULT CPlayer::Render_EdgeDetection()
 
 _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 {
-	if (fDamage <= 0 || m_bDead || m_bIsJustDodge)
+	if (fDamage <= 0 || m_bDead || m_bIsJustDodge || (CPlayerState::STATE_OVERLIMIT == m_pPlayerState->Get_StateId()))
 		return 0;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);

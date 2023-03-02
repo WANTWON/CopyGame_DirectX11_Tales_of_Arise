@@ -268,6 +268,8 @@
     <ClInclude Include="..\Public\Player_SionShooterState.h" />
     <ClInclude Include="..\Public\Player_SionSkillAttack.h" />
     <ClInclude Include="..\Public\Portal.h" />
+    <ClInclude Include="..\Public\RinwellDownState.h" />
+    <ClInclude Include="..\Public\RinwellIdleState.h" />
     <ClInclude Include="..\Public\Road.h" />
     <ClInclude Include="..\public\ScreenDistortion.h" />
     <ClInclude Include="..\Public\ShootingObject.h" />
@@ -536,6 +538,8 @@
     <ClCompile Include="..\Private\Player_SionShooterState.cpp" />
     <ClCompile Include="..\Private\Player_SionSkillAttack.cpp" />
     <ClCompile Include="..\Private\Portal.cpp" />
+    <ClCompile Include="..\Private\RinwellDownState.cpp" />
+    <ClCompile Include="..\Private\RinwellIdleState.cpp" />
     <ClCompile Include="..\Private\Road.cpp" />
     <ClCompile Include="..\private\ScreenDistortion.cpp" />
     <ClCompile Include="..\Private\ShootingObject.cpp" />

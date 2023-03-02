@@ -17,7 +17,6 @@ CBattle_BackStepState::CBattle_BackStepState(CBerserker* pBerserker)
 
 CBerserkerState * CBattle_BackStepState::AI_Behaviour(_float fTimeDelta)
 {
-	
 	return nullptr;
 }
 
@@ -39,17 +38,13 @@ CBerserkerState * CBattle_BackStepState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-	
-
 	return nullptr;
 }
 
 CBerserkerState * CBattle_BackStepState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
-	{
 		return new CBattle_RunState(m_pOwner, STATE_ANGRY);
-	}
 
 	return nullptr;
 }

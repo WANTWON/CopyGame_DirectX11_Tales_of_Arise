@@ -25,8 +25,11 @@ public:
 
 	enum SKILL_TYPE
 	{
-		PHOTONFLASH,
-		GALEFORCE,
+		PHOTONFLASH,		//±âº»°ø°Ý
+		METEOR,				//¸ÞÅ×¿À
+		THUNDERFIELD,		//½ã´õ
+		GALEFORCE,			//Ç³¾Ð
+		HOLY,				//È¦¸®·£½º
 		SKILL_END
 	};
 

@@ -48,7 +48,7 @@ private:
 	vector<class CEffect*> m_SnowParticles2;
 
 	_float m_fTotalTime = 0.f;
-	_float m_fLimitTime = 15.f;
+	_float m_fLimitTime = 30.f;
 	_float m_fCreateTime[4] = { 0.f, };
 	_float m_fSpwanTime = 5.f;
 	_int m_iScore = 0;

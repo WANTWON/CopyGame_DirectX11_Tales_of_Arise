@@ -17,16 +17,11 @@ CBattle_TornadeState::CBattle_TornadeState(CHawk* pHawk)
 
 CHawkState * CBattle_TornadeState::AI_Behaviour(_float fTimeDelta)
 {
-	
-
 	return nullptr;
-
-
 }
 
 CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 {
-
 	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
 
 	if (pDamageCauser == nullptr)
@@ -108,6 +103,8 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
+
+					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
 				}
 
 				else if (nullptr != m_pAtkColliderCom)
@@ -122,17 +119,21 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 					m_p2th_AtkColliderCom->Update(R_matWorld);
+
+					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p2th_AtkColliderCom, m_pOwner);
 				}
 
 				else if (nullptr != m_p2th_AtkColliderCom)
 					m_p2th_AtkColliderCom->Update(R_matWorld);
-
 			}
 		}
 
 		else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
 		{
 			CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+			pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
+			pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p2th_AtkColliderCom, m_pOwner);
 
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
 			pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_p2th_AtkColliderCom);
@@ -142,7 +143,6 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 		}
 	}
 
-
 	m_pOwner->Get_Transform()->LookAt(XMVectorSetY(m_vCurTargetPos, 2.f));
 
 	return nullptr;
@@ -150,7 +150,6 @@ CHawkState * CBattle_TornadeState::Tick(_float fTimeDelta)
 
 CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 {
-	
 	if (nullptr != m_pAtkColliderCom)
 	{
 		CBaseObj* pCollisionTarget = nullptr;
@@ -207,7 +206,6 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 			m_b2th_Collision = false;
 		}
 	}
-
 
 	if (m_bIsAnimationFinished)
 			return new CBattle_RunState(m_pOwner, CHawkState::STATE_ID::STATE_TORNADE);

@@ -26,7 +26,7 @@ CRinwellState * CMoveState::Tick(_float fTimeDelta)
 		break;
 	case Client::STATETYPE_MAIN:
 		m_fTarget_Distance = Find_Target(4);
-		Move(fTimeDelta);
+		Move(fTimeDelta, m_iDir);
 		break;
 	case Client::STATETYPE_END:
 		if (!m_bIsAnimationFinished)
@@ -38,7 +38,6 @@ CRinwellState * CMoveState::Tick(_float fTimeDelta)
 
 			LookAtPlayer(fTimeDelta);
 			m_pOwner->Check_Navigation();
-
 		}
 		break;
 	}
@@ -48,7 +47,6 @@ CRinwellState * CMoveState::Tick(_float fTimeDelta)
 
 CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 {
-
 	switch (m_eStateType)
 	{
 	case Client::STATETYPE_START:
@@ -61,7 +59,7 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 			m_iChangeCount++;
 			m_ChangedDir = true;
 
-			if (m_iChangeCount >= 3)
+			if (m_iChangeCount >= 1)
 				return new CMoveState(m_pOwner, STATETYPE_END, m_iChangeCount);
 			else
 				return new CMoveState(m_pOwner, STATETYPE_MAIN, m_iChangeCount);
@@ -72,25 +70,41 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 	{
 		if (m_bIsAnimationFinished)
 		{
-			_uint iSkillIndex = m_pOwner->Get_SkillIndex();
-			switch (iSkillIndex)
+			_uint iSkill = rand() % 2;
+
+			if (5.f > Find_ActiveTarget())
 			{
-			case PHOTONFLASH:
-				iSkillIndex++;
-				m_pOwner->Set_SkillIndex(iSkillIndex);
-				return new CAttackState(m_pOwner, STATETYPE_START);
-			case GALEFORCE:
-				iSkillIndex++;
-				if (iSkillIndex == SKILL_END)
-					iSkillIndex = PHOTONFLASH;
-				m_pOwner->Set_SkillIndex(iSkillIndex);
-				return new CSkillState(m_pOwner, GALEFORCE);
+				switch (iSkill)
+				{
+				case 0:
+					m_pOwner->Set_SkillIndex(CRinwellState::GALEFORCE);
+					break;
+				case 1:
+					m_pOwner->Set_SkillIndex(CRinwellState::THUNDERFIELD);
+					break;
+				}
+
+				return new CSkillState(m_pOwner, m_pOwner->Get_SkillIndex());
+			}
+			else
+			{
+				switch (iSkill)
+				{
+				case 0:
+					m_pOwner->Set_SkillIndex(CRinwellState::PHOTONFLASH);
+					return new CAttackState(m_pOwner, STATETYPE_START);
+					break;
+				case 1:
+					m_pOwner->Set_SkillIndex(CRinwellState::HOLY);
+					return new CSkillState(m_pOwner, HOLY);
+					break;
+				}
+
+				return new CSkillState(m_pOwner, m_pOwner->Get_SkillIndex());
 			}
 		}		
 		break;
 	}
-	default:
-		break;
 	}
 
 	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
@@ -108,7 +122,6 @@ void CMoveState::Enter()
 		m_bAirMove = true;
 	else
 		m_bAirMove = false;
-
 
 	switch (m_eStateType)
 	{
@@ -134,15 +147,35 @@ void CMoveState::Enter()
 	m_fTarget_Distance = Find_ActiveTarget();
 	_vector vRandomPos = XMVectorSet((rand() % 30) + 50.f, 0.f, (rand() % 30) + 50.f, 0.f);
 	m_vTargetPosition = vRandomPos;
+
+	_vector vTargetDir = m_vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+	if (0.f > XMVectorGetY(XMVector3Cross(m_pOwner->Get_TransformState(CTransform::STATE_LOOK), vTargetDir)))
+		m_iDir = 1;
+	else
+		m_iDir = 0;
+
+	if (0.f > XMVectorGetX(XMVector4Dot(m_pOwner->Get_TransformState(CTransform::STATE_LOOK), vTargetDir)))
+	{
+		if (m_bAirMove)
+			m_fTurnDegree = 0.2f;
+		else
+			m_fTurnDegree = 0.1f;
+	}
+	else
+	{
+		if (m_bAirMove)
+			m_fTurnDegree = 0.1f;
+		else
+			m_fTurnDegree = 0.05f;
+	}
 }
 
 void CMoveState::Exit()
 {
 }
 
-void CMoveState::Move(_float fTimeDelta)
+void CMoveState::Move(_float fTimeDelta, _int iDir)
 {
-
 	CTransform* pRinwellTransform = m_pOwner->Get_Transform();
 
 	_vector vTargetDir = XMVector3Normalize(m_vTargetPosition - pRinwellTransform->Get_State(CTransform::STATE_TRANSLATION));
@@ -156,7 +189,17 @@ void CMoveState::Move(_float fTimeDelta)
 	if (m_bAirMove)
 	{
 		if (fDot < 0.95f)
-			pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.1f);
+		{
+			switch (m_iDir)
+			{
+			case 0:
+				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fTurnDegree);
+				break;
+			case 1:
+				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -m_fTurnDegree);
+				break;
+			}
+		}
 		else
 		{
 			if (!m_bIsAnimationFinished)
@@ -166,18 +209,22 @@ void CMoveState::Move(_float fTimeDelta)
 	else
 	{
 		if (fDot < 0.7f)
-			pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.05f);
+		{
+			switch (m_iDir)
+			{
+			case 0:
+				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fTurnDegree);
+				break;
+			case 1:
+				pRinwellTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -m_fTurnDegree);
+				break;
+			}
+		}
 
 		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 2, m_pOwner->Get_Navigation());
 	}
 
-
-
-
-
-
 	m_pOwner->Check_Navigation();
-
 }
 
 void CMoveState::LookAtPlayer(_float fTimeDelta)
