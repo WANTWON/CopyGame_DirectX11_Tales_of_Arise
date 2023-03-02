@@ -118,7 +118,8 @@ void CSkillState::Enter()
 		BulletDesc.pOwner = m_pOwner;
 		for (_uint i = 0; i < 12; ++i)
 		{
-			m_pOwner->Get_Transform()->Set_Rotation({ 0.f,0.f + i * 30.f , 0.f });
+			m_pOwner->Get_Transform()->Set_Rotation({ 0.f, 0.f + i * 30.f, 0.f });
+			BulletDesc.vTargetDir = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 				return;
 		}

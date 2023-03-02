@@ -188,7 +188,7 @@ private:
 	_bool	m_bNpcMode = false;
 	_uint	 m_eSkillIndex = PHOTONFLASH;
 
-
+	_int	m_iDamage = 0;
 
 public:
 	static CAiRinwell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
