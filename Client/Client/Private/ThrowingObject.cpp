@@ -249,6 +249,7 @@ void CThrowingObject::Dead_Effect()
 			EffectDesc.fDeadTime = 1.f;
 			XMStoreFloat4x4(&EffectDesc.m_ModelDesc.WorldMatrix, XMMatrixIdentity());
 			EffectDesc.m_ModelDesc.vRotation = _float3(rand() % 180, rand() % 180, rand() % 180);
+			EffectDesc.m_ModelDesc.vScale = _float3(3.f, 3.f, 3.f);
 			strcpy_s(EffectDesc.m_ModelDesc.pModeltag, "Fruit_Apple_Quarter");
 
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_EffectObject"), LEVEL_RESTAURANT, TEXT("Layer_Effect"), &EffectDesc)))
@@ -273,6 +274,8 @@ void CThrowingObject::Dead_Effect()
 			EffectDesc.vTargetDir = XMVectorSet(rand() % 10 * 0.1f * iRandX, -1.f, rand() % 10 * 0.1f, 0.f * iRandZ);
 			EffectDesc.fVelocity = rand() % 3;
 			EffectDesc.fDeadTime = 1.f;
+			EffectDesc.m_ModelDesc.vScale = _float3(3.f, 3.f, 3.f);
+
 			XMStoreFloat4x4(&EffectDesc.m_ModelDesc.WorldMatrix, XMMatrixIdentity());
 			EffectDesc.m_ModelDesc.vRotation = _float3(rand() % 180, rand() % 180, rand() % 180);
 			strcpy_s(EffectDesc.m_ModelDesc.pModeltag, "Bread_French_Slice");

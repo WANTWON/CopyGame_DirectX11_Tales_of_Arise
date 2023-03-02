@@ -105,9 +105,6 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 			}
 		}
 
-		_vector vecTranslation;
-		_float fRotationRadian;
-
 	
 	}
 
