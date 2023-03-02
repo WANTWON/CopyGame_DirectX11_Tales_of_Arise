@@ -362,11 +362,11 @@ PS_OUT PS_EDGE_DETECTION(PS_IN In) // 10
 	float4 vUp = g_EdgeDetectionTexture.Sample(LinearSampler, In.vTexUV - float2(0, 1) / float2(g_fWinSizeX, g_fWinSizeY));
 	float4 vDown = g_EdgeDetectionTexture.Sample(LinearSampler, In.vTexUV + float2(0, 1) / float2(g_fWinSizeX, g_fWinSizeY));
 
-	if (vCenter.a == 1 && vLeft.a == 0 ||
-		vCenter.a == 1 && vRight.a == 0 ||
-		vCenter.a == 1 && vUp.a == 0 ||
-		vCenter.a == 1 && vDown.a == 0)
-		Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+	if (vCenter.a != 0 && vLeft.a == 0 ||
+		vCenter.a != 0 && vRight.a == 0 ||
+		vCenter.a != 0 && vUp.a == 0 ||
+		vCenter.a != 0 && vDown.a == 0)
+		Out.vColor = float4(0.f, 0.f, 0.f, vCenter.a);
 	else
 		Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
 
@@ -513,7 +513,7 @@ technique11 DefaultTechnique
 	pass EdgeDetectionBlend // 11
 	{
 		SetRasterizerState(RS_Default);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_ZEnable_Disable_ZWrite_Disable, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();

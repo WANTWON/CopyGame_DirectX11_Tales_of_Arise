@@ -50,6 +50,10 @@ float g_fDissolveAlpha;
 float4 g_WaterColorDeep = float4(0.3f, 0.3f, 0.8f, 1.f);
 float4 g_WaterColorShallow = float4(0.3f, 0.3f, 0.8f, 1.f);
 
+/* Edge Detection */
+float g_fEdgeMinRange = 20.f;
+float g_fEdgeMaxRange = 60.f;
+
 struct VS_IN
 {
 	float3 vPosition : POSITION;
@@ -345,6 +349,11 @@ PS_OUT PS_EDGE_DETECTION(PS_IN In)
 
 	if (Out.vDiffuse.a <= 0.3f)
 		discard;
+
+	float fInterpFactor = saturate((In.vProjPos.w - g_fEdgeMinRange) / (g_fEdgeMaxRange - g_fEdgeMinRange));
+	float fEdgeAlpha = lerp(1, 0, fInterpFactor);
+
+	Out.vDiffuse.a = fEdgeAlpha;
 
 	return Out;
 }

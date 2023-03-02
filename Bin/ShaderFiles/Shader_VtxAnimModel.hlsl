@@ -35,6 +35,10 @@ float g_vRimTimer;
 float3 g_vRimColor;
 float3 g_vCameraLook;
 
+/* Edge Detection */
+float g_fEdgeMinRange = 10.f;
+float g_fEdgeMaxRange = 60.f;
+
 struct VS_IN
 {
 	float3 vPosition : POSITION;
@@ -280,6 +284,11 @@ PS_OUT PS_EDGE_DETECTION(PS_IN In)
 	
 	if (Out.vDiffuse.a <= 0.3f)
 		discard;
+
+	float fInterpFactor = saturate((In.vProjPos.w - g_fEdgeMinRange) / (g_fEdgeMaxRange - g_fEdgeMinRange));
+	float fEdgeAlpha = lerp(1, 0, fInterpFactor);
+	
+	Out.vDiffuse.a = fEdgeAlpha;
 
 	return Out;
 }

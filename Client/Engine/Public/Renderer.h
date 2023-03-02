@@ -6,7 +6,25 @@ BEGIN(Engine)
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_SHADOWDEPTH, RENDER_NONALPHABLEND, RENDER_ALPHABLENDLIGHTS, RENDER_GLOW, RENDER_NONLIGHT, RENDER_ALPHABLEND, RENDER_DISTORTION, RENDER_EDGE_DETECTION, RENDER_UI_FRONT, RENDER_UI_BACK, RENDER_UI_LAST, RENDER_UI_GLOW, RENDER_END };
+	enum RENDERGROUP 
+	{ 
+		RENDER_PRIORITY, 
+		RENDER_SHADOWDEPTH, 
+		RENDER_NONALPHABLEND, 
+		RENDER_ALPHABLENDLIGHTS, 
+		RENDER_GLOW, 
+		RENDER_NONLIGHT, 
+		RENDER_ALPHABLEND, 
+		RENDER_DISTORTION, 
+		RENDER_EDGE_DETECTION, 
+		RENDER_ENVIRONMENT, 
+		RENDER_ENVIRONMENT_GLOW, 
+		RENDER_UI_FRONT, 
+		RENDER_UI_BACK, 
+		RENDER_UI_LAST, 
+		RENDER_UI_GLOW, 
+		RENDER_END 
+	};
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -64,6 +82,9 @@ private:
 	HRESULT Render_AlphaBlend();
 	HRESULT Render_Distortion();
 	HRESULT Render_EdgeDetection();
+
+	HRESULT Render_Environment();		/* Environment Objects which do not need Post Processing */
+	HRESULT Render_Environment_Glow();	/* Environment Objects which do not need Post Processing */
 
 	HRESULT Render_PostProcessing();
 

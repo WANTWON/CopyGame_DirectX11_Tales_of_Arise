@@ -142,7 +142,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		m_SnowParticles2 = CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_2.dat"), mWorldMatrix);
 
 		mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 256.f);
-		m_WindParticles = CEffect::PlayEffectAtLocation(TEXT("Wind.dat"), mWorldMatrix);
+		//m_WindParticles = CEffect::PlayEffectAtLocation(TEXT("Wind.dat"), mWorldMatrix);
 	}
 	
 	g_fSoundVolume += 0.001f;
