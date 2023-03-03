@@ -133,6 +133,8 @@ void CPlayerManager::Set_SmashAttack()
 {
 	CMonster* pLockonMonster = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster());
 
+
+
 	if ((nullptr != pLockonMonster) && (pLockonMonster->Get_Stats().m_fLockonSmashGuage >= 4.f))
 	{
 		//pLockonMonster->Set_IsActionMode(true);
@@ -180,8 +182,6 @@ void CPlayerManager::Set_SmashAttack()
 				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 			CBattleManager::Get_Instance()->Set_IsStrike(true);
 		}
-
-
 		if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 2)
 		{
 			//AlphenRinwell

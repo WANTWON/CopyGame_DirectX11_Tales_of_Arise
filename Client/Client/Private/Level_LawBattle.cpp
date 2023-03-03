@@ -167,6 +167,9 @@ void CLevel_LawBattle::Tick(_float fTimeDelta)
 		}
 	}
 
+
+
+
 }
 
 void CLevel_LawBattle::Late_Tick(_float fTimeDelta)
@@ -229,6 +232,18 @@ void CLevel_LawBattle::BattleTick(_float fTimeDelta)
 	}
 
 
+	if (CBattleManager::Get_Instance()->Get_IsHitLeg() == true)
+	{
+		m_fHitLegTime += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		if (m_fHitLegTime > 0.1f)
+		{
+			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
+			m_fHitLegTime = 0.f;
+		}
+	}
+
+
+
 	RELEASE_INSTANCE(CBattleManager);
 }
 
@@ -257,12 +272,10 @@ void CLevel_LawBattle::BattleLateTick(_float fTimeDelta)
 	}
 	
 
-
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
 	{
 		CPlayer * pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		pPlayer->Take_Damage(10000, nullptr);
-
 	}
 }
 

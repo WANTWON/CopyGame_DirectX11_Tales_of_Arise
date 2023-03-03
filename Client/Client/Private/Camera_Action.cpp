@@ -33,6 +33,13 @@ void CCamera_Action::Set_Play(_bool type)
 	 {
 		 m_vInitPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 		 m_vInitAt = m_vInitPosition + m_pTransform->Get_State(CTransform::STATE_LOOK);
+
+	 }
+	 else
+	 {
+		 m_iIndex = 0;
+		 m_fTime = 0.f;
+		 m_CamDatas.clear();
 	 }
 	
 }
@@ -171,6 +178,7 @@ void CCamera_Action::Shaking_Camera(_float fTimeDelta)
 	m_fVelocity -= m_fMinusVelocity;
 	if (m_fVelocity < 0.0f)
 	{
+		m_fShakingTime = 0.f;
 		m_fVelocity = 0.f;
 		m_iShakingCount = 0;
 		m_bShakingMode = false;

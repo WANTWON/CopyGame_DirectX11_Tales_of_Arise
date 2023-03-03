@@ -383,7 +383,7 @@ void CRinwellSkills::Dead_Effect()
 		BulletDesc.vInitPositon = Get_TransformState(CTransform::STATE_TRANSLATION);
 		BulletDesc.pOwner = m_BulletDesc.pOwner;
 
-		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC && Check_IsinFrustum(3.f) == true)
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))

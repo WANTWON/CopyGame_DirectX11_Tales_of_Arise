@@ -64,25 +64,32 @@ void CNonAnim::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
+	LEVEL eLevel =  (LEVEL)pGameInstance->Get_CurrentLevelIndex();
 	
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 		{
-			if (strcmp(m_ModelDesc.pModeltag, "Snow_Mountain") &&
-				strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_") &&
-				strcmp(m_ModelDesc.pModeltag, "Ceiling") &&
-				strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_outside_Lod1") &&
-				strcmp(m_ModelDesc.pModeltag, "Bld_D04_Door01_Wall_Lod1")  &&
-				strcmp(m_ModelDesc.pModeltag, "FountainDel") &&
-				strcmp(m_ModelDesc.pModeltag, "StoneBlock") &&
-				strcmp(m_ModelDesc.pModeltag, "StoneBlockA") &&
-				strcmp(m_ModelDesc.pModeltag, "Ground02") &&
-				strcmp(m_ModelDesc.pModeltag, "Ground03") &&
-				strcmp(m_ModelDesc.pModeltag, "Ground04")
-				)
+
+			switch (eLevel)
 			{
-				RELEASE_INSTANCE(CGameInstance);
-				return;
+			case Client::LEVEL_SNOWFIELD:
+				break;
+			case Client::LEVEL_BATTLE:
+				if (strcmp(m_ModelDesc.pModeltag, "Snow_Mountain"))
+				{
+					RELEASE_INSTANCE(CGameInstance);
+					return;
+				}
+				break;
+			case Client::LEVEL_CITY:
+				break;
+			case Client::LEVEL_RESTAURANT:
+				break;
+			case Client::LEVEL_WORKTOOL:
+				break;
+			case Client::LEVEL_LAWBATTLE:
+				break;
+			case Client::LEVEL_BOSS:
+				break;
 			}
 		}
 	

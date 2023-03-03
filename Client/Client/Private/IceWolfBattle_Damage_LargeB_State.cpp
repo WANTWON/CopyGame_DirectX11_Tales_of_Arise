@@ -42,7 +42,7 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 
 			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-			m_pOwner->Check_Navigation();
+			//m_pOwner->Check_Navigation();
 		}
 		break;
 
@@ -50,7 +50,7 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 		break;
 	}
 		
-	m_pOwner->Check_Navigation();
+	//m_pOwner->Check_Navigation();
 	return nullptr;
 }
 
@@ -71,7 +71,6 @@ CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 			if (m_bDeadAnimFinish)
 			{
 				m_pOwner->Set_GlowUp();
-				m_pOwner->Set_Dissolve();
 				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 				pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pAtkColliderCom);
