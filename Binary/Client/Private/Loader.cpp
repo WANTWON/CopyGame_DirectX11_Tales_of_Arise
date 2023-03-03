@@ -483,12 +483,6 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 //	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NPC_NMM_MHB_000.fbx", "../../../Bin/Bin_Data/Anim/NPC_NMM_MHB_000/", PivotMatrix))))
 //	return E_FAIL;
 
-
-PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_DIM_000"),
-	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NPC_NMM_DIM_000.fbx", "../../../Bin/Bin_Data/Anim/NPC_NMM_DIM_000/", PivotMatrix))))
-	return E_FAIL;
-
 //PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 //if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NFY_FIA_000"),
 //	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/NPC_NFY_FIA_000.fbx", "../../../Bin/Bin_Data/Anim/NPC_NFY_FIA_000/", PivotMatrix))))
@@ -523,6 +517,17 @@ if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NPC_NMM_DIM_000"),
 //if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Duck"),
 //	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Duck.fbx", "../../../Bin/Bin_Data/Anim/Duck/", PivotMatrix))))
 //	return E_FAIL;
+
+//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ASU_005"),
+//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/ASU_005.fbx", "../../../Bin/Bin_Data/Anim/ASU_005/", PivotMatrix))))
+//	return E_FAIL;
+
+PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ASU_005"),
+	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/ASU_005.fbx", "../../../Bin/Bin_Data/Anim/ASU_005/", PivotMatrix))))
+	return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));
 
