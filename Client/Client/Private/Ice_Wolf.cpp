@@ -162,11 +162,11 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
-	if (ExceptionHanding() == false)
-		return;
-
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
+	if (ExceptionHanding() == false)
+		return;
 
 	LateTick_State(fTimeDelta);
 }

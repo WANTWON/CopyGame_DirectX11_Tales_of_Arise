@@ -10,6 +10,7 @@
 #include "IceWolfBattle_IdleState.h"
 #include "IceWolfBattle_SomerSaultState.h"
 #include "IceWolfBattle_HowLingState.h"
+#include "IceWolfBattle_Damage_LargeB_State.h"
 
 using namespace IceWolf;
 
@@ -38,8 +39,7 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 
 	if (m_pOwner->Get_Stats().m_fCurrentHp <= 0)
 	{
-		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
-		m_pState = m_pState->ChangeState(m_pState, pState);
+		return new CBattle_Damage_LargeB_State(m_pOwner, CIceWolfState::STATE_DEAD);
 	}
 
 
