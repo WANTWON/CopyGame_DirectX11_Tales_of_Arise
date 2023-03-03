@@ -30,6 +30,9 @@ CAI_AlphenLaw_Smash::CAI_AlphenLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 {
+	if (m_bStrikeBlur)
+		StrikeBlur(fTimeDelta);
+
 	m_fTimer += fTimeDelta;
 
 	if (m_pOwner->Get_PlayerID() == CPlayer::ALPHEN)
@@ -203,6 +206,12 @@ void CAI_AlphenLaw_Smash::Enter()
 
 void CAI_AlphenLaw_Smash::Exit()
 {
+	if (m_bStrikeBlur)
+	{
+		m_pOwner->Set_ResetStrikeBlur(true);
+		m_bStrikeBlur = false;
+	}
+
 	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
@@ -244,4 +253,22 @@ void CAI_AlphenLaw_Smash::Exit()
 	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	__super::Exit();
+}
+
+void CAI_AlphenLaw_Smash::StrikeBlur(_float fTimeDelta)
+{
+	_float fDuration = .45f;
+	m_fResetTimer += fTimeDelta;
+
+	/* Zoom Blur Lerp */
+	_float fFocusPower = 10.f;
+
+	_float fBlurInterpFactor = m_fResetTimer / fDuration;
+	if (fBlurInterpFactor > 1.f)
+		fBlurInterpFactor = 1.f;
+
+	_int iDetailStart = 1;
+	_int iDetailEnd = 10;
+	_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+	m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
 }
