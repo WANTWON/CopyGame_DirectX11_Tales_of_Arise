@@ -31,13 +31,13 @@ void CCamera_Action::Set_Play(_bool type)
 	 m_bPlay = type; 
 	 if (m_bPlay)
 	 {
-		 m_fTime = 0.f;
 		 m_vInitPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 		 m_vInitAt = m_vInitPosition + m_pTransform->Get_State(CTransform::STATE_LOOK);
 
 	 }
 	 else
 	 {
+		 m_iIndex = 0;
 		 m_fTime = 0.f;
 		 m_CamDatas.clear();
 	 }

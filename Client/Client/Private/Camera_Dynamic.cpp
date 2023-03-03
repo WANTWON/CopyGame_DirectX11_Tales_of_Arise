@@ -433,7 +433,8 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	{
 		m_bLerp = true;
 
-		if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
+		if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false &&
+			CUI_Manager::Get_Instance()->Get_UIQuestScreen() != true)
 		{
 			if (XMouseMove < 0)
 			{
@@ -461,14 +462,15 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	vCameraPosition = XMVectorSetZ(vCameraPosition, (XMVectorGetZ(vCenterPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
 	m_vNewPos = vCameraPosition;
 
-	if (CBattleManager::Get_Instance()->Get_IsBattleMode() != true && CGameInstance::Get_Instance()->Get_CurrentLevel()->Get_NextLevel() != true)
+	if (CGameInstance::Get_Instance()->Get_CurrentLevel()->Get_NextLevel() != true )
 	{
 		if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
 		{
 			m_bLerp = true;
 
 
-			if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
+			if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false &&
+				CUI_Manager::Get_Instance()->Get_UIQuestScreen() != true)
 			{
 
 				if (YMouseMove > 0)
@@ -545,7 +547,7 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	_vector vCenterPos = vPlayerPosition;
 
-	ZoomSetting(-3.f, 1.f);
+	ZoomSetting(-5.f, 1.f);
 
 	// 락온 몬스터가 있으면 항상 플레이어와 락온이 화면에 들어오게 하기
 	CBaseObj* pLockOnMonster = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -1163,17 +1165,17 @@ void CCamera_Dynamic::Shaking_Camera(_float fTimeDelta)
 	_vector FinalPos = { 0.f,0.f,0.f,0.f };
 	if (m_bLerp)
 	{
-		m_fTime += fTimeDelta*0.3f;
+		m_fShakingTime += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"))*0.3f;
 
 		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
 
-		if (m_fTime >= 1.f)
+		if (m_fShakingTime >= 1.f)
 			m_bLerp = false;
 	}
 	else
 	{
 		FinalPos = m_vNewPos;
-		m_fTime = 0.f;
+		m_fShakingTime = 0.f;
 	}
 
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
@@ -1182,6 +1184,7 @@ void CCamera_Dynamic::Shaking_Camera(_float fTimeDelta)
 	m_fVelocity -= m_fMinusVelocity;
 	if (m_fVelocity < 0.0f)
 	{
+		m_fShakingTime = 0.f;
 		m_fVelocity = 0.f;
 		m_iShakingCount = 0;
 		m_bShakingMode = false;

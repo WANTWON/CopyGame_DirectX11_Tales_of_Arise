@@ -46,7 +46,11 @@ int CUI_StrikeFinish::Tick(_float fTimeDelta)
 
 
 			if (m_ftimer > 2.f)
+			{
+				CUI_Manager::Get_Instance()->Set_UIStrike(false);
 				return OBJ_DEAD;
+			}
+				
 			
 
 

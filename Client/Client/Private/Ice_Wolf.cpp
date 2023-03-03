@@ -281,6 +281,11 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnCh
 
 		if (iHp <= 0)
 		{
+			m_tStats.m_fCurrentHp = 0;
+			CBattleManager::Get_Instance()->Update_LockOn();
+			Check_AmILastMoster();
+
+			Compute_CurrentIndex();
 			CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 			return 0;

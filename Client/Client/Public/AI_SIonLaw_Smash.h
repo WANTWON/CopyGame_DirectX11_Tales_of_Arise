@@ -36,6 +36,9 @@ private:
 	_float m_fEffectEventEndTime = 0.f;
 	_float m_fEffectEventCurTime = 0.f;
 	_float m_fResetTimer = 0.f;
+
+	_float m_fShakingTime = 0.f;
+	_bool m_bShaking = false;
 };
 END
 END

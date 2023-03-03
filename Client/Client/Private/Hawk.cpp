@@ -261,6 +261,11 @@ _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange
 
 	if (iHp <= 0)
 	{
+		m_tStats.m_fCurrentHp = 0;
+		CBattleManager::Get_Instance()->Update_LockOn();
+		Check_AmILastMoster();
+
+
 		CHawkState* pState = new CBattle_DeadState(this);
 		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 		return 0;
@@ -275,6 +280,7 @@ _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange
 				{
 					if (m_bBedamageAnim == true)
 					{
+						Check_Navigation();
 						CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_TAKE_DAMAGE);
 						m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 					}
@@ -282,6 +288,7 @@ _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange
 			}
 			else if (m_bDownState == true)
 			{
+				
 				CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_ID::STATE_DOWN);
 				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 			}
