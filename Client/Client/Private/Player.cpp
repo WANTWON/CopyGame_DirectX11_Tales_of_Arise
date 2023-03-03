@@ -681,7 +681,7 @@ void CPlayer::Reset_StrikeBlur(_float fTimeDelta)
 	if (m_fStrikeBlurResetTimer < m_fStrikeBlurResetDuration)
 	{
 		/* Zoom Blur Lerp */
-		_float fFocusPower = 5.f;
+		_float fFocusPower = 10.f;
 
 		_float fBlurInterpFactor = m_fStrikeBlurResetTimer / m_fStrikeBlurResetDuration;
 		if (fBlurInterpFactor > 1.f)

@@ -1089,7 +1089,7 @@ void CCamera_Dynamic::ZoomSetting(_float fDistance, _float fSpeed)
 	/* Zoom Blur */
 	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pTarget);
-	if (pPlayer)
+	if (pPlayer && m_eCamMode == CAM_PLAYER)
 	{
 		if (pPlayer->Get_DodgeEffect() || pPlayer->Get_ResetStrikeBlur())
 			return;

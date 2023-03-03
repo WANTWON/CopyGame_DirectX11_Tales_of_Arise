@@ -32,8 +32,8 @@ CAI_SionRinwell_Smash::CAI_SionRinwell_Smash(CPlayer* pPlayer, CBaseObj* pTarget
 
 CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 {
-	/*if (m_bStrikeBlur)
-		StrikeBlur(fTimeDelta);*/
+	if (m_bStrikeBlur)
+		StrikeBlur(fTimeDelta);
 
 	m_fTimer += fTimeDelta;
 
@@ -78,6 +78,8 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 					{
 						m_fEffectEventEndTime = pEvent.fEndTime;
 						m_fEffectEventCurTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
+
+						m_bStrikeBlur = true;
 
 						/* Make Effect */
 						_vector vOffset = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
@@ -221,8 +223,11 @@ void CAI_SionRinwell_Smash::Enter()
 
 void CAI_SionRinwell_Smash::Exit()
 {
-	/*if (m_bStrikeBlur)
-		m_pOwner->Set_ResetStrikeBlur(true);*/
+	if (m_bStrikeBlur)
+	{
+		m_pOwner->Set_ResetStrikeBlur(true);
+		m_bStrikeBlur = false;
+	}
 
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 
@@ -271,15 +276,13 @@ void CAI_SionRinwell_Smash::Exit()
 
 void CAI_SionRinwell_Smash::StrikeBlur(_float fTimeDelta)
 {
-	_float fDuration = m_fEffectEventEndTime - m_fEffectEventCurTime;
-	_float fCurrentTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
-
-	_float fInterpTimer = fDuration * .15;
+	_float fDuration = .45f;
+	m_fResetTimer += fTimeDelta;
 
 	/* Zoom Blur Lerp */
-	_float fFocusPower = 5.f;
+	_float fFocusPower = 10.f;
 
-	_float fBlurInterpFactor = fCurrentTime / fInterpTimer;
+	_float fBlurInterpFactor = m_fResetTimer / fDuration;
 	if (fBlurInterpFactor > 1.f)
 		fBlurInterpFactor = 1.f;
 

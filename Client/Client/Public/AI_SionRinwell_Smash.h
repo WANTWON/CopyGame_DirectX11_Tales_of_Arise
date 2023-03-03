@@ -37,6 +37,7 @@ private:
 	_bool m_bStrikeBlur = false;
 	_float m_fEffectEventEndTime = 0.f;
 	_float m_fEffectEventCurTime = 0.f;
+	_float m_fResetTimer = 0.f;
 };
 END
 END
