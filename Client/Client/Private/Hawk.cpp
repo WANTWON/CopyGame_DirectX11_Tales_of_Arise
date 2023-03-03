@@ -330,7 +330,7 @@ void CHawk::Check_Navigation()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 2.f);
-	_float m_fDeadHeight = m_pNavigationCom->Compute_Height(vPosition, -2.f);
+	_float m_fDeadHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
 	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD || CHawkState::STATE_DOWN)
 	{
