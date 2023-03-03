@@ -455,20 +455,28 @@ void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 
 	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	mWorldMatrix.r[3] = vLocation;
+	vector<CEffect*> Impact;
 
 	switch (pPlayer->Get_PlayerID())
 	{
-	case CPlayer::PLAYERID::ALPHEN:
-		CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
-		break;
-	case CPlayer::PLAYERID::LAW:
-		CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
-		break;
-	case CPlayer::PLAYERID::RINWELL:
-	case CPlayer::PLAYERID::SION:
-		CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
-		break;
+		case CPlayer::PLAYERID::ALPHEN:
+			Impact = CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
+			break;
+		case CPlayer::PLAYERID::LAW:
+			Impact = CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
+			break;
+		case CPlayer::PLAYERID::RINWELL:
+		case CPlayer::PLAYERID::SION:
+			Impact = CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
+			break;
 	}
+
+	_vector vEffectPosition = Impact.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+	_vector vPlayerPosition = DamageCauser->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+	_vector vEffectLook = XMVector4Normalize(vPlayerPosition - vEffectPosition);
+
+	Impact.front()->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vEffectPosition + XMVector4Normalize(vEffectLook) * .2f);
 
 	RELEASE_INSTANCE(CGameInstance);
 }
