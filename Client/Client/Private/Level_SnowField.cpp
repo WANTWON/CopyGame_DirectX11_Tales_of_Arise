@@ -439,6 +439,9 @@ HRESULT CLevel_SnowField::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_SNOWFIELD, pLayerTag, TEXT("Prototype_SnowField_WaterTerrain"))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_SNOWFIELD, pLayerTag, TEXT("Prototype_SnowField_Terrain"))))
 		return E_FAIL;
 

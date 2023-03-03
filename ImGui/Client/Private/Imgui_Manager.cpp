@@ -1142,7 +1142,7 @@ void CImgui_Manager::Set_Terrain_Map()
 	if (m_PickingType == PICKING_TERRAIN_TRANSFORM)
 	{
 		if (CGameInstance::Get_Instance()->Mouse_Down(DIMK_LBUTTON))
-			CPickingMgr::Get_Instance()->Picking();
+ 			CPickingMgr::Get_Instance()->Picking();
 	}
 
 
