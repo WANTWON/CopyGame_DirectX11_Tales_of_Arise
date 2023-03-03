@@ -525,6 +525,8 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	
 
 
+
+
 	/*CDamageFont::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
 	testdesc.iDamage = fDamage;
@@ -567,6 +569,30 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 		case Client::ACTIVE:
 			if (CPlayerState::STATE_HIT != m_pPlayerState->Get_StateId())
 			{
+				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
+
+				_int iRandX = rand() % 10 * 0.1f * (rand() % 2 == 0 ? 1.f : -1.f);
+				_int iRandZ = rand() % 10 * 0.1f;
+				_vector vOffset = XMVectorSet(iRandX, m_fRadius + 1.5f, iRandX, 0.f);
+				_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+
+				_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+				mWorldMatrix.r[3] = vLocation;
+
+				switch (Get_PlayerID())
+				{
+				case CPlayer::PLAYERID::ALPHEN:
+					CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
+					break;
+				case CPlayer::PLAYERID::LAW:
+					CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
+					break;
+				case CPlayer::PLAYERID::RINWELL:
+				case CPlayer::PLAYERID::SION:
+					CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
+					break;
+				}
+
 				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
 				pState = new CHitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time());
 				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);

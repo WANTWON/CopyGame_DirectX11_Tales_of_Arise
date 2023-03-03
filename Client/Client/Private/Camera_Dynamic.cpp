@@ -98,9 +98,7 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 		break;
 	}
 
-	if (m_bShakingMode)
-		Shaking_Camera(fTimeDelta);
-
+	
 
 	if (FAILED(Bind_OnPipeLine()))
 		return OBJ_NOEVENT;;
@@ -195,28 +193,20 @@ void CCamera_Dynamic::TargetTool_Camera(_float fTimeDelta)
 	_vector FinalPos = XMVectorLerp(m_vInitPos, vCameraPos, fValue); //_float4 저장 y올리기 
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 
-	//_vector vAtPosition = pTargetPosition + XMLoadFloat4(&m_CamDatas[m_iIndex].vLookDir);
-	//_vector vAtPosition = pTargetPosition + XMLoadFloat4(&m_CamDatas[m_iIndex].vLook);
-	//_vector vAtPosition = XMVectorSetY(pTargetPosition, XMVectorGetY(pTargetPosition) + m_CamDatas[m_iIndex].fYoffset*0.5f);
-//	_vector vAt = XMVectorLerp(m_vInitAt, vAtPosition, fValue);
+
 	_vector vCenterPos = XMVectorSetY(pTargetPosition, XMVectorGetY(pTargetPosition) + m_fLookOffsetY);
 	m_pTransform->LookAt(vCenterPos);
-	//m_pTransform->LookDir(vAt);
-
+	
 
 	if (m_fTime >= fEndTime)
 	{
-		//m_vInitAt = vAtPosition;
-		//m_vInitAt = pTargetPosition + XMLoadFloat4(&m_CamDatas[m_iIndex].vLook);
-		//m_vInitAt =  XMLoadFloat4(&m_CamDatas[m_iIndex].vLookDir);
+
 		m_iIndex++;
 		m_vInitPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 
 		_vector vCameraLook = m_pTransform->Get_State(CTransform::STATE_LOOK);
 		_vector vCameraCurrentPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 		_vector vCurrentAt = vCameraCurrentPos + XMVectorSetW(vCameraLook, 0.f);
-
-
 
 		if (m_iIndex >= m_CamDatas.size())
 		{
@@ -694,6 +684,14 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 	m_pTransform->LookAt(vCenterPos);
 
 
+	if(dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
+	{
+
+		if (m_bShakingMode)
+			Shaking_Camera(fTimeDelta);
+
+	}
+
 
 	RELEASE_INSTANCE(CGameInstance);
 }
@@ -844,6 +842,14 @@ void CCamera_Dynamic::LawBattle_Camera(_float fTimeDelta)
 
 	m_pTransform->LookAt(vCenterPos);
 
+
+	if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
+	{
+
+		if (m_bShakingMode)
+			Shaking_Camera(fTimeDelta);
+
+	}
 
 
 	RELEASE_INSTANCE(CGameInstance);

@@ -163,9 +163,9 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 	{
 		m_fShakingTime += fTimeDelta;
 
-		if (m_fShakingTime > 0.2f)
+		if (m_fShakingTime > 0.1f)
 		{
-			if (m_eCurrentPlayerID == CPlayer::SION)
+			if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 			{
 				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 					dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.02f);
@@ -179,7 +179,7 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 	if (m_bBullet &&!m_bScreen)
 	{
 		m_fScreenTimer += fTimeDelta;
-		if (m_fScreenTimer > 3.f)
+		if (m_fScreenTimer > 1.5f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 			{

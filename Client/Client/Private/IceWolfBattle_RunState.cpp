@@ -36,6 +36,12 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 	CBaseObj* pOrigin_DamageCause = nullptr;
 	pOrigin_DamageCause = m_pOwner->Get_OrginDamageCauser();
 
+	if (m_pOwner->Get_Stats().m_fCurrentHp <= 0)
+	{
+		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+
 
 	if (m_pCurTarget == nullptr)
 	{

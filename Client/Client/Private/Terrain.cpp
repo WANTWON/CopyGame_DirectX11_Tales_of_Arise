@@ -47,32 +47,37 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, VIBufferTag, (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
-	/* For.Com_Filter */
-	if (FAILED(__super::Add_Components(TEXT("Com_Filter"), iLevel, TEXT("Prototype_Component_Texture_Filter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
-		return E_FAIL;
-
-	/* For.Com_Brush */
-	if (FAILED(__super::Add_Components(TEXT("Com_Brush"), iLevel, TEXT("Prototype_Component_Texture_Brush"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
-		return E_FAIL;
 
 
 	switch (iLevel)
 	{
 	case Client::LEVEL_SNOWFIELD:
+		/* For.Com_Filter */
+		if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Filter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
+			return E_FAIL;
+
+		/* For.Com_Brush */
+		if (FAILED(__super::Add_Components(TEXT("Com_Brush"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Brush"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
+			return E_FAIL;
+
 		/* For.Com_Texture */
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
 			return E_FAIL;
 		/* For.Com_Texture */
-		if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_NormalTerrain"), (CComponent**)&m_pTextureCom[TYPE_NORMAL])))
-			return E_FAIL;
-	
-		/* For.Com_Navigation */
-		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom)))
+		if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_NormalTerrain"), (CComponent**)&m_pTextureCom[TYPE_NORMAL])))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_BATTLE:
+		/* For.Com_Filter */
+		if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Filter_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
+			return E_FAIL;
+
+		/* For.Com_Brush */
+		if (FAILED(__super::Add_Components(TEXT("Com_Brush"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Brush_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
+			return E_FAIL;
+
 		/* For.Com_Texture */
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_Terrain_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
 			return E_FAIL;
 
 		/* For.Com_Navigation */
@@ -80,7 +85,7 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 			return E_FAIL;
 
 		/* For.Com_Texture */
-		if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_TerrainNormal_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_NORMAL])))
+		if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_TerrainNormal_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_NORMAL])))
 			return E_FAIL;
 		break;
 	default:
@@ -108,9 +113,6 @@ void CTerrain::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-#ifdef _DEBUG		
-		m_pRendererCom->Add_Debug(m_pNavigationCom);
-#endif
 	}
 }
 
@@ -338,8 +340,6 @@ CGameObject * CTerrain::Clone_Load(const _tchar * VIBufferTag, void * pArg)
 void CTerrain::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pFilterTexture);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);

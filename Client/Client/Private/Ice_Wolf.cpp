@@ -274,7 +274,7 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 
 _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange )
 {
-	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage )
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pState->Get_StateId() == CIceWolfState::STATE_DEAD)
 		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);

@@ -110,7 +110,11 @@ void CBattle_IdleState::Enter()
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
 	if (m_ePreBattleState == STATE_ID::STATE_DOWN)
+	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ARISE_F);
+		m_eStateId = STATE_ID::STATE_ARISE;
+	}
+		
 
 	else if (m_ePreBattleState == STATE_ID::STATE_BRAVE)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_BRAVE);

@@ -98,7 +98,7 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	CBattleManager* pBattleManager = GET_INSTANCE(CBattleManager);
-	if(pBattleManager->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
+	if(pBattleManager->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(pBattleManager->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
 		CPlayerManager::Get_Instance()->Set_SmashAttack();
 
 
@@ -139,6 +139,18 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 	}
 
 
+	if (CGameInstance::Get_Instance()->Get_TimeSpeedOffset(TEXT("Timer_Object")) == 0.f)
+	{
+		m_fHitLegTime += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		if (m_fHitLegTime > 0.1f)
+		{
+			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
+			m_fHitLegTime = 0.f;
+		}
+	}
+
+
+
 	RELEASE_INSTANCE(CBattleManager);
 }
 
@@ -173,7 +185,7 @@ HRESULT CLevel_BattleZone::Ready_Lights()
 	_ulong dwByte = 0;
 	_uint iNum = 0;
 
-	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Light2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Light3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 

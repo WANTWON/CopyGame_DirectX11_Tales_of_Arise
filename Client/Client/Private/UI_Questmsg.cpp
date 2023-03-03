@@ -32,7 +32,7 @@ HRESULT CUI_Questmsg::Initialize(void * pArg)
 	m_fPosition.y = 600.f;
 	m_fAlpha = 0;
 
-	if (CUI_Manager::Get_Instance()->Get_Quest1_Herb() == 3 && CUI_Manager::Get_Instance()->Get_Quest1_Lettuce() == 3 &&
+	if (CUI_Manager::Get_Instance()->Get_Quest1_Herb() >= 3 && CUI_Manager::Get_Instance()->Get_Quest1_Lettuce() >= 3 &&
 		CUI_Manager::Get_Instance()->Get_QuestIndex() == 1)
 	{
 		CUI_Manager::Get_Instance()->Set_QuestComplete(0, true);
