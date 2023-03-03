@@ -211,7 +211,7 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 
-
+	
 	return nullptr;
 }
 
@@ -350,7 +350,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 			{
 				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 				m_pOwner->Get_Transform()->LookAt(vPosition);
-				if (m_fTarget_Distance <= 12.f)
+				if (m_fTarget_Distance <= 15.f)
 				{
 					if (m_PreState_IsSpin == false)
 					{
