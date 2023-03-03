@@ -15,7 +15,9 @@ public:
 		STATE_IDLE,
 		STATE_AGGRO,
 		STATE_MOVE,
+		STATE_TURN,
 		STATE_ATTACK,
+		STATE_SKILL,
 		STATE_DAMAGE,
 		STATE_DOWN,
 		STATE_DEAD,
@@ -31,6 +33,7 @@ public:
 		THUNDERFIELD,		//½ã´õ
 		GALEFORCE,			//Ç³¾Ð
 		HOLY,				//È¦¸®·£½º
+		BANGJEON,			//¹æÀü
 		SKILL_END
 	};
 

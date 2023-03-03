@@ -15,6 +15,9 @@ public:
 
 	virtual void Enter(void) override;
 	virtual void Exit(void) override;
+
+private:
+	_float m_fTime = 0.f;
 };
 
 END

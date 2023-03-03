@@ -290,8 +290,8 @@ void CRinwellSkills::Collision_Check()
 		}
 		else
 		{
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			/*if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);*/
 		}
 		break;
 	case METEOR:
@@ -302,8 +302,8 @@ void CRinwellSkills::Collision_Check()
 		}
 		else
 		{
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);
+			/*if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);*/
 		}
 		break;
 	case THUNDER_FIELD:
@@ -314,8 +314,8 @@ void CRinwellSkills::Collision_Check()
 		}
 		else
 		{
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAABBCom, &pCollisionTarget))
-				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);
+			/*if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAABBCom, &pCollisionTarget))
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);*/
 		}
 		break;
 	case GALE_FORCE:
@@ -326,8 +326,8 @@ void CRinwellSkills::Collision_Check()
 		}
 		else
 		{
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);
+			/*if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);*/
 		}
 		break;
 	case BANGJEON:
@@ -338,8 +338,8 @@ void CRinwellSkills::Collision_Check()
 		}
 		else
 		{
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			/*if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);*/
 		}
 		break;
 
@@ -521,10 +521,9 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		break;
 
 	case BANGJEON:
-		ColliderDesc.vScale = _float3(7.f, 7.f, 7.f);
+		ColliderDesc.vScale = _float3(12.5f, 12.5f, 12.5f);
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-
 	}
 
 	if (m_BulletDesc.eBulletType == THUNDER_FIELD || m_BulletDesc.eBulletType == DIVINE_SABER || m_BulletDesc.eBulletType == DIVINE_SABER_BULLET)

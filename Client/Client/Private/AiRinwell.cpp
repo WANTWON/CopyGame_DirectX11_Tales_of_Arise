@@ -5,6 +5,8 @@
 #include "RinwellPoseState.h"
 #include "RinwellDamageState.h"
 #include "CameraManager.h"
+#include "RinwellSkillState.h"
+
 using namespace AiRinwell;
 
 CAiRinwell::CAiRinwell(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -16,7 +18,6 @@ CAiRinwell::CAiRinwell(const CAiRinwell & rhs)
 	: CMonster(rhs)
 {
 }
-
 
 HRESULT CAiRinwell::Initialize_Prototype()
 {
@@ -33,7 +34,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_tStats.m_fMaxHp = 100000.f;
+	m_tStats.m_fMaxHp = 1000.f;
 
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
@@ -75,8 +76,6 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 
 HRESULT CAiRinwell::Ready_Components(void * pArg)
 {
-	LEVEL iLevel = (LEVEL)CGameInstance::Get_Instance()->Get_DestinationLevelIndex();
-
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Components(TEXT("Com_Renderer"), LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
@@ -112,7 +111,6 @@ HRESULT CAiRinwell::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
-
 	if (FAILED(__super::Add_Components(TEXT("Com_FieldNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_vecNavigation[LEVEL_SNOWFIELD])))
 		return E_FAIL;
 
@@ -132,8 +130,6 @@ int CAiRinwell::Tick(_float fTimeDelta)
 		CBattleManager::Get_Instance()->Out_Monster(this);
 		return OBJ_DEAD;
 	}
-
-
 
 	_int iSuperTick = __super::Tick(fTimeDelta);
 	if (iSuperTick == OBJ_DEAD)
@@ -331,10 +327,14 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 
 _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
 {
-	if (fDamage <= 0 || m_bDead || m_bTakeDamage )
+	if (fDamage <= 0 || m_bDead || m_bTakeDamage)
 		return 0;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+
+	m_iDamage += fDamage;
+
+	m_bTakeDamage = true;
 
 	if (iHp <= 0)
 	{
@@ -342,7 +342,6 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnC
 		{
 			m_tStats.m_fLockonSmashGuage = 4.f;
 			m_tStats.m_fCurrentHp = 0;
-			m_bTakeDamage = true;
 			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
@@ -352,27 +351,35 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnC
 			CBattleManager::Get_Instance()->Update_LockOn();
 			Check_AmILastMoster();
 
-			m_bTakeDamage = true;
 			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
 	}
-	else if ((CRinwellState::STATE_DAMAGE != m_pState->Get_StateId()) && (CRinwellState::STATE_DOWN != m_pState->Get_StateId()))
+
+	else if (m_iDamage >= (m_tStats.m_fMaxHp * 0.15f))
+	{
+		if (m_bIsAir)
+		{
+			CRinwellState* pState = new CSkillState(this, CRinwellState::METEOR);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+		}
+		else
+		{
+			CRinwellState* pState = new CSkillState(this, CRinwellState::BANGJEON);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+		}
+
+		m_iDamage = 0;
+	}
+	else
 	{
 		m_pTarget = DamageCauser;
 		m_eDmg_Direction = Calculate_DmgDirection();
-		m_bTakeDamage = true;
 
-		m_iDamage += fDamage;
-		if (m_iDamage >= (m_tInfo.fMaxHp * 0.1f))
-		{
-			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
-			m_pState = m_pState->ChangeState(m_pState, pState);
-
-			m_iDamage = 0;
-		}
+		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
 	}
-
+	
 	return iHp;
 }
 

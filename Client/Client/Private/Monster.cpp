@@ -494,7 +494,6 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 	
-
 	m_pTarget = DamageCauser;
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 	
@@ -518,7 +517,6 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 			return E_FAIL;
 	}
 
-
 	if (m_pTarget != nullptr)
 	{
 		if (dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() <= 100.f)
@@ -526,17 +524,13 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 20.f);
 
 	}
-	
 
 	CDamageFont::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
 	testdesc.iDamage = fDamage;
 	testdesc.pPointer = this;
 	
-
 	//dynamic_cast<CUI_Dialoguepopup*>(m_pUI_Manager->Get_Dialoguepopup())->Open_Dialogue(0, false, 1, 0);
-	
-	
 
 	dynamic_cast<CUI_Combo_font_Hits*>(CUI_Manager::Get_Instance()->Get_Hitfont())->sethit();
 	dynamic_cast<CUI_font_Hits_number*>(CUI_Manager::Get_Instance()->Get_HitMsg())->sethit();
@@ -550,13 +544,10 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	fontdesc.iDamage = fDamage;
 	fontdesc.pPointer = this;
 
-	
 	//_float2 pos = Get_ProjPosition();
-
 
 	switch (rand() % 8)
 	{
-		
 	case 0:
 
 		
