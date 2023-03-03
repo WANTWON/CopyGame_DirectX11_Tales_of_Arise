@@ -142,7 +142,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		m_SnowParticles2 = CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_2.dat"), mWorldMatrix);
 
 		mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 256.f);
-		m_WindParticles = CEffect::PlayEffectAtLocation(TEXT("Wind.dat"), mWorldMatrix);
+		//m_WindParticles = CEffect::PlayEffectAtLocation(TEXT("Wind.dat"), mWorldMatrix);
 	}
 	
 	g_fSoundVolume += 0.001f;
@@ -438,6 +438,9 @@ HRESULT CLevel_SnowField::Ready_Layer_Monster(const _tchar * pLayerTag)
 HRESULT CLevel_SnowField::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_SNOWFIELD, pLayerTag, TEXT("Prototype_SnowField_WaterTerrain"))))
+		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_SNOWFIELD, pLayerTag, TEXT("Prototype_SnowField_Terrain"))))
 		return E_FAIL;

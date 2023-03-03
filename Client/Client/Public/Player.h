@@ -71,11 +71,8 @@ public: /* Getter &  Setter */
 	void			EffectStop_Overlimit();
 
 	/* STRIKEATTACK */
-	void           Set_StrikeAttack(_bool tof) { m_bStrikeAttack = tof; }
-	_bool           Get_StrikeAttack() {return m_bStrikeAttack;}
-	//_bool          Get_StrikeAttack() { return m_bStrikeAttack; }
-
-	
+	void			Set_StrikeAttack(_bool tof) { m_bStrikeAttack = tof; }
+	_bool           Get_StrikeAttack() { return m_bStrikeAttack; }
 
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
@@ -115,8 +112,13 @@ public: /*For.State*/
 	void Plus_Overcount() { ++m_tInfo.idodgecount; }
 	void Set_Overcount(_uint count) { m_tInfo.idodgecount = count; }
 
+	_bool Get_DodgeEffect() { return m_bDodgeEffect; }
 	void Set_DodgeEffect(_bool bDodgeEffect) { m_bDodgeEffect = bDodgeEffect; }	
 	void Reset_DodgeEffect(_float fTimeDelta);
+
+	_bool Get_ResetStrikeBlur() { return m_bResetStrikeBlur; }
+	void Set_ResetStrikeBlur(_bool bResetStrikeBlur) { m_bResetStrikeBlur = bResetStrikeBlur; }
+	void Reset_StrikeBlur(_float fTimeDelta);
 
 public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);
@@ -163,14 +165,21 @@ protected: /* for 4 Player */
 	vector<class CEffect*> m_Aura;
 
 	/* STIRKEATTACK */
-	_bool          m_bStrikeAttack = false;
+	_bool			m_bStrikeAttack = false;
+	
 
 	/* Pose */
 	_bool m_bIsPose = false;
 
+	/* Dodge Screen Effect */
 	_bool m_bDodgeEffect = false;
-	_float m_fResetDuration = .25f;
+	_float m_fResetDuration = .45f;
 	_float m_fResetTimer = 0.f;
+
+	/* Strike Screen Effect */
+	_bool m_bResetStrikeBlur = false;
+	_float m_fStrikeBlurResetDuration = .45f;
+	_float m_fStrikeBlurResetTimer = 0.f;
 
 	/* 무한피격 방지 */
 	_bool m_bTakeDamage_Delay = false;

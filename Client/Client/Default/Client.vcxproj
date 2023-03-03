@@ -98,6 +98,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>../../Reference/Librarys/;../Default</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -113,7 +114,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../Reference/Librarys/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Reference/Librarys/;../Default</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
@@ -140,6 +141,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Engine.lib;DirectXTK.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../Reference/Librarys/;../Default</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,13 +156,15 @@
       <AdditionalIncludeDirectories>../Public/;../../Reference/Headers/</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../Reference/Librarys/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Reference/Librarys/;../Default</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
@@ -234,6 +238,7 @@
     <ClInclude Include="..\Public\BerserkerChaseState.h" />
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
+    <ClInclude Include="..\public\BossSkills.h" />
     <ClInclude Include="..\Public\BreakFont.h" />
     <ClInclude Include="..\Public\Bullet.h" />
     <ClInclude Include="..\Public\Camera_Action.h" />
@@ -243,6 +248,7 @@
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
+    <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Law.h" />
     <ClInclude Include="..\Public\LawAirFSkillState.h" />
     <ClInclude Include="..\Public\LawAirRSkillState.h" />
@@ -506,6 +512,7 @@
     <ClCompile Include="..\Private\BerserkerChaseState.cpp" />
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
+    <ClCompile Include="..\private\BossSkills.cpp" />
     <ClCompile Include="..\Private\BreakFont.cpp" />
     <ClCompile Include="..\Private\Bullet.cpp" />
     <ClCompile Include="..\Private\Camera_Action.cpp" />
@@ -515,6 +522,7 @@
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
+    <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Law.cpp" />
     <ClCompile Include="..\Private\LawAirFSkillState.cpp" />
     <ClCompile Include="..\Private\LawAirRSkillState.cpp" />

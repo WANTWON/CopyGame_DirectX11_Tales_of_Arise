@@ -106,6 +106,9 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 					CBaseObj* pCorpseNearby = nullptr;
 					pCorpseNearby = m_pOwner->Find_MinDistance_Target();
 
+					if (pCorpseNearby == nullptr)
+						return nullptr;
+
 					if (pCorpseNearby->Get_Info().fCurrentHp > 0)
 					{
 						m_pCurTarget = pCorpseNearby;
@@ -208,7 +211,7 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 
-
+	
 	return nullptr;
 }
 
@@ -306,16 +309,13 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 	else
 	{
-
 		if (m_pCurTarget == nullptr)
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::SYMBOL_LOOKOUT);
 			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
 		}
-
 		else
 		{
-
 			if (m_fTarget_Distance > 30.f)
 			{
 				if (m_ePreState_Id != CAstralDoubt_State::STATE_HEADBEAM)
@@ -329,9 +329,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 							m_bBeamTargetOn = true;
 							return new CBattle_HeadBeamState(m_pOwner);
 						}
-
 					}
-
 					else if (m_b_IsTargetInsight == false)
 					{
 						if (m_bBeamTargetOn == false)
@@ -342,28 +340,22 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 							return new CBattle_HeadBeamState(m_pOwner);
 						}
 					}
-
 				}
-
-
 				else if (m_ePreState_Id == CAstralDoubt_State::STATE_HEADBEAM)
 				{
 					return new CBattleWalkState(m_pOwner);
 				}
 			}
-
 			else if (m_fTarget_Distance <= 30.f)
 			{
 				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 				m_pOwner->Get_Transform()->LookAt(vPosition);
-				if (m_fTarget_Distance <= 12.f)
+				if (m_fTarget_Distance <= 15.f)
 				{
-
 					if (m_PreState_IsSpin == false)
 					{
 						return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_SPIN);
 					}
-
 					else
 					{
 						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_FOOTPRESS);
@@ -373,29 +365,25 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 				{
 					if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
 						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-
 					else if (m_ePreState_Id == CAstralDoubt_State::STATE_SPEARMULTI)
 						return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
-
 					else
 					{
 						switch (m_iRand)
 						{
 						case 0:
 							return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-
 						case 1:
 							return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
-
 						default:
 							break;
 						}
 					}
 				}
-
 			}
 		}
 	}
+
 	return nullptr;
 }
 
@@ -404,16 +392,11 @@ void CBattle_IdleState::Enter()
 	if (m_ePreState_Id == STATE_ID::STATE_DOWN)
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::MOVE_IDLE);
-		
 	}
 	else if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::EVENT_ADVENT);
-
-		
 	}
-
-
 	else if (m_ePreState_Id == STATE_ID::STATE_BRAVE)
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_BRAVE);

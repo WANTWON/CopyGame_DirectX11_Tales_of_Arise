@@ -3,6 +3,8 @@
 #include "PlayerManager.h"
 #include "Player.h"
 #include "Level_Restaurant.h"
+#include "EffectObject.h"
+#include "Effect.h"
 
 CThrowingObject::CThrowingObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CInteractObject(pDevice, pContext)
@@ -53,6 +55,7 @@ int CThrowingObject::Tick(_float fTimeDelta)
 
 	if (m_bDead)
 	{
+		Dead_Effect();
 		CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_MINIGAME1, this);
 
 		return OBJ_DEAD;
@@ -213,6 +216,87 @@ HRESULT CThrowingObject::SetUp_ShaderID()
 		m_eShaderID = SHADER_NONANIM_DISSOLVE;*/
 
 	return S_OK;
+}
+
+void CThrowingObject::Dead_Effect()
+{
+	_float iRandX = rand() % 2 == 0 ? -1.f : 1.f;
+	_float iRandZ = rand() % 2 == 0 ? -1.f : 1.f;
+
+	CEffectObject::EFFECTDESC EffectDesc; 
+	ZeroMemory(&EffectDesc, sizeof(CEffectObject::EFFECTDESC));
+	XMStoreFloat3(&EffectDesc.m_ModelDesc.vPosition, Get_TransformState(CTransform::STATE_TRANSLATION));
+	
+
+		
+	switch (m_tThrowDesc.eType)
+	{
+	case TYPE_APPLE:
+	{
+		_vector vOffset = XMVectorSet(0.f, m_fRadius + 1.5f, 0.f, 0.f);
+		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+
+		_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
+
+		for (int i = 0; i < 5; ++i)
+		{
+			iRandX = rand() % 2 == 0 ? -1.f : 1.f;
+			iRandZ = rand() % 2 == 0 ? -1.f : 1.f;
+			EffectDesc.vTargetDir = XMVectorSet(rand() % 10 * 0.1f * iRandX, 0.5f, rand() % 10 * 0.1f, 0.f * iRandZ);
+			EffectDesc.fVelocity = rand() % 3;
+			EffectDesc.fDeadTime = 1.f;
+			XMStoreFloat4x4(&EffectDesc.m_ModelDesc.WorldMatrix, XMMatrixIdentity());
+			EffectDesc.m_ModelDesc.vRotation = _float3(rand() % 180, rand() % 180, rand() % 180);
+			EffectDesc.m_ModelDesc.vScale = _float3(3.f, 3.f, 3.f);
+			strcpy_s(EffectDesc.m_ModelDesc.pModeltag, "Fruit_Apple_Quarter");
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_EffectObject"), LEVEL_RESTAURANT, TEXT("Layer_Effect"), &EffectDesc)))
+				return;
+		}
+
+		break;
+	}
+	case TYPE_BREAD:
+	{
+		_vector vOffset = XMVectorSet(0.f, m_fRadius + 1.5f, 0.f, 0.f);
+		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+
+		_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
+		
+		for (int i = 0; i < 2; ++i)
+		{
+			iRandX = rand() % 2 == 0 ? -1.f : 1.f;
+			iRandZ = rand() % 2 == 0 ? -1.f : 1.f;
+			EffectDesc.vTargetDir = XMVectorSet(rand() % 10 * 0.1f * iRandX, -1.f, rand() % 10 * 0.1f, 0.f * iRandZ);
+			EffectDesc.fVelocity = rand() % 3;
+			EffectDesc.fDeadTime = 1.f;
+			EffectDesc.m_ModelDesc.vScale = _float3(3.f, 3.f, 3.f);
+
+			XMStoreFloat4x4(&EffectDesc.m_ModelDesc.WorldMatrix, XMMatrixIdentity());
+			EffectDesc.m_ModelDesc.vRotation = _float3(rand() % 180, rand() % 180, rand() % 180);
+			strcpy_s(EffectDesc.m_ModelDesc.pModeltag, "Bread_French_Slice");
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_EffectObject"), LEVEL_RESTAURANT, TEXT("Layer_Effect"), &EffectDesc)))
+				return;
+		}
+
+		break;
+	}
+	default:
+	{
+		_vector vOffset = XMVectorSet(0.f, m_fRadius + 1.5f, 0.f, 0.f);
+		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+
+		_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
+		break;
+	}
+	}
 }
 
 CThrowingObject * CThrowingObject::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

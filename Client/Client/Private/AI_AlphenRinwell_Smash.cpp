@@ -13,6 +13,7 @@
 #include "ParticleSystem.h"
 #include "PlayerIdleState.h"
 #include "UI_Skillmessage.h"
+#include "Animation.h"
 
 using namespace AIPlayer;
 using namespace Player;
@@ -31,7 +32,8 @@ CAI_AlphenRinwell_Smash::CAI_AlphenRinwell_Smash(CPlayer* pPlayer, CBaseObj* pTa
 
 CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 {
-
+	if (m_bStrikeBlur)
+		StrikeBlur(fTimeDelta);
 
 	m_fTimer += fTimeDelta;
 
@@ -76,12 +78,19 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 					{
 						if ((m_fEventStart != pEvent.fStartTime) && !m_bBullet)
 						{
+							m_fEffectEventEndTime = pEvent.fEndTime;
+							m_fEffectEventCurTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
+
+							m_bStrikeBlur = true;
+
+							if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+								dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.1f);
 
 							/* Make Effect */
 							_vector vOffset = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
 							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 							mWorldMatrix.r[3] += vOffset*7.f + XMVectorSet(0.f, 0.f, 0.f, 0.f);
-							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Element.dat"), mWorldMatrix);
+							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Element2.dat"), mWorldMatrix);
 							m_fFadeTime = 0.f;
 							m_bBullet = true;
 							m_fEventStart = pEvent.fStartTime;
@@ -232,6 +241,12 @@ void CAI_AlphenRinwell_Smash::Enter()
 
 void CAI_AlphenRinwell_Smash::Exit()
 {
+	if (m_bStrikeBlur)
+	{
+		m_pOwner->Set_ResetStrikeBlur(true);
+		m_bStrikeBlur = false;
+	}
+
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 	{
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
@@ -319,4 +334,22 @@ void CAI_AlphenRinwell_Smash::Exit()
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 //	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	__super::Exit();
+}
+
+void CAI_AlphenRinwell_Smash::StrikeBlur(_float fTimeDelta)
+{
+	_float fDuration = .45f;
+	m_fResetTimer += fTimeDelta;
+
+	/* Zoom Blur Lerp */
+	_float fFocusPower = 10.f;
+
+	_float fBlurInterpFactor = m_fResetTimer / fDuration;
+	if (fBlurInterpFactor > 1.f)
+		fBlurInterpFactor = 1.f;
+
+	_int iDetailStart = 1;
+	_int iDetailEnd = 10;
+	_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+	m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
 }

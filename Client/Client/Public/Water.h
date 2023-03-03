@@ -17,8 +17,6 @@ private:
 	CWater(const CWater& rhs);
 	virtual ~CWater() = default;
 
-	_matrix Get_ReflectionMatrix() { return m_ReflectionViewMatrix; }
-
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
@@ -30,14 +28,12 @@ private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT SetUp_ShaderResources();
 
-	void Compute_ReflectionView();
-
 private:
 	CModel* m_pModelCom = nullptr;
-	CTexture* m_pWaveHeightMapCom = nullptr; /* Used to update the Normals to simulate waves. */
+	CTexture* m_pWaterNoiseTextureCom = nullptr;
+	CTexture* m_pWaterNormalTextureCom = nullptr;
+
 	CNavigation* m_pNavigationCom = nullptr; /* Also Water Objects need a Navigation Component in order to swim. */
-	
-	_matrix m_ReflectionViewMatrix;
 
 	_float m_fScrollingTimer = 0.f;
 

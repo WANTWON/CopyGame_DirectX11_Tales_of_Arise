@@ -24,6 +24,8 @@
 #include "RinwellSkills.h"
 #include "SionSkills.h"
 #include "AlphenSkills.h"
+#include "EffectObject.h"
+#include "BossSkills.h"
 
 //Actor
 #include "Alphen.h"
@@ -223,6 +225,11 @@ HRESULT CLoader::Loading_ForPrototype()
 		return E_FAIL;
 
 	/*For.Prototype_Portal */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_EffectObject"),
+		CEffectObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_Portal */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MonsterLaw"),
 		CMonsterLaw::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -290,6 +297,11 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_AlphenSkills */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AlphenSkills"),
 		CAlphenSkills::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/*For.Prototype_BossSkills */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BossSkills"),
+		CBossSkills::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_AiRinwell */
@@ -743,6 +755,15 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	hFile = 0;
 	dwByte = 0;
 	iNum = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/WaterTerrain.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_SnowField_WaterTerrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, true))))
+		return E_FAIL;
+	CloseHandle(hFile);
+
+	hFile = 0;
+	dwByte = 0;
+	iNum = 0;
 	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Terrain.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_SnowField_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, true))))
@@ -755,6 +776,15 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	/*For.Prototype_Component_Texture_Dissolve*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Dissolve.png"), 1))))
+		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_WaterNoise*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_WaterNoise"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Water/PerlinNoise.png"), 1))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_WaterNormal*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_WaterNormal"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Water/WaterDistortion.png"), 1))))
 		return E_FAIL;
 #pragma endregion Texture Loading
 
@@ -893,6 +923,23 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NPC_NMM_SLV_000"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NPC_NMM_SLV_000/NPC_NMM_SLV_000.dat"))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NPC_NMY_GNL"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NPC_NMY_GNL/NPC_NMY_GNL.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NPC_NFY_WAC"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/NPC_NFY_WAC/NPC_NFY_WAC.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Dog"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Dog/Dog.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Duck"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Duck/Duck.dat"))))
+		return E_FAIL;
+
 #pragma endregion Model Loading
 
 #pragma region Navigation Loading
@@ -1789,6 +1836,9 @@ HRESULT CLoader::Loading_ForEffect()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cylinder_nm_01"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/Cylinder_nm_01.dat"))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cylinder_ko_01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/Cylinder_ko_01.dat"))))
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CylinderSphere_nm_01"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cylinder/CylinderSphere_nm_01.dat"))))

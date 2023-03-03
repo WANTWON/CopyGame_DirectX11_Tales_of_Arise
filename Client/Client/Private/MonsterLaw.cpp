@@ -137,6 +137,8 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 	AI_Behavior(fTimeDelta);
 	Tick_State(fTimeDelta);
 
+	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
+
 	return OBJ_NOEVENT;
 }
 
@@ -159,6 +161,8 @@ void CMonsterLaw::Late_Tick(_float fTimeDelta)
 	{
 		LateTick_State(fTimeDelta);
 	}
+
+
 
 }
 
@@ -205,6 +209,9 @@ void CMonsterLaw::Tick_State(_float fTimeDelta)
 	CMonsterLawState* pNewState = m_pState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
+
+	
+	
 
 }
 

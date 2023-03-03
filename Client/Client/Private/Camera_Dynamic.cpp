@@ -5,6 +5,7 @@
 #include "PlayerManager.h"
 #include "BattleManager.h"
 #include "Monster.h"
+#include "Level.h"
 
 CCamera_Dynamic::CCamera_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
@@ -470,37 +471,42 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	vCameraPosition = XMVectorSetZ(vCameraPosition, (XMVectorGetZ(vCenterPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
 	m_vNewPos = vCameraPosition;
 
-	if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode() != true && CGameInstance::Get_Instance()->Get_CurrentLevel()->Get_NextLevel() != true)
 	{
-		m_bLerp = true;
-
-
-		if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
+		if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
 		{
+			m_bLerp = true;
 
-			if (YMouseMove > 0)
+
+			if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 			{
-				m_fCameraOffsetY += 0.3f;
-				m_fLookOffsetY -= 0.1f;
+
+				if (YMouseMove > 0)
+				{
+					m_fCameraOffsetY += 0.3f;
+					m_fLookOffsetY -= 0.1f;
+				}
+				else if (YMouseMove < 0)
+				{
+					m_fCameraOffsetY -= 0.3f;
+					m_fLookOffsetY += 0.1f;
+				}
 			}
-			else if (YMouseMove < 0)
-			{
-				m_fCameraOffsetY -= 0.3f;
-				m_fLookOffsetY += 0.1f;
-			}
+
+			if (m_fCameraOffsetY >= 8.f)
+				m_fCameraOffsetY = 8.f;
+			else if (m_fCameraOffsetY <= -2.f)
+				m_fCameraOffsetY = -2.f;
+
+			if (m_fLookOffsetY >= 6.f)
+				m_fLookOffsetY = 6.f;
+			else if (m_fLookOffsetY <= 4.f)
+				m_fLookOffsetY = 4.f;
+
 		}
-
-		if (m_fCameraOffsetY >= 8.f)
-			m_fCameraOffsetY = 8.f;
-		else if (m_fCameraOffsetY <= -2.f)
-			m_fCameraOffsetY = -2.f;
-
-		if (m_fLookOffsetY >= 6.f)
-			m_fLookOffsetY = 6.f;
-		else if (m_fLookOffsetY <= 4.f)
-			m_fLookOffsetY = 4.f;
-
 	}
+
+	
 
 	vPlayerPosition = XMVectorSetY(vPlayerPosition, XMVectorGetY(vPlayerPosition) + m_fLookOffsetY);
 	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vPlayerPosition) + m_fCameraOffsetY);
@@ -638,14 +644,14 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 
 		if (fLength >= 6.f)
 			fLength = 6.f;
-		if (fLength <= 4.f)
-			fLength = 4.f;
-		if (m_fCameraOffsetY >= 4.f)
+		if (fLength <= 5.f)
+			fLength = 5.f;
+		if (m_fCameraOffsetY >= 3.f)
 			m_fCameraOffsetY = 4.f;
 		else if (m_fCameraOffsetY <= 2.f)
 			m_fCameraOffsetY = 2.f;
 
-		m_fLookOffsetY = 3.f;
+		m_fLookOffsetY = 4.f;
 	}
 
 	
@@ -1040,7 +1046,7 @@ void CCamera_Dynamic::Change_LockOn(_uchar eKeyID)
 			{
 				iIndex--;
 				if (iIndex < 0)
-					iIndex = vecMonster.size() - 1;
+					iIndex = (int)vecMonster.size() - 1;
 
 				m_bLerp = true;
 				m_fTime = 0.f;
@@ -1082,8 +1088,12 @@ void CCamera_Dynamic::ZoomSetting(_float fDistance, _float fSpeed)
 	
 	/* Zoom Blur */
 	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-	if (m_pTarget)
+	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pTarget);
+	if (pPlayer && m_eCamMode == CAM_PLAYER)
 	{
+		if (pPlayer->Get_DodgeEffect() || pPlayer->Get_ResetStrikeBlur())
+			return;
+
 		_float fFocusPower = 3.f;
 
 		_float fInterpFactor = m_fZoomOffset / -3.f;

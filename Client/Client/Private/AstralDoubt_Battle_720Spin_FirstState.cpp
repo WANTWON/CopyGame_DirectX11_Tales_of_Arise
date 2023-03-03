@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "AstralDoubt_Battle_WalkState.h"
 #include "AstralDoubt_Battle_IdleState.h"
+#include "Effect.h"
 
 using namespace Astral_Doubt;
 
@@ -72,21 +73,13 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 	{
 		if (pEvent.isPlay)
 		{
-			//if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-			//{
-			//	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-			//		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.6f, 0.01f);
-			//}
-
 			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 			{
 				if (!m_bAnimFinish)
 				{
 					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_Spin.wav"), SOUND_VOICE, 0.2f);
 					m_bAnimFinish = true;
-					
 				}
-
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
@@ -125,7 +118,6 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				matWorld_6th.r[1] = XMVector4Normalize(matWorld_6th.r[1]);
 				matWorld_6th.r[2] = XMVector4Normalize(matWorld_6th.r[2]);
 
-
 				if (nullptr == m_pAtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc;
@@ -140,7 +132,6 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				}
 				else if (nullptr != m_pAtkColliderCom)
 					m_pAtkColliderCom->Update(matWorld);
-
 
 				if (nullptr == m_p2th_AtkColliderCom)
 				{
@@ -157,7 +148,6 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p2th_AtkColliderCom)
 					m_p2th_AtkColliderCom->Update(matWorld_2th);
 
-
 				if (nullptr == m_p3th_AtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc3th;
@@ -172,7 +162,6 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				}
 				else if (nullptr != m_p3th_AtkColliderCom)
 					m_p3th_AtkColliderCom->Update(matWorld_3th);
-
 
 				if (nullptr == m_p4th_AtkColliderCom)
 				{
@@ -205,7 +194,6 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p5th_AtkColliderCom)
 					m_p5th_AtkColliderCom->Update(matWorld_5th);
 
-
 				if (nullptr == m_p6th_AtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc6th;
@@ -223,8 +211,27 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 
 				RELEASE_INSTANCE(CCollision_Manager);
 			}
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				if (!m_bSpin)
+				{
+					if (!strcmp(pEvent.szName, "Spin"))
+					{
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Swing_360.dat"), mWorldMatrix);
+						m_bSpin = true;
+					}
+				}
+				if (!m_bSlash)
+				{
+					if (!strcmp(pEvent.szName, "Slash"))
+					{
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Swing_360_Slash.dat"), mWorldMatrix);
+						m_bSlash = true;
+					}
+				}
+			}
 		}
-
 		else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
 		{
 			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
@@ -491,4 +498,10 @@ void CBattle_720Spin_FirstState::Exit()
 	Safe_Release(m_p4th_AtkColliderCom);
 	Safe_Release(m_p5th_AtkColliderCom);
 	Safe_Release(m_p6th_AtkColliderCom);
+}
+
+void CBattle_720Spin_FirstState::Reset_Effect()
+{
+	m_bSpin = false;
+	m_bSlash = false;
 }

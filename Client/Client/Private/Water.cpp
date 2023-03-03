@@ -58,7 +58,7 @@ void CWater::Late_Tick(_float fTimeDelta)
 
 	if (m_pRendererCom)
 	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLENDLIGHTS, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 #ifdef _DEBUG		
 		m_pRendererCom->Add_Debug(m_pNavigationCom);
 #endif
@@ -76,7 +76,6 @@ HRESULT CWater::Render()
 		return E_FAIL;
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
-
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
@@ -102,10 +101,16 @@ HRESULT CWater::Ready_Components(void *pArg)
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Components(TEXT("Com_Shader"), LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
-
+	/* For.Com_Model */
 	if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_STATIC, TEXT("Prototype_Component_Model_Water_Plane"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
-
+	/* For.Com_WaterNoise */
+	if (FAILED(__super::Add_Components(TEXT("Com_WaterNoise"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_WaterNoise"), (CComponent**)&m_pWaterNoiseTextureCom)))
+		return E_FAIL;
+	/* For.Com_WaterNormal */
+	if (FAILED(__super::Add_Components(TEXT("Com_WaterNormal"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_WaterNormal"), (CComponent**)&m_pWaterNormalTextureCom)))
+		return E_FAIL;
+	
 	return S_OK;
 }
 
@@ -123,52 +128,35 @@ HRESULT CWater::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Bind_RenderTarget_SRV(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
+		return E_FAIL;
+
 	RELEASE_INSTANCE(CGameInstance);
 
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fScrollingTimer", &m_fScrollingTimer, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fScrollSpeed", &m_fScrollingTimer, sizeof(_float))))
+		return E_FAIL;
+
+	float fWaterPlaneScale = m_pTransformCom->Get_Scale(CTransform::STATE::STATE_RIGHT);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fWaterPlaneScale", &fWaterPlaneScale, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_WaterNoiseTexture", m_pWaterNoiseTextureCom->Get_SRV())))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_WaterNormalTexture", m_pWaterNormalTextureCom->Get_SRV())))
 		return E_FAIL;
 
 	if (pGameInstance->Get_CurrentLevelIndex() == LEVEL_CITY)
 	{
-		_float4 WaterColorDeep = _float4(0.3f, 0.8f, 0.8f, 1.f);
-		_float4 WaterColorShallow = _float4(0.3f, 0.8f, 0.8f, 1.f);
+		_float3 WaterColorDeep = _float3(0.3f, 0.8f, 0.8f);
+		_float3 WaterColorShallow = _float3(0.3f, 0.8f, 0.8f);
 
-		if (FAILED(m_pShaderCom->Set_RawValue("g_WaterColorDeep", &WaterColorDeep, sizeof(_float4))))
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WaterColorDeep", &WaterColorDeep, sizeof(_float3))))
 			return E_FAIL;
-
-		if (FAILED(m_pShaderCom->Set_RawValue("g_WaterColorShallow", &WaterColorShallow, sizeof(_float4))))
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WaterColorShallow", &WaterColorShallow, sizeof(_float3))))
 			return E_FAIL;
-
 	}
 
 	return S_OK;
-}
-
-void CWater::Compute_ReflectionView()
-{
-	_float4 vPosition;
-	XMStoreFloat4(&vPosition, m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION));
-
-	_float fWaterHeight = vPosition.y; 
-	
-	_float4x4 CameraWorldMatrix = CGameInstance::Get_Instance()->Get_CamWorldMatrix();
-	_float4 CameraLook = (_float4)CameraWorldMatrix.m[2];
-	_float4 CameraPosition = (_float4)CameraWorldMatrix.m[3];
-
-	/* Inverse */
-	_vector InvCameraLook = XMVectorSetW(XMLoadFloat3(&_float3(CameraLook.x, -CameraLook.y, CameraLook.z)), 0.f);		
-	_vector InvCameraPosition = XMVectorSetW(XMLoadFloat3(&_float3(CameraPosition.x, CameraPosition.y - fWaterHeight, CameraPosition.z)), 0.f);
-
-	_vector InvCameraUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-	_vector vRight = XMVector3Cross(InvCameraLook, InvCameraUp);
-	vRight = XMVectorSetW(vRight, 0.f);
-
-	InvCameraUp = XMVector3Cross(InvCameraLook, vRight);
-	InvCameraUp = XMVectorSetW(InvCameraUp, 0.f);
-
-	/* Inversed Reflection View Matrix */
-	m_ReflectionViewMatrix = XMMatrixLookAtLH(InvCameraPosition, InvCameraLook, InvCameraUp);
 }
 
 CWater * CWater::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -177,7 +165,7 @@ CWater * CWater::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CWater"));
+		ERR_MSG(TEXT("Failed to Create: CWater"));
 		Safe_Release(pInstance);
 	}
 
@@ -190,7 +178,7 @@ CGameObject * CWater::Clone(void * pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CWater"));
+		ERR_MSG(TEXT("Failed to Clone: CWater"));
 		Safe_Release(pInstance);
 	}
 
@@ -201,7 +189,8 @@ void CWater::Free()
 {
 	__super::Free();
 
-	//Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
-	Safe_Release(m_pWaveHeightMapCom);
+	Safe_Release(m_pWaterNoiseTextureCom);
+	Safe_Release(m_pWaterNormalTextureCom);
+	Safe_Release(m_pNavigationCom);
 }

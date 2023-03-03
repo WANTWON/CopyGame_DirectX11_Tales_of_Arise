@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "AstralDoubt_Battle_WalkState.h"
 #include "AstralDoubt_Battle_IdleState.h"
+#include "Effect.h"
 
 using namespace Astral_Doubt;
 
@@ -23,26 +24,22 @@ CAstralDoubt_State * CBattle_RushState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 {
-	
-	
+	Update_Skill();
+
 	switch (m_ePreState_Id)
 	{
 	case CAstralDoubt_State::STATE_RUSH_START:
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
-
 	case CAstralDoubt_State::STATE_RUSH_LOOP:
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
 		break;
-
 	case CAstralDoubt_State::STATE_RUSH_END:
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
 		break;
-
 	default:
 		break;
 	}
-
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -57,7 +54,6 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 	}
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-
 	for (auto& pEvent : pEvents)
 	{
 		if (pEvent.isPlay)
@@ -96,7 +92,6 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				matWorld_6th.r[1] = XMVector4Normalize(matWorld_6th.r[1]);
 				matWorld_6th.r[2] = XMVector4Normalize(matWorld_6th.r[2]);
 
-
 				if (nullptr == m_pAtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc;
@@ -111,7 +106,6 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				}
 				else if (nullptr != m_pAtkColliderCom)
 					m_pAtkColliderCom->Update(matWorld);
-
 
 				if (nullptr == m_p2th_AtkColliderCom)
 				{
@@ -128,7 +122,6 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p2th_AtkColliderCom)
 					m_p2th_AtkColliderCom->Update(matWorld_2th);
 
-
 				if (nullptr == m_p3th_AtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc3th;
@@ -144,7 +137,6 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p3th_AtkColliderCom)
 					m_p3th_AtkColliderCom->Update(matWorld_3th);
 
-
 				if (nullptr == m_p4th_AtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc4th;
@@ -157,7 +149,6 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 
 					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p4th_AtkColliderCom, m_pOwner);
 				}
-
 				else if (nullptr != m_p4th_AtkColliderCom)
 					m_p4th_AtkColliderCom->Update(matWorld_4th);
 
@@ -176,7 +167,6 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p5th_AtkColliderCom)
 					m_p5th_AtkColliderCom->Update(matWorld_5th);
 
-
 				if (nullptr == m_p6th_AtkColliderCom)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc6th;
@@ -194,8 +184,36 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 
 				RELEASE_INSTANCE(CCollision_Manager);
 			}
-		}
 
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				/*if (!m_bAura)
+				{
+					if (!strcmp(pEvent.szName, "Aura"))
+					{
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Rush_Aura.dat"), mWorldMatrix);
+						m_bAura = true;
+					}
+				}*/
+				if (!m_bRush)
+				{
+					if (!strcmp(pEvent.szName, "Rush"))
+					{
+						m_Rush = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Rush.dat"), mWorldMatrix);
+						m_bRush = true;
+					}
+				}
+				if (!m_bSlash)
+				{
+					if (!strcmp(pEvent.szName, "Slash"))
+					{
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Rush_Slash.dat"), mWorldMatrix);
+						m_bSlash = true;
+					}
+				}
+			}
+		}
 		else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
 		{
 			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
@@ -230,29 +248,20 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 {
+	Remove_Skill();
 
 	m_pOwner->Check_Navigation();
-
 	m_fTimeDeltaAcc += fTimeDelta;
-
 
 	if (m_bIsAnimationFinished)
 	{
 		if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_START)
 			return new CBattle_RushState(m_pOwner, CAstralDoubt_State::STATE_RUSH_LOOP);
-
 		else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_LOOP)
-		{
 			return new CBattle_RushState(m_pOwner, CAstralDoubt_State::STATE_RUSH_END);
-		}
-
 		else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_END)
 			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
 	}
-
-
-
-
 
 	if (nullptr != m_pAtkColliderCom)
 	{
@@ -307,7 +316,6 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 			}
 		}
 
-
 		if (m_b5th_Collision == false)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_p5th_AtkColliderCom, &pCollisionTarget))
@@ -319,7 +327,6 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 				m_b5th_Collision = true;
 			}
 		}
-
 
 		if (m_b6th_Collision == false)
 		{
@@ -378,7 +385,6 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 		}
 	}
 
-
 	if (m_b5th_Collision)
 	{
 		m_f5th_AtkCollision_Delay += fTimeDelta;
@@ -389,7 +395,6 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 			m_b5th_Collision = false;
 		}
 	}
-
 
 	if (m_b6th_Collision)
 	{
@@ -406,7 +411,6 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
 
-
 	if (nullptr != m_p2th_AtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_p2th_AtkColliderCom);
 
@@ -422,30 +426,29 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 	if (nullptr != m_p6th_AtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_p6th_AtkColliderCom);
 #endif 
+
 	return nullptr;
 }
 
 void CBattle_RushState::Enter()
 {
+	Reset_Effect();
+
 	if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_START)
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_START);
-	
 	}
-
 	else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_LOOP)
 	{
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_Rush.wav"), SOUND_VOICE, 0.6f);
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_LOOP);
 	}
-
 	else if (m_ePreState_Id == CAstralDoubt_State::STATE_RUSH_END)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_SPEAR_RUSH_END);
 
 #ifdef _DEBUG
 	if (nullptr != m_pAtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
-
 
 	if (nullptr != m_p2th_AtkColliderCom)
 		m_pOwner->Get_Renderer()->Add_Debug(m_p2th_AtkColliderCom);
@@ -472,12 +475,6 @@ void CBattle_RushState::Exit()
 		m_pOwner->Set_FinishDownState();
 		CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 	}
-	
-	/*if (m_eStateId == Client::CAstralDoubt_State::STATE_RUSH_LOOP)
-	{
-		
-	}*/
-
 
 	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);
@@ -485,4 +482,41 @@ void CBattle_RushState::Exit()
 	Safe_Release(m_p4th_AtkColliderCom);
 	Safe_Release(m_p5th_AtkColliderCom);
 	Safe_Release(m_p6th_AtkColliderCom);
+}
+
+void CBattle_RushState::Reset_Effect()
+{
+	m_bAura = false;
+	m_bRush = false;
+	m_bSlash = false;
+}
+
+void CBattle_RushState::Remove_Skill()
+{
+	for (auto& pEffect : m_Rush)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+}
+
+void CBattle_RushState::Update_Skill()
+{
+	for (auto& pEffect : m_Rush)
+	{
+		if (pEffect)
+		{
+			_float4 vMonsterPosition;
+			XMStoreFloat4(&vMonsterPosition, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+			_float4 vMonsterLook;
+			XMStoreFloat4(&vMonsterLook, m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
+
+			vMonsterPosition.y += 10.f;
+
+			if (!wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
+				XMStoreFloat4(&vMonsterPosition, XMLoadFloat4(&vMonsterPosition) + XMVector4Normalize(XMLoadFloat4(&vMonsterLook)) * 26);
+
+			pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vMonsterPosition));
+		}
+	}
 }

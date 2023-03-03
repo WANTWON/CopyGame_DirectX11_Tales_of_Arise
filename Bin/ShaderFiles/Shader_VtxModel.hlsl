@@ -43,12 +43,23 @@ bool g_bUseDiffuseColor;
 float3 g_vGlowColor;
 float g_fGlowPower;
 
-/* Water (https://www.youtube.com/watch?v=aVCfVs1oZSY&list=PLv8DnRaQOs5-ST_VDqgbbMRtzMtpK36Hy&index=38&t=1610s) */
-float g_fScrollingSpeed = .05f;
-float g_fScrollingTimer;
-float g_fDissolveAlpha;
-float4 g_WaterColorDeep = float4(0.3f, 0.3f, 0.8f, 1.f);
-float4 g_WaterColorShallow = float4(0.3f, 0.3f, 0.8f, 1.f);
+/* Water (https://roystan.net/articles/toon-water/) */
+float3 g_WaterColorShallow = float3(0.02f, 0.59f, 0.86f);
+float3 g_WaterColorDeep = float3(0.1f, 0.35f, .7f);
+float g_fWaterMaxRange = 5.f;
+texture2D g_WaterNoiseTexture;
+float g_fWaterPlaneScale;
+float2 g_vNoiseScroll = float2(0.02f, 0.01f);
+float2 g_vNoiseWrap = float2(20, 10);
+float g_fScrollSpeed;
+float g_fNoiseCutoff = 0.777f;
+float g_fFoamDepth = .4f;
+texture2D g_WaterNormalTexture;
+float g_fNormalPower = 0.27f;
+
+/* Edge Detection */
+float g_fEdgeMinRange = 20.f;
+float g_fEdgeMaxRange = 60.f;
 
 struct VS_IN
 {
@@ -110,6 +121,11 @@ struct PS_OUT_SHADOW
 	float4 vLightDepth : SV_TARGET0;
 };
 
+struct PS_OUT_WATER
+{
+	float4 vWater : SV_TARGET0;
+};
+
 struct PS_EFFECT_OUT
 {
 	float4 vColor : SV_TARGET0;
@@ -162,29 +178,37 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_WATER(PS_IN In)
+PS_OUT_WATER PS_WATER(PS_IN In)
 {
-	PS_OUT Out = (PS_OUT)0;
+	PS_OUT_WATER Out = (PS_OUT_WATER)0;
 
-	Out.vDiffuse = g_WaterColorDeep;
-	Out.vDiffuse.a = 0.6f;
+	float2	vUV;
+	vUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	vUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
 
-	float2 texCoord = In.vTexUV * 20 + (g_fScrollingTimer * g_fScrollingSpeed);
-	float2 texCoordOffset = (float2(-In.vTexUV.x, In.vTexUV.y) * 20) + (g_fScrollingTimer * g_fScrollingSpeed); /* Wave Motion UVs */
+	float4 vDepthTexture = g_DepthTexture.Sample(LinearSampler, vUV);
+	float fViewZ = vDepthTexture.y * 1000.f;
 
-	float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, texCoord);
-	float4 vTextureNormalOffset = g_NormalTexture.Sample(LinearSampler, texCoordOffset);
+	float fWaterDepth = max((fViewZ - In.vProjPos.w), 0.f);
 
-	float3 vLerpNormal = normalize(lerp(vTextureNormal, vTextureNormalOffset, .5f));
+	if (fViewZ == 0.f)
+		fWaterDepth = 1.f;
 
-	float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-	vLerpNormal = mul(vLerpNormal, WorldMatrix);
-	Out.vNormal = vector(vLerpNormal * 0.5f + 0.5f, 0.f);
+	float fWaterInterpFactor = saturate(fWaterDepth / g_fWaterMaxRange);
+	float3 fWaterColor = lerp(g_WaterColorShallow, g_WaterColorDeep, fWaterInterpFactor);
 
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+	float2 vNormal = g_WaterNormalTexture.Sample(LinearSampler, In.vTexUV.xy * 2 - 1) * g_fNormalPower;
+	float2 vNoiseUV = float2(((In.vTexUV.x * g_vNoiseWrap.x * g_fWaterPlaneScale) + g_fScrollSpeed * g_vNoiseScroll.x) + vNormal.x, 
+								((In.vTexUV.y * g_vNoiseWrap.y * g_fWaterPlaneScale) + g_fScrollSpeed * g_vNoiseScroll.y) + vNormal.y);
+	float fNoise = g_WaterNoiseTexture.Sample(LinearSampler, vNoiseUV).r;
 
-	if (Out.vDiffuse.a <= .3f)
-		discard;
+	float fFoamInterpFactor = saturate(fWaterDepth / g_fFoamDepth);
+	float fSurfaceNoiseCutoff = fFoamInterpFactor * g_fNoiseCutoff;
+
+	fNoise = fNoise > fSurfaceNoiseCutoff ? 1 : 0;
+
+	Out.vWater.rgb = fWaterColor + fNoise;
+	Out.vWater.a = max(fWaterInterpFactor, .9f);
 
 	return Out;
 }
@@ -345,6 +369,11 @@ PS_OUT PS_EDGE_DETECTION(PS_IN In)
 
 	if (Out.vDiffuse.a <= 0.3f)
 		discard;
+
+	float fInterpFactor = saturate((In.vProjPos.w - g_fEdgeMinRange) / (g_fEdgeMaxRange - g_fEdgeMinRange));
+	float fEdgeAlpha = lerp(1, 0, fInterpFactor);
+
+	Out.vDiffuse.a = fEdgeAlpha;
 
 	return Out;
 }

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Level_Restaurant.h"
 #include "Level_WorkTool.h"
+#include "Effect.h"
 
 CShootingObject::CShootingObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CInteractObject(pDevice, pContext)
@@ -100,6 +101,15 @@ void CShootingObject::Late_Tick(_float fTimeDelta)
 	if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PBULLET, m_pSPHERECom, &pBullet))
 	{
 		//Collision
+
+		_vector vOffset = XMVectorSet(0.f, m_fRadius + 1.5f, 0.f, 0.f);
+		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+
+		_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		CEffect::PlayEffectAtLocation(TEXT("ShootingBoom.dat"), mWorldMatrix);
+
+
 		_vector dir;
 		dir =  Get_TransformState(CTransform::STATE_TRANSLATION) - pBullet->Get_TransformState(CTransform::STATE_TRANSLATION);
 		//

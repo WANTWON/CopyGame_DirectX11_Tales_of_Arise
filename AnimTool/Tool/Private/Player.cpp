@@ -243,53 +243,10 @@ HRESULT CPlayer::Ready_Components(void)
 			return E_FAIL;
 		break;
 
-	case MODEL_NPC_PLC:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_NPC_NMY_Plc"), (CComponent**)&m_pModelCom)))
+	case MODEL_ASU_005:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ASU_005"), (CComponent**)&m_pModelCom)))
 			return E_FAIL;
 		break;
-
-	case MODEL_NPC_GLD:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_NPC_NMM_Gld"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-
-	case MODEL_NPC_MHB:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_NPC_NMM_MHB_000"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-
-	case MODEL_NPC_DIM:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_NPC_NMM_DIM_000"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-
-	case MODEL_NPC_FIA:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_NPC_NFY_FIA_000"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-
-	case MODEL_NPC_GNL:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_NPC_NMY_GNL"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-
-	case MODEL_NPC_WAC:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_NPC_NFY_WAC"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-
-	case MODEL_DOG:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Dog"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-
-
-	case MODEL_DUCK:
-		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Duck"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-
-
 	}
 
 
