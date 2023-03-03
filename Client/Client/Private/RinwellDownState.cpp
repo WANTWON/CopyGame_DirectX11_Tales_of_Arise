@@ -5,9 +5,10 @@
 
 using namespace AiRinwell;
 
-CRinwellDownState::CRinwellDownState(CAiRinwell * pRinwell)
+CRinwellDownState::CRinwellDownState(CAiRinwell * pRinwell, _float fTime)
 {
 	m_pOwner = pRinwell;
+	m_fLimitTime = fTime;
 }
 
 CRinwellState * CRinwellDownState::Tick(_float fTimeDelta)
@@ -29,7 +30,7 @@ CRinwellState * CRinwellDownState::Tick(_float fTimeDelta)
 
 CRinwellState * CRinwellDownState::LateTick(_float fTimeDelta)
 {
-	if (3.f < m_fTime)
+	if (m_fLimitTime < m_fTime)
 	{
 		if (m_pOwner->Get_Stats().m_fCurrentHp < (m_pOwner->Get_Stats().m_fMaxHp * 0.5f))
 		{

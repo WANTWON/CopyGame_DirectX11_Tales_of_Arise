@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "RinwellIdleState.h"
 #include "RinwellSkillState.h"
-#include "RinwellMoveState.h"
+#include "RinwellStepState.h"
 #include "RinwellSkills.h"
 #include "RinwellDownState.h"
 #include "Effect.h"
@@ -62,12 +62,24 @@ CRinwellState * CSkillState::LateTick(_float fTimeDelta)
 				Enter();
 				break;
 			case Client::STATETYPE_END:
-				return new CRinwellDownState(m_pOwner);
+				return new CRinwellDownState(m_pOwner, 10.f);
 				break;
 			}
 		}
 		else
-			return new CRinwellIdleState(m_pOwner, 1.f);
+		{
+			switch (m_eSkillType)
+			{
+			case CRinwellState::THUNDERFIELD:
+			case CRinwellState::GALEFORCE:
+			case CRinwellState::BANGJEON:
+				return new CRinwellStepState(m_pOwner, STATETYPE_START);
+				break;
+			case CRinwellState::HOLY:
+				return new CRinwellIdleState(m_pOwner, 1.f);
+				break;
+			}
+		}
 	}
 
 	if ((CRinwellState::METEOR == m_eSkillType) && (STATETYPE_MAIN == m_eStateType) && (10.f < m_fTime))
@@ -77,7 +89,6 @@ CRinwellState * CSkillState::LateTick(_float fTimeDelta)
 		Enter();
 	}
 		
-
 	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 	return nullptr;

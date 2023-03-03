@@ -3,6 +3,7 @@
 #include "RinwellMoveState.h"
 #include "RinwellPoseState.h"
 #include "RinwellDownState.h"
+#include "RinwellIdleState.h"
 
 using namespace AiRinwell;
 
@@ -41,10 +42,9 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 			if ((m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f) && !m_pOwner->Get_AirMode())
 				return new CPoseState(m_pOwner, CRinwellState::STATE_HP50DOWN);
 			else
-				return new CRinwellDownState(m_pOwner);
+				return new CRinwellIdleState(m_pOwner, 0.f);
 		}
 			
-
 		if (m_eStateId == STATE_DEAD)
 		{
 			m_pOwner->Set_Dissolve();

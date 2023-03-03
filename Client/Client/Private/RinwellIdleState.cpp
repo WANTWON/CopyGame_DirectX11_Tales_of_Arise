@@ -49,7 +49,7 @@ CRinwellState * CRinwellIdleState::LateTick(_float fTimeDelta)
 	{
 		_vector vToTargetDir = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
 		_float fDistance = XMVectorGetX(XMVector3Length(vToTargetDir));
-		if (fDistance < 7.f)
+		if (fDistance < 8.f)
 		{
 			_float fCos = XMVectorGetX(XMVector3Dot(XMVector4Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)), XMVector4Normalize(vToTargetDir)));
 

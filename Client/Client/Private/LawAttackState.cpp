@@ -42,7 +42,7 @@ CPlayerState * CLawAttackState::Tick(_float fTimeDelta)
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 		
 		if ((CPlayerState::STATE_NORMAL_ATTACK5 == m_eStateId) && !m_bIsFly)
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.04f), fRotationRadian, m_pOwner->Get_Navigation());
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 

@@ -52,8 +52,6 @@ CRinwellState * CRinwellTurnState::LateTick(_float fTimeDelta)
 	{
 		switch (m_eNextID)
 		{
-		case Client::CRinwellState::STATE_MOVE:
-			break;
 		case Client::CRinwellState::STATE_ATTACK:
 			return new CAttackState(m_pOwner, m_eNextStateType);
 		case Client::CRinwellState::STATE_SKILL:

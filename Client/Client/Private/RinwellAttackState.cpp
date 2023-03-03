@@ -17,22 +17,7 @@ CAttackState::CAttackState(CAiRinwell* pRinwell, STATETYPE eType)
 
 CRinwellState * CAttackState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-	
-	/*if (!m_bIsAnimationFinished)
-	{
-		switch (m_eStateType)
-		{
-		case Client::STATETYPE_START:
-			Move(fTimeDelta);
-			break;
-		case Client::STATETYPE_MAIN:
-			Move(fTimeDelta);
-			break;
-		case Client::STATETYPE_END:
-			break;
-		}
-	}*/
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 4.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 	
 	m_pOwner->Check_Navigation();
 

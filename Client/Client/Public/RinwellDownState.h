@@ -8,7 +8,7 @@ BEGIN(AiRinwell)
 class CRinwellDownState final : public CRinwellState
 {
 public:
-	CRinwellDownState(class CAiRinwell* pRinwell);
+	CRinwellDownState(class CAiRinwell* pRinwell, _float fTime = 3.f);
 
 	virtual CRinwellState* Tick(_float fTimeDelta) override;
 	virtual CRinwellState* LateTick(_float fTimeDelta);
@@ -18,6 +18,7 @@ public:
 
 private:
 	_float m_fTime = 0.f;
+	_float m_fLimitTime = 0.f;
 };
 
 END
