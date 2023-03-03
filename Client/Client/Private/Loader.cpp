@@ -777,6 +777,15 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Dissolve.png"), 1))))
 		return E_FAIL;
+
+	/*For.Prototype_Component_Texture_WaterNoise*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_WaterNoise"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Water/PerlinNoise.png"), 1))))
+		return E_FAIL;
+	/*For.Prototype_Component_Texture_WaterNormal*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_WaterNormal"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Water/WaterDistortion.png"), 1))))
+		return E_FAIL;
 #pragma endregion Texture Loading
 
 #pragma region Model Loading
