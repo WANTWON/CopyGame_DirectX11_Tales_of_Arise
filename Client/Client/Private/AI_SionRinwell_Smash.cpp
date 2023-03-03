@@ -12,7 +12,7 @@
 #include "ParticleSystem.h"
 #include "PlayerIdleState.h"
 #include "UI_Skillmessage.h"
-
+#include "Animation.h"
 
 using namespace AIPlayer;
 using namespace Player;
@@ -32,6 +32,8 @@ CAI_SionRinwell_Smash::CAI_SionRinwell_Smash(CPlayer* pPlayer, CBaseObj* pTarget
 
 CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 {
+	/*if (m_bStrikeBlur)
+		StrikeBlur(fTimeDelta);*/
 
 	m_fTimer += fTimeDelta;
 
@@ -74,6 +76,8 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 						m_bIsStateEvent = true;
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType && !m_bBullet)
 					{
+						m_fEffectEventEndTime = pEvent.fEndTime;
+						m_fEffectEventCurTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
 
 						/* Make Effect */
 						_vector vOffset = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
@@ -217,7 +221,8 @@ void CAI_SionRinwell_Smash::Enter()
 
 void CAI_SionRinwell_Smash::Exit()
 {
-	
+	/*if (m_bStrikeBlur)
+		m_pOwner->Set_ResetStrikeBlur(true);*/
 
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 
@@ -262,4 +267,24 @@ void CAI_SionRinwell_Smash::Exit()
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	__super::Exit();
+}
+
+void CAI_SionRinwell_Smash::StrikeBlur(_float fTimeDelta)
+{
+	_float fDuration = m_fEffectEventEndTime - m_fEffectEventCurTime;
+	_float fCurrentTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
+
+	_float fInterpTimer = fDuration * .15;
+
+	/* Zoom Blur Lerp */
+	_float fFocusPower = 5.f;
+
+	_float fBlurInterpFactor = fCurrentTime / fInterpTimer;
+	if (fBlurInterpFactor > 1.f)
+		fBlurInterpFactor = 1.f;
+
+	_int iDetailStart = 1;
+	_int iDetailEnd = 10;
+	_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+	m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
 }
