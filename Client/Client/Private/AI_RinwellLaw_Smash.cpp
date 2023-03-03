@@ -14,8 +14,10 @@
 #include "PlayerIdleState.h"
 #include "UI_Dialogue_Caption.h"
 #include "UI_Skillmessage.h"
+
 using namespace AIPlayer;
 using namespace Player;
+
 CAI_RinwellLaw_Smash::CAI_RinwellLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 {
 	//m_ePreStateID = eStateType;
@@ -31,6 +33,8 @@ CAI_RinwellLaw_Smash::CAI_RinwellLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 {
+	if (m_bStrikeBlur)
+		StrikeBlur(fTimeDelta);
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
@@ -201,6 +205,12 @@ void CAI_RinwellLaw_Smash::Enter()
 
 void CAI_RinwellLaw_Smash::Exit()
 {
+	if (m_bStrikeBlur)
+	{
+		m_pOwner->Set_ResetStrikeBlur(true);
+		m_bStrikeBlur = false;
+	}
+
 	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
@@ -232,4 +242,22 @@ void CAI_RinwellLaw_Smash::Exit()
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	__super::Exit();
+}
+
+void CAI_RinwellLaw_Smash::StrikeBlur(_float fTimeDelta)
+{
+	_float fDuration = .45f;
+	m_fResetTimer += fTimeDelta;
+
+	/* Zoom Blur Lerp */
+	_float fFocusPower = 10.f;
+
+	_float fBlurInterpFactor = m_fResetTimer / fDuration;
+	if (fBlurInterpFactor > 1.f)
+		fBlurInterpFactor = 1.f;
+
+	_int iDetailStart = 1;
+	_int iDetailEnd = 10;
+	_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+	m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
 }

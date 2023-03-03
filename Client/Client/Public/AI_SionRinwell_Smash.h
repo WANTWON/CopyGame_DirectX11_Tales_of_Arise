@@ -17,6 +17,9 @@ public:
 	virtual void Exit() override;
 
 private:
+	void StrikeBlur(_float fTimeDelta);
+
+private:
 	vector<CEffect*> m_pEffects;
 
 	_float m_fTime = 0.f;
@@ -30,6 +33,11 @@ private:
 
 	_float m_fEventStart = -1.f;
 	
+	/* Strike Screen Blur */
+	_bool m_bStrikeBlur = false;
+	_float m_fEffectEventEndTime = 0.f;
+	_float m_fEffectEventCurTime = 0.f;
+	_float m_fResetTimer = 0.f;
 };
 END
 END

@@ -168,13 +168,21 @@ HRESULT CLoader::Loading_ForClient()
 		CParticleSystem::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Height"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Height.bmp")))))
+		return E_FAIL;
+	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("Height"));
+
+
+
 	//For Maptool
 	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
 	//For Maptool
-	/*if (FAILED(Loading_ForMaptoolSnowFieldModel()))
-		return E_FAIL;*/
+	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+		return E_FAIL;
 
 	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
 	//	return E_FAIL;
@@ -199,11 +207,11 @@ HRESULT CLoader::Loading_ForClient()
 	//	return E_FAIL;
 
 	//For Effect
-	if (FAILED(Loading_ForEffect()))
+	/*if (FAILED(Loading_ForEffect()))
 		return E_FAIL;
 	 
 	if (FAILED(Loading_ForEffectTexture()))
-		return E_FAIL;
+		return E_FAIL;*/
 
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
