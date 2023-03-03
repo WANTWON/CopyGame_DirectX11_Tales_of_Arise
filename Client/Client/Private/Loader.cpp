@@ -755,6 +755,15 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	hFile = 0;
 	dwByte = 0;
 	iNum = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/WaterTerrain.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_SnowField_WaterTerrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, true))))
+		return E_FAIL;
+	CloseHandle(hFile);
+
+	hFile = 0;
+	dwByte = 0;
+	iNum = 0;
 	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/Terrain.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_SnowField_Terrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, true))))

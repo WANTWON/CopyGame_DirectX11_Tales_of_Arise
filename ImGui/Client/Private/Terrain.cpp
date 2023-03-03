@@ -394,7 +394,7 @@ void CTerrain::Set_Picked()
 		if (m_bPicked)
 			CPickingMgr::Get_Instance()->Set_PickedObj(nullptr);
 		else
-			CPickingMgr::Get_Instance()->Set_PickedObj(this);
+ 			CPickingMgr::Get_Instance()->Set_PickedObj(this);
 	}
 
 	RELEASE_INSTANCE(CGameInstance);
