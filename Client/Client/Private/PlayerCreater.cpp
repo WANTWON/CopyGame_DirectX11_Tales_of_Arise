@@ -1791,6 +1791,42 @@ HRESULT CPlayerCreater::Ready_Layer_NpcCity(const _tchar * pLayerTag)
 
 		}
 
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMY_GNL")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NMY_GNL;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_GNL"), &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_GNL"));
+
+		}
+
+		else if (!wcscmp(pModeltag, TEXT("NPC_NFY_WAC")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NFY_WAC;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag);
+
+		}
+
+		else if (!wcscmp(pModeltag, TEXT("Dog")))
+		{
+			NpcDesc.eNpcType = CCityNpc::DOG;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NMM_SLV"));
+
+		}
+
+		else if (!wcscmp(pModeltag, TEXT("Duck")))
+		{
+			NpcDesc.eNpcType = CCityNpc::DUCK;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_Duck"), &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Duck"));
+
+		}
+
 	}
 
 	CloseHandle(hFile);

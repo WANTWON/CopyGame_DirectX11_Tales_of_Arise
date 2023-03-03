@@ -12,10 +12,40 @@ public:
 	enum NPCTYPE { NPC_NFC_SLV_000, NPC_NFC_SLV_000_2th, NPC_NFM_SLV_000, 
 		NPC_NFY_FIA_000, NPC_NMM_BEF_000
 	, NPC_NMM_BLS_000, NPC_NMM_DIM_000,
-		NPC_NMM_MHB_000, NPC_NMM_SLV_000, MAN_GLD, MAN_PLC};
+		NPC_NMM_MHB_000, NPC_NMM_SLV_000, MAN_GLD, MAN_PLC, NPC_NFY_WAC, NPC_NMY_GNL, DOG, DUCK};
 
 
 public:
+	enum NPC_NMM_DIM_ANIM {
+		DIM_TURN_LEFT,
+		DIM_IDLE,
+		DIM_TURN_RIGHT,
+		DIM_TALK,
+		DIM_WALK
+	};
+
+	enum DOG_ANIM {
+		DOG_IDLE,
+		DOG_PEE,
+		DOG_BARK,
+		DOG_SIT,
+		DOG_WALK,
+		DOG_WALK_TWO,
+		DOG_RUN,
+		DOG_WAG_A_TAIL
+	};
+
+	enum DUCK_ANIM{
+		DUCK_WALK,
+		DUCK_READY_FLY,
+		DUCK_LOOKAT_BUG
+	};
+	
+	enum NPC_NFY_WAC_ANIM {
+		WAC_Sit,
+		WAC_Walk
+	};
+
 	enum NPC_NFY_FIA_ANIM {
 		FIA_Idle,
 		FIA_Walk_leisurely,
@@ -25,6 +55,12 @@ public:
 		FIA_OKIve_decided,
 		FIA_Hands_onbothwaists,
 		FIA_Walk,
+	};
+
+	enum NPC_NFM_SLV_ANIM {
+		NFM_IDLE,
+		NFM_HI,
+		NFM_SIT
 	};
 
 	enum NPC_NFC_SLV_000_ANIM {
@@ -82,15 +118,6 @@ public:
 
 	};
 
-	enum NPC_NMM_DIM_ANIM {
-		DIM_TurnRight,
-		DIM_Idle,
-		DIM_TurnLeft,
-		DIM_Talk,
-		DIM_Walk
-
-	};
-
 private:
 	CCityNpc(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCityNpc(const CCityNpc& rhs);
@@ -116,15 +143,17 @@ public:
 	_float		Find_MAN_GLD();
 	_float		Find_NMM_SLV();
 	_float		Find_NFM();
+
 	//_float		Find_PLC_Target(_uint iIndex);
 	
 	CCityNpc*	Find_FIA_Target();
-	CCityNpc*	Find_DIM_Target();
+	CCityNpc*	Find_GNL_Target();
 
 
 	CCityNpc*	Get_FIA(_uint iIndex);
 	CCityNpc*	Get_PLC(_uint iIndex);
 	CCityNpc*	Get_GLD();
+	CCityNpc*	Get_Duck(_uint iIndex);
 
 private:
 	virtual HRESULT Ready_Components(void* pArg);
@@ -134,9 +163,12 @@ private:
 	class CCityNpc * m_pGld = nullptr;
 	class CCityNpc * m_pNMM_SLV = nullptr;
 	class CCityNpc * m_pNFM = nullptr;
+	class CCityNpc * m_pDuck_One = nullptr;
+	class CCityNpc * m_pDuck_Two = nullptr;
+
 	class CCityNpc * m_pFIA_Target = nullptr;
 	class CCityNpc * m_pDIM_Target = nullptr;
-
+	class CCityNpc * m_pGNL_Target = nullptr;
 
 	_float			m_fFriendDistance = 0.f;
 	_float			m_fGLD_Distance = 0.f;
@@ -146,6 +178,7 @@ private:
 	_float			m_fChild_TimeDleta = 0.f;
 	_float			m_fChild_2thTimeDleta = 0.f;
 	_float			m_fTimeDelta = 0.f;
+	_float			m_fTimeDelta_Two = 0.f;
 	_float			m_fPLC_TimeDelta = 0.f;
 	_float			m_fChildSpeed = 0.f;
 
@@ -164,6 +197,14 @@ private:
 	_bool			m_bIsAnimationFinished = false;
 	_bool			m_bTurnFinish = false;
 
+	//DOG
+	_bool			m_bIdle = false;
+	_bool			m_bPee = false;
+	_bool			m_bWag_a_Tail = false;
+
+	//GNL
+	_float			m_fGNL_Target_Distance = 0.f;
+	_bool			m_bLookAt = false;
 
 	//DIM
 	_bool			 m_bTalkAnim = false;
@@ -179,7 +220,6 @@ private:
 	_bool			m_bPLC_SayGoodbye = false;
 	_bool			m_bPLC_Anim_Turn_Left_Begin = false;
 	_bool			m_bPLC_GoToHer = true;
-
 
 	//FIA
 	

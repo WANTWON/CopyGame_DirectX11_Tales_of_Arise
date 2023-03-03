@@ -36,11 +36,10 @@ HRESULT CCityNpc::Initialize(void * pArg)
 		{
 		case NPC_NFC_SLV_000_2th:
 			m_eState = NPC_NFC_SLV_000_2th_ANIM::Run_2th;
-			
 			break;
 
 		case NPC_NFM_SLV_000:
-			m_eState = 2;
+			m_eState = NPC_NFM_SLV_ANIM::NFM_SIT;
 			break;
 
 		case NPC_NMM_SLV_000:
@@ -54,7 +53,15 @@ HRESULT CCityNpc::Initialize(void * pArg)
 			break;
 
 		case NPC_NMM_DIM_000:
-			m_eState = NPC_NMM_DIM_ANIM::DIM_Idle;
+			m_eState = NPC_NMM_DIM_ANIM::DIM_WALK;
+
+		case NPC_NFY_WAC:
+			m_eState = NPC_NFY_WAC_ANIM::WAC_Walk;
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 2.f);
+			break;
+		case DUCK:
+			m_eState = DUCK_ANIM::DUCK_WALK;
+			break;
 		default:
 			m_eState = 0;
 			break;
@@ -122,6 +129,49 @@ void CCityNpc::Late_Tick(_float fTimeDelta)
 _bool CCityNpc::Is_AnimationLoop(_uint eAnimId)
 {
 
+
+	if (m_NpcDesc.eNpcType == DOG)
+	{
+		switch ((_uint)eAnimId)
+		{
+		case DOG_ANIM::DOG_IDLE:
+		case DOG_ANIM::DOG_PEE:
+		case DOG_ANIM::DOG_WAG_A_TAIL:
+
+			return false;
+		}
+	}
+
+	if (m_NpcDesc.eNpcType == DUCK)
+	{
+		switch ((_uint)eAnimId)
+		{
+		case DUCK_ANIM::DUCK_WALK:
+
+			return true;
+		}
+	}
+
+	if (m_NpcDesc.eNpcType == NPC_NFM_SLV_000)
+	{
+		switch ((_uint)eAnimId)
+		{
+		case NPC_NFM_SLV_ANIM::NFM_SIT:
+
+			return true;
+		}
+	}
+
+	if (m_NpcDesc.eNpcType == NPC_NFY_WAC)
+	{
+		switch ((_uint)eAnimId)
+		{
+		case NPC_NFY_WAC_ANIM::WAC_Walk:
+
+				return true;
+		}
+	}
+
 	if (m_NpcDesc.eNpcType == NPC_NFY_FIA_000)
 	{
 		switch ((_uint)eAnimId)
@@ -141,10 +191,11 @@ _bool CCityNpc::Is_AnimationLoop(_uint eAnimId)
 	{
 		switch ((_uint)eAnimId)
 		{
-		case NPC_NMM_DIM_ANIM::DIM_Idle:
-			return true;
+		
 
-		case NPC_NMM_DIM_ANIM::DIM_Talk:
+		case NPC_NMM_DIM_ANIM::DIM_WALK:
+			return true;
+		case NPC_NMM_DIM_ANIM::DIM_TURN_LEFT:
 			return false;
 		}
 	}
@@ -202,29 +253,183 @@ void CCityNpc::Tick_State(_float fTimeDelta)
 	}
 	switch (m_NpcDesc.eNpcType)
 	{
-	case NPC_NFY_FIA_000:
-		m_pDIM_Target = Find_DIM_Target();
-
-		if (m_fDIM_Target_Distance >= 4.f)
+	case DOG:
+		if (m_bIdle == false)
 		{
-			_vector DIM_Position = m_pDIM_Target->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_pTransformCom->LookAt(DIM_Position);
-			m_pTransformCom->Sliding_Straight(fTimeDelta *0.8f, m_pNavigationCom);
-		}
+			m_eState = DOG_ANIM::DOG_IDLE;
 
-		else if(m_bTalk == false)
-		{
-			Set_eState(NPC_NFY_FIA_ANIM::FIA_Talk);
-			
 			if (m_bIsAnimationFinished)
 			{
-				Set_eState(NPC_NFY_FIA_ANIM::FIA_Laugh);
-				m_bTalk = true;
-				m_bLaugh = true;
+				m_eState = DOG_ANIM::DOG_PEE;
+				m_bIdle = true;
+				m_bPee = true;
 			}
 		}
+
+		else if (m_bPee == true)
+		{
+			if (m_bIsAnimationFinished)
+			{
+				m_eState = DOG_ANIM::DOG_WAG_A_TAIL;
+				m_bPee = false;
+				m_bWag_a_Tail = true;
+			}
+		}
+
+		else if (m_bWag_a_Tail == true)
+		{
+			if (m_bIsAnimationFinished)
+			{
+				m_eState = DOG_ANIM::DOG_IDLE;
+				m_bWag_a_Tail = false;
+				m_bIdle = false;
+			}
+		}
+		break;
+
+	case NPC_NFM_SLV_000:
+		m_eState = NPC_NFM_SLV_ANIM::NFM_SIT;
+		break;
+
+	case DUCK:	
+	if (m_bchaseNMM_SLV_Start == false)
+	{
+		Find_NMM_SLV();
+		if (m_fNMM_SLV_Distance >= 6.f)
+		{
+			m_eState = DUCK_ANIM::DUCK_WALK;
+			_vector vNMM_SLV_Position = m_pNMM_SLV->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_pTransformCom->LookAt(vNMM_SLV_Position);
+			m_pTransformCom->Sliding_Straight(fTimeDelta *1.0f, m_pNavigationCom);
+		}
+
+		else 
+		{
+			if (m_fNMM_SLV_Distance < 6)
+			{
+				m_eState = DUCK_ANIM::DUCK_READY_FLY;
+			}
+
+			if (m_bIsAnimationFinished)
+			{
+				m_bchaseNMM_SLV_Start = true;
+				m_bChaseNFMStart = true;
+			}
+		}
+	}
+
+	if (m_bChaseNFMStart == true)
+	{
 		
-		if (m_bLaugh == true)
+		Find_NFM();
+		if (m_fNFM_Distance >= 6.f)
+		{
+			m_eState = DUCK_ANIM::DUCK_WALK;
+			_vector vNFM_Position = m_pNFM->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_pTransformCom->LookAt(vNFM_Position);
+			m_pTransformCom->Sliding_Straight(fTimeDelta *1.0f, m_pNavigationCom);
+		}
+		else
+		{
+			if (m_fNFM_Distance < 6)
+			{
+				m_eState = DUCK_ANIM::DUCK_LOOKAT_BUG;
+			}
+
+			if (m_bIsAnimationFinished)
+			{
+				m_bChaseNFMStart = false;
+				m_bchaseGLDFinish = true;
+			}
+		}
+	}
+
+	if (m_bchaseGLDFinish == true)
+	{
+		Find_MAN_GLD();
+		if (m_fGLD_Distance >= 6.f)
+		{
+			m_eState = DUCK_ANIM::DUCK_WALK;
+			_vector vGldPosition = m_pGld->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_pTransformCom->LookAt(vGldPosition);
+			m_pTransformCom->Sliding_Straight(fTimeDelta *1.5f, m_pNavigationCom);
+		}
+
+		else
+		{
+			if (m_fGLD_Distance < 6)
+			{
+				m_eState = DUCK_ANIM::DUCK_READY_FLY;
+			}
+
+			if (m_bIsAnimationFinished)
+			{
+				m_bchaseGLDFinish = false;
+				m_bchaseNMM_SLV_Start = false;
+			}
+		}
+	}
+
+	break;
+
+	case NPC_NMY_GNL:
+		m_pFIA_Target = Find_FIA_Target();
+		_vector FIA_Pos = m_pFIA_Target->Get_TransformState(CTransform::STATE_TRANSLATION);
+		if (m_bLookAt == false)
+		{
+			m_pTransformCom->LookAt(FIA_Pos);
+			m_bLookAt = true;
+		}
+		break;
+
+	case NPC_NFY_WAC:
+		m_fTimeDelta += fTimeDelta;
+		m_fTimeDelta_Two += fTimeDelta;
+		if (m_fTimeDelta <= 4.f)
+		{
+			m_eState = NPC_NFY_WAC_ANIM::WAC_Walk;
+			m_pTransformCom->Sliding_Straight(fTimeDelta *0.8f, m_pNavigationCom);
+			m_fTimeDelta_Two = 0.f;
+		}
+		//
+		else
+		{
+			m_pTransformCom->Sliding_Straight(fTimeDelta *0.8f, m_pNavigationCom);
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
+			if (m_fTimeDelta > 5.f)
+			{
+				m_fTimeDelta = 0.f;
+			}
+		}
+		break;
+
+	case NPC_NFY_FIA_000:
+		m_pGNL_Target = Find_GNL_Target();
+
+		if (m_bTalk == false)
+		{
+			if (m_fGNL_Target_Distance >= 4.f)
+			{
+				_vector GNL_Position = m_pGNL_Target->Get_TransformState(CTransform::STATE_TRANSLATION);
+				m_pTransformCom->LookAt(GNL_Position);
+				m_pTransformCom->Sliding_Straight(fTimeDelta *0.8f, m_pNavigationCom);
+			}
+
+			else
+			{
+				Set_eState(NPC_NFY_FIA_ANIM::FIA_Talk);
+
+				if (m_bIsAnimationFinished)
+				{
+					Set_eState(NPC_NFY_FIA_ANIM::FIA_Laugh);
+					m_bTalk = true;
+					m_bLaugh = true;
+				}
+			}
+		}
+
+
+		else if (m_bLaugh == true)
 		{
 			if(m_bIsAnimationFinished)
 			{
@@ -234,31 +439,38 @@ void CCityNpc::Tick_State(_float fTimeDelta)
 			}
 		}
 
-		if (m_bHands_onbothwaists == true)
+		else if (m_bHands_onbothwaists == true)
 		{
+			if (m_bIsAnimationFinished)
+			{
+				Set_eState(NPC_NFY_FIA_ANIM::FIA_Talk);
+			}
 			m_bHands_onbothwaists = false;
 			m_bTalk = false;
 		}
+		break;
+
+	//case NPC_NMM_SLV_000:
+	//	
+	//	break;
 
 	case NPC_NMM_DIM_000:
-		m_pFIA_Target = Find_FIA_Target();
-
-		_vector FIA_Position = m_pFIA_Target->Get_TransformState(CTransform::STATE_TRANSLATION);
-		m_pTransformCom->LookAt(FIA_Position);
-		
-		if (m_fFIA_Target_Distance < 4.f && m_bTalkAnim)
+		m_fTimeDelta += fTimeDelta;
+		if (m_fTimeDelta <= 5.f)
 		{
-			Set_eState(NPC_NMM_DIM_ANIM::DIM_Talk);
-			
-			if (m_bIsAnimationFinished)
-			{
-				m_bTalkAnim = true;
-			}
+			m_eState = NPC_NMM_DIM_ANIM::DIM_WALK;
+			m_pTransformCom->Sliding_Straight(fTimeDelta *0.8f, m_pNavigationCom);
+			m_fTimeDelta_Two = 0.f;
 		}
+		//
 		else
 		{
-			Set_eState(NPC_NMM_DIM_ANIM::DIM_Idle);
-			m_bTalkAnim = false;
+			m_pTransformCom->Sliding_Straight(fTimeDelta *0.8f, m_pNavigationCom);
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
+			if (m_fTimeDelta > 6.f)
+			{
+				m_fTimeDelta = 0.f;
+			}
 		}
 		break;
 
@@ -266,13 +478,13 @@ void CCityNpc::Tick_State(_float fTimeDelta)
 		
 		m_fTimeDelta += fTimeDelta;
 		
-		if (m_fTimeDelta <= 6.f)
+		if (m_fTimeDelta <= 6.5f)
 		{
 			m_eState = NPC_MAN_PLC::PLC_Walk;
 			m_pTransformCom->Sliding_Straight(fTimeDelta *0.8f, m_pNavigationCom);
 			
 		} 
-		//
+		////
 		else
 		{
 			m_eState = NPC_MAN_PLC::PLC_TurnLeft;
@@ -295,6 +507,7 @@ void CCityNpc::Tick_State(_float fTimeDelta)
 				Check_Navigation();
 			}
 		}
+		break;
 
 	case NPC_NFC_SLV_000:
 		
@@ -593,7 +806,7 @@ _float CCityNpc::Find_Friend()
 _float CCityNpc::Find_MAN_GLD()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("Layer_Gld"), 2);
+	CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("Layer_Gld"));
 
 	CCityNpc* pCityNpc = dynamic_cast<CCityNpc*>(pGameObject);
 	if (!pCityNpc)
@@ -633,6 +846,7 @@ _float CCityNpc::Find_NMM_SLV()
 
 	return m_fNMM_SLV_Distance;
 }
+
 
 _float CCityNpc::Find_NFM()
 {
@@ -710,10 +924,10 @@ CCityNpc* CCityNpc::Find_FIA_Target()
 	
 }
 
-CCityNpc * CCityNpc::Find_DIM_Target()
+CCityNpc * CCityNpc::Find_GNL_Target()
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-	CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("Layer_DIM"));
+	CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("Layer_GNL"));
 	CCityNpc* pCityNpc = dynamic_cast<CCityNpc*>(pGameObject);
 	if (!pCityNpc)
 		return 0;
@@ -721,11 +935,11 @@ CCityNpc * CCityNpc::Find_DIM_Target()
 
 
 	/*m_pFIA_TWO_Target = pCityNpc;*/
-	_vector vTargetDIM_Position = pCityNpc->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+	_vector vTargetGNL_Position = pCityNpc->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 	_vector vPosition = Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-	_float fDistance = XMVectorGetX(XMVector3Length(vTargetDIM_Position - vPosition));
+	_float fDistance = XMVectorGetX(XMVector3Length(vTargetGNL_Position - vPosition));
 
-	m_fDIM_Target_Distance = fDistance;
+	m_fGNL_Target_Distance = fDistance;
 
 	return pCityNpc;
 }
@@ -763,6 +977,17 @@ CCityNpc * CCityNpc::Get_GLD()
 
 	//if (pGameObject == this)
 	//	pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("LayerGld"), 1);
+
+	CCityNpc* pNpc_Gld = dynamic_cast<CCityNpc*>(pGameObject);
+
+	return pNpc_Gld;
+}
+
+CCityNpc * CCityNpc::Get_Duck(_uint iIndex)
+{
+	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_CITY, TEXT("Layer_Duck"), iIndex);
+
 
 	CCityNpc* pNpc_Gld = dynamic_cast<CCityNpc*>(pGameObject);
 
