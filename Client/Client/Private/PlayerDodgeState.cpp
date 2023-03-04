@@ -532,6 +532,8 @@ void CDodgeState::Enter(void)
 	}
 
 	m_pOwner->Set_Manarecover(true);
+
+	Rotation();
 }
 
 void CDodgeState::Exit(void)
@@ -578,4 +580,51 @@ void CDodgeState::DodgeEffect()
 	_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
 	m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
 #pragma endregion Dodge Effect
+}
+
+void CDodgeState::Rotation(void)
+{
+	_float fRadian;
+
+	switch (m_eDirection)
+	{
+	case Client::DIR_STRAIGHT:
+	case Client::DIR_END:
+		fRadian = XMConvertToRadians(0.f);
+		break;
+	case Client::DIR_BACKWARD:
+		fRadian = XMConvertToRadians(180.f);
+		break;
+	case Client::DIR_LEFT:
+		fRadian = XMConvertToRadians(270.f);
+		break;
+	case Client::DIR_RIGHT:
+		fRadian = XMConvertToRadians(90.f);
+		break;
+	case Client::DIR_STRAIGHT_LEFT:
+		fRadian = XMConvertToRadians(315.f);
+		break;
+	case Client::DIR_STRAIGHT_RIGHT:
+		fRadian = XMConvertToRadians(45.f);
+		break;
+	case Client::DIR_BACKWARD_LEFT:
+		fRadian = XMConvertToRadians(225.f);
+		break;
+	case Client::DIR_BACKWARD_RIGHT:
+		fRadian = XMConvertToRadians(135.f);
+		break;
+	}
+
+	_matrix CamMatrix = XMLoadFloat4x4(&CGameInstance::Get_Instance()->Get_CamWorldMatrix());
+
+	_vector vCamLook = XMVector4Normalize(XMVectorSetY(CamMatrix.r[2], XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_LOOK))));
+
+	_vector vPlayerUp = XMVector4Normalize(m_pOwner->Get_TransformState(CTransform::STATE_UP));
+	vCamLook = XMVector4Normalize(XMVector3TransformNormal(vCamLook, XMMatrixRotationAxis(vPlayerUp, fRadian)));
+	
+	_vector vNewRight = XMVector3Cross(vPlayerUp, vCamLook);
+
+	_float3 fScale = m_pOwner->Get_Scale();
+	m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, vNewRight * fScale.x);
+	m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, vCamLook * fScale.z);
 }

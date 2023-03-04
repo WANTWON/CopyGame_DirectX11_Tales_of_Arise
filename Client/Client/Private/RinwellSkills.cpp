@@ -345,7 +345,7 @@ void CRinwellSkills::Collision_Check()
 		else
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);
 		}
 		break;
 
@@ -527,10 +527,9 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		break;
 
 	case BANGJEON:
-		ColliderDesc.vScale = _float3(7.f, 7.f, 7.f);
+		ColliderDesc.vScale = _float3(12.5f, 12.5f, 12.5f);
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-
 	}
 
 	if (m_BulletDesc.eBulletType == THUNDER_FIELD || m_BulletDesc.eBulletType == DIVINE_SABER || m_BulletDesc.eBulletType == DIVINE_SABER_BULLET)
