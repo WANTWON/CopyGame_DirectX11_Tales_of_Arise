@@ -69,6 +69,7 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 			if (m_b_IsTargetInsight == false)
 			{
 				_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
+				vTargetDir = XMVectorSetY(vTargetDir, 0.f);
 				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 				m_pOwner->Get_Transform()->LookDir(vTargetDir);
 			}
