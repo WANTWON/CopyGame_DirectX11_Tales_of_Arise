@@ -336,6 +336,8 @@ HRESULT CLevel_BossZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	ZeroMemory(&ModelDesc, sizeof(NONANIMDESC));
 	strcpy(ModelDesc.pModeltag, "Astral_Doubt");
 	ModelDesc.vPosition = _float3(50, 0.f, 50.f);
+	XMStoreFloat4x4(&ModelDesc.WorldMatrix, XMMatrixIdentity());
+	ModelDesc.vRotation = _float3(0.f, 180.f, 0.f);
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_Boss"), &ModelDesc)))
 		return E_FAIL;
 	/*CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
