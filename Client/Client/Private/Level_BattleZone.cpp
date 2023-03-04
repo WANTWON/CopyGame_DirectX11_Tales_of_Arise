@@ -139,10 +139,10 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 	}
 
 
-	if (CGameInstance::Get_Instance()->Get_TimeSpeedOffset(TEXT("Timer_Object")) == 0.f)
+	if (CBattleManager::Get_Instance()->Get_IsHitLeg() == true)
 	{
 		m_fHitLegTime += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
-		if (m_fHitLegTime > 0.1f)
+		if (m_fHitLegTime > CBattleManager::Get_Instance()->Get_HitLegTimer())
 		{
 			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 			m_fHitLegTime = 0.f;
@@ -291,6 +291,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		{
 			pBattleManager->Out_Monster(iter);
 			pBattleManager->Add_BattleMonster(iter);
+
 		}
 		else
 			pGameInstance->Out_GameObject(LEVEL_STATIC, TEXT("Layer_Monster"), iter);
@@ -580,10 +581,6 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	}
 	
 
-	
-
-	
-
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_button"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
 
@@ -592,9 +589,6 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_LOCKON"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
-
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Skillmsg"), LEVEL_BATTLE, pLayerTag)))
-		return E_FAIL;*/
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MonsterHP"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
@@ -610,14 +604,8 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 			return E_FAIL;
 	}
 
-
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MainPlayerMark"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
-	
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_BATTLE, pLayerTag)))
-		return E_FAIL;*/
-
-	/**/
 	
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -634,10 +622,10 @@ void CLevel_BattleZone::Set_FogShader()
 	CPlayer* pPlayer4 = CPlayerManager::Get_Instance()->Get_EnumPlayer(CPlayer::LAW);
 	
 
-	if(pPlayer1->Get_StrikeAttack() == false &&
-		pPlayer2->Get_StrikeAttack() == false &&
-		pPlayer3->Get_StrikeAttack() == false &&
-		pPlayer4->Get_StrikeAttack() == false)
+	if( (pPlayer1 != nullptr && pPlayer1->Get_StrikeAttack() == false) &&
+		(pPlayer2 != nullptr && pPlayer2->Get_StrikeAttack() == false) &&
+		(pPlayer3 != nullptr && pPlayer3->Get_StrikeAttack() == false) &&
+		(pPlayer4 != nullptr && pPlayer4->Get_StrikeAttack() == false) )
 	{
 		/* Fog Shader */
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

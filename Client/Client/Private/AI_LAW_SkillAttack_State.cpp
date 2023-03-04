@@ -42,14 +42,15 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		if ((m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_R) && !m_bIsFly)
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
+		else if ((m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_F) && !m_bIsFly)
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.02f), fRotationRadian, m_pOwner->Get_Navigation());
+		else
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	if (m_pOwner->Get_IsFly())
-		m_pOwner->Check_Navigation_Jump();
-	else
-		m_pOwner->Check_Navigation();
-	
+	m_pOwner->Check_Navigation_Jump();
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -93,22 +94,22 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 			{
+				if (CAIState::STATE_SKILL_ATTACK_R == m_eStateId || CAIState::STATE_SKILL_ATTACK_F == m_eStateId)
+					return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, true, 1.f);
+
 				if (m_pOwner->Get_Info().fCurrentMp > 1)
 				{
 					switch (rand() % 4)
 					{
 					case 0:
-						m_pOwner->Get_Model()->Reset();
 						m_eStateId = STATE_SKILL_ATTACK_E;
 						Enter();
 						break;
 					case 1:
-						m_pOwner->Get_Model()->Reset();
 						m_eStateId = STATE_SKILL_ATTACK_R;
 						Enter();
 						break;
 					case 2:
-						m_pOwner->Get_Model()->Reset();
 						m_eStateId = STATE_SKILL_ATTACK_F;
 						Enter();
 						break;
@@ -123,11 +124,9 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 					switch (rand() % 3)
 					{
 					case 0:
-						//m_pOwner->Get_Model()->Reset();
 						return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
 						break;
 					case 1:
-						//m_pOwner->Get_Model()->Reset();
 						return new CAI_DodgeState(m_pOwner, m_pTarget);
 						break;
 					case 2:
@@ -489,7 +488,12 @@ CAIState * CAI_LAW_SkillAttack_State::LateTick(_float fTimeDelta)
 	}
 
 	if (m_bIsAnimationFinished)
-		return new CAICheckState(m_pOwner, m_eStateId);
+	{
+		if (m_bIsFly)
+			return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, false, m_fTime);
+		else
+			return new CAICheckState(m_pOwner, m_eStateId);
+	}
 
 	return nullptr;
 }

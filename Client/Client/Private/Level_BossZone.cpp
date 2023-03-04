@@ -110,6 +110,15 @@ void CLevel_BossZone::Tick(_float fTimeDelta)
 
 	}
 
+	if (CBattleManager::Get_Instance()->Get_IsHitLeg() == true)
+	{
+		m_fHitLegTime += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		if (m_fHitLegTime > 0.1f)
+		{
+			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
+			m_fHitLegTime = 0.f;
+		}
+	}
 
 	RELEASE_INSTANCE(CBattleManager);
 }
@@ -322,7 +331,17 @@ HRESULT CLevel_BossZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CBattleManager*			pBattleManager = GET_INSTANCE(CBattleManager);
 	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
 
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
+
+	NONANIMDESC ModelDesc;
+	ZeroMemory(&ModelDesc, sizeof(NONANIMDESC));
+	strcpy(ModelDesc.pModeltag, "Astral_Doubt");
+	ModelDesc.vPosition = _float3(50, 0.f, 50.f);
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_Boss"), &ModelDesc)))
+		return E_FAIL;
+	/*CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
+
+
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));*/
 	CBaseObj* pBossMonster = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Boss")));
 	pBattleManager->Add_BattleMonster(pBossMonster);
 	pBattleManager->Set_BossMonster(pBossMonster);
@@ -339,7 +358,6 @@ HRESULT CLevel_BossZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
-	NONANIMDESC ModelDesc;
 	_uint iNum = 0;
 
 	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/MonsterPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);

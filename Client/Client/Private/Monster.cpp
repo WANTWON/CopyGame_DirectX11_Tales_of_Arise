@@ -74,7 +74,7 @@ int CMonster::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	if (m_bTakeDamage)
-		m_fTime_TakeDamageDeltaAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		m_fTime_TakeDamageDeltaAcc += fTimeDelta;
 
 	if (0.2f <= m_fTime_TakeDamageDeltaAcc)
 	{
@@ -450,11 +450,12 @@ void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 	if (!pPlayer)
 		return;
 
-	_int iRandX = rand() % 10 * 0.1f * (rand()% 2 == 0 ? 1.f : -1.f);
-	_int iRandZ = rand() % 10 * 0.1f;
+	_int iRandX = rand() % 20 * 0.1f * (rand()% 2 == 0 ? 1.f : -1.f);
+	_int iRandZ = rand() % 20 * 0.1f * (rand() % 2 == 0 ? 1.f : -1.f);
+	_int iRandY = rand() % 20 * 0.1f;
 
 
-	_vector vOffset = XMVectorSet(iRandX, m_fRadius + 1.5f, iRandX, 0.f);
+	_vector vOffset = XMVectorSet(iRandX, m_fRadius + iRandY, iRandX, 0.f);
 	_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
 	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -614,9 +615,24 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	if (DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer())
 	{
 		CBattleManager::Get_Instance()->Set_LackonMonster(this);
-		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
+		CBattleManager::Get_Instance()->Set_IsHitLeg(true);
+
+		switch (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID())
+		{
+		case CPlayer::PLAYERID::ALPHEN:
+		case CPlayer::PLAYERID::LAW:
+			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
+			CBattleManager::Get_Instance()->Set_HitLegTimer(0.2f);
+			break;
+		case CPlayer::PLAYERID::RINWELL:
+		case CPlayer::PLAYERID::SION:
+			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
+			CBattleManager::Get_Instance()->Set_HitLegTimer(0.1f);
+			break;
+		}
+
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.2f);
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.2f);
 	}
 
 	if (m_pTarget != nullptr)
@@ -640,11 +656,6 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	{
 		if (m_tStats.m_fCurrentHp <= 0)
 		{
-
-			m_tStats.m_fCurrentHp = 0;
-			CBattleManager::Get_Instance()->Update_LockOn();
-			Check_AmILastMoster();
-
 			return _int(m_tStats.m_fCurrentHp);
 		}
 	}

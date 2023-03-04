@@ -253,7 +253,7 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
 {
 
-	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD || m_bOnGoingDown)
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD )
 		return 0;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
@@ -261,28 +261,39 @@ _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange
 
 	if (iHp <= 0)
 	{
+		m_tStats.m_fCurrentHp = 0;
+		CBattleManager::Get_Instance()->Update_LockOn();
+		Check_AmILastMoster();
+
+
 		CHawkState* pState = new CBattle_DeadState(this);
 		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 		return 0;
 	}
 	else
 	{
-		if (m_bDownState == false)
+		if (m_bOnGoingDown == false)
 		{
-			if (m_bBedamageAnim_Delay == false)
+			if (m_bDownState == false)
 			{
-				if (m_bBedamageAnim == true)
+				if (m_bBedamageAnim_Delay == false)
 				{
-					CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_TAKE_DAMAGE);
-					m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+					if (m_bBedamageAnim == true)
+					{
+						Check_Navigation();
+						CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_TAKE_DAMAGE);
+						m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+					}
 				}
 			}
+			else if (m_bDownState == true)
+			{
+				
+				CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_ID::STATE_DOWN);
+				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+			}
 		}
-		else if (m_bDownState == true)
-		{
-			CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_ID::STATE_DOWN);
-			m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-		}
+		
 
 	}
 
