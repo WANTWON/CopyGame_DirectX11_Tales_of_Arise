@@ -500,7 +500,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	
 	++m_tStats.m_iHitcount;
 
-	if (m_tStats.m_iHitcount >= 10)
+	if (m_tStats.m_iHitcount >= 60)
 	{
 		m_bDownState = true;
 		m_tStats.m_iHitcount = 0;
