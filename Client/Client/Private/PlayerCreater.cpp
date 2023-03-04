@@ -388,7 +388,7 @@ HRESULT CPlayerCreater::Ready_InstancingForPooling(const _tchar* pLayerTag)
 #pragma endregion SnowField
 
 #pragma region BossZone
-	strcpy(stModelDesc.pModeltag, "Prop_Light02_Lod1");
+	strcpy(stModelDesc.pModeltag, "Bld_TilingA");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BOSS, pLayerTag, &stModelDesc)))
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));
@@ -927,6 +927,14 @@ HRESULT CPlayerCreater::Ready_Layer_BossMapObject(const _tchar * pLayerTag)
 	}
 
 	CloseHandle(hFile);
+
+	strcpy(ModelDesc.pModeltag, "Astral_Doubt");
+	ModelDesc.vPosition = _float3(50, 0.f, 50.f);
+	XMStoreFloat4x4(&ModelDesc.WorldMatrix, XMMatrixIdentity());
+	ModelDesc.vRotation = _float3(0.f, 180.f, 0.f);
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_Boss"), &ModelDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
 
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;

@@ -2986,6 +2986,10 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Ceiling/Ceiling.dat"))))
 		return E_FAIL;       
 	
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_TilingA"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Tiling/Bld_TilingA/Bld_TilingA.dat"))))
+		return E_FAIL;*/
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Chandelier_Lod1"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Chandelier/Bld_Chandelier_Lod1/Bld_Chandelier_Lod1.dat"))))
 		return E_FAIL;
@@ -3301,9 +3305,9 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 
 #pragma region Instancing Boss
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prop_Light02_Lod1"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Light/Prop_Light02_Lod1/Prop_Light02_Lod1.dat",
-			"../../../Bin/Data/BattleZoneData/BossMap/LightPillar.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_TilingA"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Tiling/Bld_TilingA/Bld_TilingA.dat",
+			"../../../Bin/Data/BattleZoneData/BossMap/Tilling.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Wall01"),

@@ -196,18 +196,18 @@ HRESULT CLoader::Loading_ForClient()
 	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
 	//	return E_FAIL;
 
-	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
-	//	return E_FAIL;
+	/*if (FAILED(Loading_ForMaptoolBossRoomModel()))
+		return E_FAIL;*/
 
 	//if (FAILED(Loading_ForMaptoolVillageModel()))
 	//	return E_FAIL;
 	
-	 if (FAILED(Loading_ForMaptoolCityModel()))
+	/* if (FAILED(Loading_ForMaptoolCityModel()))
 	 	return E_FAIL;
 
 	 if (FAILED(Loading_ForMaptoolPlant()))
 	 	return E_FAIL;
-
+*/
 	/*if (FAILED(Loading_ForMaptoolInteriorModel()))
 		return E_FAIL;
 
@@ -2625,7 +2625,6 @@ HRESULT CLoader::Loading_ForActor()
 #pragma endregion Animaition
 
 
-
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Alphen_NonAnim"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Alphen/Alphen.dat"))))
 		return E_FAIL;
@@ -2731,10 +2730,15 @@ HRESULT CLoader::Loading_ForActor()
 		return E_FAIL;
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Ice_Wolf_NonAnim"));
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ASU_005"),
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Astral_Doubt"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/MonsterforMaptool/Astral_Doubt.dat"))))
+	//	return E_FAIL;
+	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Astral_Doubt"));
+
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ASU_005"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/ASU_005.dat"))))
 		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("ASU_005"));
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("ASU_005"));*/
 
 
 
