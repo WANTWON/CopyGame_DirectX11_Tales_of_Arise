@@ -74,12 +74,9 @@ void CBattleNpc::Late_Tick(_float fTimeDelta)
 	   m_bIsFirst_conversation = true;
 
 	   if (CGameInstance::Get_Instance()->Key_Up(DIK_E))
-			Talk_with_Npc(); 
-		   
-	   if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
 	   {
-		   CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
-		   pCurrentLevel->Set_NextLevel(true, LEVEL_LAWBATTLE);
+		   CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_IsActionMode(true);
+		   Talk_with_Npc();
 	   }
    }
 
@@ -112,6 +109,7 @@ void CBattleNpc::Talk_with_Npc()
 	switch (m_NpcDesc.eNpcType)
 	{
 	case NPC_LAW:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcLaw.dat"), Get_Transform()->Get_WorldMatrix());
 		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(12);
 		break;

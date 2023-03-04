@@ -40,6 +40,12 @@ HRESULT CBullet::Initialize(void * pArg)
 
 int CBullet::Tick(_float fTimeDelta)
 {
+	if (m_bDead)
+		return OBJ_DEAD;
+
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return OBJ_NOSHOW;
+
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 	{
 		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
@@ -49,6 +55,20 @@ int CBullet::Tick(_float fTimeDelta)
 
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 		return OBJ_DEAD;
+
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON)
+			return OBJ_NOSHOW;
+	}
+
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return OBJ_NOSHOW;
+
 	return OBJ_NOEVENT;
 }
 
@@ -166,6 +186,29 @@ void CBullet::Collision_Check()
 			}
 		}
 	}
+}
+
+_bool CBullet::Check_Exception_Collision()
+{
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON)
+			return false;
+	}
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
+
+		if (CUI_Manager::Get_Instance()->Get_StopTick())
+			return false;
+
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return false;
+
+
+	return true; 
 }
 
 void CBullet::Free()

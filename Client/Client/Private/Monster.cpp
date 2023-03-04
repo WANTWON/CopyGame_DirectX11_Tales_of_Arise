@@ -619,12 +619,12 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 		case CPlayer::PLAYERID::ALPHEN:
 		case CPlayer::PLAYERID::LAW:
 			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
-			CBattleManager::Get_Instance()->Set_HitLegTimer(0.2f);
+			CBattleManager::Get_Instance()->Set_HitLegTimer(0.15f);
 			break;
 		case CPlayer::PLAYERID::RINWELL:
 		case CPlayer::PLAYERID::SION:
 			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
-			CBattleManager::Get_Instance()->Set_HitLegTimer(0.1f);
+			CBattleManager::Get_Instance()->Set_HitLegTimer(0.05f);
 			break;
 		}
 

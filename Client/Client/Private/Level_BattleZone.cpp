@@ -69,27 +69,29 @@ HRESULT CLevel_BattleZone::Initialize()
 	switch (eMonsterID)
 	{
 	case Client::ICE_WOLF:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgm0.wav"), g_fSoundVolume);
 		break;
 	case Client::HAWK:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgm1.wav"), g_fSoundVolume);
 		break;
 	case Client::BERSERKER:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgm2.wav"), g_fSoundVolume);
 		break;
 	case Client::RINWELL:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellBattleEnter.dat"), XMMatrixIdentity());
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
 		break;
 	default:
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
-
 		break;
 	}
 
 	CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 
-	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
-
+	
 	return S_OK;
 }
 

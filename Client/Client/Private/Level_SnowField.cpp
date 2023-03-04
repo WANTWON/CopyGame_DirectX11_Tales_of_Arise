@@ -331,7 +331,7 @@ void CLevel_SnowField::Late_Tick(_float fTimeDelta)
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (pPlayer)
 	{
-		pPlayer->Get_Renderer()->Set_Fog(false);
+		pPlayer->Get_Renderer()->Set_Fog(true);
 
 		CShader* pShaderPostProcessing = pPlayer->Get_Renderer()->Get_ShaderPostProcessing();
 		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
@@ -427,6 +427,8 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Compute_CurrentIndex(LEVEL_SNOWFIELD);
 	pPlayer->Check_Navigation();
 	pPlayer->Change_Level(LEVEL_SNOWFIELD);
+	if (pPlayer->Get_IsFly() == true)
+		pPlayer->Off_IsFly();
 
 	RELEASE_INSTANCE(CGameInstance);
 
