@@ -427,7 +427,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 
 	m_lMouseWheel = pGameInstance->Get_DIMMoveState(DIMM_WHEEL);
 
-	ZoomSetting(-5.f, 0.25f);
+	ZoomSetting(-3.f, 0.25f);
 
 	if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
 	{
@@ -547,7 +547,7 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	_vector vCenterPos = vPlayerPosition;
 
-	ZoomSetting(-5.f, 1.f);
+	ZoomSetting(3.f, 0.5f);
 
 	// 락온 몬스터가 있으면 항상 플레이어와 락온이 화면에 들어오게 하기
 	CBaseObj* pLockOnMonster = CBattleManager::Get_Instance()->Get_LackonMonster();

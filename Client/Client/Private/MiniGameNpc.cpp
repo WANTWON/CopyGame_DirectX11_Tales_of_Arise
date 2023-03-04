@@ -74,7 +74,11 @@ void CMiniGameNpc::Late_Tick(_float fTimeDelta)
 	   m_bIsFirst_conversation = true;
 
 	   if (CGameInstance::Get_Instance()->Key_Up(DIK_E))
-			Talk_with_Npc(); 
+	   {
+		   CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_IsActionMode(true);
+		   Talk_with_Npc();
+	   }
+			
 		   
    }
 
@@ -109,16 +113,14 @@ void CMiniGameNpc::Talk_with_Npc()
 
 	switch (m_NpcDesc.eNpcType)
 	{
-	case MAN_GLD:
+	case NPC_NMM_BLS_000:
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcFoodSlash.dat"), Get_Transform()->Get_WorldMatrix());
 		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(CUI_Manager::Get_Instance()->Get_Dialogue_section());
 		break;
-
 	case NPC_NMM_BEF_000:
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcShooting.dat"), Get_Transform()->Get_WorldMatrix());
 		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(CUI_Manager::Get_Instance()->Get_Dialogue_section());
 		break;
-
 	default:
 		break;
 	}

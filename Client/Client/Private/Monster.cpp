@@ -159,16 +159,11 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	if (LEVEL_BATTLE == m_eCurLevel)
 		m_bBattleMode = true;
 
-	if (LEVEL_SNOWFIELD == m_eCurLevel && m_eMonsterID != ASTRAL_DOUBT)
+	if (LEVEL_SNOWFIELD == m_eCurLevel)
 	{
 		CCollider* pPlayerCollider = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Collider();
 		if (m_pSPHERECom->Collision(pPlayerCollider))
-		{
-			if(m_eMonsterID == RINWELL)
-				CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID, true);
-			else
-				CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID);
-		}
+			CBattleManager::Get_Instance()->Set_BattleMode(true, m_eMonsterID);
 	}
 }
 
@@ -247,7 +242,7 @@ _bool CMonster::ExceptionHanding()
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 	{
 		_uint eCamMode = dynamic_cast<CCamera_Dynamic*>(pCamera)->Get_CamMode();
-		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON || eCamMode == CCamera_Dynamic::CAM_AIBOOSTOFF)
+		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON )
 			return false;
 
 	}
@@ -255,19 +250,21 @@ _bool CMonster::ExceptionHanding()
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return false;
 
-	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
+	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
 		return false;
-
 
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return false;
 
-	
+	return true;
+}
 
-	if (m_eLevel == LEVEL_SNOWFIELD && m_bBattleMode)
+_bool CMonster::ExceptingActionCamHanding()
+{
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
 		return false;
-
 	return true;
 }
 
@@ -622,12 +619,12 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 		case CPlayer::PLAYERID::ALPHEN:
 		case CPlayer::PLAYERID::LAW:
 			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
-			CBattleManager::Get_Instance()->Set_HitLegTimer(0.2f);
+			CBattleManager::Get_Instance()->Set_HitLegTimer(0.15f);
 			break;
 		case CPlayer::PLAYERID::RINWELL:
 		case CPlayer::PLAYERID::SION:
 			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
-			CBattleManager::Get_Instance()->Set_HitLegTimer(0.1f);
+			CBattleManager::Get_Instance()->Set_HitLegTimer(0.05f);
 			break;
 		}
 

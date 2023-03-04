@@ -2,10 +2,7 @@
 #include "HawkBattle_Damage_LargeB_State.h"
 #include "HawkIdleState.h"
 #include "GameInstance.h"
-
 #include "HawkBattle_RunState.h"
-#include "HawkBattle_Flying_BackState.h"
-#include "HawkBattle_Flying_BackState.h"
 #include "HawkBattle_IdleState.h"
 
 using namespace Hawk;
