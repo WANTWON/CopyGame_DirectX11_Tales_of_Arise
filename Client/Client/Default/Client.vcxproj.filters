@@ -469,6 +469,9 @@
     <Filter Include="02.GameObjects\04.UI\31.UI_MainPlayerMark">
       <UniqueIdentifier>{f0a5b304-cb9a-4ce4-88f9-84c37526f074}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\03.Effect\04.EffectObject%28NotTool%29">
+      <UniqueIdentifier>{89e2a9fa-f6cd-441b-9177-3eb51a1d308c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -694,9 +697,6 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\HawkBattle_RunState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\HawkBattle_Flying_BackState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_font_Damage_number.h">
@@ -1284,6 +1284,9 @@
     <ClInclude Include="..\Public\UI_MainPlayerMark.h">
       <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\EffectObject.h">
+      <Filter>02.GameObjects\03.Effect\04.EffectObject%28NotTool%29</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\RinwellDownState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClInclude>
@@ -1304,6 +1307,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Monster_LawAirF.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellTurnState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RinwellStepState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1509,9 +1518,6 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\FieldStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\HawkBattle_RunState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\HawkBattle_Flying_BackState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_font_Damage_number.cpp">
@@ -2084,6 +2090,9 @@
     <ClCompile Include="..\Private\UI_MainPlayerMark.cpp">
       <Filter>02.GameObjects\04.UI\31.UI_MainPlayerMark</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\EffectObject.cpp">
+      <Filter>02.GameObjects\03.Effect\04.EffectObject%28NotTool%29</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\RinwellDownState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClCompile>
@@ -2104,6 +2113,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monster_LawAirF.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellTurnState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RinwellStepState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

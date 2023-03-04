@@ -68,7 +68,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 		{
 			_uint	iIndex = i * m_iNumVerticesX + j;
 
-			m_pVerticesPos[iIndex] = pVertices[iIndex].vPosition = _float3(_float(j), (pPixel[iIndex] & 0x000000ff)/10.f, _float(i));
+			m_pVerticesPos[iIndex] = pVertices[iIndex].vPosition = _float3( -300.f + _float(j*10), (pPixel[iIndex] & 0x000000ff)/2.f - 10.f, -300.f + _float(i*10));
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTangent = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexture = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
@@ -225,7 +225,7 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 		{
 			_int		iIndex = i * m_iNumVerticesX + j;
 
-			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3((_float)j, 0.f, (_float)i);
+			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3( - 500 + (_float)j*10.f, -10.f,  -500 + (_float)i*10.f);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexture = _float2(j / _float(m_iNumVerticesX - 1), i / _float(m_iNumVerticesZ - 1));
 		}

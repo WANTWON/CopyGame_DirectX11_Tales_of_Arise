@@ -122,27 +122,32 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Astral_Doubt"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Astral_Doubt/Astral_Doubt.dat"))))
 		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Astral_Doubt");
+	//pImgui->m_AnimObj.push_back("Astral_Doubt");
 
-	/* For.Prototype_Component_Model_Rinwell */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Rinwell"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
-		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Rinwell");
-	
+	///* For.Prototype_Component_Model_Rinwell */
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Rinwell"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
+	//	return E_FAIL;
+	//pImgui->m_AnimObj.push_back("Rinwell");
+	//
+
+	///* For.Prototype_Component_Model_Law */
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Law"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Law/Law.dat"))))
+	//	return E_FAIL;
+	//pImgui->m_AnimObj.push_back("Law");
+
+	///* For.Prototype_Component_Model_RINWELLWEAPON */
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_RINWELLWEAPON"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/RinwellWeapon/RINWELLWEAPON.dat"))))
+	//	return E_FAIL;
+	//pImgui->m_WeaponObj.push_back("RINWELLWEAPON");
 
 	/* For.Prototype_Component_Model_Law */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Law"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Law/Law.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Current_Astral_Doubt"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Astral_Doubt/Astral_Doubt.dat"))))
 		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Law");
-
-	/* For.Prototype_Component_Model_RINWELLWEAPON */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_RINWELLWEAPON"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/RinwellWeapon/RINWELLWEAPON.dat"))))
-		return E_FAIL;
-	pImgui->m_WeaponObj.push_back("RINWELLWEAPON");
-
+	pImgui->m_AnimObj.push_back("Current_Astral_Doubt");
 
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));

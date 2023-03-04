@@ -41,6 +41,7 @@ public:
 		STATE_DOWN,
 		STATE_ARISE,
 		STATE_DEAD,
+		START_BATTLE,
 		STATE_END
 	};
 

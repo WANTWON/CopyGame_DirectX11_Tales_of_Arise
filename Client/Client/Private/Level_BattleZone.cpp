@@ -69,27 +69,29 @@ HRESULT CLevel_BattleZone::Initialize()
 	switch (eMonsterID)
 	{
 	case Client::ICE_WOLF:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgm0.wav"), g_fSoundVolume);
 		break;
 	case Client::HAWK:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgm1.wav"), g_fSoundVolume);
 		break;
 	case Client::BERSERKER:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgm2.wav"), g_fSoundVolume);
 		break;
 	case Client::RINWELL:
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellBattleEnter.dat"), XMMatrixIdentity());
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
 		break;
 	default:
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
-
 		break;
 	}
 
 	CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 
-	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BattleZoneEnter.dat"), XMMatrixIdentity());
-
+	
 	return S_OK;
 }
 
@@ -98,7 +100,7 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	CBattleManager* pBattleManager = GET_INSTANCE(CBattleManager);
-	if(pBattleManager->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
+	if(pBattleManager->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(pBattleManager->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
 		CPlayerManager::Get_Instance()->Set_SmashAttack();
 
 
@@ -139,6 +141,18 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 	}
 
 
+	if (CBattleManager::Get_Instance()->Get_IsHitLeg() == true)
+	{
+		m_fHitLegTime += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		if (m_fHitLegTime > CBattleManager::Get_Instance()->Get_HitLegTimer())
+		{
+			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
+			m_fHitLegTime = 0.f;
+		}
+	}
+
+
+
 	RELEASE_INSTANCE(CBattleManager);
 }
 
@@ -173,7 +187,7 @@ HRESULT CLevel_BattleZone::Ready_Lights()
 	_ulong dwByte = 0;
 	_uint iNum = 0;
 
-	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Light2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Light3.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -279,6 +293,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		{
 			pBattleManager->Out_Monster(iter);
 			pBattleManager->Add_BattleMonster(iter);
+
 		}
 		else
 			pGameInstance->Out_GameObject(LEVEL_STATIC, TEXT("Layer_Monster"), iter);
@@ -307,6 +322,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		dynamic_cast<CMonster*>(iter)->Change_Navigation(LEVEL_BATTLE);
 		dynamic_cast<CMonster*>(iter)->Compute_CurrentIndex(LEVEL_BATTLE);
 		dynamic_cast<CMonster*>(iter)->Set_BattleMode(true);
+		dynamic_cast<CMonster*>(iter)->Set_IsActionMode(true);
 		pBattleManager->Set_LackonMonster(iter);
 	}
 	CloseHandle(hFile);
@@ -568,10 +584,6 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	}
 	
 
-	
-
-	
-
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_button"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
 
@@ -580,9 +592,6 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_LOCKON"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
-
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Skillmsg"), LEVEL_BATTLE, pLayerTag)))
-		return E_FAIL;*/
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MonsterHP"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
@@ -598,14 +607,8 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 			return E_FAIL;
 	}
 
-
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MainPlayerMark"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
-	
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_BATTLE, pLayerTag)))
-		return E_FAIL;*/
-
-	/**/
 	
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -622,10 +625,10 @@ void CLevel_BattleZone::Set_FogShader()
 	CPlayer* pPlayer4 = CPlayerManager::Get_Instance()->Get_EnumPlayer(CPlayer::LAW);
 	
 
-	if(pPlayer1->Get_StrikeAttack() == false &&
-		pPlayer2->Get_StrikeAttack() == false &&
-		pPlayer3->Get_StrikeAttack() == false &&
-		pPlayer4->Get_StrikeAttack() == false)
+	if( (pPlayer1 != nullptr && pPlayer1->Get_StrikeAttack() == false) &&
+		(pPlayer2 != nullptr && pPlayer2->Get_StrikeAttack() == false) &&
+		(pPlayer3 != nullptr && pPlayer3->Get_StrikeAttack() == false) &&
+		(pPlayer4 != nullptr && pPlayer4->Get_StrikeAttack() == false) )
 	{
 		/* Fog Shader */
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

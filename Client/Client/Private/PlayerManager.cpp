@@ -24,7 +24,7 @@ void CPlayerManager::Set_ActivePlayer(CPlayer * pPlayer)
 	{
 		_vector vPosition = m_pActivePlayer->Get_TransformState(CTransform::STATE_TRANSLATION);
 		m_pActivePlayer = pPlayer;
-		m_pActivePlayer->Set_State(CTransform::STATE_TRANSLATION, vPosition);	
+		m_pActivePlayer->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	}
 	else
 	{
@@ -35,6 +35,8 @@ void CPlayerManager::Set_ActivePlayer(CPlayer * pPlayer)
 	m_pActivePlayer->Change_Navigation(iLevel);
 	m_pActivePlayer->Compute_CurrentIndex(iLevel);
 	m_pActivePlayer->Check_Navigation();
+	if (m_pActivePlayer->Get_IsFly() == true)
+		m_pActivePlayer->Off_IsFly();
 
 
 	m_pAIPlayers.clear();
@@ -43,6 +45,8 @@ void CPlayerManager::Set_ActivePlayer(CPlayer * pPlayer)
 	{
 		if (iter == m_pActivePlayer)
 			continue;
+		if (dynamic_cast<CPlayer*>(iter)->Get_IsFly() == true)
+			dynamic_cast<CPlayer*>(iter)->Off_IsFly();
 		m_pAIPlayers.push_back(dynamic_cast<CPlayer*>(iter));
 	}
 }
@@ -133,6 +137,8 @@ void CPlayerManager::Set_SmashAttack()
 {
 	CMonster* pLockonMonster = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster());
 
+
+
 	if ((nullptr != pLockonMonster) && (pLockonMonster->Get_Stats().m_fLockonSmashGuage >= 4.f))
 	{
 		//pLockonMonster->Set_IsActionMode(true);
@@ -180,8 +186,6 @@ void CPlayerManager::Set_SmashAttack()
 				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 			CBattleManager::Get_Instance()->Set_IsStrike(true);
 		}
-
-
 		if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 2)
 		{
 			//AlphenRinwell
@@ -263,7 +267,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-				pCameraManager->Play_ActionCamera(TEXT("SionRinwell3.dat"), XMMatrixIdentity());
+				pCameraManager->Play_ActionCamera(TEXT("SionRinwell2.dat"), XMMatrixIdentity());
 
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
@@ -357,7 +361,7 @@ void CPlayerManager::Set_SmashAttack()
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_3) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			{
 				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
-				Get_EnumPlayer(2)->Set_IsActionMode(true);
+				Get_EnumPlayer(2)->Set_IsActionMode(false);
 				Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
 				Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::RINWELL_LAW);

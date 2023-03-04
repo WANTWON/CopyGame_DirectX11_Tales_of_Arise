@@ -2,10 +2,7 @@
 #include "HawkBattle_Damage_LargeB_State.h"
 #include "HawkIdleState.h"
 #include "GameInstance.h"
-
 #include "HawkBattle_RunState.h"
-#include "HawkBattle_Flying_BackState.h"
-#include "HawkBattle_Flying_BackState.h"
 #include "HawkBattle_IdleState.h"
 
 using namespace Hawk;
@@ -27,22 +24,6 @@ CHawkState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 	AI_Behaviour(fTimeDelta);
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-
-	if (m_eStateId == CHawkState::STATE_DOWN)
-	{
-		if (!m_bIsAnimationFinished)
-		{
-			_vector vecTranslation;
-			_float fRotationRadian;
-
-			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.02f), fRotationRadian, m_pOwner->Get_Navigation());
-
-			m_pOwner->Check_Navigation();
-		}
-	}
-
 	m_pOwner->Check_Navigation();
 	
 	return nullptr;
@@ -50,9 +31,6 @@ CHawkState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 
 CHawkState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 {
-	m_iRand = rand() % 1;
-
-
 	if (m_bIsAnimationFinished)
 	{
 		if (m_eStateId == STATE_DOWN)

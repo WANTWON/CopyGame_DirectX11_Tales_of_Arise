@@ -15,6 +15,7 @@
 #include "Portal.h"
 #include "MiniGameNpc.h"
 #include "Trigger.h"
+#include "Effect.h"
 
 
 CPlayerCreater::CPlayerCreater(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -81,23 +82,23 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 			return E_FAIL;
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
-		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));
+		//pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 		CPlayerManager::Get_Instance()->Save_LastPosition();
 		pPlayer->Change_Level(LEVEL_SNOWFIELD);
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		//	return E_FAIL;
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		//	return E_FAIL;
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 
 	}
 
@@ -832,6 +833,7 @@ HRESULT CPlayerCreater::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 	}
 	CloseHandle(hFile);
 
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -928,13 +930,6 @@ HRESULT CPlayerCreater::Ready_Layer_BossMapObject(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 	RELEASE_INSTANCE(CGameInstance);
-
-	ModelDesc;
-	strcpy(ModelDesc.pModeltag, "Astral_Doubt");
-	ModelDesc.vPosition = _float3(50, 0.f, 50.f);
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_Boss"), &ModelDesc)))
-		return E_FAIL;
-	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
 	return S_OK;
 }
 
@@ -1227,7 +1222,9 @@ HRESULT CPlayerCreater::Ready_Layer_LawBattleMapObject(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	RELEASE_INSTANCE(CGameInstance);
+
+
+
 
 	ModelDesc;
 	strcpy(ModelDesc.pModeltag, "AILaw");
@@ -1235,6 +1232,7 @@ HRESULT CPlayerCreater::Ready_Layer_LawBattleMapObject(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MonsterLaw"), LEVEL_LAWBATTLE, TEXT("Layer_Boss"), &ModelDesc)))
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Boss"));
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
@@ -1726,9 +1724,9 @@ HRESULT CPlayerCreater::Ready_Layer_NpcCity(const _tchar * pLayerTag)
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMY_PLC")))
 		{
 			NpcDesc.eNpcType = CCityNpc::MAN_PLC;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_Plc"), &NpcDesc)))
 				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Plc"));
 
 		}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NFM_SLV_000")))
@@ -1742,9 +1740,9 @@ HRESULT CPlayerCreater::Ready_Layer_NpcCity(const _tchar * pLayerTag)
 		else if (!wcscmp(pModeltag, TEXT("NPC_NFY_FIA_000")))
 		{
 			NpcDesc.eNpcType = CCityNpc::NPC_NFY_FIA_000;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_FIA"), &NpcDesc)))
 				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag);
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_FIA"));
 
 		}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_BEF_000")))
@@ -1766,9 +1764,9 @@ HRESULT CPlayerCreater::Ready_Layer_NpcCity(const _tchar * pLayerTag)
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_DIM_000")))
 		{
 			NpcDesc.eNpcType = CCityNpc::NPC_NMM_DIM_000;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag , &NpcDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_DIM"), &NpcDesc)))
 				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag );
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_DIM"));
 
 		}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_MHB_000")))
@@ -1785,6 +1783,42 @@ HRESULT CPlayerCreater::Ready_Layer_NpcCity(const _tchar * pLayerTag)
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_NMM_SLV"), &NpcDesc)))
 				return E_FAIL;
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NMM_SLV"));
+
+		}
+
+		else if (!wcscmp(pModeltag, TEXT("NPC_NMY_GNL")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NMY_GNL;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_GNL"), &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_GNL"));
+
+		}
+
+		else if (!wcscmp(pModeltag, TEXT("NPC_NFY_WAC")))
+		{
+			NpcDesc.eNpcType = CCityNpc::NPC_NFY_WAC;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, pLayerTag);
+
+		}
+
+		else if (!wcscmp(pModeltag, TEXT("Dog")))
+		{
+			NpcDesc.eNpcType = CCityNpc::DOG;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, pLayerTag, &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NMM_SLV"));
+
+		}
+
+		else if (!wcscmp(pModeltag, TEXT("Duck")))
+		{
+			NpcDesc.eNpcType = CCityNpc::DUCK;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_CityNpc"), LEVEL_CITY, TEXT("Layer_Duck"), &NpcDesc)))
+				return E_FAIL;
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Duck"));
 
 		}
 
@@ -1821,7 +1855,7 @@ HRESULT CPlayerCreater::Ready_Layer_NpcMIniGame(const _tchar * pLayerTag)
 
 		if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
 		{
-			NpcDesc.eNpcType = CMiniGameNpc::NPC_NMM_BLS_000;
+			NpcDesc.eNpcType = CMiniGameNpc::MAN_GLD;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniGameNpc"), LEVEL_WORKTOOL, pLayerTag, &NpcDesc)))
 				return E_FAIL;
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, pLayerTag);
@@ -1858,7 +1892,7 @@ HRESULT CPlayerCreater::Ready_Layer_NpcMIniGame(const _tchar * pLayerTag)
 
 		if (!wcscmp(pModeltag, TEXT("NPC_NMM_BLS_000")))
 		{
-			NpcDesc.eNpcType = CMiniGameNpc::MAN_GLD;
+			NpcDesc.eNpcType = CMiniGameNpc::NPC_NMM_BLS_000;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniGameNpc"), LEVEL_RESTAURANT, pLayerTag, &NpcDesc)))
 				return E_FAIL;
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, pLayerTag);
@@ -1880,13 +1914,27 @@ HRESULT CPlayerCreater::Ready_Layer_NpcLawBattle(const _tchar * pLayerTag)
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	CNpc::NPCDESC NpcDesc;
+	_uint iNum = 0;
 
-	strcpy(NpcDesc.Modeldesc.pModeltag, "NpcLaw");
-	NpcDesc.Modeldesc.vPosition = _float3(64, 0.f, 64);
-	XMStoreFloat4x4(&NpcDesc.Modeldesc.WorldMatrix, XMMatrixIdentity()* XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f)));
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BattleNpc"), LEVEL_LAWBATTLE, TEXT("Layer_Npc"), &NpcDesc)))
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/LawBattle/Npc.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
 		return E_FAIL;
-	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Npc"));
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(NpcDesc.Modeldesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		strcpy(NpcDesc.Modeldesc.pModeltag, "NpcLaw");
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_BattleNpc"), LEVEL_LAWBATTLE, TEXT("Layer_Npc"), &NpcDesc)))
+			return E_FAIL;
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Npc"));
+	}
+
+	CloseHandle(hFile);
+
+
 
 	RELEASE_INSTANCE(CGameInstance);
 

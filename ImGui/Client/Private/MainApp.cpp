@@ -149,9 +149,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 50, 50, 1))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Terrain_Height"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Height.bmp")))))
-		return E_FAIL;
+	
 
 
 	Safe_AddRef(m_pRenderer);

@@ -29,69 +29,21 @@ CBerserkerState * CBattle_IdleState::Tick(_float fTimeDelta)
 	
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
-	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+	CBaseObj*	m_pCurTarget = m_pOwner->Get_DamageCauser();
 
-	if (pDamageCauser == nullptr)
-	{
-		if (m_pCurTarget == nullptr)
-		{
+	if (m_pCurTarget == nullptr)
 			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
 
-			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-		}
-
-		else if (m_pCurTarget)
-		{
-			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-		}
-	}
-
-	else if (pDamageCauser != nullptr)
-	{
-		m_pCurTarget = pDamageCauser;
-
-		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
-		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
-	}
-	
+	m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+	m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 	
 	m_fTarget_Cosign = Find_ToTargetCosign(m_vCurTargetPos);
 	m_bTarget_isRight = Find_ToTargetRightSide(m_vCurTargetPos);
-
-	////ÄÚ½Î
-	//
-	//
-	//m_fCosignTimeAcc += fTimeDelta;
-
-	//m_fCosign = m_fCosignTimeAcc * XMConvertToRadians(90.0f);
-
-	//
-	//if (m_fTarget_Cosign >= m_fCosign)
-	//{
-	//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
-
-	//	if(m_bTarget_isRight == true)
-	//		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
-	//	
-	//	else
-	//		m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -fTimeDelta);
-	//	
-	//}
-
-	//else
-	//	m_fCosignTimeAcc = 0.f;
-
-
-	//if (m_fTarget_Radian > m_fRadianAcc )
-	//{
-	//	m_pOwner->Get_Transform()->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
-	//	
-	//	if (m_fRadianAcc == m_fTarget_Radian)
-	//		m_fRadianAcc = 0.f;
-	//}
 	
+	if (m_eStateId == STATE_ID::START_BATTLE)
+	{
+		m_pOwner->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, -1.f, 0.f));
+	}
 	
 	return nullptr;
 }
@@ -124,7 +76,11 @@ CBerserkerState * CBattle_IdleState::LateTick(_float fTimeDelta)
 		}
 
 	}
-		
+	else if (m_eStateId == STATE_ID::START_BATTLE)
+	{
+		if (m_fTimeDeltaAcc > m_fRandTime && m_bIsAnimationFinished)
+			return new CBattle_WalkState(m_pOwner);
+	}
 	else
 	{
 		if (m_fTimeDeltaAcc > m_fRandTime)
@@ -138,9 +94,10 @@ void CBattle_IdleState::Enter()
 {
 	if(m_eStateId == STATE_ID::STATE_ARISE)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ARISE_F);
-
+	else if(m_eStateId == STATE_ID::START_BATTLE)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::ADVENT);
 	else
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_IDLE);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::MOVE_IDLE);
 }
 
 void CBattle_IdleState::Exit()

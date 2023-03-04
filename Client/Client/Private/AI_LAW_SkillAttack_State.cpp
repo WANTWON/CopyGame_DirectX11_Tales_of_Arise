@@ -14,8 +14,6 @@
 #include "AI_DodgeState.h"
 #include "AI_JumpState.h"
 #include "AI_Item_Use_State.h"
-#include "AI_LAW_AIRSKILLF.h"
-#include "AI_LAW_AIRSKILLR.h"
 
 using namespace AIPlayer;
 
@@ -52,10 +50,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-
-		m_pOwner->Check_Navigation_Jump();
-
-	
+	m_pOwner->Check_Navigation_Jump();
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -70,16 +65,8 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 				switch (m_eStateId)
 				{
 				case Client::CAIState::STATE_SKILL_ATTACK_E:
-					if (m_pOwner->Get_IsFly())
-					{
-						if (nullptr == m_pRightHandCollider)
-							m_pRightHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
-					else
-					{
-						if (nullptr == m_pRightFootCollider)
-							m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
-					}
+					if (nullptr == m_pRightFootCollider)
+						m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 					break;
 				case Client::CAIState::STATE_SKILL_ATTACK_R:
 					if (nullptr == m_pRightFootCollider)
@@ -104,98 +91,69 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 					m_fEventStartTime = pEvent.fStartTime;
 					break;
 				}
-		
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 			{
-				if (m_pOwner->Get_IsFly())
+				if (CAIState::STATE_SKILL_ATTACK_R == m_eStateId || CAIState::STATE_SKILL_ATTACK_F == m_eStateId)
+					return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, true, 1.f);
+
+				if (m_pOwner->Get_Info().fCurrentMp > 1)
 				{
-					if (m_pOwner->Get_Info().fCurrentMp > 1)
+					switch (rand() % 4)
 					{
-						switch (rand() % 2)
-						{
-						case 0:
-							return new CAI_LAW_AIRSKILLR(m_pOwner, STATE_SKILL_ATTACK_R);
-							break;
+					case 0:
+						m_eStateId = STATE_SKILL_ATTACK_E;
+						Enter();
+						break;
+					case 1:
+						m_eStateId = STATE_SKILL_ATTACK_R;
+						Enter();
+						break;
+					case 2:
+						m_eStateId = STATE_SKILL_ATTACK_F;
+						Enter();
+						break;
 
-						case 1:
-							return new CAI_LAW_AIRSKILLF(m_pOwner, STATE_SKILL_ATTACK_F);
-							break;
-						}
-					}
-					else
-					{
-						return new CAI_JumpState(m_pOwner, STATETYPE_START, false, m_fTime);
-					}
+					case 3:
+						return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
 
+					}
 				}
 				else
 				{
-					if (m_pOwner->Get_Info().fCurrentMp > 1)
+					switch (rand() % 3)
 					{
-						switch (rand() % 4)
+					case 0:
+						return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
+						break;
+					case 1:
+						return new CAI_DodgeState(m_pOwner, m_pTarget);
+						break;
+					case 2:
+						if (CBattleManager::Get_Instance()->Get_AIuseItem())
 						{
-						case 0:
-							m_pOwner->Get_Model()->Reset();
-							m_eStateId = STATE_SKILL_ATTACK_E;
-							Enter();
-							break;
-						case 1:
-							m_pOwner->Get_Model()->Reset();
-							m_eStateId = STATE_SKILL_ATTACK_R;
-							Enter();
-							break;
-						case 2:
-							m_pOwner->Get_Model()->Reset();
-							m_eStateId = STATE_SKILL_ATTACK_F;
-							Enter();
-							break;
-
-						case 3:
-							return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
-
-						}
-					}
-					else
-					{
-						switch (rand() % 3)
-						{
-						case 0:
-							//m_pOwner->Get_Model()->Reset();
-							return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
-							break;
-						case 1:
-							//m_pOwner->Get_Model()->Reset();
-							return new CAI_DodgeState(m_pOwner, m_pTarget);
-							break;
-						case 2:
-							if (CBattleManager::Get_Instance()->Get_AIuseItem())
+							ITEM_NAME item;
+							switch (rand() % 3)
 							{
-								ITEM_NAME item;
-								switch (rand() % 3)
-								{
-								case 0:
-									item = ITEMNAME_LEMONJELLY;
-									break;
-								case 1:
-									item = ITEMNAME_LEMONJELLY;
-									break;
-								case 2:
-									item = ITEMNAME_LEMONJELLY;
-									break;
+							case 0:
+								item = ITEMNAME_LEMONJELLY;
+								break;
+							case 1:
+								item = ITEMNAME_LEMONJELLY;
+								break;
+							case 2:
+								item = ITEMNAME_LEMONJELLY;
+								break;
 
-								}
-								return new CAI_Item_Use_State(m_pOwner, item);
 							}
-							else
-								return new CAI_DodgeState(m_pOwner, m_pTarget);
-
-							break;
+							return new CAI_Item_Use_State(m_pOwner, item);
 						}
+						else
+							return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+						break;
 					}
 				}
-
-				
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 			{
@@ -204,7 +162,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 				{
 					case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 					{
-						if (m_pOwner->Get_IsFly())
+						if (m_bIsFly)
 						{
 							if (!strcmp(pEvent.szName, "Burn_Knuckle"))
 							{
@@ -356,21 +314,10 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 				switch (m_eStateId)
 				{
 				case Client::CAIState::STATE_SKILL_ATTACK_E:
-					if (m_pOwner->Get_IsFly())
+					if (nullptr != m_pRightFootCollider)
 					{
-						if (nullptr != m_pRightHandCollider)
-						{
-							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightHandCollider);
-							m_pRightHandCollider = nullptr;
-						}
-					}
-					else
-					{
-						if (nullptr != m_pRightFootCollider)
-						{
-							pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
-							m_pRightFootCollider = nullptr;
-						}
+						pCollisionMgr->Collect_Collider(CCollider::TYPE_SPHERE, m_pRightFootCollider);
+						m_pRightFootCollider = nullptr;
 					}
 					break;
 				case Client::CAIState::STATE_SKILL_ATTACK_R:
@@ -541,7 +488,12 @@ CAIState * CAI_LAW_SkillAttack_State::LateTick(_float fTimeDelta)
 	}
 
 	if (m_bIsAnimationFinished)
-		return new CAICheckState(m_pOwner, m_eStateId);
+	{
+		if (m_bIsFly)
+			return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, false, m_fTime);
+		else
+			return new CAICheckState(m_pOwner, m_eStateId);
+	}
 
 	return nullptr;
 }
@@ -555,25 +507,11 @@ void CAI_LAW_SkillAttack_State::Enter(void)
 		return;
 	m_pOwner->Use_Mana(1.f);
 	m_pOwner->Set_Manarecover(false);
-	
+
 	Reset_Skill();
 
-
-	
-	if (m_bIsFly)
+	switch (m_eStateId)
 	{
-		if (m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_E)
-		{
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_BURN_KNUCKLE);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_E.wav"), SOUND_EFFECT, 1.0f);
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YUENSOKWAN);
-		}
-
-	}
-	else
-	{
-		switch (m_eStateId)
-		{
 		case Client::CAIState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_RONDSENPU);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_WARYUNGGONGPA);
@@ -586,11 +524,7 @@ void CAI_LAW_SkillAttack_State::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_TYOURENGADAN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOYUNATAN);
 			break;
-		}
 	}
-
-
-
 
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));

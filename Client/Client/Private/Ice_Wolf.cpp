@@ -134,21 +134,6 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	if (m_fTimeDeltaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
 
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
-	//{
-	//	CIceWolfState* pBattleState = new CAttackBiteState(this);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	//{
-	//	CIceWolfState* pBattleState = new CAttackNormalState(this, CIceWolfState::STATE_ID::START_BATTLE);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-
-
 	return OBJ_NOEVENT;
 }
 
@@ -160,13 +145,16 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
-	__super::Late_Tick(fTimeDelta);
-
-	if (ExceptionHanding() == false)
+	if (ExceptingActionCamHanding() == false)
 		return;
+	
+	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
+	if (ExceptionHanding() == false)
+		return;
 
 	LateTick_State(fTimeDelta);
 }
@@ -247,7 +235,6 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
 	{
-	case ANIM_MOVE_IDLE:
 	case ANIM_MOVE_RUN:
 	case ANIM_MOVE_WALK_F:
 		return true;
@@ -274,77 +261,53 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 
 _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange )
 {
-	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage )
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pState->Get_StateId() == CIceWolfState::STATE_DEAD )
 		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
-	
-	if (m_bOnGoingDown == false)
-	{
+
 		if (iHp <= 0)
 		{
-			m_pModelCom->Set_TimeReset();
+			m_tStats.m_fCurrentHp = 0;
+			CBattleManager::Get_Instance()->Update_LockOn();
+			Check_AmILastMoster();
+
+			Compute_CurrentIndex();
 			CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 			return 0;
 		}
 		else
 		{
-			m_iBeDamaged_Cnt++;
-
-			if (m_bDownState == false)
+			if (m_bOnGoingDown == false)
 			{
-				if (m_bOnGoing_Bite == false)
+				m_iBeDamaged_Cnt++;
+
+				if (m_bDownState == false)
 				{
-					if (m_bSomeSauling == false)
+					if (m_bOnGoing_Bite == false)
 					{
-						if (m_bBedamageAnim_Delay == false)
+						if (m_bSomeSauling == false)
 						{
-							//m_pModelCom->Set_TimeReset();
-							if (m_bBedamageAnim == true)
+							if (m_bBedamageAnim_Delay == false)
 							{
-								CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
-								m_pState = m_pState->ChangeState(m_pState, pState);
-							}
-
-							else if (m_bBedamageAnim == false)
-							{
-								return iHp;
+								if (m_bBedamageAnim == true)
+								{
+									CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
+									m_pState = m_pState->ChangeState(m_pState, pState);
+								}
 							}
 						}
-
-						else if (m_bBedamageAnim_Delay == true)
-						{
-							return iHp;
-						}
-
 					}
-					//if (m_iBeDamaged_Cnt >= 3)
-					//{
-					//	m_pModelCom->Set_TimeReset();
-					//	CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED, true);
-					//	m_pState = m_pState->ChangeState(m_pState, pState);
-					//	m_iBeDamaged_Cnt = 0;
-					//	m_bSomeSauling = true;
-					//}
 				}
-				else
+				else if (m_bDownState == true)
 				{
-					return iHp;
+					CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DOWN);
+					m_pState = m_pState->ChangeState(m_pState, pState);
 				}
-			}
-			else if (m_bDownState == true)
-			{
-				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DOWN);
-				m_pState = m_pState->ChangeState(m_pState, pState);
+
 			}
 		}
-	}
-
-	else
-	{
-		return iHp;
-	}
 
 	return iHp;
 }

@@ -74,7 +74,8 @@ void CNpc::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+		if(CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_ACTION)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_EDGE_DETECTION, this);
 	}
 
@@ -197,7 +198,7 @@ void CNpc::Free()
 {
 	__super::Free();
 
-	CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
+	CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_INTERACT, this);
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
 }

@@ -45,6 +45,7 @@ public:
 	virtual HRESULT Render_ShadowDepth() override;
 	virtual HRESULT Render_EdgeDetection() override;
 	virtual _bool ExceptionHanding();
+	virtual _bool ExceptingActionCamHanding();
 
 public:
 	virtual void AI_Behaviour(_float fTimeDelta) { };
@@ -55,6 +56,7 @@ public:
 	virtual void Follow_Target(_float fTimeDelta) { };
 	virtual void Make_GetAttacked_Effect(CBaseObj* DamageCauser = nullptr);
 	virtual void Make_DeadEffect(CBaseObj* Target = nullptr);
+	virtual void Make_UIFont(_uint iDamage);
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange = true);
 	virtual void	 Set_BattleMode(_bool type)				PURE;
 public:

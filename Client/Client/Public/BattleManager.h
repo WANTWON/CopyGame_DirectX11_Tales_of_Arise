@@ -58,6 +58,11 @@ public: /* For Lock On */
 	_bool Get_IsOneonOneMode() { return m_bIsOneonOneMode; }
 	void Set_OneonOneMode(_bool tof) { m_bIsOneonOneMode = tof; }
 
+	_bool Get_IsHitLeg() { return m_bHitLeg; }
+	void Set_IsHitLeg(_bool tof) { m_bHitLeg = tof; }
+	_float Get_HitLegTimer() { return m_fHitLegTimer; }
+	void Set_HitLegTimer(_float fTime) { m_fHitLegTimer = fTime; }
+
 public:
 	void Clear_Monster() { m_FieldMonster.clear(); };
 	void Clear_AllMonster() { m_FieldMonster.clear(); };
@@ -81,6 +86,10 @@ private:
 
 	//For Only LawbattleMode == (1:1 BattleMode)
 	_bool m_bIsOneonOneMode = false;
+	
+	_bool m_bHitLeg = false;
+	_float m_fHitLegTimer = 0.f;
+
 
 public:
 	virtual void Free() override;

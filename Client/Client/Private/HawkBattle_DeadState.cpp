@@ -3,7 +3,6 @@
 #include "HawkIdleState.h"
 #include "GameInstance.h"
 #include "HawkBattle_RunState.h"
-#include "HawkBattle_Flying_BackState.h"
 
 using namespace Hawk;
 
@@ -40,7 +39,6 @@ CHawkState * CBattle_DeadState::LateTick(_float fTimeDelta)
 
 		pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_MBULLET, m_pOwner);
 		m_pOwner->Set_GlowUp();
-		m_pOwner->Set_Dissolve();
 		m_bDeadAnimFinish = true;
 		m_fTimeDeltaAcc = 0.f;
 	}

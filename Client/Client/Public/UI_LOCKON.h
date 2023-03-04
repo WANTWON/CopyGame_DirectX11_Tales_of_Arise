@@ -5,7 +5,7 @@
 
 BEGIN(Client)
 
-
+class CEffect;
 class CUI_LOCKON final : public CUI_Base
 {
 private:
@@ -77,6 +77,7 @@ private:
 
 	_float m_fGlowtimer = 0.f;
 
+	vector<class CEffect*> m_pEffects;
 
 
 

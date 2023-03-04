@@ -98,6 +98,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>../../Reference/Librarys/;../Default</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -113,7 +114,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../Reference/Librarys/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Reference/Librarys/;../Default</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
@@ -140,6 +141,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Engine.lib;DirectXTK.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../Reference/Librarys/;../Default</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,13 +156,15 @@
       <AdditionalIncludeDirectories>../Public/;../../Reference/Headers/</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../Reference/Librarys/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Reference/Librarys/;../Default</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
@@ -244,6 +248,7 @@
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
+    <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Law.h" />
     <ClInclude Include="..\Public\LawAirFSkillState.h" />
     <ClInclude Include="..\Public\LawAirRSkillState.h" />
@@ -276,6 +281,8 @@
     <ClInclude Include="..\Public\Portal.h" />
     <ClInclude Include="..\Public\RinwellDownState.h" />
     <ClInclude Include="..\Public\RinwellIdleState.h" />
+    <ClInclude Include="..\Public\RinwellStepState.h" />
+    <ClInclude Include="..\Public\RinwellTurnState.h" />
     <ClInclude Include="..\Public\Road.h" />
     <ClInclude Include="..\public\ScreenDistortion.h" />
     <ClInclude Include="..\Public\ShootingObject.h" />
@@ -341,7 +348,6 @@
     <ClInclude Include="..\Public\HawkBattle_DashState.h" />
     <ClInclude Include="..\Public\HawkBattle_Damage_LargeB_State.h" />
     <ClInclude Include="..\Public\HawkBattle_DeadState.h" />
-    <ClInclude Include="..\Public\HawkBattle_Flying_BackState.h" />
     <ClInclude Include="..\Public\HawkBattle_IdleState.h" />
     <ClInclude Include="..\Public\HawkBattle_RunState.h" />
     <ClInclude Include="..\Public\HawkIdleState.h" />
@@ -521,6 +527,7 @@
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
+    <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Law.cpp" />
     <ClCompile Include="..\Private\LawAirFSkillState.cpp" />
     <ClCompile Include="..\Private\LawAirRSkillState.cpp" />
@@ -552,6 +559,8 @@
     <ClCompile Include="..\Private\Portal.cpp" />
     <ClCompile Include="..\Private\RinwellDownState.cpp" />
     <ClCompile Include="..\Private\RinwellIdleState.cpp" />
+    <ClCompile Include="..\Private\RinwellStepState.cpp" />
+    <ClCompile Include="..\Private\RinwellTurnState.cpp" />
     <ClCompile Include="..\Private\Road.cpp" />
     <ClCompile Include="..\private\ScreenDistortion.cpp" />
     <ClCompile Include="..\Private\ShootingObject.cpp" />
@@ -613,7 +622,6 @@
     <ClCompile Include="..\Private\HawkBattle_DashState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_Damage_LargeB_State.cpp" />
     <ClCompile Include="..\Private\HawkBattle_DeadState.cpp" />
-    <ClCompile Include="..\Private\HawkBattle_Flying_BackState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_IdleState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_RunState.cpp" />
     <ClCompile Include="..\Private\HawkIdleState.cpp" />
