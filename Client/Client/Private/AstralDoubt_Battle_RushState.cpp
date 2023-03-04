@@ -29,13 +29,13 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 	switch (m_ePreState_Id)
 	{
 	case CAstralDoubt_State::STATE_RUSH_START:
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
 	case CAstralDoubt_State::STATE_RUSH_LOOP:
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
 		break;
 	case CAstralDoubt_State::STATE_RUSH_END:
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
 		break;
 	default:
 		break;
@@ -60,7 +60,7 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("IJ_ROLL_HAND_L")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
 				matWorld.r[0] = XMVector4Normalize(matWorld.r[0]);
@@ -96,8 +96,10 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc;
 
-					ColliderDesc.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc.vScale = _float3(8.f, 8.f, 8.f);
 					ColliderDesc.vPosition = _float3(0.f, -4.f, 0.f);
+					//ColliderDesc.vScale = _float3(15.f, 15.f, 15.f);
+					//ColliderDesc.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
@@ -111,7 +113,7 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc2th;
 
-					ColliderDesc2th.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc2th.vScale = _float3(8.f, 8.f, 8.f);
 					ColliderDesc2th.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_p2th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
@@ -126,7 +128,7 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc3th;
 
-					ColliderDesc3th.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc3th.vScale = _float3(8.f, 8.f, 8.f);
 					ColliderDesc3th.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_p3th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc3th);
@@ -141,7 +143,7 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc4th;
 
-					ColliderDesc4th.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc4th.vScale = _float3(8.f, 8.f, 8.f);
 					ColliderDesc4th.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_p4th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc4th);
@@ -156,7 +158,7 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc5th;
 
-					ColliderDesc5th.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc5th.vScale = _float3(8.f, 8.f, 8.f);
 					ColliderDesc5th.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_p5th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc5th);
@@ -171,7 +173,7 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC		ColliderDesc6th;
 
-					ColliderDesc6th.vScale = _float3(15.f, 15.f, 15.f);
+					ColliderDesc6th.vScale = _float3(8.f, 8.f, 8.f);
 					ColliderDesc6th.vPosition = _float3(0.f, -4.f, 0.f);
 
 					m_p6th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc6th);
@@ -182,7 +184,7 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p6th_AtkColliderCom)
 					m_p6th_AtkColliderCom->Update(matWorld_6th);
 
-				RELEASE_INSTANCE(CCollision_Manager);
+				
 			}
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
@@ -216,7 +218,7 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 		}
 		else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
 		{
-			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+			CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 			pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
 			pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p2th_AtkColliderCom, m_pOwner);
@@ -239,7 +241,7 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 			m_p5th_AtkColliderCom = nullptr;
 			m_p6th_AtkColliderCom = nullptr;
 
-			RELEASE_INSTANCE(CCollision_Manager);
+			
 		}
 	}
 
@@ -475,6 +477,15 @@ void CBattle_RushState::Exit()
 		m_pOwner->Set_FinishDownState();
 		CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 	}
+
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p2th_AtkColliderCom, m_pOwner);
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p3th_AtkColliderCom, m_pOwner);
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p4th_AtkColliderCom, m_pOwner);
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p5th_AtkColliderCom, m_pOwner);
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p6th_AtkColliderCom, m_pOwner);
 
 	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);

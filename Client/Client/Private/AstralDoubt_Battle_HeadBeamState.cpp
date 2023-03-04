@@ -29,9 +29,17 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 {
 	Update_Effect();
 
-  	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+  	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	CBaseObj* pOrigin_DamageCause = nullptr;
+
+
+	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
+
+	Find_Target();
+
+	///////////////////////////////////////기존의 코드- 나를 때린 대상, 근접 대상을 찾아 공격.//////////////////
+
+	/*CBaseObj* pOrigin_DamageCause = nullptr;
 	pOrigin_DamageCause = m_pOwner->Get_OrginDamageCauser();
 
 	if (m_pCurTarget == nullptr)
@@ -147,7 +155,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 		}
-	}
+	}*/
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 	for (auto& pEvent : pEvents)
@@ -168,7 +176,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("HEAD1_C")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
 				matWorld.r[0] = XMVector4Normalize(matWorld.r[0]);
@@ -179,9 +187,17 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 				{
 					CCollider::COLLIDERDESC ColliderDesc;
 
-					ColliderDesc.vScale = _float3(4.5f, 1.0f, 80.1f);
-					ColliderDesc.vPosition = _float3(0.f, 0.f, -30.f);
+					ColliderDesc.vScale = _float3(2.5f, 1.0f, 80.1f);
+					ColliderDesc.vPosition = _float3(0.f, 0.f, -40.f);
 
+					//TestCode
+					//ColliderDesc.vScale = _float3(50.5f, 50.0f, 80.1f);
+					//ColliderDesc.vPosition = _float3(0.f, 0.f, -40.f);
+
+					//보스 거대할 때 코드
+					/*ColliderDesc.vScale = _float3(4.5f, 1.0f, 80.1f);
+					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+*/
 					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
 					m_pAtkColliderCom->Update(matWorld);
 
@@ -190,7 +206,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 				else
 					m_pAtkColliderCom->Update(matWorld);
 
-				RELEASE_INSTANCE(CCollision_Manager);
+				
 			}
 		
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
@@ -221,13 +237,13 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 				pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
 				pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pAtkColliderCom);
 
 				m_pAtkColliderCom = nullptr;
-
-				RELEASE_INSTANCE(CCollision_Manager);
+				
+				
 			}
 		}
 	}
@@ -246,12 +262,16 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 	if (m_fTimeDeltaAcc > m_fRandTime)
 		m_iRand = rand() % 3;
 
-	_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+
+	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
+	m_vActiveTargetPos = m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+
+	_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 	m_pOwner->Get_Transform()->LookAt(vPosition);
 
 	if (m_bIsAnimationFinished)
 	{
-		if (m_fTarget_Distance <= 10.f)
+		if (m_fActiveTarget_Distance <= 10.f)
 		{
 			switch (m_iRand)
 			{
@@ -269,6 +289,32 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 		else
 			return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_HEADBEAM);
 	}
+
+	///////////////////////////////////////기존의 코드- 나를 때린 대상, 근접 대상을 찾아 공격.//////////////////
+
+	//_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+	//m_pOwner->Get_Transform()->LookAt(vPosition);
+
+	//if (m_bIsAnimationFinished)
+	//{
+	//	if (m_fTarget_Distance <= 10.f)
+	//	{
+	//		switch (m_iRand)
+	//		{
+	//		case 0:
+	//			return new CBattle_720Spin_FirstState(m_pOwner);
+	//		case 1:
+	//			return new CBattle_SpearMultiState(m_pOwner);
+	//		case 2:
+	//			return new CBattle_UpperState(m_pOwner);
+
+	//		default:
+	//			break;
+	//		}
+	//	}
+	//	else
+	//		return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_HEADBEAM);
+	//}
 
 	if (nullptr != m_pAtkColliderCom)
 	{
@@ -303,7 +349,12 @@ void CBattle_HeadBeamState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+	
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
 	Safe_Release(m_pAtkColliderCom);
+
+	
 }
 
 void CBattle_HeadBeamState::AimTarget(_float fTimeDelta)

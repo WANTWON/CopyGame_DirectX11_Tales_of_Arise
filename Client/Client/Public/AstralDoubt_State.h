@@ -79,41 +79,29 @@ public:
 	void Set_BattleMode() { m_bBattleMode = true; }
 
 protected:
-	virtual void Find_Target(_bool bHasAggro = false)
+	virtual void Find_Target()
 	{
-		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
-		CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
-		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameObject);
+		//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+		//CGameObject* pGameObject = pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
+		//CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameObject);
+		//if (!pPlayer)
+		//	return;
+
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		if (!pPlayer)
 			return;
 
-		m_pTarget = pPlayer;
+		m_pActiveTarget = pPlayer;
 
-		if (bHasAggro)
-			m_pTarget = pPlayer;
-		else
-		{
-			_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-			_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
-			_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+		_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 
-			m_fOutPutTarget_Distance = fDistance;
+		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+
+		m_fActiveTarget_Distance = fDistance;
 			
-			if (fDistance < m_pOwner->Get_AggroRadius())
-			{
-				m_pTarget = pPlayer;
-				
-				m_pOwner->Get_Transform()->Change_Speed(m_pOwner->Get_Stats().m_fRunSpeed);
-
-				if (5 > fDistance)
-				{
-					m_bBattleMode = true;
-
-				}
-
-			}
-		}
+		
 	}
 
 	virtual _float Find_BattleTarget()
@@ -341,14 +329,17 @@ protected:
 	_float		m_fTarget_Distance;
 	_float		m_fDegreeToTarget;
 	_float		m_fOutPutTarget_Distance;
+	_float		m_fActiveTarget_Distance;
 
 	CAstralDoubt * m_pOwner = nullptr;
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
+	class CPlayer* m_pActiveTarget = nullptr;
 
 	CBaseObj*	m_pBeginTarget = nullptr;
 	CBaseObj*	m_pCurTarget = nullptr;
 	_vector		m_vBeginTargetPos;
 	_vector		m_vCurTargetPos;
+	_vector		m_vActiveTargetPos;
 
 	//CCollider*  m_pAtkColliderCom = false;
 	//CCollider*	m_p2th_AtkColliderCom = false;

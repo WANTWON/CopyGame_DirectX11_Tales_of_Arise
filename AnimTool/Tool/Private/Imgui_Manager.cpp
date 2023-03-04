@@ -137,6 +137,10 @@ void CImgui_Manager::ShowGui()
 		case MODEL_ASU_005:
 			lstrcat(pAnimationDataFilePath, TEXT("ASU_005/ASU_005_Animation.dat"));
 			break;
+
+		case MODEL_CURRENT_ASU:
+			lstrcat(pAnimationDataFilePath, TEXT("Astral_Doubt/Astral_Doubt_Animation.dat"));
+			break;
 		}
 
 		CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));
