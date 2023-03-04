@@ -4,7 +4,6 @@
 #include "HawkIdleState.h"
 #include "HawkBattle_IdleState.h"
 #include "HawkBattle_RunState.h"
-#include "HawkBattle_Flying_BackState.h"
 #include "HawkBattle_Damage_LargeB_State.h"
 #include "HawkBattle_DeadState.h"
 #include "HawkSitOnState.h"
@@ -57,7 +56,7 @@ HRESULT CHawk::Initialize(void * pArg)
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 
-	Set_Scale(_float3(0.7f,0.7f,0.7f));
+	Set_Scale(_float3(0.7f, 0.7f, 0.7f));
 
 	return S_OK;
 }
@@ -128,7 +127,6 @@ int CHawk::Tick(_float fTimeDelta)
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOSHOW;
 
-	
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
@@ -152,6 +150,9 @@ void CHawk::Late_Tick(_float fTimeDelta)
 		return;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
+		return;
+
+	if (ExceptingActionCamHanding() == false)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
@@ -208,7 +209,7 @@ void CHawk::Tick_State(_float fTimeDelta)
 	CHawkState* pNewState = m_pHawkState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pNewState);
-	
+
 }
 
 void CHawk::LateTick_State(_float fTimeDelta)
@@ -253,66 +254,51 @@ _bool CHawk::Is_AnimationLoop(_uint eAnimId)
 _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
 {
 
-		if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD)
-			return 0;
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD )
+		return 0;
 
-		_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
+
+	if (iHp <= 0)
+	{
+		m_tStats.m_fCurrentHp = 0;
+		CBattleManager::Get_Instance()->Update_LockOn();
+		Check_AmILastMoster();
+
+
+		CHawkState* pState = new CBattle_DeadState(this);
+		m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+		return 0;
+	}
+	else
+	{
 		if (m_bOnGoingDown == false)
 		{
-			if (iHp <= 0)
+			if (m_bDownState == false)
 			{
-				m_pModelCom->Set_TimeReset();
-				CHawkState* pState = new CBattle_DeadState(this);
+				if (m_bBedamageAnim_Delay == false)
+				{
+					if (m_bBedamageAnim == true)
+					{
+						CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_TAKE_DAMAGE);
+						m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+					}
+				}
+			}
+			else if (m_bDownState == true)
+			{
+				
+				CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_ID::STATE_DOWN);
 				m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-				return 0;
 			}
-
-			else
-			{
-				if (m_bDownState == false)
-				{
-					if (m_bBedamageAnim_Delay == false)
-					{
-						if (m_bBedamageAnim == true)
-						{
-							CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_TAKE_DAMAGE);
-							m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-						}
-
-						else if (m_bBedamageAnim == false)
-						{
-							return iHp;
-						}
-					}
-
-					else if (m_bBedamageAnim_Delay == true)
-					{
-						return iHp;
-					}
-
-				}
-
-				else if (m_bDownState == true)
-				{
-					CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_ID::STATE_DOWN);
-					m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
-				}
-
-			}
-
 		}
 		
 
-		else
-		{
-			return iHp;
-		}
+	}
 
 
 	return iHp;
-
-	
 }
 
 HRESULT CHawk::SetUp_ShaderID()
@@ -332,18 +318,20 @@ void CHawk::Check_Navigation()
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 2.f);
 	_float m_fDeadHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
 
-	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD || CHawkState::STATE_DOWN)
+	if (m_pHawkState->Get_StateId() == CHawkState::STATE_DEAD ||
+		m_pHawkState->Get_StateId() ==  CHawkState::STATE_DOWN ||
+		m_pHawkState->Get_StateId() == CHawkState::STATE_ARISE)
 	{
 		vPosition = XMVectorSetY(vPosition, m_fDeadHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
 	}
-
-	if (CHawkState::STATE_BRAVE != m_pHawkState->Get_StateId() && CHawkState::STATE_DEAD != m_pHawkState->Get_StateId() && CHawkState::STATE_DOWN != m_pHawkState->Get_StateId())
+	else
 	{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	}
+
 }
 
 void CHawk::Set_BattleMode(_bool type)

@@ -554,7 +554,7 @@ void CDodgeState::DodgeEffect()
 	_float fDuration = m_fEffectEventEndTime - m_fEffectEventCurTime;
 	_float fCurrentTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
 	
-	_float fInterpTimer = fDuration * .15;
+	_float fInterpTimer = fDuration * 0.15f;
 
 	/* Saturation Lerp */
 	_float fSaturationInterpFactor = fCurrentTime / fInterpTimer;

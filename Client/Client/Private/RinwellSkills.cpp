@@ -187,14 +187,16 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 
 int CRinwellSkills::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick())
-		return OBJ_NOEVENT;
+	_int iSuperTick = __super::Tick(fTimeDelta);
 
-	if (__super::Tick(fTimeDelta) == OBJ_DEAD || m_bDead)
+	if (iSuperTick == OBJ_DEAD)
 	{
 		Dead_Effect();
 		return OBJ_DEAD;
 	}
+
+	if (iSuperTick == OBJ_NOSHOW)
+		return OBJ_NOSHOW;
 
 	_float fTime = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 
@@ -274,6 +276,10 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 
 void CRinwellSkills::Collision_Check()
 {
+
+	if (Check_Exception_Collision() == false)
+		return;
+
 	CBaseObj* pCollisionTarget = nullptr;
 	switch (m_BulletDesc.eBulletType)
 	{

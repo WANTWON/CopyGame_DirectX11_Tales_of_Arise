@@ -63,6 +63,7 @@ HRESULT CLevel_LawBattle::Initialize()
 		g_fSoundVolume = 0.f;
 		CGameInstance::Get_Instance()->StopAll();
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("Boss_Asu_BackGorundSound.wav"), g_fSoundVolume);
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("LawBattleEnter.dat"), XMMatrixIdentity());
 
 		CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 	}
@@ -112,59 +113,8 @@ void CLevel_LawBattle::Tick(_float fTimeDelta)
 	}
 	else
 	{
-		if (m_bNextNevel)
-		{
-			_float fDuration = 1.5f;
-			_float fBlurDuration = fDuration / 3;
-
-			if (m_fBlurTimer >= fDuration)
-			{
-				m_fBlurTimer = 0.f;
-
-				CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-				if (pPlayer)
-					pPlayer->Get_Renderer()->Set_ZoomBlur(false);
-
-				m_pCollision_Manager->Clear_AllCollisionGroup();
-
-				CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Camera"));
-				CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Background"));
-				CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Deco"));
-				CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Npc"));
-				CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-				LEVEL eNextLevel = (LEVEL)m_iNextLevelIndex;
-				if (eNextLevel == LEVEL_LAWBATTLE)
-				{
-					CBattleManager::Get_Instance()->Set_BattleMode(true);
-					CBattleManager::Get_Instance()->Set_OneonOneMode(true);
-				}
-					
-				pGameInstance->Set_DestinationLevel(eNextLevel);
-				if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
-					return;
-
-				RELEASE_INSTANCE(CGameInstance);
-			}
-			else
-			{
-				CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-				if (pPlayer)
-				{
-					_float fFocusPower = 15.f;
-
-					_float fInterpFactor = m_fBlurTimer / fBlurDuration;
-					if (fInterpFactor > 1.f)
-						fInterpFactor = 1.f;
-
-					_int iFocusDetailLerp = 1 + fInterpFactor * (10 - 1);
-
-					pPlayer->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
-				}
-
-				m_fBlurTimer += fTimeDelta;
-			}
-		}
+		NotBattleTick(fTimeDelta);
+		
 	}
 
 }
@@ -182,7 +132,7 @@ void CLevel_LawBattle::Late_Tick(_float fTimeDelta)
 	}
 	else
 	{
-
+		NotBattleLateTick(fTimeDelta);
 	}
 
 }
@@ -217,7 +167,7 @@ void CLevel_LawBattle::BattleTick(_float fTimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
-		LEVEL eNextLevel = LEVEL_SNOWFIELD;
+		LEVEL eNextLevel = LEVEL_LAWBATTLE;
 
 		m_pCollision_Manager->Clear_AllCollisionGroup();
 		pGameInstance->Set_DestinationLevel(eNextLevel);
@@ -234,6 +184,59 @@ void CLevel_LawBattle::BattleTick(_float fTimeDelta)
 
 void CLevel_LawBattle::NotBattleTick(_float fTimeDelta)
 {
+	if (m_bNextNevel)
+	{
+		_float fDuration = 1.5f;
+		_float fBlurDuration = fDuration / 3;
+
+		if (m_fBlurTimer >= fDuration)
+		{
+			m_fBlurTimer = 0.f;
+
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			if (pPlayer)
+				pPlayer->Get_Renderer()->Set_ZoomBlur(false);
+
+			m_pCollision_Manager->Clear_AllCollisionGroup();
+
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Camera"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Background"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Deco"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Npc"));
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			LEVEL eNextLevel = (LEVEL)m_iNextLevelIndex;
+			if (eNextLevel == LEVEL_LAWBATTLE)
+			{
+				CBattleManager::Get_Instance()->Set_BattleMode(true);
+				CBattleManager::Get_Instance()->Set_OneonOneMode(true);
+			}
+
+			pGameInstance->Set_DestinationLevel(eNextLevel);
+			if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
+				return;
+
+			RELEASE_INSTANCE(CGameInstance);
+		}
+		else
+		{
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			if (pPlayer)
+			{
+				_float fFocusPower = 15.f;
+
+				_float fInterpFactor = m_fBlurTimer / fBlurDuration;
+				if (fInterpFactor > 1.f)
+					fInterpFactor = 1.f;
+
+				_int iFocusDetailLerp = 1 + fInterpFactor * (10 - 1);
+
+				pPlayer->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+			}
+
+			m_fBlurTimer += fTimeDelta;
+		}
+	}
 }
 
 void CLevel_LawBattle::BattleLateTick(_float fTimeDelta)

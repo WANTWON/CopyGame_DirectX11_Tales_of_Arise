@@ -15,6 +15,7 @@
 #include "Portal.h"
 #include "MiniGameNpc.h"
 #include "Trigger.h"
+#include "Effect.h"
 
 
 CPlayerCreater::CPlayerCreater(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -831,6 +832,7 @@ HRESULT CPlayerCreater::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 
 	}
 	CloseHandle(hFile);
+
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -1860,7 +1862,7 @@ HRESULT CPlayerCreater::Ready_Layer_NpcMIniGame(const _tchar * pLayerTag)
 
 		if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
 		{
-			NpcDesc.eNpcType = CMiniGameNpc::NPC_NMM_BLS_000;
+			NpcDesc.eNpcType = CMiniGameNpc::MAN_GLD;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniGameNpc"), LEVEL_WORKTOOL, pLayerTag, &NpcDesc)))
 				return E_FAIL;
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, pLayerTag);
@@ -1897,7 +1899,7 @@ HRESULT CPlayerCreater::Ready_Layer_NpcMIniGame(const _tchar * pLayerTag)
 
 		if (!wcscmp(pModeltag, TEXT("NPC_NMM_BLS_000")))
 		{
-			NpcDesc.eNpcType = CMiniGameNpc::MAN_GLD;
+			NpcDesc.eNpcType = CMiniGameNpc::NPC_NMM_BLS_000;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MiniGameNpc"), LEVEL_RESTAURANT, pLayerTag, &NpcDesc)))
 				return E_FAIL;
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_RESTAURANT, pLayerTag);

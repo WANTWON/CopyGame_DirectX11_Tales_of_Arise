@@ -45,6 +45,7 @@ public:
 	virtual HRESULT Render_ShadowDepth() override;
 	virtual HRESULT Render_EdgeDetection() override;
 	virtual _bool ExceptionHanding();
+	virtual _bool ExceptingActionCamHanding();
 
 public:
 	virtual void AI_Behaviour(_float fTimeDelta) { };

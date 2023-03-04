@@ -341,7 +341,6 @@
     <ClInclude Include="..\Public\HawkBattle_DashState.h" />
     <ClInclude Include="..\Public\HawkBattle_Damage_LargeB_State.h" />
     <ClInclude Include="..\Public\HawkBattle_DeadState.h" />
-    <ClInclude Include="..\Public\HawkBattle_Flying_BackState.h" />
     <ClInclude Include="..\Public\HawkBattle_IdleState.h" />
     <ClInclude Include="..\Public\HawkBattle_RunState.h" />
     <ClInclude Include="..\Public\HawkIdleState.h" />
@@ -609,7 +608,6 @@
     <ClCompile Include="..\Private\HawkBattle_DashState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_Damage_LargeB_State.cpp" />
     <ClCompile Include="..\Private\HawkBattle_DeadState.cpp" />
-    <ClCompile Include="..\Private\HawkBattle_Flying_BackState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_IdleState.cpp" />
     <ClCompile Include="..\Private\HawkBattle_RunState.cpp" />
     <ClCompile Include="..\Private\HawkIdleState.cpp" />
