@@ -1098,7 +1098,7 @@ HRESULT CPlayerCreater::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 		ReadFile(hFile, &(TriggerDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 		TriggerDesc.eType = CTrigger::UI_TRIGGER;
 		TriggerDesc.iIndex = i;
-		TriggerDesc.m_ModelDesc.vScale = _float3(10.f, 10.f, 10.f);
+		TriggerDesc.m_ModelDesc.vScale = _float3(15.f, 15.f, 15.f);
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Trigger"), LEVEL_CITY, TEXT("Layer_Trigger"), &TriggerDesc)))
 			return E_FAIL;
