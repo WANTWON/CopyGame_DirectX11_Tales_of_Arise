@@ -83,8 +83,6 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 	}
 
 	Check_NearTrigger();*/
-
-	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), 90.f);
 	//m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	m_fTimeDeltaAcc = 0;
@@ -124,7 +122,7 @@ HRESULT CAstralDoubt::Ready_Components(void * pArg)
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(8.f, 8.f, 8.f);
+	ColliderDesc.vScale = _float3(7.f, 7.f, 7.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
@@ -215,51 +213,53 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 	LateTick_State(fTimeDelta);
 
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
-	{
-		CAstralDoubt_State* pBattleState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_ID::STATE_DOWN);
-		m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
+	//{
+	//	CAstralDoubt_State* pBattleState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_ID::STATE_DOWN);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_P))
-	{
-		CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_FOOTPRESS);
-		m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_H))
-	{
-		CAstralDoubt_State* pBattleState = new CBattle_HeadBeamState(this);
-		m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	{
-		CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
-		m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
+	//{
+	//	CAstralDoubt_State* pBattleState = new CBattle_720Spin_FirstState(this);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-	{
-		CAstralDoubt_State* pBattleState = new CBattle_720Spin_FirstState(this);
-		m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_P))
+	//{
+	//	CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_FOOTPRESS);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	//{
+	//	CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
+	//{
+	//	CAstralDoubt_State* pBattleState = new CBattle_UpperState(this);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_H))
+	//{
+	//	CAstralDoubt_State* pBattleState = new CBattle_HeadBeamState(this);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
+
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_M))
+	//{
+	//	CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_ADVENT);
+	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
+	//}
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
 	{
 		CAstralDoubt_State* pBattleState = new CBattle_RushState(this, CAstralDoubt_State::STATE_ID::STATE_RUSH_START);
-		m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_M))
-	{
-		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_BRAVE);
-		m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
-	{
-		CAstralDoubt_State* pBattleState = new CBattle_UpperState(this);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
 }

@@ -8,7 +8,6 @@ class CAstralDoubt final : public CMonster
 {
 public:
 	enum ANIM {
-		ARISE_B,
 		ARISE_F,
 		ATTACK_BRAVE,
 		ATTACK_HEAD_BEAM,
@@ -49,7 +48,8 @@ public:
 		SYMBOL_WALK,
 		TURN_L,
 		TURN_POSE,
-		TURN_R
+		TURN_R,
+		ARISE_B
 	};
 
 public:
