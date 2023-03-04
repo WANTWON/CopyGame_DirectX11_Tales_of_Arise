@@ -175,14 +175,26 @@ HRESULT CLoader::Loading_ForClient()
 	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("Height"));
 
 
+	/*For.Prototype_Component_VIBuffer_Terrain*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Terrain_HeightMap"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap3.bmp"), false))))
+		return E_FAIL;
+	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("Terrain_HeightMap"));
+
+	/*For.Prototype_Component_VIBuffer_Terrain*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("HeightMapPlane"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Height.bmp"), false))))
+		return E_FAIL;
+	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("HeightMapPlane"));
+
 
 	//For Maptool
 	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
-	//For Maptool
-	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
-		return E_FAIL;
+	////For Maptool
+	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+	//	return E_FAIL;
 
 	//if (FAILED(Loading_ForMaptoolBossRoomModel()))
 	//	return E_FAIL;
@@ -190,28 +202,28 @@ HRESULT CLoader::Loading_ForClient()
 	//if (FAILED(Loading_ForMaptoolVillageModel()))
 	//	return E_FAIL;
 	
-	/* if (FAILED(Loading_ForMaptoolCityModel()))
+	 if (FAILED(Loading_ForMaptoolCityModel()))
 	 	return E_FAIL;
 
 	 if (FAILED(Loading_ForMaptoolPlant()))
-	 	return E_FAIL;*/
+	 	return E_FAIL;
 
-	//if (FAILED(Loading_ForMaptoolInteriorModel()))
-	//	return E_FAIL;
-
-	//if (FAILED(Loading_ForMaptoolWorkRoomModel()))
-	//	return E_FAIL;
-
-
-	//if (FAILED(Loading_ForMaptoolKitchenModel()))
-	//	return E_FAIL;
-
-	//For Effect
-	if (FAILED(Loading_ForEffect()))
+	/*if (FAILED(Loading_ForMaptoolInteriorModel()))
 		return E_FAIL;
-	 
-	if (FAILED(Loading_ForEffectTexture()))
+
+	if (FAILED(Loading_ForMaptoolWorkRoomModel()))
 		return E_FAIL;
+
+
+	if (FAILED(Loading_ForMaptoolKitchenModel()))
+		return E_FAIL;*/
+
+	////For Effect
+	//if (FAILED(Loading_ForEffect()))
+	//	return E_FAIL;
+	// 
+	//if (FAILED(Loading_ForEffectTexture()))
+	//	return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
@@ -723,17 +735,6 @@ HRESULT CLoader::Loading_ForMaptoolSnowFieldModel()
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Crystal"));
 
 
-	/*For.Prototype_Component_VIBuffer_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Terrain_HeightMap"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/HeightMap3.bmp"), false))))
-		return E_FAIL;
-	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("Terrain_HeightMap"));
-
-	/*For.Prototype_Component_VIBuffer_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("HeightMapPlane"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/Height.bmp"), false))))
-		return E_FAIL;
-	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("HeightMapPlane"));
 
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;

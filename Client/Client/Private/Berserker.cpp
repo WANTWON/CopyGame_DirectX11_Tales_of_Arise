@@ -146,18 +146,20 @@ void CBerserker::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return;
-
+	
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
+
+	if (ExceptingActionCamHanding() == false)
+		return;
+
 	__super::Late_Tick(fTimeDelta);
+
+	if (m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
 	if (ExceptionHanding() == false)
 		return;
-
-	if (m_pRendererCom && m_bGlowUp)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
 	LateTick_State(fTimeDelta);
 }
@@ -221,7 +223,7 @@ void CBerserker::Set_BattleMode(_bool type)
 	if (m_bBattleMode)
 	{
 		/*Set_Battle State*/
-		CBerserkerState* pBattleState = new CBattle_IdleState(this);
+		CBerserkerState* pBattleState = new CBattle_IdleState(this, CBerserkerState::START_BATTLE);
 		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pBattleState);
 	}
 	else
@@ -244,7 +246,6 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	case MOVE_WALK_F:
 	case MOVE_RUN:
 		return true;
-	
 	case ATTACK_DOUBLE_CLAW:
 	case ATTACK_DOUBLE_CROW:
 	case ATTACK_SHOCK_WAVE:

@@ -64,7 +64,7 @@ void CEffectObject::Late_Tick(_float fTimeDelta)
 		return;
 	
 
-	if (m_EffectDesc.fDeadTime > m_fTime)
+	if (m_EffectDesc.fDeadTime < m_fTime)
 	{
 		m_bDead = true;
 	}
