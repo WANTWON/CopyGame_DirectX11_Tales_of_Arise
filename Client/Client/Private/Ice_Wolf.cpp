@@ -99,7 +99,7 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 
-	
+
 	if (FAILED(__super::Add_Components(TEXT("Com_FieldNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_vecNavigation[LEVEL_SNOWFIELD])))
 		return E_FAIL;
 
@@ -113,14 +113,14 @@ HRESULT CIce_Wolf::Ready_Components(void * pArg)
 
 int CIce_Wolf::Tick(_float fTimeDelta)
 {
-	
+
 	_int iSuperTick = __super::Tick(fTimeDelta);
 	if (iSuperTick == OBJ_DEAD)
 		return OBJ_DEAD;
 
 	if (iSuperTick == OBJ_NOSHOW)
 		return OBJ_NOSHOW;
-	
+
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOSHOW;
 
@@ -130,7 +130,7 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	m_fTimeDeltaAcc += fTimeDelta;
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	
+
 	if (m_fTimeDeltaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
 
@@ -190,7 +190,7 @@ HRESULT CIce_Wolf::Render_Glow()
 			return E_FAIL;
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
-		
+
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
 			return E_FAIL;
 
@@ -213,7 +213,7 @@ void CIce_Wolf::Tick_State(_float fTimeDelta)
 	CIceWolfState* pNewState = m_pState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
-	
+
 }
 
 void CIce_Wolf::LateTick_State(_float fTimeDelta)
@@ -272,55 +272,55 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CIce_Wolf::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange )
+_int CIce_Wolf::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _bool bLockOnChange)
 {
-	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pState->Get_StateId() == CIceWolfState::STATE_DEAD )
-		return 0; 
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pState->Get_StateId() == CIceWolfState::STATE_DEAD)
+		return 0;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
 
-		if (iHp <= 0)
-		{
-			m_tStats.m_fCurrentHp = 0;
-			CBattleManager::Get_Instance()->Update_LockOn();
-			Check_AmILastMoster();
+	if (iHp <= 0)
+	{
+		m_tStats.m_fCurrentHp = 0;
+		CBattleManager::Get_Instance()->Update_LockOn();
+		Check_AmILastMoster();
 
-			Compute_CurrentIndex();
-			CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
-			m_pState = m_pState->ChangeState(m_pState, pState);
-			return 0;
-		}
-		else
+		Compute_CurrentIndex();
+		CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+		return 0;
+	}
+	else
+	{
+		if (m_bOnGoingDown == false)
 		{
-			if (m_bOnGoingDown == false)
+			m_iBeDamaged_Cnt++;
+
+			if (m_bDownState == false)
 			{
-				m_iBeDamaged_Cnt++;
-
-				if (m_bDownState == false)
+				if (m_bOnGoing_Bite == false)
 				{
-					if (m_bOnGoing_Bite == false)
+					if (m_bSomeSauling == false)
 					{
-						if (m_bSomeSauling == false)
+						if (m_bBedamageAnim_Delay == false)
 						{
-							if (m_bBedamageAnim_Delay == false)
+							if (m_bBedamageAnim == true)
 							{
-								if (m_bBedamageAnim == true)
-								{
-									CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
-									m_pState = m_pState->ChangeState(m_pState, pState);
-								}
+								CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
+								m_pState = m_pState->ChangeState(m_pState, pState);
 							}
 						}
 					}
 				}
-				else if (m_bDownState == true)
-				{
-					CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DOWN);
-					m_pState = m_pState->ChangeState(m_pState, pState);
-				}
-
 			}
+			else if (m_bDownState == true)
+			{
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DOWN);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+			}
+
 		}
+	}
 
 	return iHp;
 }

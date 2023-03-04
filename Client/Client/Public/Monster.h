@@ -56,7 +56,7 @@ public:
 	virtual void Make_GetAttacked_Effect(CBaseObj* DamageCauser = nullptr);
 	virtual void Make_DeadEffect(CBaseObj* Target = nullptr);
 	virtual void Make_UIFont(_uint iDamage);
-	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange = true);
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp = false, _bool bLockOnChange = true);
 	virtual void	 Set_BattleMode(_bool type)				PURE;
 public:
 	void Collision_Object(_float fTimeDelta);
@@ -106,7 +106,7 @@ public: // Get & Set
 	_vector	 Get_LastPosition() { return m_vLastPos; }
 	void	Set_LastStrikeAttack(_bool type) { m_bLastStrikeAttack = type; }
 	_bool Get_LastStrikeAttack() { return m_bLastStrikeAttack; }
-	
+	_bool Get_IsUp(void) { return m_bIsUp; }
 
 protected:
 	DMG_DIR Calculate_DmgDirection();
@@ -157,6 +157,8 @@ protected:
 	MONSTER_ID	m_eMonsterID = MONSTER_END;
 	DMG_DIR	m_eDmg_Direction = FRONT;
 	
+	/* For Aerial */
+	_bool m_bIsUp = false;
 
 protected: /* For.Components */
 	CModel* m_pModelCom = nullptr;

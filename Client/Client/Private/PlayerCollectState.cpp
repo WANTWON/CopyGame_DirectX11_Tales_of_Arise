@@ -19,7 +19,7 @@ CPlayerState * CCollectState::HandleInput(void)
 
 CPlayerState * CCollectState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 	m_pOwner->Check_Navigation();
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -28,19 +28,16 @@ CPlayerState * CCollectState::Tick(_float fTimeDelta)
 	{
 		if (pEvent.isPlay)
 		{
-			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID() || CPlayer::LAW == m_pOwner->Get_PlayerID())
+			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 			{
-				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-				{
-					if (nullptr != m_pObject)
-						m_pObject->Set_Interact();
-					else
-						return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
-				}
+				if (nullptr != m_pObject)
+					m_pObject->Set_Interact();
+				else
+					return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 			}
 		}
 	}
-	
+
 	return nullptr;
 }
 
@@ -48,7 +45,7 @@ CPlayerState * CCollectState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
 		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
-	
+
 	return nullptr;
 }
 

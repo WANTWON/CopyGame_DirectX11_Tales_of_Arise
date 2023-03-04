@@ -594,13 +594,11 @@ void CMonster::Make_UIFont(_uint iDamage)
 				return;
 		}
 		break;
-
 	}
-
 }
 
 
-_int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnChange)
+_int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bIsUp, _bool bLockOnChange)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
@@ -663,6 +661,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
 	m_bTakeDamage = true;
+	m_bIsUp = bIsUp;
 
 	return _int(m_tStats.m_fCurrentHp);
 }

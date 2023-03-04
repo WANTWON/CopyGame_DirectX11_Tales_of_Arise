@@ -597,7 +597,12 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 				}
 
 				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
-				pState = new CHitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time());
+				
+				if (isDown)
+					pState = new CHitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time(), STATETYPE_START);
+				else
+					pState = new CHitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time());
+				
 				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 			}
 			break;

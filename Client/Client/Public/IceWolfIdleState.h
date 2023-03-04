@@ -23,6 +23,9 @@ private:
 	FIELD_STATE_ID	m_ePreTurn_Id;
 
 	_float			m_fIdleTime;
+
+private:
+	void Find_Target_InField(void);
 };
 END
 END

@@ -12,6 +12,7 @@ _bool CSion::Is_AnimationLoop(_uint eAnimId)
 	case ANIM::BTL_MOVE_IDLE:
 	case ANIM::BTL_MOVE_RUN:
 	case ANIM::SYS_RUN:
+	case ANIM::DASH:
 		return true;
 	default:
 		return false;

@@ -298,7 +298,7 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
+_int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _bool bLockOnChange)
 {
 	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pBerserkerState->Get_StateId() == CBerserkerState::STATE_DEAD)
 		return 0;

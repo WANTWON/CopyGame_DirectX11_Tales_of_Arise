@@ -5,13 +5,14 @@
 
 using namespace Player;
 
-CHitState::CHitState(CPlayer * pPlayer, _vector vCauserPos, _bool isDown, _float fTime)
+CHitState::CHitState(CPlayer * pPlayer, _vector vCauserPos, _bool isDown, _float fTime, STATETYPE eStateType)
 {
 	m_pOwner = pPlayer;
 	m_ePlayerID = m_pOwner->Get_PlayerID();
 	m_fTime = fTime;
 	m_bIsDown = isDown;
 	m_vCauserPos = vCauserPos;
+	m_eStateType = eStateType;
 }
 
 CPlayerState * CHitState::HandleInput()
@@ -23,18 +24,18 @@ CPlayerState * CHitState::Tick(_float fTimeDelta)
 {
 	if (m_bIsDown)
 	{
-		if (Move(fTimeDelta))
-			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
+		if (!m_bIsMove)
+		{
+			Move(fTimeDelta);
+			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+		}
 		else
-			m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-		
-		m_pOwner->Check_Navigation_Jump();
+			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
 	}
 	else
-	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
-		m_pOwner->Check_Navigation_Jump();
-	}
+
+	m_pOwner->Check_Navigation_Jump();
 
 	return nullptr;
 }
@@ -43,8 +44,11 @@ CPlayerState * CHitState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
 	{
-		if (m_bIsDown)
-			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
+		if (m_bIsMove && (STATETYPE_START == m_eStateType))
+		{
+			m_eStateType = STATETYPE_END;
+			Enter();
+		}
 		else
 		{
 			if (m_bIsFly)
@@ -68,16 +72,29 @@ void CHitState::Enter()
 		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DOWN_B);
+			if (STATETYPE_START == m_eStateType)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DOWN_B);
+			else if (STATETYPE_END == m_eStateType)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ARISE_B);
 			break;
 		case CPlayer::SION:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DOWN_B);
+			if (STATETYPE_START == m_eStateType)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DOWN_B);
+			else if (STATETYPE_END == m_eStateType)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ARISE_B);
 			break;
 		case CPlayer::RINWELL:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_DOWN_B);
+			if (STATETYPE_START == m_eStateType)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_DOWN_B);
+			else if (STATETYPE_END == m_eStateType)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ARISE_B);
+			
 			break;
 		case CPlayer::LAW:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_DOWN_B);
+			if (STATETYPE_START == m_eStateType)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_DOWN_B);
+			else if (STATETYPE_END == m_eStateType)
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ARISE_B);
 			break;
 		}
 	}
@@ -129,6 +146,7 @@ void CHitState::Exit()
 
 	m_bIsDown = false;
 	m_bIsLook = false;
+	m_bIsMove = false;
 
 	if (m_bIsFly)
 		m_pOwner->Off_IsFly();
@@ -155,9 +173,9 @@ _bool CHitState::Move(_float fTimeDelta)
 	_float EndHeight = m_pOwner->Get_Navigation()->Compute_Height(vPosition, 0.f);
 
 	if (EndHeight > XMVectorGetY(vPosition))
-		return true;
+		m_bIsMove = true;
 	else
 		m_pOwner->Get_Transform()->Go_PosDir(fTimeDelta * 4.f, vDir, m_pOwner->Get_Navigation());
 
-	return false;
+	return m_bIsMove;
 }
