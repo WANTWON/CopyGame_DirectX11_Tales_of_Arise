@@ -15,6 +15,7 @@
 #include "Portal.h"
 #include "MiniGameNpc.h"
 #include "Trigger.h"
+#include "Effect.h"
 
 
 CPlayerCreater::CPlayerCreater(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -831,6 +832,7 @@ HRESULT CPlayerCreater::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 
 	}
 	CloseHandle(hFile);
+
 
 	RELEASE_INSTANCE(CGameInstance);
 

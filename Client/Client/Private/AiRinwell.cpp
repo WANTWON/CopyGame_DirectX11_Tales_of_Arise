@@ -158,13 +158,16 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
-	__super::Late_Tick(fTimeDelta);
-
-	if (ExceptionHanding() == false)
+	if (ExceptingActionCamHanding() == false)
 		return;
+
+	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom && m_bGlowUp)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
+
+	if (ExceptionHanding() == false)
+		return;
 
 	if (!m_bDissolve)
 	{

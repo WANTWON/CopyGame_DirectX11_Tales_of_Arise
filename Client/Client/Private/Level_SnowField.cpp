@@ -66,7 +66,6 @@ HRESULT CLevel_SnowField::Initialize()
 	}
 
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Interact"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Effects"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
@@ -130,15 +129,42 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_SnowParticles1.empty() && m_SnowParticles2.empty() && m_WindParticles.empty())
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Effects")) == false)
 	{
-		_matrix mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 128.f);
-		m_SnowParticles1 = CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_1.dat"), mWorldMatrix);
-		m_SnowParticles2 = CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_2.dat"), mWorldMatrix);
+		if (!m_bFirst)
+		{
+			HANDLE hFile = 0;
+			_ulong dwByte = 0;
+			NONANIMDESC  ModelDesc;
+			_uint iNum = 0;
+			hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/FogPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+			if (0 == hFile)
+				return;
 
-		mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 256.f);
-		//m_WindParticles = CEffect::PlayEffectAtLocation(TEXT("Wind.dat"), mWorldMatrix);
+			/* 타일의 개수 받아오기 */
+			ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+			for (_uint i = 0; i < iNum; ++i)
+			{
+				ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+				_matrix mWorldMatrix = XMLoadFloat4x4(&ModelDesc.WorldMatrix);
+				CEffect::PlayEffectAtLocation(TEXT("Fog.dat"), mWorldMatrix);
+			}
+			CloseHandle(hFile);
+
+		
+			_matrix mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 128.f);
+			CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_1.dat"), mWorldMatrix);
+			CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_2.dat"), mWorldMatrix);
+			mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 256.f);
+
+		m_bFirst = true;
+
+		}
+
 	}
+	
 	
 	g_fSoundVolume += 0.001f;
 	if (g_fSoundVolume >= 0.3f)
@@ -305,7 +331,7 @@ void CLevel_SnowField::Late_Tick(_float fTimeDelta)
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (pPlayer)
 	{
-		pPlayer->Get_Renderer()->Set_Fog(true);
+		pPlayer->Get_Renderer()->Set_Fog(false);
 
 		CShader* pShaderPostProcessing = pPlayer->Get_Renderer()->Get_ShaderPostProcessing();
 		if (FAILED(pShaderPostProcessing->Set_RawValue("g_ViewMatrixInv", &pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))

@@ -320,6 +320,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		dynamic_cast<CMonster*>(iter)->Change_Navigation(LEVEL_BATTLE);
 		dynamic_cast<CMonster*>(iter)->Compute_CurrentIndex(LEVEL_BATTLE);
 		dynamic_cast<CMonster*>(iter)->Set_BattleMode(true);
+		dynamic_cast<CMonster*>(iter)->Set_IsActionMode(true);
 		pBattleManager->Set_LackonMonster(iter);
 	}
 	CloseHandle(hFile);
