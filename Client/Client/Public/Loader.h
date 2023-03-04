@@ -30,11 +30,8 @@ public:
 		return m_szLoadingText;
 	}
 
-	void Set_Finished(_bool tof) { m_isFinished = tof; }
-
 public:
 	HRESULT Initialize(LEVEL eNextLevel);
-
 
 	HRESULT Loading_ForLogoLevel();
 	HRESULT Loading_ForPrototype();

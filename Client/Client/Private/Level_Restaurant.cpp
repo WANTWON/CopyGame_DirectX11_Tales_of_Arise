@@ -164,9 +164,11 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 						case 12:
 						case 13:
 						case 14:
+
 							strcpy_s(ThrowDesc.tNonDesc.pModeltag, "Bread_Croissant");
 							ThrowDesc.eType = CThrowingObject::TYPE_BREAD;
 							ThrowDesc.tNonDesc.vScale = _float3(3.f, 3.f, 3.f);
+							
 							break;
 						case 15:
 						case 16:

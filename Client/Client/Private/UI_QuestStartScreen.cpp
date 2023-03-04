@@ -50,7 +50,6 @@ HRESULT CUI_QuestStartScreen::Initialize(void * pArg)
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("QuestStart.wav"), SOUND_EFFECT, 1.0f);
 		m_bQuestStart = true;
 	}
-	CUI_Manager::Get_Instance()->Set_UIQuestScreen(true);
 
 	return S_OK;
 }
@@ -182,7 +181,7 @@ int CUI_QuestStartScreen::Tick(_float fTimeDelta)
 		}
 			
 
-		CUI_Manager::Get_Instance()->Set_UIQuestScreen(false);
+
 		return OBJ_DEAD;
 	}
 	

@@ -344,7 +344,7 @@ CAIState * CAI_Alphen_SkillAttackState::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		if (m_pOwner->Get_IsFly())
-			return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, false, m_fTime);
+			return new CAI_JumpState(m_pOwner, STATETYPE_START, false, m_fTime);
 
 		if (Get_Target_Distance() <= 3.f)
 		{

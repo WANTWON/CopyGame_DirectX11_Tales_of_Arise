@@ -122,7 +122,6 @@ private:
 	_float			m_fMinusVelocity = 1.f;
 	_vector			m_vShakingStartPos = { 0.f, 0.f, 0.f, 0.f };
 	_int			m_iShakingCount = 0;
-	_float			m_fShakingTime = 0;
 	
 	_bool			m_bBlurResetted = false;
 

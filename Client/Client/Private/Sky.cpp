@@ -94,12 +94,12 @@ HRESULT CSky::Ready_Components()
 	{
 	case Client::LEVEL_SNOWFIELD:
 		/* For.Com_Texture */
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky_SnowField"), (CComponent**)&m_pTextureCom)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_SNOWFIELD, TEXT("Prototype_Component_Texture_Sky"), (CComponent**)&m_pTextureCom)))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_BATTLE:
 		/* For.Com_Texture */
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky_SnowBattle"), (CComponent**)&m_pTextureCom)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_BATTLE, TEXT("Prototype_Component_Texture_Sky"), (CComponent**)&m_pTextureCom)))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_BOSS:
@@ -109,7 +109,7 @@ HRESULT CSky::Ready_Components()
 		break;
 	case Client::LEVEL_CITY:
 		/* For.Com_Texture */
-		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky_City"), (CComponent**)&m_pTextureCom)))
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_CITY, TEXT("Prototype_Component_Texture_Sky"), (CComponent**)&m_pTextureCom)))
 			return E_FAIL;
 		break;
 	case Client::LEVEL_LAWBATTLE:

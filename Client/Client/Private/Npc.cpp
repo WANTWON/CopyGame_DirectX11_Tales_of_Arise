@@ -197,7 +197,7 @@ void CNpc::Free()
 {
 	__super::Free();
 
-	CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_INTERACT, this);
+	CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
 }

@@ -10,7 +10,6 @@
 #include "AICheckState.h"
 #include "AI_LAW_SkillAttack_State.h"
 #include "AI_DodgeState.h"
-#include "AI_JumpState.h"
 
 
 using namespace AIPlayer;
@@ -50,7 +49,7 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 	if (m_pTarget == nullptr)
 		return nullptr;
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -59,13 +58,10 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-		if ((CAIState::STATE_NORMAL_ATTACK5 == m_eStateId) && !m_bIsFly)
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.05f), fRotationRadian, m_pOwner->Get_Navigation());
-		else
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());	
-	}
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 
-	m_pOwner->Check_Navigation_Jump();
+		m_pOwner->Check_Navigation();
+	}
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
@@ -128,15 +124,19 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 				case Client::CAIState::STATE_NORMAL_ATTACK5:
 					//if(m_pTarget != nullptr)
 					if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+					{
 						return new CAI_DodgeState(m_pOwner, m_pTarget);
+					}
 					else
 					{
-						switch (rand() % 4)
+						switch (rand() % 5)
 						{
 						case 0:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_R);
 						case 1:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
 						case 2:
-							return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, true, 1.f);
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
 						case 3:
 							return new CAI_DodgeState(m_pOwner, m_pTarget);
 						}

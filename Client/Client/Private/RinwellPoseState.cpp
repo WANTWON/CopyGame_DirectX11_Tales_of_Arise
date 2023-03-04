@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "RinwellPoseState.h"
-#include "RinwellIdleState.h"
 #include "RinwellMoveState.h"
 #include "CameraManager.h"
 #include "UI_Dialogue_Caption.h"
@@ -63,10 +62,10 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 		case Client::CRinwellState::STATE_MOVE:
 			break;
 		case Client::CRinwellState::STATE_HP50DOWN:
-			return new CRinwellIdleState(m_pOwner, 1.f);
+			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
 			break;
 		case Client::CRinwellState::STATE_BATTLESTART:
-			return new CRinwellIdleState(m_pOwner, 1.f);
+			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
 		}
 	}
 
@@ -96,7 +95,6 @@ void CPoseState::Enter()
 		break;
 	}		
 	case Client::CRinwellState::STATE_HP50DOWN:
-		m_pOwner->Set_AirMode(true);
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_ATTACK_DENZIHOU);
 		break;
 	case Client::CRinwellState::STATE_BATTLESTART:

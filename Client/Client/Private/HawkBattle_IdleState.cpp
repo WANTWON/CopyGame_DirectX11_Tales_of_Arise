@@ -32,31 +32,56 @@ CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 
 	if (pDamageCauser == nullptr)
 	{
-		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
-		if (nullptr == m_pCurTarget)
-			return nullptr;
+		if (m_pCurTarget == nullptr)
+		{
+			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+			if (nullptr == m_pCurTarget)
+				return nullptr;
+
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
+		else if (m_pCurTarget)
+		{
+			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+		}
+
 	}
-	else 
+
+	else if (pDamageCauser != nullptr)
+	{
 		m_pCurTarget = pDamageCauser;
-		
-	m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 
-
-	m_pOwner->Check_Navigation();
+		m_vCurTargetPos = pDamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_fTarget_Distance = m_pOwner->Target_Distance(pDamageCauser);
+	}
 
 	return nullptr;
 }
 
 CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 {	
+	m_pOwner->Check_Navigation();
+
 	m_fTimeDeltaAcc += fTimeDelta;
 
 	if (m_ePreBattleState == STATE_ID::STATE_DOWN)
 	{
 		if (m_bIsAnimationFinished)
 			return new CBattle_DashState(m_pOwner);
+		else
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+			m_pOwner->Check_Navigation();
+		}
 	}
+
 	else if (m_ePreBattleState == STATE_ID:: STATE_BRAVE)
 	{
 		if (m_bIsAnimationFinished)
@@ -70,6 +95,7 @@ CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
 		}
 	}
+
 	else
 	{
 		if (m_fTimeDeltaAcc > m_fRandTime)
@@ -84,11 +110,7 @@ void CBattle_IdleState::Enter()
 	m_eStateId = STATE_ID::STATE_BATTLE;
 
 	if (m_ePreBattleState == STATE_ID::STATE_DOWN)
-	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ARISE_F);
-		m_eStateId = STATE_ID::STATE_ARISE;
-	}
-		
 
 	else if (m_ePreBattleState == STATE_ID::STATE_BRAVE)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_BRAVE);

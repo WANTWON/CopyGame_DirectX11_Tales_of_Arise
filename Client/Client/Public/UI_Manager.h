@@ -111,12 +111,6 @@ public: /*Getter Setter*/
 	void Set_StopTick(_bool onoff) { m_bStopTick = onoff; }
 	_bool Get_StopTick() { return m_bStopTick; }
 
-	void Set_UIStrike(_bool onoff) { m_bUIStrikeFade = onoff; }
-	_bool Get_UIStrike() { return m_bUIStrikeFade; }
-
-	void Set_UIQuestScreen(_bool onoff) { m_bUIQuestScreen = onoff; }
-	_bool Get_UIQuestScreen() { return m_bUIQuestScreen; }
-
 	_uint Get_QuestIndex() { return m_iQuestIndex; }
 	_uint Get_Quest1_Lettuce() { return m_iQuest1_Lettuce; }
 	_uint Get_Quest1_Herb() { return m_iQuest1_Herb; }
@@ -187,9 +181,6 @@ private:
 	_uint m_iQuest1_Herb = 0;
 
 	_bool m_bQuestComplete[8] = { false,false, false, false, false, false, false, false };
-
-	_bool m_bUIStrikeFade = false;
-	_bool m_bUIQuestScreen = false;
 
 	_uint m_iDialogueSection = 0;
 //private:

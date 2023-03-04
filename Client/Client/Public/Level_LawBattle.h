@@ -38,7 +38,6 @@ private:
 	_bool	   m_bZumIn = false;
 
 	_float m_fBlurTimer = 0.f;
-	_float m_fHitLegTime = 0.f;
 
 public:
 	static CLevel_LawBattle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -35,12 +35,7 @@ CHawkState * CBattle_Flying_BackState::Tick(_float fTimeDelta)
 		m_pOwner->Check_Navigation();
 	}
 
-
-	return nullptr;
-}
-
-CHawkState * CBattle_Flying_BackState::LateTick(_float fTimeDelta)
-{
+	srand((_uint)time(NULL));
 	m_iRand = rand() % 2;
 
 	if (m_bIsAnimationFinished)
@@ -50,7 +45,7 @@ CHawkState * CBattle_Flying_BackState::LateTick(_float fTimeDelta)
 		case 0:
 			return new CBattle_DashState(m_pOwner);
 			break;
-
+			
 		case 1:
 			return new CBattle_TornadeState(m_pOwner);
 			break;
@@ -60,10 +55,17 @@ CHawkState * CBattle_Flying_BackState::LateTick(_float fTimeDelta)
 	return nullptr;
 }
 
+CHawkState * CBattle_Flying_BackState::LateTick(_float fTimeDelta)
+{
+	return nullptr;
+}
+
 void CBattle_Flying_BackState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_BATTLE;
+
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_FLUTTER);
+
 	m_StartMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 }
 

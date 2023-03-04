@@ -9,7 +9,7 @@ BEGIN(AiRinwell)
 class CSkillState final : public CRinwellState
 {
 public:
-	CSkillState(class CAiRinwell* pPlayer, _uint eType, STATETYPE eStateType = STATETYPE_DEFAULT);
+	CSkillState(class CAiRinwell* pPlayer, _uint eType);
 
 	virtual CRinwellState* Tick(_float fTimeDelta) override;
 	virtual CRinwellState* LateTick(_float fTimeDelta);
@@ -18,14 +18,12 @@ public:
 	virtual void Exit() override;
 
 private:
-	_vector m_vTargetPosition = { 0.f, 0.f, 0.f, 0.f };
+	_vector m_vTargetPosition = {0.f,0.f,0.f,0.f};
 	_int	m_iChangeCount = 0;
 	_bool	m_ChangedDir = false;
 	_bool	m_bAirMove = false;
 	vector<CEffect*> m_pEffects;
 	vector<CEffect*> m_pBlastEffects;
-	STATETYPE m_eStateType; 
-	_float	m_fTime = 0.f;
 };
 
 END

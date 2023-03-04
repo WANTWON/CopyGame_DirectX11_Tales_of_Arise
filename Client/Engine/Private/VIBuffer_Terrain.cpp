@@ -225,7 +225,7 @@ HRESULT CVIBuffer_Terrain::Initialize(void * pArg)
 		{
 			_int		iIndex = i * m_iNumVerticesX + j;
 
-			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3( - 500 + (_float)j*10.f, -10.f,  -500 + (_float)i*10.f);
+			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3((_float)j, 0.f, (_float)i);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexture = _float2(j / _float(m_iNumVerticesX - 1), i / _float(m_iNumVerticesZ - 1));
 		}

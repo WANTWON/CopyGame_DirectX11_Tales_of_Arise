@@ -38,7 +38,7 @@ HRESULT CUI_StrikeFinish::Initialize(void * pArg)
 int CUI_StrikeFinish::Tick(_float fTimeDelta)
 {
 	
-		m_ftimer += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		m_ftimer += fTimeDelta;
 
 
 			if (m_bfadein)
@@ -46,11 +46,7 @@ int CUI_StrikeFinish::Tick(_float fTimeDelta)
 
 
 			if (m_ftimer > 2.f)
-			{
-				CUI_Manager::Get_Instance()->Set_UIStrike(false);
 				return OBJ_DEAD;
-			}
-				
 			
 
 

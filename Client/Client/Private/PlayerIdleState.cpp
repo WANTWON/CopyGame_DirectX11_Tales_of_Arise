@@ -104,26 +104,8 @@ CPlayerState * CIdleState::HandleInput()
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMPTYPE::JUMP_BATTLE);
 
-		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT_RIGHT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_BACKWARD_LEFT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_BACKWARD_RIGHT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_LEFT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_RIGHT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_BACKWARD, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_LSHIFT) && !m_bIsFly)
-			return new CDodgeState(m_pOwner, DIR_END, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_LSHIFT) && m_bIsFly)
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
+		if (pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT);
 	}
 	else if ((LEVEL_RESTAURANT == pGameInstance->Get_CurrentLevelIndex()) && ((CLevel_Restaurant*)(pGameInstance->Get_CurrentLevel()))->Get_MiniGameStart())
 	{
@@ -132,6 +114,9 @@ CPlayerState * CIdleState::HandleInput()
 	}
 	else
 	{
+		if (pGameInstance->Key_Down(DIK_E))
+			return new CCollectState(m_pOwner);
+
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMPTYPE::JUMP_IDLE);
 	}

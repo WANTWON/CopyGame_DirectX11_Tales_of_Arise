@@ -118,8 +118,7 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 void CMoveState::Enter()
 {
 	m_eStateId = STATE_ID::STATE_MOVE;
-
-	if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
+	if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp*0.5f)
 		m_bAirMove = true;
 	else
 		m_bAirMove = false;

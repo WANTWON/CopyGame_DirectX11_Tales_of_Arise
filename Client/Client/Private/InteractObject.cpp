@@ -160,6 +160,10 @@ HRESULT CInteractObject::SetUp_ShaderResources()
 	{
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DissolveTexture", m_pDissolveTexture->Get_SRV(0))))
 			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fDissolveAlpha", &m_DissolveAlpha, sizeof(_float))))
+			return E_FAIL;
+
 	}
 
 

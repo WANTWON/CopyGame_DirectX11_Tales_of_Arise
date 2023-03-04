@@ -22,8 +22,6 @@ private:
 	_vector m_vTargetPosition = {0.f,0.f,0.f,0.f};
 	_uint m_eDmgDir = FRONT;
 
-private:
-	void Move(void);
 };
 
 END

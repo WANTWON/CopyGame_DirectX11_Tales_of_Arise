@@ -130,6 +130,9 @@ CPlayerState * CRunState::HandleInput()
 
 		else
 		{
+			if (pGameInstance->Key_Down(DIK_E))
+				return new CCollectState(m_pOwner);
+
 			if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 				return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_RUN);
 		}

@@ -97,11 +97,7 @@ void CSnowFieldNpc::Late_Tick(_float fTimeDelta)
 	   m_bIsFirst_conversation = true;
 
 	   if (CGameInstance::Get_Instance()->Key_Up(DIK_E))
-	   {
-		   CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_IsActionMode(true);
-		   Talk_with_Npc();
-	   }
-			
+			Talk_with_Npc(); 
 		   
    }
 

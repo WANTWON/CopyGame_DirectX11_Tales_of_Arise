@@ -67,7 +67,6 @@ void CPlayerOverlimit::Enter(void)
 	m_eStateId = STATE_ID::STATE_OVERLIMIT;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
 
-	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("OverLimit.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())

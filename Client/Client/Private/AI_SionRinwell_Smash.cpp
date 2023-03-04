@@ -133,8 +133,7 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-			CUI_Manager::Get_Instance()->Get_UIStrike() == false)
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
 			PLAYER_MODE eMode = CPlayerManager::Get_Instance()->Check_ActiveMode(m_pOwner);
 			switch (eMode)
@@ -166,7 +165,6 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 		{
 			if (m_eCurrentPlayerID == CPlayer::SION)
 			{
-				CUI_Manager::Get_Instance()->Set_UIStrike(true);
 				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 					dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
 
@@ -236,31 +234,23 @@ void CAI_SionRinwell_Smash::Exit()
 
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
-
-	if (m_eCurrentPlayerID == CPlayer::SION)
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
+	CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+	if (pLockOn != nullptr)
 	{
-
-
-		CBattleManager::Get_Instance()->Set_IsStrike(false);
-		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
-		if (pLockOn != nullptr)
+		_vector vLastPosition = dynamic_cast<CMonster*>(pLockOn)->Get_LastPosition();
+		if (!dynamic_cast<CMonster*>(pLockOn)->Get_LastStrikeAttack())
 		{
-			_vector vLastPosition = dynamic_cast<CMonster*>(pLockOn)->Get_LastPosition();
-			if (!dynamic_cast<CMonster*>(pLockOn)->Get_LastStrikeAttack())
-			{
-				dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
-				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
-			}
-			else
-			{
-				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
-			}
+			dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
+			dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+			dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 		}
-
+		else
+		{
+			dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+			dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		}
 	}
-
 	for (auto& iter : m_pEffects)
 	{
 		if (iter != nullptr && iter->Get_PreDead())

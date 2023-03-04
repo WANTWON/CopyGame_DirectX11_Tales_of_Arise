@@ -222,10 +222,10 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 				case CThrowingObject::TYPE_APPLE:
 					m_iScore = 10;
 					break;
-				case CThrowingObject::TYPE_BREAD:
+				case CThrowingObject::TYPE_REDONION:
 					m_iScore = 15;
 					break;
-				case CThrowingObject::TYPE_REDONION:
+				case CThrowingObject::TYPE_BREAD:
 					m_iScore = 20;
 					break;
 				case CThrowingObject::TYPE_MANGO:

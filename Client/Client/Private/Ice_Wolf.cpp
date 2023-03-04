@@ -162,11 +162,11 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 
-	if (m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
-
 	if (ExceptionHanding() == false)
 		return;
+
+	if (m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
 	LateTick_State(fTimeDelta);
 }
@@ -274,53 +274,77 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 
 _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange )
 {
-	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pState->Get_StateId() == CIceWolfState::STATE_DEAD )
+	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage )
 		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
-
+	
+	if (m_bOnGoingDown == false)
+	{
 		if (iHp <= 0)
 		{
-			m_tStats.m_fCurrentHp = 0;
-			CBattleManager::Get_Instance()->Update_LockOn();
-			Check_AmILastMoster();
-
-			Compute_CurrentIndex();
+			m_pModelCom->Set_TimeReset();
 			CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DEAD);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 			return 0;
 		}
 		else
 		{
-			if (m_bOnGoingDown == false)
-			{
-				m_iBeDamaged_Cnt++;
+			m_iBeDamaged_Cnt++;
 
-				if (m_bDownState == false)
+			if (m_bDownState == false)
+			{
+				if (m_bOnGoing_Bite == false)
 				{
-					if (m_bOnGoing_Bite == false)
+					if (m_bSomeSauling == false)
 					{
-						if (m_bSomeSauling == false)
+						if (m_bBedamageAnim_Delay == false)
 						{
-							if (m_bBedamageAnim_Delay == false)
+							//m_pModelCom->Set_TimeReset();
+							if (m_bBedamageAnim == true)
 							{
-								if (m_bBedamageAnim == true)
-								{
-									CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
-									m_pState = m_pState->ChangeState(m_pState, pState);
-								}
+								CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
+								m_pState = m_pState->ChangeState(m_pState, pState);
+							}
+
+							else if (m_bBedamageAnim == false)
+							{
+								return iHp;
 							}
 						}
-					}
-				}
-				else if (m_bDownState == true)
-				{
-					CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DOWN);
-					m_pState = m_pState->ChangeState(m_pState, pState);
-				}
 
+						else if (m_bBedamageAnim_Delay == true)
+						{
+							return iHp;
+						}
+
+					}
+					//if (m_iBeDamaged_Cnt >= 3)
+					//{
+					//	m_pModelCom->Set_TimeReset();
+					//	CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED, true);
+					//	m_pState = m_pState->ChangeState(m_pState, pState);
+					//	m_iBeDamaged_Cnt = 0;
+					//	m_bSomeSauling = true;
+					//}
+				}
+				else
+				{
+					return iHp;
+				}
+			}
+			else if (m_bDownState == true)
+			{
+				CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_DOWN);
+				m_pState = m_pState->ChangeState(m_pState, pState);
 			}
 		}
+	}
+
+	else
+	{
+		return iHp;
+	}
 
 	return iHp;
 }

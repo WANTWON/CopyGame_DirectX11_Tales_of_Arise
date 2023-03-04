@@ -31,21 +31,29 @@ CAI_JumpState::CAI_JumpState(CPlayer* pPlayer, STATETYPE eType, _bool useskill, 
 {
 	m_pOwner = pPlayer;
 	m_eStateType = eType;
+	//m_eJumpType = eJumpType;
 	m_eCurrentPlayerID = m_pOwner->Get_PlayerID();
 	m_fTime = fTime;
 
 	m_bUseskill = useskill;
 }
 
+
+
 CAIState * CAI_JumpState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.f);
 
+
+	/*m_bIsJump = true;
+
+if (m_bIsJump)*/
 	Move(fTimeDelta);
 
 	m_pOwner->Get_Navigation()->Compute_CurrentIndex_byXZ(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
-	m_pOwner->Check_Navigation_Jump();
+	if (STATETYPE_END == m_eStateType)
+		m_pOwner->Check_Navigation_Jump();
 
 	return nullptr;
 }
@@ -74,7 +82,7 @@ CAIState * CAI_JumpState::LateTick(_float fTimeDelta)
 			}
 			break;
 		case CPlayer::LAW:
-			switch (rand() % 2)
+			switch (0/*rand() % 2*/)
 			{
 			case 0:
 				return new CAI_LAW_AIRSKILLR(m_pOwner, STATE_SKILL_ATTACK_R);
@@ -155,22 +163,7 @@ CAIState * CAI_JumpState::LateTick(_float fTimeDelta)
 			}
 		}
 		break;
-	case Client::STATETYPE_MAIN:
-		if (Check_JumpEnd(1.f))
-		{
-			m_eStateType = STATETYPE_END;
 
-			if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_LAND);
-			else if (CPlayer::SION == m_pOwner->Get_PlayerID())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_LAND);
-			else if (CPlayer::RINWELL == m_pOwner->Get_PlayerID())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_LAND);
-			else if (CPlayer::LAW == m_pOwner->Get_PlayerID())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_LAND);
-			break;
-		}
-		break;
 	case Client::STATETYPE_END:
 		if (m_bIsAnimationFinished)
 			return new CAICheckState(m_pOwner, m_eStateId);
@@ -182,11 +175,43 @@ CAIState * CAI_JumpState::LateTick(_float fTimeDelta)
 
 CAIState * CAI_JumpState::EventInput(void)
 {
+	//CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+
+	//
+	//	if (GetKeyState(VK_LBUTTON) < 0)
+	//	{
+	//		switch (m_eCurrentPlayerID)
+	//		{
+	//		case CPlayer::ALPHEN:
+	//		case CPlayer::LAW:
+	////			return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_NORMAL_ATTACK1);
+	//			break;
+	//		case CPlayer::SION:
+	//	//		return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
+	//			//for Sion State//
+	//			break;
+
+	//		case CPlayer::RINWELL:
+	//	//		return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
+	//			break;
+	//		}
+	//	}
+
+	//	/* Skill */
+	//	if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
+	//	{
+	//		
+	//	}
+
+
+
 	return nullptr;
 }
 
 void CAI_JumpState::Enter()
 {
+	//__super::Enter();
+
 	m_eStateId = STATE_ID::STATE_JUMP;
 
 	m_pOwner->On_IsFly();
@@ -281,4 +306,8 @@ void CAI_JumpState::Move(_float fTimeDelta)
 		m_bIsDrop = true;
 	else
 		m_bIsDrop = false;
+
+
+	/*else if ((JUMP_BATTLE == m_eJumpType) && (m_eDirection != DIR_END) && (STATETYPE_END != m_eStateType))
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 3.f);*/
 }

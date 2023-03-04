@@ -477,7 +477,7 @@ CAIState * CAI_Sion_SkillState::LateTick(_float fTimeDelta)
 		//m_fEventStart = -1.f;
 
 		if (m_pOwner->Get_IsFly())
-			return new CAI_JumpState(m_pOwner, STATETYPE_MAIN ,false ,  m_fTime);
+			return new CAI_JumpState(m_pOwner, STATETYPE_START ,false ,  m_fTime);
 
 		if (m_pOwner->Get_Info().fCurrentMp < 1)
 		{

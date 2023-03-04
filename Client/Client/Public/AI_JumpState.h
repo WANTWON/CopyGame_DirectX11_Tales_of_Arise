@@ -12,6 +12,7 @@ public:
 public:
 	CAI_JumpState(class CPlayer* pPlayer, STATETYPE eType, _bool useskill = false , _float fTime = 0.f);
 
+
 	virtual CAIState* Tick(_float fTimeDelta) override;
 	virtual CAIState* LateTick(_float fTimeDelta);
 	virtual CAIState* EventInput(void);

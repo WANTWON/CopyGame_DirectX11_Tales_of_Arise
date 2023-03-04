@@ -2,10 +2,7 @@
 #include "..\Public\RinwellIdleState.h"
 
 #include "RinwellMoveState.h"
-#include "RinwellAttackState.h"
 #include "RinwellSkillState.h"
-#include "RinwellPoseState.h"
-#include "RinwellTurnState.h"
 
 using namespace AiRinwell;
 
@@ -39,40 +36,27 @@ CRinwellState * CRinwellIdleState::Tick(_float fTimeDelta)
 
 CRinwellState * CRinwellIdleState::LateTick(_float fTimeDelta)
 {
-	_float fCurrentHP = m_pOwner->Get_Stats().m_fCurrentHp;
-	_float fMaxHP = m_pOwner->Get_Stats().m_fMaxHp;
-
-	if ((fCurrentHP < fMaxHP * 0.5f) && !m_pOwner->Get_AirMode())
-		return new CPoseState(m_pOwner, STATE_HP50DOWN);
-
 	if (m_fWaitingTime < m_fTime)
 	{
-		_vector vToTargetDir = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
-		_float fDistance = XMVectorGetX(XMVector3Length(vToTargetDir));
-		if (fDistance < 8.f)
+		_float fDistance = XMVectorGetX(XMVector3Length(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		if (fDistance < 0.5f)
 		{
-			_float fCos = XMVectorGetX(XMVector3Dot(XMVector4Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)), XMVector4Normalize(vToTargetDir)));
+			_uint iSkill = rand() % 2;
 
-			if (fCos > 0.4f)
+			switch (iSkill)
 			{
+			case 0:
 				m_pOwner->Set_SkillIndex(CRinwellState::GALEFORCE);
-				return new CRinwellTurnState(m_pOwner, STATE_SKILL);
+				break;
+			case 1:
+				m_pOwner->Set_SkillIndex(CRinwellState::THUNDERFIELD);
+				break;
 			}
-			else
-				return new CSkillState(m_pOwner, CRinwellState::THUNDERFIELD);
+
+			return new CSkillState(m_pOwner, m_pOwner->Get_SkillIndex());
 		}
 		else
-		{
-			if (fCurrentHP < fMaxHP * 0.75f)
-			{
-				_int iSkill = rand() % 2;
-
-				if (1 == iSkill)
-					return new CSkillState(m_pOwner, CRinwellState::HOLY);
-			}
-
-			return new CRinwellTurnState(m_pOwner, STATE_ATTACK, STATETYPE_START);
-		}
+			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
 	}
 
 	return nullptr;
