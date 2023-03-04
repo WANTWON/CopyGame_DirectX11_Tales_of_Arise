@@ -50,6 +50,8 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
 		return OBJ_NOEVENT;
 
+	KillParticles();	/* Release old Particles. */
+
 	if (m_bDead)
 		return OBJ_DEAD;
 	else if (m_bPreDead)
@@ -80,8 +82,6 @@ int CParticleSystem::Tick(_float fTimeDelta)
 
 		m_pVIBufferPointInstance->Update(fTimeDelta, m_Particles, m_iCurrentParticleCount);
 	}
-
-	KillParticles();				/* Release old Particles. */
 	
 	return OBJ_NOEVENT;
 }

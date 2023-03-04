@@ -304,7 +304,20 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bHousyutigakuzinThirdEffect)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_3.dat"), mWorldMatrix);
+								vector<CEffect*> Housyutigakuzin = CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_3.dat"), mWorldMatrix);
+								for (auto& pEffect : Housyutigakuzin)
+								{
+									if (pEffect && !wcscmp(pEffect->Get_PrototypeId(), TEXT("Plane")))
+									{
+										_vector vPosition = pEffect->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+										_matrix ParticleWorldMatrix = XMMatrixIdentity();
+										ParticleWorldMatrix.r[3] = vPosition;
+										CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_Particles.dat"), ParticleWorldMatrix);
+									}
+								}
+
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_4.dat"), mWorldMatrix);
 
 								m_bHousyutigakuzinThirdEffect = true;
 							}
