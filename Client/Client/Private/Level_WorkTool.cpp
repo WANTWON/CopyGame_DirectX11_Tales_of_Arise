@@ -319,7 +319,6 @@ void CLevel_WorkTool::Late_Tick(_float fTimeDelta)
 		
 	CUI_Manager::Get_Instance()->Reset_Minigamecaptionindex();
 		
-		
 	}
 	
 

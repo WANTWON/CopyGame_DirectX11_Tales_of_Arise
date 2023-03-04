@@ -32,6 +32,7 @@ private:
 
 private:
 	_float m_fBlurTimer = 0.f;
+	_bool	m_bFirst = false;
 	 
 	vector<class CEffect*> m_SnowParticles1;
 	vector<class CEffect*> m_SnowParticles2;

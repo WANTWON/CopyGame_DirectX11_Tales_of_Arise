@@ -98,7 +98,6 @@ void CSnowFieldNpc::Late_Tick(_float fTimeDelta)
 
 	   if (CGameInstance::Get_Instance()->Key_Up(DIK_E))
 	   {
-		   CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_IsActionMode(true);
 		   Talk_with_Npc();
 	   }
 			
@@ -163,7 +162,7 @@ void CSnowFieldNpc::Talk_with_Npc()
 	switch (m_NpcDesc.eNpcType)
 	{
 	case FEMALE_YOUNG:
-		
+		CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_IsActionMode(true);
 		switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
 		{
 		case 0:
@@ -189,7 +188,7 @@ void CSnowFieldNpc::Talk_with_Npc()
 		}
 		break;
 	case MAN_OLD:
-
+		CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_IsActionMode(true);
 		switch (CUI_Manager::Get_Instance()->Get_Dialogue_section())
 		{
 		case 3:

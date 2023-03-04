@@ -51,7 +51,7 @@ HRESULT CUI_QuestClear::Initialize(void * pArg)
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("QuestClear.wav"), SOUND_EFFECT, 1.0f);
 		m_bQuestClear = true;
 	}
-
+	CUI_Manager::Get_Instance()->Set_UIQuestScreen(true);
 	return S_OK;
 }
 
@@ -240,6 +240,7 @@ int CUI_QuestClear::Tick(_float fTimeDelta)
 
 		}
 		
+		CUI_Manager::Get_Instance()->Set_UIQuestScreen(false);
 		return OBJ_DEAD;
 			
 	}

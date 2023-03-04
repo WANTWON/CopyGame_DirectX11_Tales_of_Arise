@@ -245,7 +245,7 @@ void CThrowingObject::Dead_Effect()
 			iRandX = rand() % 2 == 0 ? -1.f : 1.f;
 			iRandZ = rand() % 2 == 0 ? -1.f : 1.f;
 			EffectDesc.vTargetDir = XMVectorSet(rand() % 10 * 0.1f * iRandX, 0.5f, rand() % 10 * 0.1f, 0.f * iRandZ);
-			EffectDesc.fVelocity = rand() % 3;
+			EffectDesc.fVelocity = rand() % 20 + 5.f;
 			EffectDesc.fDeadTime = 1.f;
 			XMStoreFloat4x4(&EffectDesc.m_ModelDesc.WorldMatrix, XMMatrixIdentity());
 			EffectDesc.m_ModelDesc.vRotation = _float3(rand() % 180, rand() % 180, rand() % 180);
@@ -272,7 +272,7 @@ void CThrowingObject::Dead_Effect()
 			iRandX = rand() % 2 == 0 ? -1.f : 1.f;
 			iRandZ = rand() % 2 == 0 ? -1.f : 1.f;
 			EffectDesc.vTargetDir = XMVectorSet(rand() % 10 * 0.1f * iRandX, -1.f, rand() % 10 * 0.1f, 0.f * iRandZ);
-			EffectDesc.fVelocity = rand() % 3;
+			EffectDesc.fVelocity = rand() % 20 + 5.f;
 			EffectDesc.fDeadTime = 1.f;
 			EffectDesc.m_ModelDesc.vScale = _float3(3.f, 3.f, 3.f);
 

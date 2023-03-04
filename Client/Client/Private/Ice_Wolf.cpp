@@ -134,21 +134,6 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	if (m_fTimeDeltaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
 
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
-	//{
-	//	CIceWolfState* pBattleState = new CAttackBiteState(this);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	//{
-	//	CIceWolfState* pBattleState = new CAttackNormalState(this, CIceWolfState::STATE_ID::START_BATTLE);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-
-
 	return OBJ_NOEVENT;
 }
 
@@ -160,6 +145,9 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
+	if (ExceptingActionCamHanding() == false)
+		return;
+	
 	__super::Late_Tick(fTimeDelta);
 
 	if (m_pRendererCom)
@@ -247,7 +235,6 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
 	{
-	case ANIM_MOVE_IDLE:
 	case ANIM_MOVE_RUN:
 	case ANIM_MOVE_WALK_F:
 		return true;

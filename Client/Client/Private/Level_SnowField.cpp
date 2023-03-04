@@ -66,7 +66,6 @@ HRESULT CLevel_SnowField::Initialize()
 	}
 
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Interact"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Effects"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
@@ -130,15 +129,42 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_SnowParticles1.empty() && m_SnowParticles2.empty() && m_WindParticles.empty())
+	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Effects")) == false)
 	{
-		_matrix mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 128.f);
-		m_SnowParticles1 = CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_1.dat"), mWorldMatrix);
-		m_SnowParticles2 = CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_2.dat"), mWorldMatrix);
+		if (!m_bFirst)
+		{
+			HANDLE hFile = 0;
+			_ulong dwByte = 0;
+			NONANIMDESC  ModelDesc;
+			_uint iNum = 0;
+			hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/FogPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+			if (0 == hFile)
+				return;
 
-		mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 256.f);
-		//m_WindParticles = CEffect::PlayEffectAtLocation(TEXT("Wind.dat"), mWorldMatrix);
+			/* 타일의 개수 받아오기 */
+			ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+			for (_uint i = 0; i < iNum; ++i)
+			{
+				ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+				_matrix mWorldMatrix = XMLoadFloat4x4(&ModelDesc.WorldMatrix);
+				CEffect::PlayEffectAtLocation(TEXT("Fog.dat"), mWorldMatrix);
+			}
+			CloseHandle(hFile);
+
+		
+			_matrix mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 128.f);
+			CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_1.dat"), mWorldMatrix);
+			CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_2.dat"), mWorldMatrix);
+			mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 256.f);
+
+		m_bFirst = true;
+
+		}
+
 	}
+	
 	
 	g_fSoundVolume += 0.001f;
 	if (g_fSoundVolume >= 0.3f)
@@ -382,15 +408,14 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 	if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::RINWELL) == nullptr)
 	{
 		vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
+		vecFightedMonster.push_back(RINWELL);
 		for (auto& iter : vecFightedMonster)
 		{
 			if (iter == RINWELL)
 			{
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-					return E_FAIL;
+				CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 				break;
 			}
-
 		}
 	}
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
@@ -401,6 +426,8 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Compute_CurrentIndex(LEVEL_SNOWFIELD);
 	pPlayer->Check_Navigation();
 	pPlayer->Change_Level(LEVEL_SNOWFIELD);
+	if (pPlayer->Get_IsFly() == true)
+		pPlayer->Off_IsFly();
 
 	RELEASE_INSTANCE(CGameInstance);
 

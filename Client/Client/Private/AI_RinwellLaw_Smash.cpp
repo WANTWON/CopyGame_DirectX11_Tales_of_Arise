@@ -195,7 +195,6 @@ void CAI_RinwellLaw_Smash::Enter()
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
 	pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);

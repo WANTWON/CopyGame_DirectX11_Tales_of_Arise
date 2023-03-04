@@ -4,7 +4,6 @@
 #include "HawkIdleState.h"
 #include "HawkBattle_IdleState.h"
 #include "HawkBattle_RunState.h"
-#include "HawkBattle_Flying_BackState.h"
 #include "HawkBattle_Damage_LargeB_State.h"
 #include "HawkBattle_DeadState.h"
 #include "HawkSitOnState.h"
@@ -128,7 +127,6 @@ int CHawk::Tick(_float fTimeDelta)
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOSHOW;
 
-
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
@@ -152,6 +150,9 @@ void CHawk::Late_Tick(_float fTimeDelta)
 		return;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
+		return;
+
+	if (ExceptingActionCamHanding() == false)
 		return;
 
 	__super::Late_Tick(fTimeDelta);
@@ -279,7 +280,6 @@ _int CHawk::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _bool 
 				{
 					if (m_bBedamageAnim == true)
 					{
-						Check_Navigation();
 						CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_TAKE_DAMAGE);
 						m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
 					}

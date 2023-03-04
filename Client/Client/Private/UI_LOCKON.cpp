@@ -177,7 +177,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 			_matrix mWorldMatrix = XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z);
 
-			CEffect::PlayEffectAtLocation(TEXT("Skill_Break_Shockwave_1.dat"), mWorldMatrix);
+			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Skill_Break_Shockwave_1.dat"), mWorldMatrix);
 
 			m_bEffectSpawned = true;
 
@@ -202,6 +202,20 @@ void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_GLOW, this);
+
+	if (!m_pEffects.empty() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+	{
+		for (auto& iter : m_pEffects)
+		{
+			if (iter != nullptr)
+			{
+				iter->Set_Dead(true);
+				iter = nullptr;
+
+			}
+			
+		}
+	}
 }
 
 HRESULT CUI_LOCKON::Render()
