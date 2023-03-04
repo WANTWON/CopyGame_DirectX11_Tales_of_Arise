@@ -207,8 +207,13 @@ void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 	{
 		for (auto& iter : m_pEffects)
 		{
-			iter->Set_Dead(true); 
-			iter = nullptr;
+			if (iter != nullptr)
+			{
+				iter->Set_Dead(true);
+				iter = nullptr;
+
+			}
+			
 		}
 	}
 }

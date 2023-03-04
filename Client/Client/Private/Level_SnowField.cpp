@@ -408,15 +408,14 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 	if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::RINWELL) == nullptr)
 	{
 		vector<MONSTER_ID> vecFightedMonster = CBattleManager::Get_Instance()->Get_FightedMonster();
+		vecFightedMonster.push_back(RINWELL);
 		for (auto& iter : vecFightedMonster)
 		{
 			if (iter == RINWELL)
 			{
-				if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-					return E_FAIL;
+				CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 				break;
 			}
-
 		}
 	}
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();

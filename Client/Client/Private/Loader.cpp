@@ -782,6 +782,15 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		return E_FAIL;
 	CloseHandle(hFile);
 
+	hFile = 0;
+	dwByte = 0;
+	iNum = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/Terrain.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_City_WaterTerrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, true))))
+		return E_FAIL;
+	CloseHandle(hFile);
+
 #pragma endregion Buffer Loading
 
 #pragma region Texture Loading
@@ -1117,6 +1126,13 @@ HRESULT CLoader::Loading_ForCityLevel()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/City_SkyBox.dds"), 1))))
 		return E_FAIL;
 
+	/*For.Prototype_Component_Texture_Terrain*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain_City"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/City/Floor%d_C.dds"), 4))))
+		return E_FAIL;
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_NormalTerrain_City"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/City/Floor%d_N.dds"), 4))))
+		return E_FAIL;
 
 #pragma region Deco CityMap Object
 
@@ -1301,6 +1317,8 @@ HRESULT CLoader::Loading_ForCityLevel()
 			"../../../Bin/Data/City_Data/SAT_Wall02.dat"))))
 		return E_FAIL;
 #pragma endregion Instancing City
+
+
 
 
 	Safe_Release(pGameInstance);
@@ -2972,6 +2990,10 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Ceil/Ceiling/Ceiling.dat"))))
 		return E_FAIL;       
 	
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_TilingA"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Tiling/Bld_TilingA/Bld_TilingA.dat"))))
+		return E_FAIL;*/
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Chandelier_Lod1"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Chandelier/Bld_Chandelier_Lod1/Bld_Chandelier_Lod1.dat"))))
 		return E_FAIL;
@@ -3287,9 +3309,9 @@ HRESULT CLoader::Loading_ForStaticMapObject()
 
 #pragma region Instancing Boss
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prop_Light02_Lod1"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Light/Prop_Light02_Lod1/Prop_Light02_Lod1.dat",
-			"../../../Bin/Data/BattleZoneData/BossMap/LightPillar.dat"))))
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_TilingA"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Tiling/Bld_TilingA/Bld_TilingA.dat",
+			"../../../Bin/Data/BattleZoneData/BossMap/Tilling.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bld_Wall01"),
