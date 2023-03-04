@@ -3,7 +3,6 @@
 #include "HawkIdleState.h"
 #include "GameInstance.h"
 #include "HawkBattle_RunState.h"
-#include "HawkBattle_Flying_BackState.h"
 #include "HawkBattle_RunState.h"
 #include "HawkBattle_PeckState.h"
 #include "HawkBattle_DashState.h"
@@ -28,19 +27,22 @@ CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-	CBaseObj*	pDamageCauser = m_pOwner->Get_DamageCauser();
+	CBaseObj*	m_pCurTarget = m_pOwner->Get_DamageCauser();
 
-	if (pDamageCauser == nullptr)
+	if (m_pCurTarget == nullptr)
 	{
 		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
 		if (nullptr == m_pCurTarget)
 			return nullptr;
 	}
-	else 
-		m_pCurTarget = pDamageCauser;
 		
 	m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
+
+	if (m_ePreBattleState == STATE_ID::START_BATTLEMODE)
+	{
+		m_pOwner->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, -1.f, 0.f));
+	}
 
 
 	m_pOwner->Check_Navigation();
@@ -70,6 +72,11 @@ CHawkState * CBattle_IdleState::LateTick(_float fTimeDelta)
 				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
 		}
 	}
+	else if (m_ePreBattleState == STATE_ID::START_BATTLEMODE)
+	{
+		if (m_fTimeDeltaAcc > m_fRandTime && m_bIsAnimationFinished)
+			return new CBattle_DashState(m_pOwner);
+	}
 	else
 	{
 		if (m_fTimeDeltaAcc > m_fRandTime)
@@ -88,13 +95,12 @@ void CBattle_IdleState::Enter()
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ARISE_F);
 		m_eStateId = STATE_ID::STATE_ARISE;
 	}
-		
-
 	else if (m_ePreBattleState == STATE_ID::STATE_BRAVE)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_BRAVE);
-
+	else if (m_ePreBattleState == STATE_ID::START_BATTLEMODE)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ADVENT);
 	else
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::SYMBOL_IDLE);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_BRAVE);
 	
 }
 

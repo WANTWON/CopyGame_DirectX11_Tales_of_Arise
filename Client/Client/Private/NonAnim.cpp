@@ -259,8 +259,9 @@ _float CNonAnim::Check_CullingRadius()
 	case Client::LEVEL_RESTAURANT:
 		if (!strcmp(m_ModelDesc.pModeltag, "CookingTable"))
 			return 25.f;
-		if (!strcmp(m_ModelDesc.pModeltag, "Carpet"))
-			return 10.f;
+		if (!strcmp(m_ModelDesc.pModeltag, "Carpet") ||
+			!strcmp(m_ModelDesc.pModeltag, "Carpet3"))
+			return 20.f;
 		else if (!strcmp(m_ModelDesc.pModeltag, "InteriorFloor"))
 			return 1000.f;
 		break;
