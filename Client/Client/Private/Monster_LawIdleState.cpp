@@ -1,0 +1,92 @@
+#include "stdafx.h"
+#include "..\Public\Monster_LawIdleState.h"
+
+#include "RinwellMoveState.h"
+#include "RinwellSkillState.h"
+#include "Monster_LawNormalAttack.h"
+
+
+
+using namespace MonsterLaw;
+
+CMonster_LawIdleState::CMonster_LawIdleState(CMonsterLaw * pRinwell)
+{
+	m_pOwner = pRinwell;
+	//m_fWaitingTime = fTime;
+}
+
+CMonsterLawState * CMonster_LawIdleState::Tick(_float fTimeDelta)
+{
+
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+
+	if (m_bAirMove)
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 1.5f);
+	else
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+
+	if (!m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+	}
+
+	m_pOwner->Check_Navigation();
+
+	m_fTime += fTimeDelta;
+
+	return nullptr;
+}
+
+CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
+{
+
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+	/*if (m_fWaitingTime < m_fTime)
+	{
+		_float fDistance = XMVectorGetX(XMVector3Length(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		if (fDistance < 0.5f)
+		{
+			_uint iSkill = rand() % 2;
+
+			switch (iSkill)
+			{
+			case 0:
+				m_pOwner->Set_SkillIndex(CRinwellState::GALEFORCE);
+				break;
+			case 1:
+				m_pOwner->Set_SkillIndex(CRinwellState::THUNDERFIELD);
+				break;
+			}
+
+			return new CSkillState(m_pOwner, m_pOwner->Get_SkillIndex());
+		}
+		else
+			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
+	}*/
+	
+	
+	return new CMonster_LawNormalAttack(m_pOwner , NORMALATTACK_1 , m_pTarget,m_iPhase  );
+
+	return nullptr;
+}
+
+void CMonster_LawIdleState::Enter(void)
+{
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+
+	m_eStateId = STATE_ID::STATE_IDLE;
+
+	
+	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CMonsterLaw::ANIM::BTL_MOVE_IDLE);
+
+	//Find_ActiveTarget();
+	m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+}
+
+void CMonster_LawIdleState::Exit(void)
+{
+	m_fTime = 0.f;
+}

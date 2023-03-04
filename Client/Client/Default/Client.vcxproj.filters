@@ -1290,6 +1290,21 @@
     <ClInclude Include="..\Public\RinwellIdleState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Monster_LawIdleState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster_LawNormalAttack.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster_LawSkill.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster_LawAirR.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster_LawAirF.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2074,6 +2089,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\RinwellIdleState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_LawIdleState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_LawNormalAttack.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_LawSkill.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_LawAirR.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_LawAirF.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
