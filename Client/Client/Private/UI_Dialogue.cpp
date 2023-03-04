@@ -10,6 +10,7 @@
 #include "CameraManager.h"
 #include "Level_Restaurant.h"
 #include "Level_WorkTool.h"
+#include "Player.h"
 
 
 CUI_Dialogue::CUI_Dialogue(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -150,6 +151,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION)
 				{
+					CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_IsActionMode(false);
 					CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 					dynamic_cast<CCamera_Action*>(pCamera)->Set_Play(false);
 					CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);

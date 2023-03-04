@@ -14,6 +14,9 @@ void CCameraManager::Set_CamState(CAM_STATE _eState)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
+	if (m_eCamState == CAM_ACTION)
+		dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_Play(false);
+
 	CCamera* pCamera = dynamic_cast<CCamera*>(pGameInstance->Get_Object(m_eCurrentLevel, TEXT("Layer_Camera"), _eState));
 	if (nullptr == pCamera)
 		return;

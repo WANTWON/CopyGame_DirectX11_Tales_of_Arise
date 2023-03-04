@@ -144,6 +144,8 @@ public:
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	void Set_SkillIndex(_uint iIndex) { m_eSkillIndex = iIndex; }
 	virtual void	 Set_BattleMode(_bool type) override;
+	_bool Get_AirMode(void) { return m_bIsAir; }
+	void Set_AirMode(_bool bAir) { m_bIsAir = bAir; }
 
 	void Kill_Boss_Rinwell();
 
@@ -189,6 +191,9 @@ private:
 	_uint	 m_eSkillIndex = PHOTONFLASH;
 
 	_int	m_iDamage = 0;
+	_bool	m_bIsAir = false;
+
+	_float	m_fMethor = 100.f;
 
 public:
 	static CAiRinwell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

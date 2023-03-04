@@ -420,7 +420,7 @@ CAIState * CAI_Rinwell_SkillState::LateTick(_float fTimeDelta)
 		if (m_bStateFinish)
 		{
 			if (m_pOwner->Get_IsFly())
-				return new CAI_JumpState(m_pOwner, STATETYPE_START, false, m_fTime);
+				return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, false, m_fTime);
 
 
 			m_bStateFinish = false;
