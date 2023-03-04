@@ -93,7 +93,12 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bRyuuseizinSecondEffect)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_2.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_Ring.dat"), mWorldMatrix);
+								
+								vector<CEffect*> Ryuuseizin = CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_2.dat"), mWorldMatrix);
+								_matrix EffectWorldMatrix = Ryuuseizin.front()->Get_Transform()->Get_WorldMatrix();
+
+								vector<CEffect*> RyuuseizinParticles = CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_Particles.dat"), EffectWorldMatrix);
 
 								m_bRyuuseizinSecondEffect = true;
 							}
@@ -132,95 +137,79 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
-					//if (m_bIsFly)
-					//{
-					//	if (!strcmp(pEvent.szName, "Senkusyourepa_Particles"))
-					//	{
-					//		if (!m_bSenkusyourepaParticle)
-					//		{
-					//			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+					if (m_bIsFly)
+					{
+						if (!strcmp(pEvent.szName, "Senkusyourepa_1"))
+						{
+							if (!m_bSenkusyourepaFirstEffect)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_1.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Wind.dat"), mWorldMatrix);
 
-					//			_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-					//			_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+								m_bSenkusyourepaFirstEffect = true;
+							}
+						}
+						else if (!strcmp(pEvent.szName, "Senkusyourepa_2"))
+						{
+							if (!m_bSenkusyourepaSecondEffect)
+							{
+								/* Destroy Particles first. */
+								if (!m_SenkusyourepaParticles.empty())
+								{
+									for (auto& iter : m_SenkusyourepaParticles)
+									{
+										if (iter)
+										{
+											CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
+											if (pParticleSystem != nullptr)
+												pParticleSystem->Set_Stop(true);
+										}
+									}
+								}
 
-					//			vPosition += vOffset;
-					//			mWorldMatrix.r[3] = vPosition;
+								/* Then Spawn Particles Effect */
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-					//			m_SenkusyourepaParticles = CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Particles.dat"), mWorldMatrix);
+								_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
 
-					//			m_bSenkusyourepaParticle = true;
-					//		}
-					//	}
-					//	else if (!strcmp(pEvent.szName, "Senkusyourepa_1"))
-					//	{
-					//		if (!m_bSenkusyourepaFirstEffect)
-					//		{
-					//			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-					//			CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_1.dat"), mWorldMatrix);
+								vPosition += vOffset;
+								mWorldMatrix.r[3] = vPosition;
 
-					//			m_bSenkusyourepaFirstEffect = true;
-					//		}
-					//	}
-					//	else if (!strcmp(pEvent.szName, "Senkusyourepa_2"))
-					//	{
-					//		if (!m_bSenkusyourepaSecondEffect)
-					//		{
-					//			/* Destroy Particles first. */
-					//			if (!m_SenkusyourepaParticles.empty())
-					//			{
-					//				for (auto& iter : m_SenkusyourepaParticles)
-					//				{
-					//					if (iter)
-					//					{
-					//						CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
-					//						if (pParticleSystem != nullptr)
-					//							pParticleSystem->Set_Stop(true);
-					//					}
-					//				}
-					//			}
+								CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Explosion_Particles.dat"), mWorldMatrix);
 
-					//			/* Then Spawn Particles Effect */
-					//			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								/* Then Spawn Effect */
+								mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_2.dat"), mWorldMatrix);
 
-					//			_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-					//			_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
+								m_bSenkusyourepaSecondEffect = true;
+							}
+						}
+					}
+					else
+					{
+						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-					//			vPosition += vOffset;
-					//			mWorldMatrix.r[3] = vPosition;
+						if (!strcmp(pEvent.szName, "Akizame_1"))
+						{
+							if (!m_bAkizameFirstEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Akizame_1.dat"), mWorldMatrix);
 
-					//			CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_Explosion_Particles.dat"), mWorldMatrix);
+								m_bAkizameFirstEffect = true;
+							}
+						}
+						else if (!strcmp(pEvent.szName, "Akizame_2"))
+						{
+							if (!m_bAkizameSecondEffect)
+							{
+								CEffect::PlayEffectAtLocation(TEXT("Akizame_2.dat"), mWorldMatrix);
 
-					//			/* Then Spawn Effect */
-					//			mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-					//			CEffect::PlayEffectAtLocation(TEXT("Senkusyourepa_2.dat"), mWorldMatrix);
-
-					//			m_bSenkusyourepaSecondEffect = true;
-					//		}
-					//	}
-					//}
-					//else
-					//{
-					//	_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-
-					//	if (!strcmp(pEvent.szName, "Akizame_1"))
-					//	{
-					//		if (!m_bAkizameFirstEffect)
-					//		{
-					//			CEffect::PlayEffectAtLocation(TEXT("Akizame_1.dat"), mWorldMatrix);
-
-					//			m_bAkizameFirstEffect = true;
-					//		}
-					//	}
-					//	else if (!strcmp(pEvent.szName, "Akizame_2"))
-					//	{
-					//		if (!m_bAkizameSecondEffect)
-					//		{
-					//			CEffect::PlayEffectAtLocation(TEXT("Akizame_2.dat"), mWorldMatrix);
-
-					//			m_bAkizameSecondEffect = true;
-					//		}
-					//	}
-					//}
+								m_bAkizameSecondEffect = true;
+							}
+						}
+					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 					if (m_bIsFly)
@@ -231,7 +220,17 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bEngetuFirstEffect)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Engetu.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Engetu_Ring.dat"), mWorldMatrix);
+								vector<CEffect*> Engetu = CEffect::PlayEffectAtLocation(TEXT("Engetu.dat"), mWorldMatrix);
+								
+								_vector vPosition = Engetu.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+								vector<CEffect*> EngetuParticles = CEffect::PlayEffectAtLocation(TEXT("Engetu_Particles.dat"), mWorldMatrix);
+								for (auto& pEffect : EngetuParticles)
+								{
+									if (pEffect)
+										pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+								}
 								
 								m_bEngetuFirstEffect = true;
 							}
@@ -241,7 +240,16 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bEngetuSecondEffect)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Engetu.dat"), mWorldMatrix);
+								vector<CEffect*> Engetu = CEffect::PlayEffectAtLocation(TEXT("Engetu.dat"), mWorldMatrix);
+
+								_vector vPosition = Engetu.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+								vector<CEffect*> EngetuParticles = CEffect::PlayEffectAtLocation(TEXT("Engetu_Particles.dat"), mWorldMatrix);
+								for (auto& pEffect : EngetuParticles)
+								{
+									if (pEffect)
+										pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+								}
 
 								m_bEngetuSecondEffect = true;
 							}

@@ -6,8 +6,15 @@
 
 void CParticleSystem::Set_WorldPosition(_matrix mWorldMatrix)
 {
-	_vector vPosition = (_vector)mWorldMatrix.r[3];
-	m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+	// Get current RotationMatrix from the WorldMatrix by decomposition.
+	_vector vScale, vRotationQuat, vTranslation;
+	XMMatrixDecompose(&vScale, &vRotationQuat, &vTranslation, mWorldMatrix);
+	_matrix RotationMatrix = XMMatrixRotationQuaternion(vRotationQuat);
+	_matrix TranslationMatrix = XMMatrixTranslationFromVector(vTranslation);
+
+	_matrix WorldMatrix = XMMatrixMultiply(RotationMatrix, TranslationMatrix);
+
+	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 }
 
 CParticleSystem::CParticleSystem(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
