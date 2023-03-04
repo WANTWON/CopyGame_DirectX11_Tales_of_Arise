@@ -31,7 +31,6 @@ HRESULT CLevel_SnowField::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	cout << " Initialize start" << endl;
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
@@ -83,13 +82,9 @@ HRESULT CLevel_SnowField::Initialize()
 			return E_FAIL;
 
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
-		g_bUIMade = true;
-
+		
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-		if (nullptr == pGameInstance)
-			return E_FAIL;
-
 		list<CGameObject*>* MonsterList = pGameInstance->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Monster"));
 
 		for (auto& iter : *MonsterList)
@@ -106,8 +101,8 @@ HRESULT CLevel_SnowField::Initialize()
 			dynamic_cast<CMonster*>(iter)->Set_BattleMode(false);
 
 		}
-
 		RELEASE_INSTANCE(CGameInstance);
+		g_bUIMade = true;
 	}
 	else
 	{

@@ -91,14 +91,14 @@ int CPlayer::Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 
-	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+	if (m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
+		return OBJ_NOEVENT;
 
+	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
 		return OBJ_NOEVENT;
 
-	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if(m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
-		return OBJ_NOEVENT;
 
 	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
 		return OBJ_NOEVENT;
@@ -273,15 +273,13 @@ int CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
+	if (m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
+		return;
+
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
-
-
-	if (m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
-		return;
-
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
 
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
@@ -526,6 +524,8 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 	
 
 
+
+
 	/*CDamageFont::DMGDESC testdesc;
 	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
 	testdesc.iDamage = fDamage;
@@ -568,6 +568,34 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 		case Client::ACTIVE:
 			if (CPlayerState::STATE_HIT != m_pPlayerState->Get_StateId())
 			{
+				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
+				CBattleManager::Get_Instance()->Set_IsHitLeg(true);
+
+				_int iRandX = rand() % 20 * 0.1f * (rand() % 2 == 0 ? 1.f : -1.f);
+				_int iRandZ = rand() % 20 * 0.1f * (rand() % 2 == 0 ? 1.f : -1.f);
+				_int iRandY = rand() % 20 * 0.1f;
+
+
+				_vector vOffset = XMVectorSet(iRandX, m_fRadius + iRandY, iRandX, 0.f);
+				_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+
+				_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+				mWorldMatrix.r[3] = vLocation;
+
+				switch (Get_PlayerID())
+				{
+				case CPlayer::PLAYERID::ALPHEN:
+					CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
+					break;
+				case CPlayer::PLAYERID::LAW:
+					CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
+					break;
+				case CPlayer::PLAYERID::RINWELL:
+				case CPlayer::PLAYERID::SION:
+					CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
+					break;
+				}
+
 				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
 				pState = new CHitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time());
 				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);

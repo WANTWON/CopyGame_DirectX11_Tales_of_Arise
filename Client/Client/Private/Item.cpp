@@ -85,6 +85,7 @@ int CItem::Tick(_float fTimeDelta)
 
 void CItem::Late_Tick(_float fTimeDelta)
 {
+
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 

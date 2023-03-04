@@ -19,6 +19,8 @@ public:
 
 private:
 	void DodgeEffect();
+	void Rotation(void);
+
 private:
 	DIRID m_eDirection = DIRID::DIR_END;
 

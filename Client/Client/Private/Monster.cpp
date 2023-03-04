@@ -64,7 +64,7 @@ HRESULT CMonster::Initialize(void* pArg)
 int CMonster::Tick(_float fTimeDelta)
 {
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-
+		
 	if (m_eLevel == LEVEL_SNOWFIELD &&  m_pTrigger == nullptr)
 		Check_NearTrigger();
 
@@ -74,7 +74,7 @@ int CMonster::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	if (m_bTakeDamage)
-		m_fTime_TakeDamageDeltaAcc += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
+		m_fTime_TakeDamageDeltaAcc += fTimeDelta;
 
 	if (0.2f <= m_fTime_TakeDamageDeltaAcc)
 	{
@@ -450,25 +450,38 @@ void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 	if (!pPlayer)
 		return;
 
-	_vector vOffset = XMVectorSet(0.f, m_fRadius + 1.5f, 0.f, 0.f);
+	_int iRandX = rand() % 20 * 0.1f * (rand()% 2 == 0 ? 1.f : -1.f);
+	_int iRandZ = rand() % 20 * 0.1f * (rand() % 2 == 0 ? 1.f : -1.f);
+	_int iRandY = rand() % 20 * 0.1f;
+
+
+	_vector vOffset = XMVectorSet(iRandX, m_fRadius + iRandY, iRandX, 0.f);
 	_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 
 	_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	mWorldMatrix.r[3] = vLocation;
+	vector<CEffect*> Impact;
 
 	switch (pPlayer->Get_PlayerID())
 	{
-	case CPlayer::PLAYERID::ALPHEN:
-		CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
-		break;
-	case CPlayer::PLAYERID::LAW:
-		CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
-		break;
-	case CPlayer::PLAYERID::RINWELL:
-	case CPlayer::PLAYERID::SION:
-		CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
-		break;
+		case CPlayer::PLAYERID::ALPHEN:
+			Impact = CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
+			break;
+		case CPlayer::PLAYERID::LAW:
+			Impact = CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
+			break;
+		case CPlayer::PLAYERID::RINWELL:
+		case CPlayer::PLAYERID::SION:
+			Impact = CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
+			break;
 	}
+
+	_vector vEffectPosition = Impact.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+	_vector vPlayerPosition = DamageCauser->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+	_vector vEffectLook = XMVector4Normalize(vPlayerPosition - vEffectPosition);
+
+	Impact.front()->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vEffectPosition + XMVector4Normalize(vEffectLook) * .2f);
 
 	RELEASE_INSTANCE(CGameInstance);
 }
@@ -486,6 +499,104 @@ void CMonster::Make_DeadEffect(CBaseObj * Target)
 	RELEASE_INSTANCE(CGameInstance);
 
 	m_bMakeEffect = true;
+}
+
+void CMonster::Make_UIFont(_uint iDamage)
+{
+
+
+	if (m_tStats.m_iHitcount >= 10)
+	{
+		m_bDownState = true;
+		m_tStats.m_iHitcount = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+			return;
+	}
+
+	++m_tStats.m_iBedamagedCount;
+
+	if (m_tStats.m_iBedamagedCount >= 20)
+	{
+		m_bBedamageAnim = true;
+		m_tStats.m_iBedamagedCount = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+			return;
+	}
+
+
+	CDamageFont::DMGDESC testdesc;
+	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
+	testdesc.iDamage = iDamage;
+	testdesc.pPointer = this;
+	testdesc.itype = 1;
+	testdesc.bisNormal = false;
+
+	//dynamic_cast<CUI_Dialoguepopup*>(m_pUI_Manager->Get_Dialoguepopup())->Open_Dialogue(0, false, 1, 0);
+
+
+	dynamic_cast<CUI_Combo_font_Hits*>(CUI_Manager::Get_Instance()->Get_Hitfont())->sethit();
+	dynamic_cast<CUI_font_Hits_number*>(CUI_Manager::Get_Instance()->Get_HitMsg())->sethit();
+	dynamic_cast<CUI_Combo_font_Damages*>(CUI_Manager::Get_Instance()->Get_DMGfont())->updatedmg();
+	dynamic_cast<CUI_font_Damage_number*>(CUI_Manager::Get_Instance()->Get_DMGNUM())->updatedamage(iDamage);
+	dynamic_cast<CUI_Comboline*>(CUI_Manager::Get_Instance()->Get_Comboline())->setline();
+
+	/*CCriticalFont::DMGDESC fontdesc;
+	ZeroMemory(&fontdesc, sizeof(CCriticalFont::DMGDESC));
+	fontdesc.itype = 1;
+	fontdesc.iDamage = fDamage;
+	fontdesc.pPointer = this;
+	*/
+
+	//_float2 pos = Get_ProjPosition();
+
+
+	switch (rand() % 8)
+	{
+
+	case 0:
+
+		testdesc.itype = 1;
+		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
+		{
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
+				return;
+		}
+		break;
+
+	case 1:
+
+		testdesc.itype = 2;
+		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
+		{
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
+				return;
+		}
+		break;
+
+	case 2:
+		testdesc.itype = 3;
+		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
+		{
+
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
+				return;
+		}
+		break;
+
+	default:
+		testdesc.itype = 0;
+		testdesc.bisNormal = true;
+		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
+		{
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
+				return;
+		}
+		break;
+
+	}
+
 }
 
 
@@ -518,93 +629,35 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 			return E_FAIL;
 	}
 
+	if (DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+	{
+		CBattleManager::Get_Instance()->Set_LackonMonster(this);
+		CBattleManager::Get_Instance()->Set_IsHitLeg(true);
+
+		switch (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID())
+		{
+		case CPlayer::PLAYERID::ALPHEN:
+		case CPlayer::PLAYERID::LAW:
+			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
+			CBattleManager::Get_Instance()->Set_HitLegTimer(0.2f);
+			break;
+		case CPlayer::PLAYERID::RINWELL:
+		case CPlayer::PLAYERID::SION:
+			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
+			CBattleManager::Get_Instance()->Set_HitLegTimer(0.1f);
+			break;
+		}
+
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.2f);
+	}
 
 	if (m_pTarget != nullptr)
 	{
 		if (dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() <= 100.f)
-
 			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 20.f);
 
 	}
-	
-	dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.2f);
-
-
-	CDamageFont::DMGDESC testdesc;
-	ZeroMemory(&testdesc, sizeof(CDamageFont::DMGDESC));
-	testdesc.iDamage = fDamage;
-	testdesc.pPointer = this;
-	testdesc.itype = 1;
-	testdesc.bisNormal = false;
-
-	//dynamic_cast<CUI_Dialoguepopup*>(m_pUI_Manager->Get_Dialoguepopup())->Open_Dialogue(0, false, 1, 0);
-	
-	
-
-	dynamic_cast<CUI_Combo_font_Hits*>(CUI_Manager::Get_Instance()->Get_Hitfont())->sethit();
-	dynamic_cast<CUI_font_Hits_number*>(CUI_Manager::Get_Instance()->Get_HitMsg())->sethit();
-	dynamic_cast<CUI_Combo_font_Damages*>(CUI_Manager::Get_Instance()->Get_DMGfont())->updatedmg();
-	dynamic_cast<CUI_font_Damage_number*>(CUI_Manager::Get_Instance()->Get_DMGNUM())->updatedamage(fDamage);
-	dynamic_cast<CUI_Comboline*>(CUI_Manager::Get_Instance()->Get_Comboline())->setline();
-
-	/*CCriticalFont::DMGDESC fontdesc;
-	ZeroMemory(&fontdesc, sizeof(CCriticalFont::DMGDESC));
-	fontdesc.itype = 1;
-	fontdesc.iDamage = fDamage;
-	fontdesc.pPointer = this;
-*/
-	
-	//_float2 pos = Get_ProjPosition();
-
-
-	switch (rand() % 8)
-	{
-		
-	case 0:
-
-		testdesc.itype = 1;
-		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
-		{
-			
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
-				return E_FAIL;
-		}
-		break;
-
-	case 1:
-	
-		testdesc.itype = 2;
-		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
-		{
-		
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
-				return E_FAIL;
-		}
-		break;
-
-	case 2:
-		testdesc.itype = 3;
-		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
-		{
-			
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
-				return E_FAIL;
-		}
-		break;
-
-	default:
-		testdesc.itype = 0;
-		testdesc.bisNormal = true;
-		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
-		{
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Damagefont"), LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
-				return E_FAIL;
-		}
-		break;
-
-	}
-
-	
 	
 	m_tStats.m_fLockonSmashGuage += 0.1f;
 
@@ -612,25 +665,18 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bLockOnCh
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
 		m_tStats.m_fLockonSmashGuage = 4.f;
 
+	Make_UIFont(fDamage);
 	Make_GetAttacked_Effect(DamageCauser);
+
 
 	if (!CBattleManager::Get_Instance()->Get_IsBossBattle())
 	{
 		if (m_tStats.m_fCurrentHp <= 0)
 		{
-
-			m_tStats.m_fCurrentHp = 0;
-			CBattleManager::Get_Instance()->Update_LockOn();
-			Check_AmILastMoster();
-
 			return _int(m_tStats.m_fCurrentHp);
 		}
 	}
 
-	
-
-	if(DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer() && bLockOnChange)
-		CBattleManager::Get_Instance()->Set_LackonMonster(this);
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
 	m_bTakeDamage = true;

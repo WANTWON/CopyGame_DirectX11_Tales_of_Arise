@@ -339,7 +339,7 @@ void CRinwellSkills::Collision_Check()
 		else
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, true);
 		}
 		break;
 
@@ -383,7 +383,7 @@ void CRinwellSkills::Dead_Effect()
 		BulletDesc.vInitPositon = Get_TransformState(CTransform::STATE_TRANSLATION);
 		BulletDesc.pOwner = m_BulletDesc.pOwner;
 
-		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC && Check_IsinFrustum(3.f) == true)
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
@@ -521,10 +521,9 @@ HRESULT CRinwellSkills::Ready_Components(void * pArg)
 		break;
 
 	case BANGJEON:
-		ColliderDesc.vScale = _float3(7.f, 7.f, 7.f);
+		ColliderDesc.vScale = _float3(12.5f, 12.5f, 12.5f);
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-
 	}
 
 	if (m_BulletDesc.eBulletType == THUNDER_FIELD || m_BulletDesc.eBulletType == DIVINE_SABER || m_BulletDesc.eBulletType == DIVINE_SABER_BULLET)

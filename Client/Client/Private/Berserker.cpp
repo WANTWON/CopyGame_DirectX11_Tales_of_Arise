@@ -311,10 +311,12 @@ _int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnC
 	{
 		if (iHp <= 0)
 		{
-			m_pModelCom->Set_TimeReset();
+			m_tStats.m_fCurrentHp = 0;
+			CBattleManager::Get_Instance()->Update_LockOn();
+			Check_AmILastMoster();
+
 			CBerserkerState* pState = new CBattle_DeadState(this);
 			m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
-			iHp = 0;
 			return 0;
 		}
 		else
