@@ -39,8 +39,10 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-		if (CPlayerState::STATE_SKILL_ATTACK_F && !m_bIsFly)
+		if (m_eStateId == CPlayerState::STATE_SKILL_ATTACK_F && !m_bIsFly)
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.04f), fRotationRadian, m_pOwner->Get_Navigation());
+		else if (m_eStateId == CPlayerState::STATE_SKILL_ATTACK_E && !m_bIsFly)
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.005f), fRotationRadian, m_pOwner->Get_Navigation());
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
@@ -107,21 +109,22 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					else
 					{
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-						_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
-						_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-
-						_vector vOffset = XMVectorSet(0.f, 1.5f, 0.f, 0.f);
-						vPosition += vLook * 2;
-						vPosition += vOffset;
-
-						mWorldMatrix.r[3] = vPosition;
-
+					
 						if (!strcmp(pEvent.szName, "Hienzin_1"))
 						{
 							if (!m_bHienzinFirstEffect)
 							{							
-								CEffect::PlayEffectAtLocation(TEXT("Hienzin_1.dat"), mWorldMatrix);
+								vector<CEffect*> Hienzin_1 = CEffect::PlayEffectAtLocation(TEXT("Hienzin_1.dat"), mWorldMatrix);
+								for (auto& pEffect : Hienzin_1)
+								{
+									if (pEffect && !wcscmp(pEffect->Get_PrototypeId(), TEXT("CrossBuffer1")))
+									{
+										_matrix ParticleWorldMatrix = pEffect->Get_Transform()->Get_WorldMatrix();
+										CEffect::PlayEffectAtLocation(TEXT("Hienzin_Particles.dat"), ParticleWorldMatrix);
+									}
+								}
 
+								CEffect::PlayEffectAtLocation(TEXT("Hienzin_Ring.dat"), mWorldMatrix);
 								m_bHienzinFirstEffect = true;
 							}
 						}
@@ -129,7 +132,15 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bHienzinSecondEffect)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Hienzin_2.dat"), mWorldMatrix);
+								vector<CEffect*> Hienzin_2 = CEffect::PlayEffectAtLocation(TEXT("Hienzin_2.dat"), mWorldMatrix);
+								for (auto& pEffect : Hienzin_2)
+								{
+									if (pEffect && !wcscmp(pEffect->Get_PrototypeId(), TEXT("CrossBuffer1")))
+									{
+										_matrix ParticleWorldMatrix = pEffect->Get_Transform()->Get_WorldMatrix();
+										CEffect::PlayEffectAtLocation(TEXT("Hienzin_Particles.dat"), ParticleWorldMatrix);
+									}
+								}
 
 								m_bHienzinSecondEffect = true;
 							}
@@ -204,7 +215,17 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bAkizameSecondEffect)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Akizame_2.dat"), mWorldMatrix);
+								vector<CEffect*> Akizame_2 = CEffect::PlayEffectAtLocation(TEXT("Akizame_2.dat"), mWorldMatrix);
+								for (auto& pEffect : Akizame_2)
+								{
+									if (pEffect && !wcscmp(pEffect->Get_PrototypeId(), TEXT("Cone01")))
+									{
+										_vector vPosition = pEffect->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+										vector<CEffect*> Akizame_Particles = CEffect::PlayEffectAtLocation(TEXT("Akizame_Particles.dat"), mWorldMatrix);
+										Akizame_Particles.front()->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+									}
+								}
 
 								m_bAkizameSecondEffect = true;
 							}
