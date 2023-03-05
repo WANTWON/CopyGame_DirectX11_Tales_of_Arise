@@ -34,6 +34,7 @@ private:
 	_bool			m_PreState_FootPress = false;
 	_bool			m_bAdventSound = false;
 	_bool			m_bLandSound = false;
+	_bool			m_bAdventLookAt = false;
 };
 END
 END
