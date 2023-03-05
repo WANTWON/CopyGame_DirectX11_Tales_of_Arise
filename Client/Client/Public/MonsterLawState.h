@@ -21,7 +21,8 @@ public:
 		NORMALATTACK_5,
 	    SKILL_R,
 		SKILL_E,
-		SKILL_F
+		SKILL_F,
+		SKILL_STRIKE
 	};
 
 

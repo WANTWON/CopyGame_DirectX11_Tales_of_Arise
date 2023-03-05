@@ -23,6 +23,7 @@ private:
 
 	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
+	_float m_fEventStart = -1.f;
 
 private:
 

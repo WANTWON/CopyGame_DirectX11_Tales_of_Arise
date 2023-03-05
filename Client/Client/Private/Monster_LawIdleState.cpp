@@ -4,6 +4,7 @@
 #include "RinwellMoveState.h"
 #include "RinwellSkillState.h"
 #include "Monster_LawNormalAttack.h"
+#include "Monster_LawSkill.h"
 
 
 
@@ -66,9 +67,21 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 		else
 			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
 	}*/
+	return new CMonster_LawSkill(m_pOwner, SKILL_E);
+	/*switch (rand() % 3)
+	{
+	case 0:
+		return new CMonster_LawSkill(m_pOwner, SKILL_R);
+
+	case 1:
+		return new CMonster_LawSkill(m_pOwner, SKILL_E);
+	case 2:
+		return new CMonster_LawSkill(m_pOwner, SKILL_F);
+	default:
+		return new CMonster_LawSkill(m_pOwner, SKILL_STRIKE);
+	}*/
 	
-	
-	return new CMonster_LawNormalAttack(m_pOwner , NORMALATTACK_1 , m_pTarget,m_iPhase  );
+	//return new CMonster_LawNormalAttack(m_pOwner , NORMALATTACK_1 , m_pTarget,m_iPhase  );
 
 	return nullptr;
 }

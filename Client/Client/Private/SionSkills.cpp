@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\SionSkills.h"
 #include "Monster.h"
+#include "Player.h"
 
 
 CSionSkills::CSionSkills(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -302,8 +303,17 @@ void CSionSkills::Collision_Check()
 			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
 		break;
 	case MAGNA_RAY:
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		switch (m_BulletDesc.eCollisionGroup)
+		{
+		case PLAYER:
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			break;
+
+		default:
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pOBBCom, &pCollisionTarget))
+				dynamic_cast<CPlayer*> (pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		}
 		break;
 	case GRAVITY:
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
