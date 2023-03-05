@@ -6,7 +6,10 @@ BEGIN(Player)
 class CHitState final : public CPlayerState
 {
 public:
-	CHitState(class CPlayer* pPlayer, _vector vCauserPos, _bool isDown = false, _float fTime = 0.f, STATETYPE eStateType = STATETYPE_DEFAULT);
+	enum HITTYPE { HIT_NORMAL, HIT_DOWN, HIT_END };
+
+public:
+	CHitState(class CPlayer* pPlayer, _vector vCauserPos, _float fMoveLength = 0.4f, HITTYPE eHitType = HIT_NORMAL, STATETYPE eStateType = STATETYPE_DEFAULT);
 
 	virtual CPlayerState* HandleInput() override;
 	virtual CPlayerState* Tick(_float fTimeDelta) override;
@@ -17,12 +20,12 @@ public:
 
 private:
 	STATETYPE m_eStateType;
+	HITTYPE m_eHitType = HIT_END;
 
 	_float m_fStartHeight = 0.f;
+	_float m_fMoveLength = 0.f;
 
-	_bool m_bIsDown = false;
 	_vector m_vCauserPos;
-	_bool m_bIsLook = false;
 	_bool m_bIsMove = false;
 
 private:

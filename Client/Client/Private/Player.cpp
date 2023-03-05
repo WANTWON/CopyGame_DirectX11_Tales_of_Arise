@@ -485,7 +485,7 @@ HRESULT CPlayer::Render_EdgeDetection()
 }
 
 
-_int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
+_int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _float fMoveLength, _bool isDown)
 {
 	if (fDamage <= 0 || m_bDead || m_bIsJustDodge || (CPlayerState::STATE_OVERLIMIT == m_pPlayerState->Get_StateId()))
 		return 0;
@@ -599,9 +599,9 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool isDown)
 				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
 				
 				if (isDown)
-					pState = new CHitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time(), STATETYPE_START);
+					pState = new CHitState(this, vCauserPos, fMoveLength, CHitState::HIT_DOWN, STATETYPE_START);
 				else
-					pState = new CHitState(this, vCauserPos, isDown, m_pPlayerState->Get_Time());
+					pState = new CHitState(this, vCauserPos);
 				
 				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
 			}
