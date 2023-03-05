@@ -108,7 +108,7 @@ void CAlphenSkills::Late_Tick(_float fTimeDelta)
 void CAlphenSkills::Collision_Check()
 {
 
-	if (Check_Exception_Collision() == false)
+	if (Check_Exception() == false)
 		return;
 
 	CBaseObj* pCollisionTarget = nullptr;

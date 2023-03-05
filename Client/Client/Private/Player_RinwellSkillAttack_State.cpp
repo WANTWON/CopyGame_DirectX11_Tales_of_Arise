@@ -605,7 +605,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); //¾óÀ½¶³±¸±â
 																							/* Make Effect */
-			_vector vOffset = { 0.f,3.f,0.f,0.f };
+			_vector vOffset = { 0.f,5.f,0.f,0.f };
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);

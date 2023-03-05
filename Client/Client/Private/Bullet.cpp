@@ -188,7 +188,7 @@ void CBullet::Collision_Check()
 	}
 }
 
-_bool CBullet::Check_Exception_Collision()
+_bool CBullet::Check_Exception()
 {
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();

@@ -170,7 +170,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		m_pTransformCom->LookDir(XMLoadFloat4(&vCamView));
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBall.dat"), mWorldMatrix);
-		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeThunder.dat"), mWorldMatrix);
+		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeThunder2.dat"), mWorldMatrix);
 		break;
 	}
 	case BANGEONDEAD:
@@ -288,7 +288,7 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 void CRinwellSkills::Collision_Check()
 {
 
-	if (Check_Exception_Collision() == false)
+	if (Check_Exception() == false)
 		return;
 
 	CBaseObj* pCollisionTarget = nullptr;
@@ -981,7 +981,7 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 
 		if (iter != nullptr)
 		{
-			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+			_vector vOffset = XMVectorSet(0.f, 5.f, 0.f, 0.f);
 			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
 		}
 			
