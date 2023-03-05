@@ -132,11 +132,6 @@ void CBattle_Damage_LargeB_State::Enter()
 		break;
 
 	case Client::CIceWolfState::STATE_BE_DAMAGED:
-		if (m_pOwner->Get_IsUp())
-		{
-
-		}
-		else
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
 			m_pOwner->SetOff_BedamagedCount();

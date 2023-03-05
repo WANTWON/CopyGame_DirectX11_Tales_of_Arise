@@ -157,7 +157,7 @@ public:
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	void Set_SkillIndex(_uint iIndex) { m_eSkillIndex = iIndex; }
 	virtual void	 Set_BattleMode(_bool type) override;
-
+	virtual void	 Set_HitState() override;
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc) override;

@@ -202,6 +202,12 @@ HRESULT CAiRinwell::Render_Glow()
 	return S_OK;
 }
 
+void CAiRinwell::Set_HitState()
+{
+	CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+	m_pState = m_pState->ChangeState(m_pState, pState);
+}
+
 void CAiRinwell::AI_Behavior(_float fTimeDelta)
 {
 	CRinwellState* pNewState = m_pState->AI_Behaviour(fTimeDelta);

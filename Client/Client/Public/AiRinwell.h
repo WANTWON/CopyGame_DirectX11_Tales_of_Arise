@@ -165,7 +165,7 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render_Glow() override;
-
+	virtual void	 Set_HitState() override;
 public: /*For.State*/
 	void AI_Behavior(_float fTimeDelta);
 	void Tick_State(_float fTimeDelta);
