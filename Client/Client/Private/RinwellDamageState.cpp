@@ -127,7 +127,7 @@ void CDamageState::Move(void)
 		break;
 	}
 
-	m_pOwner->Get_Transform()->Go_PosDir(0.0025, vDir, m_pOwner->Get_Navigation());
+	m_pOwner->Get_Transform()->Go_PosDir(0.0025f, vDir, m_pOwner->Get_Navigation());
 
 	m_pOwner->Check_Navigation();
 }

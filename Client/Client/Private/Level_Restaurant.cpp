@@ -106,7 +106,8 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 				if (m_fSpwanTime < m_fCreateTime[i])
 				{
 					_int iPhase = _int(floor((30.f - m_fLimitTime)) / 10) + 1;
-					_int iNumCreate = rand() % (iPhase + 1);
+					_int iNumCreate = (rand() % iPhase) + 1;
+
 
 					for (_int j = 0; j < iNumCreate;)
 					{
@@ -264,8 +265,6 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 			m_fLimitTime -= fTimeDelta;
 			RELEASE_INSTANCE(CGameInstance);
 		}
-
-		
 	}
 }
 

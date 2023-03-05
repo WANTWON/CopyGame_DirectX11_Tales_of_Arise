@@ -25,7 +25,7 @@ CHawkState * CBraveState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CBraveState::Tick(_float fTimeDelta)
 {
-	Find_Target();
+	Find_Target_InField();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	

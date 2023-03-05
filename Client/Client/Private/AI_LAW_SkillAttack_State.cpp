@@ -116,7 +116,6 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 
 					case 3:
 						return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
-
 					}
 				}
 				else

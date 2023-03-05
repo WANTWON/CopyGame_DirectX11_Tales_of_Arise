@@ -23,6 +23,9 @@ private:
 	_float			m_fIdleTime;
 
 	FIELD_STATE_ID	m_ePreState_Id;
+
+//private:
+//	void Find_Target_InField(void);
 };
 END
 END

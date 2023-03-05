@@ -26,7 +26,7 @@ CIceWolfState * CIdleState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CIdleState::Tick(_float fTimeDelta)
 {
-	Find_Target();
+	Find_Target_InField();
 	//m_pCurTarget = m_pOwner->Check_FiledTarget();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
@@ -48,12 +48,12 @@ CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 	{
 		return new CChaseState(m_pOwner);
 	}
-	
+
 	else
 	{
 		if (m_fTimeDeltaAcc > m_fIdleTime)
 		{
-			switch (rand()%4)
+			switch (rand() % 4)
 			{
 			case 0:
 				return new CWalkState(m_pOwner, FIELD_STATE_END);
@@ -107,6 +107,28 @@ CIceWolfState * CIdleState::LateTick(_float fTimeDelta)
 
 	return nullptr;
 }
+
+//void CIdleState::Find_Target_InField(void)
+//{
+//	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+//	if (!pPlayer)
+//		return;
+//
+//	_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+//	_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+//
+//	_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+//	m_fTarget_Distance = fDistance;
+//	if (fDistance < m_pOwner->Get_AggroRadius())
+//	{
+//		m_pTarget = pPlayer;
+//
+//		m_pOwner->Get_Transform()->Change_Speed(m_pOwner->Get_Stats().m_fRunSpeed);
+//
+//		if (5 > fDistance)
+//			m_bBattleMode = true;
+//	}
+//}
 
 void CIdleState::Enter()
 {
