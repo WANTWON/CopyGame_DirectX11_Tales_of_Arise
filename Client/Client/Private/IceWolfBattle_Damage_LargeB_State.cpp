@@ -11,7 +11,7 @@
 
 using namespace IceWolf;
 
-CBattle_Damage_LargeB_State::CBattle_Damage_LargeB_State(class CIce_Wolf* pIceWolf,  STATE_ID StateId, _bool bThirdHit)
+CBattle_Damage_LargeB_State::CBattle_Damage_LargeB_State(class CIce_Wolf* pIceWolf, STATE_ID StateId, _bool bThirdHit)
 {
 	m_pOwner = pIceWolf;
 	m_fTimeDeltaAcc = 0;
@@ -26,7 +26,7 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 	switch (m_eStateId)
 	{
 	case Client::CIceWolfState::STATE_DEAD:
-		if(!m_bThirdHit)
+		if (!m_bThirdHit)
 			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
 	case Client::CIceWolfState::STATE_BE_DAMAGED:
@@ -49,7 +49,7 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 	default:
 		break;
 	}
-		
+
 	//m_pOwner->Check_Navigation();
 	return nullptr;
 }
@@ -59,9 +59,9 @@ CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 	m_fTimeDeltaAcc += fTimeDelta;
 
 
-	if(m_fTimeDeltaAcc > m_fCntChanceTime)
-	m_iRand = rand() % 3;
-	
+	if (m_fTimeDeltaAcc > m_fCntChanceTime)
+		m_iRand = rand() % 3;
+
 	if (m_bIsAnimationFinished)
 	{
 		switch (m_eStateId)
@@ -106,10 +106,10 @@ CIceWolfState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 
 		case Client::CIceWolfState::STATE_DOWN:
 			return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_ARISE);
-		}	
+		}
 
 	}
-	
+
 
 	return nullptr;
 }
@@ -122,7 +122,7 @@ void CBattle_Damage_LargeB_State::Enter()
 	{
 	case Client::CIceWolfState::STATE_DEAD:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DEAD);
-		
+
 		if (!m_bDeadSound && !m_bThirdHit)
 		{
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Dead.wav"), SOUND_VOICE, 0.4f);
@@ -132,16 +132,14 @@ void CBattle_Damage_LargeB_State::Enter()
 		break;
 
 	case Client::CIceWolfState::STATE_BE_DAMAGED:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
+		m_pOwner->SetOff_BedamagedCount();
+		m_pOwner->Set_BedamageCount_Delay();
+		if (!m_bAnimFinish)
 		{
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
-			m_pOwner->SetOff_BedamagedCount();
-			m_pOwner->Set_BedamageCount_Delay();
-			if (!m_bAnimFinish)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Hit.wav"), SOUND_VOICE, 0.4f);
-				m_bAnimFinish = true;
-				break;
-			}
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Hit.wav"), SOUND_VOICE, 0.4f);
+			m_bAnimFinish = true;
+			break;
 		}
 		break;
 
@@ -157,7 +155,7 @@ void CBattle_Damage_LargeB_State::Enter()
 void CBattle_Damage_LargeB_State::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
-	if(m_eStateId == Client::CIceWolfState::STATE_BE_DAMAGED)
+	if (m_eStateId == Client::CIceWolfState::STATE_BE_DAMAGED)
 		m_pOwner->SetOff_BedamageCount_Delay();
 
 

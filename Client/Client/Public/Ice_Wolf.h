@@ -118,6 +118,7 @@ public: /*For.State*/
 public:	/*For Navigation*/
 	virtual void Check_Navigation() override;
 
+
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 

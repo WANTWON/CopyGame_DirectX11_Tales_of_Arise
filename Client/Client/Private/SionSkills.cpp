@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\SionSkills.h"
 #include "Monster.h"
+#include "Player.h"
 
 
 CSionSkills::CSionSkills(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -351,8 +352,17 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.fHitLagTimer = 0.1f;
 		m_HitLagDesc.bShaking = false;
 
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
+		switch (m_BulletDesc.eCollisionGroup)
+		{
+		case PLAYER:
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
+			break;
+
+		default:
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pOBBCom, &pCollisionTarget))
+				dynamic_cast<CPlayer*> (pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		}
 		break;
 	case GRAVITY:
 		m_HitLagDesc.bLockOnChange = false;

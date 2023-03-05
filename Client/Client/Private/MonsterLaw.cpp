@@ -328,6 +328,28 @@ void CMonsterLaw::Check_Navigation()
 
 }
 
+//_bool CMonsterLaw::Check_Navigation_Jump()
+//{
+//	return _bool();
+//}
+
+_bool CMonsterLaw::Check_Navigation_Jump()
+{
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
+
+	if (m_fWalkingHeight >= XMVectorGetY(vPosition))
+	{
+		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+
+		return true;
+	}
+
+	return false;
+}
+
+
 CMonsterLaw * CMonsterLaw::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CMonsterLaw* pInstance = new CMonsterLaw(pDevice, pContext);

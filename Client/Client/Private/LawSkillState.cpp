@@ -117,7 +117,6 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 					break;
 				}
 
-				pCollisionMgr->Add_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				return EventInput();
@@ -354,7 +353,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 					break;
 				}
 
-				pCollisionMgr->Out_CollisionGroup(CCollision_Manager::COLLISION_PBULLET, m_pOwner);
+			
 			}
 		}
 	}
