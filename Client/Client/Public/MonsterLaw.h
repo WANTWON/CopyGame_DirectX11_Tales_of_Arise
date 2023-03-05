@@ -141,6 +141,11 @@ public:
 
 	enum SKILL_TYPE
 	{
+		NORMALATTACK_1,
+		NORMALATTACK_2,
+		NORMALATTACK_3,
+		NORMALATTACK_4,
+		NORMALATTACK_5,
 		PHOTONFLASH,
 		GALEFORCE,
 		CROSSBLADE,
@@ -157,6 +162,14 @@ public:
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	void Set_SkillIndex(_uint iIndex) { m_eSkillIndex = iIndex; }
 	virtual void	 Set_BattleMode(_bool type) override;
+	virtual void	 Set_HitState() override;
+
+
+	/* Air Check*/
+	_bool			Get_IsFly(void) { return m_bIsFly; }
+	void			On_IsFly(void) { m_bIsFly = true; }
+	void			Off_IsFly(void) { m_bIsFly = false; }
+
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
@@ -184,6 +197,7 @@ public: /*For.State*/
 
 		/*For Navigation*/
 	virtual void Check_Navigation() override;
+    _bool Check_Navigation_Jump();
 
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -199,7 +213,7 @@ private:
 	_bool	m_bNpcMode = false;
 	_uint	 m_eSkillIndex = SKILL_END;
 
-
+	_bool m_bIsFly = false;
 
 public:
 	static CMonsterLaw* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

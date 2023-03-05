@@ -91,7 +91,7 @@ int CUI_SidePopup::Tick(_float fTimeDelta)
 	}*/
 	
 	
-		if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_BATTLE || CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_LAWBATTLE ||
+		if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_BATTLE && CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_LAWBATTLE &&
 			CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_BOSS)
 		{
 			if (CGameInstance::Get_Instance()->Key_Down(DIK_LCONTROL))

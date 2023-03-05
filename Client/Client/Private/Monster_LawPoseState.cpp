@@ -2,6 +2,7 @@
 #include "CameraManager.h"
 #include "UI_Dialogue_Caption.h"
 #include "Monster_LawPoseState.h"
+#include "Monster_LawIdleState.h"
 
 using namespace MonsterLaw;
 
@@ -17,6 +18,8 @@ CMonsterLawState * CPoseState::Tick(_float fTimeDelta)
 	if(!m_bFinised)
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
+	
+
 
 	return nullptr;
 }
@@ -25,7 +28,9 @@ CMonsterLawState * CPoseState::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
 	{
-		return nullptr;
+
+		
+		return new CMonster_LawIdleState(m_pOwner);
 	}
 
 	return nullptr;

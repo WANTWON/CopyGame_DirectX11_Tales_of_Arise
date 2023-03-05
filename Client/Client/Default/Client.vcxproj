@@ -254,6 +254,10 @@
     <ClInclude Include="..\Public\LawAirRSkillState.h" />
     <ClInclude Include="..\Public\LawAttackState.h" />
     <ClInclude Include="..\Public\MonsterLawState.h" />
+    <ClInclude Include="..\Public\Monster_LawAirF.h" />
+    <ClInclude Include="..\Public\Monster_LawAirR.h" />
+    <ClInclude Include="..\Public\Monster_LawIdleState.h" />
+    <ClInclude Include="..\Public\Monster_LawNormalAttack.h" />
     <ClInclude Include="..\Public\Monster_LawPoseState.h" />
     <ClInclude Include="..\Public\LawSkillState.h" />
     <ClInclude Include="..\Public\Level_BossZone.h" />
@@ -263,6 +267,7 @@
     <ClInclude Include="..\Public\Level_WorkTool.h" />
     <ClInclude Include="..\Public\MiniGameNpc.h" />
     <ClInclude Include="..\Public\MonsterLaw.h" />
+    <ClInclude Include="..\Public\Monster_LawSkill.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\PlayerOverlimit.h" />
@@ -527,6 +532,10 @@
     <ClCompile Include="..\Private\LawAirFSkillState.cpp" />
     <ClCompile Include="..\Private\LawAirRSkillState.cpp" />
     <ClCompile Include="..\Private\LawAttackState.cpp" />
+    <ClCompile Include="..\Private\Monster_LawAirF.cpp" />
+    <ClCompile Include="..\Private\Monster_LawAirR.cpp" />
+    <ClCompile Include="..\Private\Monster_LawIdleState.cpp" />
+    <ClCompile Include="..\Private\Monster_LawNormalAttack.cpp" />
     <ClCompile Include="..\Private\Monster_LawPoseState.cpp" />
     <ClCompile Include="..\Private\LawSkillState.cpp" />
     <ClCompile Include="..\Private\Level_BossZone.cpp" />
@@ -536,6 +545,7 @@
     <ClCompile Include="..\Private\Level_WorkTool.cpp" />
     <ClCompile Include="..\Private\MiniGameNpc.cpp" />
     <ClCompile Include="..\Private\MonsterLaw.cpp" />
+    <ClCompile Include="..\Private\Monster_LawSkill.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\PlayerOverlimit.cpp" />

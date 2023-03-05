@@ -181,6 +181,10 @@ void CSlime::Set_BattleMode(_bool type)
 {
 }
 
+void CSlime::Set_HitState()
+{
+}
+
 //HRESULT CSlime::Render()
 //{
 //	if (nullptr == m_pShaderCom ||

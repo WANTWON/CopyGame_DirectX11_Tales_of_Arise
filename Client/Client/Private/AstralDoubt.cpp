@@ -489,6 +489,10 @@ HRESULT CAstralDoubt::SetUp_ShaderID()
 	return S_OK;
 }
 
+void CAstralDoubt::Set_HitState()
+{
+}
+
 void CAstralDoubt::Check_Navigation()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);

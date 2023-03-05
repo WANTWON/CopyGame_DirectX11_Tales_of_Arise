@@ -196,6 +196,12 @@ HRESULT CHawk::Render_Glow()
 	return S_OK;
 }
 
+void CHawk::Set_HitState()
+{
+	CHawkState* pState = new CBattle_Damage_LargeB_State(this, CHawkState::STATE_TAKE_DAMAGE);
+	m_pHawkState = m_pHawkState->ChangeState(m_pHawkState, pState);
+}
+
 void CHawk::AI_Behavior(_float fTimeDelta)
 {
 	CHawkState* pNewState = m_pHawkState->AI_Behaviour(fTimeDelta);

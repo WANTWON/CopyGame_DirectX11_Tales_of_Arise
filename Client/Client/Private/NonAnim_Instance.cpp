@@ -45,11 +45,11 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 
-	//if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION
-	//	&& CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
-	//{
-	//	return;
-	//}
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION
+		&& CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
+	{
+		return;
+	}
 		
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

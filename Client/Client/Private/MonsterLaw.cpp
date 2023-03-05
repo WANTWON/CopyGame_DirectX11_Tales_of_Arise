@@ -242,6 +242,10 @@ void CMonsterLaw::Set_BattleMode(_bool type)
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 }
 
+void CMonsterLaw::Set_HitState()
+{
+}
+
 
 _bool CMonsterLaw::Is_AnimationLoop(_uint eAnimId)
 {
@@ -323,6 +327,28 @@ void CMonsterLaw::Check_Navigation()
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
 }
+
+//_bool CMonsterLaw::Check_Navigation_Jump()
+//{
+//	return _bool();
+//}
+
+_bool CMonsterLaw::Check_Navigation_Jump()
+{
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
+
+	if (m_fWalkingHeight >= XMVectorGetY(vPosition))
+	{
+		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+
+		return true;
+	}
+
+	return false;
+}
+
 
 CMonsterLaw * CMonsterLaw::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
