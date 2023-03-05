@@ -143,7 +143,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 	
-	if (Out.vDiffuse.a <= 0.3f)
+	if (Out.vDiffuse.a <= 0.f)
 		discard;
 
 	/* Rim Light */

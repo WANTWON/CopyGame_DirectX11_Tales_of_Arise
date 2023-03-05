@@ -343,76 +343,77 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 		}
 		else
 		{
-			if (m_fActiveTarget_Distance > 30.f) //if (m_fActiveTarget_Distance > 30.f)
-			{
-				if (m_ePreState_Id != CAstralDoubt_State::STATE_HEADBEAM)
-				{
-					if (m_b_IsTargetInsight == true)
-					{
-						if (m_bBeamTargetOn == false)
-						{
-							_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-							m_pOwner->Get_Transform()->LookAt(vPosition);
-							m_bBeamTargetOn = true;
-							return new CBattle_HeadBeamState(m_pOwner);
-						}
-					}
-					else if (m_b_IsTargetInsight == false)
-					{
-						if (m_bBeamTargetOn == false)
-						{
-							_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-							m_pOwner->Get_Transform()->LookAt(vPosition);
-							m_bBeamTargetOn = true;
-							return new CBattle_HeadBeamState(m_pOwner);
-						}
-					}
-				}
-				else if (m_ePreState_Id == CAstralDoubt_State::STATE_HEADBEAM)
-				{
-					return new CBattleWalkState(m_pOwner,m_ePreState_Id);
-				}
-			}
-			else if (m_fActiveTarget_Distance <= 30.f)   //(m_fActiveTarget_Distance <= 30.f)
-			{
-				_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-				m_pOwner->Get_Transform()->LookAt(vPosition);
-				if (m_fActiveTarget_Distance <= 12.f)  //(m_fActiveTarget_Distance <= 15.f)
-				{
-					if (m_PreState_IsSpin == false)
-					{
-						return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_SPIN);
-					}
-					else
-					{
-						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_FOOTPRESS);
-					}
-				}
-				else
-				{
-					if (m_fActiveTarget_Distance <= 16.f)
-					{
-						if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
-							return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-						else if (m_ePreState_Id == CAstralDoubt_State::STATE_SPEARMULTI)
-							return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
-						else
-						{
-							switch (m_iRand)
-							{
-							case 0:
-								return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-							case 1:
-								return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
-							default:
-								break;
-							}
-						}
-					}
-					else
-						return new CBattleWalkState(m_pOwner, m_ePreState_Id);
-				}
-			}
+			return new CBattle_RushState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_RUSH_START);
+			//if (m_fActiveTarget_Distance > 30.f) //if (m_fActiveTarget_Distance > 30.f)
+			//{
+			//	if (m_ePreState_Id != CAstralDoubt_State::STATE_HEADBEAM)
+			//	{
+			//		if (m_b_IsTargetInsight == true)
+			//		{
+			//			if (m_bBeamTargetOn == false)
+			//			{
+			//				_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			//				m_pOwner->Get_Transform()->LookAt(vPosition);
+			//				m_bBeamTargetOn = true;
+			//				return new CBattle_HeadBeamState(m_pOwner);
+			//			}
+			//		}
+			//		else if (m_b_IsTargetInsight == false)
+			//		{
+			//			if (m_bBeamTargetOn == false)
+			//			{
+			//				_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			//				m_pOwner->Get_Transform()->LookAt(vPosition);
+			//				m_bBeamTargetOn = true;
+			//				return new CBattle_HeadBeamState(m_pOwner);
+			//			}
+			//		}
+			//	}
+			//	else if (m_ePreState_Id == CAstralDoubt_State::STATE_HEADBEAM)
+			//	{
+			//		return new CBattleWalkState(m_pOwner,m_ePreState_Id);
+			//	}
+			//}
+			//else if (m_fActiveTarget_Distance <= 30.f)   //(m_fActiveTarget_Distance <= 30.f)
+			//{
+			//	_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			//	m_pOwner->Get_Transform()->LookAt(vPosition);
+			//	if (m_fActiveTarget_Distance <= 12.f)  //(m_fActiveTarget_Distance <= 15.f)
+			//	{
+			//		if (m_PreState_IsSpin == false)
+			//		{
+			//			return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_SPIN);
+			//		}
+			//		else
+			//		{
+			//			return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_FOOTPRESS);
+			//		}
+			//	}
+			//	else
+			//	{
+			//		if (m_fActiveTarget_Distance <= 16.f)
+			//		{
+			//			if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
+			//				return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+			//			else if (m_ePreState_Id == CAstralDoubt_State::STATE_SPEARMULTI)
+			//				return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
+			//			else
+			//			{
+			//				switch (m_iRand)
+			//				{
+			//				case 0:
+			//					return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+			//				case 1:
+			//					return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
+			//				default:
+			//					break;
+			//				}
+			//			}
+			//		}
+			//		else
+			//			return new CBattleWalkState(m_pOwner, m_ePreState_Id);
+			//	}
+			//}
 		}
 	}
 

@@ -228,7 +228,8 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				{
 					if (!strcmp(pEvent.szName, "Spin"))
 					{
-						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Swing_360.dat"), mWorldMatrix);
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Swing_360_Ring.dat"), mWorldMatrix);
+
 						m_bSpin = true;
 					}
 				}
@@ -236,7 +237,19 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				{
 					if (!strcmp(pEvent.szName, "Slash"))
 					{
-						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Swing_360_Slash.dat"), mWorldMatrix);
+						vector<CEffect*> Slash = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Swing_360_Slash.dat"), mWorldMatrix);
+
+						_matrix mParticlesMatrix;
+
+						mParticlesMatrix = Slash[0]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = Slash[2]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = Slash[4]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
 						m_bSlash = true;
 					}
 				}
