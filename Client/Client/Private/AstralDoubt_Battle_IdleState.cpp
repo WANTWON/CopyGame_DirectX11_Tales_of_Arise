@@ -59,7 +59,7 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 
 	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
 	Find_Target();
-
+	m_vActiveTargetPos = m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 
 
@@ -259,6 +259,12 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 	else if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
 	{
+		if (m_bAdventLookAt == false)
+		{
+			_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			m_pOwner->Get_Transform()->LookAt(vPosition);
+			m_bAdventLookAt = true;
+		}
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 		for (auto& pEvent : pEvents)
 		{
