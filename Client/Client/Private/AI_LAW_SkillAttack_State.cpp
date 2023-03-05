@@ -427,7 +427,7 @@ CAIState * CAI_LAW_SkillAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -444,7 +444,7 @@ CAIState * CAI_LAW_SkillAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -461,7 +461,7 @@ CAIState * CAI_LAW_SkillAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -478,7 +478,7 @@ CAIState * CAI_LAW_SkillAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -508,6 +508,10 @@ void CAI_LAW_SkillAttack_State::Enter(void)
 	m_pOwner->Set_Manarecover(false);
 
 	Reset_Skill();
+
+	m_HitLagDesc.bHitLag = false;
+	m_HitLagDesc.bLockOnChange = false;
+	m_HitLagDesc.bShaking = false;
 
 	switch (m_eStateId)
 	{

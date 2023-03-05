@@ -239,7 +239,10 @@ void CAI_SionRinwell_Smash::Exit()
 
 	if (m_eCurrentPlayerID == CPlayer::SION)
 	{
-
+		HITLAGDESC m_HitLagDesc;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bShaking = false;
 
 		CBattleManager::Get_Instance()->Set_IsStrike(false);
 		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -250,12 +253,12 @@ void CAI_SionRinwell_Smash::Exit()
 			{
 				dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
 				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 			}
 			else
 			{
 				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 			}
 		}
 

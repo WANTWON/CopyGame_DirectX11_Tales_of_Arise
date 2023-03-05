@@ -39,6 +39,18 @@ namespace Client
 
 	enum HITTYPE { HIT_NORMAL, HIT_AIR, HIT_DOWN, HIT_END };
 
+	typedef struct HitLagInfo
+	{
+		bool bLockOnChange = true;
+
+		bool bHitLag = true;
+		bool bShaking = true;
+
+		float fHitLagTimer = 0.15f;
+		float fShakingPower = 2.f;
+		float fShakingMinusPower = 0.2f;
+
+	}HITLAGDESC;
 
 	typedef struct ObjectInfo
 	{

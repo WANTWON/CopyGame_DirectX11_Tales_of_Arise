@@ -329,12 +329,12 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 	return true;
 }
 
-_int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _bool bLockOnChange)
+_int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
 	if (fDamage <= 0 || m_bDead || m_bTakeDamage)
 		return 0;
 
-	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
 	m_iDamage += fDamage;
 

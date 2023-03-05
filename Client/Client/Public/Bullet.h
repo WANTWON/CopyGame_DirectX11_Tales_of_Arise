@@ -55,6 +55,8 @@ protected:
 
 protected:
 	BULLETDESC m_BulletDesc;
+	HITLAGDESC m_HitLagDesc;
+
 	CModel* m_pModelCom = nullptr;
 	vector<CEffect*> m_pEffects;
 	vector<CEffect*> m_pDeadEffects;

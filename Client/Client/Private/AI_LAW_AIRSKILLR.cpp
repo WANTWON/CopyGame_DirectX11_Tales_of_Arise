@@ -195,7 +195,7 @@ CAIState * CAI_LAW_AIRSKILLR::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -212,7 +212,7 @@ CAIState * CAI_LAW_AIRSKILLR::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 #ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pRightHandCollider);
@@ -228,7 +228,7 @@ CAIState * CAI_LAW_AIRSKILLR::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -275,6 +275,11 @@ CAIState * CAI_LAW_AIRSKILLR::LateTick(_float fTimeDelta)
 
 void CAI_LAW_AIRSKILLR::Enter()
 {
+
+	m_HitLagDesc.bHitLag = false;
+	m_HitLagDesc.bLockOnChange = false;
+	m_HitLagDesc.bShaking = false;
+
 
 	m_pOwner->Use_Mana(1.f);
 	m_pOwner->Set_Manarecover(false);

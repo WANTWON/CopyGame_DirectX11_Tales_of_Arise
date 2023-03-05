@@ -278,37 +278,91 @@ void CSionSkills::Collision_Check()
 	{
 	case TRESVENTOS:
 	case NORMALATTACK:
+		m_HitLagDesc.bLockOnChange = true;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.1f;
+		m_HitLagDesc.bShaking = false;
+		m_HitLagDesc.fShakingPower = 2.f;
+		m_HitLagDesc.fShakingMinusPower = 0.2f;
+		__super::Collision_Check();
+		break;
 	case GRAVITY_DEAD:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.3f;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 2.f;
+		m_HitLagDesc.fShakingMinusPower = 0.2f;
 		__super::Collision_Check();
 		break;
 	case GLACIA_DEAD:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.3f;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 2.f;
+		m_HitLagDesc.fShakingMinusPower = 0.2f;
+
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 			m_bDead = true;
 		}
 		break;
 	case AQUA_LUINA_BULLET:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 0.4f;
+		m_HitLagDesc.fShakingMinusPower = 0.1f;
+
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
 		{
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 			m_bDead = true;
 		}
 		break;
-	case BOOST:
-	case GLACIA:
 	case EXPLOSION:
+	case GLACIA:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.1f;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 0.4f;
+		m_HitLagDesc.fShakingMinusPower = 0.1f;
+
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
+		break;
+	case BOOST:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.1f;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 2.f;
+		m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 		break;
 	case MAGNA_RAY:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.1f;
+		m_HitLagDesc.bShaking = false;
+
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 		break;
 	case GRAVITY:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.1f;
+		m_HitLagDesc.bShaking = false;
+
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 			_vector vDirection = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - pCollisionTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
 			if (fabs(XMVectorGetX(vDirection)) > fabs(XMVectorGetZ(vDirection)))
@@ -320,6 +374,10 @@ void CSionSkills::Collision_Check()
 		}
 		break;
 	case NAILBULLET:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bShaking = false;
+
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
 			_vector vDirection = pCollisionTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);

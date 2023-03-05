@@ -21,8 +21,8 @@ CBerserkerState * CChaseState::AI_Behaviour(_float fTimeDelta)
 
 CBerserkerState * CChaseState::Tick(_float fTimeDelta)
 {
-	Find_Target();
-	m_fTarget_Distance = Find_BattleTarget();
+	Find_Target_InField();
+	
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
@@ -31,7 +31,7 @@ CBerserkerState * CChaseState::Tick(_float fTimeDelta)
 
 CBerserkerState * CChaseState::LateTick(_float fTimeDelta)
 {
-	Find_Target();
+
 	m_pOwner->Check_Navigation();
 
 	CBaseObj* pTrigger = m_pOwner->Get_Trigger();
@@ -40,13 +40,17 @@ CBerserkerState * CChaseState::LateTick(_float fTimeDelta)
 	_bool bIs_TargetInFront = false;
 	bIs_TargetInFront = Is_TargetInFront(vTrigger_Pos);
 
-	_vector vTargetPos = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+
 
 
 	if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == true)
 	{
-		m_pOwner->Get_Transform()->LookAtExceptY(vTargetPos);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.4f, m_pOwner->Get_Navigation());
+		if (m_pTarget)
+		{
+			_vector vTargetPos = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+			m_pOwner->Get_Transform()->LookAtExceptY(vTargetPos);
+			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.4f, m_pOwner->Get_Navigation());
+		}
 	}
 
 	else
@@ -59,7 +63,7 @@ CBerserkerState * CChaseState::LateTick(_float fTimeDelta)
 
 	}
 
-	if (m_fTarget_Distance >= 15.f)
+	if (m_fTarget_Distance >= 15.f || m_pTarget == nullptr)
 		return new CWalkState(m_pOwner, CBerserkerState::FIELD_STATE_ID::STATE_CHASE);
 
 	return nullptr;

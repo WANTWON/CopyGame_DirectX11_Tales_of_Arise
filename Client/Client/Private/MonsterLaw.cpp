@@ -258,12 +258,12 @@ _bool CMonsterLaw::Is_AnimationLoop(_uint eAnimId)
 	}
 }
 
-_int CMonsterLaw::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _bool bLockOnChange)
+_int CMonsterLaw::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
 	if (fDamage <= 0 || m_bDead || m_bTakeDamage )
 		return 0;
 
-	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
 
 	if (iHp <= 0)

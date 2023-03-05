@@ -287,12 +287,37 @@ void CRinwellSkills::Collision_Check()
 		__super::Collision_Check();
 		break;
 	case HOLY_RANCE_BULLET:
-	case HOLY_RANCE_FISRTBULLET:
-	case HOLY_RANCE_LASTBULLET:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.1f;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 1.f;
+		m_HitLagDesc.fShakingMinusPower = 0.2f;
+
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
+		}
+		else
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		}
+		break;
+	case HOLY_RANCE_FISRTBULLET:
+	case HOLY_RANCE_LASTBULLET:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.3f;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 2.f;
+		m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+		if (m_BulletDesc.eCollisionGroup == PLAYER)
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 		}
 		else
 		{
@@ -301,10 +326,14 @@ void CRinwellSkills::Collision_Check()
 		}
 		break;
 	case METEOR:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bShaking = false;
+
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 		}
 		else
 		{
@@ -313,10 +342,14 @@ void CRinwellSkills::Collision_Check()
 		}
 		break;
 	case THUNDER_FIELD:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bShaking = false;
+
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
-				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 		}
 		else
 		{
@@ -325,10 +358,14 @@ void CRinwellSkills::Collision_Check()
 		}
 		break;
 	case GALE_FORCE:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bShaking = false;
+
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 		}
 		else
 		{
@@ -337,10 +374,14 @@ void CRinwellSkills::Collision_Check()
 		}
 		break;
 	case BANGJEON:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bShaking = false;
+
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 		}
 		else
 		{
@@ -350,9 +391,14 @@ void CRinwellSkills::Collision_Check()
 		break;
 
 	case DIVINE_SABER_BULLET:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bShaking = false;
+
+
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
 		{
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 			m_bDead = true;
 		}
 		break;

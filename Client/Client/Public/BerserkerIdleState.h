@@ -24,8 +24,8 @@ private:
 
 	FIELD_STATE_ID	m_ePreState_Id;
 
-private:
-	void Find_Target_InField(void);
+//private:
+//	void Find_Target_InField(void);
 };
 END
 END

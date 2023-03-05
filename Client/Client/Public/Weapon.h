@@ -50,6 +50,7 @@ private:
 
 private:
 	WEAPONDESC				m_WeaponDesc;
+	HITLAGDESC				m_HitLagDesc;
 	_float4x4				m_CombinedWorldMatrix;
 	_matrix					m_SocketMatrix;
 
