@@ -21,7 +21,7 @@ CHawkState * CSitOnState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CSitOnState::Tick(_float fTimeDelta)
 {
-	m_fTarget_Distance = Find_BattleTarget();
+	Find_Target_InField();
 	
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");

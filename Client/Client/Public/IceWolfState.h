@@ -77,6 +77,35 @@ public:
 	void Set_BattleMode() { m_bBattleMode = true; }
 
 protected:
+	void Find_Target_InField(void)
+	{
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		if (!pPlayer)
+			return;
+
+		_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+		
+		if (fDistance < m_pOwner->Get_AggroRadius())
+		{
+			m_pTarget = pPlayer;
+
+			m_pOwner->Get_Transform()->Change_Speed(m_pOwner->Get_Stats().m_fRunSpeed);
+
+			if (5 > fDistance)
+				m_bBattleMode = true;
+		}
+
+		else
+			m_pTarget = nullptr;
+
+		m_fTarget_Distance = fDistance;
+	}
+
+
+
 	virtual void Find_Target(_bool bHasAggro = false)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
