@@ -278,12 +278,12 @@ _bool CSlime::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CSlime::Take_Damage(int fDamage, CBaseObj * DamageCauser)
+_int CSlime::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitDesc)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 
-	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
 	if (iHp <= 0)
 	{
