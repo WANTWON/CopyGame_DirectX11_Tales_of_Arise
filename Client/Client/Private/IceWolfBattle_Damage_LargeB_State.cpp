@@ -132,23 +132,18 @@ void CBattle_Damage_LargeB_State::Enter()
 		break;
 
 	case Client::CIceWolfState::STATE_BE_DAMAGED:
-		if (m_pOwner->Get_IsUp())
+	{
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
+		m_pOwner->SetOff_BedamagedCount();
+		m_pOwner->Set_BedamageCount_Delay();
+		if (!m_bAnimFinish)
 		{
-
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Hit.wav"), SOUND_VOICE, 0.4f);
+			m_bAnimFinish = true;
+			break;
 		}
-		else
-		{
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DAMAGE_SMALL_B);
-			m_pOwner->SetOff_BedamagedCount();
-			m_pOwner->Set_BedamageCount_Delay();
-			if (!m_bAnimFinish)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Wolf_Hit.wav"), SOUND_VOICE, 0.4f);
-				m_bAnimFinish = true;
-				break;
-			}
-		}
-		break;
+	}
+	break;
 
 	case Client::CIceWolfState::STATE_DOWN:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CIce_Wolf::ANIM::ANIM_DOWN_F);
