@@ -67,8 +67,8 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 		else
 			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
 	}*/
-	return new CMonster_LawSkill(m_pOwner, SKILL_E);
-	/*switch (rand() % 3)
+	//return new CMonster_LawSkill(m_pOwner, SKILL_E);
+	switch (rand() % 5)
 	{
 	case 0:
 		return new CMonster_LawSkill(m_pOwner, SKILL_R);
@@ -77,9 +77,11 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 		return new CMonster_LawSkill(m_pOwner, SKILL_E);
 	case 2:
 		return new CMonster_LawSkill(m_pOwner, SKILL_F);
+	case 3:
+		return new CMonster_LawNormalAttack(m_pOwner , NORMALATTACK_1 , m_pTarget ,m_iPhase);
 	default:
 		return new CMonster_LawSkill(m_pOwner, SKILL_STRIKE);
-	}*/
+	}
 	
 	//return new CMonster_LawNormalAttack(m_pOwner , NORMALATTACK_1 , m_pTarget,m_iPhase  );
 

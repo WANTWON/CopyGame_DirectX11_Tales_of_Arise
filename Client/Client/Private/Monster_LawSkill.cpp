@@ -95,7 +95,7 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 							BulletDesc.vInitPositon -= vRight*2.f;
 						if (m_iCount == 1)
 							BulletDesc.vInitPositon += vRight*2.f;*/
-
+						 
 						BulletDesc.pOwner = m_pOwner;
 						BulletDesc.fVelocity = 5.f;
 						m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
@@ -106,20 +106,20 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 
 						BulletDesc.vTargetDir = vLook;
 						
-						BulletDesc.vInitPositon -= vRight*4.f;
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+						BulletDesc.vInitPositon -= vRight*6.f;
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
-						BulletDesc.vInitPositon += vRight*2.f;
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+						BulletDesc.vInitPositon += vRight*3.f;
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
-						BulletDesc.vInitPositon += vRight*2.f;
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+						BulletDesc.vInitPositon += vRight*3.f;
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
-						BulletDesc.vInitPositon += vRight*2.f;
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+						BulletDesc.vInitPositon += vRight*3.f;
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
-						BulletDesc.vInitPositon += vRight*2.f;
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+						BulletDesc.vInitPositon += vRight*3.f;
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						m_fEventStart = pEvent.fStartTime;
 					}
@@ -185,19 +185,25 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 				/*if (CAIState::STATE_SKILL_ATTACK_R == m_eStateId || CAIState::STATE_SKILL_ATTACK_F == m_eStateId)
 					return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, true, 1.f);*/
 
-				if (m_eStateId == SKILL_R || m_eStateId == SKILL_F)
+				if (m_eStateId == SKILL_R)
 				{
-					switch (rand() % 2)
+					return new CMonster_LawAirF(m_pOwner);
+				} 
+				else if (m_eStateId == SKILL_F)
+				{
+					return new CMonster_LawAirR(m_pOwner);
+				}
+					/*switch (rand() % 2)
 					{
 					case 0:
-						return new CMonster_LawAirF(m_pOwner);
+						
 						break;
 
 					case 1:
-						return new CMonster_LawAirR(m_pOwner);
+						
 						break;
 					}
-				}
+				}*/
 				else
 				{
 					switch (rand() % 4)
@@ -636,6 +642,12 @@ void CMonster_LawSkill::Enter(void)
 void CMonster_LawSkill::Exit(void)
 {
 	//__super::Exit();
+
+
+	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pRightFootCollider, m_pOwner);
+	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pRightHandCollider, m_pOwner);
+	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pLeftHandCollider, m_pOwner);
+	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pLeftFootCollider, m_pOwner);
 
 	Safe_Release(m_pLeftFootCollider);
 	Safe_Release(m_pLeftHandCollider);

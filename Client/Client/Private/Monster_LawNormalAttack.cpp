@@ -380,6 +380,12 @@ void CMonster_LawNormalAttack::Exit()
 {
 	//__super::Exit();
 
+	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pRightFootCollider, m_pOwner);
+	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pRightHandCollider, m_pOwner);
+	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pLeftHandCollider, m_pOwner);
+	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pLeftFootCollider, m_pOwner);
+
+
 	Safe_Release(m_pLeftHandCollider);
 	Safe_Release(m_pRightHandCollider);
 	Safe_Release(m_pLeftFootCollider);

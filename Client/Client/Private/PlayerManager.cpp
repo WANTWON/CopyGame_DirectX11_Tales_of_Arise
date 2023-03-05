@@ -106,7 +106,18 @@ PLAYER_MODE CPlayerManager::Check_ActiveMode(CPlayer * pPlayer)
 		return pPlayer == m_pActivePlayer ? ACTIVE : AI_MODE;
 	}
 	else
-		return pPlayer == m_pActivePlayer ? ACTIVE : UNVISIBLE;
+	{
+		if (pPlayer == m_pActivePlayer)
+			return	ACTIVE;
+
+		else
+		{
+			CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, pPlayer);
+			return UNVISIBLE;
+		}
+		
+	}
+		
 
 	return ACTIVE;
 }

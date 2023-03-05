@@ -131,13 +131,13 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 						return new CAI_DodgeState(m_pOwner, m_pTarget);
 					else
 					{
-						switch (rand() % 4)
+						switch (rand() % 2)
 						{
+						/*case 0:
+						case 1:*/
 						case 0:
-						case 1:
-						case 2:
 							return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, true, 1.f);
-						case 3:
+						case 1:
 							return new CAI_DodgeState(m_pOwner, m_pTarget);
 						}
 					}
