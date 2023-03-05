@@ -274,14 +274,14 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange)
+_int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
 	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pBerserkerState->Get_StateId() == CBerserkerState::STATE_DEAD)
 		return 0;
 	
 	m_iBeDamaged_Cnt++;
 
-	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
 	if (m_bOnGoingDown == false)
 	{

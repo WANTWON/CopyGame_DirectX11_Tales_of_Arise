@@ -217,6 +217,25 @@ void CAI_AlphenLaw_Smash::Exit()
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
 			return;
 
+		if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+		{
+			HITLAGDESC m_HitLagDesc;
+			m_HitLagDesc.bHitLag = false;
+			m_HitLagDesc.bLockOnChange = false;
+			m_HitLagDesc.bShaking = false;
+
+
+			if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+			{
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+			}
+			else
+			{
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+			}
+		}
+
 	}
 	
 
@@ -225,18 +244,7 @@ void CAI_AlphenLaw_Smash::Exit()
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
 	CBattleManager::Get_Instance()->Set_IsStrike(false);
-	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
-	{
-		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
-		}
-		else
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
-		}
-	}
+	
 
 	if (!m_pEffects.empty())
 	{

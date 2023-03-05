@@ -191,19 +191,6 @@ void CAI_SionLaw_Smash::Enter()
 {
 	m_pOwner->Set_StrikeAttack(true);
 	
-	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
-	{
-		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
-		}
-		else
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
-		}
-	}
-
 
 	switch (m_eCurrentPlayerID)
 	{
@@ -213,12 +200,8 @@ void CAI_SionLaw_Smash::Enter()
 		break;
 	case CPlayer::LAW:
 		m_iCurrentAnimIndex = CLaw::ANIM::ANIM_SIONLAW_STRIKE;
-
-
 		break;
-
 	}
-
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	m_pOwner->Get_Model()->Reset();
@@ -267,6 +250,11 @@ void CAI_SionLaw_Smash::Exit()
 	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
 
+		HITLAGDESC m_HitLagDesc;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bShaking = false;
+
 		CBattleManager::Get_Instance()->Set_IsStrike(false);
 		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
 		if (pLockOn != nullptr)
@@ -276,12 +264,12 @@ void CAI_SionLaw_Smash::Exit()
 			{
 				dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
 				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 			}
 			else
 			{
 				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 			}
 		}
 

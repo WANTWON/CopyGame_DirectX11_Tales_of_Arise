@@ -21,7 +21,8 @@ private:
 	_bool m_bTriggerTurn = false;
 	_float m_fRandTime = 0.f;
 	
-
+//private:
+//	void Find_Target_InField(void);
 };
 
 END

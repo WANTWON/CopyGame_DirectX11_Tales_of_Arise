@@ -37,6 +37,18 @@ namespace Client
 
 	enum MONSTER_ID { ICE_WOLF, HAWK, BERSERKER, SLIME, RINWELL, LAW_MONSTER, ASTRAL_DOUBT, MONSTER_END };
 
+	typedef struct HitLagInfo
+	{
+		bool bLockOnChange = true;
+
+		bool bHitLag = true;
+		bool bShaking = true;
+
+		float fHitLagTimer = 0.15f;
+		float fShakingPower = 2.f;
+		float fShakingMinusPower = 0.2f;
+
+	}HITLAGDESC;
 
 	typedef struct ObjectInfo
 	{

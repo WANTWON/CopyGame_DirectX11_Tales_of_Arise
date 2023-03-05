@@ -259,12 +259,12 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CIce_Wolf::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange )
+_int CIce_Wolf::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc )
 {
 	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pState->Get_StateId() == CIceWolfState::STATE_DEAD )
 		return 0; 
 
-	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
 		if (iHp <= 0)
 		{

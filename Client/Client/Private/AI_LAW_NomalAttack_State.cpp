@@ -272,7 +272,7 @@ CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -289,7 +289,7 @@ CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -306,7 +306,7 @@ CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -323,7 +323,7 @@ CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -343,33 +343,12 @@ void AI_LAW_NomalAttack_State::Enter()
 {
 	if (CheckTarget() == false)
 		return;
-	//__super::Enter();
+	
 
-	//__super::Enter();
+	m_HitLagDesc.bHitLag = false;
+	m_HitLagDesc.bLockOnChange = false;
+	m_HitLagDesc.bShaking = false;
 
-	/*if (m_bIsFly)
-	{
-		switch (m_eStateId)
-		{
-		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_0);
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_1);
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_2);
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_3);
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK5:
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_4);
-			break;
-		}
-	}
-	else
-	{*/
 		switch (m_eStateId)
 		{
 		case Client::CAIState::STATE_NORMAL_ATTACK1:
@@ -388,9 +367,6 @@ void AI_LAW_NomalAttack_State::Enter()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_4);
 			break;
 		}
-//	}
-
-	//m_fResultTime = m_fTime;
 
 	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 

@@ -24,7 +24,7 @@ CBerserkerState * CHowLing_State::AI_Behaviour(_float fTimeDelta)
 
 CBerserkerState * CHowLing_State::Tick(_float fTimeDelta)
 {
-	Find_Target();
+	Find_Target_InField();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 

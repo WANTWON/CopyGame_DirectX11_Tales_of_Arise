@@ -25,16 +25,18 @@ CHawkState * CWalkState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CWalkState::Tick(_float fTimeDelta)
 {
-	Find_Target();
+	Find_Target_InField();
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	m_pOwner->Check_Navigation();
+	
 
 	return nullptr;
 }
 
 CHawkState * CWalkState::LateTick(_float fTimeDelta)
 {
-	
+	m_pOwner->Check_Navigation();
+
+
 	//나의 트리거 박스랑 충돌안했을떄
 	CBaseObj* pTrigger = m_pOwner->Get_Trigger();
 

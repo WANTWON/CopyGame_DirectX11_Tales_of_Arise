@@ -57,7 +57,7 @@ public:
 	virtual void Make_GetAttacked_Effect(CBaseObj* DamageCauser = nullptr);
 	virtual void Make_DeadEffect(CBaseObj* Target = nullptr);
 	virtual void Make_UIFont(_uint iDamage);
-	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bLockOnChange = true);
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc);
 	virtual void	 Set_BattleMode(_bool type)				PURE;
 public:
 	void Collision_Object(_float fTimeDelta);

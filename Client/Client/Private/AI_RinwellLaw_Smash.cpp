@@ -213,16 +213,27 @@ void CAI_RinwellLaw_Smash::Exit()
 	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
-	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+
+	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
-		if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+
+		if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
-		}
-		else
-		{
-			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+			HITLAGDESC m_HitLagDesc;
+			m_HitLagDesc.bHitLag = false;
+			m_HitLagDesc.bLockOnChange = false;
+			m_HitLagDesc.bShaking = false;
+
+
+			if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+			{
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+			}
+			else
+			{
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+			}
 		}
 	}
 

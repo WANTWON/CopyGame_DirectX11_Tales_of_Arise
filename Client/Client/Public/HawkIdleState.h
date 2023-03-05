@@ -24,6 +24,9 @@ private:
 	_uint			m_iRand = 0;
 
 	FIELD_STATE_ID	m_ePreState_Id;
+
+//private:
+//	void Find_Target_InField(void);
 };
 END
 END

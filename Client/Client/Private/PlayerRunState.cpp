@@ -95,10 +95,8 @@ CPlayerState * CRunState::HandleInput()
 			}
 		}
 
-
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE);
-
 
 		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT);
@@ -135,88 +133,187 @@ CPlayerState * CRunState::HandleInput()
 		}
 	}
 
+
 	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
-		m_eDirection = DIR_STRAIGHT_LEFT;
-	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
-		m_eDirection = DIR_STRAIGHT_RIGHT;
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
-		m_eDirection = DIR_BACKWARD_LEFT;
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
-		m_eDirection = DIR_BACKWARD_RIGHT;
-	else if (pGameInstance->Key_Pressing(DIK_A))
-		m_eDirection = DIR_LEFT;
-	else if (pGameInstance->Key_Pressing(DIK_D))
-		m_eDirection = DIR_RIGHT;
-	else if (pGameInstance->Key_Pressing(DIK_S))
-		m_eDirection = DIR_BACKWARD;
-	else if (pGameInstance->Key_Pressing(DIK_W))
-		m_eDirection = DIR_STRAIGHT;
-	else
-		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
-
-	if (!pBattleManager->Get_IsBattleMode())
 	{
-		if (pGameInstance->Key_Pressing(DIK_LSHIFT))
+		if (STATETYPE_END == m_eStateType)
 		{
-			if (!m_bIsDash)
-			{
-				if (CPlayer::ALPHEN == m_ePlayerID)
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
-				else if (CPlayer::SION == m_ePlayerID)
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
-				else if (CPlayer::RINWELL == m_ePlayerID)
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
-				else if (CPlayer::LAW == m_ePlayerID)
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
-			}
-
-			m_bIsDash = true;
-
-			if (!CBattleManager::Get_Instance()->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-			{
-				CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-				pCamera->Set_Zoom(true);
-			}
+			m_eStateType = STATETYPE_START;
+			m_fRunTime = 0.f;
+			Enter();
 		}
-		else
+		m_eDirection = DIR_STRAIGHT_LEFT;
+	}
+	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
+	{
+		if (STATETYPE_END == m_eStateType)
 		{
-			if (m_bIsDash)
+			m_eStateType = STATETYPE_START;
+			m_fRunTime = 0.f;
+			Enter();
+		}
+		m_eDirection = DIR_STRAIGHT_RIGHT;
+	}
+	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
+	{
+		if (STATETYPE_END == m_eStateType)
+		{
+			m_eStateType = STATETYPE_START;
+			m_fRunTime = 0.f;
+			Enter();
+		}
+		m_eDirection = DIR_BACKWARD_LEFT;
+	}
+	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
+	{
+		if (STATETYPE_END == m_eStateType)
+		{
+			m_eStateType = STATETYPE_START;
+			m_fRunTime = 0.f;
+			Enter();
+		}
+		m_eDirection = DIR_BACKWARD_RIGHT;
+	}
+	else if (pGameInstance->Key_Pressing(DIK_A))
+	{
+		if (STATETYPE_END == m_eStateType)
+		{
+			m_eStateType = STATETYPE_START;
+			m_fRunTime = 0.f;
+			Enter();
+		}
+		m_eDirection = DIR_LEFT;
+	}
+	else if (pGameInstance->Key_Pressing(DIK_D))
+	{
+		if (STATETYPE_END == m_eStateType)
+		{
+			m_eStateType = STATETYPE_START;
+			m_fRunTime = 0.f;
+			Enter();
+		}
+		m_eDirection = DIR_RIGHT;
+	}
+	else if (pGameInstance->Key_Pressing(DIK_S))
+	{
+		if (STATETYPE_END == m_eStateType)
+		{
+			m_eStateType = STATETYPE_START;
+			m_fRunTime = 0.f;
+			Enter();
+		}
+		m_eDirection = DIR_BACKWARD;
+	}
+	else if (pGameInstance->Key_Pressing(DIK_W))
+	{
+		if (STATETYPE_END == m_eStateType)
+		{
+			m_eStateType = STATETYPE_START;
+			m_fRunTime = 0.f;
+			Enter();
+		}
+		m_eDirection = DIR_STRAIGHT;
+	}
+	else
+	{
+		if (STATETYPE_START == m_eStateType)
+		{
+			if (0.5f > m_fRunTime)
+				return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
+			else
 			{
-				switch (m_ePlayerID)
-				{
-				case CPlayer::ALPHEN:
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
-					break;
-				case CPlayer::SION:
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
-					break;
-				case CPlayer::RINWELL:
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
-					break;
-				case CPlayer::LAW:
-					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
-					break;
-				}
-			}
+				m_eStateType = STATETYPE_END;
+				Enter();
 
-			m_bIsDash = false;
-
-			if (!pBattleManager->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-			{
-				CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-				pCamera->Set_Zoom(false);
+				return nullptr;
 			}
 		}
 	}
 
+	if (STATETYPE_END != m_eStateType)
+	{
+		if (!pBattleManager->Get_IsBattleMode())
+		{
+			if (pGameInstance->Key_Pressing(DIK_LSHIFT))
+			{
+				if (!m_bIsDash)
+				{
+					if (CPlayer::ALPHEN == m_ePlayerID)
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
+					else if (CPlayer::SION == m_ePlayerID)
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
+					else if (CPlayer::RINWELL == m_ePlayerID)
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
+					else if (CPlayer::LAW == m_ePlayerID)
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
+				}
+
+				m_bIsDash = true;
+
+				if (!CBattleManager::Get_Instance()->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+				{
+					CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+					pCamera->Set_Zoom(true);
+				}
+			}
+			else
+			{
+				if (m_bIsDash)
+				{
+					switch (m_ePlayerID)
+					{
+					case CPlayer::ALPHEN:
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
+						break;
+					case CPlayer::SION:
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
+						break;
+					case CPlayer::RINWELL:
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+						break;
+					case CPlayer::LAW:
+						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
+						break;
+					}
+				}
+
+				m_bIsDash = false;
+
+				if (!pBattleManager->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+				{
+					CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+					pCamera->Set_Zoom(false);
+				}
+			}
+		}
+	}
+	
 	return nullptr;
 }
 
 CPlayerState * CRunState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
+	if (STATETYPE_START == m_eStateType)
+	{
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
+		
+		Move(fTimeDelta);
 
-	Move(fTimeDelta);
+		m_fRunTime += fTimeDelta;
+	}
+	else
+	{
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.f);
+
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
+		}
+	}
 
 	m_pOwner->Check_Navigation();
 
@@ -245,6 +342,9 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 
 CPlayerState * CRunState::LateTick(_float fTimeDelta)
 {
+	if (STATETYPE_END == m_eStateType && m_bIsAnimationFinished)
+		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
+	
 	return nullptr;
 }
 
@@ -261,22 +361,42 @@ void CRunState::Enter()
 		{
 		case CPlayer::ALPHEN:
 			if (!pBattleManager->Get_IsBattleMode())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH_BRAKE_LEFT_START);
+			}
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::SION:
 			if (!pBattleManager->Get_IsBattleMode())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH_BRAKE_000);
+			}
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::RINWELL:
 			if (!pBattleManager->Get_IsBattleMode())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH_BRAKE_000);
+			}
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::LAW:
 			if (!pBattleManager->Get_IsBattleMode())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH_BREAK_START);
+			}
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		}
@@ -287,31 +407,71 @@ void CRunState::Enter()
 		{
 		case CPlayer::ALPHEN:
 			if (pBattleManager->Get_IsBattleMode())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_RUN);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_RUN);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_BREAK);
+			}
 			else
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN_BRAKE_START);
+			}
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_RunSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::SION:
 			if (pBattleManager->Get_IsBattleMode())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_BRAKE);
+			}
 			else
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::RUN_BRAKE_000);
+			}
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::RINWELL:
 			if (pBattleManager->Get_IsBattleMode())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MOVE_RUN);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN_BRAKE_000);
+			}
 			else
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN_BRAKE_000);
+			}
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::LAW:
 			if (pBattleManager->Get_IsBattleMode())
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_RUN);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_RUN);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_BRAKE);
+			}
 			else
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
+			{
+				if (STATETYPE_START == m_eStateType)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
+				else
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN_BRAKE);
+			}
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		}
