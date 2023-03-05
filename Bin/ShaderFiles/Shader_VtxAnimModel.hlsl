@@ -293,6 +293,21 @@ PS_OUT PS_EDGE_DETECTION(PS_IN In)
 	return Out;
 }
 
+PS_OUT_GLOW PS_GLOW_BOSS(PS_IN In)
+{
+	PS_OUT_GLOW Out = (PS_OUT_GLOW)0;
+
+	float4 vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vGlow = g_GlowTexture.Sample(LinearSampler, In.vTexUV);
+
+	Out.vGlow *= vDiffuse;
+
+	if (Out.vGlow.a == 0)
+		discard;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default // 0
@@ -359,5 +374,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_EDGE_DETECTION();
+	}
+
+	pass Glow_Boss // 6
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_GLOW_BOSS();
 	}
 }
