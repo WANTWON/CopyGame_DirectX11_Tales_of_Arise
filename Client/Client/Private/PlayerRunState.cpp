@@ -154,55 +154,58 @@ CPlayerState * CRunState::HandleInput()
 	else
 		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 
-	if ((!pBattleManager->Get_IsBattleMode()) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+	if (!pBattleManager->Get_IsBattleMode())
 	{
-		if (!m_bIsDash)
+		if (pGameInstance->Key_Pressing(DIK_LSHIFT))
 		{
-			if (CPlayer::ALPHEN == m_ePlayerID)
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
-			else if (CPlayer::SION == m_ePlayerID)
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
-			else if (CPlayer::RINWELL == m_ePlayerID)
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
-			else if (CPlayer::LAW == m_ePlayerID)
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
-		}
-
-		m_bIsDash = true;
-
-		if (!CBattleManager::Get_Instance()->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-		{
-			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-			pCamera->Set_Zoom(true);
-		}
-	}
-	else
-	{
-		if (m_bIsDash)
-		{
-			switch (m_ePlayerID)
+			if (!m_bIsDash)
 			{
-			case CPlayer::ALPHEN:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
-				break;
-			case CPlayer::SION:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
-				break;
-			case CPlayer::RINWELL:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
-				break;
-			case CPlayer::LAW:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
-				break;
+				if (CPlayer::ALPHEN == m_ePlayerID)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
+				else if (CPlayer::SION == m_ePlayerID)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
+				else if (CPlayer::RINWELL == m_ePlayerID)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH);
+				else if (CPlayer::LAW == m_ePlayerID)
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH);
+			}
+
+			m_bIsDash = true;
+
+			if (!CBattleManager::Get_Instance()->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			{
+				CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+				pCamera->Set_Zoom(true);
 			}
 		}
-
-		m_bIsDash = false;
-
-		if (!pBattleManager->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		else
 		{
-			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-			pCamera->Set_Zoom(false);
+			if (m_bIsDash)
+			{
+				switch (m_ePlayerID)
+				{
+				case CPlayer::ALPHEN:
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
+					break;
+				case CPlayer::SION:
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
+					break;
+				case CPlayer::RINWELL:
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN);
+					break;
+				case CPlayer::LAW:
+					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN);
+					break;
+				}
+			}
+
+			m_bIsDash = false;
+
+			if (!pBattleManager->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			{
+				CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+				pCamera->Set_Zoom(false);
+			}
 		}
 	}
 
@@ -320,6 +323,15 @@ void CRunState::Enter()
 void CRunState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
+
+	if (m_bIsDash)
+	{
+		if (!CBattleManager::Get_Instance()->Get_IsBattleMode() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(false);
+		}
+	}
 }
 
 void CRunState::Move(_float fTimeDelta)

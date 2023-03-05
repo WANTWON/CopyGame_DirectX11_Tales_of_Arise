@@ -168,7 +168,7 @@ HRESULT CWater::SetUp_ShaderResources()
 		WaterNoiseCutoff = 0.777f;
 		WaterNormalPower = 0.27f;
 		WaterNoiseScroll = _float2(0.02f, 0.f);
-		WaterNoiseWrap = _float2(7.5f, 30.f);
+		WaterNoiseWrap = _float2(7.5f, 20.f);
 	}
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fWaterMaxRange", &WaterMaxRange, sizeof(_float))))
