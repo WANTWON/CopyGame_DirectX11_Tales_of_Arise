@@ -332,7 +332,7 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 
 	_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 		m_pOwner->Get_Transform()->LookAt(vPosition);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.9f, m_pOwner->Get_Navigation());
 
 
 	if (m_fActiveTarget_Distance > 30.f) //(m_fActiveTarget_Distance > 30.f)
