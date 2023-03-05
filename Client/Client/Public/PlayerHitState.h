@@ -6,9 +6,6 @@ BEGIN(Player)
 class CHitState final : public CPlayerState
 {
 public:
-	enum HITTYPE { HIT_NORMAL, HIT_DOWN, HIT_END };
-
-public:
 	CHitState(class CPlayer* pPlayer, _vector vCauserPos, _float fMoveLength = 0.4f, HITTYPE eHitType = HIT_NORMAL, STATETYPE eStateType = STATETYPE_DEFAULT);
 
 	virtual CPlayerState* HandleInput() override;
