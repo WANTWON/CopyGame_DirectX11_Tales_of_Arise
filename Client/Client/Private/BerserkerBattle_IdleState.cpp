@@ -27,7 +27,10 @@ CBerserkerState * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 CBerserkerState * CBattle_IdleState::Tick(_float fTimeDelta)
 {
 	
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	if (m_eStateId == STATE_ID::START_BATTLE)
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta*2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	else
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
 	CBaseObj*	m_pCurTarget = m_pOwner->Get_DamageCauser();
 
@@ -45,40 +48,26 @@ CBerserkerState * CBattle_IdleState::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, -1.f, 0.f));
 	}
 	
+	if (m_eStateId == STATE_ID::STATE_ARISE && !m_bIsAnimationFinished)
+	{
+		_vector vecTranslation;
+		_float fRotationRadian;
+
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Check_Navigation();
+	}
+
 	return nullptr;
 }
 
 CBerserkerState * CBattle_IdleState::LateTick(_float fTimeDelta)
 {
-
-	m_pOwner->Check_Navigation();
-
-	if (m_pCurTarget == nullptr)
-		return nullptr;
-
 	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (m_eStateId == STATE_ID::STATE_ARISE)
+	if (m_eStateId == STATE_ID::STATE_ARISE || m_eStateId == STATE_ID::START_BATTLE)
 	{
 		if (m_bIsAnimationFinished)
-		{
-			return new CBattle_WalkState(m_pOwner);
-		}
-
-		else
-		{
-			_vector vecTranslation;
-			_float fRotationRadian;
-
-			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-			m_pOwner->Check_Navigation();
-		}
-
-	}
-	else if (m_eStateId == STATE_ID::START_BATTLE)
-	{
-		if (m_fTimeDeltaAcc > m_fRandTime && m_bIsAnimationFinished)
 			return new CBattle_WalkState(m_pOwner);
 	}
 	else
@@ -87,6 +76,8 @@ CBerserkerState * CBattle_IdleState::LateTick(_float fTimeDelta)
 			return new CBattle_WalkState(m_pOwner);
 	}
 
+
+	m_pOwner->Check_Navigation();
 	return nullptr;
 }
 

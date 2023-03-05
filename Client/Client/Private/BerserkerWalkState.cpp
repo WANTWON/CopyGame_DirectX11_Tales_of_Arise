@@ -28,7 +28,7 @@ CBerserkerState * CWalkState::AI_Behaviour(_float fTimeDelta)
 
 CBerserkerState * CWalkState::Tick(_float fTimeDelta)
 {
-	Find_Target();
+	Find_Target_InField();
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	
@@ -41,10 +41,15 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 	m_pOwner->Check_Navigation();
 
 	CBaseObj* pTrigger = m_pOwner->Get_Trigger();
-	_vector vTrigger_Pos = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
+	
+	if (pTrigger != nullptr)
+	{
+		_vector vTrigger_Pos = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	_bool bIs_TargetInFront = false;
-	bIs_TargetInFront = Is_TargetInFront(vTrigger_Pos);
+		_bool bIs_TargetInFront = false;
+		bIs_TargetInFront = Is_TargetInFront(vTrigger_Pos);
+	}
+
 	_bool pTriggerCollision = false;
 	pTriggerCollision = m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider());
 
@@ -62,7 +67,7 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 		else
 		{
 			_vector vPosition = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *0.5f, m_pOwner->Get_Navigation());
 			m_pOwner->Get_Transform()->LookAt(vPosition);
 			
 		}
@@ -75,7 +80,7 @@ CBerserkerState * CWalkState::LateTick(_float fTimeDelta)
 
 		m_fTimeDeltaAcc += fTimeDelta;
 
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta*0.5f, m_pOwner->Get_Navigation());
 
 		if (m_pTarget)
 			return new CChaseState(m_pOwner);

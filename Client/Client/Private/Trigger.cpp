@@ -75,6 +75,10 @@ void CTrigger::Late_Tick(_float fTimeDelta)
 			{
 				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(5, false, 0, 2);
 			}
+			else if (m_TriggerDesc.iIndex == 2)
+			{
+				int a = 0;
+			}
 		}
 		break;
 	}

@@ -131,13 +131,13 @@ CAIState * AI_LAW_NomalAttack_State::Tick(_float fTimeDelta)
 						return new CAI_DodgeState(m_pOwner, m_pTarget);
 					else
 					{
-						switch (rand() % 2)
+						switch (rand() % 4)
 						{
-						/*case 0:
-						case 1:*/
 						case 0:
-							return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, true, 1.f);
 						case 1:
+						case 2:
+							return new CAI_JumpState(m_pOwner, STATETYPE_MAIN, true, 1.f);
+						case 3:
 							return new CAI_DodgeState(m_pOwner, m_pTarget);
 						}
 					}
@@ -272,7 +272,7 @@ CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -289,7 +289,7 @@ CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -306,7 +306,7 @@ CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -323,7 +323,7 @@ CAIState * AI_LAW_NomalAttack_State::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -344,6 +344,11 @@ void AI_LAW_NomalAttack_State::Enter()
 	if (CheckTarget() == false)
 		return;
 	
+
+	m_HitLagDesc.bHitLag = false;
+	m_HitLagDesc.bLockOnChange = false;
+	m_HitLagDesc.bShaking = false;
+
 		switch (m_eStateId)
 		{
 		case Client::CAIState::STATE_NORMAL_ATTACK1:
@@ -362,7 +367,6 @@ void AI_LAW_NomalAttack_State::Enter()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_4);
 			break;
 		}
-
 
 	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 

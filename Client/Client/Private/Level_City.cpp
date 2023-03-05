@@ -287,6 +287,9 @@ HRESULT CLevel_City::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sky"), LEVEL_CITY, pLayerTag, nullptr)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObjectLoad(TEXT("Prototype_GameObject_Terrain"), LEVEL_CITY, pLayerTag, TEXT("Prototype_City_WaterTerrain"))))
+		return E_FAIL;
+
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	NONANIMDESC  ModelDesc;

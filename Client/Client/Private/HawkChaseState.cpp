@@ -19,7 +19,7 @@ CHawkState * CChaseState::AI_Behaviour(_float fTimeDelta)
 
 CHawkState * CChaseState::Tick(_float fTimeDelta)
 {
-	m_fTarget_Distance = Find_BattleTarget();
+	Find_Target_InField();
 
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
@@ -43,13 +43,17 @@ CHawkState * CChaseState::LateTick(_float fTimeDelta)
 {
 	
 
-	_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	vTargetPosition = XMVectorSetY(vTargetPosition,XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+	
+	//vTargetPosition = XMVectorSetY(vTargetPosition,XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 
-	m_pOwner->Get_Transform()->LookAt(vTargetPosition);
-	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+	if (m_pTarget)
+	{
+		_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+		m_pOwner->Get_Transform()->LookAt(vTargetPosition);
+		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta);
+	}
 
-	if (m_fTarget_Distance >= 15.f)
+	if (m_fTarget_Distance >= 15.f || m_pTarget == nullptr)
 		return new CIdleState(m_pOwner, CHawkState::FIELD_STATE_ID::STATE_TURN_R);
 
 	return nullptr;

@@ -115,8 +115,15 @@ void CAlphenSkills::Collision_Check()
 	switch (m_BulletDesc.eBulletType)
 	{
 		case BOOST_1:
+			m_HitLagDesc.bLockOnChange = false;
+			m_HitLagDesc.bHitLag = true;
+			m_HitLagDesc.fHitLagTimer = 0.15f;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.fShakingPower = 2.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
-				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 			break;
 	}
 }

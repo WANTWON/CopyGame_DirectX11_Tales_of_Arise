@@ -88,6 +88,27 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 		if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_TerrainNormal_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_NORMAL])))
 			return E_FAIL;
 		break;
+	case Client::LEVEL_CITY:
+		/* For.Com_Filter */
+		if (FAILED(__super::Add_Components(TEXT("Com_Filter"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Filter"), (CComponent**)&m_pTextureCom[TYPE_FILTER])))
+			return E_FAIL;
+
+		/* For.Com_Brush */
+		if (FAILED(__super::Add_Components(TEXT("Com_Brush"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Brush_SnowBattle"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
+			return E_FAIL;
+
+		/* For.Com_Texture */
+		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain_City"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
+			return E_FAIL;
+
+		/* For.Com_Navigation */
+		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_City_Navigation"), (CComponent**)&m_pNavigationCom)))
+			return E_FAIL;
+
+		/* For.Com_Texture */
+		if (FAILED(__super::Add_Components(TEXT("Com_NormalTexture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_NormalTerrain_City"), (CComponent**)&m_pTextureCom[TYPE_NORMAL])))
+			return E_FAIL;
+		break;
 	default:
 		break;
 	}

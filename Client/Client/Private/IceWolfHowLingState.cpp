@@ -21,7 +21,7 @@ CIceWolfState * CHowLingState::AI_Behaviour(_float fTimeDelta)
 
 CIceWolfState * CHowLingState::Tick(_float fTimeDelta)
 {
-	Find_Target();
+	Find_Target_InField();
 
 	//m_pCurTarget = m_pOwner->Check_FiledTarget();
 
