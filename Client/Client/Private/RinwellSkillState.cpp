@@ -79,7 +79,7 @@ CRinwellState * CSkillState::LateTick(_float fTimeDelta)
 				return new CRinwellStepState(m_pOwner, STATETYPE_START);
 				break;
 			case CRinwellState::HOLY:
-				return new CRinwellIdleState(m_pOwner, 1.f);
+				return new CRinwellIdleState(m_pOwner, 0.5f);
 				break;
 			}
 		}

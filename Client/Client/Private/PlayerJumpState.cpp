@@ -58,7 +58,7 @@ CPlayerState * CJumpState::HandleInput()
 					break;
 				}
 			}
-			
+
 			if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
 				return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT, m_fTime);
 			else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
@@ -139,7 +139,7 @@ CPlayerState * CJumpState::HandleInput()
 		else
 			m_eDirection = DIR_END;
 	}
-	
+
 	return nullptr;
 }
 
@@ -149,22 +149,19 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 	if (!m_bIsAnimationFinished)
 	{
-		if (STATETYPE_END == m_eStateType && JUMP_RUN == m_eJumpType)
-		{
-			_vector vecTranslation;
-			_float fRotationRadian;
+		_vector vecTranslation;
+		_float fRotationRadian;
 
-			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.02f), fRotationRadian, m_pOwner->Get_Navigation());
+		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.02f), fRotationRadian, m_pOwner->Get_Navigation());
 
-			m_pOwner->Check_Navigation();
+		m_pOwner->Check_Navigation();
 
-			m_bIsJump = false;
-		}
+		m_bIsJump = false;
 	}
 
-	if ((CPlayer::ALPHEN == m_pOwner->Get_PlayerID()) || (CPlayer::LAW == m_pOwner->Get_PlayerID()))
+	if (CPlayer::ALPHEN == m_ePlayerID || CPlayer::LAW == m_ePlayerID)
 	{
 		if (STATETYPE_START == m_eStateType && JUMP_IDLE == m_eJumpType)
 		{
@@ -184,29 +181,28 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 				}
 			}
 		}
+	}
+	
+	else if (STATETYPE_END == m_eStateType)
+	{
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
-		else if (STATETYPE_END == m_eStateType)
+		for (auto& pEvent : pEvents)
 		{
-			vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-
-			for (auto& pEvent : pEvents)
+			if (pEvent.isPlay)
 			{
-				if (pEvent.isPlay)
+				if (ANIMEVENT::EVENT_STATE == pEvent.eType)
 				{
-					if (ANIMEVENT::EVENT_STATE == pEvent.eType)
-					{
-						CPlayerState* pEvent = EventInput();
-						if (nullptr != pEvent)
-							return pEvent;
-					}
+					CPlayerState* pEvent = EventInput();
+					if (nullptr != pEvent)
+						return pEvent;
 				}
 			}
 		}
-		else
-			m_bIsJump = true;
 	}
 	else
 		m_bIsJump = true;
+
 
 	if (m_bIsJump)
 		Move(fTimeDelta);
@@ -245,7 +241,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				}
 				else if (CPlayer::SION == m_ePlayerID)
 				{
-					if (Check_JumpEnd(0.f))
+					if (Check_JumpEnd(1.6f))
 					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_LANDING);
 						m_eStateType = STATETYPE_END;
@@ -258,7 +254,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				}
 				else if (CPlayer::RINWELL == m_ePlayerID)
 				{
-					if (Check_JumpEnd(0.f))
+					if (Check_JumpEnd(1.5f))
 					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_LANDING);
 						m_eStateType = STATETYPE_END;
@@ -312,7 +308,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				}
 				else if (CPlayer::RINWELL == m_ePlayerID)
 				{
-					if (Check_JumpEnd(0.5f))
+					if (Check_JumpEnd(1.f))
 					{
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_LANDING);
 						m_eStateType = STATETYPE_END;
@@ -492,9 +488,7 @@ CPlayerState * CJumpState::EventInput(void)
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_R);
 				else if (pGameInstance->Key_Down(DIK_F))
 					return new CPlayer_SionSkillAttack(m_pOwner, STATE_SKILL_ATTACK_F);
-
 				break;
-
 			case CPlayer::RINWELL:
 				if (pGameInstance->Key_Down(DIK_E))
 					return new CPlayer_RinwellSkillAttack_State(m_pOwner, STATE_SKILL_ATTACK4, m_fTime);
