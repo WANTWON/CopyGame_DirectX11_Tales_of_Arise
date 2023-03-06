@@ -1406,7 +1406,7 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Dead_Grass_SnowField"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/WinterNature/Dead_Grass.dat",
-			"../../../Bin/Data/Field_Data/Dead_Grass2.dat"))))
+			"../../../Bin/Data/Field_Data/Dead_Grass.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Dead_Tree_SnowField"),
