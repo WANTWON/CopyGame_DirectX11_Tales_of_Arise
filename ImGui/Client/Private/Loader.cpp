@@ -97,7 +97,7 @@ HRESULT CLoader::Loading_ForClient()
 
 	/*For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/ForImguiDebug/Texture%d.dds"), 4))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Terrain/ForImguiDebug/Terrain%d_D.dds"), 4))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Brush */
@@ -192,9 +192,9 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForActor()))
 		return E_FAIL;
 
-	//////For Maptool
-	if (FAILED(Loading_ForMaptoolSnowFieldModel()))
-		return E_FAIL;
+	////For Maptool
+	//if (FAILED(Loading_ForMaptoolSnowFieldModel()))
+	//	return E_FAIL;
 
 	/*if (FAILED(Loading_ForMaptoolBossRoomModel()))
 		return E_FAIL;*/
@@ -219,11 +219,11 @@ HRESULT CLoader::Loading_ForClient()
 		return E_FAIL;*/
 
 	//For Effect
-	//if (FAILED(Loading_ForEffect()))
-	//	return E_FAIL;
-	// 
-	//if (FAILED(Loading_ForEffectTexture()))
-	//	return E_FAIL;
+	if (FAILED(Loading_ForEffect()))
+		return E_FAIL;
+	 
+	if (FAILED(Loading_ForEffectTexture()))
+		return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
