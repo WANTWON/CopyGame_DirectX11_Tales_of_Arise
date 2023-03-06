@@ -8,7 +8,7 @@ BEGIN(MonsterLaw)
 class CMonster_LawIdleState final : public CMonsterLawState
 {
 public:
-	CMonster_LawIdleState(class CMonsterLaw* pRinwell);
+	CMonster_LawIdleState(class CMonsterLaw* pLaw);
 
 	virtual CMonsterLawState* Tick(_float fTimeDelta) override;
 	virtual CMonsterLawState* LateTick(_float fTimeDelta);

@@ -1314,6 +1314,15 @@
     <ClInclude Include="..\Public\RinwellStepState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Monster_LawDodge.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster_Lawhit.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterLaw_StrikeTrigger.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2119,6 +2128,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\RinwellStepState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Rinwell\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_LawDodge.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_Lawhit.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterLaw_StrikeTrigger.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

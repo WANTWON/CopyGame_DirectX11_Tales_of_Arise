@@ -5,6 +5,7 @@
 #include "RinwellDownState.h"
 #include "RinwellIdleState.h"
 
+
 using namespace AiRinwell;
 
 CDamageState::CDamageState(CAiRinwell* pRinwell, _uint eDir, STATE_ID eStateID)

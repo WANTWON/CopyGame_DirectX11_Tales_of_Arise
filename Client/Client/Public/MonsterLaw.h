@@ -199,6 +199,12 @@ public: /*For.State*/
 	virtual void Check_Navigation() override;
     _bool Check_Navigation_Jump();
 
+	void Set_AfterThunder(_bool tof) { m_bAfterThunder = tof; }
+	void Set_AfterKick(_bool tof) { m_bAfterKick = tof; }
+
+	_int Get_Phase() { return m_iPhase; }
+	void Set_Phase(_int phase) { m_iPhase = phase; }
+
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 
@@ -215,6 +221,15 @@ private:
 
 	_bool m_bIsFly = false;
 
+	_int m_iLawhitcount = 0;
+
+	_bool m_bAfterThunder = false;
+	_bool m_bAfterKick = false;
+
+	_float m_fThunderHitTime = 0.f;
+	_float m_fKickHitTIme = 0.f;
+
+	_int m_iPhase = 0;
 public:
 	static CMonsterLaw* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

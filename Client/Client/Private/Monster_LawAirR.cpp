@@ -24,7 +24,7 @@ CMonster_LawAirR::CMonster_LawAirR(CMonsterLaw* pPlayer)//, _float fStartHeight,
 CMonsterLawState * CMonster_LawAirR::Tick(_float fTimeDelta)
 {
 	
-	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 
 	if ((STATETYPE_END == m_eStateType))
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -267,6 +267,8 @@ CMonsterLawState * CMonster_LawAirR::LateTick(_float fTimeDelta)
 		if (STATETYPE_END == m_eStateType)
 		{
 			m_pOwner->Off_IsFly();
+			if(m_pOwner->Get_Phase() == 0)
+			m_pOwner->Set_AfterKick(true);
 			return new CMonster_LawIdleState(m_pOwner);
 		}
 	}
@@ -285,7 +287,7 @@ void CMonster_LawAirR::Enter()
 //	CBattleManager* pBattleMgr = CBattleManager::Get_Instance();
 
 //	m_pTarget = pBattleMgr->Get_LackonMonster();
-	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
