@@ -6,8 +6,15 @@
 
 void CParticleSystem::Set_WorldPosition(_matrix mWorldMatrix)
 {
-	_vector vPosition = (_vector)mWorldMatrix.r[3];
-	m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+	// Get current RotationMatrix from the WorldMatrix by decomposition.
+	_vector vScale, vRotationQuat, vTranslation;
+	XMMatrixDecompose(&vScale, &vRotationQuat, &vTranslation, mWorldMatrix);
+	_matrix RotationMatrix = XMMatrixRotationQuaternion(vRotationQuat);
+	_matrix TranslationMatrix = XMMatrixTranslationFromVector(vTranslation);
+
+	_matrix WorldMatrix = XMMatrixMultiply(RotationMatrix, TranslationMatrix);
+
+	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 }
 
 CParticleSystem::CParticleSystem(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -43,6 +50,8 @@ int CParticleSystem::Tick(_float fTimeDelta)
 	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
 		return OBJ_NOEVENT;
 
+	KillParticles();	/* Release old Particles. */
+
 	if (m_bDead)
 		return OBJ_DEAD;
 	else if (m_bPreDead)
@@ -73,8 +82,6 @@ int CParticleSystem::Tick(_float fTimeDelta)
 
 		m_pVIBufferPointInstance->Update(fTimeDelta, m_Particles, m_iCurrentParticleCount);
 	}
-
-	KillParticles();				/* Release old Particles. */
 	
 	return OBJ_NOEVENT;
 }

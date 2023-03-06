@@ -230,11 +230,11 @@ _float CNonAnim::Check_CullingRadius()
 			!strcmp(m_ModelDesc.pModeltag, "Snow_Mountain"))
 			return 50.f;
 		else if (!strcmp(m_ModelDesc.pModeltag, "Vehicle_Boat"))
-			return 10.f;
+			return 20.f;
 		break;
 	case Client::LEVEL_CITY:
 		if (!strcmp(m_ModelDesc.pModeltag, "Vehicle_Boat"))
-			return 10.f;
+			return 20.f;
 		else if (!strcmp(m_ModelDesc.pModeltag, "Ground03") ||
 			!strcmp(m_ModelDesc.pModeltag, "Ground02") ||
 			!strcmp(m_ModelDesc.pModeltag, "Ground04") ||

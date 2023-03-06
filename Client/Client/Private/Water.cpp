@@ -133,28 +133,67 @@ HRESULT CWater::SetUp_ShaderResources()
 
 	RELEASE_INSTANCE(CGameInstance);
 
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fScrollSpeed", &m_fScrollingTimer, sizeof(_float))))
-		return E_FAIL;
-
-	float fWaterPlaneScale = m_pTransformCom->Get_Scale(CTransform::STATE::STATE_RIGHT);
-	if (FAILED(m_pShaderCom->Set_RawValue("g_fWaterPlaneScale", &fWaterPlaneScale, sizeof(_float))))
-		return E_FAIL;
-
+	/* Water Shader Properties. */
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_WaterNoiseTexture", m_pWaterNoiseTextureCom->Get_SRV())))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_WaterNormalTexture", m_pWaterNormalTextureCom->Get_SRV())))
 		return E_FAIL;
 
+	_float WaterMaxRange;
+	_float3 WaterColorDeep;
+	_float3 WaterColorShallow;
+	_float WaterFoamDepth;
+	_float WaterNoiseCutoff;
+	_float WaterNormalPower;
+	_float2 WaterNoiseWrap;
+	_float2 WaterNoiseScroll;
+
 	if (pGameInstance->Get_CurrentLevelIndex() == LEVEL_CITY)
 	{
-		_float3 WaterColorDeep = _float3(0.3f, 0.8f, 0.8f);
-		_float3 WaterColorShallow = _float3(0.3f, 0.8f, 0.8f);
-
-		if (FAILED(m_pShaderCom->Set_RawValue("g_WaterColorDeep", &WaterColorDeep, sizeof(_float3))))
-			return E_FAIL;
-		if (FAILED(m_pShaderCom->Set_RawValue("g_WaterColorShallow", &WaterColorShallow, sizeof(_float3))))
-			return E_FAIL;
+		WaterMaxRange = 7.5f;
+		WaterColorDeep = _float3(0.6f, 0.8f, 0.8f);
+		WaterColorShallow = _float3(0.56f, 0.72f, 0.62f);
+		WaterFoamDepth = 0.6f;
+		WaterNoiseCutoff = 0.777f;
+		WaterNormalPower = 0.27f;
+		WaterNoiseScroll = _float2(0.f, 0.02f);
+		WaterNoiseWrap = _float2(20.f, 7.5);
 	}
+	else
+	{
+		WaterMaxRange = 5.f;
+		WaterColorDeep = _float3(0.1f, 0.35f, .7f);
+		WaterColorShallow = _float3(0.02f, 0.59f, 0.86f);
+		WaterFoamDepth = 0.4f;
+		WaterNoiseCutoff = 0.777f;
+		WaterNormalPower = 0.27f;
+		WaterNoiseScroll = _float2(0.02f, 0.f);
+		WaterNoiseWrap = _float2(7.5f, 20.f);
+	}
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fWaterMaxRange", &WaterMaxRange, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WaterColorDeep", &WaterColorDeep, sizeof(_float3))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_WaterColorShallow", &WaterColorShallow, sizeof(_float3))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fFoamDepth", &WaterFoamDepth, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fNoiseCutoff", &WaterNoiseCutoff, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fNormalPower", &WaterNormalPower, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vNoiseScroll", &WaterNoiseScroll, sizeof(_float2))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vNoiseWrap", &WaterNoiseWrap, sizeof(_float2))))
+		return E_FAIL;
+
+	_float fWaterPlaneScale = m_pTransformCom->Get_Scale(CTransform::STATE::STATE_RIGHT);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fWaterPlaneScale", &fWaterPlaneScale, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fScrollTimer", &m_fScrollingTimer, sizeof(_float))))
+		return E_FAIL;
 
 	return S_OK;
 }

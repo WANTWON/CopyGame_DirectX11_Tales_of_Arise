@@ -12,7 +12,7 @@ BEGIN(Client)
 class CEffectObject : public CBaseObj
 {
 public:
-	enum TYPE { APPLE_QUARTER, BREAD_SLASH };
+	enum TYPE { APPLE_QUARTER, BREAD_SLASH, ALPHEN_F_ROCK };
 
 	typedef struct Bullettag
 	{
