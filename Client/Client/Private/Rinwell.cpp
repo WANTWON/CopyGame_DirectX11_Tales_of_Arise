@@ -9,11 +9,14 @@ _bool CRinwell::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
 	{
-	case IDLE:
+	case IDLE_SIDE:
 	case RUN:
 	case BTL_MAGIC_LOOP:
 	case DASH:
 	case BTL_MOVE_RUN:
+	case JUMP_LOOP:
+	case JUMP_RUN_LOOP:
+	case BTL_MOVE_IDLE:
 		return true;
 	default:
 		return false;

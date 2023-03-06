@@ -157,6 +157,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 			_matrix mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 128.f);
 			CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_1.dat"), mWorldMatrix);
 			CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_2.dat"), mWorldMatrix);
+			CEffect::PlayEffectAtLocation(TEXT("Snow_Particles_2.dat"), mWorldMatrix);
 			mWorldMatrix = XMMatrixTranslation(128.f, 60.f, 256.f);
 
 		m_bFirst = true;

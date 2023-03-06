@@ -165,21 +165,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						{
 							if (!m_bSenkusyourepaSecondEffect)
 							{
-								/* Destroy Particles first. */
-								if (!m_SenkusyourepaParticles.empty())
-								{
-									for (auto& iter : m_SenkusyourepaParticles)
-									{
-										if (iter)
-										{
-											CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
-											if (pParticleSystem != nullptr)
-												pParticleSystem->Set_Stop(true);
-										}
-									}
-								}
-
-								/* Then Spawn Particles Effect */
+								/* Spawn Particles Effect */
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
 								_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
@@ -389,15 +375,6 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 #endif
 	}
 
-	for (auto& pEffect : m_SenkusyourepaParticles)
-	{
-		if (pEffect)
-		{
-			if (pEffect->Get_PreDead())
-				pEffect = nullptr;
-		}
-	}
-
 	if (m_bIsAnimationFinished)
 	{
 		if (m_bIsFly)
@@ -589,8 +566,6 @@ void CAlphenSkillState::Reset_Skill()
 	m_bHousyutigakuzinThirdEffect = false;
 	m_bEngetuFirstEffect = false;
 	m_bEngetuSecondEffect = false;
-
-	m_SenkusyourepaParticles.clear();
 }
 
 CCollider * CAlphenSkillState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)

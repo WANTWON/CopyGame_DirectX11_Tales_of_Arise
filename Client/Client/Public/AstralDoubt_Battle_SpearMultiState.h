@@ -79,6 +79,7 @@ private:
 	_bool m_bBullet_4 = false;
 	_bool m_bBullet_5 = false;
 	_bool m_bBullet_6 = false;
+	_bool m_bSmash = false;
 };
 END
 END
