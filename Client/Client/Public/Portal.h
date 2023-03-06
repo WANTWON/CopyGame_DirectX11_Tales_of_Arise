@@ -3,7 +3,7 @@
 #include "BaseObj.h"
 
 BEGIN(Client)
-
+class CEffect;
 class CPortal : public CBaseObj
 {
 public:
@@ -29,6 +29,8 @@ private:
 	virtual HRESULT SetUp_ShaderResources();
 private:
 	PORTALDESC m_PortalDesc;
+	vector<class CEffect*> m_pEffects;
+	_bool m_bFirst = false;
 
 public:
 	static CPortal* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

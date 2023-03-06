@@ -193,7 +193,11 @@ _bool CNonAnim_Instance::IsRenderShadow()
 			!strcmp(m_ModelDesc.pModeltag, "BushWood_SnowField") ||
 			!strcmp(m_ModelDesc.pModeltag, "Snow1_SnowField") ||
 			!strcmp(m_ModelDesc.pModeltag, "Stalagmite5_SnowField") ||
-			!strcmp(m_ModelDesc.pModeltag, "Stalagmite4_SnowField"))
+			!strcmp(m_ModelDesc.pModeltag, "Stalagmite4_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock1_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock2_SnowField") || 
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock3_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock4_SnowField"))
 			return false;
 		break;
 	case Client::LEVEL_BATTLE:

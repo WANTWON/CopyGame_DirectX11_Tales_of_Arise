@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Level.h"
 #include "UI_InterectMsg.h"
+#include "Effect.h"
 
 CPortal::CPortal(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -40,12 +41,42 @@ HRESULT CPortal::Initialize(void * pArg)
 
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_TRIGGER, this);
 
+
+
 	return S_OK;
 }
 
 int CPortal::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+
+	_vector vDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) -Get_TransformState(CTransform::STATE_TRANSLATION));
+	vDir = XMVectorSetY(vDir, 0.f);
+	m_pTransformCom->LookDir(vDir);
+
+	if (!m_bFirst)
+	{
+
+		//_vector vOffset = { 0.f,4.f,0.f,0.f };
+		_matrix mWorldMatrix = XMMatrixIdentity();
+		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		//mWorldMatrix.r[3] += vOffset;
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Portal.dat"), mWorldMatrix);
+		m_bFirst = true;
+	}
+
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr)
+		{
+			//iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+			iter->Set_State(CTransform::STATE_LOOK, Get_TransformState(CTransform::STATE_LOOK));
+			iter->Set_State(CTransform::STATE_RIGHT, Get_TransformState(CTransform::STATE_RIGHT));
+			iter->Set_State(CTransform::STATE_UP, Get_TransformState(CTransform::STATE_UP));
+		}
+
+	}
 
 	return OBJ_NOEVENT;
 }

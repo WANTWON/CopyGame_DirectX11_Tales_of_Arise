@@ -236,6 +236,7 @@ _float CNonAnim::Check_CullingRadius()
 		if (!strcmp(m_ModelDesc.pModeltag, "Vehicle_Boat"))
 			return 20.f;
 		else if (!strcmp(m_ModelDesc.pModeltag, "Ground03") ||
+			!strcmp(m_ModelDesc.pModeltag, "Ground01") ||
 			!strcmp(m_ModelDesc.pModeltag, "Ground02") ||
 			!strcmp(m_ModelDesc.pModeltag, "Ground04") ||
 			!strcmp(m_ModelDesc.pModeltag, "CliffWall01") ||
@@ -252,6 +253,8 @@ _float CNonAnim::Check_CullingRadius()
 			!strcmp(m_ModelDesc.pModeltag, "LineNew03") ||
 			!strcmp(m_ModelDesc.pModeltag, "BigGateArch01") ||
 			!strcmp(m_ModelDesc.pModeltag, "Stair01") ||
+			!strcmp(m_ModelDesc.pModeltag, "Stair02") ||
+			!strcmp(m_ModelDesc.pModeltag, "Stair03") ||
 			!strcmp(m_ModelDesc.pModeltag, "castleHouse") ||
 			!strcmp(m_ModelDesc.pModeltag, "Bridge_base"))
 			return 30.f;
