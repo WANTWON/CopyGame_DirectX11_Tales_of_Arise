@@ -1326,6 +1326,12 @@
     <ClInclude Include="..\Public\MonsterLaw_Strike1.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MonsterLaw_Strike2.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster_Law_StrikeTrigger2.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2142,6 +2148,12 @@
       <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MonsterLaw_Strike1.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster_Law_StrikeTrigger2.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterLaw_Strike2.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\MonsterLaw\State\BattleState</Filter>
     </ClCompile>
   </ItemGroup>
