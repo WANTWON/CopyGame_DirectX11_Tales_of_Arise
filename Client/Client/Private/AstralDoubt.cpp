@@ -48,8 +48,6 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 	//	CAstralDoubt_State* pState = new CIdleState(this, CAstralDoubt_State::FIELD_STATE_ID::FIELD_STATE_START);
 	//	m_pState = m_pState->ChangeState(m_pState, pState);
 	//}
-
-
 	
 		///* Set State */
 		CAstralDoubt_State* pState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::START_BATTLE);
@@ -510,6 +508,18 @@ _float CAstralDoubt::ForTheBossTarget_Distance(CBaseObj* pTarget)
 	
 
 	return fDistance;
+}
+
+void CAstralDoubt::Check_Navigation_Jump(void)
+{
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
+
+	if (m_fWalkingHeight >= XMVectorGetY(vPosition))
+	{
+		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	}
 }
 
 CAstralDoubt * CAstralDoubt::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
