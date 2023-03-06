@@ -48,7 +48,8 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION
 		&& CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
 	{
-		return;
+		if(!strcmp(m_ModelDesc.pModeltag, "Dead_Tree1_BattleZone"))
+			return;
 	}
 		
 

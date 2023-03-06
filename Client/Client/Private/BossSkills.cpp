@@ -151,7 +151,7 @@ void CBossSkills::Late_Tick(_float fTimeDelta)
 
 void CBossSkills::Collision_Check()
 {
-	if (Check_Exception_Collision() == false)
+	if (Check_Exception() == false)
 		return;
 
 	switch (m_BulletDesc.eBulletType)

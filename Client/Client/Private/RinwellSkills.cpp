@@ -60,7 +60,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		m_pTransformCom->LookDir(m_BulletDesc.vTargetDir);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorBall_Old.dat"), mWorldMatrix);
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorBall.dat"), mWorldMatrix);
 
 		break;
 	case DIVINE_SABER:
@@ -170,13 +170,14 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		m_pTransformCom->LookDir(XMLoadFloat4(&vCamView));
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBall.dat"), mWorldMatrix);
-		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeThunder.dat"), mWorldMatrix);
+		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeThunder2.dat"), mWorldMatrix);
 		break;
 	}
 	case BANGEONDEAD:
-		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
-		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
+		vLocation = m_BulletDesc.pOwner->Get_Transform()->Get_State(CTransform::STATE::STATE_TRANSLATION);
+		vOffset = XMVectorSet(0.f, 5.f, 0.f, 0.f);
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation + vOffset;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeEnd.dat"), mWorldMatrix);
 		break;
 	}
@@ -265,6 +266,21 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 		if (m_fTime >= m_BulletDesc.fDeadTime)
 			m_bDead = true;
 		break;
+	case HOLY_RANCE_LASTBULLET:
+		if(XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) <= - 0.3f)
+			m_bBullet = true;
+		if (m_bBullet == true && !m_bFirst)
+		{
+			_vector vOffset = XMVectorSet(0.f, m_fRadius + 3, 0.f, 0.f);
+			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+			_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+			mWorldMatrix.r[3] = vLocation;
+			CEffect::PlayEffectAtLocation(TEXT("holyLanceBlast.dat"), mWorldMatrix);
+			m_bFirst = true;
+		}
+		if (XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) <= -10.f)
+			m_bDead = true;
+		break;
 	default:
 		if (XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) <= -0.5f)
 			m_bDead = true;
@@ -275,6 +291,13 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 	{
 		if (iter != nullptr && iter->Get_PreDead())
 			iter = nullptr;
+	}
+
+	for (auto& iter : m_pBlastEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+
 	}
 
 	for (auto& iter : m_pBlast2Effects)
@@ -288,7 +311,7 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 void CRinwellSkills::Collision_Check()
 {
 
-	if (Check_Exception_Collision() == false)
+	if (Check_Exception() == false)
 		return;
 
 	CBaseObj* pCollisionTarget = nullptr;
@@ -317,7 +340,6 @@ void CRinwellSkills::Collision_Check()
 		}
 		break;
 	case HOLY_RANCE_FISRTBULLET:
-	case HOLY_RANCE_LASTBULLET:
 		m_HitLagDesc.bLockOnChange = false;
 		m_HitLagDesc.bHitLag = true;
 		m_HitLagDesc.fHitLagTimer = 0.3f;
@@ -329,11 +351,39 @@ void CRinwellSkills::Collision_Check()
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
+				
 		}
 		else
 		{
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
 				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+				
+		}
+		break;
+	case HOLY_RANCE_LASTBULLET:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.3f;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 2.f;
+		m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+		if (m_BulletDesc.eCollisionGroup == PLAYER)
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+			{
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
+				
+			}
+		}
+		else
+		{
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
+			{
+				dynamic_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			
+
+			}
 		}
 		break;
 	case METEOR:
@@ -509,15 +559,6 @@ void CRinwellSkills::Dead_Effect()
 		}
 		m_pBlastEffects.clear();
 
-		break;
-	}
-	case HOLY_RANCE_LASTBULLET:
-	{
-		_vector vOffset = XMVectorSet(0.f, m_fRadius+ 2, 0.f, 0.f);
-		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
-		_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
-		m_pDeadEffects = CEffect::PlayEffectAtLocation(TEXT("holyLanceBlast.dat"), mWorldMatrix);
 		break;
 	}
 	}
@@ -976,12 +1017,9 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 
 	for (auto& iter : m_pEffects)
 	{
-		if (iter != nullptr && iter->Get_PreDead())
-			iter = nullptr;
-
 		if (iter != nullptr)
 		{
-			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+			_vector vOffset = XMVectorSet(0.f, 4.f, 0.f, 0.f);
 			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
 		}
 			
@@ -989,12 +1027,9 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 
 	for (auto& iter : m_pBlastEffects)
 	{
-		if (iter != nullptr && iter->Get_PreDead())
-			iter = nullptr;
-
 		if (iter != nullptr)
 		{
-			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+			_vector vOffset = XMVectorSet(0.f, 4.f, 0.f, 0.f);
 			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
 		}
 			

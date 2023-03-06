@@ -147,6 +147,9 @@ int CSionSkills::Tick(_float fTimeDelta)
 
 	_float fTime = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 
+	if (Check_Exception() == false)
+		return OBJ_NOEVENT;
+
 	switch (m_BulletDesc.eBulletType)
 	{
 	case NORMALATTACK:
@@ -204,6 +207,9 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 		if (iter != nullptr && iter->Get_PreDead())
 			iter = nullptr;
 	}
+
+	if (Check_Exception() == false)
+		return;
 
 	switch (m_BulletDesc.eBulletType)
 	{
@@ -271,7 +277,7 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 void CSionSkills::Collision_Check()
 {
 	
-	if (Check_Exception_Collision() == false)
+	if (Check_Exception() == false)
 		return;
 
 	CBaseObj* pCollisionTarget = nullptr;
