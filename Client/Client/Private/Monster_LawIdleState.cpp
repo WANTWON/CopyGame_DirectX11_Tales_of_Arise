@@ -5,21 +5,22 @@
 #include "RinwellSkillState.h"
 #include "Monster_LawNormalAttack.h"
 #include "Monster_LawSkill.h"
+#include "Monster_LawDodge.h"
 
 
 
 using namespace MonsterLaw;
 
-CMonster_LawIdleState::CMonster_LawIdleState(CMonsterLaw * pRinwell)
+CMonster_LawIdleState::CMonster_LawIdleState(CMonsterLaw * pLaw)
 {
-	m_pOwner = pRinwell;
+	m_pOwner = pLaw;
 	//m_fWaitingTime = fTime;
 }
 
 CMonsterLawState * CMonster_LawIdleState::Tick(_float fTimeDelta)
 {
 
-	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 
 	if (m_bAirMove)
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 1.5f);
@@ -44,7 +45,7 @@ CMonsterLawState * CMonster_LawIdleState::Tick(_float fTimeDelta)
 CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 {
 
-	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 	/*if (m_fWaitingTime < m_fTime)
 	{
 		_float fDistance = XMVectorGetX(XMVector3Length(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
@@ -68,7 +69,9 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 			return new CMoveState(m_pOwner, STATETYPE_MAIN, 0);
 	}*/
 	//return new CMonster_LawSkill(m_pOwner, SKILL_E);
-	switch (rand() % 5)
+
+	
+	switch (rand() % 6)
 	{
 	case 0:
 		return new CMonster_LawSkill(m_pOwner, SKILL_R);
@@ -78,7 +81,9 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 	case 2:
 		return new CMonster_LawSkill(m_pOwner, SKILL_F);
 	case 3:
-		return new CMonster_LawNormalAttack(m_pOwner , NORMALATTACK_1 , m_pTarget ,m_iPhase);
+		return new CMonster_LawNormalAttack(m_pOwner , NORMALATTACK_1 , m_pTarget , m_pOwner->Get_Phase());
+	case 4:
+		return new CMonster_LawDodge(m_pOwner);
 	default:
 		return new CMonster_LawSkill(m_pOwner, SKILL_STRIKE);
 	}
@@ -90,7 +95,7 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 
 void CMonster_LawIdleState::Enter(void)
 {
-	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 
 	m_eStateId = STATE_ID::STATE_IDLE;
 

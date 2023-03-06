@@ -22,7 +22,10 @@ public:
 	    SKILL_R,
 		SKILL_E,
 		SKILL_F,
-		SKILL_STRIKE
+		SKILL_STRIKE,
+		STATE_DAMAGE,
+		STATE_DOWN,
+		STATE_DEAD
 	};
 
 

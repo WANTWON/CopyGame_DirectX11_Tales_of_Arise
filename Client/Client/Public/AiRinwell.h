@@ -146,6 +146,7 @@ public:
 	virtual void	 Set_BattleMode(_bool type) override;
 	_bool Get_AirMode(void) { return m_bIsAir; }
 	void Set_AirMode(_bool bAir) { m_bIsAir = bAir; }
+	_float Get_Methor(void) { return m_fMethor; }
 
 	void Kill_Boss_Rinwell();
 
@@ -193,7 +194,7 @@ private:
 	_int	m_iDamage = 0;
 	_bool	m_bIsAir = false;
 
-	_float	m_fMethor = 100.f;
+	_float	m_fMethor = 1000.f;
 
 public:
 	static CAiRinwell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

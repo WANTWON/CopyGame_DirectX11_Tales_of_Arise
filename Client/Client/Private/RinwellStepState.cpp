@@ -17,6 +17,8 @@ CRinwellState * CRinwellStepState::Tick(_float fTimeDelta)
 
 	Move(fTimeDelta);
 
+	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 	return nullptr;
 }
 

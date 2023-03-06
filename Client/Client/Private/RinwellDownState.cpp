@@ -25,6 +25,8 @@ CRinwellState * CRinwellDownState::Tick(_float fTimeDelta)
 
 	m_fTime += fTimeDelta;
 
+	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 	return nullptr;
 }
 
@@ -60,4 +62,4 @@ void CRinwellDownState::Enter(void)
 void CRinwellDownState::Exit(void)
 {
 	m_fTime = 0.f;
-}
+} 

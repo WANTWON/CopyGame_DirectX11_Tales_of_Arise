@@ -369,7 +369,19 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+			{
+				if (!m_bIsFly)
+				{
+					if (STATE_SKILL_ATTACK_F == m_eStateId)
+						m_HitLagDesc.fHitLagTimer = 0.1f;
+					/*else if (STATE_SKILL_ATTACK_R == m_eStateId)
+						m_HitLagDesc.fHitLagTimer = 0.2f;*/
+
+					pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+				}
+				else
+					pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+			}
 		}
 
 #ifdef _DEBUG

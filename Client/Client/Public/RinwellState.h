@@ -63,6 +63,7 @@ public:
 	STATE_ID Get_StateId() { return m_eStateId; }
 	_bool Has_Aggro() { return m_pOwner->Get_Aggro(); }
 	void Reset_Target() { m_pTarget = nullptr; }
+	_uint Get_SkillType(void) { return m_eSkillType; }
 
 protected:
 	virtual _float Find_ActiveTarget()

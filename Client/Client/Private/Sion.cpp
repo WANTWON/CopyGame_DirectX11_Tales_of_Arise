@@ -8,7 +8,9 @@ _bool CSion::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
 	{
-	case ANIM::IDLE:
+	case ANIM::IDLE_CHARA:
+	case ANIM::JUMP_LOOP:
+	case ANIM::JUMP_RUN_LOOP:
 	case ANIM::BTL_MOVE_IDLE:
 	case ANIM::BTL_MOVE_RUN:
 	case ANIM::SYS_RUN:
