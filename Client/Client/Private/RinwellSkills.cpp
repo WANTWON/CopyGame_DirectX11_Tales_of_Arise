@@ -174,9 +174,10 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		break;
 	}
 	case BANGEONDEAD:
-		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
-		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
+		vLocation = m_BulletDesc.pOwner->Get_Transform()->Get_State(CTransform::STATE::STATE_TRANSLATION);
+		vOffset = XMVectorSet(0.f, 5.f, 0.f, 0.f);
+		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation + vOffset;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeEnd.dat"), mWorldMatrix);
 		break;
 	}
@@ -275,6 +276,13 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 	{
 		if (iter != nullptr && iter->Get_PreDead())
 			iter = nullptr;
+	}
+
+	for (auto& iter : m_pBlastEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+
 	}
 
 	for (auto& iter : m_pBlast2Effects)
@@ -976,12 +984,9 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 
 	for (auto& iter : m_pEffects)
 	{
-		if (iter != nullptr && iter->Get_PreDead())
-			iter = nullptr;
-
 		if (iter != nullptr)
 		{
-			_vector vOffset = XMVectorSet(0.f, 5.f, 0.f, 0.f);
+			_vector vOffset = XMVectorSet(0.f, 4.f, 0.f, 0.f);
 			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
 		}
 			
@@ -989,12 +994,9 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 
 	for (auto& iter : m_pBlastEffects)
 	{
-		if (iter != nullptr && iter->Get_PreDead())
-			iter = nullptr;
-
 		if (iter != nullptr)
 		{
-			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+			_vector vOffset = XMVectorSet(0.f, 4.f, 0.f, 0.f);
 			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
 		}
 			

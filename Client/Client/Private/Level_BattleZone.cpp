@@ -644,7 +644,13 @@ void CLevel_BattleZone::Set_FogShader()
 				return;
 
 			_float3 FogColor = _float3(0.2f, 0.4f, 0.9f);
+			_float FogminRange = 40.f;
+			_float FogmaxRange = 80.f;
 			if (FAILED(pShaderPostProcessing->Set_RawValue("g_vFogColor", &FogColor, sizeof(_float3))))
+				return;
+			if (FAILED(pShaderPostProcessing->Set_RawValue("g_fMinRange", &FogminRange, sizeof(_float))))
+				return;
+			if (FAILED(pShaderPostProcessing->Set_RawValue("g_fMaxRange", &FogmaxRange, sizeof(_float))))
 				return;
 
 

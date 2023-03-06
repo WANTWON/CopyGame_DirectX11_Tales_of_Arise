@@ -64,19 +64,8 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 	}
 
 
-	if (!m_pBlastEffect.empty())
-	{
-		for (auto& iter : m_pBlastEffect)
-		{
-			if (iter != nullptr && iter->Get_PreDead())
-				iter = nullptr;
-
-		}
-	}
 
 	
-
-
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -96,18 +85,11 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 						{
 							CBaseObj * pTarget = nullptr;
 
-							if (CBattleManager::Get_Instance()->IsAllMonsterDead())
-								return nullptr;
-
 							CBullet::BULLETDESC BulletDesc;
 							if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
-							{
-								CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-							}
+								pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 							else
-							{
 								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-							}
 							
 							BulletDesc.pTarget = pTarget;
 							_vector vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);						
@@ -462,6 +444,34 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 	}
 
 
+	if (!m_pSmokeEffect.empty())
+	{
+		for (auto& iter : m_pSmokeEffect)
+		{
+			if (iter != nullptr)
+			{
+				_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+				iter->Set_State(CTransform::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
+			}
+
+
+		}
+	}
+
+	if (!m_pBlastEffect.empty())
+	{
+		for (auto& iter : m_pBlastEffect)
+		{
+			if (iter != nullptr)
+			{
+				_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+				iter->Set_State(CTransform::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
+			}
+
+
+		}
+	}
+
 
 	return nullptr;
 }
@@ -510,6 +520,29 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::LateTick(_float fTimeDelta)
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 
 	}
+
+
+
+	if (!m_pSmokeEffect.empty())
+	{
+		for (auto& iter : m_pSmokeEffect)
+		{
+			if (iter != nullptr && iter->Get_PreDead())
+				iter = nullptr;
+
+		}
+	}
+
+	if (!m_pBlastEffect.empty())
+	{
+		for (auto& iter : m_pBlastEffect)
+		{
+			if (iter != nullptr && iter->Get_PreDead())
+				iter = nullptr;
+
+		}
+	}
+
 
 	return nullptr;
 }
@@ -605,7 +638,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); //¾óÀ½¶³±¸±â
 																							/* Make Effect */
-			_vector vOffset = { 0.f,5.f,0.f,0.f };
+			_vector vOffset = { 0.f,3.f,0.f,0.f };
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
