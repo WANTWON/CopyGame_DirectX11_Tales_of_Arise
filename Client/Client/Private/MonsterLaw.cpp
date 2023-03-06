@@ -2,6 +2,7 @@
 #include "MonsterLaw.h"
 #include "CameraManager.h"
 #include "Monster_LawPoseState.h"
+#include "Monster_Lawhit.h"
 
 using namespace MonsterLaw;
 
@@ -122,6 +123,26 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
+
+	if(m_bAfterThunder)
+	m_fThunderHitTime += fTimeDelta;
+
+	if (m_bAfterKick)
+		m_fKickHitTIme += fTimeDelta;
+
+
+	if (m_fThunderHitTime > 4.f && m_bAfterThunder)
+	{
+		m_bAfterThunder = false;
+		m_fThunderHitTime = 0.f;
+	}
+
+	if (m_fKickHitTIme > 3.f && m_bAfterKick)
+	{
+		m_bAfterKick = false;
+		m_fKickHitTIme = 0.f;
+	}
+		
 
 
 	_int iSuperTick = __super::Tick(fTimeDelta);
@@ -264,6 +285,53 @@ _int CMonsterLaw::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hi
 		return 0;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
+
+	++m_iLawhitcount;
+
+	if (m_iLawhitcount >= 15)
+	{
+
+		m_bDownState = true;
+		m_iLawhitcount = 0;
+
+		m_pTarget = DamageCauser;
+		m_eDmg_Direction = Calculate_DmgDirection();
+
+		CMonsterLawState* pState = new CMonster_Lawhit(this, m_eDmg_Direction, CMonsterLawState::STATE_DAMAGE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	
+	}
+
+	if (m_bAfterThunder)
+	{
+		m_bDownState;
+		m_pTarget = DamageCauser;
+		m_eDmg_Direction = Calculate_DmgDirection();
+
+		CMonsterLawState* pState = new CMonster_Lawhit(this, m_eDmg_Direction, CMonsterLawState::STATE_DAMAGE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+		m_bAfterThunder = false;
+	}
+
+	if (m_bAfterKick)
+	{
+		m_bDownState;
+		m_pTarget = DamageCauser;
+		m_eDmg_Direction = Calculate_DmgDirection();
+
+		CMonsterLawState* pState = new CMonster_Lawhit(this, m_eDmg_Direction, CMonsterLawState::STATE_DAMAGE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+		m_bAfterKick = false;
+	}
+	
+
+	/*if (m_tStats.m_iBedamagedCount >= 20)
+	{
+		m_bBedamageAnim = true;
+		m_tStats.m_iBedamagedCount = 0;
+		
+	}*/
+
 
 
 	if (iHp <= 0)

@@ -26,7 +26,7 @@ CMonster_LawAirF::CMonster_LawAirF(CMonsterLaw* pPlayer)//, _float fStartHeight,
 CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 {
 
-	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 
 	if (STATETYPE_MAIN == m_eStateType)
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.f);
@@ -77,7 +77,7 @@ CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
 							//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-							m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+							m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 							//Bullet
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = MONSTER;
@@ -89,6 +89,8 @@ CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 							//BulletDesc.vTargetPosition = vTargetPosition;
 							BulletDesc.fDeadTime = 5.5f;
 							BulletDesc.pOwner = m_pOwner;
+							if(m_pOwner->Get_Phase() == 0)
+							m_pOwner->Set_AfterThunder(true);
 							for (_uint i = 0; i < 12; ++i)
 							{
 								m_pOwner->Get_Transform()->Set_Rotation({ 0.f,0.f + i * 30.f , 0.f });
@@ -194,7 +196,7 @@ void CMonster_LawAirF::Enter()
 
 	if (nullptr == m_pTarget)
 	{
-		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	else

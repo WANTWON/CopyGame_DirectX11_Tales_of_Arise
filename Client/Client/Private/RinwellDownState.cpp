@@ -60,4 +60,4 @@ void CRinwellDownState::Enter(void)
 void CRinwellDownState::Exit(void)
 {
 	m_fTime = 0.f;
-}
+} 

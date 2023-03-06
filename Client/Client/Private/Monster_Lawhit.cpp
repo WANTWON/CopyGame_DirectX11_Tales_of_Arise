@@ -1,21 +1,23 @@
 #include "stdafx.h"
-#include "RinwellDamageState.h"
+#include "..\Public\Monster_Lawhit.h"
 #include "RinwellMoveState.h"
 #include "RinwellPoseState.h"
 #include "RinwellDownState.h"
 #include "RinwellIdleState.h"
 
+#include "Monster_LawPoseState.h"
+#include "Monster_LawIdleState.h"
 
-using namespace AiRinwell;
+using namespace MonsterLaw;
 
-CDamageState::CDamageState(CAiRinwell* pRinwell, _uint eDir, STATE_ID eStateID)
+CMonster_Lawhit::CMonster_Lawhit(CMonsterLaw* pRinwell, _uint eDir, STATE_ID eStateID)
 {
 	m_pOwner = pRinwell;
 	m_eDmgDir = eDir;
 	m_eStateId = eStateID;
 }
 
-CRinwellState * CDamageState::Tick(_float fTimeDelta)
+CMonsterLawState * CMonster_Lawhit::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false, "TransN");
 
@@ -28,24 +30,24 @@ CRinwellState * CDamageState::Tick(_float fTimeDelta)
 	}
 
 	Move();
-	
+
 	m_pOwner->Check_Navigation();
 
 	return nullptr;
 }
 
-CRinwellState * CDamageState::LateTick(_float fTimeDelta)
+CMonsterLawState * CMonster_Lawhit::LateTick(_float fTimeDelta)
 {
 	if (m_bIsAnimationFinished)
 	{
 		if (m_eStateId == STATE_DAMAGE)
 		{
-			if ((m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f) && !m_pOwner->Get_AirMode())
-				return new CPoseState(m_pOwner, CRinwellState::STATE_HP50DOWN);
+			if ((m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f))
+				return new CPoseState(m_pOwner, CMonsterLawState::STATE_IDLE);
 			else
-				return new CRinwellIdleState(m_pOwner, 0.f);
+				return new CMonster_LawIdleState(m_pOwner);
 		}
-			
+
 		if (m_eStateId == STATE_DEAD)
 		{
 			m_pOwner->Set_Dissolve();
@@ -58,57 +60,38 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 	return nullptr;
 }
 
-void CDamageState::Enter()
+void CMonster_Lawhit::Enter()
 {
 	if (m_eStateId == STATE_DAMAGE)
 	{
-		if (m_pOwner->Get_AirMode())
-		{
+		
 			switch (m_eDmgDir)
 			{
 			case FRONT:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DAMAGE_AIR_LARGE_B);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CMonsterLaw::BTL_DAMAGE_LARGE_B);
 				break;
 			case BACK:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DAMAGE_AIR_LARGE_F);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CMonsterLaw::BTL_DAMAGE_LARGE_F);
 				break;
 			case LEFT:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DAMAGE_AIR_LARGE_L);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CMonsterLaw::BTL_DAMAGE_LARGE_R);
 				break;
 			case RIGHT:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DAMAGE_AIR_LARGE_R);
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CMonsterLaw::BTL_DAMAGE_LARGE_L);
 				break;
 			}
-		}
-		else
-		{
-			switch (m_eDmgDir)
-			{
-			case FRONT:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DAMAGE_LARGE_B);
-				break;
-			case BACK:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DAMAGE_LARGE_F);
-				break;
-			case LEFT:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DAMAGE_LARGE_R);
-				break;
-			case RIGHT:
-				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DAMAGE_LARGE_L);
-				break;
-			}
-		}
+		
 	}
-	else if(m_eStateId == STATE_DEAD)
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DEAD);
+	else if (m_eStateId == STATE_DEAD)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CMonsterLaw::BTL_DEAD);
 }
 
-void CDamageState::Exit()
+void CMonster_Lawhit::Exit()
 {
-	
+
 }
 
-void CDamageState::Move(void)
+void CMonster_Lawhit::Move(void)
 {
 	_vector vDir;
 
