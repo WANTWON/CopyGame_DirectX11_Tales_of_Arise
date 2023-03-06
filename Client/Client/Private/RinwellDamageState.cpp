@@ -26,7 +26,7 @@ CRinwellState * CDamageState::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	Move();
+	Move(fTimeDelta);
 	
 	m_pOwner->Check_Navigation();
 
@@ -103,15 +103,9 @@ void CDamageState::Enter()
 	}
 	else if(m_eStateId == STATE_DEAD)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DEAD);
-}
 
-void CDamageState::Exit()
-{
-	
-}
+	m_vStartPos = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 0.f);
 
-void CDamageState::Move(void)
-{
 	_vector vDir;
 
 	switch (m_eDmgDir)
@@ -130,7 +124,26 @@ void CDamageState::Move(void)
 		break;
 	}
 
-	m_pOwner->Get_Transform()->Go_PosDir(0.0025f, vDir, m_pOwner->Get_Navigation());
+	m_vGoalPos = m_vStartPos + vDir;
+}
+
+void CDamageState::Exit()
+{
+	
+}
+
+void CDamageState::Move(_float fTimeDelta)
+{
+	_vector vOwnerPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_float fOwnerPosY = XMVectorGetY(vOwnerPos);
+
+	_float fDecrease = XMVectorGetX(XMVector4Length(XMVectorSetY(vOwnerPos, XMVectorGetY(m_vGoalPos)) - m_vStartPos)) / XMVectorGetX(XMVector4Length(m_vStartPos - m_vGoalPos));
+
+	m_fRatio += (1.f - fDecrease) * 0.2f + fTimeDelta;
+
+	_vector vPos = XMVectorSetY(XMVectorLerp(m_vStartPos, m_vGoalPos, m_fRatio), fOwnerPosY);
+	if (m_pOwner->Get_Navigation()->isMove(vPos))
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPos);
 
 	m_pOwner->Check_Navigation();
 }

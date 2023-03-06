@@ -22,8 +22,12 @@ private:
 	_vector m_vTargetPosition = {0.f,0.f,0.f,0.f};
 	_uint m_eDmgDir = FRONT;
 
+	_vector m_vStartPos;
+	_vector m_vGoalPos;
+	_float m_fRatio = 0.f;
+
 private:
-	void Move(void);
+	void Move(_float fTimeDelta);
 };
 
 END
