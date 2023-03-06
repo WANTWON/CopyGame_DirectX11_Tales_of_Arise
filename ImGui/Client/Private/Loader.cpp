@@ -214,7 +214,6 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForMaptoolWorkRoomModel()))
 		return E_FAIL;
 
-
 	if (FAILED(Loading_ForMaptoolKitchenModel()))
 		return E_FAIL;*/
 

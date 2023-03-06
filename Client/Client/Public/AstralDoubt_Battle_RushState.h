@@ -55,6 +55,7 @@ private:
 	_bool m_bSlash = false;
 
 	vector<CEffect*> m_Rush;
+	vector<CEffect*> m_RushParticles;
 };
 END
 END

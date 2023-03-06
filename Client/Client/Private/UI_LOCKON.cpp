@@ -405,7 +405,7 @@ HRESULT CUI_LOCKON::Render()
 HRESULT CUI_LOCKON::Render_Glow()
 {
 	if (CUI_Manager::Get_Instance()->Get_UIStrike())
-		return;
+		return S_OK;
 
 	if (!m_bStrikeon)
 		return S_OK;
