@@ -236,15 +236,26 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 				{
-					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+					_matrix mWorldMatrix = XMMatrixIdentity();
+
+					CHierarchyNode* pBone = nullptr;
+					_float4x4 PivotMatrix = m_pOwner->Get_Model()->Get_PivotFloat4x4();
+					_matrix ParentWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
 					if (!m_bHit_1)
 					{
 						if (!strcmp(pEvent.szName, "Hit_1"))
 						{
-							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand_1.dat"), mWorldMatrix);
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE3_3_R");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+							
+							_float4 vPosition;
+							XMStoreFloat4(&vPosition, SocketMatrix.r[3]);
+							vPosition.y = .01f;
 
-							_vector vPosition = Effects.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							Effects.back()->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+							mWorldMatrix.r[3] = XMLoadFloat4(&vPosition);
+
+							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand.dat"), mWorldMatrix);
 
 							m_bHit_1 = true;
 						}
@@ -253,10 +264,16 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Hit_2"))
 						{
-							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand_2.dat"), mWorldMatrix);
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE2_3_L");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+							
+							_float4 vPosition;
+							XMStoreFloat4(&vPosition, SocketMatrix.r[3]);
+							vPosition.y = .01f;
 
-							_vector vPosition = Effects.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							Effects.back()->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+							mWorldMatrix.r[3] = XMLoadFloat4(&vPosition);
+
+							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand.dat"), mWorldMatrix);
 
 							m_bHit_2 = true;
 						}
@@ -265,11 +282,17 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Hit_3"))
 						{
-							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand_3.dat"), mWorldMatrix);
-							
-							_vector vPosition = Effects.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							Effects.back()->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
-							
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE1_3_R");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+							_float4 vPosition;
+							XMStoreFloat4(&vPosition, SocketMatrix.r[3]);
+							vPosition.y = .01f;
+
+							mWorldMatrix.r[3] = XMLoadFloat4(&vPosition);
+
+							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand.dat"), mWorldMatrix);
+
 							m_bHit_3 = true;
 						}
 					}
@@ -277,10 +300,16 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Hit_4"))
 						{
-							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand_4.dat"), mWorldMatrix);
-							
-							_vector vPosition = Effects.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							Effects.back()->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE3_3_L");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+							_float4 vPosition;
+							XMStoreFloat4(&vPosition, SocketMatrix.r[3]);
+							vPosition.y = .01f;
+
+							mWorldMatrix.r[3] = XMLoadFloat4(&vPosition);
+
+							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand.dat"), mWorldMatrix);
 							
 							m_bHit_4 = true;
 						}
@@ -289,10 +318,16 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Hit_5"))
 						{
-							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand_5.dat"), mWorldMatrix);
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE2_3_R");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
 
-							_vector vPosition = Effects.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							Effects.back()->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+							_float4 vPosition;
+							XMStoreFloat4(&vPosition, SocketMatrix.r[3]);
+							vPosition.y = .01f;
+
+							mWorldMatrix.r[3] = XMLoadFloat4(&vPosition);
+
+							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand.dat"), mWorldMatrix);
 
 							m_bHit_5 = true;
 						}
@@ -301,10 +336,16 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Hit_6"))
 						{
-							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand_6.dat"), mWorldMatrix);
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE1_3_L");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
 
-							_vector vPosition = Effects.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							Effects.back()->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+							_float4 vPosition;
+							XMStoreFloat4(&vPosition, SocketMatrix.r[3]);
+							vPosition.y = .01f;
+
+							mWorldMatrix.r[3] = XMLoadFloat4(&vPosition);
+
+							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand.dat"), mWorldMatrix);
 
 							m_bHit_6 = true;
 						}
@@ -313,10 +354,45 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Hit_7"))
 						{
-							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand_7.dat"), mWorldMatrix);
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
-							_vector vPosition = Effects.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-							Effects[3]->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand_Big.dat"), mWorldMatrix);
+							for (auto& pEffect : Effects)
+							{
+								if (pEffect)
+								{
+									_vector vPosition = pEffect->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+									_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+
+									vPosition += XMVector4Normalize(vLook) * 3;
+
+									_float4 vOffset;
+									XMStoreFloat4(&vOffset, vPosition);
+
+									if (!wcscmp(pEffect->Get_PrototypeId(), TEXT("Plane")))
+										vOffset.y = 0.02f;
+									else if (!wcscmp(pEffect->Get_PrototypeId(), TEXT("Smoke_Mask")))
+										vOffset.y = 2.f;
+									else
+										vOffset.y = 0.01f;
+
+									pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vOffset));
+								}
+							}
+
+							vector<CEffect*> EffectsRing = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand_Ring.dat"), mWorldMatrix);
+							for (auto& pEffect : EffectsRing)
+							{
+								if (pEffect)
+								{
+									_vector vPosition = pEffect->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+									_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+
+									vPosition += XMVector4Normalize(vLook) * 3;
+
+									pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+								}
+							}
 
 							m_bHit_7 = true;
 						}
@@ -513,6 +589,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 				{
+					_matrix mWorldMatrix = XMMatrixIdentity();
+
+					CHierarchyNode* pBone = nullptr;
+					_float4x4 PivotMatrix = m_pOwner->Get_Model()->Get_PivotFloat4x4();
+					_matrix ParentWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
 					CBullet::BULLETDESC BulletDesc;
 					BulletDesc.eCollisionGroup = PLAYER;
 					BulletDesc.pOwner = m_pOwner;
@@ -522,8 +604,23 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 					if (!m_bBullet_1)
 					{
+						CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), .3f);
 						if (!strcmp(pEvent.szName, "Bullet_1"))
 						{
+							/* Effect */
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE3_3_R");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+							_vector vSocketPosition = SocketMatrix.r[3];
+							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							vSocketPosition += XMVector4Normalize(vLook) * 2;
+
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = vSocketPosition;
+
+							CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Aura.dat"), mWorldMatrix);
+
+							/* Bullet */
 							BulletDesc.eBulletType = CBossSkills::TYPE::BULLET_SPEAR_MULTI_1;
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_BossSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
@@ -536,6 +633,20 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Bullet_2"))
 						{
+							/* Effect */
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE2_3_L");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+							_vector vSocketPosition = SocketMatrix.r[3];
+							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							vSocketPosition += XMVector4Normalize(vLook) * 2;
+
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = vSocketPosition;
+
+							CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Aura.dat"), mWorldMatrix);
+
+							/* Bullet */
 							BulletDesc.eBulletType = CBossSkills::TYPE::BULLET_SPEAR_MULTI_2;
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_BossSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
@@ -548,6 +659,20 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Bullet_3"))
 						{
+							/* Effect */
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE1_3_R");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+							_vector vSocketPosition = SocketMatrix.r[3];
+							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							vSocketPosition += XMVector4Normalize(vLook) * 2;
+
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = vSocketPosition;
+
+							CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Aura.dat"), mWorldMatrix);
+
+							/* Bullet */
 							BulletDesc.eBulletType = CBossSkills::TYPE::BULLET_SPEAR_MULTI_3;
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_BossSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
@@ -560,6 +685,20 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Bullet_4"))
 						{
+							/* Effect */
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE3_3_L");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+							_vector vSocketPosition = SocketMatrix.r[3];
+							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							vSocketPosition += XMVector4Normalize(vLook) * 2;
+
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = vSocketPosition;
+
+							CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Aura.dat"), mWorldMatrix);
+
+							/* Bullet */
 							BulletDesc.eBulletType = CBossSkills::TYPE::BULLET_SPEAR_MULTI_4;
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_BossSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
@@ -572,6 +711,20 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Bullet_5"))
 						{
+							/* Effect */
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE2_3_R");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+							_vector vSocketPosition = SocketMatrix.r[3];
+							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							vSocketPosition += XMVector4Normalize(vLook) * 2;
+
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = vSocketPosition;
+
+							CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Aura.dat"), mWorldMatrix);
+
+							/* Bullet */
 							BulletDesc.eBulletType = CBossSkills::TYPE::BULLET_SPEAR_MULTI_5;
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_BossSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
@@ -584,6 +737,20 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 					{
 						if (!strcmp(pEvent.szName, "Bullet_6"))
 						{
+							/* Effect */
+							pBone = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE1_3_L");
+							_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+							_vector vSocketPosition = SocketMatrix.r[3];
+							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							vSocketPosition += XMVector4Normalize(vLook) * 2;
+
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = vSocketPosition;
+
+							CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Aura.dat"), mWorldMatrix);
+
+							/* Bullet */
 							BulletDesc.eBulletType = CBossSkills::TYPE::BULLET_SPEAR_MULTI_6;
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_BossSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
@@ -882,6 +1049,8 @@ void CBattle_SpearMultiState::Enter()
 	default:
 		break;
 	}
+
+	m_pOwner->Get_Model()->Reset();
 }
 
 void CBattle_SpearMultiState::Exit()
@@ -951,4 +1120,6 @@ void CBattle_SpearMultiState::Reset_Effect()
 	m_bHit_5 = false;
 	m_bHit_6 = false;
 	m_bHit_7 = false;
+
+	
 }

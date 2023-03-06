@@ -507,7 +507,21 @@ void CMonster::Make_DeadEffect(CBaseObj * Target)
 
 void CMonster::Make_UIFont(_uint iDamage)
 {
+	if (m_tStats.m_iHitcount >= 60)
+	{
+		m_bDownState = true;
+		m_tStats.m_iHitcount = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+			return;
+	}
 
+	if (m_tStats.m_iBedamagedCount >= 20)
+	{
+		m_bBedamageAnim = true;
+		m_tStats.m_iBedamagedCount = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+			return;
+	}
 
 	if (m_tStats.m_iHitcount >= 10)
 	{
@@ -609,29 +623,12 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 	
-
 	m_pTarget = DamageCauser;
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 	
 	++m_tStats.m_iHitcount;
-
-	if (m_tStats.m_iHitcount >= 60)
-	{
-		m_bDownState = true;
-		m_tStats.m_iHitcount = 0;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
-			return E_FAIL;
-	}
-		
 	++m_tStats.m_iBedamagedCount;
 	
-	if (m_tStats.m_iBedamagedCount >= 20)
-	{
-		m_bBedamageAnim = true;
-		m_tStats.m_iBedamagedCount = 0;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
-			return E_FAIL;
-	}
 
 	if (DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer())
 	{

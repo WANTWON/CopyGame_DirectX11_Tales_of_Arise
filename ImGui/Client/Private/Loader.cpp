@@ -201,7 +201,7 @@ HRESULT CLoader::Loading_ForClient()
 
 	//if (FAILED(Loading_ForMaptoolVillageModel()))
 	//	return E_FAIL;
-	
+
 	/* if (FAILED(Loading_ForMaptoolCityModel()))
 	 	return E_FAIL;
 
@@ -213,7 +213,6 @@ HRESULT CLoader::Loading_ForClient()
 
 	if (FAILED(Loading_ForMaptoolWorkRoomModel()))
 		return E_FAIL;
-
 
 	if (FAILED(Loading_ForMaptoolKitchenModel()))
 		return E_FAIL;*/
@@ -2740,17 +2739,6 @@ HRESULT CLoader::Loading_ForActor()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/MonsterforMaptool/Ice_Wolf.dat"))))
 		return E_FAIL;
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Ice_Wolf_NonAnim"));
-
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Astral_Doubt"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/MonsterforMaptool/Astral_Doubt.dat"))))
-	//	return E_FAIL;
-	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Astral_Doubt"));
-
-	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("ASU_005"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/ASU_005.dat"))))
-		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("ASU_005"));*/
-
 
 
 	RELEASE_INSTANCE(CImgui_Manager);

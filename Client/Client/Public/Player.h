@@ -35,7 +35,7 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 	virtual HRESULT Render_ShadowDepth() override;
-	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _float fMoveLength = 1.f, _bool isDown = false);
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _float fMoveLength = 1.f, HITTYPE eHitType = HIT_NORMAL);
 	virtual HRESULT Render_EdgeDetection() override;
 
 public: /* Getter &  Setter */

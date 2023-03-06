@@ -34,7 +34,7 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 
 	if (nullptr == m_pTarget)
 	{
-		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	else
@@ -98,7 +98,7 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 						 
 						BulletDesc.pOwner = m_pOwner;
 						BulletDesc.fVelocity = 5.f;
-						m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+						m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 						BulletDesc.pTarget = m_pTarget;
 					
 						
@@ -158,7 +158,7 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 				case SKILL_STRIKE:
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+						m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 						//	CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 						//	if (pTarget == nullptr)
 						//		pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
@@ -632,7 +632,7 @@ void CMonster_LawSkill::Enter(void)
 
 	if (nullptr == m_pTarget)
 	{
-		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_iPhase);
+		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	else

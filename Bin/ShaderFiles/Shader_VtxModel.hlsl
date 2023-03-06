@@ -51,10 +51,11 @@ texture2D g_WaterNoiseTexture;
 float g_fWaterPlaneScale;
 float2 g_vNoiseScroll = float2(0.02f, 0.01f);
 float2 g_vNoiseWrap = float2(20, 10);
-float g_fScrollSpeed;
+float g_fScrollTimer;
 float g_fNoiseCutoff = 0.777f;
 float g_fFoamDepth = .4f;
 texture2D g_WaterNormalTexture;
+float2 g_vNormalWrap = float2(3.33f, 3.33f);
 float g_fNormalPower = 0.27f;
 
 /* Edge Detection */
@@ -197,9 +198,9 @@ PS_OUT_WATER PS_WATER(PS_IN In)
 	float fWaterInterpFactor = saturate(fWaterDepth / g_fWaterMaxRange);
 	float3 fWaterColor = lerp(g_WaterColorShallow, g_WaterColorDeep, fWaterInterpFactor);
 
-	float2 vNormal = g_WaterNormalTexture.Sample(LinearSampler, In.vTexUV.xy * 2 - 1) * g_fNormalPower;
-	float2 vNoiseUV = float2(((In.vTexUV.x * g_vNoiseWrap.x * g_fWaterPlaneScale) + g_fScrollSpeed * g_vNoiseScroll.x) + vNormal.x, 
-								((In.vTexUV.y * g_vNoiseWrap.y * g_fWaterPlaneScale) + g_fScrollSpeed * g_vNoiseScroll.y) + vNormal.y);
+	float2 vNormal = g_WaterNormalTexture.Sample(LinearSampler, (In.vTexUV * g_vNormalWrap * g_fWaterPlaneScale) * 2 - 1) * g_fNormalPower;
+	float2 vNoiseUV = float2(((In.vTexUV.x * g_vNoiseWrap.x * g_fWaterPlaneScale) + g_fScrollTimer * g_vNoiseScroll.x) + vNormal.x,
+								((In.vTexUV.y * g_vNoiseWrap.y * g_fWaterPlaneScale) + g_fScrollTimer * g_vNoiseScroll.y) + vNormal.y);
 	float fNoise = g_WaterNoiseTexture.Sample(LinearSampler, vNoiseUV).r;
 
 	float fFoamInterpFactor = saturate(fWaterDepth / g_fFoamDepth);
@@ -224,6 +225,10 @@ PS_OUT PS_DISSOLVE(PS_IN In)
 	vNormal = mul(vNormal, WorldMatrix);
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	if (Out.vDiffuse.a <= 0.0f)
+		discard;
+
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 
@@ -498,7 +503,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default_NoCull);
 		SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_Default, 0);
+		SetDepthStencilState(DSS_NoWrite, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
@@ -531,7 +536,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
-		SetDepthStencilState(DSS_Default, 0);
+		SetDepthStencilState(DSS_NoWrite, 0);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
