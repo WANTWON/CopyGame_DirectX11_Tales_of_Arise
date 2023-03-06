@@ -46,7 +46,7 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 			else if (0.f >= m_pOwner->Get_Methor())
 				return new CRinwellDownState(m_pOwner);
 			else
-				return new CRinwellIdleState(m_pOwner, 3.f);
+				return new CRinwellIdleState(m_pOwner, 1.f);
 		}
 			
 		if (m_eStateId == STATE_DEAD)
