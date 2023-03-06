@@ -371,6 +371,13 @@ HRESULT CBerserker::SetUp_ShaderID()
 	return S_OK;
 }
 
+void CBerserker::Set_HitState()
+{
+	CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, true, m_bBerserkerMode, true, CBerserkerState::STATE_ID::STATE_TAKE_DAMAGE);
+	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+
+}
+
 void CBerserker::Check_Navigation()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);

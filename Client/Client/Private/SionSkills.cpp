@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\SionSkills.h"
 #include "Monster.h"
+#include "Player.h"
 
 
 CSionSkills::CSionSkills(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -146,6 +147,9 @@ int CSionSkills::Tick(_float fTimeDelta)
 
 	_float fTime = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"));
 
+	if (Check_Exception() == false)
+		return OBJ_NOEVENT;
+
 	switch (m_BulletDesc.eBulletType)
 	{
 	case NORMALATTACK:
@@ -203,6 +207,9 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 		if (iter != nullptr && iter->Get_PreDead())
 			iter = nullptr;
 	}
+
+	if (Check_Exception() == false)
+		return;
 
 	switch (m_BulletDesc.eBulletType)
 	{
@@ -270,7 +277,7 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 void CSionSkills::Collision_Check()
 {
 	
-	if (Check_Exception_Collision() == false)
+	if (Check_Exception() == false)
 		return;
 
 	CBaseObj* pCollisionTarget = nullptr;
@@ -351,8 +358,17 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.fHitLagTimer = 0.1f;
 		m_HitLagDesc.bShaking = false;
 
-		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
+		switch (m_BulletDesc.eCollisionGroup)
+		{
+		case PLAYER:
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
+			break;
+
+		default:
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pOBBCom, &pCollisionTarget))
+				dynamic_cast<CPlayer*> (pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+		}
 		break;
 	case GRAVITY:
 		m_HitLagDesc.bLockOnChange = false;

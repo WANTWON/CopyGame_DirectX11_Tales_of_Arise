@@ -170,7 +170,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		m_pTransformCom->LookDir(XMLoadFloat4(&vCamView));
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBall.dat"), mWorldMatrix);
-		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeThunder.dat"), mWorldMatrix);
+		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeThunder2.dat"), mWorldMatrix);
 		break;
 	}
 	case BANGEONDEAD:
@@ -271,13 +271,24 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 		break;
 	}
 
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
+
+	for (auto& iter : m_pBlast2Effects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
 	
 }
 
 void CRinwellSkills::Collision_Check()
 {
 
-	if (Check_Exception_Collision() == false)
+	if (Check_Exception() == false)
 		return;
 
 	CBaseObj* pCollisionTarget = nullptr;
@@ -657,9 +668,6 @@ void CRinwellSkills::Tick_ThunderField(_float fTimeDelta)
 
 	for (auto& iter : m_pEffects)
 	{
-		if (iter != nullptr && iter->Get_PreDead())
-			iter = nullptr;
-
 		if (iter != nullptr)
 		{
 			_vector vOffset = XMVectorSet(0.f, m_fRadius + 6.f, 0.f, 0.f);
@@ -670,9 +678,6 @@ void CRinwellSkills::Tick_ThunderField(_float fTimeDelta)
 
 	for (auto& iter : m_pBlast2Effects)
 	{
-		if (iter != nullptr && iter->Get_PreDead())
-			iter = nullptr;
-
 		_vector vOffset = XMVectorSet(0.f, m_fRadius + 0.5f, 0.f, 0.f);
 		if (iter != nullptr)
 			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
@@ -976,7 +981,7 @@ void CRinwellSkills::Tick_BangJeon(_float fTimeDelta)
 
 		if (iter != nullptr)
 		{
-			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+			_vector vOffset = XMVectorSet(0.f, 5.f, 0.f, 0.f);
 			iter->Set_State(CTransform::STATE_TRANSLATION, m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
 		}
 			

@@ -633,7 +633,7 @@ void CAI_Rinwell_SkillState::Enter()
 	case STATE_BANGJEON:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 		/* Make Effect */
-		_vector vOffset = { 0.f,0.f,0.f,0.f };
+		_vector vOffset = { 0.f,5.f,0.f,0.f };
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_HOUDEN;

@@ -25,6 +25,7 @@
 
 #include "AI_LAW_AIRSKILLR.h"
 #include "AI_LAW_AIRSKILLF.h"
+#include "AI_LAW_SkillAttack_State.h"
 using namespace AIPlayer;
 
 CAI_JumpState::CAI_JumpState(CPlayer* pPlayer, STATETYPE eType, _bool useskill, _float fTime)
@@ -74,6 +75,7 @@ CAIState * CAI_JumpState::LateTick(_float fTimeDelta)
 			}
 			break;
 		case CPlayer::LAW:
+
 			switch (rand() % 2)
 			{
 			case 0:
@@ -82,6 +84,10 @@ CAIState * CAI_JumpState::LateTick(_float fTimeDelta)
 
 			case 1:
 				return new CAI_LAW_AIRSKILLF(m_pOwner, STATE_SKILL_ATTACK_F);
+				break;
+
+			case 2:
+				return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
 				break;
 			}
 

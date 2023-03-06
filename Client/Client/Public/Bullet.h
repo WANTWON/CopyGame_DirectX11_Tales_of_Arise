@@ -51,7 +51,7 @@ protected:
 	virtual HRESULT SetUp_ShaderResources();
 	virtual HRESULT SetUp_ShaderID();
 	virtual void Collision_Check();
-	virtual _bool Check_Exception_Collision();
+	virtual _bool Check_Exception();
 
 protected:
 	BULLETDESC m_BulletDesc;

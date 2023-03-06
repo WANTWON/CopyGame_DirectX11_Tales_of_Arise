@@ -31,6 +31,7 @@ void CCamera_Action::Set_Play(_bool type)
 	 m_bPlay = type; 
 	 if (m_bPlay)
 	 {
+		 m_bShakingMode = false;
 		 m_vInitPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 		 m_vInitAt = m_vInitPosition + m_pTransform->Get_State(CTransform::STATE_LOOK);
 
@@ -76,9 +77,6 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 
 	_vector vPositionStart = m_vInitPosition;
 	_vector vPositionEnd = XMLoadFloat4(&m_CamDatas[m_iIndex].vEyePosition);
-	_vector vCatRom1 = vPositionStart;
-	_vector vCatRom2 = vPositionEnd;
-
 
 	_vector vAtStart = m_vInitAt;
 	_vector vAtEnd = XMVectorSetW(XMLoadFloat4(&m_CamDatas[m_iIndex].vAtPosition), 1.f);
@@ -87,7 +85,17 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 	if (m_CamDatas[m_iIndex].bLerp == true)
 		vPosition = XMVectorLerp(vPositionStart, vPositionEnd, fValue);
 	else
+	{
+		_vector vCatRom1 = vPositionStart;
+		if (m_iIndex - 2 >= 0)
+			vCatRom1 = XMLoadFloat4(&m_CamDatas[m_iIndex - 2].vEyePosition);
+
+		_vector vCatRom2 = vPositionEnd;
+		if (m_iIndex + 1 <= m_CamDatas.size() - 1)
+			vCatRom2 = XMLoadFloat4(&m_CamDatas[m_iIndex + 1].vEyePosition);
+
 		vPosition = XMVectorCatmullRom(vCatRom1, vPositionStart, vPositionEnd, vCatRom2, fValue);
+	}
 
 
 
@@ -95,7 +103,7 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	m_pTransform->LookAt(vAt);
 
-	if (m_bShakingMode)
+	if (m_bShakingMode == true)
 		Shaking_Camera(fTimeDelta);
 
 
@@ -108,6 +116,7 @@ int CCamera_Action::PlayCamera(_float fTimeDelta)
 
 		if (m_iIndex >= m_CamDatas.size())
 		{
+			m_bShakingMode = false;
 			m_iIndex = 0;
 			m_bPlay = false;
 			m_CamDatas.clear();

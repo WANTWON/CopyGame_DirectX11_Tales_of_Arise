@@ -74,6 +74,9 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 		}
 	}
 
+	
+
+
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -91,16 +94,23 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 					{
 						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CRinwell::ANIM::BTL_ATTACK_FUATU))
 						{
+							CBaseObj * pTarget = nullptr;
+
+							if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+								return nullptr;
+
 							CBullet::BULLETDESC BulletDesc;
-							CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-							if (pTarget == nullptr)
+							if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+							{
+								CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+							}
+							else
+							{
 								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-							BulletDesc.pTarget = pTarget;
-
-							_vector vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-
+							}
 							
-						
+							BulletDesc.pTarget = pTarget;
+							_vector vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);						
 							BulletDesc.eCollisionGroup = PLAYER;
 							BulletDesc.eBulletType = CRinwellSkills::GALE_FORCE;
 							BulletDesc.vTargetDir = XMVector3Normalize(vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -325,13 +335,22 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+						if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+							return nullptr;
+						CBaseObj * pTarget = nullptr;
+						if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+							pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+
+						
 						if (pTarget == nullptr)
 							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.eBulletType = CRinwellSkills::DIVINE_SABER;
+
+
+
 						if (pTarget != nullptr)
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 						BulletDesc.pOwner = m_pOwner;
@@ -379,7 +398,12 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+						if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+							return nullptr;
+						CBaseObj * pTarget = nullptr;
+						if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+							pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+
 						if (pTarget == nullptr)
 							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 
@@ -581,7 +605,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); //¾óÀ½¶³±¸±â
 																							/* Make Effect */
-			_vector vOffset = { 0.f,3.f,0.f,0.f };
+			_vector vOffset = { 0.f,5.f,0.f,0.f };
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);

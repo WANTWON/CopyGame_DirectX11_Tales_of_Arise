@@ -173,6 +173,7 @@ public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc) override;
 	HRESULT CBerserker::SetUp_ShaderID();
+	virtual void	 Set_HitState() override;
 
 private:
 	CBerserker(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

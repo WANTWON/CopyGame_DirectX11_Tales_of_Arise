@@ -32,6 +32,7 @@ public: /* Getter Setter */
 	void	 Set_ActivePlayer(CPlayer* pPlayer);
 	void	 Set_ActivePlayer(_uint iIndex);
 	vector<CPlayer*> Get_AIPlayers() { return m_pAIPlayers; } 
+	vector<_vector> Get_StrikeLockOnPosition() { return m_vStrikeLockOnPos; }
 
 	/* For Field - BattleZone level change & Comeback*/
 	_vector	 Get_LastPosition() { return m_vLastPos; }
@@ -43,7 +44,7 @@ public: /* Getter Setter */
 
 	void Set_Ai_Check();
 	void Set_SmashAttack();
-	void Update_StrikePosition(_tchar* FilePath);
+	void Update_StrikePosition(_tchar* FilePath, _int iMonsterPosNum = 1);
 
 private:
 	CPlayer* m_pActivePlayer = nullptr;
@@ -54,6 +55,7 @@ private:
 	CPlayer* m_AllPlayers[PLAYER_END] = { nullptr, nullptr, nullptr, nullptr };
 
 	_vector m_vStrikePosition[5];
+	vector<_vector> m_vStrikeLockOnPos;
 
 public:
 	virtual void Free() override;

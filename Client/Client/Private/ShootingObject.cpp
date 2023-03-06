@@ -133,20 +133,20 @@ void CShootingObject::Late_Tick(_float fTimeDelta)
 		{
 		case TYPE_A:
 	//		m_pTransformCom->Go_PosDir(fTimeDelta*2.5, m_vDir);
-			m_pTransformCom->Go_PosDir(fTimeDelta*2.5, m_vDir);
+			m_pTransformCom->Go_PosDir(fTimeDelta*2.5f, m_vDir);
 			m_pTransformCom->Jump(fTimeDelta, m_tShootingDesc.fVelocity, 2.f, Get_TransformState(CTransform::STATE_TRANSLATION).m128_f32[1]);
 			m_pTransformCom->Turn(Get_TransformState(CTransform::STATE_UP), fTimeDelta*4.f);
 			break;
 
 		case TYPE_B:
-			m_pTransformCom->Go_PosDir(fTimeDelta*2.5, m_vDir);
+			m_pTransformCom->Go_PosDir(fTimeDelta*2.5f, m_vDir);
 			m_pTransformCom->Jump(fTimeDelta, m_tShootingDesc.fVelocity, 2.f, Get_TransformState(CTransform::STATE_TRANSLATION).m128_f32[1]);
 	//		m_pTransformCom->Go_PosDir(fTimeDelta*2.5, m_vDir);
 			m_pTransformCom->Turn(Get_TransformState(CTransform::STATE_RIGHT), fTimeDelta*4.f);
 			break;
 
 		case TYPE_C:
-			m_pTransformCom->Go_PosDir(fTimeDelta*2.5, m_vDir);
+			m_pTransformCom->Go_PosDir(fTimeDelta*2.5f, m_vDir);
 			m_pTransformCom->Jump(fTimeDelta, m_tShootingDesc.fVelocity, 2.f, Get_TransformState(CTransform::STATE_TRANSLATION).m128_f32[1]);
         	m_pTransformCom->Turn(Get_TransformState(CTransform::STATE_LOOK), fTimeDelta*4.f);
 			break;
