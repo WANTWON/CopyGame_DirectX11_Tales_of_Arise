@@ -604,7 +604,6 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 					if (!m_bBullet_1)
 					{
-						CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), .3f);
 						if (!strcmp(pEvent.szName, "Bullet_1"))
 						{
 							/* Effect */

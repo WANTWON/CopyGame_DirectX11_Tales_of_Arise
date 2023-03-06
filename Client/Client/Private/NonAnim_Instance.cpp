@@ -233,9 +233,9 @@ _bool CNonAnim_Instance::IsRenderShadow()
 
 _bool CNonAnim_Instance::IsRenderGlow()
 {
-	/*if (!strcmp(m_ModelDesc.pModeltag, "Bld_WallB") ||
+	if (!strcmp(m_ModelDesc.pModeltag, "Bld_WallB") ||
 		!strcmp(m_ModelDesc.pModeltag, "Bld_Wall01"))
-		return true;*/
+		return true;
 
 	return false;
 }
