@@ -6,6 +6,7 @@
 #include "Monster_LawNormalAttack.h"
 #include "Monster_LawSkill.h"
 #include "Monster_LawDodge.h"
+#include "MonsterLaw_StrikeTrigger.h"
 
 
 
@@ -70,6 +71,8 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 	}*/
 	//return new CMonster_LawSkill(m_pOwner, SKILL_E);
 
+
+	return new CMonsterLaw_StrikeTrigger(m_pOwner);
 	
 	switch (rand() % 6)
 	{

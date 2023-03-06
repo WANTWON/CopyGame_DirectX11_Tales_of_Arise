@@ -140,5 +140,9 @@ protected:
 	class CPlayer* m_pTarget = nullptr;		/* If TRUE, has Aggro. */
 	_int    m_iPhase = 0;
 
+	_bool m_bIsStateEvent = false;
+
+
+
 };
 END

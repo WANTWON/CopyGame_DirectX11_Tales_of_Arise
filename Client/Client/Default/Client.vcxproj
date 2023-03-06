@@ -254,6 +254,7 @@
     <ClInclude Include="..\Public\LawAirRSkillState.h" />
     <ClInclude Include="..\Public\LawAttackState.h" />
     <ClInclude Include="..\Public\MonsterLawState.h" />
+    <ClInclude Include="..\Public\MonsterLaw_Strike1.h" />
     <ClInclude Include="..\Public\MonsterLaw_StrikeTrigger.h" />
     <ClInclude Include="..\Public\Monster_LawAirF.h" />
     <ClInclude Include="..\Public\Monster_LawAirR.h" />
@@ -535,6 +536,7 @@
     <ClCompile Include="..\Private\LawAirFSkillState.cpp" />
     <ClCompile Include="..\Private\LawAirRSkillState.cpp" />
     <ClCompile Include="..\Private\LawAttackState.cpp" />
+    <ClCompile Include="..\Private\MonsterLaw_Strike1.cpp" />
     <ClCompile Include="..\Private\MonsterLaw_StrikeTrigger.cpp" />
     <ClCompile Include="..\Private\Monster_LawAirF.cpp" />
     <ClCompile Include="..\Private\Monster_LawAirR.cpp" />
