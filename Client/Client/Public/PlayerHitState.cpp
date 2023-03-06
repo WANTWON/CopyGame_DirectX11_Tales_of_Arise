@@ -197,11 +197,11 @@ _bool CHitState::Move(_float fTimeDelta)
 			m_pOwner->On_IsFly();
 		
 		if (HIT_DOWN == m_eHitType)
-			m_fTime += fTimeDelta * 3.5f;
-		else
 			m_fTime += fTimeDelta * 3.f;
+		else
+			m_fTime += fTimeDelta * 2.5f;
 		
-		m_pOwner->Get_Transform()->Jump(m_fTime, 2.3f, 2.9f, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->Jump(m_fTime, 2.3f, 3.f, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 
 		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
 		_float EndHeight = m_pOwner->Get_Navigation()->Compute_Height(vPosition, 0.f);

@@ -47,7 +47,7 @@ namespace Client
 		bool bHitLag = true;
 		bool bShaking = true;
 
-		float fHitLagTimer = 0.15f;
+		float fHitLagTimer = 0.2f;
 		float fShakingPower = 2.f;
 		float fShakingMinusPower = 0.2f;
 	}HITLAGDESC;

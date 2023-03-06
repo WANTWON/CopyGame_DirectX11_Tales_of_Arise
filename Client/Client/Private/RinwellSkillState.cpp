@@ -4,6 +4,7 @@
 #include "RinwellStepState.h"
 #include "RinwellSkills.h"
 #include "RinwellDownState.h"
+#include "RinwellDamageState.h"
 #include "Effect.h"
 
 using namespace AiRinwell;

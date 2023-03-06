@@ -43,8 +43,10 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 		{
 			if ((m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f) && !m_pOwner->Get_AirMode())
 				return new CPoseState(m_pOwner, CRinwellState::STATE_HP50DOWN);
+			else if (0.f >= m_pOwner->Get_Methor())
+				return new CRinwellDownState(m_pOwner);
 			else
-				return new CRinwellIdleState(m_pOwner, 0.f);
+				return new CRinwellIdleState(m_pOwner, 3.f);
 		}
 			
 		if (m_eStateId == STATE_DEAD)

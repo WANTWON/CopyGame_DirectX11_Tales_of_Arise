@@ -138,6 +138,7 @@ void CCamera_Dynamic::Set_CamMode(CAMERAMODE _eCamMode)
 	m_fTime = 0.f;
 	m_vInitPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 	m_bLerp = true;
+	m_bShakingMode = false;
 }
 
 void CCamera_Dynamic::Set_Position(_vector vPosition)
