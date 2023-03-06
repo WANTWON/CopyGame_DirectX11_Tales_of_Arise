@@ -300,20 +300,28 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+		{
 			m_eStateId = STATE_NORMAL_ATTACK2;
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-			m_eStateId = STATE_NORMAL_ATTACK3;
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-			m_eStateId = STATE_NORMAL_ATTACK4;
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-			return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
+			Enter();
 			break;
 		}
-
-		Enter();
+		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+		{
+			m_eStateId = STATE_NORMAL_ATTACK3;
+			Enter();
+			break;
+		}
+		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+		{
+			m_eStateId = STATE_NORMAL_ATTACK4;
+			Enter();
+			break;
+		}
+		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+			if (!m_bIsFly)
+				return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
+			break;
+		}
 	}
 
 	if (LEVEL_RESTAURANT != CGameInstance::Get_Instance()->Get_CurrentLevelIndex())
@@ -356,25 +364,28 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 		}
 	}
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	if (!m_bIsFly)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_BACKWARD_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_S))
-		return new CRunState(m_pOwner, DIR_BACKWARD, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_W))
-		return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-
+		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
+			return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
+			return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
+			return new CRunState(m_pOwner, DIR_BACKWARD_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
+			return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_A))
+			return new CRunState(m_pOwner, DIR_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_D))
+			return new CRunState(m_pOwner, DIR_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_S))
+			return new CRunState(m_pOwner, DIR_BACKWARD, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_W))
+			return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	}
+	
 	return nullptr;
 }
 

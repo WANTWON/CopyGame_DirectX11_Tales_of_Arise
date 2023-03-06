@@ -42,6 +42,7 @@ namespace Client
 	typedef struct HitLagInfo
 	{
 		bool bLockOnChange = true;
+		HITTYPE eHitType = HIT_NORMAL;
 
 		bool bHitLag = true;
 		bool bShaking = true;
@@ -49,7 +50,6 @@ namespace Client
 		float fHitLagTimer = 0.15f;
 		float fShakingPower = 2.f;
 		float fShakingMinusPower = 0.2f;
-
 	}HITLAGDESC;
 
 	typedef struct ObjectInfo

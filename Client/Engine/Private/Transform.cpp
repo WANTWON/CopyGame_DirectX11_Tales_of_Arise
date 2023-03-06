@@ -394,8 +394,8 @@ bool CTransform::Go_PosDir(_float fTimeDelta, _vector vecDir, CNavigation * pNav
 
 	vDir = XMVector3Normalize(vDir);
 
-	vPosition += vDir*fTimeDelta*m_TransformDesc.fSpeedPerSec;
-
+	vPosition += vDir * fTimeDelta * m_TransformDesc.fSpeedPerSec;
+	 
 	if (nullptr == pNavigation)
 		Set_State(CTransform::STATE_TRANSLATION, vPosition);
 	else if (true == pNavigation->isMove(vPosition))
@@ -412,7 +412,7 @@ bool CTransform::Go_PosLerp(_float fTimeDelta, _vector TargetPos, _float fVecOff
 	_vector vDir = TargetPos - vPos;
 
 	_float fLength = XMVectorGetX(XMVector3Length(vPos - TargetPos));
-	_float  fVec = (1 - fTimeDelta) * 0 + fTimeDelta*fLength;
+	_float  fVec = (1 - fTimeDelta) * 0 + fTimeDelta * fLength;
 
 	vPos += XMVector3Normalize(vDir)*fVec*m_TransformDesc.fSpeedPerSec*fVecOffset;
 

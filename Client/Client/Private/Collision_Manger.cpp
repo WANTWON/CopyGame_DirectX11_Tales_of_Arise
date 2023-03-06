@@ -17,6 +17,15 @@ void CCollision_Manager::Add_CollisionGroup(COLLSIONGROUP CollisionGroup, CBaseO
 	if (nullptr == pGameObject)
 		return;
 
+	auto& iter = m_GameObjects[CollisionGroup].begin();
+	while (iter != m_GameObjects[CollisionGroup].end())
+	{
+		if (*iter == pGameObject)
+			return;
+		else
+			++iter;
+	}
+
 	m_GameObjects[CollisionGroup].push_back(pGameObject);
 }
 

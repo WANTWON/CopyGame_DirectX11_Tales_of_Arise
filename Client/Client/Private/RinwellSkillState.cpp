@@ -46,6 +46,8 @@ CRinwellState * CSkillState::Tick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation();
 
+	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 	return nullptr;
 }
 
@@ -88,8 +90,6 @@ CRinwellState * CSkillState::LateTick(_float fTimeDelta)
 		m_fTime = 0.f;
 		Enter();
 	}
-		
-	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 	return nullptr;
 }

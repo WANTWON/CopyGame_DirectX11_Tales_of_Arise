@@ -30,6 +30,8 @@ CRinwellState * CDamageState::Tick(_float fTimeDelta)
 	
 	m_pOwner->Check_Navigation();
 
+	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 	return nullptr;
 }
 
@@ -53,7 +55,6 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 		}
 	}
 
-	m_pOwner->Check_Navigation();
 	return nullptr;
 }
 
