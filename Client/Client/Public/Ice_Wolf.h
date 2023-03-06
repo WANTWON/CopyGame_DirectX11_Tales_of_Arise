@@ -92,7 +92,7 @@ public:
 	void Set_OnGoingBite() { m_bOnGoing_Bite= true; }
 	void Set_FinishBite() { m_bOnGoing_Bite = false; }
 	virtual void	 Set_BattleMode(_bool type) override;
-
+	virtual void	 Set_HitState() override;
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc) override;

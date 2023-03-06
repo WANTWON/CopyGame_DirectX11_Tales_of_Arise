@@ -24,11 +24,16 @@ CPlayerState * CHitState::Tick(_float fTimeDelta)
 {
 	switch (m_eHitType)
 	{
-	case Client::Player::CHitState::HIT_NORMAL:
+	case HIT_NORMAL:
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
 		Move(fTimeDelta);
 		break;
-	case Client::Player::CHitState::HIT_DOWN:
+	case HIT_AIR:
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
+		if (!m_bIsMove)
+			Move(fTimeDelta);
+		break;
+	case HIT_DOWN:
 		if (!m_bIsMove)
 		{
 			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
@@ -73,7 +78,7 @@ void CHitState::Enter()
 
 	switch (m_eHitType)
 	{
-	case Client::Player::CHitState::HIT_NORMAL:
+	case HIT_NORMAL:
 		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
@@ -102,7 +107,24 @@ void CHitState::Enter()
 			break;
 		}
 		break;
-	case Client::Player::CHitState::HIT_DOWN:
+	case HIT_AIR:
+		switch (m_ePlayerID)
+		{
+		case CPlayer::ALPHEN:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_AIR_SMALL_B);
+			break;
+		case CPlayer::SION:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DAMAGE_AIR_LARGE_B);
+			break;
+		case CPlayer::RINWELL:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_DAMAGE_AIR_LARGE_B);
+			break;
+		case CPlayer::LAW:
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_DAMAGE_AIR_SMALL_B);
+			break;
+		}
+		break;
+	case HIT_DOWN:
 		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
@@ -142,6 +164,14 @@ void CHitState::Enter()
 	}
 	else
 		m_fStartHeight = XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	m_vStartPos = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 0.f);
+
+	m_pOwner->Get_Transform()->LookAtExceptY(m_vCauserPos);
+
+	m_vDir = XMVector4Normalize(m_vStartPos - XMVectorSetY(m_vCauserPos, 0.f));
+
+	m_vGoalPos = m_vStartPos + (m_vDir * m_fMoveLength);
 }
 
 void CHitState::Exit()
@@ -158,24 +188,47 @@ void CHitState::Exit()
 
 _bool CHitState::Move(_float fTimeDelta)
 {
-	m_pOwner->Get_Transform()->LookAtExceptY(m_vCauserPos);
-
-	_vector vOwnerPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
-	_vector vDir = XMVector4Normalize(vOwnerPos - XMVectorSetY(m_vCauserPos, XMVectorGetY(vOwnerPos)));
-
-	if (HIT_DOWN == m_eHitType)
+	if (HIT_NORMAL != m_eHitType)
 	{
-		m_fTime += fTimeDelta * 3.5f;
-		m_pOwner->Get_Transform()->Jump(m_fTime, 2.3f, 2.9f, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		_vector vOwnerPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_vector vDir = XMVector4Normalize(vOwnerPos - XMVectorSetY(m_vCauserPos, XMVectorGetY(vOwnerPos)));
+
+		if (!m_pOwner->Get_IsFly())
+			m_pOwner->On_IsFly();
+		
+		if (HIT_DOWN == m_eHitType)
+			m_fTime += fTimeDelta * 3.f;
+		else
+			m_fTime += fTimeDelta * 2.5f;
+		
+		m_pOwner->Get_Transform()->Jump(m_fTime, 2.3f, 3.f, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 
 		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
 		_float EndHeight = m_pOwner->Get_Navigation()->Compute_Height(vPosition, 0.f);
 
 		if (EndHeight > XMVectorGetY(vPosition))
+		{
+			if (m_pOwner->Get_IsFly())
+				m_pOwner->Off_IsFly();
+
 			m_bIsMove = true;
+		}
+
+		m_pOwner->Get_Transform()->Go_PosDir(fTimeDelta * m_fMoveLength, vDir, m_pOwner->Get_Navigation());
 	}
-	
-	m_pOwner->Get_Transform()->Go_PosDir(fTimeDelta * m_fMoveLength, vDir, m_pOwner->Get_Navigation());
+	else
+	{
+		_vector vOwnerPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_float fOwnerPosY = XMVectorGetY(vOwnerPos);
+
+		_float fDecrease = XMVectorGetX(XMVector4Length(XMVectorSetY(vOwnerPos, XMVectorGetY(m_vGoalPos)) - m_vStartPos)) / XMVectorGetX(XMVector4Length(m_vStartPos - m_vGoalPos));
+
+		m_fRatio += (1.f - fDecrease) * 0.13f + fTimeDelta;
+
+		_vector vPos = XMVectorSetY(XMVectorLerp(m_vStartPos, m_vGoalPos, m_fRatio), fOwnerPosY);
+		if (m_pOwner->Get_Navigation()->isMove(vPos))
+			m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPos);
+	}
 
 	return m_bIsMove;
 }

@@ -210,17 +210,17 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.eBulletType = CRinwellSkills::METEOR;
 						BulletDesc.pOwner = m_pOwner;
-						_int XRand = rand() % 2 == 0 ? 1.f : -1.f;
-						_int ZRand = rand() % 2 == 0 ? 1.f : -1.f;
-						BulletDesc.vTargetDir = { rand() % 6 * 0.1f *XRand, -1.f, rand() % 6 * 0.1f*ZRand, 0.f };
+						
 						
 
-						for (int i = 0; i < 14; ++i)
+						for (int i = 0; i < 15; ++i)
 						{
 							BulletDesc.fVelocity = 2.f + ((_float)(rand() % 20 + 1))*0.1f;
 							_vector pos = { (_float)(rand() % 40 + 40) , 12.f + i*2.5f , (_float)(rand() % 40 + 40), 1.f };
 							BulletDesc.vInitPositon = pos;
-
+							_int XRand = rand() % 2 == 0 ? 1.f : -1.f;
+							_int ZRand = rand() % 2 == 0 ? 1.f : -1.f;
+							BulletDesc.vTargetDir = { rand() % 6 * 0.1f *XRand, -1.f, rand() % 6 * 0.1f*ZRand, 0.f };
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
 						}
@@ -633,7 +633,7 @@ void CAI_Rinwell_SkillState::Enter()
 	case STATE_BANGJEON:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 		/* Make Effect */
-		_vector vOffset = { 0.f,0.f,0.f,0.f };
+		_vector vOffset = { 0.f,5.f,0.f,0.f };
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_HOUDEN;

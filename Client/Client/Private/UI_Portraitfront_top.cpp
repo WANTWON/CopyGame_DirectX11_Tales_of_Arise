@@ -268,6 +268,9 @@ HRESULT CUI_Portraitfront_top::Render()
 
 HRESULT CUI_Portraitfront_top::Render_Glow()
 {
+	if (CUI_Manager::Get_Instance()->Get_UIStrike())
+		return S_OK;
+
 	if (!m_bportraiton)
 		return S_OK;
 

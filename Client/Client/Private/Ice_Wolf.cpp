@@ -231,6 +231,12 @@ void CIce_Wolf::Set_BattleMode(_bool type)
 
 }
 
+void CIce_Wolf::Set_HitState()
+{
+	CIceWolfState* pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED);
+	m_pState = m_pState->ChangeState(m_pState, pState);
+}
+
 _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)

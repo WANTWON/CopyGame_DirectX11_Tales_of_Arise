@@ -59,6 +59,7 @@ public:
 	virtual void Make_UIFont(_uint iDamage);
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc);
 	virtual void	 Set_BattleMode(_bool type)				PURE;
+	virtual void	 Set_HitState()							PURE;
 public:
 	void Collision_Object(_float fTimeDelta);
 	void Change_Navigation(LEVEL eLevel);

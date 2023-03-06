@@ -6,14 +6,17 @@ BEGIN(Client)
 class CBossSkills final : public CBullet
 {
 public:
-	enum TYPE {
+	enum TYPE 
+	{
 		BULLET_SPEAR_MULTI_1,
 		BULLET_SPEAR_MULTI_2,
 		BULLET_SPEAR_MULTI_3,
 		BULLET_SPEAR_MULTI_4,
 		BULLET_SPEAR_MULTI_5,
 		BULLET_SPEAR_MULTI_6,
-		BULLET_END };
+		BULLET_LASER,
+		BULLET_END 
+	};
 
 public:
 	CBossSkills(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -32,6 +35,9 @@ protected:
 
 private:
 	void Tick_SpearMulti(_float fTimeDelta);
+	void Tick_Laser(_float fTimeDelta);
+
+	/* Effects Functions */
 	void Dead_Effect();
 	void Stop_Effect();
 

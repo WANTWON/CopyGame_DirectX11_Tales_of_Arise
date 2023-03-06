@@ -1888,7 +1888,7 @@ void CImgui_Manager::Show_CurrentModelList()
 				char szLayertag[MAX_PATH] = "";
 
 				string  ModelTag = iter->Get_Modeltag();
-				ModelTag = ModelTag + to_string(i);
+				ModelTag = ModelTag + "_" + to_string(i);
 				_tchar* RealModelTag = StringToTCHAR(ModelTag);
 				WideCharToMultiByte(CP_ACP, 0, RealModelTag, MAX_PATH, szLayertag, MAX_PATH, NULL, NULL);
 				sprintf(label, szLayertag);

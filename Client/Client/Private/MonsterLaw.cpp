@@ -263,6 +263,10 @@ void CMonsterLaw::Set_BattleMode(_bool type)
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 }
 
+void CMonsterLaw::Set_HitState()
+{
+}
+
 
 _bool CMonsterLaw::Is_AnimationLoop(_uint eAnimId)
 {

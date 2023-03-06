@@ -162,11 +162,14 @@ public:
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	void Set_SkillIndex(_uint iIndex) { m_eSkillIndex = iIndex; }
 	virtual void	 Set_BattleMode(_bool type) override;
+	virtual void	 Set_HitState() override;
 
-	/* 공중 판단 */
+
+	/* Air Check*/
 	_bool			Get_IsFly(void) { return m_bIsFly; }
 	void			On_IsFly(void) { m_bIsFly = true; }
 	void			Off_IsFly(void) { m_bIsFly = false; }
+
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;

@@ -4,6 +4,7 @@
 #include "RinwellStepState.h"
 #include "RinwellSkills.h"
 #include "RinwellDownState.h"
+#include "RinwellDamageState.h"
 #include "Effect.h"
 
 using namespace AiRinwell;
@@ -45,6 +46,8 @@ CRinwellState * CSkillState::Tick(_float fTimeDelta)
 		m_fTime += fTimeDelta;
 
 	m_pOwner->Check_Navigation();
+
+	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 	return nullptr;
 }
@@ -88,8 +91,6 @@ CRinwellState * CSkillState::LateTick(_float fTimeDelta)
 		m_fTime = 0.f;
 		Enter();
 	}
-		
-	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 	return nullptr;
 }
