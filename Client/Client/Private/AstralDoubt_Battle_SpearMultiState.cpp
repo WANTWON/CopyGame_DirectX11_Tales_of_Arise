@@ -759,6 +759,27 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 							m_bBullet_6 = true;
 						}
 					}
+					if (!m_bSmash)
+					{
+						if (!strcmp(pEvent.szName, "Smash"))
+						{
+							/* Effect */
+							_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+							vPosition += XMVector4Normalize(vLook) * 9;
+
+							_float4 vOffset;
+							XMStoreFloat4(&vOffset, vPosition);
+							vOffset.y = 3.f;
+
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							mWorldMatrix.r[3] = XMLoadFloat4(&vOffset);
+
+							CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Smash.dat"), mWorldMatrix);
+
+							m_bSmash = true;
+						}
+					}
 				}
 			}
 			else 
@@ -996,6 +1017,14 @@ CAstralDoubt_State * CBattle_SpearMultiState::LateTick(_float fTimeDelta)
 				m_b2th_FootCollision = false;
 			}
 		}
+	}
+	else if (m_eStateId == CAstralDoubt_State::STATE_SPEARMULTI)
+	{
+		Find_Target();
+
+		m_vActiveTargetPos = m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+		_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->LookAt(vPosition);
 	}
 
 	if (m_bIsAnimationFinished)
