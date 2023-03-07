@@ -329,7 +329,7 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 				if (!m_bSoundStart)
 				{
 					m_bSoundStart = true;
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Run1.wav"), SOUND_EFFECT, 0.5f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Run1.wav"), SOUND_FOOT, 0.5f);
 				}
 			}
 			else
@@ -420,7 +420,7 @@ void CRunState::Enter()
 				else
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN_BRAKE_START);
 			}
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_RunSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::SION:
@@ -438,7 +438,7 @@ void CRunState::Enter()
 				else
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::RUN_BRAKE_000);
 			}
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::RINWELL:
 			if (pBattleManager->Get_IsBattleMode())
@@ -455,7 +455,7 @@ void CRunState::Enter()
 				else
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN_BRAKE_000);
 			}
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::LAW:
 			if (pBattleManager->Get_IsBattleMode())
@@ -472,7 +472,7 @@ void CRunState::Enter()
 				else
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN_BRAKE);
 			}
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		}
 	}

@@ -116,6 +116,8 @@ HRESULT CAiRinwell::Ready_Components(void * pArg)
 
 	if (FAILED(__super::Add_Components(TEXT("Com_BattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_vecNavigation[LEVEL_BATTLE])))
 		return E_FAIL;
+	if (FAILED(__super::Add_Components(TEXT("Com_LawBattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_LawBattle_Navigation"), (CComponent**)&m_vecNavigation[LEVEL_LAWBATTLE])))
+		return E_FAIL;
 
 	m_pNavigationCom = m_vecNavigation[LEVEL_SNOWFIELD];
 

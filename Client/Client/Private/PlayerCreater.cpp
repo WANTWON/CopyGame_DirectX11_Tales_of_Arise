@@ -1272,6 +1272,14 @@ HRESULT CPlayerCreater::Ready_Layer_LawBattleMapObject(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MonsterLaw"), LEVEL_LAWBATTLE, TEXT("Layer_Boss"), &ModelDesc)))
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Boss"));
+
+	ModelDesc;
+	strcpy(ModelDesc.pModeltag, "AIRinwell");
+	ModelDesc.vPosition = _float3(64, 0.f, 64);
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"), &ModelDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"));
+
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }

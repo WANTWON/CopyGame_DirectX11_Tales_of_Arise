@@ -372,14 +372,10 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 
 HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
 {
-	/* �޽ú��� �׸���. */
-	/* �޽� �� ���⤷�� �ִ� ������ ����� �����´�. */
 	if (TYPE_ANIM == m_eModelType)
 	{
 		_float4x4		BoneMatrix[400];
 
-		/* �޽ÿ��� �����ؼ� �ϰ� ����ִ� ������ �迭�� ��ƿ�.
-		�� = ���� ������ * ���� �Ĺ��ε��Ʈ���� * ���ʻ���������� */
 		m_Meshes[iMeshIndex]->Get_BoneMatrices(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
 
 		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 400);
@@ -398,14 +394,10 @@ HRESULT CModel::Render(CShader * pShader, _uint iMeshIndex, _uint iPassIndex)
 HRESULT CModel::RenderShadow(CShader * pShader, _uint iMeshIndex, _uint iLevelIndex, _uint iPassIndex)
 {
 	
-	/* �޽ú��� �׸���. */
-	/* �޽� �� ���⤷�� �ִ� ������ ����� �����´�. */
 	if (TYPE_ANIM == m_eModelType)
 	{
 		_float4x4		BoneMatrix[400];
 
-		/* �޽ÿ��� �����ؼ� �ϰ� ����ִ� ������ �迭�� ��ƿ�.
-		�� = ���� ������ * ���� �Ĺ��ε��Ʈ���� * ���ʻ���������� */
 		m_Meshes[iMeshIndex]->Get_BoneMatrices(BoneMatrix, XMLoadFloat4x4(&m_PivotMatrix));
 
 		pShader->Set_MatrixArray("g_BoneMatrices", BoneMatrix, 400);
