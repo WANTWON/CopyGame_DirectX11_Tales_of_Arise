@@ -9,6 +9,7 @@
 #include "Level_Loading.h"
 #include "BattleManager.h"
 #include "Monster.h"
+#include "AstralDoubt.h"
 
 CLevel_BossZone::CLevel_BossZone(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -58,6 +59,7 @@ HRESULT CLevel_BossZone::Initialize()
 
 	//CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("Boss_Asu_BackGorundSound.wav"), g_fSoundVolume);
+	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BossEnter.dat"), XMMatrixIdentity());
 
 	CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
@@ -305,6 +307,8 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Check_Navigation();
 	pPlayer->Off_IsFly();
 	pPlayer->Change_Level(LEVEL_BOSS);
+	pPlayer->Set_IsActionMode(true);
+
 
 	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
 	_vector vPosition[3] = { XMVectorSetW(XMLoadFloat3(&ModelDesc2.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc3.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc4.vPosition), 1.f) };
@@ -316,6 +320,7 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Compute_CurrentIndex(LEVEL_BOSS);
 		iter->Check_Navigation();
 		iter->Change_Level(LEVEL_BOSS);
+		iter->Set_IsActionMode(true);
 		i++;
 	}
 	
@@ -332,47 +337,26 @@ HRESULT CLevel_BossZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
 	NONANIMDESC ModelDesc;
 
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
-	CBaseObj* pBossMonster = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Boss")));
-	pBattleManager->Add_BattleMonster(pBossMonster);
-	pBattleManager->Set_BossMonster(pBossMonster);
-
-
-	MONSTER_ID eMonsterID = pBattleManager->Get_MonsterType();
 	vector<CBaseObj*>		vecAllMonster = pBattleManager->Get_AllMonster();
-	
+
 	for (auto& iter : vecAllMonster)
 	{
-		dynamic_cast<CMonster*>(iter)->Save_LastPosition();
-		pGameInstance->Out_GameObject(LEVEL_STATIC, TEXT("Layer_Monster"), iter);
+		pBattleManager->Out_Monster(iter);
 	}
 
-	HANDLE hFile = 0;
-	_ulong dwByte = 0;
-	_uint iNum = 0;
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
+	CBaseObj* pBossMonsterFirst = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Boss")));
+	pBattleManager->Add_BattleMonster(pBossMonsterFirst);
+	pBattleManager->Set_BossMonster(pBossMonsterFirst);
 
-	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/BossPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
 
-	/* 타일의 개수 받아오기 */
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	pBossMonsterFirst->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMVectorSet(50.f,0.f,60.f,1.f), 1.f));
+	dynamic_cast<CMonster*>(pBossMonsterFirst)->Compute_CurrentIndex(LEVEL_BOSS);
+	dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_BattleMode(true);
+	dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_IsActionMode(true);
+	dynamic_cast<CAstralDoubt*>(pBossMonsterFirst)->Set_AmIFirstBoss(true);
+	pBattleManager->Set_LackonMonster(pBossMonsterFirst);
 
-	vector<CBaseObj*>		vecBattleMonster = pBattleManager->Get_BattleMonster();
-	for (auto& iter : vecBattleMonster)
-	{
-		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
-		_tchar pModeltag[MAX_PATH];
-		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
-
-		iter->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&ModelDesc.vPosition), 1.f));
-		iter->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetY(iter->Get_TransformState(CTransform::STATE_TRANSLATION), 8.f));
-		//dynamic_cast<CMonster*>(iter)->Change_Navigation(LEVEL_BOSS);
-		dynamic_cast<CMonster*>(iter)->Compute_CurrentIndex(LEVEL_BOSS);
-		dynamic_cast<CMonster*>(iter)->Set_BattleMode(true);
-		pBattleManager->Set_LackonMonster(iter);
-	}
-	CloseHandle(hFile);
 
 	RELEASE_INSTANCE(CGameInstance);
 	RELEASE_INSTANCE(CBattleManager);
@@ -474,11 +458,7 @@ HRESULT CLevel_BossZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_font"), LEVEL_BOSS, pLayerTag)))
 		return E_FAIL;
 
-	/*for (int i = 0; i < 6; ++i)
-	{
-	_uint number = i;
 
-	*/
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_HITS_fontnum"), LEVEL_BOSS, pLayerTag)))
 		return E_FAIL;
@@ -529,10 +509,6 @@ HRESULT CLevel_BossZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_BOSS, pLayerTag)))
 			return E_FAIL;
 	}
-	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_BOSS, pLayerTag)))
-		return E_FAIL;*/
-
-	/**/
 	
 
 	RELEASE_INSTANCE(CGameInstance);

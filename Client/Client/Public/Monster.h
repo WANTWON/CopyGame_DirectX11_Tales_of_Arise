@@ -126,6 +126,7 @@ protected:
 	_float m_fPatrolRadius = 5.f;
 	_float m_fDistanceToTarget = 0.f;
 	_float m_fTime_TakeDamageDeltaAcc = 0.f;
+	_float m_fTakeDamgeTime = 0.f;
 
 	_float m_fAnimSpeed = 1.f;
 
@@ -174,6 +175,7 @@ protected: /* For.Components */
 	CTexture* m_pDissolveTexture = nullptr;
 	
 protected:
+	_float m_fFresnelTimer = 0.f;
 	_bool m_bGlowUp = false; /* Used to increase Glow Power and spawn Diffuse Particles. */
 	_float m_fGlowUpTimer = 0.f;
 	_float m_fGlowUpLifespan = 2.f;

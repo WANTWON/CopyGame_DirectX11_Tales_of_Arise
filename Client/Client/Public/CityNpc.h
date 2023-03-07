@@ -181,6 +181,7 @@ private:
 	_float			m_fTimeDelta_Two = 0.f;
 	_float			m_fPLC_TimeDelta = 0.f;
 	_float			m_fChildSpeed = 0.f;
+	_float			m_fActiveTarget_Distance = 0.f;
 
 	_bool			m_bchaseGLDFinish = false;
 	_bool			m_bchaseNMM_SLV_Start = false;
@@ -196,6 +197,7 @@ private:
 	_bool			m_bHappyEnd = false;
 	_bool			m_bIsAnimationFinished = false;
 	_bool			m_bTurnFinish = false;
+	_bool			m_bCrowdSound = false;
 
 	//DOG
 	_bool			m_bIdle = false;

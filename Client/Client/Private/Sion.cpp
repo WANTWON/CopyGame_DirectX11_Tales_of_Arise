@@ -43,8 +43,8 @@ HRESULT CSion::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_tInfo.fMaxHp = 1500.f;
-	m_tInfo.fCurrentHp = 1500.f;
+	m_tInfo.fMaxHp = 5000.f;
+	m_tInfo.fCurrentHp = 5000.f;
 	m_tInfo.fMaxMp = 5.f;
 	m_tInfo.fCurrentMp = 2.3f;
 	m_tInfo.iDamage = 100;
@@ -184,7 +184,7 @@ void CSion::Change_Level(LEVEL eLevel)
 			}
 			else
 			{
-				pSocket = m_pModelCom->Get_BonePtr("SWG_CHR_ARI_HUM_003_COLOAR00_00_L");
+				pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 				if (nullptr == pSocket)
 				{
 					ERR_MSG(TEXT("Failed to Get BonePtr"));

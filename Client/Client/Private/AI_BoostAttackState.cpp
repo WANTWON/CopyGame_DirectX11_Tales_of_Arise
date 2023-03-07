@@ -90,7 +90,17 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 						m_bIsStateEvent = true;
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
-						if (!strcmp(pEvent.szName, "Alphen_Strike_1"))
+						if (!strcmp(pEvent.szName, "Alphen_Boost_Floor"))
+						{
+							if (!m_bAlphenFloor)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								CEffect::PlayEffectAtLocation(TEXT("Alphen_Boost_Floor.dat"), mWorldMatrix);
+
+								m_bAlphenFloor = true;
+							}
+						}
+						if (!strcmp(pEvent.szName, "Alphen_Boost_1"))
 						{
 							if (!m_bAlphenStrike_1)
 							{
@@ -99,7 +109,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 								CBullet::BULLETDESC BulletDesc;
 								BulletDesc.eCollisionGroup = PLAYER;
 								BulletDesc.fDeadTime = 3.f;
-								BulletDesc.eBulletType = CAlphenSkills::STRIKE_1;
+								BulletDesc.eBulletType = CAlphenSkills::BOOST_1;
 								BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
 								BulletDesc.pOwner = m_pOwner;
 								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
@@ -110,7 +120,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 								m_bAlphenStrike_1 = true;
 							}
 						}
-						if (!strcmp(pEvent.szName, "Alphen_Strike_2"))
+						if (!strcmp(pEvent.szName, "Alphen_Boost_2"))
 						{
 							if (!m_bAlphenStrike_2)
 							{
@@ -119,7 +129,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 								CBullet::BULLETDESC BulletDesc;
 								BulletDesc.eCollisionGroup = PLAYER;
 								BulletDesc.fDeadTime = 3.f;
-								BulletDesc.eBulletType = CAlphenSkills::STRIKE_2;
+								BulletDesc.eBulletType = CAlphenSkills::BOOST_2;
 								BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + vLook * 2.f;
 								BulletDesc.pOwner = m_pOwner;
 								BulletDesc.vTargetDir = XMVector3Normalize(BulletDesc.vTargetPosition - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
@@ -188,9 +198,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 
 				case CPlayer::LAW:
 				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
@@ -304,15 +312,15 @@ void CAI_BoostAttack::Enter()
 		mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects2 = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Booster.wav"), SOUND_EFFECT, 1.0f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Booster.wav"), SOUND_EFFECT, 0.6f);
 		break;
 	}
 	case CPlayer::LAW:
 	{
 		CPlayerManager::Get_Instance()->Get_EnumPlayer(3)->Set_BoostGuage(0);
 		m_iCurrentAnimIndex = CLaw::ANIM::BTL_ATTACK_STRIKE;
-		
-		// Sound
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_BoosterAttack.wav"), SOUND_EFFECT, 0.6f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_BoosterAttackVoice.wav"), SOUND_EFFECT, 0.6f);
 		break;
 	}
 	}
@@ -397,6 +405,13 @@ void CAI_BoostAttack::Exit()
 			}
 		}
 	}
+
+	if (m_pOwner->Get_PlayerID() == CPlayer::LAW)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+	}
+	
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	__super::Exit();

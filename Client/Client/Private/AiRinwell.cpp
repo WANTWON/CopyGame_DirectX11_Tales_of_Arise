@@ -53,7 +53,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 	}
 
 
-	if (m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode())
+	if (m_bBattleMode == CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
 		/* Set State */
 		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_BATTLESTART);
@@ -146,6 +146,11 @@ int CAiRinwell::Tick(_float fTimeDelta)
 	AI_Behavior(fTimeDelta);
 	Tick_State(fTimeDelta);
 
+	if (m_pState->Get_StateId() == CRinwellState::STATE_ID::STATE_DOWN)
+		m_fFresnelTimer += fTimeDelta * 6;
+	else
+		m_fFresnelTimer = 0.f;
+
 	return OBJ_NOEVENT;
 }
 
@@ -172,6 +177,19 @@ void CAiRinwell::Late_Tick(_float fTimeDelta)
 		LateTick_State(fTimeDelta);
 	}
 
+}
+
+HRESULT CAiRinwell::Render()
+{
+	if (m_pState->Get_StateId() == CRinwellState::STATE_ID::STATE_DOWN)
+	{
+		_bool bDownState = true;
+		m_pShaderCom->Set_RawValue("g_bRimLight", &bDownState, sizeof(_bool));
+	}
+
+	__super::Render();
+
+	return S_OK;
 }
 
 HRESULT CAiRinwell::Render_Glow()

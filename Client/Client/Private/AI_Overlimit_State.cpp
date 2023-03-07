@@ -139,6 +139,8 @@ CAIState * CAI_Overlimit_State::LateTick(_float fTimeDelta)
 void CAI_Overlimit_State::Enter()
 {
 	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
+	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Camera"), 1.f);
+
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:

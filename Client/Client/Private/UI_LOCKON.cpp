@@ -125,6 +125,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		if (m_fTimeOffset <= 0.1f)
 			m_fTimeOffset = 0.1f;		
 		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), m_fTimeOffset);
+		//CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Camera"), 0.5f);
 		RELEASE_INSTANCE(CGameInstance);
 		
 	}
@@ -190,6 +191,19 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 {
+	// Kill Strike Flash Effect when Strike Action starts.
+	if (!m_pEffects.empty() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+	{
+		for (auto& iter : m_pEffects)
+		{
+			if (iter != nullptr)
+			{
+				iter->Set_Dead(true);
+				iter = nullptr;
+			}
+		}
+	}
+
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return;
 
@@ -202,20 +216,6 @@ void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 
 	if (m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_GLOW, this);
-
-	if (!m_pEffects.empty() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
-	{
-		for (auto& iter : m_pEffects)
-		{
-			if (iter != nullptr)
-			{
-				iter->Set_Dead(true);
-				iter = nullptr;
-
-			}
-			
-		}
-	}
 }
 
 HRESULT CUI_LOCKON::Render()
