@@ -74,6 +74,7 @@ int CUI_Minigame1::Tick(_float fTimeDelta)
 		//m_bGameStart = true;
 	if (m_bGameStartUI)
 	{
+		
 		m_fScaler += 0.02f;
 		if (m_fScaler >= 1.f)
 		{
