@@ -17,12 +17,30 @@ public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
+private:
+	void Update_Skill(void);
+	void Remove_Skill(void);
+	void Reset_Skill(void);
 
 private:
 	_matrix m_StartMatrix;
 
 	_float m_fStartHeight = 0.f;
 	_float m_fTime = 0.f;
+
+	/* Effect Booleans */
+	_bool m_bSankamousyuukyaku_1 = false;				// R (Air)
+	_bool m_bSankamousyuukyaku_2 = false;				// R (Air)
+	_bool m_bSankamousyuukyaku_Punch_1 = false;			// R (Air)
+	_bool m_bSankamousyuukyaku_Punch_2 = false;			// R (Air)
+
+	_vector m_vPunchPosition_1;
+	_vector m_vPunchPosition_2;
+
+	/* Effect Vectors */
+	vector<class CEffect*> m_Sankamousyuukyaku_1;
+	vector<class CEffect*> m_Sankamousyuukyaku_Punch_1;
+	vector<class CEffect*> m_Sankamousyuukyaku_Punch_2;
 
 private:
 	CCollider* m_pLeftHandCollider = nullptr;

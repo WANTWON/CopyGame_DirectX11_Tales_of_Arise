@@ -30,7 +30,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 	if (CheckTarget() == false)
 		return nullptr;
 
-	if ((m_eStateId == CPlayerState::STATE_SKILL_ATTACK_F) && (nullptr != m_pTarget))
+	if ((m_eStateId == CAIState::STATE_SKILL_ATTACK_F) && (nullptr != m_pTarget))
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
@@ -42,9 +42,9 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
-		if ((m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_R) && !m_bIsFly)
+		if ((m_eStateId == Client::CAIState::STATE_SKILL_ATTACK_R) && !m_bIsFly)
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
-		else if ((m_eStateId == Client::CPlayerState::STATE_SKILL_ATTACK_F) && !m_bIsFly)
+		else if ((m_eStateId == Client::CAIState::STATE_SKILL_ATTACK_F) && !m_bIsFly)
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.02f), fRotationRadian, m_pOwner->Get_Navigation());
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
@@ -159,7 +159,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 				switch (m_eStateId)
 				{
-					case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+					case Client::CAIState::STATE_SKILL_ATTACK_E:
 					{
 						if (m_bIsFly)
 						{
@@ -198,7 +198,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 						}
 						break;
 					}
-					case Client::CPlayerState::STATE_SKILL_ATTACK_R:
+					case Client::CAIState::STATE_SKILL_ATTACK_R:
 					{
 						if (m_bIsFly)
 						{
@@ -224,7 +224,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 						}
 						break;
 					}
-					case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+					case Client::CAIState::STATE_SKILL_ATTACK_F:
 					{
 						if (m_bIsFly)
 						{
@@ -263,16 +263,16 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 									m_bTyourengadan_3 = true;
 								}
 							}
-							if (!strcmp(pEvent.szName, "Tyourengadan_4"))
+							/*if (!strcmp(pEvent.szName, "Tyourengadan_4"))
 							{
-								if (!m_bTyourengadan_4)
-								{
-									mWorldMatrix.r[3] = m_vPunchPosition;
+							if (!m_bTyourengadan_4)
+							{
+							mWorldMatrix.r[3] = m_vPunchPosition;
 
-									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_4.dat"), mWorldMatrix);
-									m_bTyourengadan_4 = true;
-								}
+							CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_4.dat"), mWorldMatrix);
+							m_bTyourengadan_4 = true;
 							}
+							}*/
 							if (!strcmp(pEvent.szName, "Tyourengadan_5"))
 							{
 								if (!m_bTyourengadan_5)

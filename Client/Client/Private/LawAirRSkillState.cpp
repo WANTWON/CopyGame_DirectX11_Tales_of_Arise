@@ -119,16 +119,6 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 								m_vPunchPosition_1 = m_Sankamousyuukyaku_Punch_1[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 						}
 					}
-					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Particles_1"))
-					{
-						if (!m_bSankamousyuukyaku_Particles_1)
-						{
-							mWorldMatrix.r[3] = m_vPunchPosition_1;
-
-							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_2.dat"), mWorldMatrix);
-							m_bSankamousyuukyaku_Particles_1 = true;
-						}
-					}
 					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Punch_2"))
 					{
 						if (!m_bSankamousyuukyaku_Punch_2)
@@ -138,16 +128,6 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 
 							if (m_Sankamousyuukyaku_Punch_2[1])
 								m_vPunchPosition_2 = m_Sankamousyuukyaku_Punch_2[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-						}
-					}
-					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Particles_2"))
-					{
-						if (!m_bSankamousyuukyaku_Particles_2)
-						{
-							mWorldMatrix.r[3] = m_vPunchPosition_2;
-
-							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_2.dat"), mWorldMatrix);
-							m_bSankamousyuukyaku_Particles_2 = true;
 						}
 					}
 					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_3"))
@@ -443,8 +423,6 @@ void CLawAirRSkillState::Reset_Skill(void)
 	m_bSankamousyuukyaku_2 = false;
 	m_bSankamousyuukyaku_Punch_1 = false;
 	m_bSankamousyuukyaku_Punch_2 = false;
-	m_bSankamousyuukyaku_Particles_1 = false;
-	m_bSankamousyuukyaku_Particles_2 = false;
 }	
 
 CCollider * CLawAirRSkillState::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)
