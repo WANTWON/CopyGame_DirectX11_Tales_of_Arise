@@ -57,7 +57,7 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 
 	m_eMonsterID = ASTRAL_DOUBT;
 
-	m_tStats.m_fMaxHp = 900000;
+	m_tStats.m_fMaxHp = 50000;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
@@ -190,6 +190,28 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
+
+	if (m_bCreatedMonster == false &&
+		m_tStats.m_fCurrentHp < m_tStats.m_fMaxHp*0.5f &&
+		m_AmIFirstBoss == true)
+	{
+		CBattleManager*			pBattleManager = GET_INSTANCE(CBattleManager);
+		CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
+		NONANIMDESC ModelDesc;
+
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_SecondBoss"));
+		CBaseObj* pBossMonsterFirst = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_SecondBoss")));
+		pBattleManager->Add_BattleMonster(pBossMonsterFirst);
+
+		pBossMonsterFirst->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMVectorSet(50.f, 0.f, 60.f, 1.f), 1.f));
+		dynamic_cast<CMonster*>(pBossMonsterFirst)->Compute_CurrentIndex(LEVEL_BOSS);
+		dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_BattleMode(true);
+		dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_IsActionMode(true);
+
+		RELEASE_INSTANCE(CGameInstance);
+		RELEASE_INSTANCE(CBattleManager);
+		m_bCreatedMonster = true;
+	}
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
@@ -336,13 +358,12 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 
 _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
-	if (fDamage <= 0 || m_bDead || m_bDissolve || m_tStats.m_fCurrentHp <= 0.f || m_bTakeDamage)
+	if (fDamage <= 0 || m_bDead || m_bGlowUp || m_bDissolve || m_bTakeDamage || m_pState->Get_StateId() == CAstralDoubt_State::STATE_DEAD)
 		return 0; 
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
-	if (m_bOnGoingDown == false)
-	{
+	
 		if (iHp <= 0)
 		{
 			m_tStats.m_fCurrentHp = 0;
@@ -357,27 +378,18 @@ _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC H
 		}
 		else
 		{
-			m_iBeDamaged_Cnt++;
+			if (m_bOnGoingDown == false)
+			{
+				m_iBeDamaged_Cnt++;
 
-			if (m_bDownState == false)
-			{
-				return iHp;
-			}
-			else if (m_bDownState == true)
-			{
-				CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DOWN);
-				m_pState = m_pState->ChangeState(m_pState, pState);
+				if (m_bDownState == true)
+				{
+					CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DOWN);
+					m_pState = m_pState->ChangeState(m_pState, pState);
+				}
 			}
 
 		}
-	}
-
-	else if (m_bOnGoingDown == true)
-		return iHp;
-
-
-
-
 
 	//if (m_bOnGoingDown == false)
 	//{

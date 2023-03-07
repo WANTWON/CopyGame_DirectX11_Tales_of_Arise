@@ -76,7 +76,7 @@ int CMonster::Tick(_float fTimeDelta)
 	if (m_bTakeDamage)
 		m_fTime_TakeDamageDeltaAcc += fTimeDelta;
 
-	if (0.2f <= m_fTime_TakeDamageDeltaAcc)
+	if (m_fTakeDamgeTime <= m_fTime_TakeDamageDeltaAcc)
 	{
 		m_bTakeDamage = false;
 		m_fTime_TakeDamageDeltaAcc = 0.f;
@@ -638,6 +638,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 	
+	m_fTakeDamgeTime = HitDesc.fTakeDamageTimer;
 	m_pTarget = DamageCauser;
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 	
@@ -669,7 +670,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 
 	}
 	
-	m_tStats.m_fLockonSmashGuage += 0.1f;
+	m_tStats.m_fLockonSmashGuage += 0.05f;
 
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)

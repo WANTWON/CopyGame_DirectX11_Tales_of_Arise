@@ -85,6 +85,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
+		
 		if (m_fActiveTarget_Distance <= 10.f)
 		{
 			switch (m_iRand)

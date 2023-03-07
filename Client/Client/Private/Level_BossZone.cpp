@@ -9,6 +9,7 @@
 #include "Level_Loading.h"
 #include "BattleManager.h"
 #include "Monster.h"
+#include "AstralDoubt.h"
 
 CLevel_BossZone::CLevel_BossZone(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -336,6 +337,13 @@ HRESULT CLevel_BossZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
 	NONANIMDESC ModelDesc;
 
+	vector<CBaseObj*>		vecAllMonster = pBattleManager->Get_AllMonster();
+
+	for (auto& iter : vecAllMonster)
+	{
+		pBattleManager->Out_Monster(iter);
+	}
+
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
 	CBaseObj* pBossMonsterFirst = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Boss")));
 	pBattleManager->Add_BattleMonster(pBossMonsterFirst);
@@ -346,6 +354,7 @@ HRESULT CLevel_BossZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	dynamic_cast<CMonster*>(pBossMonsterFirst)->Compute_CurrentIndex(LEVEL_BOSS);
 	dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_BattleMode(true);
 	dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_IsActionMode(true);
+	dynamic_cast<CAstralDoubt*>(pBossMonsterFirst)->Set_AmIFirstBoss(true);
 	pBattleManager->Set_LackonMonster(pBossMonsterFirst);
 
 

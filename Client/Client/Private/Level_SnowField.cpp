@@ -109,10 +109,10 @@ HRESULT CLevel_SnowField::Initialize()
 			return E_FAIL;
 	}
 
-	
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("SnowFiledSong.wav"), g_fSoundVolume);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_SnowField_2.wav"), g_fSoundVolume);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Nature_blizzard.wav"), SOUND_NATURE, 0.6f);
 	CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_StrikeAttack(false);
 
 	if (vecFightedMonster.size() != 0)
@@ -250,7 +250,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Trigger"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Effects"));
-
+		CGameInstance::Get_Instance()->Clear_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -744,6 +744,6 @@ void CLevel_SnowField::Free()
 
 	Safe_Release(m_pCollision_Manager);
 	
-	
+	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
 
 }

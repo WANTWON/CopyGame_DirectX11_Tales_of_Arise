@@ -125,6 +125,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		if (m_fTimeOffset <= 0.1f)
 			m_fTimeOffset = 0.1f;		
 		CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), m_fTimeOffset);
+		//CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Camera"), 0.5f);
 		RELEASE_INSTANCE(CGameInstance);
 		
 	}

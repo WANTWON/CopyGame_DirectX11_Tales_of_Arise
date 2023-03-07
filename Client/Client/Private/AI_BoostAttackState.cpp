@@ -198,9 +198,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 
 				case CPlayer::LAW:
 				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
@@ -314,15 +312,15 @@ void CAI_BoostAttack::Enter()
 		mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects2 = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Booster.wav"), SOUND_EFFECT, 1.0f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Booster.wav"), SOUND_EFFECT, 0.6f);
 		break;
 	}
 	case CPlayer::LAW:
 	{
 		CPlayerManager::Get_Instance()->Get_EnumPlayer(3)->Set_BoostGuage(0);
 		m_iCurrentAnimIndex = CLaw::ANIM::BTL_ATTACK_STRIKE;
-		
-		// Sound
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_BoosterAttack.wav"), SOUND_EFFECT, 0.6f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_BoosterAttackVoice.wav"), SOUND_EFFECT, 0.6f);
 		break;
 	}
 	}
@@ -407,6 +405,13 @@ void CAI_BoostAttack::Exit()
 			}
 		}
 	}
+
+	if (m_pOwner->Get_PlayerID() == CPlayer::LAW)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+	}
+	
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	__super::Exit();

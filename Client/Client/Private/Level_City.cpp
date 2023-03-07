@@ -69,7 +69,8 @@ HRESULT CLevel_City::Initialize()
 
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LEVEL_CITY2.wav"), g_fSoundVolume);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LEVEL_CITY3.wav"), g_fSoundVolume);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_mountain_Bird_Bug.wav"), SOUND_NATURE, 0.5f);
 	return S_OK;
 }
 
@@ -389,6 +390,6 @@ void CLevel_City::Free()
 	//CBattleManager::Get_Instance()->Clear_Monster();
 	Safe_Release(m_pCollision_Manager);
 
-	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
+	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
 
 }

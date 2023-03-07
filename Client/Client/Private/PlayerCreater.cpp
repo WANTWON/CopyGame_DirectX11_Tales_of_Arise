@@ -1661,13 +1661,13 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_WorkTool(const _tchar * pLayerTag)
 		if (!wcscmp(pModeltag, TEXT("Cigar")))
 		{
 			ItemDesc.etype = CItem::TABACO;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_WORKTOOL, pLayerTag, &ItemDesc)))
 				return E_FAIL;
 		}
 		else if (!wcscmp(pModeltag, TEXT("Chess")))
 		{
 			ItemDesc.etype = CItem::CHESS;
-			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_WORKTOOL, pLayerTag, &ItemDesc)))
 				return E_FAIL;
 		}
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_WORKTOOL, TEXT("Layer_Interact"));

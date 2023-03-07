@@ -126,6 +126,7 @@ protected:
 	_float m_fPatrolRadius = 5.f;
 	_float m_fDistanceToTarget = 0.f;
 	_float m_fTime_TakeDamageDeltaAcc = 0.f;
+	_float m_fTakeDamgeTime = 0.f;
 
 	_float m_fAnimSpeed = 1.f;
 
