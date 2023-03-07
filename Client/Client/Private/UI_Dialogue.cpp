@@ -286,10 +286,11 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
 		
 					dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(8, true, 0, 1);
-					CBattleManager::Get_Instance()->Set_IsStrike(true);
-					break;
+					CBattleManager::Get_Instance()->Set_IsStrike(false);
+					
 					CGameInstance::Get_Instance()->StopAll();
 					CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LawBattle.wav"), g_fSoundVolume);
+					break;
 				}
 					
 
