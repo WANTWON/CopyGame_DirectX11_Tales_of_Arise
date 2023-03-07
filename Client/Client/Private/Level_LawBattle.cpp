@@ -336,11 +336,6 @@ HRESULT CLevel_LawBattle::Ready_Layer_Player(const _tchar * pLayerTag)
 			return E_FAIL;
 	
 	}
-	if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::LAW) == nullptr)
-	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;
-	}
 
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
@@ -564,8 +559,8 @@ HRESULT CLevel_LawBattle::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_top"), LEVEL_LAWBATTLE, pLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_right"), LEVEL_LAWBATTLE, pLayerTag)))
-		return E_FAIL;
+	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_right"), LEVEL_LAWBATTLE, pLayerTag)))
+		return E_FAIL;*/
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_bottom"), LEVEL_LAWBATTLE, pLayerTag)))
 		return E_FAIL;
