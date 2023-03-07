@@ -273,6 +273,7 @@
     <ClInclude Include="..\Public\MiniGameNpc.h" />
     <ClInclude Include="..\Public\MonsterLaw.h" />
     <ClInclude Include="..\Public\Monster_LawSkill.h" />
+    <ClInclude Include="..\Public\Monster_Law_Move.h" />
     <ClInclude Include="..\Public\Monster_Law_StrikeTrigger2.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
@@ -557,6 +558,7 @@
     <ClCompile Include="..\Private\MiniGameNpc.cpp" />
     <ClCompile Include="..\Private\MonsterLaw.cpp" />
     <ClCompile Include="..\Private\Monster_LawSkill.cpp" />
+    <ClCompile Include="..\Private\Monster_Law_Move.cpp" />
     <ClCompile Include="..\Private\Monster_Law_StrikeTrigger2.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />

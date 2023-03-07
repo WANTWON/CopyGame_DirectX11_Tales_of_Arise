@@ -228,20 +228,20 @@ void CMonsterLaw_Strike1::Enter()
 {
 	//m_pOwner->Set_StrikeAttack(true);
 	
-
+	m_pOwner->Set_IsActionMode(true);
 	Set_EffectPosition();
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RAINOUI);
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MYSTIC_ZINRAIROUEIKYAKU);
 	m_pOwner->Get_Model()->Reset();
 
 
-	if (nullptr == m_pTarget)
+	/*if (nullptr == m_pTarget)
 	{
 		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	else
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));*/
 
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_VOICE, 0.55f);
@@ -249,6 +249,8 @@ void CMonsterLaw_Strike1::Enter()
 
 void CMonsterLaw_Strike1::Exit()
 {
+	m_pOwner->Get_Model()->Reset();
+
 	if (m_bStrikeBlur)
 	{
 		m_bStrikeBlur = false;

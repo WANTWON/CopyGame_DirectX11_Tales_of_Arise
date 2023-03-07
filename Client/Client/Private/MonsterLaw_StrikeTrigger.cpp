@@ -197,6 +197,6 @@ void CMonsterLaw_StrikeTrigger::Update_StrikePosition(_tchar * FilePath, _int iM
 	m_vStrikePosition[LOCKON] = m_vStrikeLockOnPos[0];
 
 
-//	CPlayerManager::Get_Instance()->Set_StrikeLockOnPos(m_vStrikeLockOnPos);
+	//CPlayerManager::Get_Instance()->Set_StrikeLockOnPos(m_vStrikeLockOnPos);
 	
 }

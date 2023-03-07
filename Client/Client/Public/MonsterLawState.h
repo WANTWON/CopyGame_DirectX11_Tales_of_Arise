@@ -127,7 +127,15 @@ protected:
 
 	}
 
+	_float Get_Target_Distance()
+	{
 
+		_vector vMonsterPosition = m_pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+		_vector vPlayerPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+		_float fDistance = XMVectorGetX(XMVector3Length(vMonsterPosition - vPlayerPosition));
+		return fDistance;
+	}
 
 
 protected:
