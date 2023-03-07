@@ -80,11 +80,11 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 		return new CMonster_Law_Move(m_pOwner);
 	}
 
-	if (m_pOwner->Get_Debug())
+	/*if (m_pOwner->Get_Debug())
 	{
 		return new CMonsterLaw_StrikeTrigger(m_pOwner);
 		m_pOwner->Set_Debug(false);
-	}
+	}*/
 		
 
 	switch (rand() % 6)

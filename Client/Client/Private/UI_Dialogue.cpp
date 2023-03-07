@@ -11,6 +11,7 @@
 #include "Level_Restaurant.h"
 #include "Level_WorkTool.h"
 #include "Player.h"
+#include "MonsterLaw.h"
 
 
 CUI_Dialogue::CUI_Dialogue(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -62,6 +63,7 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 	Read_TextFiles_for_Minigame2start();
 	Read_TextFiles_for_Minigame2end();
 	Read_TextFiles_for_LawBossBattleStart();
+	Read_TextFiles_for_LawBossBattleEvent();
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -142,6 +144,15 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 		//}
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_6)) // 생겨질때
 		{
+			if (m_iVectorIndex == 13 && m_iDialogueindex == 1)
+			{
+				CPlayerManager::Get_Instance()->Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(50.f, 0.f, 50.f, 1.f));
+				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+				pCameraManager->Play_ActionCamera(TEXT("SexyLaw2.dat"), XMMatrixIdentity());
+				CPlayerManager::Get_Instance()->Get_EnumPlayer(2)->Set_IsActionMode(true);
+				CPlayerManager::Get_Instance()->Get_EnumPlayer(2)->AI_RINWELL_Event();
+			}
 		
 			++m_iDialogueindex;
 
@@ -255,9 +266,28 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					break;
 
 				case 12:
+				{
 					CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
 					pCurrentLevel->Set_NextLevel(true, LEVEL_LAWBATTLE);
 					break;
+				}
+					
+
+				case 13:
+				{
+					CPlayerManager::Get_Instance()->Set_Changetoboss(true);
+					dynamic_cast<CMonsterLaw*>(CBattleManager::Get_Instance()->Get_BossMonster())->Set_EventFinish(true);
+					CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"));
+					CBaseObj* pObject = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell")));
+					dynamic_cast<CMonster*>(pObject)->Change_Navigation(LEVEL_LAWBATTLE);
+					dynamic_cast<CMonster*>(pObject)->Compute_CurrentIndex(LEVEL_LAWBATTLE);
+					dynamic_cast<CMonster*>(pObject)->Set_BattleMode(true);
+					CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
+					break;
+				}
+					
+
+
 						
 
 
@@ -2025,6 +2055,101 @@ void CUI_Dialogue::Read_TextFiles_for_LawBossBattleStart()
 	matrix.push_back(m_vDialogue12[4]);
 	matrix.push_back(m_vDialogue12[5]);
 	matrix.push_back(m_vDialogue12[6]);
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
+void CUI_Dialogue::Read_TextFiles_for_LawBossBattleEvent()
+{
+	std::ifstream file("../../../Bin/LawSexy0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue13[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/LawSexy1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue13[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/LawSexy2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue13[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/LawSexy3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue13[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+
+
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialogue13[0]);
+	matrix.push_back(m_vDialogue13[1]);
+	matrix.push_back(m_vDialogue13[2]);
+	matrix.push_back(m_vDialogue13[3]);
+
 
 
 	m_vCurrentDialogue.push_back(matrix);

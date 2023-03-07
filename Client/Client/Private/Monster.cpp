@@ -14,6 +14,7 @@
 #include "UI_font_Damage_number.h"
 #include "UI_Comboline.h"
 #include "CriticalFont.h"
+
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBaseObj(pDevice, pContext)
 {

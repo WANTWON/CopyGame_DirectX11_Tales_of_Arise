@@ -17,6 +17,7 @@ _bool CRinwell::Is_AnimationLoop(_uint eAnimId)
 	case JUMP_LOOP:
 	case JUMP_RUN_LOOP:
 	case BTL_MOVE_IDLE:
+	case BTL_DAMAGE_LOOP:
 		return true;
 	default:
 		return false;

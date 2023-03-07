@@ -24,6 +24,7 @@
 #include "AI_SionRinwell_Smash.h"
 #include "AI_SionLaw_Smash.h"
 #include "AI_RinwellLaw_Smash.h"
+#include "AI_Rinwell_Fascinated.h"
 //////////////////////////////////
 #include "AI_Overlimit_State.h"
 #include "AIPoseState.h"
@@ -821,6 +822,14 @@ void CPlayer::AI_check()
 	CAIState* pAIState = nullptr;
 
 	pAIState = new CAICheckState(this,CAIState::STATE_IDLE);
+	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+}
+
+void CPlayer::AI_RINWELL_Event()
+{
+	CAIState* pAIState = nullptr;
+
+	pAIState = new CAI_Rinwell_Fascinated(this);
 	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 }
 

@@ -283,8 +283,7 @@ _int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
-	if (m_bOnGoingDown == false)
-	{
+
 		if (iHp <= 0)
 		{
 			m_tStats.m_fCurrentHp = 0;
@@ -298,7 +297,8 @@ _int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 		else
 		{
 			++m_iBeDamaged_Cnt;
-			if (m_bOnGoingHowLing == false)
+	
+			if (m_bOnGoingHowLing == false && m_bOnGoingDown == false)
 			{
 				if (m_bDownState == false)
 				{
@@ -354,7 +354,7 @@ _int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 			else
 				return iHp;
 		}
-	}
+
 	
 
 	return iHp;

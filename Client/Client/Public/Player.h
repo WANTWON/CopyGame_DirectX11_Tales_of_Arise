@@ -77,6 +77,9 @@ public: /* Getter &  Setter */
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
 	void Play_AISkill(PLAYERID ePlayer);
+
+	void AI_RINWELL_Event();
+
 	//expup
 	void Plus_EXP(_uint exp);
 
