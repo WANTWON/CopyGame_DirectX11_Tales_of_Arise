@@ -6,7 +6,7 @@
 #include "EffectMesh.h"
 #include "AICheckState.h"
 #include "Alphen.h"
-
+#include "Effect.h"
 
 using namespace AIPlayer;
 
@@ -187,6 +187,8 @@ CAIState * CAI_Alphen_NormalAttackState::LateTick(_float fTimeDelta)
 
 void CAI_Alphen_NormalAttackState::Enter()
 {
+	m_bEffectSlashSpawned = false;
+
 	//__super::Enter();
 	if (CheckTarget() == false)
 		return;

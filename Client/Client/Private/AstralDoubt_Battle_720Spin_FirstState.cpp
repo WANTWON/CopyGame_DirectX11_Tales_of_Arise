@@ -24,7 +24,7 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 {
-	
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -37,9 +37,6 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 
 		m_pOwner->Check_Navigation();
 	}
-
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-
 
 	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
 
@@ -228,7 +225,8 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				{
 					if (!strcmp(pEvent.szName, "Spin"))
 					{
-						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Swing_360.dat"), mWorldMatrix);
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Swing_360_Ring.dat"), mWorldMatrix);
+
 						m_bSpin = true;
 					}
 				}
@@ -236,7 +234,19 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 				{
 					if (!strcmp(pEvent.szName, "Slash"))
 					{
-						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Swing_360_Slash.dat"), mWorldMatrix);
+						vector<CEffect*> Slash = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Swing_360_Slash.dat"), mWorldMatrix);
+
+						_matrix mParticlesMatrix;
+
+						mParticlesMatrix = Slash[0]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = Slash[2]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = Slash[4]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
 						m_bSlash = true;
 					}
 				}

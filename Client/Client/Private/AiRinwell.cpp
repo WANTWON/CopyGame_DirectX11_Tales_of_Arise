@@ -202,6 +202,12 @@ HRESULT CAiRinwell::Render_Glow()
 	return S_OK;
 }
 
+void CAiRinwell::Set_HitState()
+{
+	CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_STRIKE_HIT);
+	m_pState = m_pState->ChangeState(m_pState, pState);
+}
+
 void CAiRinwell::AI_Behavior(_float fTimeDelta)
 {
 	CRinwellState* pNewState = m_pState->AI_Behaviour(fTimeDelta);
@@ -329,12 +335,34 @@ _bool CAiRinwell::Is_AnimationLoop(_uint eAnimId)
 	return true;
 }
 
-_int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _bool bLockOnChange)
+_int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
 	if (fDamage <= 0 || m_bDead || m_bTakeDamage)
 		return 0;
 
-	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp;
+
+	if ((CRinwellState::STATE_SKILL == m_pState->Get_StateId()) && (CRinwellState::METEOR == m_pState->Get_SkillType()))
+	{
+		m_fMethor -= fDamage;
+
+		Make_UIFont(fDamage);
+		Make_GetAttacked_Effect(DamageCauser);
+
+		if (0.f >= m_fMethor)
+		{
+			m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+
+			m_eDmg_Direction = Calculate_DmgDirection();
+
+			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+		}
+
+		iHp = _int(m_tStats.m_fCurrentHp);
+	}
+	else
+		iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
 	m_iDamage += fDamage;
 
@@ -363,6 +391,7 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _
 	{
 		if (m_bIsAir)
 		{
+			m_fMethor = 1000.f;
 			CRinwellState* pState = new CSkillState(this, CRinwellState::METEOR, STATETYPE_START);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
@@ -377,10 +406,14 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _
 	else if (CRinwellState::STATE_SKILL != m_pState->Get_StateId())
 	{
 		m_pTarget = DamageCauser;
-		m_eDmg_Direction = Calculate_DmgDirection();
 
-		CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
-		m_pState = m_pState->ChangeState(m_pState, pState);
+		if (dynamic_cast<CPlayer*>(m_pTarget) == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+		{
+			m_eDmg_Direction = Calculate_DmgDirection();
+
+			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+		}
 	}
 	
 	return iHp;

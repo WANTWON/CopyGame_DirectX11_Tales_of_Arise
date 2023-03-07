@@ -274,14 +274,14 @@ _bool CBerserker::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _bool bLockOnChange)
+_int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
 	if (fDamage <= 0 || m_bDead || m_bDissolve || m_bTakeDamage || m_pBerserkerState->Get_StateId() == CBerserkerState::STATE_DEAD)
 		return 0;
 	
 	m_iBeDamaged_Cnt++;
 
-	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
 	if (m_bOnGoingDown == false)
 	{
@@ -369,6 +369,13 @@ HRESULT CBerserker::SetUp_ShaderID()
 		m_eShaderID = SHADER_ANIM_DISSOLVE;
 
 	return S_OK;
+}
+
+void CBerserker::Set_HitState()
+{
+	CBerserkerState* pState = new CBattle_Damage_LargeB_State(this, true, m_bBerserkerMode, true, CBerserkerState::STATE_ID::STATE_TAKE_DAMAGE);
+	m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
+
 }
 
 void CBerserker::Check_Navigation()

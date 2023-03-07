@@ -50,6 +50,8 @@ public:
 private:
 	_float m_fThunderStopTimer = 0.f;
 
+	_bool	m_bFirst = false;
+	_bool	m_bBullet = false;
 	_int bulletcount = 60;
 	_float m_fDivineTimer = 0.f;
 	_int m_fDivineOffset = 70;

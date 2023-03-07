@@ -34,7 +34,7 @@ HRESULT CBossSkills::Initialize(void * pArg)
 	{
 		case BULLET_SPEAR_MULTI_1:
 		{
-			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE1_3_R");
+			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE3_3_R");
 			_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
 
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Bullet.dat"), SocketMatrix);
@@ -43,7 +43,7 @@ HRESULT CBossSkills::Initialize(void * pArg)
 		}
 		case BULLET_SPEAR_MULTI_2:
 		{
-			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE3_3_L");
+			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE2_3_L");
 			_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
 
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Bullet.dat"), SocketMatrix);
@@ -52,7 +52,7 @@ HRESULT CBossSkills::Initialize(void * pArg)
 		}
 		case BULLET_SPEAR_MULTI_3:
 		{
-			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE2_3_R");
+			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE1_3_R");
 			_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
 
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Bullet.dat"), SocketMatrix);
@@ -61,7 +61,7 @@ HRESULT CBossSkills::Initialize(void * pArg)
 		}
 		case BULLET_SPEAR_MULTI_4:
 		{
-			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE1_3_L");
+			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE3_3_L");
 			_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
 
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Bullet.dat"), SocketMatrix);
@@ -70,7 +70,7 @@ HRESULT CBossSkills::Initialize(void * pArg)
 		}
 		case BULLET_SPEAR_MULTI_5:
 		{
-			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE3_3_R");
+			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE2_3_R");
 			_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
 
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Bullet.dat"), SocketMatrix);
@@ -79,11 +79,57 @@ HRESULT CBossSkills::Initialize(void * pArg)
 		}
 		case BULLET_SPEAR_MULTI_6:
 		{
-			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE2_3_L");
+			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HMIDDLE1_3_L");
 			_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
 
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Multi_Bullet.dat"), SocketMatrix);
 			m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pEffects.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+			break;
+		}
+		case BULLET_SPEAR_DYNAMIC:
+		{
+			//..
+
+			break;
+		}
+		case BULLET_LASER:
+		{
+			pBone = pAstralDoubt->Get_Model()->Get_BonePtr("HEAD1_C");
+			_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+			_matrix mWorldMatrix = XMMatrixIdentity();
+			mWorldMatrix.r[3] = SocketMatrix.r[3];
+
+			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Head_Beam.dat"), mWorldMatrix);
+			m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, m_pEffects.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+			/* Populate Focus Points. */
+			FOCUSPOINTDESC tFocusPointDesc;
+			ZeroMemory(&tFocusPointDesc, sizeof(FOCUSPOINTDESC));
+
+			_vector vOwnerPosition = pAstralDoubt->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+			_vector vOwnerRight = pAstralDoubt->Get_TransformState(CTransform::STATE::STATE_RIGHT);
+			_vector vOwnerLook = pAstralDoubt->Get_TransformState(CTransform::STATE::STATE_LOOK);
+
+			XMStoreFloat3(&tFocusPointDesc.vFocusPosition, (vOwnerPosition + XMVector4Normalize(vOwnerLook) * 50.f));
+			tFocusPointDesc.vFocusPosition.y = 0.f;
+			m_LaserFocusPoints.push_back(tFocusPointDesc);
+
+			XMStoreFloat3(&tFocusPointDesc.vFocusPosition, (vOwnerPosition + (XMVector4Normalize(vOwnerLook) * 35.f) + (XMVector4Normalize(vOwnerRight) * 35.f)));
+			tFocusPointDesc.vFocusPosition.y = 0.f;
+			m_LaserFocusPoints.push_back(tFocusPointDesc);
+
+			XMStoreFloat3(&tFocusPointDesc.vFocusPosition, (vOwnerPosition + (XMVector4Normalize(vOwnerLook) * 20.f) + (XMVector4Normalize(-vOwnerRight) * 20.f)));
+			tFocusPointDesc.vFocusPosition.y = 0.f;
+			m_LaserFocusPoints.push_back(tFocusPointDesc);
+
+			XMStoreFloat3(&tFocusPointDesc.vFocusPosition, (vOwnerPosition + (XMVector4Normalize(vOwnerLook) * 10.f) + (XMVector4Normalize(+vOwnerRight) * 10.f)));
+			tFocusPointDesc.vFocusPosition.y = 0.f;
+			m_LaserFocusPoints.push_back(tFocusPointDesc);
+
+			m_vFocusPoint = m_LaserFocusPoints[m_iCurrentFocusPoint].vFocusPosition;
+			m_vNextFocusPoint = m_LaserFocusPoints[m_iCurrentFocusPoint + 1].vFocusPosition;
+
 			break;
 		}
 	}
@@ -118,6 +164,11 @@ int CBossSkills::Tick(_float fTimeDelta)
 			Tick_SpearMulti(fTime);
 			break;
 		}
+		case BULLET_LASER:
+		{
+			Tick_Laser(fTime);
+			break;
+		}
 	}
 
 	if (m_pAABBCom != nullptr)
@@ -133,12 +184,20 @@ int CBossSkills::Tick(_float fTimeDelta)
 void CBossSkills::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	switch (m_BulletDesc.eBulletType)
+	{
+		case BULLET_LASER:
+		{
+			LateTick_Laser(fTimeDelta);
+			break;
+		}
+	}
 }
 
 void CBossSkills::Collision_Check()
 {
-
-	if (Check_Exception_Collision() == false)
+	if (Check_Exception() == false)
 		return;
 
 	switch (m_BulletDesc.eBulletType)
@@ -157,6 +216,15 @@ void CBossSkills::Collision_Check()
 				m_bCollided = true;
 				m_bDead = true;
 			}
+
+			break;
+		}
+		case BULLET_LASER:
+		{
+			CBaseObj* pCollisionTarget = nullptr;
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pOBBCom, &pCollisionTarget))
+				static_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+
 			break;
 		}
 	}
@@ -169,6 +237,8 @@ void CBossSkills::Tick_SpearMulti(_float fTimeDelta)
 		Stop_Effect();
 		m_bDead = true;
 	}
+	else
+		m_fBulletTimer += fTimeDelta;
 
 	m_pTransformCom->Go_PosDir(fTimeDelta, m_BulletDesc.vTargetDir);
 
@@ -179,6 +249,72 @@ void CBossSkills::Tick_SpearMulti(_float fTimeDelta)
 
 		if (pEffect)
 			pEffect->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+}
+
+void CBossSkills::Tick_Laser(_float fTimeDelta)
+{
+	if (m_fBulletTimer > m_BulletDesc.fDeadTime)
+	{
+		Stop_Effect();
+		m_bDead = true;
+	}
+	else
+		m_fBulletTimer += fTimeDelta;
+
+	/* Focus Points Logic */
+	_float fLerpTime = m_BulletDesc.fDeadTime / (m_LaserFocusPoints.size() - 1);
+	if (m_fFocusTimer > fLerpTime)
+	{
+		m_iCurrentFocusPoint++;
+
+		m_vFocusPoint = m_LaserFocusPoints[m_iCurrentFocusPoint].vFocusPosition;
+		m_vNextFocusPoint = m_LaserFocusPoints[m_iCurrentFocusPoint + 1].vFocusPosition;
+
+		m_fFocusTimer = 0.f;
+	}
+	else
+		m_fFocusTimer += fTimeDelta;
+	
+	/* Lerping to Next Focus Point */
+	_float fInterpFactor = m_fFocusTimer / fLerpTime;
+	_vector vLerpPosition = XMLoadFloat3(&m_vFocusPoint) + fInterpFactor * (XMLoadFloat3(&m_vNextFocusPoint) - XMLoadFloat3(&m_vFocusPoint));
+
+	vLerpPosition = XMVectorSetW(vLerpPosition, 1.f);
+
+	m_pTransformCom->LookAt(vLerpPosition);
+}
+
+void CBossSkills::LateTick_Laser(_float fTimeDelta)
+{
+	for (auto& pEffect : m_pEffects)
+	{
+		if (!pEffect)
+			continue;
+
+		if (!wcscmp(pEffect->Get_PrototypeId(), TEXT("Cylinder_ko_01")))
+		{
+			_matrix mEffectWorldMatrix = pEffect->Get_Transform()->Get_WorldMatrix();
+			
+			_vector vScale, vRotationQuaternion, vTranslation;
+			XMMatrixDecompose(&vScale, &vRotationQuaternion, &vTranslation, mEffectWorldMatrix);
+
+			_matrix mScalingMatrix = XMMatrixScalingFromVector(vScale);
+			_matrix mTranslationMatrix = XMMatrixTranslationFromVector(vTranslation);
+
+			_matrix mBulletWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+			_vector vScaleBullet, vRotationBullet, vTranslationBullet;
+			XMMatrixDecompose(&vScaleBullet, &vRotationBullet, &vTranslationBullet, mBulletWorldMatrix);
+
+			_matrix mRotationMatrix = XMMatrixRotationQuaternion(vRotationBullet);
+
+			mEffectWorldMatrix = XMMatrixIdentity();
+			mEffectWorldMatrix = XMMatrixMultiply(mEffectWorldMatrix, mScalingMatrix);
+			mEffectWorldMatrix = XMMatrixMultiply(mEffectWorldMatrix, mRotationMatrix);
+			mEffectWorldMatrix = XMMatrixMultiply(mEffectWorldMatrix, mTranslationMatrix);
+
+			pEffect->Get_Transform()->Set_WorldMatrix(mEffectWorldMatrix);
+		}
 	}
 }
 
@@ -231,10 +367,6 @@ HRESULT CBossSkills::Ready_Components(void * pArg)
 	if (FAILED(__super::Ready_Components(pArg)))
 		return E_FAIL;
 
-	/* For.Com_SPHERE */
-	CCollider::COLLIDERDESC ColliderDesc;
-	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-
 	switch (m_BulletDesc.eBulletType)
 	{
 		case BULLET_SPEAR_MULTI_1:
@@ -244,16 +376,35 @@ HRESULT CBossSkills::Ready_Components(void * pArg)
 		case BULLET_SPEAR_MULTI_5:
 		case BULLET_SPEAR_MULTI_6:
 		{
+			/* For.Com_SPHERE */
+			CCollider::COLLIDERDESC ColliderDesc;
+			ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+
 			ColliderDesc.vScale = _float3(3.f, 3.f, 3.f);
 			ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 			ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
+			if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
+				return E_FAIL;
+
+			break;
+		}
+		case BULLET_LASER:
+		{
+			/* For.Com_OBB */
+
+			CCollider::COLLIDERDESC ColliderDesc;
+			ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
+
+			ColliderDesc.vScale = _float3(2.5f, 1.0f, 80.1f);
+			ColliderDesc.vPosition = _float3(0.f, 0.f, 40.f);
+
+			if (FAILED(__super::Add_Components(TEXT("Com_OBB"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), (CComponent**)&m_pOBBCom, &ColliderDesc)))
+				return E_FAIL;
+
 			break;
 		}
 	}
-	
-	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
-		return E_FAIL;
 
 	return S_OK;
 }

@@ -177,8 +177,10 @@ CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_TO_IDLE_SIDE);
 				break;
 			case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE_TRANS_IDLE);
 				break;
 			case CPlayer::RINWELL:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::IDLE_TO_IDLE_SIDE);
 				break;
 			case CPlayer::LAW:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::IDLE_TRANS_IDLE_SIDE);
@@ -193,8 +195,10 @@ CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_IDLE_SIDE);
 				break;
 			case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE_CHARA);
 				break;
 			case CPlayer::RINWELL:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::IDLE_SIDE);
 				break;
 			case CPlayer::LAW:
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::IDLE_SIDE);
@@ -204,7 +208,6 @@ CPlayerState * CIdleState::LateTick(_float fTimeDelta)
 			break;
 		}
 	}
-
 
 	return nullptr;
 }
@@ -246,6 +249,7 @@ void CIdleState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE);
 				break;
 			case Client::Player::CIdleState::IDLE_SIDE:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::IDLE_CHARA);
 				break;
 			}
 		}
@@ -261,6 +265,7 @@ void CIdleState::Enter()
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::IDLE);
 				break;
 			case Client::Player::CIdleState::IDLE_SIDE:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::IDLE_SIDE);
 				break;
 			}
 		}

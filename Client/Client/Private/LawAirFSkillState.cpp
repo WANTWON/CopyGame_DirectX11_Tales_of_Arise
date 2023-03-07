@@ -163,7 +163,7 @@ CPlayerState * CLawAirFSkillState::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -262,8 +262,11 @@ void CLawAirFSkillState::Enter(void)
 	if (nullptr != pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_EFFECT, 1.0f);
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillSoundBegin.wav"), SOUND_EFFECT, 1.0f);
+
+CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_EFFECT, 1.0f);
+CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillSoundBegin.wav"), SOUND_EFFECT, 1.0f);
+	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YUMPAEFUCKSAY);
+
 }
 
 void CLawAirFSkillState::Exit(void)

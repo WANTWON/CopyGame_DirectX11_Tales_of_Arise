@@ -160,29 +160,27 @@ CPlayerState * CDodgeState::HandleInput(void)
 		if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMPTYPE::JUMP_BATTLE);
 
-		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT_RIGHT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_BACKWARD_LEFT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_BACKWARD_RIGHT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_LEFT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_RIGHT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_BACKWARD, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_LSHIFT) && !m_bIsFly)
-			return new CDodgeState(m_pOwner, DIR_END, m_fTime);
-		else if (pGameInstance->Key_Pressing(DIK_LSHIFT) && m_bIsFly)
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
-
 		if (!m_bIsFly)
 		{
+			if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+				return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT, m_fTime);
+			else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+				return new CDodgeState(m_pOwner, DIR_STRAIGHT_RIGHT, m_fTime);
+			else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+				return new CDodgeState(m_pOwner, DIR_BACKWARD_LEFT, m_fTime);
+			else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+				return new CDodgeState(m_pOwner, DIR_BACKWARD_RIGHT, m_fTime);
+			else if (pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+				return new CDodgeState(m_pOwner, DIR_LEFT, m_fTime);
+			else if (pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+				return new CDodgeState(m_pOwner, DIR_RIGHT, m_fTime);
+			else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+				return new CDodgeState(m_pOwner, DIR_BACKWARD, m_fTime);
+			else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+				return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
+			else if (pGameInstance->Key_Pressing(DIK_LSHIFT))
+				return new CDodgeState(m_pOwner, DIR_END, m_fTime);
+
 			if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
 				return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT);
 			else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
@@ -328,7 +326,7 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 		}
 
 		if (m_bIsFly)
-			return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMP_BATTLE, m_fTime);
+			return new CJumpState(m_pOwner, STATETYPE_MAIN, CJumpState::JUMP_BATTLE, m_fTime);
 		else
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
@@ -340,20 +338,36 @@ CPlayerState * CDodgeState::EventInput(void)
 {
 	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if ((CPlayer::ALPHEN == m_pOwner->Get_PlayerID()) || (CPlayer::LAW == m_pOwner->Get_PlayerID()))
+	if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID())
 	{
 		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_NORMAL_ATTACK1);
+		{
+			if (m_bIsFly)
+				return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
+			else
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_NORMAL_ATTACK1);
+		}
+			
 	}
 	else if (CPlayer::SION == m_pOwner->Get_PlayerID())
 	{
 		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
+			return new CPlayer_SionNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
 	}
 	else if (CPlayer::RINWELL == m_pOwner->Get_PlayerID())
 	{
 		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
-			return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1);
+			return new CPlayer_RinwellNormalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
+	}
+	else if (CPlayer::LAW == m_pOwner->Get_PlayerID())
+	{
+		if (pGameInstance->Mouse_Down(DIMK_LBUTTON))
+		{
+			if (m_bIsFly)
+				return new CLawAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
+			else
+				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_NORMAL_ATTACK1);
+		}
 	}
 
 	/* Skill */
@@ -362,13 +376,24 @@ CPlayerState * CDodgeState::EventInput(void)
 		switch (m_ePlayerID)
 		{
 		case CPlayer::ALPHEN:
-		case CPlayer::LAW:
-			if (pGameInstance->Key_Down(DIK_E))
-				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_E);
-			if (pGameInstance->Key_Down(DIK_R))
-				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_R);
-			if (pGameInstance->Key_Down(DIK_F))
-				return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_F);
+			if (m_bIsFly)
+			{
+				if (pGameInstance->Key_Down(DIK_E))
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fTime);
+				if (pGameInstance->Key_Down(DIK_R))
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_R, m_fTime);
+				if (pGameInstance->Key_Down(DIK_F))
+					return new CAlphenSkillState(m_pOwner, STATE_SKILL_ATTACK_F, m_fTime);
+			}
+			else
+			{
+				if (pGameInstance->Key_Down(DIK_E))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_E);
+				if (pGameInstance->Key_Down(DIK_R))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_R);
+				if (pGameInstance->Key_Down(DIK_F))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_F);
+			}
 			break;
 		case CPlayer::SION:
 			if (CGameInstance::Get_Instance()->Key_Pressing(DIK_LCONTROL) && CGameInstance::Get_Instance()->Key_Down(DIK_E))
@@ -396,30 +421,31 @@ CPlayerState * CDodgeState::EventInput(void)
 			else if (pGameInstance->Key_Down(DIK_F))
 				return new CPlayer_RinwellSkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
 			break;
+		case CPlayer::LAW:
+			if (m_bIsFly)
+			{
+				if (pGameInstance->Key_Down(DIK_E))
+					return new CLawSkillState(m_pOwner, STATE_SKILL_ATTACK_E, m_fTime);
+				if (pGameInstance->Key_Down(DIK_R))
+					return new CLawAirRSkillState(m_pOwner, STATE_SKILL_ATTACK_R);
+				if (pGameInstance->Key_Down(DIK_F))
+					return new CLawAirFSkillState(m_pOwner, STATE_SKILL_ATTACK_F);
+			}
+			else
+			{
+				if (pGameInstance->Key_Down(DIK_E))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_E);
+				if (pGameInstance->Key_Down(DIK_R))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_R);
+				if (pGameInstance->Key_Down(DIK_F))
+					return new CCloseChaseState(m_pOwner, STATE_CHASE, STATE_SKILL_ATTACK_F);
+			}
+			break;
 		}
 	}
 
 	if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 		return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMPTYPE::JUMP_BATTLE);
-
-	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-		return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT, m_fTime);
-	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-		return new CDodgeState(m_pOwner, DIR_STRAIGHT_RIGHT, m_fTime);
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-		return new CDodgeState(m_pOwner, DIR_BACKWARD_LEFT, m_fTime);
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-		return new CDodgeState(m_pOwner, DIR_BACKWARD_RIGHT, m_fTime);
-	else if (pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-		return new CDodgeState(m_pOwner, DIR_LEFT, m_fTime);
-	else if (pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-		return new CDodgeState(m_pOwner, DIR_RIGHT, m_fTime);
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-		return new CDodgeState(m_pOwner, DIR_BACKWARD, m_fTime);
-	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-		return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
-	else if (pGameInstance->Key_Pressing(DIK_LSHIFT) && !m_bIsFly)
-		return new CDodgeState(m_pOwner, DIR_END, m_fTime);
 
 	return nullptr;
 }

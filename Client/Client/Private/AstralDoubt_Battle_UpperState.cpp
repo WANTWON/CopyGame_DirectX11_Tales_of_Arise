@@ -221,7 +221,19 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				{
 					if (!strcmp(pEvent.szName, "Slash_1"))
 					{
-						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_1.dat"), mWorldMatrix);
+						vector<CEffect*> InOutUpper = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_1.dat"), mWorldMatrix);
+
+						_matrix mParticlesMatrix;
+						
+						mParticlesMatrix = InOutUpper[0]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+						
+						mParticlesMatrix = InOutUpper[2]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = InOutUpper[4]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
 						m_bSlash_1 = true;
 					}
 				}
@@ -229,7 +241,19 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				{
 					if (!strcmp(pEvent.szName, "Slash_2"))
 					{
-						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_2.dat"), mWorldMatrix);
+						vector<CEffect*> InOutUpper = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_2.dat"), mWorldMatrix);
+
+						_matrix mParticlesMatrix;
+
+						mParticlesMatrix = InOutUpper[0]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = InOutUpper[2]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = InOutUpper[4]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
 						m_bSlash_2 = true;
 					}
 				}
@@ -237,7 +261,19 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 				{
 					if (!strcmp(pEvent.szName, "Slash_3"))
 					{
-						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_3.dat"), mWorldMatrix);
+						vector<CEffect*> InOutUpper = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_3.dat"), mWorldMatrix);
+
+						_matrix mParticlesMatrix;
+
+						mParticlesMatrix = InOutUpper[0]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = InOutUpper[2]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = InOutUpper[4]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
 						m_bSlash_3 = true;
 					}
 				}

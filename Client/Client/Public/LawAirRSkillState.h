@@ -39,8 +39,6 @@ private:
 	_bool m_bSankamousyuukyaku_2 = false;				// R (Air)
 	_bool m_bSankamousyuukyaku_Punch_1 = false;			// R (Air)
 	_bool m_bSankamousyuukyaku_Punch_2 = false;			// R (Air)
-	_bool m_bSankamousyuukyaku_Particles_1 = false;		// R (Air)
-	_bool m_bSankamousyuukyaku_Particles_2 = false;		// R (Air)
 
 	_vector m_vPunchPosition_1;
 	_vector m_vPunchPosition_2;
@@ -54,6 +52,7 @@ private:
 	_bool m_bSkill_R_Sound = false;
 private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
+	HITLAGDESC m_HitLagDesc;
 };
 END
 END

@@ -141,6 +141,11 @@ public:
 
 	enum SKILL_TYPE
 	{
+		NORMALATTACK_1,
+		NORMALATTACK_2,
+		NORMALATTACK_3,
+		NORMALATTACK_4,
+		NORMALATTACK_5,
 		PHOTONFLASH,
 		GALEFORCE,
 		CROSSBLADE,
@@ -157,10 +162,18 @@ public:
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
 	void Set_SkillIndex(_uint iIndex) { m_eSkillIndex = iIndex; }
 	virtual void	 Set_BattleMode(_bool type) override;
+	virtual void	 Set_HitState() override;
+
+
+	/* Air Check*/
+	_bool			Get_IsFly(void) { return m_bIsFly; }
+	void			On_IsFly(void) { m_bIsFly = true; }
+	void			Off_IsFly(void) { m_bIsFly = false; }
+
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
-	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp = false, _bool bLockOnChange = true) override;
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc) override;
 	virtual HRESULT SetUp_ShaderID() override;
 
 private:
@@ -184,6 +197,19 @@ public: /*For.State*/
 
 		/*For Navigation*/
 	virtual void Check_Navigation() override;
+    _bool Check_Navigation_Jump();
+
+	void Set_AfterThunder(_bool tof) { m_bAfterThunder = tof; }
+	void Set_AfterKick(_bool tof) { m_bAfterKick = tof; }
+
+	_int Get_Phase() { return m_iPhase; }
+	void Set_Phase(_int phase) { m_iPhase = phase; }
+
+
+	void Reset_StrikeBlur(_float fTimeDelta);
+
+	_bool Get_Debug() { return m_bDebug; }
+	void Set_Debug(_bool tof) { m_bDebug = tof; }
 
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -199,8 +225,25 @@ private:
 	_bool	m_bNpcMode = false;
 	_uint	 m_eSkillIndex = SKILL_END;
 
+	_bool m_bIsFly = false;
+
+	_int m_iLawhitcount = 0;
+
+	_bool m_bAfterThunder = false;
+	_bool m_bAfterKick = false;
+
+	_float m_fThunderHitTime = 0.f;
+	_float m_fKickHitTIme = 0.f;
+
+	_int m_iPhase = 0;
 
 
+	_bool m_bDebug = true;
+private:
+		/* Strike Screen Effect */
+		_bool m_bResetStrikeBlur = false;
+		_float m_fStrikeBlurResetDuration = .45f;
+		_float m_fStrikeBlurResetTimer = 0.f;
 public:
 	static CMonsterLaw* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

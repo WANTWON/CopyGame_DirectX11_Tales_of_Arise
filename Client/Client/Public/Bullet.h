@@ -51,10 +51,12 @@ protected:
 	virtual HRESULT SetUp_ShaderResources();
 	virtual HRESULT SetUp_ShaderID();
 	virtual void Collision_Check();
-	virtual _bool Check_Exception_Collision();
+	virtual _bool Check_Exception();
 
 protected:
 	BULLETDESC m_BulletDesc;
+	HITLAGDESC m_HitLagDesc;
+
 	CModel* m_pModelCom = nullptr;
 	vector<CEffect*> m_pEffects;
 	vector<CEffect*> m_pDeadEffects;

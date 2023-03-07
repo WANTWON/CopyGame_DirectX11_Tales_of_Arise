@@ -51,11 +51,11 @@ private:
 	CCollider*	m_p6th_AtkColliderCom = nullptr;
 
 	/* Effect Booleans */
-	_bool m_bAura = false;
 	_bool m_bRush = false;
 	_bool m_bSlash = false;
 
 	vector<CEffect*> m_Rush;
+	vector<CEffect*> m_RushParticles;
 };
 END
 END

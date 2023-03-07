@@ -5,6 +5,7 @@
 #include "RinwellDownState.h"
 #include "RinwellIdleState.h"
 
+
 using namespace AiRinwell;
 
 CDamageState::CDamageState(CAiRinwell* pRinwell, _uint eDir, STATE_ID eStateID)
@@ -26,9 +27,12 @@ CRinwellState * CDamageState::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	Move();
+	Move(fTimeDelta);
 	
-	m_pOwner->Check_Navigation();
+	if(m_eStateId != STATE_STRIKE_HIT)
+		m_pOwner->Check_Navigation();
+
+	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 	return nullptr;
 }
@@ -41,8 +45,10 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 		{
 			if ((m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f) && !m_pOwner->Get_AirMode())
 				return new CPoseState(m_pOwner, CRinwellState::STATE_HP50DOWN);
+			else if (0.f >= m_pOwner->Get_Methor())
+				return new CRinwellDownState(m_pOwner);
 			else
-				return new CRinwellIdleState(m_pOwner, 0.f);
+				return new CRinwellIdleState(m_pOwner, 1.f);
 		}
 			
 		if (m_eStateId == STATE_DEAD)
@@ -53,13 +59,12 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 		}
 	}
 
-	m_pOwner->Check_Navigation();
 	return nullptr;
 }
 
 void CDamageState::Enter()
 {
-	if (m_eStateId == STATE_DAMAGE)
+	if (m_eStateId == STATE_DAMAGE || m_eStateId ==  STATE_STRIKE_HIT)
 	{
 		if (m_pOwner->Get_AirMode())
 		{
@@ -100,15 +105,9 @@ void CDamageState::Enter()
 	}
 	else if(m_eStateId == STATE_DEAD)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_DEAD);
-}
 
-void CDamageState::Exit()
-{
-	
-}
+	m_vStartPos = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 0.f);
 
-void CDamageState::Move(void)
-{
 	_vector vDir;
 
 	switch (m_eDmgDir)
@@ -127,8 +126,28 @@ void CDamageState::Move(void)
 		break;
 	}
 
-	m_pOwner->Get_Transform()->Go_PosDir(0.0025f, vDir, m_pOwner->Get_Navigation());
+	m_vGoalPos = m_vStartPos + vDir;
+}
 
-	m_pOwner->Check_Navigation();
+void CDamageState::Exit()
+{
+	
+}
+
+void CDamageState::Move(_float fTimeDelta)
+{
+	_vector vOwnerPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_float fOwnerPosY = XMVectorGetY(vOwnerPos);
+
+	_float fDecrease = XMVectorGetX(XMVector4Length(XMVectorSetY(vOwnerPos, XMVectorGetY(m_vGoalPos)) - m_vStartPos)) / XMVectorGetX(XMVector4Length(m_vStartPos - m_vGoalPos));
+
+	m_fRatio += (1.f - fDecrease) * 0.2f + fTimeDelta;
+
+	_vector vPos = XMVectorSetY(XMVectorLerp(m_vStartPos, m_vGoalPos, m_fRatio), fOwnerPosY);
+	if (m_pOwner->Get_Navigation()->isMove(vPos))
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPos);
+
+	if (m_eStateId != STATE_STRIKE_HIT)
+		m_pOwner->Check_Navigation();
 }
 

@@ -146,12 +146,13 @@ public:
 	virtual void	 Set_BattleMode(_bool type) override;
 	_bool Get_AirMode(void) { return m_bIsAir; }
 	void Set_AirMode(_bool bAir) { m_bIsAir = bAir; }
+	_float Get_Methor(void) { return m_fMethor; }
 
 	void Kill_Boss_Rinwell();
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
-	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp = false, _bool bLockOnChange = true) override;
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc) override;
 	virtual HRESULT SetUp_ShaderID() override;
 
 private:
@@ -165,7 +166,7 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render_Glow() override;
-
+	virtual void	 Set_HitState() override;
 public: /*For.State*/
 	void AI_Behavior(_float fTimeDelta);
 	void Tick_State(_float fTimeDelta);
@@ -193,7 +194,7 @@ private:
 	_int	m_iDamage = 0;
 	_bool	m_bIsAir = false;
 
-	_float	m_fMethor = 100.f;
+	_float	m_fMethor = 1000.f;
 
 public:
 	static CAiRinwell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

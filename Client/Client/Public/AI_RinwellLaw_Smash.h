@@ -18,9 +18,12 @@ public:
 
 private:
 	void StrikeBlur(_float fTimeDelta);
-
+	void Set_EffectPosition();
 private:
 	vector<CEffect*> m_pEffects;
+
+	vector<_vector> m_vStrikeLockOnPos;
+	vector<_vector> m_vEffectPos;
 
 	_float m_fTime = 0.f;
 	_bool  m_bBullet = false;
@@ -29,7 +32,8 @@ private:
 	_bool m_bAlphenStrike_2 = false;
 
 	_float m_fEventStart = -1.f;
-
+	_float m_fFadeTime = 0.f;
+	
 	/* Strike Screen Blur */
 	_bool m_bStrikeBlur = false;
 	_float m_fEffectEventEndTime = 0.f;

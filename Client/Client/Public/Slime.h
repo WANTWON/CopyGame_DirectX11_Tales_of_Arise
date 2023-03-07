@@ -81,7 +81,7 @@ public:
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 
-	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser) override;
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc) override;
 	virtual HRESULT SetUp_ShaderID() override;
 private:
 	CSlime(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -95,6 +95,7 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render_Glow() override;
 	virtual void	 Set_BattleMode(_bool type) override;
+	virtual void	 Set_HitState() override;
 public: /*For.State*/
 	void AI_Behavior(_float fTimeDelta);
 	void Tick_State(_float fTimeDelta);

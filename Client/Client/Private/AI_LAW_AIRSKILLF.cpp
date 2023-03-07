@@ -32,6 +32,8 @@ CAI_LAW_AIRSKILLF::CAI_LAW_AIRSKILLF(CPlayer* pPlayer, STATE_ID eStateType)//, _
 
 CAIState * CAI_LAW_AIRSKILLF::Tick(_float fTimeDelta)
 {
+	Update_Skill();
+
 	if (CheckTarget() == false)
 		return nullptr;
 
@@ -51,7 +53,7 @@ CAIState * CAI_LAW_AIRSKILLF::Tick(_float fTimeDelta)
 		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
 
 		if (STATETYPE_MAIN == m_eStateType)
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.1f), fRotationRadian, m_pOwner->Get_Navigation());
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.6f), fRotationRadian, m_pOwner->Get_Navigation());
 		else
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
@@ -87,6 +89,23 @@ CAIState * CAI_LAW_AIRSKILLF::Tick(_float fTimeDelta)
 				}
 				//if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					//return EventInput();
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					if (!strcmp(pEvent.szName, "EnhaBakusaiken_2"))
+					{
+						if (!m_bEnhaBakusaiken_2)
+						{
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							vector<CEffect*> pFloor = CEffect::PlayEffectAtLocation(TEXT("Enha_Bakusaiken_Floor.dat"), mWorldMatrix);
+
+							_vector vPosition = pFloor[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							mWorldMatrix.r[3] = vPosition;
+							CEffect::PlayEffectAtLocation(TEXT("Enha_Bakusaiken_Floor_Particles.dat"), mWorldMatrix);
+
+							m_bEnhaBakusaiken_2 = true;
+						}
+					}
+				}
 			}
 			else
 			{
@@ -104,6 +123,28 @@ CAIState * CAI_LAW_AIRSKILLF::Tick(_float fTimeDelta)
 		if (nullptr != m_pLandCollider)
 			m_pLandCollider->Update(m_ColliderMatrix);
 	}
+	else
+	{
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					if (!strcmp(pEvent.szName, "EnhaBakusaiken_1"))
+					{
+						if (!m_bEnhaBakusaiken_1)
+						{
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							m_EnhaBakusaiken_1 = CEffect::PlayEffectAtLocation(TEXT("Enha_Bakusaiken_1.dat"), mWorldMatrix);
+							m_bEnhaBakusaiken_1 = true;
+						}
+					}
+				}
+			}
+		}
+	}
 
 	return nullptr;
 }
@@ -111,6 +152,8 @@ CAIState * CAI_LAW_AIRSKILLF::Tick(_float fTimeDelta)
 
 CAIState * CAI_LAW_AIRSKILLF::LateTick(_float fTimeDelta)
 {
+	Remove_Skill();
+
 	if ((STATETYPE_END == m_eStateType) && (nullptr != m_pLandCollider))
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -120,7 +163,7 @@ CAIState * CAI_LAW_AIRSKILLF::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -164,6 +207,11 @@ CAIState * CAI_LAW_AIRSKILLF::LateTick(_float fTimeDelta)
 
 void CAI_LAW_AIRSKILLF::Enter()
 {
+	Reset_Skill();
+
+	m_HitLagDesc.bHitLag = false;
+	m_HitLagDesc.bLockOnChange = false;
+	m_HitLagDesc.bShaking = false;
 
 	m_pOwner->Use_Mana(1.f);
 	m_pOwner->Set_Manarecover(false);
@@ -194,6 +242,42 @@ void CAI_LAW_AIRSKILLF::Exit()
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	
 	Safe_Release(m_pLandCollider);
+}
+
+void CAI_LAW_AIRSKILLF::Update_Skill(void)
+{
+	for (auto& pEffect : m_EnhaBakusaiken_1)
+	{
+		if (!pEffect || wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
+			continue;
+
+		_float4 vPlayerPosition;
+		XMStoreFloat4(&vPlayerPosition, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+		_float4 vPlayerLook;
+		XMStoreFloat4(&vPlayerLook, m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
+
+		_float4 vEffectPosition;
+		vEffectPosition.y = vPlayerPosition.y;
+
+		XMStoreFloat4(&vEffectPosition, XMLoadFloat4(&vPlayerPosition) + XMLoadFloat4(&vPlayerLook));
+
+		pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vEffectPosition));
+	}
+}
+
+void CAI_LAW_AIRSKILLF::Remove_Skill(void)
+{
+	for (auto& pEffect : m_EnhaBakusaiken_1)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+}
+
+void CAI_LAW_AIRSKILLF::Reset_Skill(void)
+{
+	m_bEnhaBakusaiken_1 = false;
+	m_bEnhaBakusaiken_2 = false;
 }
 
 

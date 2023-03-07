@@ -100,8 +100,8 @@ protected:
 		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
 
 		m_fActiveTarget_Distance = fDistance;
-			
-		
+
+
 	}
 
 	virtual _float Find_BattleTarget()
@@ -191,7 +191,7 @@ protected:
 
 		_float fDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
 
-		_float fRadian = acos(fDot) * (180/XM_PI);
+		_float fRadian = acos(fDot) * (180 / XM_PI);
 
 		//앞쪽인지 뒤쪽인지 
 		_float fLookDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
@@ -316,6 +316,25 @@ protected:
 		return false;
 	}
 
+	void TurnToTarget(_float fTimeDelta)
+	{
+		_vector vPosition = XMVectorSetY(m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION), XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+
+		_vector vScale, vRotQuat, vPos;
+		XMMatrixDecompose(&vScale, &vRotQuat, &vPos, m_pOwner->Get_Transform()->Get_WorldMatrix());
+
+		m_pOwner->Get_Transform()->LookAt(vPosition);
+
+		_vector vAfterScale, vAfterRotQuat, vAfterPos;
+		XMMatrixDecompose(&vAfterScale, &vAfterRotQuat, &vAfterPos, m_pOwner->Get_Transform()->Get_WorldMatrix());
+
+		_vector vLerpRot = XMQuaternionSlerp(XMQuaternionNormalize(vRotQuat), XMQuaternionNormalize(vAfterRotQuat), fTimeDelta);
+
+		_matrix LerpMatrix = XMMatrixScalingFromVector(vScale) * XMMatrixRotationQuaternion(vLerpRot) * XMMatrixTranslationFromVector(vPos);
+
+		m_pOwner->Get_Transform()->Set_WorldMatrix(LerpMatrix);
+	}
+
 protected:
 	STATETYPE m_eStateType = STATETYPE_DEFAULT;
 	STATE_ID m_eStateId = STATE_END;
@@ -348,6 +367,6 @@ protected:
 	//CCollider*	m_p5th_AtkColliderCom = false;
 	//CCollider*	m_p6th_AtkColliderCom = false;
 
-	
+
 };
 END

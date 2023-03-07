@@ -757,6 +757,44 @@ HRESULT CRenderer::Render_Environment()
 	}
 #pragma endregion Fog
 
+#pragma region Depth_Of_Field
+	/* Depth of Field */
+	m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
+	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+		return E_FAIL;
+	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BlurTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Horizontal"))))
+		return E_FAIL;
+
+	m_pShaderPostProcessing->Begin(1); /* Horizontal Blur */
+	m_pVIBuffer->Render();
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShaderPostProcessing, "g_BlurTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Vertical"))))
+		return E_FAIL;
+
+	m_pShaderPostProcessing->Begin(2); /* Vertical Blur */
+	m_pVIBuffer->Render();
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShaderPostProcessing, "g_BlurredBackBufferTexture")))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
+		return E_FAIL;
+
+	m_pShaderPostProcessing->Begin(7); /* Depth Of Field */
+	m_pVIBuffer->Render();
+#pragma endregion Depth_Of_Field
+
 	m_GameObjects[RENDER_ENVIRONMENT].sort([](CGameObject* pSour, CGameObject* pDest)
 	{
 		return pSour->Get_CamDistance() > pDest->Get_CamDistance();
@@ -861,43 +899,7 @@ HRESULT CRenderer::Render_PostProcessing()
 	if (!m_pTarget_Manager)
 		return E_FAIL;
 
-#pragma region Depth_Of_Field
-	/* Depth of Field */
-	m_pTarget_Manager->Copy_BackBufferTexture(m_pDevice, m_pContext);
-	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BackBufferTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
-		return E_FAIL;
-	if (FAILED(m_pShaderPostProcessing->Set_ShaderResourceView("g_BlurTexture", m_pTarget_Manager->Get_BackBufferCopySRV())))
-		return E_FAIL;
 
-	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Horizontal"))))
-		return E_FAIL;
-
-	m_pShaderPostProcessing->Begin(1); /* Horizontal Blur */
-	m_pVIBuffer->Render();
-
-	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Horizontal"), m_pShaderPostProcessing, "g_BlurTexture")))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur_Vertical"))))
-		return E_FAIL;
-
-	m_pShaderPostProcessing->Begin(2); /* Vertical Blur */
-	m_pVIBuffer->Render();
-
-	if (FAILED(m_pTarget_Manager->End_MRT(m_pContext)))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Blur_Vertical"), m_pShaderPostProcessing, "g_BlurredBackBufferTexture")))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Bind_ShaderResource(TEXT("Target_Depth"), m_pShaderPostProcessing, "g_DepthTexture")))
-		return E_FAIL;
-
-	m_pShaderPostProcessing->Begin(7); /* Depth Of Field */
-	m_pVIBuffer->Render();
-#pragma endregion Depth_Of_Field
 	
 #pragma region Distortion
 	/* Distortion */

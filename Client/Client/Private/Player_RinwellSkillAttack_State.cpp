@@ -64,16 +64,8 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 	}
 
 
-	if (!m_pBlastEffect.empty())
-	{
-		for (auto& iter : m_pBlastEffect)
-		{
-			if (iter != nullptr && iter->Get_PreDead())
-				iter = nullptr;
 
-		}
-	}
-
+	
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -92,16 +84,16 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillSound.wav"), SOUND_EFFECT, 1.0f);
 						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CRinwell::ANIM::BTL_ATTACK_FUATU))
 						{
+							CBaseObj * pTarget = nullptr;
+
 							CBullet::BULLETDESC BulletDesc;
-							CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-							if (pTarget == nullptr)
+							if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+								pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+							else
 								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-							BulletDesc.pTarget = pTarget;
-
-							_vector vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-
 							
-						
+							BulletDesc.pTarget = pTarget;
+							_vector vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);						
 							BulletDesc.eCollisionGroup = PLAYER;
 							BulletDesc.eBulletType = CRinwellSkills::GALE_FORCE;
 							BulletDesc.vTargetDir = XMVector3Normalize(vTargetPosition - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -220,13 +212,13 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.eBulletType = CRinwellSkills::METEOR;
 
-						_int XRand = rand() % 2 == 0 ? 1.f : -1.f;
-						_int ZRand = rand() % 2 == 0 ? 1.f : -1.f;
-						BulletDesc.vTargetDir = { rand() % 6 * 0.1f *XRand, -1.f, rand() % 6 * 0.1f*ZRand, 0.f };
 
-
-						for (int i = 0; i < 30; ++i)
+						for (int i = 0; i < 15; ++i)
 						{
+							_int XRand = rand() % 2 == 0 ? 1.f : -1.f;
+							_int ZRand = rand() % 2 == 0 ? 1.f : -1.f;
+							BulletDesc.vTargetDir = { rand() % 6 * 0.1f *XRand, -1.f, rand() % 6 * 0.1f*ZRand, 0.f };
+
 							BulletDesc.fVelocity = 4.f + ((_float)(rand() % 20 + 1))*0.1f;
 							_vector pos = { (_float)(rand() % 40 + 40) , 12.f + i*2.5f , (_float)(rand() % 40 + 40), 1.f };
 							BulletDesc.vInitPositon = pos;
@@ -328,15 +320,28 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
+
+					
+						if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+							return nullptr;
+						CBaseObj * pTarget = nullptr;
+						if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+							pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound.wav"), SOUND_EFFECT, 0.7f);
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_EFFECT, 1.0f);
-						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+
+
+						
 						if (pTarget == nullptr)
 							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.eBulletType = CRinwellSkills::DIVINE_SABER;
+
+
+
 						if (pTarget != nullptr)
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 						BulletDesc.pOwner = m_pOwner;
@@ -384,8 +389,13 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						//CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound.wav"), SOUND_EFFECT, 1.0f);
-						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+
+						if (CBattleManager::Get_Instance()->IsAllMonsterDead())
+							return nullptr;
+						CBaseObj * pTarget = nullptr;
+						if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+							pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+
 						if (pTarget == nullptr)
 							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound.wav"), SOUND_EFFECT, 0.8f);
@@ -444,6 +454,34 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 	}
 
 
+	if (!m_pSmokeEffect.empty())
+	{
+		for (auto& iter : m_pSmokeEffect)
+		{
+			if (iter != nullptr)
+			{
+				_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+				iter->Set_State(CTransform::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
+			}
+
+
+		}
+	}
+
+	if (!m_pBlastEffect.empty())
+	{
+		for (auto& iter : m_pBlastEffect)
+		{
+			if (iter != nullptr)
+			{
+				_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+				iter->Set_State(CTransform::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
+			}
+
+
+		}
+	}
+
 
 	return nullptr;
 }
@@ -492,6 +530,29 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::LateTick(_float fTimeDelta)
 			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 
 	}
+
+
+
+	if (!m_pSmokeEffect.empty())
+	{
+		for (auto& iter : m_pSmokeEffect)
+		{
+			if (iter != nullptr && iter->Get_PreDead())
+				iter = nullptr;
+
+		}
+	}
+
+	if (!m_pBlastEffect.empty())
+	{
+		for (auto& iter : m_pBlastEffect)
+		{
+			if (iter != nullptr && iter->Get_PreDead())
+				iter = nullptr;
+
+		}
+	}
+
 
 	return nullptr;
 }

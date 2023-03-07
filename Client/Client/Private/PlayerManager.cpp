@@ -106,7 +106,18 @@ PLAYER_MODE CPlayerManager::Check_ActiveMode(CPlayer * pPlayer)
 		return pPlayer == m_pActivePlayer ? ACTIVE : AI_MODE;
 	}
 	else
-		return pPlayer == m_pActivePlayer ? ACTIVE : UNVISIBLE;
+	{
+		if (pPlayer == m_pActivePlayer)
+			return	ACTIVE;
+
+		else
+		{
+			CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, pPlayer);
+			return UNVISIBLE;
+		}
+		
+	}
+		
 
 	return ACTIVE;
 }
@@ -148,6 +159,8 @@ void CPlayerManager::Set_SmashAttack()
 		{
 			Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position_AlphenSion.dat"));
 			CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+			dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+			
 			Get_EnumPlayer(0)->Set_IsActionMode(true);
 			Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
 			Get_EnumPlayer(0)->Get_Transform()->LookDir(XMVectorSet(0.f,0.f,1.f,0.f));
@@ -193,6 +206,9 @@ void CPlayerManager::Set_SmashAttack()
 			{
 				Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+
+				
 				Get_EnumPlayer(0)->Set_IsActionMode(true);
 				Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
 				Get_EnumPlayer(0)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
@@ -209,6 +225,8 @@ void CPlayerManager::Set_SmashAttack()
 					Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
 					Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 					Get_EnumPlayer(1)->Set_IsActionMode(false);
+					Get_EnumPlayer(1)->Check_Navigation();
+
 				}
 
 				if (Get_EnumPlayer(3) != nullptr)
@@ -216,6 +234,8 @@ void CPlayerManager::Set_SmashAttack()
 					Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
 					Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 					Get_EnumPlayer(3)->Set_IsActionMode(false);
+					Get_EnumPlayer(3)->Check_Navigation();
+
 				}
 
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
@@ -235,6 +255,9 @@ void CPlayerManager::Set_SmashAttack()
 			{
 				Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+
+				
 				Get_EnumPlayer(1)->Set_IsActionMode(true);
 				Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
 				Get_EnumPlayer(1)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
@@ -252,6 +275,8 @@ void CPlayerManager::Set_SmashAttack()
 					Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
 					Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 					Get_EnumPlayer(0)->Set_IsActionMode(false);
+					Get_EnumPlayer(0)->Check_Navigation();
+
 				}
 
 				if (Get_EnumPlayer(3) != nullptr)
@@ -259,6 +284,8 @@ void CPlayerManager::Set_SmashAttack()
 					Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
 					Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 					Get_EnumPlayer(3)->Set_IsActionMode(false);
+					Get_EnumPlayer(3)->Check_Navigation();
+
 				}
 
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
@@ -282,15 +309,19 @@ void CPlayerManager::Set_SmashAttack()
 		{
 			if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			{
+				Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position_LawAttack1.dat"), 3);
 				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
-				Get_EnumPlayer(0)->Set_IsActionMode(true);
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+
+				
+				Get_EnumPlayer(0)->Set_IsActionMode(false);
 				Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
-				Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(0)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 				Get_EnumPlayer(0)->SmashAttack(CPlayer::ALPHEN_LAW);
 
 				Get_EnumPlayer(3)->Set_IsActionMode(true);
 				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
-				Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(3)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 				Get_EnumPlayer(3)->SmashAttack(CPlayer::ALPHEN_LAW);
 
 				if (Get_EnumPlayer(1) != nullptr)
@@ -298,6 +329,8 @@ void CPlayerManager::Set_SmashAttack()
 					Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
 					Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 					Get_EnumPlayer(1)->Set_IsActionMode(false);
+					Get_EnumPlayer(1)->Check_Navigation();
+
 				}
 
 				if (Get_EnumPlayer(2) != nullptr)
@@ -305,6 +338,8 @@ void CPlayerManager::Set_SmashAttack()
 					Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
 					Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 					Get_EnumPlayer(2)->Set_IsActionMode(false);
+					Get_EnumPlayer(2)->Check_Navigation();
+
 				}
 
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
@@ -313,7 +348,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-				pCameraManager->Play_ActionCamera(TEXT("WithLawStrike.dat"), XMMatrixIdentity());
+				pCameraManager->Play_ActionCamera(TEXT("WithLawStrike2.dat"), XMMatrixIdentity());
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
@@ -324,6 +359,9 @@ void CPlayerManager::Set_SmashAttack()
 			{
 				Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+
+				
 				Get_EnumPlayer(1)->Set_IsActionMode(true);
 				Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
 				Get_EnumPlayer(1)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
@@ -362,15 +400,19 @@ void CPlayerManager::Set_SmashAttack()
 			}
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_3) && CGameInstance::Get_Instance()->Key_Down(DIK_4))
 			{
+				Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/EffectPosition/LawFinishMove_LockOnPosition.dat"), 2);
 				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
+				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+
+				
 				Get_EnumPlayer(2)->Set_IsActionMode(false);
 				Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
-				Get_EnumPlayer(2)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(2)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::RINWELL_LAW);
 
 				Get_EnumPlayer(3)->Set_IsActionMode(true);
 				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(63.f, 0.11f, 54.f, 1.f));
-				Get_EnumPlayer(3)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
+				Get_EnumPlayer(3)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 				Get_EnumPlayer(3)->SmashAttack(CPlayer::RINWELL_LAW);
 
 				if (Get_EnumPlayer(0) != nullptr)
@@ -378,6 +420,7 @@ void CPlayerManager::Set_SmashAttack()
 					Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
 					Get_EnumPlayer(0)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 					Get_EnumPlayer(0)->Set_IsActionMode(false);
+					Get_EnumPlayer(0)->Check_Navigation();
 				}
 
 				if (Get_EnumPlayer(1) != nullptr)
@@ -385,6 +428,8 @@ void CPlayerManager::Set_SmashAttack()
 					Get_EnumPlayer(1)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER2]);
 					Get_EnumPlayer(1)->Get_Transform()->LookAt(m_vStrikePosition[LOCKON]);
 					Get_EnumPlayer(1)->Set_IsActionMode(false);
+					Get_EnumPlayer(1)->Check_Navigation();
+
 				}
 
 				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
@@ -393,7 +438,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-				pCameraManager->Play_ActionCamera(TEXT("withlaw2.dat"), XMMatrixIdentity());
+				pCameraManager->Play_ActionCamera(TEXT("withlaw3.dat"), XMMatrixIdentity());
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
@@ -403,8 +448,10 @@ void CPlayerManager::Set_SmashAttack()
 	}
 }
 
-void CPlayerManager::Update_StrikePosition(_tchar * FilePath)
+void CPlayerManager::Update_StrikePosition(_tchar * FilePath, _int iMonsterPosNum)
 {
+	m_vStrikeLockOnPos.clear();
+
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	NONANIMDESC Active1;
@@ -424,7 +471,14 @@ void CPlayerManager::Update_StrikePosition(_tchar * FilePath)
 	ReadFile(hFile, &(Active2), sizeof(NONANIMDESC), &dwByte, nullptr);
 	ReadFile(hFile, &(AIplayer1), sizeof(NONANIMDESC), &dwByte, nullptr);
 	ReadFile(hFile, &(AIplayer2), sizeof(NONANIMDESC), &dwByte, nullptr);
-	ReadFile(hFile, &(Monster), sizeof(NONANIMDESC), &dwByte, nullptr);
+
+	for (int i = 0; i < iMonsterPosNum; ++i)
+	{
+		ReadFile(hFile, &(Monster), sizeof(NONANIMDESC), &dwByte, nullptr);
+		m_vStrikeLockOnPos.push_back(XMVectorSetW(XMLoadFloat3(&Monster.vPosition), 1.f));
+	}
+
+	
 	CloseHandle(hFile);
 
 
@@ -432,7 +486,7 @@ void CPlayerManager::Update_StrikePosition(_tchar * FilePath)
 	m_vStrikePosition[ACTIVE2] = XMVectorSetW(XMLoadFloat3(&Active2.vPosition), 1.f);
 	m_vStrikePosition[AIPLAYER1] = XMVectorSetW(XMLoadFloat3(&AIplayer1.vPosition), 1.f);
 	m_vStrikePosition[AIPLAYER2] = XMVectorSetW(XMLoadFloat3(&AIplayer2.vPosition), 1.f);
-	m_vStrikePosition[LOCKON] = XMVectorSetW(XMLoadFloat3(&Monster.vPosition), 1.f);
+	m_vStrikePosition[LOCKON] = m_vStrikeLockOnPos[0];
 }
 
 void CPlayerManager::Free()

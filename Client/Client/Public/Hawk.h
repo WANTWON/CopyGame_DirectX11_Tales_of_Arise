@@ -73,7 +73,7 @@ public:
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 
-	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp = false, _bool bLockOnChange = true) override;
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc) override;
 
 	HRESULT CHawk::SetUp_ShaderID();
 private:
@@ -87,6 +87,7 @@ public:
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render_Glow() override;
+	virtual void	 Set_HitState() override;
 
 public: /*For.State*/
 	void AI_Behavior(_float fTimeDelta);

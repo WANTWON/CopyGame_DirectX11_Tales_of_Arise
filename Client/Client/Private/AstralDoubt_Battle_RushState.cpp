@@ -5,6 +5,7 @@
 #include "AstralDoubt_Battle_WalkState.h"
 #include "AstralDoubt_Battle_IdleState.h"
 #include "Effect.h"
+#include "ParticleSystem.h"
 
 using namespace Astral_Doubt;
 
@@ -190,19 +191,25 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 			{
 				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-				/*if (!m_bAura)
-				{
-					if (!strcmp(pEvent.szName, "Aura"))
-					{
-						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Rush_Aura.dat"), mWorldMatrix);
-						m_bAura = true;
-					}
-				}*/
+				
 				if (!m_bRush)
 				{
 					if (!strcmp(pEvent.szName, "Rush"))
 					{
 						m_Rush = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Rush.dat"), mWorldMatrix);
+
+						_float4 vMonsterPosition;
+						XMStoreFloat4(&vMonsterPosition, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+						_float4 vMonsterLook;
+						XMStoreFloat4(&vMonsterLook, m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
+
+						vMonsterPosition.y += 5.f;
+						XMStoreFloat4(&vMonsterPosition, XMLoadFloat4(&vMonsterPosition) + XMVector4Normalize(XMLoadFloat4(&vMonsterLook)) * 15);
+
+						mWorldMatrix.r[3] = XMLoadFloat4(&vMonsterPosition);
+
+						m_RushParticles = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Rush_Particles.dat"), mWorldMatrix);
+
 						m_bRush = true;
 					}
 				}
@@ -210,7 +217,19 @@ CAstralDoubt_State * CBattle_RushState::Tick(_float fTimeDelta)
 				{
 					if (!strcmp(pEvent.szName, "Slash"))
 					{
-						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Rush_Slash.dat"), mWorldMatrix);
+						vector<CEffect*> Slash = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_Rush_Slash.dat"), mWorldMatrix);
+
+						_matrix mParticlesMatrix;
+
+						mParticlesMatrix = Slash[0]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = Slash[2]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
+						mParticlesMatrix = Slash[4]->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_InOutUpper_Particles.dat"), mParticlesMatrix);
+
 						m_bSlash = true;
 					}
 				}
@@ -497,7 +516,6 @@ void CBattle_RushState::Exit()
 
 void CBattle_RushState::Reset_Effect()
 {
-	m_bAura = false;
 	m_bRush = false;
 	m_bSlash = false;
 }
@@ -522,12 +540,13 @@ void CBattle_RushState::Update_Skill()
 			_float4 vMonsterLook;
 			XMStoreFloat4(&vMonsterLook, m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
 
-			vMonsterPosition.y += 10.f;
+			vMonsterPosition.y += 5.f;
 
 			if (!wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
-				XMStoreFloat4(&vMonsterPosition, XMLoadFloat4(&vMonsterPosition) + XMVector4Normalize(XMLoadFloat4(&vMonsterLook)) * 26);
-
-			pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vMonsterPosition));
+			{
+				XMStoreFloat4(&vMonsterPosition, XMLoadFloat4(&vMonsterPosition) + XMVector4Normalize(XMLoadFloat4(&vMonsterLook)) * 15);
+				pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vMonsterPosition));
+			}
 		}
 	}
 }

@@ -110,7 +110,15 @@ CRinwellState * CMoveState::LateTick(_float fTimeDelta)
 	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 	if (m_pOwner->Get_Stats().m_fCurrentHp <= 0)
-		m_pOwner->Take_Damage(10, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+	{
+		HITLAGDESC m_HitLagDesc;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bShaking = false;
+
+		m_pOwner->Take_Damage(10, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+	}
+		
 
 	return nullptr;
 }

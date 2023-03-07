@@ -45,11 +45,12 @@ void CNonAnim_Instance::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 
-	//if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION
-	//	&& CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
-	//{
-	//	return;
-	//}
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION
+		&& CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BATTLE)
+	{
+		if(!strcmp(m_ModelDesc.pModeltag, "Dead_Tree1_BattleZone"))
+			return;
+	}
 		
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -192,7 +193,11 @@ _bool CNonAnim_Instance::IsRenderShadow()
 			!strcmp(m_ModelDesc.pModeltag, "BushWood_SnowField") ||
 			!strcmp(m_ModelDesc.pModeltag, "Snow1_SnowField") ||
 			!strcmp(m_ModelDesc.pModeltag, "Stalagmite5_SnowField") ||
-			!strcmp(m_ModelDesc.pModeltag, "Stalagmite4_SnowField"))
+			!strcmp(m_ModelDesc.pModeltag, "Stalagmite4_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock1_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock2_SnowField") || 
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock3_SnowField") ||
+			!strcmp(m_ModelDesc.pModeltag, "CliffRock4_SnowField"))
 			return false;
 		break;
 	case Client::LEVEL_BATTLE:

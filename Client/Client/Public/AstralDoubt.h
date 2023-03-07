@@ -65,9 +65,9 @@ public:
 	virtual void	 Set_BattleMode(_bool type) override;
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
-	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp = false, _bool bLockOnChange = true) override;
+	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc) override;
 	virtual HRESULT SetUp_ShaderID() override;
-
+	virtual void	 Set_HitState() override;
 private:
 	CAstralDoubt(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CAstralDoubt(const CAstralDoubt& rhs);
@@ -90,6 +90,8 @@ public: /*For.State*/
 public:	/*For Navigation*/
 	virtual void Check_Navigation() override;
 	virtual _float ForTheBossTarget_Distance(CBaseObj*);
+
+	void Check_Navigation_Jump(void);
 
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;

@@ -48,8 +48,6 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 	//	CAstralDoubt_State* pState = new CIdleState(this, CAstralDoubt_State::FIELD_STATE_ID::FIELD_STATE_START);
 	//	m_pState = m_pState->ChangeState(m_pState, pState);
 	//}
-
-
 	
 		///* Set State */
 		CAstralDoubt_State* pState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::START_BATTLE);
@@ -290,7 +288,7 @@ HRESULT CAstralDoubt::Render_Glow()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_bDissolve ? SHADER_ANIM_GLOW_DISSOLVE : SHADER_ANIM_GLOW)))
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_bDissolve ? SHADER_ANIM_GLOW_DISSOLVE : 6)))
 			return E_FAIL;
 	}
 
@@ -375,12 +373,12 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 	return false;
 }
 
-_int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _bool bLockOnChange)
+_int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
 	if (fDamage <= 0 || m_bDead || m_bDissolve || m_tStats.m_fCurrentHp <= 0.f || m_bTakeDamage)
 		return 0; 
 
-	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
 	if (m_bOnGoingDown == false)
 	{
@@ -489,6 +487,10 @@ HRESULT CAstralDoubt::SetUp_ShaderID()
 	return S_OK;
 }
 
+void CAstralDoubt::Set_HitState()
+{
+}
+
 void CAstralDoubt::Check_Navigation()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -506,6 +508,18 @@ _float CAstralDoubt::ForTheBossTarget_Distance(CBaseObj* pTarget)
 	
 
 	return fDistance;
+}
+
+void CAstralDoubt::Check_Navigation_Jump(void)
+{
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
+
+	if (m_fWalkingHeight >= XMVectorGetY(vPosition))
+	{
+		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+	}
 }
 
 CAstralDoubt * CAstralDoubt::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

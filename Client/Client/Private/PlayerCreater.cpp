@@ -90,15 +90,18 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
-		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		////CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 
-		/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;*/
-		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		//	return E_FAIL;
+		//
+		//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		//	return E_FAIL;
 
-		/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;*/
-		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		//CGameObject* pObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"), 2);
+		//CGameObject* pObject2 = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"), 3);
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Player"), pObject);
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Player"), pObject2);
 	}
 
 	cout << "Player Clone Finished" << endl;
@@ -300,6 +303,25 @@ HRESULT CPlayerCreater::Ready_InstancingForPooling(const _tchar* pLayerTag)
 #pragma endregion BattleZone
 
 #pragma region SnowField
+	strcpy(stModelDesc.pModeltag, "CliffRock1_SnowField");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
+
+	strcpy(stModelDesc.pModeltag, "CliffRock2_SnowField");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
+	strcpy(stModelDesc.pModeltag, "CliffRock3_SnowField");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
+	strcpy(stModelDesc.pModeltag, "CliffRock4_SnowField");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Instancing"));
+
+
 	strcpy(stModelDesc.pModeltag, "Birch1_SnowField");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_SNOWFIELD, pLayerTag, &stModelDesc)))
 		return E_FAIL;
@@ -416,6 +438,11 @@ HRESULT CPlayerCreater::Ready_InstancingForPooling(const _tchar* pLayerTag)
 #pragma endregion BossZone
 
 #pragma region CityZone
+	strcpy(stModelDesc.pModeltag, "CIty_Rock1");
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_CITY, pLayerTag, &stModelDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
+
 	strcpy(stModelDesc.pModeltag, "CIty_BigWall");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_CITY, pLayerTag, &stModelDesc)))
 		return E_FAIL;
@@ -729,23 +756,23 @@ HRESULT CPlayerCreater::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 	NONANIMDESC  ModelDesc;
 	_uint iNum = 0;
 
-	hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/CliffRock2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
+	//hFile = CreateFile(TEXT("../../../Bin/Data/Field_Data/CliffRock2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//if (0 == hFile)
+	//	return E_FAIL;
 
-	/* 타일의 개수 받아오기 */
-	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+	///* 타일의 개수 받아오기 */
+	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
-	for (_uint i = 0; i < iNum; ++i)
-	{
-		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
-			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
+	//for (_uint i = 0; i < iNum; ++i)
+	//{
+	//	ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+	//	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim"), LEVEL_SNOWFIELD, pLayerTag, &ModelDesc)))
+	//		return E_FAIL;
+	//	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Deco"));
 
-	}
+	//}
 
-	CloseHandle(hFile);
+	//CloseHandle(hFile);
 
 	hFile = 0;
 	dwByte = 0;
@@ -1074,6 +1101,12 @@ HRESULT CPlayerCreater::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 
 	ReadFile(hFile, &(PortalDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 	PortalDesc.iNextLevel = LEVEL_LAWBATTLE;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_CITY, TEXT("Layer_Portal"), &PortalDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
+
+	ReadFile(hFile, &(PortalDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+	PortalDesc.iNextLevel = LEVEL_BOSS;
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_CITY, TEXT("Layer_Portal"), &PortalDesc)))
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));

@@ -58,7 +58,9 @@ HRESULT CLevel_City::Initialize()
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_DIM"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_GNL"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Duck"));
-	
+	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Effects"));
+
+
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_CITY);
 	m_pCamera = dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera());
@@ -106,7 +108,8 @@ void CLevel_City::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_DIM"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_GNL"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Duck"));
-		
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Effects"));
+
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 		LEVEL eNextLevel = (LEVEL)m_iNextLevelIndex;

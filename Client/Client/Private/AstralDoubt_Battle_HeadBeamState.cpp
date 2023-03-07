@@ -8,6 +8,7 @@
 #include "AstralDoubt_Battle_SpearMultiState.h"
 #include "AstralDoubt_Battle_UpperState.h"
 #include "Effect.h"
+#include "BossSkills.h"
 
 using namespace Astral_Doubt;
 
@@ -27,135 +28,9 @@ CAstralDoubt_State * CBattle_HeadBeamState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 {
-	Update_Effect();
-
   	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-
-
-	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
-
 	Find_Target();
-
-	///////////////////////////////////////기존의 코드- 나를 때린 대상, 근접 대상을 찾아 공격.//////////////////
-
-	/*CBaseObj* pOrigin_DamageCause = nullptr;
-	pOrigin_DamageCause = m_pOwner->Get_OrginDamageCauser();
-
-	if (m_pCurTarget == nullptr)
-	{
-		if (pOrigin_DamageCause == nullptr)
-		{
-			CBaseObj* pDamageCauser = nullptr;
-			pDamageCauser = m_pOwner->Get_DamageCauser();
-
-			if (pDamageCauser == nullptr)
-			{
-				m_pCurTarget = m_pOwner->Find_MinDistance_Target();
-
-				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-			}
-			else if (pDamageCauser != nullptr)
-			{
-				CBaseObj* pDamageCauser = nullptr;
-				pDamageCauser = m_pOwner->Get_DamageCauser();
-				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
-
-				m_pCurTarget = pDamageCauser;
-
-				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-			}
-		}
-		else if (pOrigin_DamageCause != nullptr)
-		{
-			if (pOrigin_DamageCause->Get_Info().fCurrentHp <= 0)
-			{
-				CBaseObj* pDamageCauser = nullptr;
-				pDamageCauser = m_pOwner->Get_DamageCauser();
-
-				if (pDamageCauser == nullptr)
-				{
-					CBaseObj* pCorpseNearby = nullptr;
-					pCorpseNearby = m_pOwner->Find_MinDistance_Target();
-
-					if (pCorpseNearby->Get_Info().fCurrentHp > 0)
-					{
-						m_pCurTarget = pCorpseNearby;
-						m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-						m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-					}
-					else
-						return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-				}
-				else if (pDamageCauser != nullptr)
-				{
-					if (pDamageCauser->Get_Info().fCurrentHp > 0)
-					{
-						pDamageCauser = m_pOwner->Get_DamageCauser();
-						m_pOwner->Set_OrginDamageCauser(pDamageCauser);
-
-						m_pCurTarget = pDamageCauser;
-
-						m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-						m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-					}
-
-					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-				}
-			}
-			else if (pOrigin_DamageCause->Get_Info().fCurrentHp > 0)
-			{
-				m_pCurTarget = pOrigin_DamageCause;
-				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-			}
-		}
-	}
-	else
-	{
-		if (m_pCurTarget->Get_Info().fCurrentHp <= 0)
-		{
-			CBaseObj* pDamageCauser = nullptr;
-			pDamageCauser = m_pOwner->Get_DamageCauser();
-
-			if (pDamageCauser == nullptr)
-			{
-				CBaseObj* pCorpseNearby = nullptr;
-				pCorpseNearby = m_pOwner->Find_MinDistance_Target();
-
-				if (pCorpseNearby->Get_Info().fCurrentHp > 0)
-				{
-					m_pCurTarget = pCorpseNearby;
-					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-				}
-				else
-					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-			}
-			else if (pDamageCauser != nullptr)
-			{
-				if (pDamageCauser->Get_Info().fCurrentHp > 0)
-				{
-					pDamageCauser = m_pOwner->Get_DamageCauser();
-					m_pOwner->Set_OrginDamageCauser(pDamageCauser);
-
-					m_pCurTarget = pDamageCauser;
-
-					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-				}
-				else
-					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-			}
-		}
-		else if (m_pCurTarget->Get_Info().fCurrentHp > 0)
-		{
-			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-		}
-	}*/
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 	for (auto& pEvent : pEvents)
@@ -169,81 +44,29 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 				if (!m_bAnimFinish)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_HeadBeam.wav"), SOUND_EFFECT, 0.2f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_HeadBeam.wav"), SOUND_VOICE, 0.2f);
 					m_bAnimFinish = true;
 				}
-			}
-
-			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-			{
-				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
-
-				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("HEAD1_C")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
-				matWorld.r[0] = XMVector4Normalize(matWorld.r[0]);
-				matWorld.r[1] = XMVector4Normalize(matWorld.r[1]);
-				matWorld.r[2] = XMVector4Normalize(matWorld.r[2]);
-
-				if (nullptr == m_pAtkColliderCom)
-				{
-					CCollider::COLLIDERDESC ColliderDesc;
-
-					ColliderDesc.vScale = _float3(2.5f, 1.0f, 80.1f);
-					ColliderDesc.vPosition = _float3(0.f, 0.f, -40.f);
-
-					//TestCode
-					//ColliderDesc.vScale = _float3(50.5f, 50.0f, 80.1f);
-					//ColliderDesc.vPosition = _float3(0.f, 0.f, -40.f);
-
-					//보스 거대할 때 코드
-					/*ColliderDesc.vScale = _float3(4.5f, 1.0f, 80.1f);
-					ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
-*/
-					m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_OBB, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
-					m_pAtkColliderCom->Update(matWorld);
-
-					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
-				}
-				else
-					m_pAtkColliderCom->Update(matWorld);
-
-				
-			}
-		
+			}		
 			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 			{
 				if (!m_bBeam)
 				{
 					if (!strcmp(pEvent.szName, "Beam"))
 					{
-						_float4x4 PivotMatrix = m_pOwner->Get_Model()->Get_PivotFloat4x4();
-						_matrix ParentWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = PLAYER;
+						BulletDesc.pOwner = m_pOwner;
+						BulletDesc.fDeadTime = 8.3;
+						BulletDesc.fVelocity = 1.f;
+						BulletDesc.eBulletType = CBossSkills::TYPE::BULLET_LASER;
 
-						CHierarchyNode* pBone = m_pOwner->Get_Model()->Get_BonePtr("HEAD1_C");
-
-						_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
-						SocketMatrix.r[0] = XMVector4Normalize(SocketMatrix.r[0]);
-						SocketMatrix.r[1] = XMVector4Normalize(SocketMatrix.r[1]);
-						SocketMatrix.r[2] = XMVector4Normalize(SocketMatrix.r[2]);
-
-						m_Beam = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Head_Beam.dat"), SocketMatrix);
-						Update_Effect();
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_BossSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
 
 						m_bBeam = true;
 					}
 				}
-			}
-		}
-		else
-		{
-			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-			{
-				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
-				pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
-				pCollisionMgr->Collect_Collider(CCollider::TYPE_OBB, m_pAtkColliderCom);
-
-				m_pAtkColliderCom = nullptr;
-				
-				
 			}
 		}
 	}
@@ -253,21 +76,12 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 {
-	Remove_Effect();
-
 	m_pOwner->Check_Navigation();
 	
 	m_fTimeDeltaAcc += fTimeDelta;
 
 	if (m_fTimeDeltaAcc > m_fRandTime)
 		m_iRand = rand() % 3;
-
-
-	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
-	m_vActiveTargetPos = m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-
-	_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	m_pOwner->Get_Transform()->LookAt(vPosition);
 
 	if (m_bIsAnimationFinished)
 	{
@@ -290,89 +104,18 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 			return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_HEADBEAM);
 	}
 
-	///////////////////////////////////////기존의 코드- 나를 때린 대상, 근접 대상을 찾아 공격.//////////////////
-
-	//_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	//m_pOwner->Get_Transform()->LookAt(vPosition);
-
-	//if (m_bIsAnimationFinished)
-	//{
-	//	if (m_fTarget_Distance <= 10.f)
-	//	{
-	//		switch (m_iRand)
-	//		{
-	//		case 0:
-	//			return new CBattle_720Spin_FirstState(m_pOwner);
-	//		case 1:
-	//			return new CBattle_SpearMultiState(m_pOwner);
-	//		case 2:
-	//			return new CBattle_UpperState(m_pOwner);
-
-	//		default:
-	//			break;
-	//		}
-	//	}
-	//	else
-	//		return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_HEADBEAM);
-	//}
-
-	if (nullptr != m_pAtkColliderCom)
-	{
-		CBaseObj* pCollisionTarget = nullptr;
-
-		if (m_bCollision == false)
-		{
-			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pAtkColliderCom, &pCollisionTarget))
-			{
-				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-				if (pCollided)
-					pCollided->Take_Damage(rand() % (700 - 500 + 1) + 500, m_pOwner);
-
-				m_bCollision = true;
-			}
-		}
-	}
-
-	if (m_bCollision)
-	{
-		m_fAtkCollision_Delay += fTimeDelta;
-
-		if (m_fAtkCollision_Delay >= 1.5f)
-		{
-			m_fAtkCollision_Delay = 0.f;
-			m_bCollision = false;
-		}
-	}
-
-
-
-#ifdef _DEBUG
-	if (nullptr != m_pAtkColliderCom)
-		m_pOwner->Get_Renderer()->Add_Debug(m_pAtkColliderCom);
-#endif 
-
 	return nullptr;
 }
 
 void CBattle_HeadBeamState::Enter()
 {
-	Reset_Effect();
-
 	m_eStateId = STATE_ID::STATE_IDLE;
-
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_HEAD_BEAM);
 }
 
 void CBattle_HeadBeamState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
-
-	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
-	
-	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
-	Safe_Release(m_pAtkColliderCom);
-
-	
 }
 
 void CBattle_HeadBeamState::AimTarget(_float fTimeDelta)
@@ -383,31 +126,5 @@ void CBattle_HeadBeamState::AimTarget(_float fTimeDelta)
 	{
 		m_bUpdatTargetPos = false;
 		m_fTimeDeltaAcc = 0.f;
-	}
-}
-
-void CBattle_HeadBeamState::Reset_Effect()
-{
-	m_bBeam = false;
-}
-
-void CBattle_HeadBeamState::Remove_Effect()
-{
-	for (auto& pEffect : m_Beam)
-	{
-		if (pEffect && pEffect->Get_PreDead())
-			pEffect = nullptr;
-	}
-}
-
-void CBattle_HeadBeamState::Update_Effect()
-{
-	for (auto& pEffect : m_Beam)
-	{
-		if (!pEffect)
-			continue;
-
-		if (!wcscmp(pEffect->Get_PrototypeId(), TEXT("Cylinder_ko_01")))
-			pEffect->Get_Transform()->Set_Scale(CTransform::STATE::STATE_LOOK, 10.f);
 	}
 }

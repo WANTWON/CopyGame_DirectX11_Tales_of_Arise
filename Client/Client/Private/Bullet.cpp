@@ -171,7 +171,7 @@ void CBullet::Collision_Check()
 	{
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
-			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 			m_bDead = true;
 		}
 	}
@@ -188,7 +188,7 @@ void CBullet::Collision_Check()
 	}
 }
 
-_bool CBullet::Check_Exception_Collision()
+_bool CBullet::Check_Exception()
 {
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();

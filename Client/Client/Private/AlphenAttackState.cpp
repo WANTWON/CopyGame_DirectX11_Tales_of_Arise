@@ -202,7 +202,7 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MINIGAME1, m_pSwordCollider, &pCollisionTarget))
@@ -261,7 +261,7 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner);
+				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 		}
 #ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pFootCollider);
@@ -300,20 +300,28 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+		{
 			m_eStateId = STATE_NORMAL_ATTACK2;
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-			m_eStateId = STATE_NORMAL_ATTACK3;
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-			m_eStateId = STATE_NORMAL_ATTACK4;
-			break;
-		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-			return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
+			Enter();
 			break;
 		}
-
-		Enter();
+		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+		{
+			m_eStateId = STATE_NORMAL_ATTACK3;
+			Enter();
+			break;
+		}
+		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+		{
+			m_eStateId = STATE_NORMAL_ATTACK4;
+			Enter();
+			break;
+		}
+		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+			if (!m_bIsFly)
+				return new CAlphenAttackState(m_pOwner, STATE_NORMAL_ATTACK1, m_fTime);
+			break;
+		}
 	}
 
 	if (LEVEL_RESTAURANT != CGameInstance::Get_Instance()->Get_CurrentLevelIndex())
@@ -356,25 +364,28 @@ CPlayerState * CAlphenAttackState::EventInput(void)
 		}
 	}
 
-	CGameInstance* pGameInstance = CGameInstance::Get_Instance();
+	if (!m_bIsFly)
+	{
+		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
 
-	if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_BACKWARD_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_A))
-		return new CRunState(m_pOwner, DIR_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_D))
-		return new CRunState(m_pOwner, DIR_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_S))
-		return new CRunState(m_pOwner, DIR_BACKWARD, pGameInstance->Key_Pressing(DIK_LSHIFT));
-	else if (pGameInstance->Key_Pressing(DIK_W))
-		return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
-
+		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A))
+			return new CRunState(m_pOwner, DIR_STRAIGHT_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D))
+			return new CRunState(m_pOwner, DIR_STRAIGHT_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A))
+			return new CRunState(m_pOwner, DIR_BACKWARD_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D))
+			return new CRunState(m_pOwner, DIR_BACKWARD_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_A))
+			return new CRunState(m_pOwner, DIR_LEFT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_D))
+			return new CRunState(m_pOwner, DIR_RIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_S))
+			return new CRunState(m_pOwner, DIR_BACKWARD, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		else if (pGameInstance->Key_Pressing(DIK_W))
+			return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+	}
+	
 	return nullptr;
 }
 
@@ -485,13 +496,13 @@ CCollider * CAlphenAttackState::Get_Collider(CCollider::TYPE eType, _float3 vSca
 	switch (eType)
 	{
 	case Engine::CCollider::TYPE_AABB:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"), &ColliderDesc);
 		break;
 	case Engine::CCollider::TYPE_OBB:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"), &ColliderDesc);
 		break;
 	case Engine::CCollider::TYPE_SPHERE:
-		return pCollisionMgr->Reuse_Collider(eType, m_pOwner->Get_Level(), TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+		return pCollisionMgr->Reuse_Collider(eType, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 		break;
 	}
 

@@ -481,9 +481,9 @@ HRESULT CLoader::Loading_ForPrototype()
 		CDamageFont::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Damagefont_Critical"),
+	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Damagefont_Critical"),
 		CDamagefont_Critical::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Critical"),
 		CCriticalFont::Create(m_pDevice, m_pContext))))
@@ -1141,6 +1141,14 @@ HRESULT CLoader::Loading_ForCityLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Stair01.dat"))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Stair02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Stair02.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Stair03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/Stair03.dat"))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LineNew01"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Saternas/LineNew01.dat"))))
 		return E_FAIL;
@@ -1261,6 +1269,11 @@ HRESULT CLoader::Loading_ForCityLevel()
 
 
 #pragma region Instancing City
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CIty_Rock1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Astrik/Rock1.dat",
+			"../../../Bin/Data/City_Data/Rock1.dat"))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CIty_BigWall"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/Saternas/Big_Wall01.dat",
 			"../../../Bin/Data/City_Data/BigWall.dat"))))
@@ -1339,6 +1352,26 @@ HRESULT CLoader::Loading_ForSnowFieldLevel()
 #pragma region Instancing SnowField
 	/* Loading Instancing */
 	lstrcpy(m_szLoadingText, TEXT("Loading Instancing "));
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffRock1_SnowField"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/CliffRock/CliffRock.dat",
+			"../../../Bin/Data/Field_Data/CliffRock_1.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffRock2_SnowField"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/CliffRock/CliffRock2.dat",
+			"../../../Bin/Data/Field_Data/CliffRock_2.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffRock3_SnowField"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/CliffRock/CliffRock3.dat",
+			"../../../Bin/Data/Field_Data/CliffRock_3.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("CliffRock4_SnowField"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM_INSTANCE, "../../../Bin/Bin_Data/NonAnim/CliffRock/CliffRock4.dat",
+			"../../../Bin/Data/Field_Data/CliffRock_4.dat"))))
+		return E_FAIL;
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Bush_SnowField"),
@@ -1942,7 +1975,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Minigame"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/MinigameCount/Minigame/minigame%d.dds"), 8))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/MinigameCount/Minigame/minigame%d.dds"), 9))))
 		return E_FAIL;
 
 	
@@ -2040,6 +2073,10 @@ HRESULT CLoader::Loading_ForEffect()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ring_Warp"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Ring/Ring_Warp.dat"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cone01"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/Effect/Cone/Cone01.dat"))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Cylinder0"),

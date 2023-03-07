@@ -2,6 +2,7 @@
 #include "MonsterLaw.h"
 #include "CameraManager.h"
 #include "Monster_LawPoseState.h"
+#include "Monster_Lawhit.h"
 
 using namespace MonsterLaw;
 
@@ -63,7 +64,34 @@ HRESULT CMonsterLaw::Initialize(void * pArg)
 
 }
 
+void CMonsterLaw::Reset_StrikeBlur(_float fTimeDelta)
+{
+	if (!m_bResetStrikeBlur)
+		return;
 
+	if (m_fStrikeBlurResetTimer < m_fStrikeBlurResetDuration)
+	{
+		/* Zoom Blur Lerp */
+		_float fFocusPower = 10.f;
+
+		_float fBlurInterpFactor = m_fStrikeBlurResetTimer / m_fStrikeBlurResetDuration;
+		if (fBlurInterpFactor > 1.f)
+			fBlurInterpFactor = 1.f;
+
+		_int iDetailStart = 10;
+		_int iDetailEnd = 1;
+		_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+		m_pRendererCom->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+
+		m_fStrikeBlurResetTimer += fTimeDelta;
+	}
+	else
+	{
+		m_fStrikeBlurResetTimer = 0.f;
+		m_bResetStrikeBlur = false;
+		m_pRendererCom->Set_ZoomBlur(false);
+	}
+}
 
 HRESULT CMonsterLaw::Ready_Components(void * pArg)
 {
@@ -122,6 +150,28 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
+	m_iPhase =  CBattleManager::Get_Instance()->Get_LawBattlePhase();
+
+
+	if(m_bAfterThunder)
+	m_fThunderHitTime += fTimeDelta;
+
+	if (m_bAfterKick)
+		m_fKickHitTIme += fTimeDelta;
+
+
+	if (m_fThunderHitTime > 4.f && m_bAfterThunder)
+	{
+		m_bAfterThunder = false;
+		m_fThunderHitTime = 0.f;
+	}
+
+	if (m_fKickHitTIme > 3.f && m_bAfterKick)
+	{
+		m_bAfterKick = false;
+		m_fKickHitTIme = 0.f;
+	}
+		
 
 
 	_int iSuperTick = __super::Tick(fTimeDelta);
@@ -242,6 +292,10 @@ void CMonsterLaw::Set_BattleMode(_bool type)
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 }
 
+void CMonsterLaw::Set_HitState()
+{
+}
+
 
 _bool CMonsterLaw::Is_AnimationLoop(_uint eAnimId)
 {
@@ -258,12 +312,59 @@ _bool CMonsterLaw::Is_AnimationLoop(_uint eAnimId)
 	}
 }
 
-_int CMonsterLaw::Take_Damage(int fDamage, CBaseObj* DamageCauser, _bool bIsUp, _bool bLockOnChange)
+_int CMonsterLaw::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
 	if (fDamage <= 0 || m_bDead || m_bTakeDamage )
 		return 0;
 
-	_int iHp = __super::Take_Damage(fDamage, DamageCauser);
+	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
+
+	++m_iLawhitcount;
+
+	if (m_iLawhitcount >= 15)
+	{
+
+		m_bDownState = true;
+		m_iLawhitcount = 0;
+
+		m_pTarget = DamageCauser;
+		m_eDmg_Direction = Calculate_DmgDirection();
+
+		CMonsterLawState* pState = new CMonster_Lawhit(this, m_eDmg_Direction, CMonsterLawState::STATE_DAMAGE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	
+	}
+
+	if (m_bAfterThunder)
+	{
+		m_bDownState;
+		m_pTarget = DamageCauser;
+		m_eDmg_Direction = Calculate_DmgDirection();
+
+		CMonsterLawState* pState = new CMonster_Lawhit(this, m_eDmg_Direction, CMonsterLawState::STATE_DAMAGE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+		m_bAfterThunder = false;
+	}
+
+	if (m_bAfterKick)
+	{
+		m_bDownState;
+		m_pTarget = DamageCauser;
+		m_eDmg_Direction = Calculate_DmgDirection();
+
+		CMonsterLawState* pState = new CMonster_Lawhit(this, m_eDmg_Direction, CMonsterLawState::STATE_DAMAGE);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+		m_bAfterKick = false;
+	}
+	
+
+	/*if (m_tStats.m_iBedamagedCount >= 20)
+	{
+		m_bBedamageAnim = true;
+		m_tStats.m_iBedamagedCount = 0;
+		
+	}*/
+
 
 
 	if (iHp <= 0)
@@ -323,6 +424,28 @@ void CMonsterLaw::Check_Navigation()
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
 }
+
+//_bool CMonsterLaw::Check_Navigation_Jump()
+//{
+//	return _bool();
+//}
+
+_bool CMonsterLaw::Check_Navigation_Jump()
+{
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
+
+	if (m_fWalkingHeight >= XMVectorGetY(vPosition))
+	{
+		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+
+		return true;
+	}
+
+	return false;
+}
+
 
 CMonsterLaw * CMonsterLaw::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {

@@ -107,7 +107,14 @@ void CMonster::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
 	{
-		Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+		HITLAGDESC m_HitLagDesc;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fHitLagTimer = 0.1f;
+		m_HitLagDesc.fShakingPower = 1.f;
+		m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+		Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 		m_bTakeDamage = true;
 	}
 
@@ -500,7 +507,21 @@ void CMonster::Make_DeadEffect(CBaseObj * Target)
 
 void CMonster::Make_UIFont(_uint iDamage)
 {
+	if (m_tStats.m_iHitcount >= 60)
+	{
+		m_bDownState = true;
+		m_tStats.m_iHitcount = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+			return;
+	}
 
+	if (m_tStats.m_iBedamagedCount >= 20)
+	{
+		m_bBedamageAnim = true;
+		m_tStats.m_iBedamagedCount = 0;
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+			return;
+	}
 
 	if (m_tStats.m_iHitcount >= 10)
 	{
@@ -591,60 +612,39 @@ void CMonster::Make_UIFont(_uint iDamage)
 				return;
 		}
 		break;
+
 	}
+
 }
 
 
-_int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bIsUp, _bool bLockOnChange)
+_int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitDesc)
 {
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 	
-
 	m_pTarget = DamageCauser;
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 	
 	++m_tStats.m_iHitcount;
-
-	if (m_tStats.m_iHitcount >= 60)
-	{
-		m_bDownState = true;
-		m_tStats.m_iHitcount = 0;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
-			return E_FAIL;
-	}
-		
 	++m_tStats.m_iBedamagedCount;
 	
-	if (m_tStats.m_iBedamagedCount >= 20)
-	{
-		m_bBedamageAnim = true;
-		m_tStats.m_iBedamagedCount = 0;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
-			return E_FAIL;
-	}
 
 	if (DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer())
 	{
-		CBattleManager::Get_Instance()->Set_LackonMonster(this);
-		CBattleManager::Get_Instance()->Set_IsHitLeg(true);
+		if(HitDesc.bLockOnChange)
+			CBattleManager::Get_Instance()->Set_LackonMonster(this);
 
-		switch (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID())
+		if (HitDesc.bHitLag)
 		{
-		case CPlayer::PLAYERID::ALPHEN:
-		case CPlayer::PLAYERID::LAW:
+			CBattleManager::Get_Instance()->Set_IsHitLeg(HitDesc.bHitLag);
 			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
-			CBattleManager::Get_Instance()->Set_HitLegTimer(0.15f);
-			break;
-		case CPlayer::PLAYERID::RINWELL:
-		case CPlayer::PLAYERID::SION:
-			CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.f);
-			CBattleManager::Get_Instance()->Set_HitLegTimer(0.05f);
-			break;
-		}
+			CBattleManager::Get_Instance()->Set_HitLegTimer(HitDesc.fHitLagTimer);
 
+		}
+		
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.2f);
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(HitDesc.bShaking, HitDesc.fShakingPower, HitDesc.fShakingMinusPower);
 	}
 
 	if (m_pTarget != nullptr)
@@ -675,7 +675,6 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, _bool bIsUp, _b
 	m_bHit = true;
 	m_dwHitTime = GetTickCount();
 	m_bTakeDamage = true;
-	m_bIsUp = bIsUp;
 
 	return _int(m_tStats.m_fCurrentHp);
 }

@@ -63,10 +63,10 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 		case Client::CRinwellState::STATE_MOVE:
 			break;
 		case Client::CRinwellState::STATE_HP50DOWN:
-			return new CRinwellIdleState(m_pOwner, 1.f);
+			return new CRinwellIdleState(m_pOwner, 0.5f);
 			break;
 		case Client::CRinwellState::STATE_BATTLESTART:
-			return new CRinwellIdleState(m_pOwner, 1.f);
+			return new CRinwellIdleState(m_pOwner, 0.5f);
 		}
 	}
 

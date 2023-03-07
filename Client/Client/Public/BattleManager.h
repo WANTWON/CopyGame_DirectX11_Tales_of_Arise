@@ -63,6 +63,9 @@ public: /* For Lock On */
 	_float Get_HitLegTimer() { return m_fHitLegTimer; }
 	void Set_HitLegTimer(_float fTime) { m_fHitLegTimer = fTime; }
 
+	_int Get_LawBattlePhase() { return m_iLawBattelPhase; }
+	void Set_LawBattlePhase(_int phase) { m_iLawBattelPhase = phase; }
+
 public:
 	void Clear_Monster() { m_FieldMonster.clear(); };
 	void Clear_AllMonster() { m_FieldMonster.clear(); };
@@ -89,6 +92,8 @@ private:
 	
 	_bool m_bHitLeg = false;
 	_float m_fHitLegTimer = 0.f;
+
+	_int m_iLawBattelPhase = 0;
 
 
 public:
