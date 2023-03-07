@@ -335,7 +335,6 @@ void CAI_AlphenLaw_Smash::Exit()
 		}
 	}
 	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	__super::Exit();
 }
 
