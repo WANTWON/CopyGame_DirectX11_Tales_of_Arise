@@ -16,7 +16,7 @@ CAI_Rinwell_Fascinated::CAI_Rinwell_Fascinated(CPlayer* pPlayer)
 CAIState * CAI_Rinwell_Fascinated::Tick(_float fTimeDelta)
 {
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	 m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
 
 	/*if (!m_bIsAnimationFinished)
 	{
@@ -72,6 +72,18 @@ void CAI_Rinwell_Fascinated::Enter()
 void CAI_Rinwell_Fascinated::Exit()
 {
 	__super::Exit();
+	if (!m_pEffects.empty())
+	{
+		for (auto& iter : m_pEffects)
+		{
+			if (iter != nullptr)
+			{
+				iter->Set_Dead(true);
+				iter = nullptr;
+			}
+
+		}
+	}
 }
 
 

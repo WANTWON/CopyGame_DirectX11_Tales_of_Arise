@@ -17,8 +17,8 @@ CFascinate::CFascinate(CMonsterLaw* pRinwell)
 
 CMonsterLawState * CFascinate::Tick(_float fTimeDelta)
 {
-	if (!m_bFinised)
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+	//if (!m_bFinised)
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.f,false);
 
 
 
@@ -43,7 +43,9 @@ CMonsterLawState * CFascinate::LateTick(_float fTimeDelta)
 
 void CFascinate::Enter()
 {
+	
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CMonsterLaw::BTL_ARISE_B);
+	//m_pOwner->Get_Model()->Reset();
 
 
 	_vector vOffset = { 0.f,3.f,0.f,0.f };
@@ -54,6 +56,17 @@ void CFascinate::Enter()
 
 void CFascinate::Exit()
 {
+	if (!m_pEffects.empty())
+	{
+		for (auto& iter : m_pEffects)
+		{
+			if (iter != nullptr)
+			{
+				iter->Set_Dead(true);
+				iter = nullptr;
+			}
 
+		}
+	}
 }
 

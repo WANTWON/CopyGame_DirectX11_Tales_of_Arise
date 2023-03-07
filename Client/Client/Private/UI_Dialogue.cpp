@@ -147,6 +147,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 			if (m_iVectorIndex == 13 && m_iDialogueindex == 1)
 			{
 				CPlayerManager::Get_Instance()->Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(50.f, 0.f, 50.f, 1.f));
+				CPlayerManager::Get_Instance()->Get_EnumPlayer(2)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
 				pCameraManager->Play_ActionCamera(TEXT("SexyLaw2.dat"), XMMatrixIdentity());
@@ -283,7 +284,12 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					dynamic_cast<CMonster*>(pObject)->Compute_CurrentIndex(LEVEL_LAWBATTLE);
 					dynamic_cast<CMonster*>(pObject)->Set_BattleMode(true);
 					CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
+		
+					dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(8, true, 0, 1);
+					CBattleManager::Get_Instance()->Set_IsStrike(true);
 					break;
+					CGameInstance::Get_Instance()->StopAll();
+					CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LawBattle.wav"), g_fSoundVolume);
 				}
 					
 

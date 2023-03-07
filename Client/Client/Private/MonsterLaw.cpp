@@ -164,12 +164,15 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 		pCameraManager->Play_ActionCamera(TEXT("SexyLaw1.dat"), XMMatrixIdentity());
 	    Set_IsActionMode(true);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(64.f, 0.f, 64.f, 1.f));
+		m_pTransformCom->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(13);
 
 		CMonsterLawState* pState = new CFascinate(this);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(31);
-
+		CBattleManager::Get_Instance()->Set_IsStrike(true);
+		CGameInstance::Get_Instance()->StopAll();
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("hentai.wav"), g_fSoundVolume);
 		
 
 	}

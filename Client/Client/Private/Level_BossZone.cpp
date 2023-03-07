@@ -56,7 +56,7 @@ HRESULT CLevel_BossZone::Initialize()
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
 	
-
+	
 	//CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("Boss_Asu_BackGorundSound.wav"), g_fSoundVolume);
 	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BossEnter.dat"), XMMatrixIdentity());
