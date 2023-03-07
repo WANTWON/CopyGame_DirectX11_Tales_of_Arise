@@ -33,6 +33,7 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
 	case Client::CIceWolfState::STATE_DOWN:
+	{	
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 		/*_bool bDownState = true;
@@ -48,7 +49,7 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 			//m_pOwner->Check_Navigation();
 		}
 		break;
-
+	}
 	default:
 		break;
 	}
