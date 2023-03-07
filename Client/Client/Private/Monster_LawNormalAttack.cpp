@@ -137,6 +137,71 @@ CMonsterLawState * CMonster_LawNormalAttack::Tick(_float fTimeDelta)
 
 				return nullptr;
 			}
+			if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+			{
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				switch (m_eStateId)
+				{
+				case NORMALATTACK_1:
+						if (!m_bNormalAttack_1)
+						{
+							vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_1.dat"), mWorldMatrix);
+
+							/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							mWorldMatrix.r[3] = vPosition;
+
+							CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
+							m_bNormalAttack_1 = true;
+						}
+					break;
+				case NORMALATTACK_2:
+					
+						if (!m_bNormalAttack_2)
+						{
+							vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_2.dat"), mWorldMatrix);
+
+							/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							mWorldMatrix.r[3] = vPosition;
+
+							CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
+							m_bNormalAttack_2 = true;
+						}
+					
+					break;
+				case NORMALATTACK_3:
+					
+						if (!m_bNormalAttack_3)
+						{
+							CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_3.dat"), mWorldMatrix);
+							m_bNormalAttack_3 = true;
+						}
+					
+					break;
+				case NORMALATTACK_4:
+					
+						if (!m_bNormalAttack_4)
+						{
+							vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_4.dat"), mWorldMatrix);
+
+							/*_vector vPosition = Punch.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							mWorldMatrix.r[3] = vPosition;
+
+							CEffect::PlayEffectAtLocation(TEXT("Punch_Impact.dat"), mWorldMatrix);*/
+							m_bNormalAttack_4 = true;
+						}
+					
+					break;
+				case NORMALATTACK_5:
+					
+						if (!m_bNormalAttack_5)
+						{
+							CEffect::PlayEffectAtLocation(TEXT("Law_Normal_Attack_5.dat"), mWorldMatrix);
+							m_bNormalAttack_5 = true;
+						}
+					
+					break;
+				}
+			}
 		}
 		else
 		{

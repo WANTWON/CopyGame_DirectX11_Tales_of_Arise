@@ -96,6 +96,18 @@ protected:
 		return fDistance;
 	}
 
+	virtual _float Find_EnumTarget(_int player)
+	{
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_EnumPlayer(player);
+
+		m_pTarget = pPlayer;
+		_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+		_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+		return fDistance;
+	}
+
 
 	virtual _vector Get_PlayerPos()
 	{

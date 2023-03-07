@@ -5,7 +5,7 @@
 #include "Effect.h"
 #include "EffectMesh.h"
 #include "AICheckState.h"
-#include "Alphen.h"
+#include "Law.h"
 #include "UI_Skillmessage.h"
 #include "ParticleSystem.h"
 #include "Law.h"
@@ -13,6 +13,7 @@
 
 
 using namespace MonsterLaw;
+
 
 CMonster_LawAirR::CMonster_LawAirR(CMonsterLaw* pPlayer)//, _float fStartHeight, _float fTime)
 {
@@ -69,6 +70,18 @@ CMonsterLawState * CMonster_LawAirR::Tick(_float fTimeDelta)
 						m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pLeftFootCollider, m_pOwner);
 				}
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_1"))
+					{
+						if (!m_bSankamousyuukyaku_1)
+						{
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							m_Sankamousyuukyaku_1 = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_1.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_1 = true;
+						}
+					}
+				}
 				break;
 			case Client::STATETYPE_END:
 				if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
@@ -92,6 +105,60 @@ CMonsterLawState * CMonster_LawAirR::Tick(_float fTimeDelta)
 						if (nullptr == m_pLeftHandCollider)
 							m_pLeftHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 						pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pLeftHandCollider, m_pOwner);
+					}
+				}
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Punch_1"))
+					{
+						if (!m_bSankamousyuukyaku_Punch_1)
+						{
+							m_Sankamousyuukyaku_Punch_1 = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_Punch_1.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_Punch_1 = true;
+
+							if (m_Sankamousyuukyaku_Punch_1[1])
+								m_vPunchPosition_1 = m_Sankamousyuukyaku_Punch_1[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						}
+					}
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Particles_1"))
+					{
+						if (!m_bSankamousyuukyaku_Particles_1)
+						{
+							mWorldMatrix.r[3] = m_vPunchPosition_1;
+
+							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_2.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_Particles_1 = true;
+						}
+					}
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Punch_2"))
+					{
+						if (!m_bSankamousyuukyaku_Punch_2)
+						{
+							m_Sankamousyuukyaku_Punch_2 = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_Punch_2.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_Punch_2 = true;
+
+							if (m_Sankamousyuukyaku_Punch_2[1])
+								m_vPunchPosition_2 = m_Sankamousyuukyaku_Punch_2[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+						}
+					}
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Particles_2"))
+					{
+						if (!m_bSankamousyuukyaku_Particles_2)
+						{
+							mWorldMatrix.r[3] = m_vPunchPosition_2;
+
+							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_2.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_Particles_2 = true;
+						}
+					}
+					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_3"))
+					{
+						if (!m_bSankamousyuukyaku_2)
+						{
+							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_3.dat"), mWorldMatrix);
+							m_bSankamousyuukyaku_2 = true;
+						}
 					}
 				}
 				break;
