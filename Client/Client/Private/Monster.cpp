@@ -184,6 +184,18 @@ HRESULT CMonster::Render()
 	if (FAILED(SetUp_ShaderID()))
 		return E_FAIL;
 
+	_float3 vRimColor = _float3(1.f, 0.f, 0.f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimColor", &vRimColor, sizeof(_float3))))
+		return E_FAIL;
+	/*if (FAILED(m_pShaderCom->Set_RawValue("g_vRimTimer", &m_fAuraTimer, sizeof(_float))))
+		return E_FAIL;*/
+
+	_float4 vCameraLook = (_float4)(CGameInstance::Get_Instance()->Get_CamWorldMatrix().m[2]);
+	_float3 vCamLook = _float3(vCameraLook.x, vCameraLook.y, vCameraLook.z);
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vCameraLook", &vCamLook, sizeof(_float3))))
+		return E_FAIL;
+
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
@@ -195,6 +207,10 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
 			return E_FAIL;
 	}
+
+	_bool bRimLight = false;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_bRimLight", &bRimLight, sizeof(_bool))))
+		return E_FAIL;
 
 	return S_OK;
 }
