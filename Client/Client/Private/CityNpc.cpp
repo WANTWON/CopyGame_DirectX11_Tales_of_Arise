@@ -85,7 +85,6 @@ int CCityNpc::Tick(_float fTimeDelta)
 {
 
 
-
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || Check_IsinFrustum(2.f) == false)
 		return OBJ_NOEVENT;
 
@@ -98,17 +97,28 @@ int CCityNpc::Tick(_float fTimeDelta)
 
 void CCityNpc::Late_Tick(_float fTimeDelta)
 {
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	if (!pPlayer)
+		return;
+
 	_vector vPosition = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION);
 	_float fDistance = XMVectorGetX(XMVector3Length(vPosition - Get_TransformState(CTransform::STATE_TRANSLATION)));
 	if (fDistance > 50.f)
 		return;
+	
+	//else
+	//{
+	//	if (!m_bCrowdSound)
+	//	{
+	//		CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_Crowd.wav"), SOUND_NATURE, 0.5f);
+	//		m_bCrowdSound = true;
+	//	}
+	//}
+
 
 	__super::Late_Tick(fTimeDelta);
    LateTick_State(fTimeDelta);
 
-   CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-   if (!pPlayer)
-	   return;
 
    m_bCollision = m_pSPHERECom->Collision(pPlayer->Get_Collider());
 
@@ -235,6 +245,13 @@ _bool CCityNpc::Is_AnimationLoop(_uint eAnimId)
 
 void CCityNpc::Tick_State(_float fTimeDelta)
 {
+
+	/*_vector vPlayerPosition = pPlayer->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+	_vector vPosition = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+
+	_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPosition - vPosition));
+
+	m_fActiveTarget_Distance = fDistance;*/
 
 	if (m_eState != m_ePreState)
 	{
