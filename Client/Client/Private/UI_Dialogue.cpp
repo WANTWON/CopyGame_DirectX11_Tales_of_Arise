@@ -2140,6 +2140,7 @@ void CUI_Dialogue::Open_Dialogue(_uint index)
 	for (auto vec : (m_vCurrentDialogue[index])) test++;
 	
 	vectorsize = test;
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Open_Dialogue.wav"), SOUND_EFFECT, 0.6f);
 }
 
 
