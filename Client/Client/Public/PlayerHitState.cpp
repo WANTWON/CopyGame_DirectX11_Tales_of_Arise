@@ -218,16 +218,19 @@ _bool CHitState::Move(_float fTimeDelta)
 	}
 	else
 	{
-		_vector vOwnerPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
-		_float fOwnerPosY = XMVectorGetY(vOwnerPos);
+		if ((LEVEL_BOSS != m_pOwner->Get_Level()) && (LEVEL_LAWBATTLE != m_pOwner->Get_Level()))
+		{
+			_vector vOwnerPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+			_float fOwnerPosY = XMVectorGetY(vOwnerPos);
 
-		_float fDecrease = XMVectorGetX(XMVector4Length(XMVectorSetY(vOwnerPos, XMVectorGetY(m_vGoalPos)) - m_vStartPos)) / XMVectorGetX(XMVector4Length(m_vStartPos - m_vGoalPos));
+			_float fDecrease = XMVectorGetX(XMVector4Length(XMVectorSetY(vOwnerPos, XMVectorGetY(m_vGoalPos)) - m_vStartPos)) / XMVectorGetX(XMVector4Length(m_vStartPos - m_vGoalPos));
 
-		m_fRatio += (1.f - fDecrease) * 0.13f + fTimeDelta;
+			m_fRatio += (1.f - fDecrease) * 0.13f + fTimeDelta;
 
-		_vector vPos = XMVectorSetY(XMVectorLerp(m_vStartPos, m_vGoalPos, m_fRatio), fOwnerPosY);
-		if (m_pOwner->Get_Navigation()->isMove(vPos))
-			m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPos);
+			_vector vPos = XMVectorSetY(XMVectorLerp(m_vStartPos, m_vGoalPos, m_fRatio), fOwnerPosY);
+			if (m_pOwner->Get_Navigation()->isMove(vPos))
+				m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPos);
+		}
 	}
 
 	return m_bIsMove;
