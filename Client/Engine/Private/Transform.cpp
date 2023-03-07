@@ -266,38 +266,19 @@ bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigati
 
 	WorldMatrix = XMMatrixRotationQuaternion(XMQuaternionNormalize(XMQuaternionMultiply(vWorldRot, RotationQuat)));
 
-	_vector vTranslation = XMVector3TransformCoord(vecMove, XMMatrixRotationY(XMConvertToRadians(180.f)) * WorldMatrix);
+	_vector vTranslation = XMVector3TransformNormal(vecMove, XMMatrixRotationY(XMConvertToRadians(180.f)));
 
-	WorldMatrix.r[0] = XMVector4Normalize(WorldMatrix.r[0]) * Get_Scale(CTransform::STATE_RIGHT);
-	WorldMatrix.r[1] = XMVector4Normalize(WorldMatrix.r[1]) * Get_Scale(CTransform::STATE_UP);
-	WorldMatrix.r[2] = XMVector4Normalize(WorldMatrix.r[2]) * Get_Scale(CTransform::STATE_LOOK);
-	WorldMatrix.r[3] = vWorldPos;
+	WorldMatrix = XMMatrixTranslationFromVector(vTranslation) * XMMatrixScalingFromVector(vWorldScale) * WorldMatrix * XMMatrixTranslationFromVector(vWorldPos);
 
 	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
-
-	_vector		vPosition = Get_State(CTransform::STATE_TRANSLATION);
-
-	_vector		vAfterPosition = vPosition + vTranslation;
-	vAfterPosition = XMVectorSetW(vAfterPosition, 1.f);
-
+	
 	if (pNavigation)
-		pNavigation->Compute_CurrentIndex_byXZ(vAfterPosition);
+		pNavigation->Compute_CurrentIndex_byXZ(WorldMatrix.r[3]);
 
 	if (nullptr == pNavigation)
-		Set_State(CTransform::STATE_TRANSLATION, vAfterPosition);
-	else if (true == pNavigation->isMove(vAfterPosition))
-		Set_State(CTransform::STATE_TRANSLATION, vAfterPosition);
-	/*else if (false == pNavigation->isMove(vAfterPosition))
-	{
-	_vector vNormal = XMVector3Normalize(pNavigation->Get_LastNormal());
-	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vNormal));
-	vNormal = vNormal * fDot * -1.f;
-	_vector vSliding = XMVector3Normalize(vLook + vNormal);
-	vPosition += vSliding * XMVectorGetX(XMVector4Length(vAfterPosition - vPosition));
-	if (true == pNavigation->isMove(vPosition + XMVector3Normalize(vLook) * fRadius))
-	Set_State(CTransform::STATE_TRANSLATION, vPosition);
-	return false;
-	}*/
+		Set_State(CTransform::STATE_TRANSLATION, WorldMatrix.r[3]);
+	else if (true == pNavigation->isMove(WorldMatrix.r[3]))
+		Set_State(CTransform::STATE_TRANSLATION, WorldMatrix.r[3]);
 
 	return true;
 }
