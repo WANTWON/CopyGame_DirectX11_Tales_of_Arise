@@ -65,7 +65,7 @@ public:
 public:
 	void Set_Target(CBaseObj* pTarget) { m_pTarget = pTarget; }
 
-
+	
 private:
 	_uint		m_eCamMode = CAM_DEBUG;
 	_vector		m_vInitPos = { 0.f,0.f,0.f,1.f };

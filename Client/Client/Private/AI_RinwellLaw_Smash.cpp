@@ -72,7 +72,7 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 	}
 
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta,false);
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
 	if (!m_bIsAnimationFinished)
 	{
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -98,12 +98,106 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
+							if (!strcmp(pEvent.szName, "Begin"))
+							{
+								/* Make Effect */
+								CBattleManager::Get_Instance()->Get_LackonMonster()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[1]);
+
+								_matrix mWorldMatrix2 = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								mWorldMatrix2.r[3] = m_vEffectPos[0];
+								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawFinishMove_Begin.dat"), mWorldMatrix2);
+								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix2.r[3]);
+
+								for (auto& pEffect : Punch)
+								{
+									vPosition += vCamDir*0.1f;
+									pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+								}
+							}
+							else if (!strcmp(pEvent.szName, "Punch1"))
+							{
+								CBattleManager::Get_Instance()->Get_LackonMonster()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[0]);
+
+								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								mWorldMatrix.r[3] = m_vEffectPos[1];
+								CEffect::PlayEffectAtLocation(TEXT("LawFinishMove_BeginPunchFlash.dat"), mWorldMatrix);
+
+								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawFinishMove_BeginPunchFlash.dat"), mWorldMatrix);
+								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
+
+								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+								for (auto& pEffect : Punch)
+								{
+									vPosition += vCamDir*0.1f;
+									pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+								}
+							}
+							else if (!strcmp(pEvent.szName, "Punch2"))
+							{
+								CBattleManager::Get_Instance()->Get_LackonMonster()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[0]);
+
+								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								mWorldMatrix.r[3] = m_vEffectPos[2];
+								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawFinishMove_Punch.dat"), mWorldMatrix);
+								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
+
+								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+								for (auto& pEffect : Punch)
+								{
+									vPosition += vCamDir*0.1f;
+									pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+								}
+							}
+							else if (!strcmp(pEvent.szName, "FootPunch"))
+							{
+								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+								CBattleManager::Get_Instance()->Get_LackonMonster()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[1]);
+								
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								mWorldMatrix.r[3] = m_vEffectPos[2];
+								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawFinishMove_Punch.dat"), mWorldMatrix);
+								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
+
+								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+								for (auto& pEffect : Punch)
+								{
+									vPosition += vCamDir*0.1f;
+									pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+								}
+							}
+							else if (!strcmp(pEvent.szName, "FootEnd"))
+							{
+								
+								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+								CBattleManager::Get_Instance()->Get_LackonMonster()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[1]);
+
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								mWorldMatrix.r[3] = m_vEffectPos[3];
+								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawFinishMove_FootEnd.dat"), mWorldMatrix);
+								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
 
 
+								if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+									dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.02f);
+
+
+								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+								m_bStrikeBlur = true;
+								m_bBullet = true;
+
+							}
 							m_fEventStart = pEvent.fStartTime;
 						}
 					}
@@ -114,7 +208,7 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 
 	}
 
-	m_pOwner->Check_Navigation_Jump();
+	
 
 	return nullptr;
 }
@@ -136,7 +230,8 @@ CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 
-		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+			CUI_Manager::Get_Instance()->Get_UIStrike() == false)
 		{
 
 			PLAYER_MODE eMode = CPlayerManager::Get_Instance()->Check_ActiveMode(m_pOwner);
@@ -163,6 +258,21 @@ CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 
 	}
 
+	if (m_bBullet)
+	{
+		m_fFadeTime += fTimeDelta;
+
+		if (m_fFadeTime > 1.f)
+		{
+			if (m_eCurrentPlayerID == CPlayer::LAW)
+			{
+				CUI_Manager::Get_Instance()->Set_UIStrike(true);
+				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
+			}
+
+		}
+	}
+
 	return nullptr;
 }
 
@@ -175,16 +285,34 @@ void CAI_RinwellLaw_Smash::Enter()
 		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_STRIKE;
 		break;
 	case CPlayer::LAW:
-		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_GURENTENSYOU;
-		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RAINOUI);
-		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
+	{		
+	Set_EffectPosition();
+	CBattleManager::Get_Instance()->Get_LackonMonster()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[1]);
 
-		break;
+	_matrix mWorldMatrix2 = m_pOwner->Get_Transform()->Get_WorldMatrix();
+	mWorldMatrix2.r[3] = m_vEffectPos[0];
+	vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawFinishMove_LoopEffect.dat"), mWorldMatrix2);
+	_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+	_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix2.r[3]);
+
+	for (auto& pEffect : Punch)
+	{
+		vPosition += vCamDir*0.1f;
+		pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+	}	
+	m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_GURENTENSYOU;
+	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RAINOUI);
+	dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
+
+	break;
+	}
 
 	}
 
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
+	m_pOwner->Get_Model()->Reset();
+
 	if (nullptr == m_pTarget)
 	{
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
@@ -270,4 +398,29 @@ void CAI_RinwellLaw_Smash::StrikeBlur(_float fTimeDelta)
 	_int iDetailEnd = 10;
 	_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
 	m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+}
+
+void CAI_RinwellLaw_Smash::Set_EffectPosition()
+{
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC Model;
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/EffectPosition/LawFinishMove_EffectPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return;
+
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+
+	for (int i = 0; i < iNum; ++i)
+	{
+		ReadFile(hFile, &(Model), sizeof(NONANIMDESC), &dwByte, nullptr);
+		m_vEffectPos.push_back(XMVectorSetW(XMLoadFloat3(&Model.vPosition), 1.f));
+	}
+
+	CloseHandle(hFile);
+
+	m_vStrikeLockOnPos = CPlayerManager::Get_Instance()->Get_StrikeLockOnPosition();
 }
