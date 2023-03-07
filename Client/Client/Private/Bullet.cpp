@@ -198,13 +198,15 @@ _bool CBullet::Check_Exception()
 		if (eCamMode == CCamera_Dynamic::CAM_AIBOOSTON && m_bIsActiveAtActionCamera == false)
 			return false;
 	}
-	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
 
-		if (CUI_Manager::Get_Instance()->Get_StopTick())
-			return false;
+	if (CUI_Manager::Get_Instance()->Get_StopTick())
+		return false;
 
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		return false;
+
+	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
 		return false;
 
 	return true; 

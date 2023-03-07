@@ -26,7 +26,7 @@ CAIState * CAIPoseState::Tick(_float fTimeDelta)
 
 CAIState * CAIPoseState::LateTick(_float fTimeDelta)
 {
-	if (m_bIsAnimationFinished)
+	if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 	{
 		if (CBattleManager::Get_Instance()->Get_IsOneonOneMode() == true)
 			return nullptr;

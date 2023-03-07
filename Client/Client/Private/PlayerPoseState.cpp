@@ -28,7 +28,7 @@ CPlayerState * CPlayerPoseState::Tick(_float fTimeDelta)
 
 CPlayerState * CPlayerPoseState::LateTick(_float fTimeDelta)
 {
-	if (m_bIsAnimationFinished)
+	if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 
 	return nullptr;

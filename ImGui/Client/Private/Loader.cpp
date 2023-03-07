@@ -196,11 +196,11 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolSnowFieldModel()))
 		return E_FAIL;*/
 
-	if (FAILED(Loading_ForMaptoolBossRoomModel()))
+	/*if (FAILED(Loading_ForMaptoolBossRoomModel()))
 		return E_FAIL;
 
-	//if (FAILED(Loading_ForMaptoolVillageModel()))
-	//	return E_FAIL;
+	if (FAILED(Loading_ForMaptoolVillageModel()))
+		return E_FAIL;*/
 
 	 //if (FAILED(Loading_ForMaptoolCityModel()))
 	 //	return E_FAIL;
@@ -3139,7 +3139,9 @@ HRESULT CLoader::Loading_ForEffectTexture()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Distortion_Noise"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Distortion_Noise.png"), 1))))
 		return E_FAIL;
-
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Heart"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Heart.png"), 1))))
+		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Particle_Horizontal"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Particle_Horizontal.png"), 1))))
 		return E_FAIL;
