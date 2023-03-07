@@ -216,7 +216,6 @@ int CPlayer::Tick(_float fTimeDelta)
 			Tick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-		break;
 		Tick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
