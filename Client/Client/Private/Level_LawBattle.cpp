@@ -270,13 +270,93 @@ void CLevel_LawBattle::BattleLateTick(_float fTimeDelta)
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_LAWBATTLE, TEXT("test"), &desc)))
 			return;
 	}
-	
+	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_CAPSLOCK))
+	{
+
+
+		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+		if (pLockOn != nullptr)
+		{
+			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKON);
+			m_pCamera->Set_TargetPosition(pLockOn->Get_TransformState(CTransform::STATE_TRANSLATION));
+		}
+
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
+		{
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
+			if (!m_bZumIn)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
+				m_bZumIn = true;
+			}
+		}
+
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
+		{
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
+			if (!m_bZumIn)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
+				m_bZumIn = true;
+			}
+		}
+
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
+			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
+		{
+			CUI_RuneEffect::RUNEDESC desc;
+			desc.position.x = 100.f;
+			desc.position.y = 100.f;
+			desc.m_etype = 1;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
+				return;
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_Z);
+		}
+
+		if (CGameInstance::Get_Instance()->Key_Down(DIK_X))
+		{
+			CUI_RuneEffect::RUNEDESC desc;
+			desc.position.x = 100.f;
+			desc.position.y = 100.f;
+			desc.m_etype = 1;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_BATTLE, TEXT("test"), &desc)))
+				return;
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_X);
+		}
+	}
+	else
+	{
+		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+		{
+			if (CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_IsFly())
+				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Off_IsFly();
+
+			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKOFF);
+		}
+	}
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
 	{
 		CPlayer * pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		pPlayer->Take_Damage(10000, nullptr);
 	}
+
+
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
+	{
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"));
+		CBaseObj* pObject = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell")));
+		dynamic_cast<CMonster*>(pObject)->Change_Navigation(LEVEL_LAWBATTLE);
+		dynamic_cast<CMonster*>(pObject)->Compute_CurrentIndex(LEVEL_LAWBATTLE);
+		dynamic_cast<CMonster*>(pObject)->Set_BattleMode(true);
+		CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
+
+	}
+
 }
 
 void CLevel_LawBattle::NotBattleLateTick(_float fTimeDelta)
