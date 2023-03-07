@@ -572,7 +572,7 @@ void CMonster::Make_UIFont(_uint iDamage)
 	{
 
 	case 0:
-
+		//Critical
 		testdesc.itype = 1;
 		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 		{
@@ -581,7 +581,6 @@ void CMonster::Make_UIFont(_uint iDamage)
 				return;
 		}
 		break;
-
 	case 1:
 
 		testdesc.itype = 2;
@@ -682,9 +681,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 
 void CMonster::Collision_Object(_float fTimeDelta)
 {
-	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
-	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if(ExceptionHanding() == false)
 		return;
 
 	CBaseObj* pCollisionMonster = nullptr;
