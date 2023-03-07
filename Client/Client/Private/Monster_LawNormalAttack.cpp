@@ -17,10 +17,10 @@ using namespace MonsterLaw;
 
 CMonster_LawNormalAttack::CMonster_LawNormalAttack(CMonsterLaw* pPlayer, STATE_ID state, CPlayer* pTarget , _int phase)//, _float fStartHeight, _float fTime)
 {
-
+	m_pOwner = pPlayer;
 	m_iPhase = m_pOwner->Get_Phase();
 	m_eStateId = state;
-	m_pOwner = pPlayer;
+	
 	if (nullptr == pTarget)
 	{
 		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());//Find_Target(0/*rand() % 4*/);

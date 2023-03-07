@@ -13,9 +13,9 @@ using namespace MonsterLaw;
 CMonster_LawDodge::CMonster_LawDodge(CMonsterLaw * pPlayer)
 {
 	//m_bbackstep = back;
-	
-	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 	m_pOwner = pPlayer;
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
+	
 
 }
 

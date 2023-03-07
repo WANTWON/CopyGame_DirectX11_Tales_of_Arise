@@ -46,6 +46,8 @@ public: /* Getter Setter */
 	void Set_SmashAttack();
 	void Update_StrikePosition(_tchar* FilePath, _int iMonsterPosNum = 1);
 
+	void Set_StrikeLockOnPos(vector<_vector> pos) { m_vStrikeLockOnPos = pos; };
+
 private:
 	CPlayer* m_pActivePlayer = nullptr;
 	vector<CPlayer*> m_pAIPlayers;
