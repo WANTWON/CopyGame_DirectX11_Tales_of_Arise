@@ -64,7 +64,34 @@ HRESULT CMonsterLaw::Initialize(void * pArg)
 
 }
 
+void CMonsterLaw::Reset_StrikeBlur(_float fTimeDelta)
+{
+	if (!m_bResetStrikeBlur)
+		return;
 
+	if (m_fStrikeBlurResetTimer < m_fStrikeBlurResetDuration)
+	{
+		/* Zoom Blur Lerp */
+		_float fFocusPower = 10.f;
+
+		_float fBlurInterpFactor = m_fStrikeBlurResetTimer / m_fStrikeBlurResetDuration;
+		if (fBlurInterpFactor > 1.f)
+			fBlurInterpFactor = 1.f;
+
+		_int iDetailStart = 10;
+		_int iDetailEnd = 1;
+		_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+		m_pRendererCom->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+
+		m_fStrikeBlurResetTimer += fTimeDelta;
+	}
+	else
+	{
+		m_fStrikeBlurResetTimer = 0.f;
+		m_bResetStrikeBlur = false;
+		m_pRendererCom->Set_ZoomBlur(false);
+	}
+}
 
 HRESULT CMonsterLaw::Ready_Components(void * pArg)
 {

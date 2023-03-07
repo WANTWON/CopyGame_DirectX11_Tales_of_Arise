@@ -254,6 +254,8 @@
     <ClInclude Include="..\Public\LawAirRSkillState.h" />
     <ClInclude Include="..\Public\LawAttackState.h" />
     <ClInclude Include="..\Public\MonsterLawState.h" />
+    <ClInclude Include="..\Public\MonsterLaw_Strike1.h" />
+    <ClInclude Include="..\Public\MonsterLaw_Strike2.h" />
     <ClInclude Include="..\Public\MonsterLaw_StrikeTrigger.h" />
     <ClInclude Include="..\Public\Monster_LawAirF.h" />
     <ClInclude Include="..\Public\Monster_LawAirR.h" />
@@ -271,6 +273,8 @@
     <ClInclude Include="..\Public\MiniGameNpc.h" />
     <ClInclude Include="..\Public\MonsterLaw.h" />
     <ClInclude Include="..\Public\Monster_LawSkill.h" />
+    <ClInclude Include="..\Public\Monster_Law_Move.h" />
+    <ClInclude Include="..\Public\Monster_Law_StrikeTrigger2.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\PlayerOverlimit.h" />
@@ -535,6 +539,8 @@
     <ClCompile Include="..\Private\LawAirFSkillState.cpp" />
     <ClCompile Include="..\Private\LawAirRSkillState.cpp" />
     <ClCompile Include="..\Private\LawAttackState.cpp" />
+    <ClCompile Include="..\Private\MonsterLaw_Strike1.cpp" />
+    <ClCompile Include="..\Private\MonsterLaw_Strike2.cpp" />
     <ClCompile Include="..\Private\MonsterLaw_StrikeTrigger.cpp" />
     <ClCompile Include="..\Private\Monster_LawAirF.cpp" />
     <ClCompile Include="..\Private\Monster_LawAirR.cpp" />
@@ -552,6 +558,8 @@
     <ClCompile Include="..\Private\MiniGameNpc.cpp" />
     <ClCompile Include="..\Private\MonsterLaw.cpp" />
     <ClCompile Include="..\Private\Monster_LawSkill.cpp" />
+    <ClCompile Include="..\Private\Monster_Law_Move.cpp" />
+    <ClCompile Include="..\Private\Monster_Law_StrikeTrigger2.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\PlayerOverlimit.cpp" />

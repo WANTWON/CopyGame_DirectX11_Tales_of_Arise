@@ -205,6 +205,9 @@ public: /*For.State*/
 	_int Get_Phase() { return m_iPhase; }
 	void Set_Phase(_int phase) { m_iPhase = phase; }
 
+
+	void Reset_StrikeBlur(_float fTimeDelta);
+
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 
@@ -230,6 +233,12 @@ private:
 	_float m_fKickHitTIme = 0.f;
 
 	_int m_iPhase = 0;
+
+private:
+		/* Strike Screen Effect */
+		_bool m_bResetStrikeBlur = false;
+		_float m_fStrikeBlurResetDuration = .45f;
+		_float m_fStrikeBlurResetTimer = 0.f;
 public:
 	static CMonsterLaw* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
