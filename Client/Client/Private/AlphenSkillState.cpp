@@ -428,17 +428,45 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
 			{
+				
+
 				if (!m_bIsFly)
 				{
 					if (STATE_SKILL_ATTACK_F == m_eStateId)
 						m_HitLagDesc.fHitLagTimer = 0.1f;
-					/*else if (STATE_SKILL_ATTACK_R == m_eStateId)
-						m_HitLagDesc.fHitLagTimer = 0.2f;*/
 
 					pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 				}
 				else
+				{
+					if (STATE_SKILL_ATTACK_E == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.1f;
+						m_HitLagDesc.bHitLag = true;
+						m_HitLagDesc.fHitLagTimer = 0.1f;
+
+						m_HitLagDesc.bShaking = true;
+						m_HitLagDesc.fShakingPower = 0.6f;
+						m_HitLagDesc.fShakingMinusPower = 0.1f;
+						
+					}
+					if (STATE_SKILL_ATTACK_R == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.1f;
+					}
+					if (STATE_SKILL_ATTACK_F == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.3f;
+						m_HitLagDesc.bHitLag = true;
+						m_HitLagDesc.fHitLagTimer = 0.2f;
+
+						m_HitLagDesc.bShaking = true;
+						m_HitLagDesc.fShakingPower = 1.4f;
+						m_HitLagDesc.fShakingMinusPower = 0.2f;
+					}
 					pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+				}
+					
 			}
 		}
 
@@ -584,7 +612,6 @@ void CAlphenSkillState::Enter(void)
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_R.wav"), SOUND_EFFECT, 1.0f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R_Test2.wav"), SOUND_EFFECT, 0.3f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.4f);
-			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("TestSkill.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);

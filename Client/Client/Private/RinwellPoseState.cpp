@@ -16,27 +16,25 @@ CPoseState::CPoseState(CAiRinwell* pRinwell, STATE_ID eStateID)
 
 CRinwellState * CPoseState::Tick(_float fTimeDelta)
 {
-	if(!m_bFinised)
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-
+	
 	switch (m_eStateId)
 	{
 	case Client::CRinwellState::STATE_IDLE:
+		if (!m_bFinised)
+			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+
+
 		m_fTarget_Distance =  Find_ActiveTarget();
 		if (m_fTarget_Distance < 10.f && m_pOwner->Get_NpcMode() == false)
 			return new CPoseState(m_pOwner, STATE_AGGRO);
 		break;
 	case Client::CRinwellState::STATE_HP50DOWN:
-		if (!m_bIsAnimationFinished)
-		{
-			_vector vecTranslation;
-			_float fRotationRadian;
-			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
-
-			m_pOwner->Check_Navigation();
-
-		}
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.f,false);
+		break;
+	default:
+		if (!m_bFinised)
+			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 1.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+		break;
 	}
 
 	return nullptr;
@@ -63,7 +61,13 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 		case Client::CRinwellState::STATE_MOVE:
 			break;
 		case Client::CRinwellState::STATE_HP50DOWN:
-			return new CRinwellIdleState(m_pOwner, 0.5f);
+			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			{
+				m_pOwner->Set_IsActionMode(false);
+				return new CRinwellIdleState(m_pOwner, 0.5f);
+			}
+			else
+				return nullptr;
 			break;
 		case Client::CRinwellState::STATE_BATTLESTART:
 			return new CRinwellIdleState(m_pOwner, 0.5f);
@@ -96,9 +100,18 @@ void CPoseState::Enter()
 		break;
 	}		
 	case Client::CRinwellState::STATE_HP50DOWN:
+	{
+		_vector vPosition = XMVectorSet(60.f, 0.2f, 80.f, 1.f);
+		m_pOwner->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, -1.f, 0.f));
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+		CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+		pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+		pCameraManager->Play_ActionCamera(TEXT("Rinwell50Down.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 		m_pOwner->Set_AirMode(true);
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_ATTACK_DENZIHOU);
+		m_pOwner->Get_Model()->Reset();
 		break;
+	}
 	case Client::CRinwellState::STATE_BATTLESTART:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_ATTACK_BRAVE);
 		break;

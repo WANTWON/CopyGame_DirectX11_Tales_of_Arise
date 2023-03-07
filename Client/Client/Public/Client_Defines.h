@@ -50,6 +50,9 @@ namespace Client
 		float fHitLagTimer = 0.2f;
 		float fShakingPower = 2.f;
 		float fShakingMinusPower = 0.2f;
+		
+		float fTakeDamageTimer = 0.2f;
+
 	}HITLAGDESC;
 
 	typedef struct ObjectInfo

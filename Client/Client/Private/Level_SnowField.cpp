@@ -250,7 +250,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Trigger"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Effects"));
-
+		CGameInstance::Get_Instance()->Clear_Layer(LEVEL_STATIC, TEXT("Layer_Monster"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 

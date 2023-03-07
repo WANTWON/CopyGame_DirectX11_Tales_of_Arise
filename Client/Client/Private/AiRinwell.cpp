@@ -53,7 +53,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 	}
 
 
-	if (m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode())
+	if (m_bBattleMode == CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
 		/* Set State */
 		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_BATTLESTART);

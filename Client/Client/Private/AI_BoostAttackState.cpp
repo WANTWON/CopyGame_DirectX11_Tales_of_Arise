@@ -188,9 +188,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 
 				case CPlayer::LAW:
 				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
@@ -397,6 +395,13 @@ void CAI_BoostAttack::Exit()
 			}
 		}
 	}
+
+	if (m_pOwner->Get_PlayerID() == CPlayer::LAW)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+	}
+	
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	__super::Exit();

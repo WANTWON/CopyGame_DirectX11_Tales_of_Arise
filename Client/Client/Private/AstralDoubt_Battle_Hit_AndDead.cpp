@@ -22,7 +22,7 @@ CAstralDoubt_State * CBattle_Hit_AndDead::Tick(_float fTimeDelta)
 	switch (m_eStateId)
 	{
 	case Client::CAstralDoubt_State::STATE_DEAD:
-		if(!m_bThirdHit)
+		if(!m_bIsAnimationFinished)
 			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
 
