@@ -204,7 +204,7 @@ HRESULT CAiRinwell::Render_Glow()
 
 void CAiRinwell::Set_HitState()
 {
-	CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+	CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_STRIKE_HIT);
 	m_pState = m_pState->ChangeState(m_pState, pState);
 }
 
