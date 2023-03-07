@@ -1022,8 +1022,9 @@ CAstralDoubt_State * CBattle_SpearMultiState::LateTick(_float fTimeDelta)
 		Find_Target();
 
 		m_vActiveTargetPos = m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-		_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAt(vPosition);
+		/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->LookAt(vPosition);*/
+		TurnToTarget(fTimeDelta);
 	}
 
 	if (m_bIsAnimationFinished)

@@ -91,6 +91,8 @@ public:	/*For Navigation*/
 	virtual void Check_Navigation() override;
 	virtual _float ForTheBossTarget_Distance(CBaseObj*);
 
+	void Check_Navigation_Jump(void);
+
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 

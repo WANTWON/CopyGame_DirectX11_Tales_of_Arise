@@ -29,7 +29,8 @@ CRinwellState * CDamageState::Tick(_float fTimeDelta)
 
 	Move(fTimeDelta);
 	
-	m_pOwner->Check_Navigation();
+	if(m_eStateId != STATE_STRIKE_HIT)
+		m_pOwner->Check_Navigation();
 
 	m_pOwner->Get_Collider()->Update(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
@@ -63,7 +64,7 @@ CRinwellState * CDamageState::LateTick(_float fTimeDelta)
 
 void CDamageState::Enter()
 {
-	if (m_eStateId == STATE_DAMAGE)
+	if (m_eStateId == STATE_DAMAGE || m_eStateId ==  STATE_STRIKE_HIT)
 	{
 		if (m_pOwner->Get_AirMode())
 		{
@@ -146,6 +147,7 @@ void CDamageState::Move(_float fTimeDelta)
 	if (m_pOwner->Get_Navigation()->isMove(vPos))
 		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, vPos);
 
-	m_pOwner->Check_Navigation();
+	if (m_eStateId != STATE_STRIKE_HIT)
+		m_pOwner->Check_Navigation();
 }
 

@@ -181,6 +181,8 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 				}
 			}
 		}
+		else
+			m_bIsJump = true;
 	}
 	
 	else if (STATETYPE_END == m_eStateType)
