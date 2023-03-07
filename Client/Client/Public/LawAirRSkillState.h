@@ -39,8 +39,6 @@ private:
 	_bool m_bSankamousyuukyaku_2 = false;				// R (Air)
 	_bool m_bSankamousyuukyaku_Punch_1 = false;			// R (Air)
 	_bool m_bSankamousyuukyaku_Punch_2 = false;			// R (Air)
-	_bool m_bSankamousyuukyaku_Particles_1 = false;		// R (Air)
-	_bool m_bSankamousyuukyaku_Particles_2 = false;		// R (Air)
 
 	_vector m_vPunchPosition_1;
 	_vector m_vPunchPosition_2;
