@@ -6,8 +6,7 @@ class CAlphenSkills final : public CBullet
 {
 public:
 
-	enum TYPE { BOOST_1, BOOST_2 , STRIKE_1 , STRIKE_2};
-
+	enum TYPE { BOOST_1, BOOST_2 };
 
 public:
 	CAlphenSkills(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -26,11 +25,7 @@ protected:
 	virtual HRESULT Ready_Components(void* pArg = nullptr) override;
 
 private:
-	void Tick_Strike(_float fTimeDelta);
-
-private:
-	vector<CEffect*> m_pBlastEffect;
-	vector<CEffect*> m_pSmoke;
+	void Tick_Boost(_float fTimeDelta);
 
 public:
 	static CAlphenSkills* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
