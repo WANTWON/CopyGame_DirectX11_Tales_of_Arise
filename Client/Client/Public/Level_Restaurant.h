@@ -59,6 +59,10 @@ private:
 
 	_bool m_bIsSpwan[4][3] = { { false, }, { false, }, { false, }, { false, } };
 
+	//Sound
+	_bool m_bMiniGameSound_End = false;
+	_bool m_bMiniGameAfterIsOver_Bgm = false;
+
 public:
 	static CLevel_Restaurant* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

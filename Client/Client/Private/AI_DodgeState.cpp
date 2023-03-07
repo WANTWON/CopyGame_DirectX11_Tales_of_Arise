@@ -166,13 +166,8 @@ CAIState * CAI_DodgeState::LateTick(_float ftimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-		if (m_pOwner->Get_Info().idodgecount >= 5)
+		if (m_pOwner->Get_Info().idodgecount >= 10)
 		{
-			if (m_pTarget == nullptr)
-				return nullptr;
-
-
-
 			if (nullptr == m_pTarget)
 			{
 				m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster

@@ -23,27 +23,67 @@ HRESULT CAlphenSkills::Initialize(void * pArg)
 {
 	__super::Initialize(pArg);
 
-	_vector vOffset = { 0.f,0.f,0.f,0.f };
-	_vector vLocation = { 0.f,0.f,0.f,0.f };
 	_matrix mWorldMatrix = XMMatrixIdentity();
-	_vector vDir = { 0.f,0.f,0.f,0.f };
+	_vector vOffset =	{ 0.f, 0.f, 0.f, 0.f };
+	_vector vLocation = { 0.f, 0.f, 0.f, 0.f };
+	_vector vDir =		{ 0.f, 0.f, 0.f, 0.f };
+
+	
 
 	switch (m_BulletDesc.eBulletType)
 	{
 		case BOOST_1:
 		{
-			vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+			m_bIsActiveAtActionCamera = true;
+
 			mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
-			mWorldMatrix.r[3] = vLocation;
-			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Alphen_Strike_1.dat"), mWorldMatrix);
+
+			CEffect::PlayEffectAtLocation(TEXT("Alphen_Boost_Wind_1.dat"), mWorldMatrix);
+
+			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Alphen_Boost_1.dat"), mWorldMatrix);			
+			for (auto& pEffect : m_pEffects)
+			{
+				if (!pEffect)
+					continue;
+
+				if (!wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
+				{
+					_float4 vPosition;
+					XMStoreFloat4(&vPosition, pEffect->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+					mWorldMatrix.r[3] = XMLoadFloat4(&vPosition);
+
+					CEffect::PlayEffectAtLocation(TEXT("Alphen_Boost_Particles_1.dat"), mWorldMatrix);
+					break;
+				}
+			}
+
 			break;
 		}
 		case BOOST_2:
 		{
-			vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+			m_bIsActiveAtActionCamera = true;
+
 			mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
-			mWorldMatrix.r[3] = vLocation;
-			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Alphen_Strike_2.dat"), mWorldMatrix);
+		
+			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Alphen_Boost_2.dat"), mWorldMatrix);
+
+			for (auto& pEffect : m_pEffects)
+			{
+				if (!pEffect)
+					continue;
+
+				if (!wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
+				{
+					_float4 vPosition;
+					XMStoreFloat4(&vPosition, pEffect->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+
+					mWorldMatrix.r[3] = XMLoadFloat4(&vPosition);
+
+					CEffect::PlayEffectAtLocation(TEXT("Alphen_Boost_Particles_2.dat"), mWorldMatrix);
+					break;
+				}
+			}
 			break;
 		}
 	}
@@ -69,7 +109,7 @@ int CAlphenSkills::Tick(_float fTimeDelta)
 		case BOOST_1:
 		case BOOST_2:
 		{
-			Tick_Strike(fTimeDelta);
+			Tick_Boost(fTimeDelta);
 			break;
 		}
 	}
@@ -97,6 +137,7 @@ void CAlphenSkills::Late_Tick(_float fTimeDelta)
 	switch (m_BulletDesc.eBulletType)
 	{
 		case BOOST_1:
+		case BOOST_2:
 		{
 			if (m_fTime >= m_BulletDesc.fDeadTime)
 				m_bDead = true;
@@ -107,7 +148,6 @@ void CAlphenSkills::Late_Tick(_float fTimeDelta)
 
 void CAlphenSkills::Collision_Check()
 {
-
 	if (Check_Exception() == false)
 		return;
 
@@ -115,6 +155,7 @@ void CAlphenSkills::Collision_Check()
 	switch (m_BulletDesc.eBulletType)
 	{
 		case BOOST_1:
+		case BOOST_2:
 			m_HitLagDesc.bLockOnChange = false;
 			m_HitLagDesc.bHitLag = true;
 			m_HitLagDesc.fHitLagTimer = 0.15f;
@@ -139,6 +180,7 @@ void CAlphenSkills::Dead_Effect()
 	switch (m_BulletDesc.eBulletType)
 	{
 		case BOOST_1:
+		case BOOST_2:
 		{
 			if (!m_pEffects.empty())
 			{
@@ -153,7 +195,6 @@ void CAlphenSkills::Dead_Effect()
 				}
 			}
 			m_pEffects.clear();
-			m_pSmoke.clear();
 			break;
 		}
 	}
@@ -171,10 +212,11 @@ HRESULT CAlphenSkills::Ready_Components(void * pArg)
 	switch (m_BulletDesc.eBulletType)
 	{
 		case BOOST_1:
+		case BOOST_2:
 		{
-			ColliderDesc.vScale = _float3(30, 30, 30);
+			ColliderDesc.vScale = _float3(20.f, 20.f, 20.f);
 			ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
-			ColliderDesc.vPosition = _float3(0.f, 0.f, 15.f);
+			ColliderDesc.vPosition = _float3(0.f, 0.f, 10.f);
 
 			if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 				return E_FAIL;
@@ -185,7 +227,7 @@ HRESULT CAlphenSkills::Ready_Components(void * pArg)
 
 	return S_OK;
 }
-void CAlphenSkills::Tick_Strike(_float fTimeDelta)
+void CAlphenSkills::Tick_Boost(_float fTimeDelta)
 {
 	m_fTime += fTimeDelta;
 
@@ -202,7 +244,7 @@ CAlphenSkills * CAlphenSkills::Create(ID3D11Device * pDevice, ID3D11DeviceContex
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		ERR_MSG(TEXT("Failed to Created : CAlphenSkills"));
+		ERR_MSG(TEXT("Failed to Create: CAlphenSkills"));
 		Safe_Release(pInstance);
 	}
 
@@ -215,7 +257,7 @@ CGameObject * CAlphenSkills::Clone(void * pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		ERR_MSG(TEXT("Failed to Cloned : CAlphenSkills"));
+		ERR_MSG(TEXT("Failed to Clone: CAlphenSkills"));
 		Safe_Release(pInstance);
 	}
 

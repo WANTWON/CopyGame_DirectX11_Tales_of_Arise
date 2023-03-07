@@ -76,7 +76,7 @@ int CMonster::Tick(_float fTimeDelta)
 	if (m_bTakeDamage)
 		m_fTime_TakeDamageDeltaAcc += fTimeDelta;
 
-	if (0.2f <= m_fTime_TakeDamageDeltaAcc)
+	if (m_fTakeDamgeTime <= m_fTime_TakeDamageDeltaAcc)
 	{
 		m_bTakeDamage = false;
 		m_fTime_TakeDamageDeltaAcc = 0.f;
@@ -184,6 +184,18 @@ HRESULT CMonster::Render()
 	if (FAILED(SetUp_ShaderID()))
 		return E_FAIL;
 
+	_float3 vRimColor = _float3(1.f, 0.f, 0.f);
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimColor", &vRimColor, sizeof(_float3))))
+		return E_FAIL;
+	/*if (FAILED(m_pShaderCom->Set_RawValue("g_vRimTimer", &m_fAuraTimer, sizeof(_float))))
+		return E_FAIL;*/
+
+	_float4 vCameraLook = (_float4)(CGameInstance::Get_Instance()->Get_CamWorldMatrix().m[2]);
+	_float3 vCamLook = _float3(vCameraLook.x, vCameraLook.y, vCameraLook.z);
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vCameraLook", &vCamLook, sizeof(_float3))))
+		return E_FAIL;
+
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshContainers();
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
@@ -195,6 +207,10 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
 			return E_FAIL;
 	}
+
+	_bool bRimLight = false;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_bRimLight", &bRimLight, sizeof(_bool))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -572,7 +588,7 @@ void CMonster::Make_UIFont(_uint iDamage)
 	{
 
 	case 0:
-
+		//Critical
 		testdesc.itype = 1;
 		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 		{
@@ -581,7 +597,6 @@ void CMonster::Make_UIFont(_uint iDamage)
 				return;
 		}
 		break;
-
 	case 1:
 
 		testdesc.itype = 2;
@@ -623,6 +638,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 	
+	m_fTakeDamgeTime = HitDesc.fTakeDamageTimer;
 	m_pTarget = DamageCauser;
 	m_tStats.m_fCurrentHp-= (int)fDamage;
 	
@@ -654,7 +670,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 
 	}
 	
-	m_tStats.m_fLockonSmashGuage += 0.1f;
+	m_tStats.m_fLockonSmashGuage += 0.05f;
 
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
@@ -682,9 +698,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 
 void CMonster::Collision_Object(_float fTimeDelta)
 {
-	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
-	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if(ExceptionHanding() == false)
 		return;
 
 	CBaseObj* pCollisionMonster = nullptr;

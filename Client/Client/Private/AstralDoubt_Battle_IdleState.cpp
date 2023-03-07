@@ -30,26 +30,16 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 {
 	Find_Target();
 
- 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
-
+ 	
 	if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
 	{ 
-		if (!m_bIsAnimationFinished)
-		{
-			_vector vecTranslation;
-			_float fRotationRadian;
-
-			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
-
-			m_pOwner->Check_Navigation_Jump();
-		}
-
-		m_pOwner->Get_Transform()->LookAt(m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta*1.3f, false);
 	}
 	else
 	{
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
+
+
 		if (!m_bIsAnimationFinished)
 		{
 			_vector vecTranslation;
@@ -262,16 +252,8 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 		}
 
 	}
-
 	else if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
 	{
-		if (m_bAdventLookAt == false)
-		{
-			/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-			m_pOwner->Get_Transform()->LookAt(vPosition);*/
-			TurnToTarget(fTimeDelta);
-			m_bAdventLookAt = true;
-		}
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 		for (auto& pEvent : pEvents)
 		{
@@ -281,7 +263,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 				{
 					if (m_bLandSound == false)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.6f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.5f);
 						m_bLandSound = true;
 					}
 				}
@@ -310,7 +292,6 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 		}
 
 	}
-
 	else if (m_ePreState_Id == STATE_ID::STATE_BRAVE)
 	{
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -340,7 +321,6 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
 		}
 	}
-
 	else
 	{
 		if (m_pActiveTarget == nullptr)
@@ -614,6 +594,7 @@ void CBattle_IdleState::Enter()
 	}
 	else if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
 	{
+		m_pOwner->Set_IsActionMode(true);
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::EVENT_ADVENT);
 	}
 	else if (m_ePreState_Id == STATE_ID::STATE_BRAVE)
@@ -651,4 +632,6 @@ void CBattle_IdleState::Exit()
 {
 	if (m_ePreState_Id == STATE_ID::STATE_BRAVE || m_ePreState_Id == STATE_ID::STATE_ADVENT)
 		CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+
+	m_pOwner->Set_IsActionMode(false);
 }

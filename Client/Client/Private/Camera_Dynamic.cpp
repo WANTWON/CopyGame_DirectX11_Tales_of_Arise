@@ -41,7 +41,9 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_DYNAMIC)
 		return OBJ_NOEVENT;
 
-	__super::Tick(fTimeDelta);
+	_float fTime = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_Camera"));
+
+	__super::Tick(fTime);
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_F1))
 	{
@@ -61,40 +63,40 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 	switch (m_eCamMode)
 	{
 	case Client::CCamera_Dynamic::CAM_PLAYER:
-		Player_Camera(fTimeDelta);
+		Player_Camera(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_DEBUG:
-		Debug_Camera(fTimeDelta);
+		Debug_Camera(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_BATTLEZONE:
-		Battle_Camera(fTimeDelta);
+		Battle_Camera(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_BATTLE_CLEAR:
-		BattleClear_Camera(fTimeDelta);
+		BattleClear_Camera(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_LOCKON:
-		LockOn_Camera(fTimeDelta);
+		LockOn_Camera(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_LOCKOFF:
-		LockOff_Camera(fTimeDelta);
+		LockOff_Camera(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_AIBOOSTON:
-		AIBoostOn_Camera(fTimeDelta);
+		AIBoostOn_Camera(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_AIBOOSTOFF:
-		AIBoostOff_Camera(fTimeDelta);
+		AIBoostOff_Camera(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_TARGETMODE:
-		TargetTool_Camera(fTimeDelta);
+		TargetTool_Camera(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_TARGETMODE_OFF:
-		TargetTool_CameraOff(fTimeDelta);
+		TargetTool_CameraOff(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_ROOM:
-		Room_Camera(fTimeDelta);
+		Room_Camera(fTime);
 		break;
 	case Client::CCamera_Dynamic::CAM_LAWBATTLE:
-		LawBattle_Camera(fTimeDelta);
+		LawBattle_Camera(fTime);
 		break;
 	}
 
@@ -108,10 +110,12 @@ int CCamera_Dynamic::Tick(_float fTimeDelta)
 
 void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
 {
+	_float fTime = CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_Camera"));
+
 	if (CCameraManager::Get_Instance()->Get_CamState() != CCameraManager::CAM_DYNAMIC)
 		return;
 
-	__super::Late_Tick(fTimeDelta);
+	__super::Late_Tick(fTime);
 }
 
 HRESULT CCamera_Dynamic::Render()

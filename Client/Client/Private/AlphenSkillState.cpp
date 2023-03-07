@@ -75,8 +75,64 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						m_fColEventStartTime = pEvent.fStartTime;
 					}
 				}
-			}
 
+				switch (m_eStateId)
+				{
+				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
+					if (m_bIsFly)
+					{
+						if (!m_bSkill_R_Sound)
+						{
+							//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_R.wav"), SOUND_EFFECT, 0.5f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Jump_R_SkillSound.wav"), SOUND_EFFECT, 0.4f);
+							m_bSkill_R_Sound = true;
+						}
+					}
+					else
+						if (!m_bSkill_R_Sound)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_R_SkillSound.wav"), SOUND_EFFECT, 0.4f);
+							m_bSkill_R_Sound = true;
+						}
+			
+						break;
+
+				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+					if (m_bIsFly)
+					{
+						if (!m_bSkill_E_Sound)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Jump_E_SkillSound.wav"), SOUND_EFFECT, 0.5f);
+							m_bSkill_E_Sound = true;
+						}
+					}
+
+					else
+						if (!m_bSkill_E_Sound)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillSound.wav"), SOUND_EFFECT, 0.5f);
+							m_bSkill_E_Sound = true;
+						}
+						break;
+
+				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+					if (m_bIsFly)
+						if (!m_bSkill_JumpF_Sound)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_F.wav"), SOUND_EFFECT, 0.7f);
+							m_bSkill_JumpF_Sound = true;
+						}
+
+					else
+						if (!m_bSkill_F_Sound)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.3f);
+							m_bSkill_F_Sound = true;
+						}
+						break;
+
+				}
+			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 			{
 				CPlayerState* pState = EventInput();
@@ -372,17 +428,45 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
 			{
+				
+
 				if (!m_bIsFly)
 				{
 					if (STATE_SKILL_ATTACK_F == m_eStateId)
 						m_HitLagDesc.fHitLagTimer = 0.1f;
-					/*else if (STATE_SKILL_ATTACK_R == m_eStateId)
-						m_HitLagDesc.fHitLagTimer = 0.2f;*/
 
 					pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 				}
 				else
+				{
+					if (STATE_SKILL_ATTACK_E == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.1f;
+						m_HitLagDesc.bHitLag = true;
+						m_HitLagDesc.fHitLagTimer = 0.1f;
+
+						m_HitLagDesc.bShaking = true;
+						m_HitLagDesc.fShakingPower = 0.6f;
+						m_HitLagDesc.fShakingMinusPower = 0.1f;
+						
+					}
+					if (STATE_SKILL_ATTACK_R == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.1f;
+					}
+					if (STATE_SKILL_ATTACK_F == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.3f;
+						m_HitLagDesc.bHitLag = true;
+						m_HitLagDesc.fHitLagTimer = 0.2f;
+
+						m_HitLagDesc.bShaking = true;
+						m_HitLagDesc.fShakingPower = 1.4f;
+						m_HitLagDesc.fShakingMinusPower = 0.2f;
+					}
 					pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+				}
+					
 			}
 		}
 
@@ -489,16 +573,16 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_SENKUSYOUREPA);
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SUMGONGSANGEULPA);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_R.wav"), SOUND_EFFECT, 0.3f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_R.wav"), SOUND_EFFECT, 0.3f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_R.wav"), SOUND_EFFECT, 0.3f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_R.wav"), SOUND_EFFECT, 0.4f);
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("AlphenAirR.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_ENGETU);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ONEWALL);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_F.wav"), SOUND_EFFECT, 0.5f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_F.wav"), SOUND_EFFECT, 0.3f);
+			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_F.wav"), SOUND_EFFECT, 0.5f);*/
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_F.wav"), SOUND_EFFECT, 0.5f);
 
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
@@ -515,9 +599,9 @@ void CAlphenSkillState::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_E.wav"), SOUND_EFFECT, 1.0f);
-			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_E.wav"), SOUND_EFFECT, 0.3f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);*/
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_E.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);*/
 			
 			
 			break;
@@ -525,17 +609,16 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOOSAWOO);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_R.wav"), SOUND_EFFECT, 1.0f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_R.wav"), SOUND_EFFECT, 1.0f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R_Test2.wav"), SOUND_EFFECT, 0.3f);
-			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.3f);
-			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("TestSkill.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.4f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BOONGSUPGEEAKJIN);
 
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.3f);
+			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.3f);*/
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_EFFECT, 0.3f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:

@@ -97,8 +97,8 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 							else if (!strcmp(pEvent.szName, "Punch"))
 							{
 								//dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
-								CPlayerState* pState = new CHitState(m_pTarget,m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-								m_pTarget->Set_PlayerState(pState);
+								/*CPlayerState* pState = new CHitState(m_pTarget,m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+								m_pTarget->Set_PlayerState(pState);*/
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[2];
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawAttack1_BeginPunch.dat"), mWorldMatrix);
@@ -114,8 +114,8 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 							}
 							else if (!strcmp(pEvent.szName, "FootPunch"))
 							{
-								CPlayerState* pState = new CHitState(m_pTarget, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-								m_pTarget->Set_PlayerState(pState);
+								/*CPlayerState* pState = new CHitState(m_pTarget, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+								m_pTarget->Set_PlayerState(pState);*/
 
 				//				m_pTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[2]);
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
@@ -132,8 +132,8 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 							}
 							else if (!strcmp(pEvent.szName, "Punch2"))
 							{
-								CPlayerState* pState = new CHitState(m_pTarget, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-								m_pTarget->Set_PlayerState(pState);
+								/*CPlayerState* pState = new CHitState(m_pTarget, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+								m_pTarget->Set_PlayerState(pState);*/
 
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[4];
@@ -155,8 +155,8 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 							}
 							else if (!strcmp(pEvent.szName, "Boom"))
 							{
-								CPlayerState* pState = new CHitState(m_pTarget, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-								m_pTarget->Set_PlayerState(pState);
+								/*CPlayerState* pState = new CHitState(m_pTarget, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+								m_pTarget->Set_PlayerState(pState);*/
 
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[6];
@@ -269,7 +269,7 @@ void CMonsterLaw_Strike1::Exit()
 
 			if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
 			{
-				m_pTarget->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+				m_pTarget->Take_Damage(1000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 			}
 			
 		}

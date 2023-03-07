@@ -277,7 +277,7 @@ void CAI_AlphenLaw_Smash::Enter()
 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_VOICE, 0.55f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_VOICE, 0.3f);
 }
 
 void CAI_AlphenLaw_Smash::Exit()
@@ -335,7 +335,6 @@ void CAI_AlphenLaw_Smash::Exit()
 		}
 	}
 	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	__super::Exit();
 }
 

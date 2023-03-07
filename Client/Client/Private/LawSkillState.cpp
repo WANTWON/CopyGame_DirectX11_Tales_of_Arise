@@ -74,16 +74,36 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 					{
 						if (nullptr == m_pRightHandCollider)
 							m_pRightHandCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
+						if (!m_bSkill_E_Sound)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_EFFECT, 1.0f);
+							m_bSkill_E_Sound = true;
+						}
 					}
 					else
 					{
 						if (nullptr == m_pRightFootCollider)
 							m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
+						if (!m_bSkill_E_Sound)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_EFFECT, 0.5f);
+							m_bSkill_E_Sound = true;
+						}
 					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 					if (nullptr == m_pRightFootCollider)
+					{
 						m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+					}
+
+					if (!m_bSkill_R_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_EFFECT, 1.0f);
+						m_bSkill_R_Sound = true;
+					}
 					break;
 				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 					if (!strcmp(pEvent.szName, "RH"))
@@ -102,6 +122,14 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 							m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 					}
 					m_fEventStartTime = pEvent.fStartTime;
+
+						if (!m_bSkill_F_Sound)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_EFFECT, 0.5f);
+							m_bSkill_F_Sound = true;
+						}
+					
+
 					break;
 				case Client::CPlayerState::STATE_SKILL_BOOST:
 					if (m_bIsFly)
@@ -587,7 +615,7 @@ void CLawSkillState::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_BURN_KNUCKLE);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_E.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_STRIKE_AIR);
@@ -600,15 +628,15 @@ void CLawSkillState::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_RONDSENPU);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_E.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_GARYOUKUUHA);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_R.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_TYOURENGADAN);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_F.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_STRIKE);
@@ -633,7 +661,7 @@ void CLawSkillState::Exit(void)
 	Safe_Release(m_pRightFootCollider);
 	Safe_Release(m_pRightHandCollider);
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
 void CLawSkillState::Update_Skill(void)

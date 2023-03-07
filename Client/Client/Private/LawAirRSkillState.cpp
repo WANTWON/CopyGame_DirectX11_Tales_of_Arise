@@ -72,6 +72,16 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 				{
 					if (nullptr == m_pLeftFootCollider)
 						m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
+				//Sound
+
+						if (!m_bSkill_R_Sound)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillSound.wav"), SOUND_EFFECT, 0.5f);
+							m_bSkill_R_Sound = true;
+						}
+					
+
 				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 				{
@@ -373,7 +383,7 @@ void CLawAirRSkillState::Enter(void)
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_R.wav"), SOUND_EFFECT, 1.0f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
 }
 
 void CLawAirRSkillState::Exit(void)
@@ -384,7 +394,7 @@ void CLawAirRSkillState::Exit(void)
 	Safe_Release(m_pLeftFootCollider);
 	Safe_Release(m_pLeftHandCollider);
 	Safe_Release(m_pRightHandCollider);
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	/*CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);*/
 }
 
 void CLawAirRSkillState::Update_Skill(void)

@@ -51,6 +51,9 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_BoostBlast.dat"), mWorldMatrix);
+
+		m_bIsActiveAtActionCamera = true;
+
 		break;
 	case GRAVITY:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
@@ -386,7 +389,7 @@ void CSionSkills::Collision_Check()
 			else
 				vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
 
-			pCollisionTarget->Get_Transform()->Go_PosDir(0.05f, vDirection, dynamic_cast<CMonster*>(pCollisionTarget)->Get_Navigation());
+			pCollisionTarget->Get_Transform()->Go_PosDir(CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_Object"))*0.5f, vDirection, dynamic_cast<CMonster*>(pCollisionTarget)->Get_Navigation());
 		}
 		break;
 	case NAILBULLET:
@@ -444,6 +447,11 @@ void CSionSkills::Dead_Effect()
 			{
 				if (iter != nullptr)
 				{
+					//if (m_bTresventos == false)
+					//{
+					//	CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Hit.wav"), SOUND_EFFECT, 0.1f);
+					//	m_bTresventos = true;
+					//}
 					iter->Set_Dead(true);
 				}
 			}
@@ -542,6 +550,12 @@ void CSionSkills::Dead_Effect()
 		break;
 	}
 	case EXPLOSION:
+		if (m_bExplosionSound == false)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Hit.wav"), SOUND_EFFECT, 0.1f);
+			m_bExplosionSound = true;
+		}
+
 		if(CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
 		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);

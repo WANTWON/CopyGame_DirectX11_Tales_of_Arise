@@ -48,6 +48,8 @@ private:
 	vector<class CEffect*> m_Sankamousyuukyaku_Punch_1;
 	vector<class CEffect*> m_Sankamousyuukyaku_Punch_2;
 
+	//Sound
+	_bool m_bSkill_R_Sound = false;
 private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
 	HITLAGDESC m_HitLagDesc;

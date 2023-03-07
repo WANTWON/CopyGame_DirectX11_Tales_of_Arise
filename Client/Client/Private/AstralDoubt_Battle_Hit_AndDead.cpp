@@ -22,7 +22,7 @@ CAstralDoubt_State * CBattle_Hit_AndDead::Tick(_float fTimeDelta)
 	switch (m_eStateId)
 	{
 	case Client::CAstralDoubt_State::STATE_DEAD:
-		if(!m_bThirdHit)
+		if(!m_bIsAnimationFinished)
 			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.2f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 		break;
 
@@ -112,13 +112,13 @@ void CBattle_Hit_AndDead::Enter()
 		//	m_bDeadSound = true;
 		//	break;
 		//}
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAus_Dead.wav"), SOUND_VOICE, 0.8f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAus_Dead.wav"), SOUND_EFFECT, 0.8f);
 		break;
 
 	case Client::CAstralDoubt_State::STATE_DOWN:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::DOWN_UNIQUE);
 		m_pOwner->Set_OnGoingDown();
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Hit.wav"), SOUND_VOICE, 0.5f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Hit.wav"), SOUND_EFFECT, 0.5f);
 		break;
 	}
 

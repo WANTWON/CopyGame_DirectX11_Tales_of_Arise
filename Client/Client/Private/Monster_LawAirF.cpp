@@ -12,6 +12,8 @@
 #include "Monster_LawIdleState.h"
 #include "Bullet.h"
 #include "RinwellSkills.h"
+#include "Effect.h"
+#include "ParticleSystem.h"
 
 
 using namespace MonsterLaw;
@@ -102,6 +104,23 @@ CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 							//	m_bBulletMake = true;
 							//m_bCollideFinsh = true;
 							m_fEventStart = pEvent.fStartTime;
+						}
+					}
+				}
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					if (!strcmp(pEvent.szName, "EnhaBakusaiken_2"))
+					{
+						if (!m_bEnhaBakusaiken_2)
+						{
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							vector<CEffect*> pFloor = CEffect::PlayEffectAtLocation(TEXT("Enha_Bakusaiken_Floor.dat"), mWorldMatrix);
+
+							_vector vPosition = pFloor[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+							mWorldMatrix.r[3] = vPosition;
+							CEffect::PlayEffectAtLocation(TEXT("Enha_Bakusaiken_Floor_Particles.dat"), mWorldMatrix);
+
+							m_bEnhaBakusaiken_2 = true;
 						}
 					}
 				}
@@ -211,7 +230,7 @@ void CMonster_LawAirF::Enter()
 void CMonster_LawAirF::Exit()
 {
 	//__super::Exit();
-
+	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pLandCollider, m_pOwner);
 	if (m_pOwner->Get_IsFly())
 		m_pOwner->Off_IsFly();
 

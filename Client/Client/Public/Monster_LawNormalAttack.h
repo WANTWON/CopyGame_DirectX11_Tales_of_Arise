@@ -35,6 +35,14 @@ private:
 
 	_float m_fEventStartTime = -1.f;
 
+	/* Effect Booleans */
+	_bool m_bNormalAttack_1 = false;
+	_bool m_bNormalAttack_2 = false;
+	_bool m_bNormalAttack_3 = false;
+	_bool m_bNormalAttack_4 = false;
+	_bool m_bNormalAttack_5 = false;
+
+
 private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
 };

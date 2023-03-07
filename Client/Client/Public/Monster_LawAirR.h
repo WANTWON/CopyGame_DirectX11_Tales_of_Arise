@@ -31,6 +31,21 @@ private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
 	_bool m_bIsLoop = false;
 
+	/* Effect Booleans */
+	_bool m_bSankamousyuukyaku_1 = false;				// R (Air)
+	_bool m_bSankamousyuukyaku_2 = false;				// R (Air)
+	_bool m_bSankamousyuukyaku_Punch_1 = false;			// R (Air)
+	_bool m_bSankamousyuukyaku_Punch_2 = false;			// R (Air)
+	_bool m_bSankamousyuukyaku_Particles_1 = false;		// R (Air)
+	_bool m_bSankamousyuukyaku_Particles_2 = false;		// R (Air)
+
+	_vector m_vPunchPosition_1;
+	_vector m_vPunchPosition_2;
+
+	/* Effect Vectors */
+	vector<class CEffect*> m_Sankamousyuukyaku_1;
+	vector<class CEffect*> m_Sankamousyuukyaku_Punch_1;
+	vector<class CEffect*> m_Sankamousyuukyaku_Punch_2;
 
 };
 END

@@ -86,19 +86,22 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 		CPlayerManager::Get_Instance()->Save_LastPosition();
 		pPlayer->Change_Level(LEVEL_SNOWFIELD);
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		////CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		//	return E_FAIL;
+		//
+		//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		//	return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		//CGameObject* pObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"), 2);
+		//CGameObject* pObject2 = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"), 3);
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Player"), pObject);
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Player"), pObject2);
 	}
 
 	cout << "Player Clone Finished" << endl;
@@ -259,6 +262,40 @@ HRESULT CPlayerCreater::Loading_MonsterAtFirst()
 
 
 	}
+
+	CloseHandle(hFile);
+
+
+	 hFile = 0;
+	 dwByte = 0;
+	 iNum = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/BossMap/BossPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		_tchar pModeltag[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+		strcpy(ModelDesc.pModeltag, "Astral_Doubt");
+		ModelDesc.vScale = _float3(2.f, 2.f, 2.f);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_Boss"), &ModelDesc)))
+			return E_FAIL;
+
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
+
+		ReadFile(hFile, &(ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
+		strcpy(ModelDesc.pModeltag, "Astral_Doubt");
+		ModelDesc.vScale = _float3(2.f, 2.f, 2.f);
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_SecondBoss"), &ModelDesc)))
+			return E_FAIL;
+
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_SecondBoss"));
+	
 
 	CloseHandle(hFile);
 	RELEASE_INSTANCE(CGameInstance);
@@ -952,13 +989,7 @@ HRESULT CPlayerCreater::Ready_Layer_BossMapObject(const _tchar * pLayerTag)
 
 	CloseHandle(hFile);
 
-	strcpy(ModelDesc.pModeltag, "Astral_Doubt");
-	ModelDesc.vPosition = _float3(50, 0.f, 50.f);
-	XMStoreFloat4x4(&ModelDesc.WorldMatrix, XMMatrixIdentity());
-	ModelDesc.vRotation = _float3(0.f, 180.f, 0.f);
-	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AstralDoubt"), LEVEL_STATIC, TEXT("Layer_Boss"), &ModelDesc)))
-		return E_FAIL;
-	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Boss"));
+
 
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
@@ -1269,6 +1300,14 @@ HRESULT CPlayerCreater::Ready_Layer_LawBattleMapObject(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MonsterLaw"), LEVEL_LAWBATTLE, TEXT("Layer_Boss"), &ModelDesc)))
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Boss"));
+
+	ModelDesc;
+	strcpy(ModelDesc.pModeltag, "AIRinwell");
+	ModelDesc.vPosition = _float3(64, 0.f, 64);
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"), &ModelDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"));
+
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
@@ -1406,15 +1445,26 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag
 		ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 		_tchar pModeltag[MAX_PATH];
 		MultiByteToWideChar(CP_ACP, 0, ItemDesc.m_ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
-		if (!wcscmp(pModeltag, TEXT("Apple")))
+		if (!wcscmp(pModeltag, TEXT("Bread_Challah")) ||
+			!wcscmp(pModeltag, TEXT("Bread_Croissant")) || 
+			!wcscmp(pModeltag, TEXT("Bread_French")) || 
+			!wcscmp(pModeltag, TEXT("Bread_French_Slice")) ||
+			!wcscmp(pModeltag, TEXT("Bread_Loaf_Sourdough")) || 
+			!wcscmp(pModeltag, TEXT("Bread_Muffin"))  )
 		{
-			ItemDesc.etype = CItem::APPLE;
+			ItemDesc.etype = CItem::BREAD;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
 				return E_FAIL;
 		}
-		else
+		else if (!wcscmp(pModeltag, TEXT("Bread_Pizza")))
 		{
-			ItemDesc.etype = CItem::APPLE;
+			ItemDesc.etype = CItem::PIZZA;
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
+				return E_FAIL;
+		}
+		else if (!wcscmp(pModeltag, TEXT("Steak")))
+		{
+			ItemDesc.etype = CItem::STEAK;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_RESTAURANT, pLayerTag, &ItemDesc)))
 				return E_FAIL;
 		}
@@ -1608,15 +1658,15 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_WorkTool(const _tchar * pLayerTag)
 		ReadFile(hFile, &(ItemDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
 		_tchar pModeltag[MAX_PATH];
 		MultiByteToWideChar(CP_ACP, 0, ItemDesc.m_ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
-		if (!wcscmp(pModeltag, TEXT("Apple")))
+		if (!wcscmp(pModeltag, TEXT("Cigar")))
 		{
-			ItemDesc.etype = CItem::APPLE;
+			ItemDesc.etype = CItem::TABACO;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_WORKTOOL, pLayerTag, &ItemDesc)))
 				return E_FAIL;
 		}
-		else
+		else if (!wcscmp(pModeltag, TEXT("Chess")))
 		{
-			ItemDesc.etype = CItem::APPLE;
+			ItemDesc.etype = CItem::CHESS;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Item"), LEVEL_WORKTOOL, pLayerTag, &ItemDesc)))
 				return E_FAIL;
 		}

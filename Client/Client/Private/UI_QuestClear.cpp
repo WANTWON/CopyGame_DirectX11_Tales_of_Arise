@@ -48,7 +48,7 @@ HRESULT CUI_QuestClear::Initialize(void * pArg)
 
 	if (!m_bQuestClear)
 	{
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("QuestClear.wav"), SOUND_EFFECT, 1.0f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("QuestClear.wav"), SOUND_EFFECT, 0.6f);
 		m_bQuestClear = true;
 	}
 	CUI_Manager::Get_Instance()->Set_UIQuestScreen(true);

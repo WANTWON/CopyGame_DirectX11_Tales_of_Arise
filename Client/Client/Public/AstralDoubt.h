@@ -63,6 +63,11 @@ public:
 	void Set_OnGoing320Spin() { m_bOnGoing_320Spin = true; }
 	void Set_Finish320Spin() { m_bOnGoing_320Spin = false; }
 	virtual void	 Set_BattleMode(_bool type) override;
+	_bool Get_CreatedSecondMonster() { return m_bCreatedMonster; }
+	void Set_CreatedSecondMonster(_bool type) {  m_bCreatedMonster = type; }
+	_bool Get_AmIFirstBoss() { return m_AmIFirstBoss; }
+	void Set_AmIFirstBoss(_bool type) { m_AmIFirstBoss = type; }
+
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc) override;
@@ -105,6 +110,9 @@ private:
 	_bool m_bDone_HitAnimState = false;
 //	_bool m_bSomeSauling = false;
 	_bool m_bOnGoing_320Spin = false;
+	_bool m_bCreatedMonster = false;
+	_bool m_AmIFirstBoss = false;
+
 
 public:
 	static CAstralDoubt* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

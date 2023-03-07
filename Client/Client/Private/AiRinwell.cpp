@@ -53,7 +53,7 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 	}
 
 
-	if (m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode())
+	if (m_bBattleMode == CBattleManager::Get_Instance()->Get_IsBattleMode())
 	{
 		/* Set State */
 		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_BATTLESTART);
@@ -115,6 +115,8 @@ HRESULT CAiRinwell::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Components(TEXT("Com_BattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowPlaneBattleNavigation"), (CComponent**)&m_vecNavigation[LEVEL_BATTLE])))
+		return E_FAIL;
+	if (FAILED(__super::Add_Components(TEXT("Com_LawBattleNavigation"), LEVEL_STATIC, TEXT("Prototype_Component_LawBattle_Navigation"), (CComponent**)&m_vecNavigation[LEVEL_LAWBATTLE])))
 		return E_FAIL;
 
 	m_pNavigationCom = m_vecNavigation[LEVEL_SNOWFIELD];

@@ -41,20 +41,22 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 		if (CBattleManager::Get_Instance()->Get_IsOneonOneMode() == true)
 		{
 			CPlayer::PLAYERID ePlayerID = m_pOwner->Get_PlayerID();
-
+			
 			switch (ePlayerID)
 			{
 			case Client::CPlayer::ALPHEN:
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
+				CBattleManager::Get_Instance()->Set_LawBattlePhase(1);
 				break;
 			case Client::CPlayer::SION:
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
+				CBattleManager::Get_Instance()->Set_LawBattlePhase(2);
 				break;
 			case Client::CPlayer::RINWELL:
 			{
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
 				CBattleManager::Get_Instance()->Set_OneonOneMode(false);
-
+				CBattleManager::Get_Instance()->Set_LawBattlePhase(0);
 				vector<CPlayer*> pAIList = CPlayerManager::Get_Instance()->Get_AIPlayers();
 				for (auto& iter : pAIList)
 				{

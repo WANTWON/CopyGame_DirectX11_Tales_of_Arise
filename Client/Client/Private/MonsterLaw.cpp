@@ -150,6 +150,8 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
+	m_iPhase =  CBattleManager::Get_Instance()->Get_LawBattlePhase();
+
 
 	if(m_bAfterThunder)
 	m_fThunderHitTime += fTimeDelta;
