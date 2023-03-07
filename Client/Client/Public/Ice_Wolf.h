@@ -85,6 +85,7 @@ public:
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	CTransform* Get_Transform() { return m_pTransformCom; }
+	CShader* Get_Shader() { return m_pShaderCom; }
 	class CIceWolfState* Get_State() { return m_pState; }
 	void Set_PlayerState(class CIceWolfState* pPlayerState) { m_pState = pPlayerState; }
 	void Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
