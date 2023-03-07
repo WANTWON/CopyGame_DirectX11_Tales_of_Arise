@@ -54,7 +54,15 @@ int CNonAnim::Tick(_float fTimeDelta)
 	if (__super::Tick(fTimeDelta))
 		return OBJ_DEAD;
 
-	
+	if (!strcmp(m_ModelDesc.pModeltag, "StoneBlock"))
+	{
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta*0.2f);
+	}
+	else if (!strcmp(m_ModelDesc.pModeltag, "StoneBlockA"))
+	{
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta*0.1f);
+
+	}
 
 	return OBJ_NOEVENT;
 }

@@ -155,24 +155,15 @@ HRESULT CAstralDoubt::Ready_Components(void * pArg)
 
 int CAstralDoubt::Tick(_float fTimeDelta)
 {
-	if (m_bDead)
+	_int iSuperTick = __super::Tick(fTimeDelta);
+	if (iSuperTick == OBJ_DEAD)
 		return OBJ_DEAD;
 
-	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_eLevel == LEVEL_SNOWFIELD)
-		return OBJ_NOEVENT;
-
-	if(CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
-		return OBJ_NOEVENT;
-
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
-		return OBJ_NOEVENT;
-
-	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
-
+	if (iSuperTick == OBJ_NOSHOW)
+		return OBJ_NOSHOW;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
-		return OBJ_NOEVENT;
+		return OBJ_NOSHOW;
 
 	__super::Tick(fTimeDelta);
 	
@@ -191,75 +182,25 @@ int CAstralDoubt::Tick(_float fTimeDelta)
 
 void CAstralDoubt::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO || m_eLevel == LEVEL_SNOWFIELD)
-		return;
-
-	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+	m_eLevel = (LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex();
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 
+	if (ExceptingActionCamHanding() == false)
+		return;
+
 	__super::Late_Tick(fTimeDelta);
 
-	if (m_pRendererCom)
+	if (m_pRendererCom && m_bGlowUp)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
-	if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+	if (ExceptionHanding() == false)
 		return;
 
 	LateTick_State(fTimeDelta);
-
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
-	//{
-	//	CAstralDoubt_State* pBattleState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_ID::STATE_DOWN);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_O))
-	//{
-	//	CAstralDoubt_State* pBattleState = new CBattle_720Spin_FirstState(this);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_P))
-	//{
-	//	CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_FOOTPRESS);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	//{
-	//	CAstralDoubt_State* pBattleState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
-	//{
-	//	CAstralDoubt_State* pBattleState = new CBattle_UpperState(this);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_H))
-	//{
-	//	CAstralDoubt_State* pBattleState = new CBattle_HeadBeamState(this);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_M))
-	//{
-	//	CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_ADVENT);
-	//	m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	//}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_J))
-	{
-		CAstralDoubt_State* pBattleState = new CBattle_RushState(this, CAstralDoubt_State::STATE_ID::STATE_RUSH_START);
-		m_pState = m_pState->ChangeState(m_pState, pBattleState);
-	}
 }
 
 HRESULT CAstralDoubt::Render_Glow()
@@ -322,6 +263,8 @@ void CAstralDoubt::Set_BattleMode(_bool type)
 	m_bBattleMode = type;
 	if (m_bBattleMode)
 	{
+		m_pTransformCom->LookDir(XMVectorSet(0.f, 0.f, -1.f, 0.f));
+
 		/* Set_Battle State */
 		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_ADVENT);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);

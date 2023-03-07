@@ -523,11 +523,30 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 //	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/ASU_005.fbx", "../../../Bin/Bin_Data/Anim/ASU_005/", PivotMatrix))))
 //	return E_FAIL;
 
-PivotMatrix = XMMatrixScaling(0.005f, 0.005f, 0.005f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Astral_Doubt"),
-	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Astral_Doubt.fbx", "../../../Bin/Bin_Data/Anim/Astral_Doubt/", PivotMatrix))))
-	return E_FAIL;
+	//PivotMatrix = XMMatrixScaling(0.005f, 0.005f, 0.005f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Astral_Doubt"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Astral_Doubt.fbx", "../../../Bin/Bin_Data/Anim/Astral_Doubt/", PivotMatrix))))
+	//	return E_FAIL;
 
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cylinder_ak_03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Cylinder_ak_03.fbx", "../../../Bin/Bin_Data/Effect/Trail/", PivotMatrix))))
+		return E_FAIL;
+
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cylinder_ak_04"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Cylinder_ak_04.fbx", "../../../Bin/Bin_Data/Effect/Trail/", PivotMatrix))))
+		return E_FAIL;
+
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cylinder_hn_05"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Cylinder_hn_05.fbx", "../../../Bin/Bin_Data/Effect/Trail/", PivotMatrix))))
+		return E_FAIL;
+
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cylinder_hn_08"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Cylinder_hn_08.fbx", "../../../Bin/Bin_Data/Effect/Trail/", PivotMatrix))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Finish Loading"));
 
