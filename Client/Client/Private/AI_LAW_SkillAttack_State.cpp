@@ -263,16 +263,16 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 									m_bTyourengadan_3 = true;
 								}
 							}
-							if (!strcmp(pEvent.szName, "Tyourengadan_4"))
+							/*if (!strcmp(pEvent.szName, "Tyourengadan_4"))
 							{
-								if (!m_bTyourengadan_4)
-								{
-									mWorldMatrix.r[3] = m_vPunchPosition;
+							if (!m_bTyourengadan_4)
+							{
+							mWorldMatrix.r[3] = m_vPunchPosition;
 
-									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_4.dat"), mWorldMatrix);
-									m_bTyourengadan_4 = true;
-								}
+							CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_4.dat"), mWorldMatrix);
+							m_bTyourengadan_4 = true;
 							}
+							}*/
 							if (!strcmp(pEvent.szName, "Tyourengadan_5"))
 							{
 								if (!m_bTyourengadan_5)
