@@ -81,6 +81,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		memcpy(&OriginLightDesc, CGameInstance::Get_Instance()->Get_LightDesc(0), sizeof(LIGHTDESC));
 		memcpy(&DevineLightDesc, &OriginLightDesc, sizeof(LIGHTDESC));
 
+		//CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound_Start.wav"), SOUND_EFFECT, 1.0f);
 		break;
 	case DIVINE_SABER_BULLET:
 	{
@@ -93,13 +94,45 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 
 		_int iRandNum = rand() % 4;
 		if (iRandNum == 0)
+		{
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberBullet0.dat"), mWorldMatrix);
+			
+			/*if (m_bDivineBullet0_Sound == false)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound_Bullet0.wav"), SOUND_EFFECT, 1.0f);
+				m_bDivineBullet0_Sound = false;
+			}*/
+		}
 		if (iRandNum == 1)
+		{
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberBullet1.dat"), mWorldMatrix);
+			
+			/*if (m_bDivineBullet1_Sound == false)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound_Bullet1.wav"), SOUND_EFFECT, 1.0f);
+				m_bDivineBullet1_Sound = false;
+			}
+		*/}
 		if (iRandNum == 2)
+		{
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberBullet2.dat"), mWorldMatrix);
-		if (iRandNum == 2)
+			
+			/*if (m_bDivineBullet2_Sound == false)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound_Bullet2.wav"), SOUND_EFFECT, 1.0f);
+				m_bDivineBullet2_Sound = false;
+			}*/
+		}
+		if (iRandNum == 3)
+		{
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberBullet3.dat"), mWorldMatrix);
+			
+			/*if (m_bDivineBullet3_Sound == false)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound_Bullet3.wav"), SOUND_EFFECT, 1.0f);
+				m_bDivineBullet3_Sound = false;
+			}*/
+		}
 
 
 		//m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("AquaImpact.dat"), mWorldMatrix);
@@ -112,17 +145,53 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		mWorldMatrix.r[3] = vLocation;
 		m_pBlastEffects = CEffect::PlayEffectAtLocation(TEXT("HolyLanceGround.dat"), mWorldMatrix);
 		
+		/*if (m_bHoly_RanceGround_Sound == false)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound_Ground.wav"), SOUND_EFFECT, 1.0f);
+			m_bHoly_RanceGround_Sound = true;
+		}*/
 		/*vLocation = m_BulletDesc.vInitPositon;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);*/
 
 		break;
 	case HOLY_RANCE_BULLET:
+	{
 		vLocation = m_BulletDesc.vInitPositon;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
 		m_pTransformCom->LookAt(m_BulletDesc.vTargetPosition);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("HolyLanceBullet.dat"), mWorldMatrix);
+
+		_int iRandNumber = rand() % 3;
+
+		if (iRandNumber = 0)
+		{
+			/*if (m_bHoly_RanceBullet0_Sound == false)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound_Bullet0.wav"), SOUND_EFFECT, 1.0f);
+				m_bHoly_RanceBullet0_Sound = true;
+			}*/
+		}
+
+		if (iRandNumber = 1)
+		{
+			/*if (m_bHoly_RanceBullet1_Sound == false)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound_Bullet1.wav"), SOUND_EFFECT, 1.0f);
+				m_bHoly_RanceBullet1_Sound = true;
+			}*/
+		}
+
+		if (iRandNumber = 2)
+		{
+			/*if (m_bHoly_RanceBullet2_Sound == false)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound_Bullet2.wav"), SOUND_EFFECT, 1.0f);
+				m_bHoly_RanceBullet2_Sound = true;
+			}*/
+		}
 		break;
+	}
 	case HOLY_RANCE_LASTBULLET:
 		vLocation = m_BulletDesc.vInitPositon;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
@@ -130,6 +199,12 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("HolyLanceBigBullet.dat"), mWorldMatrix);
+		
+		/*if (m_bHoly_RanceLastBullet_Sound == false)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound_LastBullet.wav"), SOUND_EFFECT, 1.0f);
+			m_bHoly_RanceLastBullet_Sound = true;
+		}*/
 		break;
 	case HOLY_RANCE_FISRTBULLET:
 		vLocation = m_BulletDesc.vInitPositon;
@@ -138,6 +213,12 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("HolyLanceUpBullet.dat"), mWorldMatrix);
+		
+		/*if (m_bHoly_RanceFirstBullet_Sound == false)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound_FirstBullet.wav"), SOUND_EFFECT, 1.0f);
+			m_bHoly_RanceFirstBullet_Sound = true;
+		}*/
 		break;
 	case THUNDER_FIELD:
 		vOffset = XMVectorSet(0.f, m_fRadius + 5.f, 0.f, 0.f);
@@ -155,13 +236,14 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 		mWorldMatrix.r[3] = vLocation;
 		m_pBlast2Effects = CEffect::PlayEffectAtLocation(TEXT("ThunderFieldFloor.dat"), mWorldMatrix);
-
 		break;
 	case METEORDEAD:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MeteorDeadFlash.dat"), mWorldMatrix);
+
+
 		break;
 
 	case BANGJEON:
@@ -394,6 +476,11 @@ void CRinwellSkills::Dead_Effect()
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
+		/*if (m_bMeteorSound == false)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillHit.wav"), SOUND_EFFECT, 1.0f);
+			m_bMeteorSound = true;
+		}*/
 		break;
 	}
 	case THUNDER_FIELD:
@@ -979,4 +1066,6 @@ CGameObject * CRinwellSkills::Clone(void * pArg)
 void CRinwellSkills::Free()
 {
 	__super::Free();
+	m_bMeteorSound = false;
+	
 }

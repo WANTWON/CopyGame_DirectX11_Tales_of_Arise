@@ -237,7 +237,7 @@ void CAI_AlphenSion_Smash::Enter()
 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenSion_Smash.wav"), SOUND_VOICE, 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenSion_Smash.wav"), SOUND_VOICE, 0.2f);
 }
 
 void CAI_AlphenSion_Smash::Exit()

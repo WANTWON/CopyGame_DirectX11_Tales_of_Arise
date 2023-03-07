@@ -284,8 +284,8 @@ void CAI_BoostAttack::Enter()
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_Boost.dat"), mWorldMatrix);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Booster.wav"), SOUND_EFFECT, 0.5f);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Booster.wav"), SOUND_EFFECT, 0.5f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Booster_Test.wav"), SOUND_EFFECT, 0.35f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Booster.wav"), SOUND_EFFECT, 0.45f);
 		break;
 	}
 	case CPlayer::RINWELL:
@@ -304,7 +304,7 @@ void CAI_BoostAttack::Enter()
 		mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects2 = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Booster.wav"), SOUND_EFFECT, 0.5f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Booster.wav"), SOUND_EFFECT, 1.0f);
 		break;
 	}
 	case CPlayer::LAW:

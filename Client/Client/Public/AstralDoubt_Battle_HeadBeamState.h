@@ -34,6 +34,7 @@ private:
 	_uint		m_iRand = 0;
 	_float		m_fRandTime = 0.f;
 	_float		m_fDot;
+	_float		m_fAtkCollision_Delay = 0.f;
 
 	_bool		m_bUpdatTargetPos = false;
 	_bool		m_bStartTargetPos = false;
@@ -48,6 +49,7 @@ private:
 	CTransform* m_pMonSterTransform;
 	CCollider*  m_pAtkColliderCom = nullptr;
 	_bool		m_b_IsTargetInsight = false;
+	_bool		m_bCollision = false;
 
 	/* Effect Booleans */
 	_bool m_bBeam = false;

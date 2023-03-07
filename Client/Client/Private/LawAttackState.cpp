@@ -607,19 +607,19 @@ void CLawAttackState::Enter()
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_0);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack1.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack1.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_1);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack2.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack2.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_2);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack3.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack3.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_3);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack4.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack4.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK5:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_4);
@@ -632,23 +632,23 @@ void CLawAttackState::Enter()
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_0);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack1.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack1.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_1);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack2.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack2.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_2);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack3.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack3.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_3);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack4.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack4.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK5:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_4);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack5.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack5.wav"), SOUND_EFFECT, 0.6f);
 			break;
 		}
 	}

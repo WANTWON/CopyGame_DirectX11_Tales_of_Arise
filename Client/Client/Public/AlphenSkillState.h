@@ -48,6 +48,13 @@ private:
 	CCollider* m_pSwordCollider = nullptr;
 	_float m_fColEventStartTime = 0.f;
 
+	//Sound
+
+	//_bool m_bSkillJump_R_Sound = false;
+	_bool m_bSkill_JumpF_Sound = false;
+	_bool m_bSkill_F_Sound = false;
+	_bool m_bSkill_R_Sound = false;
+	_bool m_bSkill_E_Sound = false;
 private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
 };

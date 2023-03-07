@@ -221,7 +221,7 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 			{
 				if (m_fSoundStart != pEvent.fStartTime)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_WalkSound.wav"), SOUND_VOICE, 0.2f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_WalkSound.wav"), SOUND_EFFECT, 0.2f);
 					m_fSoundStart = pEvent.fStartTime;
 				}
 

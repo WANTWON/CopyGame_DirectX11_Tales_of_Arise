@@ -308,7 +308,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, _bool isLoop, const char* pBoneN
 			PreChannels[i]->Invalidate_TransformationMatrix(fPreLinearTime + fTimeDelta, pBoneName);
 			CurChannels[i]->Invalidate_TransformationMatrix(fCurLinearTime + fTimeDelta, pBoneName);
 
-			_vector vScale, vRotation, vPosition;
+			_vector vScale, vRotation, vPosition;SSS
 
 			if (m_fLinearCurrentTime >= fInterpolatonTime)
 			{

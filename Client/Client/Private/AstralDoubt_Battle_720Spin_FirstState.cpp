@@ -85,7 +85,7 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 			{
 				if (!m_bAnimFinish)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_Spin.wav"), SOUND_VOICE, 0.2f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_Spin.wav"), SOUND_EFFECT, 0.2f);
 					m_bAnimFinish = true;
 				}
 			}

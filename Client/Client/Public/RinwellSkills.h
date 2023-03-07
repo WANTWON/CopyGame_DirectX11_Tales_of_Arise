@@ -56,11 +56,29 @@ private:
 	_float m_fholytimer = 0.f;
 
 	_bool m_bholybullet[7] = { true, true, true , true , true ,  true , true };
-
+	
 	LIGHTDESC OriginLightDesc;
 	LIGHTDESC DevineLightDesc;
 	
 	_float3	  LightOffset = _float3(0.f, 0.f, 0.f);
+
+	//Sound
+	_bool	m_bMeteorSound = false;
+	_bool	m_bThunder_Field = false;
+
+	//디바인세이버 사운드
+	_bool	m_bDivineBullet0_Sound = false;
+	_bool	m_bDivineBullet1_Sound = false;
+	_bool	m_bDivineBullet2_Sound = false;
+	_bool	m_bDivineBullet3_Sound = false;
+
+	//홀리랜스 사운드
+	_bool	m_bHoly_RanceGround_Sound = false;
+	_bool	m_bHoly_RanceFirstBullet_Sound = false;
+	_bool	m_bHoly_RanceBullet0_Sound = false;
+	_bool	m_bHoly_RanceBullet1_Sound = false;
+	_bool	m_bHoly_RanceBullet2_Sound = false;
+	_bool	m_bHoly_RanceLastBullet_Sound = false;
 };
 
 END

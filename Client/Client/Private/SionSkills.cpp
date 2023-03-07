@@ -370,6 +370,11 @@ void CSionSkills::Dead_Effect()
 			{
 				if (iter != nullptr)
 				{
+					//if (m_bTresventos == false)
+					//{
+					//	CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Hit.wav"), SOUND_EFFECT, 0.1f);
+					//	m_bTresventos = true;
+					//}
 					iter->Set_Dead(true);
 				}
 			}
@@ -468,6 +473,12 @@ void CSionSkills::Dead_Effect()
 		break;
 	}
 	case EXPLOSION:
+		if (m_bExplosionSound == false)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Hit.wav"), SOUND_EFFECT, 0.1f);
+			m_bExplosionSound = true;
+		}
+
 		if(CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
 		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);

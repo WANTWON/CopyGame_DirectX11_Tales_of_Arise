@@ -59,7 +59,9 @@ private:
 
 	_float m_fExplosionGroundTimer = 0.f;
 
-
+	//Sound
+	_bool m_bTresventos = false;
+	_bool m_bExplosionSound = false;
 };
 
 END

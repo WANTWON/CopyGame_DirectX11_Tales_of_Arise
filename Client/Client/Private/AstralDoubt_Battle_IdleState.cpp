@@ -274,7 +274,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 				{
 					if (m_bLandSound == false)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.6f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.5f);
 						m_bLandSound = true;
 					}
 				}
