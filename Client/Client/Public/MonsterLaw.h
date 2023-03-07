@@ -208,6 +208,9 @@ public: /*For.State*/
 
 	void Reset_StrikeBlur(_float fTimeDelta);
 
+	_bool Get_Debug() { return m_bDebug; }
+	void Set_Debug(_bool tof) { m_bDebug = tof; }
+
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 
@@ -234,6 +237,8 @@ private:
 
 	_int m_iPhase = 0;
 
+
+	_bool m_bDebug = true;
 private:
 		/* Strike Screen Effect */
 		_bool m_bResetStrikeBlur = false;

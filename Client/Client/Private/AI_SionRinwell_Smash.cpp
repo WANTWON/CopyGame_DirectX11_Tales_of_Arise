@@ -217,10 +217,10 @@ void CAI_SionRinwell_Smash::Enter()
 	}
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
+	 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("SionRinwell_Smash.wav"), SOUND_VOICE, 0.6f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("SionRinwell_Smash.wav"), SOUND_VOICE, 0.5f);
 }
 
 void CAI_SionRinwell_Smash::Exit()

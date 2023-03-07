@@ -37,6 +37,12 @@ private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
 	//_bool m_bIsLoop = false;
 
+	/* Effect Booleans */
+	_bool m_bEnhaBakusaiken_1 = false;	// F (Air)
+	_bool m_bEnhaBakusaiken_2 = false;	// F (Air)
+
+										/* Effect Vectors */
+	vector<class CEffect*> m_EnhaBakusaiken_1;
 
 };
 END

@@ -24,7 +24,7 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 {
-	
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	if (!m_bIsAnimationFinished)
 	{
@@ -37,9 +37,6 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 
 		m_pOwner->Check_Navigation();
 	}
-
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-
 
 	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
 
@@ -85,7 +82,7 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 			{
 				if (!m_bAnimFinish)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_Spin.wav"), SOUND_VOICE, 0.2f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_Spin.wav"), SOUND_EFFECT, 0.2f);
 					m_bAnimFinish = true;
 				}
 			}

@@ -221,7 +221,7 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 			{
 				if (m_fSoundStart != pEvent.fStartTime)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_WalkSound.wav"), SOUND_VOICE, 0.2f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_WalkSound.wav"), SOUND_EFFECT, 0.2f);
 					m_fSoundStart = pEvent.fStartTime;
 				}
 
@@ -330,8 +330,9 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 	_bool bIs_TargetInFront = false;
 	bIs_TargetInFront = Is_TargetInFront(m_vActiveTargetPos);
 
-	_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAt(vPosition);
+	/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->LookAt(vPosition);*/
+	TurnToTarget(fTimeDelta);
 		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.9f, m_pOwner->Get_Navigation());
 
 
@@ -343,8 +344,9 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 			{
 				if (m_bBeamTargetOn == false)
 				{
-					_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(vPosition);
+					/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+					m_pOwner->Get_Transform()->LookAt(vPosition);*/
+					TurnToTarget(fTimeDelta);
 					m_bBeamTargetOn = true;
 					return new CBattle_HeadBeamState(m_pOwner);
 				}
@@ -355,8 +357,9 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 			{
 				if (m_bBeamTargetOn == false)
 				{
-					_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(vPosition);
+					/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+					m_pOwner->Get_Transform()->LookAt(vPosition);*/
+					TurnToTarget(fTimeDelta);
 					m_bBeamTargetOn = true;
 					return new CBattle_HeadBeamState(m_pOwner);
 				}
@@ -385,8 +388,9 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 		if (m_fActiveTarget_Distance <= 12.f)  //(m_fActiveTarget_Distance <= 15.f)
 		{
 
-			_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-			m_pOwner->Get_Transform()->LookAt(vPosition);
+			/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			m_pOwner->Get_Transform()->LookAt(vPosition);*/
+			TurnToTarget(fTimeDelta);
 			switch (m_iRand)
 			{
 			case 0:
@@ -439,8 +443,9 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 
 				else if (bIs_TargetInFront == false)
 				{
-					_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(vPosition);
+					/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+					m_pOwner->Get_Transform()->LookAt(vPosition);*/
+					TurnToTarget(fTimeDelta);
 
 
 					if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)

@@ -86,19 +86,22 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 		CPlayerManager::Get_Instance()->Save_LastPosition();
 		pPlayer->Change_Level(LEVEL_SNOWFIELD);
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Sion"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		////CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		//	return E_FAIL;
+		//
+		//if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		//	return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
-			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_Player"));
+		//CGameObject* pObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"), 2);
+		//CGameObject* pObject2 = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"), 3);
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Player"), pObject);
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Player"), pObject2);
 	}
 
 	cout << "Player Clone Finished" << endl;
@@ -1269,6 +1272,14 @@ HRESULT CPlayerCreater::Ready_Layer_LawBattleMapObject(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_MonsterLaw"), LEVEL_LAWBATTLE, TEXT("Layer_Boss"), &ModelDesc)))
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Boss"));
+
+	ModelDesc;
+	strcpy(ModelDesc.pModeltag, "AIRinwell");
+	ModelDesc.vPosition = _float3(64, 0.f, 64);
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_AiRinwell"), LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"), &ModelDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"));
+
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }

@@ -65,6 +65,9 @@ int CUI_Minigame1::Tick(_float fTimeDelta)
 	{
 		if(!m_bGameStart)
 		m_bGameStartUI = true;
+
+		CGameInstance::Get_Instance()->StopAll();
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_MiniGame1_Start.wav"), g_fSoundVolume);
 	}
 
 
@@ -74,6 +77,7 @@ int CUI_Minigame1::Tick(_float fTimeDelta)
 		//m_bGameStart = true;
 	if (m_bGameStartUI)
 	{
+		
 		m_fScaler += 0.02f;
 		if (m_fScaler >= 1.f)
 		{
@@ -100,6 +104,15 @@ int CUI_Minigame1::Tick(_float fTimeDelta)
 
 		}
 
+		if (m_fGametime <= 0)
+		{
+			if (!m_bMiniGameSound_End)
+			{
+				CGameInstance::Get_Instance()->StopAll();
+				CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_MiniGame1_End.wav"), g_fSoundVolume);
+				m_bMiniGameSound_End = true;
+			}
+		}
 	}
 
 
@@ -111,12 +124,6 @@ int CUI_Minigame1::Tick(_float fTimeDelta)
 	
 	if (m_bGameStart)
 	{
-		
-
-
-		if (m_fGametime <= 0)
-			m_iStartEndtexnum = 1;
-
 		m_fSize.x = 50.f;
 		m_fSize.y = 75.f;
 		m_fNext = 50.f;

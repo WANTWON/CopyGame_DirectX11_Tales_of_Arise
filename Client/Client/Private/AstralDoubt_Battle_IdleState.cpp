@@ -28,6 +28,8 @@ CAstralDoubt_State * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 {
+	Find_Target();
+
  	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
 
 	if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
@@ -41,21 +43,26 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
 
+			m_pOwner->Check_Navigation_Jump();
+		}
+
+		m_pOwner->Get_Transform()->LookAt(m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+	else
+	{
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
+
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
+
 			m_pOwner->Check_Navigation();
 		}
 	}
-
-	if (!m_bIsAnimationFinished)
-	{
-		_vector vecTranslation;
-		_float fRotationRadian;
-
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("ABone", &vecTranslation, &fRotationRadian);
-
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.03f), fRotationRadian, m_pOwner->Get_Navigation());
-
-		m_pOwner->Check_Navigation();
-	}
+	
 
 	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
 	Find_Target();
@@ -225,8 +232,6 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 {
-	
-	m_pOwner->Check_Navigation();
 	m_fTimeDeltaAcc += fTimeDelta;
 
 	
@@ -246,8 +251,9 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 	if (m_ePreState_Id == STATE_ID::STATE_DOWN)
 	{
-		_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAt(vPosition);
+		/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->LookAt(vPosition);*/
+		TurnToTarget(fTimeDelta);
 
 		if (m_b_IsTargetInsight)
 		{
@@ -261,8 +267,9 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 	{
 		if (m_bAdventLookAt == false)
 		{
-			_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-			m_pOwner->Get_Transform()->LookAt(vPosition);
+			/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+			m_pOwner->Get_Transform()->LookAt(vPosition);*/
+			TurnToTarget(fTimeDelta);
 			m_bAdventLookAt = true;
 		}
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -274,7 +281,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 				{
 					if (m_bLandSound == false)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.6f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.5f);
 						m_bLandSound = true;
 					}
 				}
@@ -351,8 +358,9 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 					{
 						if (m_bBeamTargetOn == false)
 						{
-							_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-							m_pOwner->Get_Transform()->LookAt(vPosition);
+							/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+							m_pOwner->Get_Transform()->LookAt(vPosition);*/
+							TurnToTarget(fTimeDelta);
 							m_bBeamTargetOn = true;
 							return new CBattle_HeadBeamState(m_pOwner);
 						}
@@ -361,8 +369,9 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 					{
 						if (m_bBeamTargetOn == false)
 						{
-							_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-							m_pOwner->Get_Transform()->LookAt(vPosition);
+							/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+							m_pOwner->Get_Transform()->LookAt(vPosition);*/
+							TurnToTarget(fTimeDelta);
 							m_bBeamTargetOn = true;
 							return new CBattle_HeadBeamState(m_pOwner);
 						}
@@ -375,8 +384,9 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 			}
 			else if (m_fActiveTarget_Distance <= 30.f)   //(m_fActiveTarget_Distance <= 30.f)
 			{
-				_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-				m_pOwner->Get_Transform()->LookAt(vPosition);
+				/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+				m_pOwner->Get_Transform()->LookAt(vPosition);*/
+				TurnToTarget(fTimeDelta);
 				if (m_fActiveTarget_Distance <= 12.f)  //(m_fActiveTarget_Distance <= 15.f)
 				{
 					if (m_PreState_IsSpin == false)

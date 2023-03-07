@@ -57,7 +57,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 					if (m_bAdventSound == false)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_EFFECT, 0.25f);
 						m_bAdventSound = true;
 					}
 
@@ -453,7 +453,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 					if (m_bSpearMultiEndSound == false)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_SpearMultiEnd.wav"), SOUND_VOICE, 0.4f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_SpearMultiEnd.wav"), SOUND_EFFECT, 0.4f);
 						m_bSpearMultiEndSound = true;
 					}
 				}
@@ -1022,8 +1022,9 @@ CAstralDoubt_State * CBattle_SpearMultiState::LateTick(_float fTimeDelta)
 		Find_Target();
 
 		m_vActiveTargetPos = m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-		_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAt(vPosition);
+		/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		m_pOwner->Get_Transform()->LookAt(vPosition);*/
+		TurnToTarget(fTimeDelta);
 	}
 
 	if (m_bIsAnimationFinished)

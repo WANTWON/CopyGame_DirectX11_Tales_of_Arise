@@ -282,7 +282,7 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	_uint iNum = 0;
 
-	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/PlayerPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/BossMap/PlayerPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -351,7 +351,7 @@ HRESULT CLevel_BossZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	_ulong dwByte = 0;
 	_uint iNum = 0;
 
-	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/MonsterPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/BossPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == hFile)
 		return E_FAIL;
 
@@ -366,7 +366,8 @@ HRESULT CLevel_BossZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		MultiByteToWideChar(CP_ACP, 0, ModelDesc.pModeltag, MAX_PATH, pModeltag, MAX_PATH);
 
 		iter->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&ModelDesc.vPosition), 1.f));
-		dynamic_cast<CMonster*>(iter)->Change_Navigation(LEVEL_BOSS);
+		iter->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetY(iter->Get_TransformState(CTransform::STATE_TRANSLATION), 8.f));
+		//dynamic_cast<CMonster*>(iter)->Change_Navigation(LEVEL_BOSS);
 		dynamic_cast<CMonster*>(iter)->Compute_CurrentIndex(LEVEL_BOSS);
 		dynamic_cast<CMonster*>(iter)->Set_BattleMode(true);
 		pBattleManager->Set_LackonMonster(iter);
