@@ -277,7 +277,7 @@ void CAI_AlphenLaw_Smash::Enter()
 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_VOICE, 0.55f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_VOICE, 0.3f);
 }
 
 void CAI_AlphenLaw_Smash::Exit()

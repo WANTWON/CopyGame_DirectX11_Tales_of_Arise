@@ -494,7 +494,7 @@ void CLevel_Restaurant::Set_MiniGameStart(_bool tof)
 		m_iScore = 0;
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_minigame1"), LEVEL_RESTAURANT, TEXT("score"))))
 			return;
-
+					
 	}
 	else
 	{
@@ -509,8 +509,18 @@ void CLevel_Restaurant::Set_MiniGameStart(_bool tof)
 		pPlayer->Change_Level(LEVEL_RESTAURANT);
 		if (pPlayer->Get_IsFly())
 			pPlayer->Off_IsFly();
+		
+
 	}
 	
+	if (tof == false)
+	{
+		if (!m_bMiniGameAfterIsOver_Bgm)
+		{
+			CGameInstance::Get_Instance()->StopAll();
+			CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_Restaurant_MiniGameEnd_After.wav"), g_fSoundVolume);
+		}
+	}
 }
 
 

@@ -37,7 +37,16 @@ private:
 
 private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
+
 	HITLAGDESC m_HitLagDesc;
+
+
+	//Sound
+	_bool m_bSkill_F_Sound = false;
+
+
+
+
 };
 END
 END
