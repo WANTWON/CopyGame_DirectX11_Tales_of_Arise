@@ -139,6 +139,11 @@ int CBerserker::Tick(_float fTimeDelta)
 	
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
+	if (m_pBerserkerState->Get_StateId() == CBerserkerState::STATE_ID::STATE_DOWN)
+		m_fFresnelTimer += fTimeDelta * 6;
+	else
+		m_fFresnelTimer = 0.f;
+
 	return OBJ_NOEVENT;
 }
 
@@ -162,6 +167,19 @@ void CBerserker::Late_Tick(_float fTimeDelta)
 		return;
 
 	LateTick_State(fTimeDelta);
+}
+
+HRESULT CBerserker::Render()
+{
+	if (m_pBerserkerState->Get_StateId() == CBerserkerState::STATE_ID::STATE_DOWN)
+	{
+		_bool bDownState = true;
+		m_pShaderCom->Set_RawValue("g_bRimLight", &bDownState, sizeof(_bool));
+	}
+
+	__super::Render();
+
+	return S_OK;
 }
 
 HRESULT CBerserker::Render_Glow()

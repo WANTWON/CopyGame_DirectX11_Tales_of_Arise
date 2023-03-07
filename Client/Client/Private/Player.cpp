@@ -407,7 +407,7 @@ HRESULT CPlayer::Render()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimColor", &m_vAuraColor, sizeof(_float3))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimTimer", &m_fAuraTimer, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimTimer", &m_fFresnelTimer, sizeof(_float))))
 		return E_FAIL;
 
 	_float4 vCameraLook = (_float4)(CGameInstance::Get_Instance()->Get_CamWorldMatrix().m[2]);

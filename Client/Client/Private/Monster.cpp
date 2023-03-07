@@ -184,11 +184,11 @@ HRESULT CMonster::Render()
 	if (FAILED(SetUp_ShaderID()))
 		return E_FAIL;
 
-	_float3 vRimColor = _float3(1.f, 0.f, 0.f);
+	_float3 vRimColor = _float3(.86f, 0.07f, 0.23f);
 	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimColor", &vRimColor, sizeof(_float3))))
 		return E_FAIL;
-	/*if (FAILED(m_pShaderCom->Set_RawValue("g_vRimTimer", &m_fAuraTimer, sizeof(_float))))
-		return E_FAIL;*/
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimTimer", &m_fFresnelTimer, sizeof(_float))))
+		return E_FAIL;
 
 	_float4 vCameraLook = (_float4)(CGameInstance::Get_Instance()->Get_CamWorldMatrix().m[2]);
 	_float3 vCamLook = _float3(vCameraLook.x, vCameraLook.y, vCameraLook.z);

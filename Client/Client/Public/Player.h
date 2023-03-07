@@ -159,6 +159,7 @@ protected: /* for 4 Player */
 	/* Over Limit */
 	_bool			m_bOverLimit = false;
 	_float			m_fOverLimitTimer = 0.f;
+	_float			m_fFresnelTimer = 0.f;
 	_bool			m_bIsOverlimiEffectSpawned = false;
 	_float3			m_vAuraColor;
 	_float			m_fAuraTimer = 0.f;

@@ -189,6 +189,11 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
+	if (m_pState->Get_StateId() == CMonsterLawState::STATE_ID::STATE_DOWN)
+		m_fFresnelTimer += fTimeDelta * 6;
+	else
+		m_fFresnelTimer = 0.f;
+
 	return OBJ_NOEVENT;
 }
 
@@ -214,6 +219,19 @@ void CMonsterLaw::Late_Tick(_float fTimeDelta)
 
 
 
+}
+
+HRESULT CMonsterLaw::Render()
+{
+	if (m_pState->Get_StateId() == CMonsterLawState::STATE_ID::STATE_DOWN)
+	{
+		_bool bDownState = true;
+		m_pShaderCom->Set_RawValue("g_bRimLight", &bDownState, sizeof(_bool));
+	}
+
+	__super::Render();
+
+	return S_OK;
 }
 
 HRESULT CMonsterLaw::Render_Glow()
