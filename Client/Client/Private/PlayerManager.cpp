@@ -106,16 +106,27 @@ PLAYER_MODE CPlayerManager::Check_ActiveMode(CPlayer * pPlayer)
 
 	if (m_bBattleMode == true && CBattleManager::Get_Instance()->Get_IsOneonOneMode() == false)
 	{
-		return pPlayer == m_pActivePlayer ? ACTIVE : AI_MODE;
+		if (pPlayer == m_pActivePlayer)
+		{
+			if (pPlayer->Get_PlayerMode() == UNVISIBLE)
+				CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, pPlayer);
+			return	ACTIVE;
+		}
+		else
+		{
+			if(pPlayer->Get_PlayerMode() == UNVISIBLE)
+				CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, pPlayer);
+			return AI_MODE;
+		}
 	}
 	else
 	{
 		if (pPlayer == m_pActivePlayer)
 			return	ACTIVE;
-
 		else
 		{
-			CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, pPlayer);
+			if (pPlayer->Get_PlayerMode() == AI_MODE)
+				CCollision_Manager::Get_Instance()->Out_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, pPlayer);
 			return UNVISIBLE;
 		}
 		

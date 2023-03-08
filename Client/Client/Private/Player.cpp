@@ -80,6 +80,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_eLevel = LEVEL_END;
 
 	m_pPlayerManager->Set_PlayerEnum(this, m_ePlayerID);
+
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
 
 	m_tInfo.fCurrentOverlimitGauge = 100.f;
@@ -108,8 +109,7 @@ int CPlayer::Tick(_float fTimeDelta)
 		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
 
-	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
-
+	m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
 
 	if (m_bOverLimit)
 	{
@@ -205,7 +205,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	else if (m_bIsPose)
 		m_bIsPose = false;
 
-	switch (eMode)
+	switch (m_ePlayerMode)
 	{
 	case Client::ACTIVE:
 		if (!m_bStrikeAttack)
