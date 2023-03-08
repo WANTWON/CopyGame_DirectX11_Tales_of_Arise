@@ -70,7 +70,7 @@ HRESULT CLevel_City::Initialize()
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LEVEL_CITY3.wav"), g_fSoundVolume);
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_mountain_Bird_Bug.wav"), SOUND_NATURE, 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_mountain_Bird_Bug.wav"), SOUND_NATURE, 0.1f);
 	return S_OK;
 }
 

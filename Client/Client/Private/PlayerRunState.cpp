@@ -293,6 +293,7 @@ CPlayerState * CRunState::HandleInput()
 
 CPlayerState * CRunState::Tick(_float fTimeDelta)
 {
+	CBattleManager* pBattleManager = CBattleManager::Get_Instance();
 	if (STATETYPE_START == m_eStateType)
 	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
@@ -300,6 +301,166 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 		Move(fTimeDelta);
 
 		m_fRunTime += fTimeDelta;
+
+		if (m_bIsDash)
+		{
+			vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+			for (auto& pEvent : pEvents)
+			{
+				if (pEvent.isPlay)
+				{
+					if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+					{
+						if (m_fDashSoundStart != pEvent.fStartTime)
+						{
+							if (m_iDashSoundCount == 0)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound1.wav"), SOUND_FOOT, 0.1f);
+								m_iDashSoundCount = 1;
+							}
+
+							else if (m_iDashSoundCount == 1)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound2.wav"), SOUND_FOOT, 0.1f);
+								m_iDashSoundCount = 2;
+							}
+
+							else if (m_iDashSoundCount == 2)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound3.wav"), SOUND_FOOT, 0.1f);
+								m_iDashSoundCount = 3;
+							}
+
+							else if (m_iDashSoundCount == 3)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound4.wav"), SOUND_FOOT, 0.1f);
+								m_iDashSoundCount = 4;
+							}
+
+							else if (m_iDashSoundCount == 4)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound5.wav"), SOUND_FOOT, 0.1f);
+								m_iDashSoundCount = 5;
+							}
+
+							else if (m_iDashSoundCount == 5)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound6.wav"), SOUND_FOOT, 0.1f);
+								m_iDashSoundCount = 0;
+							}
+
+							m_fDashSoundStart = pEvent.fStartTime;
+						}
+					}
+				}
+			}
+		}
+
+		else if (!m_bIsDash)
+		{
+			vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+			for (auto& pEvent : pEvents)
+			{
+				if (pEvent.isPlay)
+				{
+					if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+					{
+						if (m_fSoundStart != pEvent.fStartTime)
+						{
+							if (m_iRunSoundCount == 0)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound1.wav"), SOUND_FOOT, 0.1f);
+								m_iRunSoundCount = 1;
+							}
+
+							else if (m_iRunSoundCount == 1)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound2.wav"), SOUND_FOOT, 0.1f);
+								m_iRunSoundCount = 2;
+							}
+
+							else if (m_iRunSoundCount == 2)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound3.wav"), SOUND_FOOT, 0.1f);
+								m_iRunSoundCount = 3;
+							}
+
+							else if (m_iRunSoundCount == 3)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound4.wav"), SOUND_FOOT, 0.1f);
+								m_iRunSoundCount = 0;
+							}
+
+							m_fSoundStart = pEvent.fStartTime;
+						}
+					}
+				}
+			}
+
+		}
+
+		else if (pBattleManager->Get_IsBattleMode())
+		{
+			vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+			for (auto& pEvent : pEvents)
+			{
+				if (pEvent.isPlay)
+				{
+					if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+					{
+						if (m_fBattleSoundStart != pEvent.fStartTime)
+						{
+							if (m_iBattleSoundCount == 0)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Battle_Run1.wav"), SOUND_FOOT, 0.2f);
+								m_iBattleSoundCount = 1;
+							}
+
+							else if (m_iBattleSoundCount == 1)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Battle_Run2.wav"), SOUND_FOOT, 0.2f);
+								m_iBattleSoundCount = 2;
+							}
+
+							else if (m_iBattleSoundCount == 2)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Battle_Run3.wav"), SOUND_FOOT, 0.2f);
+								m_iBattleSoundCount = 3;
+							}
+
+							else if (m_iBattleSoundCount == 3)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Battle_Run4.wav"), SOUND_FOOT, 0.2f);
+								m_iBattleSoundCount = 4;
+							}
+
+							else if (m_iBattleSoundCount == 4)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Battle_Run5.wav"), SOUND_FOOT, 0.2f);
+								m_iBattleSoundCount = 5;
+							}
+
+							else if (m_iBattleSoundCount == 5)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Battle_Run6.wav"), SOUND_FOOT, 0.2f);
+								m_iBattleSoundCount = 5;
+							}
+
+							else if (m_iBattleSoundCount == 5)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Battle_Run7.wav"), SOUND_FOOT, 0.2f);
+								m_iBattleSoundCount = 0;
+							}
+
+							m_fBattleSoundStart = pEvent.fStartTime;
+						}
+					}
+				}
+			}
+		}
 	}
 	else
 	{
@@ -316,26 +477,6 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 	}
 
 	m_pOwner->Check_Navigation();
-
-	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-
-	for (auto& pEvent : pEvents)
-	{
-		if (pEvent.isPlay)
-		{
-			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
-			{
-				//CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
-				if (!m_bSoundStart)
-				{
-					m_bSoundStart = true;
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Run1.wav"), SOUND_FOOT, 0.5f);
-				}
-			}
-			else
-				m_iRunSoundCount = 0;
-		}
-	}
 
 	return nullptr;
 }
@@ -365,9 +506,12 @@ void CRunState::Enter()
 				if (STATETYPE_START == m_eStateType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH);
 				else
+				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH_BRAKE_LEFT_START);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSoundBreak.wav"), SOUND_FOOT, 0.4f);
+				}
 			}
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			
 			break;
 		case CPlayer::SION:
 			if (!pBattleManager->Get_IsBattleMode())
@@ -377,7 +521,7 @@ void CRunState::Enter()
 				else
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH_BRAKE_000);
 			}
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::RINWELL:
 			if (!pBattleManager->Get_IsBattleMode())
@@ -387,7 +531,7 @@ void CRunState::Enter()
 				else
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH_BRAKE_000);
 			}
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		case CPlayer::LAW:
 			if (!pBattleManager->Get_IsBattleMode())
@@ -397,7 +541,7 @@ void CRunState::Enter()
 				else
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH_BREAK_START);
 			}
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			break;
 		}
 	}
@@ -410,15 +554,21 @@ void CRunState::Enter()
 			{
 				if (STATETYPE_START == m_eStateType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_RUN);
+
 				else
+				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_BREAK);
+				}
 			}
 			else
 			{
 				if (STATETYPE_START == m_eStateType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN);
 				else
+				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN_BRAKE_START);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+				}
 			}
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_RunSound.wav"), SOUND_FOOT, 0.4f);
@@ -482,7 +632,7 @@ void CRunState::Enter()
 
 void CRunState::Exit()
 {
-	CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
 
 	if (m_bIsDash)
 	{

@@ -604,7 +604,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_EFFECT, 0.5f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_EFFECT, 0.5f);*/
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GALEFORCE);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillVoice.wav"), SOUND_EFFECT, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillVoice.wav"), SOUND_VOICE, 0.7f);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:

@@ -34,6 +34,9 @@ private:
 private:
 	DIRID m_eDirection = DIRID::DIR_END;
 	JUMPTYPE m_eJumpType = JUMP_END;
+
+	//Sound
+	_bool m_bLandSound = false;
 };
 END
 END

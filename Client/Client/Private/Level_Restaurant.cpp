@@ -518,7 +518,7 @@ void CLevel_Restaurant::Set_MiniGameStart(_bool tof)
 		if (!m_bMiniGameAfterIsOver_Bgm)
 		{
 			CGameInstance::Get_Instance()->StopAll();
-			CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_Restaurant_MiniGameEnd_After.wav"), g_fSoundVolume);
+			CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_Restaurant.wav"), g_fSoundVolume);
 		}
 	}
 }
