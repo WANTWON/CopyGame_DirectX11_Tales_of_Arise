@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "..\Public\Fascinate.h"
-//#include "stdafx.h"
 #include "CameraManager.h"
 #include "UI_Dialogue_Caption.h"
 #include "Monster_LawIdleState.h"

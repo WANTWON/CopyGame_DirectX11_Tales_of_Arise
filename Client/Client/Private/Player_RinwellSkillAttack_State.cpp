@@ -213,7 +213,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 						BulletDesc.eBulletType = CRinwellSkills::METEOR;
 
 
-						for (int i = 0; i < 15; ++i)
+						for (int i = 0; i < 7; ++i)
 						{
 							_int XRand = rand() % 2 == 0 ? 1.f : -1.f;
 							_int ZRand = rand() % 2 == 0 ? 1.f : -1.f;

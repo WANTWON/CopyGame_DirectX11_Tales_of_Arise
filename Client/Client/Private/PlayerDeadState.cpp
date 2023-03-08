@@ -97,10 +97,7 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 		}
 		else
 			m_bIsStop = true;
-
-
 	}
-		
 
 	return nullptr;
 }

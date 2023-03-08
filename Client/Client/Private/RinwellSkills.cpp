@@ -64,12 +64,12 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 
 		break;
 	case DIVINE_SABER:
-		vOffset = XMVectorSet(0.f, m_fRadius + 1.f, 0.f, 0.f);
+		/*vOffset = XMVectorSet(0.f, m_fRadius + 1.f, 0.f, 0.f);
 		vLocation = m_BulletDesc.vTargetPosition + vOffset;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberRing.dat"), mWorldMatrix);
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberRing.dat"), mWorldMatrix);*/
 
 		vOffset = XMVectorSet(0.f, m_fRadius + 0.5f, 0.f, 0.f);
 		vLocation = m_BulletDesc.vTargetPosition + vOffset;
@@ -574,12 +574,12 @@ void CRinwellSkills::Dead_Effect()
 		BulletDesc.fVelocity = 1.f;
 		BulletDesc.eBulletType = METEORDEAD;
 		BulletDesc.iDamage = 300;
-		BulletDesc.fDeadTime = 1.f;
+		BulletDesc.fDeadTime = 10.f;
 		BulletDesc.vInitPositon = Get_TransformState(CTransform::STATE_TRANSLATION);
 		BulletDesc.pOwner = m_BulletDesc.pOwner;
 
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC && Check_IsinFrustum(3.f) == true)
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.1f);
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
