@@ -75,6 +75,34 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 
 int CUI_Dialogue::Tick(_float fTimeDelta)
 {
+	if (m_bSexyEventEnd)
+	{
+		m_fSexyOffTimer += fTimeDelta;
+		if (m_fSexyOffTimer > 3.5f)
+		{
+			m_bSexyEventEnd = false;
+			m_fSexyOffTimer = 0.f;
+			CPlayerManager::Get_Instance()->Set_Changetoboss(true);
+			dynamic_cast<CMonsterLaw*>(CBattleManager::Get_Instance()->Get_BossMonster())->Set_EventFinish(true);
+			CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"));
+			CBaseObj* pObject = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell")));
+			dynamic_cast<CMonster*>(pObject)->Change_Navigation(LEVEL_LAWBATTLE);
+			dynamic_cast<CMonster*>(pObject)->Compute_CurrentIndex(LEVEL_LAWBATTLE);
+			dynamic_cast<CMonster*>(pObject)->Set_BattleMode(true);
+
+			dynamic_cast<CAiRinwell*>(pObject)->Set_AirMode(true);
+			CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
+
+			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(8, true, 0, 1);
+			CBattleManager::Get_Instance()->Set_IsStrike(false);
+
+			CGameInstance::Get_Instance()->StopAll();
+			CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LawBattle.wav"), g_fSoundVolume);
+			CBattleManager::Get_Instance()->Set_Rinwellboss(true);
+
+		}
+
+	}
 
 	
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_PGUP))
@@ -279,23 +307,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 				case 13:
 				{
-					CPlayerManager::Get_Instance()->Set_Changetoboss(true);
-					dynamic_cast<CMonsterLaw*>(CBattleManager::Get_Instance()->Get_BossMonster())->Set_EventFinish(true);
-					CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"));
-					CBaseObj* pObject = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell")));
-					dynamic_cast<CMonster*>(pObject)->Change_Navigation(LEVEL_LAWBATTLE);
-					dynamic_cast<CMonster*>(pObject)->Compute_CurrentIndex(LEVEL_LAWBATTLE);
-					dynamic_cast<CMonster*>(pObject)->Set_BattleMode(true);
-
-					dynamic_cast<CAiRinwell*>(pObject)->Set_AirMode(true);
-					CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
-		
-					dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(8, true, 0, 1);
-					CBattleManager::Get_Instance()->Set_IsStrike(false);
-					
-					CGameInstance::Get_Instance()->StopAll();
-					CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LawBattle.wav"), g_fSoundVolume);
-					CBattleManager::Get_Instance()->Set_Rinwellboss(true);
+					m_bSexyEventEnd = true;
 					break;
 				}
 					

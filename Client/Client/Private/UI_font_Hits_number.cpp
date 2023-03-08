@@ -60,6 +60,8 @@ HRESULT CUI_font_Hits_number::Initialize(void * pArg)
 
 int CUI_font_Hits_number::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
@@ -145,6 +147,8 @@ int CUI_font_Hits_number::Tick(_float fTimeDelta)
 
 void CUI_font_Hits_number::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return ;
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 

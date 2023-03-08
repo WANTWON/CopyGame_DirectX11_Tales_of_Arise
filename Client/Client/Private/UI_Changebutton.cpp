@@ -43,6 +43,8 @@ HRESULT CUI_Changebutton::Initialize(void * pArg)
 
 int CUI_Changebutton::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 
 	//std::mbstowcs;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
@@ -71,6 +73,8 @@ int CUI_Changebutton::Tick(_float fTimeDelta)
 
 void CUI_Changebutton::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return ;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return;
 

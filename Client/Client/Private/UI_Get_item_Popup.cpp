@@ -67,6 +67,8 @@ HRESULT CUI_Get_item_Popup::Initialize(void * pArg)
 
 int CUI_Get_item_Popup::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (m_btick)
 	{
 		if (m_bfirstarrived)
@@ -168,6 +170,8 @@ int CUI_Get_item_Popup::Tick(_float fTimeDelta)
 
 void CUI_Get_item_Popup::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return ;
 
 	if (m_btick)
 	{
