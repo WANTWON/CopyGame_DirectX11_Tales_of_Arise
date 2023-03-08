@@ -543,7 +543,7 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _float fMoveLeng
 	{
 		CPlayerState* pState = nullptr;
 		CAIState* pAIState = nullptr;
-
+		m_bDead = true;
 		m_tInfo.fCurrentHp = 0;
 		switch (eMode)
 		{
