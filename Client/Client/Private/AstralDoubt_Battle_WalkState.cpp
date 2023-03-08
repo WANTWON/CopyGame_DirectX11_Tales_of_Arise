@@ -17,8 +17,8 @@ CBattleWalkState::CBattleWalkState(CAstralDoubt* pIceWolf, STATE_ID ePreState)
 	m_ePreState_Id = ePreState;
 
 	m_fTimeDeltaAcc = 0;
-	m_fMoveTime = ((rand() % 1000) *0.001f )*((rand() % 100) * 0.01f);
-	
+	m_fMoveTime = ((rand() % 1000) *0.001f)*((rand() % 100) * 0.01f);
+
 }
 
 CAstralDoubt_State * CBattleWalkState::AI_Behaviour(_float fTimeDelta)
@@ -28,12 +28,12 @@ CAstralDoubt_State * CBattleWalkState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 {
-	
+
 	//Find_Target();
 	//m_fTarget_Distance = m_fOutPutTarget_Distance;
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.7f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
-	
+
 	//CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	//if (!pPlayer)
 	//	return;
@@ -206,8 +206,8 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 	//	}
 
 	//}
-	
-	
+
+
 
 
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -238,7 +238,7 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 				//Camera Shaking 
 				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 					dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.5f, 0.1f);
-			
+
 
 
 				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
@@ -285,7 +285,7 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p2th_AtkColliderCom)
 					m_p2th_AtkColliderCom->Update(R_matWorld);
 
-				
+
 			}
 		}
 
@@ -302,7 +302,7 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 			m_pAtkColliderCom = nullptr;
 			m_p2th_AtkColliderCom = nullptr;
 
-			
+
 		}
 	}
 
@@ -313,15 +313,10 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 {
 	m_pOwner->Check_Navigation();
 	m_fTimeDeltaAcc += fTimeDelta;
-	
+
 
 	if (m_fTimeDeltaAcc > m_fMoveTime)
 		m_iRand = rand() % 2;
-
-
-
-
-
 
 	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
 
@@ -330,66 +325,13 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 	_bool bIs_TargetInFront = false;
 	bIs_TargetInFront = Is_TargetInFront(m_vActiveTargetPos);
 
-	/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAt(vPosition);*/
 	TurnToTarget(fTimeDelta);
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.9f, m_pOwner->Get_Navigation());
+	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.9f, m_pOwner->Get_Navigation());
 
-
-	if (m_fActiveTarget_Distance > 30.f) //(m_fActiveTarget_Distance > 30.f)
+	if (m_fActiveTarget_Distance <= 30.f)
 	{
-		if (m_ePreState_Id != CAstralDoubt_State::STATE_HEADBEAM)
+		if (m_fActiveTarget_Distance <= 12.f)
 		{
-			if (bIs_TargetInFront == true)
-			{
-				if (m_bBeamTargetOn == false)
-				{
-					/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(vPosition);*/
-					TurnToTarget(fTimeDelta);
-					m_bBeamTargetOn = true;
-					return new CBattle_HeadBeamState(m_pOwner);
-				}
-
-			}
-
-			else if (bIs_TargetInFront == false)
-			{
-				if (m_bBeamTargetOn == false)
-				{
-					/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(vPosition);*/
-					TurnToTarget(fTimeDelta);
-					m_bBeamTargetOn = true;
-					return new CBattle_HeadBeamState(m_pOwner);
-				}
-			}
-
-		}
-
-		//else if (m_ePreState_Id == CAstralDoubt_State::STATE_HEADBEAM)
-		//{
-		//	_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-		//	m_pOwner->Get_Transform()->LookAt(vPosition);
-		//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
-		//}
-	}
-
-
-	else
-	{
-		//_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-		//m_pOwner->Get_Transform()->LookAt(vPosition);
-		//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
-
-		//
-		//if (m_fTarget_Distance <= 24.f)
-		//{
-		if (m_fActiveTarget_Distance <= 12.f)  //(m_fActiveTarget_Distance <= 15.f)
-		{
-
-			/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-			m_pOwner->Get_Transform()->LookAt(vPosition);*/
 			TurnToTarget(fTimeDelta);
 			switch (m_iRand)
 			{
@@ -398,219 +340,150 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 
 			case 1:
 				return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_FOOTPRESS);
-
-			default:
-				break;
 			}
+		}
+		else if (m_fActiveTarget_Distance <= 22.f)
+		{
+			if (m_ePreState_Id != CAstralDoubt_State::STATE_UPPER)
+			{
+				TurnToTarget(fTimeDelta);
 
+				return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
+			}
 		}
 		else
 		{
-			if (m_fActiveTarget_Distance <= 16.f)
+			if (m_ePreState_Id != CAstralDoubt_State::STATE_HEADBEAM)
 			{
-				if (bIs_TargetInFront == true)
+				if (m_bBeamTargetOn == false)
 				{
-					if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
-						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-					else if (m_ePreState_Id == CAstralDoubt_State::STATE_SPEARMULTI)
-						return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
-					else
-					{
-						switch (m_iRand)
-						{
-						case 0:
-							return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-						case 1:
-							return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
-						default:
-							break;
-						}
-					}
-
-					//보스 거대할 때 코드////
-					/*switch (m_iRand)
-					{
-					case 0:
-						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-
-					case 1:
-						return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
-
-					default:
-						break;
-					}*/
-				}
-
-				else if (bIs_TargetInFront == false)
-				{
-					/*_vector vPosition = XMVectorSetY(m_vActiveTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-					m_pOwner->Get_Transform()->LookAt(vPosition);*/
 					TurnToTarget(fTimeDelta);
-
-
-					if (m_ePreState_Id == CAstralDoubt_State::STATE_UPPER)
-						return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-					else if (m_ePreState_Id == CAstralDoubt_State::STATE_SPEARMULTI)
-						return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
-					else
-					{
-						switch (m_iRand)
-						{
-						case 0:
-							return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-						case 1:
-							return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
-						default:
-							break;
-						}
-					}
-
-
-					//switch (m_iRand)
-					//{
-					//case 0:
-					//	return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
-
-					//case 1:
-					//	return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
-
-					//default:
-					//	break;
-					//}
+					m_bBeamTargetOn = true;
+					return new CBattle_HeadBeamState(m_pOwner);
 				}
 			}
-
-			//else
-			//{
-			//	m_pOwner->Get_Transform()->LookAt(vPosition);
-			//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
-			//}
+			else if (m_ePreState_Id != CAstralDoubt_State::STATE_SPEARMULTI)
+				return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
 		}
-		//}			
 	}
-
-
-
-
-
 
 	///////////////////////////////////////기존의 코드- 나를 때린 대상, 근접 대상을 찾아 공격.//////////////////
 
 
 	/*if (m_fTarget_Distance <= 15.f)
 		m_Testbool = true;*/
-	//m_Testbool = true;
-	//_vector vTargetPos = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+		//m_Testbool = true;
+		//_vector vTargetPos = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	//_bool bIs_TargetInFront = false;
-	//bIs_TargetInFront = Is_TargetInFront(m_vCurTargetPos);
+		//_bool bIs_TargetInFront = false;
+		//bIs_TargetInFront = Is_TargetInFront(m_vCurTargetPos);
 
-	//_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	//m_pOwner->Get_Transform()->LookAt(vPosition);
-	//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
+		//_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		//m_pOwner->Get_Transform()->LookAt(vPosition);
+		//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
 
-	//	if (m_fTarget_Distance > 30.f)
-	//	{
-	//		if (m_ePreState_Id != CAstralDoubt_State::STATE_HEADBEAM)
-	//		{
-	//			if (bIs_TargetInFront == true)
-	//			{
-	//				if (m_bBeamTargetOn == false)
-	//				{
-	//					_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	//					m_pOwner->Get_Transform()->LookAt(vPosition);
-	//					m_bBeamTargetOn = true;
-	//					return new CBattle_HeadBeamState(m_pOwner);
-	//				}
-	//				
-	//			}
-	//			
-	//			else if (bIs_TargetInFront == false)
-	//			{
-	//				if (m_bBeamTargetOn == false)
-	//				{
-	//					_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	//					m_pOwner->Get_Transform()->LookAt(vPosition);
-	//					m_bBeamTargetOn = true;
-	//					return new CBattle_HeadBeamState(m_pOwner);
-	//				}
-	//			}
+		//	if (m_fTarget_Distance > 30.f)
+		//	{
+		//		if (m_ePreState_Id != CAstralDoubt_State::STATE_HEADBEAM)
+		//		{
+		//			if (bIs_TargetInFront == true)
+		//			{
+		//				if (m_bBeamTargetOn == false)
+		//				{
+		//					_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		//					m_pOwner->Get_Transform()->LookAt(vPosition);
+		//					m_bBeamTargetOn = true;
+		//					return new CBattle_HeadBeamState(m_pOwner);
+		//				}
+		//				
+		//			}
+		//			
+		//			else if (bIs_TargetInFront == false)
+		//			{
+		//				if (m_bBeamTargetOn == false)
+		//				{
+		//					_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		//					m_pOwner->Get_Transform()->LookAt(vPosition);
+		//					m_bBeamTargetOn = true;
+		//					return new CBattle_HeadBeamState(m_pOwner);
+		//				}
+		//			}
 
-	//		}
+		//		}
 
-	//		//else if (m_ePreState_Id == CAstralDoubt_State::STATE_HEADBEAM)
-	//		//{
-	//		//	_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	//		//	m_pOwner->Get_Transform()->LookAt(vPosition);
-	//		//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
-	//		//}
-	//	}
-	//		
+		//		//else if (m_ePreState_Id == CAstralDoubt_State::STATE_HEADBEAM)
+		//		//{
+		//		//	_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		//		//	m_pOwner->Get_Transform()->LookAt(vPosition);
+		//		//	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
+		//		//}
+		//	}
+		//		
 
-	//	else
-	//	{
-	//		//_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	//		//m_pOwner->Get_Transform()->LookAt(vPosition);
-	//		//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
+		//	else
+		//	{
+		//		//_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		//		//m_pOwner->Get_Transform()->LookAt(vPosition);
+		//		//m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.55f, m_pOwner->Get_Navigation());
 
-	//		//
-	//		//if (m_fTarget_Distance <= 24.f)
-	//		//{
-	//		if (m_fTarget_Distance <= 15.f)
-	//		{
-	//
-	//				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	//				m_pOwner->Get_Transform()->LookAt(vPosition);
-	//				switch (m_iRand)
-	//				{
-	//				case 0:
-	//					return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_SPIN);
+		//		//
+		//		//if (m_fTarget_Distance <= 24.f)
+		//		//{
+		//		if (m_fTarget_Distance <= 15.f)
+		//		{
+		//
+		//				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		//				m_pOwner->Get_Transform()->LookAt(vPosition);
+		//				switch (m_iRand)
+		//				{
+		//				case 0:
+		//					return new CBattle_720Spin_FirstState(m_pOwner, CAstralDoubt_State::STATE_SPIN);
 
-	//				case 1:
-	//					return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_FOOTPRESS);
+		//				case 1:
+		//					return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_FOOTPRESS);
 
-	//				default:
-	//					break;
-	//				}
-	//			
-	//		}
-	//		else
-	//		{
-	//			if (bIs_TargetInFront == true)
-	//			{
-	//				switch (m_iRand)
-	//				{
-	//				case 0:
-	//					return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+		//				default:
+		//					break;
+		//				}
+		//			
+		//		}
+		//		else
+		//		{
+		//			if (bIs_TargetInFront == true)
+		//			{
+		//				switch (m_iRand)
+		//				{
+		//				case 0:
+		//					return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
 
-	//				case 1:
-	//					return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
+		//				case 1:
+		//					return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
 
-	//				default:
-	//					break;
-	//				}
-	//			}
+		//				default:
+		//					break;
+		//				}
+		//			}
 
-	//			else if (bIs_TargetInFront == false)
-	//			{
-	//				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-	//				m_pOwner->Get_Transform()->LookAt(vPosition);
+		//			else if (bIs_TargetInFront == false)
+		//			{
+		//				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+		//				m_pOwner->Get_Transform()->LookAt(vPosition);
 
-	//				switch (m_iRand)
-	//				{
-	//				case 0:
-	//					return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
+		//				switch (m_iRand)
+		//				{
+		//				case 0:
+		//					return new CBattle_SpearMultiState(m_pOwner, CAstralDoubt_State::STATE_SPEARMULTI);
 
-	//				case 1:
-	//					return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
+		//				case 1:
+		//					return new CBattle_UpperState(m_pOwner, CAstralDoubt_State::STATE_UPPER);
 
-	//				default:
-	//					break;
-	//				}
-	//			}
-	//		}
-	//		//}			
-	//	}
+		//				default:
+		//					break;
+		//				}
+		//			}
+		//		}
+		//		//}			
+		//	}
 
 
 #ifdef _DEBUG
@@ -627,9 +500,7 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 
 void CBattleWalkState::Enter()
 {
-
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::MOVE_WALK_F);
-	
 }
 
 void CBattleWalkState::Exit()
@@ -644,8 +515,5 @@ void CBattleWalkState::Exit()
 
 	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);
-
-	
-
 }
 
