@@ -32,6 +32,7 @@ private:
 	_bool m_bAlphenStrike_2 = false;
 
 	_float m_fEventStart = -1.f;
+	_float m_fEventStart1 = -2.f;
 	_float m_fFadeTime = 0.f;
 	
 	/* Strike Screen Blur */
@@ -39,6 +40,7 @@ private:
 	_float m_fEffectEventEndTime = 0.f;
 	_float m_fEffectEventCurTime = 0.f;
 	_float m_fResetTimer = 0.f;
+	_int m_iEventIndex = 0;
 };
 END
 END

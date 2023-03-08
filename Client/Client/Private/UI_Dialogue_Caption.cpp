@@ -41,19 +41,17 @@ HRESULT CUI_Dialogue_Caption::Initialize(void * pArg)
 	
 
 	m_bfadein = true;
-	/*CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY, false, false);
-	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LIFEBOTTLE, ITEMTYPE_POTION, false, false);
-	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_POTATO, ITEMTYPE_VEGITABLE, false, false);
-	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_DULLSWORD, ITEMTYPE_SWORD, false, false);
-	CUI_Manager::Get_Instance()->AddItem(ITEMNAME_PYOGOMUSHROOM, ITEMTYPE_ARMOR, false, false);*/
 
 	Read_TextFiles_for_BossRinwell();
 	Read_TextFiles_for_Strike_RinwellLaw();
-	/*Read_TextFiles_for_Quest1Clear();
-	Read_TextFiles_for_Quest2Strat();
-	Read_TextFiles_for_Quest2Clear();
-	Read_TextFiles_for_Quest3Start();
-	Read_TextFiles_for_Quest3Clear();*/
+	Read_TextFiles_for_Strike_AlphenSion();
+	Read_TextFiles_for_Strike_AlphenRinwell();
+	Read_TextFiles_for_Strike_SionRinwell();
+	Read_TextFiles_for_Strike_SionLaw();
+	Read_TextFiles_for_Strike_AlphenLaw();
+	
+	
+	
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -82,7 +80,7 @@ int CUI_Dialogue_Caption::Tick(_float fTimeDelta)
 			}
 
 			break;
-		case 1:
+		/*case 1:
 
 			if (m_fTimer > 1.5f)
 			{
@@ -94,18 +92,21 @@ int CUI_Dialogue_Caption::Tick(_float fTimeDelta)
 
 			}
 
-			break;
+			break;*/
 		}
 		
 		
-		
-
-		if (m_iDialogueindex == vectorsize)
+		if (m_iVectorIndex == 0)
 		{
-			m_bfadeout = true;
+			if (m_iDialogueindex == vectorsize)
+			{
+				m_bfadeout = true;
 
-			--m_iDialogueindex;
+				--m_iDialogueindex;
+			}
 		}
+
+		
 
 
 
@@ -123,6 +124,14 @@ int CUI_Dialogue_Caption::Tick(_float fTimeDelta)
 
 void CUI_Dialogue_Caption::Late_Tick(_float fTimeDelta)
 {
+
+	if (m_iDialogueindex >= vectorsize)
+	{
+		m_iDialogueindex = vectorsize - 1;
+		//m_bfadeout = true;
+
+		//--m_iDialogueindex;
+	}
 
 	
 	if (m_btick)
@@ -300,6 +309,97 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_BossRinwell()
 
 }
 
+void CUI_Dialogue_Caption::Read_TextFiles_for_Strike_AlphenLaw()
+{
+	std::ifstream file("../../../Bin/Resources/Caption/AlphenLaw0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge6[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/Resources/Caption/AlphenLaw1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge6[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/Resources/Caption/AlphenLaw2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge6[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/Resources/Caption/AlphenLaw3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialouge6[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialouge6[0]);
+	matrix.push_back(m_vDialouge6[1]);
+	matrix.push_back(m_vDialouge6[2]);
+	matrix.push_back(m_vDialouge6[3]);
+
+
+
+	m_vCurrentDialogue.push_back(matrix);
+	
+}
+
 void CUI_Dialogue_Caption::Read_TextFiles_for_Strike_RinwellLaw()
 {
 	std::ifstream file("../../../Bin/Resources/Caption/RinwellLawST0.txt");
@@ -376,7 +476,7 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Strike_RinwellLaw()
 		std::cout << "Unable to open file\n";
 	}
 
-	
+
 
 
 	vector<vector<_tchar*>> matrix;
@@ -388,11 +488,13 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Strike_RinwellLaw()
 
 
 	m_vCurrentDialogue.push_back(matrix);
+	
 }
 
-void CUI_Dialogue_Caption::Read_TextFiles_for_Quest2Strat()
+void CUI_Dialogue_Caption::Read_TextFiles_for_Strike_AlphenSion()
 {
-	std::ifstream file("../../../Bin/quest2start0.txt");
+
+	std::ifstream file("../../../Bin/Resources/Caption/AlphenSion0.txt");
 	if (file.is_open())
 	{
 		while (file.getline(fuck, 256))
@@ -411,7 +513,7 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest2Strat()
 	}
 
 
-	std::ifstream file1("../../../Bin/quest2start1.txt");
+	std::ifstream file1("../../../Bin/Resources/Caption/AlphenSion1.txt");
 	if (file1.is_open())
 	{
 		while (file1.getline(fuck, 256))
@@ -429,58 +531,17 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest2Strat()
 		std::cout << "Unable to open file\n";
 	}
 
-	//m_vCurrentDialogue.
-	std::ifstream file2("../../../Bin/quest2start2.txt");
-	if (file2.is_open())
-	{
-		while (file2.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge2[2].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file2.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-	std::ifstream file3("../../../Bin/quest2start3.txt");
-	if (file3.is_open())
-	{
-		while (file3.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge2[3].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file3.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-
-
 	vector<vector<_tchar*>> matrix;
 	matrix.push_back(m_vDialouge2[0]);
 	matrix.push_back(m_vDialouge2[1]);
-	matrix.push_back(m_vDialouge2[2]);
-	matrix.push_back(m_vDialouge2[3]);
 
 
 	m_vCurrentDialogue.push_back(matrix);
 }
 
-void CUI_Dialogue_Caption::Read_TextFiles_for_Quest2Clear()
+void CUI_Dialogue_Caption::Read_TextFiles_for_Strike_AlphenRinwell()
 {
-	std::ifstream file("../../../Bin/quest2clear0.txt");
+	std::ifstream file("../../../Bin/Resources/Caption/AlphenRinwell0.txt");
 	if (file.is_open())
 	{
 		while (file.getline(fuck, 256))
@@ -499,7 +560,7 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest2Clear()
 	}
 
 
-	std::ifstream file1("../../../Bin/quest2clear1.txt");
+	std::ifstream file1("../../../Bin/Resources/Caption/AlphenRinwell1.txt");
 	if (file1.is_open())
 	{
 		while (file1.getline(fuck, 256))
@@ -517,11 +578,6 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest2Clear()
 		std::cout << "Unable to open file\n";
 	}
 
-	//m_vCurrentDialogue.
-
-
-
-
 	vector<vector<_tchar*>> matrix;
 	matrix.push_back(m_vDialouge3[0]);
 	matrix.push_back(m_vDialouge3[1]);
@@ -530,9 +586,9 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest2Clear()
 	m_vCurrentDialogue.push_back(matrix);
 }
 
-void CUI_Dialogue_Caption::Read_TextFiles_for_Quest3Start()
+void CUI_Dialogue_Caption::Read_TextFiles_for_Strike_SionRinwell()
 {
-	std::ifstream file("../../../Bin/quest3start0.txt");
+	std::ifstream file("../../../Bin/Resources/Caption/SionRinwell0.txt");
 	if (file.is_open())
 	{
 		while (file.getline(fuck, 256))
@@ -551,7 +607,7 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest3Start()
 	}
 
 
-	std::ifstream file1("../../../Bin/quest3start1.txt");
+	std::ifstream file1("../../../Bin/Resources/Caption/SionRinwell1.txt");
 	if (file1.is_open())
 	{
 		while (file1.getline(fuck, 256))
@@ -569,58 +625,17 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest3Start()
 		std::cout << "Unable to open file\n";
 	}
 
-	//m_vCurrentDialogue.
-	std::ifstream file2("../../../Bin/quest3start2.txt");
-	if (file2.is_open())
-	{
-		while (file2.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge4[2].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file2.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-	std::ifstream file3("../../../Bin/quest3start3.txt");
-	if (file3.is_open())
-	{
-		while (file3.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge4[3].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file3.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-
-
 	vector<vector<_tchar*>> matrix;
 	matrix.push_back(m_vDialouge4[0]);
 	matrix.push_back(m_vDialouge4[1]);
-	matrix.push_back(m_vDialouge4[2]);
-	matrix.push_back(m_vDialouge4[3]);
 
 
 	m_vCurrentDialogue.push_back(matrix);
 }
 
-void CUI_Dialogue_Caption::Read_TextFiles_for_Quest3Clear()
+void CUI_Dialogue_Caption::Read_TextFiles_for_Strike_SionLaw()
 {
-	std::ifstream file("../../../Bin/quest3clear0.txt");
+	std::ifstream file("../../../Bin/Resources/Caption/SionLaw0.txt");
 	if (file.is_open())
 	{
 		while (file.getline(fuck, 256))
@@ -639,7 +654,7 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest3Clear()
 	}
 
 
-	std::ifstream file1("../../../Bin/quest3clear1.txt");
+	std::ifstream file1("../../../Bin/Resources/Caption/SionLaw1.txt");
 	if (file1.is_open())
 	{
 		while (file1.getline(fuck, 256))
@@ -657,100 +672,15 @@ void CUI_Dialogue_Caption::Read_TextFiles_for_Quest3Clear()
 		std::cout << "Unable to open file\n";
 	}
 
-	//m_vCurrentDialogue.
-	std::ifstream file2("../../../Bin/quest3clear2.txt");
-	if (file2.is_open())
-	{
-		while (file2.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge5[2].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file2.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-	std::ifstream file3("../../../Bin/quest3clear3.txt");
-	if (file3.is_open())
-	{
-		while (file3.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge5[3].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file3.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-	std::ifstream file4("../../../Bin/quest3clear4.txt");
-	if (file4.is_open())
-	{
-		while (file4.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge5[4].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file4.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-
-	std::ifstream file5("../../../Bin/quest3clear5.txt");
-	if (file5.is_open())
-	{
-		while (file5.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialouge5[5].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file5.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-	//m_vCurrentDialogue.
-
-
-
-
-
-
-
-
 	vector<vector<_tchar*>> matrix;
 	matrix.push_back(m_vDialouge5[0]);
 	matrix.push_back(m_vDialouge5[1]);
-	matrix.push_back(m_vDialouge5[2]);
-	matrix.push_back(m_vDialouge5[3]);
-	matrix.push_back(m_vDialouge5[4]);
-	matrix.push_back(m_vDialouge5[5]);
 
 
 	m_vCurrentDialogue.push_back(matrix);
 }
+
+
 
 wchar_t * CUI_Dialogue_Caption::ConverCtoWC(char * str)
 {
@@ -777,23 +707,59 @@ void CUI_Dialogue_Caption::Render_Fonts(_uint index)
 	for (auto vec : m_vDialogue) test++;*/
 	m_fFontsize = 1.f;
 	m_fFontOffsetY = 30.f;
-	switch (m_vCurrentDialogue[m_iVectorIndex][index].size())
+	if (m_iVectorIndex == 0)
 	{
-	case 0:
-		return;
-		break;
-	case 1:
-		m_fFontPos.y = 600.f; //+ m_fFade;
-		break;
-	case 2:
-		m_fFontPos.y = 580.f;//+ m_fFade;
-		break;
-	case 3:
-		m_fFontPos.y = 570.f;//+ m_fFade;
-		break;
+		switch (m_vCurrentDialogue[m_iVectorIndex][index].size())
+		{
+		case 0:
+			return;
+			break;
+		case 1:
+			m_fFontPos.y = 600.f; //+ m_fFade;
+			break;
+		case 2:
+			m_fFontPos.y = 580.f;//+ m_fFade;
+			break;
+		case 3:
+			m_fFontPos.y = 570.f;//+ m_fFade;
+			break;
 
+		}
 	}
-
+	else if (m_iVectorIndex == 1)
+	{
+		m_fFontPos.x = 585.f;
+		m_fFontPos.y = 645.f; //+ m_fFade;
+	}
+	else if(m_iVectorIndex == 2)
+	{
+		m_fFontPos.x = 540.f;
+		m_fFontPos.y = 645.f; //+ m_fFade;
+	}
+	else if (m_iVectorIndex == 3)
+	{
+		m_fFontPos.x = 585.f;
+		m_fFontPos.y = 645.f; //+ m_fFade;
+	}
+	else if (m_iVectorIndex == 4)
+	{
+		m_fFontPos.x = 585.f;
+		m_fFontPos.y = 645.f; //+ m_fFade;
+	}
+	else if (m_iVectorIndex == 5)
+	{
+		m_fFontPos.x = 585.f;
+		m_fFontPos.y = 645.f; //+ m_fFade;
+	}
+	else if (m_iVectorIndex == 6)
+	{
+		m_fFontPos.x = 585.f;
+		m_fFontPos.y = 645.f; //+ m_fFade;
+	}
+	
+	if (m_iVectorIndex != 0)
+		m_fAlpha = 1.f;
+		
 	for (_uint i = 0; i < m_vCurrentDialogue[m_iVectorIndex][index].size() ; ++i)
 	{
 		CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][index][i], XMVectorSet(m_fFontPos.x, m_fFontPos.y + (m_fFontOffsetY * (_float)i), 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
