@@ -62,7 +62,7 @@ HRESULT CLevel_LawBattle::Initialize()
 
 		g_fSoundVolume = 0.f;
 		CGameInstance::Get_Instance()->StopAll();
-		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LawBattle.wav"), g_fSoundVolume);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_FightWith_Law.wav"), g_fSoundVolume);
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("LawBattleEnter.dat"), XMMatrixIdentity());
 
 		CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));

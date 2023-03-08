@@ -379,6 +379,18 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					break;
 				}
 			}
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+				if (!m_bIsFly && (STATE_SKILL_ATTACK_F == m_eStateId))
+				{
+					if (!m_bSkill_F_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_F_SkillSound.wav"), SOUND_EFFECT, 0.6f);
+						m_bSkill_F_Sound = true;
+					}
+				}
+			}
 		}
 		else
 		{
@@ -390,6 +402,16 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					m_pSwordCollider = nullptr;
 
 					m_fColEventStartTime = -1.f;
+
+					if (STATE_SKILL_ATTACK_F == m_eStateId && !m_bIsFly)
+					{
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+						{
+							CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+							pCamera->Set_Zoom(false);
+						}
+					}
+					
 				}
 			}
 		}
@@ -432,8 +454,53 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 
 				if (!m_bIsFly)
 				{
-					if (STATE_SKILL_ATTACK_F == m_eStateId)
-						m_HitLagDesc.fHitLagTimer = 0.1f;
+					
+					if (STATE_SKILL_ATTACK_E == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.05f;
+						m_HitLagDesc.bHitLag = true;
+						m_HitLagDesc.fHitLagTimer = 0.15f;
+						m_HitLagDesc.bCritical = true;
+						m_HitLagDesc.bShaking = true;
+						m_HitLagDesc.bZoom = true;
+						m_HitLagDesc.fShakingPower = 0.2f;
+						m_HitLagDesc.fShakingMinusPower = 0.2f;
+						m_HitLagDesc.fZoomDistance = 0.5f;
+						m_HitLagDesc.fZoomSpeed = 0.1f;
+						m_HitLagDesc.fBlurPower = 5.f;
+						m_HitLagDesc.fBlurDetail = 7.f;
+					}
+					else if (STATE_SKILL_ATTACK_R == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.05f;
+						m_HitLagDesc.bHitLag = true;
+						m_HitLagDesc.fHitLagTimer = 0.02f;
+						m_HitLagDesc.bCritical = true;
+						m_HitLagDesc.bShaking = false;
+						m_HitLagDesc.fZoomDistance = 1.f;
+						m_HitLagDesc.fZoomSpeed = 0.5f;
+						m_HitLagDesc.bZoom = true;
+						m_HitLagDesc.fBlurPower = 6.f;
+						m_HitLagDesc.fBlurDetail = 10.f;
+
+					}
+					else if (STATE_SKILL_ATTACK_F == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.1f;
+						m_HitLagDesc.bHitLag = true;
+						m_HitLagDesc.fHitLagTimer = 0.05f;
+						m_HitLagDesc.bCritical = true;
+						m_HitLagDesc.bShaking = true;
+						m_HitLagDesc.fShakingPower = 1.f;
+						m_HitLagDesc.fShakingMinusPower = 0.2f;
+						m_HitLagDesc.fZoomDistance = 4.f;
+						m_HitLagDesc.fZoomSpeed = 2.f;
+						m_HitLagDesc.fBlurPower = 6.f;
+						m_HitLagDesc.fBlurDetail = 10.f;
+						m_HitLagDesc.bZoom = true;
+
+					}
+						
 
 					pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 				}
@@ -441,28 +508,47 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 				{
 					if (STATE_SKILL_ATTACK_E == m_eStateId)
 					{
-						m_HitLagDesc.fTakeDamageTimer = 0.1f;
-						m_HitLagDesc.bHitLag = true;
-						m_HitLagDesc.fHitLagTimer = 0.1f;
-
-						m_HitLagDesc.bShaking = true;
-						m_HitLagDesc.fShakingPower = 0.6f;
-						m_HitLagDesc.fShakingMinusPower = 0.1f;
-						
-					}
-					if (STATE_SKILL_ATTACK_R == m_eStateId)
-					{
-						m_HitLagDesc.fTakeDamageTimer = 0.1f;
-					}
-					if (STATE_SKILL_ATTACK_F == m_eStateId)
-					{
-						m_HitLagDesc.fTakeDamageTimer = 0.3f;
+						m_HitLagDesc.fTakeDamageTimer = 0.5f;
 						m_HitLagDesc.bHitLag = true;
 						m_HitLagDesc.fHitLagTimer = 0.2f;
 
 						m_HitLagDesc.bShaking = true;
+						m_HitLagDesc.fShakingPower = 0.6f;
+						m_HitLagDesc.fShakingMinusPower = 0.1f;
+
+						m_HitLagDesc.fZoomDistance = -0.5f;
+						m_HitLagDesc.fZoomSpeed = 0.1f;
+						m_HitLagDesc.bZoom = true;
+						m_HitLagDesc.fBlurPower = 3.f;
+						m_HitLagDesc.fBlurDetail = 7.f;
+						
+					}
+					else if (STATE_SKILL_ATTACK_R == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.1f;
+						m_HitLagDesc.bHitLag = false;
+						m_HitLagDesc.bShaking = false;
+						m_HitLagDesc.fZoomDistance = -4.f;
+						m_HitLagDesc.fZoomSpeed = 1.f;
+						m_HitLagDesc.fBlurPower = 6.f;
+						m_HitLagDesc.fBlurDetail = 10.f;
+						m_HitLagDesc.bZoom = true;
+					}
+					else if (STATE_SKILL_ATTACK_F == m_eStateId)
+					{
+						m_HitLagDesc.fTakeDamageTimer = 0.3f;
+						m_HitLagDesc.bHitLag = true;
+						m_HitLagDesc.fHitLagTimer = 0.2f;
+						m_HitLagDesc.bCritical = true;
+						m_HitLagDesc.bShaking = true;
 						m_HitLagDesc.fShakingPower = 1.4f;
 						m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+						m_HitLagDesc.fZoomDistance = -2.f;
+						m_HitLagDesc.fZoomSpeed = 1.f;
+						m_HitLagDesc.bZoom = true;
+						m_HitLagDesc.fBlurPower = 6.f;
+						m_HitLagDesc.fBlurDetail = 10.f;
 					}
 					pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 				}
@@ -566,7 +652,7 @@ void CAlphenSkillState::Enter(void)
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 0.3f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 0.25f);
 			
-			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("AlphenAirE.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+			//CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("AlphenAirE.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
@@ -575,7 +661,7 @@ void CAlphenSkillState::Enter(void)
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SUMGONGSANGEULPA);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_R.wav"), SOUND_EFFECT, 0.3f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_R.wav"), SOUND_EFFECT, 0.4f);
-			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("AlphenAirR.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+		//	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("AlphenAirR.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
@@ -600,7 +686,7 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_E.wav"), SOUND_EFFECT, 1.0f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillVoice.wav"), SOUND_EFFECT, 0.4f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);*/
 			
 			
@@ -642,6 +728,14 @@ void CAlphenSkillState::Exit(void)
 	Safe_Release(m_pSwordCollider);
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false);
+	}
+	
+
 }
 
 void CAlphenSkillState::Reset_Skill()

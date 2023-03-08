@@ -2,6 +2,7 @@
 #include "..\Public\RinwellSkills.h"
 #include "Monster.h"
 #include "Player.h"
+#include "EffectMesh.h"
 
 CRinwellSkills::CRinwellSkills(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBullet(pDevice, pContext)
@@ -64,12 +65,12 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 
 		break;
 	case DIVINE_SABER:
-		vOffset = XMVectorSet(0.f, m_fRadius + 1.f, 0.f, 0.f);
+		/*vOffset = XMVectorSet(0.f, m_fRadius + 1.f, 0.f, 0.f);
 		vLocation = m_BulletDesc.vTargetPosition + vOffset;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberRing.dat"), mWorldMatrix);
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberRing.dat"), mWorldMatrix);*/
 
 		vOffset = XMVectorSet(0.f, m_fRadius + 0.5f, 0.f, 0.f);
 		vLocation = m_BulletDesc.vTargetPosition + vOffset;
@@ -353,11 +354,23 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 			m_bBullet = true;
 		if (m_bBullet == true && !m_bFirst)
 		{
-			_vector vOffset = XMVectorSet(0.f, m_fRadius + 3, 0.f, 0.f);
-			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 			_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
-			mWorldMatrix.r[3] = vLocation;
-			CEffect::PlayEffectAtLocation(TEXT("holyLanceBlast.dat"), mWorldMatrix);
+			vector<CEffect*> Blast = CEffect::PlayEffectAtLocation(TEXT("holyLanceBlast.dat"), mWorldMatrix);
+
+			for (auto& pEffect : Blast)
+			{
+				if (!pEffect)
+					continue;
+
+				CEffectMesh* pNotMesh = dynamic_cast<CEffectMesh*>(pEffect);
+				if (!pNotMesh)
+				{
+					_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+					_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+					pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+				}
+			}
+			
 			m_bFirst = true;
 		}
 		if (XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) <= -10.f)
@@ -574,12 +587,12 @@ void CRinwellSkills::Dead_Effect()
 		BulletDesc.fVelocity = 1.f;
 		BulletDesc.eBulletType = METEORDEAD;
 		BulletDesc.iDamage = 300;
-		BulletDesc.fDeadTime = 1.f;
+		BulletDesc.fDeadTime = 10.f;
 		BulletDesc.vInitPositon = Get_TransformState(CTransform::STATE_TRANSLATION);
 		BulletDesc.pOwner = m_BulletDesc.pOwner;
 
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC && Check_IsinFrustum(3.f) == true)
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.1f);
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;

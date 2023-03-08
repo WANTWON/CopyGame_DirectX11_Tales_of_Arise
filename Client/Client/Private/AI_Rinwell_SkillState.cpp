@@ -213,7 +213,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						
 						
 
-						for (int i = 0; i < 15; ++i)
+						for (int i = 0; i < 7; ++i)
 						{
 							BulletDesc.fVelocity = 2.f + ((_float)(rand() % 20 + 1))*0.1f;
 							_vector pos = { (_float)(rand() % 40 + 40) , 12.f + i*2.5f , (_float)(rand() % 40 + 40), 1.f };

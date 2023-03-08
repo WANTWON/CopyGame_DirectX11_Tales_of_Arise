@@ -545,6 +545,15 @@ void CLevel_WorkTool::Set_MiniGameStart(_bool type)
 			pPlayer->Off_IsFly();
 	}
 
+
+	if (type == false)
+	{
+		if (!m_bMiniGameAfterIsOver_Bgm)
+		{
+			CGameInstance::Get_Instance()->StopAll();
+			CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_WorkTool_MiniGameEnd_After.wav"), g_fSoundVolume);
+		}
+	}
 }
 
 

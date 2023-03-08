@@ -53,7 +53,7 @@ public:
 	void Set_CamMode(CAMERAMODE _eCamMode);
 	void Set_Position(_vector vPosition);
 	void Set_TargetPosition(_vector vPosition) { m_vTargetPos = vPosition; }
-	void Set_Zoom(_bool type) { m_bZoom = type; }
+	void Set_Zoom(_bool type, _float fZoomDistance = 0.f, _float fZoomSpeed = 0.f, _float fBlurPower = 3.f, _float fBlurDetail = 7.f);
 	CAMERAMODE Get_CamMode() { return m_eCamMode; }
 	CBaseObj* Get_Target() { return  m_pTarget; }
 
@@ -84,7 +84,7 @@ public:
 
 	void Room_Camera(_float fTimeDelta);
 private:
-	void ZoomSetting(_float fDistance, _float fSpeed);
+	void ZoomSetting(_float fDistance, _float fSpeed, _float fFocusPower, _float fFocusDetail);
 	void Shaking_Camera(_float fTimeDelta);
 
 private:
@@ -116,6 +116,10 @@ private:
 	_bool			m_bTurn = false;
 	_bool			m_bZoom = false;
 	_float			m_fZoomOffset = 0.f;
+	_float			m_fZoomDistance = 0.f;
+	_float			m_fZoomSpeed = 0.f;
+	_float			m_fBlurPower = 0.f;
+	_float			m_fBlurDetail = 0.f;
 
 	_bool			m_bShakingMode = false;
 	_float			m_fVelocity = 1.f;

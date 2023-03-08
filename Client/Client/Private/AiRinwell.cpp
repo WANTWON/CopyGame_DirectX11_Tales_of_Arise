@@ -368,7 +368,7 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 	{
 		m_fMethor -= fDamage;
 
-		Make_UIFont(fDamage);
+		Make_UIFont(fDamage, DamageCauser, HitDesc);
 		Make_GetAttacked_Effect(DamageCauser);
 
 		if (0.f >= m_fMethor)
