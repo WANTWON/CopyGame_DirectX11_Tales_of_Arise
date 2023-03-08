@@ -383,7 +383,7 @@ void CLawAirRSkillState::Enter(void)
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 }
 
 void CLawAirRSkillState::Exit(void)

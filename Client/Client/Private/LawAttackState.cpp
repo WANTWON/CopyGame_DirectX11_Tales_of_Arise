@@ -673,7 +673,6 @@ void CLawAttackState::Exit()
 	Safe_Release(m_pLeftFootCollider);
 	Safe_Release(m_pRightFootCollider);
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
 void CLawAttackState::Reset_Skill(void)

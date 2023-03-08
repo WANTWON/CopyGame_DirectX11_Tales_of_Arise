@@ -250,7 +250,11 @@ void CAI_AlphenSion_Smash::Exit()
 
 	__super::Exit();
 
-	
+	for (auto& iter : m_pEffects)
+	{
+		if (iter != nullptr && iter->Get_PreDead())
+			iter = nullptr;
+	}
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)

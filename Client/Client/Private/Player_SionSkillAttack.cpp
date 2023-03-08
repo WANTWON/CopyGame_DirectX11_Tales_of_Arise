@@ -528,11 +528,15 @@ void CPlayer_SionSkillAttack::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 
+
+			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Fix.wav"), SOUND_EFFECT, 0.3f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Jump_E.wav"), SOUND_VOICE, 0.8f);
+
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(true, 0.f, 0.f, 6.f, 10.f);
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_TRESVENTOS);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Jump_E.wav"), SOUND_EFFECT, 0.8f);
+
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS);
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("SionTresShot.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
@@ -559,7 +563,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_MAGNARAY);//마그나
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_EFFECT, 0.3f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_VOICE, 0.5f);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_MAGNARAY);
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("SionMagnaRay.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 			break;
@@ -576,21 +580,21 @@ void CPlayer_SionSkillAttack::Enter(void)
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_R.wav"), SOUND_EFFECT, 0.3f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_R.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_R.wav"), SOUND_VOICE, 0.5f);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GRAVITY);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_BRAVE); // 메테오
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_EXPLODE);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_F.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_F.wav"), SOUND_VOICE, 0.5f);
 			break;
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT); //얼음떨구기
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_E.wav"), SOUND_EFFECT, 0.4f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_E.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_E.wav"), SOUND_VOICE, 0.5f);
 			break;
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK5:
@@ -598,7 +602,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 			
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_R.wav"), SOUND_EFFECT, 0.4f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_R.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_R.wav"), SOUND_VOICE, 0.5f);
 			break;
 		}
 	}

@@ -67,7 +67,8 @@ HRESULT CUI_Skillmessage::Initialize(void * pArg)
 
 int CUI_Skillmessage::Tick(_float fTimeDelta)
 {
-
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	/*if (CGameInstance::Get_Instance()->Key_Up(DIK_3))
@@ -165,6 +166,8 @@ int CUI_Skillmessage::Tick(_float fTimeDelta)
 
 void CUI_Skillmessage::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return ;
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 	if (m_btick)
