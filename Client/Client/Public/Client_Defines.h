@@ -46,12 +46,20 @@ namespace Client
 
 		bool bHitLag = true;
 		bool bShaking = true;
+		bool bCritical = false;
+		bool bZoom = false;
 
 		float fHitLagTimer = 0.2f;
 		float fShakingPower = 2.f;
 		float fShakingMinusPower = 0.2f;
 		
 		float fTakeDamageTimer = 0.2f;
+
+		float fZoomDistance = 3.f;
+		float fZoomSpeed = 1.f;
+		float fBlurPower = 6.f;
+		float fBlurDetail = 10.f;
+
 
 	}HITLAGDESC;
 

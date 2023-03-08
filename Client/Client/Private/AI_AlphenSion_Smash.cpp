@@ -234,7 +234,7 @@ void CAI_AlphenSion_Smash::Enter()
 			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	
-
+	m_bStrikeBlur = false;
 	m_pOwner->Set_Manarecover(false);
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenSion_Smash.wav"), SOUND_VOICE, 0.2f);

@@ -216,6 +216,7 @@ int CPlayer::Tick(_float fTimeDelta)
 			Tick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
+		break;
 		Tick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
@@ -319,6 +320,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			LateTick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
+		break;
 		LateTick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
@@ -486,7 +488,8 @@ HRESULT CPlayer::Render_EdgeDetection()
 
 _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _float fMoveLength, HITTYPE eHitType)
 {
-	if (fDamage <= 0 || m_bDead || m_bIsJustDodge || (CPlayerState::STATE_OVERLIMIT == m_pPlayerState->Get_StateId()))
+	CPlayerState::STATE_ID StateID = m_pPlayerState->Get_StateId();
+	if (fDamage <= 0 || m_bDead || m_bIsJustDodge || (CPlayerState::STATE_OVERLIMIT == StateID))
 		return 0;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
@@ -595,8 +598,17 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _float fMoveLeng
 					break;
 				}
 
+			
+				if (StateID == CPlayerState::STATE_SKILL_ATTACK_E ||
+					StateID == CPlayerState::STATE_SKILL_ATTACK_R ||
+					StateID == CPlayerState::STATE_SKILL_ATTACK_F)
+				{
+					return (_uint)m_tInfo.fCurrentHp;
+				}
+
+
 				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
-				
+			
 				if (HIT_DOWN == eHitType)
 					pState = new CHitState(this, vCauserPos, fMoveLength, eHitType, STATETYPE_START);
 				else

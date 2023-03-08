@@ -151,6 +151,19 @@ void CCamera_Dynamic::Set_Position(_vector vPosition)
 	m_OriginPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
 }
 
+void CCamera_Dynamic::Set_Zoom(_bool type, _float fZoomDistance, _float fZoomSpeed, _float fBlurPower, _float fBlurDetail)
+{
+	 m_bZoom = type; 
+
+	 if (m_bZoom)
+	 { 
+		 m_fZoomDistance = fZoomDistance;
+		 m_fZoomSpeed = fZoomSpeed; 
+		 m_fBlurPower = fBlurPower;
+		 m_fBlurDetail = fBlurDetail;
+	 }
+}
+
 
 void CCamera_Dynamic::Set_Play(_bool type)
 {
@@ -273,7 +286,7 @@ void CCamera_Dynamic::Room_Camera(_float fTimeDelta)
 
 	m_lMouseWheel = pGameInstance->Get_DIMMoveState(DIMM_WHEEL);
 
-	ZoomSetting(-5.f, 0.25f);
+	ZoomSetting(-5.f, 0.25f, 3.f, 7.f);
 
 	if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
 	{
@@ -432,30 +445,31 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 
 	m_lMouseWheel = pGameInstance->Get_DIMMoveState(DIMM_WHEEL);
 
-	ZoomSetting(-3.f, 0.25f);
+	ZoomSetting(-3.f, 0.25f, 3.f, 7.f);
 
-	if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+	if (CGameInstance::Get_Instance()->Get_CurrentLevel()->Get_NextLevel() != true)
 	{
-		m_bLerp = true;
-
-		if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false &&
-			CUI_Manager::Get_Instance()->Get_UIQuestScreen() != true)
+		if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
 		{
-			if (XMouseMove < 0)
+			m_bLerp = true;
+
+			if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false &&
+				CUI_Manager::Get_Instance()->Get_UIQuestScreen() != true)
 			{
-				m_fAngle += 4.f;
-				if (m_fAngle >= 360.f)
-					m_fAngle = 0.f;
-			}
-			else if (XMouseMove > 0)
-			{
-				m_fAngle -= 4.f;
-				if (m_fAngle <= 0.f)
-					m_fAngle = 360.f;
+				if (XMouseMove < 0)
+				{
+					m_fAngle += 4.f;
+					if (m_fAngle >= 360.f)
+						m_fAngle = 0.f;
+				}
+				else if (XMouseMove > 0)
+				{
+					m_fAngle -= 4.f;
+					if (m_fAngle <= 0.f)
+						m_fAngle = 360.f;
+				}
 			}
 		}
-		
-
 	}
 	// 항상 플레이어 위치 바라보게 하기
 	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -552,7 +566,7 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	_vector vCenterPos = vPlayerPosition;
 
-	ZoomSetting(3.f, 0.5f);
+	ZoomSetting(m_fZoomDistance, m_fZoomSpeed, m_fBlurPower, m_fBlurDetail);
 
 	// 락온 몬스터가 있으면 항상 플레이어와 락온이 화면에 들어오게 하기
 	CBaseObj* pLockOnMonster = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -671,16 +685,16 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 	{
 		m_fTime += fTimeDelta*0.3f;
 
-		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
 		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
-		FinalPos = m_vNewPos + vZoomDir*m_fZoomOffset;
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos + vZoomDir*m_fZoomOffset), m_fTime); //_float4 저장 y올리기 
+
 		if (m_fTime >= 1.f)
 			m_bLerp = false;
 	}
 	else
 	{
 		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
-		FinalPos = m_vNewPos + vZoomDir*m_fZoomOffset;
+		FinalPos = m_vNewPos +vZoomDir*m_fZoomOffset;
 		m_fTime = 0.f;
 	}
 
@@ -714,7 +728,7 @@ void CCamera_Dynamic::LawBattle_Camera(_float fTimeDelta)
 	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	_vector vCenterPos = vPlayerPosition;
 
-	ZoomSetting(-3.f, 1.f);
+	ZoomSetting(2.f, 0.5f, 10.f, 10.f);
 
 	// 락온 몬스터가 있으면 항상 플레이어와 락온이 화면에 들어오게 하기
 	CBaseObj* pLockOnMonster = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -1084,33 +1098,52 @@ void CCamera_Dynamic::Change_LockOn(_uchar eKeyID)
 	}
 }
 
-void CCamera_Dynamic::ZoomSetting(_float fDistance, _float fSpeed)
+void CCamera_Dynamic::ZoomSetting(_float fDistance, _float fSpeed, _float fFocusPower, _float fFocusDetail)
 {
 	if (m_bZoom)
 	{
-		m_fZoomOffset -= fSpeed;
-		if (m_fZoomOffset <= fDistance)
-			m_fZoomOffset = fDistance;
+		if (fDistance < 0.f)
+		{
+			m_fZoomOffset -= fSpeed;
+			if (m_fZoomOffset <= fDistance)
+				m_fZoomOffset = fDistance;
+
+		}
+		else
+		{
+			m_fZoomOffset += fSpeed;
+			if (m_fZoomOffset >= fDistance)
+				m_fZoomOffset = fDistance;
+		}
+		
 	}
 	else
 	{
-		m_fZoomOffset += fSpeed;
-		if (m_fZoomOffset >= 0.f)
-			m_fZoomOffset = 0.f;
+		if (fDistance < 0.f)
+		{
+			m_fZoomOffset += fSpeed;
+			if (m_fZoomOffset >= 0.f)
+				m_fZoomOffset = 0.f;
+
+		}
+		else
+		{
+			m_fZoomOffset -= fSpeed;
+			if (m_fZoomOffset <= 0.f)
+				m_fZoomOffset = 0.f;
+		}
 	}
 	
 	/* Zoom Blur */
 	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pTarget);
-	if (pPlayer && m_eCamMode == CAM_PLAYER)
+	if (pPlayer)
 	{
 		if (pPlayer->Get_DodgeEffect() || pPlayer->Get_ResetStrikeBlur())
 			return;
 
-		_float fFocusPower = 3.f;
-
-		_float fInterpFactor = m_fZoomOffset / -3.f;
-		_int iFocusDetailLerp = 1 + fInterpFactor * (7 - 1);
+		_float fInterpFactor = m_fZoomOffset / fDistance;
+		_int iFocusDetailLerp = 1 + fInterpFactor * (fFocusDetail - 1);
 
 		if (m_fZoomOffset == 0.f)
 		{
@@ -1122,7 +1155,7 @@ void CCamera_Dynamic::ZoomSetting(_float fDistance, _float fSpeed)
 		}
 		else
 		{
-			m_pTarget->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);	
+			m_pTarget->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
 			m_bBlurResetted = false;
 		}
 	}
@@ -1172,19 +1205,20 @@ void CCamera_Dynamic::Shaking_Camera(_float fTimeDelta)
 	{
 		m_fShakingTime += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"))*0.3f;
 
-		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
+		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos + vZoomDir*m_fZoomOffset), m_fTime); //_float4 저장 y올리기 
 
 		if (m_fShakingTime >= 1.f)
 			m_bLerp = false;
 	}
 	else
 	{
-		FinalPos = m_vNewPos;
+		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = m_vNewPos + vZoomDir*m_fZoomOffset;
 		m_fShakingTime = 0.f;
 	}
 
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
-
 
 	m_fVelocity -= m_fMinusVelocity;
 	if (m_fVelocity < 0.0f)
