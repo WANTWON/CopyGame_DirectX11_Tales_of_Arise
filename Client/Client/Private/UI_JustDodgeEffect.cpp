@@ -54,8 +54,7 @@ HRESULT CUI_JustDodgeEffect::Initialize(void * pArg)
 
 int CUI_JustDodgeEffect::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return OBJ_NOEVENT;
+
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 
@@ -106,8 +105,6 @@ int CUI_JustDodgeEffect::Tick(_float fTimeDelta)
 
 void CUI_JustDodgeEffect::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return;
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;
 	

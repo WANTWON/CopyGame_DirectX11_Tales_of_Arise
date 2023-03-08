@@ -39,8 +39,6 @@ HRESULT CUI_Comboline::Initialize(void * pArg)
 
 int CUI_Comboline::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return OBJ_NOEVENT;
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	//if(CGameInstance::Get_Instance()->Key_Up(DIK_3))
@@ -113,8 +111,6 @@ int CUI_Comboline::Tick(_float fTimeDelta)
 
 void CUI_Comboline::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return ;
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return;

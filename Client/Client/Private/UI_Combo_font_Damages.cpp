@@ -39,8 +39,6 @@ HRESULT CUI_Combo_font_Damages::Initialize(void * pArg)
 
 int CUI_Combo_font_Damages::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return OBJ_NOEVENT;
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	if (m_bmoveleft)
@@ -91,8 +89,6 @@ int CUI_Combo_font_Damages::Tick(_float fTimeDelta)
 
 void CUI_Combo_font_Damages::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return ;
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 

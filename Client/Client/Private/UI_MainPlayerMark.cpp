@@ -43,8 +43,6 @@ HRESULT CUI_MainPlayerMark::Initialize(void * pArg)
 
 int CUI_MainPlayerMark::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return OBJ_NOEVENT;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
@@ -111,8 +109,6 @@ int CUI_MainPlayerMark::Tick(_float fTimeDelta)
 
 void CUI_MainPlayerMark::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return ;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return;
 	__super::Late_Tick(fTimeDelta);

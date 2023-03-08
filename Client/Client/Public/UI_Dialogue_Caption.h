@@ -51,8 +51,6 @@ public:
 
 	void Open_Dialogue(_uint index);// { m_iVectorIndex = index; m_btick = true; }
 
-	void Next_Dialogueindex() {	++m_iDialogueindex;}
-
 private:
 	CTexture*				m_pTextureCom1 = nullptr;
 	CTexture*               m_pTextureCom2 = nullptr;

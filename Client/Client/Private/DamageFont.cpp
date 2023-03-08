@@ -122,8 +122,6 @@ HRESULT CDamageFont::Initialize(void * pArg)
 
 int CDamageFont::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return OBJ_NOEVENT;
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
@@ -285,8 +283,6 @@ int CDamageFont::Tick(_float fTimeDelta)
 
 void CDamageFont::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return ;
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 	/*if (m_fStart_timer > 0.8f)

@@ -130,9 +130,6 @@ private:
 	_uint vectorsize = 0;
 
 	_bool m_btick = false;
-
-	_bool m_bSexyEventEnd = false;
-	_float m_fSexyOffTimer = 0.f;
 	//vector<vector>
 };
 

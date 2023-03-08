@@ -58,8 +58,6 @@ HRESULT CUI_Damagefont_Break::Initialize(void * pArg)
 
 int CUI_Damagefont_Break::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return OBJ_NOEVENT;
 	if (m_pPointer == nullptr)
 		return OBJ_DEAD;
 	m_fPosition = m_pPointer->Get_ProjPosition();
@@ -149,8 +147,6 @@ int CUI_Damagefont_Break::Tick(_float fTimeDelta)
 
 void CUI_Damagefont_Break::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return ;
 	if (m_pPointer == nullptr)
 		return;
 

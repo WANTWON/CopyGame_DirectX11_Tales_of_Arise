@@ -39,8 +39,7 @@ HRESULT CPortraitback::Initialize(void * pArg)
 
 int CPortraitback::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return OBJ_NOEVENT;
+
 	/*if (m_bmoveleft)
 		moveleft();*/
 
@@ -80,8 +79,6 @@ int CPortraitback::Tick(_float fTimeDelta)
 
 void CPortraitback::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return ;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return ;
 

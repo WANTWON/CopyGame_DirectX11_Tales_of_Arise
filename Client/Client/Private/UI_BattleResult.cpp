@@ -70,8 +70,7 @@ HRESULT CUI_BattleResult::Initialize(void * pArg)
 
 int CUI_BattleResult::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return OBJ_NOEVENT;
+	
 	_uint index = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1;
 
 	if (m_fGainExp > 0.f)
@@ -373,8 +372,7 @@ int CUI_BattleResult::Tick(_float fTimeDelta)
 
 void CUI_BattleResult::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return ;
+
 
 
 

@@ -53,8 +53,6 @@ HRESULT CUI_LOCKON::Initialize(void * pArg)
 
 int CUI_LOCKON::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return OBJ_NOEVENT;
 	
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
@@ -193,8 +191,6 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 
 void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
-		return ;
 	// Kill Strike Flash Effect when Strike Action starts.
 	if (!m_pEffects.empty() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 	{
