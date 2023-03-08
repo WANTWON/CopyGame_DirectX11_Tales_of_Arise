@@ -75,17 +75,17 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		//return OBJ_DEAD;
 	}
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_5))
-	{
-		m_fcurrentmp += 5.f;
-	}
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_6))
-	{
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"), LEVEL_BATTLE, TEXT("ETETET"))))
-			return OBJ_NOEVENT;
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_5))
+	//{
+	//	m_fcurrentmp += 5.f;
+	//}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_6))
+	//{
+	//	/*if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"), LEVEL_BATTLE, TEXT("ETETET"))))
+	//		return OBJ_NOEVENT;*/
 
-		m_fcurrentmp -= 1.f;
-	}
+	//	m_fcurrentmp -= 1.f;
+	//}
 	//dynamic_cast<CPlayer*>(pGameObject)->Get_ProjPosition().x - 85.f;
 
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() == nullptr)

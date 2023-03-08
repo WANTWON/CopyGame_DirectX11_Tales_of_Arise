@@ -49,9 +49,28 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 				CBattleManager::Get_Instance()->Set_LawBattlePhase(1);
 				break;
 			case Client::CPlayer::SION:
-				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
-				CBattleManager::Get_Instance()->Set_LawBattlePhase(2);
+			{
+				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
+				CBattleManager::Get_Instance()->Set_OneonOneMode(false);
+				CBattleManager::Get_Instance()->Set_LawBattlePhase(0);
+				vector<CPlayer*> pAIList = CPlayerManager::Get_Instance()->Get_AIPlayers();
+				for (auto& iter : pAIList)
+				{
+					iter->Set_HP(iter->Get_Info().fMaxHp);
+				}
+
+				CLevel_LawBattle* pLavel = dynamic_cast<CLevel_LawBattle*>(CGameInstance::Get_Instance()->Get_CurrentLevel());
+				pLavel->Ready_Layer_Player(nullptr);
+
+
+				CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
+				CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+				pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
 				break;
+			}
+			//	CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
+			//	CBattleManager::Get_Instance()->Set_LawBattlePhase(2);
+			//	break;
 			case Client::CPlayer::RINWELL:
 			{
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
@@ -78,10 +97,7 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 		}
 		else
 			m_bIsStop = true;
-
-
 	}
-		
 
 	return nullptr;
 }

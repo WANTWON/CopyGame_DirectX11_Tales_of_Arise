@@ -44,6 +44,7 @@ HRESULT CUI_Dialoguepopup::Initialize(void * pArg)
 	Read_TextFiles_for_dialogue_jelous();
 	Read_TextFiles_for_dialougeStage2Start();
 	Read_TextFiles_for_dialogue_jelous2();
+	Read_TextFiles_for_LawEvent();
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -787,6 +788,51 @@ void CUI_Dialoguepopup::Read_TextFiles_for_dialogue_jelous2()
 	vector<vector<_tchar*>> matrix1;
 	matrix1.push_back(m_vDialoguepopup_jelous2[0]);
 	matrix1.push_back(m_vDialoguepopup_jelous2[1]);
+
+	m_vCurrentDialogue.push_back(matrix1);
+}
+
+void CUI_Dialoguepopup::Read_TextFiles_for_LawEvent()
+{
+	std::ifstream file("../../../Bin/Resources/popup/SexyLaw0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_LawEvent[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file1("../../../Bin/Resources/popup/SexyLaw1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_LawEvent[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix1;
+	matrix1.push_back(m_vDialoguepopup_LawEvent[0]);
+	matrix1.push_back(m_vDialoguepopup_LawEvent[1]);
 
 	m_vCurrentDialogue.push_back(matrix1);
 }

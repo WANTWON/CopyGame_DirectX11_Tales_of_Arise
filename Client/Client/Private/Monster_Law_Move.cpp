@@ -27,7 +27,7 @@ CMonsterLawState * CMonster_Law_Move::Tick(_float fTimeDelta)
 
 	
 		
-	
+	m_fbreaktimer += fTimeDelta;
 
 
 	
@@ -94,48 +94,39 @@ CMonsterLawState * CMonster_Law_Move::LateTick(_float fTimeDelta)
 
 	}
 
-	if (m_bIsAnimationFinished && m_bStopRunning)
-	{
+	if(m_fbreaktimer > 0.5f && m_bStopRunning)
 		return new CMonster_LawIdleState(m_pOwner);
-			/*if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+
+
+	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+	if (m_bStopRunning)
+	{
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
 			{
-				switch (rand() % 2)
+				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
-				case 0:
-					return new CAI_DodgeState(m_pOwner, m_pTarget);
-					break;
-				case  1:
-					return new AI_LAW_NomalAttack_State(m_pOwner, STATE_ATTACK, m_pTarget);
-					break;
+
+					return new CMonster_LawIdleState(m_pOwner);
+
 				}
+
 
 			}
 
 
-			switch (rand() % 6)
-			{
+		}
+	}
+	
 
-			case 0:
-				return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_R);
-
-			case 1:
-				return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
-
-			case 2:
-				return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
-
-			case 3:
-				return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
-			case 4:
-				return new CAI_DodgeState(m_pOwner, m_pTarget);
-			case 5:
-				return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
-
-
-			}*/
+	/*if (m_bIsAnimationFinished && m_bStopRunning)
+	{
+		
+		return new CMonster_LawIdleState(m_pOwner);
 		
 
-	}
+	}*/
 
 
 

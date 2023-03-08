@@ -46,6 +46,7 @@ public: /* Getter &  Setter */
 	CGameObject*	Get_Parts(_int iIndex) { return m_Parts[iIndex]; }
 	LEVEL			Get_Level(void) { return m_eLevel; }
 	void			Set_TakeDamage_DelayFinish() { m_bTakeDamage_Delay = false; }
+	PLAYER_MODE		Get_PlayerMode(void) { return m_ePlayerMode; }
 
 	/* 지상 스킬 */
 	_uint			Get_GroundSkillAnimIndex(GROUNDSKILL SkillIndex) { return m_eGroundSkills[SkillIndex]; }
@@ -77,6 +78,9 @@ public: /* Getter &  Setter */
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
 	void Play_AISkill(PLAYERID ePlayer);
+
+	void AI_RINWELL_Event();
+
 	//expup
 	void Plus_EXP(_uint exp);
 
@@ -143,6 +147,7 @@ protected: /* for 4 Player */
 	CPlayerState*	m_pPlayerState = nullptr;
 	CAIState*		m_pAIState = nullptr;
 	CPlayerManager*	m_pPlayerManager = nullptr;
+	PLAYER_MODE		m_ePlayerMode;
 	
 	/* 스킬 */
 	_uint			m_eGroundSkills[GROUND_SKILL_END] = { GROUND_SKILL_END, };

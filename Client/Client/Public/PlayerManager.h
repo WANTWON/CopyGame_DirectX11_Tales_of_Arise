@@ -48,6 +48,8 @@ public: /* Getter Setter */
 
 	void Set_StrikeLockOnPos(vector<_vector> pos) { m_vStrikeLockOnPos = pos; };
 
+	void Set_Changetoboss(_bool tof) { m_bChangetoboss = tof; }
+
 private:
 	CPlayer* m_pActivePlayer = nullptr;
 	vector<CPlayer*> m_pAIPlayers;
@@ -58,6 +60,8 @@ private:
 
 	_vector m_vStrikePosition[5];
 	vector<_vector> m_vStrikeLockOnPos;
+
+	_bool m_bChangetoboss = false;
 
 public:
 	virtual void Free() override;

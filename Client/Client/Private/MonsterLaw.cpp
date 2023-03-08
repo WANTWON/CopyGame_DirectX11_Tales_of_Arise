@@ -3,6 +3,10 @@
 #include "CameraManager.h"
 #include "Monster_LawPoseState.h"
 #include "Monster_Lawhit.h"
+#include "UI_Dialogue.h"
+#include "Fascinate.h"
+#include "UI_Skillmessage.h"
+#include "Effect.h"
 
 using namespace MonsterLaw;
 
@@ -151,6 +155,27 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 	}
 
 	m_iPhase =  CBattleManager::Get_Instance()->Get_LawBattlePhase();
+
+
+	if(CGameInstance::Get_Instance()->Key_Up(DIK_M))
+	{
+		CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+		pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
+		pCameraManager->Play_ActionCamera(TEXT("SexyLaw1.dat"), XMMatrixIdentity());
+	    Set_IsActionMode(true);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(64.f, 0.f, 64.f, 1.f));
+		m_pTransformCom->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
+		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(13);
+
+		CMonsterLawState* pState = new CFascinate(this);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(31);
+		CBattleManager::Get_Instance()->Set_IsStrike(true);
+		CGameInstance::Get_Instance()->StopAll();
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("hentai.wav"), g_fSoundVolume);
+		
+
+	}
 
 
 	if(m_bAfterThunder)

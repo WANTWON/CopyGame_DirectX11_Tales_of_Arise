@@ -194,6 +194,34 @@ void CItem::Late_Tick(_float fTimeDelta)
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SALTROCK, ITEMTYPE_MATERIAL, true, false);
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SALTROCK, ITEMTYPE_MATERIAL, true, false);
 					break;
+                 
+				case PIZZA:
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_PIZZA, ITEMTYPE_MEAT, true, false);
+					break;
+				case BREAD:
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_BREAD, ITEMTYPE_MEAT, true, false);
+					break;
+
+				case STEAK:
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_STEAK, ITEMTYPE_MEAT, true, false);
+					break;
+				case TABACO:
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_TABACO, ITEMTYPE_CONDIMENT, true, false);
+					break;
+				case CHESS:
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_CHESS, ITEMTYPE_MATERIAL, true, false);
+					break;
+
+				case CRYSTAL:
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SALTROCK, ITEMTYPE_MATERIAL, true, false);
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SALTROCK, ITEMTYPE_MATERIAL, true, false);
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SALTROCK, ITEMTYPE_MATERIAL, true, false);
+					break;
+
+
+
+
+
 			}
 			
 			m_fTimeDeltaAcc += fTimeDelta;

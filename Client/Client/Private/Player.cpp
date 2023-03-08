@@ -24,6 +24,7 @@
 #include "AI_SionRinwell_Smash.h"
 #include "AI_SionLaw_Smash.h"
 #include "AI_RinwellLaw_Smash.h"
+#include "AI_Rinwell_Fascinated.h"
 //////////////////////////////////
 #include "AI_Overlimit_State.h"
 #include "AIPoseState.h"
@@ -79,6 +80,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_eLevel = LEVEL_END;
 
 	m_pPlayerManager->Set_PlayerEnum(this, m_ePlayerID);
+
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
 
 	m_tInfo.fCurrentOverlimitGauge = 100.f;
@@ -107,8 +109,7 @@ int CPlayer::Tick(_float fTimeDelta)
 		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
 
-	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
-
+	m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
 
 	if (m_bOverLimit)
 	{
@@ -204,7 +205,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	else if (m_bIsPose)
 		m_bIsPose = false;
 
-	switch (eMode)
+	switch (m_ePlayerMode)
 	{
 	case Client::ACTIVE:
 		if (!m_bStrikeAttack)
@@ -216,6 +217,7 @@ int CPlayer::Tick(_float fTimeDelta)
 			Tick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
+		break;
 		Tick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
@@ -319,6 +321,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			LateTick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
+		break;
 		LateTick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
@@ -486,7 +489,8 @@ HRESULT CPlayer::Render_EdgeDetection()
 
 _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _float fMoveLength, HITTYPE eHitType)
 {
-	if (fDamage <= 0 || m_bDead || m_bIsJustDodge || (CPlayerState::STATE_OVERLIMIT == m_pPlayerState->Get_StateId()))
+	CPlayerState::STATE_ID StateID = m_pPlayerState->Get_StateId();
+	if (fDamage <= 0 || m_bDead || m_bIsJustDodge || (CPlayerState::STATE_OVERLIMIT == StateID))
 		return 0;
 
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
@@ -595,8 +599,17 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _float fMoveLeng
 					break;
 				}
 
+			
+				if (StateID == CPlayerState::STATE_SKILL_ATTACK_E ||
+					StateID == CPlayerState::STATE_SKILL_ATTACK_R ||
+					StateID == CPlayerState::STATE_SKILL_ATTACK_F)
+				{
+					return (_uint)m_tInfo.fCurrentHp;
+				}
+
+
 				_vector vCauserPos = DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION);
-				
+			
 				if (HIT_DOWN == eHitType)
 					pState = new CHitState(this, vCauserPos, fMoveLength, eHitType, STATETYPE_START);
 				else
@@ -821,6 +834,14 @@ void CPlayer::AI_check()
 	CAIState* pAIState = nullptr;
 
 	pAIState = new CAICheckState(this,CAIState::STATE_IDLE);
+	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+}
+
+void CPlayer::AI_RINWELL_Event()
+{
+	CAIState* pAIState = nullptr;
+
+	pAIState = new CAI_Rinwell_Fascinated(this);
 	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 }
 

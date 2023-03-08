@@ -212,6 +212,9 @@ public: /*For.State*/
 	_bool Get_Debug() { return m_bDebug; }
 	void Set_Debug(_bool tof) { m_bDebug = tof; }
 
+	_bool Get_EventFinish() { return m_bEventFinish; }
+	void Set_EventFinish(_bool tof) { m_bEventFinish = tof; }
+
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 
@@ -240,11 +243,15 @@ private:
 
 
 	_bool m_bDebug = true;
+
+	_bool m_bEventFinish = false;
 private:
 		/* Strike Screen Effect */
 		_bool m_bResetStrikeBlur = false;
 		_float m_fStrikeBlurResetDuration = .45f;
 		_float m_fStrikeBlurResetTimer = 0.f;
+		
+
 public:
 	static CMonsterLaw* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);
