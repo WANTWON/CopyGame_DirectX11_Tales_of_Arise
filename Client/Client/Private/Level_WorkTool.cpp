@@ -52,6 +52,7 @@ HRESULT CLevel_WorkTool::Initialize()
 	m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, -10.f, 0.f));
 
 	g_fSoundVolume = 0.f;
+	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_WorkTool.wav"), g_fSoundVolume);
 	
@@ -61,7 +62,6 @@ HRESULT CLevel_WorkTool::Initialize()
 void CLevel_WorkTool::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
 	switch (m_iPhase)
 	{
 	case 1:
@@ -575,4 +575,5 @@ void CLevel_WorkTool::Free()
 {
 	__super::Free();
 	Safe_Release(m_pCollision_Manager);
+
 }

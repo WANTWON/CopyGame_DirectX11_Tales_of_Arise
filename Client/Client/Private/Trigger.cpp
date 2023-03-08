@@ -78,6 +78,8 @@ void CTrigger::Late_Tick(_float fTimeDelta)
 			else if (m_TriggerDesc.iIndex == 2)
 			{
 				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(6, false, 0, 1);
+
+				g_fSoundNatureVolume = 0.2f;
 			}
 		}
 		break;
