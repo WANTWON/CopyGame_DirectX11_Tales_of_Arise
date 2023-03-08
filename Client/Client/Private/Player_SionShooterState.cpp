@@ -42,7 +42,7 @@ void CPlayer_SionShooterState::Enter(void)
 	__super::Enter();
 
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_IDLE);
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DashSound.wav"), SOUND_FOOT, 0.4f);
+	
 }
 
 void CPlayer_SionShooterState::Exit(void)

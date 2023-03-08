@@ -65,7 +65,7 @@ CRinwellState * CRinwellIdleState::LateTick(_float fTimeDelta)
 		}
 		else
 		{
-			if (fCurrentHP < fMaxHP * 0.75f)
+			if (fCurrentHP < fMaxHP * 0.75f || CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
 			{
 				_int iSkill = rand() % 2;
 
@@ -84,18 +84,24 @@ void CRinwellIdleState::Enter(void)
 {
 	m_eStateId = STATE_ID::STATE_IDLE;
 
-	if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
-		m_bAirMove = true;
+	
+	if (!m_pOwner->Get_AirMode() && m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
+		m_pOwner->Set_AirMode(true);
 	else
-		m_bAirMove = false;
+		m_pOwner->Set_AirMode(false);
 
-	if (m_bAirMove)
+	if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
+		m_pOwner->Set_AirMode(true);
+
+	if (m_pOwner->Get_AirMode())
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_FALL);
 	else
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_MOVE_IDLE);
 
 	Find_ActiveTarget();
 	m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	m_bAirMove = m_pOwner->Get_AirMode();
 }
 
 void CRinwellIdleState::Exit(void)

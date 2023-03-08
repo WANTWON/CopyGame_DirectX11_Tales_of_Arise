@@ -67,7 +67,8 @@ private:
 
 	_float m_fStopTimer = 0.f;
 
-	
+	//Sound
+	_bool m_bMiniGame2Sound_End = false;
 
 };
 

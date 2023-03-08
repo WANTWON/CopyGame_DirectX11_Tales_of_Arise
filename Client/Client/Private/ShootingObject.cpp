@@ -121,6 +121,13 @@ void CShootingObject::Late_Tick(_float fTimeDelta)
 		dynamic_cast<CLevel_WorkTool*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Increase_Score(m_tShootingDesc.m_iScore);
 
 		//int a = 0;
+
+		_bool bMiniGame_BoxBreak = false;
+		if (!bMiniGame_BoxBreak)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("MiniGame_BoxBreak.wav"), SOUND_EFFECT, 0.6f);
+			bMiniGame_BoxBreak = true;
+		}
 	}
 
 	if (m_bhit)

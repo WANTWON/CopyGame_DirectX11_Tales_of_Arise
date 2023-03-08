@@ -104,6 +104,10 @@ void CSkillState::Enter()
 	else
 		m_bAirMove = false;
 
+	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
+		m_bAirMove = true;
+
+
 	switch (m_eSkillType)
 	{
 	case Client::CRinwellState::PHOTONFLASH:

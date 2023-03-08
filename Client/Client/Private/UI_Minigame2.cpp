@@ -65,6 +65,10 @@ int CUI_Minigame2::Tick(_float fTimeDelta)
 	{
 		if (!m_bGameStart)
 			m_bGameStartUI = true;
+
+
+		CGameInstance::Get_Instance()->StopAll();
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_MiniGame2.wav"), g_fSoundVolume);
 	}
 	//m_bGameStart = true;
 
@@ -97,7 +101,14 @@ int CUI_Minigame2::Tick(_float fTimeDelta)
 				
 		}
 	
-				
+		//if (m_fGametime <= 0)
+		//{
+		//	if (!m_bMiniGame2Sound_End)
+		//	{
+		//		CGameInstance::Get_Instance()->StopAll();
+		//		m_bMiniGame2Sound_End = true;
+		//	}
+		//}
 
 		
 

@@ -311,17 +311,11 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.fVelocity = 2.f;
 						BulletDesc.eBulletType = CSionSkills::GLACIA;
-						BulletDesc.iDamage = 70 + rand()%10;
+						BulletDesc.iDamage = 70 + rand() % 10;
 						BulletDesc.fDeadTime = 5.f;
 
-
-						/*BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-						BulletDesc.vTargetPosition.m128_f32[2] += 3.f;*/
-
-
 						BulletDesc.vInitPositon = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-						/*BulletDesc.vInitPositon.m128_f32[2] += 3.f;*/
-
+						
 						// +vOffset;
 						BulletDesc.vInitPositon.m128_f32[1] = 8.f;
 						BulletDesc.pOwner = m_pOwner;
@@ -334,13 +328,8 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 							mWorldMatrix.r[3] = BulletDesc.vInitPositon;
 							m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GlacioStart.dat"), mWorldMatrix);
 
-							/*_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - BulletDesc.vInitPositon);
-							mWorldMatrix.r[3] = BulletDesc.vInitPositon - vCamDir*1.5f;
-							m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("GlacioStartSmoke.dat"), mWorldMatrix);
-*/
 							m_bBulletMade = true;
 						}
-
 
 						if (pTarget != nullptr)
 						{
@@ -352,7 +341,6 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 						if (pTarget != nullptr)
 						{
-
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 							BulletDesc.vTargetPosition.m128_f32[0] -= 6.f;
 						}
@@ -361,7 +349,6 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 						if (pTarget != nullptr)
 						{
-
 							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 							BulletDesc.vTargetPosition.m128_f32[0] += 1.5f;
 							BulletDesc.vTargetPosition.m128_f32[2] += 3.f;
@@ -371,8 +358,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 						if (pTarget != nullptr)
 						{
-							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
-							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 							BulletDesc.vTargetPosition.m128_f32[0] += 1.5f;
 						}
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
@@ -380,8 +366,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 						if (pTarget != nullptr)
 						{
-							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
-							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 							BulletDesc.vTargetPosition.m128_f32[2] -= 6.f;
 						}
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
@@ -389,12 +374,12 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 						if (pTarget != nullptr)
 						{
-							//vOffset = XMVectorSet(0.f, 0.f, 3.f, 0.f);
-							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);// -vOffset;
+							BulletDesc.vTargetPosition = pTarget->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 							BulletDesc.vTargetPosition.m128_f32[0] -= 1.5f;
 						}
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
+
 						m_fEventStart = pEvent.fStartTime;
 					}
 				}
