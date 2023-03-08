@@ -109,7 +109,7 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
 	{
-		g_fSoundVolume += 0.001f;
+		g_fSoundVolume += 0.01f;
 		if (g_fSoundVolume >= 0.15f)
 			g_fSoundVolume = 0.15f;
 	}

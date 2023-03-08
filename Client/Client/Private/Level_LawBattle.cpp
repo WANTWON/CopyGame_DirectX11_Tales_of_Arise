@@ -461,6 +461,7 @@ HRESULT CLevel_LawBattle::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Compute_CurrentIndex(LEVEL_LAWBATTLE);
 		iter->Check_Navigation();
 		iter->Change_Level(LEVEL_LAWBATTLE);
+		iter->Set_IsActionMode(true);
 		i++;
 	}
 	
