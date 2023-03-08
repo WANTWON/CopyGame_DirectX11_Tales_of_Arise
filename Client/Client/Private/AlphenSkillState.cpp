@@ -106,7 +106,6 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 							m_bSkill_E_Sound = true;
 						}
 					}
-
 					else
 						if (!m_bSkill_E_Sound)
 						{
@@ -167,7 +166,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 								vector<CEffect*> Ryuuseizin = CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_2.dat"), mWorldMatrix);
 								_matrix EffectWorldMatrix = Ryuuseizin.front()->Get_Transform()->Get_WorldMatrix();
 
-								vector<CEffect*> RyuuseizinParticles = CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_Particles.dat"), EffectWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_Particles.dat"), EffectWorldMatrix);
 
 								m_bRyuuseizinSecondEffect = true;
 							}
