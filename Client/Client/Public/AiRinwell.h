@@ -146,6 +146,8 @@ public:
 	virtual void	 Set_BattleMode(_bool type) override;
 	_bool Get_AirMode(void) { return m_bIsAir; }
 	void Set_AirMode(_bool bAir) { m_bIsAir = bAir; }
+	_bool Get_50DownCutScene(void) { return m_b50Down; }
+	void Set_50DownCutScene(_bool tof) { m_b50Down = tof; }
 	_float Get_Methor(void) { return m_fMethor; }
 
 	void Kill_Boss_Rinwell();
@@ -194,6 +196,7 @@ private:
 
 	_int	m_iDamage = 0;
 	_bool	m_bIsAir = false;
+	_bool	m_b50Down = false;
 
 	_float	m_fMethor = 1000.f;
 

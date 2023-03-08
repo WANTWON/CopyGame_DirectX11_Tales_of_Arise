@@ -154,7 +154,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
 							CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-							pCamera->Set_Zoom(true, 8.f, 4.f, 10.f, 10.f);
+							pCamera->Set_Zoom(true, 8.f, 4.f, 6.f, 10.f);
 
 							_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
 							CBullet::BULLETDESC BulletDesc;

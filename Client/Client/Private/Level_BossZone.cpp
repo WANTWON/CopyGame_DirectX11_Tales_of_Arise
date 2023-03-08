@@ -50,7 +50,7 @@ HRESULT CLevel_BossZone::Initialize()
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	pCameraManager->Ready_Camera(LEVEL::LEVEL_BOSS);
 	m_pCamera = dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera());
-	m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
+	m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_BOSSBATTLE);
 	m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, -10.f, 0.f));
 
 	g_fSoundVolume = 0.f;
@@ -81,7 +81,7 @@ void CLevel_BossZone::Tick(_float fTimeDelta)
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
 	{
-		g_fSoundVolume += 0.001f;
+		g_fSoundVolume += 0.01f;
 		if (g_fSoundVolume >= 0.15f)
 			g_fSoundVolume = 0.15f;
 	}

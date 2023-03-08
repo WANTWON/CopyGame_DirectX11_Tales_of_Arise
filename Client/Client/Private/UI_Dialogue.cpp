@@ -288,6 +288,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					dynamic_cast<CMonster*>(pObject)->Set_BattleMode(true);
 
 					dynamic_cast<CAiRinwell*>(pObject)->Set_AirMode(true);
+					dynamic_cast<CAiRinwell*>(pObject)->Set_50DownCutScene(true);
 					CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
 		
 					dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(8, true, 0, 1);

@@ -64,6 +64,7 @@ CRinwellState * CPoseState::LateTick(_float fTimeDelta)
 			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 			{
 				m_pOwner->Set_IsActionMode(false);
+				m_pOwner->Set_50DownCutScene(true);
 				return new CRinwellIdleState(m_pOwner, 0.5f);
 			}
 			else

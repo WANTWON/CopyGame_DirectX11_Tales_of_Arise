@@ -190,7 +190,6 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC )
 							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.5f, true);
 
-
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.fVelocity = 1.f;
@@ -522,13 +521,15 @@ void CPlayer_SionSkillAttack::Enter(void)
 	__super::Enter();
 	m_pOwner->Use_Mana(1.f);
 
+	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+
+
 	if (m_bIsFly)
 	{
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 
-			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(true, 0.f, 0.f, 6.f, 10.f);
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_TRESVENTOS);
@@ -546,7 +547,6 @@ void CPlayer_SionSkillAttack::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 		{
-			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(true, 0.f, 0.f, 6.f, 10.f);
 
 			/* Make Effect */
@@ -581,12 +581,16 @@ void CPlayer_SionSkillAttack::Enter(void)
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+			pCamera->Set_Zoom(true, -8.f, 0.5f, 3.f, 5.f);
+
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_BRAVE); // 메테오
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_EXPLODE);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_F.wav"), SOUND_EFFECT, 0.5f);
 			break;
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK4:
+			pCamera->Set_Zoom(true, -8.f, 0.5f, 3.f, 5.f);
+
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_THUNDER_BOLT); //얼음떨구기
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_E.wav"), SOUND_EFFECT, 0.4f);
@@ -594,6 +598,9 @@ void CPlayer_SionSkillAttack::Enter(void)
 			break;
 
 		case Client::CPlayerState::STATE_SKILL_ATTACK5:
+			
+			pCamera->Set_Zoom(true, -3.f, 1.f, 3.f, 5.f);
+
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); // 비가우수수
 			
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
