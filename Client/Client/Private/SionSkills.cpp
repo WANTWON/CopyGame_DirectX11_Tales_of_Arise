@@ -45,25 +45,22 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("GlacioBullet.dat"), mWorldMatrix);
+
 		break;
 	case BOOST:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_BoostBlast.dat"), mWorldMatrix);
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_BoostBGlast.dat"), mWorldMatrix);
 
 		m_bIsActiveAtActionCamera = true;
-
 		break;
 	case GRAVITY:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GravitasFieldBlast.dat"), mWorldMatrix);
-	
-
 		m_pSmoke = CEffect::PlayEffectAtLocation(TEXT("GravitasFieldSmoke.dat"), mWorldMatrix);
-
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
@@ -473,14 +470,12 @@ void CSionSkills::Dead_Effect()
 	}
 	case GLACIA:
 	{
-		_vector vHeightOffset = { 0.f,3.f,0.f,0.f };
-		_vector vOffset = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION));
-		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vHeightOffset;// -vOffset*1.5 ;
+		_vector vHeightOffset = { 0.f, 1.f, 0.f, 0.f };
+		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vHeightOffset;
+		
 		_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
-
-		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
-		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
+		
 		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GlacioDead.dat"), mWorldMatrix);
 
 		CBullet::BULLETDESC BulletDesc;
