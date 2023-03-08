@@ -115,6 +115,8 @@ HRESULT CHP_Font::Initialize(void * pArg)
 int CHP_Font::Tick(_float fTimeDelta)
 {
 	//CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_PlayerID();
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 	for (_uint i = 0; i < 4; ++i)
@@ -255,6 +257,8 @@ int CHP_Font::Tick(_float fTimeDelta)
 void CHP_Font::Late_Tick(_float fTimeDelta)
 {
 	if (m_bRenderoff)
+		return;
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
 		return;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return;

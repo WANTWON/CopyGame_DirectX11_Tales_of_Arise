@@ -205,6 +205,7 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 			{
 				m_HitLagDesc.fTakeDamageTimer = 0.02f;
 				m_HitLagDesc.fHitLagTimer = 0.17f;
+				m_HitLagDesc.eHitType = HIT_NORMAL;
 				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 			}
 		}
@@ -522,7 +523,7 @@ void CAlphenAttackState::Enter()
 			if (iCurLevelIndex == LEVEL_RESTAURANT)
 				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack1_Fruit.wav"), SOUND_EFFECT, 0.3f);
 			else
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack1.wav"), SOUND_EFFECT, 0.5f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack1.wav"), SOUND_EFFECT, 1.f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("swing_sword_01.wav"), SOUND_EFFECT, 0.8f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
@@ -530,7 +531,7 @@ void CAlphenAttackState::Enter()
 			if (iCurLevelIndex == LEVEL_RESTAURANT)
 				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack2_Fruit.wav"), SOUND_EFFECT, 0.3f);
 			else
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack2.wav"), SOUND_EFFECT, 0.5f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack2.wav"), SOUND_EFFECT, 1.f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("swing_sword_01.wav"), SOUND_EFFECT, 0.8f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
@@ -538,7 +539,7 @@ void CAlphenAttackState::Enter()
 			if (iCurLevelIndex == LEVEL_RESTAURANT)
 				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack3_Fruit.wav"), SOUND_EFFECT, 0.3f);
 			else
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack3.wav"), SOUND_EFFECT, 0.5f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack3.wav"), SOUND_EFFECT, 1.f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("swing_sword_01.wav"), SOUND_EFFECT, 0.8f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
@@ -546,7 +547,7 @@ void CAlphenAttackState::Enter()
 			if (iCurLevelIndex == LEVEL_RESTAURANT)
 				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack4_Fruit.wav"), SOUND_EFFECT, 0.3f);
 			else
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack4.wav"), SOUND_EFFECT, 0.5f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack4.wav"), SOUND_EFFECT, 1.f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("swing_sword_01.wav"), SOUND_EFFECT, 0.8f);
 			break;
 		}

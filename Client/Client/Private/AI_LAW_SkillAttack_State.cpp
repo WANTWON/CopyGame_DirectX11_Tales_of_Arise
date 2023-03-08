@@ -236,6 +236,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 							{
 								if (!m_bGaryoukuuha)
 								{
+									CEffect::PlayEffectAtLocation(TEXT("Garyoukuuha_Ring.dat"), mWorldMatrix);
 									m_Garyoukuuha = CEffect::PlayEffectAtLocation(TEXT("Garyoukuuha.dat"), mWorldMatrix);
 									m_bGaryoukuuha = true;
 								}
@@ -296,6 +297,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 							{
 								if (!m_bTyourengadan_5)
 								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
 									m_bTyourengadan_5 = true;
 								}
@@ -304,6 +306,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 							{
 								if (!m_bTyourengadan_Kick)
 								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Kick.dat"), mWorldMatrix);
 									m_bTyourengadan_Kick = true;
 								}

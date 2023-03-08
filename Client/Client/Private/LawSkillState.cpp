@@ -185,7 +185,11 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 							{
 								if (!m_bRondsenpu)
 								{
-									CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_1.dat"), mWorldMatrix);
+									vector<CEffect*> Rondsenpu = CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_1.dat"), mWorldMatrix);
+
+									_matrix EffectWorldMatrix = Rondsenpu.front()->Get_Transform()->Get_WorldMatrix();
+									CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_Particles.dat"), EffectWorldMatrix);
+
 									m_bRondsenpu = true;
 								}
 							}
@@ -211,6 +215,8 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 							{
 								if (!m_bGaryoukuuha)
 								{
+									CEffect::PlayEffectAtLocation(TEXT("Garyoukuuha_Particles.dat"), mWorldMatrix);
+									CEffect::PlayEffectAtLocation(TEXT("Garyoukuuha_Ring.dat"), mWorldMatrix);
 									m_Garyoukuuha = CEffect::PlayEffectAtLocation(TEXT("Garyoukuuha.dat"), mWorldMatrix);
 									m_bGaryoukuuha = true;
 								}
@@ -257,20 +263,11 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 									m_bTyourengadan_3 = true;
 								}
 							}
-							/*if (!strcmp(pEvent.szName, "Tyourengadan_4"))
-							{
-								if (!m_bTyourengadan_4)
-								{
-									mWorldMatrix.r[3] = m_vPunchPosition;
-
-									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_4.dat"), mWorldMatrix);
-									m_bTyourengadan_4 = true;
-								}
-							}*/
 							if (!strcmp(pEvent.szName, "Tyourengadan_5"))
 							{
 								if (!m_bTyourengadan_5)
 								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
 									m_bTyourengadan_5 = true;
 								}
@@ -279,6 +276,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 							{
 								if (!m_bTyourengadan_Kick)
 								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Kick.dat"), mWorldMatrix);
 									m_bTyourengadan_Kick = true;
 								}
@@ -287,6 +285,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 							{
 								if (!m_bTyourengadan_Punch)
 								{
+									
 									m_TyourengadanPunch = CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Punch.dat"), mWorldMatrix);
 									m_bTyourengadan_Punch = true;
 
