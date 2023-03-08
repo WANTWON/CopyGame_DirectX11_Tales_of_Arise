@@ -56,7 +56,7 @@ public:
 	virtual void Follow_Target(_float fTimeDelta) { };
 	virtual void Make_GetAttacked_Effect(CBaseObj* DamageCauser = nullptr);
 	virtual void Make_DeadEffect(CBaseObj* Target = nullptr);
-	virtual void Make_UIFont(_uint iDamage);
+	virtual void Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc);
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc);
 	virtual void	 Set_BattleMode(_bool type)				PURE;
 	virtual void	 Set_HitState()							PURE;
@@ -146,6 +146,7 @@ protected:
 	_bool m_bBedamageAnim_Delay = false;
 	_bool  m_bLastStrikeAttack = false;
 	_bool m_bKillerSkill = false;
+	_bool	m_bCritical = false;
 
 	_uint m_eCurLevel = LEVEL_END;
 	_uint m_iRand = 0;

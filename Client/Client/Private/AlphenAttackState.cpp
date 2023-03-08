@@ -202,7 +202,11 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
+			{
+				m_HitLagDesc.fTakeDamageTimer = 0.02f;
+				m_HitLagDesc.fHitLagTimer = 0.17f;
 				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+			}
 		}
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MINIGAME1, m_pSwordCollider, &pCollisionTarget))
@@ -261,7 +265,10 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
+			{
+				m_HitLagDesc.fHitLagTimer = 0.05f;
 				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+			}
 		}
 #ifdef _DEBUG
 		m_pOwner->Get_Renderer()->Add_Debug(m_pFootCollider);
