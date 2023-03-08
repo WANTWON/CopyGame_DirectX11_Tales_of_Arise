@@ -12,6 +12,7 @@
 #include "AstralDoubt_Battle_RushState.h"
 #include "AstralDoubt_TurnState.h"
 #include "AstralDoubt_Battle_WalkState.h"
+#include "AstralDoubt_TeleportState.h"
 
 using namespace Astral_Doubt;
 
@@ -48,11 +49,11 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 	//	CAstralDoubt_State* pState = new CIdleState(this, CAstralDoubt_State::FIELD_STATE_ID::FIELD_STATE_START);
 	//	m_pState = m_pState->ChangeState(m_pState, pState);
 	//}
-	
+
 		///* Set State */
-		CAstralDoubt_State* pState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::START_BATTLE);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	
+	CAstralDoubt_State* pState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::START_BATTLE);
+	m_pState = m_pState->ChangeState(m_pState, pState);
+
 
 
 	m_eMonsterID = ASTRAL_DOUBT;
@@ -88,7 +89,7 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 	m_bDone_HitAnimState = false;
 
 	//CBattleManager::Get_Instance()->Out_Monster(this);
-	
+
 	return S_OK;
 }
 
@@ -120,7 +121,7 @@ HRESULT CAstralDoubt::Ready_Components(void * pArg)
 	/* For.Com_SPHERE */
 	CCollider::COLLIDERDESC ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(CCollider::COLLIDERDESC));
-	ColliderDesc.vScale = _float3(7.f, 7.f, 7.f);
+	ColliderDesc.vScale = _float3(5.f, 5.f, 5.f);
 	ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 	ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
@@ -166,14 +167,14 @@ int CAstralDoubt::Tick(_float fTimeDelta)
 		return OBJ_NOSHOW;
 
 	__super::Tick(fTimeDelta);
-	
+
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
 
 	m_fTimeDeltaAcc += fTimeDelta;
 
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
-	
+
 	if (m_fTimeDeltaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
 
@@ -265,7 +266,7 @@ HRESULT CAstralDoubt::Render_Glow()
 			return E_FAIL;
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
-		
+
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_GlowTexture", i, aiTextureType_EMISSIVE)))
 			return E_FAIL;
 
@@ -288,7 +289,7 @@ void CAstralDoubt::Tick_State(_float fTimeDelta)
 	CAstralDoubt_State* pNewState = m_pState->Tick(fTimeDelta);
 	if (pNewState)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
-	
+
 }
 
 void CAstralDoubt::LateTick_State(_float fTimeDelta)
@@ -309,7 +310,7 @@ void CAstralDoubt::Set_BattleMode(_bool type)
 		CAstralDoubt_State* pBattleState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_ID::STATE_ADVENT);
 		m_pState = m_pState->ChangeState(m_pState, pBattleState);
 	}
-	else 
+	else
 	{
 		Check_NearTrigger();
 		/* Set State */
@@ -327,6 +328,8 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 	case SYMBOL_RUN:
 	case MOVE_IDLE:
 	case SYMBOL_LOOKOUT:
+	case ATTACK_JUMP_SHOOT_DROP_RISE_LOOP:
+	case ATTACK_JUMP_SHOOT_DROP_DESCEND_LOOP:
 		return true;
 
 
@@ -359,93 +362,51 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
 	if (fDamage <= 0 || m_bDead || m_bGlowUp || m_bDissolve || m_bTakeDamage || m_pState->Get_StateId() == CAstralDoubt_State::STATE_DEAD)
-		return 0; 
+		return 0;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
-	
-		if (iHp <= 0)
-		{
-			m_tStats.m_fCurrentHp = 0;
-			CBattleManager::Get_Instance()->Update_LockOn();
-			Check_AmILastMoster();
+	m_fDamage += fDamage;
 
-			m_pModelCom->Set_TimeReset();
-			CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DEAD);
-			m_pState = m_pState->ChangeState(m_pState, pState);
+	if (iHp <= 0)
+	{
+		m_tStats.m_fCurrentHp = 0;
+		CBattleManager::Get_Instance()->Update_LockOn();
+		Check_AmILastMoster();
 
-			return 0;
-		}
-		else
+		m_pModelCom->Set_TimeReset();
+		CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DEAD);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+
+		return 0;
+	}
+	else
+	{
+		if (m_bOnGoingDown == false)
 		{
-			if (m_bOnGoingDown == false)
+			m_iBeDamaged_Cnt++;
+
+			if (m_bDownState == true)
 			{
-				m_iBeDamaged_Cnt++;
-
-				if (m_bDownState == true)
-				{
-					CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DOWN);
-					m_pState = m_pState->ChangeState(m_pState, pState);
-				}
+				CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DOWN);
+				m_pState = m_pState->ChangeState(m_pState, pState);
 			}
-
 		}
+		if (!m_bIsHalf && (m_tStats.m_fCurrentHp < m_tStats.m_fMaxHp * 0.5f))
+		{
+			m_bIsHalf = true;
 
-	//if (m_bOnGoingDown == false)
-	//{
-	//	if (iHp <= 0)
-	//	{
-	//		m_tStats.m_fCurrentHp = 0;
-	//		CBattleManager::Get_Instance()->Update_LockOn();
-	//		Check_AmILastMoster();
+			CAstralDoubt_State* pState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_HALF);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+		}
+		if (m_fDamage >= (m_tStats.m_fMaxHp * 0.15f))
+		{
+			m_fDamage = 0.f;
 
-	//		m_pModelCom->Set_TimeReset();
-	//		CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DEAD);
-	//		m_pState = m_pState->ChangeState(m_pState, pState);
-
-	//		return 0;
-	//	}
-	//	else
-	//	{
-	//		m_iBeDamaged_Cnt++;
-
-	//		if (m_bDownState == false)
-	//		{
-	//			if (m_bOnGoing_320Spin == false)
-	//			{
-	//				if (m_bBedamageAnim_Delay == false)
-	//				{
-	//					if (m_bBedamageAnim == true)
-	//					{
-	//						//m_pModelCom->Set_TimeReset();
-	//						CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_BE_DAMAGED);
-	//						m_pState = m_pState->ChangeState(m_pState, pState);
-	//					}
-
-	//					else if (m_bBedamageAnim == false)
-	//					{
-	//						return iHp;
-	//					}
-	//				}
-
-	//				else if (m_bBedamageAnim_Delay == true)
-	//				{
-	//					return iHp;
-	//				}
-
-	//			}
-
-	//			else if (m_bOnGoing_320Spin == false)
-	//				return iHp;
-	//		}
-	//		else if (m_bDownState == true)
-	//		{
-	//			CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DOWN);
-	//			m_pState = m_pState->ChangeState(m_pState, pState);
-	//		}
-	//			
-	//	}
-	//}
+			CAstralDoubt_State* pState = new CAstralDoubt_TeleportState(this);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+		}
+	}
 
 	return iHp;
 }
@@ -480,12 +441,12 @@ _float CAstralDoubt::ForTheBossTarget_Distance(CBaseObj* pTarget)
 	_vector fDir = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - Get_TransformState(CTransform::STATE_TRANSLATION);
 	XMVectorSetY(fDir, 0.f);
 	_float fDistance = XMVectorGetX(XMVector3Length(fDir));
-	
+
 
 	return fDistance;
 }
 
-void CAstralDoubt::Check_Navigation_Jump(void)
+_bool CAstralDoubt::Check_Navigation_Jump(void)
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	_float m_fWalkingHeight = m_pNavigationCom->Compute_Height(vPosition, 0.f);
@@ -494,7 +455,11 @@ void CAstralDoubt::Check_Navigation_Jump(void)
 	{
 		vPosition = XMVectorSetY(vPosition, m_fWalkingHeight);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
+
+		return true;
 	}
+
+	return false;
 }
 
 CAstralDoubt * CAstralDoubt::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

@@ -530,6 +530,5 @@ void CPlayer_RinwellNormalAttack_State::Exit()
 {
 	__super::Exit();
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 

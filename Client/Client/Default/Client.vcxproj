@@ -224,6 +224,7 @@
     <ClInclude Include="..\Public\AstralDoubt_DetectStopState.h" />
     <ClInclude Include="..\Public\AstralDoubt_IdleState.h" />
     <ClInclude Include="..\Public\AstralDoubt_State.h" />
+    <ClInclude Include="..\Public\AstralDoubt_TeleportState.h" />
     <ClInclude Include="..\Public\AstralDoubt_TurnState.h" />
     <ClInclude Include="..\Public\AstralDoubt_WalkState.h" />
     <ClInclude Include="..\Public\BattleManager.h" />
@@ -251,6 +252,7 @@
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Fascinate.h" />
+    <ClInclude Include="..\Public\IceWolfJumpState.h" />
     <ClInclude Include="..\Public\Law.h" />
     <ClInclude Include="..\Public\LawAirFSkillState.h" />
     <ClInclude Include="..\Public\LawAirRSkillState.h" />
@@ -512,6 +514,7 @@
     <ClCompile Include="..\Private\AstralDoubt_ChaseState.cpp" />
     <ClCompile Include="..\Private\AstralDoubt_DetectStopState.cpp" />
     <ClCompile Include="..\Private\AstralDoubt_IdleState.cpp" />
+    <ClCompile Include="..\Private\AstralDoubt_TeleportState.cpp" />
     <ClCompile Include="..\Private\AstralDoubt_TurnState.cpp" />
     <ClCompile Include="..\Private\AstralDoubt_WalkState.cpp" />
     <ClCompile Include="..\Private\BattleManager.cpp" />
@@ -539,6 +542,7 @@
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Fascinate.cpp" />
+    <ClCompile Include="..\Private\IceWolfJumpState.cpp" />
     <ClCompile Include="..\Private\Law.cpp" />
     <ClCompile Include="..\Private\LawAirFSkillState.cpp" />
     <ClCompile Include="..\Private\LawAirRSkillState.cpp" />

@@ -56,7 +56,7 @@ int CUI_MENU_Back::Tick(_float fTimeDelta)
 
 	if (!CUI_Manager::Get_Instance()->Get_Mainmenuon())
 		return OBJ_NOEVENT;
-
+	
 	/*_uint index = CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1;
 	for (_uint i = 0; i < index; ++i)
 	{

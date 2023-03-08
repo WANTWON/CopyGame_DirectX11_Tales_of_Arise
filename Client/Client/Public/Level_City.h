@@ -23,13 +23,18 @@ public:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 
+
+
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
 	CCamera_Dynamic*	m_pCamera = nullptr;
 	_float	   m_fMinLength = MAXDISTANCE;
 
 	_float m_fBlurTimer = 0.f;
-
+	
+	//Sound
+	_float m_bCrowdSoundStart = false;
+	_float m_bSound = false;
 public:
 	static CLevel_City* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

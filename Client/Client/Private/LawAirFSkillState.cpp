@@ -263,7 +263,7 @@ void CLawAirFSkillState::Enter(void)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 
-CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
+CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillSoundBegin.wav"), SOUND_EFFECT, 0.7f);
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YUMPAEFUCKSAY);
 
@@ -278,7 +278,7 @@ void CLawAirFSkillState::Exit(void)
 	
 	Safe_Release(m_pLandCollider);
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
 void CLawAirFSkillState::Update_Skill(void)

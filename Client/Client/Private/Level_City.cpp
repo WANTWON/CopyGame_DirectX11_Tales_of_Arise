@@ -11,6 +11,8 @@
 #include "Level_City.h"
 #include "Level_Loading.h"
 
+
+
 CLevel_City::CLevel_City(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 	, m_pCollision_Manager(CCollision_Manager::Get_Instance())
@@ -71,6 +73,7 @@ HRESULT CLevel_City::Initialize()
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LEVEL_CITY3.wav"), g_fSoundVolume);
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_mountain_Bird_Bug.wav"), SOUND_NATURE, 0.1f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_Crowd.wav"), SOUND_CROWD, g_fSoundNatureVolume);
 	return S_OK;
 }
 
@@ -82,6 +85,7 @@ void CLevel_City::Tick(_float fTimeDelta)
 	if (g_fSoundVolume >= 0.3f)
 		g_fSoundVolume = 0.3f;
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
+	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_CROWD, g_fSoundNatureVolume);
 
 
 	if (m_bNextNevel)
@@ -397,5 +401,5 @@ void CLevel_City::Free()
 	Safe_Release(m_pCollision_Manager);
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
 }

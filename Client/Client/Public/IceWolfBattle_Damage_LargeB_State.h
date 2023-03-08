@@ -22,7 +22,7 @@ public:
 
 	};
 public:
-	CBattle_Damage_LargeB_State(class CIce_Wolf* pIceWolf, STATE_ID StateId, _bool bThirdHit = false);
+	CBattle_Damage_LargeB_State(class CIce_Wolf* pIceWolf, STATE_ID StateId, HITTYPE eType, _vector vCauserPos, _float fMoveLength);
 
 	virtual CIceWolfState* Tick(_float fTimeDelta) override;
 	virtual CIceWolfState* LateTick(_float fTimeDelta) override;
@@ -41,9 +41,16 @@ private:
 	_bool			m_bDeadSound = false;
 	_bool			m_bDowning = false;
 	CCollider*		m_pAtkColliderCom = nullptr;
-	
+	HITTYPE			m_eHitType = HIT_END;
+	_vector			m_vCauserPos;
+	_float			m_fTime = 0.f;
+	_float			m_fMoveLength = 0.f;
+
 private:
 	_matrix m_StartMatrix;
+
+private:
+	void Move(_float fTimeDelta);
 };
 
 END

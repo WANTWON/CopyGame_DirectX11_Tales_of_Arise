@@ -266,11 +266,11 @@ bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigati
 
 	WorldMatrix = XMMatrixRotationQuaternion(XMQuaternionNormalize(XMQuaternionMultiply(vWorldRot, RotationQuat)));
 
-	_vector vTranslation = XMVector3TransformNormal(vecMove, XMMatrixRotationY(XMConvertToRadians(180.f)));
+	_vector vTranslation = XMVector3TransformNormal(vecMove, XMMatrixRotationY(XMConvertToRadians(180.f)) * WorldMatrix);
 
-	WorldMatrix = XMMatrixTranslationFromVector(vTranslation) * XMMatrixScalingFromVector(vWorldScale) * WorldMatrix * XMMatrixTranslationFromVector(vWorldPos);
+	WorldMatrix = XMMatrixScalingFromVector(vWorldScale) * WorldMatrix * XMMatrixTranslationFromVector(vWorldPos);
 
-	_vector vPos = WorldMatrix.r[3];
+	_vector vPos = WorldMatrix.r[3] + vTranslation;
 	WorldMatrix.r[3] = vWorldPos;
 
 	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);

@@ -75,6 +75,36 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 
 int CUI_Dialogue::Tick(_float fTimeDelta)
 {
+	if (m_bSexyEventEnd)
+	{
+		m_fSexyOffTimer += fTimeDelta;
+		if (m_fSexyOffTimer > 3.5f)
+		{
+			m_bSexyEventEnd = false;
+			m_fSexyOffTimer = 0.f;
+			CPlayerManager::Get_Instance()->Set_Changetoboss(true);
+			dynamic_cast<CMonsterLaw*>(CBattleManager::Get_Instance()->Get_BossMonster())->Set_EventFinish(true);
+			CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"));
+			CBaseObj* pObject = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell")));
+			dynamic_cast<CMonster*>(pObject)->Change_Navigation(LEVEL_LAWBATTLE);
+			dynamic_cast<CMonster*>(pObject)->Compute_CurrentIndex(LEVEL_LAWBATTLE);
+			dynamic_cast<CMonster*>(pObject)->Set_BattleMode(true);
+
+			dynamic_cast<CAiRinwell*>(pObject)->Set_AirMode(true);
+			dynamic_cast<CAiRinwell*>(pObject)->Set_50DownCutScene(true);
+
+			CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
+
+			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(8, true, 0, 1);
+			CBattleManager::Get_Instance()->Set_IsStrike(false);
+
+			CGameInstance::Get_Instance()->StopAll();
+			CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LawBattle.wav"), g_fSoundVolume);
+			CBattleManager::Get_Instance()->Set_Rinwellboss(true);
+
+		}
+
+	}
 
 	
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_PGUP))
@@ -124,7 +154,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 		if (m_bfadein)
 		{
-			m_fAlpha += 0.02f; //»ý±æ¶§
+			m_fAlpha += 0.02f; //ï¿½ï¿½ï¿½æ¶§
 			m_fFade += 0.8f;
 		}
 		else if (m_bfadeout)
@@ -137,15 +167,15 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 		//	m_fAlpha = 0.5f;
 
-		//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // »ç¶óÁú¶§
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		//{
 		//	m_bfadeout = true;
 		//}
-		//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // »ý°ÜÁú¶§
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		//{
 		//	m_bfadein = true;
 		//}
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_6)) // »ý°ÜÁú¶§
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_6)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		{
 			if (m_iVectorIndex == 13 && m_iDialogueindex == 1)
 			{
@@ -279,24 +309,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 				case 13:
 				{
-					CPlayerManager::Get_Instance()->Set_Changetoboss(true);
-					dynamic_cast<CMonsterLaw*>(CBattleManager::Get_Instance()->Get_BossMonster())->Set_EventFinish(true);
-					CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"));
-					CBaseObj* pObject = dynamic_cast<CBaseObj*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell")));
-					dynamic_cast<CMonster*>(pObject)->Change_Navigation(LEVEL_LAWBATTLE);
-					dynamic_cast<CMonster*>(pObject)->Compute_CurrentIndex(LEVEL_LAWBATTLE);
-					dynamic_cast<CMonster*>(pObject)->Set_BattleMode(true);
-
-					dynamic_cast<CAiRinwell*>(pObject)->Set_AirMode(true);
-					dynamic_cast<CAiRinwell*>(pObject)->Set_50DownCutScene(true);
-					CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
-		
-					dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(8, true, 0, 1);
-					CBattleManager::Get_Instance()->Set_IsStrike(false);
-					
-					CGameInstance::Get_Instance()->StopAll();
-					CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LawBattle.wav"), g_fSoundVolume);
-					CBattleManager::Get_Instance()->Set_Rinwellboss(true);
+					m_bSexyEventEnd = true;
 					break;
 				}
 					
@@ -334,7 +347,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 
 	
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_9)) // »ý°ÜÁú¶§
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_9)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//{
 	//	++m_iVectorIndex;
 	//}
@@ -2550,13 +2563,13 @@ void CUI_Dialogue::Read_TextFiles_for_LastQuestStart()
 wchar_t * CUI_Dialogue::ConverCtoWC(char * str)
 {
 
-	//wchar_tÇü º¯¼ö ¼±¾ð
+	//wchar_tï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	wchar_t* pStr;
-	//¸ÖÆ¼ ¹ÙÀÌÆ® Å©±â °è»ê ±æÀÌ ¹ÝÈ¯
+	//ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½Æ® Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
 	int strSize = MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, NULL);
-	//wchar_t ¸Þ¸ð¸® ÇÒ´ç
+	//wchar_t ï¿½Þ¸ï¿½ ï¿½Ò´ï¿½
 	pStr = new WCHAR[MAX_PATH];
-	//Çü º¯È¯
+	//ï¿½ï¿½ ï¿½ï¿½È¯
 	MultiByteToWideChar(CP_ACP, 0, str, _uint(strlen(str) + 1), m_szTXT, MAX_PATH);
 	
 	Safe_Delete_Array(pStr);
@@ -2597,19 +2610,19 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size()-1], XMVectorSet(390.f, 535.f+m_fFade, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
 	
 	
-	if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("¾ËÆæ")))
+	if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ï¿½ï¿½ï¿½ï¿½")))
 	{
 		m_iPortraitnum = 0;
 	}
-	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("½Ã¿Â")))
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ï¿½Ã¿ï¿½")))
 	{
 		m_iPortraitnum = 1;
 	}
-	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("¸°À£")))
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ï¿½ï¿½ï¿½ï¿½")))
 	{
 		m_iPortraitnum = 2;
 	}
-	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("·Î¿ì")))
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ï¿½Î¿ï¿½")))
 	{
 		m_iPortraitnum = 3;
 	}
