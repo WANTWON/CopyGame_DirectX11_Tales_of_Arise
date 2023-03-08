@@ -74,6 +74,7 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 			case Client::CPlayer::RINWELL:
 			{
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
+				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_HP(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp);
 				CBattleManager::Get_Instance()->Set_OneonOneMode(false);
 				CBattleManager::Get_Instance()->Set_LawBattlePhase(0);
 				dynamic_cast<CMonsterLaw*>(CBattleManager::Get_Instance()->Get_BossMonster())->Set_Daguri(true);

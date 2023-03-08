@@ -131,6 +131,8 @@ void CMoveState::Enter()
 		m_bAirMove = true;
 	else
 		m_bAirMove = false;
+	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
+		m_bAirMove = true;
 
 	switch (m_eStateType)
 	{

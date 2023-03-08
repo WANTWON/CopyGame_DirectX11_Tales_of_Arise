@@ -111,7 +111,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
 
-	if (m_bOverLimit)
+	if (m_bOverLimit &&  m_tInfo.fCurrentHp > 0)
 	{
 		/* Overlimit Effect */
 		if (!m_bIsOverlimiEffectSpawned)
@@ -119,7 +119,7 @@ int CPlayer::Tick(_float fTimeDelta)
 			EffectSpawn_Overlimit();
 			m_bIsOverlimiEffectSpawned = true;
 		}
-
+		
 		EffectUpdate_Overlimit();
 		m_fAuraTimer += fTimeDelta;
 

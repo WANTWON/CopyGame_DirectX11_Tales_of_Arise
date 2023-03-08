@@ -6,6 +6,7 @@
 #include "RinwellDamageState.h"
 #include "CameraManager.h"
 #include "RinwellSkillState.h"
+#include "Level_LawBattle.h"
 
 using namespace AiRinwell;
 
@@ -129,6 +130,8 @@ int CAiRinwell::Tick(_float fTimeDelta)
 	{
 		CBattleManager::Get_Instance()->Set_BossMonster(nullptr);
 		CBattleManager::Get_Instance()->Out_Monster(this);
+		if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
+			dynamic_cast<CLevel_LawBattle*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Plus_DeadCount();
 		return OBJ_DEAD;
 	}
 

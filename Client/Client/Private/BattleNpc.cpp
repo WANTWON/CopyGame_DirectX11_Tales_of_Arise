@@ -110,12 +110,18 @@ void CBattleNpc::Talk_with_Npc()
 	{
 	case NPC_LAW:
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("NpcLaw.dat"), Get_Transform()->Get_WorldMatrix());
+		if (CBattleManager::Get_Instance()->Get_Rinwellboss())
+		{
+			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(14);
+		}
+		else
+		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(15);
 		dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
-		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(12);
 		break;
 	default:
 		break;
 	}
+	dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 }
 
 

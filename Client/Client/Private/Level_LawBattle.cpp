@@ -75,7 +75,8 @@ HRESULT CLevel_LawBattle::Initialize()
 		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 
-		if (CGameInstance::Get_Instance() ->Get_PastLevelIndex() == LEVEL_CITY)
+		if (CGameInstance::Get_Instance() ->Get_PastLevelIndex() == LEVEL_CITY || 
+			CGameInstance::Get_Instance()->Get_PastLevelIndex() == LEVEL_LAWBATTLE)
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(60.f, 0.f, 20.f, 1.f));
 		else
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
@@ -105,6 +106,30 @@ void CLevel_LawBattle::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false && m_iBossDeadCount >= 2)
+	{
+
+		CUI_Manager::Get_Instance()->ReSet_Arrived_Count();
+
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Camera"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Deco"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Background"));
+
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		LEVEL eNextLevel = LEVEL_LAWBATTLE;
+
+		m_pCollision_Manager->Clear_AllCollisionGroup();
+		pGameInstance->Set_DestinationLevel(eNextLevel);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
+			return;
+		Safe_Release(pGameInstance);
+		return;
+
+	}
 
 	_bool isBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 	if (isBattleMode)

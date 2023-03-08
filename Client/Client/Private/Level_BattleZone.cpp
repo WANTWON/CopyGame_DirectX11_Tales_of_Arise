@@ -324,6 +324,9 @@ HRESULT CLevel_BattleZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 		dynamic_cast<CMonster*>(iter)->Set_BattleMode(true);
 		dynamic_cast<CMonster*>(iter)->Set_IsActionMode(true);
 		pBattleManager->Set_LackonMonster(iter);
+
+		if (eMonsterID == RINWELL)
+			CBattleManager::Get_Instance()->Set_BossMonster(iter);
 	}
 	CloseHandle(hFile);
 

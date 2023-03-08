@@ -66,17 +66,19 @@ void CTrigger::Late_Tick(_float fTimeDelta)
 	{
 		if (m_pSPHERECom->Collision(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Collider()))
 		{
-			if (m_TriggerDesc.iIndex == 0)
+			if (m_TriggerDesc.iIndex == 0 && m_bCollideOnce[0])
 			{
-
+				m_bCollideOnce[0] = false;
 				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(4, false, 1, 2);
 			}
-			else if (m_TriggerDesc.iIndex == 1)
+			else if (m_TriggerDesc.iIndex == 1 && m_bCollideOnce[1])
 			{
+				m_bCollideOnce[1] = false;
 				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(5, false, 0, 2);
 			}
-			else if (m_TriggerDesc.iIndex == 2)
+			else if (m_TriggerDesc.iIndex == 2 &&  m_bCollideOnce[2])
 			{
+				m_bCollideOnce[2] = false;
 				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(6, false, 0, 1);
 			}
 		}
