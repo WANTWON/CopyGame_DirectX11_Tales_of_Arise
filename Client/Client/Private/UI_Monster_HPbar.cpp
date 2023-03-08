@@ -36,7 +36,7 @@ HRESULT CUI_Monster_HPbar::Initialize(void * pArg)
 	m_fNext = 11.f;
 
 
-	m_eShaderID = UI_HPBAR;
+	m_eShaderID = UI_BOSSHP;
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -142,7 +142,7 @@ HRESULT CUI_Monster_HPbar::Render()
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
 			return E_FAIL;
-		m_eShaderID = UI_HPBAR;
+		m_eShaderID = UI_BOSSHP;
 		m_pShaderCom->Begin(0);
 
 		m_pVIBufferCom->Render();
@@ -191,7 +191,7 @@ HRESULT CUI_Monster_HPbar::Render()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GradationTexture", m_pTextureCom1->Get_SRV(0))))
 		return E_FAIL;
-	m_eShaderID = UI_HPBAR;
+	m_eShaderID = UI_BOSSHP;
 
 	if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 	{

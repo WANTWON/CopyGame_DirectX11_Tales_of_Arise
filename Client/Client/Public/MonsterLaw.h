@@ -215,6 +215,11 @@ public: /*For.State*/
 	_bool Get_EventFinish() { return m_bEventFinish; }
 	void Set_EventFinish(_bool tof) { m_bEventFinish = tof; }
 
+	void Set_Daguri(_bool tof) { m_bDaguri = tof; }
+	_bool Get_Daguri() { return m_bDaguri; }
+
+	
+
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 
@@ -245,12 +250,14 @@ private:
 	_bool m_bDebug = true;
 
 	_bool m_bEventFinish = false;
+	_bool m_bDaguri = false;
+	_bool m_bReadytoChangeTarget = false;
 private:
 		/* Strike Screen Effect */
 		_bool m_bResetStrikeBlur = false;
 		_float m_fStrikeBlurResetDuration = .45f;
 		_float m_fStrikeBlurResetTimer = 0.f;
-		
+		_float m_fRandomTargetTimer = 0.f;
 
 public:
 	static CMonsterLaw* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -23,6 +23,8 @@ public:
 	void BattleLateTick(_float fTimeDelta);
 	void NotBattleLateTick(_float fTimeDelta);
 
+	void Plus_DeadCount() { ++m_iBossDeadCount; }
+
 public:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
@@ -39,6 +41,7 @@ private:
 
 	_float m_fBlurTimer = 0.f;
 	_float m_fHitLegTime = 0.f;
+	_int m_iBossDeadCount = 0;
 
 public:
 	static CLevel_LawBattle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

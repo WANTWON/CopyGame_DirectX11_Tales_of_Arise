@@ -46,6 +46,9 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
+	m_bChangetoboss = CBattleManager::Get_Instance()->Get_Rinwellboss();
+
+
 	if (CBattleManager::Get_Instance()->Get_BossMonster() == nullptr)
 		return OBJ_DEAD;
 	else
@@ -56,6 +59,22 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 		m_fcurrenthp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_Stats().m_fCurrentHp;
 		m_fmaxhp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_Stats().m_fMaxHp;
 	}
+
+	/*m_iMonstername = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_MonsterID();
+
+
+	m_fcurrenthp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_Stats().m_fCurrentHp;
+	m_fmaxhp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_Stats().m_fMaxHp;*/
+
+	if (m_bChangetoboss && CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
+	{
+		CMonster* pObject = dynamic_cast<CMonster*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell")));
+		m_fcurrenthp1 = pObject->Get_Stats().m_fCurrentHp;
+		m_fmaxhp1 = pObject->Get_Stats().m_fMaxHp;
+		m_iMonstername1 = pObject->Get_MonsterID();
+		m_fYOffset = 25.f;
+	}
+	
 
 	
 	//m_iMonstername = 0;
@@ -98,6 +117,15 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 	else
 		m_iHPbarindex = 1;
 
+	if (m_fmaxhp1 * 0.75f < m_fcurrenthp1)
+		m_iHPbarindex1 = 4;
+	else if (m_fmaxhp1 * 0.5f < m_fcurrenthp1)
+		m_iHPbarindex1 = 3;
+	else if (m_fmaxhp1 * 0.25f < m_fcurrenthp1)
+		m_iHPbarindex1 = 2;
+	else
+		m_iHPbarindex1 = 1;
+
 
 
 
@@ -107,7 +135,8 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 	
 
 	
-
+	calculateboss1();
+	calculateboss2();
 
 
 
@@ -117,48 +146,7 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 
 
 
-	m_fMinusHp = m_fmaxhp - m_fcurrenthp;
-	_uint barindex = 4;
-	_float maxonebar = m_fmaxhp*0.25f;
-
-	if (maxonebar - m_fMinusHp >= 0.f)       // 양수면 이번거에!
-	{
-		m_fCurrentbar = maxonebar - m_fMinusHp;
-		return OBJ_NOEVENT;
-	}
-		  //이걸던지자
-
-	else
-	{
-		--barindex;
-		m_fMinusHp -= maxonebar;                                //음수면           3
-	}
-
-	if (maxonebar - m_fMinusHp >= 0.f)       // 양수면 이번거에!
-	{
-		m_fCurrentbar = maxonebar - m_fMinusHp;
-		return OBJ_NOEVENT;
-	}
-
-	else
-	{
-		--barindex;
-		m_fMinusHp -= maxonebar;                                //음수면             2
-	}
-
-	if (maxonebar - m_fMinusHp >= 0.f)       // 양수면 이번거에!
-	{
-		m_fCurrentbar = maxonebar - m_fMinusHp;
-		return OBJ_NOEVENT;
-	}
-
-	else
-	{
-		--barindex;
-		m_fMinusHp -= maxonebar;                                //음수면             1
-	}
-
-	m_fCurrentbar = maxonebar - m_fMinusHp;
+	
 
 	return OBJ_NOEVENT;
 }
@@ -196,7 +184,7 @@ HRESULT CUI_BossMonster_HPbar::Render()
 	m_fSize.x = 220.0f;
 	m_fSize.y = 22.0f;
 	m_fPosition.x = 400.f;
-	m_fPosition.y = 40.f;
+	m_fPosition.y = 40.f  - m_fYOffset;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -230,7 +218,7 @@ HRESULT CUI_BossMonster_HPbar::Render()
 		m_fSize.x = 770.f;
 		m_fSize.y = 30.0f;
 		m_fPosition.x = 650.f;
-		m_fPosition.y = 60.f;
+		m_fPosition.y = 60.f - m_fYOffset;
 		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -257,7 +245,7 @@ HRESULT CUI_BossMonster_HPbar::Render()
 		m_fSize.x = 190.f;
 		m_fSize.y = 22.0f;
 		m_fPosition.x = 380.f;
-		m_fPosition.y = 60.f;
+		m_fPosition.y = 60.f - m_fYOffset;
 		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
@@ -354,7 +342,7 @@ HRESULT CUI_BossMonster_HPbar::Render()
 		m_fSize.x = 20.0f;
 		m_fSize.y = 20.0f;
 		m_fPosition.x = 850.f;
-		m_fPosition.y = 80.f;
+		m_fPosition.y = 80.f - m_fYOffset;
 		m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 		m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
 
@@ -397,6 +385,198 @@ HRESULT CUI_BossMonster_HPbar::Render()
 
 	m_pVIBufferCom->Render();*/
 
+		if (m_bChangetoboss)
+		{
+			m_fYOffset = -20.f;
+
+			m_fSize.x = 220.0f;
+			m_fSize.y = 22.0f;
+			m_fPosition.x = 400.f;
+			m_fPosition.y = 40.f - m_fYOffset;
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(SetUp_ShaderResources()))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom3->Get_SRV(m_iMonstername1))))
+				return E_FAIL;
+			m_pShaderCom->Begin(UI_BRIGHT);
+
+			m_pVIBufferCom->Render();
+
+
+
+			maxbar = m_fmaxhp1 * 0.25f;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &maxbar, sizeof(_float))))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fCurrentbar1, sizeof(_float))))
+				return E_FAIL;
+
+
+
+
+
+
+
+
+			/*if (dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
+			{*/
+
+
+
+			m_fSize.x = 770.f;
+			m_fSize.y = 30.0f;
+			m_fPosition.x = 650.f;
+			m_fPosition.y = 60.f - m_fYOffset;
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(2))))
+				return E_FAIL;
+
+			m_pShaderCom->Begin(UI_BOSSHPBACKBLACK);
+
+			m_pVIBufferCom->Render();
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(3))))
+				return E_FAIL;
+			m_pShaderCom->Begin(UI_BOSSHPBACKWHITE);
+
+			m_pVIBufferCom->Render();
+
+			//	m_eShaderID = UI_HPBAR;
+
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[0], sizeof(_float))))
+				return E_FAIL;
+			m_fSize.x = 190.f;
+			m_fSize.y = 22.0f;
+			m_fPosition.x = 380.f;
+			m_fPosition.y = 60.f - m_fYOffset;
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+			switch (m_iHPbarindex1)
+			{
+			case 1:
+				m_eShaderID = UI_BOSSHP;
+				break;
+			default:
+				m_eShaderID = UI_BOSSHPFULL;
+
+			}
+
+			m_pShaderCom->Begin(m_eShaderID);
+			m_pVIBufferCom->Render();
+
+
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[1], sizeof(_float))))
+				return E_FAIL;
+			m_fPosition.x += 180.f;
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+			switch (m_iHPbarindex1)
+			{
+			case 1:
+				m_eShaderID = 0;
+				break;
+
+			case 2:
+				m_eShaderID = UI_BOSSHP;
+				m_pShaderCom->Begin(m_eShaderID);
+				m_pVIBufferCom->Render();
+				break;
+
+			default:
+				m_eShaderID = UI_BOSSHPFULL;
+				m_pShaderCom->Begin(m_eShaderID);
+				m_pVIBufferCom->Render();
+
+			}
+
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[2], sizeof(_float))))
+				return E_FAIL;
+			m_fPosition.x += 180.f;
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+			switch (m_iHPbarindex1)
+			{
+			case 1:
+				m_eShaderID = 0;
+				break;
+
+			case 2:
+				m_eShaderID = 0;
+				break;
+
+			case 3:
+				m_eShaderID = UI_BOSSHP;
+				m_pShaderCom->Begin(m_eShaderID);
+				m_pVIBufferCom->Render();
+				break;
+
+			default:
+				m_eShaderID = UI_BOSSHPFULL;
+				m_pShaderCom->Begin(m_eShaderID);
+				m_pVIBufferCom->Render();
+			}
+
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[3], sizeof(_float))))
+				return E_FAIL;
+			m_fPosition.x += 180.f;
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+			switch (m_iHPbarindex1)
+			{
+			case 4:
+				m_eShaderID = UI_BOSSHP;
+				m_pShaderCom->Begin(m_eShaderID);
+				m_pVIBufferCom->Render();
+				break;
+			default:
+				m_eShaderID = 0;
+			}
+
+
+
+
+			m_eShaderID = UI_BRIGHT;
+			m_fSize.x = 20.0f;
+			m_fSize.y = 20.0f;
+			m_fPosition.x = 850.f;
+			m_fPosition.y = 80.f - m_fYOffset;
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+
+			RenderCurrenthpfont1();
+
+
+			m_fPosition.x += m_fNext;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[0], sizeof(_float))))
+				return E_FAIL;
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(10))))
+				return E_FAIL;
+			m_pShaderCom->Begin(m_eShaderID);
+
+			m_pVIBufferCom->Render();
+
+			//return S_OK;
+
+			RenderMaxhpfont1();
+		}
+	
 	return S_OK;
 
 }
@@ -598,6 +778,294 @@ HRESULT CUI_BossMonster_HPbar::RenderMaxhpfont()
 	}
 
 	return S_OK;
+}
+
+HRESULT CUI_BossMonster_HPbar::RenderCurrenthpfont1()
+{
+	if (m_fcurrenthp1 >= 100000.f)
+	{
+		m_itexnum = (_uint)(m_fcurrenthp1 / 100000);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[0], sizeof(_float))))
+			return E_FAIL;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+		m_pVIBufferCom->Render();
+	}
+	m_fPosition.x += m_fNext;
+	if (m_fcurrenthp1 >= 10000.f)
+	{
+		m_itexnum = (((_uint)m_fcurrenthp1 % 100000) / 10000);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[1], sizeof(_float))))
+			return E_FAIL;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+		m_pVIBufferCom->Render();
+	}
+
+	m_fPosition.x += m_fNext;
+	if (m_fcurrenthp1 >= 1000.f)
+	{
+		m_itexnum = (((_uint)m_fcurrenthp1 % 10000) / 1000);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[2], sizeof(_float))))
+			return E_FAIL;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+	}
+
+	m_fPosition.x += m_fNext;
+	if (m_fcurrenthp1 >= 100.f)
+	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[3], sizeof(_float))))
+			return E_FAIL;
+		m_itexnum = (((_uint)m_fcurrenthp1 % 1000) / 100);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+		m_pVIBufferCom->Render();
+	}
+	m_fPosition.x += m_fNext;
+	if (m_fcurrenthp1 >= 10.f)
+	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[4], sizeof(_float))))
+			return E_FAIL;
+		m_itexnum = (((_uint)m_fcurrenthp1 % 100) / 10);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+		m_pVIBufferCom->Render();
+	}
+
+	m_fPosition.x += m_fNext;
+	
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[5], sizeof(_float))))
+			return E_FAIL;
+		m_itexnum = (_uint)m_fcurrenthp1 % 10;
+
+
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+	
+	return S_OK;
+}
+
+HRESULT CUI_BossMonster_HPbar::RenderMaxhpfont1()
+{
+	m_fPosition.x += m_fNext;
+	if (m_fmaxhp1 >= 100000.f)
+	{
+		m_itexnum = (_uint)(m_fmaxhp1 / 100000);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[0], sizeof(_float))))
+			return E_FAIL;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+		m_pVIBufferCom->Render();
+	}
+	m_fPosition.x += m_fNext;
+	if (m_fmaxhp1 >= 10000.f)
+	{
+		m_itexnum = (((_uint)m_fmaxhp1 % 100000) / 10000);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[1], sizeof(_float))))
+			return E_FAIL;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+		m_pVIBufferCom->Render();
+	}
+
+	m_fPosition.x += m_fNext;
+	if (m_fmaxhp1 >= 1000.f)
+	{
+		m_itexnum = (((_uint)m_fmaxhp1 % 10000) / 1000);
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[2], sizeof(_float))))
+			return E_FAIL;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+	}
+
+	m_fPosition.x += m_fNext;
+	if (m_fmaxhp1 >= 100.f)
+	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[3], sizeof(_float))))
+			return E_FAIL;
+		m_itexnum = (((_uint)m_fmaxhp1 % 1000) / 100);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+		m_pVIBufferCom->Render();
+	}
+	m_fPosition.x += m_fNext;
+	if (m_fmaxhp1 >= 10.f)
+	{
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[4], sizeof(_float))))
+			return E_FAIL;
+		m_itexnum = (((_uint)m_fmaxhp1 % 100) / 10);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+		m_pVIBufferCom->Render();
+	}
+
+
+	
+		if (FAILED(m_pShaderCom->Set_RawValue("g_fBright", &m_fbrightpos_hp[5], sizeof(_float))))
+			return E_FAIL;
+		m_itexnum = (_uint)m_fmaxhp1 % 10;
+
+		m_fPosition.x += m_fNext;
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+		if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom2->Get_SRV(m_itexnum))))
+			return E_FAIL;
+		m_pShaderCom->Begin(m_eShaderID);
+
+		m_pVIBufferCom->Render();
+	
+
+	return S_OK;
+}
+
+void CUI_BossMonster_HPbar::calculateboss1()
+{
+	m_fMinusHp = m_fmaxhp - m_fcurrenthp;
+	_uint barindex = 4;
+	_float maxonebar = m_fmaxhp*0.25f;
+
+	if (maxonebar - m_fMinusHp >= 0.f)       // 양수면 이번거에!
+	{
+		m_fCurrentbar = maxonebar - m_fMinusHp;
+		return;
+	}
+	//이걸던지자
+
+	else
+	{
+		--barindex;
+		m_fMinusHp -= maxonebar;                                //음수면           3
+	}
+
+	if (maxonebar - m_fMinusHp >= 0.f)       // 양수면 이번거에!
+	{
+		m_fCurrentbar = maxonebar - m_fMinusHp;
+		return ;
+	}
+
+	else
+	{
+		--barindex;
+		m_fMinusHp -= maxonebar;                                //음수면             2
+	}
+
+	if (maxonebar - m_fMinusHp >= 0.f)       // 양수면 이번거에!
+	{
+		m_fCurrentbar = maxonebar - m_fMinusHp;
+		return ;
+	}
+
+	else
+	{
+		--barindex;
+		m_fMinusHp -= maxonebar;                                //음수면             1
+	}
+
+	m_fCurrentbar = maxonebar - m_fMinusHp;
+}
+
+void CUI_BossMonster_HPbar::calculateboss2()
+{
+	m_fMinusHp1 = m_fmaxhp1 - m_fcurrenthp1;
+	_uint barindex = 4;
+	_float maxonebar = m_fmaxhp1*0.25f;
+
+	if (maxonebar - m_fMinusHp1 >= 0.f)       // 양수면 이번거에!
+	{
+		m_fCurrentbar1 = maxonebar - m_fMinusHp1;
+		return;
+	}
+	//이걸던지자
+
+	else
+	{
+		--barindex;
+		m_fMinusHp1 -= maxonebar;                                //음수면           3
+	}
+
+	if (maxonebar - m_fMinusHp1 >= 0.f)       // 양수면 이번거에!
+	{
+		m_fCurrentbar1 = maxonebar - m_fMinusHp1;
+		return;
+	}
+
+	else
+	{
+		--barindex;
+		m_fMinusHp1 -= maxonebar;                                //음수면             2
+	}
+
+	if (maxonebar - m_fMinusHp1 >= 0.f)       // 양수면 이번거에!
+	{
+		m_fCurrentbar1 = maxonebar - m_fMinusHp1;
+		return;
+	}
+
+	else
+	{
+		--barindex;
+		m_fMinusHp1 -= maxonebar;                                //음수면             1
+	}
+
+	m_fCurrentbar1 = maxonebar - m_fMinusHp1;
 }
 
 HRESULT CUI_BossMonster_HPbar::Ready_Components(void * pArg)

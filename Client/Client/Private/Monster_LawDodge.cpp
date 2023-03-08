@@ -10,13 +10,13 @@
 
 using namespace MonsterLaw;
 
-CMonster_LawDodge::CMonster_LawDodge(CMonsterLaw * pPlayer)
+CMonster_LawDodge::CMonster_LawDodge(CMonsterLaw * pPlayer , _bool gofront)
 {
 	//m_bbackstep = back;
 	m_pOwner = pPlayer;
 	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 	
-
+	m_bGofront = gofront;
 }
 
 
@@ -125,6 +125,22 @@ void CMonster_LawDodge::Enter()
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	
 
+
+	if (m_bGofront)
+	{
+		switch (rand() % 2)
+		{
+		case 0:
+			m_pOwner->Get_Transform()->Set_Rotation({ 0.f, 45.f ,0.f });
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_LAND);
+			break;
+
+		case 1:
+			m_pOwner->Get_Transform()->Set_Rotation({ 0.f, -45.f ,0.f });
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_LAND);
+			break;
+		}
+	}
 	
 		switch (rand() % 3)
 		{

@@ -2,6 +2,7 @@
 #include "..\Public\RinwellSkills.h"
 #include "Monster.h"
 #include "Player.h"
+#include "EffectMesh.h"
 
 CRinwellSkills::CRinwellSkills(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBullet(pDevice, pContext)
@@ -353,11 +354,23 @@ void CRinwellSkills::Late_Tick(_float fTimeDelta)
 			m_bBullet = true;
 		if (m_bBullet == true && !m_bFirst)
 		{
-			_vector vOffset = XMVectorSet(0.f, m_fRadius + 3, 0.f, 0.f);
-			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
 			_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
-			mWorldMatrix.r[3] = vLocation;
-			CEffect::PlayEffectAtLocation(TEXT("holyLanceBlast.dat"), mWorldMatrix);
+			vector<CEffect*> Blast = CEffect::PlayEffectAtLocation(TEXT("holyLanceBlast.dat"), mWorldMatrix);
+
+			for (auto& pEffect : Blast)
+			{
+				if (!pEffect)
+					continue;
+
+				CEffectMesh* pNotMesh = dynamic_cast<CEffectMesh*>(pEffect);
+				if (!pNotMesh)
+				{
+					_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+					_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+					pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
+				}
+			}
+			
 			m_bFirst = true;
 		}
 		if (XMVectorGetY(Get_TransformState(CTransform::STATE_TRANSLATION)) <= -10.f)
