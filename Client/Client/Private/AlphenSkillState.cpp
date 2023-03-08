@@ -106,13 +106,12 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 							m_bSkill_E_Sound = true;
 						}
 					}
-
 					else
-						if (!m_bSkill_E_Sound)
-						{
+						//if (!m_bSkill_E_Sound)
+						//{
 							CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillSound.wav"), SOUND_EFFECT, 0.5f);
-							m_bSkill_E_Sound = true;
-						}
+						//	m_bSkill_E_Sound = true;
+						//}
 						break;
 
 				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
@@ -167,7 +166,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 								vector<CEffect*> Ryuuseizin = CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_2.dat"), mWorldMatrix);
 								_matrix EffectWorldMatrix = Ryuuseizin.front()->Get_Transform()->Get_WorldMatrix();
 
-								vector<CEffect*> RyuuseizinParticles = CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_Particles.dat"), EffectWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Ryuuseizin_Particles.dat"), EffectWorldMatrix);
 
 								m_bRyuuseizinSecondEffect = true;
 							}
@@ -465,8 +464,8 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.bZoom = true;
 						m_HitLagDesc.fShakingPower = 0.2f;
 						m_HitLagDesc.fShakingMinusPower = 0.2f;
-						m_HitLagDesc.fZoomDistance = 0.5f;
-						m_HitLagDesc.fZoomSpeed = 0.1f;
+						m_HitLagDesc.fZoomDistance = 2.5f;
+						m_HitLagDesc.fZoomSpeed = 0.5f;
 						m_HitLagDesc.fBlurPower = 5.f;
 						m_HitLagDesc.fBlurDetail = 7.f;
 					}
@@ -477,8 +476,8 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.fHitLagTimer = 0.02f;
 						m_HitLagDesc.bCritical = true;
 						m_HitLagDesc.bShaking = false;
-						m_HitLagDesc.fZoomDistance = 1.f;
-						m_HitLagDesc.fZoomSpeed = 0.5f;
+						m_HitLagDesc.fZoomDistance = 5.f;
+						m_HitLagDesc.fZoomSpeed = 2.5f;
 						m_HitLagDesc.bZoom = true;
 						m_HitLagDesc.fBlurPower = 6.f;
 						m_HitLagDesc.fBlurDetail = 10.f;
@@ -493,7 +492,7 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.bShaking = true;
 						m_HitLagDesc.fShakingPower = 1.f;
 						m_HitLagDesc.fShakingMinusPower = 0.2f;
-						m_HitLagDesc.fZoomDistance = 4.f;
+						m_HitLagDesc.fZoomDistance = 8.f;
 						m_HitLagDesc.fZoomSpeed = 2.f;
 						m_HitLagDesc.fBlurPower = 6.f;
 						m_HitLagDesc.fBlurDetail = 10.f;
@@ -516,8 +515,8 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.fShakingPower = 0.6f;
 						m_HitLagDesc.fShakingMinusPower = 0.1f;
 
-						m_HitLagDesc.fZoomDistance = -0.5f;
-						m_HitLagDesc.fZoomSpeed = 0.1f;
+						m_HitLagDesc.fZoomDistance = -2.5f;
+						m_HitLagDesc.fZoomSpeed = 0.5f;
 						m_HitLagDesc.bZoom = true;
 						m_HitLagDesc.fBlurPower = 3.f;
 						m_HitLagDesc.fBlurDetail = 7.f;
@@ -528,8 +527,8 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.fTakeDamageTimer = 0.1f;
 						m_HitLagDesc.bHitLag = false;
 						m_HitLagDesc.bShaking = false;
-						m_HitLagDesc.fZoomDistance = -4.f;
-						m_HitLagDesc.fZoomSpeed = 1.f;
+						m_HitLagDesc.fZoomDistance = -20.f;
+						m_HitLagDesc.fZoomSpeed = 5.f;
 						m_HitLagDesc.fBlurPower = 6.f;
 						m_HitLagDesc.fBlurDetail = 10.f;
 						m_HitLagDesc.bZoom = true;
@@ -544,8 +543,8 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.fShakingPower = 1.4f;
 						m_HitLagDesc.fShakingMinusPower = 0.2f;
 
-						m_HitLagDesc.fZoomDistance = -2.f;
-						m_HitLagDesc.fZoomSpeed = 1.f;
+						m_HitLagDesc.fZoomDistance = -20.f;
+						m_HitLagDesc.fZoomSpeed = 5.f;
 						m_HitLagDesc.bZoom = true;
 						m_HitLagDesc.fBlurPower = 6.f;
 						m_HitLagDesc.fBlurDetail = 10.f;
@@ -660,7 +659,7 @@ void CAlphenSkillState::Enter(void)
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SUMGONGSANGEULPA);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_R.wav"), SOUND_EFFECT, 0.3f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_R.wav"), SOUND_EFFECT, 0.4f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_R.wav"), SOUND_VOICE, 0.4f);
 		//	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("AlphenAirR.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			break;
@@ -668,7 +667,7 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_ENGETU);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ONEWALL);
 			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_F.wav"), SOUND_EFFECT, 0.5f);*/
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_F.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_F.wav"), SOUND_VOICE, 0.5f);
 
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
@@ -686,7 +685,7 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_E.wav"), SOUND_EFFECT, 1.0f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillVoice.wav"), SOUND_EFFECT, 0.4f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillVoice.wav"), SOUND_VOICE, 0.4f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);*/
 			
 			
@@ -697,7 +696,7 @@ void CAlphenSkillState::Enter(void)
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOOSAWOO);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_R.wav"), SOUND_EFFECT, 1.0f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_R_Test2.wav"), SOUND_EFFECT, 0.3f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_EFFECT, 0.4f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_VOICE, 0.4f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
@@ -705,7 +704,7 @@ void CAlphenSkillState::Enter(void)
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BOONGSUPGEEAKJIN);
 
 			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.3f);*/
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_EFFECT, 0.3f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_VOICE, 0.3f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_STRIKE);

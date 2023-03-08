@@ -71,6 +71,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 	{
 		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
+		pCamera->Set_Zoom(false, 1.f, 0.1f, 6.f, 10.f);
 	}
 
 	if (m_bIsAnimationFinished)
@@ -152,6 +153,9 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
+							CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+							pCamera->Set_Zoom(true, 8.f, 4.f, 10.f, 10.f);
+
 							_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = PLAYER;
@@ -274,6 +278,9 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 
 void CAI_BoostAttack::Enter()
 {
+	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+	pCamera->Set_Zoom(false);
+
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
@@ -294,6 +301,7 @@ void CAI_BoostAttack::Enter()
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_Boost.dat"), mWorldMatrix);
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Booster_Test.wav"), SOUND_EFFECT, 0.35f);
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Booster.wav"), SOUND_EFFECT, 0.45f);
+
 		break;
 	}
 	case CPlayer::RINWELL:
@@ -340,6 +348,7 @@ void CAI_BoostAttack::Enter()
 	{
 		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+
 		pCamera->Set_Target(m_pOwner);
 	}
 	
@@ -409,6 +418,7 @@ void CAI_BoostAttack::Exit()
 	if (m_pOwner->Get_PlayerID() == CPlayer::LAW)
 	{
 		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false, 1.f, 0.1f, 6.f, 10.f);
 		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
 	

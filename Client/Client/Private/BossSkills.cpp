@@ -260,7 +260,7 @@ void CBossSkills::Tick_Laser(_float fTimeDelta)
 		m_bDead = true;
 	}
 	else
-		m_fBulletTimer += fTimeDelta;
+		m_fBulletTimer += fTimeDelta * 2.f;
 
 	/* Focus Points Logic */
 	_float fLerpTime = m_BulletDesc.fDeadTime / (m_LaserFocusPoints.size() - 1);
@@ -274,7 +274,7 @@ void CBossSkills::Tick_Laser(_float fTimeDelta)
 		m_fFocusTimer = 0.f;
 	}
 	else
-		m_fFocusTimer += fTimeDelta;
+		m_fFocusTimer += fTimeDelta * 2.f;
 	
 	/* Lerping to Next Focus Point */
 	_float fInterpFactor = m_fFocusTimer / fLerpTime;

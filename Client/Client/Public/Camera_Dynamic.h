@@ -64,7 +64,7 @@ public:
 	void					Set_Play(_bool type);
 	void					Set_PlayTime(_float fTime) { m_fPlayTime = fTime; m_fTime = 0.f; }
 	void					Set_TargetMatrix(_matrix matTarget) { m_matTarget = matTarget; }
-	void					Set_ShakingMode(_bool type, _float fPower = 1.f, _float fMinusPower = 0.1f);
+	void					Set_ShakingMode(_bool type, _float fPower = 1.f, _float fMinusPower = 0.1f, _bool bOnlyYShaking = false);
 
 public:
 	void Debug_Camera(_float fTimeDelta);
@@ -120,8 +120,11 @@ private:
 	_float			m_fZoomSpeed = 0.f;
 	_float			m_fBlurPower = 0.f;
 	_float			m_fBlurDetail = 0.f;
+	_float			m_fDefaultFov = 0.f;
+
 
 	_bool			m_bShakingMode = false;
+	_bool			m_bOnlyYShaking = false;
 	_float			m_fVelocity = 1.f;
 	_float			m_fMinusVelocity = 1.f;
 	_vector			m_vShakingStartPos = { 0.f, 0.f, 0.f, 0.f };

@@ -125,7 +125,8 @@ PLAYER_MODE CPlayerManager::Check_ActiveMode(CPlayer * pPlayer)
 		{
 			if (pPlayer->Get_PlayerMode() == UNVISIBLE)
 				CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, pPlayer);
-			return   ACTIVE;
+
+			return	ACTIVE;
 		}
 		else
 		{

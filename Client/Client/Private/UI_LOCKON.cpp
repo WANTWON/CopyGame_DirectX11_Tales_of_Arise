@@ -121,7 +121,7 @@ int CUI_LOCKON::Tick(_float fTimeDelta)
 		m_fGlowtimer += fTimeDelta*30.f;
 		m_bStrikefonton = true;
 		if(CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(true);
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_Zoom(true, 10.f, 5.f, 6.f, 10.f);
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 		m_fTimeOffset -= 0.1f;
 		if (m_fTimeOffset <= 0.1f)
