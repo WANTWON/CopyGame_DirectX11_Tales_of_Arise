@@ -39,6 +39,13 @@ CMonsterLawState * CPoseState::LateTick(_float fTimeDelta)
 void CPoseState::Enter()
 {
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CMonsterLaw::BTL_ADVENT);
+
+
+	/*if (m_eStateId == STATE_PHEROMONE)
+	{
+
+	}*/
+	 
 	
 }
 

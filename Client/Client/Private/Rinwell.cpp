@@ -17,6 +17,7 @@ _bool CRinwell::Is_AnimationLoop(_uint eAnimId)
 	case JUMP_LOOP:
 	case JUMP_RUN_LOOP:
 	case BTL_MOVE_IDLE:
+	case BTL_DAMAGE_LOOP:
 		return true;
 	default:
 		return false;
@@ -45,8 +46,8 @@ HRESULT CRinwell::Initialize(void * pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_tInfo.fMaxHp = 5000;
-	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
+	m_tInfo.fMaxHp = 5000.f;
+	m_tInfo.fCurrentHp = 300.f;
 
 	m_tInfo.fMaxMp = 5.f;
 	m_tInfo.fCurrentMp = 2.3f;

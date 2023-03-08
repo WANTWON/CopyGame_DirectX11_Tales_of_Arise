@@ -24,6 +24,7 @@
 #include "AI_SionRinwell_Smash.h"
 #include "AI_SionLaw_Smash.h"
 #include "AI_RinwellLaw_Smash.h"
+#include "AI_Rinwell_Fascinated.h"
 //////////////////////////////////
 #include "AI_Overlimit_State.h"
 #include "AIPoseState.h"
@@ -407,7 +408,7 @@ HRESULT CPlayer::Render()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimColor", &m_vAuraColor, sizeof(_float3))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimTimer", &m_fAuraTimer, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Set_RawValue("g_vRimTimer", &m_fFresnelTimer, sizeof(_float))))
 		return E_FAIL;
 
 	_float4 vCameraLook = (_float4)(CGameInstance::Get_Instance()->Get_CamWorldMatrix().m[2]);
@@ -821,6 +822,14 @@ void CPlayer::AI_check()
 	CAIState* pAIState = nullptr;
 
 	pAIState = new CAICheckState(this,CAIState::STATE_IDLE);
+	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+}
+
+void CPlayer::AI_RINWELL_Event()
+{
+	CAIState* pAIState = nullptr;
+
+	pAIState = new CAI_Rinwell_Fascinated(this);
 	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 }
 

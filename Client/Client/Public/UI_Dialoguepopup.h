@@ -41,6 +41,7 @@ public:
 	void Read_TextFiles_for_dialogue_jelous();
 	void Read_TextFiles_for_dialougeStage2Start();
 	void Read_TextFiles_for_dialogue_jelous2();
+	void Read_TextFiles_for_LawEvent();
 
 	wchar_t* ConverCtoWC(char* str);
 
@@ -89,6 +90,8 @@ private:
 	vector<_tchar*> m_vDialoguepopup_Stage2Start3[2]; // stage 2 begin2
 
 	vector<_tchar*> m_vDialoguepopup_jelous2[2];  // bjb
+
+	vector<_tchar*> m_vDialoguepopup_LawEvent[2];  // SexyLAW
 
 	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;
 	_uint m_iDialogueindex = 0;

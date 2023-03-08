@@ -98,6 +98,9 @@ void CPlayerManager::Save_LastPosition()
 
 PLAYER_MODE CPlayerManager::Check_ActiveMode(CPlayer * pPlayer)
 {
+	if(pPlayer->Get_PlayerID() == RINWELL && m_bChangetoboss)
+		return UNVISIBLE;
+
 	if (pPlayer == nullptr)
 		return ACTIVE;
 

@@ -33,7 +33,7 @@ CAI_ChaseState::CAI_ChaseState(CPlayer* pPlayer, STATE_ID eStateType, _uint play
 
 CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 {
-	
+	m_fbreaktimer += fTimeDelta;
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN || m_eCurrentPlayerID == CPlayer::LAW)
 	{
 		if (CheckTarget() == false)
@@ -173,9 +173,8 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 
 	}
 
-	if (m_bIsAnimationFinished && m_bStopRunning)
+	if (m_fbreaktimer > 0.5f && m_bStopRunning)
 	{
-
 		if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 		{
 			if (nullptr == m_pTarget)
@@ -212,149 +211,313 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 		{
 			if (m_pOwner->Get_Info().fCurrentMp < 1)
 			{
-				switch (rand() % 3)
+				switch (rand() % 2)
 				{
 				case 0:
-					//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+					return new CAI_DodgeState(m_pOwner, m_pTarget);	//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
 					break;
 				case 1:
 					return new CAICheckState(m_pOwner, m_eStateId);
-				case 2:
-					return new CAI_DodgeState(m_pOwner, m_pTarget);
+					break;
+					//	case 2:
+
 
 				}
 			}
 			else
 			{
-				switch (rand() % 7)
-				{
+				//switch (rand() % 7)
+				//{
 
-				case 0:
-					//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
-					break;
-				case 1:
-					//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
-					break;
-				case 2:
-					//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
-					break;
-				case 3:
-					//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
-					break;
-				case 4:
-					//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
-					break;
-				case 5:
-					//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
-					break;
-				case 6:
-					return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+				//case 0:
+				//	//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+				//	break;
+				//case 1:
+				//	//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+				//	break;
+				//case 2:
+				//	//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
+				//	break;
+				//case 3:
+				//	//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
+				//	break;
+				//case 4:
+				//	//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+				//	break;
+				//case 5:
+				//	//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+				//	break;
+				//case 6:
+				return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
 
-				}
 			}
+		}
+
+
+	}
+
+	else if (m_eCurrentPlayerID == CPlayer::RINWELL)
+	{
+		if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+		{
+			/*switch (rand() % 2)
+			{
+			case 0:*/
+			return new CAI_DodgeState(m_pOwner, m_pTarget, true);
+			//case 1:
+			//	//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+			//	break;
+			//}
 
 
 		}
-
-		else if (m_eCurrentPlayerID == CPlayer::RINWELL)
+		else
 		{
-			if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+			switch (rand() % 2)
 			{
-				switch (rand() % 2)
-				{
-				case 0:
-					return new CAI_DodgeState(m_pOwner, m_pTarget, true);
-				case 1:
-					//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
-					break;
-				}
 
-
-			}
-			else
-			{
-				switch (rand() % 9)
-				{
-
-				case 0:
-					//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
-					break;
-				case 1:
-					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_GALEFORCE, m_pTarget);
-					break;
-				case 2:
-					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_THUNDERFIELD, m_pTarget);
-					break;
-				case 3:
-					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_METEOR, m_pTarget);
-					break;
-				case 4:
-					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_DIVINE_SABER, m_pTarget);
-					break;
-				case 5:
-					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_HOLYRANCE, m_pTarget);
-					break;
-				case 6:
-					//return new CAI_Rinwell_SkillState(m_pOwner, STATE_BANGJEON, m_pTarget);
-					break;
-				case 7:
-					return new CAI_DodgeState(m_pOwner, m_pTarget);
-
-				case 8:
-					return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
-
-
-
-				}
-				return nullptr;
-			}
-
-		}
-
-		else if (m_eCurrentPlayerID == CPlayer::LAW)
-		{
-			if (CheckTarget() == false)
-				return nullptr;
-
-			if (m_pOwner->Get_Info().fCurrentMp < 1.f)
-			{
-				switch (rand() % 2)
-				{
-				case 0:
-					return new CAI_DodgeState(m_pOwner, m_pTarget);
-					break;
-				case  1:
-					return new AI_LAW_NomalAttack_State(m_pOwner, STATE_ATTACK, m_pTarget);
-					break;
-				}
-
-			}
-
-
-			switch (rand() % 6)
-			{
 
 			case 0:
-				return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_R);
+				return new CAI_DodgeState(m_pOwner, m_pTarget);
 
 			case 1:
-				return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
-
-			case 2:
-				return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
-
-			case 3:
-				return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
-			case 4:
-				return new CAI_DodgeState(m_pOwner, m_pTarget);
-			case 5:
 				return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
 
 
+
 			}
+			return nullptr;
 		}
-		
+
 	}
+
+	else if (m_eCurrentPlayerID == CPlayer::LAW)
+	{
+		if (CheckTarget() == false)
+			return nullptr;
+
+		if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+		{
+			switch (rand() % 2)
+			{
+			case 0:
+				return new CAI_DodgeState(m_pOwner, m_pTarget);
+				break;
+			case  1:
+				return new AI_LAW_NomalAttack_State(m_pOwner, STATE_ATTACK, m_pTarget);
+				break;
+			}
+
+		}
+
+
+		switch (rand() % 6)
+		{
+
+		case 0:
+			return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_R);
+
+		case 1:
+			return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
+
+		case 2:
+			return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
+
+		case 3:
+			return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
+		case 4:
+			return new CAI_DodgeState(m_pOwner, m_pTarget);
+		case 5:
+			return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
+
+		}
+	}
+	else
+	{
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+		if (m_bStopRunning)
+		{
+			for (auto& pEvent : pEvents)
+			{
+				if (pEvent.isPlay)
+				{
+					if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
+					{
+
+						if (m_eCurrentPlayerID == CPlayer::ALPHEN)
+						{
+							if (nullptr == m_pTarget)
+							{
+								m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
+								(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+							}
+
+							if (m_pOwner->Get_Info().fCurrentMp > 1.f)
+							{
+								switch (rand() % 4)
+								{
+
+
+								case 0:
+									return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
+
+								case 1:
+									return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_AKIZAME);
+
+								case 2:
+									return new CAI_Alphen_SkillAttackState(m_pOwner, STATE_ATTACK, m_pTarget, CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN);
+
+								case 3:
+									return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
+								}
+							}
+							else
+								return new CAI_Alphen_NormalAttackState(m_pOwner, STATE_ATTACK, m_pTarget);
+						}
+
+						else if (m_eCurrentPlayerID == CPlayer::SION)
+						{
+							if (m_pOwner->Get_Info().fCurrentMp < 1)
+							{
+								switch (rand() % 2)
+								{
+								case 0:
+									return new CAI_DodgeState(m_pOwner, m_pTarget);	//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+									break;
+								case 1:
+									return new CAICheckState(m_pOwner, m_eStateId);
+									break;
+									//	case 2:
+
+
+								}
+							}
+							else
+							{
+								//switch (rand() % 7)
+								//{
+
+								//case 0:
+								//	//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+								//	break;
+								//case 1:
+								//	//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE);
+								//	break;
+								//case 2:
+								//	//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_MAGNARAY);
+								//	break;
+								//case 3:
+								//	//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_BRAVE);
+								//	break;
+								//case 4:
+								//	//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET);
+								//	break;
+								//case 5:
+								//	//return new CAI_Sion_SkillState(m_pOwner, STATE_ATTACK, m_pTarget, CSion::ANIM::BTL_ATTACK_THUNDER_BOLT);
+								//	break;
+								//case 6:
+								return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
+							}
+						}
+
+
+					}
+
+					else if (m_eCurrentPlayerID == CPlayer::RINWELL)
+					{
+						if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+						{
+							/*switch (rand() % 2)
+							{
+							case 0:*/
+							return new CAI_DodgeState(m_pOwner, m_pTarget, true);
+							//case 1:
+							//	//return new CAIAttackNormalState(m_pOwner, STATE_ATTACK, m_pTarget);
+							//	break;
+							//}
+
+
+						}
+						else
+						{
+							switch (rand() % 2)
+							{
+
+
+							case 0:
+								return new CAI_DodgeState(m_pOwner, m_pTarget);
+
+							case 1:
+								return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
+
+
+							}
+							return nullptr;
+						}
+
+					}
+
+					else if (m_eCurrentPlayerID == CPlayer::LAW)
+					{
+						if (CheckTarget() == false)
+							return nullptr;
+
+						if (m_pOwner->Get_Info().fCurrentMp < 1.f)
+						{
+							switch (rand() % 2)
+							{
+							case 0:
+								return new CAI_DodgeState(m_pOwner, m_pTarget);
+								break;
+							case  1:
+								return new AI_LAW_NomalAttack_State(m_pOwner, STATE_ATTACK, m_pTarget);
+								break;
+							}
+
+						}
+
+
+						switch (rand() % 6)
+						{
+
+						case 0:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_R);
+
+						case 1:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_E);
+
+						case 2:
+							return new CAI_LAW_SkillAttack_State(m_pOwner, STATE_SKILL_ATTACK_F);
+
+						case 3:
+							return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
+						case 4:
+							return new CAI_DodgeState(m_pOwner, m_pTarget);
+						case 5:
+							return new CAI_JumpState(m_pOwner, STATETYPE_START, true);
+
+
+						}
+					}
+
+				}
+
+
+			}
+
+
+		}
+	}
+		
+	
+		
+		
+		
+	
 
 
 	

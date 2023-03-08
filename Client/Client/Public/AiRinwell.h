@@ -165,6 +165,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual int Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
+	virtual HRESULT Render() override;
 	virtual HRESULT Render_Glow() override;
 	virtual void	 Set_HitState() override;
 public: /*For.State*/
