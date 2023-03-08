@@ -141,6 +141,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						m_fEventStart = pEvent.fStartTime;
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_R_Test.wav"), SOUND_EFFECT, 0.25f);
 					}
 
 
@@ -179,6 +180,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
 							m_fEventStart = pEvent.fStartTime;
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_EFFECT, 0.25f);
 						}
 					}
 
@@ -216,6 +218,7 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 
 						m_bBulletMake = true;
 						m_fEventStart = pEvent.fStartTime;
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_F.wav"), SOUND_EFFECT, 0.3f);
 					}
 				}
 
@@ -253,6 +256,8 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 
 						m_bBulletMake = true;
 						m_fEventStart = pEvent.fStartTime;
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_R_Test.wav"), SOUND_EFFECT, 0.3f);
 
 					}
 				}
@@ -355,6 +360,8 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 							return nullptr;
 
 						m_fEventStart = pEvent.fStartTime;
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_E.wav"), SOUND_EFFECT, 0.3f);
 					}
 				}
 
@@ -397,6 +404,8 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 							return nullptr;
 						m_fEventStart = pEvent.fStartTime;
 						m_iCount++;
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E.wav"), SOUND_EFFECT, 0.15f);
 					}
 
 				}
@@ -603,21 +612,27 @@ void CAI_Sion_SkillState::Enter()
 	{
 	case CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GRAVITY);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_R.wav"), SOUND_VOICE, 0.17f);
 		break;
 	case CSion::ANIM::BTL_ATTACK_MAGNARAY:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_MAGNARAY);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_VOICE, 0.25f);
 		break;
 	case CSion::ANIM::BTL_ATTACK_BRAVE:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_EXPLODE);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_F.wav"), SOUND_VOICE, 0.25f);
 		break;
 	case CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_E.wav"), SOUND_VOICE, 0.25f);
 		break;
 	case CSion::ANIM::BTL_ATTACK_THUNDER_BOLT:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GLACIA);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Ctrl_E.wav"), SOUND_VOICE, 0.25f);
 		break;
 	case CSion::ANIM::BTL_ATTACK_TRESVENTOS:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_TRESVENTUS);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Jump_E.wav"), SOUND_VOICE, 0.25f);
 		break;
 	}
 

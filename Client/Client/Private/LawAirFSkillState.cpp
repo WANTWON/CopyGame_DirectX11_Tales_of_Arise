@@ -278,7 +278,7 @@ void CLawAirFSkillState::Exit(void)
 	
 	Safe_Release(m_pLandCollider);
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
 void CLawAirFSkillState::Update_Skill(void)

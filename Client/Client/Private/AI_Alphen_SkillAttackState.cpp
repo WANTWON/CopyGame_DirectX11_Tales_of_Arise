@@ -92,6 +92,11 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 				{
 				case CAlphen::ANIM::ANIM_ATTACK_HIENZIN:
 				{
+					if (!m_bSkill_E_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						m_bSkill_E_Sound = true;
+					}
 					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
 					if (!strcmp(pEvent.szName, "Hienzin_1"))
@@ -134,6 +139,12 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 				}
 				case CAlphen::ANIM::ANIM_ATTACK_AKIZAME:
 				{
+					if (!m_bSkill_R_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_R_SkillSound.wav"), SOUND_EFFECT, 0.2f);
+						m_bSkill_R_Sound = true;
+					}
+					
 					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
 					if (!strcmp(pEvent.szName, "Akizame_1"))
@@ -169,6 +180,12 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 				}
 				case CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN:
 				{
+					if (!m_bSkill_F_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_EFFECT, 0.3f);
+						m_bSkill_F_Sound = true;
+					}
+					
 					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
 					if (!strcmp(pEvent.szName, "Housyutigakuzin_1"))
@@ -218,6 +235,12 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 				}
 				case CAlphen::ANIM::ANIM_ATTACK_RYUUSEIZIN:
 				{
+					if (!m_bSkillJump_F_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Jump_E_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						m_bSkillJump_F_Sound = true;
+					}
+					
 					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
 					if (!strcmp(pEvent.szName, "Ryuuseizin_1"))
@@ -247,6 +270,12 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 
 				case CAlphen::ANIM::ANIM_ATTACK_SENKUSYOUREPA:
 				{
+					if (!m_bSkillJump_R_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Jump_R_SkillSound.wav"), SOUND_EFFECT, 0.2f);
+						m_bSkillJump_R_Sound = true;
+					}
+					
 					if (!strcmp(pEvent.szName, "Senkusyourepa_1"))
 					{
 						if (!m_bSenkusyourepaFirstEffect)
@@ -284,6 +313,12 @@ CAIState * CAI_Alphen_SkillAttackState::Tick(_float fTimeDelta)
 
 				case CAlphen::ANIM::ANIM_ATTACK_ENGETU:
 				{
+					if (!m_bSkillJump_F_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_F.wav"), SOUND_EFFECT, 0.3f);
+						m_bSkillJump_F_Sound = true;
+					}
+					
 					_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 
 					if (!strcmp(pEvent.szName, "Engetu_1"))
@@ -492,22 +527,28 @@ void CAI_Alphen_SkillAttackState::Enter()
 	{
 	case CAlphen::ANIM::ANIM_ATTACK_HIENZIN:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillVoice.wav"), SOUND_VOICE, 0.2f);
 		break;
 	case CAlphen::ANIM::ANIM_ATTACK_AKIZAME:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOOSAWOO);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_R.wav"), SOUND_VOICE, 0.2f);
 		break;
 	case CAlphen::ANIM::ANIM_ATTACK_HOUSYUTIGAKUZIN:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BOONGSUPGEEAKJIN);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_F.wav"), SOUND_VOICE, 0.2f);
 		break;
 
 	case CAlphen::ANIM::ANIM_ATTACK_RYUUSEIZIN:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YOUSEONGJIN);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_Jump_E.wav"), SOUND_EFFECT, 0.4f);
 		break;
 	case CAlphen::ANIM::ANIM_ATTACK_SENKUSYOUREPA:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SUMGONGSANGEULPA);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_R.wav"), SOUND_VOICE, 0.2f);
 		break;
 	case CAlphen::ANIM::ANIM_ATTACK_ENGETU:
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ONEWALL);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_F.wav"), SOUND_VOICE, 0.25f);
 		break;
 	}
 
