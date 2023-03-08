@@ -379,6 +379,18 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					break;
 				}
 			}
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+				if (!m_bIsFly && (STATE_SKILL_ATTACK_F == m_eStateId))
+				{
+					if (!m_bSkill_F_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_F_SkillSound.wav"), SOUND_EFFECT, 0.6f);
+						m_bSkill_F_Sound = true;
+					}
+				}
+			}
 		}
 		else
 		{
@@ -453,8 +465,8 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.bZoom = true;
 						m_HitLagDesc.fShakingPower = 0.2f;
 						m_HitLagDesc.fShakingMinusPower = 0.2f;
-						m_HitLagDesc.fZoomDistance = 0.5f;
-						m_HitLagDesc.fZoomSpeed = 0.1f;
+						m_HitLagDesc.fZoomDistance = 2.5f;
+						m_HitLagDesc.fZoomSpeed = 0.5f;
 						m_HitLagDesc.fBlurPower = 5.f;
 						m_HitLagDesc.fBlurDetail = 7.f;
 					}
@@ -465,8 +477,8 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.fHitLagTimer = 0.02f;
 						m_HitLagDesc.bCritical = true;
 						m_HitLagDesc.bShaking = false;
-						m_HitLagDesc.fZoomDistance = 1.f;
-						m_HitLagDesc.fZoomSpeed = 0.5f;
+						m_HitLagDesc.fZoomDistance = 5.f;
+						m_HitLagDesc.fZoomSpeed = 2.5f;
 						m_HitLagDesc.bZoom = true;
 						m_HitLagDesc.fBlurPower = 6.f;
 						m_HitLagDesc.fBlurDetail = 10.f;
@@ -481,7 +493,7 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.bShaking = true;
 						m_HitLagDesc.fShakingPower = 1.f;
 						m_HitLagDesc.fShakingMinusPower = 0.2f;
-						m_HitLagDesc.fZoomDistance = 4.f;
+						m_HitLagDesc.fZoomDistance = 8.f;
 						m_HitLagDesc.fZoomSpeed = 2.f;
 						m_HitLagDesc.fBlurPower = 6.f;
 						m_HitLagDesc.fBlurDetail = 10.f;
@@ -504,8 +516,8 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.fShakingPower = 0.6f;
 						m_HitLagDesc.fShakingMinusPower = 0.1f;
 
-						m_HitLagDesc.fZoomDistance = -0.5f;
-						m_HitLagDesc.fZoomSpeed = 0.1f;
+						m_HitLagDesc.fZoomDistance = -2.5f;
+						m_HitLagDesc.fZoomSpeed = 0.5f;
 						m_HitLagDesc.bZoom = true;
 						m_HitLagDesc.fBlurPower = 3.f;
 						m_HitLagDesc.fBlurDetail = 7.f;
@@ -516,8 +528,8 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.fTakeDamageTimer = 0.1f;
 						m_HitLagDesc.bHitLag = false;
 						m_HitLagDesc.bShaking = false;
-						m_HitLagDesc.fZoomDistance = -4.f;
-						m_HitLagDesc.fZoomSpeed = 1.f;
+						m_HitLagDesc.fZoomDistance = -20.f;
+						m_HitLagDesc.fZoomSpeed = 5.f;
 						m_HitLagDesc.fBlurPower = 6.f;
 						m_HitLagDesc.fBlurDetail = 10.f;
 						m_HitLagDesc.bZoom = true;
@@ -532,8 +544,8 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.fShakingPower = 1.4f;
 						m_HitLagDesc.fShakingMinusPower = 0.2f;
 
-						m_HitLagDesc.fZoomDistance = -2.f;
-						m_HitLagDesc.fZoomSpeed = 1.f;
+						m_HitLagDesc.fZoomDistance = -20.f;
+						m_HitLagDesc.fZoomSpeed = 5.f;
 						m_HitLagDesc.bZoom = true;
 						m_HitLagDesc.fBlurPower = 6.f;
 						m_HitLagDesc.fBlurDetail = 10.f;
@@ -674,7 +686,7 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_E.wav"), SOUND_EFFECT, 1.0f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillVoice.wav"), SOUND_EFFECT, 0.4f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);*/
 			
 			

@@ -6,6 +6,7 @@
 #include "RinwellDamageState.h"
 #include "CameraManager.h"
 #include "RinwellSkillState.h"
+#include "Level_LawBattle.h"
 
 using namespace AiRinwell;
 
@@ -59,7 +60,6 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_BATTLESTART);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 		m_pTransformCom->LookAt(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION));
-		CBattleManager::Get_Instance()->Set_BossMonster(this);
 	}
 	else
 	{
@@ -130,6 +130,8 @@ int CAiRinwell::Tick(_float fTimeDelta)
 	{
 		CBattleManager::Get_Instance()->Set_BossMonster(nullptr);
 		CBattleManager::Get_Instance()->Out_Monster(this);
+		if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
+			dynamic_cast<CLevel_LawBattle*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Plus_DeadCount();
 		return OBJ_DEAD;
 	}
 
@@ -273,7 +275,7 @@ void CAiRinwell::Set_BattleMode(_bool type)
 		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_BATTLESTART);
 		m_pState = m_pState->ChangeState(m_pState, pState);
 		m_pTransformCom->LookAt(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION));
-		CBattleManager::Get_Instance()->Set_BossMonster(this);
+		//CBattleManager::Get_Instance()->Set_BossMonster(this);
 	}
 	else
 	{

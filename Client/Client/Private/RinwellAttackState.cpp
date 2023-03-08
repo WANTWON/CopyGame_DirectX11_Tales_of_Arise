@@ -53,6 +53,8 @@ void CAttackState::Enter()
 	else
 		m_bAirMove = false;
 
+	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
+		m_bAirMove = true;
 	switch (m_eStateType)
 	{
 	case Client::STATETYPE_START:
@@ -90,7 +92,7 @@ void CAttackState::Enter()
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
 
-		if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
+		if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f || CGameInstance::Get_Instance()->Get_CurrentLevelIndex()==LEVEL_LAWBATTLE)
 		{
 			BulletDesc.vTargetDir = XMVector3TransformNormal(BulletDesc.vTargetDir, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(15.f)));
 
@@ -132,7 +134,7 @@ void CAttackState::Enter()
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
 
-		if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.75f)
+		if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.75f|| CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
 		{
 			BulletDesc.vTargetDir = XMVector3TransformNormal(BulletDesc.vTargetDir, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(15.f)));
 
@@ -145,7 +147,7 @@ void CAttackState::Enter()
 				return;
 		}
 
-		if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
+		if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f || CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)	
 		{
 			BulletDesc.vTargetDir = XMVector3TransformNormal(BulletDesc.vTargetDir, XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-15.f)));
 

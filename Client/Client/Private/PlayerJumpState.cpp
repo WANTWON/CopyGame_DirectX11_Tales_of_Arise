@@ -199,6 +199,15 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 					if (nullptr != pEvent)
 						return pEvent;
 				}
+
+				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					if (!m_bLandSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.8f);
+						m_bLandSound = true;
+					}
+				}
 			}
 		}
 	}
@@ -684,7 +693,7 @@ void CJumpState::Exit()
 
 	m_bIsDrop = false;
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_FOOT);
 }
 
 _bool CJumpState::Check_JumpEnd(_float fOffset)

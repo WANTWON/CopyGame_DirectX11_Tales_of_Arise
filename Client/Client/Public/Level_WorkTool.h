@@ -65,6 +65,9 @@ private:
 
 	_float m_fSpawnTime = 0.f;
 
+	//Sound
+	_bool m_bMiniGameAfterIsOver_Bgm = false;
+
 public:
 	static CLevel_WorkTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

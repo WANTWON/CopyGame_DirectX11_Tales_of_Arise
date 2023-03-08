@@ -66,6 +66,10 @@ public: /* For Lock On */
 	_int Get_LawBattlePhase() { return m_iLawBattelPhase; }
 	void Set_LawBattlePhase(_int phase) { m_iLawBattelPhase = phase; }
 
+	_bool Get_Rinwellboss() { return m_bRinwellChangetoboss; }
+	void Set_Rinwellboss(_bool tof) { m_bRinwellChangetoboss = tof; }
+
+
 public:
 	void Clear_Monster() { m_FieldMonster.clear(); };
 	void Clear_AllMonster() { m_FieldMonster.clear(); };
@@ -95,6 +99,7 @@ private:
 
 	_int m_iLawBattelPhase = 0;
 
+	_bool m_bRinwellChangetoboss = false;
 
 public:
 	virtual void Free() override;

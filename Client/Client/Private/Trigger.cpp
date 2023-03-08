@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "UI_Dialoguepopup.h"
+#include "UI_Dialogue.h"
 
 CTrigger::CTrigger(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CBaseObj(pDevice, pContext)
@@ -66,18 +67,25 @@ void CTrigger::Late_Tick(_float fTimeDelta)
 	{
 		if (m_pSPHERECom->Collision(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Collider()))
 		{
-			if (m_TriggerDesc.iIndex == 0)
+			if (m_TriggerDesc.iIndex == 0 && m_bCollideOnce[0])
 			{
-
+				m_bCollideOnce[0] = false;
 				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(4, false, 1, 2);
 			}
-			else if (m_TriggerDesc.iIndex == 1)
+			else if (m_TriggerDesc.iIndex == 1 && m_bCollideOnce[1])
 			{
+				m_bCollideOnce[1] = false;
 				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(5, false, 0, 2);
 			}
-			else if (m_TriggerDesc.iIndex == 2)
+			else if (m_TriggerDesc.iIndex == 2 &&  m_bCollideOnce[2])
 			{
+				m_bCollideOnce[2] = false;
 				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(6, false, 0, 1);
+			}
+			else if (m_TriggerDesc.iIndex == 3 && m_bCollideOnce[3])
+			{
+				m_bCollideOnce[3] = false;
+				dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(15);
 			}
 		}
 		break;

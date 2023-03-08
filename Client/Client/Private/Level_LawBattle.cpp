@@ -62,7 +62,7 @@ HRESULT CLevel_LawBattle::Initialize()
 
 		g_fSoundVolume = 0.f;
 		CGameInstance::Get_Instance()->StopAll();
-		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LawBattle.wav"), g_fSoundVolume);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_FightWith_Law.wav"), g_fSoundVolume);
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("LawBattleEnter.dat"), XMMatrixIdentity());
 
 		CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
@@ -75,7 +75,8 @@ HRESULT CLevel_LawBattle::Initialize()
 		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 
-		if (CGameInstance::Get_Instance() ->Get_PastLevelIndex() == LEVEL_CITY)
+		if (CGameInstance::Get_Instance() ->Get_PastLevelIndex() == LEVEL_CITY || 
+			CGameInstance::Get_Instance()->Get_PastLevelIndex() == LEVEL_LAWBATTLE)
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(60.f, 0.f, 20.f, 1.f));
 		else
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
@@ -105,6 +106,30 @@ void CLevel_LawBattle::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false && m_iBossDeadCount >= 2)
+	{
+
+		CUI_Manager::Get_Instance()->ReSet_Arrived_Count();
+
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Camera"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Deco"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Background"));
+
+		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
+		Safe_AddRef(pGameInstance);
+
+		LEVEL eNextLevel = LEVEL_LAWBATTLE;
+
+		m_pCollision_Manager->Clear_AllCollisionGroup();
+		pGameInstance->Set_DestinationLevel(eNextLevel);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
+			return;
+		Safe_Release(pGameInstance);
+		return;
+
+	}
 
 	_bool isBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 	if (isBattleMode)
@@ -461,6 +486,7 @@ HRESULT CLevel_LawBattle::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Compute_CurrentIndex(LEVEL_LAWBATTLE);
 		iter->Check_Navigation();
 		iter->Change_Level(LEVEL_LAWBATTLE);
+		iter->Set_IsActionMode(true);
 		i++;
 	}
 	
@@ -668,11 +694,9 @@ HRESULT CLevel_LawBattle::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		return E_FAIL;
 
 
-	if (CBattleManager::Get_Instance()->Get_IsBossBattle())
-	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_LAWBATTLE, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_LAWBATTLE, pLayerTag)))
 			return E_FAIL;
-	}
+	
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_LAWBATTLE, pLayerTag)))
 		return E_FAIL;*/
 

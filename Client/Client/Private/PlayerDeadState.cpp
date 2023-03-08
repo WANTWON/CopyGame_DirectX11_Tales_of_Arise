@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\PlayerDeadState.h"
 #include "Level_LawBattle.h"
-
+#include "MonsterLaw.h"
 using namespace Player;
 
 CPlayerDeadState::CPlayerDeadState(CPlayer * pPlayer, STATE_ID eStateType)
@@ -49,7 +49,7 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 				CBattleManager::Get_Instance()->Set_LawBattlePhase(1);
 				break;
 			case Client::CPlayer::SION:
-			{
+			/*{
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
 				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_HP(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp);
 				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_Dead(false);
@@ -69,15 +69,17 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 				CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 				pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
 				break;
-			}
-			//	CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
-			//	CBattleManager::Get_Instance()->Set_LawBattlePhase(2);
-			//	break;
+			}*/
+				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
+				CBattleManager::Get_Instance()->Set_LawBattlePhase(2);
+				break;
 			case Client::CPlayer::RINWELL:
 			{
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
+				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_HP(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp);
 				CBattleManager::Get_Instance()->Set_OneonOneMode(false);
 				CBattleManager::Get_Instance()->Set_LawBattlePhase(0);
+				dynamic_cast<CMonsterLaw*>(CBattleManager::Get_Instance()->Get_BossMonster())->Set_Daguri(true);
 				vector<CPlayer*> pAIList = CPlayerManager::Get_Instance()->Get_AIPlayers();
 				for (auto& iter : pAIList)
 				{

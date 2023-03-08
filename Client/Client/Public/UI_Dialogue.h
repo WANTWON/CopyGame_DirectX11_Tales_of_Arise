@@ -47,13 +47,12 @@ public:
 	void Read_TextFiles_for_Minigame1start();
 	void Read_TextFiles_for_Minigame1end();
 	void Read_TextFiles_for_Minigame2start();
-
-
 	void Read_TextFiles_for_Minigame2end();
-
 	void Read_TextFiles_for_LawBossBattleStart();
-
 	void Read_TextFiles_for_LawBossBattleEvent();
+
+	void Read_TextFiles_for_LawBossBattleEnd();
+	void Read_TextFiles_for_LastQuestStart();
 
 	wchar_t* ConverCtoWC(char* str);
 
@@ -111,7 +110,9 @@ private:
 
 	vector<_tchar*> m_vDialogue13[5]; // LawBossbattle EVENT;
 
-	
+	vector<_tchar*> m_vDialogue14[5]; // LawBossbattleEnd
+
+	vector<_tchar*> m_vDialogue15[14]; // LASTQUESTSTART
 
 	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;
 	/*m_vCurrentDialogue.reszie(10);

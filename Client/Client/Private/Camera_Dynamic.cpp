@@ -30,6 +30,7 @@ HRESULT CCamera_Dynamic::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&((CAMERADESC_DERIVED*)pArg)->CameraDesc)))
 		return E_FAIL;
 
+	m_fDefaultFov = XMConvertToDegrees(m_CameraDesc.fFovy);
 	//m_vDistance = ((CAMERADESC_DERIVED*)pArg)->vDistance;
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&((CAMERADESC_DERIVED*)pArg)->InitPostion));
 	m_OriginPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
@@ -182,17 +183,20 @@ void CCamera_Dynamic::Set_Play(_bool type)
 	}
 }
 
-void CCamera_Dynamic::Set_ShakingMode(_bool type, _float fPower, _float fMinusPower)
+void CCamera_Dynamic::Set_ShakingMode(_bool type, _float fPower, _float fMinusPower, _bool bOnlyYShaking)
 {
 	 m_bShakingMode = type; 
 	 m_fVelocity = fPower;
 	 m_fMinusVelocity = fMinusPower;
 	 m_vShakingStartPos = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+	 m_bOnlyYShaking = bOnlyYShaking;
 }
 
 void CCamera_Dynamic::TargetTool_Camera(_float fTimeDelta)
 {
 	m_fTime += fTimeDelta;
+
+	ZoomSetting(m_fZoomDistance, m_fZoomSpeed, m_fBlurPower, m_fBlurDetail);
 
 	_float fStartTime = m_CamDatas[m_iIndex].fStartTime* m_fPlayTime;
 	_float fEndTime = m_CamDatas[m_iIndex].fEndTime* m_fPlayTime;
@@ -208,7 +212,8 @@ void CCamera_Dynamic::TargetTool_Camera(_float fTimeDelta)
 	vCameraPos = XMVectorSetY(vCameraPos, XMVectorGetY(vCameraPos) + m_CamDatas[m_iIndex].fYoffset + m_fCameraOffsetY);
 
 
-	_vector FinalPos = XMVectorLerp(m_vInitPos, vCameraPos, fValue); //_float4 저장 y올리기 
+	_vector vZoomDir = XMVector3Normalize(pTargetPosition - vCameraPos);
+	_vector FinalPos = XMVectorLerp(m_vInitPos, vCameraPos + vZoomDir*m_fZoomOffset, fValue); //_float4 저장 y올리기 
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 
 
@@ -234,11 +239,86 @@ void CCamera_Dynamic::TargetTool_Camera(_float fTimeDelta)
 			m_CamDatas.clear();
 		}
 	}
+
+	if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
+	{
+
+		if (m_bShakingMode)
+		{
+			_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
+			_vector vCenterPos = vCameraPosition;
+
+			_float m_fCameraOffsetX = 0.f;
+			_float m_fCameraOffsetY = 0.f;
+
+
+			++m_iShakingCount;
+			if (m_iShakingCount % 4 == 0)
+			{
+				m_fCameraOffsetX -= m_fVelocity*0.1f;;
+
+				if (rand() % 2 == 0)
+					m_fCameraOffsetY -= m_fVelocity*0.1f;
+				else
+					m_fCameraOffsetY += m_fVelocity*0.1f;
+			}
+			else if (m_iShakingCount % 4 == 1)
+			{
+				m_fCameraOffsetX += m_fVelocity*0.1f;;
+
+				if (rand() % 2 == 0)
+					m_fCameraOffsetY -= m_fVelocity*0.1f;
+				else
+					m_fCameraOffsetY += m_fVelocity*0.1f;
+			}
+
+
+			m_fVelocity -= m_fMinusVelocity;
+			vCameraPosition = vCameraPosition + m_pTransform->Get_State(CTransform::STATE_RIGHT)*m_fCameraOffsetX + m_pTransform->Get_State(CTransform::STATE_UP)*m_fCameraOffsetY;
+			m_vNewPos = vCameraPosition;
+
+			if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - m_vNewPos)) <= 0.2f && m_fTime <= 0.2f)
+				m_bLerp = false;
+
+			_vector FinalPos = { 0.f,0.f,0.f,0.f };
+			if (m_bLerp)
+			{
+				m_fShakingTime += fTimeDelta*0.3f;
+
+				FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fShakingTime); //_float4 저장 y올리기 
+
+				if (m_fShakingTime >= 1.f)
+					m_bLerp = false;
+			}
+			else
+			{
+				FinalPos = m_vNewPos;
+				m_fShakingTime = 0.f;
+			}
+
+			m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
+
+			m_fVelocity -= m_fMinusVelocity;
+			if (m_fVelocity < 0.0f)
+			{
+				m_fShakingTime = 0.f;
+				m_fVelocity = 0.f;
+				m_iShakingCount = 0;
+				m_bShakingMode = false;
+			}
+		}
+			
+
+	}
+
+	
 }
 
 void CCamera_Dynamic::TargetTool_CameraOff(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	ZoomSetting(m_fZoomDistance, m_fZoomSpeed, m_fBlurPower, m_fBlurDetail);
 
 	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 
@@ -251,14 +331,19 @@ void CCamera_Dynamic::TargetTool_CameraOff(_float fTimeDelta)
 	{
 		m_fTime += fTimeDelta;
 
-		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), m_vNewPos, m_fTime); //_float4 저장 y올리기 
+		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos + vZoomDir*m_fZoomOffset), m_fTime); //_float4 저장 y올리기 
+
+		if (m_fTime >= 1.f)
+			m_bLerp = false;
 
 		if (m_fTime >= 1.f)
 			m_bLerp = false;
 	}
 	else
 	{
-		FinalPos = m_vNewPos;
+		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
+		FinalPos = m_vNewPos + vZoomDir*m_fZoomOffset;
 		m_fTime = 0.f;
 		
 		if(pGameInstance->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
@@ -270,6 +355,15 @@ void CCamera_Dynamic::TargetTool_CameraOff(_float fTimeDelta)
 	_vector vCenterPos = XMVectorSetY(vPlayerPosition, XMVectorGetY(vPlayerPosition) + m_fLookOffsetY);
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 	m_pTransform->LookAt(vCenterPos);
+
+	if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
+	{
+
+		if (m_bShakingMode)
+			Shaking_Camera(fTimeDelta);
+
+	}
+
 
 	RELEASE_INSTANCE(CGameInstance);
 }
@@ -445,7 +539,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 
 	m_lMouseWheel = pGameInstance->Get_DIMMoveState(DIMM_WHEEL);
 
-	ZoomSetting(-3.f, 0.25f, 3.f, 7.f);
+	ZoomSetting(-15.f, 1.25f, 3.f, 7.f);
 
 	if (CGameInstance::Get_Instance()->Get_CurrentLevel()->Get_NextLevel() != true)
 	{
@@ -532,7 +626,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 		m_fTime += fTimeDelta*0.3f;
 
 		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
-		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos + vZoomDir*m_fZoomOffset), m_fTime); //_float4 저장 y올리기 
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos  /*+vZoomDir*m_fZoomOffset*/), m_fTime); //_float4 저장 y올리기 
 
 		if (m_fTime >= 1.f)
 			m_bLerp = false;
@@ -540,7 +634,7 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 	else
 	{
 		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
-		FinalPos = m_vNewPos +vZoomDir*m_fZoomOffset;
+		FinalPos = m_vNewPos; //+vZoomDir*m_fZoomOffset;
 		m_fTime = 0.f;
 	}
 
@@ -559,7 +653,6 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	//if (m_pTarget == nullptr)
 	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 
 	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
@@ -684,24 +777,19 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 	if (m_bLerp)
 	{
 		m_fTime += fTimeDelta*0.3f;
-
-		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
-		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos + vZoomDir*m_fZoomOffset), m_fTime); //_float4 저장 y올리기 
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos), m_fTime); //_float4 저장 y올리기 
 
 		if (m_fTime >= 1.f)
 			m_bLerp = false;
 	}
 	else
 	{
-		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
-		FinalPos = m_vNewPos +vZoomDir*m_fZoomOffset;
+		FinalPos = m_vNewPos;
 		m_fTime = 0.f;
 	}
 
 
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
-
-	
 	m_pTransform->LookAt(vCenterPos);
 
 
@@ -990,7 +1078,9 @@ void CCamera_Dynamic::AIBoostOn_Camera(_float fTimeDelta)
 	m_pTarget->Set_IsActionMode(true);
 	_vector vPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_vDistance;
 
-	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - vPosition)) <= 0.2f && m_fTime <= 0.2f)
+	ZoomSetting(m_fZoomDistance, m_fZoomSpeed, m_fBlurPower, m_fBlurDetail);
+
+	if (XMVectorGetX(XMVector4Length(m_pTransform->Get_State(CTransform::STATE_TRANSLATION) - vPosition )) <= 0.2f && m_fTime <= 0.2f)
 		m_bLerp = false;
 	
 
@@ -998,7 +1088,6 @@ void CCamera_Dynamic::AIBoostOn_Camera(_float fTimeDelta)
 	if (m_bLerp)
 	{
 		m_fTime += fTimeDelta*0.3f;
-
 		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), vPosition, m_fTime); //_float4 저장 y올리기 
 
 		if (m_fTime >= 1.f)
@@ -1006,6 +1095,7 @@ void CCamera_Dynamic::AIBoostOn_Camera(_float fTimeDelta)
 	}
 	else
 	{
+		
 		FinalPos = vPosition;
 		m_fTime = 0.f;
 	}
@@ -1134,13 +1224,17 @@ void CCamera_Dynamic::ZoomSetting(_float fDistance, _float fSpeed, _float fFocus
 		}
 	}
 	
+	m_CameraDesc.fFovy = XMConvertToRadians(m_fDefaultFov - m_fZoomOffset);
+
+	if(m_eCamMode != CAM_AIBOOSTON && m_eCamMode != CAM_AIBOOSTOFF)
+		m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	/* Zoom Blur */
-	m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pTarget);
 	if (pPlayer)
 	{
 		if (pPlayer->Get_DodgeEffect() || pPlayer->Get_ResetStrikeBlur())
-			return;
+			return;	
 
 		_float fInterpFactor = m_fZoomOffset / fDistance;
 		_int iFocusDetailLerp = 1 + fInterpFactor * (fFocusDetail - 1);
@@ -1170,24 +1264,39 @@ void CCamera_Dynamic::Shaking_Camera(_float fTimeDelta)
 	++m_iShakingCount;
 	if (m_iShakingCount % 4 == 0)
 	{
-		m_fAngle -= m_fVelocity;
+		if (!m_bOnlyYShaking)
+		{
+			m_fAngle -= m_fVelocity;
 
-		if (rand() % 2 == 0)
-			m_fCameraOffsetY -= m_fVelocity*0.1f;
+			if (rand() % 2 == 0)
+				m_fCameraOffsetY -= m_fVelocity*0.1f;
+			else
+				m_fCameraOffsetY += m_fVelocity*0.1f;
+		}
 		else
-			m_fCameraOffsetY += m_fVelocity*0.1f;
+		{
+			m_fCameraOffsetY -= m_fVelocity*0.1f;
+		}
+		
 	}
 	else if (m_iShakingCount % 4 == 1)
 	{
-		m_fAngle += m_fVelocity;
+		if (!m_bOnlyYShaking)
+		{
+			m_fAngle += m_fVelocity;
 
-		if (rand() % 2 == 0)
-			m_fCameraOffsetY -= m_fVelocity*0.1f;
+			if (rand() % 2 == 0)
+				m_fCameraOffsetY -= m_fVelocity*0.1f;
+			else
+				m_fCameraOffsetY += m_fVelocity*0.1f;
+		}
 		else
+		{
 			m_fCameraOffsetY += m_fVelocity*0.1f;
+		}
+		
 	}
 	
-
 	m_fVelocity -= m_fMinusVelocity;
 
 	vCameraPosition = XMVectorSetX(vCameraPosition, (XMVectorGetX(vCenterPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
@@ -1204,17 +1313,14 @@ void CCamera_Dynamic::Shaking_Camera(_float fTimeDelta)
 	if (m_bLerp)
 	{
 		m_fShakingTime += CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60"))*0.3f;
-
-		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
-		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos + vZoomDir*m_fZoomOffset), m_fTime); //_float4 저장 y올리기 
+		FinalPos = XMVectorLerp(m_pTransform->Get_State(CTransform::STATE_TRANSLATION), (m_vNewPos), m_fTime); //_float4 저장 y올리기 
 
 		if (m_fShakingTime >= 1.f)
 			m_bLerp = false;
 	}
 	else
 	{
-		_vector vZoomDir = XMVector3Normalize(vPlayerPosition - m_vNewPos);
-		FinalPos = m_vNewPos + vZoomDir*m_fZoomOffset;
+		FinalPos = m_vNewPos;
 		m_fShakingTime = 0.f;
 	}
 
