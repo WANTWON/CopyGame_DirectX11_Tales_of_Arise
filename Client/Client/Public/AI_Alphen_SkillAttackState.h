@@ -46,6 +46,17 @@ private:
 	_bool m_bHousyutigakuzinThirdEffect = false;
 	_bool m_bEngetuFirstEffect = false;
 	_bool m_bEngetuSecondEffect = false;
+
+
+	//Sound
+	_bool m_bSkillJump_R_Sound = false;
+	_bool m_bSkillJump_E_Sound = false;
+	_bool m_bSkillJump_F_Sound = false;
+	_bool m_bSkill_R_Sound = false;
+	_bool m_bSkill_E_Sound = false;
+	_bool m_bSkill_F_Sound = false;
+	
+	
 };
 END
 END

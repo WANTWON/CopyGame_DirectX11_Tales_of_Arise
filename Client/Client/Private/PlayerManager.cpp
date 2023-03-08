@@ -171,7 +171,7 @@ void CPlayerManager::Set_SmashAttack()
 
 	if ((nullptr != pLockonMonster) && (pLockonMonster->Get_Stats().m_fLockonSmashGuage >= 4.f))
 	{
-		//pLockonMonster->Set_IsActionMode(true);
+		pLockonMonster->Set_IsActionMode(true);
 		pLockonMonster->Save_LastPosition();
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1) && CGameInstance::Get_Instance()->Key_Down(DIK_2))
@@ -430,17 +430,18 @@ void CPlayerManager::Set_SmashAttack()
 				CBattleManager::Get_Instance()->Get_LackonMonster()->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
 				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
 
-				
+				Get_EnumPlayer(3)->Set_IsActionMode(true);
+				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
+				Get_EnumPlayer(3)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
+				Get_EnumPlayer(3)->SmashAttack(CPlayer::RINWELL_LAW);
+
+
 				Get_EnumPlayer(2)->Set_IsActionMode(false);
 				Get_EnumPlayer(2)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE1]);
 				Get_EnumPlayer(2)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 				Get_EnumPlayer(2)->SmashAttack(CPlayer::RINWELL_LAW);
 
-				Get_EnumPlayer(3)->Set_IsActionMode(true);
-				Get_EnumPlayer(3)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(63.f, 0.11f, 54.f, 1.f));
-				Get_EnumPlayer(3)->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
-				Get_EnumPlayer(3)->SmashAttack(CPlayer::RINWELL_LAW);
-
+				
 				if (Get_EnumPlayer(0) != nullptr)
 				{
 					Get_EnumPlayer(0)->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[AIPLAYER1]);
@@ -466,7 +467,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-				pCameraManager->Play_ActionCamera(TEXT("withlaw3.dat"), XMMatrixIdentity());
+				pCameraManager->Play_ActionCamera(TEXT("withlaw2.dat"), XMMatrixIdentity());
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();

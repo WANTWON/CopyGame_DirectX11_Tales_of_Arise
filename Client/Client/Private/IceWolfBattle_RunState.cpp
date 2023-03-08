@@ -39,7 +39,7 @@ CIceWolfState * CBattle_RunState::Tick(_float fTimeDelta)
 
 	if (m_pOwner->Get_Stats().m_fCurrentHp <= 0)
 	{
-		return new CBattle_Damage_LargeB_State(m_pOwner, CIceWolfState::STATE_DEAD);
+		return new CBattle_Damage_LargeB_State(m_pOwner, CIceWolfState::STATE_DEAD, HIT_DOWN, XMVectorSet(0.f, 0.f, 0.f, 1.f), 0.f);
 	}
 
 

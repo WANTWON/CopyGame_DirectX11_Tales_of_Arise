@@ -423,6 +423,8 @@ HRESULT CAstralDoubt::SetUp_ShaderID()
 
 void CAstralDoubt::Set_HitState()
 {
+	CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_SMASHHIT);
+	m_pState = m_pState->ChangeState(m_pState, pState);
 }
 
 void CAstralDoubt::Check_Navigation()

@@ -545,7 +545,6 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _float fMoveLeng
 		CAIState* pAIState = nullptr;
 
 		m_tInfo.fCurrentHp = 0;
-		m_bDead = true;
 		switch (eMode)
 		{
 		case Client::ACTIVE:
@@ -744,6 +743,21 @@ void CPlayer::Reset_StrikeBlur(_float fTimeDelta)
 		m_bResetStrikeBlur = false;
 		m_pRendererCom->Set_ZoomBlur(false);
 	}
+}
+
+void CPlayer::Set_HitState()
+{
+	if (m_ePlayerMode == ACTIVE)
+	{
+		CPlayerState* pPlayerState = new Player::CHitState(this, XMVectorSet(0.f,0.f,0.f,0.f), 0.f, HIT_SMASH);
+		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+	}
+	else
+	{
+		CAIState* pAIState = new AIPlayer::CAI_HitState(this,XMVectorSet(0.f, 0.f, 0.f, 0.f), false , 0.f, CAIState::STATE_SMASHHIT);
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+	}
+
 }
 
 void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)

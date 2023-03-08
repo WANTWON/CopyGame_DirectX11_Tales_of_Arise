@@ -57,10 +57,11 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 					if (m_bAdventSound == false)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_EFFECT, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_FootPress_PoisonFog.wav"), SOUND_EFFECT, 0.4f);
 						m_bAdventSound = true;
 					}
-
+					
 					CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 					_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("FOOT_L"/*"EX_CLAW2_3_L"*/)->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
@@ -626,6 +627,13 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 								return nullptr;
 
 							m_bBullet_1 = true;
+
+							if (!m_bSpearMulti_Poison1)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison1.wav"), SOUND_EFFECT, 0.4f);
+								m_bSpearMulti_Poison1 = true;
+							}
+
 						}
 					}
 					if (!m_bBullet_2)
@@ -652,6 +660,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 								return nullptr;
 
 							m_bBullet_2 = true;
+
+							if (!m_bSpearMulti_Poison2)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison2.wav"), SOUND_EFFECT, 0.4f);
+								m_bSpearMulti_Poison2 = true;
+							}
 						}
 					}
 					if (!m_bBullet_3)
@@ -678,6 +692,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 								return nullptr;
 
 							m_bBullet_3 = true;
+
+							if (!m_bSpearMulti_Poison3)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison3.wav"), SOUND_EFFECT, 0.4f);
+								m_bSpearMulti_Poison3 = true;
+							}
 						}
 					}
 					if (!m_bBullet_4)
@@ -704,6 +724,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 								return nullptr;
 
 							m_bBullet_4 = true;
+
+							if (!m_bSpearMulti_Poison4)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison4.wav"), SOUND_EFFECT, 0.4f);
+								m_bSpearMulti_Poison4 = true;
+							}
 						}
 					}
 					if (!m_bBullet_5)
@@ -730,6 +756,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 								return nullptr;
 
 							m_bBullet_5 = true;
+
+							if (!m_bSpearMulti_Poison5)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison5.wav"), SOUND_EFFECT, 0.4f);
+								m_bSpearMulti_Poison5 = true;
+							}
 						}
 					}
 					if (!m_bBullet_6)
@@ -756,6 +788,12 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 								return nullptr;
 
 							m_bBullet_6 = true;
+
+							if (!m_bSpearMulti_Poison6)
+							{
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison6.wav"), SOUND_EFFECT, 0.4f);
+								m_bSpearMulti_Poison6 = true;
+							}
 						}
 					}
 					if (!m_bSmash)

@@ -45,6 +45,7 @@ public:
 		STATE_BE_DAMAGED,
 		STATE_DOWN,
 		STATE_DEAD,
+		STATE_SMASHHIT,
 		STATE_HALF,
 		STATE_TELEPORT_START,
 		STATE_TELEPORT_UP,
@@ -198,7 +199,7 @@ protected:
 
 		_float fRadian = acos(fDot) * (180 / XM_PI);
 
-		//¾ÕÂÊÀÎÁö µÚÂÊÀÎÁö 
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 		_float fLookDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
 
 		//if (fLookDot < 0)
@@ -221,14 +222,14 @@ protected:
 
 		_vector		vTargetDir = XMVector3Normalize(vAt - vMonPos);
 
-		//¿À¸¥ÂÊÀÎÁö ¿ÞÂÊÀÎÁö 
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 		_float fRightDot = XMVectorGetX(XMVector3Dot(vRight, vTargetDir));
 
 		if (fRightDot > 0)
-			return true;	//¿À¸¥ÂÊ
+			return true;	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 		else
-			return false;  //¿ÞÂÊ
+			return false;  //ï¿½ï¿½ï¿½ï¿½
 
 		return false;
 	}
@@ -249,7 +250,7 @@ protected:
 		_float fDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
 
 
-		//¾ÕÂÊÀÎÁö µÚÂÊÀÎÁö 
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 		_float fLookDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
 
 
@@ -299,13 +300,13 @@ protected:
 
 		_float fRadian = acos(fDot) * (180 / XM_PI);
 
-		//¾ÕÂÊÀÎÁö µÚÂÊÀÎÁö 
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 		_float fLookDot = XMVectorGetX(XMVector3Dot(vMonLook, vTargetDir));
 
 
 		_float fSightAngle = vSightAngle;
 
-		//¾ÕÂÊ¿¡ ÀÖ°í ½Ã¾ß°¢ ¾È¿¡ ÀÖ´Ù
+		//ï¿½ï¿½ï¿½Ê¿ï¿½ ï¿½Ö°ï¿½ ï¿½Ã¾ß°ï¿½ ï¿½È¿ï¿½ ï¿½Ö´ï¿½
 		if (fLookDot > 0)
 		{
 			if (fRadian <= fSightAngle)

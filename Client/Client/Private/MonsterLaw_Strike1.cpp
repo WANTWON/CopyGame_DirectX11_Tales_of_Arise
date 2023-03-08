@@ -17,13 +17,12 @@ using namespace MonsterLaw;
 using namespace Player;
 CMonsterLaw_Strike1::CMonsterLaw_Strike1(CMonsterLaw* pPlayer, CBaseObj* pTarget)
 {
-	//m_ePreStateID = eStateType;
+
 	m_pOwner = pPlayer;
-	//m_eCurrentPlayerID = m_pOwner->Get_PlayerID();
+
 	if (nullptr == pTarget)
 	{
 		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
-	//	(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 	}
 	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());;
 }
@@ -35,25 +34,13 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 
 	m_fTimer += fTimeDelta;
 
-	/*if (m_pOwner->Get_PlayerID() == CPlayer::ALPHEN)
-	{
-		if (m_fTimer > 2.f)
-		{
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
-			m_fTimer = -100.f;
-		}
 
-	}*/
-
-//	if (m_pOwner->Get_PlayerID() == CPlayer::LAW)
-//	{
 		if (m_fTimer > 4.f)
 		{
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ALPHENLAWSTRIKE);
 			m_fTimer = -100.f;
 		}
 
-//	}
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
 	if (!m_bIsAnimationFinished)
@@ -96,9 +83,7 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 							}
 							else if (!strcmp(pEvent.szName, "Punch"))
 							{
-								//dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
-								/*CPlayerState* pState = new CHitState(m_pTarget,m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-								m_pTarget->Set_PlayerState(pState);*/
+								
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[2];
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawAttack1_BeginPunch.dat"), mWorldMatrix);
@@ -110,14 +95,14 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 									vPosition += vCamDir*0.1f;
 									pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
 								}
-				//				m_pTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[1]);
+								m_pTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[0]);
+								m_pTarget->Set_HitState();
 							}
 							else if (!strcmp(pEvent.szName, "FootPunch"))
 							{
-								/*CPlayerState* pState = new CHitState(m_pTarget, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-								m_pTarget->Set_PlayerState(pState);*/
-
-				//				m_pTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[2]);
+								
+								m_pTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[1]);
+								m_pTarget->Set_HitState();
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[3];
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawAttack1_BeginPunch.dat"), mWorldMatrix);
@@ -132,9 +117,7 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 							}
 							else if (!strcmp(pEvent.szName, "Punch2"))
 							{
-								/*CPlayerState* pState = new CHitState(m_pTarget, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-								m_pTarget->Set_PlayerState(pState);*/
-
+								
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[4];
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawAttack1_BeginPunch.dat"), mWorldMatrix);
@@ -155,9 +138,9 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 							}
 							else if (!strcmp(pEvent.szName, "Boom"))
 							{
-								/*CPlayerState* pState = new CHitState(m_pTarget, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-								m_pTarget->Set_PlayerState(pState);*/
-
+							
+								m_pTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[2]);
+								m_pTarget->Set_HitState();
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[6];
 								CEffect::PlayEffectAtLocation(TEXT("LawAttack1_Boom.dat"), mWorldMatrix);
@@ -196,9 +179,7 @@ CMonsterLawState * CMonsterLaw_Strike1::LateTick(_float fTimeDelta)
 			CUI_Manager::Get_Instance()->Get_UIStrike() == false)
 		{
 
-			
-
-			
+	
 				return new CMonster_LawIdleState(m_pOwner);
 			
 
@@ -213,6 +194,8 @@ CMonsterLawState * CMonsterLaw_Strike1::LateTick(_float fTimeDelta)
 
 		if (m_fFadeTime > 1.f)
 		{
+			if (m_bStrikeBlur)
+				m_bStrikeBlur = false;
 			
 				CUI_Manager::Get_Instance()->Set_UIStrike(true);
 				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
@@ -226,22 +209,12 @@ CMonsterLawState * CMonsterLaw_Strike1::LateTick(_float fTimeDelta)
 
 void CMonsterLaw_Strike1::Enter()
 {
-	//m_pOwner->Set_StrikeAttack(true);
-	
+
 	m_pOwner->Set_IsActionMode(true);
 	Set_EffectPosition();
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RAINOUI);
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MYSTIC_ZINRAIROUEIKYAKU);
 	m_pOwner->Get_Model()->Reset();
-
-
-	/*if (nullptr == m_pTarget)
-	{
-		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-	}
-	else
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));*/
 
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_VOICE, 0.55f);
@@ -251,10 +224,7 @@ void CMonsterLaw_Strike1::Exit()
 {
 	m_pOwner->Get_Model()->Reset();
 
-	if (m_bStrikeBlur)
-	{
-		m_bStrikeBlur = false;
-	}
+	
 	
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
 			return;
@@ -279,7 +249,7 @@ void CMonsterLaw_Strike1::Exit()
 
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 
-	//m_pOwner->Set_StrikeAttack(false);
+	m_pTarget->Set_IsActionMode(false);
 	m_pOwner->Set_IsActionMode(false);
 	CBattleManager::Get_Instance()->Set_IsStrike(false);
 
@@ -298,7 +268,7 @@ void CMonsterLaw_Strike1::Exit()
 	}
 	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//__super::Exit();
+	pCamera->Set_Zoom(false);
 }
 
 void CMonsterLaw_Strike1::StrikeBlur(_float fTimeDelta)

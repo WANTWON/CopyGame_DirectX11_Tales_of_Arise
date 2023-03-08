@@ -17,8 +17,11 @@ CBattleManager::CBattleManager()
 void CBattleManager::Set_BattleMode(_bool type, MONSTER_ID eMonsterType, _bool IsBossBattle)
 {
 	 m_isBattleMode = type; 
-	 m_eMonsterType = eMonsterType; 
-	 m_FightedMonster.push_back(eMonsterType);
+	 if (m_eMonsterType != eMonsterType)
+	 {
+		 m_eMonsterType = eMonsterType;
+		 m_FightedMonster.push_back(eMonsterType);
+	}
 	 m_bIsBossBattle = IsBossBattle;
 }
 

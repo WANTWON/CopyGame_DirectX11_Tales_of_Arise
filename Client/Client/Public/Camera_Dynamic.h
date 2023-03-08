@@ -15,7 +15,7 @@ public:
 	enum CAMERAMODE {CAM_DEBUG, CAM_PLAYER,
 		CAM_BATTLEZONE, CAM_BATTLE_CLEAR, CAM_LOCKON, CAM_LOCKOFF,
 		CAM_AIBOOSTON, CAM_AIBOOSTOFF, CAM_TARGETMODE, CAM_TARGETMODE_OFF,
-		CAM_ROOM, CAM_LAWBATTLE, CAM_END};
+		CAM_ROOM, CAM_LAWBATTLE, CAM_BOSSBATTLE, CAM_END};
 	
 	typedef struct tagCameraTool
 	{
@@ -71,6 +71,7 @@ public:
 	void Player_Camera(_float fTimeDelta);
 	void Battle_Camera(_float fTimeDelta);
 	void LawBattle_Camera(_float fTimeDelta);
+	void BossRoom_Camera(_float fTimeDelta);
 	void BattleClear_Camera(_float fTimeDelta);
 	void LockOn_Camera(_float fTimeDelta);
 	void LockOff_Camera(_float fTimeDelta);

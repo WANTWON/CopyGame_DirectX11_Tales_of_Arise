@@ -142,7 +142,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 								return nullptr;
 							m_fEventStart = pEvent.fStartTime;
 							m_iCount++;
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E.wav"), SOUND_EFFECT, 0.3f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E.wav"), SOUND_EFFECT, 0.5f);
 						}
 					}
 				}
@@ -530,7 +530,7 @@ void CPlayer_SionSkillAttack::Enter(void)
 
 
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Fix.wav"), SOUND_EFFECT, 0.3f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Jump_E.wav"), SOUND_VOICE, 0.8f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_Jump_E.wav"), SOUND_VOICE, 0.5f);
 
 			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 			pCamera->Set_Zoom(true, 0.f, 0.f, 6.f, 10.f);

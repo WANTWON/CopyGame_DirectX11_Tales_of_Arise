@@ -140,6 +140,8 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 							return nullptr;
 						//m_bCollideFinsh = true;
 						m_fEventStart = pEvent.fStartTime;
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillSound.wav"), SOUND_EFFECT, 0.25f);
 					}
 
 
@@ -184,6 +186,8 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						m_bBulletMake = true;
 						//m_bCollideFinsh = true;
 						m_fEventStart = pEvent.fStartTime;
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_R_SkillSound.wav"), SOUND_EFFECT, 0.2f);
 					}
 
 					//m_fEventStart = pEvent.fStartTime;
@@ -227,6 +231,9 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 
 						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_METEORSWARM);
 						m_fEventStart = pEvent.fStartTime;
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillSound.wav"), SOUND_EFFECT, 0.2f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_EFFECT, 0.3f);
 					}
 				}
 
@@ -271,6 +278,9 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						//m_bCollideFinsh = true;
 						m_fEventStart = pEvent.fStartTime;
 						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_DIVINESABER);
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound.wav"), SOUND_EFFECT, 0.2f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_EFFECT, 0.3f);
 
 					}
 				}
@@ -324,6 +334,8 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 					 
 						m_fEventStart = pEvent.fStartTime;
 						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_HOLYRANCE);
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound.wav"), SOUND_EFFECT, 0.25f);
 					}
 				}
 
@@ -356,6 +368,8 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 
 						m_fEventStart = pEvent.fStartTime;
 						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillSound.wav"), SOUND_EFFECT, 0.25f);
 					}
 				}
 

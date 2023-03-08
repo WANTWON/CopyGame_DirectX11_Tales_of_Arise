@@ -7,7 +7,7 @@ BEGIN(AIPlayer)
 class CAI_HitState final : public CAIState
 {
 public:
-	CAI_HitState(class CPlayer* pPlayer, _vector vCauserPos, _bool isDown = false, _float fTime = 0.f);
+	CAI_HitState(class CPlayer* pPlayer, _vector vCauserPos, _bool isDown = false, _float fTime = 0.f, STATE_ID eStateID = STATE_END);
 
 	virtual CAIState* Tick(_float fTimeDelta) override;
 	virtual CAIState* LateTick(_float fTimeDelta) override;

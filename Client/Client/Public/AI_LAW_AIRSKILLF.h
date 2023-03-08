@@ -41,6 +41,9 @@ private:
 										/* Effect Vectors */
 	vector<class CEffect*> m_EnhaBakusaiken_1;
 
+	//Sound
+	_bool m_bSkill_F_Sound = false;
+
 private:
 	CCollider* Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition);
 	HITLAGDESC m_HitLagDesc;

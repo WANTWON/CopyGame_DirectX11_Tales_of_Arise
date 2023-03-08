@@ -124,6 +124,8 @@ public: /*For.State*/
 	void Set_ResetStrikeBlur(_bool bResetStrikeBlur) { m_bResetStrikeBlur = bResetStrikeBlur; }
 	void Reset_StrikeBlur(_float fTimeDelta);
 
+	void Set_HitState();
+
 public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);
 	void Check_Navigation();
