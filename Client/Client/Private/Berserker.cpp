@@ -139,6 +139,11 @@ int CBerserker::Tick(_float fTimeDelta)
 	
 	m_pSPHERECom->Update(m_pTransformCom->Get_WorldMatrix());
 
+	if (m_pBerserkerState->Get_StateId() == CBerserkerState::STATE_ID::STATE_DOWN)
+		m_fFresnelTimer += fTimeDelta * 6;
+	else
+		m_fFresnelTimer = 0.f;
+
 	return OBJ_NOEVENT;
 }
 
@@ -162,6 +167,19 @@ void CBerserker::Late_Tick(_float fTimeDelta)
 		return;
 
 	LateTick_State(fTimeDelta);
+}
+
+HRESULT CBerserker::Render()
+{
+	if (m_pBerserkerState->Get_StateId() == CBerserkerState::STATE_ID::STATE_DOWN)
+	{
+		_bool bDownState = true;
+		m_pShaderCom->Set_RawValue("g_bRimLight", &bDownState, sizeof(_bool));
+	}
+
+	__super::Render();
+
+	return S_OK;
 }
 
 HRESULT CBerserker::Render_Glow()
@@ -283,8 +301,7 @@ _int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
-	if (m_bOnGoingDown == false)
-	{
+
 		if (iHp <= 0)
 		{
 			m_tStats.m_fCurrentHp = 0;
@@ -298,7 +315,8 @@ _int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 		else
 		{
 			++m_iBeDamaged_Cnt;
-			if (m_bOnGoingHowLing == false)
+	
+			if (m_bOnGoingHowLing == false && m_bOnGoingDown == false)
 			{
 				if (m_bDownState == false)
 				{
@@ -354,7 +372,7 @@ _int CBerserker::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 			else
 				return iHp;
 		}
-	}
+
 	
 
 	return iHp;

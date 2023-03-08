@@ -20,6 +20,8 @@ public:
 
 
 private:
+
+	_float m_fbreaktimer = 0.f;
 	_bool m_bStopRunning = false;
 };
 END

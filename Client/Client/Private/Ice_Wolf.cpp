@@ -134,6 +134,11 @@ int CIce_Wolf::Tick(_float fTimeDelta)
 	if (m_fTimeDeltaAcc > m_fCntChanceTime)
 		m_iRand = rand() % 3;
 
+	if (m_pState->Get_StateId() == CIceWolfState::STATE_ID::STATE_DOWN)
+		m_fFresnelTimer += fTimeDelta * 6;
+	else
+		m_fFresnelTimer = 0.f;
+
 	return OBJ_NOEVENT;
 }
 
@@ -157,6 +162,19 @@ void CIce_Wolf::Late_Tick(_float fTimeDelta)
 		return;
 
 	LateTick_State(fTimeDelta);
+}
+
+HRESULT CIce_Wolf::Render()
+{
+	if (m_pState->Get_StateId() == CIceWolfState::STATE_ID::STATE_DOWN)
+	{
+		_bool bDownState = true;
+		m_pShaderCom->Set_RawValue("g_bRimLight", &bDownState, sizeof(_bool));
+	}
+
+	__super::Render();
+
+	return S_OK;
 }
 
 HRESULT CIce_Wolf::Render_Glow()

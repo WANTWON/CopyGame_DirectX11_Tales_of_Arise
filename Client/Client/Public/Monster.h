@@ -176,6 +176,7 @@ protected: /* For.Components */
 	CTexture* m_pDissolveTexture = nullptr;
 	
 protected:
+	_float m_fFresnelTimer = 0.f;
 	_bool m_bGlowUp = false; /* Used to increase Glow Power and spawn Diffuse Particles. */
 	_float m_fGlowUpTimer = 0.f;
 	_float m_fGlowUpLifespan = 2.f;

@@ -1890,7 +1890,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 	
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Skillname"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillmsg/skillname%d.dds"), 31))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/skillmsg/skillname%d.dds"), 32))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_QUESTMENU"),
@@ -2831,6 +2831,10 @@ HRESULT CLoader::Loading_ForEffectTexture()
 		return E_FAIL;
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Thunder_c"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Thunder/Thunder_c.png"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Heart"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Heart.png"), 1))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);

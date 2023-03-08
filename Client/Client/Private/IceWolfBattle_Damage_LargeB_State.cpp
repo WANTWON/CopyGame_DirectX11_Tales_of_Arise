@@ -36,9 +36,6 @@ CIceWolfState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 	{	
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
-		/*_bool bDownState = true;
-		m_pOwner->Get_Shader()->Set_RawValue("g_bRimLight", &bDownState, sizeof(_bool));*/
-
 		if (!m_bIsAnimationFinished)
 		{
 			_vector vecTranslation;

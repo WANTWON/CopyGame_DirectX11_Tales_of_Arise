@@ -31,7 +31,7 @@ vector g_DissolveHighlight = vector(.92f, .36f, .2f, 1);
 
 /* Rim Light */
 bool g_bRimLight = false;
-float g_vRimTimer;
+float g_vRimTimer = 0.f;
 float3 g_vRimColor;
 float3 g_vCameraLook;
 
@@ -150,6 +150,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	if (g_bRimLight)
 	{
 		float fFresnel = (1 - dot(-g_vCameraLook, vNormal));
+
+		fFresnel *= (cos(g_vRimTimer) + 1) / 2;
 
 		float3 vLerpColor = lerp(Out.vDiffuse.rgb, g_vRimColor, fFresnel);
 		Out.vDiffuse.rgb = vLerpColor;
