@@ -381,7 +381,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 			_float fCollDistance = fRadiusSum - XMVectorGetX(XMVector4Length(vDirection));
 
-			if (fCollDistance > 0)
+			if ((fCollDistance > 0) && (XMVectorGetY(vPlayerPos) >= XMVectorGetY(vMonsterPos)))
 			{
 				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vDirection) * fRadiusSum);
 				_vector vLerpPos = XMVectorLerp(vPlayerPos, XMVectorSetY(vNewPos, XMVectorGetY(vPlayerPos)), 0.5f);

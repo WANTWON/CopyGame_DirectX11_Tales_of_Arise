@@ -319,12 +319,6 @@ CAstralDoubt_State * CBattleWalkState::LateTick(_float fTimeDelta)
 		m_iRand = rand() % 2;
 
 	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
-
-	m_vActiveTargetPos = m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-
-	_bool bIs_TargetInFront = false;
-	bIs_TargetInFront = Is_TargetInFront(m_vActiveTargetPos);
-
 	TurnToTarget(fTimeDelta);
 	m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 0.9f, m_pOwner->Get_Navigation());
 

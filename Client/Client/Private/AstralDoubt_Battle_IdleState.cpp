@@ -32,9 +32,8 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 
  	
 	if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
-	{ 
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta*1.3f, false);
-	}
+	
 	else
 	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
@@ -320,13 +319,15 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
 		}
 	}
+	else if (m_ePreState_Id == STATE_ID::STATE_HALF)
+	{
+		if (m_bIsAnimationFinished)
+			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
+	}
 	else
 	{
 		if (m_pActiveTarget == nullptr)
-		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::SYMBOL_LOOKOUT);
-			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
-		}
 		else
 		{
 			if (m_fActiveTarget_Distance > 30.f) //if (m_fActiveTarget_Distance > 30.f)
@@ -382,6 +383,13 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 				}
 			}
 		}
+	}
+
+	if (!m_pOwner->Get_Half() && (m_pOwner->Get_Stats().m_fCurrentHp <= m_pOwner->Get_Stats().m_fMaxHp * 0.5f))
+	{
+		m_pOwner->Set_Half(true);
+		
+		return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_HALF);
 	}
 
 	///////////////////////////////////////기존의 코드- 나를 때린 대상, 근접 대상을 찾아 공격.//////////////////
@@ -575,7 +583,7 @@ void CBattle_IdleState::Enter()
 	else if (m_ePreState_Id == STATE_ID::STATE_BRAVE)
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_BRAVE);
-		
+
 		/*vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 		for (auto& pEvent : pEvents)
 		{
@@ -590,11 +598,15 @@ void CBattle_IdleState::Enter()
 			}
 		}*/
 	}
-	else if(m_ePreState_Id == STATE_ID::STATE_ALLPLAYER_DEAD)
+	else if (m_ePreState_Id == STATE_ID::STATE_ALLPLAYER_DEAD)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_BRAVE);
+
+	else if (STATE_ID::STATE_HALF == m_ePreState_Id)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::SYMBOL_DETECT_IDLE);
 
 	else
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::MOVE_IDLE);
+
 
 	if (m_ePreState_Id == STATE_ID::STATE_SPIN)
 		m_PreState_IsSpin = true;
