@@ -379,6 +379,18 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					break;
 				}
 			}
+
+			if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+			{
+				if (!m_bIsFly && (STATE_SKILL_ATTACK_F == m_eStateId))
+				{
+					if (!m_bSkill_F_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_F_SkillSound.wav"), SOUND_EFFECT, 0.6f);
+						m_bSkill_F_Sound = true;
+					}
+				}
+			}
 		}
 		else
 		{
@@ -674,7 +686,7 @@ void CAlphenSkillState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HIENZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BEEYEONIN);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_E.wav"), SOUND_EFFECT, 1.0f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillVoice.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillVoice.wav"), SOUND_EFFECT, 0.4f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_E.wav"), SOUND_EFFECT, 0.2f);*/
 			
 			

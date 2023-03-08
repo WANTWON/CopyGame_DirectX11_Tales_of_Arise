@@ -22,11 +22,19 @@ private:
 private:
 	DIRID m_eDirection = DIRID::DIR_END;
 	_bool m_bIsDash = false;
-	_bool m_bSoundStart = false;
-	_uint m_iRunSoundCount = 0;
 	STATETYPE m_eStateType = STATETYPE_START;
 
 	_float m_fRunTime = 0.f;
+
+	//Sound
+	_bool   m_bRunSound = false;
+	_float	m_fSoundStart = -1.f;
+	_float	m_fDashSoundStart = -1.f;
+	_float  m_fBattleSoundStart = -1.f;
+	_uint   m_iRunSoundCount = 0;
+	_uint   m_iDashSoundCount = 0;
+	_uint	m_iBattleSoundCount = 0;
+	
 };
 END
 END

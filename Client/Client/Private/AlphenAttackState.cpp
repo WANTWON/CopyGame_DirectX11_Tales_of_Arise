@@ -221,35 +221,117 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 				switch (dynamic_cast<CThrowingObject*>(pCollied)->Get_Type())
 				{
 				case CThrowingObject::TYPE_POTATO:
+				{
 					m_iScore = 5;
-					break;
+
+					_bool bPineAppleSound = false;
+					if (!bPineAppleSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut_Plum.wav"), SOUND_EFFECT, 0.5f);
+						bPineAppleSound = true;
+					}
+				}
+				break;
 				case CThrowingObject::TYPE_APPLE:
+				{
 					m_iScore = 10;
-					break;
+
+					_bool bAppleSound = false;
+					if (!bAppleSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut_Apple.wav"), SOUND_EFFECT, 0.5f);
+						bAppleSound = true;
+					}
+				}
+				break;
 				case CThrowingObject::TYPE_BREAD:
+				{
 					m_iScore = 15;
-					break;
+
+					_bool bBreadSound = false;
+					if (!bBreadSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut_Bread.wav"), SOUND_EFFECT, 0.5f);
+						bBreadSound = true;
+					}
+				}
+				break;
 				case CThrowingObject::TYPE_REDONION:
+				{
 					m_iScore = 20;
-					break;
+
+					_bool bRedOnionSound = false;
+					if (!bRedOnionSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut_Watermelon.wav"), SOUND_EFFECT, 0.5f);
+						bRedOnionSound = true;
+					}
+				}
+				break;
 				case CThrowingObject::TYPE_MANGO:
+				{
 					m_iScore = 25;
-					break;
+
+					_bool bMangoSound = false;
+					if (!bMangoSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut_Strawberry.wav"), SOUND_EFFECT, 0.5f);
+						bMangoSound = true;
+					}
+				}
+				break;
 				case CThrowingObject::TYPE_PINEAPPLE:
+				{
 					m_iScore = -10;
-					break;
+
+					_bool bPineAppleSound = false;
+					if (!bPineAppleSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut_Plum.wav"), SOUND_EFFECT, 0.5f);
+						bPineAppleSound = true;
+					}
+
+					
+				}
+				break;
 				}
 
 				dynamic_cast<CLevel_Restaurant*>(pGameInstance->Get_CurrentLevel())->Increase_Score(m_iScore);
 
 				pCollied->Set_Dead(true);
 
-				_bool bSound = false;
+				/*_bool bSound = false;
 				if (!bSound)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut.wav"), SOUND_EFFECT, 1.0f);
-					//bSound = true;
-				}
+					if (m_iFruitCutSoundCount == 0)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut_Apple.wav"), SOUND_EFFECT, 0.5f);
+						m_iFruitCutSoundCount = 1;
+						bSound = true;
+					}
+					
+					else if (m_iFruitCutSoundCount == 1)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut_Plum.wav"), SOUND_EFFECT, 0.5f);
+						m_iFruitCutSoundCount = 2;
+						bSound = true;
+					}
+
+					else if (m_iFruitCutSoundCount == 2)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut_Strawberry.wav"), SOUND_EFFECT, 0.5f);
+						m_iFruitCutSoundCount = 3;
+						bSound = true;
+					}
+
+					else if (m_iFruitCutSoundCount == 3)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("FruitCut_Watermelon.wav"), SOUND_EFFECT, 0.5f);
+						m_iFruitCutSoundCount = 0;
+						bSound = true;
+					}
+
+				}*/
 			}
 		}
 #ifdef _DEBUG
@@ -415,19 +497,19 @@ void CAlphenAttackState::Enter()
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_0);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack1_Fruit.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack1_Jump.wav"), SOUND_EFFECT, 0.3f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_1);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack2_Fruit.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack2_Jump.wav"), SOUND_EFFECT, 0.3f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_2);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack3_Fruit.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack3_Jump.wav"), SOUND_EFFECT, 0.3f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_AIR_3);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack4_Fruit.wav"), SOUND_EFFECT, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack4_Jump.wav"), SOUND_EFFECT, 0.3f);
 			break;
 		}
 	}
@@ -438,33 +520,33 @@ void CAlphenAttackState::Enter()
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_0);
 			if (iCurLevelIndex == LEVEL_RESTAURANT)
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack1_Fruit.wav"), SOUND_EFFECT, 0.5f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack1_Fruit.wav"), SOUND_EFFECT, 0.3f);
 			else
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack1.wav"), SOUND_EFFECT, 0.7f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack1.wav"), SOUND_EFFECT, 0.5f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("swing_sword_01.wav"), SOUND_EFFECT, 0.8f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_1);
 			if (iCurLevelIndex == LEVEL_RESTAURANT)
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack2_Fruit.wav"), SOUND_EFFECT, 0.5f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack2_Fruit.wav"), SOUND_EFFECT, 0.3f);
 			else
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack2.wav"), SOUND_EFFECT, 0.7f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack2.wav"), SOUND_EFFECT, 0.5f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("swing_sword_01.wav"), SOUND_EFFECT, 0.8f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_8);
 			if (iCurLevelIndex == LEVEL_RESTAURANT)
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack3_Fruit.wav"), SOUND_EFFECT, 0.5f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack3_Fruit.wav"), SOUND_EFFECT, 0.3f);
 			else
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack3.wav"), SOUND_EFFECT, 0.7f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack3.wav"), SOUND_EFFECT, 0.5f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("swing_sword_01.wav"), SOUND_EFFECT, 0.8f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_NORMAL_6);
 			if (iCurLevelIndex == LEVEL_RESTAURANT)
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack4_Fruit.wav"), SOUND_EFFECT, 0.5f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Normal_Attack4_Fruit.wav"), SOUND_EFFECT, 0.3f);
 			else
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack4.wav"), SOUND_EFFECT, 0.7f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack4.wav"), SOUND_EFFECT, 0.5f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("swing_sword_01.wav"), SOUND_EFFECT, 0.8f);
 			break;
 		}
