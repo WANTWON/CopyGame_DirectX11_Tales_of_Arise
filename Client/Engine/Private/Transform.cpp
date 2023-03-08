@@ -270,15 +270,18 @@ bool CTransform::Sliding_Anim(_vector vecMove, _float fRotation, class CNavigati
 
 	WorldMatrix = XMMatrixTranslationFromVector(vTranslation) * XMMatrixScalingFromVector(vWorldScale) * WorldMatrix * XMMatrixTranslationFromVector(vWorldPos);
 
+	_vector vPos = WorldMatrix.r[3];
+	WorldMatrix.r[3] = vWorldPos;
+
 	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
 	
 	if (pNavigation)
-		pNavigation->Compute_CurrentIndex_byXZ(WorldMatrix.r[3]);
+		pNavigation->Compute_CurrentIndex_byXZ(vPos);
 
 	if (nullptr == pNavigation)
-		Set_State(CTransform::STATE_TRANSLATION, WorldMatrix.r[3]);
-	else if (true == pNavigation->isMove(WorldMatrix.r[3]))
-		Set_State(CTransform::STATE_TRANSLATION, WorldMatrix.r[3]);
+		Set_State(CTransform::STATE_TRANSLATION, vPos);
+	else if (true == pNavigation->isMove(vPos))
+		Set_State(CTransform::STATE_TRANSLATION, vPos);
 
 	return true;
 }
