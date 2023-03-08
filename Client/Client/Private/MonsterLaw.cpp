@@ -154,8 +154,37 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
-	m_iPhase =  CBattleManager::Get_Instance()->Get_LawBattlePhase();
+	
+	
+	if (m_bDaguri)
+	{
+		
+		m_fRandomTargetTimer += fTimeDelta;
 
+		if (m_fRandomTargetTimer > 20.f)
+		{
+			m_fRandomTargetTimer = 0.f;
+			m_bReadytoChangeTarget = true;
+		}
+			
+
+		if (m_bReadytoChangeTarget)
+		{
+			_bool loop = true;
+			_int PrePhase = m_iPhase;
+			while(loop)
+			{
+				m_iPhase = rand() % 3;
+				if (PrePhase != m_iPhase)
+					break;
+			}
+			m_bReadytoChangeTarget = false;
+		}
+	}
+	else
+	m_iPhase = CBattleManager::Get_Instance()->Get_LawBattlePhase();
+		
+	
 
 	if(CGameInstance::Get_Instance()->Key_Up(DIK_M))
 	{
@@ -361,6 +390,9 @@ _int CMonsterLaw::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hi
 		return 0;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
+
+	if (CBattleManager::Get_Instance()->Get_IsOneonOneMode())
+		m_tStats.m_fLockonSmashGuage = 0.f;
 
 	++m_iLawhitcount;
 

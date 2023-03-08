@@ -668,11 +668,9 @@ HRESULT CLevel_LawBattle::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		return E_FAIL;
 
 
-	if (CBattleManager::Get_Instance()->Get_IsBossBattle())
-	{
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_LAWBATTLE, pLayerTag)))
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_LAWBATTLE, pLayerTag)))
 			return E_FAIL;
-	}
+	
 	/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_LAWBATTLE, pLayerTag)))
 		return E_FAIL;*/
 

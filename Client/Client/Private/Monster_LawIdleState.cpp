@@ -48,6 +48,9 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 {
 
 	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
+
+
+	
 	/*if (m_fWaitingTime < m_fTime)
 	{
 		_float fDistance = XMVectorGetX(XMVector3Length(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)));
@@ -75,10 +78,31 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 	
 	//
 
-	if (Find_EnumTarget(m_pOwner->Get_Phase()) > 4.f)
+	if (m_pOwner->Get_Phase() == 1 || m_pOwner->Get_Phase() == 2)
+	{
+		switch (rand() % 6)
+		{
+		case 0:
+			return new CMonster_LawSkill(m_pOwner, SKILL_E);
+
+		case 1:
+			return new CMonster_LawDodge(m_pOwner, true);
+
+		case 2:
+			return new CMonster_LawSkill(m_pOwner, SKILL_STRIKE);
+
+
+
+		}
+	}
+
+	if (Find_EnumTarget(m_pOwner->Get_Phase()) > 6.f)
 	{
 		return new CMonster_Law_Move(m_pOwner);
 	}
+
+
+	
 
 	/*if (m_pOwner->Get_Debug())
 	{

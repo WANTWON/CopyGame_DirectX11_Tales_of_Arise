@@ -290,6 +290,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					
 					CGameInstance::Get_Instance()->StopAll();
 					CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LawBattle.wav"), g_fSoundVolume);
+					CBattleManager::Get_Instance()->Set_Rinwellboss(true);
 					break;
 				}
 					
