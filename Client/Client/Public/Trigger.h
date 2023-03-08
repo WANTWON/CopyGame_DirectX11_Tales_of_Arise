@@ -36,7 +36,7 @@ private:
 private:
 	TRIGGERDESC m_TriggerDesc;
 
-	_bool m_bCollideOnce[3] = { true, true , true };
+	_bool m_bCollideOnce[4] = { true, true , true , true };
 
 public:
 	static CTrigger* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
