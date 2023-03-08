@@ -77,6 +77,7 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 			{
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
 				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_HP(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp);
+				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_Dead(false);
 				CBattleManager::Get_Instance()->Set_OneonOneMode(false);
 				CBattleManager::Get_Instance()->Set_LawBattlePhase(0);
 				dynamic_cast<CMonsterLaw*>(CBattleManager::Get_Instance()->Get_BossMonster())->Set_Daguri(true);
@@ -84,6 +85,7 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 				for (auto& iter : pAIList)
 				{
 					iter->Set_HP(iter->Get_Info().fMaxHp);
+					iter->Set_Dead(false);
 				}
 				
 				CLevel_LawBattle* pLavel = dynamic_cast<CLevel_LawBattle*>(CGameInstance::Get_Instance()->Get_CurrentLevel());
@@ -130,6 +132,8 @@ void CPlayerDeadState::Enter()
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_DEAD);
 		break;
 	}
+
+	m_pOwner->Set_TakeDamage_DelayFinish();
 }
 
 void CPlayerDeadState::Exit()

@@ -205,6 +205,7 @@ CPlayerState * CAlphenAttackState::LateTick(_float fTimeDelta)
 			{
 				m_HitLagDesc.fTakeDamageTimer = 0.02f;
 				m_HitLagDesc.fHitLagTimer = 0.17f;
+				m_HitLagDesc.eHitType = HIT_NORMAL;
 				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
 			}
 		}
