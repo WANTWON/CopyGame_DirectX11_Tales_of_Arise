@@ -10,6 +10,7 @@
 #include "Monster.h"
 #include "Level_Loading.h"
 #include "ThrowingObject.h"
+#include "Level_City.h"
 
 CLevel_Restaurant::CLevel_Restaurant(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -52,6 +53,7 @@ HRESULT CLevel_Restaurant::Initialize()
 	m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, -10.f, 0.f));
 
 	g_fSoundVolume = 0.f;
+	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_Restaurant.wav"), g_fSoundVolume);
 
@@ -546,5 +548,7 @@ void CLevel_Restaurant::Free()
 	Safe_Release(m_pCollision_Manager);
 
 	//CGameInstance::Get_Instance()->StopSound(SOUND_SYSTEM);
+
+		
 
 }

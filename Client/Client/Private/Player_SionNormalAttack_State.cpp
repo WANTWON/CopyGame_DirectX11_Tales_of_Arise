@@ -48,6 +48,8 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 			m_pOwner->Check_Navigation();
 	}
 
+	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+
 	vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 	for (auto& pEvent : pEvents)
@@ -88,6 +90,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
+
 						//รั น฿ป็ 
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT, 0.13f);
 						m_fEventStart = pEvent.fStartTime;
@@ -97,6 +100,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 						mWorldMatrix.r[3] = vLocation;
 						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
+
+						pCamera->Set_Zoom(true, 2.f, 1.f, 3.f, 7.f);
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.5f, true);
+
+
 					}
 				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -166,6 +175,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 						mWorldMatrix.r[3] = vLocation;
 						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
+
+						pCamera->Set_Zoom(true, 2.f, 1.f, 3.f, 7.f);
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.5f, true);
+
+
 					}
 				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -233,6 +248,12 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 						mWorldMatrix.r[3] = vLocation;
 						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
+
+						
+						pCamera->Set_Zoom(true, 4.f, 2.f, 5.f, 8.f);
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.5f, true);
+
 					}
 
 
@@ -304,6 +325,11 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 						mWorldMatrix.r[3] = vLocation;
 						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
+
+						pCamera->Set_Zoom(true, 4.f, 2.f, 5.f, 8.f);
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.5f, true);
+
 					}
 
 
@@ -390,9 +416,14 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 						mWorldMatrix.r[3] = vLocation;
 						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
+
+
+						pCamera->Set_Zoom(true, 4.f, 2.f, 5.f, 8.f);
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.5f, true);
+
+
 					}
-
-
 				}
 
 
@@ -430,8 +461,6 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 					{
 						m_bSoundStart = true;
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_EFFECT, 0.3f);
-
-
 					}
 				}
 				break;
@@ -475,6 +504,9 @@ CPlayerState * CPlayer_SionNormalAttack_State::LateTick(_float fTimeDelta)
 		/* Skill */
 		if (floor(m_pOwner->Get_Info().fCurrentMp) > 0)
 		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(false);
+
 			switch (m_iSkillEvent)
 			{
 			case 1:
@@ -498,6 +530,9 @@ CPlayerState * CPlayer_SionNormalAttack_State::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false);
+
 		if (m_bIsFly)
 			return new CJumpState(m_pOwner, STATETYPE_MAIN, CJumpState::JUMP_BATTLE, m_fTime);
 		else
@@ -516,24 +551,35 @@ void CPlayer_SionNormalAttack_State::Enter()
 {
 	__super::Enter();
 
-	
+	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+
 		if (m_bIsFly)
 		{
 			switch (m_eStateId)
 			{
 			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_0);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_1);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_2);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_3);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK5:
+				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_4);
 				break;
 			}
@@ -543,18 +589,26 @@ void CPlayer_SionNormalAttack_State::Enter()
 			switch (m_eStateId)
 			{
 			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_0);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_1);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_2);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_3);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK5:
+				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_4);
 				break;
 			}
@@ -588,7 +642,7 @@ void CPlayer_SionNormalAttack_State::Exit()
 {
 	__super::Exit();
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
 }
 

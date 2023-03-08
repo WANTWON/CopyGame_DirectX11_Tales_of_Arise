@@ -111,7 +111,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
 
-	if (m_bOverLimit)
+	if (m_bOverLimit &&  m_tInfo.fCurrentHp > 0)
 	{
 		/* Overlimit Effect */
 		if (!m_bIsOverlimiEffectSpawned)
@@ -119,7 +119,7 @@ int CPlayer::Tick(_float fTimeDelta)
 			EffectSpawn_Overlimit();
 			m_bIsOverlimiEffectSpawned = true;
 		}
-
+		
 		EffectUpdate_Overlimit();
 		m_fAuraTimer += fTimeDelta;
 
@@ -320,7 +320,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			LateTick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-		break;
 		LateTick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
@@ -380,7 +379,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 			_float fCollDistance = fRadiusSum - XMVectorGetX(XMVector4Length(vDirection));
 
-			if (fCollDistance > 0)
+			if ((fCollDistance > 0) && (XMVectorGetY(vPlayerPos) >= XMVectorGetY(vMonsterPos)))
 			{
 				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vDirection) * fRadiusSum);
 				_vector vLerpPos = XMVectorLerp(vPlayerPos, XMVectorSetY(vNewPos, XMVectorGetY(vPlayerPos)), 0.5f);

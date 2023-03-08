@@ -6538,7 +6538,7 @@ HRESULT CUI_MENU_Back::Render_inven_bottom_item_forUseitem()
 			m_pVIBufferCom->Render();
 		}
 	}
-	else if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 3)
+	if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 3)
 	{
 		m_fPosition.x = 940.f;
 		m_fPosition.y = 360.f;

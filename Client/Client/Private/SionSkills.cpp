@@ -284,13 +284,28 @@ void CSionSkills::Collision_Check()
 	switch (m_BulletDesc.eBulletType)
 	{
 	case TRESVENTOS:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = true;
+		m_HitLagDesc.fHitLagTimer = 0.1f;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 2.f;
+		m_HitLagDesc.fShakingMinusPower = 0.2f;
+		m_HitLagDesc.bZoom = true;
+		m_HitLagDesc.fZoomDistance = 2.f;
+		m_HitLagDesc.fZoomSpeed = 0.5f;
+		m_HitLagDesc.fBlurPower = 6.f;
+		m_HitLagDesc.fBlurDetail = 10.f;
+		m_HitLagDesc.fTakeDamageTimer = 0.2f;
+		__super::Collision_Check();
+		break;
 	case NORMALATTACK:
 		m_HitLagDesc.bLockOnChange = true;
 		m_HitLagDesc.bHitLag = true;
 		m_HitLagDesc.fHitLagTimer = 0.1f;
 		m_HitLagDesc.bShaking = false;
-		m_HitLagDesc.fShakingPower = 2.f;
+		m_HitLagDesc.fShakingPower = 1.f;
 		m_HitLagDesc.fShakingMinusPower = 0.2f;
+		m_HitLagDesc.fTakeDamageTimer = 0.1f;
 		__super::Collision_Check();
 		break;
 	case GRAVITY_DEAD:
@@ -348,7 +363,11 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.bShaking = true;
 		m_HitLagDesc.fShakingPower = 2.f;
 		m_HitLagDesc.fShakingMinusPower = 0.2f;
-
+		m_HitLagDesc.bZoom = true;
+		m_HitLagDesc.fZoomDistance = 3.f;
+		m_HitLagDesc.fZoomSpeed = 0.5f;
+		m_HitLagDesc.fBlurPower = 6.f;
+		m_HitLagDesc.fBlurDetail = 10.f;
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 		break;
@@ -356,7 +375,15 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.bLockOnChange = false;
 		m_HitLagDesc.bHitLag = true;
 		m_HitLagDesc.fHitLagTimer = 0.1f;
-		m_HitLagDesc.bShaking = false;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 2.f;
+		m_HitLagDesc.fShakingMinusPower = 0.2f;
+		m_HitLagDesc.bZoom = true;
+		m_HitLagDesc.fZoomDistance = 2.f;
+		m_HitLagDesc.fZoomSpeed = 0.5f;
+		m_HitLagDesc.fBlurPower = 6.f;
+		m_HitLagDesc.fBlurDetail = 10.f;
+		m_HitLagDesc.fTakeDamageTimer = 0.2f;
 
 		switch (m_BulletDesc.eCollisionGroup)
 		{
@@ -364,7 +391,6 @@ void CSionSkills::Collision_Check()
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
 				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 			break;
-
 		default:
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pOBBCom, &pCollisionTarget))
 				dynamic_cast<CPlayer*> (pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
@@ -415,6 +441,30 @@ void CSionSkills::Dead_Effect()
 	switch (m_BulletDesc.eBulletType)
 	{
 	case NAILBULLET:
+	{
+		if (!m_pEffects.empty())
+		{
+			for (auto& iter : m_pEffects)
+			{
+				if (iter != nullptr)
+				{
+					iter->Set_Dead(true);
+				}
+			}
+		}
+		m_pEffects.clear();
+
+		_vector vOffset = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION));
+		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset*1.5;
+		_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation;
+		m_pDeadEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletDead.dat"), mWorldMatrix);
+
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false);
+
+		break;
+	}
 	case NORMALATTACK:
 	{
 		if (!m_pEffects.empty())
@@ -434,6 +484,13 @@ void CSionSkills::Dead_Effect()
 		_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pDeadEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletDead.dat"), mWorldMatrix);
+
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(false);
+		}
+
 		break;
 	}
 	case TRESVENTOS:

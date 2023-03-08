@@ -96,13 +96,10 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 				return new CBattle_SpearMultiState(m_pOwner);
 			case 2:
 				return new CBattle_UpperState(m_pOwner);
-
-			default:
-				break;
 			}
 		}
 		else
-			return new CBattleWalkState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_HEADBEAM);
+			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_HEADBEAM);
 	}
 
 	return nullptr;

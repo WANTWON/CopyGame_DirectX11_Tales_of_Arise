@@ -12,6 +12,7 @@
 #include "Level_WorkTool.h"
 #include "Player.h"
 #include "MonsterLaw.h"
+#include "AiRinwell.h"
 
 
 CUI_Dialogue::CUI_Dialogue(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -64,6 +65,8 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 	Read_TextFiles_for_Minigame2end();
 	Read_TextFiles_for_LawBossBattleStart();
 	Read_TextFiles_for_LawBossBattleEvent();
+	Read_TextFiles_for_LawBossBattleEnd();
+	Read_TextFiles_for_LastQuestStart();
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -283,6 +286,8 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					dynamic_cast<CMonster*>(pObject)->Change_Navigation(LEVEL_LAWBATTLE);
 					dynamic_cast<CMonster*>(pObject)->Compute_CurrentIndex(LEVEL_LAWBATTLE);
 					dynamic_cast<CMonster*>(pObject)->Set_BattleMode(true);
+
+					dynamic_cast<CAiRinwell*>(pObject)->Set_AirMode(true);
 					CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
 		
 					dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(8, true, 0, 1);
@@ -290,16 +295,34 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 					
 					CGameInstance::Get_Instance()->StopAll();
 					CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LawBattle.wav"), g_fSoundVolume);
+					CBattleManager::Get_Instance()->Set_Rinwellboss(true);
+					break;
+				}
+					
+				case 14:
+				{
+					CUI_Manager::Get_Instance()->Set_QuestIndex(4);
+					CUI_QuestClear::QUESTCLEARDESC garrr;
+					ZeroMemory(&garrr, sizeof(CUI_QuestClear::QUESTCLEARDESC));
+					garrr.eName1 = ITEMNAME_REDSAGE;
+					garrr.eType1 = ITEMTYPE_LEAVES;
+					garrr.iGaingald = 500;
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTCLEAR"), LEVEL_SNOWFIELD, (TEXT("ssss")), &garrr)))
+						return OBJ_NOEVENT;
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_LEMONJELLY, ITEMTYPE_JELLY, false, false);
+					CUI_Manager::Get_Instance()->Set_QuestComplete(3, true);
 					break;
 				}
 					
 
-
-						
-
-
+				case 15:
+					CUI_Manager::Get_Instance()->Set_QuestIndex(5);
+					if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_QUESTSTART"), LEVEL_SNOWFIELD, (TEXT("ses")))))
+						return OBJ_NOEVENT;
 
 				}
+
+				
 				
 
 			}
@@ -2157,6 +2180,367 @@ void CUI_Dialogue::Read_TextFiles_for_LawBossBattleEvent()
 	matrix.push_back(m_vDialogue13[2]);
 	matrix.push_back(m_vDialogue13[3]);
 
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
+void CUI_Dialogue::Read_TextFiles_for_LawBossBattleEnd()
+{
+	std::ifstream file("../../../Bin/bosslawend0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue14[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/bosslawend1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue14[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/bosslawend2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue14[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/bosslawend3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue14[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+
+
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialogue14[0]);
+	matrix.push_back(m_vDialogue14[1]);
+	matrix.push_back(m_vDialogue14[2]);
+	matrix.push_back(m_vDialogue14[3]);
+
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
+void CUI_Dialogue::Read_TextFiles_for_LastQuestStart()
+{
+	std::ifstream file("../../../Bin/lastqueststart0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/lastqueststart1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/lastqueststart2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/lastqueststart3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file4("../../../Bin/lastqueststart4.txt");
+	if (file4.is_open())
+	{
+		while (file4.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[4].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file4.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file5("../../../Bin/lastqueststart5.txt");
+	if (file5.is_open())
+	{
+		while (file5.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[5].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file5.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file6("../../../Bin/lastqueststart6.txt");
+	if (file6.is_open())
+	{
+		while (file6.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[6].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file6.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+	std::ifstream file7("../../../Bin/lastqueststart7.txt");
+	if (file7.is_open())
+	{
+		while (file7.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[7].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file7.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file8("../../../Bin/lastqueststart8.txt");
+	if (file8.is_open())
+	{
+		while (file8.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[8].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file8.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file9("../../../Bin/lastqueststart9.txt");
+	if (file9.is_open())
+	{
+		while (file9.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[9].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file9.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file10("../../../Bin/lastqueststart10.txt");
+	if (file10.is_open())
+	{
+		while (file10.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[10].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file10.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file11("../../../Bin/lastqueststart11.txt");
+	if (file11.is_open())
+	{
+		while (file11.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[11].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file11.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file12("../../../Bin/lastqueststart12.txt");
+	if (file12.is_open())
+	{
+		while (file12.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[12].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file12.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialogue15[0]);
+	matrix.push_back(m_vDialogue15[1]);
+	matrix.push_back(m_vDialogue15[2]);
+	matrix.push_back(m_vDialogue15[3]);
+	matrix.push_back(m_vDialogue15[4]);
+	matrix.push_back(m_vDialogue15[5]);
+	matrix.push_back(m_vDialogue15[6]);
+	matrix.push_back(m_vDialogue15[7]);
+	matrix.push_back(m_vDialogue15[8]);
+	matrix.push_back(m_vDialogue15[9]);
+	matrix.push_back(m_vDialogue15[10]);
+	matrix.push_back(m_vDialogue15[11]);
+	matrix.push_back(m_vDialogue15[12]);
 
 
 	m_vCurrentDialogue.push_back(matrix);

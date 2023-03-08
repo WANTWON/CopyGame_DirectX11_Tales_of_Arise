@@ -7,6 +7,8 @@
 #include "Fascinate.h"
 #include "UI_Skillmessage.h"
 #include "Effect.h"
+#include "Monster_Lawhit.h"
+#include "Level_LawBattle.h"
 
 using namespace MonsterLaw;
 
@@ -60,7 +62,6 @@ HRESULT CMonsterLaw::Initialize(void * pArg)
 	CMonsterLawState* pState = new CPoseState(this, CMonsterLawState::STATE_BATTLESTART);
 	m_pState = m_pState->ChangeState(m_pState, pState);
 	m_pTransformCom->LookAt(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION));
-	CBattleManager::Get_Instance()->Set_BossMonster(this);
 
 	m_eMonsterID = LAW_MONSTER;
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -151,11 +152,42 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 	{
 		CBattleManager::Get_Instance()->Set_BossMonster(nullptr);
 		CBattleManager::Get_Instance()->Out_Monster(this);
+		if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
+			dynamic_cast<CLevel_LawBattle*>(CGameInstance::Get_Instance()->Get_CurrentLevel())->Plus_DeadCount();
 		return OBJ_DEAD;
 	}
 
-	m_iPhase =  CBattleManager::Get_Instance()->Get_LawBattlePhase();
+	
+	
+	if (m_bDaguri)
+	{
+		
+		m_fRandomTargetTimer += fTimeDelta;
 
+		if (m_fRandomTargetTimer > 20.f)
+		{
+			m_fRandomTargetTimer = 0.f;
+			m_bReadytoChangeTarget = true;
+		}
+			
+
+		if (m_bReadytoChangeTarget)
+		{
+			_bool loop = true;
+			_int PrePhase = m_iPhase;
+			while(loop)
+			{
+				m_iPhase = rand() % 3;
+				if (PrePhase != m_iPhase)
+					break;
+			}
+			m_bReadytoChangeTarget = false;
+		}
+	}
+	else
+	m_iPhase = CBattleManager::Get_Instance()->Get_LawBattlePhase();
+		
+	
 
 	if(CGameInstance::Get_Instance()->Key_Up(DIK_M))
 	{
@@ -362,6 +394,9 @@ _int CMonsterLaw::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hi
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
+	if (CBattleManager::Get_Instance()->Get_IsOneonOneMode())
+		m_tStats.m_fLockonSmashGuage = 0.f;
+
 	++m_iLawhitcount;
 
 	if (m_iLawhitcount >= 15)
@@ -417,8 +452,8 @@ _int CMonsterLaw::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hi
 			m_tStats.m_fLockonSmashGuage = 4.f;
 			m_tStats.m_fCurrentHp = 0;
 			m_bTakeDamage = true;
-			//CMonsterLawState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
-			//m_pState = m_pState->ChangeState(m_pState, pState);
+			CMonsterLawState* pState = new CMonster_Lawhit(this, m_eDmg_Direction, CMonsterLawState::STATE_DAMAGE);
+			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
 		else
 		{
@@ -427,6 +462,8 @@ _int CMonsterLaw::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hi
 			Check_AmILastMoster();
 
 			m_bTakeDamage = true;
+			CMonsterLawState* pState = new CMonster_Lawhit(this, m_eDmg_Direction, CMonsterLawState::STATE_DEAD);
+			m_pState = m_pState->ChangeState(m_pState, pState);
 			//CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
 			//m_pState = m_pState->ChangeState(m_pState, pState);
 		}
