@@ -224,6 +224,7 @@
     <ClInclude Include="..\Public\AstralDoubt_DetectStopState.h" />
     <ClInclude Include="..\Public\AstralDoubt_IdleState.h" />
     <ClInclude Include="..\Public\AstralDoubt_State.h" />
+    <ClInclude Include="..\Public\AstralDoubt_TeleportState.h" />
     <ClInclude Include="..\Public\AstralDoubt_TurnState.h" />
     <ClInclude Include="..\Public\AstralDoubt_WalkState.h" />
     <ClInclude Include="..\Public\BattleManager.h" />
@@ -512,6 +513,7 @@
     <ClCompile Include="..\Private\AstralDoubt_ChaseState.cpp" />
     <ClCompile Include="..\Private\AstralDoubt_DetectStopState.cpp" />
     <ClCompile Include="..\Private\AstralDoubt_IdleState.cpp" />
+    <ClCompile Include="..\Private\AstralDoubt_TeleportState.cpp" />
     <ClCompile Include="..\Private\AstralDoubt_TurnState.cpp" />
     <ClCompile Include="..\Private\AstralDoubt_WalkState.cpp" />
     <ClCompile Include="..\Private\BattleManager.cpp" />

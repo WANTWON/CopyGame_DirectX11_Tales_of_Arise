@@ -51,6 +51,8 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 			case Client::CPlayer::SION:
 			/*{
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
+				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_HP(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp);
+				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_Dead(false);
 				CBattleManager::Get_Instance()->Set_OneonOneMode(false);
 				CBattleManager::Get_Instance()->Set_LawBattlePhase(0);
 				vector<CPlayer*> pAIList = CPlayerManager::Get_Instance()->Get_AIPlayers();

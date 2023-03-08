@@ -67,6 +67,8 @@ public:
 	void Set_CreatedSecondMonster(_bool type) {  m_bCreatedMonster = type; }
 	_bool Get_AmIFirstBoss() { return m_AmIFirstBoss; }
 	void Set_AmIFirstBoss(_bool type) { m_AmIFirstBoss = type; }
+	_bool Get_Half(void) { return m_bIsHalf; }
+	void Set_Half(_bool bHalf) { m_bIsHalf = bHalf; }
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
@@ -97,7 +99,7 @@ public:	/*For Navigation*/
 	virtual void Check_Navigation() override;
 	virtual _float ForTheBossTarget_Distance(CBaseObj*);
 
-	void Check_Navigation_Jump(void);
+	_bool Check_Navigation_Jump(void);
 
 private:
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -113,6 +115,9 @@ private:
 	_bool m_bOnGoing_320Spin = false;
 	_bool m_bCreatedMonster = false;
 	_bool m_AmIFirstBoss = false;
+	_bool m_bIsHalf = false;
+
+	_float m_fDamage = 0.f;
 
 
 public:
