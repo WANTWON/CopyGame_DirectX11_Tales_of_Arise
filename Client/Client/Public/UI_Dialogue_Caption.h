@@ -20,6 +20,8 @@ public:
 	virtual void Late_Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+	void offdialogue() { m_bfadeout = true;	}
+
 private:
 	virtual HRESULT Ready_Components(void * pArg) override;
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
@@ -37,13 +39,14 @@ public:
 
 public:
 	void Read_TextFiles_for_BossRinwell();
+	void Read_TextFiles_for_Strike_AlphenLaw();
+
+	void Read_TextFiles_for_Strike_AlphenSion();
+	void Read_TextFiles_for_Strike_AlphenRinwell();
+	void Read_TextFiles_for_Strike_SionRinwell();
+	void Read_TextFiles_for_Strike_SionLaw();
 	void Read_TextFiles_for_Strike_RinwellLaw();
 
-
-	void Read_TextFiles_for_Quest2Strat();
-	void Read_TextFiles_for_Quest2Clear();
-	void Read_TextFiles_for_Quest3Start();
-	void Read_TextFiles_for_Quest3Clear();
 
 	wchar_t* ConverCtoWC(char* str);
 
@@ -77,15 +80,17 @@ private:
 	char fuck[256];
 	vector<_tchar*> m_vDialogue[5];  // m_vDialogue[0] m_vDialogue[1]
 
-	vector<_tchar*> m_vDialouge1[4]; // quest 1 clear
+	vector<_tchar*> m_vDialouge1[4]; // LawOUI1 gak
 
-	vector<_tchar*> m_vDialouge2[7]; // quest 2 start
+	vector<_tchar*> m_vDialouge2[3]; // AlphenSion
 
-	vector<_tchar*> m_vDialouge3[6]; // quest 2 clear
+	vector<_tchar*> m_vDialouge3[3]; // AlphenRinwell
 
-	vector<_tchar*> m_vDialouge4[6]; // quest 3 start
+	vector<_tchar*> m_vDialouge4[3]; // SionRinwell
 
-	vector<_tchar*> m_vDialouge5[6]; // quest 3 clear
+	vector<_tchar*> m_vDialouge5[3]; // SionLaw
+
+	vector<_tchar*> m_vDialouge6[5]; // LawOUI2 bird
 
 
 	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;

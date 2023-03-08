@@ -67,7 +67,20 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 				case CPlayer::LAW:
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
+					{
+
+						if ((m_fEventStart1 != pEvent.fStartTime))
+						{
+							if (m_iEventIndex == 0)
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
+							else
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
+
+							++m_iEventIndex;
+							m_fEventStart1 = pEvent.fStartTime;
+						}
+
+					}
 					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
@@ -258,8 +271,8 @@ void CAI_RinwellLaw_Smash::Enter()
 		pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
 	}	
 	m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_GURENTENSYOU;
-	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RAINOUI);
-	dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
+	//dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RAINOUI);
+	
 
 	break;
 	}
@@ -284,6 +297,10 @@ void CAI_RinwellLaw_Smash::Exit()
 
 	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
+
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
+
 		if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		{
 			HITLAGDESC m_HitLagDesc;

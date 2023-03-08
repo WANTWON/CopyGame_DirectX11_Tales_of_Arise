@@ -14,6 +14,7 @@
 #include "PlayerIdleState.h"
 #include "UI_Skillmessage.h"
 #include "Animation.h"
+#include "UI_Dialogue_Caption.h"
 
 using namespace AIPlayer;
 using namespace Player;
@@ -38,14 +39,7 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 	m_fTimer += fTimeDelta;
 
 
-	if (m_pOwner->Get_PlayerID() == CPlayer::ALPHEN)
-	{
-		if (m_fTimer > 4.f)
-		{
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ALPHENSIONSTRIKE);
-			m_fTimer = -100.f;
-		}
-	}
+	
 
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
@@ -74,8 +68,21 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 				case CPlayer::ALPHEN:
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType || !m_bBullet)
+					{
+						if ((m_fEventStart != pEvent.fStartTime))
+						{
+							if (m_iEventIndex == 0)
+							dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(2);
+							else
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
+
+							++m_iEventIndex;
+							m_fEventStart = pEvent.fStartTime;
+						}
+						
+
+					}
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType &&  !m_bBullet)
 					{
 						m_fEffectEventEndTime = pEvent.fEndTime;
 						m_fEffectEventCurTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
@@ -95,9 +102,9 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 
 				case CPlayer::SION:
 				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					//if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+						//m_bIsStateEvent = true;
+				    if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
@@ -210,6 +217,8 @@ void CAI_AlphenSion_Smash::Enter()
 	{
 	case CPlayer::ALPHEN:
 		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_SIONALPHEN_SMASH;
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ALPHENSIONSTRIKE);
+
 		break;
 	case CPlayer::SION:
 		m_iCurrentAnimIndex = CSion::ANIM::ANIM_ALPHENSION_STRIKE;
@@ -242,6 +251,7 @@ void CAI_AlphenSion_Smash::Enter()
 
 void CAI_AlphenSion_Smash::Exit()
 {
+	
 	if (m_bStrikeBlur)
 	{
 		m_pOwner->Set_ResetStrikeBlur(true);
@@ -268,13 +278,15 @@ void CAI_AlphenSion_Smash::Exit()
 		}
 	}
 
-	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+	
 
 
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 	{
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 		HITLAGDESC m_HitLagDesc;
 		m_HitLagDesc.bHitLag = false;
 		m_HitLagDesc.bLockOnChange = false;
