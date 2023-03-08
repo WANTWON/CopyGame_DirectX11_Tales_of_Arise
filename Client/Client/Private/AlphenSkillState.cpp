@@ -107,11 +107,11 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						}
 					}
 					else
-						//if (!m_bSkill_E_Sound)
-						//{
+						if (!m_bSkill_E_Sound)
+						{
 							CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillSound.wav"), SOUND_EFFECT, 0.5f);
-						//	m_bSkill_E_Sound = true;
-						//}
+							m_bSkill_E_Sound = true;
+						}
 						break;
 
 				case Client::CPlayerState::STATE_SKILL_ATTACK_F:

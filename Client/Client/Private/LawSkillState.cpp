@@ -243,6 +243,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 							{
 								if (!m_bTyourengadan_1)
 								{
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_1.dat"), mWorldMatrix);
 									m_bTyourengadan_1 = true;
 								}
