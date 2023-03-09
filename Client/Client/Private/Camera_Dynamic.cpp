@@ -1399,8 +1399,8 @@ void CCamera_Dynamic::ZoomSetting(_float fDistance, _float fSpeed, _float fFocus
 
 	if(m_eCamMode != CAM_AIBOOSTON && m_eCamMode != CAM_AIBOOSTOFF)
 		m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-	/* Zoom Blur */
 	
+	/* Zoom Blur */
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pTarget);
 	if (pPlayer)
 	{

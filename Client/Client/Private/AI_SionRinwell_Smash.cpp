@@ -201,6 +201,11 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 
 void CAI_SionRinwell_Smash::Enter()
 {
+	if (m_eCurrentPlayerID == CPlayer::SION)
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+
+	m_bStrikeBlur = false;
+
 	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
@@ -234,10 +239,14 @@ void CAI_SionRinwell_Smash::Enter()
 
 void CAI_SionRinwell_Smash::Exit()
 {
-	if (m_bStrikeBlur)
+	if (m_eCurrentPlayerID == CPlayer::SION)
 	{
-		m_pOwner->Set_ResetStrikeBlur(true);
-		m_bStrikeBlur = false;
+		if (m_bStrikeBlur)
+		{
+			/*m_pOwner->Set_ResetStrikeBlur(true);*/
+			m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+			m_bStrikeBlur = false;
+		}
 	}
 
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();

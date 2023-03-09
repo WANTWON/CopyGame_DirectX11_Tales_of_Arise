@@ -196,6 +196,10 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 
 void CAI_AlphenSion_Smash::Enter()
 {
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+
+	m_bStrikeBlur = false;
 	
 	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
@@ -228,7 +232,6 @@ void CAI_AlphenSion_Smash::Enter()
 			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	
-	m_bStrikeBlur = false;
 	m_pOwner->Set_Manarecover(false);
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenSion_Smash.wav"), SOUND_VOICE, 0.2f);
@@ -239,10 +242,14 @@ void CAI_AlphenSion_Smash::Exit()
 	if(CBattleManager::Get_Instance()->Get_Rinwellboss())
 	CBattleManager::Get_Instance()->Set_KillLawbosslevel(true);
 
-	if (m_bStrikeBlur)
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 	{
-		m_pOwner->Set_ResetStrikeBlur(true);
-		m_bStrikeBlur = false;
+		if (m_bStrikeBlur)
+		{
+			/*m_pOwner->Set_ResetStrikeBlur(true);*/
+			m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+			m_bStrikeBlur = false;
+		}
 	}
 
 	__super::Exit();

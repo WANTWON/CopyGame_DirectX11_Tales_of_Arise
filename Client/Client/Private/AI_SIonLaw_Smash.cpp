@@ -175,6 +175,11 @@ CAIState * CAI_SionLaw_Smash::LateTick(_float fTimeDelta)
 
 void CAI_SionLaw_Smash::Enter()
 {
+	if (m_eCurrentPlayerID == CPlayer::LAW)
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+
+	m_bStrikeBlur = false;
+
 	m_pOwner->Set_StrikeAttack(true);
 	
 
@@ -216,10 +221,14 @@ void CAI_SionLaw_Smash::Enter()
 
 void CAI_SionLaw_Smash::Exit()
 {
-	if (m_bStrikeBlur)
+	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
-		m_pOwner->Set_ResetStrikeBlur(true);
-		m_bStrikeBlur = false;
+		if (m_bStrikeBlur)
+		{
+			/*m_pOwner->Set_ResetStrikeBlur(true);*/
+			m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+			m_bStrikeBlur = false;
+		}
 	}
 
 	if (m_eCurrentPlayerID == CPlayer::SION)
