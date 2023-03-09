@@ -8,7 +8,7 @@ BEGIN(AIPlayer)
 class CAI_Overlimit_State final : public CAIState
 {
 public:
-	CAI_Overlimit_State(class CPlayer* pPlayer, CBaseObj* pTarget);
+	CAI_Overlimit_State(class CPlayer* pPlayer, CBaseObj* pTarget, _bool FinalCameraMode = false);
 
 	virtual CAIState* Tick(_float fTimeDelta) override;
 	virtual CAIState* LateTick(_float fTimeDelta) override;
@@ -21,7 +21,7 @@ private:
 
 	_float m_fTime = 0.f;
 	_bool  m_bBullet = false;
-	;
+	_bool m_bFinalMode = false;
 
 	_float m_fEventStart = -1.f;
 };

@@ -979,7 +979,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 
 	/* For.Prototype_Component_Navigation */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Boss_Navigation"),
-		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/BattleZoneData/BossMap/Navigation.dat")))))
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/BattleZoneData/BossMap/Navigation2.dat")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Navigation */

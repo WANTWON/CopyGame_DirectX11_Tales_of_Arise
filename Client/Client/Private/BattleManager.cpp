@@ -139,6 +139,8 @@ void CBattleManager::Update_LockOn()
 	if (m_BattleMonster.size() <= 1)
 	{
 		Set_LackonMonster(nullptr);
+		Set_BossMonster(nullptr);
+
 		return;
 	}
 
@@ -147,10 +149,13 @@ void CBattleManager::Update_LockOn()
 		if (dynamic_cast<CMonster*>(iter)->Get_Dissolve() || dynamic_cast<CMonster*>(iter)->Get_Stats().m_fCurrentHp <= 0)
 			continue;
 		Set_LackonMonster(dynamic_cast<CBaseObj*>(iter));
+		Set_BossMonster(dynamic_cast<CBaseObj*>(iter));
 		return;
 
 	}
 	Set_LackonMonster(nullptr);
+	Set_BossMonster(nullptr);
+	
 	return;
 
 }

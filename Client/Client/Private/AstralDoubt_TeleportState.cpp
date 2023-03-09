@@ -2,6 +2,7 @@
 #include "..\Public\AstralDoubt_TeleportState.h"
 
 #include "AstralDoubt_Battle_IdleState.h"
+#include "Effect.h"
 
 using namespace Astral_Doubt;
 
@@ -62,10 +63,11 @@ CAstralDoubt_State * CAstralDoubt_TeleportState::LateTick(_float fTimeDelta)
 	{
 		m_fTime += fTimeDelta;
 
+		m_pActiveTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		m_pOwner->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetY(m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION), 20.f));
+
 		if (5.f < m_fTime)
 		{
-			Find_Target();
-			m_pOwner->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetY(m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION), 20.f));
 			m_eStateId = STATE_TELEPORT_DOWN;
 			Enter();
 		}
@@ -91,8 +93,14 @@ void CAstralDoubt_TeleportState::Enter()
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_JUMP_SHOOT_DROP_RISE_LOOP);
 		break;
 	case Client::CAstralDoubt_State::STATE_TELEPORT_DOWN:
+	{
+		/* Make Effect */
+		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = XMVectorSetY(mWorldMatrix.r[3], 0.5f);
+		CEffect::PlayEffectAtLocation(TEXT("BosstelePort.dat"), mWorldMatrix);
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_JUMP_SHOOT_DROP_DESCEND_LOOP);
 		break;
+	}
 	case Client::CAstralDoubt_State::STATE_TELEPORT_END:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_JUMP_SHOOT_DROP_END);
 		break;
