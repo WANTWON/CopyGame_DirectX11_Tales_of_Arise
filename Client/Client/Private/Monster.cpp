@@ -685,7 +685,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	
 
 
-	m_tStats.m_fLockonSmashGuage += 0.1f;
+	m_tStats.m_fLockonSmashGuage += 0.5f;
 	
 
 

@@ -203,7 +203,7 @@ CMonsterLawState * CMonsterLaw_Strike1::LateTick(_float fTimeDelta)
 	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
-		if (m_fFadeTime > 1.f)
+		if (m_fFadeTime > .85f)
 		{
 			CUI_Manager::Get_Instance()->Set_UIStrike(true);
 			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
@@ -245,10 +245,6 @@ void CMonsterLaw_Strike1::Exit()
 
 	m_pOwner->Get_Model()->Reset();
 
-	
-	
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
-			return;
 
 		if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		{

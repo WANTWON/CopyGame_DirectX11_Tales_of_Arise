@@ -245,7 +245,7 @@ CAIState * CAI_AlphenLaw_Smash::LateTick(_float fTimeDelta)
 	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
-		if (m_fFadeTime > 1.f)
+		if (m_fFadeTime > .85f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::LAW)
 			{

@@ -51,7 +51,7 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_BoostBGlast.dat"), mWorldMatrix);
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_BoostBlast.dat"), mWorldMatrix);
 		m_bIsActiveAtActionCamera = true;
 		break;
 	case GRAVITY:
