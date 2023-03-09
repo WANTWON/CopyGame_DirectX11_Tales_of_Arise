@@ -316,6 +316,12 @@ CAIState * CAI_LAW_AIRSKILLR::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
+		if (STATETYPE_START == m_eStateType)
+		{
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
+			m_eStateType = STATETYPE_MAIN;
+			m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
+		}
 		if (STATETYPE_MAIN == m_eStateType)
 			m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
 
