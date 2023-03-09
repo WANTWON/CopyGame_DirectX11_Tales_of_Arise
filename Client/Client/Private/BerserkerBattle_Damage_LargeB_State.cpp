@@ -10,10 +10,11 @@
 #include "BerserkerBattle_WalkState.h"
 #include "BerserkerBattle_RunState.h"
 #include "BerserkerBattle_IdleState.h"
+#include "BerserkerJumpState.h"
 
 using namespace Berserker;
 
-CBattle_Damage_LargeB_State::CBattle_Damage_LargeB_State(CBerserker* pBerserker, _bool bAngry, _bool bBerserkerMode, _bool bEvadeChance, STATE_ID eStateId)
+CBattle_Damage_LargeB_State::CBattle_Damage_LargeB_State(class CBerserker* pBerserker, _bool bAngry, _bool bBerserkerMode, _bool bEvadeChance, HITTYPE eType, _vector vCauserPos, _float fMoveLength, STATE_ID eStateId)
 {
 	m_pOwner = pBerserker;
 	/*m_bAngry = bOnAngry;
@@ -25,11 +26,13 @@ CBattle_Damage_LargeB_State::CBattle_Damage_LargeB_State(CBerserker* pBerserker,
 	m_bBerserkerMode = bBerserkerMode;
 	m_bEvadeChance = bEvadeChance;
 	m_eStateId = eStateId;
+	m_eHitType = eType;
+	m_vCauserPos = vCauserPos;
+	m_fMoveLength = fMoveLength;
 }
 
 CBerserkerState * CBattle_Damage_LargeB_State::AI_Behaviour(_float fTimeDelta)
 {
-	
 	return nullptr;
 }
 
@@ -60,28 +63,31 @@ CBerserkerState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 			m_pOwner->Check_Navigation();
 		}
 	}
+	else
+		Move(fTimeDelta);
+
+	m_pOwner->Check_Navigation_Jump();
 
 	return nullptr;
 }
 
 CBerserkerState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 {
-	m_pOwner->Check_Navigation();
-
 	CMonster::STATS pBerserker_Stats;
 
 	memcpy(&pBerserker_Stats, &m_pOwner->Get_Stats(), sizeof(CMonster::STATS));
 	
 	if (m_bAngry)
-	{
 		m_pOwner->Set_AngryOn();
-	}
 
 	if(m_bIsAnimationFinished)
 	{
 		switch (m_eStateId)
 		{
 		case Client::CBerserkerState::STATE_TAKE_DAMAGE:
+			if (m_pOwner->Get_IsFly())
+				return new CBerserkerJumpState(m_pOwner, 1.f);
+
 			if (m_bAngry == true && m_bBerserkerMode == false)
 				return new CBattle_HowLingState(m_pOwner);
 
@@ -140,7 +146,10 @@ void CBattle_Damage_LargeB_State::Enter()
 	switch (m_eStateId)
 	{
 	case Client::CBerserkerState::STATE_TAKE_DAMAGE:
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DAMAGE_LARGE_B);
+		if (m_pOwner->Get_IsFly())
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::BLOW_UP_B);
+		else
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DAMAGE_LARGE_B);
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("Berserker_Hit.wav"), SOUND_VOICE, 0.4f);
 		m_pOwner->SetOff_BedamagedCount();
 		m_pOwner->Set_BedamageCount_Delay();
@@ -149,9 +158,6 @@ void CBattle_Damage_LargeB_State::Enter()
 	case Client::CBerserkerState::STATE_DOWN:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DOWN_F);
 		m_pOwner->Set_OnGoingDown();
-		break;
-
-	default:
 		break;
 	}
 
@@ -185,4 +191,19 @@ void CBattle_Damage_LargeB_State::Exit()
 
 	//if (m_eStateId == Client::CBerserkerState::STATE_TAKE_DAMAGE)
 	//	m_pOwner->SetOff_BedamageCount_Delay();
+}
+
+void CBattle_Damage_LargeB_State::Move(_float fTimeDelta)
+{
+	_vector vOwnerPos = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+	_vector vDir = XMVector4Normalize(vOwnerPos - XMVectorSetY(m_vCauserPos, XMVectorGetY(vOwnerPos)));
+
+	if (HIT_NORMAL != m_eHitType)
+	{
+		m_fTime += fTimeDelta * 2.5f;
+
+		m_pOwner->Get_Transform()->Jump(m_fTime, 2.3f, 3.f, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
+	}
+
+	m_pOwner->Get_Transform()->Go_PosDir(fTimeDelta * m_fMoveLength, vDir, m_pOwner->Get_Navigation());
 }

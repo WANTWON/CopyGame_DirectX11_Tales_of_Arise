@@ -32,12 +32,17 @@ private:
 	_float m_fEventStart = -1.f;
 	_float m_fTimer = 0.f;
 	_float m_fFadeTime = 0.f;
+	_float m_fEventStart1 = -2.f;
+	_int m_iEventIndex = 0;
+
 
 	/* Strike Screen Blur */
 	_bool m_bStrikeBlur = false;
 	_float m_fEffectEventEndTime = 0.f;
 	_float m_fEffectEventCurTime = 0.f;
 	_float m_fResetTimer = 0.f;
+
+	CBaseObj* StrikeTarget = nullptr;
 };
 END
 END

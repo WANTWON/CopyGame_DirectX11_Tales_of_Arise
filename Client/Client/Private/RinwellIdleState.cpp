@@ -44,7 +44,7 @@ CRinwellState * CRinwellIdleState::LateTick(_float fTimeDelta)
 	_float fCurrentHP = m_pOwner->Get_Stats().m_fCurrentHp;
 	_float fMaxHP = m_pOwner->Get_Stats().m_fMaxHp;
 
-	if ((fCurrentHP < fMaxHP * 0.5f) && !m_pOwner->Get_AirMode())
+	if ((fCurrentHP < fMaxHP * 0.5f) && !m_pOwner->Get_AirMode() && !m_pOwner->Get_50DownCutScene())
 		return new CPoseState(m_pOwner, STATE_HP50DOWN);
 
 	if (m_fWaitingTime < m_fTime)

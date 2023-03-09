@@ -195,6 +195,7 @@ public: /*For.State*/
 	virtual void	 Set_BattleMode(_bool type) override;
 		/*For Navigation*/
 	virtual void Check_Navigation() override;
+	_bool Check_Navigation_Jump(void);
 	
 public:
 	void Set_AngryOn() { m_bAngry = true; }

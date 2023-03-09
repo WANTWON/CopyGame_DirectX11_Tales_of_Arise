@@ -111,7 +111,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
 
-	if (m_bOverLimit &&  m_tInfo.fCurrentHp > 0)
+	if (m_bOverLimit &&  m_tInfo.fCurrentHp > 0 && CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 	{
 		/* Overlimit Effect */
 		if (!m_bIsOverlimiEffectSpawned)
@@ -758,6 +758,20 @@ void CPlayer::Set_HitState()
 		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 	}
 
+}
+
+void CPlayer::Set_OverLimitState()
+{
+	if (m_ePlayerMode == ACTIVE)
+	{
+		CPlayerState* pPlayerState = new Player::CPlayerOverlimit(this, true);
+		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+	}
+	else
+	{
+		CAIState* pAIState = new AIPlayer::CAI_Overlimit_State(this,nullptr, true);
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+	}
 }
 
 void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)

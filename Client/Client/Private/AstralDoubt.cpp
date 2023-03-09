@@ -13,6 +13,7 @@
 #include "AstralDoubt_TurnState.h"
 #include "AstralDoubt_Battle_WalkState.h"
 #include "AstralDoubt_TeleportState.h"
+#include "Level_BossZone.h"
 
 using namespace Astral_Doubt;
 
@@ -340,6 +341,8 @@ void CAstralDoubt::UpdatePosition()
 		dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_BattleMode(true);
 		dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_IsActionMode(true);
 
+		dynamic_cast<CLevel_BossZone*>(pGameInstance->Get_CurrentLevel())->Set_SecondCreated(true);
+
 		RELEASE_INSTANCE(CGameInstance);
 		RELEASE_INSTANCE(CBattleManager);
 		m_bCreatedMonster = true;
@@ -410,6 +413,7 @@ _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC H
 		CBattleManager::Get_Instance()->Update_LockOn();
 		Check_AmILastMoster();
 
+
 		m_pModelCom->Set_TimeReset();
 		CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DEAD);
 		m_pState = m_pState->ChangeState(m_pState, pState);
@@ -428,7 +432,7 @@ _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC H
 				m_pState = m_pState->ChangeState(m_pState, pState);
 			}
 		}
-		if (!m_bIsHalf && (m_tStats.m_fCurrentHp < m_tStats.m_fMaxHp * 0.5f))
+		if (!m_bIsHalf && (m_tStats.m_fCurrentHp < m_tStats.m_fMaxHp * 0.5f) && m_AmIFirstBoss)
 		{
 			m_bIsHalf = true;
 			UpdatePosition();

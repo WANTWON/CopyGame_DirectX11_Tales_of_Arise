@@ -305,7 +305,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 				return new CAI_DodgeState(m_pOwner, m_pTarget);
 				break;
 			case  1:
-				return new AI_LAW_NomalAttack_State(m_pOwner, STATE_ATTACK, m_pTarget);
+				return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
 				break;
 			}
 
@@ -475,7 +475,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 								return new CAI_DodgeState(m_pOwner, m_pTarget);
 								break;
 							case  1:
-								return new AI_LAW_NomalAttack_State(m_pOwner, STATE_ATTACK, m_pTarget);
+								return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
 								break;
 							}
 

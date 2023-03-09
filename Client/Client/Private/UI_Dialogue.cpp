@@ -336,12 +336,10 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 				}
 
-				
-				
-
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_End.wav"), SOUND_UI, 0.4f);
 			}
-			
-			
+			else
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_UI, 0.4f);
 		}
 	}
 

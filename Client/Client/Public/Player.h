@@ -125,6 +125,7 @@ public: /*For.State*/
 	void Reset_StrikeBlur(_float fTimeDelta);
 
 	void Set_HitState();
+	void Set_OverLimitState(); 
 
 public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);

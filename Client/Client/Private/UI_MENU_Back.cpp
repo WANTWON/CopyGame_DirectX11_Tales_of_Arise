@@ -52,7 +52,11 @@ int CUI_MENU_Back::Tick(_float fTimeDelta)
 {
 	
 	if (!CUI_Manager::Get_Instance()->Get_Mainmenuon() && CGameInstance::Get_Instance()->Key_Up(DIK_ESCAPE))
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Open.wav"), SOUND_UI, 1.f);
+		CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, 0.1f);
 		fadeinMain();
+	}
 
 	if (!CUI_Manager::Get_Instance()->Get_Mainmenuon())
 		return OBJ_NOEVENT;
@@ -248,7 +252,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_F))
 	{
-		
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Set.wav"), SOUND_UI, 1.f);
 
 		if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 3) //풀방
 		{
@@ -297,6 +301,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_G))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Set.wav"), SOUND_UI, 1.f);
 
 		if (m_etype == MENU_QUEST)
 		{
@@ -305,12 +310,11 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 			else
 				m_bQuestInformation = true;
 		}
-		 
-		
 	}
 
 	if (m_busingiteminmenu && CGameInstance::Get_Instance()->Key_Up(DIK_RIGHT))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 		if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 3) //풀방
 		{
 			if (m_iCursor_itemuse == 3)
@@ -340,7 +344,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 
 	if (m_busingiteminmenu && CGameInstance::Get_Instance()->Key_Up(DIK_LEFT))
 	{
-
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 		if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 3) //풀방
 		{
 			if (m_iCursor_itemuse == 0)
@@ -372,6 +376,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_RIGHT))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 		if (m_etype == MENU_MAIN && m_iCursor == 3)
 			m_iCursor = 0;
 		else
@@ -380,6 +385,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 	}
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_LEFT))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 		if (m_etype == MENU_MAIN && m_iCursor == 0)
 			m_iCursor = 3;
 		else
@@ -390,7 +396,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_SPACE))
 	{
-		
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Set.wav"), SOUND_UI, 1.f);
 		if (m_etype == MENU_MAIN)
 		{
 			switch (m_iCursor)
@@ -424,6 +430,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 
 	if (m_etype == MENU_INVENTORY1 && CGameInstance::Get_Instance()->Key_Up(DIK_RETURN))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Set.wav"), SOUND_UI, 1.f);
 		if (m_busingiteminmenu == true)
 		{
 			use_HPrecover_item();
@@ -447,6 +454,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 	}*/
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_Q))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Set.wav"), SOUND_UI, 1.f);
 		m_iCursor_inventory1 = 0;
 		if (m_eInventory_type == INVEN_MAIN)
 			m_eInventory_type = INVEN_ARMOR;
@@ -483,6 +491,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 	}
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_E))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Set.wav"), SOUND_UI, 1.f);
 		m_iCursor_inventory1 = 0;
 
 		if (m_eInventory_type == INVEN_ARMOR)
@@ -555,7 +564,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 	{
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_UP))
 		{
-			
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 
 			switch (m_eInventory_type)
 			{
@@ -613,6 +622,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		}
 		else if (CGameInstance::Get_Instance()->Key_Up(DIK_RIGHT) && !m_busingiteminmenu)
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 			if (m_iCursor_inventory1 % 2 == 0)
 				++m_iCursor_inventory1;
 			else
@@ -620,6 +630,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		}
 		else if (CGameInstance::Get_Instance()->Key_Up(DIK_LEFT) && !m_busingiteminmenu)
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 			if (m_iCursor_inventory1 % 2 == 0)
 				++m_iCursor_inventory1;
 			else
@@ -627,6 +638,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		}
 		else if (CGameInstance::Get_Instance()->Key_Up(DIK_DOWN) && !m_busingiteminmenu)
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 			switch (m_eInventory_type)
 			{
 			case INVEN_MAIN:
@@ -685,6 +697,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 	{
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_UP))
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 			if(m_iOrdercursor == 0)
 				m_iOrdercursor = 2;
 				else
@@ -693,6 +706,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		}
 		else if (CGameInstance::Get_Instance()->Key_Up(DIK_DOWN))
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 			if (m_iOrdercursor == 2)
 				m_iOrdercursor = 0;
 			else
@@ -701,6 +715,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 
 		else if (CGameInstance::Get_Instance()->Key_Up(DIK_RETURN))
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Set.wav"), SOUND_UI, 1.f);
 			if (m_bAIcanuseItem)
 			{
 				m_bAIcanuseItem = false;
@@ -726,6 +741,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		}
 		else if (m_etype == MENU_INVENTORY1)
 		{
+
 			m_iCursor_inventory1 = 0;
 			m_bfadeout_inventory = true;
 		}
@@ -746,13 +762,14 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		}
 
 
-
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Close.wav"), SOUND_UI, 1.f);
 	}
 
 	if (m_etype == MENU_QUEST)
 	{
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_UP))
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 			if (m_iCursor_Quest == 0)
 				m_iCursor_Quest = 10;
 			else
@@ -761,6 +778,7 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 		}
 		else if (CGameInstance::Get_Instance()->Key_Up(DIK_DOWN))
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Change.wav"), SOUND_UI, 1.f);
 			if (m_iCursor_Quest == 10)
 				m_iCursor_Quest = 0;
 			else
@@ -775,6 +793,8 @@ void CUI_MENU_Back::Late_Tick(_float fTimeDelta)
 	{
 		if (CGameInstance::Get_Instance()->Key_Up(DIK_ESCAPE))
 		{
+			CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, 0.3f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Close.wav"), SOUND_UI, 1.f);
 			m_fbackfadeout = true;
 			CUI_Manager::Get_Instance()->Set_StopTick(false);
 			//m_fMain_Bottom_buttonY = 400.f;
