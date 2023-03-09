@@ -192,27 +192,7 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
 
-	if (m_bCreatedMonster == false &&
-		m_tStats.m_fCurrentHp < m_tStats.m_fMaxHp*0.5f &&
-		m_AmIFirstBoss == true)
-	{
-		CBattleManager*			pBattleManager = GET_INSTANCE(CBattleManager);
-		CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
-		NONANIMDESC ModelDesc;
-
-		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_SecondBoss"));
-		CBaseObj* pBossMonsterFirst = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_SecondBoss")));
-		pBattleManager->Add_BattleMonster(pBossMonsterFirst);
-
-		pBossMonsterFirst->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMVectorSet(50.f, 0.f, 60.f, 1.f), 1.f));
-		dynamic_cast<CMonster*>(pBossMonsterFirst)->Compute_CurrentIndex(LEVEL_BOSS);
-		dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_BattleMode(true);
-		dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_IsActionMode(true);
-
-		RELEASE_INSTANCE(CGameInstance);
-		RELEASE_INSTANCE(CBattleManager);
-		m_bCreatedMonster = true;
-	}
+	
 
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
@@ -320,6 +300,52 @@ void CAstralDoubt::Set_BattleMode(_bool type)
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_MONSTER, this);
 }
 
+void CAstralDoubt::UpdatePosition()
+{
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC ModelDesc1;
+	NONANIMDESC ModelDesc2;
+	_uint iNum = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/BossMap/BossPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return;
+	/* 타일의 개수 받아오기 */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	ReadFile(hFile, &(ModelDesc1), sizeof(NONANIMDESC), &dwByte, nullptr);
+	if (m_AmIFirstBoss == true)
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&ModelDesc1.vPosition), 1.f));
+		m_pTransformCom->Set_Rotation(ModelDesc1.vRotation);
+	}
+		
+	ReadFile(hFile, &(ModelDesc2), sizeof(NONANIMDESC), &dwByte, nullptr);
+	CloseHandle(hFile);
+
+	if (m_bCreatedMonster == false &&
+		m_tStats.m_fCurrentHp < m_tStats.m_fMaxHp*0.5f &&
+		m_AmIFirstBoss == true)
+	{
+		CBattleManager*			pBattleManager = GET_INSTANCE(CBattleManager);
+		CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
+		NONANIMDESC ModelDesc;
+
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_STATIC, TEXT("Layer_SecondBoss"));
+		CBaseObj* pBossMonsterFirst = dynamic_cast<CBaseObj*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_SecondBoss")));
+		pBattleManager->Add_BattleMonster(pBossMonsterFirst);
+
+		pBossMonsterFirst->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&ModelDesc2.vPosition), 1.f));
+		dynamic_cast<CMonster*>(pBossMonsterFirst)->Compute_CurrentIndex(LEVEL_BOSS);
+		dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_BattleMode(true);
+		dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_IsActionMode(true);
+
+		RELEASE_INSTANCE(CGameInstance);
+		RELEASE_INSTANCE(CBattleManager);
+		m_bCreatedMonster = true;
+	}
+}
+
 _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 {
 	switch ((ANIM)eAnimId)
@@ -395,7 +421,7 @@ _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC H
 		if (!m_bIsHalf && (m_tStats.m_fCurrentHp < m_tStats.m_fMaxHp * 0.5f))
 		{
 			m_bIsHalf = true;
-
+			UpdatePosition();
 			CAstralDoubt_State* pState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_HALF);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
