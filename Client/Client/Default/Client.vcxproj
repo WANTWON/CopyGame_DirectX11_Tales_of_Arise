@@ -239,6 +239,7 @@
     <ClInclude Include="..\Public\BerserkerBattle_WalkState.h" />
     <ClInclude Include="..\Public\BerserkerChaseState.h" />
     <ClInclude Include="..\Public\BerserkerHowLing_State.h" />
+    <ClInclude Include="..\Public\BerserkerJumpState.h" />
     <ClInclude Include="..\Public\BerserkerTurnR_State.h" />
     <ClInclude Include="..\public\BossSkills.h" />
     <ClInclude Include="..\Public\BreakFont.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Fascinate.h" />
+    <ClInclude Include="..\Public\HawkJumpState.h" />
     <ClInclude Include="..\Public\IceWolfJumpState.h" />
     <ClInclude Include="..\Public\Law.h" />
     <ClInclude Include="..\Public\LawAirFSkillState.h" />
@@ -529,6 +531,7 @@
     <ClCompile Include="..\Private\BerserkerBattle_WalkState.cpp" />
     <ClCompile Include="..\Private\BerserkerChaseState.cpp" />
     <ClCompile Include="..\Private\BerserkerHowLing_State.cpp" />
+    <ClCompile Include="..\Private\BerserkerJumpState.cpp" />
     <ClCompile Include="..\Private\BerserkerTurnR_State.cpp" />
     <ClCompile Include="..\private\BossSkills.cpp" />
     <ClCompile Include="..\Private\BreakFont.cpp" />
@@ -542,6 +545,7 @@
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Fascinate.cpp" />
+    <ClCompile Include="..\Private\HawkJumpState.cpp" />
     <ClCompile Include="..\Private\IceWolfJumpState.cpp" />
     <ClCompile Include="..\Private\Law.cpp" />
     <ClCompile Include="..\Private\LawAirFSkillState.cpp" />

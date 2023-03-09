@@ -49,6 +49,7 @@ public: /* Getter Setter */
 	void Set_StrikeLockOnPos(vector<_vector> pos) { m_vStrikeLockOnPos = pos; };
 
 	void Set_Changetoboss(_bool tof) { m_bChangetoboss = tof; }
+	_bool Get_Changetoboss() { return m_bChangetoboss; }
 
 private:
 	CPlayer* m_pActivePlayer = nullptr;

@@ -48,26 +48,12 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
-				switch (m_eCurrentPlayerID)
-				{
-				case CPlayer::SION:
-				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
-					{
-
-
-					}
-					break;
-				}
-
-				case CPlayer::LAW:
+				if (m_eCurrentPlayerID == CPlayer::LAW)
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
 
-						if ((m_fEventStart != pEvent.fStartTime))
+						if ((m_fEventStart1 != pEvent.fStartTime))
 						{
 							if (m_iEventIndex == 0)
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(5);
@@ -75,7 +61,7 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
 
 							++m_iEventIndex;
-							m_fEventStart = pEvent.fStartTime;
+							m_fEventStart1 = pEvent.fStartTime;
 						}
 
 					}
@@ -93,7 +79,7 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 							/* Make Effect */
 							_vector vOffset = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
 							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-							mWorldMatrix.r[3] +=  vOffset*10.f + XMVectorSet(-10.f, 0.f, 0.f, 0.f);
+							mWorldMatrix.r[3] += vOffset*10.f + XMVectorSet(-10.f, 0.f, 0.f, 0.f);
 							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("BunStrikeBurst.dat"), mWorldMatrix);
 							m_fFadeTime = 0.f;
 							m_bBullet = true;
@@ -101,11 +87,11 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 						}
 					}
 				}
+					
+				}
 				}
 			}
-		}
-	
-	}
+		
 
 	m_pOwner->Check_Navigation();
 
@@ -192,6 +178,11 @@ CAIState * CAI_SionLaw_Smash::LateTick(_float fTimeDelta)
 
 void CAI_SionLaw_Smash::Enter()
 {
+	if (m_eCurrentPlayerID == CPlayer::LAW)
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+
+	m_bStrikeBlur = false;
+
 	m_pOwner->Set_StrikeAttack(true);
 	
 
@@ -233,10 +224,14 @@ void CAI_SionLaw_Smash::Enter()
 
 void CAI_SionLaw_Smash::Exit()
 {
-	if (m_bStrikeBlur)
+	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
-		m_pOwner->Set_ResetStrikeBlur(true);
-		m_bStrikeBlur = false;
+		if (m_bStrikeBlur)
+		{
+			/*m_pOwner->Set_ResetStrikeBlur(true);*/
+			m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+			m_bStrikeBlur = false;
+		}
 	}
 
 	if (m_eCurrentPlayerID == CPlayer::SION)
@@ -247,12 +242,13 @@ void CAI_SionLaw_Smash::Exit()
 	}
 
 
-	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+	
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
 
 	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 		HITLAGDESC m_HitLagDesc;
 		m_HitLagDesc.bHitLag = false;

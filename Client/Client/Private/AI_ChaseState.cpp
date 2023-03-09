@@ -33,6 +33,7 @@ CAI_ChaseState::CAI_ChaseState(CPlayer* pPlayer, STATE_ID eStateType, _uint play
 
 CAIState * CAI_ChaseState::Tick(_float fTimeDelta)
 {
+	m_fCuttimer += fTimeDelta;
 	m_fbreaktimer += fTimeDelta;
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN || m_eCurrentPlayerID == CPlayer::LAW)
 	{
@@ -123,7 +124,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 		switch (m_eCurrentPlayerID)
 		{
 		case CPlayer::ALPHEN:
-			if (Get_Target_Distance() <= 4.5f)
+			if (Get_Target_Distance() <= 6.5f || m_fCuttimer > 3.f)
 			{
 				__super::Exit();
 				m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_BATTLE_MOVE_BREAK;
@@ -134,7 +135,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			break;
 
 		case CPlayer::SION:
-			if (Get_Target_Distance() <= 11.f)
+			if (Get_Target_Distance() <= 11.f || m_fCuttimer > 3.f)
 			{
 				__super::Exit();
 				m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_BRAKE;
@@ -144,7 +145,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			break;
 
 		case CPlayer::RINWELL:
-			if (Get_Target_Distance() <= 11.f)
+			if (Get_Target_Distance() <= 11.f || m_fCuttimer > 3.f)
 			{
 				__super::Exit();
 				m_iCurrentAnimIndex = CRinwell::ANIM::DASH_BRAKE_000;
@@ -154,7 +155,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 			break;
 
 		case CPlayer::LAW:
-			if (Get_Target_Distance() <= 4.5f)
+			if (Get_Target_Distance() <= 6.5f || m_fCuttimer > 3.f)
 			{
 				__super::Exit();
 				m_iCurrentAnimIndex = CLaw::ANIM::BTL_MOVE_BRAKE;
@@ -304,7 +305,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 				return new CAI_DodgeState(m_pOwner, m_pTarget);
 				break;
 			case  1:
-				return new AI_LAW_NomalAttack_State(m_pOwner, STATE_ATTACK, m_pTarget);
+				return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
 				break;
 			}
 
@@ -474,7 +475,7 @@ CAIState * CAI_ChaseState::LateTick(_float fTimeDelta)
 								return new CAI_DodgeState(m_pOwner, m_pTarget);
 								break;
 							case  1:
-								return new AI_LAW_NomalAttack_State(m_pOwner, STATE_ATTACK, m_pTarget);
+								return new AI_LAW_NomalAttack_State(m_pOwner, STATE_NORMAL_ATTACK1, m_pTarget);
 								break;
 							}
 

@@ -63,32 +63,30 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
-				switch (m_eCurrentPlayerID)
-				{
-				case CPlayer::ALPHEN:
+				if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
 							if (m_iEventIndex == 0)
-							dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(2);
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(2);
 							else
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
 
 							++m_iEventIndex;
 							m_fEventStart = pEvent.fStartTime;
 						}
-						
+
 
 					}
-					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType &&  !m_bBullet)
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType && !m_bBullet)
 					{
 						m_fEffectEventEndTime = pEvent.fEndTime;
 						m_fEffectEventCurTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
 
 						m_bStrikeBlur = true;
-						
+
 						/* Make Effect */
 						_vector vOffset = { 0.f,0.f,0.f,0.f };
 						CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -97,26 +95,16 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 
 						m_bBullet = true;
 					}
-					break;
+				}
+				
+					
+					
 				}
 
-				case CPlayer::SION:
-				{
-					//if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						//m_bIsStateEvent = true;
-				    if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					{
-						if ((m_fEventStart != pEvent.fStartTime))
-						{
-							
-
-							m_fEventStart = pEvent.fStartTime;
-						}
-					}
-				 }
-				}
+			
+				
 			}
-		}
+		
 
 	
 	}
@@ -202,6 +190,11 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 			{
 				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
 				m_bScreen = true;
+				if (m_bStrikeBlur)
+				{
+					m_pOwner->Set_ResetStrikeBlur(true);
+					m_bStrikeBlur = false;
+				}
 			}
 		}
 	}
@@ -211,6 +204,10 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 
 void CAI_AlphenSion_Smash::Enter()
 {
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+
+	m_bStrikeBlur = false;
 	
 	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
@@ -243,7 +240,6 @@ void CAI_AlphenSion_Smash::Enter()
 			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 	
-	m_bStrikeBlur = false;
 	m_pOwner->Set_Manarecover(false);
 
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenSion_Smash.wav"), SOUND_VOICE, 0.2f);
@@ -251,11 +247,14 @@ void CAI_AlphenSion_Smash::Enter()
 
 void CAI_AlphenSion_Smash::Exit()
 {
-	
-	if (m_bStrikeBlur)
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 	{
-		m_pOwner->Set_ResetStrikeBlur(true);
-		m_bStrikeBlur = false;
+		if (m_bStrikeBlur)
+		{
+			/*m_pOwner->Set_ResetStrikeBlur(true);*/
+			m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+			m_bStrikeBlur = false;
+		}
 	}
 
 	__super::Exit();
@@ -285,6 +284,8 @@ void CAI_AlphenSion_Smash::Exit()
 	m_pOwner->Set_IsActionMode(false);
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 	{
+		if (CBattleManager::Get_Instance()->Get_Rinwellboss())
+			CBattleManager::Get_Instance()->Set_KillLawbosslevel(true);
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 		HITLAGDESC m_HitLagDesc;
@@ -297,17 +298,21 @@ void CAI_AlphenSion_Smash::Exit()
 		if (pLockOn != nullptr)
 		{
 			_vector vLastPosition = dynamic_cast<CMonster*>(pLockOn)->Get_LastPosition();
-			if (!dynamic_cast<CMonster*>(pLockOn)->Get_LastStrikeAttack())
+			if (!CBattleManager::Get_Instance()->Get_Rinwellboss())
 			{
-				dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
-				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				if (!dynamic_cast<CMonster*>(pLockOn)->Get_LastStrikeAttack())
+				{
+					dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
+					dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+					dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				}
+				else
+				{
+					dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+					dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				}
 			}
-			else
-			{
-				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
-			}
+			
 		}
 
 	}

@@ -146,5 +146,9 @@ void CBattle_DashState::Enter()
 void CBattle_DashState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
+
 	Safe_Release(m_pAtkColliderCom);
 }

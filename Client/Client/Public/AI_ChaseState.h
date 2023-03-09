@@ -22,6 +22,8 @@ public:
 private:
 	_bool m_bStopRunning = false;
 	_float m_fbreaktimer = 0.f;
+	_float m_fCuttimer = 0.f;
+
 };
 END
 END

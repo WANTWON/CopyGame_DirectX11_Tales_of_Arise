@@ -776,6 +776,7 @@ void CUI_Dialogue_Caption::Open_Dialogue(_uint index)
 	m_iVectorIndex = index; m_btick = true;
 
 	m_bfadein = true;
+	m_bfadeout = false;
 	_uint test = 0;
 
 	for (auto vec : (m_vCurrentDialogue[index])) test++;

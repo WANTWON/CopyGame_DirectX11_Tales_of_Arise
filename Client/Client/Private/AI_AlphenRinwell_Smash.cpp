@@ -69,7 +69,7 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
 						
-						if ((m_fEventStart != pEvent.fStartTime))
+						if ((m_fEventStart1 != pEvent.fStartTime))
 						{
 							if (m_iEventIndex == 0)
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(3);
@@ -77,7 +77,7 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
 
 							++m_iEventIndex;
-							m_fEventStart = pEvent.fStartTime;
+							m_fEventStart1 = pEvent.fStartTime;
 						}
 
 					}
@@ -111,9 +111,8 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 
 				case CPlayer::RINWELL:
 				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime) && !m_bBullet)
 						{
@@ -217,6 +216,11 @@ CAIState * CAI_AlphenRinwell_Smash::LateTick(_float fTimeDelta)
 
 void CAI_AlphenRinwell_Smash::Enter()
 {
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+
+	m_bStrikeBlur = false;
+
 	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
@@ -252,10 +256,14 @@ void CAI_AlphenRinwell_Smash::Enter()
 
 void CAI_AlphenRinwell_Smash::Exit()
 {
-	if (m_bStrikeBlur)
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 	{
-		m_pOwner->Set_ResetStrikeBlur(true);
-		m_bStrikeBlur = false;
+		if (m_bStrikeBlur)
+		{
+			/*m_pOwner->Set_ResetStrikeBlur(true);*/
+			m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+			m_bStrikeBlur = false;
+		}
 	}
 
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
@@ -263,11 +271,11 @@ void CAI_AlphenRinwell_Smash::Exit()
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 		/*if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
 			return;*/
-
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 	}
 
 
-	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+	
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN)

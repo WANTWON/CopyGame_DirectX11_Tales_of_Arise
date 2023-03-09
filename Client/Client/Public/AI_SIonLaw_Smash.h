@@ -31,6 +31,7 @@ private:
 
 	_float m_fEventStart = -1.f;
 	_float m_fEventStart1 = -2.f;
+
 	/* Strike Screen Blur */
 	_bool m_bStrikeBlur = false;
 	_float m_fEffectEventEndTime = 0.f;

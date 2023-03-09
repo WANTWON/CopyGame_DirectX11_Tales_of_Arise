@@ -441,6 +441,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 		}
 		break;
 	case Client::STATETYPE_END:
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_JumpLand.wav"), SOUND_FOOT, 0.1f);
 		if (m_bIsAnimationFinished)
 			return new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
 		break;
@@ -680,7 +681,7 @@ void CJumpState::Enter()
 
 	m_pOwner->Set_Manarecover(true);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_JumpStart.wav"), SOUND_FOOT, 0.4f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_JumpStart.wav"), SOUND_FOOT, 0.1f);
 }
 
 void CJumpState::Exit()
