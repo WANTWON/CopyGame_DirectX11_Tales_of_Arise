@@ -225,6 +225,11 @@ void CBattle_TornadeState::Exit()
 {
 	//CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p2th_AtkColliderCom, m_pOwner);
+
 	Safe_Release(m_p2th_AtkColliderCom);
 	Safe_Release(m_pAtkColliderCom);
 

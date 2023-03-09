@@ -57,7 +57,7 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-				CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 				_matrix matWorld = m_pOwner->Get_Model()->Get_BonePtr("HMIDDLE1_2_L")->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&m_pOwner->Get_Model()->Get_PivotFloat4x4()) * m_pOwner->Get_Transform()->Get_WorldMatrix();
 				matWorld.r[0] = XMVector4Normalize(matWorld.r[0]);
@@ -101,13 +101,12 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 				else if (nullptr != m_p2th_AtkColliderCom)
 					m_p2th_AtkColliderCom->Update(R_matWorld);
 
-				RELEASE_INSTANCE(CCollision_Manager);
 			}
 		}
 
 		else if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType && !pEvent.isPlay)
 		{
-			CCollision_Manager* pCollisionMgr = GET_INSTANCE(CCollision_Manager);
+			CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 
 			pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
 			pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p2th_AtkColliderCom, m_pOwner);
@@ -118,7 +117,6 @@ CBerserkerState * CBattle_Double_ClawState::Tick(_float fTimeDelta)
 			m_pAtkColliderCom = nullptr;
 			m_p2th_AtkColliderCom = nullptr;
 
-			RELEASE_INSTANCE(CCollision_Manager);
 		}
 	}
 
@@ -236,6 +234,11 @@ void CBattle_Double_ClawState::Enter()
 void CBattle_Double_ClawState::Exit()
 {
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_p2th_AtkColliderCom, m_pOwner);
 
 	Safe_Release(m_pAtkColliderCom);
 	Safe_Release(m_p2th_AtkColliderCom);

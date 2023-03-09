@@ -362,6 +362,40 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 					case CPlayer::SION:
 						if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 						{
+							if (m_fDashSoundStart != pEvent.fStartTime)
+							{
+								if (m_iDashSoundCount == 0)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound0.wav"), SOUND_FOOT, 0.1f);
+									m_iDashSoundCount = 1;
+								}
+
+								else if (m_iDashSoundCount == 1)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound1.wav"), SOUND_FOOT, 0.1f);
+									m_iDashSoundCount = 2;
+								}
+
+								else if (m_iDashSoundCount == 2)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound2.wav"), SOUND_FOOT, 0.1f);
+									m_iDashSoundCount = 3;
+								}
+
+								else if (m_iDashSoundCount == 3)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound3.wav"), SOUND_FOOT, 0.1f);
+									m_iDashSoundCount = 4;
+								}
+
+								else if (m_iDashSoundCount == 4)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound4.wav"), SOUND_FOOT, 0.1f);
+									m_iDashSoundCount = 0;
+								}
+
+								m_fDashSoundStart = pEvent.fStartTime;
+							}
 						}
 						break;
 
@@ -528,6 +562,52 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 					case CPlayer::SION:
 						if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 						{
+							if (m_fSoundStart != pEvent.fStartTime)
+							{
+								if (m_iRunSoundCount == 0)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound1.wav"), SOUND_FOOT, 0.1f);
+									m_iRunSoundCount = 1;
+								}
+
+								else if (m_iRunSoundCount == 1)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound2.wav"), SOUND_FOOT, 0.1f);
+									m_iRunSoundCount = 2;
+								}
+
+								else if (m_iRunSoundCount == 2)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound3.wav"), SOUND_FOOT, 0.1f);
+									m_iRunSoundCount = 3;
+								}
+
+								else if (m_iRunSoundCount == 3)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound4.wav"), SOUND_FOOT, 0.1f);
+									m_iRunSoundCount = 4;
+								}
+
+								else if (m_iRunSoundCount == 4)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound5.wav"), SOUND_FOOT, 0.1f);
+									m_iRunSoundCount = 5;
+								}
+
+								else if (m_iRunSoundCount == 5)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound6.wav"), SOUND_FOOT, 0.1f);
+									m_iRunSoundCount = 6;
+								}
+
+								else if (m_iRunSoundCount == 6)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound7.wav"), SOUND_FOOT, 0.1f);
+									m_iRunSoundCount = 0;
+								}
+
+								m_fSoundStart = pEvent.fStartTime;
+							}
 						}
 						break;
 
@@ -680,7 +760,55 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 						break;
 
 					case CPlayer::SION:
+						if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+						{
+							if (m_fBattleSoundStart != pEvent.fStartTime)
+							{
+								if (m_iBattleSoundCount == 0)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Battle_Run1.wav"), SOUND_FOOT, 0.2f);
+									m_iBattleSoundCount = 1;
+								}
 
+								else if (m_iBattleSoundCount == 1)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Battle_Run2.wav"), SOUND_FOOT, 0.2f);
+									m_iBattleSoundCount = 2;
+								}
+
+								else if (m_iBattleSoundCount == 2)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Battle_Run3.wav"), SOUND_FOOT, 0.2f);
+									m_iBattleSoundCount = 3;
+								}
+
+								else if (m_iBattleSoundCount == 3)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Battle_Run4.wav"), SOUND_FOOT, 0.2f);
+									m_iBattleSoundCount = 4;
+								}
+
+								else if (m_iBattleSoundCount == 4)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Battle_Run5.wav"), SOUND_FOOT, 0.2f);
+									m_iBattleSoundCount = 5;
+								}
+
+								else if (m_iBattleSoundCount == 5)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Battle_Run6.wav"), SOUND_FOOT, 0.2f);
+									m_iBattleSoundCount = 6;
+								}
+
+								else if (m_iBattleSoundCount == 6)
+								{
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Battle_Run7.wav"), SOUND_FOOT, 0.2f);
+									m_iBattleSoundCount = 0;
+								}
+
+								m_fBattleSoundStart = pEvent.fStartTime;
+							}
+						}
 						break;
 
 					case CPlayer::RINWELL:
@@ -850,7 +978,10 @@ void CRunState::Enter()
 				if (STATETYPE_START == m_eStateType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH);
 				else
+				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH_BRAKE_000);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSoundBreak.wav"), SOUND_FOOT, 0.4f);
+				}
 			}
 			break;
 		case CPlayer::RINWELL:
@@ -913,14 +1044,20 @@ void CRunState::Enter()
 				if (STATETYPE_START == m_eStateType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_RUN);
 				else
+				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_BRAKE);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+				}
 			}
 			else
 			{
 				if (STATETYPE_START == m_eStateType)
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::SYS_RUN);
 				else
+				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::RUN_BRAKE_000);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+				}
 			}
 			break;
 		case CPlayer::RINWELL:

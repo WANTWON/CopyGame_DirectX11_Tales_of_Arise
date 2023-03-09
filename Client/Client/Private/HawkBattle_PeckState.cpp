@@ -163,5 +163,8 @@ void CBattle_PeckState::Enter()
 
 void CBattle_PeckState::Exit()
 {
+	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+	pCollisionMgr->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pAtkColliderCom, m_pOwner);
+
 	Safe_Release(m_pAtkColliderCom);
 }
