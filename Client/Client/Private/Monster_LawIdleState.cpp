@@ -75,7 +75,7 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 	}*/
 	//return new CMonster_LawSkill(m_pOwner, SKILL_E);
 
-	return new CMonsterLaw_StrikeTrigger(m_pOwner);
+	//return new CMonsterLaw_StrikeTrigger(m_pOwner);
 	//
 
 	if (m_pOwner->Get_Phase() == 1 || m_pOwner->Get_Phase() == 2)
@@ -84,15 +84,10 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 		{
 		case 0:
 			return new CMonster_LawSkill(m_pOwner, SKILL_E);
-
 		case 1:
 			return new CMonster_LawDodge(m_pOwner, true);
-
 		case 2:
 			return new CMonster_LawSkill(m_pOwner, SKILL_STRIKE);
-
-
-
 		}
 	}
 
@@ -125,7 +120,7 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 	case 4:
 		return new CMonster_LawDodge(m_pOwner);
 	case 5:
-	//	return new CMonsterLaw_StrikeTrigger(m_pOwner);
+		return new CMonsterLaw_StrikeTrigger(m_pOwner);
 	default:
 		return new CMonster_LawSkill(m_pOwner, SKILL_STRIKE);
 	}
