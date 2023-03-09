@@ -5,7 +5,7 @@
 #include "AICheckState.h"
 #include "Monster_LawIdleState.h"
 #include "MonsterLaw_Strike1.h"
-
+#include "MonsterLaw_Strike2.h"
 
 
 
@@ -87,10 +87,24 @@ CMonsterLawState * CMonsterLaw_StrikeTrigger::LateTick(_float ftimeDelta)
 
 					CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 					pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-					pCameraManager->Play_ActionCamera(TEXT("WithLawStrike2.dat"), XMMatrixIdentity());
+			
 
 					CBattleManager::Get_Instance()->Set_IsStrike(true);
-					return new CMonsterLaw_Strike1(m_pOwner, m_pTarget);
+					switch (rand() % 2)
+					{
+					case 0:
+					pCameraManager->Play_ActionCamera(TEXT("WithLawStrike2.dat"), XMMatrixIdentity());
+						return new CMonsterLaw_Strike1(m_pOwner, pCollisionTarget);
+						break;
+
+					case 1:
+						pCameraManager->Play_ActionCamera(TEXT("withlaw3.dat"), XMMatrixIdentity());
+						return new CMonsterLaw_Strike2(m_pOwner, pCollisionTarget);
+						break;
+					}
+					
+				//		return new CMonsterLaw_Strike2(m_pOwner, pCollisionTarget);
+						
 				}
 
 

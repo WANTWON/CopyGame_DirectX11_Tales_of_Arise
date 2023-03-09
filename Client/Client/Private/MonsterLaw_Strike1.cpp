@@ -12,6 +12,7 @@
 #include "UI_Skillmessage.h"
 #include "Monster_LawIdleState.h"
 #include "PlayerHitState.h"
+#include "UI_Dialogue_Caption.h"
 
 using namespace MonsterLaw;
 using namespace Player;
@@ -24,7 +25,9 @@ CMonsterLaw_Strike1::CMonsterLaw_Strike1(CMonsterLaw* pPlayer, CBaseObj* pTarget
 	{
 		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 	}
-	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());;
+	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
+
+	StrikeTarget = pTarget;
 }
 
 CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
@@ -51,8 +54,21 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 			if (pEvent.isPlay)
 			{
 				
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
+				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+				{
+
+					if ((m_fEventStart1 != pEvent.fStartTime))
+					{
+						if (m_iEventIndex == 0)
+							dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
+						else
+							dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
+
+						++m_iEventIndex;
+						m_fEventStart1 = pEvent.fStartTime;
+					}
+
+				}
 					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
@@ -95,14 +111,14 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 									vPosition += vCamDir*0.1f;
 									pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
 								}
-								m_pTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[0]);
-								m_pTarget->Set_HitState();
+								StrikeTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[0]);
+								dynamic_cast<CPlayer*>(StrikeTarget)->Set_HitState();
 							}
 							else if (!strcmp(pEvent.szName, "FootPunch"))
 							{
 								
-								m_pTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[1]);
-								m_pTarget->Set_HitState();
+								StrikeTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[1]);
+								dynamic_cast<CPlayer*>(StrikeTarget)->Set_HitState();
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[3];
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawAttack1_BeginPunch.dat"), mWorldMatrix);
@@ -139,8 +155,8 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 							else if (!strcmp(pEvent.szName, "Boom"))
 							{
 							
-								m_pTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[2]);
-								m_pTarget->Set_HitState();
+								StrikeTarget->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[2]);
+								dynamic_cast<CPlayer*>(StrikeTarget)->Set_HitState();
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[6];
 								CEffect::PlayEffectAtLocation(TEXT("LawAttack1_Boom.dat"), mWorldMatrix);
@@ -174,12 +190,12 @@ CMonsterLawState * CMonsterLaw_Strike1::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
+	//	m_fWaitTimer += fTimeDelta;
 
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 			CUI_Manager::Get_Instance()->Get_UIStrike() == false)
 		{
 
-	
 				return new CMonster_LawIdleState(m_pOwner);
 			
 

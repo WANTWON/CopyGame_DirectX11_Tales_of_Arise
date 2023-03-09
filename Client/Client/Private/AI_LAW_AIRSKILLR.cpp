@@ -135,6 +135,7 @@ CAIState * CAI_LAW_AIRSKILLR::Tick(_float fTimeDelta)
 					{
 						if (!m_bSankamousyuukyaku_Punch_2)
 						{
+							CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 							m_Sankamousyuukyaku_Punch_2 = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_Punch_2.dat"), mWorldMatrix);
 							m_bSankamousyuukyaku_Punch_2 = true;
 

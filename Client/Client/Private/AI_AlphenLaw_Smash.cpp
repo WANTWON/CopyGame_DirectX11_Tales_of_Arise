@@ -78,6 +78,8 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 
 			//	case CPlayer::LAW:
 			//	{
+				if (m_eCurrentPlayerID == CPlayer::LAW)
+				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
 						if ((m_fEventStart1 != pEvent.fStartTime))
@@ -100,13 +102,13 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 							{
 								/* Make Effect */
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-								m_pEffects =  CEffect::PlayEffectAtLocation(TEXT("LawAttack1_Begin.dat"), mWorldMatrix);
+								m_pEffects = CEffect::PlayEffectAtLocation(TEXT("LawAttack1_Begin.dat"), mWorldMatrix);
 
 								_matrix mWorldMatrix2 = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix2.r[3] = m_vEffectPos[0];
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawAttack1_BeginFlash.dat"), mWorldMatrix2);
 								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-								_vector vCamDir = XMVector3Normalize( XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix2.r[3]);
+								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix2.r[3]);
 
 								for (auto& pEffect : Punch)
 								{
@@ -127,7 +129,7 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[2];
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawAttack1_BeginPunch.dat"), mWorldMatrix);
-								_vector vPosition  = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
 
 								for (auto& pEffect : Punch)
@@ -194,8 +196,10 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 						}
 					}
 				}
-				}
 			}
+		}
+				}
+				
 	//	}
 	//}
 
@@ -258,6 +262,11 @@ CAIState * CAI_AlphenLaw_Smash::LateTick(_float fTimeDelta)
 
 void CAI_AlphenLaw_Smash::Enter()
 {
+	if (m_eCurrentPlayerID == CPlayer::LAW)
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+
+	m_bStrikeBlur = false;
+
 	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
@@ -294,10 +303,14 @@ void CAI_AlphenLaw_Smash::Enter()
 
 void CAI_AlphenLaw_Smash::Exit()
 {
-	if (m_bStrikeBlur)
+	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
-		m_pOwner->Set_ResetStrikeBlur(true);
-		m_bStrikeBlur = false;
+		if (m_bStrikeBlur)
+		{
+			/*m_pOwner->Set_ResetStrikeBlur(true);*/
+			m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+			m_bStrikeBlur = false;
+		}
 	}
 
 	if (m_eCurrentPlayerID == CPlayer::LAW)
@@ -306,7 +319,7 @@ void CAI_AlphenLaw_Smash::Exit()
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 		/*if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
 			return;*/
-
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 		if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		{
 			HITLAGDESC m_HitLagDesc;
@@ -329,7 +342,7 @@ void CAI_AlphenLaw_Smash::Exit()
 	}
 	
 
-	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+	
 
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);

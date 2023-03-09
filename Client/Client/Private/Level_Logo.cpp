@@ -13,7 +13,7 @@
 
 float g_fSoundVolume = 0.0f;
 float g_fSoundNatureVolume = 0.0f;
-
+bool g_bIsSoundOn;
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
