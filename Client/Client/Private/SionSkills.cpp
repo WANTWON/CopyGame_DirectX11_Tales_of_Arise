@@ -52,7 +52,6 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Sion_BoostBGlast.dat"), mWorldMatrix);
-
 		m_bIsActiveAtActionCamera = true;
 		break;
 	case GRAVITY:
@@ -315,6 +314,10 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.bShaking = true;
 		m_HitLagDesc.fShakingPower = 2.f;
 		m_HitLagDesc.fShakingMinusPower = 0.2f;
+		m_HitLagDesc.bCritical = true;
+		m_HitLagDesc.fBlurPower = 6.f;
+		m_HitLagDesc.fBlurDetail = 10.f;
+
 		__super::Collision_Check();
 		break;
 	case GLACIA_DEAD:
@@ -324,6 +327,10 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.bShaking = true;
 		m_HitLagDesc.fShakingPower = 2.f;
 		m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+		m_HitLagDesc.bCritical = true;
+		m_HitLagDesc.fBlurPower = 6.f;
+		m_HitLagDesc.fBlurDetail = 10.f;
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
@@ -345,10 +352,19 @@ void CSionSkills::Collision_Check()
 		}
 		break;
 	case EXPLOSION:
-	case GLACIA:
 		m_HitLagDesc.bLockOnChange = false;
 		m_HitLagDesc.bHitLag = true;
 		m_HitLagDesc.fHitLagTimer = 0.1f;
+		m_HitLagDesc.bShaking = true;
+		m_HitLagDesc.fShakingPower = 0.4f;
+		m_HitLagDesc.fShakingMinusPower = 0.1f;
+
+		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
+			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
+		break;
+	case GLACIA:
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bHitLag = false;
 		m_HitLagDesc.bShaking = true;
 		m_HitLagDesc.fShakingPower = 0.4f;
 		m_HitLagDesc.fShakingMinusPower = 0.1f;
@@ -399,7 +415,8 @@ void CSionSkills::Collision_Check()
 	case GRAVITY:
 		m_HitLagDesc.bLockOnChange = false;
 		m_HitLagDesc.bHitLag = true;
-		m_HitLagDesc.fHitLagTimer = 0.1f;
+		m_HitLagDesc.fHitLagTimer = 0.05f;
+		m_HitLagDesc.fTakeDamageTimer = 0.05f;
 		m_HitLagDesc.bShaking = false;
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))

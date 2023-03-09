@@ -1308,6 +1308,15 @@ HRESULT CPlayerCreater::Ready_Layer_LawBattleMapObject(const _tchar * pLayerTag)
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Rinwell"));
 
+
+	CPortal::PORTALDESC PortalDesc;
+	PortalDesc.iNextLevel = LEVEL_CITY;
+	PortalDesc.m_ModelDesc.vPosition = _float3(64.f, 0.f, 80.f);
+	PortalDesc.m_ModelDesc.vScale = _float3(1.f, 1.f, 1.f);
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_LAWBATTLE, TEXT("Layer_Portal"), &PortalDesc)))
+		return E_FAIL;
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Portal"));
+
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }

@@ -67,10 +67,22 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 				case Client::CAIState::STATE_SKILL_ATTACK_E:
 					if (nullptr == m_pRightFootCollider)
 						m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
+					if (!m_bSkill_E_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						m_bSkill_E_Sound = true;
+					}
 					break;
 				case Client::CAIState::STATE_SKILL_ATTACK_R:
 					if (nullptr == m_pRightFootCollider)
 						m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
+					if (!m_bSkill_R_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						m_bSkill_R_Sound = true;
+					}
 					break;
 				case Client::CAIState::STATE_SKILL_ATTACK_F:
 					if (!strcmp(pEvent.szName, "RH"))
@@ -89,6 +101,13 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 							m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 					}
 					m_fEventStartTime = pEvent.fStartTime;
+
+
+					if (!m_bSkill_F_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						m_bSkill_F_Sound = true;
+					}
 					break;
 				}
 			}

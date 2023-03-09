@@ -726,7 +726,7 @@ void CAlphenSkillState::Exit(void)
 
 	Safe_Release(m_pSwordCollider);
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 	{

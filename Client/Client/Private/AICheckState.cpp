@@ -143,7 +143,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 		{
 		case CPlayer::ALPHEN:
 		//	return new CAI_DodgeState(m_pOwner, m_pTarget);
-			if (Get_Target_Distance() >= 3.f)
+			if (Get_Target_Distance() >= 6.5f)
 			{
 				
 					if (CheckTarget() == false)
@@ -279,7 +279,7 @@ CAIState * CAICheckState::LateTick(_float fTimeDelta)
 
 		case CPlayer::LAW:
 			//	return new CAI_DodgeState(m_pOwner, m_pTarget);
-			if (Get_Target_Distance() >= 3.f)
+			if (Get_Target_Distance() >= 7.f)
 			{
 				if (CheckTarget() == false)
 					return nullptr;

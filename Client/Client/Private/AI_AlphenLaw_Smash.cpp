@@ -12,6 +12,7 @@
 #include "ParticleSystem.h"
 #include "PlayerIdleState.h"
 #include "UI_Skillmessage.h"
+#include "UI_Dialogue_Caption.h"
 
 using namespace AIPlayer;
 using namespace Player;
@@ -63,23 +64,35 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
-				switch (m_eCurrentPlayerID)
+				/*switch (m_eCurrentPlayerID)
 				{
 				case CPlayer::ALPHEN:
 				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
+					
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						
 					}
 					break;
-				}
+				}*/
 
-				case CPlayer::LAW:
-				{
+			//	case CPlayer::LAW:
+			//	{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
+					{
+
+						if ((m_fEventStart1 != pEvent.fStartTime))
+						{
+							if (m_iEventIndex == 0)
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(6);
+							else
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
+
+							++m_iEventIndex;
+							m_fEventStart1 = pEvent.fStartTime;
+						}
+
+					}
 					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
@@ -184,8 +197,8 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 				}
 				}
 			}
-		}
-	}
+	//	}
+	//}
 
 
 	return nullptr;
@@ -290,8 +303,10 @@ void CAI_AlphenLaw_Smash::Exit()
 
 	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
-			return;
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
+		/*if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
+			return;*/
 
 		if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		{

@@ -23,11 +23,6 @@ CAI_RinwellLaw_Smash::CAI_RinwellLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 	//m_ePreStateID = eStateType;
 	m_pOwner = pPlayer;
 	m_eCurrentPlayerID = m_pOwner->Get_PlayerID();
-	if (nullptr == pTarget)
-	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-	}
 	m_pTarget = pTarget;
 }
 
@@ -35,19 +30,6 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 {
 	if (m_bStrikeBlur)
 		StrikeBlur(fTimeDelta);
-
-	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
-	{
-		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-	}
-	else
-	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-	}
-
-	if (m_pTarget == nullptr)
-		return nullptr;
 
 	m_fTimer += fTimeDelta;
 
@@ -72,7 +54,7 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 	}
 
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_60")), false);
 	if (!m_bIsAnimationFinished)
 	{
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
@@ -82,22 +64,23 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 			{
 				switch (m_eCurrentPlayerID)
 				{
-				case CPlayer::RINWELL:
-				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
-					{
-
-
-					}
-					break;
-				}
-
 				case CPlayer::LAW:
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
+					{
+
+						if ((m_fEventStart1 != pEvent.fStartTime))
+						{
+							if (m_iEventIndex == 0)
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
+							else
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
+
+							++m_iEventIndex;
+							m_fEventStart1 = pEvent.fStartTime;
+						}
+
+					}
 					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
@@ -132,7 +115,6 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
 
-								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
 								for (auto& pEffect : Punch)
 								{
 									vPosition += vCamDir*0.1f;
@@ -141,8 +123,7 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 							}
 							else if (!strcmp(pEvent.szName, "Punch2"))
 							{
-								CBattleManager::Get_Instance()->Get_LackonMonster()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[0]);
-
+								CBattleManager::Get_Instance()->Get_LackonMonster()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[1]);
 								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
 
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
@@ -151,7 +132,7 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
 
-								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+					
 								for (auto& pEffect : Punch)
 								{
 									vPosition += vCamDir*0.1f;
@@ -169,7 +150,6 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
 
-								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
 								for (auto& pEffect : Punch)
 								{
 									vPosition += vCamDir*0.1f;
@@ -188,12 +168,9 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
 
-
 								if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 									dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.02f);
 
-
-								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
 								m_bStrikeBlur = true;
 								m_bBullet = true;
 
@@ -215,12 +192,7 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 
 CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 {
-	if (m_bIsStateEvent)
-	{
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
-	}
-
+	
 	for (auto& iter : m_pEffects)
 	{
 		if (iter != nullptr && iter->Get_PreDead())
@@ -244,7 +216,6 @@ CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 				pState = new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
 				m_pOwner->Set_PlayerState(m_pOwner->Get_PlayerState()->ChangeState(m_pOwner->Get_PlayerState(), pState));
 			}
-
 
 
 			case Client::AI_MODE:
@@ -288,7 +259,6 @@ void CAI_RinwellLaw_Smash::Enter()
 	{		
 	Set_EffectPosition();
 	CBattleManager::Get_Instance()->Get_LackonMonster()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[1]);
-
 	_matrix mWorldMatrix2 = m_pOwner->Get_Transform()->Get_WorldMatrix();
 	mWorldMatrix2.r[3] = m_vEffectPos[0];
 	vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawFinishMove_LoopEffect.dat"), mWorldMatrix2);
@@ -301,32 +271,19 @@ void CAI_RinwellLaw_Smash::Enter()
 		pEffect->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
 	}	
 	m_iCurrentAnimIndex = CLaw::ANIM::BTL_MYSTIC_GURENTENSYOU;
-	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RAINOUI);
-	dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
+	//dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_RAINOUI);
+	
 
 	break;
 	}
 
 	}
-
-
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	m_pOwner->Get_Model()->Reset();
 
-	if (nullptr == m_pTarget)
-	{
-		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
-		(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-	}
-	else
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_Target(m_pOwner);
-
 	m_pOwner->Set_Manarecover(false);
-
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawRinwell_Smash.wav"), SOUND_VOICE, 0.85f);
 }
 
@@ -338,12 +295,11 @@ void CAI_RinwellLaw_Smash::Exit()
 		m_bStrikeBlur = false;
 	}
 
-	CBattleManager::Get_Instance()->Set_IsStrike(false);
-	m_pOwner->Set_StrikeAttack(false);
-	m_pOwner->Set_IsActionMode(false);
-
 	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
+
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 
 		if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		{
@@ -363,7 +319,15 @@ void CAI_RinwellLaw_Smash::Exit()
 				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 			}
 		}
+
 	}
+
+	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+
+	m_pOwner->Set_StrikeAttack(false);
+	m_pOwner->Set_IsActionMode(false);
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
+
 
 	if (!m_pEffects.empty())
 	{
@@ -377,8 +341,7 @@ void CAI_RinwellLaw_Smash::Exit()
 			}
 		}
 	}
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+
 	__super::Exit();
 }
 

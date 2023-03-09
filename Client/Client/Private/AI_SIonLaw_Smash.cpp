@@ -13,6 +13,7 @@
 #include "PlayerIdleState.h"
 #include "UI_Skillmessage.h"
 #include "Animation.h"
+#include "UI_Dialogue_Caption.h"
 
 using namespace AIPlayer;
 using namespace Player;
@@ -37,15 +38,7 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 	m_fTimer += fTimeDelta;
 
 
-	if (m_pOwner->Get_PlayerID() == CPlayer::LAW)
-	{
-		if (m_fTimer > 4.f)
-		{
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SIONLAWSTRIKE);
-			m_fTimer = -100.f;
-		}
-	}
-
+	
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
 	if (!m_bIsAnimationFinished)
@@ -55,24 +48,22 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
-				switch (m_eCurrentPlayerID)
-				{
-				case CPlayer::SION:
-				{
+				
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 
+						if ((m_fEventStart1 != pEvent.fStartTime))
+						{
+							if (m_iEventIndex == 0)
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(5);
+							else
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
+
+							++m_iEventIndex;
+							m_fEventStart1 = pEvent.fStartTime;
+						}
 
 					}
-					break;
-				}
-
-				case CPlayer::LAW:
-				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
 					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime) && !m_bBullet)
@@ -97,9 +88,7 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 				}
 				}
 			}
-		}
-	
-	}
+		
 
 	m_pOwner->Check_Navigation();
 
@@ -111,10 +100,7 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 
 CAIState * CAI_SionLaw_Smash::LateTick(_float fTimeDelta)
 {
-	if (m_bIsStateEvent)
-	{
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	}
+	
 
 	for (auto& iter : m_pEffects)
 	{
@@ -199,6 +185,7 @@ void CAI_SionLaw_Smash::Enter()
 
 		break;
 	case CPlayer::LAW:
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SIONLAWSTRIKE);
 		m_iCurrentAnimIndex = CLaw::ANIM::ANIM_SIONLAW_STRIKE;
 		break;
 	}
@@ -249,7 +236,7 @@ void CAI_SionLaw_Smash::Exit()
 
 	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
-
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 		HITLAGDESC m_HitLagDesc;
 		m_HitLagDesc.bHitLag = false;
 		m_HitLagDesc.bLockOnChange = false;

@@ -42,16 +42,20 @@ CPlayerState * CHitState::Tick(_float fTimeDelta)
 		else
 			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
 		break;
+	case HIT_SMASH:
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
+		break;
 	}
 
-	m_pOwner->Check_Navigation_Jump();
+	if(m_eHitType != HIT_SMASH)
+		m_pOwner->Check_Navigation_Jump();
 
 	return nullptr;
 }
 
 CPlayerState * CHitState::LateTick(_float fTimeDelta)
 {
-	if (m_bIsAnimationFinished)
+	if (m_bIsAnimationFinished && m_eHitType != HIT_SMASH)
 	{
 		if (m_bIsMove && (STATETYPE_START == m_eStateType))
 		{
@@ -65,6 +69,12 @@ CPlayerState * CHitState::LateTick(_float fTimeDelta)
 			else
 				return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 		}
+	}
+
+	if (m_bIsAnimationFinished && m_eHitType == HIT_SMASH)
+	{
+		if(CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
 
 	return nullptr;
@@ -153,6 +163,26 @@ void CHitState::Enter()
 			break;
 		}
 		break;
+	case HIT_SMASH:
+	{
+		switch (m_ePlayerID)
+		{
+		case CPlayer::ALPHEN:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DAMAGE_AIR_LARGE_B);
+			break;
+		case CPlayer::SION:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DAMAGE_AIR_LARGE_B);
+			break;
+		case CPlayer::RINWELL:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_DAMAGE_AIR_LARGE_B);
+			break;
+		case CPlayer::LAW:
+				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_DAMAGE_AIR_LARGE_B);
+			break;
+		}
+		m_pOwner->Get_Model()->Reset();
+		return;
+	}
 	}
 
 	m_pOwner->Set_Manarecover(false);

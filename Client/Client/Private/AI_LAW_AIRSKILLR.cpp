@@ -78,6 +78,12 @@ CAIState * CAI_LAW_AIRSKILLR::Tick(_float fTimeDelta)
 				{
 					if (nullptr == m_pLeftFootCollider)
 						m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
+
+					if (!m_bSkill_R_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillSound.wav"), SOUND_EFFECT, 0.2f);
+						m_bSkill_R_Sound = true;
+					}
 				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 				{
@@ -347,7 +353,7 @@ void CAI_LAW_AIRSKILLR::Enter()
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_R.wav"), SOUND_EFFECT, 1.0f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_R.wav"), SOUND_EFFECT, 0.25f);
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SANHWAMANGSUP);
 	
 	

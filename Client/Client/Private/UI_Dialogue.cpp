@@ -91,6 +91,8 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 			dynamic_cast<CMonster*>(pObject)->Set_BattleMode(true);
 
 			dynamic_cast<CAiRinwell*>(pObject)->Set_AirMode(true);
+			dynamic_cast<CAiRinwell*>(pObject)->Set_50DownCutScene(true);
+
 			CBattleManager::Get_Instance()->Add_BattleMonster(pObject);
 
 			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(8, true, 0, 1);
@@ -152,7 +154,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 		if (m_bfadein)
 		{
-			m_fAlpha += 0.02f; //»ý±æ¶§
+			m_fAlpha += 0.02f; //ï¿½ï¿½ï¿½æ¶§
 			m_fFade += 0.8f;
 		}
 		else if (m_bfadeout)
@@ -165,15 +167,15 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 		//	m_fAlpha = 0.5f;
 
-		//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // »ç¶óÁú¶§
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		//{
 		//	m_bfadeout = true;
 		//}
-		//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // »ý°ÜÁú¶§
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		//{
 		//	m_bfadein = true;
 		//}
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_6)) // »ý°ÜÁú¶§
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_6)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		{
 			if (m_iVectorIndex == 13 && m_iDialogueindex == 1)
 			{
@@ -345,7 +347,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 
 	
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_9)) // »ý°ÜÁú¶§
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_9)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	//{
 	//	++m_iVectorIndex;
 	//}
@@ -2561,13 +2563,13 @@ void CUI_Dialogue::Read_TextFiles_for_LastQuestStart()
 wchar_t * CUI_Dialogue::ConverCtoWC(char * str)
 {
 
-	//wchar_tÇü º¯¼ö ¼±¾ð
+	//wchar_tï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	wchar_t* pStr;
-	//¸ÖÆ¼ ¹ÙÀÌÆ® Å©±â °è»ê ±æÀÌ ¹ÝÈ¯
+	//ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½Æ® Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
 	int strSize = MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, NULL);
-	//wchar_t ¸Þ¸ð¸® ÇÒ´ç
+	//wchar_t ï¿½Þ¸ï¿½ ï¿½Ò´ï¿½
 	pStr = new WCHAR[MAX_PATH];
-	//Çü º¯È¯
+	//ï¿½ï¿½ ï¿½ï¿½È¯
 	MultiByteToWideChar(CP_ACP, 0, str, _uint(strlen(str) + 1), m_szTXT, MAX_PATH);
 	
 	Safe_Delete_Array(pStr);
@@ -2608,19 +2610,19 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size()-1], XMVectorSet(390.f, 535.f+m_fFade, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
 	
 	
-	if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("¾ËÆæ")))
+	if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ì•ŒíŽœ")))
 	{
 		m_iPortraitnum = 0;
 	}
-	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("½Ã¿Â")))
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ì‹œì˜¨")))
 	{
 		m_iPortraitnum = 1;
 	}
-	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("¸°À£")))
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ë¦°ì›°")))
 	{
 		m_iPortraitnum = 2;
 	}
-	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("·Î¿ì")))
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ë¡œìš°")))
 	{
 		m_iPortraitnum = 3;
 	}

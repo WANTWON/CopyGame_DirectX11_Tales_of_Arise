@@ -109,9 +109,8 @@ public: // Get & Set
 	_vector	 Get_LastPosition() { return m_vLastPos; }
 	void	Set_LastStrikeAttack(_bool type) { m_bLastStrikeAttack = type; }
 	_bool Get_LastStrikeAttack() { return m_bLastStrikeAttack; }
-	
-
-
+	_bool Get_IsFly(void) { return m_bIsFly; }
+	void Set_IsFly(_bool bIsFly) { m_bIsFly = bIsFly; }
 
 protected:
 	DMG_DIR Calculate_DmgDirection();
@@ -147,6 +146,7 @@ protected:
 	_bool  m_bLastStrikeAttack = false;
 	_bool m_bKillerSkill = false;
 	_bool	m_bCritical = false;
+	_bool m_bIsFly = false;
 
 	_uint m_eCurLevel = LEVEL_END;
 	_uint m_iRand = 0;

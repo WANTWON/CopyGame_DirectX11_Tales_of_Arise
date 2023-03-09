@@ -71,18 +71,14 @@ CMonsterLawState * CMonsterLaw_StrikeTrigger::LateTick(_float ftimeDelta)
 				CBaseObj* pCollisionTarget = nullptr;
 				if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pOwner->Get_SPHERECollider(), &pCollisionTarget))
 				{
-					/*CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
-					if (pCollided)
-						pCollided->Take_Damage(rand() % 100, m_pOwner);*/
 					Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position_LawAttack1.dat"), 3);
 					m_pTarget->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[LOCKON]);
-					//	m_pTarget->Set_HitState();
-
+					m_pTarget->Set_IsActionMode(true);
+					m_pTarget->Set_HitState();
+					
 					m_pOwner->Set_IsActionMode(true);
 					m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikePosition[ACTIVE2]);
 					m_pOwner->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
-
-
 
 
 					CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
@@ -94,8 +90,6 @@ CMonsterLawState * CMonsterLaw_StrikeTrigger::LateTick(_float ftimeDelta)
 					pCameraManager->Play_ActionCamera(TEXT("WithLawStrike2.dat"), XMMatrixIdentity());
 
 					CBattleManager::Get_Instance()->Set_IsStrike(true);
-
-
 					return new CMonsterLaw_Strike1(m_pOwner, m_pTarget);
 				}
 
@@ -130,19 +124,7 @@ void CMonsterLaw_StrikeTrigger::Enter()
 	if (m_pTarget == nullptr)
 		return;
 
-	//m_eStateId = STATE_ID::STATE_DODGE;
-	if (m_bLookat)
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
-
-
-
-
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_MUEISYOU);
-
-
-	
-
 
 
 

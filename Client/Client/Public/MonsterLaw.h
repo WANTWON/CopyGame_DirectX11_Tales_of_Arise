@@ -252,12 +252,19 @@ private:
 	_bool m_bEventFinish = false;
 	_bool m_bDaguri = false;
 	_bool m_bReadytoChangeTarget = false;
+
+
+	_float m_fFinalTimer = 0.f;
+	_bool m_fFinalStrikeOnetime = true;
+
+	
 private:
 		/* Strike Screen Effect */
 		_bool m_bResetStrikeBlur = false;
 		_float m_fStrikeBlurResetDuration = .45f;
 		_float m_fStrikeBlurResetTimer = 0.f;
 		_float m_fRandomTargetTimer = 0.f;
+		
 
 public:
 	static CMonsterLaw* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

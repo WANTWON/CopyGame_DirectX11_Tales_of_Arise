@@ -32,8 +32,10 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 
  	
 	if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta*1.3f, false);
-	
+	{
+		if(!m_bIsAnimationFinished)
+			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta*1.3f, false);
+	}
 	else
 	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);

@@ -289,6 +289,9 @@ void CBossSkills::LateTick_Laser(_float fTimeDelta)
 {
 	for (auto& pEffect : m_pEffects)
 	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+
 		if (!pEffect)
 			continue;
 

@@ -250,7 +250,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
 
 						
-						pCamera->Set_Zoom(true, 4.f, 2.f, 5.f, 8.f);
+						pCamera->Set_Zoom(true, 3.f, 1.5f, 5.f, 8.f);
 						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.5f, true);
 
@@ -326,7 +326,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						mWorldMatrix.r[3] = vLocation;
 						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
 
-						pCamera->Set_Zoom(true, 4.f, 2.f, 5.f, 8.f);
+						pCamera->Set_Zoom(true, 3.f, 1.5f, 5.f, 8.f);
 						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.5f, true);
 
@@ -418,7 +418,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletBlast.dat"), mWorldMatrix);
 
 
-						pCamera->Set_Zoom(true, 4.f, 2.f, 5.f, 8.f);
+						pCamera->Set_Zoom(true, 3.f, 1.5f, 5.f, 8.f);
 						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.5f, true);
 
@@ -470,7 +470,6 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 	}
 		
 	
-
 	return nullptr;
 }
 
@@ -558,27 +557,27 @@ void CPlayer_SionNormalAttack_State::Enter()
 			switch (m_eStateId)
 			{
 			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+				pCamera->Set_Zoom(true, -4.f, 1.f, 5.f, 8.f);
 
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_0);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+				pCamera->Set_Zoom(true, -4.f, 1.f, 5.f, 8.f);
 
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_1);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+				pCamera->Set_Zoom(true, -4.f, 1.f, 5.f, 8.f);
 
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_2);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+				pCamera->Set_Zoom(true, -4.f, 1.f, 5.f, 8.f);
 
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_3);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK5:
-				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+				pCamera->Set_Zoom(true, -4.f, 1.f, 5.f, 8.f);
 
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_AIR_4);
 				break;
@@ -589,25 +588,25 @@ void CPlayer_SionNormalAttack_State::Enter()
 			switch (m_eStateId)
 			{
 			case Client::CPlayerState::STATE_NORMAL_ATTACK1:
-				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+				pCamera->Set_Zoom(true, -4.f, 1.f, 5.f, 8.f);
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_0);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK2:
-				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+				pCamera->Set_Zoom(true, -4.f, 1.f, 5.f, 8.f);
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_1);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK3:
-				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+				pCamera->Set_Zoom(true, -4.f, 1.f, 5.f, 8.f);
 
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_2);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK4:
-				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+				pCamera->Set_Zoom(true, -4.f, 1.f, 5.f, 8.f);
 
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_3);
 				break;
 			case Client::CPlayerState::STATE_NORMAL_ATTACK5:
-				pCamera->Set_Zoom(true, -2.f, 0.5f, 5.f, 8.f);
+				pCamera->Set_Zoom(true, -4.f, 1.f, 5.f, 8.f);
 
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_NORMAL_4);
 				break;

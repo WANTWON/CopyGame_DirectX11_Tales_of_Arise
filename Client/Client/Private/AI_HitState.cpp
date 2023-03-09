@@ -9,55 +9,81 @@
 
 using namespace AIPlayer;
 
-CAI_HitState::CAI_HitState(CPlayer* pPlayer, _vector vCauserPos, _bool isDown , _float fTime)
+
+CAI_HitState::CAI_HitState(CPlayer* pPlayer, _vector vCauserPos, _bool isDown , _float fTime , STATE_ID eStateID )
 {
 	//m_ePreStateID = eStateType;
 	m_pOwner = pPlayer;
 	m_eCurrentPlayerID = m_pOwner->Get_PlayerID();
 	m_bIsDown = isDown;
 	m_vCauserPos = vCauserPos;
+	m_eStateId = eStateID;
 }
 
 CAIState * CAI_HitState::Tick(_float fTimeDelta)
 {
-
-
-
-	//m_fTimer += fTimeDelta;
-
-	if (m_bIsDown)
-	{
-		if (Move(fTimeDelta))
-			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
-		else
-			m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-
-		m_pOwner->Check_Navigation_Jump();
-	}
-
+	if (m_eStateId == STATE_SMASHHIT)
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, false);
 	else
 	{
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
-		m_pOwner->Check_Navigation_Jump();
-		//m_pOwner->Check_Navigation();
+		if (m_bIsDown)
+		{
+			if (Move(fTimeDelta))
+				m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 2.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
+			else
+				m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
+
+			m_pOwner->Check_Navigation_Jump();
+		}
+
+		else
+		{
+			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+			m_pOwner->Check_Navigation_Jump();
+			//m_pOwner->Check_Navigation();
+		}
 	}
-
-
 	return nullptr;
 }
 
 CAIState * CAI_HitState::LateTick(_float fTimeDelta)
 {
 
-	if (m_bIsAnimationFinished)
-	return new CAICheckState(m_pOwner, m_eStateId);
-
+	if (m_bIsAnimationFinished && m_eStateId != STATE_SMASHHIT)
+		return new CAICheckState(m_pOwner, m_eStateId);
+	if (m_bIsAnimationFinished && m_eStateId == STATE_SMASHHIT)
+	{
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			return new CAICheckState(m_pOwner, m_eStateId);
+	}
 
 	return nullptr;
 }
 
 void CAI_HitState::Enter()
 {
+	if (m_eStateId == STATE_SMASHHIT)
+	{
+		switch (m_eCurrentPlayerID)
+		{
+		case CPlayer::ALPHEN:
+			m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_DAMAGE_LARGE_B;
+			break;
+		case CPlayer::SION:
+			m_iCurrentAnimIndex = CSion::ANIM::BTL_DAMAGE_LARGE_B;
+			break;
+		case CPlayer::RINWELL:
+			m_iCurrentAnimIndex = CRinwell::ANIM::BTL_DAMAGE_LARGE_B;
+			break;
+		case CPlayer::LAW:
+			m_iCurrentAnimIndex = CLaw::ANIM::BTL_DAMAGE_LARGE_B;
+			break;
+		}
+		m_pOwner->Get_Model()->Reset();
+		return;
+	}
+
+
 	m_eStateId = STATE_ID::STATE_HIT;
 
 	if (m_bIsDown)

@@ -80,6 +80,15 @@ private:
 	_bool m_bBullet_5 = false;
 	_bool m_bBullet_6 = false;
 	_bool m_bSmash = false;
+
+
+	//Sound
+	_bool m_bSpearMulti_Poison1 = false;
+	_bool m_bSpearMulti_Poison2 = false;
+	_bool m_bSpearMulti_Poison3 = false;
+	_bool m_bSpearMulti_Poison4 = false;
+	_bool m_bSpearMulti_Poison5 = false;
+	_bool m_bSpearMulti_Poison6 = false;
 };
 END
 END

@@ -288,8 +288,21 @@ HRESULT CUI_Skillmessage::Render()
 		m_fSize.x = 240.f;
 		m_fSize.y = 26.f;
 	}
+
+	if (m_iNum == 27)
+	{
+		m_fPosition.x = 660.f - m_fFadeX;
+	}
+	else if (m_iNum == SKILLNAME_SIONRINWELLSTRIKE)
+	{
+		m_fPosition.x = 670.f - m_fFadeX;
+	}
+	else if (m_iNum == SKILLNAME_ALPHENRINWELLSTRIKE)
+	{
+		m_fPosition.x = 670.f - m_fFadeX;
+	}
 	
-	
+
 	m_fPosition.y = 120.f;// + m_fFadeY + m_fIndexOffsetY;
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
 	m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);

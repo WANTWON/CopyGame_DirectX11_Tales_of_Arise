@@ -148,6 +148,15 @@ HRESULT CMonsterLaw::Ready_Components(void * pArg)
 
 int CMonsterLaw::Tick(_float fTimeDelta)
 {
+	if (CBattleManager::Get_Instance()->Get_KillLawbosslevel() && m_tStats.m_fCurrentHp > 0)
+	{
+		HITLAGDESC m_HitLagDesc;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bShaking = false;
+		Take_Damage(1, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+	}
+
 	if (m_bDead)
 	{
 		CBattleManager::Get_Instance()->Set_BossMonster(nullptr);
@@ -157,7 +166,21 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
-	
+	if (CPlayerManager::Get_Instance()->Get_Changetoboss())
+	{
+		m_fFinalTimer += fTimeDelta;
+
+		if (m_fFinalTimer > 15.f)
+		{
+	//		if (m_fFinalStrikeOnetime)
+	//		{
+				m_tStats.m_fLockonSmashGuage = 4.f;
+				m_fFinalStrikeOnetime = false;
+
+	//		}
+			
+		}
+	}
 	
 	if (m_bDaguri)
 	{
@@ -392,10 +415,26 @@ _int CMonsterLaw::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hi
 	if (fDamage <= 0 || m_bDead || m_bTakeDamage )
 		return 0;
 
+	
+
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);
 
-	if (CBattleManager::Get_Instance()->Get_IsOneonOneMode())
+	if (!m_fFinalStrikeOnetime&&CBattleManager::Get_Instance()->Get_KillLawbosslevel())
+	{
+		iHp = 0;
+		m_bLastStrikeAttack = true;
+	}
+
+	//if(CBattleManager::Get_Instance()->Get_IsOneonOneMode() || CBattleManager::Get_Instance()->Get_Rinwellboss())
+	if (CBattleManager::Get_Instance()->Get_IsOneonOneMode() && !m_fFinalStrikeOnetime)
+	{
+		
 		m_tStats.m_fLockonSmashGuage = 0.f;
+	}
+	if (CBattleManager::Get_Instance()->Get_Rinwellboss() && !m_fFinalStrikeOnetime)
+	{
+		m_tStats.m_fLockonSmashGuage = 0.f;
+	}
 
 	++m_iLawhitcount;
 

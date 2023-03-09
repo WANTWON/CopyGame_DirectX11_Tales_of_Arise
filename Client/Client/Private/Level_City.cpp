@@ -259,8 +259,11 @@ HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	if(pGameInstance->Get_PastLevelIndex() == LEVEL_SNOWFIELD)
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20.f, 0.f, -135.f, 1.f));
+	else if (pGameInstance->Get_PastLevelIndex() == LEVEL_LAWBATTLE)
+		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(13.f, 0.f, 327.f, 1.f));
 	else
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
+
 	pPlayer->Change_Navigation(LEVEL_CITY);
 	pPlayer->Compute_CurrentIndex(LEVEL_CITY);
 	pPlayer->Check_Navigation();
@@ -273,11 +276,14 @@ HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 	{
 		if (pGameInstance->Get_PastLevelIndex() == LEVEL_SNOWFIELD)
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20.f, 0.f, -135.f, 1.f));
+		else if (pGameInstance->Get_PastLevelIndex() == LEVEL_LAWBATTLE)
+			pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(13.f, 0.f, 327.f, 1.f));
 		else
 			pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
 		iter->Change_Navigation(LEVEL_CITY);
 		iter->Compute_CurrentIndex(LEVEL_CITY);
 		iter->Check_Navigation();
+		iter->Off_IsFly();
 		iter->Change_Level(LEVEL_CITY);
 		i++;
 	}

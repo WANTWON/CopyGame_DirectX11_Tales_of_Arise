@@ -13,6 +13,7 @@
 #include "PlayerIdleState.h"
 #include "UI_Skillmessage.h"
 #include "Animation.h"
+#include "UI_Dialogue_Caption.h"
 
 using namespace AIPlayer;
 using namespace Player;
@@ -38,14 +39,7 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 	m_fTimer += fTimeDelta;
 
 
-	if (m_pOwner->Get_PlayerID() == CPlayer::SION)
-	{
-		if (m_fTimer > 4.f)
-		{
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SIONRINWELLSTRIKE);
-			m_fTimer = -100.f;
-		}
-	}
+	
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
@@ -72,8 +66,7 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 				{
 				case CPlayer::SION:
 				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
+						
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType && !m_bBullet)
 					{
 						m_fEffectEventEndTime = pEvent.fEndTime;
@@ -95,7 +88,20 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 				case CPlayer::RINWELL:
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
+					{
+
+						if ((m_fEventStart1 != pEvent.fStartTime))
+						{
+							if (m_iEventIndex == 0)
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(4);
+							else
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
+
+							++m_iEventIndex;
+							m_fEventStart1 = pEvent.fStartTime;
+						}
+
+					}
 					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime) && !m_bBullet)
@@ -200,8 +206,11 @@ void CAI_SionRinwell_Smash::Enter()
 	{
 	case CPlayer::SION:
 		m_iCurrentAnimIndex = CSion::ANIM::ANIM_RINWELLSION_STRIKE;
+	   dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SIONRINWELLSTRIKE);
+	
 		break;
 	case CPlayer::RINWELL:
+
 		m_iCurrentAnimIndex = CRinwell::ANIM::ANIM_SIONRINWELL_STRIKE;
 	}
 
@@ -239,6 +248,7 @@ void CAI_SionRinwell_Smash::Exit()
 
 	if (m_eCurrentPlayerID == CPlayer::SION)
 	{
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 		HITLAGDESC m_HitLagDesc;
 		m_HitLagDesc.bHitLag = false;
 		m_HitLagDesc.bLockOnChange = false;

@@ -86,6 +86,12 @@ CAIState * CAI_LAW_AIRSKILLF::Tick(_float fTimeDelta)
 						m_ColliderMatrix.r[1] = XMVector4Normalize(m_ColliderMatrix.r[1]);
 						m_ColliderMatrix.r[2] = XMVector4Normalize(m_ColliderMatrix.r[2]);
 					}
+
+					if (!m_bSkill_F_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillHitSound.wav"), SOUND_EFFECT, 0.2f);
+						m_bSkill_F_Sound = true;
+					}
 				}
 				//if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 					//return EventInput();
@@ -227,7 +233,8 @@ void CAI_LAW_AIRSKILLF::Enter()
 	if (nullptr != pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_F.wav"), SOUND_EFFECT, 1.0f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_VOICE, 0.25f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillSoundBegin.wav"), SOUND_EFFECT, 0.251f);
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YUMPAEFUCKSAY);
 
 }

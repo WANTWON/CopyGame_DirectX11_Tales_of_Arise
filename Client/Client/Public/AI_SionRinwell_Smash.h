@@ -32,6 +32,8 @@ private:
 	_bool m_bAlphenStrike_2 = false;
 
 	_float m_fEventStart = -1.f;
+	_float m_fEventStart1 = -2.f;
+	_int m_iEventIndex = 0;
 	
 	/* Strike Screen Blur */
 	_bool m_bStrikeBlur = false;

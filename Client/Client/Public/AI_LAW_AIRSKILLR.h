@@ -42,6 +42,9 @@ private:
 	vector<class CEffect*> m_Sankamousyuukyaku_Punch_1;
 	vector<class CEffect*> m_Sankamousyuukyaku_Punch_2;
 
+	//Sound
+	_bool m_bSkill_R_Sound = false;
+
 private:
 	CCollider* m_pLeftHandCollider = nullptr;
 	CCollider* m_pRightHandCollider = nullptr;

@@ -1344,6 +1344,9 @@
     <ClInclude Include="..\Public\AstralDoubt_TeleportState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\BattleStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\IceWolfJumpState.h">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2179,6 +2182,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AstralDoubt_TeleportState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\AstralDoubt\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\IceWolfJumpState.cpp">
+      <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

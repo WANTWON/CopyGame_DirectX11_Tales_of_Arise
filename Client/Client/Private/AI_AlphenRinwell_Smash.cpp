@@ -14,6 +14,7 @@
 #include "PlayerIdleState.h"
 #include "UI_Skillmessage.h"
 #include "Animation.h"
+#include "UI_Dialogue_Caption.h"
 
 using namespace AIPlayer;
 using namespace Player;
@@ -38,14 +39,7 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 	m_fTimer += fTimeDelta;
 
 
-	if (m_pOwner->Get_PlayerID() == CPlayer::ALPHEN)
-	{
-		if (m_fTimer > 4.f)
-		{
-			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ALPHENRINWELLSTRIKE);
-			m_fTimer = -100.f;
-		}
-	}
+	
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
@@ -73,7 +67,22 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 				case CPlayer::ALPHEN:
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
+					{
+						
+						if ((m_fEventStart1 != pEvent.fStartTime))
+						{
+							if (m_iEventIndex == 0)
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(3);
+							else
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
+
+							++m_iEventIndex;
+							m_fEventStart1 = pEvent.fStartTime;
+						}
+
+					}
+
+						
 					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime) && !m_bBullet)
@@ -102,9 +111,8 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 
 				case CPlayer::RINWELL:
 				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime) && !m_bBullet)
 						{
@@ -140,11 +148,7 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 
 CAIState * CAI_AlphenRinwell_Smash::LateTick(_float fTimeDelta)
 {
-	if (m_bIsStateEvent)
-	{
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
-	}
+	
 
 	for (auto& iter : m_pEffects)
 	{
@@ -217,6 +221,9 @@ void CAI_AlphenRinwell_Smash::Enter()
 	{
 	case CPlayer::ALPHEN:
 		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_RINWELLALPHEN_SMASH;
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_ALPHENRINWELLSTRIKE);
+		
+		
 		break;
 	case CPlayer::RINWELL:
 		m_iCurrentAnimIndex = CRinwell::ANIM::ANIM_ALPHENRINWELL_STRIKE;
@@ -252,8 +259,9 @@ void CAI_AlphenRinwell_Smash::Exit()
 
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 	{
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
-			return;
+		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
+		/*if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
+			return;*/
 
 	}
 
