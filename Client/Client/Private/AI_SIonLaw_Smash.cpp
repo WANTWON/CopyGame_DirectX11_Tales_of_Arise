@@ -48,7 +48,8 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
-				
+				if (m_eCurrentPlayerID == CPlayer::LAW)
+				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
 
@@ -78,13 +79,15 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 							/* Make Effect */
 							_vector vOffset = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
 							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-							mWorldMatrix.r[3] +=  vOffset*10.f + XMVectorSet(-10.f, 0.f, 0.f, 0.f);
+							mWorldMatrix.r[3] += vOffset*10.f + XMVectorSet(-10.f, 0.f, 0.f, 0.f);
 							m_pEffects = CEffect::PlayEffectAtLocation(TEXT("BunStrikeBurst.dat"), mWorldMatrix);
 							m_fFadeTime = 0.f;
 							m_bBullet = true;
 							m_fEventStart = pEvent.fStartTime;
 						}
 					}
+				}
+					
 				}
 				}
 			}
@@ -239,12 +242,13 @@ void CAI_SionLaw_Smash::Exit()
 	}
 
 
-	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+	
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
 
 	if (m_eCurrentPlayerID == CPlayer::LAW)
 	{
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 		HITLAGDESC m_HitLagDesc;
 		m_HitLagDesc.bHitLag = false;
