@@ -126,6 +126,17 @@ HRESULT CAiRinwell::Ready_Components(void * pArg)
 
 int CAiRinwell::Tick(_float fTimeDelta)
 {
+	if (CBattleManager::Get_Instance()->Get_KillLawbosslevel() && m_tStats.m_fCurrentHp > 0)
+	{
+		HITLAGDESC m_HitLagDesc;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bShaking = false;
+		Take_Damage(1, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+	}
+		
+		
+
 	if (m_bDead)
 	{
 		CBattleManager::Get_Instance()->Set_BossMonster(nullptr);
@@ -389,6 +400,12 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 	m_iDamage += fDamage;
 
 	m_bTakeDamage = true;
+
+	if (CBattleManager::Get_Instance()->Get_KillLawbosslevel())
+	{
+		iHp = 0;
+		m_bLastStrikeAttack = true;
+	}
 
 	if (iHp <= 0)
 	{

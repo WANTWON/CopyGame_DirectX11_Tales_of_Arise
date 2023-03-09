@@ -90,7 +90,7 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
 
-						if ((m_fEventStart != pEvent.fStartTime))
+						if ((m_fEventStart1 != pEvent.fStartTime))
 						{
 							if (m_iEventIndex == 0)
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(4);
@@ -98,7 +98,7 @@ CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
 
 							++m_iEventIndex;
-							m_fEventStart = pEvent.fStartTime;
+							m_fEventStart1 = pEvent.fStartTime;
 						}
 
 					}

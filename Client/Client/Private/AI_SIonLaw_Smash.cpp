@@ -48,26 +48,11 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
-				switch (m_eCurrentPlayerID)
-				{
-				case CPlayer::SION:
-				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
-					{
-
-
-					}
-					break;
-				}
-
-				case CPlayer::LAW:
-				{
+				
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
 
-						if ((m_fEventStart != pEvent.fStartTime))
+						if ((m_fEventStart1 != pEvent.fStartTime))
 						{
 							if (m_iEventIndex == 0)
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(5);
@@ -75,7 +60,7 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
 
 							++m_iEventIndex;
-							m_fEventStart = pEvent.fStartTime;
+							m_fEventStart1 = pEvent.fStartTime;
 						}
 
 					}
@@ -103,9 +88,7 @@ CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 				}
 				}
 			}
-		}
-	
-	}
+		
 
 	m_pOwner->Check_Navigation();
 

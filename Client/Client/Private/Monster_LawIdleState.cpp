@@ -106,7 +106,7 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 
 	if (m_pOwner->Get_Debug())
 	{
-		return new CMonsterLaw_StrikeTrigger(m_pOwner);
+		//return new CMonsterLaw_StrikeTrigger(m_pOwner);
 		m_pOwner->Set_Debug(false);
 	}
 		
@@ -125,7 +125,7 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 	case 4:
 		return new CMonster_LawDodge(m_pOwner);
 	case 5:
-		return new CMonsterLaw_StrikeTrigger(m_pOwner);
+	//	return new CMonsterLaw_StrikeTrigger(m_pOwner);
 	default:
 		return new CMonster_LawSkill(m_pOwner, SKILL_STRIKE);
 	}

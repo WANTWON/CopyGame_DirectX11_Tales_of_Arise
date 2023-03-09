@@ -71,7 +71,7 @@ HRESULT CLevel_LawBattle::Initialize()
 	{
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Npc"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Portal"));
-
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Effects"));
 		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 
@@ -115,7 +115,7 @@ void CLevel_LawBattle::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Camera"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Deco"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Background"));
-
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Effects"));
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
@@ -188,6 +188,7 @@ void CLevel_LawBattle::BattleTick(_float fTimeDelta)
 
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Camera"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Deco"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Effects"));
 
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
@@ -241,6 +242,8 @@ void CLevel_LawBattle::NotBattleTick(_float fTimeDelta)
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Background"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Deco"));
 			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Npc"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Effects"));
+
 			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 			LEVEL eNextLevel = (LEVEL)m_iNextLevelIndex;

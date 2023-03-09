@@ -69,7 +69,7 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
 						
-						if ((m_fEventStart != pEvent.fStartTime))
+						if ((m_fEventStart1 != pEvent.fStartTime))
 						{
 							if (m_iEventIndex == 0)
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(3);
@@ -77,7 +77,7 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
 
 							++m_iEventIndex;
-							m_fEventStart = pEvent.fStartTime;
+							m_fEventStart1 = pEvent.fStartTime;
 						}
 
 					}
@@ -111,9 +111,8 @@ CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 
 				case CPlayer::RINWELL:
 				{
-					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						m_bIsStateEvent = true;
-					else if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime) && !m_bBullet)
 						{

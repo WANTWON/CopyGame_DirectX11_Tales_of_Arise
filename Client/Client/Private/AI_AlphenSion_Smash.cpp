@@ -63,10 +63,8 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
-				switch (m_eCurrentPlayerID)
-				{
-				case CPlayer::ALPHEN:
-				{
+				
+				
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
@@ -100,23 +98,10 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 					break;
 				}
 
-				case CPlayer::SION:
-				{
-					//if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-						//m_bIsStateEvent = true;
-				    if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
-					{
-						if ((m_fEventStart != pEvent.fStartTime))
-						{
-							
-
-							m_fEventStart = pEvent.fStartTime;
-						}
-					}
-				 }
-				}
+			
+				
 			}
-		}
+		
 
 	
 	}
@@ -251,7 +236,9 @@ void CAI_AlphenSion_Smash::Enter()
 
 void CAI_AlphenSion_Smash::Exit()
 {
-	
+	if(CBattleManager::Get_Instance()->Get_Rinwellboss())
+	CBattleManager::Get_Instance()->Set_KillLawbosslevel(true);
+
 	if (m_bStrikeBlur)
 	{
 		m_pOwner->Set_ResetStrikeBlur(true);
@@ -297,17 +284,21 @@ void CAI_AlphenSion_Smash::Exit()
 		if (pLockOn != nullptr)
 		{
 			_vector vLastPosition = dynamic_cast<CMonster*>(pLockOn)->Get_LastPosition();
-			if (!dynamic_cast<CMonster*>(pLockOn)->Get_LastStrikeAttack())
+			if (!CBattleManager::Get_Instance()->Get_Rinwellboss())
 			{
-				dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
-				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				if (!dynamic_cast<CMonster*>(pLockOn)->Get_LastStrikeAttack())
+				{
+					dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
+					dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+					dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				}
+				else
+				{
+					dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+					dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				}
 			}
-			else
-			{
-				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
-			}
+			
 		}
 
 	}
