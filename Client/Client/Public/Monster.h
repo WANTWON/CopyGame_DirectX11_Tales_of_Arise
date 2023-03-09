@@ -60,6 +60,11 @@ public:
 	virtual _int Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc);
 	virtual void	 Set_BattleMode(_bool type)				PURE;
 	virtual void	 Set_HitState()							PURE;
+
+	_bool Get_ResetStrikeBlur() { return m_bResetStrikeBlur; }
+	void Set_ResetStrikeBlur(_bool bResetStrikeBlur) { m_bResetStrikeBlur = bResetStrikeBlur; }
+	void Reset_StrikeBlur(_float fTimeDelta);
+
 public:
 	void Collision_Object(_float fTimeDelta);
 	void Change_Navigation(LEVEL eLevel);
@@ -147,6 +152,11 @@ protected:
 	_bool m_bKillerSkill = false;
 	_bool	m_bCritical = false;
 	_bool m_bIsFly = false;
+
+	/* Strike Screen Effect */
+	_bool m_bResetStrikeBlur = false;
+	_float m_fStrikeBlurResetDuration = .45f;
+	_float m_fStrikeBlurResetTimer = 0.f;
 
 	_uint m_eCurLevel = LEVEL_END;
 	_uint m_iRand = 0;
