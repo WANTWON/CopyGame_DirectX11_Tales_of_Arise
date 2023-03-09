@@ -63,30 +63,30 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 		{
 			if (pEvent.isPlay)
 			{
-				
-				
+				if (m_eCurrentPlayerID == CPlayer::ALPHEN)
+				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
 							if (m_iEventIndex == 0)
-							dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(2);
+								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(2);
 							else
 								dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
 
 							++m_iEventIndex;
 							m_fEventStart = pEvent.fStartTime;
 						}
-						
+
 
 					}
-					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType &&  !m_bBullet)
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType && !m_bBullet)
 					{
 						m_fEffectEventEndTime = pEvent.fEndTime;
 						m_fEffectEventCurTime = m_pOwner->Get_Model()->Get_Animations()[m_pOwner->Get_Model()->Get_CurrentAnimIndex()]->Get_CurrentTime();
 
 						m_bStrikeBlur = true;
-						
+
 						/* Make Effect */
 						_vector vOffset = { 0.f,0.f,0.f,0.f };
 						CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
@@ -95,7 +95,10 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 
 						m_bBullet = true;
 					}
-					break;
+				}
+				
+					
+					
 				}
 
 			
@@ -187,6 +190,11 @@ CAIState * CAI_AlphenSion_Smash::LateTick(_float fTimeDelta)
 			{
 				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
 				m_bScreen = true;
+				if (m_bStrikeBlur)
+				{
+					m_pOwner->Set_ResetStrikeBlur(true);
+					m_bStrikeBlur = false;
+				}
 			}
 		}
 	}
@@ -236,14 +244,9 @@ void CAI_AlphenSion_Smash::Enter()
 
 void CAI_AlphenSion_Smash::Exit()
 {
-	if(CBattleManager::Get_Instance()->Get_Rinwellboss())
-	CBattleManager::Get_Instance()->Set_KillLawbosslevel(true);
+	
 
-	if (m_bStrikeBlur)
-	{
-		m_pOwner->Set_ResetStrikeBlur(true);
-		m_bStrikeBlur = false;
-	}
+	
 
 	__super::Exit();
 
@@ -272,6 +275,8 @@ void CAI_AlphenSion_Smash::Exit()
 	m_pOwner->Set_IsActionMode(false);
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 	{
+		if (CBattleManager::Get_Instance()->Get_Rinwellboss())
+			CBattleManager::Get_Instance()->Set_KillLawbosslevel(true);
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 		HITLAGDESC m_HitLagDesc;

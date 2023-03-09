@@ -240,7 +240,7 @@ void CAI_SionRinwell_Smash::Exit()
 		m_bStrikeBlur = false;
 	}
 
-	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
+	
 
 
 	m_pOwner->Set_StrikeAttack(false);
@@ -272,6 +272,10 @@ void CAI_SionRinwell_Smash::Exit()
 			}
 		}
 
+	}
+	else
+	{
+		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 	}
 
 	for (auto& iter : m_pEffects)
