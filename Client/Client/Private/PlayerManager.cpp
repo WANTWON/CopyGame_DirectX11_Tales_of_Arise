@@ -467,7 +467,7 @@ void CPlayerManager::Set_SmashAttack()
 
 				CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 				pCameraManager->Set_CamState(CCameraManager::CAM_ACTION);
-				pCameraManager->Play_ActionCamera(TEXT("withlaw2.dat"), XMMatrixIdentity());
+				pCameraManager->Play_ActionCamera(TEXT("withlaw3.dat"), XMMatrixIdentity());
 
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
