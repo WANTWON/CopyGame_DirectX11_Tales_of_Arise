@@ -69,6 +69,7 @@ public:
 	void Set_AmIFirstBoss(_bool type) { m_AmIFirstBoss = type; }
 	_bool Get_Half(void) { return m_bIsHalf; }
 	void Set_Half(_bool bHalf) { m_bIsHalf = bHalf; }
+	void UpdatePosition();
 
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;

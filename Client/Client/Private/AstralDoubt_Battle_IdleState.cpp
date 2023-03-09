@@ -36,6 +36,11 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 		if(!m_bIsAnimationFinished)
 			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta*1.3f, false);
 	}
+	else if (m_ePreState_Id == STATE_ID::STATE_HALF)
+	{
+		if (!m_bIsAnimationFinished)
+			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
+	}
 	else
 	{
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone", 0.f);
@@ -286,7 +291,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 			}
 		}
 
-		if (m_bIsAnimationFinished)
+		if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
 			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_UPPER);
 		}
@@ -323,8 +328,21 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 	}
 	else if (m_ePreState_Id == STATE_ID::STATE_HALF)
 	{
-		if (m_bIsAnimationFinished)
+
+		if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			pPlayer->Set_IsActionMode(false);
+
+			vector<CPlayer*> pAIList = CPlayerManager::Get_Instance()->Get_AIPlayers();
+			for (auto& iter : pAIList)
+			{
+				iter->Set_IsActionMode(false);
+			}
+
 			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
+		}
+			
 	}
 	else
 	{
@@ -387,12 +405,6 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 		}
 	}
 
-	if (!m_pOwner->Get_Half() && (m_pOwner->Get_Stats().m_fCurrentHp <= m_pOwner->Get_Stats().m_fMaxHp * 0.5f))
-	{
-		m_pOwner->Set_Half(true);
-		
-		return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_HALF);
-	}
 
 	///////////////////////////////////////기존의 코드- 나를 때린 대상, 근접 대상을 찾아 공격.//////////////////
 
@@ -586,25 +598,17 @@ void CBattle_IdleState::Enter()
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_BRAVE);
 
-		/*vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-		for (auto& pEvent : pEvents)
-		{
-			if (pEvent.isPlay && m_bAdventSound == false)
-			{
-
-				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
-				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Howling.wav"), SOUND_VOICE, 0.6f);
-					m_bAdventSound = true;
-				}
-			}
-		}*/
 	}
 	else if (m_ePreState_Id == STATE_ID::STATE_ALLPLAYER_DEAD)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_BRAVE);
 
 	else if (STATE_ID::STATE_HALF == m_ePreState_Id)
+	{
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("Boss50Down.dat"), XMMatrixIdentity());
+		m_pOwner->Set_IsActionMode(true);
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::SYMBOL_DETECT_IDLE);
+		m_pOwner->Get_Model()->Reset();
+	}
 
 	else
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::MOVE_IDLE);
@@ -620,7 +624,9 @@ void CBattle_IdleState::Enter()
 void CBattle_IdleState::Exit()
 {
 	if (m_ePreState_Id == STATE_ID::STATE_BRAVE || m_ePreState_Id == STATE_ID::STATE_ADVENT)
+	{
+		m_pOwner->Set_IsActionMode(false);
 		CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
-
-	m_pOwner->Set_IsActionMode(false);
+	}
+		
 }
