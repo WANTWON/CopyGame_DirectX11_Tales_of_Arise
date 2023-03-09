@@ -10,8 +10,10 @@
 
 using namespace Player;
 
-CPlayerOverlimit::CPlayerOverlimit(CPlayer * pPlayer)
+CPlayerOverlimit::CPlayerOverlimit(CPlayer * pPlayer, _bool FinalCameraMode)
 {
+	m_bFinalMode = FinalCameraMode;
+
 	m_pOwner = pPlayer;
 }
 
@@ -53,8 +55,6 @@ CPlayerState * CPlayerOverlimit::LateTick(_float fTimeDelta)
 	if (m_bIsAnimationFinished)
 	{
 		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTOFF);
 	}
 
 	return nullptr;
@@ -70,7 +70,11 @@ void CPlayerOverlimit::Enter(void)
 	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Camera"), 1.f);
 
-	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("OverLimit.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+	if(!m_bFinalMode)
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("OverLimit.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+	else
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("FinalOverLimit.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return;
@@ -87,9 +91,13 @@ void CPlayerOverlimit::Enter(void)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
 
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-	pCamera->Set_Target(m_pOwner);
+	if (!m_bFinalMode)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+		pCamera->Set_Target(m_pOwner);
+	}
+
 	m_pOwner->Set_Manarecover(false);
 	m_pOwner->Set_Overlimit(true);
 }

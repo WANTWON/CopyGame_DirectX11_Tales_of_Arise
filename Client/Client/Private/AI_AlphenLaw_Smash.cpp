@@ -82,7 +82,6 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 				{
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 					{
-
 						if ((m_fEventStart1 != pEvent.fStartTime))
 						{
 							if (m_iEventIndex == 0)

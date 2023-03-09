@@ -72,6 +72,10 @@ void CLevel_BossZone::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if(!m_bFinal)
+		LastAttackCheck();
+
+
 	CBattleManager* pBattleManager = GET_INSTANCE(CBattleManager);
 	if(pBattleManager->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
 		CPlayerManager::Get_Instance()->Set_SmashAttack();
@@ -135,6 +139,7 @@ void CLevel_BossZone::Late_Tick(_float fTimeDelta)
 
 
 	_int iMonsterSize = (_int)CBattleManager::Get_Instance()->Get_BattleMonster().size();
+
 
 	if (iMonsterSize == 0)
 	{
@@ -214,6 +219,57 @@ void CLevel_BossZone::Late_Tick(_float fTimeDelta)
 	{
 		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKOFF);
+	}
+}
+
+void CLevel_BossZone::LastAttackCheck()
+{
+	_int iMonsterSize = (_int)CBattleManager::Get_Instance()->Get_BattleMonster().size();
+
+	if (iMonsterSize == 1 && m_bSecondCreated)
+	{
+		CMonster* pMonster = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster());
+		if (pMonster->Get_Stats().m_fCurrentHp <= pMonster->Get_Stats().m_fMaxHp *0.1f)
+		{
+			m_bFinal = true;
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("FinalOverLimit.dat"), XMMatrixIdentity());
+			CPlayerManager* pPlayerManager = CPlayerManager::Get_Instance();
+
+			HANDLE hFile = 0;
+			_ulong dwByte = 0;
+			NONANIMDESC Active1;
+			NONANIMDESC Active2;
+			NONANIMDESC AIplayer1;
+			NONANIMDESC AIplayer2;
+			_uint iNum = 0;
+
+			hFile = CreateFile(TEXT("../../../Bin/Data/BattleZoneData/BossMap/PlayerPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+			if (0 == hFile)
+				return;
+
+			ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+			ReadFile(hFile, &(Active1), sizeof(NONANIMDESC), &dwByte, nullptr);
+			ReadFile(hFile, &(Active2), sizeof(NONANIMDESC), &dwByte, nullptr);
+			ReadFile(hFile, &(AIplayer1), sizeof(NONANIMDESC), &dwByte, nullptr);
+			ReadFile(hFile, &(AIplayer2), sizeof(NONANIMDESC), &dwByte, nullptr);
+			CloseHandle(hFile);
+
+			CPlayer* Alphen = pPlayerManager->Get_EnumPlayer(CPlayer::ALPHEN);
+			CPlayer* Sion = pPlayerManager->Get_EnumPlayer(CPlayer::SION); 
+			CPlayer* Rinwell = pPlayerManager->Get_EnumPlayer(CPlayer::RINWELL);
+			CPlayer* Law = pPlayerManager->Get_EnumPlayer(CPlayer::LAW);
+
+			Alphen->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&Active1.vPosition), 1.f));
+			Sion->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&Active2.vPosition), 1.f));
+			Rinwell->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&AIplayer1.vPosition), 1.f));
+			Law->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&AIplayer2.vPosition), 1.f));
+
+			Alphen->Set_OverLimitState();
+			Sion->Set_OverLimitState();
+			Rinwell->Set_OverLimitState();
+			Law->Set_OverLimitState();
+		}
 	}
 }
 

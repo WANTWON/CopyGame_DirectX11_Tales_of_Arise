@@ -134,7 +134,7 @@ _bool CAnimation::Invalidate_TransformationMatrix(_float fTimeDelta, _bool isLoo
 	//애니메이션 이벤트
 	for (_int i = 0; i < m_vecAnimEvent.size(); ++i)
 	{
-		if (m_vecAnimEvent[i].fStartTime < m_fCurrentTime && m_vecAnimEvent[i].fEndTime > m_fCurrentTime)
+		if (m_vecAnimEvent[i].fStartTime <= m_fCurrentTime && m_vecAnimEvent[i].fEndTime >= m_fCurrentTime)
 			m_vecAnimEvent[i].isPlay = true;
 		else
 			m_vecAnimEvent[i].isPlay = false;
