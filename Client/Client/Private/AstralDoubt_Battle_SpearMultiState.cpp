@@ -57,8 +57,8 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 					if (m_bAdventSound == false)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.25f);
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_FootPress_PoisonFog.wav"), SOUND_EFFECT, 0.4f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_NATURE, 0.55f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_FootPress_PoisonFog.wav"), SOUND_OBJECT, 0.4f);
 						m_bAdventSound = true;
 					}
 					
@@ -295,6 +295,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 							vector<CEffect*> Effects = CEffect::PlayEffectAtLocation(TEXT("Astral_Doubt_Spear_HandStand.dat"), mWorldMatrix);
 
 							m_bHit_3 = true;
+
 						}
 					}
 					if (!m_bHit_4)
@@ -399,6 +400,52 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						}
 					}
 				}
+
+				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+
+					if (m_fSoundStart != pEvent.fStartTime)
+					{
+						if (m_iFootPressAnim_SpearCount == 0)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_FootPress_Spear1.wav"), SOUND_OBJECT, 0.8f);
+							m_iFootPressAnim_SpearCount = 1;
+						}
+
+						else if (m_iFootPressAnim_SpearCount == 1)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_FootPress_Spear2.wav"), SOUND_NATURE, 0.8f);
+							m_iFootPressAnim_SpearCount = 2;
+						}
+
+						else if (m_iFootPressAnim_SpearCount == 2)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_FootPress_Spear3.wav"), SOUND_CROWD, 0.8f);
+							m_iFootPressAnim_SpearCount = 3;
+						}
+
+						else if (m_iFootPressAnim_SpearCount == 3)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_FootPress_Spear4.wav"), SOUND_OBJECT, 0.8f);
+							m_iFootPressAnim_SpearCount = 4;
+						}
+
+						else if (m_iFootPressAnim_SpearCount == 4)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_FootPress_Spear5.wav"), SOUND_NATURE, 0.8f);
+							m_iFootPressAnim_SpearCount = 5;
+						}
+
+						else if (m_iFootPressAnim_SpearCount == 5)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_FootPress_Spear6.wav"), SOUND_CROWD, 0.8f);
+							m_iFootPressAnim_SpearCount = 0;
+						}
+
+						m_fSoundStart = pEvent.fStartTime;
+					}
+				
+				}
 			}
 			else
 			{
@@ -454,7 +501,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 					if (m_bSpearMultiEndSound == false)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_SpearMultiEnd.wav"), SOUND_EFFECT, 0.4f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_SpearMultiEnd.wav"), SOUND_OBJECT, 0.4f);
 						m_bSpearMultiEndSound = true;
 					}
 				}
@@ -630,7 +677,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 							if (!m_bSpearMulti_Poison1)
 							{
-								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison1.wav"), SOUND_EFFECT, 0.4f);
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison1.wav"), SOUND_OBJECT, 1.0f);
 								m_bSpearMulti_Poison1 = true;
 							}
 
@@ -663,7 +710,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 							if (!m_bSpearMulti_Poison2)
 							{
-								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison2.wav"), SOUND_EFFECT, 0.4f);
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison2.wav"), SOUND_NATURE, 1.0f);
 								m_bSpearMulti_Poison2 = true;
 							}
 						}
@@ -695,7 +742,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 							if (!m_bSpearMulti_Poison3)
 							{
-								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison3.wav"), SOUND_EFFECT, 0.4f);
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison3.wav"), SOUND_CROWD, 1.0f);
 								m_bSpearMulti_Poison3 = true;
 							}
 						}
@@ -727,7 +774,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 							if (!m_bSpearMulti_Poison4)
 							{
-								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison4.wav"), SOUND_EFFECT, 0.4f);
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison2.wav"), SOUND_OBJECT, 1.0f);
 								m_bSpearMulti_Poison4 = true;
 							}
 						}
@@ -759,7 +806,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 							if (!m_bSpearMulti_Poison5)
 							{
-								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison5.wav"), SOUND_EFFECT, 0.4f);
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison3.wav"), SOUND_NATURE, 1.0f);
 								m_bSpearMulti_Poison5 = true;
 							}
 						}
@@ -791,7 +838,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 							if (!m_bSpearMulti_Poison6)
 							{
-								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison6.wav"), SOUND_EFFECT, 0.4f);
+								CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_SpearMulti_Poison4.wav"), SOUND_CROWD, 1.0f);
 								m_bSpearMulti_Poison6 = true;
 							}
 						}
@@ -1122,7 +1169,7 @@ void CBattle_SpearMultiState::Enter()
 
 void CBattle_SpearMultiState::Exit()
 {
-	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 
 
 	if (m_eStateId == CAstralDoubt_State::STATE_FOOTPRESS)

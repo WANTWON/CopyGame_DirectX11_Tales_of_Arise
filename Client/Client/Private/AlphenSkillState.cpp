@@ -91,7 +91,7 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 					else
 						if (!m_bSkill_R_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_R_SkillSound.wav"), SOUND_EFFECT, 0.4f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_R_SkillSound.wav"), SOUND_EFFECT_ALPHEN, 0.4f);
 							m_bSkill_R_Sound = true;
 						}
 			

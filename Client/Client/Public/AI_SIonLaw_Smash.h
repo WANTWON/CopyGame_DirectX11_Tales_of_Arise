@@ -41,6 +41,9 @@ private:
 	_float m_fShakingTime = 0.f;
 	_bool m_bShaking = false;
 	_int m_iEventIndex = 0;
+
+	//Sound 
+	_bool m_bSoundStart = false;
 };
 END
 END

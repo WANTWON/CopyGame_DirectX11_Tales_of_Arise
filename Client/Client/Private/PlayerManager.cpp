@@ -168,7 +168,7 @@ void CPlayerManager::Set_SmashAttack()
 	CMonster* pLockonMonster = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster());
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 	if ((nullptr != pLockonMonster) && (pLockonMonster->Get_Stats().m_fLockonSmashGuage >= 4.f))
 	{
 		pLockonMonster->Set_IsActionMode(true);
