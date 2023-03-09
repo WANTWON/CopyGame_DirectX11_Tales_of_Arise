@@ -291,7 +291,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 			}
 		}
 
-		if (m_bIsAnimationFinished)
+		if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
 			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_UPPER);
 		}
@@ -328,8 +328,21 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 	}
 	else if (m_ePreState_Id == STATE_ID::STATE_HALF)
 	{
+
 		if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			pPlayer->Set_IsActionMode(false);
+
+			vector<CPlayer*> pAIList = CPlayerManager::Get_Instance()->Get_AIPlayers();
+			for (auto& iter : pAIList)
+			{
+				iter->Set_IsActionMode(false);
+			}
+
 			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
+		}
+			
 	}
 	else
 	{

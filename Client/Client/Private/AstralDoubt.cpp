@@ -344,6 +344,16 @@ void CAstralDoubt::UpdatePosition()
 		RELEASE_INSTANCE(CBattleManager);
 		m_bCreatedMonster = true;
 	}
+
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	pPlayer->Set_IsActionMode(false);
+
+	vector<CPlayer*> pAIList = CPlayerManager::Get_Instance()->Get_AIPlayers();
+	for (auto& iter : pAIList)
+	{
+		iter->Set_IsActionMode(false);
+	}
+	
 }
 
 _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
@@ -425,7 +435,7 @@ _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC H
 			CAstralDoubt_State* pState = new CBattle_IdleState(this, CAstralDoubt_State::STATE_HALF);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
-		if (m_fDamage >= (m_tStats.m_fMaxHp * 0.15f))
+		else if (m_fDamage >= (m_tStats.m_fMaxHp * 0.15f))
 		{
 			m_fDamage = 0.f;
 
