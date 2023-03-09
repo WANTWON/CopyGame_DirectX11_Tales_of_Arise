@@ -98,6 +98,7 @@ void CPoseState::Enter()
 		pCameraManager->Play_ActionCamera(TEXT("RinwellAction.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::BTL_ATTACK_BRAVE);
 		m_pOwner->Set_IsActionMode(true);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Aggro.wav"), SOUND_VOICE, 0.3f);
 		break;
 	}		
 	case Client::CRinwellState::STATE_HP50DOWN:
