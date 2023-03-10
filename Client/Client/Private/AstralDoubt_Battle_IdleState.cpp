@@ -292,8 +292,10 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 					if (!m_bRoar && !strcmp(pEvent.szName, "Roar"))
 					{
 						_matrix WorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Roar_Wind.dat"), WorldMatrix);
 						m_Roar = CEffect::PlayEffectAtLocation(TEXT("Boss_Roar.dat"), WorldMatrix);
 						Update_Effects();
+						Update_Blur(fTimeDelta);
 
 						m_bRoar = true;
 						m_bRoarBlur = true;
@@ -304,12 +306,18 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 
 		if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
-			//return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_UPPER);
-			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_ADVENT);
+			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_UPPER);
 		}
 
 	}
 	else if (m_ePreState_Id == STATE_ID::STATE_BRAVE)
+	{
+		if (m_bIsAnimationFinished)
+		{
+			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
+		}
+	}
+	else if (m_ePreState_Id == STATE_ID::STATE_HALF)
 	{
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 		for (auto& pEvent : pEvents)
@@ -325,16 +333,21 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 						m_bAdventSound = true;
 					}
 				}
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					if (!m_bRoar && !strcmp(pEvent.szName, "Roar"))
+					{
+						_matrix WorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Roar_Wind.dat"), WorldMatrix);
+						m_Roar = CEffect::PlayEffectAtLocation(TEXT("Boss_Roar.dat"), WorldMatrix);
+						Update_Effects();
+
+						m_bRoar = true;
+						m_bRoarBlur = true;
+					}
+				}
 			}
 		}
-
-		if (m_bIsAnimationFinished)
-		{
-			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
-		}
-	}
-	else if (m_ePreState_Id == STATE_ID::STATE_HALF)
-	{
 
 		if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
@@ -626,32 +639,17 @@ void CBattle_IdleState::Update_Blur(_float fTimeDelta)
 	if (!m_bRoarBlur)
 		return;
 
-	_float fDuration = .45f;
+	_float fDuration = .75f;
 	m_fBlurTimer += fTimeDelta;
 
-	// Blur Off
-	if (m_fBlurTimer > m_fBlurResetAfter)
+	if (m_fBlurTimer > m_fBlurResetAfter && !m_bBlurResetted)
 	{
-		if (!m_bBlurResetted)
-		{
-			m_fBlurTimer = 0.f;
-			m_bBlurResetted = true;
-		}
-
-		/* Zoom Blur Lerp */
-		_float fFocusPower = 10.f;
-
-		_float fBlurInterpFactor = m_fBlurTimer / fDuration;
-		if (fBlurInterpFactor > 1.f)
-			fBlurInterpFactor = 1.f;
-
-		_int iDetailStart = 10;
-		_int iDetailEnd = 1;
-		_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
-		m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+		m_fBlurTimer = 0.f;
+		m_bBlurResetted = true;
 	}
+
 	// Blur On
-	else
+	if (!m_bBlurResetted)
 	{
 		/* Zoom Blur Lerp */
 		_float fFocusPower = 10.f;
@@ -661,9 +659,27 @@ void CBattle_IdleState::Update_Blur(_float fTimeDelta)
 			fBlurInterpFactor = 1.f;
 
 		_int iDetailStart = 1;
-		_int iDetailEnd = 10;
+		_int iDetailEnd = 4;
 		_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
 		m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+	}
+	// Blur Off
+	else
+	{
+		/* Zoom Blur Lerp */
+		_float fFocusPower = 10.f;
+
+		_float fBlurInterpFactor = m_fBlurTimer / fDuration;
+		if (fBlurInterpFactor > 1.f)
+			fBlurInterpFactor = 1.f;
+
+		_int iDetailStart = 4;
+		_int iDetailEnd = 1;
+		_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+
+		if (m_fBlurTimer > fDuration)
+			m_bRoarBlur = false;
 	}
 }
 
