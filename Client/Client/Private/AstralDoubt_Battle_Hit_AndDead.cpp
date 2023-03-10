@@ -71,7 +71,6 @@ CAstralDoubt_State * CBattle_Hit_AndDead::LateTick(_float fTimeDelta)
 
 					m_bDeadAnimFinish = true;
 					m_pOwner->Set_GlowUp();
-					m_pOwner->Set_Dissolve();
 				}
 				break;
 			case Client::CAstralDoubt_State::STATE_DOWN:

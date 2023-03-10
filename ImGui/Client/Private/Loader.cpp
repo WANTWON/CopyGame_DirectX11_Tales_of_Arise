@@ -2632,6 +2632,11 @@ HRESULT CLoader::Loading_ForActor()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Astral_Doubt/Astral_Doubt.dat"))))
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("Astral_Doubt");
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("TreasureBox02"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02/TreasureBox02.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("TreasureBox02");
 #pragma endregion Animaition
 
 
