@@ -98,8 +98,6 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 			{
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
-
-
 					m_bIsStateEvent = true;
 
 				}
@@ -217,8 +215,6 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 			{
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
-
-
 					m_bIsStateEvent = true;
 
 				}
@@ -272,37 +268,11 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 			}
 		}
-		/*if (m_iCurrentAnimIndex == CRinwell::ANIM::BTL_ATTACK_NORMAL_3 && m_bIsAnimationFinished)
-		{
-
-			return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
-			
-		}*/
-
-		
 		break;
 	 }
 	}
 
 
-
-	
- 
-
-
-
-
-
-
-
-
-
-
-
-	
-
-
-	
 		//m_bIsStateEvent = false;
 
 	if (m_bIsStateEvent)

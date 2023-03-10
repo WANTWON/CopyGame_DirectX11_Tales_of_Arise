@@ -454,20 +454,20 @@ HRESULT CPlayerCreater::Ready_InstancingForPooling(const _tchar* pLayerTag)
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));
 
-	/*strcpy(stModelDesc.pModeltag, "Bld_WallB");
+	strcpy(stModelDesc.pModeltag, "Bld_WallB");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BOSS, pLayerTag, &stModelDesc)))
 		return E_FAIL;
-	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));*/
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));
 
 	strcpy(stModelDesc.pModeltag, "Bld_Pillar01_Lod1");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BOSS, pLayerTag, &stModelDesc)))
 		return E_FAIL;
 	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));
 
-	strcpy(stModelDesc.pModeltag, "Bld_Wall01_B02_Lod1");
+	/*strcpy(stModelDesc.pModeltag, "Bld_Wall01_B02_Lod1");
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_NonAnim_Instance"), LEVEL_BOSS, pLayerTag, &stModelDesc)))
 		return E_FAIL;
-	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));
+	CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));*/
 
 #pragma endregion BossZone
 

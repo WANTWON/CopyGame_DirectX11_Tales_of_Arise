@@ -52,7 +52,12 @@ CPlayerState * CPlayerOverlimit::Tick(_float fTimeDelta)
 
 CPlayerState * CPlayerOverlimit::LateTick(_float fTimeDelta)
 {
-	if (m_bIsAnimationFinished)
+	if (m_bFinalMode)
+	{
+		if(m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
+	}
+	else if (m_bIsAnimationFinished)
 	{
 		return new CIdleState(m_pOwner, CIdleState::IDLE_MAIN);
 	}
@@ -94,9 +99,10 @@ void CPlayerOverlimit::Enter(void)
 	if (!m_bFinalMode)
 	{
 		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		//pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
 		pCamera->Set_Target(m_pOwner);
 	}
+
+	m_pOwner->Set_IsActionMode(true);
 
 	m_pOwner->Set_Manarecover(false);
 	m_pOwner->Set_Overlimit(true);
@@ -104,5 +110,7 @@ void CPlayerOverlimit::Enter(void)
 
 void CPlayerOverlimit::Exit(void)
 {
+	m_pOwner->Set_IsActionMode(false);
+
 	__super::Exit();
 }

@@ -111,7 +111,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
 
-	if (m_bOverLimit &&  m_tInfo.fCurrentHp > 0 && CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
+	if (m_bOverLimit &&  m_tInfo.fCurrentHp > 0)
 	{
 		/* Overlimit Effect */
 		if (!m_bIsOverlimiEffectSpawned)
