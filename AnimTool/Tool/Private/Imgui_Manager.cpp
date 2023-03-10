@@ -138,8 +138,16 @@ void CImgui_Manager::ShowGui()
 			lstrcat(pAnimationDataFilePath, TEXT("ASU_005/ASU_005_Animation.dat"));
 			break;
 
-		case MODEL_CURRENT_ASU:
+		/*case MODEL_CURRENT_ASU:
 			lstrcat(pAnimationDataFilePath, TEXT("Astral_Doubt/Astral_Doubt_Animation.dat"));
+			break;*/
+
+		case MODEL_DUOHALEM:
+			lstrcat(pAnimationDataFilePath, TEXT("Duohalem/Duohalem_Animation.dat"));
+			break;
+
+		case MODEL_KISARA:
+			lstrcat(pAnimationDataFilePath, TEXT("Kisara/Kisara_Animation.dat"));
 			break;
 		}
 
