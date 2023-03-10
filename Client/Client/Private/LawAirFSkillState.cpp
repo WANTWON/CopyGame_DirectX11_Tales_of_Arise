@@ -81,7 +81,7 @@ CPlayerState * CLawAirFSkillState::Tick(_float fTimeDelta)
 
 					if (!m_bSkill_F_Sound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillHitSound.wav"), SOUND_RAW_EFF, 0.5f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillHitSound.wav"), SOUND_HIT, 0.5f);
 						m_bSkill_F_Sound = true;
 					}
 
@@ -263,8 +263,8 @@ void CLawAirFSkillState::Enter(void)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 
-CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_RAW_VOICE, 0.5f);
-CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillSoundBegin.wav"), SOUND_RAW_BEGIN, 0.7f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_VOICE, 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillSoundBegin.wav"), SOUND_SKILL, 0.7f);
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YUMPAEFUCKSAY);
 
 }
