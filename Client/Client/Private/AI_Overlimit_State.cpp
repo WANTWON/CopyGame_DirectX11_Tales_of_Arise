@@ -125,7 +125,12 @@ CAIState * CAI_Overlimit_State::LateTick(_float fTimeDelta)
 			pEffect = nullptr;
 	}
 
-	if (m_bIsAnimationFinished)
+	if (m_bFinalMode)
+	{
+		if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
+	}
+	else if (m_bIsAnimationFinished)
 	{
 		return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
 	}
@@ -164,7 +169,7 @@ void CAI_Overlimit_State::Enter()
 	_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 	m_pEffects = CEffect::PlayEffectAtLocation(TEXT("Overlimit.dat"), mWorldMatrix);
 
-
+	m_pOwner->Set_IsActionMode(true);
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 	if (nullptr == m_pTarget)
 	{
@@ -193,6 +198,8 @@ void CAI_Overlimit_State::Enter()
 
 void CAI_Overlimit_State::Exit()
 {
+	m_pOwner->Set_IsActionMode(false);
+
 	for (auto& pEffect : m_pEffects)
 	{
 		if (pEffect)

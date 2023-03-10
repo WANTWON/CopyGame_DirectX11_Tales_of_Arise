@@ -111,7 +111,7 @@ int CPlayer::Tick(_float fTimeDelta)
 
 	m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
 
-	if (m_bOverLimit &&  m_tInfo.fCurrentHp > 0 && CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
+	if (m_bOverLimit &&  m_tInfo.fCurrentHp > 0)
 	{
 		/* Overlimit Effect */
 		if (!m_bIsOverlimiEffectSpawned)
@@ -217,7 +217,6 @@ int CPlayer::Tick(_float fTimeDelta)
 			Tick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-		break;
 		Tick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
@@ -321,7 +320,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			LateTick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-		break;
 		LateTick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:

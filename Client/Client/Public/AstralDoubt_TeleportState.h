@@ -3,6 +3,7 @@
 #include "AstralDoubt_State.h"
 
 BEGIN(Client)
+class CEffect;
 BEGIN(Astral_Doubt)
 
 class CAstralDoubt_TeleportState final : public CAstralDoubt_State
@@ -19,6 +20,7 @@ public:
 
 private:
 	_float m_fTime = 0.f;
+	vector<class CEffect*> m_pEffects;
 };
 
 END
