@@ -323,7 +323,7 @@ _int CIce_Wolf::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitD
 								if (HIT_AIR == HitDesc.eHitType)
 									pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED, HIT_AIR, DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION), 1.f);
 								else if (HIT_NORMAL == HitDesc.eHitType)
-									pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED, HIT_NORMAL, DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION), 2.f);
+									pState = new CBattle_Damage_LargeB_State(this, CIceWolfState::STATE_BE_DAMAGED, HIT_NORMAL, DamageCauser->Get_TransformState(CTransform::STATE_TRANSLATION), 0.2f);
 
 								m_pState = m_pState->ChangeState(m_pState, pState);
 							}

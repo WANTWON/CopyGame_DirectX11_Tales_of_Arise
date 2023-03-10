@@ -1061,7 +1061,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::LateTick(_float fTimeDelta)
 				{
 					CPlayer* pCollided = dynamic_cast<CPlayer*>(pFootCollisionTarget);
 					if (pCollided)
-						pCollided->Take_Damage(rand() % (1100 - 1000 + 1) + 1000, m_pOwner, true);
+						pCollided->Take_Damage(rand() % (1100 - 1000 + 1) + 1000, m_pOwner, 4.f, HIT_DOWN);
 
 					m_bFootCollision = true;
 				}
@@ -1073,7 +1073,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::LateTick(_float fTimeDelta)
 				{
 					CPlayer* pCollided = dynamic_cast<CPlayer*>(pFootCollisionTarget);
 					if (pCollided)
-						pCollided->Take_Damage(rand() % (1100 - 1000 + 1) + 1000, m_pOwner, true);
+						pCollided->Take_Damage(rand() % (1100 - 1000 + 1) + 1000, m_pOwner, 4.f, HIT_DOWN);
 
 					m_b2th_FootCollision = true;
 				}

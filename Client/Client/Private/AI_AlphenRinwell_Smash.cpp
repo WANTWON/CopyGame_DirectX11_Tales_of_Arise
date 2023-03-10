@@ -189,9 +189,6 @@ CAIState * CAI_AlphenRinwell_Smash::LateTick(_float fTimeDelta)
 				pState = new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
 				m_pOwner->Set_PlayerState(m_pOwner->Get_PlayerState()->ChangeState(m_pOwner->Get_PlayerState(), pState));
 			}
-
-
-
 			case Client::AI_MODE:
 			{
 				return new CAICheckState(m_pOwner, STATE_ID::STATE_BOOSTATTACK);
