@@ -141,9 +141,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 					if (!m_bSoundStart)
 					{
-						/*if (m_fReloadTimeDelta > 0.005f)
-							CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);*/
-
+						
 						m_bSoundStart = true;
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_EFFECT, 0.1f);
 

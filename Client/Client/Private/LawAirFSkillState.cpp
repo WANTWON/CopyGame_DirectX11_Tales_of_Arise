@@ -263,6 +263,19 @@ void CLawAirFSkillState::Enter(void)
 		m_pOwner->Get_Transform()->LookAtExceptY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
 
+	m_HitLagDesc.fTakeDamageTimer = 0.1f;
+	m_HitLagDesc.bHitLag = true;
+	m_HitLagDesc.fHitLagTimer = 0.05f;
+	m_HitLagDesc.bCritical = true;
+	m_HitLagDesc.bShaking = true;
+	m_HitLagDesc.fShakingPower = 1.f;
+	m_HitLagDesc.fShakingMinusPower = 0.2f;
+	m_HitLagDesc.fZoomDistance = 8.f;
+	m_HitLagDesc.fZoomSpeed = 2.f;
+	m_HitLagDesc.fBlurPower = 6.f;
+	m_HitLagDesc.fBlurDetail = 10.f;
+	m_HitLagDesc.bZoom = true;
+
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillSoundBegin.wav"), SOUND_SKILL, 0.7f);
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YUMPAEFUCKSAY);
@@ -271,14 +284,18 @@ void CLawAirFSkillState::Enter(void)
 
 void CLawAirFSkillState::Exit(void)
 {
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false);
+	}
+
 	__super::Exit();
 
 	if (m_bIsFly)
 		m_pOwner->Off_IsFly();
 	
 	Safe_Release(m_pLandCollider);
-
-	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
 void CLawAirFSkillState::Update_Skill(void)

@@ -77,7 +77,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_E_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_SKILL, 0.85f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_SKILL1, 0.85f);
 							m_bSkill_E_Sound = true;
 						}
 					}
@@ -88,7 +88,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_E_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_SKILL, 0.85f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_SKILL2, 0.85f);
 							m_bSkill_E_Sound = true;
 						}
 					}
@@ -101,7 +101,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 					if (!m_bSkill_R_Sound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_SKILL, 0.45f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_SKILL3, 0.45f);
 						m_bSkill_R_Sound = true;
 					}
 					break;
@@ -125,7 +125,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_F_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_SKILL, 0.25f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_SKILL4, 0.25f);
 							m_bSkill_F_Sound = true;
 						}
 					
@@ -614,10 +614,34 @@ void CLawSkillState::Enter(void)
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
+			m_HitLagDesc.bHitLag = true;
+			m_HitLagDesc.fHitLagTimer = 0.05f;
+			m_HitLagDesc.bCritical = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+			m_HitLagDesc.fZoomDistance = 8.f;
+			m_HitLagDesc.fZoomSpeed = 2.f;
+			m_HitLagDesc.fBlurPower = 6.f;
+			m_HitLagDesc.fBlurDetail = 10.f;
+			m_HitLagDesc.bZoom = true;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_BURN_KNUCKLE);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
+			m_HitLagDesc.bHitLag = true;
+			m_HitLagDesc.fHitLagTimer = 0.05f;
+			m_HitLagDesc.bCritical = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+			m_HitLagDesc.fZoomDistance = 8.f;
+			m_HitLagDesc.fZoomSpeed = 2.f;
+			m_HitLagDesc.fBlurPower = 6.f;
+			m_HitLagDesc.fBlurDetail = 10.f;
+			m_HitLagDesc.bZoom = true;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_STRIKE_AIR);
 			break;
 		}
@@ -627,18 +651,68 @@ void CLawSkillState::Enter(void)
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
+			m_HitLagDesc.fTakeDamageTimer = 0.5f;
+			m_HitLagDesc.bHitLag = true;
+			m_HitLagDesc.fHitLagTimer = 0.2f;
+
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.fShakingPower = 0.6f;
+			m_HitLagDesc.fShakingMinusPower = 0.1f;
+
+			m_HitLagDesc.fZoomDistance = -2.5f;
+			m_HitLagDesc.fZoomSpeed = 0.5f;
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.fBlurPower = 3.f;
+			m_HitLagDesc.fBlurDetail = 7.f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_RONDSENPU);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
+			m_HitLagDesc.fTakeDamageTimer = 0.5f;
+			m_HitLagDesc.bHitLag = true;
+			m_HitLagDesc.fHitLagTimer = 0.2f;
+
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.fShakingPower = 0.6f;
+			m_HitLagDesc.fShakingMinusPower = 0.1f;
+
+			m_HitLagDesc.fZoomDistance = -2.5f;
+			m_HitLagDesc.fZoomSpeed = 0.5f;
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.fBlurPower = 3.f;
+			m_HitLagDesc.fBlurDetail = 7.f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_GARYOUKUUHA);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
+			m_HitLagDesc.bHitLag = true;
+			m_HitLagDesc.fHitLagTimer = 0.05f;
+			m_HitLagDesc.bCritical = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+			m_HitLagDesc.fZoomDistance = 8.f;
+			m_HitLagDesc.fZoomSpeed = 2.f;
+			m_HitLagDesc.fBlurPower = 6.f;
+			m_HitLagDesc.fBlurDetail = 10.f;
+			m_HitLagDesc.bZoom = true;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_TYOURENGADAN);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
+			m_HitLagDesc.bHitLag = true;
+			m_HitLagDesc.fHitLagTimer = 0.05f;
+			m_HitLagDesc.bCritical = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+			m_HitLagDesc.fZoomDistance = 8.f;
+			m_HitLagDesc.fZoomSpeed = 2.f;
+			m_HitLagDesc.fBlurPower = 6.f;
+			m_HitLagDesc.fBlurDetail = 10.f;
+			m_HitLagDesc.bZoom = true;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_STRIKE);
 			break;
 		}
@@ -655,6 +729,12 @@ void CLawSkillState::Enter(void)
 void CLawSkillState::Exit(void)
 {
 	__super::Exit();
+
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false);
+	}
 
 	Safe_Release(m_pLeftFootCollider);
 	Safe_Release(m_pLeftHandCollider);

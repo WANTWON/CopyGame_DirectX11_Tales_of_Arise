@@ -638,7 +638,5 @@ void CPlayer_SionSkillAttack::Exit(void)
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_Zoom(false, 3.f, 1.f, 6.f, 10.f);
 
-	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-
 	
 }

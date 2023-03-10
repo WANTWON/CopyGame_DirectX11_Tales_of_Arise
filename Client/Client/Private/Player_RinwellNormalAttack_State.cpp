@@ -361,19 +361,6 @@ CPlayerState * CPlayer_RinwellNormalAttack_State::Tick(_float fTimeDelta)
 					getchar();
 				}
 
-
-				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
-				{
-
-					/*CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
-					if (!m_bSoundStart)
-					{
-						m_bSoundStart = true;
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_EFFECT, 0.1f);
-
-
-					}*/
-				}
 				break;
 
 			

@@ -456,7 +456,6 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 				{
 					
-					CGameInstance::Get_Instance()->StopSound(SOUND_SKILL);
 					if (!m_bSoundStart)
 					{
 						m_bSoundStart = true;
@@ -641,7 +640,5 @@ void CPlayer_SionNormalAttack_State::Exit()
 {
 	__super::Exit();
 
-	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
 }
 
