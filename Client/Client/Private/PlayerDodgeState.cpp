@@ -451,6 +451,28 @@ CPlayerState * CDodgeState::EventInput(void)
 	if (pGameInstance->Key_Down(DIK_SPACE) && !m_bIsFly)
 		return new CJumpState(m_pOwner, STATETYPE_START, CJumpState::JUMPTYPE::JUMP_BATTLE);
 
+	if (!m_bIsFly)
+	{
+		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT_RIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD_LEFT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD_RIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_LEFT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_RIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_BACKWARD, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
+		else if (pGameInstance->Key_Pressing(DIK_LSHIFT))
+			return new CDodgeState(m_pOwner, DIR_END, m_fTime);
+	}
+
 	return nullptr;
 }
 
@@ -572,6 +594,11 @@ void CDodgeState::Exit(void)
 
 	if (m_bDodgeEffect)
 		m_pOwner->Set_DodgeEffect(true);
+
+	if (m_pOwner->Get_IsJustDodge())
+		m_pOwner->Off_JustDodge();
+	
+	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 
 	m_bIncreaseOverLimit = false;
 

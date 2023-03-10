@@ -898,8 +898,6 @@ HRESULT CRenderer::Render_PostProcessing()
 {
 	if (!m_pTarget_Manager)
 		return E_FAIL;
-
-
 	
 #pragma region Distortion
 	/* Distortion */

@@ -142,7 +142,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 								return nullptr;
 							m_fEventStart = pEvent.fStartTime;
 							m_iCount++;
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E.wav"), SOUND_SION_EFF, 0.5f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_TEST.wav"), SOUND_SION_EFF, 0.5f);
 						}
 					}
 				}
@@ -186,9 +186,9 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 
 						CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-						pCamera->Set_Zoom(true, 8.f, 4.f, 6.f, 10.f);
+						pCamera->Set_Zoom(true, 4.f, 4.f, 6.f, 10.f);
 						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC )
-							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.5f, true);
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.5f, true);
 
 
 						CBullet::BULLETDESC BulletDesc;

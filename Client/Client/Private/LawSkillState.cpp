@@ -77,7 +77,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_E_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_RAW_EFF, 0.25f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_RAW_EFF, 0.85f);
 							m_bSkill_E_Sound = true;
 						}
 					}
@@ -88,7 +88,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_E_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_RAW_EFF, 0.25f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_RAW_EFF, 0.85f);
 							m_bSkill_E_Sound = true;
 						}
 					}
@@ -101,7 +101,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 					if (!m_bSkill_R_Sound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_RAW_EFF, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_RAW_EFF, 0.45f);
 						m_bSkill_R_Sound = true;
 					}
 					break;
@@ -269,7 +269,11 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 								if (!m_bTyourengadan_5)
 								{
 									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
-									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
+									vector<CEffect*> Tyourengadan = CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
+
+									_matrix EffectWorldMatrix = Tyourengadan.front()->Get_Transform()->Get_WorldMatrix();
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Particles.dat"), EffectWorldMatrix);
+
 									m_bTyourengadan_5 = true;
 								}
 							}

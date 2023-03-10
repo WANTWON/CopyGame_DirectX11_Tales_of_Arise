@@ -95,6 +95,8 @@ CPlayerState * CLawAirFSkillState::Tick(_float fTimeDelta)
 						if (!m_bEnhaBakusaiken_2)
 						{
 							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+							CEffect::PlayEffectAtLocation(TEXT("Enha_Bakusaiken_Ring.dat"), mWorldMatrix);
 							vector<CEffect*> pFloor = CEffect::PlayEffectAtLocation(TEXT("Enha_Bakusaiken_Floor.dat"), mWorldMatrix);
 
 							_vector vPosition = pFloor[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);

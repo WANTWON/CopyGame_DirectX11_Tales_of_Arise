@@ -220,8 +220,9 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 							if (!m_bLawBoost)
 							{
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+								
+								CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 								vector<CEffect*> Boost = CEffect::PlayEffectAtLocation(TEXT("Law_Boost.dat"), mWorldMatrix);
-
 
 								_vector vPosition = Boost.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;

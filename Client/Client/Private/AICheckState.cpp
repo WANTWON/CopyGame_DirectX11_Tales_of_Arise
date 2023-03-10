@@ -322,16 +322,16 @@ void CAICheckState::Enter()
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
-		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_IDLE;
+		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_BATTLE_MOVE_IDLE;
 		break;
 	case CPlayer::SION:
 		m_iCurrentAnimIndex = CSion::ANIM::BTL_MOVE_IDLE;
 		break;
 	case CPlayer::RINWELL:
-		m_iCurrentAnimIndex = CRinwell::ANIM::IDLE;
+		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MOVE_IDLE;
 		break;
 	case CPlayer::LAW:
-		m_iCurrentAnimIndex = CLaw::ANIM::IDLE;
+		m_iCurrentAnimIndex = CLaw::ANIM::BTL_MOVE_IDLE;
 		break;
 	}
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);

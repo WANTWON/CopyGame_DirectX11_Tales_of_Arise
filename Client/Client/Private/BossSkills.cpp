@@ -212,7 +212,7 @@ void CBossSkills::Collision_Check()
 			CBaseObj* pCollisionTarget = nullptr;
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
 			{
-				static_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+				static_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
 				m_bCollided = true;
 				m_bDead = true;
 			}
@@ -223,7 +223,7 @@ void CBossSkills::Collision_Check()
 		{
 			CBaseObj* pCollisionTarget = nullptr;
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pOBBCom, &pCollisionTarget))
-				static_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, false);
+				static_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, 4.f, HIT_DOWN);
 
 			break;
 		}

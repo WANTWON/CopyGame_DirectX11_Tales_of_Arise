@@ -45,6 +45,30 @@ CPlayerState * CPlayerOverlimit::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
+	if (CPlayer::ALPHEN == m_ePlayerID)
+	{
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+		CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(true);
+			}
+			else
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+				{
+					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(false);
+					//dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Reset_RotateTime();
+				}
+			}
+		}
+	}
+
 	m_pOwner->Check_Navigation();
 
 	return nullptr;

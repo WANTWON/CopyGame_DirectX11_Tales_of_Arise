@@ -145,7 +145,11 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 					{
 						if (!m_bSankamousyuukyaku_2)
 						{
-							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_3.dat"), mWorldMatrix);
+							vector<CEffect*> Sanka_Moushuukyoku = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_3.dat"), mWorldMatrix);
+
+							_matrix EffectWorldMatrix = Sanka_Moushuukyoku.front()->Get_Transform()->Get_WorldMatrix();
+							vector<CEffect*> Sanka_Moushuukyoku_Particles = CEffect::PlayEffectAtLocation(TEXT("Sanka_Mousyuukyaku_Particles.dat"), EffectWorldMatrix);
+
 							m_bSankamousyuukyaku_2 = true;
 						}
 					}
