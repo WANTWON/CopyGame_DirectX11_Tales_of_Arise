@@ -91,6 +91,8 @@ int CMonster::Tick(_float fTimeDelta)
 	if (ExceptionHanding() == false)
 		return OBJ_NOSHOW;
 
+	Reset_StrikeBlur(fTimeDelta);
+
 	return OBJ_NOEVENT;
 }
 
@@ -681,8 +683,12 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 
 	}
 	
-	m_tStats.m_fLockonSmashGuage += 0.001f;
 
+	if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
+		m_tStats.m_fLockonSmashGuage += 0.01f;
+	else
+		m_tStats.m_fLockonSmashGuage += 0.05f; 
+		
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
 		m_tStats.m_fLockonSmashGuage = 4.f;
@@ -706,6 +712,35 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	return _int(m_tStats.m_fCurrentHp);
 }
 
+
+void CMonster::Reset_StrikeBlur(_float fTimeDelta)
+{
+	if (!m_bResetStrikeBlur)
+		return;
+
+	if (m_fStrikeBlurResetTimer < m_fStrikeBlurResetDuration)
+	{
+		/* Zoom Blur Lerp */
+		_float fFocusPower = 10.f;
+
+		_float fBlurInterpFactor = m_fStrikeBlurResetTimer / m_fStrikeBlurResetDuration;
+		if (fBlurInterpFactor > 1.f)
+			fBlurInterpFactor = 1.f;
+
+		_int iDetailStart = 10;
+		_int iDetailEnd = 1;
+		_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+		m_pRendererCom->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+
+		m_fStrikeBlurResetTimer += fTimeDelta;
+	}
+	else
+	{
+		m_fStrikeBlurResetTimer = 0.f;
+		m_bResetStrikeBlur = false;
+		m_pRendererCom->Set_ZoomBlur(false);
+	}
+}
 
 void CMonster::Collision_Object(_float fTimeDelta)
 {

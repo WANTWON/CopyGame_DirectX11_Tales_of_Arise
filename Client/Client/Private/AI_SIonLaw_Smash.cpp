@@ -32,13 +32,16 @@ CAI_SionLaw_Smash::CAI_SionLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_SionLaw_Smash::Tick(_float fTimeDelta)
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
+
 	if (m_bStrikeBlur)
 		StrikeBlur(fTimeDelta);
 
 	m_fTimer += fTimeDelta;
-
-
-	
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
 	if (!m_bIsAnimationFinished)
@@ -159,17 +162,22 @@ CAIState * CAI_SionLaw_Smash::LateTick(_float fTimeDelta)
 		}
 	}
 
-	if (m_bBullet)
+	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
-
-		if (m_fFadeTime > 4.f)
+		if (m_fFadeTime > 1.f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::LAW)
 			{
+				CUI_Manager::Get_Instance()->Set_UIStrike(true);
 				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
+				m_bScreen = true;
+				if (m_bStrikeBlur)
+				{
+					m_pOwner->Set_ResetStrikeBlur(true);
+					m_bStrikeBlur = false;
+				}
 			}
-
 		}
 	}
 
@@ -219,7 +227,11 @@ void CAI_SionLaw_Smash::Enter()
 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSion_Smash.wav"), SOUND_VOICE, 0.4f);
+	if (!m_bSoundStart)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSion_Smash.wav"), SOUND_SMASH, 0.6f);
+		m_bSoundStart = true;
+	}
 }
 
 void CAI_SionLaw_Smash::Exit()
@@ -234,12 +246,12 @@ void CAI_SionLaw_Smash::Exit()
 		}
 	}
 
-	if (m_eCurrentPlayerID == CPlayer::SION)
+	/*if (m_eCurrentPlayerID == CPlayer::SION)
 	{
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
 			return;
 
-	}
+	}*/
 
 
 	

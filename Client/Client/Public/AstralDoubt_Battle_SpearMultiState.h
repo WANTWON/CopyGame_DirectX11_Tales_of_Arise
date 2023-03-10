@@ -89,6 +89,9 @@ private:
 	_bool m_bSpearMulti_Poison4 = false;
 	_bool m_bSpearMulti_Poison5 = false;
 	_bool m_bSpearMulti_Poison6 = false;
+
+	_float	m_fSoundStart = -1.f;
+	_uint   m_iFootPressAnim_SpearCount = 0;
 };
 END
 END

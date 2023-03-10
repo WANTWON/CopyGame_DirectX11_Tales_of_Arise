@@ -23,7 +23,7 @@ public:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 
-
+	HRESULT Ready_Layer_PlayerEnding(const _tchar* pLayerTag);
 
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
@@ -35,6 +35,7 @@ private:
 	//Sound
 	_float m_bCrowdSoundStart = false;
 	_float m_bSound = false;
+	_bool m_bEnding = false;
 public:
 	static CLevel_City* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

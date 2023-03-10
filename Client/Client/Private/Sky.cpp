@@ -141,8 +141,17 @@ HRESULT CSky::SetUp_ShaderResources()
 
 	RELEASE_INSTANCE(CGameInstance);
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
-		return E_FAIL;
+	if (g_bEnd == true)
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(1))))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
+			return E_FAIL;
+	}
+	
 
 	return S_OK;
 }

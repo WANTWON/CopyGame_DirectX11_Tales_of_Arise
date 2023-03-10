@@ -434,6 +434,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Compute_CurrentIndex(LEVEL_SNOWFIELD);
 	pPlayer->Check_Navigation();
 	pPlayer->Change_Level(LEVEL_SNOWFIELD);
+	
 	if (pPlayer->Get_IsFly() == true)
 		pPlayer->Off_IsFly();
 

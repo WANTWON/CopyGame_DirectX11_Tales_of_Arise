@@ -441,6 +441,8 @@ CPlayerState * CPlayer_RinwellNormalAttack_State::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false, -4.f, 0.5f, 5.f, 8.f);
 		if (m_bIsFly)
 			return new CJumpState(m_pOwner, STATETYPE_MAIN, CJumpState::JUMP_BATTLE, m_fTime);
 		else
@@ -459,22 +461,28 @@ void CPlayer_RinwellNormalAttack_State::Enter()
 {
 	__super::Enter();
 
+	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 
 	if (m_bIsFly)
 	{
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+			pCamera->Set_Zoom(true, -6.f, 0.5f, 5.f, 8.f);
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_AIR_0);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack1.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack1.wav"), SOUND_RINWELL_NORMAL, 1.0f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+			pCamera->Set_Zoom(true, -6.f, 0.5f, 5.f, 8.f);
+
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_AIR_1);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack2.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack2.wav"), SOUND_RINWELL_NORMAL, 1.0f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+			pCamera->Set_Zoom(true, -6.f, 0.5f, 5.f, 8.f);
+
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_AIR_2);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack3.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack3.wav"), SOUND_RINWELL_NORMAL, 1.0f);
 			break;
 
 		}
@@ -484,20 +492,28 @@ void CPlayer_RinwellNormalAttack_State::Enter()
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+			pCamera->Set_Zoom(true, -6.f, 0.5f, 5.f, 8.f);
+
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_0);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack1.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack1.wav"), SOUND_RINWELL_NORMAL, 1.0f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+			pCamera->Set_Zoom(true, -6.f, 0.5f, 5.f, 8.f);
+
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_1);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack2.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack2.wav"), SOUND_RINWELL_NORMAL, 1.0f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+			pCamera->Set_Zoom(true, -6.f, 0.5f, 5.f, 8.f);
+
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_2);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack3.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack3.wav"), SOUND_RINWELL_NORMAL, 1.0f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+			pCamera->Set_Zoom(true, -6.f, 0.5f, 5.f, 8.f);
+
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_NORMAL_3);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack4.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack4.wav"), SOUND_RINWELL_NORMAL, 1.0f);
 			break;
 		}
 	}

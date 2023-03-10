@@ -785,7 +785,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	hFile = 0;
 	dwByte = 0;
 	iNum = 0;
-	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/Terrain.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/Terrain2.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_City_WaterTerrain"), CVIBuffer_Terrain::Create(m_pDevice, m_pContext, hFile, dwByte, true))))
 		return E_FAIL;
@@ -979,7 +979,7 @@ HRESULT CLoader::Loading_ForStaticLevel()
 
 	/* For.Prototype_Component_Navigation */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Boss_Navigation"),
-		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/BattleZoneData/BossMap/Navigation.dat")))))
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Data/BattleZoneData/BossMap/Navigation2.dat")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Navigation */
@@ -1123,7 +1123,7 @@ HRESULT CLoader::Loading_ForCityLevel()
 
 	/*For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Sky_City"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/City_SkyBox.dds"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/City_SkyBox%d.dds"), 2))))
 		return E_FAIL;
 
 	/*For.Prototype_Component_Texture_Terrain*/

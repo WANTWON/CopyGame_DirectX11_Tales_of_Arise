@@ -2,6 +2,7 @@
 #include "..\Public\AstralDoubt_TeleportState.h"
 
 #include "AstralDoubt_Battle_IdleState.h"
+#include "Effect.h"
 
 using namespace Astral_Doubt;
 
@@ -43,6 +44,8 @@ CAstralDoubt_State * CAstralDoubt_TeleportState::Tick(_float fTimeDelta)
 
 CAstralDoubt_State * CAstralDoubt_TeleportState::LateTick(_float fTimeDelta)
 {
+	Reset_Effects();
+
 	if (m_bIsAnimationFinished)
 	{
 		switch (m_eStateId)
@@ -62,12 +65,29 @@ CAstralDoubt_State * CAstralDoubt_TeleportState::LateTick(_float fTimeDelta)
 	{
 		m_fTime += fTimeDelta;
 
+		m_pActiveTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		_vector vDir = XMVector3Normalize(m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
+		vDir = XMVectorSetY(vDir, 0.f);
+		if(XMVectorGetX(XMVectorEqual(vDir, XMVectorSet(0.f,0.f,0.f,0.f))) != 1)
+			m_pOwner->Get_Transform()->Go_PosDir(fTimeDelta, vDir);
+		m_pOwner->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 20.f));
+
 		if (5.f < m_fTime)
 		{
-			Find_Target();
-			m_pOwner->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetY(m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION), 20.f));
 			m_eStateId = STATE_TELEPORT_DOWN;
 			Enter();
+		}
+
+		if (!m_pEffects.empty())
+		{
+			for (auto& iter : m_pEffects)
+			{
+				if (iter == nullptr)
+					continue;
+				_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+				mWorldMatrix.r[3] = XMVectorSetY(mWorldMatrix.r[3], 0.5f);
+				iter->Set_State(CTransform::STATE_TRANSLATION, mWorldMatrix.r[3]);
+			}
 		}
 	}
 
@@ -88,17 +108,44 @@ void CAstralDoubt_TeleportState::Enter()
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_JUMP_SHOOT_DROP_START);
 		break;
 	case Client::CAstralDoubt_State::STATE_TELEPORT_UP:
+	{
+		/* Make Effect */
+		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = XMVectorSetY(mWorldMatrix.r[3], 0.5f);
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("BosstelePort.dat"), mWorldMatrix);
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_JUMP_SHOOT_DROP_RISE_LOOP);
 		break;
+	}
 	case Client::CAstralDoubt_State::STATE_TELEPORT_DOWN:
+	{
+		/* Make Effect */
+		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = XMVectorSetY(mWorldMatrix.r[3], 0.5f);
+		CEffect::PlayEffectAtLocation(TEXT("BosstelePort.dat"), mWorldMatrix);
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_JUMP_SHOOT_DROP_DESCEND_LOOP);
 		break;
+	}
 	case Client::CAstralDoubt_State::STATE_TELEPORT_END:
+	{
+		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = XMVectorSetY(mWorldMatrix.r[3], 0.5f);
+		CEffect::PlayEffectAtLocation(TEXT("BosstelePort.dat"), mWorldMatrix);
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_JUMP_SHOOT_DROP_END);
 		break;
+	}
+		
 	}
 }
 
 void CAstralDoubt_TeleportState::Exit()
 {
+}
+
+void CAstralDoubt_TeleportState::Reset_Effects()
+{
+	for (auto& pEffect : m_pEffects)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
 }

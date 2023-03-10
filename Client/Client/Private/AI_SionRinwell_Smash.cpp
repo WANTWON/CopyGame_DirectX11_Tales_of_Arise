@@ -33,13 +33,17 @@ CAI_SionRinwell_Smash::CAI_SionRinwell_Smash(CPlayer* pPlayer, CBaseObj* pTarget
 
 CAIState * CAI_SionRinwell_Smash::Tick(_float fTimeDelta)
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
+
 	if (m_bStrikeBlur)
 		StrikeBlur(fTimeDelta);
 
 	m_fTimer += fTimeDelta;
 
-
-	
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
 	{
@@ -182,17 +186,21 @@ CAIState * CAI_SionRinwell_Smash::LateTick(_float fTimeDelta)
 		}
 	}
 
-	if (m_bBullet)
+	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
-
 		if (m_fFadeTime > 4.5f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::SION)
 			{
 				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
+				m_bScreen = true;
+				if (m_bStrikeBlur)
+				{
+					m_pOwner->Set_ResetStrikeBlur(true);
+					m_bStrikeBlur = false;
+				}
 			}
-
 		}
 	}
 
@@ -233,8 +241,11 @@ void CAI_SionRinwell_Smash::Enter()
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	 
 	m_pOwner->Set_Manarecover(false);
-
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("SionRinwell_Smash.wav"), SOUND_VOICE, 0.5f);
+	if (!m_bSoundStart)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionRinwell_Smash.wav"), SOUND_SMASH, 0.47f);
+		m_bSoundStart = true;
+	}
 }
 
 void CAI_SionRinwell_Smash::Exit()

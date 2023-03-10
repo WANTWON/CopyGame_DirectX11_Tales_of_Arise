@@ -744,7 +744,7 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 								else if (m_iBattleSoundCount == 5)
 								{
 									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Battle_Run6.wav"), SOUND_FOOT, 0.2f);
-									m_iBattleSoundCount = 5;
+									m_iBattleSoundCount = 0;
 								}
 
 								else if (m_iBattleSoundCount == 5)
@@ -849,10 +849,10 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 								else if (m_iBattleSoundCount == 5)
 								{
 									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Battle_Run6.wav"), SOUND_FOOT, 0.2f);
-									m_iBattleSoundCount = 5;
+									m_iBattleSoundCount = 6;
 								}
 
-								else if (m_iBattleSoundCount == 5)
+								else if (m_iBattleSoundCount == 6)
 								{
 									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Battle_Run7.wav"), SOUND_FOOT, 0.2f);
 									m_iBattleSoundCount = 0;
@@ -901,10 +901,10 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 								else if (m_iBattleSoundCount == 5)
 								{
 									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Battle_Run6.wav"), SOUND_FOOT, 0.2f);
-									m_iBattleSoundCount = 5;
+									m_iBattleSoundCount = 6;
 								}
 
-								else if (m_iBattleSoundCount == 5)
+								else if (m_iBattleSoundCount == 6)
 								{
 									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Battle_Run7.wav"), SOUND_FOOT, 0.2f);
 									m_iBattleSoundCount = 0;

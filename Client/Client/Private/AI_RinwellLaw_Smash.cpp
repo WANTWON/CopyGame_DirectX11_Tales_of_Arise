@@ -28,6 +28,12 @@ CAI_RinwellLaw_Smash::CAI_RinwellLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
+
 	if (m_bStrikeBlur)
 		StrikeBlur(fTimeDelta);
 
@@ -229,7 +235,7 @@ CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 
 	}
 
-	if (m_bBullet)
+	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
 
@@ -239,8 +245,13 @@ CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 			{
 				CUI_Manager::Get_Instance()->Set_UIStrike(true);
 				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
+				m_bScreen = true;
+				if (m_bStrikeBlur)
+				{
+					m_pOwner->Set_ResetStrikeBlur(true);
+					m_bStrikeBlur = false;
+				}
 			}
-
 		}
 	}
 
@@ -289,7 +300,13 @@ void CAI_RinwellLaw_Smash::Enter()
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_Target(m_pOwner);
 	m_pOwner->Set_Manarecover(false);
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawRinwell_Smash.wav"), SOUND_VOICE, 0.85f);
+	
+	if (!m_bSoundStart)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("LawRinwell_Smash.wav"), SOUND_SMASH, 0.65f);
+		m_bSoundStart = true;
+	}
+	
 }
 
 void CAI_RinwellLaw_Smash::Exit()

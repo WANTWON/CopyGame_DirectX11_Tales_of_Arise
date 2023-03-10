@@ -31,7 +31,7 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 	{
 	case PHOTON_FLASH:
 		vOffset = m_BulletDesc.pOwner->Get_TransformState(CTransform::STATE_LOOK);
-		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset*2.f;
+		vLocation = m_BulletDesc.pOwner->Get_Transform()->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset*2.f;
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("PhotonFlashBall.dat"), mWorldMatrix);

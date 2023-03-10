@@ -27,6 +27,7 @@ private:
 	_float m_fShakingTime = 0.f;
 	_bool m_bShaking = false;
 	_bool  m_bBullet = false;
+	_bool m_bScreen = false;
 
 	_bool m_bAlphenStrike_1 = false;
 	_bool m_bAlphenStrike_2 = false;
@@ -40,6 +41,9 @@ private:
 	_float m_fEffectEventEndTime = 0.f;
 	_float m_fEffectEventCurTime = 0.f;
 	_float m_fResetTimer = 0.f;
+
+	//Sound 
+	_bool m_bSoundStart = false;
 };
 END
 END

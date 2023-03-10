@@ -243,6 +243,11 @@ HRESULT CAnim::Ready_Components(void * pArg)
 		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Law"), (CComponent**)&m_pModelCom)))
 			return E_FAIL;
 		break;
+
+	case MODEL_TREASURE:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("TreasureBox02"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
 	}
 
 	return S_OK;

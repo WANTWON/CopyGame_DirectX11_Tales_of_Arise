@@ -77,7 +77,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_E_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_RAW_EFF, 0.25f);
 							m_bSkill_E_Sound = true;
 						}
 					}
@@ -88,7 +88,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_E_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_RAW_EFF, 0.25f);
 							m_bSkill_E_Sound = true;
 						}
 					}
@@ -101,7 +101,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 					if (!m_bSkill_R_Sound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_RAW_EFF, 0.25f);
 						m_bSkill_R_Sound = true;
 					}
 					break;
@@ -125,7 +125,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_F_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_RAW_EFF, 0.25f);
 							m_bSkill_F_Sound = true;
 						}
 					
@@ -615,7 +615,7 @@ void CLawSkillState::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_BURN_KNUCKLE);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillVoice.wav"), SOUND_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillVoice.wav"), SOUND_RAW_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_STRIKE_AIR);
@@ -628,15 +628,15 @@ void CLawSkillState::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_RONDSENPU);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillVoice.wav"), SOUND_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillVoice.wav"), SOUND_RAW_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_GARYOUKUUHA);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillVoice.wav"), SOUND_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillVoice.wav"), SOUND_RAW_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_TYOURENGADAN);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillVoice.wav"), SOUND_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillVoice.wav"), SOUND_RAW_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_STRIKE);

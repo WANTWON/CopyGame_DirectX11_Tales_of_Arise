@@ -5,7 +5,7 @@
 #include "HawkChaseState.h"
 #include "HawkWalkState.h"
 #include "HawkTurnR_State.h"
-#include "HawkBraveState.h"
+#include "HawkState.h"
 #include "HawkSitOnState.h"
 
 
@@ -41,38 +41,68 @@ CHawkState * CIdleState::LateTick(_float fTimeDelta)
 {
 	m_fTimeDeltaAcc += fTimeDelta;
 
-	if (m_pTarget)
-	{
-		return new CChaseState(m_pOwner);
-	}
+	CBaseObj* pTrigger = m_pOwner->Get_Trigger();
+	_vector vTrigger_Pos = pTrigger->Get_TransformState(CTransform::STATE_TRANSLATION);
 
-	else
+	if (pTrigger != nullptr && m_pOwner->Get_Collider()->Collision(pTrigger->Get_Collider()) == true)
 	{
-		if (m_fTimeDeltaAcc > m_fIdleTime)
+		if (m_pTarget)
 		{
-			switch (rand() % 3)
+			return new CChaseState(m_pOwner);
+		}
+		else
+		{
+			if (m_fTimeDeltaAcc > m_fIdleTime)
 			{
-			case 0:
-				return new CWalkState(m_pOwner);
-			case 1:
-				return new CIdleState(m_pOwner, FIELD_STATE_END);
-			case 2:
-				return new CTurn_State(m_pOwner);
-	/*		case 3:
-				return new CTurnR_State(m_pOwner);*/
-			default:
-				break;
+				switch (rand() % 3)
+				{
+				case 0:
+					return new CWalkState(m_pOwner);
+				case 1:
+					return new CIdleState(m_pOwner, FIELD_STATE_END);
+				case 2:
+					return new CTurn_State(m_pOwner);
+					/*		case 3:
+					return new CTurnR_State(m_pOwner);*/
+				default:
+					break;
+				}
 			}
 		}
 	}
 
+	else
+	{
+		return new CTurn_State(m_pOwner);
+	}
 
 
 
+	///0310 수정전 코드 
+	//if (m_pTarget)
+	//{
+	//	return new CChaseState(m_pOwner);
+	//}
 
-
-
-
+	//else
+	//{
+	//	if (m_fTimeDeltaAcc > m_fIdleTime)
+	//	{
+	//		switch (rand() % 3)
+	//		{
+	//		case 0:
+	//			return new CWalkState(m_pOwner);
+	//		case 1:
+	//			return new CIdleState(m_pOwner, FIELD_STATE_END);
+	//		case 2:
+	//			return new CTurn_State(m_pOwner);
+	///*		case 3:
+	//			return new CTurnR_State(m_pOwner);*/
+	//		default:
+	//			break;
+	//		}
+	//	}
+	//}
 
 
 

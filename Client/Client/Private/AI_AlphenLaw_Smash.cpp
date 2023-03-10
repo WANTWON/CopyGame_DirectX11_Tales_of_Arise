@@ -31,6 +31,13 @@ CAI_AlphenLaw_Smash::CAI_AlphenLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
+
+
 	if (m_bStrikeBlur)
 		StrikeBlur(fTimeDelta);
 
@@ -242,18 +249,22 @@ CAIState * CAI_AlphenLaw_Smash::LateTick(_float fTimeDelta)
 		
 	}
 
-	if (m_bBullet)
+	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
-
-		if (m_fFadeTime > 1.f)
+		if (m_fFadeTime > .85f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::LAW)
 			{
 				CUI_Manager::Get_Instance()->Set_UIStrike(true);
 				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
+				m_bScreen = true;
+				if (m_bStrikeBlur)
+				{
+					m_pOwner->Set_ResetStrikeBlur(true);
+					m_bStrikeBlur = false;
+				}
 			}
-
 		}
 	}
 
@@ -298,7 +309,13 @@ void CAI_AlphenLaw_Smash::Enter()
 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_VOICE, 0.3f);
+	if (!m_bSoundStart)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_SMASH, 0.6f);
+		m_bSoundStart = true;
+	}
+
+	
 }
 
 void CAI_AlphenLaw_Smash::Exit()

@@ -1102,8 +1102,8 @@ void CCamera_Dynamic::BossRoom_Camera(_float fTimeDelta)
 		m_fTime = 0.f;
 	}
 
-	if (XMVectorGetX(FinalPos) < 0.f)
-		FinalPos = XMVectorSetX(FinalPos, 0.f);
+	if (XMVectorGetX(FinalPos) < -10.f)
+		FinalPos = XMVectorSetX(FinalPos, -10.f);
 
 	if (XMVectorGetX(FinalPos) > 128.f)
 		FinalPos = XMVectorSetX(FinalPos, 128.f);
@@ -1138,7 +1138,9 @@ void CCamera_Dynamic::BattleClear_Camera(_float fTimeDelta)
 		m_fAngle = 0.f;
 
 	_vector vCameraPosition = m_pTransform->Get_State(CTransform::STATE_TRANSLATION);
-	_float fLength = 4.f; 
+	_float fLength = 4.f;
+	if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BOSS)
+		fLength = 8.f;
 	m_vNewPos = XMVectorSetX(m_vNewPos, (XMVectorGetX(m_vTargetPos) + cosf(XMConvertToRadians(m_fAngle))*fLength - sin(XMConvertToRadians(m_fAngle))*fLength));
 	m_vNewPos = XMVectorSetZ(m_vNewPos, (XMVectorGetZ(m_vTargetPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
 	m_vNewPos = XMVectorSetY(m_vNewPos,  3.f);

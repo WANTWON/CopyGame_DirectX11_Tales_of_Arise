@@ -49,6 +49,7 @@ HRESULT CNonAnim::Initialize(void * pArg)
 
 int CNonAnim::Tick(_float fTimeDelta)
 {
+	
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return OBJ_NOEVENT;
 	if (__super::Tick(fTimeDelta))
