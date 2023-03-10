@@ -106,6 +106,13 @@ void CLevel_LawBattle::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
+	{
+		g_fSoundVolume += 0.01f;
+		if (g_fSoundVolume >= 0.15f)
+			g_fSoundVolume = 0.15f;
+	}
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false && m_iBossDeadCount >= 2)
 	{
@@ -478,6 +485,8 @@ HRESULT CLevel_LawBattle::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Compute_CurrentIndex(LEVEL_LAWBATTLE);
 	pPlayer->Check_Navigation();
 	pPlayer->Off_IsFly();
+	pPlayer->Set_BattlePose(false);
+
 	pPlayer->Change_Level(LEVEL_LAWBATTLE);
 
 	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
@@ -491,6 +500,8 @@ HRESULT CLevel_LawBattle::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Check_Navigation();
 		iter->Change_Level(LEVEL_LAWBATTLE);
 		iter->Set_IsActionMode(true);
+		iter->Set_BattlePose(false);
+
 		i++;
 	}
 	

@@ -84,7 +84,7 @@ CAstralDoubt_State * CBattle_UpperState::Tick(_float fTimeDelta)
 			{
 				if (m_fSoundStart != pEvent.fStartTime)
 				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAus_Attack_Upper.wav"), SOUND_EFFECT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAus_Attack_Upper.wav"), SOUND_OBJECT, 0.4f);
 					m_fSoundStart = pEvent.fStartTime;
 				}
 			}
@@ -511,7 +511,6 @@ void CBattle_UpperState::Enter()
 
 void CBattle_UpperState::Exit()
 {
-	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 
 	CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 

@@ -16,6 +16,8 @@ public:
 	virtual HRESULT Initialize();
 	virtual void Tick(_float fTimeDelta);
 	virtual void Late_Tick(_float fTimeDelta);
+	void LastAttackCheck();
+	void Set_SecondCreated(_bool tof) { m_bSecondCreated = tof; }
 
 public:
 	HRESULT Ready_Lights();
@@ -25,12 +27,14 @@ public:
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Battle_UI(const _tchar* pLayerTag);
 
+
 private:
 	CCollision_Manager* m_pCollision_Manager = nullptr;
 	CCamera_Dynamic*	m_pCamera = nullptr;
 	_float	   m_fMinLength = MAXDISTANCE;
 	_bool	   m_bZumIn = false;
-
+	_bool	   m_bFinal = false;
+	_bool	   m_bSecondCreated = false;
 	_float	   m_fHitLegTime = 0.f;
 public:
 	static CLevel_BossZone* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

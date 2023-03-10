@@ -31,6 +31,7 @@ private:
 
 	_float m_fEventStart = -1.f;
 	_float m_fEventStart1 = -2.f;
+
 	/* Strike Screen Blur */
 	_bool m_bStrikeBlur = false;
 	_float m_fEffectEventEndTime = 0.f;
@@ -40,6 +41,9 @@ private:
 	_float m_fShakingTime = 0.f;
 	_bool m_bShaking = false;
 	_int m_iEventIndex = 0;
+
+	//Sound 
+	_bool m_bSoundStart = false;
 };
 END
 END

@@ -40,6 +40,9 @@ private:
 	_float m_fEffectEventEndTime = 0.f;
 	_float m_fEffectEventCurTime = 0.f;
 	_float m_fResetTimer = 0.f;
+
+	//Sound 
+	_bool m_bSoundStart = false;
 };
 END
 END

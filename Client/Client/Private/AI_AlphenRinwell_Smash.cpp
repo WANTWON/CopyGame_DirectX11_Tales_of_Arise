@@ -33,11 +33,16 @@ CAI_AlphenRinwell_Smash::CAI_AlphenRinwell_Smash(CPlayer* pPlayer, CBaseObj* pTa
 
 CAIState * CAI_AlphenRinwell_Smash::Tick(_float fTimeDelta)
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
+
 	if (m_bStrikeBlur)
 		StrikeBlur(fTimeDelta);
 
 	m_fTimer += fTimeDelta;
-
 
 	
 
@@ -216,6 +221,11 @@ CAIState * CAI_AlphenRinwell_Smash::LateTick(_float fTimeDelta)
 
 void CAI_AlphenRinwell_Smash::Enter()
 {
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+
+	m_bStrikeBlur = false;
+
 	m_pOwner->Set_StrikeAttack(true);
 	switch (m_eCurrentPlayerID)
 	{
@@ -246,15 +256,25 @@ void CAI_AlphenRinwell_Smash::Enter()
 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenRinwell_Smash.wav"), SOUND_VOICE, 0.5f);
+	if (!m_bSoundStart)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenRinwell_Smash.wav"), SOUND_SMASH, 0.6f);
+		m_bSoundStart = true;
+	}
+
+	
 }
 
 void CAI_AlphenRinwell_Smash::Exit()
 {
-	if (m_bStrikeBlur)
+	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 	{
-		m_pOwner->Set_ResetStrikeBlur(true);
-		m_bStrikeBlur = false;
+		if (m_bStrikeBlur)
+		{
+			/*m_pOwner->Set_ResetStrikeBlur(true);*/
+			m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+			m_bStrikeBlur = false;
+		}
 	}
 
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN)

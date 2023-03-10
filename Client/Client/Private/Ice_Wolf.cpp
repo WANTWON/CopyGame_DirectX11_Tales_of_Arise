@@ -261,6 +261,7 @@ _bool CIce_Wolf::Is_AnimationLoop(_uint eAnimId)
 	{
 	case ANIM_MOVE_RUN:
 	case ANIM_MOVE_WALK_F:
+	case ANIM_SYMBOL_RUN:
 		return true;
 	case ANIM_TURN_L:
 	case ANIM_ATTACK_HOWLING:

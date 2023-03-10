@@ -65,6 +65,7 @@ public: /* Getter &  Setter */
 	/* OverLimit */
 	void            Set_Overlimit(_bool bOverlimit) { m_bOverLimit = bOverlimit; }
 	_bool           Get_Overlimit() { return m_bOverLimit; }
+	void			Set_BattlePose(_bool tof) { m_bIsPose = tof; }
 	void			Get_AuraColor();
 	void			EffectSpawn_Overlimit();
 	void			EffectUpdate_Overlimit();
@@ -108,6 +109,7 @@ public: /*For.State*/
 	void			LateTick_AIState(_float fTimeDelta);
 	void            SmashAttack(_uint smashtype);
 	void            BoostAttack();
+	void			BattleModeSetting(_float fTimeDelta);
 	CPlayerState* Get_PlayerState() { return m_pPlayerState; }
 	//void Set_PlayerState(CPlayerState* state) { m_pPlayerState = state; }
 	
@@ -125,6 +127,7 @@ public: /*For.State*/
 	void Reset_StrikeBlur(_float fTimeDelta);
 
 	void Set_HitState();
+	void Set_OverLimitState(); 
 
 public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);

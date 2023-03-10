@@ -185,7 +185,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 			m_bIsJump = true;
 	}
 	
-	else if (STATETYPE_END == m_eStateType)
+	if (STATETYPE_END == m_eStateType)
 	{
 		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
@@ -204,7 +204,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 				{
 					if (!m_bLandSound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.8f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
 						m_bLandSound = true;
 					}
 				}
@@ -221,8 +221,10 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 	m_pOwner->Get_Navigation()->Compute_CurrentIndex_byXZ(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
 	if (STATETYPE_END == m_eStateType)
+	{
 		m_pOwner->Check_Navigation_Jump();
 
+	}
 	return nullptr;
 }
 
@@ -295,6 +297,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				{
 					if (Check_JumpEnd(1.75f))
 					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LAND);
 						m_eStateType = STATETYPE_END;
 					}
@@ -308,6 +311,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				{
 					if (Check_JumpEnd(0.5f))
 					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_LANDING);
 						m_eStateType = STATETYPE_END;
 					}
@@ -321,6 +325,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				{
 					if (Check_JumpEnd(1.f))
 					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_LANDING);
 						m_eStateType = STATETYPE_END;
 					}
@@ -334,6 +339,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				{
 					if (Check_JumpEnd(1.5f))
 					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::JUMP_RUN_LANDING);
 						m_eStateType = STATETYPE_END;
 					}
@@ -441,7 +447,23 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 		}
 		break;
 	case Client::STATETYPE_END:
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_JumpLand.wav"), SOUND_FOOT, 0.1f);
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				{
+					if (!m_bLandSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.3f);
+						m_bLandSound = true;
+					}
+				}
+			}
+		}
+		//CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_JumpLand.wav"), SOUND_FOOT, 0.1f);
 		if (m_bIsAnimationFinished)
 			return new CIdleState(m_pOwner, CIdleState::IDLE_SIDE);
 		break;

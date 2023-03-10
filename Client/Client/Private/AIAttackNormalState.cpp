@@ -98,8 +98,6 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 			{
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
-
-
 					m_bIsStateEvent = true;
 
 				}
@@ -123,7 +121,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						//총 발사 사운드
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_EFFECT_SION, 0.07f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_SION_EFF, 0.07f);
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -141,7 +139,7 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 					m_fReloadTimeDelta += fTimeDelta;
 
 
-					CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
+					CGameInstance::Get_Instance()->StopSound(SOUND_SION_EFF);
 					if (!m_bSoundStart)
 					{
 						/*if (m_fReloadTimeDelta > 0.005f)
@@ -217,8 +215,6 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 			{
 				if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
 				{
-
-
 					m_bIsStateEvent = true;
 
 				}
@@ -272,37 +268,11 @@ CAIState * CAIAttackNormalState::LateTick(_float fTimeDelta)
 
 			}
 		}
-		/*if (m_iCurrentAnimIndex == CRinwell::ANIM::BTL_ATTACK_NORMAL_3 && m_bIsAnimationFinished)
-		{
-
-			return new CAICheckState(m_pOwner, STATE_ID::STATE_IDLE);
-			
-		}*/
-
-		
 		break;
 	 }
 	}
 
 
-
-	
- 
-
-
-
-
-
-
-
-
-
-
-
-	
-
-
-	
 		//m_bIsStateEvent = false;
 
 	if (m_bIsStateEvent)
@@ -413,6 +383,6 @@ void CAIAttackNormalState::Enter()
 void CAIAttackNormalState::Exit()
 {
 	__super::Exit();
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	//CGameInstance::Get_Instance()->StopSound(SOUND_SION_EFF);
 }

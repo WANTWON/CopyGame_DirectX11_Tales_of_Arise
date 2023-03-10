@@ -77,7 +77,7 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_R_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillSound.wav"), SOUND_EFFECT, 0.5f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillSound.wav"), SOUND_RAW_EFF, 0.5f);
 							m_bSkill_R_Sound = true;
 						}
 					
@@ -133,6 +133,7 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 					{
 						if (!m_bSankamousyuukyaku_Punch_2)
 						{
+							CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 							m_Sankamousyuukyaku_Punch_2 = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_Punch_2.dat"), mWorldMatrix);
 							m_bSankamousyuukyaku_Punch_2 = true;
 
@@ -383,7 +384,7 @@ void CLawAirRSkillState::Enter(void)
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillVoice.wav"), SOUND_VOICE, 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillVoice.wav"), SOUND_RAW_VOICE, 0.5f);
 }
 
 void CLawAirRSkillState::Exit(void)

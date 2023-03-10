@@ -109,7 +109,9 @@ HRESULT CLevel_SnowField::Initialize()
 			return E_FAIL;
 	}
 
+	g_bIsSoundOn = false;
 	g_fSoundVolume = 0.f;
+
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_SnowField_2.wav"), g_fSoundVolume);
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Nature_blizzard.wav"), SOUND_NATURE, 0.3f);
@@ -167,12 +169,17 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 	}
 	
 	
-	g_fSoundVolume += 0.001f;
-	if (g_fSoundVolume >= 0.3f)
-		g_fSoundVolume = 0.3f;
-	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
+	if (!g_bIsSoundOn)
+	{
+		g_fSoundVolume += 0.001f;
+		if (g_fSoundVolume >= 0.3f)
+		{
+			g_fSoundVolume = 0.3f;
+			g_bIsSoundOn = true;
+		}
 
-
+		CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
+	}
 
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_MINUS))
 	{
@@ -427,6 +434,7 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Compute_CurrentIndex(LEVEL_SNOWFIELD);
 	pPlayer->Check_Navigation();
 	pPlayer->Change_Level(LEVEL_SNOWFIELD);
+	
 	if (pPlayer->Get_IsFly() == true)
 		pPlayer->Off_IsFly();
 

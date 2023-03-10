@@ -135,6 +135,7 @@ CAIState * CAI_LAW_AIRSKILLR::Tick(_float fTimeDelta)
 					{
 						if (!m_bSankamousyuukyaku_Punch_2)
 						{
+							CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 							m_Sankamousyuukyaku_Punch_2 = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_Punch_2.dat"), mWorldMatrix);
 							m_bSankamousyuukyaku_Punch_2 = true;
 
@@ -316,6 +317,12 @@ CAIState * CAI_LAW_AIRSKILLR::LateTick(_float fTimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
+		if (STATETYPE_START == m_eStateType)
+		{
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
+			m_eStateType = STATETYPE_MAIN;
+			m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_START);
+		}
 		if (STATETYPE_MAIN == m_eStateType)
 			m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
 
