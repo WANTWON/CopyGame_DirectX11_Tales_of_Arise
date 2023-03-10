@@ -102,7 +102,7 @@ void CBattle_Hit_AndDead::Enter()
 	{
 	case Client::CAstralDoubt_State::STATE_DEAD:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::DEAD);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAus_Dead.wav"), SOUND_EFFECT, 0.8f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAus_Dead.wav"), SOUND_OBJECT, 0.8f);
 		m_pOwner->Check_Navigation();
 		break;
 
@@ -121,14 +121,14 @@ void CBattle_Hit_AndDead::Enter()
 
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::DOWN_UNIQUE);
 		m_pOwner->Set_OnGoingDown();
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Hit.wav"), SOUND_EFFECT, 0.5f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Hit.wav"), SOUND_OBJECT, 0.5f);
 		break;
 	}
 	case Client::CAstralDoubt_State::STATE_SMASHHIT:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::DOWN_UNIQUE);
 		m_pOwner->Get_Model()->Reset();
 		m_pOwner->Set_OnGoingDown();
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Hit.wav"), SOUND_EFFECT, 0.5f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Hit.wav"), SOUND_OBJECT, 0.5f);
 		break;
 	}
 
@@ -137,7 +137,7 @@ void CBattle_Hit_AndDead::Enter()
 
 void CBattle_Hit_AndDead::Exit()
 {
-	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 
 	Safe_Release(m_pAtkColliderCom);
 

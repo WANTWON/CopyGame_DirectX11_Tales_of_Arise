@@ -508,6 +508,7 @@ void CSionSkills::Dead_Effect()
 			pCamera->Set_Zoom(false);
 		}
 
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Normal_Attack_HitSound.wav"), SOUND_HIT, 1.0f);
 		break;
 	}
 	case TRESVENTOS:

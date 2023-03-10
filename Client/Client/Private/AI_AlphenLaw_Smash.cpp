@@ -31,6 +31,13 @@ CAI_AlphenLaw_Smash::CAI_AlphenLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
+	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
+
+
 	if (m_bStrikeBlur)
 		StrikeBlur(fTimeDelta);
 
@@ -302,7 +309,13 @@ void CAI_AlphenLaw_Smash::Enter()
 
 	m_pOwner->Set_Manarecover(false);
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_VOICE, 0.3f);
+	if (!m_bSoundStart)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_SMASH, 0.3f);
+		m_bSoundStart = true;
+	}
+
+	
 }
 
 void CAI_AlphenLaw_Smash::Exit()

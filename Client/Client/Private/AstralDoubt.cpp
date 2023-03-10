@@ -184,6 +184,19 @@ int CAstralDoubt::Tick(_float fTimeDelta)
 	else
 		m_fFresnelTimer = 0.f;
 
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
+	{
+		CAstralDoubt_State* pState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
+	{
+		CAstralDoubt_State* pState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_FOOTPRESS);
+		m_pState = m_pState->ChangeState(m_pState, pState);
+	}
+
+
 	return OBJ_NOEVENT;
 }
 
