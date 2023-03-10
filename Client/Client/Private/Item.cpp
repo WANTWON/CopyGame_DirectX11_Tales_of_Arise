@@ -341,15 +341,19 @@ HRESULT CItem::Ready_Components(void * pArg)
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 		break;
+	case MUSHROOM:
+		ColliderDesc.vScale = _float3(10.f, 10.f, 10.f);
+		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
+		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
+		break;
 	default:
 		ColliderDesc.vScale = _float3(3.f, 3.f, 3.f);
 		ColliderDesc.vRotation = _float3(0.f, 0.f, 0.f);
 		ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 		break;
 	}
+
 	/* For.Com_SPHERE */
-	
-	
 	if (FAILED(__super::Add_Components(TEXT("Com_SPHERE"), LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), (CComponent**)&m_pSPHERECom, &ColliderDesc)))
 		return E_FAIL;
 

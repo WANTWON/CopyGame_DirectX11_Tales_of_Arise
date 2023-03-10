@@ -3,8 +3,8 @@
 #include "IceWolfState.h"
 
 BEGIN(Client)
+class CEffect;
 BEGIN(IceWolf)
-
 class CBattle_IdleState : public CIceWolfState
 {
 public:
@@ -18,13 +18,19 @@ public:
 	virtual void Exit() override;
 
 private:
+	void Update_Effects();
+	void Remove_Effects();
+
+private:
 	_uint			m_iRand = 0;
 	_float			m_fRedayAttackTimer = 0.f;
 	_bool			m_bTargetSetting = false;
 	STATE_ID		m_ePreState;
 	_float			m_fIdleTime;
 
-
+	/* Effect */
+	_bool m_bHowl = false;
+	vector<CEffect*> m_Howl;
 };
 
 END
