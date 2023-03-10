@@ -247,7 +247,7 @@ void CAI_AlphenSion_Smash::Enter()
 
 	if (!m_bSoundStart)
 	{
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenSion_Smash.wav"), SOUND_SMASH, 0.2f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenSion_Smash.wav"), SOUND_SMASH, 0.6f);
 		m_bSoundStart = true;
 	}
 	

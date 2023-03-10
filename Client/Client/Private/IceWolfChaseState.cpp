@@ -64,6 +64,8 @@ CIceWolfState * CChaseState::LateTick(_float fTimeDelta)
 
 	//vTargetPosition = XMVectorSetY(vTargetPosition, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
 	
+
+
 	if (m_pTarget)
 	{
 		_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);

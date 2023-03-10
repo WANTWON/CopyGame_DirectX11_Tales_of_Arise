@@ -270,6 +270,8 @@ void CPlayerManager::Set_SmashAttack()
 				if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 				CBattleManager::Get_Instance()->Set_IsStrike(true);
+
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("SionRinwell_Smash_Begin.wav"), SOUND_SMASH, 0.7f);
 			}
 
 			else if (CGameInstance::Get_Instance()->Key_Down(DIK_2) && CGameInstance::Get_Instance()->Key_Down(DIK_3))
@@ -324,7 +326,7 @@ void CPlayerManager::Set_SmashAttack()
 					dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Reset_Lockonguage();
 				CBattleManager::Get_Instance()->Set_IsStrike(true);
 
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("SionRinwell_Smash_Begin.wav"), SOUND_EFFECT, 0.7f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("SionRinwell_Smash_Begin.wav"), SOUND_SMASH, 0.7f);
 			}
 		}
 
