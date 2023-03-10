@@ -255,6 +255,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Compute_CurrentIndex(LEVEL_BATTLE);
 	pPlayer->Check_Navigation();
 	pPlayer->Off_IsFly();
+	pPlayer->Set_BattlePose(false);
 	pPlayer->Change_Level(LEVEL_BATTLE);
 	pPlayer->Set_IsActionMode(true);
 
@@ -268,6 +269,7 @@ HRESULT CLevel_BattleZone::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Compute_CurrentIndex(LEVEL_BATTLE);
 		iter->Check_Navigation();
 		iter->Change_Level(LEVEL_BATTLE);
+		iter->Set_BattlePose(false);
 		iter->Set_IsActionMode(true);
 		i++;
 	}
@@ -670,7 +672,10 @@ void CLevel_BattleZone::Set_FogShader()
 	else
 	{
 		if (pPlayer)
+		{
 			pPlayer->Get_Renderer()->Set_Fog(false);
+		}
+			
 	}
 	
 

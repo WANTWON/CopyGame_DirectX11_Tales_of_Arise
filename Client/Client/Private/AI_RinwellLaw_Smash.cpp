@@ -303,7 +303,7 @@ void CAI_RinwellLaw_Smash::Enter()
 	
 	if (!m_bSoundStart)
 	{
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("LawRinwell_Smash.wav"), SOUND_SMASH, 0.55f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("LawRinwell_Smash.wav"), SOUND_SMASH, 0.65f);
 		m_bSoundStart = true;
 	}
 	

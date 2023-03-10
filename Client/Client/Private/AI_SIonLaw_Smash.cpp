@@ -229,7 +229,7 @@ void CAI_SionLaw_Smash::Enter()
 
 	if (!m_bSoundStart)
 	{
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSion_Smash.wav"), SOUND_SMASH, 0.4f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSion_Smash.wav"), SOUND_SMASH, 0.6f);
 		m_bSoundStart = true;
 	}
 }
