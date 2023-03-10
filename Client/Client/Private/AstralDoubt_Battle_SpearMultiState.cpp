@@ -52,9 +52,7 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 			{       
 				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 				{
-					if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-						dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.4f, 0.1f);
-
+					
 					if (m_bAdventSound == false)
 					{
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_NATURE, 0.55f);
@@ -83,6 +81,9 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						//ColliderDesc.vScale = _float3(14.f, 14.f, 14.f);
 						//ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.2f);
+
 						m_pFootColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 						m_pFootColliderCom->Update(matWorld);
 
@@ -97,6 +98,10 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 						ColliderDesc2th.vScale = _float3(15.f, 15.f, 15.f);
 						ColliderDesc2th.vPosition = _float3(0.f, 0.f, 0.f);
+
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.2f);
+
 
 						m_p2th_FootColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc2th);
 						m_p2th_FootColliderCom->Update(R_matWorld);
@@ -149,6 +154,10 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						ColliderDesc.vScale = _float3(8.f, 8.f, 8.f);
 						ColliderDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.2f);
+
+
 						m_pAtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
 						m_pAtkColliderCom->Update(matWorld);
 
@@ -179,6 +188,10 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 						ColliderDesc3th.vScale = _float3(8.f, 8.f, 8.f);
 						ColliderDesc3th.vPosition = _float3(0.f, 0.f, 0.f);
 
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.2f);
+
+
 						m_p3th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc3th);
 						m_p3th_AtkColliderCom->Update(matWorld_3th);
 
@@ -193,6 +206,9 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 						ColliderDesc4th.vScale = _float3(8.f, 8.f, 8.f);
 						ColliderDesc4th.vPosition = _float3(0.f, 0.f, 0.f);
+
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.2f);
 
 						m_p4th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc4th);
 						m_p4th_AtkColliderCom->Update(matWorld_4th);
@@ -223,6 +239,9 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 
 						ColliderDesc6th.vScale = _float3(8.f, 8.f, 8.f);
 						ColliderDesc6th.vPosition = _float3(0.f, 0.f, 0.f);
+
+						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.2f);
 
 						m_p6th_AtkColliderCom = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc6th);
 						m_p6th_AtkColliderCom->Update(matWorld_6th);
@@ -496,9 +515,6 @@ CAstralDoubt_State * CBattle_SpearMultiState::Tick(_float fTimeDelta)
 			{
 				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 				{
-					if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-						dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.4f, 0.1f);
-
 					if (m_bSpearMultiEndSound == false)
 					{
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_SpearMultiEnd.wav"), SOUND_OBJECT, 0.4f);

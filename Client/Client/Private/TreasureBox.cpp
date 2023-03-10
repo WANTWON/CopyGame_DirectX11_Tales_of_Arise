@@ -4,6 +4,7 @@
 #include "Level_Manager.h"
 #include "CameraManager.h"
 #include "UI_InterectMsg.h"
+#include "Effect.h"
 
 CTreasureBox::CTreasureBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CInteractObject(pDevice, pContext)
@@ -66,6 +67,23 @@ int CTreasureBox::Tick(_float fTimeDelta)
 	{
 		m_bIsAnimationFinished = m_pModelCom->Play_Animation(fTimeDelta, false);
 		m_fTimeDeltaAcc += fTimeDelta;
+
+		vector<ANIMEVENT> pEvents = m_pModelCom->Get_Events();
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					if (!m_bParticles)
+					{
+						_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+						CEffect::PlayEffectAtLocation(TEXT("Chest_Open.dat"), mWorldMatrix);
+						m_bParticles = true;
+					}
+				}
+			}
+		}
 
 		if (m_bIsAnimationFinished)
 		{

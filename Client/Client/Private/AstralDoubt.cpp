@@ -206,8 +206,6 @@ void CAstralDoubt::Late_Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
 
-	
-
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return;
 

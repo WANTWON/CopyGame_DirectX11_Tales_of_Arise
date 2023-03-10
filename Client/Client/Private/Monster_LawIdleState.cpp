@@ -75,9 +75,10 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 	}*/
 	//return new CMonster_LawSkill(m_pOwner, SKILL_E);
 
-	
+
 
 	//return new CMonsterLaw_StrikeTrigger(m_pOwner);
+
 
 	//
 

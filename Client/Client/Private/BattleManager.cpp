@@ -90,7 +90,7 @@ CBaseObj * CBattleManager::Get_MinDistance_Monster(_vector vPosition)
 	if (pTarget == nullptr)
 		return pLockOn;
 	else
-	return pTarget;
+		return pTarget;
 }
 
 //CBaseObj * CBattleManager::Get_MinDistance_Monster_includeLockon(_vector vPosition)

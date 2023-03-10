@@ -25,6 +25,7 @@ private:
 	_float m_fTime = 0.f;
 	_bool  m_bBullet = false;
 	_float  m_fFadeTime = 0.f;
+	_bool m_bScreen = false;
 	
 	_bool m_bAlphenStrike_1 = false;
 	_bool m_bAlphenStrike_2 = false;

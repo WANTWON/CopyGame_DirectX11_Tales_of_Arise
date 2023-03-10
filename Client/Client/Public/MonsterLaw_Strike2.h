@@ -28,6 +28,7 @@ private:
 
 	_float m_fTime = 0.f;
 	_bool  m_bBullet = false;
+	_bool m_bScreen = false;
 
 	_float m_fEventStart = -1.f;
 	_float m_fTimer = 0.f;

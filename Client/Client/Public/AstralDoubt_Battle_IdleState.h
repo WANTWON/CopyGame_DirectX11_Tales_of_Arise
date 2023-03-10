@@ -3,6 +3,7 @@
 #include "AstralDoubt_State.h"
 
 BEGIN(Client)
+class CEffect;
 BEGIN(Astral_Doubt)
 class CBattle_IdleState : public CAstralDoubt_State
 {
@@ -15,6 +16,12 @@ public:
 
 	virtual void Enter() override;
 	virtual void Exit() override;
+
+private:
+	void Update_Effects();
+	void Remove_Effects();
+	
+	void Update_Blur(_float fTimeDelta);
 
 private:
 	//_float			m_fTimeDeltaAcc = 0.f;
@@ -35,6 +42,16 @@ private:
 	_bool			m_bAdventSound = false;
 	_bool			m_bLandSound = false;
 	_bool			m_bAdventLookAt = false;
+	
+	/* Effect */
+	_bool m_bRoar = false;
+	vector<CEffect*> m_Roar;
+
+	/* Screen Blur */
+	_bool m_bRoarBlur = false;
+	_float m_fBlurTimer = 0.f;
+	_float m_fBlurResetAfter = 1.f;
+	_bool m_bBlurResetted = false;
 };
 END
 END

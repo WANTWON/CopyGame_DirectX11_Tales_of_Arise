@@ -229,6 +229,9 @@ void CLevel_BossZone::LastAttackCheck()
 	if (iMonsterSize == 1 && m_bSecondCreated)
 	{
 		CMonster* pMonster = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster());
+		if (!pMonster)
+			return;
+
 		if (pMonster->Get_Stats().m_fCurrentHp <= pMonster->Get_Stats().m_fMaxHp *0.3f)
 		{
 			m_bFinal = true;
