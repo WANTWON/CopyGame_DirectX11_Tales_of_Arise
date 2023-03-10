@@ -88,9 +88,6 @@ int CParticleSystem::Tick(_float fTimeDelta)
 
 void CParticleSystem::Late_Tick(_float fTimeDelta)
 {
-	if ((LEVEL)CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
-		return;
-
 	if (m_pRendererCom)
 	{
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));

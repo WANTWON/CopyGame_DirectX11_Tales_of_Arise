@@ -98,7 +98,7 @@ void CItem::Late_Tick(_float fTimeDelta)
 			pPickupFlare = nullptr;	
 	}
 
-	if (m_ItemDesc.etype == ITEMTYPE::CRYSTAL)
+	if (m_ItemDesc.etype == ITEMTYPE::CRYSTAL || m_ItemDesc.etype == ITEMTYPE::JEWEL)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_GLOW, this);
 
 	if (!m_bIsGain)
