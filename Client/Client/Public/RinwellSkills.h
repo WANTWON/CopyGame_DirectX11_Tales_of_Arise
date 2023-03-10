@@ -67,7 +67,7 @@ private:
 	//Sound
 	_bool	m_bMeteorSound = false;
 	_bool	m_bThunder_Field = false;
-
+	_bool   m_bNormalHit = false;
 	//디바인세이버 사운드
 	_bool	m_bDivineBullet0_Sound = false;
 	_bool	m_bDivineBullet1_Sound = false;
