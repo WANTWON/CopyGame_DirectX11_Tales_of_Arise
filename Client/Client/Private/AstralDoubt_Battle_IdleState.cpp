@@ -9,6 +9,7 @@
 #include "AstralDoubt_Battle_UpperState.h"
 #include "AstralDoubt_Battle_720Spin_FirstState.h"
 #include "AstralDoubt_Battle_RushState.h"
+#include "Effect.h"
 
 using namespace Astral_Doubt;
 
@@ -28,13 +29,15 @@ CAstralDoubt_State * CBattle_IdleState::AI_Behaviour(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 {
-	Find_Target();
+	Update_Effects();
+	Update_Blur(fTimeDelta);
 
+	Find_Target();
  	
 	if (m_ePreState_Id == STATE_ID::STATE_ADVENT)
 	{
 		if(!m_bIsAnimationFinished)
-			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta*1.3f, false);
+			m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
 	}
 	else if (m_ePreState_Id == STATE_ID::STATE_HALF)
 	{
@@ -228,9 +231,10 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 
 CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 {
+	Remove_Effects();
+
 	m_fTimeDeltaAcc += fTimeDelta;
 
-	
 	////////////////////////////////현재 코드 - ACTIVE_PLAYER만을 타겟으로 함 ////////////////////
 	
 
@@ -273,7 +277,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 					}
 				}
 
-				else if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 				{
 					if (m_bAdventSound == false)
 					{
@@ -283,17 +287,25 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 					}
 				}
 
-				else
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
 				{
-					CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
-				}
+					if (!m_bRoar && !strcmp(pEvent.szName, "Roar"))
+					{
+						_matrix WorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+						m_Roar = CEffect::PlayEffectAtLocation(TEXT("Boss_Roar.dat"), WorldMatrix);
+						Update_Effects();
 
+						m_bRoar = true;
+						m_bRoarBlur = true;
+					}
+				}
 			}
 		}
 
 		if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 		{
-			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_UPPER);
+			//return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_UPPER);
+			return new CBattle_IdleState(m_pOwner, CAstralDoubt_State::STATE_ID::STATE_ADVENT);
 		}
 
 	}
@@ -312,11 +324,6 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Howling.wav"), SOUND_VOICE, 0.6f);
 						m_bAdventSound = true;
 					}
-				}
-
-				else
-				{
-					CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 				}
 			}
 		}
@@ -583,8 +590,91 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 	return nullptr;
 }
 
+void CBattle_IdleState::Update_Effects()
+{
+	for (auto& pEffect : m_Roar)
+	{
+		if (!pEffect)
+			continue;
+
+		_float4x4 PivotMatrix = m_pOwner->Get_Model()->Get_PivotFloat4x4();
+		_matrix ParentWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+		CHierarchyNode* pBone;
+
+		pBone = m_pOwner->Get_Model()->Get_BonePtr("HEAD1_C");
+		_matrix	SocketMatrix = pBone->Get_CombinedTransformationMatrix() * XMLoadFloat4x4(&PivotMatrix) * ParentWorldMatrix;
+
+		_vector vLook = m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK);
+		_vector vPosition = SocketMatrix.r[3] + (XMVector4Normalize(vLook) * 2);
+
+		pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, vPosition);
+	}
+}
+
+void CBattle_IdleState::Remove_Effects()
+{
+	for (auto& pEffect : m_Roar)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+}
+
+void CBattle_IdleState::Update_Blur(_float fTimeDelta)
+{
+	if (!m_bRoarBlur)
+		return;
+
+	_float fDuration = .45f;
+	m_fBlurTimer += fTimeDelta;
+
+	// Blur Off
+	if (m_fBlurTimer > m_fBlurResetAfter)
+	{
+		if (!m_bBlurResetted)
+		{
+			m_fBlurTimer = 0.f;
+			m_bBlurResetted = true;
+		}
+
+		/* Zoom Blur Lerp */
+		_float fFocusPower = 10.f;
+
+		_float fBlurInterpFactor = m_fBlurTimer / fDuration;
+		if (fBlurInterpFactor > 1.f)
+			fBlurInterpFactor = 1.f;
+
+		_int iDetailStart = 10;
+		_int iDetailEnd = 1;
+		_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+	}
+	// Blur On
+	else
+	{
+		/* Zoom Blur Lerp */
+		_float fFocusPower = 10.f;
+
+		_float fBlurInterpFactor = m_fBlurTimer / fDuration;
+		if (fBlurInterpFactor > 1.f)
+			fBlurInterpFactor = 1.f;
+
+		_int iDetailStart = 1;
+		_int iDetailEnd = 10;
+		_int iFocusDetailLerp = iDetailStart + fBlurInterpFactor * (iDetailEnd - iDetailStart);
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(true, fFocusPower, iFocusDetailLerp);
+	}
+}
+
 void CBattle_IdleState::Enter()
 {
+	m_bRoar = false;
+	
+	m_bRoarBlur = false;
+	m_fBlurTimer = 0.f;
+	m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+
 	if (m_ePreState_Id == STATE_ID::STATE_DOWN)
 	{
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::MOVE_IDLE);
