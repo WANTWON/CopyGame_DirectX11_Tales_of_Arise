@@ -307,7 +307,7 @@ void CAI_AlphenLaw_Smash::Enter()
 
 	if (!m_bSoundStart)
 	{
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_SMASH, 0.3f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_SMASH, 0.6f);
 		m_bSoundStart = true;
 	}
 

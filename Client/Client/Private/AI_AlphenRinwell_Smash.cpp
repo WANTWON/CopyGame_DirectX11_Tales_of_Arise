@@ -258,7 +258,7 @@ void CAI_AlphenRinwell_Smash::Enter()
 
 	if (!m_bSoundStart)
 	{
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenRinwell_Smash.wav"), SOUND_SMASH, 0.5f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenRinwell_Smash.wav"), SOUND_SMASH, 0.6f);
 		m_bSoundStart = true;
 	}
 

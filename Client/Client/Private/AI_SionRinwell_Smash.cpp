@@ -239,7 +239,7 @@ void CAI_SionRinwell_Smash::Enter()
 	m_pOwner->Set_Manarecover(false);
 	if (!m_bSoundStart)
 	{
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionRinwell_Smash.wav"), SOUND_SMASH, 0.5f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("SionRinwell_Smash.wav"), SOUND_SMASH, 0.47f);
 		m_bSoundStart = true;
 	}
 }
