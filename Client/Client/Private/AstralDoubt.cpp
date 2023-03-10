@@ -316,6 +316,7 @@ void CAstralDoubt::Set_BattleMode(_bool type)
 
 void CAstralDoubt::UpdatePosition()
 {
+	CBattleManager::Get_Instance()->Set_LastbossSecond(true);
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	NONANIMDESC ModelDesc1;

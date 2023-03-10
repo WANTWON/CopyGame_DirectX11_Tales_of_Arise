@@ -575,6 +575,9 @@ void CDodgeState::Exit(void)
 
 	m_bIncreaseOverLimit = false;
 
+	if (m_pOwner->Get_IsJustDodge() == true)
+		m_pOwner->Off_JustDodge();
+
 	Safe_Release(m_pDodgeCollider);
 
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);

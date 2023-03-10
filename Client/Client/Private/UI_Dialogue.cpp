@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "MonsterLaw.h"
 #include "AiRinwell.h"
+#include <tchar.h>
 
 
 CUI_Dialogue::CUI_Dialogue(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -2607,20 +2608,20 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	
 	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size()-1], XMVectorSet(390.f, 535.f+m_fFade, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
 	
-	
-	if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("알펜")))
+	_tchar* asd = m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1];
+	if (!_tcsicmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("알펜")))
 	{
 		m_iPortraitnum = 0;
 	}
-	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("시온")))
+	else if (!_tcsicmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("시온")))
 	{
 		m_iPortraitnum = 1;
 	}
-	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("린웰")))
+	else if (!_tcsicmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("린웰")))
 	{
 		m_iPortraitnum = 2;
 	}
-	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("로우")))
+	else if (!_tcsicmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("로우")))
 	{
 		m_iPortraitnum = 3;
 	}
