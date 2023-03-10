@@ -374,6 +374,16 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Sion.fbx", "../../../Bin/Bin_Data/Anim/Sion/", PivotMatrix))))
 		return E_FAIL;*/
 
+		PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("DUOHALAM"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Duohalem.fbx", "../../../Bin/Bin_Data/Anim/Duohalem/", PivotMatrix))))
+		return E_FAIL;
+
+		PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+		if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("KISARA"),
+			CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Kisara.fbx", "../../../Bin/Bin_Data/Anim/Kisara/", PivotMatrix))))
+			return E_FAIL;
+
 	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cylinder_ko_01"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Cylinder_ko_01.fbx", "../../../Bin/Bin_Data/Effect/Cylinder/", PivotMatrix))))
@@ -528,10 +538,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Astral_Doubt.fbx", "../../../Bin/Bin_Data/Anim/Astral_Doubt/", PivotMatrix))))
 	//	return E_FAIL;
 
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f)  * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	/*PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f)  * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Bld_Wall01"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Bld_Wall01.fbx", "../../../Bin/Bin_Data/NonAnim/Boss_AstralDoubt/Wall/Bld_Wall01/", PivotMatrix))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cylinder_ak_04"),

@@ -72,6 +72,9 @@ public: /* For Lock On */
 	_bool Get_KillLawbosslevel() { return m_bKillLawBattle; }
 	void Set_KillLawbosslevel(_bool tof) { m_bKillLawBattle = tof; }
 
+	_bool Get_LastbossSecond() { return m_bLastbossSecond; }
+	void Set_LastbossSecond(_bool tof) { m_bLastbossSecond = tof; }
+
 public:
 	void Clear_Monster() { m_FieldMonster.clear(); };
 	void Clear_AllMonster() { m_FieldMonster.clear(); };
@@ -103,6 +106,7 @@ private:
 
 	_bool m_bRinwellChangetoboss = false;
 	_bool m_bKillLawBattle = false;
+	_bool m_bLastbossSecond = false;
 
 public:
 	virtual void Free() override;

@@ -458,8 +458,6 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 				_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
 				iter->Set_State(CTransform::STATE_TRANSLATION, m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION) + vOffset);
 			}
-
-
 		}
 	}
 

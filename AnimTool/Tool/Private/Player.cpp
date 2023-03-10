@@ -248,8 +248,18 @@ HRESULT CPlayer::Ready_Components(void)
 			return E_FAIL;
 		break;
 
-	case MODEL_CURRENT_ASU:
+	/*case MODEL_CURRENT_ASU:
 		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Current_Astral_Doubt"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;*/
+
+	case MODEL_DUOHALEM:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Duohalem"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
+
+	case MODEL_KISARA:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Kisara"), (CComponent**)&m_pModelCom)))
 			return E_FAIL;
 		break;
 	}

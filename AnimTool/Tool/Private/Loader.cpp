@@ -149,6 +149,18 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("Current_Astral_Doubt");
 
+	/* For.Prototype_Component_Model_Law */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Duohalem"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Duohalem/Duohalem.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Duohalem");
+
+	/* For.Prototype_Component_Model_Law */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Kisara"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Kisara/Kisara.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Kisara");
+
 	/* 셰이더 로딩 중. */
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중."));
 	/* For.Prototype_Component_Shader_VtxNorTex*/

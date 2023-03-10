@@ -94,7 +94,7 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
-		////
+
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
 
@@ -145,7 +145,7 @@ HRESULT CPlayerCreater::Cloning_ForMonster()
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -228,7 +228,7 @@ HRESULT CPlayerCreater::Loading_MonsterAtFirst()
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; i++)
@@ -273,7 +273,7 @@ HRESULT CPlayerCreater::Loading_MonsterAtFirst()
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	
@@ -701,7 +701,7 @@ HRESULT CPlayerCreater::Ready_Layer_Deco_SnowField(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -721,7 +721,7 @@ HRESULT CPlayerCreater::Ready_Layer_Deco_SnowField(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -743,7 +743,7 @@ HRESULT CPlayerCreater::Ready_Layer_Deco_SnowField(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -763,7 +763,7 @@ HRESULT CPlayerCreater::Ready_Layer_Deco_SnowField(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -794,7 +794,7 @@ HRESULT CPlayerCreater::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 	//if (0 == hFile)
 	//	return E_FAIL;
 
-	///* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	///* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	//for (_uint i = 0; i < iNum; ++i)
@@ -814,7 +814,7 @@ HRESULT CPlayerCreater::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -842,7 +842,7 @@ HRESULT CPlayerCreater::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -861,7 +861,7 @@ HRESULT CPlayerCreater::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -880,7 +880,7 @@ HRESULT CPlayerCreater::Ready_Layer_SnowDecoObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -911,7 +911,7 @@ HRESULT CPlayerCreater::Ready_Layer_RestaurantObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -933,7 +933,7 @@ HRESULT CPlayerCreater::Ready_Layer_RestaurantObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -949,7 +949,7 @@ HRESULT CPlayerCreater::Ready_Layer_RestaurantObject(const _tchar * pLayerTag)
 
 
 	CPortal::PORTALDESC PortalDesc;
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	PortalDesc.m_ModelDesc.vPosition.x = 16.7f;
 	PortalDesc.m_ModelDesc.vPosition.y = 0.f;
 	PortalDesc.m_ModelDesc.vPosition.z = -4.f;
@@ -975,7 +975,7 @@ HRESULT CPlayerCreater::Ready_Layer_BossMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1007,7 +1007,7 @@ HRESULT CPlayerCreater::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1027,7 +1027,7 @@ HRESULT CPlayerCreater::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1050,7 +1050,7 @@ HRESULT CPlayerCreater::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1070,7 +1070,7 @@ HRESULT CPlayerCreater::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1089,7 +1089,7 @@ HRESULT CPlayerCreater::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1110,7 +1110,7 @@ HRESULT CPlayerCreater::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	CPortal::PORTALDESC PortalDesc;
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 
@@ -1151,7 +1151,7 @@ HRESULT CPlayerCreater::Ready_Layer_CityMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1188,7 +1188,7 @@ HRESULT CPlayerCreater::Ready_Layer_WorkToolMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1208,7 +1208,7 @@ HRESULT CPlayerCreater::Ready_Layer_WorkToolMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1227,7 +1227,7 @@ HRESULT CPlayerCreater::Ready_Layer_WorkToolMapObject(const _tchar * pLayerTag)
 	CloseHandle(hFile);
 
 	CPortal::PORTALDESC PortalDesc;
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	PortalDesc.m_ModelDesc.vPosition.x = 15.f;
 	PortalDesc.m_ModelDesc.vPosition.y = 0.f;
 	PortalDesc.m_ModelDesc.vPosition.z = -4.f;
@@ -1254,7 +1254,7 @@ HRESULT CPlayerCreater::Ready_Layer_LawBattleMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1276,7 +1276,7 @@ HRESULT CPlayerCreater::Ready_Layer_LawBattleMapObject(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1336,7 +1336,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_SnowField(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1411,7 +1411,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_SnowField(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1446,7 +1446,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1490,7 +1490,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag
 	//if (0 == hFile)
 	//	return E_FAIL;
 
-	///* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	///* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	//for (_uint i = 0; i < iNum; ++i)
@@ -1512,7 +1512,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag
 	//if (0 == hFile)
 	//	return E_FAIL;
 
-	///* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	///* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	//for (_uint i = 0; i < iNum; ++i)
@@ -1534,7 +1534,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag
 	//if (0 == hFile)
 	//	return E_FAIL;
 
-	///* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	///* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	//for (_uint i = 0; i < iNum; ++i)
@@ -1552,7 +1552,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag
 	//if (0 == hFile)
 	//	return E_FAIL;
 
-	///* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	///* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	//for (_uint i = 0; i < iNum; ++i)
@@ -1570,7 +1570,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag
 	//if (0 == hFile)
 	//	return E_FAIL;
 
-	///* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	///* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	//for (_uint i = 0; i < iNum; ++i)
@@ -1588,7 +1588,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag
 	//if (0 == hFile)
 	//	return E_FAIL;
 
-	///* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	///* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	//for (_uint i = 0; i < iNum; ++i)
@@ -1607,7 +1607,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag
 	//if (0 == hFile)
 	//	return E_FAIL;
 
-	///* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	///* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	//for (_uint i = 0; i < iNum; ++i)
@@ -1625,7 +1625,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_Restaurant(const _tchar * pLayerTag
 	//if (0 == hFile)
 	//	return E_FAIL;
 
-	///* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	///* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	//ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	//for (_uint i = 0; i < iNum; ++i)
@@ -1659,7 +1659,7 @@ HRESULT CPlayerCreater::Ready_Layer_Interact_WorkTool(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1702,7 +1702,7 @@ HRESULT CPlayerCreater::Ready_Layer_NpcSnowField(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1774,7 +1774,7 @@ HRESULT CPlayerCreater::Ready_Layer_NpcCity(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1940,7 +1940,7 @@ HRESULT CPlayerCreater::Ready_Layer_NpcMIniGame(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -1977,7 +1977,7 @@ HRESULT CPlayerCreater::Ready_Layer_NpcMIniGame(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)
@@ -2016,7 +2016,7 @@ HRESULT CPlayerCreater::Ready_Layer_NpcLawBattle(const _tchar * pLayerTag)
 	if (0 == hFile)
 		return E_FAIL;
 
-	/* Å¸ÀÏÀÇ °³¼ö ¹Þ¾Æ¿À±â */
+	/* Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ */
 	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iNum; ++i)

@@ -371,10 +371,13 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 										_matrix ParticleWorldMatrix = XMMatrixIdentity();
 										ParticleWorldMatrix.r[3] = vPosition;
 										CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_Particles.dat"), ParticleWorldMatrix);
+
+										break;
 									}
 								}
 
 								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_4.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Housyutigakuzin_Ring.dat"), mWorldMatrix);
 
 								m_bHousyutigakuzinThirdEffect = true;
 							}

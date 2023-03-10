@@ -67,12 +67,14 @@ private:
 
 	_float m_fYOffset = 0.f;
 	_bool m_bChangetoboss = false;
+	_bool m_bLastsecondboss = false;
 	_float 	m_fcurrenthp1 = 10000.f;
 	_float m_fmaxhp1 = 10000.f;
 	_uint m_iMonstername1 = 0;
 	_float m_fMinusHp1 = 0.f;
 	_float m_fCurrentbar1 = 0.f;
 	_int m_iHPbarindex1 = 0;
+	_bool m_bnomoreupdate = false;
 
 
 public:

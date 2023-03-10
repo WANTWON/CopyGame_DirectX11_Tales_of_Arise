@@ -25,8 +25,8 @@ private:
 	HRESULT SetUp_ShaderResources(); /* 셰이더 전역변수에 값을 전달한다. */
 
 private:
-	//CTexture*				m_pTextureCom1 = nullptr;
-	//CTexture*				m_pTextureCom2 = nullptr;
+	CTexture*				m_pTextureCom1 = nullptr;
+	CTexture*				m_pTextureCom2 = nullptr;
 
 	_float 	m_fcurrenthp = 2000.f;
 	_float m_fmaxhp = 2000.f;
@@ -37,6 +37,11 @@ private:
 
 	_float m_fWorldsizeX = 0.f;
 	_float m_fWorldsizeY = 0.f;
+
+	_float m_fFlowMAX = 100.f;
+	_float m_fFlowCurrent = 100.f;
+
+
 public:
 	static CUI_MainPlayerMark* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

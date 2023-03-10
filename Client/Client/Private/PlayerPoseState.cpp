@@ -21,6 +21,30 @@ CPlayerState * CPlayerPoseState::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
+	if (CPlayer::ALPHEN == m_ePlayerID)
+	{
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+
+		CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
+
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(true);
+			}
+			else
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+				{
+					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(false);
+					//dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Reset_RotateTime();
+				}
+			}
+		}
+	}
+
 	m_pOwner->Check_Navigation();
 
 	return nullptr;

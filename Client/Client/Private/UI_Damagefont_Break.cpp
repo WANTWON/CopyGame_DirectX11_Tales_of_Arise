@@ -151,6 +151,7 @@ void CUI_Damagefont_Break::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
 		return ;
+	
 	if (m_pPointer == nullptr)
 		return;
 

@@ -47,20 +47,35 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
-	m_bChangetoboss = CBattleManager::Get_Instance()->Get_Rinwellboss();
+	
+	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_LAWBATTLE)
+		m_bChangetoboss = false;
+	else
+		m_bChangetoboss = CBattleManager::Get_Instance()->Get_Rinwellboss();
+
+	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() != LEVEL_BOSS)
+		m_bLastsecondboss = false;
+	else
+		m_bLastsecondboss = CBattleManager::Get_Instance()->Get_LastbossSecond();
 
 
 	if (CBattleManager::Get_Instance()->Get_BossMonster() == nullptr)
 		return OBJ_DEAD;
 	else
 	{
-		m_iMonstername = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_MonsterID();
+		if (!m_bnomoreupdate)
+		{
+			m_iMonstername = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_MonsterID();
 
 
-		m_fcurrenthp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_Stats().m_fCurrentHp;
-		m_fmaxhp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_Stats().m_fMaxHp;
+			m_fcurrenthp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_Stats().m_fCurrentHp;
+			m_fmaxhp = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_Stats().m_fMaxHp;
+		}
+		
 	}
 
+	if (m_fcurrenthp <= 0)
+		m_bnomoreupdate = true;
 	/*m_iMonstername = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_BossMonster())->Get_MonsterID();
 
 
@@ -75,7 +90,22 @@ int CUI_BossMonster_HPbar::Tick(_float fTimeDelta)
 		m_iMonstername1 = pObject->Get_MonsterID();
 		m_fYOffset = 25.f;
 	}
+	else if(m_bLastsecondboss && CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_BOSS)
+	{
+		CMonster* pBossMonsterFirst = dynamic_cast<CMonster*>(CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_SecondBoss")));
+		if (pBossMonsterFirst != nullptr)
+		{
+			m_fcurrenthp1 = pBossMonsterFirst->Get_Stats().m_fCurrentHp;
+			m_fmaxhp1 = pBossMonsterFirst->Get_Stats().m_fMaxHp;
+			m_iMonstername1 = pBossMonsterFirst->Get_MonsterID();
+			m_fYOffset = 25.f;
+		}
 	
+	}
+	//else if
+	
+	
+
 
 	
 	//m_iMonstername = 0;
@@ -388,7 +418,7 @@ HRESULT CUI_BossMonster_HPbar::Render()
 
 	m_pVIBufferCom->Render();*/
 
-		if (m_bChangetoboss)
+		if (m_bChangetoboss || m_bLastsecondboss)
 		{
 			m_fYOffset = -20.f;
 

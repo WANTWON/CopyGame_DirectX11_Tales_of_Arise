@@ -1287,7 +1287,7 @@ HRESULT CUI_MENU_Back::Ready_Components(void * pArg)
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture18"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_FLAG"), (CComponent**)&m_pTextureCom18)))
 		return E_FAIL;
-
+	
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Components(TEXT("Com_Texture19"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_ITEMUSEPORTRAIT"), (CComponent**)&m_pTextureCom19)))
 		return E_FAIL;
