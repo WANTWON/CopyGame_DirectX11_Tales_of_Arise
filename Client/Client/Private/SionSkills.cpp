@@ -477,9 +477,13 @@ void CSionSkills::Dead_Effect()
 		mWorldMatrix.r[3] = vLocation;
 		m_pDeadEffects = CEffect::PlayEffectAtLocation(TEXT("SionNormalBulletDead.dat"), mWorldMatrix);
 
-		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-		pCamera->Set_Zoom(false);
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(false);
 
+		}
+		
 		break;
 	}
 	case NORMALATTACK:
@@ -519,11 +523,11 @@ void CSionSkills::Dead_Effect()
 			{
 				if (iter != nullptr)
 				{
-					//if (m_bTresventos == false)
-					//{
-					//	CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Hit.wav"), SOUND_EFFECT, 0.1f);
-					//	m_bTresventos = true;
-					//}
+					if (m_bTresventos == false)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Hit.wav"), SOUND_EFFECT, 0.1f);
+						m_bTresventos = true;
+					}
 					iter->Set_Dead(true);
 				}
 			}
@@ -622,7 +626,7 @@ void CSionSkills::Dead_Effect()
 	case EXPLOSION:
 		if (m_bExplosionSound == false)
 		{
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_Hit.wav"), SOUND_EFFECT, 0.1f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_F_Hit.wav"), SOUND_EFFECT, 0.1f);
 			m_bExplosionSound = true;
 		}
 

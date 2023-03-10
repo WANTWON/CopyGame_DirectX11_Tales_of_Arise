@@ -414,6 +414,14 @@ void CRinwellSkills::Collision_Check()
 	{
 	case PHOTON_FLASH:
 		__super::Collision_Check();
+		if (m_bDead)
+		{
+			if (m_bNormalHit == false)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack_Hit.wav"), SOUND_RINWELL_NORMAL, 0.6f);
+				m_bNormalHit = true;
+			}
+		}
 		break;
 	case HOLY_RANCE_BULLET:
 		m_HitLagDesc.bLockOnChange = false;
