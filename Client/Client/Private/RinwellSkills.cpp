@@ -65,12 +65,12 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 
 		break;
 	case DIVINE_SABER:
-		/*vOffset = XMVectorSet(0.f, m_fRadius + 1.f, 0.f, 0.f);
+		vOffset = XMVectorSet(0.f, m_fRadius + 1.f, 0.f, 0.f);
 		vLocation = m_BulletDesc.vTargetPosition + vOffset;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberRing.dat"), mWorldMatrix);*/
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberRing.dat"), mWorldMatrix);
 
 		vOffset = XMVectorSet(0.f, m_fRadius + 0.5f, 0.f, 0.f);
 		vLocation = m_BulletDesc.vTargetPosition + vOffset;

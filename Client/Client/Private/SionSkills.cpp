@@ -841,7 +841,7 @@ void CSionSkills::Tick_TresVentos(_float fTimeDelta)
 
 	//m_pTransformCom->Go_PosTarget(fTimeDelta, pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	
-	m_pTransformCom->LookAt(XMVectorSetY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f));
+	m_pTransformCom->LookAt(XMVectorSetY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION), XMVectorGetY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)) + 3.f));
 	m_pTransformCom->Go_Straight(fTimeDelta);
 
 
@@ -853,9 +853,6 @@ void CSionSkills::Tick_TresVentos(_float fTimeDelta)
 		if (iter != nullptr)
 		{
 			iter->Set_State(CTransform::STATE_TRANSLATION, Get_TransformState(CTransform::STATE_TRANSLATION));
-		//	iter->Set_State(CTransform::STATE_RIGHT, Get_TransformState(CTransform::STATE_RIGHT));
-		//	iter->Set_State(CTransform::STATE_UP, Get_TransformState(CTransform::STATE_UP));
-		//	iter->Set_State(CTransform::STATE_LOOK, Get_TransformState(CTransform::STATE_LOOK));
 		}
 			
 	}

@@ -92,6 +92,10 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 							else
 								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 							
+							CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+							pCamera->Set_Zoom(true, 1.f, 0.1f, 5.f, 7.f);
+
+
 							BulletDesc.pTarget = pTarget;
 							_vector vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);						
 							BulletDesc.eCollisionGroup = PLAYER;
@@ -154,6 +158,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 							BulletDesc.eCollisionGroup = PLAYER;
 							BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
 
+							
 							BulletDesc.fVelocity = 0.5f;
 							BulletDesc.vInitPositon = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
 							BulletDesc.fDeadTime = 6.f;
@@ -576,7 +581,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_E.mp3"), SOUND_EFFECT, 1.0f);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
-			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("SionTresShot.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellElecDischarge.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 			break;
 		}
 			
@@ -601,8 +606,8 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			//m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayStart.dat"), mWorldMatrix);
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_FUATU);//마그나
-			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_EFFECT, 0.5f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_E.wav"), SOUND_EFFECT, 0.5f);*/
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellGaleForce.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GALEFORCE);
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
 			break;
@@ -630,9 +635,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); // 메테오
 
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
-
-			/*dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_METEOR);
-			break;*/
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellDevineSabor2.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
 			_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)) * 2;
@@ -642,25 +645,23 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartFlash.dat"), mWorldMatrix);
 			m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
 			break;
-
-			break;
 		}
-		case Client::CPlayerState::STATE_SKILL_ATTACK4:
+		case Client::CPlayerState::STATE_SKILL_ATTACK4: //elecdischarge
 		{
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); //얼음떨구기
-																							/* Make Effect */
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN);
+																							
 			_vector vOffset = { 0.f,3.f,0.f,0.f };
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
-			//CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_E.mp3"), SOUND_EFFECT, 1.0f);
+			
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
 			break;
 		}
-		case Client::CPlayerState::STATE_SKILL_ATTACK5:
+		case Client::CPlayerState::STATE_SKILL_ATTACK5: //devine
 		{
-			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); // 비가우수수
-		//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); // 비가우수수
+			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); 
+		//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); 
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.7f);
 
 			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -675,7 +676,7 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			break;
 		}
 
-		case Client::CPlayerState::STATE_SKILL_ATTACK6:
+		case Client::CPlayerState::STATE_SKILL_ATTACK6: //meteor
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); 
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_F.mp3"), SOUND_EFFECT, 1.0f);
@@ -722,6 +723,9 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 void CPlayer_RinwellSkillAttack_State::Exit(void)
 {
 	__super::Exit();
+
+	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+	pCamera->Set_Zoom(false, 3.f, 1.f, 6.f, 10.f);
 
 	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }

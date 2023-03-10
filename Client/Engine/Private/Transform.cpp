@@ -490,7 +490,7 @@ void CTransform::LookDir(_fvector vDir)
 void CTransform::LookAtExceptY(_fvector vAt)
 {
 	_vector		vLook = XMVectorSetY(vAt, m_WorldMatrix.m[3][1]) - Get_State(STATE_TRANSLATION);
-	if (XMVectorGetX(XMVectorEqual(vLook, XMVectorSet(0.f, 0.f, 0.f, 0.f))) == 0)
+	if (XMVectorGetX(XMVectorEqual(vLook, XMVectorSet(0.f, 0.f, 0.f, 0.f))) != 0)
 		return;
 
 	_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
