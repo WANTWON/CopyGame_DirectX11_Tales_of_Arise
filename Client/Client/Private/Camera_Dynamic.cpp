@@ -1102,8 +1102,8 @@ void CCamera_Dynamic::BossRoom_Camera(_float fTimeDelta)
 		m_fTime = 0.f;
 	}
 
-	if (XMVectorGetX(FinalPos) < 0.f)
-		FinalPos = XMVectorSetX(FinalPos, 0.f);
+	if (XMVectorGetX(FinalPos) < -10.f)
+		FinalPos = XMVectorSetX(FinalPos, -10.f);
 
 	if (XMVectorGetX(FinalPos) > 128.f)
 		FinalPos = XMVectorSetX(FinalPos, 128.f);

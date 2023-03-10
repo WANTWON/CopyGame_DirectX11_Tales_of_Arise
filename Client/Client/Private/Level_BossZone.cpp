@@ -229,10 +229,9 @@ void CLevel_BossZone::LastAttackCheck()
 	if (iMonsterSize == 1 && m_bSecondCreated)
 	{
 		CMonster* pMonster = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster());
-		if (pMonster->Get_Stats().m_fCurrentHp <= pMonster->Get_Stats().m_fMaxHp *0.1f)
+		if (pMonster->Get_Stats().m_fCurrentHp <= pMonster->Get_Stats().m_fMaxHp *0.3f)
 		{
 			m_bFinal = true;
-			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("FinalOverLimit.dat"), XMMatrixIdentity());
 			CPlayerManager* pPlayerManager = CPlayerManager::Get_Instance();
 
 			HANDLE hFile = 0;
