@@ -295,7 +295,7 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 			{
 				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 				if (pCollided)
-					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, true);
+					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, 4.f, HIT_DOWN);
 
 				m_bCollision = true;
 			}
@@ -307,7 +307,7 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 			{
 				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 				if (pCollided)
-					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, true);
+					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, 4.f, HIT_DOWN);
 
 				m_b2th_Collision = true;
 			}
@@ -319,7 +319,7 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 			{
 				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 				if (pCollided)
-					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, true);
+					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, 4.f, HIT_DOWN);
 
 				m_b3th_Collision = true;
 			}
@@ -331,7 +331,7 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 			{
 				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 				if (pCollided)
-					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, true);
+					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, 4.f, HIT_DOWN);
 
 				m_b4th_Collision = true;
 			}
@@ -343,7 +343,7 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 			{
 				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 				if (pCollided)
-					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, true);
+					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, 4.f, HIT_DOWN);
 
 				m_b5th_Collision = true;
 			}
@@ -355,7 +355,7 @@ CAstralDoubt_State * CBattle_RushState::LateTick(_float fTimeDelta)
 			{
 				CPlayer* pCollided = dynamic_cast<CPlayer*>(pCollisionTarget);
 				if (pCollided)
-					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, true);
+					pCollided->Take_Damage(rand() % (800 - 700 + 1) + 700, m_pOwner, 4.f, HIT_DOWN);
 
 				m_b6th_Collision = true;
 			}

@@ -33,9 +33,11 @@ public:
 	CBaseObj* Get_Owner() { return m_WeaponDesc.pOwner; }
 	void On_Collider(void) { m_isCollider = true; }
 	void Off_Collider(void) { m_isCollider = false; }
-	void Set_WeaponDesc(WEAPONDESC tWeaponDesc); 
+	void Set_WeaponDesc(WEAPONDESC tWeaponDesc);
 	void Collision_Immediate();
 	_bool Get_SoundStart() { m_bSoundStart; }
+	void Set_Rotation(_bool bRotation) { m_isRotation = bRotation; }
+	void Reset_RotateTime(void) { m_fRotateTime = 0.f; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -71,6 +73,10 @@ private:
 	_float m_fNormalAttack4TimeDelta = 0.f;
 
 	_float m_fSoundStopTimeDelta = 0.f;
+
+	_bool m_isRotation = false;
+
+	_float m_fRotateTime = 0.f;
 
 public:
 	static CWeapon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

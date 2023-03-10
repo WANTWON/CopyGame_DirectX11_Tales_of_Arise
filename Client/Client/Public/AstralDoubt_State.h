@@ -334,7 +334,7 @@ protected:
 		_vector vAfterScale, vAfterRotQuat, vAfterPos;
 		XMMatrixDecompose(&vAfterScale, &vAfterRotQuat, &vAfterPos, m_pOwner->Get_Transform()->Get_WorldMatrix());
 
-		_vector vLerpRot = XMQuaternionSlerp(XMQuaternionNormalize(vRotQuat), XMQuaternionNormalize(vAfterRotQuat), 0.5f);
+		_vector vLerpRot = XMQuaternionSlerp(XMQuaternionNormalize(vRotQuat), XMQuaternionNormalize(vAfterRotQuat), 0.3f);
 
 		_matrix LerpMatrix = XMMatrixScalingFromVector(vScale) * XMMatrixRotationQuaternion(vLerpRot) * XMMatrixTranslationFromVector(vPos);
 

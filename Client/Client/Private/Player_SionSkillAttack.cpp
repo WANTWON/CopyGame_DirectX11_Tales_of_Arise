@@ -142,7 +142,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 								return nullptr;
 							m_fEventStart = pEvent.fStartTime;
 							m_iCount++;
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E.wav"), SOUND_SION_EFF, 0.5f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_TEST.wav"), SOUND_SION_EFF, 0.5f);
 						}
 					}
 				}

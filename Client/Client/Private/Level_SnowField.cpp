@@ -113,7 +113,7 @@ HRESULT CLevel_SnowField::Initialize()
 	g_fSoundVolume = 0.f;
 
 	CGameInstance::Get_Instance()->StopAll();
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_SnowField_2.wav"), g_fSoundVolume);
+	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_SnowyFields.wav"), g_fSoundVolume);
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Nature_blizzard.wav"), SOUND_NATURE, 0.3f);
 	CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_StrikeAttack(false);
 

@@ -65,12 +65,12 @@ HRESULT CRinwellSkills::Initialize(void * pArg)
 
 		break;
 	case DIVINE_SABER:
-		/*vOffset = XMVectorSet(0.f, m_fRadius + 1.f, 0.f, 0.f);
+		vOffset = XMVectorSet(0.f, m_fRadius + 1.f, 0.f, 0.f);
 		vLocation = m_BulletDesc.vTargetPosition + vOffset;
 		m_pTransformCom->Set_State(CTransform::STATE::STATE_TRANSLATION, vLocation);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberRing.dat"), mWorldMatrix);*/
+		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("DivineSaberRing.dat"), mWorldMatrix);
 
 		vOffset = XMVectorSet(0.f, m_fRadius + 0.5f, 0.f, 0.f);
 		vLocation = m_BulletDesc.vTargetPosition + vOffset;
@@ -414,6 +414,14 @@ void CRinwellSkills::Collision_Check()
 	{
 	case PHOTON_FLASH:
 		__super::Collision_Check();
+		if (m_bDead)
+		{
+			if (m_bNormalHit == false)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack_Hit.wav"), SOUND_RINWELL_NORMAL, 0.6f);
+				m_bNormalHit = true;
+			}
+		}
 		break;
 	case HOLY_RANCE_BULLET:
 		m_HitLagDesc.bLockOnChange = false;

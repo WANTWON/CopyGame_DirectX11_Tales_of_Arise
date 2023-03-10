@@ -89,12 +89,13 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						}
 					}
 					else
+					{
 						if (!m_bSkill_R_Sound)
 						{
 							CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_R_SkillSound.wav"), SOUND_ALPHEN_EFF, 0.4f);
 							m_bSkill_R_Sound = true;
 						}
-			
+					}
 						break;
 
 				case Client::CPlayerState::STATE_SKILL_ATTACK_E:
@@ -107,27 +108,31 @@ CPlayerState * CAlphenSkillState::Tick(_float fTimeDelta)
 						}
 					}
 					else
+					{
 						if (!m_bSkill_E_Sound)
 						{
 							CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_E_SkillSound.wav"), SOUND_ALPHEN_EFF, 0.5f);
 							m_bSkill_E_Sound = true;
 						}
+					}
 						break;
 
 				case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 					if (m_bIsFly)
+					{
 						if (!m_bSkill_JumpF_Sound)
 						{
 							CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_F.wav"), SOUND_ALPHEN_EFF, 0.7f);
 							m_bSkill_JumpF_Sound = true;
 						}
+					}
 
-					else
-						if (!m_bSkill_F_Sound)
-						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_ALPHEN_EFF, 0.3f);
-							m_bSkill_F_Sound = true;
-						}
+					//else
+					//	if (!m_bSkill_F_Sound)
+					//	{
+					//		CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_F.wav"), SOUND_ALPHEN_EFF, 0.3f);
+					//		m_bSkill_F_Sound = true;
+					//	}
 						break;
 
 				}
@@ -650,7 +655,7 @@ void CAlphenSkillState::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_RYUUSEIZIN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YOUSEONGJIN);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound+Voice_Jump_E.wav"), SOUND_ALPHEN_VOICE, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Jump_E_Voice.wav"), SOUND_ALPHEN_VOICE, 0.7f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillSound_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 0.3f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("PlayerSkillVoice_Jump_E.wav"), SOUND_EFFECT_ALPHEN, 0.25f);
 			

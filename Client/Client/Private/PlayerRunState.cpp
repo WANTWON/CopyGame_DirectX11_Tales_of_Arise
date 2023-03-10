@@ -296,7 +296,7 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 	CBattleManager* pBattleManager = CBattleManager::Get_Instance();
 	if (STATETYPE_START == m_eStateType)
 	{
-		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.05f);
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.15f);
 		
 		Move(fTimeDelta);
 
