@@ -186,9 +186,9 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 
 						CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-						pCamera->Set_Zoom(true, 8.f, 4.f, 6.f, 10.f);
+						pCamera->Set_Zoom(true, 4.f, 4.f, 6.f, 10.f);
 						if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC )
-							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.5f, true);
+							dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.5f, true);
 
 
 						CBullet::BULLETDESC BulletDesc;
