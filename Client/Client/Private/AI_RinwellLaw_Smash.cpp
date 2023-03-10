@@ -235,7 +235,7 @@ CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 
 	}
 
-	if (m_bBullet)
+	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
 
@@ -245,8 +245,13 @@ CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 			{
 				CUI_Manager::Get_Instance()->Set_UIStrike(true);
 				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
+				m_bScreen = true;
+				if (m_bStrikeBlur)
+				{
+					m_pOwner->Set_ResetStrikeBlur(true);
+					m_bStrikeBlur = false;
+				}
 			}
-
 		}
 	}
 

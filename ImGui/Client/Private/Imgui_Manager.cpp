@@ -5989,6 +5989,9 @@ void CImgui_Manager::Set_Animation()
 		case MODEL_LAW:
 			lstrcat(pAnimationDataFilePath, TEXT("Law/Law_Animation_Add.dat"));
 			break;
+		case MODEL_TREASURE:
+			lstrcat(pAnimationDataFilePath, TEXT("TreasureBox02/TreasureBox02_Animation_Add.dat"));
+			break;
 		}
 
 		CModel* pPlayerModel = (CModel*)pGameInstance->Get_Component(LEVEL_GAMEPLAY, TEXT("Layer_Player"), TEXT("Com_Model"));

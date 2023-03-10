@@ -216,17 +216,19 @@ CMonsterLawState * CMonsterLaw_Strike2::LateTick(_float fTimeDelta)
 
 	}
 
-	if (m_bBullet)
+	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
-
 		if (m_fFadeTime > 1.f)
 		{
-
 			CUI_Manager::Get_Instance()->Set_UIStrike(true);
 			CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
-
-
+			m_bScreen = true;
+			if (m_bStrikeBlur)
+			{
+				m_pOwner->Set_ResetStrikeBlur(true);
+				m_bStrikeBlur = false;
+			}
 		}
 	}
 
@@ -235,6 +237,9 @@ CMonsterLawState * CMonsterLaw_Strike2::LateTick(_float fTimeDelta)
 
 void CMonsterLaw_Strike2::Enter()
 {
+	m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
+	m_bStrikeBlur = false;
+
 	//m_pOwner->Set_StrikeAttack(true);
 
 
@@ -260,6 +265,8 @@ void CMonsterLaw_Strike2::Exit()
 {
 	if (m_bStrikeBlur)
 	{
+		/*m_pOwner->Set_ResetStrikeBlur(true);*/
+		m_pOwner->Get_Renderer()->Set_ZoomBlur(false);
 		m_bStrikeBlur = false;
 	}
 

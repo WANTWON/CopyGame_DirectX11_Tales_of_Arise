@@ -19,6 +19,9 @@ public:
 	virtual void Exit() override;
 
 private:
+	void Reset_Effects();
+
+private:
 	_float m_fTime = 0.f;
 	vector<class CEffect*> m_pEffects;
 };

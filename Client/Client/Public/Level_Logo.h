@@ -18,18 +18,6 @@ public:
 
 public:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
-	HRESULT Ready_InstancingForPooling(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Npc(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Deco_SnowField(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_SnowDecoObject(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_BossMapObject(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_RestaurantObject(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_CityMapObject(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_WorkToolMapObject(const _tchar* pLayerTag);
-
-	HRESULT Ready_Layer_Interact_SnowField(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Interact_Restaurant(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Interact_WorkTool(const _tchar* pLayerTag);
 
 
 private:

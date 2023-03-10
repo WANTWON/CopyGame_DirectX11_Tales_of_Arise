@@ -89,7 +89,7 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 	/* For.Prototype_Component_Model_SWO2(R00) */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_SWO2(R00)"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO2(R00)/SWO2(R00).dat"))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/AlphenWeapon/SWO00/SWO0.dat"))))
 		return E_FAIL;
 	pImgui->m_WeaponObj.push_back("SWO2(R00)");
 

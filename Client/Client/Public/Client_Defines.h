@@ -117,5 +117,6 @@ extern bool		g_bUIMade;
 extern float	g_fSoundVolume;
 extern float	g_fSoundNatureVolume;
 extern bool		g_bIsSoundOn;
+extern bool		g_bEnd;
 
 using namespace Client;

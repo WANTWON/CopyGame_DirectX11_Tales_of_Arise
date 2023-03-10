@@ -221,6 +221,11 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 			{
 				if (m_fSoundStart != pEvent.fStartTime)
 				{
+					//Camera Shaking 
+					if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+						dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.5f, 0.1f);
+
+
 					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_WalkSound.wav"), SOUND_NATURE, 0.2f);
 					m_fSoundStart = pEvent.fStartTime;
 				}
@@ -235,11 +240,7 @@ CAstralDoubt_State * CBattleWalkState::Tick(_float fTimeDelta)
 
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
-				//Camera Shaking 
-				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-					dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.5f, 0.1f);
-
-
+				
 
 				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 

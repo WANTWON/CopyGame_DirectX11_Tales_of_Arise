@@ -101,7 +101,7 @@ PLAYER_MODE CPlayerManager::Check_ActiveMode(CPlayer * pPlayer)
 	if(pPlayer->Get_PlayerID() == RINWELL && m_bChangetoboss)
 		return UNVISIBLE;
 
-	if (pPlayer == nullptr)
+	if (pPlayer == nullptr || g_bEnd)
 		return ACTIVE;
 
 	if (m_bBattleMode == true && CBattleManager::Get_Instance()->Get_IsOneonOneMode() == false)

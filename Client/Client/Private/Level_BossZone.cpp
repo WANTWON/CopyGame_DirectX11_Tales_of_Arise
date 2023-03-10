@@ -105,7 +105,7 @@ void CLevel_BossZone::Tick(_float fTimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
-		LEVEL eNextLevel = LEVEL_SNOWFIELD;
+		LEVEL eNextLevel = LEVEL_CITY;
 
 		m_pCollision_Manager->Clear_AllCollisionGroup();
 		pGameInstance->Set_DestinationLevel(eNextLevel);
@@ -229,6 +229,9 @@ void CLevel_BossZone::LastAttackCheck()
 	if (iMonsterSize == 1 && m_bSecondCreated)
 	{
 		CMonster* pMonster = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster());
+		if (!pMonster)
+			return;
+
 		if (pMonster->Get_Stats().m_fCurrentHp <= pMonster->Get_Stats().m_fMaxHp *0.3f)
 		{
 			m_bFinal = true;
@@ -363,6 +366,7 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Off_IsFly();
 	pPlayer->Change_Level(LEVEL_BOSS);
 	pPlayer->Set_IsActionMode(true);
+	pPlayer->Set_BattlePose(false);
 
 
 	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
@@ -376,6 +380,8 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Check_Navigation();
 		iter->Change_Level(LEVEL_BOSS);
 		iter->Set_IsActionMode(true);
+		iter->Set_BattlePose(false);
+
 		i++;
 	}
 	

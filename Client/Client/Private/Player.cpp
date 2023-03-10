@@ -101,7 +101,6 @@ int CPlayer::Tick(_float fTimeDelta)
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
 		return OBJ_NOEVENT;
 
-
 	if (m_eLevel == LEVEL_SNOWFIELD && CBattleManager::Get_Instance()->Get_IsBattleMode())
 		return OBJ_NOEVENT;
 
@@ -110,101 +109,8 @@ int CPlayer::Tick(_float fTimeDelta)
 		return OBJ_NOEVENT;
 
 	m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
-
-	if (m_bOverLimit &&  m_tInfo.fCurrentHp > 0)
-	{
-		/* Overlimit Effect */
-		if (!m_bIsOverlimiEffectSpawned)
-		{
-			EffectSpawn_Overlimit();
-			m_bIsOverlimiEffectSpawned = true;
-		}
-		
-		EffectUpdate_Overlimit();
-		m_fAuraTimer += fTimeDelta;
-
-		/* Mana Bar */
-		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
-		m_fOverLimitTimer += fTimeDelta;
-		if (m_fOverLimitTimer > 0.2f)
-		{
-			m_fOverLimitTimer = 0.f;
-			m_tInfo.fCurrentOverlimitGauge -= 1.f;
-
-			/* Reset */
-			if (m_tInfo.fCurrentOverlimitGauge <= 0.f)
-			{
-				m_tInfo.fCurrentOverlimitGauge = 100.f;
-				m_bOverLimit = false;
-				m_fOverLimitTimer = 0.f;
-				m_bIsOverlimiEffectSpawned = false;
-				m_fAuraTimer = 0.f;
-				EffectStop_Overlimit();
-			}
-		}
-	}
-
-
-	if (m_bManaRecover)
-		m_tInfo.fCurrentMp += 0.02f;
-
-	if (m_tInfo.fCurrentMp >= m_tInfo.fMaxMp)
-		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
-
-
-	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
-	{	
-		if (!m_bIsPose)
-		{
-			m_bIsPose = true;
-
-			/* Set State */
-			if (this == CPlayerManager::Get_Instance()->Get_ActivePlayer())
-			{
-				CPlayerState* pPlayerState = new Player::CPlayerPoseState(this, CPlayerState::STATE_POSE);
-				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
-			}
-			else
-			{
-				CPlayerState* pPlayerState = new Player::CIdleState(this, CIdleState::IDLE_MAIN);
-				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
-			}
-
-			CAIState* pAIState = new AIPlayer::CAIPoseState(this, CAIState::STATE_POSE);
-			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
-		}
-
-		if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
-		{
-			/*_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;*/
-			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
-				BoostAttack();
-		}
-
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
-		{
-			CUI_Manager::Get_Instance()->MinusCP(10);
-			m_tInfo.fCurrentHp += 100.f;
-			if (m_bDead)
-				m_bDead = false;
-			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
-			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
-		}
-		else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
-			Take_Damage((_int)m_tInfo.fCurrentHp, nullptr);
-		else if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
-		{
-			if (CPlayerManager::Get_Instance()->Get_ActivePlayer() == this)
-			{
-				CPlayerState* pState = new CPlayerOverlimit(this);
-				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
-			}
-		}
-
-	}
-	else if (m_bIsPose)
-		m_bIsPose = false;
-
+	BattleModeSetting(fTimeDelta);
+	
 	switch (m_ePlayerMode)
 	{
 	case Client::ACTIVE:
@@ -381,7 +287,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 			_float fCollDistance = fRadiusSum - XMVectorGetX(XMVector4Length(vDirection));
 
-			if ((fCollDistance > 0) && (XMVectorGetY(vPlayerPos) >= XMVectorGetY(vMonsterPos)))
+			if ((fCollDistance > 0) && (XMVectorGetY(vPlayerPos) >= (XMVectorGetY(vMonsterPos) - 0.5f)))
 			{
 				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vDirection) * fRadiusSum);
 				_vector vLerpPos = XMVectorLerp(vPlayerPos, XMVectorSetY(vNewPos, XMVectorGetY(vPlayerPos)), 0.5f);
@@ -882,6 +788,8 @@ void CPlayer::RecoverHP(_float hp)
 
 void CPlayer::HandleInput()
 {
+	if (g_bEnd)
+		return;
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 	CCamera* pCamera = pCameraManager->Get_CurrentCamera();
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_DYNAMIC)
@@ -1029,6 +937,101 @@ void CPlayer::BoostAttack()
 		Play_AISkill(RINWELL);
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_tInfo.fCurrentBoostGuage>= 100.f && m_ePlayerID == LAW)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
 		Play_AISkill(LAW);
+}
+
+void CPlayer::BattleModeSetting(_float fTimeDelta)
+{
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode())
+	{
+		if (!m_bIsPose)
+		{
+			m_bIsPose = true;
+
+			/* Set State */
+			if (this == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+			{
+				CPlayerState* pPlayerState = new Player::CPlayerPoseState(this, CPlayerState::STATE_POSE);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			}
+			else
+			{
+				CPlayerState* pPlayerState = new Player::CIdleState(this, CIdleState::IDLE_MAIN);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pPlayerState);
+			}
+
+			CAIState* pAIState = new AIPlayer::CAIPoseState(this, CAIState::STATE_POSE);
+			m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		}
+
+		if (!CBattleManager::Get_Instance()->IsAllMonsterDead())
+		{
+			/*_float debug = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage;*/
+			if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
+				BoostAttack();
+		}
+
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_8) && CUI_Manager::Get_Instance()->Get_CP() >= 0)
+		{
+			CUI_Manager::Get_Instance()->MinusCP(10);
+			m_tInfo.fCurrentHp += 100.f;
+			if (m_bDead)
+				m_bDead = false;
+			CPlayerState* pState = new CIdleState(this, CIdleState::IDLE_SIDE);
+			m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+		}
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_9))
+			Take_Damage((_int)m_tInfo.fCurrentHp, nullptr);
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_L))
+		{
+			if (CPlayerManager::Get_Instance()->Get_ActivePlayer() == this)
+			{
+				CPlayerState* pState = new CPlayerOverlimit(this);
+				m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pState);
+			}
+		}
+
+	}
+
+	if (m_bOverLimit &&  m_tInfo.fCurrentHp > 0 && CBattleManager::Get_Instance()->IsAllMonsterDead() == false)
+	{
+		/* Overlimit Effect */
+		if (!m_bIsOverlimiEffectSpawned)
+		{
+			EffectSpawn_Overlimit();
+			m_bIsOverlimiEffectSpawned = true;
+		}
+
+		EffectUpdate_Overlimit();
+		m_fAuraTimer += fTimeDelta;
+
+		/* Mana Bar */
+		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
+		m_fOverLimitTimer += fTimeDelta;
+		if (m_fOverLimitTimer > 0.2f)
+		{
+			m_fOverLimitTimer = 0.f;
+			m_tInfo.fCurrentOverlimitGauge -= 1.f;
+
+			/* Reset */
+			if (m_tInfo.fCurrentOverlimitGauge <= 0.f)
+			{
+				m_tInfo.fCurrentOverlimitGauge = 100.f;
+				m_bOverLimit = false;
+				m_fOverLimitTimer = 0.f;
+				m_bIsOverlimiEffectSpawned = false;
+				m_fAuraTimer = 0.f;
+				EffectStop_Overlimit();
+			}
+		}
+	}
+	
+
+
+	if (m_bManaRecover)
+		m_tInfo.fCurrentMp += 0.02f;
+
+	if (m_tInfo.fCurrentMp >= m_tInfo.fMaxMp)
+		m_tInfo.fCurrentMp = m_tInfo.fMaxMp;
 }
 
 //m_powner
