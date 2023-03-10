@@ -269,7 +269,11 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 								if (!m_bTyourengadan_5)
 								{
 									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
-									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
+									vector<CEffect*> Tyourengadan = CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
+
+									_matrix EffectWorldMatrix = Tyourengadan.front()->Get_Transform()->Get_WorldMatrix();
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Particles.dat"), EffectWorldMatrix);
+
 									m_bTyourengadan_5 = true;
 								}
 							}

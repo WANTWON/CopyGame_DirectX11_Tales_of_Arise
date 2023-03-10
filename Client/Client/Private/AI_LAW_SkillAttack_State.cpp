@@ -210,7 +210,11 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 							{
 								if (!m_bRondsenpu)
 								{
-									CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_1.dat"), mWorldMatrix);
+									vector<CEffect*> Rondsenpu = CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_1.dat"), mWorldMatrix);
+
+									_matrix EffectWorldMatrix = Rondsenpu.front()->Get_Transform()->Get_WorldMatrix();
+									CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_Particles.dat"), EffectWorldMatrix);
+
 									m_bRondsenpu = true;
 								}
 							}
@@ -299,7 +303,11 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 								if (!m_bTyourengadan_5)
 								{
 									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
-									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
+									vector<CEffect*> Tyourengadan = CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
+
+									_matrix EffectWorldMatrix = Tyourengadan.front()->Get_Transform()->Get_WorldMatrix();
+									CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Particles.dat"), EffectWorldMatrix);
+
 									m_bTyourengadan_5 = true;
 								}
 							}
