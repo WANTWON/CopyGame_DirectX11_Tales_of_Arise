@@ -249,18 +249,22 @@ CAIState * CAI_AlphenLaw_Smash::LateTick(_float fTimeDelta)
 		
 	}
 
-	if (m_bBullet)
+	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
-
-		if (m_fFadeTime > 1.f)
+		if (m_fFadeTime > .85f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::LAW)
 			{
 				CUI_Manager::Get_Instance()->Set_UIStrike(true);
 				CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"));
+				m_bScreen = true;
+				if (m_bStrikeBlur)
+				{
+					m_pOwner->Set_ResetStrikeBlur(true);
+					m_bStrikeBlur = false;
+				}
 			}
-
 		}
 	}
 

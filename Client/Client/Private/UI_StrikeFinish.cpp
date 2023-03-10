@@ -44,8 +44,7 @@ int CUI_StrikeFinish::Tick(_float fTimeDelta)
 			if (m_bfadein)
 				m_fAlpha += 0.04f;
 
-
-			if (m_ftimer > 2.f)
+			if (m_ftimer > 1.5f)
 			{
 				CUI_Manager::Get_Instance()->Set_UIStrike(false);
 				return OBJ_DEAD;

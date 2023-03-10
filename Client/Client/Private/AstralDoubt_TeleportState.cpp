@@ -44,6 +44,8 @@ CAstralDoubt_State * CAstralDoubt_TeleportState::Tick(_float fTimeDelta)
 
 CAstralDoubt_State * CAstralDoubt_TeleportState::LateTick(_float fTimeDelta)
 {
+	Reset_Effects();
+
 	if (m_bIsAnimationFinished)
 	{
 		switch (m_eStateId)
@@ -140,4 +142,13 @@ void CAstralDoubt_TeleportState::Enter()
 
 void CAstralDoubt_TeleportState::Exit()
 {
+}
+
+void CAstralDoubt_TeleportState::Reset_Effects()
+{
+	for (auto& pEffect : m_pEffects)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
 }

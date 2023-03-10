@@ -27,6 +27,7 @@ private:
 	_float m_fShakingTime = 0.f;
 	_bool m_bShaking = false;
 	_bool  m_bBullet = false;
+	_bool m_bScreen = false;
 
 	_bool m_bAlphenStrike_1 = false;
 	_bool m_bAlphenStrike_2 = false;
