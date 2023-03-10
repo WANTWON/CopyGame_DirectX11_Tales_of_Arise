@@ -196,14 +196,14 @@ HRESULT CLoader::Loading_ForClient()
 	/*if (FAILED(Loading_ForMaptoolSnowFieldModel()))
 		return E_FAIL;*/
 
-	if (FAILED(Loading_ForMaptoolBossRoomModel()))
+	/*if (FAILED(Loading_ForMaptoolBossRoomModel()))
 		return E_FAIL;
-
-	/*if (FAILED(Loading_ForMaptoolVillageModel()))
+*/
+	if (FAILED(Loading_ForMaptoolVillageModel()))
 		return E_FAIL;
 
 	 if (FAILED(Loading_ForMaptoolCityModel()))
-	 	return E_FAIL;*/
+	 	return E_FAIL;
 
 	 //if (FAILED(Loading_ForMaptoolPlant()))
 	 //	return E_FAIL;
@@ -217,12 +217,12 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForMaptoolKitchenModel()))
 		return E_FAIL;*/
 
-	//For Effect
-	if (FAILED(Loading_ForEffect()))
-		return E_FAIL;
-	 
-	if (FAILED(Loading_ForEffectTexture()))
-		return E_FAIL;
+	////For Effect
+	//if (FAILED(Loading_ForEffect()))
+	//	return E_FAIL;
+	// 
+	//if (FAILED(Loading_ForEffectTexture()))
+	//	return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
@@ -1349,15 +1349,15 @@ HRESULT CLoader::Loading_ForMaptoolCityModel()
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rock1"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Rock1.dat"))))
-	//	return E_FAIL;
-	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rock1"));
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rock1"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Rock1.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rock1"));
 
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rock2"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Rock2.dat"))))
-	//	return E_FAIL;
-	//CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rock2"));
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rock2"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Astrik/Rock2.dat"))))
+		return E_FAIL;
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rock2"));
 
 	/*For.Prototype_Component_Model_Water_Plane*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Water"),

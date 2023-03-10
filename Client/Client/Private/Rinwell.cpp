@@ -47,7 +47,7 @@ HRESULT CRinwell::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_tInfo.fMaxHp = 5000.f;
-	m_tInfo.fCurrentHp = 300.f;
+	m_tInfo.fCurrentHp = 5000.f;
 
 	m_tInfo.fMaxMp = 5.f;
 	m_tInfo.fCurrentMp = 2.3f;

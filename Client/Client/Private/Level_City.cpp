@@ -23,7 +23,10 @@ CLevel_City::CLevel_City(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 HRESULT CLevel_City::Initialize()
 {
 	CBattleManager::Get_Instance()->Set_BattleMode(false);
-	
+
+	if (CGameInstance::Get_Instance()->Get_PastLevelIndex() == LEVEL_BOSS)
+		g_bEnd = true;
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -35,9 +38,18 @@ HRESULT CLevel_City::Initialize()
 
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
+	
+	if (g_bEnd)
+	{
+		if (FAILED(Ready_Layer_PlayerEnding(TEXT("Layer_Player"))))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
+			return E_FAIL;
+	}
 
-	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
-		return E_FAIL;
 
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Backgorund")) == false)
 	{
@@ -46,21 +58,29 @@ HRESULT CLevel_City::Initialize()
 	}
 	
 
+	
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Child"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Gld"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NMM_SLV"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NFM"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Trigger"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Plc"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_FIA"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_DIM"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_GNL"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Duck"));
-	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Effects"));
+
+	if (!g_bEnd)
+	{
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco_Market"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing_Culling"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Child"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Gld"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NMM_SLV"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NFM"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Trigger"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Plc"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_FIA"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_DIM"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_GNL"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Duck"));
+		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Effects"));
+	}
+	
 
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
@@ -74,6 +94,10 @@ HRESULT CLevel_City::Initialize()
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LEVEL_CITY3.wav"), g_fSoundVolume);
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_mountain_Bird_Bug.wav"), SOUND_NATURE, 0.1f);
 	CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_Crowd.wav"), SOUND_CROWD, g_fSoundNatureVolume);
+
+	if(g_bEnd)
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("Ending.dat"), XMMatrixIdentity());
+
 	return S_OK;
 }
 
@@ -97,6 +121,8 @@ void CLevel_City::Tick(_float fTimeDelta)
 		CPlayerManager::Get_Instance()->Save_LastPosition();
 		m_pCollision_Manager->Clear_AllCollisionGroup();
 
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco_Market"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing_Culling"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Camera"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Backgorund"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
@@ -135,6 +161,8 @@ void CLevel_City::Tick(_float fTimeDelta)
 		CPlayerManager::Get_Instance()->Save_LastPosition();
 		m_pCollision_Manager->Clear_AllCollisionGroup();
 		
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco_Market"));
+		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing_Culling"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Camera"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Backgorund"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
@@ -269,6 +297,7 @@ HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Check_Navigation();
 	pPlayer->Off_IsFly();
 	pPlayer->Change_Level(LEVEL_CITY);
+	
 
 	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
 	_int i = 0;
@@ -285,6 +314,7 @@ HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 		iter->Check_Navigation();
 		iter->Off_IsFly();
 		iter->Change_Level(LEVEL_CITY);
+
 		i++;
 	}
 	
@@ -375,6 +405,65 @@ HRESULT CLevel_City::Ready_Layer_Camera(const _tchar * pLayerTag)
 
 	RELEASE_INSTANCE(CGameInstance);
 
+	return S_OK;
+}
+
+HRESULT CLevel_City::Ready_Layer_PlayerEnding(const _tchar * pLayerTag)
+{
+	CPlayerManager* pPlayerManager = CPlayerManager::Get_Instance();
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC Active1;
+	NONANIMDESC Active2;
+	NONANIMDESC AIplayer1;
+	NONANIMDESC AIplayer2;
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/Ending/PlayerPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	ReadFile(hFile, &(Active1), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(Active2), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(AIplayer1), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(AIplayer2), sizeof(NONANIMDESC), &dwByte, nullptr);
+	CloseHandle(hFile);
+
+	CPlayer* Alphen = pPlayerManager->Get_EnumPlayer(CPlayer::ALPHEN);
+	CPlayer* Sion = pPlayerManager->Get_EnumPlayer(CPlayer::SION);
+	CPlayer* Rinwell = pPlayerManager->Get_EnumPlayer(CPlayer::RINWELL);
+	CPlayer* Law = pPlayerManager->Get_EnumPlayer(CPlayer::LAW);
+
+	Alphen->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&Active1.vPosition), 1.f));
+	Sion->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&Active2.vPosition), 1.f));
+	Rinwell->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&AIplayer1.vPosition), 1.f));
+	Law->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&AIplayer2.vPosition), 1.f));
+
+	Alphen->Set_IsActionMode(true);
+	Sion->Set_IsActionMode(true);
+	Rinwell->Set_IsActionMode(true);
+	Law->Set_IsActionMode(true);
+
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	pPlayer->Off_IsFly();
+	pPlayer->Change_Level(LEVEL_CITY);
+	pPlayer->Get_Transform()->LookDir( XMVectorSet(0.f, 0.f, -1.f, 0.f));
+
+	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
+	_int i = 0;
+	for (auto& iter : pAIPlayers)
+	{
+		iter->Off_IsFly();
+		iter->Set_Overlimit(false);
+		iter->Change_Level(LEVEL_CITY);
+		iter->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, -1.f, 0.f));
+		i++;
+	}
+
+	CPlayerManager::Get_Instance()->Set_BattleMode(false);
 	return S_OK;
 }
 
