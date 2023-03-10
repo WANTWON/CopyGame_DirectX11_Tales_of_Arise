@@ -77,7 +77,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_E_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_RAW_EFF, 0.25f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_RAW_EFF, 0.85f);
 							m_bSkill_E_Sound = true;
 						}
 					}
@@ -88,7 +88,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_E_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_RAW_EFF, 0.25f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_RAW_EFF, 0.85f);
 							m_bSkill_E_Sound = true;
 						}
 					}
@@ -101,7 +101,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 					if (!m_bSkill_R_Sound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_RAW_EFF, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_RAW_EFF, 0.45f);
 						m_bSkill_R_Sound = true;
 					}
 					break;

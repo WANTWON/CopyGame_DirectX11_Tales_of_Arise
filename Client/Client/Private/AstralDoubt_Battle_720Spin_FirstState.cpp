@@ -89,7 +89,7 @@ CAstralDoubt_State * CBattle_720Spin_FirstState::Tick(_float fTimeDelta)
 			if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 			{
 				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-					dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.6f, 0.01f);
+					dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.6f, 0.1f);
 
 				CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
 

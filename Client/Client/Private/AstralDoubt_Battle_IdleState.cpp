@@ -69,160 +69,6 @@ CAstralDoubt_State * CBattle_IdleState::Tick(_float fTimeDelta)
 
 
 
-	///////////////////////////////////////기존의 코드- 나를 때린 대상, 근접 대상을 찾아 공격.//////////////////
-
-	//CBaseObj* pOrigin_DamageCause = nullptr;
-	//pOrigin_DamageCause = m_pOwner->Get_OrginDamageCauser();
-
-
-	//if (m_pCurTarget == nullptr)
-	//{
-	//	if (pOrigin_DamageCause == nullptr)
-	//	{
-	//		CBaseObj* pDamageCauser = nullptr;
-	//		pDamageCauser = m_pOwner->Get_DamageCauser();
-
-	//		if (pDamageCauser == nullptr)
-	//		{
-	//			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
-
-	//			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-
-	//			if (m_pCurTarget == nullptr)
-	//			{
-	//				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_ALLPLAYER_DEAD);
-	//			}
-	//		}
-
-	//		else if (pDamageCauser != nullptr)
-	//		{
-	//			CBaseObj* pDamageCauser = nullptr;
-	//			pDamageCauser = m_pOwner->Get_DamageCauser();
-	//			m_pOwner->Set_OrginDamageCauser(pDamageCauser);
-
-	//			m_pCurTarget = pDamageCauser;
-
-	//			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//		}
-	//	}
-
-	//	else if (pOrigin_DamageCause != nullptr)
-	//	{
-	//		if (pOrigin_DamageCause->Get_Info().fCurrentHp <= 0)
-	//		{
-	//			CBaseObj* pDamageCauser = nullptr;
-	//			pDamageCauser = m_pOwner->Get_DamageCauser();
-
-	//			if (pDamageCauser == nullptr)
-	//			{
-	//				CBaseObj* pCorpseNearby = nullptr;
-	//				pCorpseNearby = m_pOwner->Find_MinDistance_Target();
-
-	//				if (pCorpseNearby == nullptr)
-	//					return nullptr;
-
-	//				if (pCorpseNearby->Get_Info().fCurrentHp > 0)
-	//				{
-	//					m_pCurTarget = pCorpseNearby;
-	//					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//				}
-
-	//				else
-	//					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-
-	//			}
-
-	//			else if (pDamageCauser != nullptr)
-	//			{
-	//				if (pDamageCauser->Get_Info().fCurrentHp > 0)
-	//				{
-	//					pDamageCauser = m_pOwner->Get_DamageCauser();
-	//					m_pOwner->Set_OrginDamageCauser(pDamageCauser);
-
-	//					m_pCurTarget = pDamageCauser;
-
-	//					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//				}
-
-	//				CBaseObj* pCorpseNearby = nullptr;
-	//				pCorpseNearby = m_pOwner->Find_MinDistance_Target();
-
-	//				if (pCorpseNearby->Get_Info().fCurrentHp > 0)
-	//				{
-	//					m_pCurTarget = pCorpseNearby;
-	//					m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//					m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//				}
-	//				else
-	//					return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-	//			}
-	//		}
-
-	//		else if (pOrigin_DamageCause->Get_Info().fCurrentHp > 0)
-	//		{
-	//			m_pCurTarget = pOrigin_DamageCause;
-	//			m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//			m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//		}
-	//	}
-	//}
-
-	//else
-	//{
-	//	if (m_pCurTarget->Get_Info().fCurrentHp <= 0)
-	//	{
-	//		CBaseObj* pDamageCauser = nullptr;
-	//		pDamageCauser = m_pOwner->Get_DamageCauser();
-
-	//		if (pDamageCauser == nullptr)
-	//		{
-	//			CBaseObj* pCorpseNearby = nullptr;
-	//			pCorpseNearby = m_pOwner->Find_MinDistance_Target();
-
-	//			if (pCorpseNearby->Get_Info().fCurrentHp > 0)
-	//			{
-	//				m_pCurTarget = pCorpseNearby;
-	//				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//			}
-
-	//			else
-	//				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-	//		}
-
-	//		else if (pDamageCauser != nullptr)
-	//		{
-	//			if (pDamageCauser->Get_Info().fCurrentHp > 0)
-	//			{
-	//				pDamageCauser = m_pOwner->Get_DamageCauser();
-	//				m_pOwner->Set_OrginDamageCauser(pDamageCauser);
-
-	//				m_pCurTarget = pDamageCauser;
-
-	//				m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//				m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//			}
-
-	//			else
-	//				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_BRAVE);
-	//			//return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_LOOKOUT);
-	//		}
-	//	}
-
-	//	else if (m_pCurTarget->Get_Info().fCurrentHp > 0)
-	//	{
-	//		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-	//		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
-	//	}
-
-	//}
-
-
-	//ector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
 
 
 	
@@ -272,6 +118,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 				{
 					if (m_bLandSound == false)
 					{
+						dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.05f);
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("Boss_Asu_FootPress.wav"), SOUND_VOICE, 0.5f);
 						m_bLandSound = true;
 					}
@@ -282,6 +129,7 @@ CAstralDoubt_State * CBattle_IdleState::LateTick(_float fTimeDelta)
 					if (m_bAdventSound == false)
 					{
 						m_fSoundStart = pEvent.fStartTime;
+						dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.1f);
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Howling.wav"), SOUND_VOICE, 0.6f);
 						m_bAdventSound = true;
 					}

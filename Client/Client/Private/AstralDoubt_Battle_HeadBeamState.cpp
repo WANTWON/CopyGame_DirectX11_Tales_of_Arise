@@ -39,9 +39,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 		{
 			if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 			{
-				if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-					dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.5f, 0.1f);
-
+				
 				if (!m_bAnimFinish)
 				{
 					CGameInstance::Get_Instance()->PlaySounds(TEXT("BossAsu_Attack_HeadBeam.wav"), SOUND_OBJECT, 0.2f);
@@ -107,6 +105,9 @@ CAstralDoubt_State * CBattle_HeadBeamState::LateTick(_float fTimeDelta)
 
 void CBattle_HeadBeamState::Enter()
 {
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 0.5f, 0.1f);
+
 	m_eStateId = STATE_ID::STATE_IDLE;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAstralDoubt::ANIM::ATTACK_HEAD_BEAM);
 }

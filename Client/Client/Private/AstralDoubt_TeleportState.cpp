@@ -127,6 +127,9 @@ void CAstralDoubt_TeleportState::Enter()
 	}
 	case Client::CAstralDoubt_State::STATE_TELEPORT_END:
 	{
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 2.f, 0.2f);
+
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = XMVectorSetY(mWorldMatrix.r[3], 0.5f);
 		CEffect::PlayEffectAtLocation(TEXT("BosstelePort.dat"), mWorldMatrix);
