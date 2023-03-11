@@ -58,7 +58,7 @@ HRESULT CUI_Damagefont_Break::Initialize(void * pArg)
 
 int CUI_Damagefont_Break::Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon() || CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon() || CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION ||CUI_Manager::Get_Instance()->Get_UIStrike())
 		return OBJ_NOEVENT;
 	if (m_pPointer == nullptr)
 		return OBJ_DEAD;
@@ -149,7 +149,7 @@ int CUI_Damagefont_Break::Tick(_float fTimeDelta)
 
 void CUI_Damagefont_Break::Late_Tick(_float fTimeDelta)
 {
-	if (CUI_Manager::Get_Instance()->Get_Mainmenuon() || CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon() || CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION || CUI_Manager::Get_Instance()->Get_UIStrike())
 		return ;
 	
 	if (m_pPointer == nullptr)
