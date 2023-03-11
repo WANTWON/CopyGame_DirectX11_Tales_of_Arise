@@ -81,6 +81,15 @@ int UI_PartyjoinMsg_Law::Tick(_float fTimeDelta)
 		}
 		else
 		{
+			if (m_msgboxdesc.iCount == 7)
+			{
+				if(FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Kisara"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+					return OBJ_NOEVENT;
+
+				if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_Duohaelm"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+					return OBJ_NOEVENT;
+			}
+				
 			m_bfadeout = true;
 		}
 

@@ -10,6 +10,7 @@
 #include "BattleManager.h"
 #include "Monster.h"
 #include "PlayerState.h"
+#include "UI_InterectMsg.h"
 
 CLevel_LawBattle::CLevel_LawBattle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -28,7 +29,7 @@ HRESULT CLevel_LawBattle::Initialize()
 
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
-
+	dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Camera")) == false)
 	{
 		if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))

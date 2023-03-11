@@ -221,6 +221,8 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(64.f, 0.f, 64.f, 1.f));
 		m_pTransformCom->LookDir(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(13);
+		CPlayerManager::Get_Instance()->Get_EnumPlayer(1)->Set_IsActionMode(false);
+		CPlayerManager::Get_Instance()->Get_EnumPlayer(2)->Set_IsActionMode(false);
 
 		CMonsterLawState* pState = new CFascinate(this);
 		m_pState = m_pState->ChangeState(m_pState, pState);

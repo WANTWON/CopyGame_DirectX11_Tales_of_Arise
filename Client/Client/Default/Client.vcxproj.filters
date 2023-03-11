@@ -1368,7 +1368,7 @@
     <ClInclude Include="..\Public\UI_Portraitfront_sub1.h">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
     </ClInclude>
-    <ClInclude Include="UI_Portraitfront_sub2.h">
+    <ClInclude Include="..\Public\UI_Portraitfront_sub2.h">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
     </ClInclude>
   </ItemGroup>
@@ -2213,9 +2213,6 @@
     <ClCompile Include="..\Private\BerserkerJumpState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\HawkJumpState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Kisara.cpp">
       <Filter>02.GameObjects\01.Actor\00.Player\Player\04.Kisara</Filter>
     </ClCompile>
@@ -2228,7 +2225,7 @@
     <ClCompile Include="..\Private\UI_Portraitfront_sub1.cpp">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
     </ClCompile>
-    <ClCompile Include="UI_Portraitfront_sub2.cpp">
+    <ClCompile Include="..\Private\UI_Portraitfront_sub2.cpp">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
     </ClCompile>
   </ItemGroup>

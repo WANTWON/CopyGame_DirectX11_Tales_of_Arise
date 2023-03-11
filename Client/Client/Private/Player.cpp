@@ -981,6 +981,8 @@ void CPlayer::BoostAttack()
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::ACTION)
 		return;
 
+
+
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == ALPHEN)
 		Play_AISkill(ALPHEN);
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == SION)
