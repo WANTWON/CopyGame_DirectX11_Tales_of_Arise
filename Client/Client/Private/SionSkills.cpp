@@ -302,6 +302,8 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.fBlurPower = 6.f;
 		m_HitLagDesc.fBlurDetail = 10.f;
 		m_HitLagDesc.fTakeDamageTimer = 0.2f;
+		m_BulletDesc.iDamage = rand() % 100 + 100;
+
 		__super::Collision_Check();
 		break;
 	case NORMALATTACK:
@@ -312,6 +314,8 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.fShakingPower = 1.f;
 		m_HitLagDesc.fShakingMinusPower = 0.2f;
 		m_HitLagDesc.fTakeDamageTimer = 0.1f;
+		m_BulletDesc.iDamage = rand() % 100 + 100;
+
 		__super::Collision_Check();
 		break;
 	case GRAVITY_DEAD:
@@ -324,6 +328,7 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.bCritical = true;
 		m_HitLagDesc.fBlurPower = 6.f;
 		m_HitLagDesc.fBlurDetail = 10.f;
+		m_BulletDesc.iDamage = rand() % 100 + 300;
 
 		__super::Collision_Check();
 		break;
@@ -338,6 +343,7 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.bCritical = true;
 		m_HitLagDesc.fBlurPower = 6.f;
 		m_HitLagDesc.fBlurDetail = 10.f;
+		m_BulletDesc.iDamage = rand() % 100 + 300;
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
@@ -351,6 +357,7 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.bShaking = true;
 		m_HitLagDesc.fShakingPower = 0.4f;
 		m_HitLagDesc.fShakingMinusPower = 0.1f;
+		m_BulletDesc.iDamage = rand() % 100 + 200;
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))
 		{
@@ -365,6 +372,7 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.bShaking = true;
 		m_HitLagDesc.fShakingPower = 0.4f;
 		m_HitLagDesc.fShakingMinusPower = 0.1f;
+		m_BulletDesc.iDamage = rand() % 100 + 200;
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
@@ -375,6 +383,7 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.bShaking = true;
 		m_HitLagDesc.fShakingPower = 0.4f;
 		m_HitLagDesc.fShakingMinusPower = 0.1f;
+		m_BulletDesc.iDamage = rand() % 100 + 100;
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
@@ -391,6 +400,8 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.fZoomSpeed = 0.5f;
 		m_HitLagDesc.fBlurPower = 6.f;
 		m_HitLagDesc.fBlurDetail = 10.f;
+		m_BulletDesc.iDamage = rand() % 100 + 500;
+
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 			dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 		break;
@@ -407,6 +418,7 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.fBlurPower = 6.f;
 		m_HitLagDesc.fBlurDetail = 10.f;
 		m_HitLagDesc.fTakeDamageTimer = 0.2f;
+		m_BulletDesc.iDamage = rand() % 100 + 100;
 
 		switch (m_BulletDesc.eCollisionGroup)
 		{
@@ -415,6 +427,7 @@ void CSionSkills::Collision_Check()
 				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 			break;
 		case FRIEND:
+			m_BulletDesc.iDamage = rand() % 100 + 400;
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
 				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 			break;
@@ -429,6 +442,7 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.fHitLagTimer = 0.05f;
 		m_HitLagDesc.fTakeDamageTimer = 0.1f;
 		m_HitLagDesc.bShaking = false;
+		m_BulletDesc.iDamage = rand() % 100 + 100;
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 		{
@@ -440,7 +454,7 @@ void CSionSkills::Collision_Check()
 			else
 				vDirection = XMVectorSet(0.f, 0.f, XMVectorGetZ(vDirection), 0.f);
 
-			pCollisionTarget->Get_Transform()->Go_PosDir(CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_Object"))*0.5f, vDirection, dynamic_cast<CMonster*>(pCollisionTarget)->Get_Navigation());
+			pCollisionTarget->Get_Transform()->Go_PosDir(CGameInstance::Get_Instance()->Get_TimeDelta(TEXT("Timer_Object"))*0.1f, vDirection, dynamic_cast<CMonster*>(pCollisionTarget)->Get_Navigation());
 		}
 		break;
 	case NAILBULLET:

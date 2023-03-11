@@ -222,6 +222,8 @@ void CIdleState::Enter()
 {
 	__super::Enter();
 
+	m_pOwner->Set_TakeDamage_DelayFinish();
+
 	m_eStateId = STATE_ID::STATE_IDLE;
 
 	switch (m_pOwner->Get_PlayerID())

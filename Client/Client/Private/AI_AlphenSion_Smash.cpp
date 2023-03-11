@@ -94,6 +94,7 @@ CAIState * CAI_AlphenSion_Smash::Tick(_float fTimeDelta)
 						_vector vOffset = { 0.f,0.f,0.f,0.f };
 						CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
 						_matrix mWorldMatrix = pLockOn->Get_Transform()->Get_WorldMatrix();
+						mWorldMatrix.r[3] = m_vStrikeLockOnPos[0];
 						m_pEffects = CEffect::PlayEffectAtLocation(TEXT("AlphenSionStrike.dat"), mWorldMatrix);
 
 						m_bBullet = true;
@@ -246,6 +247,8 @@ void CAI_AlphenSion_Smash::Enter()
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenSion_Smash.wav"), SOUND_SMASH, 0.6f);
 		m_bSoundStart = true;
 	}
+
+	m_vStrikeLockOnPos = CPlayerManager::Get_Instance()->Get_StrikeLockOnPosition();
 	
 }
 
