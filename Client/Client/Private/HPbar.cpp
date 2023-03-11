@@ -25,8 +25,18 @@ HRESULT CHPbar::Initialize(void * pArg)
 	if (pArg != nullptr)
 		m_iIndex = *(_uint*)pArg;
 		//memcpy(&m_ScreenEffectdesc, pArg, sizeof(SCREENFADE_DESC));
-	if (m_iIndex == CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1)
-		m_bforMainPlayer = true;
+	if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() <= 3)
+	{
+		if (m_iIndex == CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1)
+			m_bforMainPlayer = true;
+	}
+	else
+	{
+		if(m_iIndex == 4)
+			m_bforMainPlayer = true;
+	}
+
+	
 
 	m_fSize.x = 200.0f;
 	m_fSize.y = 22.0f;

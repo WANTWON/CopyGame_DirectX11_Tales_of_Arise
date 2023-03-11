@@ -635,6 +635,20 @@ HRESULT CLevel_LawBattle::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	_int numcreate = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
+	//_int PlayerNum = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1);
+	if (numcreate >= 5)
+		numcreate = 5;
+	for (int i = 0; i < numcreate; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPbar"), LEVEL_LAWBATTLE, pLayerTag, &i)))
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_HPfont"), LEVEL_LAWBATTLE, pLayerTag, &i)))
+			return E_FAIL;
+
+	}
 
 	for (int i = 0; i < numcreate; ++i)
 	{

@@ -80,10 +80,14 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_eLevel = LEVEL_END;
 
 	m_pPlayerManager->Set_PlayerEnum(this, m_ePlayerID);
-
+	if (CPlayer::KISARA != m_ePlayerID || CPlayer::DUOHALEM != m_ePlayerID)
 	CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
+	else
+		m_bIsSionWeapon = false;
 
 	m_tInfo.fCurrentOverlimitGauge = 100.f;
+
+
 
 	return S_OK;
 }
@@ -107,8 +111,34 @@ int CPlayer::Tick(_float fTimeDelta)
 	if (pCameraManager->Get_CamState()== CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return OBJ_NOEVENT;
+	if (CPlayer::KISARA != m_ePlayerID && CPlayer::DUOHALEM != m_ePlayerID)
+		m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
 
-	m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	m_fBoostRecovertimer += fTimeDelta;
+
+	if (m_fBoostRecovertimer > 1.f)
+	{
+		if (m_tInfo.fCurrentBoostGuage < 100.f)
+		{
+			m_tInfo.fCurrentBoostGuage += 4.f;
+		}
+
+		if (m_tInfo.fCurrentBoostGuage >= 100.f)
+			m_tInfo.fCurrentBoostGuage = 100.f;
+
+
+			m_fBoostRecovertimer = 0.f;
+	}
+	
+
+	//else
+	//{
+	//	//m_ePlayerMode = 
+	//	
+	//}
+	
+
 	BattleModeSetting(fTimeDelta);
 	
 	switch (m_ePlayerMode)
@@ -185,14 +215,18 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
+	if (CPlayer::KISARA == m_ePlayerID || CPlayer::DUOHALEM == m_ePlayerID)
+		m_bIsSionWeapon = false;
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
-	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+
+	if (CPlayer::KISARA != m_ePlayerID && CPlayer::DUOHALEM != m_ePlayerID)
+	 m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
 
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
 		return;
 
-	if (nullptr != m_pRendererCom && eMode != UNVISIBLE)
+	if (nullptr != m_pRendererCom && m_ePlayerMode != UNVISIBLE)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		if (m_bIsSionWeapon)
@@ -218,7 +252,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 		dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera())->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 		return;
 	
-	switch (eMode)
+	switch (m_ePlayerMode)
 	{
 	case Client::ACTIVE:
 		if (!m_bStrikeAttack)
@@ -692,8 +726,12 @@ void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)
 void CPlayer::Play_AISkill(PLAYERID ePlayer)
 {
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
-	if (m_tInfo.fCurrentBoostGuage < 100.f || eMode != Client::AI_MODE)
-		return;
+	if (ePlayer != KISARA)
+	{
+		if (m_tInfo.fCurrentBoostGuage < 100.f || eMode != Client::AI_MODE)
+			return;
+	}
+	
 
 	switch (ePlayer)
 	{
@@ -716,9 +754,26 @@ void CPlayer::Play_AISkill(PLAYERID ePlayer)
 		break;
 	}
 	case Client::CPlayer::LAW:
+	{
 		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
 		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
 		break;
+	}
+
+	case Client::CPlayer::KISARA:
+	{
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+
+	case Client::CPlayer::DUOHALEM:
+	{
+		CAIState* pAIState = new AIPlayer::CAI_BoostAttack(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);
+		break;
+	}
+
 	}
 }
 
@@ -937,6 +992,17 @@ void CPlayer::BoostAttack()
 		Play_AISkill(RINWELL);
 	else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_tInfo.fCurrentBoostGuage>= 100.f && m_ePlayerID == LAW)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
 		Play_AISkill(LAW);
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_5) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == KISARA)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
+	{
+		Set_PlayerMode(AI_MODE);
+		Play_AISkill(KISARA);
+	}
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_6) && m_tInfo.fCurrentBoostGuage >= 100.f&&m_ePlayerID == DUOHALEM)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
+	{
+		Set_PlayerMode(AI_MODE);
+		Play_AISkill(DUOHALEM);
+	}
+		
 }
 
 void CPlayer::BattleModeSetting(_float fTimeDelta)
@@ -1168,11 +1234,7 @@ void CPlayer::Compute_CurrentIndex(LEVEL eLevel)
 
 void CPlayer::Change_Level(LEVEL eLevel)
 {
-	m_eLevel = eLevel;
 
-	CPlayerState* pNewState = new Player::CIdleState(this, CIdleState::IDLE_SIDE);
-	if (pNewState)
-		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
 }
 
 void CPlayer::Change_ShootState(void)

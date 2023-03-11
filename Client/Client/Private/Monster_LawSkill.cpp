@@ -82,47 +82,47 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 					if (nullptr == m_pRightFootCollider)
 						m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pRightFootCollider, m_pOwner);
-					if ((m_fEventStart != pEvent.fStartTime))
-					{
-						_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
-						_vector vRight = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_RIGHT));
-						_vector vPostion = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
-						CBullet::BULLETDESC BulletDesc;
-						BulletDesc.eCollisionGroup = MONSTER;
-						BulletDesc.eBulletType = CSionSkills::TRESVENTOS;
-						BulletDesc.vInitPositon = XMVectorSetY(vPostion, XMVectorGetY(vPostion) + 3.f) + vLook*2.f;
-						/*if (m_iCount == 0)
-							BulletDesc.vInitPositon -= vRight*2.f;
-						if (m_iCount == 1)
-							BulletDesc.vInitPositon += vRight*2.f;*/
-						 
-						BulletDesc.pOwner = m_pOwner;
-						BulletDesc.fVelocity = 5.f;
-						m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
-						BulletDesc.pTarget = m_pTarget;
-					
-						
+					//if ((m_fEventStart != pEvent.fStartTime))
+					//{
+					//	_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
+					//	_vector vRight = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_RIGHT));
+					//	_vector vPostion = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+					//	CBullet::BULLETDESC BulletDesc;
+					//	BulletDesc.eCollisionGroup = MONSTER;
+					//	BulletDesc.eBulletType = CSionSkills::TRESVENTOS;
+					//	BulletDesc.vInitPositon = XMVectorSetY(vPostion, XMVectorGetY(vPostion) + 3.f) + vLook*2.f;
+					//	/*if (m_iCount == 0)
+					//		BulletDesc.vInitPositon -= vRight*2.f;
+					//	if (m_iCount == 1)
+					//		BulletDesc.vInitPositon += vRight*2.f;*/
+					//	 
+					//	BulletDesc.pOwner = m_pOwner;
+					//	BulletDesc.fVelocity = 5.f;
+					//	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
+					//	BulletDesc.pTarget = m_pTarget;
+					//
+					//	
 
 
-						BulletDesc.vTargetDir = vLook;
-						
-						BulletDesc.vInitPositon -= vRight*6.f;
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-							return nullptr;
-						BulletDesc.vInitPositon += vRight*3.f;
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-							return nullptr;
-						BulletDesc.vInitPositon += vRight*3.f;
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-							return nullptr;
-						BulletDesc.vInitPositon += vRight*3.f;
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-							return nullptr;
-						BulletDesc.vInitPositon += vRight*3.f;
-						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-							return nullptr;
-						m_fEventStart = pEvent.fStartTime;
-					}
+					//	BulletDesc.vTargetDir = vLook;
+					//	
+					//	BulletDesc.vInitPositon -= vRight*6.f;
+					//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+					//		return nullptr;
+					//	BulletDesc.vInitPositon += vRight*3.f;
+					//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+					//		return nullptr;
+					//	BulletDesc.vInitPositon += vRight*3.f;
+					//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+					//		return nullptr;
+					//	BulletDesc.vInitPositon += vRight*3.f;
+					//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+					//		return nullptr;
+					//	BulletDesc.vInitPositon += vRight*3.f;
+					//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+					//		return nullptr;
+					//	m_fEventStart = pEvent.fStartTime;
+					//}
 					//m_iCount++;
 
 

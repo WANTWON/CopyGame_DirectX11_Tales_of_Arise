@@ -86,8 +86,8 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 	{
 		switch (rand() % 6)
 		{
-		case 0:
-			return new CMonster_LawSkill(m_pOwner, SKILL_E);
+		/*case 0:
+			return new CMonster_LawSkill(m_pOwner, SKILL_E);*/
 		case 1:
 			return new CMonster_LawDodge(m_pOwner, true);
 		case 2:

@@ -527,6 +527,8 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	_int numcreate = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
 	_int PlayerNum = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1);
+	if (numcreate >= 5)
+		numcreate = 5;
 	for (int i = 0; i < numcreate; ++i)
 	{
 		_uint number = i;

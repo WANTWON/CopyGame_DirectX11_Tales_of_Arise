@@ -495,7 +495,8 @@ HRESULT CLevel_BossZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	_int numcreate = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
-
+	if (numcreate >= 5)
+		numcreate = 5;
 	for (int i = 0; i < numcreate; ++i)
 	{
 		_uint number = i;
@@ -543,6 +544,12 @@ HRESULT CLevel_BossZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_left"), LEVEL_BOSS, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_sub1"), LEVEL_BOSS, pLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_sub2"), LEVEL_BOSS, pLayerTag)))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_SKill_button"), LEVEL_BOSS, pLayerTag)))
