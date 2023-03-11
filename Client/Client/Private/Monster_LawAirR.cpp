@@ -322,7 +322,7 @@ CMonsterLawState * CMonster_LawAirR::LateTick(_float fTimeDelta)
 		if (STATETYPE_MAIN == m_eStateType)
 		{
 			m_pOwner->Get_Model()->Reset_Anim(CLaw::ANIM::BTL_ATTACK_SANKAMOUSYUUKYAKU_LOOP);
-			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			//m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 		}
 			
 
