@@ -58,7 +58,7 @@ HRESULT CLevel_BossZone::Initialize()
 
 		g_fSoundVolume = 0.f;
 		CGameInstance::Get_Instance()->StopAll();
-
+		 
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BossRoomEnding.dat"), XMMatrixIdentity());
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BossKilledStroyBgm.wav"), g_fSoundVolume);
 	}

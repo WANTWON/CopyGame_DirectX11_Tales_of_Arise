@@ -68,11 +68,14 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 	Read_TextFiles_for_LawBossBattleEvent();
 	Read_TextFiles_for_LawBossBattleEnd();
 	Read_TextFiles_for_LastQuestStart();
-	void Read_TextFiles_for_Meetlastboss();
-	void Read_TextFiles_for_Secondbosson();
 
 
-	void Read_TextFiles_for_lastbossclear();
+	 Read_TextFiles_for_Meetlastboss();
+	 Read_TextFiles_for_Secondbosson();
+	 Read_TextFiles_for_Lastoverlimit();
+
+	 Read_TextFiles_for_lastbossclear();
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 

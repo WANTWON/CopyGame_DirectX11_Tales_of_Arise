@@ -1053,47 +1053,7 @@ void CUI_Dialoguepopup::Read_TextFiles_for_LawBattle()
 	m_vCurrentDialogue.push_back(matrix2);
 
 
-	std::ifstream file10("../../../Bin/Resources/popup/battlewithlaw10.txt");
-	if (file10.is_open())
-	{
-		while (file10.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialoguepopup_Lawbattle5[0].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//		Safe_Delete_Array(pszDialog);
-		}
-		file10.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-	std::ifstream file11("../../../Bin/Resources/popup/battlewithlaw11.txt");
-	if (file11.is_open())
-	{
-		while (file11.getline(fuck, 256))
-		{
-			_tchar* pszDialog = new _tchar[MAX_PATH];
-			m_vDialoguepopup_Lawbattle5[1].push_back(pszDialog);
-			ConverCtoWC(fuck);
-			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
-			//	Safe_Delete_Array(pszDialog);
-		}
-		file11.close();
-	}
-	else
-	{
-		std::cout << "Unable to open file\n";
-	}
-
-	vector<vector<_tchar*>> matrix5;
-	matrix5.push_back(m_vDialoguepopup_Lawbattle5[0]);
-	matrix5.push_back(m_vDialoguepopup_Lawbattle5[1]);
-
-	m_vCurrentDialogue.push_back(matrix5);
+	
 
 }
 
