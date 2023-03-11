@@ -83,14 +83,13 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		mWorldMatrix.r[3] = vLocation;
 		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayBurst.dat"), mWorldMatrix);
 
-
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MagnaRayBullet.dat"), mWorldMatrix);
 		m_pTransformCom->LookDir(m_BulletDesc.vTargetDir);
 		break;
 	case TRESVENTOS:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		m_pTransformCom->Set_WorldMatrix(m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix());
-		m_pTransformCom->LookDir(m_BulletDesc.vTargetDir);
+		//m_pTransformCom->LookDir(m_BulletDesc.vTargetDir);
 		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("TresVentusStart.dat"), mWorldMatrix);
@@ -843,22 +842,7 @@ void CSionSkills::Tick_TresVentos(_float fTimeDelta)
 		
 	CTransform* pTargetTransform = pTarget->Get_Transform();
 
-	//_vector vTargetDir = XMVector3Normalize( XMVectorSetY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION),3.f) - Get_TransformState(CTransform::STATE_TRANSLATION));
-	//
-	//
-	//_vector vLook = XMVector3Normalize(pTargetTransform->Get_State(CTransform::STATE_LOOK));
 
-	//m_pTransformCom->Go_PosDir( fTimeDelta,XMVectorSet(0.f, XMVectorGetY(vTargetDir), 0.f, 0.f));
-
-	//vLook = XMVectorSetY(vLook, 0.f);
-	//vTargetDir = XMVectorSetY(vTargetDir, 0.f);
-
-	//_float fDot = XMVectorGetX(XMVector3Dot(vTargetDir, vLook));
-
-	//if (fDot < 0.9f)
-	//	pTargetTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), 0.5f);
-
-	//m_pTransformCom->Go_PosTarget(fTimeDelta, pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	
 	m_pTransformCom->LookAt(XMVectorSetY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION), XMVectorGetY(pTarget->Get_TransformState(CTransform::STATE_TRANSLATION)) + 3.f));
 	m_pTransformCom->Go_Straight(fTimeDelta);

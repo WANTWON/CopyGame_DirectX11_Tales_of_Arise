@@ -1721,10 +1721,10 @@ HRESULT CPlayerCreater::Ready_Layer_NpcSnowField(const _tchar * pLayerTag)
 		}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMM_GLD")))
 		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_GLD;
+			/*NpcDesc.eNpcType = CSnowFieldNpc::MAN_GLD;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
 				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));*/
 
 		}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMO_DOK")))
@@ -1737,10 +1737,10 @@ HRESULT CPlayerCreater::Ready_Layer_NpcSnowField(const _tchar * pLayerTag)
 		}
 		else if (!wcscmp(pModeltag, TEXT("NPC_NMY_PLC")))
 		{
-			NpcDesc.eNpcType = CSnowFieldNpc::MAN_PLC;
+		/*	NpcDesc.eNpcType = CSnowFieldNpc::MAN_PLC;
 			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_SnowFieldNpc"), LEVEL_SNOWFIELD, pLayerTag, &NpcDesc)))
 				return E_FAIL;
-			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Npc"));*/
 
 		}
 		else if (!wcscmp(pModeltag, TEXT("Rinwell")))
