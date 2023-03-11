@@ -877,7 +877,7 @@ PS_OUT PS_DIALOGUECURSOR(PS_IN In)
 
 		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
 
-		float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+		float4 lerpcolor = lerp(float4(0.9176470588235294, 0.2313725490196078, 0.2588235294117647, 1.f), float4(0.9254901960784314, 0.5254901960784314, 0.5411764705882353, 1.f), maskcolor);
 
 		Out.vColor = lerpcolor;
 
@@ -896,7 +896,7 @@ PS_OUT PS_DIALOGUECURSORNOTMOVE(PS_IN In)
 
 	float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
 
-	float4 lerpcolor = lerp(float4(0.701f, 0.784f, 0.545f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), maskcolor);
+	float4 lerpcolor = lerp(float4(0.9176470588235294, 0.2313725490196078, 0.2588235294117647, 1.f), float4(0.9254901960784314, 0.5254901960784314, 0.5411764705882353, 1.f), maskcolor);
 
 	Out.vColor = lerpcolor;
 

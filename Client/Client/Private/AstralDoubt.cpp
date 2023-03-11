@@ -409,14 +409,23 @@ _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC H
 
 	if (iHp <= 0)
 	{
-		m_tStats.m_fCurrentHp = 0;
-		CBattleManager::Get_Instance()->Update_LockOn();
-		Check_AmILastMoster();
-
-
 		m_pModelCom->Set_TimeReset();
-		CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DEAD);
-		m_pState = m_pState->ChangeState(m_pState, pState);
+		if (!m_bLastStrikeAttack)
+		{
+			m_tStats.m_fLockonSmashGuage = 4.f;
+			m_tStats.m_fCurrentHp = 0;
+			CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DOWN);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+		}
+		else
+		{
+			m_tStats.m_fCurrentHp = 0;
+			CBattleManager::Get_Instance()->Update_LockOn();
+			Check_AmILastMoster();
+
+			CAstralDoubt_State* pState = new CBattle_Hit_AndDead(this, CAstralDoubt_State::STATE_DEAD);
+			m_pState = m_pState->ChangeState(m_pState, pState);
+		}
 
 		return 0;
 	}

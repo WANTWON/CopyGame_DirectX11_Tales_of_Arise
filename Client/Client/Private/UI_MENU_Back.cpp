@@ -972,7 +972,7 @@ HRESULT CUI_MENU_Back::Render()
 		break;
 
 	case 2:
-		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(11))))
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(13))))
 			return E_FAIL;
 
 

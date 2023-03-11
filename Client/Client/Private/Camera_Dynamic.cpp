@@ -135,6 +135,11 @@ void CCamera_Dynamic::Set_CamMode(CAMERAMODE _eCamMode)
 	if (_eCamMode == m_eCamMode)
 		return;
 
+	if (_eCamMode == CAM_LOCKON || _eCamMode == CAM_LOCKOFF)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("LockOnZoom.mp3"), SOUND_SYSTEM, 0.5f);
+	}
+
 	if (m_ePreCamMode != m_eCamMode)
 		m_ePreCamMode = m_eCamMode;
 

@@ -384,9 +384,7 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 		if (0.f >= m_fMethor)
 		{
 			m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-
 			m_eDmg_Direction = Calculate_DmgDirection();
-
 			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
