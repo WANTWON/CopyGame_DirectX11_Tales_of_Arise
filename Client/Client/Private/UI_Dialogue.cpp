@@ -503,14 +503,14 @@ HRESULT CUI_Dialogue::Render()
 	/*m_fFlowMAX = 1
 		m_fFlowCurrent*/
 
-	m_pShaderCom->Begin(UI_DIALOGUECURSORNONMOVE);
+	m_pShaderCom->Begin(UI_CURSORNOTMOVE);
 
 	m_pVIBufferCom->Render();
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(UI_DIALOGUECURSOR);
+	m_pShaderCom->Begin(UI_CURSOR);
 
 	m_pVIBufferCom->Render();
 

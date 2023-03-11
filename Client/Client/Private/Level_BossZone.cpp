@@ -777,6 +777,19 @@ HRESULT CLevel_BossZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"), LEVEL_BOSS, pLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_BOSS, pLayerTag)))
+		return E_FAIL;
+
+	for (int i = 0; i < 7; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_BOSS, pLayerTag, &i)))
+			return E_FAIL;
+
+
+	}
+
 
 	if (CBattleManager::Get_Instance()->Get_IsBossBattle())
 	{
