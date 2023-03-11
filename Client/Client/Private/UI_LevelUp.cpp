@@ -52,6 +52,11 @@ HRESULT CUI_LevelUp::Initialize(void * pArg)
 		m_bQuestStart = true;
 	}*/
 
+	if (!m_bLevelUp_Sound)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("LevelUp.wav"), SOUND_EFFECT, 0.17f);
+		m_bLevelUp_Sound = true;
+	}
 	return S_OK;
 }
 

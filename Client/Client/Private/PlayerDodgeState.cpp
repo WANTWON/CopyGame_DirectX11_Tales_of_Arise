@@ -206,7 +206,15 @@ CPlayerState * CDodgeState::HandleInput(void)
 CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 {
 	if (m_bDodgeEffect)
+	{
 		DodgeEffect();
+		
+		if (!m_bDodgeSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DodgeSound.wav"), SOUND_EFFECT, 1.0f);
+			m_bDodgeSound = true;
+		}
+	}
 
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN", 0.f);
 
@@ -489,7 +497,7 @@ void CDodgeState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DODGE_AIR);
 		else
 		{
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DodgeSound.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_NormalDodge.wav"), SOUND_VOICE, 0.6f);
 			switch (m_eDirection)
 			{
 			case Client::DIR_STRAIGHT:
@@ -513,7 +521,7 @@ void CDodgeState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_AIR);
 		else
 		{
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DodgeSound.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_NormalDodge.wav"), SOUND_VOICE, 0.6f);
 			switch (m_eDirection)
 			{
 			case Client::DIR_STRAIGHT:
@@ -538,7 +546,7 @@ void CDodgeState::Enter(void)
 
 		else
 		{
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DodgeSound.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_NormalDodge.wav"), SOUND_VOICE, 0.6f);
 			switch (m_eDirection)
 			{
 			case Client::DIR_STRAIGHT:
@@ -562,7 +570,7 @@ void CDodgeState::Enter(void)
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_AIR);
 		else
 		{
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_DodgeSound.wav"), SOUND_EFFECT, 1.0f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_NormalDodge.wav"), SOUND_VOICE, 0.6f);
 			switch (m_eDirection)
 			{
 			case Client::DIR_STRAIGHT:

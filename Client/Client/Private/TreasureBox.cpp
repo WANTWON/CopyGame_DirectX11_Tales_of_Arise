@@ -156,7 +156,7 @@ void CTreasureBox::Late_Tick(_float fTimeDelta)
 			{
 
 
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("BoxOpen.wav"), SOUND_OBJECT, 0.4f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Get_TreasureBox.wav"), SOUND_OBJECT, 0.8f);
 				m_bSoundStart = true;
 			}
 

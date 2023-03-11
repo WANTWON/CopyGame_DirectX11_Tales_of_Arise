@@ -127,6 +127,8 @@ private:
 
 	_float m_fIndex = 0;
 
+	//Sound
+	_bool m_bLevelUp_Sound = false;
 };
 
 END
