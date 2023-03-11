@@ -472,6 +472,12 @@
     <Filter Include="02.GameObjects\03.Effect\04.EffectObject%28NotTool%29">
       <UniqueIdentifier>{89e2a9fa-f6cd-441b-9177-3eb51a1d308c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Player\04.Kisara">
+      <UniqueIdentifier>{0c9e8525-b0c8-434f-ab40-dfb1678a6708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Player\05.Duohalem">
+      <UniqueIdentifier>{b3fabee1-8e7f-4920-af68-fefc12b59558}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1350,6 +1356,21 @@
     <ClInclude Include="..\Public\BerserkerJumpState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Kisara.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\04.Kisara</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duohalem.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\05.Duohalem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PartyjoinMsg_Law.h">
+      <Filter>02.GameObjects\04.UI\26.UI_PartyJoin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront_sub1.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront_sub2.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2191,6 +2212,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\BerserkerJumpState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Kisara.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\04.Kisara</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duohalem.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\05.Duohalem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PartyjoinMsg_Law.cpp">
+      <Filter>02.GameObjects\04.UI\26.UI_PartyJoin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront_sub1.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront_sub2.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

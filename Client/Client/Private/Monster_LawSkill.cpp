@@ -108,29 +108,29 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 					
 
 					break;
-				//case SKILL_STRIKE:
-				//	if ((m_fEventStart != pEvent.fStartTime))
-				//	{
-				//		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
-				//		//	CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-				//		//	if (pTarget == nullptr)
-				//		//		pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+			case SKILL_STRIKE:
+				if ((m_fEventStart != pEvent.fStartTime))
+				{
+					m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
+					//	CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+					//	if (pTarget == nullptr)
+					//		pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 
-				//			CBullet::BULLETDESC BulletDesc;
-				//			BulletDesc.eCollisionGroup = MONSTER;
-				//			BulletDesc.fVelocity = 1.f;
-				//			BulletDesc.eBulletType = CSionSkills::MAGNA_RAY;
-				//			BulletDesc.iDamage = 74;
-				//			BulletDesc.fDeadTime = 2.f;
-				//			BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
-				//			BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*4.f);
-				//			BulletDesc.pOwner = m_pOwner;
+						CBullet::BULLETDESC BulletDesc;
+						BulletDesc.eCollisionGroup = MONSTER;
+						BulletDesc.fVelocity = 1.f;
+						BulletDesc.eBulletType = CSionSkills::MAGNA_RAY;
+						BulletDesc.iDamage = 74;
+						BulletDesc.fDeadTime = 2.f;
+						BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
+						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*4.f);
+						BulletDesc.pOwner = m_pOwner;
 
-				//			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-				//				return nullptr;
-				//			m_fEventStart = pEvent.fStartTime;
-				//		
-				//	}
+						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							return nullptr;
+						m_fEventStart = pEvent.fStartTime;
+					
+				}
 				}
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)

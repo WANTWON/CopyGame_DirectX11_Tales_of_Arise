@@ -173,6 +173,8 @@ int CUI_SidePopup::Tick(_float fTimeDelta)
 
 
 	_uint index = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1;
+	if (index > 4)
+		index = 4;
 
 
 	m_fbrightpos += 0.015f;
@@ -194,7 +196,7 @@ int CUI_SidePopup::Tick(_float fTimeDelta)
 		if (m_fbrightpos_hpfont[i] >= 3.f)
 			m_fbrightpos_hpfont[i] = 0.f;
 	}
-	index = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1;
+	//index = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1;
 	for (_uint i = 0; i < index; ++i)
 	{
 		m_PlayersCurrentHP[i] = CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fCurrentHp;

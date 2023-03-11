@@ -4,6 +4,7 @@
 #include "PlayerManager.h"
 #include "Player.h"
 #include "UI_Dialoguepopup.h"
+#include "UI_PartyjoinMsg_Law.h"
 
 
 
@@ -235,6 +236,16 @@ int CUI_QuestClear::Tick(_float fTimeDelta)
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage"), LEVEL_STATIC, (TEXT("party")))))
 				return E_FAIL;
 			CUI_Manager::Get_Instance()->Set_Dialogue_section(6); //after quest 3 clear
+			break;
+
+		case 4:
+			UI_PartyjoinMsg_Law::MSGBOXDESC ddd;
+			ZeroMemory(&ddd, sizeof(UI_PartyjoinMsg_Law::MSGBOXDESC));
+			ddd.iIndex = 2;
+		//	ddd.iCount = 5;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage_Law"), LEVEL_STATIC, (TEXT("party")), &ddd)))
+				return E_FAIL;
+		//	CUI_Manager::Get_Instance()->Set_Dialogue_section(6); //after quest 3 clear
 			break;
 
 

@@ -174,10 +174,10 @@ int CUI_Portraitfront_top::Tick(_float fTimeDelta)
 		m_fAlpha += 0.0483f;
 	
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 사라질때
-	{
-		m_bfadeout = true;
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 사라질때
+	//{
+	//	m_bfadeout = true;
+	//}
 
 
 

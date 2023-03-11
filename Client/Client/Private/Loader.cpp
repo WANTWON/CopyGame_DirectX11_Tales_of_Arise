@@ -37,6 +37,9 @@
 
 #include "Rinwell.h"
 #include "Law.h"
+#include "Kisara.h"
+#include "Duohalem.h"
+
 
 #include "Ice_Wolf.h"
 #include "Berserker.h"
@@ -101,6 +104,10 @@
 #include "UI_Minigame1.h"
 #include "UI_Minigame2.h"
 #include "UI_MainPlayerMark.h"
+#include "UI_PartyjoinMsg_Law.h"
+#include "UI_Portraitfront_sub1.h"
+#include "UI_Portraitfront_sub2.h"
+
 
 
 //InteractObject
@@ -425,6 +432,14 @@ HRESULT CLoader::Loading_ForPrototype()
 		CUI_Portraitfront_left::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_sub1"),
+		CUI_Portraitfront_sub1::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Combo_Portraitfront_sub2"),
+		CUI_Portraitfront_sub2::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SKill_button"),
 		CUI_Skillbutton::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -525,6 +540,10 @@ HRESULT CLoader::Loading_ForPrototype()
 		CUI_PartyjoinMsg::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_PartyMessage_Law"),
+		UI_PartyjoinMsg_Law::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_JustDodgeEffect"),
 		CUI_JustDodgeEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -571,6 +590,14 @@ HRESULT CLoader::Loading_ForPrototype()
 	/*For.Prototype_GameObject_Player*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sion"),
 		CSion::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Kisara"),
+		CKisara::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Duohaelm"),
+		CDuohalem::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/*For.Prototype_GameObject_Terrain*/
@@ -818,6 +845,16 @@ HRESULT CLoader::Loading_ForStaticLevel()
 	/* For.Prototype_Component_Model_Sion */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Sion"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Sion/Sion.dat"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Model_Kisara */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Kisara"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Kisara/Kisara.dat"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Model_Duohalem */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Duohalem"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Duohalem/Duohalem.dat"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Sion */
@@ -1770,7 +1807,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portrait_front"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/portrait/battle_portrait_%d.dds"), 6))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/portrait/battle_portrait_%d.dds"), 8))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Portrait_Glow"),
@@ -1802,7 +1839,7 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENU_BACK"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/menuback/menuback%d.dds"), 14))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/menuback/menuback%d.dds"), 16))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MENU_ICON"),
@@ -1944,11 +1981,11 @@ HRESULT CLoader::Loading_ForUITexture()
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Partyjoin"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/partyjoin/partyjoin%d.dds"), 2))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/partyjoin/partyjoin%d.dds"), 8))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_dialogueportrait"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/dialogue/TalkUI_%d.dds"), 4))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/UI/dialogue/TalkUI_%d.dds"), 6))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_battleorder"),
