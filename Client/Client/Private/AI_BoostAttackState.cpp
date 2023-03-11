@@ -275,6 +275,22 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 
 					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 						m_bIsStateEvent = true;
+
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					{
+						if (!strcmp(pEvent.szName, "Shield"))
+						{
+							if (!m_bShieldSlam)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+								CEffect::PlayEffectAtLocation(TEXT("Shield_Slam.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Shield_Slam_Ring.dat"), mWorldMatrix);
+
+								m_bShieldSlam = true;
+							}
+						}
+					}
 				 
 				break;
 				case CPlayer::DUOHALEM:
@@ -350,6 +366,8 @@ void CAI_BoostAttack::Enter()
 {
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_Zoom(false);
+
+	m_bShieldSlam = false;
 
 	switch (m_eCurrentPlayerID)
 	{

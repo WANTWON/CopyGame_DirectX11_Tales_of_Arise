@@ -2637,6 +2637,16 @@ HRESULT CLoader::Loading_ForActor()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02/TreasureBox02.dat"))))
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("TreasureBox02");
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Kisara"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Kisara/Kisara.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Kisara");
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Duohalem"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Duohalem/Duohalem.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Duohalem");
 #pragma endregion Animaition
 
 
@@ -3138,6 +3148,10 @@ HRESULT CLoader::Loading_ForEffectTexture()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("HolyLanceGradient02"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/HolyLance/HolyLanceGradient02.png"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Shield"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Unique/Shield.png"), 1))))
 		return E_FAIL;
 
 

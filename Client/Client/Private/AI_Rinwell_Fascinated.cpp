@@ -83,15 +83,12 @@ void CAI_Rinwell_Fascinated::Exit()
 			pEffect = nullptr;
 	}
 
-		for (auto& iter : m_pEffects)
-		{
-			if (iter != nullptr)
-			{
-				iter->Set_Dead(true);
-				iter = nullptr;
-			}
-		}
-	
+	for (auto& pEffect : m_pEffects)
+	{
+		if (!pEffect)
+			continue;
+
+		pEffect->Set_Dead(true);
+		pEffect = nullptr;
+	}
 }
-
-
