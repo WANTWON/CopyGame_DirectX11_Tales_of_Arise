@@ -261,27 +261,25 @@ void CLevel_BossZone::BattleLateTick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
-			if (!m_bZumIn)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
-				m_bZumIn = true;
-			}
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
-			if (!m_bZumIn)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
-				m_bZumIn = true;
-			}
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
+		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
+		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
 		{
 			CUI_RuneEffect::RUNEDESC desc;
