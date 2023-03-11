@@ -37,6 +37,7 @@ private:
 	_float	   m_fMinLength = MAXDISTANCE;
 	_bool	   m_bZumIn = false;
 	_float	   m_fHitLegTime = 0.f;
+	
 
 public:
 	static CLevel_BattleZone* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

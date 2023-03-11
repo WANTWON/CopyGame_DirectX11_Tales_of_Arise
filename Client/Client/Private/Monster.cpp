@@ -544,6 +544,7 @@ void CMonster::Make_DeadEffect(CBaseObj * Target)
 
 void CMonster::Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
+
 	if (dynamic_cast<CPlayer*>(DamageCauser)->Get_PlayingBoost() && !m_bhitboost)
 	{
 		m_bhitboost = true;
@@ -554,14 +555,6 @@ void CMonster::Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 	}
 	else
 	{
-		if (m_tStats.m_iHitcount >= 60)
-		{
-			m_bDownState = true;
-			m_tStats.m_iHitcount = 0;
-			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
-				return;
-		}
-
 		if (m_tStats.m_iBedamagedCount >= 20)
 		{
 			m_bBedamageAnim = true;
@@ -577,20 +570,6 @@ void CMonster::Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
 				return;
 		}
-	}
-
-	
-
-
-
-	++m_tStats.m_iBedamagedCount;
-
-	if (m_tStats.m_iBedamagedCount >= 20)
-	{
-		m_bBedamageAnim = true;
-		m_tStats.m_iBedamagedCount = 0;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
-			return;
 	}
 
 
@@ -618,7 +597,8 @@ void CMonster::Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 	if (HitDesc.bCritical == true && DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer())
 	{
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("CriticalHit.wav"), SOUND_SKILL5, 1.0f);
-		testdesc.itype = 1;
+		testdesc.itype = FONT_CRITYCAL;
+		m_DamageOffset = 2.f;
 		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 		{
 
@@ -628,11 +608,12 @@ void CMonster::Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 	}
 	else
 	{
-		switch (rand() % 8)
+		switch (rand() % 10)
 		{
 		case 0:
 			//Critical
-			testdesc.itype = 1;
+			m_DamageOffset = 2.f;
+			testdesc.itype = FONT_CRITYCAL;
 			if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 			{
 
@@ -641,7 +622,8 @@ void CMonster::Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 			}
 			break;
 		case 1:
-			testdesc.itype = 2;
+			m_DamageOffset = 0.3f;
+			testdesc.itype = FONT_RESIST;
 			if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 			{
 
@@ -651,7 +633,8 @@ void CMonster::Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 			break;
 
 		case 2:
-			testdesc.itype = 3;
+			m_DamageOffset = 1.5f;
+			testdesc.itype = FONT_WEAKNESS;
 			if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 			{
 
@@ -659,8 +642,8 @@ void CMonster::Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 					return;
 			}
 			break;
-
 		default:
+			m_DamageOffset = 1.f;
 			testdesc.itype = 0;
 			testdesc.bisNormal = true;
 			if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
@@ -682,12 +665,18 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	if (fDamage <= 0 || m_bDead)
 		return 0;
 	
-	m_fTakeDamgeTime = HitDesc.fTakeDamageTimer;
-	m_pTarget = DamageCauser;
-	m_tStats.m_fCurrentHp-= (int)fDamage;
-	
 	++m_tStats.m_iHitcount;
 	++m_tStats.m_iBedamagedCount;
+
+	m_DamageOffset = 1.f;
+	Make_UIFont(fDamage, DamageCauser, HitDesc);
+	Make_GetAttacked_Effect(DamageCauser);
+
+	m_fTakeDamgeTime = HitDesc.fTakeDamageTimer;
+	m_pTarget = DamageCauser;
+	
+	m_tStats.m_fCurrentHp-= (int)fDamage * m_DamageOffset;
+	
 	
 
 	if (DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer())
@@ -725,8 +714,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
 		m_tStats.m_fLockonSmashGuage = 4.f;
 
-	Make_UIFont(fDamage, DamageCauser, HitDesc);
-	Make_GetAttacked_Effect(DamageCauser);
+	
 
 
 	if (!CBattleManager::Get_Instance()->Get_IsBossBattle())
