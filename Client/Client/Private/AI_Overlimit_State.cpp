@@ -108,6 +108,45 @@ CAIState * CAI_Overlimit_State::Tick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation();
 
+	switch (m_eCurrentPlayerID)
+	{
+	case CPlayer::ALPHEN:
+		if (!m_bAlphenSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenOverLimit.wav"), SOUND_OBJECT, 0.65f);
+			m_bAlphenSound = true;
+		}
+		break;
+
+	case CPlayer::SION:
+		if (!m_bSionSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionOverLimit.wav"), SOUND_OBJECT, 0.65f);
+			m_bSionSound = true;
+		}
+		break;
+
+	case CPlayer::RINWELL:
+		if (!m_bRinwellSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellOverLimit.wav"), SOUND_OBJECT, 0.65f);
+			m_bRinwellSound = true;
+		}
+		break;
+
+	case CPlayer::LAW:
+		if (!m_bLawSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawOverLimit.wav"), SOUND_OBJECT, 0.65f);
+			m_bLawSound = true;
+		}
+		break;
+
+
+	default:
+		break;
+	}
+
 	return nullptr;
 }
 

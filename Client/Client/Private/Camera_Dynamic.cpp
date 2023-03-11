@@ -492,13 +492,13 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 			{
 				if (XMouseMove < 0)
 				{
-					m_fAngle += 4.f;
+					m_fAngle += 2.f;
 					if (m_fAngle >= 360.f)
 						m_fAngle = 0.f;
 				}
 				else if (XMouseMove > 0)
 				{
-					m_fAngle -= 4.f;
+					m_fAngle -= 2.f;
 					if (m_fAngle <= 0.f)
 						m_fAngle = 360.f;
 				}
@@ -637,7 +637,7 @@ void CCamera_Dynamic::Battle_Camera(_float fTimeDelta)
 					else if (fDot > 0.3)
 						m_fAngle -= (0.9f - fDot)* 5.f;
 					else
-						m_fAngle -= (0.8f - fDot)* 7.f;
+						m_fAngle -= (0.9f - fDot)* 7.f;
 				}
 				else
 				{
@@ -779,29 +779,29 @@ void CCamera_Dynamic::LawBattle_Camera(_float fTimeDelta)
 
 		if (m_bTurn)
 		{
-			if (fDot < 0.9f)
+			if (fDot < 0.8f)
 			{
 				if (fRightDot > 0.f)
 				{
 					if (fDot > 0.8)
-						m_fAngle -= (0.9f - fDot)* 2.f;
+						m_fAngle -= (0.8f - fDot)* 2.f;
 					else if (fDot > 0.5)
-						m_fAngle -= (0.9f - fDot)* 3.f;
+						m_fAngle -= (0.8f - fDot)* 3.f;
 					else if (fDot > 0.3)
-						m_fAngle -= (0.9f - fDot)* 7.f;
+						m_fAngle -= (0.8f - fDot)* 7.f;
 					else
 						m_fAngle -= (0.8f - fDot)* 9.f;
 				}
 				else
 				{
 					if (fDot > 0.8)
-						m_fAngle += (0.9f - fDot)* 2.f;
+						m_fAngle += (0.8f - fDot)* 2.f;
 					else if (fDot > 0.5)
-						m_fAngle += (0.9f - fDot)* 3.f;
+						m_fAngle += (0.8f - fDot)* 3.f;
 					else if (fDot > 0.3)
-						m_fAngle += (0.9f - fDot)* 7.f;
+						m_fAngle += (0.8f - fDot)* 7.f;
 					else
-						m_fAngle += (0.9f - fDot)* 9.f;
+						m_fAngle += (0.8f - fDot)* 9.f;
 				}
 
 			}

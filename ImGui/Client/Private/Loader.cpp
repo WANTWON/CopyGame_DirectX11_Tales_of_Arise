@@ -188,19 +188,19 @@ HRESULT CLoader::Loading_ForClient()
 	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("HeightMapPlane"));
 
 
-	////For Maptool
-	//if (FAILED(Loading_ForActor()))
-	//	return E_FAIL;
+	//For Maptool
+	if (FAILED(Loading_ForActor()))
+		return E_FAIL;
 
 	//////For Maptool
 	/*if (FAILED(Loading_ForMaptoolSnowFieldModel()))
 		return E_FAIL;*/
 
 	/*if (FAILED(Loading_ForMaptoolBossRoomModel()))
-		return E_FAIL;
-*/
-	if (FAILED(Loading_ForMaptoolVillageModel()))
-		return E_FAIL;
+		return E_FAIL;*/
+
+	/*if (FAILED(Loading_ForMaptoolVillageModel()))
+		return E_FAIL;*/
 
 	/* if (FAILED(Loading_ForMaptoolCityModel()))
 	 	return E_FAIL;*/
@@ -217,12 +217,12 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForMaptoolKitchenModel()))
 		return E_FAIL;*/
 
-	////For Effect
-	//if (FAILED(Loading_ForEffect()))
-	//	return E_FAIL;
-	// 
-	//if (FAILED(Loading_ForEffectTexture()))
-	//	return E_FAIL;
+	//For Effect
+	if (FAILED(Loading_ForEffect()))
+		return E_FAIL;
+	 
+	if (FAILED(Loading_ForEffectTexture()))
+		return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
@@ -2599,10 +2599,10 @@ HRESULT CLoader::Loading_ForActor()
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("Sion");
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
 		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Rinwell");
+	pImgui->m_AnimObj.push_back("Rinwell");*/
 
 
 
@@ -2637,6 +2637,16 @@ HRESULT CLoader::Loading_ForActor()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/TreasureBox02/TreasureBox02.dat"))))
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("TreasureBox02");
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Kisara"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Kisara/Kisara.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Kisara");
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Duohalem"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Duohalem/Duohalem.dat"))))
+		return E_FAIL;
+	pImgui->m_AnimObj.push_back("Duohalem");
 #pragma endregion Animaition
 
 
@@ -2646,10 +2656,10 @@ HRESULT CLoader::Loading_ForActor()
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen_NonAnim"));
 
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell_NonAnim"),
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Rinwell/Rinwell.dat"))))
 		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell_NonAnim"));
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell"));
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NpcFemaleYoung"),
@@ -3138,6 +3148,10 @@ HRESULT CLoader::Loading_ForEffectTexture()
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("HolyLanceGradient02"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/HolyLance/HolyLanceGradient02.png"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Shield"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/Effect/Unique/Shield.png"), 1))))
 		return E_FAIL;
 
 

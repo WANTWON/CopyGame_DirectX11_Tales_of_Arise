@@ -404,7 +404,6 @@ CAIState * CAI_Sion_SkillState::Tick(_float fTimeDelta)
 							return nullptr;
 						m_fEventStart = pEvent.fStartTime;
 						m_iCount++;
-
 						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E.wav"), SOUND_EFFECT, 0.15f);
 					}
 

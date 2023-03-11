@@ -35,13 +35,13 @@ HRESULT CSnowFieldNpc::Initialize(void * pArg)
 		m_eState = HURT;
 		break;
 	case MAN_OLD:
-		m_eState = ANIM_OLD_MAN::CROSSONESARMS_ST;
+		m_eState = ANIM_OLD_MAN::CROSSONESARMS_ED;
 		break;
 	case MAN_GLD:
-		m_eState = ANIM_MAN_GLD::TALKING;
+		m_eState =1;
 		break;
 	case MAN_PLC:
-		m_eState = ANIM_MAN_PLC::IDLE;
+		m_eState = 1;
 		break;
 	case RINWELL_NPC:
 		m_eState = CRinwell::IDLE_SIDE;
@@ -49,7 +49,6 @@ HRESULT CSnowFieldNpc::Initialize(void * pArg)
 	}
 	
 	m_pModelCom->Set_CurrentAnimIndex(m_eState);
-
 	m_pNavigationCom->Compute_CurrentIndex_byXZ(Get_TransformState(CTransform::STATE_TRANSLATION));
 	Check_Navigation();
 
