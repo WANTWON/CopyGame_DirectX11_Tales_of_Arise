@@ -162,7 +162,12 @@ HRESULT CNonAnim::Render()
 		if (FAILED(m_pModelCom->SetUp_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, m_eShaderID)))
+		_bool bShouldDiscard = false;
+		if (!strcmp(m_ModelDesc.pModeltag, "Tannery") ||
+			!strcmp(m_ModelDesc.pModeltag, "Carpet3"))
+			bShouldDiscard = true;
+		
+		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, bShouldDiscard ? 10 : m_eShaderID)))
 			return E_FAIL;
 	}
 
