@@ -199,6 +199,7 @@ private:
 	_bool	m_b50Down = false;
 
 	_float	m_fMethor = 1000.f;
+	_float m_fHitSound = 0.f;
 
 public:
 	static CAiRinwell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

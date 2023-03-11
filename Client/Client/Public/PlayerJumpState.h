@@ -37,6 +37,11 @@ private:
 
 	//Sound
 	_bool m_bLandSound = false;
+
+	_bool m_bAlphenJumpSound = false;
+	_bool m_bSionJumpSound = false;
+	_bool m_bRinwellJumpSound = false;
+	_bool m_bLawJumpSound = false;
 };
 END
 END

@@ -115,6 +115,10 @@ void CAttackState::Enter()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_ATTACK_NORMAL_1);
 		else
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_ATTACK_NORMAL_AIR_1);
+
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack.wav"), SOUND_RINWELL_NORMAL_ATTCK, 0.6f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack_Voice1.wav"), SOUND_RINWELL_VOICE, 0.6f);
+
 		break;
 	}
 	case Client::STATETYPE_END:
@@ -170,6 +174,10 @@ void CAttackState::Enter()
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_ATTACK_NORMAL_2);
 		else
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_ATTACK_NORMAL_AIR_2);
+
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack.wav"), SOUND_RINWELL_NORMAL_ATTCK, 0.6f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack_Voice2.wav"), SOUND_RINWELL_VOICE, 0.6f);
+
 		break;
 	}
 	}

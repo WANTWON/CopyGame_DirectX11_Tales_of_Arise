@@ -294,13 +294,13 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 				}
 				break;
 
-			default:
-				if (!m_bLandSound)
-				{
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
-					m_bLandSound = true;
-				}
-				break;
+			//default:
+			//	if (!m_bLandSound)
+			//	{
+			//		CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+			//		m_bLandSound = true;
+			//	}
+			//	break;
 			}
 		
 	}
@@ -790,6 +790,7 @@ void CJumpState::Exit()
 {
 	if (STATETYPE_END == m_eStateType && Check_JumpEnd(1.f))
 	{
+
 		m_pOwner->Off_IsFly();
 		m_fTime = 0.f;
 	}
