@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "BattleManager.h"
+#include "CameraManager.h"
 
 CCP_Guage_font::CCP_Guage_font(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
@@ -28,14 +29,14 @@ HRESULT CCP_Guage_font::Initialize(void * pArg)
 	m_fSize.x = 14.f;
 	m_fSize.y = 19.f;
 	m_fPosition.x = 930.f + (m_iIndex * 15);
-	m_fPosition.y = 135;
+	m_fPosition.y = 75.f;
 
 	if (m_iIndex < 3)
 	{
 		m_fSize.x = 20.f;
 		m_fSize.y = 26.f;
 		m_fPosition.x = 930.f + (m_iIndex * 16);
-		m_fPosition.y = 135;
+		m_fPosition.y = 75.f;
 	}
 
 
@@ -71,7 +72,11 @@ HRESULT CCP_Guage_font::Initialize(void * pArg)
 
 int CCP_Guage_font::Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
+		return OBJ_NOEVENT;
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 		return OBJ_NOEVENT;
 
 	m_iMaxcp = CUI_Manager::Get_Instance()->Get_MAXCP();
@@ -188,17 +193,17 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 	if (m_iIndex < 3)
 	{
 		m_fPosition.x = 1065.f + (m_iIndex * 16);
-		m_fPosition.y = 300.f;
+		m_fPosition.y = 240.f;
 	}
 	else if (m_iIndex == 3)
 	{
 		m_fPosition.x = 1074.f + (m_iIndex * 13);
-		m_fPosition.y = 300.f;
+		m_fPosition.y = 240.f;
 	}
 	else
 	{
 		m_fPosition.x = 1070.f + (m_iIndex * 13);
-		m_fPosition.y = 300.f;
+		m_fPosition.y = 240.f;
 	}
 
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
@@ -213,8 +218,12 @@ int CCP_Guage_font::Tick(_float fTimeDelta)
 
 void CCP_Guage_font::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
-		return ;
+		return;
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+		return;
 
 	if (!m_bRender)
 		return;
