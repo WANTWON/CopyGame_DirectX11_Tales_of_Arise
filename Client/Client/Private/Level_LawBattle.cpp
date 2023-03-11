@@ -94,6 +94,10 @@ HRESULT CLevel_LawBattle::Initialize()
 		m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 		m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, -10.f, 20.f, 0.f));
 
+		CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
+		CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
+		CGameInstance::Get_Instance()->StopAll();
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_FightWith_Law.wav"), g_fSoundVolume);
 	}
 
 	
@@ -322,26 +326,26 @@ void CLevel_LawBattle::BattleLateTick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.7f);
 
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.7f);
 
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.7f);
 		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.7f);
 		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
 		{
@@ -665,7 +669,18 @@ HRESULT CLevel_LawBattle::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	}
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_LAWBATTLE, pLayerTag)))
+		return E_FAIL;
 
+	for (int i = 0; i < 7; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_LAWBATTLE, pLayerTag, &i)))
+			return E_FAIL;
+
+
+	}
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Comboline"), LEVEL_LAWBATTLE, pLayerTag)))
 		return E_FAIL;

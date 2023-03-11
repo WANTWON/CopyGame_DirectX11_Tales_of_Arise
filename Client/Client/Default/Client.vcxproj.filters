@@ -1371,6 +1371,12 @@
     <ClInclude Include="..\Public\UI_Portraitfront_sub2.h">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerBoostAttackState.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Damagefont_BoostBreak.h">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2227,6 +2233,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Portraitfront_sub2.cpp">
       <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerBoostAttackState.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\State\PlayerState\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Damagefont_BoostBreak.cpp">
+      <Filter>02.GameObjects\04.UI\19.UI_DamagaeFont</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

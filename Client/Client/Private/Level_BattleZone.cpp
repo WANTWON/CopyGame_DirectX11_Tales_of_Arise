@@ -618,6 +618,20 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MainPlayerMark"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	for (int i = 0; i < 7; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_BATTLE, pLayerTag, &i)))
+			return E_FAIL;
+
+
+	}
 	
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -697,8 +711,7 @@ void CLevel_BattleZone::Update_LockOnSetting()
 	}
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_CAPSLOCK))
 	{
-
-
+		
 		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
 		if (pLockOn != nullptr)
 		{
@@ -709,30 +722,32 @@ void CLevel_BattleZone::Update_LockOnSetting()
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.3f);
 
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.3f);
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.3f);
 			
 
 		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.3f);
 		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_End.wav"), SOUND_CROWD, 0.3f);
+
 			CUI_RuneEffect::RUNEDESC desc;
 			desc.position.x = 100.f;
 			desc.position.y = 100.f;
@@ -744,6 +759,8 @@ void CLevel_BattleZone::Update_LockOnSetting()
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_X))
 		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_End.wav"), SOUND_CROWD, 0.3f);
+
 			CUI_RuneEffect::RUNEDESC desc;
 			desc.position.x = 100.f;
 			desc.position.y = 100.f;

@@ -53,6 +53,8 @@ CRinwellState * CRinwellDownState::LateTick(_float fTimeDelta)
 
 void CRinwellDownState::Enter(void)
 {
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_DownSound.wav"), SOUND_SKILL4, 0.65f);
+
 	if (m_pOwner->Get_Stats().m_fCurrentHp < m_pOwner->Get_Stats().m_fMaxHp * 0.5f)
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_DAMAGE_AIR_LOOP);
 	else

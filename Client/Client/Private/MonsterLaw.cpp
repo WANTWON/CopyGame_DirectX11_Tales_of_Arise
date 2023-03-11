@@ -166,11 +166,14 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 		return OBJ_DEAD;
 	}
 
+	if (CGameInstance::Get_Instance()->Key_Down(DIK_PGDN))
+		m_bReadytokill = true;
+
 	if (CPlayerManager::Get_Instance()->Get_Changetoboss())
 	{
-		m_fFinalTimer += fTimeDelta;
+		//m_fFinalTimer += fTimeDelta;
 
-		if (m_fFinalTimer > 15.f)
+		if (m_bReadytokill)
 		{
 	//		if (m_fFinalStrikeOnetime)
 	//		{

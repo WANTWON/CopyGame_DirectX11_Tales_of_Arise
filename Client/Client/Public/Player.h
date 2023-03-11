@@ -80,6 +80,7 @@ public: /* Getter &  Setter */
 	void Set_PlayerState(class CPlayerState* pPlayerState) { m_pPlayerState = pPlayerState; }
 	void Set_PlayerCollectState(class CInteractObject* pObject = nullptr);
 	void Play_AISkill(PLAYERID ePlayer);
+	void Play_ActiveSkill(PLAYERID ePlayer);
 
 	void AI_RINWELL_Event();
 
@@ -129,6 +130,9 @@ public: /*For.State*/
 
 	void Set_HitState();
 	void Set_OverLimitState(); 
+
+	void Set_PlayingBoost(_bool tof) { m_bIsPlayingBoostAttack = tof; }
+	_bool Get_PlayingBoost() {	return m_bIsPlayingBoostAttack;}
 
 public: /*For.Navigation*/
 	void Change_Navigation(LEVEL eLevel);
@@ -197,6 +201,8 @@ protected: /* for 4 Player */
 	_bool m_bTakeDamage_Delay = false;
 
 	_float m_fBoostRecovertimer = 0.f;
+
+	_bool m_bIsPlayingBoostAttack = false;
 
 private:
 	_bool m_bLevelup = false;

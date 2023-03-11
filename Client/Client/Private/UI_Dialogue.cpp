@@ -79,7 +79,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 	if (m_bSexyEventEnd)
 	{
 		m_fSexyOffTimer += fTimeDelta;
-		if (m_fSexyOffTimer > 3.5f)
+		if (m_fSexyOffTimer > 1.5f)
 		{
 			m_bSexyEventEnd = false;
 			m_fSexyOffTimer = 0.f;
@@ -503,14 +503,14 @@ HRESULT CUI_Dialogue::Render()
 	/*m_fFlowMAX = 1
 		m_fFlowCurrent*/
 
-	m_pShaderCom->Begin(UI_DIALOGUECURSORNONMOVE);
+	m_pShaderCom->Begin(UI_CURSORNOTMOVE);
 
 	m_pVIBufferCom->Render();
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(UI_DIALOGUECURSOR);
+	m_pShaderCom->Begin(UI_CURSOR);
 
 	m_pVIBufferCom->Render();
 
@@ -2538,6 +2538,60 @@ void CUI_Dialogue::Read_TextFiles_for_LastQuestStart()
 		std::cout << "Unable to open file\n";
 	}
 
+	std::ifstream file13("../../../Bin/lastqueststart13.txt");
+	if (file13.is_open())
+	{
+		while (file13.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[13].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file13.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file14("../../../Bin/lastqueststart14.txt");
+	if (file14.is_open())
+	{
+		while (file14.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[14].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file14.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file15("../../../Bin/lastqueststart15.txt");
+	if (file15.is_open())
+	{
+		while (file15.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue15[15].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file15.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
 
 
 
@@ -2557,6 +2611,9 @@ void CUI_Dialogue::Read_TextFiles_for_LastQuestStart()
 	matrix.push_back(m_vDialogue15[10]);
 	matrix.push_back(m_vDialogue15[11]);
 	matrix.push_back(m_vDialogue15[12]);
+	matrix.push_back(m_vDialogue15[13]);
+	matrix.push_back(m_vDialogue15[14]);
+	matrix.push_back(m_vDialogue15[15]);
 
 
 	m_vCurrentDialogue.push_back(matrix);
@@ -2638,7 +2695,12 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	else
 		m_iPortraitnum = 100;
 
-	if(m_iPortraitnum <= 3)
+	if (m_iDialogueindex == 14)
+		m_iPortraitnum = 5;
+	else if (m_iDialogueindex == 15)
+		m_iPortraitnum = 4;
+
+	if(m_iPortraitnum <= 5)
 	{
 
 		m_fSize.x = 600.f;

@@ -282,6 +282,7 @@
     <ClInclude Include="..\Public\Monster_LawSkill.h" />
     <ClInclude Include="..\Public\Monster_Law_Move.h" />
     <ClInclude Include="..\Public\Monster_Law_StrikeTrigger2.h" />
+    <ClInclude Include="..\Public\PlayerBoostAttackState.h" />
     <ClInclude Include="..\Public\PlayerCreater.h" />
     <ClInclude Include="..\Public\PlayerDodgeState.h" />
     <ClInclude Include="..\Public\PlayerOverlimit.h" />
@@ -337,6 +338,7 @@
     <ClInclude Include="..\Public\UI_AlphaScreen.h" />
     <ClInclude Include="..\Public\UI_BattleResult.h" />
     <ClInclude Include="..\Public\UI_BossMonster_HPbar.h" />
+    <ClInclude Include="..\Public\UI_Damagefont_BoostBreak.h" />
     <ClInclude Include="..\Public\UI_Damagefont_Break.h" />
     <ClInclude Include="..\Public\UI_Dialogue_Caption.h" />
     <ClInclude Include="..\Public\UI_Get_item_Popup.h" />
@@ -577,6 +579,7 @@
     <ClCompile Include="..\Private\Monster_LawSkill.cpp" />
     <ClCompile Include="..\Private\Monster_Law_Move.cpp" />
     <ClCompile Include="..\Private\Monster_Law_StrikeTrigger2.cpp" />
+    <ClCompile Include="..\Private\PlayerBoostAttackState.cpp" />
     <ClCompile Include="..\Private\PlayerCreater.cpp" />
     <ClCompile Include="..\Private\PlayerDodgeState.cpp" />
     <ClCompile Include="..\Private\PlayerOverlimit.cpp" />
@@ -629,6 +632,7 @@
     <ClCompile Include="..\Private\UI_AlphaScreen.cpp" />
     <ClCompile Include="..\Private\UI_BattleResult.cpp" />
     <ClCompile Include="..\Private\UI_BossMonster_HPbar.cpp" />
+    <ClCompile Include="..\Private\UI_Damagefont_BoostBreak.cpp" />
     <ClCompile Include="..\Private\UI_Damagefont_Break.cpp" />
     <ClCompile Include="..\Private\UI_Dialogue_Caption.cpp" />
     <ClCompile Include="..\Private\UI_Get_item_Popup.cpp" />

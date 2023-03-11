@@ -10,6 +10,7 @@
 #include "BattleManager.h"
 #include "Monster.h"
 #include "AstralDoubt.h"
+#include "UI_InterectMsg.h"
 
 CLevel_BossZone::CLevel_BossZone(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -20,6 +21,7 @@ CLevel_BossZone::CLevel_BossZone(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CLevel_BossZone::Initialize()
 {
+	
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
 	if (FAILED(__super::Initialize()))
@@ -27,7 +29,7 @@ HRESULT CLevel_BossZone::Initialize()
 
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
-
+	dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Camera")) == false)
 	{
@@ -261,24 +263,24 @@ void CLevel_BossZone::BattleLateTick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.7f);
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.7f);
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.7f);
 		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Chat_Next.wav"), SOUND_CROWD, 0.7f);
 		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
 		{
@@ -447,6 +449,12 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 	{
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Kisara"), LEVEL_STATIC, TEXT("Layer_FPlayer"), nullptr)))
+		return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Duohaelm"), LEVEL_STATIC, TEXT("Layer_FPlayer"), nullptr)))
+		return E_FAIL;
 	}
 
 	HANDLE hFile = 0;
@@ -485,21 +493,40 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Set_BattlePose(false);
 
 
-	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
-	_vector vPosition[3] = { XMVectorSetW(XMLoadFloat3(&ModelDesc2.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc3.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc4.vPosition), 1.f) };
-	_int i = 0;
-	for (auto& iter : pAIPlayers)
-	{
-		iter->Set_State(CTransform::STATE_TRANSLATION, vPosition[i]);
-		iter->Change_Navigation(LEVEL_BOSS);
-		iter->Compute_CurrentIndex(LEVEL_BOSS);
-		iter->Check_Navigation();
-		iter->Change_Level(LEVEL_BOSS);
-		iter->Set_IsActionMode(true);
-		iter->Set_BattlePose(false);
 
-		i++;
-	}
+	_vector vPosition[3] = { XMVectorSetW(XMLoadFloat3(&ModelDesc2.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc3.vPosition), 1.f),XMVectorSetW(XMLoadFloat3(&ModelDesc4.vPosition), 1.f) };
+	
+	CPlayer* pSion = CPlayerManager::Get_Instance()->Get_EnumPlayer(1);
+	pSion->Set_State(CTransform::STATE_TRANSLATION, vPosition[0]);
+	pSion->Change_Navigation(LEVEL_BOSS);
+	pSion->Compute_CurrentIndex(LEVEL_BOSS);
+	pSion->Check_Navigation();
+	pSion->Change_Level(LEVEL_BOSS);
+	pSion->Set_IsActionMode(true);
+	pSion->Set_BattlePose(false);
+
+	CPlayer* pRinwell = CPlayerManager::Get_Instance()->Get_EnumPlayer(2);
+	pRinwell->Set_State(CTransform::STATE_TRANSLATION, vPosition[1]);
+	pRinwell->Change_Navigation(LEVEL_BOSS);
+	pRinwell->Compute_CurrentIndex(LEVEL_BOSS);
+	pRinwell->Check_Navigation();
+	pRinwell->Change_Level(LEVEL_BOSS);
+	pRinwell->Set_IsActionMode(true);
+	pRinwell->Set_BattlePose(false);
+
+	CPlayer* pLaw = CPlayerManager::Get_Instance()->Get_EnumPlayer(3);
+	pLaw->Set_State(CTransform::STATE_TRANSLATION, vPosition[2]);
+	pLaw->Change_Navigation(LEVEL_BOSS);
+	pLaw->Compute_CurrentIndex(LEVEL_BOSS);
+	pLaw->Check_Navigation();
+	pLaw->Change_Level(LEVEL_BOSS);
+	pLaw->Set_IsActionMode(true);
+	pLaw->Set_BattlePose(false);
+
+	
+
+	CPlayerManager::Get_Instance()->Get_EnumPlayer(4)->Set_IsActionMode(false);   //Set_IsActionMode
+	CPlayerManager::Get_Instance()->Get_EnumPlayer(5)->Set_IsActionMode(false);
 
 	CPlayerManager::Get_Instance()->Set_BattleMode(true);
 	CPlayerManager::Get_Instance()->Set_Ai_Check();
@@ -749,6 +776,19 @@ HRESULT CLevel_BossZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"), LEVEL_BOSS, pLayerTag)))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_BOSS, pLayerTag)))
+		return E_FAIL;
+
+	for (int i = 0; i < 7; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_BOSS, pLayerTag, &i)))
+			return E_FAIL;
+
+
+	}
 
 
 	if (CBattleManager::Get_Instance()->Get_IsBossBattle())

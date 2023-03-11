@@ -65,6 +65,7 @@ void CDamageState::Enter()
 {
 	if (m_eStateId == STATE_DAMAGE || m_eStateId ==  STATE_STRIKE_HIT)
 	{
+		//CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_DownSound.wav"), SOUND_SKILL4, 0.65f);
 		if (m_pOwner->Get_AirMode())
 		{
 			switch (m_eDmgDir)

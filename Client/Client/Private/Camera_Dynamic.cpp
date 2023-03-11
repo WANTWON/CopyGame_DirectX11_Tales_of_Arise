@@ -135,6 +135,11 @@ void CCamera_Dynamic::Set_CamMode(CAMERAMODE _eCamMode)
 	if (_eCamMode == m_eCamMode)
 		return;
 
+	if (_eCamMode == CAM_LOCKON || _eCamMode == CAM_LOCKOFF)
+	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("LockOnZoom.mp3"), SOUND_SYSTEM, 0.5f);
+	}
+
 	if (m_ePreCamMode != m_eCamMode)
 		m_ePreCamMode = m_eCamMode;
 
@@ -330,13 +335,13 @@ void CCamera_Dynamic::Room_Camera(_float fTimeDelta)
 		{
 			if (XMouseMove < 0)
 			{
-				m_fAngle += 4.f;
+				m_fAngle += 2.f;
 				if (m_fAngle >= 360.f)
 					m_fAngle = 0.f;
 			}
 			else if (XMouseMove > 0)
 			{
-				m_fAngle -= 4.f;
+				m_fAngle -= 2.f;
 				if (m_fAngle <= 0.f)
 					m_fAngle = 360.f;
 			}

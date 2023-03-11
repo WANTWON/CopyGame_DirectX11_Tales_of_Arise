@@ -254,6 +254,7 @@ void CAiRinwell::Tick_State(_float fTimeDelta)
 	if (pNewState)
 		m_pState = m_pState->ChangeState(m_pState, pNewState);
 
+	m_fHitSound += 0.01f;
 }
 
 void CAiRinwell::LateTick_State(_float fTimeDelta)
@@ -384,9 +385,7 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 		if (0.f >= m_fMethor)
 		{
 			m_pTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-
 			m_eDmg_Direction = Calculate_DmgDirection();
-
 			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 			m_pState = m_pState->ChangeState(m_pState, pState);
 		}
@@ -451,6 +450,12 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 
 			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
 			m_pState = m_pState->ChangeState(m_pState, pState);
+
+			if (1.5f < m_fHitSound)
+			{
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_DownSound.wav"), SOUND_SKILL4, 0.65f);
+				m_fHitSound = 0.f;
+			}
 		}
 	}
 	
