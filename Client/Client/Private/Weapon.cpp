@@ -69,7 +69,7 @@ int CWeapon::Tick(_float fTimeDelta)
 	{
 		m_fRotateTime += fTimeDelta;
 
-		_matrix		RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(90.f) * m_fRotateTime * 3.f);
+		_matrix		RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(90.f) * m_fRotateTime * 10.f);
 		_matrix CombinedMatrix = XMLoadFloat4x4(&m_CombinedWorldMatrix);
 
 		CombinedMatrix.r[0] = XMVector3TransformNormal(CombinedMatrix.r[0], RotationMatrix);
