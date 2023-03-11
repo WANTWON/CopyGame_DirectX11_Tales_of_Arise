@@ -213,8 +213,6 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 	{
 		m_pOwner->Check_Navigation_Jump();
 
-		if (!m_bLandSound)
-		{
 			switch (m_ePlayerID)
 			{
 			case CPlayer::ALPHEN:
@@ -304,7 +302,7 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 				}
 				break;
 			}
-		}
+		
 	}
 
 	return nullptr;
@@ -792,7 +790,6 @@ void CJumpState::Exit()
 {
 	if (STATETYPE_END == m_eStateType && Check_JumpEnd(1.f))
 	{
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
 		m_pOwner->Off_IsFly();
 		m_fTime = 0.f;
 	}
