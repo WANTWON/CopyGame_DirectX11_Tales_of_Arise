@@ -438,7 +438,6 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 	
 	if (pPlayer->Get_IsFly() == true)
 		pPlayer->Off_IsFly();
-
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;

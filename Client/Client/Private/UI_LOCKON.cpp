@@ -195,6 +195,9 @@ void CUI_LOCKON::Late_Tick(_float fTimeDelta)
 {
 	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
 		return ;
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+		return;
+
 	// Kill Strike Flash Effect when Strike Action starts.
 	if (!m_pEffects.empty() && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 	{

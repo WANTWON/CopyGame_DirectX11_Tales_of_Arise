@@ -16,7 +16,6 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype(void);
 	virtual HRESULT Initialize(void* pArg);
-
 public:
 	virtual _bool Is_AnimationLoop(_uint eAnimId) override;
 

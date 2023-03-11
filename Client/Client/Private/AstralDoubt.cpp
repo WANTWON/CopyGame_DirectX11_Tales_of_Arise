@@ -59,7 +59,7 @@ HRESULT CAstralDoubt::Initialize(void * pArg)
 
 	m_eMonsterID = ASTRAL_DOUBT;
 
-	m_tStats.m_fMaxHp = 50000;
+	m_tStats.m_fMaxHp = 500000;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10.f;
 	m_tStats.m_fWalkSpeed = 0.05f;
