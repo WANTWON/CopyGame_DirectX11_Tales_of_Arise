@@ -19,31 +19,7 @@ CPlayerState * CPlayerPoseState::HandleInput(void)
 
 CPlayerState * CPlayerPoseState::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-
-	if (CPlayer::ALPHEN == m_ePlayerID)
-	{
-		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-
-		CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
-
-		for (auto& pEvent : pEvents)
-		{
-			if (pEvent.isPlay)
-			{
-				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(true, 5.f);
-			}
-			else
-			{
-				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-				{
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(false, 1.f);
-					//dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Reset_RotateTime();
-				}
-			}
-		}
-	}
+	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 0.5f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
 	m_pOwner->Check_Navigation();
 
@@ -65,7 +41,7 @@ void CPlayerPoseState::Enter(void)
 	switch (m_ePlayerID)
 	{
 	case CPlayer::ALPHEN:
-		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ADVENT);
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HADOUMEPPU_START);
 		break;
 	case CPlayer::SION:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ADVENT);
