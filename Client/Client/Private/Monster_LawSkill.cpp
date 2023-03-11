@@ -79,11 +79,23 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 					if (nullptr == m_pRightFootCollider)
 						m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pRightFootCollider, m_pOwner);
+
+					if (!m_bSkill_E_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_LAW_SKILL, 0.65f);
+						m_bSkill_E_Sound = true;
+					}
 					break;
 				case SKILL_R:
 					if (nullptr == m_pRightFootCollider)
 						m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pRightFootCollider, m_pOwner);
+
+					if (!m_bSkill_R_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_LAW_SKILL, 0.45f);
+						m_bSkill_R_Sound = true;
+					}
 					break;
 				case SKILL_F:
 					if (!strcmp(pEvent.szName, "RH"))
@@ -106,6 +118,11 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 					}
 					//m_fEventStartTime = pEvent.fStartTime;
 					
+					if (!m_bSkill_F_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_LAW_SKILL, 0.25f);
+						m_bSkill_F_Sound = true;
+					}
 
 					break;
 				//case SKILL_STRIKE:
@@ -569,14 +586,17 @@ void CMonster_LawSkill::Enter(void)
 	case SKILL_E:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_RONDSENPU);
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_WARYUNGGONGPA);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillVoice.wav"), SOUND_LAW_VOICE, 0.4f);
 		break;
 	case SKILL_R:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_GARYOUKUUHA);
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YOONMUSUNPOONG);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillVoice.wav"), SOUND_LAW_VOICE, 0.5f);
 		break;
 	case SKILL_F:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_TYOURENGADAN);
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOYUNATAN);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillVoice.wav"), SOUND_LAW_VOICE, 0.5f);
 		break;
 
 	case SKILL_STRIKE:

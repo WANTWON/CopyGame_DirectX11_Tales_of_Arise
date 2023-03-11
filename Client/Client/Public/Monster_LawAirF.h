@@ -48,6 +48,9 @@ private:
 	/* Effect Vectors */
 	vector<CEffect*> m_EnhaBakusaiken_1;
 
+	//Sound
+	_bool m_bSkill_F_Sound = false;
+
 };
 END
 END

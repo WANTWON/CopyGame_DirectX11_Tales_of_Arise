@@ -71,6 +71,45 @@ CPlayerState * CPlayerOverlimit::Tick(_float fTimeDelta)
 
 	m_pOwner->Check_Navigation();
 
+	switch (m_ePlayerID)
+	{
+	case CPlayer::ALPHEN:
+		if (!m_bAlphenSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenOverLimit.wav"), SOUND_NATURE, 0.85f);
+			m_bAlphenSound = true;
+		}
+		break;
+
+	case CPlayer::SION:
+		if (!m_bSionSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionOverLimit.wav"), SOUND_NATURE, 0.85f);
+			m_bSionSound = true;
+		}
+		break;
+
+	case CPlayer::RINWELL:
+		if (!m_bRinwellSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellOverLimit.wav"), SOUND_NATURE, 0.85f);
+			m_bRinwellSound = true;
+		}
+		break;
+
+	case CPlayer::LAW:
+		if (!m_bLawSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawOverLimit.wav"), SOUND_NATURE, 0.65f);
+			m_bLawSound = true;
+		}
+		break;
+		
+
+	default:
+		break;
+	}
+
 	return nullptr;
 }
 
@@ -92,7 +131,7 @@ CPlayerState * CPlayerOverlimit::LateTick(_float fTimeDelta)
 void CPlayerOverlimit::Enter(void)
 {
 	__super::Enter();
-
+	m_ePlayerID = m_pOwner->Get_PlayerID();
 	m_eStateId = STATE_ID::STATE_OVERLIMIT;
 	m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
 

@@ -160,7 +160,7 @@ void CMonster_LawDodge::Enter()
 
 		}
 		
-
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_NormalDodge.wav"), SOUND_VOICE, 0.6f);
 
 
 

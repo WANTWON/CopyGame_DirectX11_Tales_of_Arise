@@ -139,25 +139,37 @@ void CHitState::Enter()
 		{
 		case CPlayer::ALPHEN:
 			if (STATETYPE_START == m_eStateType)
+			{
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DOWN_B);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_DownSound.wav"), SOUND_CROWD, 0.65f);
+			}
 			else if (STATETYPE_END == m_eStateType)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ARISE_B);
 			break;
 		case CPlayer::SION:
 			if (STATETYPE_START == m_eStateType)
+			{
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_DOWN_B);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_DownSound.wav"), SOUND_CROWD, 0.65f);
+			}
 			else if (STATETYPE_END == m_eStateType)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ARISE_B);
 			break;
 		case CPlayer::RINWELL:
 			if (STATETYPE_START == m_eStateType)
+			{
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_DOWN_B);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_DownSound.wav"), SOUND_CROWD, 0.65f);
+			}
 			else if (STATETYPE_END == m_eStateType)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ARISE_B);
 			break;
 		case CPlayer::LAW:
 			if (STATETYPE_START == m_eStateType)
+			{
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_DOWN_B);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_DownSound.wav"), SOUND_CROWD, 0.65f);
+			}
 			else if (STATETYPE_END == m_eStateType)
 				m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ARISE_B);
 			break;

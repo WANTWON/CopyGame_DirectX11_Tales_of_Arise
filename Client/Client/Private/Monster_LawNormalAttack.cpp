@@ -409,18 +409,23 @@ void CMonster_LawNormalAttack::Enter()
 	{
 	case NORMALATTACK_1:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_0);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack1.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 		break;
 	case NORMALATTACK_2:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_1);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack2.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 		break;
 	case NORMALATTACK_3:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_2);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack3.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 		break;
 	case NORMALATTACK_4:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_3);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack4.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 		break;
 	case NORMALATTACK_5:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_4);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack5.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 		break;
 	}
 
