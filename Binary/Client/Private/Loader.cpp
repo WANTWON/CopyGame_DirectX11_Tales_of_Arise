@@ -106,6 +106,12 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 
 	//_matrix PivotMatrix;
 
+	/*For.Prototype_Component_Model_SWO1(R00)*/
+	PivotMatrix = XMMatrixScaling(0.03f, 0.03f, 0.03f);
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SWO00"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/KISARASHEILD.fbx", "../../../Bin/Bin_Data/NonAnim/KisaraWeapon/", PivotMatrix))))
+		return E_FAIL;
+
 
 	///*For.Prototype_Component_Model_SWO1(R00)*/
 	/*PivotMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
@@ -384,10 +390,10 @@ HRESULT CLoader::Loading_ForGamePlayLevel(void)
 		//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Kisara.fbx", "../../../Bin/Bin_Data/Anim/Kisara/", PivotMatrix))))
 		//	return E_FAIL;
 
-PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("DUOHALAM"),
-	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Duohalem.fbx", "../../../Bin/Bin_Data/Anim/Duohalem/", PivotMatrix))))
-	return E_FAIL;
+//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("DUOHALAM"),
+//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Meshes/Duohalem.fbx", "../../../Bin/Bin_Data/Anim/Duohalem/", PivotMatrix))))
+//	return E_FAIL;
 
 	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Cylinder_ko_01"),
