@@ -43,6 +43,8 @@ public:
 	void Read_TextFiles_for_dialogue_jelous2();
 	void Read_TextFiles_for_LawEvent();
 
+	void Read_TextFiles_for_LawBattle();
+
 	wchar_t* ConverCtoWC(char* str);
 
 	void Render_Fonts(_uint index);
@@ -92,6 +94,14 @@ private:
 	vector<_tchar*> m_vDialoguepopup_jelous2[2];  // bjb
 
 	vector<_tchar*> m_vDialoguepopup_LawEvent[2];  // SexyLAW
+
+	vector<_tchar*> m_vDialoguepopup_Lawbattle[2];  // Lawbattlestart
+	vector<_tchar*> m_vDialoguepopup_Lawbattle1[2];  // alphendie
+	vector<_tchar*> m_vDialoguepopup_Lawbattle2[2];  // siondie
+	vector<_tchar*> m_vDialoguepopup_Lawbattle3[2];  // rinwelldie
+	vector<_tchar*> m_vDialoguepopup_Lawbattle4[2];  // rinwelldie
+	vector<_tchar*> m_vDialoguepopup_Lawbattle5[2];  // rinwelldie
+
 
 	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;
 	_uint m_iDialogueindex = 0;

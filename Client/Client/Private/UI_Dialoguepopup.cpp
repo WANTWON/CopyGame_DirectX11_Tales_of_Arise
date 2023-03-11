@@ -45,6 +45,7 @@ HRESULT CUI_Dialoguepopup::Initialize(void * pArg)
 	Read_TextFiles_for_dialougeStage2Start();
 	Read_TextFiles_for_dialogue_jelous2();
 	Read_TextFiles_for_LawEvent();
+	Read_TextFiles_for_LawBattle();
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -835,6 +836,265 @@ void CUI_Dialoguepopup::Read_TextFiles_for_LawEvent()
 	matrix1.push_back(m_vDialoguepopup_LawEvent[1]);
 
 	m_vCurrentDialogue.push_back(matrix1);
+}
+
+void CUI_Dialoguepopup::Read_TextFiles_for_LawBattle()
+{
+	std::ifstream file("../../../Bin/Resources/popup/battlewithlaw0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file1("../../../Bin/Resources/popup/battlewithlaw1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialoguepopup_Lawbattle[0]);
+	matrix.push_back(m_vDialoguepopup_Lawbattle[1]);
+
+	m_vCurrentDialogue.push_back(matrix);
+
+	std::ifstream file2("../../../Bin/Resources/popup/battlewithlaw2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle1[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/Resources/popup/battlewithlaw3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle1[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix1;
+	matrix1.push_back(m_vDialoguepopup_Lawbattle1[0]);
+	matrix1.push_back(m_vDialoguepopup_Lawbattle1[1]);
+
+	m_vCurrentDialogue.push_back(matrix1);
+
+
+	std::ifstream file4("../../../Bin/Resources/popup/battlewithlaw4.txt");
+	if (file4.is_open())
+	{
+		while (file4.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle2[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file4.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file5("../../../Bin/Resources/popup/battlewithlaw5.txt");
+	if (file5.is_open())
+	{
+		while (file5.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle2[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file5.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix2;
+	matrix2.push_back(m_vDialoguepopup_Lawbattle2[0]);
+	matrix2.push_back(m_vDialoguepopup_Lawbattle2[1]);
+
+	m_vCurrentDialogue.push_back(matrix2);
+
+
+	std::ifstream file6("../../../Bin/Resources/popup/battlewithlaw6.txt");
+	if (file6.is_open())
+	{
+		while (file6.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle3[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file6.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file7("../../../Bin/Resources/popup/battlewithlaw7.txt");
+	if (file7.is_open())
+	{
+		while (file7.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle3[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file7.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix3;
+	matrix3.push_back(m_vDialoguepopup_Lawbattle3[0]);
+	matrix3.push_back(m_vDialoguepopup_Lawbattle3[1]);
+
+	m_vCurrentDialogue.push_back(matrix3);
+
+	std::ifstream file8("../../../Bin/Resources/popup/battlewithlaw8.txt");
+	if (file8.is_open())
+	{
+		while (file8.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle4[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file8.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file9("../../../Bin/Resources/popup/battlewithlaw9.txt");
+	if (file9.is_open())
+	{
+		while (file9.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle4[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file9.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix4;
+	matrix4.push_back(m_vDialoguepopup_Lawbattle4[0]);
+	matrix4.push_back(m_vDialoguepopup_Lawbattle4[1]);
+
+	m_vCurrentDialogue.push_back(matrix2);
+
+
+	std::ifstream file10("../../../Bin/Resources/popup/battlewithlaw10.txt");
+	if (file10.is_open())
+	{
+		while (file10.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle5[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//		Safe_Delete_Array(pszDialog);
+		}
+		file10.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file11("../../../Bin/Resources/popup/battlewithlaw11.txt");
+	if (file11.is_open())
+	{
+		while (file11.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialoguepopup_Lawbattle5[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file11.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	vector<vector<_tchar*>> matrix5;
+	matrix5.push_back(m_vDialoguepopup_Lawbattle5[0]);
+	matrix5.push_back(m_vDialoguepopup_Lawbattle5[1]);
+
+	m_vCurrentDialogue.push_back(matrix5);
+
 }
 
 wchar_t * CUI_Dialoguepopup::ConverCtoWC(char * str)

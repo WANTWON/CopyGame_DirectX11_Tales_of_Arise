@@ -54,6 +54,13 @@ public:
 	void Read_TextFiles_for_LawBossBattleEnd();
 	void Read_TextFiles_for_LastQuestStart();
 
+	void Read_TextFiles_for_Meetlastboss();
+	void Read_TextFiles_for_Secondbosson();
+	void Read_TextFiles_for_Lastoverlimit();
+
+	void Read_TextFiles_for_lastbossclear();
+	
+
 	wchar_t* ConverCtoWC(char* str);
 
 	void Render_Fonts(_uint index);
@@ -113,6 +120,13 @@ private:
 	vector<_tchar*> m_vDialogue14[5]; // LawBossbattleEnd
 
 	vector<_tchar*> m_vDialogue15[18]; // LASTQUESTSTART
+
+	vector<_tchar*> m_vDialogue16[7]; // MeetLastboss
+	vector<_tchar*> m_vDialogue17[7]; // Secondboss on
+
+	vector<_tchar*> m_vDialogue18[7]; // lastoverlimit
+
+	vector<_tchar*> m_vDialogue19[7]; // ClearLastboss
 
 	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;
 	/*m_vCurrentDialogue.reszie(10);

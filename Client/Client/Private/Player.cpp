@@ -170,7 +170,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	if (CPlayer::SION == m_ePlayerID)
 	{
 		LEVEL eLevel = LEVEL(CGameInstance::Get_Instance()->Get_CurrentLevelIndex());
-		if (LEVEL_BATTLE == eLevel || LEVEL_BOSS == eLevel)
+		if (LEVEL_BATTLE == eLevel || LEVEL_BOSS == eLevel || LEVEL_LAWBATTLE == eLevel)
 		{
 			m_bIsSionWeapon = true;
 

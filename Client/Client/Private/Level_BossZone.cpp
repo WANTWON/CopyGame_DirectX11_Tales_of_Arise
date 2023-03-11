@@ -11,6 +11,7 @@
 #include "Monster.h"
 #include "AstralDoubt.h"
 #include "UI_InterectMsg.h"
+#include "UI_Dialogue.h"
 
 CLevel_BossZone::CLevel_BossZone(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -30,7 +31,7 @@ HRESULT CLevel_BossZone::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 	dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
-
+	dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(16);
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Camera")) == false)
 	{
 		if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
@@ -45,6 +46,7 @@ HRESULT CLevel_BossZone::Initialize()
 	if (!m_bBattleMode)
 	{
 		g_bEnd = true;
+		dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(19);
 		if (FAILED(Ready_Layer_Player_NotBattle(TEXT("Layer_Player"))))
 			return E_FAIL;
 
@@ -353,6 +355,9 @@ void CLevel_BossZone::LastAttackCheck()
 		if (pMonster->Get_Stats().m_fCurrentHp <= pMonster->Get_Stats().m_fMaxHp *0.3f)
 		{
 			m_bFinal = true;
+			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(18);
+			CGameInstance::Get_Instance()->StopAll();
+			CGameInstance::Get_Instance()->PlayBGM(TEXT("forvictory.wav"), g_fSoundVolume);
 			CPlayerManager* pPlayerManager = CPlayerManager::Get_Instance();
 
 			HANDLE hFile = 0;

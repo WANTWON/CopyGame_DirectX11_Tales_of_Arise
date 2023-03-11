@@ -2,6 +2,7 @@
 #include "..\Public\PlayerPoseState.h"
 
 #include "PlayerIdleState.h"
+#include "UI_Dialoguepopup.h"
 
 using namespace Player;
 
@@ -42,6 +43,10 @@ void CPlayerPoseState::Enter(void)
 	{
 	case CPlayer::ALPHEN:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HADOUMEPPU_START);
+		
+		if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
+		dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(9, true, 2, 1);
+		
 		break;
 	case CPlayer::SION:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ADVENT);

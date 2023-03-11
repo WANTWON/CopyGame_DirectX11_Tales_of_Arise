@@ -14,6 +14,7 @@
 #include "AstralDoubt_Battle_WalkState.h"
 #include "AstralDoubt_TeleportState.h"
 #include "Level_BossZone.h"
+#include "UI_Dialogue.h"
 
 using namespace Astral_Doubt;
 
@@ -302,6 +303,7 @@ void CAstralDoubt::Set_BattleMode(_bool type)
 
 void CAstralDoubt::UpdatePosition()
 {
+	dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(17);
 	CBattleManager::Get_Instance()->Set_LastbossSecond(true);
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;

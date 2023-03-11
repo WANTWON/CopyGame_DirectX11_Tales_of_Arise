@@ -2,6 +2,7 @@
 #include "..\Public\PlayerDeadState.h"
 #include "Level_LawBattle.h"
 #include "MonsterLaw.h"
+#include "UI_Dialoguepopup.h"
 using namespace Player;
 
 CPlayerDeadState::CPlayerDeadState(CPlayer * pPlayer, STATE_ID eStateType)
@@ -45,6 +46,7 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 			switch (ePlayerID)
 			{
 			case Client::CPlayer::ALPHEN:
+				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(10, true, 0, 1);
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
 				CBattleManager::Get_Instance()->Set_LawBattlePhase(1);
 				break;
@@ -70,11 +72,13 @@ CPlayerState * CPlayerDeadState::LateTick(_float fTimeDelta)
 				pCamera->Set_CamMode(CCamera_Dynamic::CAM_BATTLEZONE);
 				break;
 			}*/
+				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(11, true, 1, 2);
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
 				CBattleManager::Get_Instance()->Set_LawBattlePhase(2);
 				break;
 			case Client::CPlayer::RINWELL:
 			{
+				dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(12, true, 0, 3);
 				CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
 				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_HP(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp);
 				CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_Dead(false);

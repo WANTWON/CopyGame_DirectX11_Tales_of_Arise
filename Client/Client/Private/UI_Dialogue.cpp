@@ -68,6 +68,11 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 	Read_TextFiles_for_LawBossBattleEvent();
 	Read_TextFiles_for_LawBossBattleEnd();
 	Read_TextFiles_for_LastQuestStart();
+	void Read_TextFiles_for_Meetlastboss();
+	void Read_TextFiles_for_Secondbosson();
+
+
+	void Read_TextFiles_for_lastbossclear();
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -2614,6 +2619,334 @@ void CUI_Dialogue::Read_TextFiles_for_LastQuestStart()
 	matrix.push_back(m_vDialogue15[13]);
 	matrix.push_back(m_vDialogue15[14]);
 	matrix.push_back(m_vDialogue15[15]);
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
+void CUI_Dialogue::Read_TextFiles_for_Meetlastboss()
+{
+	std::ifstream file("../../../Bin/meetlastboss0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue16[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/meetlastboss1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue16[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/meetlastboss2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue16[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/meetlastboss3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue16[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+
+
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialogue16[0]);
+	matrix.push_back(m_vDialogue16[1]);
+	matrix.push_back(m_vDialogue16[2]);
+	matrix.push_back(m_vDialogue16[3]);
+
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
+void CUI_Dialogue::Read_TextFiles_for_Secondbosson()
+{
+	std::ifstream file("../../../Bin/secondbosson0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue17[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/secondbosson1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue17[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	
+
+	
+
+
+
+
+
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialogue17[0]);
+	matrix.push_back(m_vDialogue17[1]);
+
+
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
+void CUI_Dialogue::Read_TextFiles_for_Lastoverlimit()
+{
+	std::ifstream file("../../../Bin/lastoverlim0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue18[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/lastoverlim1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue18[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialogue18[0]);
+	matrix.push_back(m_vDialogue18[1]);
+
+
+
+
+	m_vCurrentDialogue.push_back(matrix);
+}
+
+void CUI_Dialogue::Read_TextFiles_for_lastbossclear()
+{
+	std::ifstream file("../../../Bin/lastbossend0.txt");
+	if (file.is_open())
+	{
+		while (file.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue19[0].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file1("../../../Bin/lastbossend1.txt");
+	if (file1.is_open())
+	{
+		while (file1.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue19[1].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file1.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	//m_vCurrentDialogue.
+	std::ifstream file2("../../../Bin/lastbossend2.txt");
+	if (file2.is_open())
+	{
+		while (file2.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue19[2].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file2.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+	std::ifstream file3("../../../Bin/lastbossend3.txt");
+	if (file3.is_open())
+	{
+		while (file3.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue19[3].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file3.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+	std::ifstream file4("../../../Bin/lastbossend4.txt");
+	if (file4.is_open())
+	{
+		while (file4.getline(fuck, 256))
+		{
+			_tchar* pszDialog = new _tchar[MAX_PATH];
+			m_vDialogue19[4].push_back(pszDialog);
+			ConverCtoWC(fuck);
+			memcpy(pszDialog, m_szTXT, sizeof(_tchar)*MAX_PATH);
+			//	Safe_Delete_Array(pszDialog);
+		}
+		file4.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file\n";
+	}
+
+
+
+
+
+
+	vector<vector<_tchar*>> matrix;
+	matrix.push_back(m_vDialogue19[0]);
+	matrix.push_back(m_vDialogue19[1]);
+	matrix.push_back(m_vDialogue19[2]);
+	matrix.push_back(m_vDialogue19[3]);
+	matrix.push_back(m_vDialogue19[4]);
 
 
 	m_vCurrentDialogue.push_back(matrix);

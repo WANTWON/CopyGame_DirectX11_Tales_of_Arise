@@ -9,6 +9,7 @@
 #include "Effect.h"
 #include "Monster_Lawhit.h"
 #include "Level_LawBattle.h"
+#include "UI_Dialoguepopup.h"
 
 using namespace MonsterLaw;
 
@@ -171,12 +172,20 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 
 	if (CPlayerManager::Get_Instance()->Get_Changetoboss())
 	{
-		//m_fFinalTimer += fTimeDelta;
+		m_fFinalTimer += fTimeDelta;
+
+		if (m_fFinalTimer > 15.f)
+		{
+			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(13, true, 0, 1);
+			m_fFinalTimer = -10000.f;
+		}
+
 
 		if (m_bReadytokill)
 		{
 	//		if (m_fFinalStrikeOnetime)
 	//		{
+			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(14, true, 1, 0);
 				m_tStats.m_fLockonSmashGuage = 4.f;
 				m_fFinalStrikeOnetime = false;
 
