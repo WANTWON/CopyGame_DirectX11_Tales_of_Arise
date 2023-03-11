@@ -724,7 +724,7 @@ void CLawAttackState::Enter()
 
 			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_0);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack1.wav"), SOUND_EFFECT, 0.45f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack1.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
 			m_HitLagDesc.bZoom = true;
@@ -744,7 +744,7 @@ void CLawAttackState::Enter()
 
 			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_1);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack2.wav"), SOUND_EFFECT, 0.45f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack2.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
 			m_HitLagDesc.bZoom = true;
@@ -763,11 +763,11 @@ void CLawAttackState::Enter()
 
 			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_2);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack3.wav"), SOUND_EFFECT, 0.45f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack3.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_3);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack4.wav"), SOUND_EFFECT, 0.45f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack4.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 			m_HitLagDesc.bZoom = true;
 			m_HitLagDesc.bShaking = true;
 			m_HitLagDesc.bHitLag = true;
@@ -802,7 +802,7 @@ void CLawAttackState::Enter()
 			m_HitLagDesc.fZoomSpeed = 4.f;
 
 			m_HitLagDesc.fTakeDamageTimer = 0.3f;
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack5.wav"), SOUND_EFFECT, 0.45f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack5.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 			break;
 		}
 	}

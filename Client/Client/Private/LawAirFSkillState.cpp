@@ -278,8 +278,8 @@ void CLawAirFSkillState::Enter(void)
 	m_HitLagDesc.fBlurDetail = 10.f;
 	m_HitLagDesc.bZoom = true;
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_VOICE, 0.5f);
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillSoundBegin.wav"), SOUND_SKILL, 0.7f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_LAW_VOICE, 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillSoundBegin.wav"), SOUND_LAW_SKILL, 0.7f);
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YUMPAEFUCKSAY);
 
 }

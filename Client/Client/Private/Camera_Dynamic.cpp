@@ -296,7 +296,7 @@ void CCamera_Dynamic::TargetTool_CameraOff(_float fTimeDelta)
 	m_pTransform->Set_State(CTransform::STATE_TRANSLATION, FinalPos);
 	m_pTransform->LookAt(vCenterPos);
 
-	if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == true && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
 	{
 
 		if (m_bShakingMode)
