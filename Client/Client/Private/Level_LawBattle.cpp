@@ -383,7 +383,7 @@ void CLevel_LawBattle::BattleLateTick(_float fTimeDelta)
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
 	{
 		CPlayer * pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
-		pPlayer->Take_Damage(10000, nullptr);
+		pPlayer->Take_Damage(9999, nullptr);
 	}
 
 

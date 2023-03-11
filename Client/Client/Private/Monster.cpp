@@ -132,7 +132,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 		m_HitLagDesc.fShakingPower = 1.f;
 		m_HitLagDesc.fShakingMinusPower = 0.2f;
 
-		Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+		Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 		m_bTakeDamage = true;
 	}
 
