@@ -119,8 +119,29 @@ void CItem::Late_Tick(_float fTimeDelta)
 			dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 			m_bIsGain = true;
 			
-			_vector vOffset = XMVectorSet(0.f, m_fRadius * 2, 0.f, 0.f);
-			_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION) + vOffset;
+			_vector vItemPosition = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+			_vector vCameraPosition = XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition());
+			_vector vDirection = XMVector4Normalize(vCameraPosition - vItemPosition);
+
+			_vector vOffset;
+			switch (m_ItemDesc.etype)
+			{
+			case ITEMTYPE::CRYSTAL:
+			case ITEMTYPE::JEWEL:
+				vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
+				break;
+			case ITEMTYPE::BOX:
+				vOffset = XMVectorSet(0.f, 2.f, 0.f, 0.f);
+				break;
+			case ITEMTYPE::LETTUCE:
+			case ITEMTYPE::PLANT:
+				vOffset = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+				break;
+			default:
+				vOffset = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+			}
+			 
+			_vector vLocation = vItemPosition + (vDirection * 2) + vOffset;
 
 			_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 			mWorldMatrix.r[3] = vLocation;
