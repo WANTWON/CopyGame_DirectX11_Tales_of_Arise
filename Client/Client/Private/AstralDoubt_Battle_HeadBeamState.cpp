@@ -55,7 +55,7 @@ CAstralDoubt_State * CBattle_HeadBeamState::Tick(_float fTimeDelta)
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
 						BulletDesc.pOwner = m_pOwner;
-						BulletDesc.fDeadTime = 8.3;
+						BulletDesc.fDeadTime = 8.3f;
 						BulletDesc.fVelocity = 1.f;
 						BulletDesc.eBulletType = CBossSkills::TYPE::BULLET_LASER;
 

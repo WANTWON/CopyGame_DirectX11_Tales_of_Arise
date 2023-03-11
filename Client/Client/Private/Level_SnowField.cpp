@@ -754,5 +754,5 @@ void CLevel_SnowField::Free()
 	Safe_Release(m_pCollision_Manager);
 	
 	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

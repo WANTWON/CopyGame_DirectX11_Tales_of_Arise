@@ -133,6 +133,10 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 							{
 								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
 
+								if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+									dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.1f);
+
+
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[2];
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawAttack1_BeginPunch.dat"), mWorldMatrix);
@@ -150,6 +154,10 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 							{
 								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
 
+								if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+									dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.1f);
+
+
 								CBattleManager::Get_Instance()->Get_LackonMonster()->Set_State(CTransform::STATE_TRANSLATION, m_vStrikeLockOnPos[2]);
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[3];
@@ -166,6 +174,10 @@ CAIState * CAI_AlphenLaw_Smash::Tick(_float fTimeDelta)
 							else if (!strcmp(pEvent.szName, "Punch2"))
 							{
 								dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_HitState();
+
+								if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+									dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.1f);
+
 
 								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 								mWorldMatrix.r[3] = m_vEffectPos[4];
@@ -252,7 +264,7 @@ CAIState * CAI_AlphenLaw_Smash::LateTick(_float fTimeDelta)
 	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
-		if (m_fFadeTime > .85f)
+		if (m_fFadeTime > 0.5f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::LAW)
 			{
