@@ -17,6 +17,8 @@
 #include "Monster.h"
 #include "Effect.h"
 
+#include "PlayerIdleState.h"
+
 extern bool		g_bUIMade = false;
 
 CLevel_SnowField::CLevel_SnowField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -430,12 +432,14 @@ HRESULT CLevel_SnowField::Ready_Layer_Player(const _tchar * pLayerTag)
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	pPlayer->Set_State(CTransform::STATE_TRANSLATION, CPlayerManager::Get_Instance()->Get_LastPosition());
 	CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
+	CBattleManager::Get_Instance()->Set_BattleMode(false);
 
 	pPlayer->Change_Navigation(LEVEL_SNOWFIELD);
 	pPlayer->Compute_CurrentIndex(LEVEL_SNOWFIELD);
 	pPlayer->Check_Navigation();
 	pPlayer->Change_Level(LEVEL_SNOWFIELD);
-	
+	pPlayer->Get_PlayerState()->Enter();
+
 	if (pPlayer->Get_IsFly() == true)
 		pPlayer->Off_IsFly();
 

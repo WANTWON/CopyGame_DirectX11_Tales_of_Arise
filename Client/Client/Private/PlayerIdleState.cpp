@@ -152,11 +152,7 @@ CPlayerState * CIdleState::HandleInput()
 	else if (pGameInstance->Key_Pressing(DIK_S))
 		return new CRunState(m_pOwner, DIR_BACKWARD, pGameInstance->Key_Pressing(DIK_LSHIFT));
 	else if (pGameInstance->Key_Pressing(DIK_W))
-	{
-		return new CPlayerPoseState(m_pOwner, CPlayerState::STATE_POSE);
-		
-	}
-		//return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
+		return new CRunState(m_pOwner, DIR_STRAIGHT, pGameInstance->Key_Pressing(DIK_LSHIFT));
 
 	return nullptr;
 }

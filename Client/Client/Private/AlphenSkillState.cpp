@@ -509,7 +509,7 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 					}
 						
 
-					pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+					pCollided->Take_Damage((rand() % 100 + ((rand() % 3) + 1) * 100), m_pOwner, m_HitLagDesc);
 				}
 				else
 				{
@@ -557,7 +557,7 @@ CPlayerState * CAlphenSkillState::LateTick(_float fTimeDelta)
 						m_HitLagDesc.fBlurPower = 6.f;
 						m_HitLagDesc.fBlurDetail = 10.f;
 					}
-					pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+					pCollided->Take_Damage((rand() % 100 + ((rand() % 3) + 1) * 100), m_pOwner, m_HitLagDesc);
 				}
 					
 			}
