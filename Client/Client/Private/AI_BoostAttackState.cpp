@@ -310,7 +310,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 							BulletDesc.iDamage = 74;
 							BulletDesc.fDeadTime = 2.f;
 							BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
-							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*8.f);
+							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*15.f);
 							BulletDesc.pOwner = m_pOwner;
 
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_STATIC, TEXT("Layer_Bullet"), &BulletDesc)))
