@@ -45,30 +45,6 @@ CPlayerState * CPlayerOverlimit::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	if (CPlayer::ALPHEN == m_ePlayerID)
-	{
-		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-
-		CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
-
-		for (auto& pEvent : pEvents)
-		{
-			if (pEvent.isPlay)
-			{
-				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(true);
-			}
-			else
-			{
-				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-				{
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(false);
-					//dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Reset_RotateTime();
-				}
-			}
-		}
-	}
-
 	m_pOwner->Check_Navigation();
 
 	switch (m_ePlayerID)
@@ -133,7 +109,11 @@ void CPlayerOverlimit::Enter(void)
 	__super::Enter();
 	m_ePlayerID = m_pOwner->Get_PlayerID();
 	m_eStateId = STATE_ID::STATE_OVERLIMIT;
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
+
+	if (CPlayer::ALPHEN == m_ePlayerID)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HADOUMEPPU_START);
+	else
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
 
 	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Camera"), 1.f);

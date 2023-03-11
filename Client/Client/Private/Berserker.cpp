@@ -56,7 +56,7 @@ HRESULT CBerserker::Initialize(void * pArg)
 		m_pBerserkerState = m_pBerserkerState->ChangeState(m_pBerserkerState, pState);
 	}
 
-	m_tStats.m_fMaxHp = 15000;
+	m_tStats.m_fMaxHp = 40000;
 	m_tStats.m_fCurrentHp = m_tStats.m_fMaxHp;
 	m_tStats.m_fAttackPower = 10;
 	m_eMonsterID = BERSERKER;

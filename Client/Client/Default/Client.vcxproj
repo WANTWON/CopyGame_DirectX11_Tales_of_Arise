@@ -251,9 +251,11 @@
     <ClInclude Include="..\Public\CriticalFont.h" />
     <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
+    <ClInclude Include="..\Public\Duohalem.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Fascinate.h" />
     <ClInclude Include="..\Public\IceWolfJumpState.h" />
+    <ClInclude Include="..\Public\Kisara.h" />
     <ClInclude Include="..\Public\Law.h" />
     <ClInclude Include="..\Public\LawAirFSkillState.h" />
     <ClInclude Include="..\Public\LawAirRSkillState.h" />
@@ -425,6 +427,7 @@
     <ClInclude Include="..\Public\UI_Minigame2.h" />
     <ClInclude Include="..\Public\UI_Monster_HPbar.h" />
     <ClInclude Include="..\Public\UI_PartyjoinMsg.h" />
+    <ClInclude Include="..\Public\UI_PartyjoinMsg_Law.h" />
     <ClInclude Include="..\Public\UI_Portraitback.h" />
     <ClInclude Include="..\Public\ScreenFadeEffect.h" />
     <ClInclude Include="..\Public\UI_Comboline.h" />
@@ -438,6 +441,8 @@
     <ClInclude Include="..\Public\UI_Portraitfront_bottom.h" />
     <ClInclude Include="..\Public\UI_Portraitfront_left.h" />
     <ClInclude Include="..\Public\UI_Portraitfront_right.h" />
+    <ClInclude Include="..\Public\UI_Portraitfront_sub1.h" />
+    <ClInclude Include="..\Public\UI_Portraitfront_sub2.h" />
     <ClInclude Include="..\Public\UI_Portraitfront_top.h" />
     <ClInclude Include="..\Public\UI_QuestClear.h" />
     <ClInclude Include="..\Public\UI_Questmsg.h" />
@@ -542,9 +547,11 @@
     <ClCompile Include="..\Private\CriticalFont.cpp" />
     <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
+    <ClCompile Include="..\Private\Duohalem.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Fascinate.cpp" />
     <ClCompile Include="..\Private\IceWolfJumpState.cpp" />
+    <ClCompile Include="..\Private\Kisara.cpp" />
     <ClCompile Include="..\Private\Law.cpp" />
     <ClCompile Include="..\Private\LawAirFSkillState.cpp" />
     <ClCompile Include="..\Private\LawAirRSkillState.cpp" />
@@ -707,6 +714,7 @@
     <ClCompile Include="..\Private\UI_Minigame2.cpp" />
     <ClCompile Include="..\Private\UI_Monster_HPbar.cpp" />
     <ClCompile Include="..\Private\UI_PartyjoinMsg.cpp" />
+    <ClCompile Include="..\Private\UI_PartyjoinMsg_Law.cpp" />
     <ClCompile Include="..\Private\UI_Portraitback.cpp" />
     <ClCompile Include="..\Private\ScreenFadeEffect.cpp" />
     <ClCompile Include="..\Private\UI_Comboline.cpp" />
@@ -720,6 +728,8 @@
     <ClCompile Include="..\Private\UI_Portraitfront_bottom.cpp" />
     <ClCompile Include="..\Private\UI_Portraitfront_left.cpp" />
     <ClCompile Include="..\Private\UI_Portraitfront_right.cpp" />
+    <ClCompile Include="..\Private\UI_Portraitfront_sub1.cpp" />
+    <ClCompile Include="..\Private\UI_Portraitfront_sub2.cpp" />
     <ClCompile Include="..\Private\UI_Portraitfront_top.cpp" />
     <ClCompile Include="..\Private\UI_QuestClear.cpp" />
     <ClCompile Include="..\Private\UI_Questmsg.cpp" />

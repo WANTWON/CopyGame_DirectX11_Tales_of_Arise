@@ -14,6 +14,7 @@
 #include "AlphenSkills.h"
 #include "ParticleSystem.h"
 
+
 using namespace AIPlayer;
 
 CAI_BoostAttack::CAI_BoostAttack(CPlayer* pPlayer, CBaseObj* pTarget)
@@ -48,17 +49,26 @@ CAIState * CAI_BoostAttack::Tick(_float fTimeDelta)
 	if (m_pTarget == nullptr)
 		return nullptr;
 
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-	
-	
-	if (!m_bIsAnimationFinished)
+	if (m_eCurrentPlayerID != CPlayer::KISARA && m_eCurrentPlayerID != CPlayer::DUOHALEM)
 	{
-		_vector vecTranslation;
-		_float fRotationRadian;
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 
-		m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+
+		if (!m_bIsAnimationFinished)
+		{
+			_vector vecTranslation;
+			_float fRotationRadian;
+
+			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
+			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
+		}
 	}
+	else
+	{
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()));
+	}
+		
+	
 
 	m_pOwner->Check_Navigation();
 
@@ -204,7 +214,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 				}
 
 				case CPlayer::LAW:
-				{
+				
 					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
@@ -245,7 +255,75 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 
 
 					break;
-				 }
+				case CPlayer::KISARA:
+				
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					{
+						if ((m_fEventStart != pEvent.fStartTime))
+						{
+							HITLAGDESC m_HitLagDesc;
+							m_HitLagDesc.bHitLag = true;
+							m_HitLagDesc.bShaking = true;
+							m_HitLagDesc.fHitLagTimer = 0.1f;
+							m_HitLagDesc.fShakingPower = 1.f;
+							m_HitLagDesc.fShakingMinusPower = 0.2f;
+							dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(500, m_pOwner, m_HitLagDesc);
+
+							m_fEventStart = pEvent.fStartTime;
+						}
+					}
+
+					if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+						m_bIsStateEvent = true;
+
+					if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+					{
+						if (!strcmp(pEvent.szName, "Shield"))
+						{
+							if (!m_bShieldSlam)
+							{
+								_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+								CEffect::PlayEffectAtLocation(TEXT("Shield_Slam.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Shield_Slam_Ring.dat"), mWorldMatrix);
+
+								m_bShieldSlam = true;
+							}
+						}
+					}
+				 
+				break;
+				case CPlayer::DUOHALEM:
+
+					if (ANIMEVENT::EVENTTYPE::EVENT_COLLIDER == pEvent.eType)
+					{
+						if ((m_fEventStart != pEvent.fStartTime))
+						{
+							CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+							if (pTarget == nullptr)
+								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+
+							CBullet::BULLETDESC BulletDesc;
+							BulletDesc.eCollisionGroup = FRIEND;
+							BulletDesc.fVelocity = 1.f;
+							BulletDesc.eBulletType = CSionSkills::MAGNA_RAY;
+							BulletDesc.iDamage = 74;
+							BulletDesc.fDeadTime = 2.f;
+							BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
+							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*8.f);
+							BulletDesc.pOwner = m_pOwner;
+
+							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_STATIC, TEXT("Layer_Bullet"), &BulletDesc)))
+								return nullptr;
+						
+							m_fEventStart = pEvent.fStartTime;
+						}
+					}
+				
+				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
+						m_bIsStateEvent = true;
+				
+				break;
 				}
 			}
 		}
@@ -287,6 +365,8 @@ void CAI_BoostAttack::Enter()
 {
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_Zoom(false);
+
+	m_bShieldSlam = false;
 
 	switch (m_eCurrentPlayerID)
 	{
@@ -338,6 +418,39 @@ void CAI_BoostAttack::Enter()
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_BoosterAttackVoice.wav"), SOUND_EFFECT, 0.6f);
 		break;
 	}
+	case CPlayer::KISARA:
+	{
+		CPlayerManager::Get_Instance()->Get_EnumPlayer(4)->Set_BoostGuage(0);
+		m_iCurrentAnimIndex = 0;
+		_vector pos = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION);
+		pos.m128_f32[0] -= 5.f;
+		pos.m128_f32[2] -= 5.f;
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+		
+			
+		break;
+	}
+	case CPlayer::DUOHALEM:
+	{
+
+		/* Make Effect */
+		_vector vOffset = { 0.f,3.f,0.f,0.f };
+		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+		_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
+		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation + vOffset + vLook*2.f;
+		CEffect::PlayEffectAtLocation(TEXT("FriendMagnaStart.dat"), mWorldMatrix);
+
+		CPlayerManager::Get_Instance()->Get_EnumPlayer(5)->Set_BoostGuage(0);
+		m_iCurrentAnimIndex = 0;
+		_vector pos = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION);
+		pos.m128_f32[0] -= 10.f;
+		pos.m128_f32[2] -= 15.f;
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+
+		break;
+	}
+
 	}
 
 
@@ -365,6 +478,8 @@ void CAI_BoostAttack::Enter()
 
 void CAI_BoostAttack::Exit()
 {
+	if (m_eCurrentPlayerID == CPlayer::KISARA || m_eCurrentPlayerID == CPlayer::DUOHALEM)
+		m_pOwner->Set_PlayerMode(UNVISIBLE);
 	for (auto& iter : m_pEffects)
 	{
 		if (iter != nullptr && iter->Get_PreDead())

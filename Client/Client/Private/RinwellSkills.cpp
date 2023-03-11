@@ -413,6 +413,7 @@ void CRinwellSkills::Collision_Check()
 	switch (m_BulletDesc.eBulletType)
 	{
 	case PHOTON_FLASH:
+		m_BulletDesc.iDamage = rand() % 100 + 100;
 		__super::Collision_Check();
 		if (m_bDead)
 		{
@@ -449,6 +450,7 @@ void CRinwellSkills::Collision_Check()
 		m_HitLagDesc.bShaking = true;
 		m_HitLagDesc.fShakingPower = 2.f;
 		m_HitLagDesc.fShakingMinusPower = 0.2f;
+		m_BulletDesc.iDamage = rand() % 100 + 100;
 
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
@@ -470,6 +472,7 @@ void CRinwellSkills::Collision_Check()
 		m_HitLagDesc.bShaking = true;
 		m_HitLagDesc.fShakingPower = 2.f;
 		m_HitLagDesc.fShakingMinusPower = 0.2f;
+		m_BulletDesc.iDamage = rand() % 100 + 300;
 
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
@@ -493,6 +496,7 @@ void CRinwellSkills::Collision_Check()
 		m_HitLagDesc.bLockOnChange = false;
 		m_HitLagDesc.bHitLag = false;
 		m_HitLagDesc.bShaking = false;
+		m_BulletDesc.iDamage = rand() % 100 + 200;
 
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
@@ -509,6 +513,7 @@ void CRinwellSkills::Collision_Check()
 		m_HitLagDesc.bLockOnChange = false;
 		m_HitLagDesc.bHitLag = false;
 		m_HitLagDesc.bShaking = false;
+		m_BulletDesc.iDamage = rand() % 100 + 100;
 
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
@@ -525,6 +530,7 @@ void CRinwellSkills::Collision_Check()
 		m_HitLagDesc.bLockOnChange = false;
 		m_HitLagDesc.bHitLag = false;
 		m_HitLagDesc.bShaking = false;
+		m_BulletDesc.iDamage = rand() % 100 + 100;
 
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
@@ -541,6 +547,7 @@ void CRinwellSkills::Collision_Check()
 		m_HitLagDesc.bLockOnChange = false;
 		m_HitLagDesc.bHitLag = false;
 		m_HitLagDesc.bShaking = false;
+		m_BulletDesc.iDamage = rand() % 100 + 200;
 
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
@@ -558,6 +565,7 @@ void CRinwellSkills::Collision_Check()
 		m_HitLagDesc.bLockOnChange = false;
 		m_HitLagDesc.bHitLag = false;
 		m_HitLagDesc.bShaking = false;
+		m_BulletDesc.iDamage = rand() % 100 + 100;
 
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pAABBCom, &pCollisionTarget))

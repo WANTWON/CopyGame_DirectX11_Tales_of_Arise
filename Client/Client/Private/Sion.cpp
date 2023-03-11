@@ -168,35 +168,7 @@ void CSion::Change_Level(LEVEL eLevel)
 
 		CHierarchyNode* pSocket = nullptr;
 
-		if (LEVEL_LAWBATTLE == eLevel)
-		{
-			if (CBattleManager::Get_Instance()->Get_IsBattleMode() == true)
-			{
-
-				pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
-				if (nullptr == pSocket)
-				{
-					ERR_MSG(TEXT("Failed to Get BonePtr"));
-					return;
-				}
-
-				XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixIdentity());
-				XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixIdentity());
-			}
-			else
-			{
-				pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
-				if (nullptr == pSocket)
-				{
-					ERR_MSG(TEXT("Failed to Get BonePtr"));
-					return;
-				}
-
-				XMStoreFloat4x4(&WeaponDesc.RotationCorrectionMatrix, XMMatrixRotationX(XMConvertToRadians(180.f)));
-				XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 50.f));
-			}
-		}
-		else if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel || LEVEL_RESTAURANT == eLevel)
+		if (LEVEL_SNOWFIELD == eLevel || LEVEL_CITY == eLevel || LEVEL_RESTAURANT == eLevel)
 		{
 			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 			if (nullptr == pSocket)
@@ -209,7 +181,7 @@ void CSion::Change_Level(LEVEL eLevel)
 			XMStoreFloat4x4(&WeaponDesc.TranslationCorrectionMatrix, XMMatrixTranslation(-40.f, 50.f, 50.f));
 
 		}
-		else if (LEVEL_BATTLE == eLevel || LEVEL_BOSS == eLevel || LEVEL_WORKTOOL == eLevel)
+		else if (LEVEL_BATTLE == eLevel || LEVEL_BOSS == eLevel || LEVEL_WORKTOOL == eLevel || LEVEL_LAWBATTLE == eLevel)
 		{
 			pSocket = m_pModelCom->Get_BonePtr("pinky_03_R");
 			if (nullptr == pSocket)

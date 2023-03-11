@@ -19,7 +19,7 @@ public:
 	enum PARTS { PARTS_WEAPON, PARTS_END };
 	enum GROUNDSKILL { GROUND_SKILL1, GROUND_SKILL2, GROUND_SKILL3, GROUND_SKILL_END };
 	enum FLYSKILL { FLY_SKILL1, FLY_SKILL2, FLY_SKILL3, FLY_SKILL_END };
-	enum PLAYERID { ALPHEN, SION, RINWELL, LAW };
+	enum PLAYERID { ALPHEN, SION, RINWELL, LAW , KISARA , DUOHALEM };
 
 	enum STRIKESMASH { ALPHEN_SION, ALPHEN_RINWELL, ALPHEN_LAW, SION_RINWELL, SION_LAW, RINWELL_LAW };
 
@@ -47,6 +47,7 @@ public: /* Getter &  Setter */
 	LEVEL			Get_Level(void) { return m_eLevel; }
 	void			Set_TakeDamage_DelayFinish() { m_bTakeDamage_Delay = false; }
 	PLAYER_MODE		Get_PlayerMode(void) { return m_ePlayerMode; }
+	void            Set_PlayerMode(PLAYER_MODE mode) { m_ePlayerMode = mode; }
 
 	/* 지상 스킬 */
 	_uint			Get_GroundSkillAnimIndex(GROUNDSKILL SkillIndex) { return m_eGroundSkills[SkillIndex]; }
@@ -194,6 +195,8 @@ protected: /* for 4 Player */
 
 	/* 무한피격 방지 */
 	_bool m_bTakeDamage_Delay = false;
+
+	_float m_fBoostRecovertimer = 0.f;
 
 private:
 	_bool m_bLevelup = false;

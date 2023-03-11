@@ -234,10 +234,10 @@ HRESULT CAnim::Ready_Components(void * pArg)
 			return E_FAIL;
 		break;
 
-	case MODEL_RINWELL:
+	/*case MODEL_RINWELL:
 		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Rinwell"), (CComponent**)&m_pModelCom)))
 			return E_FAIL;
-		break;
+		break;*/
 
 	case MODEL_LAW:
 		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Law"), (CComponent**)&m_pModelCom)))
@@ -246,6 +246,16 @@ HRESULT CAnim::Ready_Components(void * pArg)
 
 	case MODEL_TREASURE:
 		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("TreasureBox02"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
+
+	case MODEL_KISARA:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Kisara"), (CComponent**)&m_pModelCom)))
+			return E_FAIL;
+		break;
+
+	case MODEL_DUOHALEM:
+		if (FAILED(__super::Add_Components(TEXT("Com_Model"), LEVEL_GAMEPLAY, TEXT("Duohalem"), (CComponent**)&m_pModelCom)))
 			return E_FAIL;
 		break;
 	}

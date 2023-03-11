@@ -60,7 +60,7 @@ CMonsterLawState * CMonsterLaw_Strike1::Tick(_float fTimeDelta)
 					if ((m_fEventStart1 != pEvent.fStartTime))
 					{
 						if (m_iEventIndex == 0)
-							dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(1);
+							dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Open_Dialogue(6);
 						else
 							dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->Next_Dialogueindex();
 
@@ -256,14 +256,14 @@ void CMonsterLaw_Strike1::Exit()
 
 			if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
 			{
-				m_pTarget->Take_Damage(1000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+				m_pTarget->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 			}
 			
 		}
 
 	
 
-
+	dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 
 	m_pTarget->Set_IsActionMode(false);

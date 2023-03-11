@@ -495,10 +495,12 @@ void CMonster::Make_GetAttacked_Effect(CBaseObj* DamageCauser)
 			Impact = CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
 			break;
 		case CPlayer::PLAYERID::LAW:
+		case CPlayer::PLAYERID::KISARA:
 			Impact = CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
 			break;
 		case CPlayer::PLAYERID::RINWELL:
 		case CPlayer::PLAYERID::SION:
+		case CPlayer::PLAYERID::DUOHALEM:
 			Impact = CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
 			break;
 	}
@@ -681,7 +683,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	if (m_pTarget != nullptr)
 	{
 		if (dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() <= 100.f)
-			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 20.f);
+			dynamic_cast<CPlayer*>(m_pTarget)->Set_BoostGuage(dynamic_cast<CPlayer*>(m_pTarget)->Get_BoostGuage() + 2.f);
 
 	}
 	

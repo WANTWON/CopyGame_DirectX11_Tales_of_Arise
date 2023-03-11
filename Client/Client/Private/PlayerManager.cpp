@@ -37,7 +37,7 @@ void CPlayerManager::Set_ActivePlayer(CPlayer * pPlayer)
 	m_pActivePlayer->Check_Navigation();
 	if (m_pActivePlayer->Get_IsFly() == true)
 		m_pActivePlayer->Off_IsFly();
-
+	m_pActivePlayer->Change_Level(LEVEL(CGameInstance::Get_Instance()->Get_CurrentLevelIndex()));
 
 	m_pAIPlayers.clear();
 	list<CGameObject*>* pPlayerLists =  CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player"));
@@ -104,7 +104,8 @@ PLAYER_MODE CPlayerManager::Check_ActiveMode(CPlayer * pPlayer)
 	if (pPlayer == nullptr || g_bEnd)
 		return ACTIVE;
 
-	if (m_bBattleMode == true && CBattleManager::Get_Instance()->Get_IsOneonOneMode() == false)
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+	if (m_bBattleMode && CBattleManager::Get_Instance()->Get_IsOneonOneMode() == false)
 	{
 		if (pPlayer == m_pActivePlayer)
 		{
