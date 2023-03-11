@@ -10,6 +10,9 @@
 #include "Monster.h"
 #include "Level_Loading.h"
 #include "ShootingObject.h"
+#include "PlayerIdleState.h"
+
+using namespace Player;
 
 CLevel_WorkTool::CLevel_WorkTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -315,8 +318,6 @@ void CLevel_WorkTool::Late_Tick(_float fTimeDelta)
 	{
 
 	m_bGameFinish = true;
-		//m_bMinigameStart = false;
-		
 	CUI_Manager::Get_Instance()->Reset_Minigamecaptionindex();
 		
 	}
@@ -534,9 +535,13 @@ void CLevel_WorkTool::Set_MiniGameStart(_bool type)
 	{
 		CCameraManager::Get_Instance()->Set_CamState(CCameraManager::CAM_DYNAMIC);
 
+		CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
 		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(20, 0.f, 3.f, 1.f));
 		pPlayer->Change_Navigation(LEVEL_WORKTOOL);
+
+		CPlayerState* pState = new Player::CIdleState(pPlayer, CIdleState::IDLE_SIDE);
+		pPlayer->Set_PlayerState(pState);
 
 		pPlayer->Compute_CurrentIndex(LEVEL_WORKTOOL);
 		pPlayer->Check_Navigation();

@@ -10,7 +10,7 @@
 #include "Monster.h"
 #include "Level_City.h"
 #include "Level_Loading.h"
-
+#include "Portal.h"
 
 
 CLevel_City::CLevel_City(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -67,7 +67,7 @@ HRESULT CLevel_City::Initialize()
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco_Market"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing_Culling"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
-		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
+		//CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Child"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Gld"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_NMM_SLV"));
@@ -78,7 +78,7 @@ HRESULT CLevel_City::Initialize()
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_DIM"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_GNL"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Duck"));
-		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Effects"));
+		//CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Effects"));
 	}
 	
 
@@ -135,7 +135,7 @@ void CLevel_City::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Backgorund"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Child"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Gld"));
@@ -147,7 +147,7 @@ void CLevel_City::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_DIM"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_GNL"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Duck"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Effects"));
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Effects"));
 
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -178,7 +178,7 @@ void CLevel_City::Tick(_float fTimeDelta)
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Backgorund"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Instancing"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Deco"));
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
+		//CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Portal"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Npc"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Child"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_CITY, TEXT("Layer_Gld"));
@@ -283,7 +283,45 @@ HRESULT CLevel_City::Ready_Lights()
 	pGameInstance->Set_ShadowLightView(vLightEye, vLightAt);
 
 	
+
+	hFile = 0;
+	dwByte = 0;
+	hFile = CreateFile(TEXT("../../../Bin/Data/City_Data/PortalPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	CPortal::PORTALDESC PortalDesc;
+	/* Ÿ���� ���� �޾ƿ��� */
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+
+	ReadFile(hFile, &(PortalDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+	PortalDesc.iNextLevel = LEVEL_RESTAURANT;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_CITY, TEXT("Layer_Portal"), &PortalDesc)))
+		return E_FAIL;
+
+
+	ReadFile(hFile, &(PortalDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+	PortalDesc.iNextLevel = LEVEL_WORKTOOL;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_CITY, TEXT("Layer_Portal"), &PortalDesc)))
+		return E_FAIL;
+
+	ReadFile(hFile, &(PortalDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+	PortalDesc.iNextLevel = LEVEL_LAWBATTLE;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_CITY, TEXT("Layer_Portal"), &PortalDesc)))
+		return E_FAIL;
+
+	ReadFile(hFile, &(PortalDesc.m_ModelDesc), sizeof(NONANIMDESC), &dwByte, nullptr);
+	PortalDesc.iNextLevel = LEVEL_BOSS;
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Portal"), LEVEL_CITY, TEXT("Layer_Portal"), &PortalDesc)))
+		return E_FAIL;
+
+	CloseHandle(hFile);
+
 	RELEASE_INSTANCE(CGameInstance);
+
+
+
 
 	return S_OK;
 }

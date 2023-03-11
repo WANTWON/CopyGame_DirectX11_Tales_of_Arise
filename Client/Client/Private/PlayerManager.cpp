@@ -172,6 +172,7 @@ void CPlayerManager::Set_SmashAttack()
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 	if ((nullptr != pLockonMonster) && (pLockonMonster->Get_Stats().m_fLockonSmashGuage >= 4.f))
 	{
+		
 		pLockonMonster->Set_IsActionMode(true);
 		pLockonMonster->Save_LastPosition();
 

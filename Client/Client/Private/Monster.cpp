@@ -72,6 +72,9 @@ int CMonster::Tick(_float fTimeDelta)
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	if (this == CBattleManager::Get_Instance()->Get_LackonMonster() && CGameInstance::Get_Instance()->Key_Down(DIK_V))
+		m_tStats.m_fLockonSmashGuage = 4.f;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_bhitboost)
@@ -708,7 +711,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
 		m_tStats.m_fLockonSmashGuage += 0.01f;
 	else
-		m_tStats.m_fLockonSmashGuage += 0.02f; 
+		m_tStats.m_fLockonSmashGuage += 0.05f; 
 
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
