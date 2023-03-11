@@ -28,9 +28,6 @@ CMonsterLawState * CMonster_LawAirR::Tick(_float fTimeDelta)
 
 	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 
-	if ((STATETYPE_END == m_eStateType))
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
 	if (STATETYPE_MAIN == m_eStateType)
 		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta * 3.f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
 	else
@@ -343,6 +340,7 @@ void CMonster_LawAirR::Enter()
 
 //	m_pTarget = pBattleMgr->Get_LackonMonster();
 	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
+
 
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
