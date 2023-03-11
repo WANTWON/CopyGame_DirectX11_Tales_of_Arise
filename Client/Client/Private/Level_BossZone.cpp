@@ -55,8 +55,8 @@ HRESULT CLevel_BossZone::Initialize()
 		g_fSoundVolume = 0.f;
 		CGameInstance::Get_Instance()->StopAll();
 
-		CGameInstance::Get_Instance()->PlayBGM(TEXT("Boss_Asu_BackGorundSound.wav"), g_fSoundVolume);
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BossRoomEnding.dat"), XMMatrixIdentity());
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BossKilledStroyBgm.wav"), g_fSoundVolume);
 	}
 	else
 	{
@@ -87,8 +87,8 @@ HRESULT CLevel_BossZone::Initialize()
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BossRoomPlayerEnter.dat"), XMMatrixIdentity());
 		CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 	}
-
-
+	
+		
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (pPlayer)
 		pPlayer->Get_Renderer()->Set_Fog(false);

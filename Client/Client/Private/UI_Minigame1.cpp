@@ -106,10 +106,9 @@ int CUI_Minigame1::Tick(_float fTimeDelta)
 
 		if (m_fGametime <= 0)
 		{
-			//m_iStartEndtexnum = 1;
 			if (!m_bMiniGameSound_End)
 			{
-				//m_iStartEndtexnum = 1;
+				m_iStartEndtexnum = 1;
 				CGameInstance::Get_Instance()->StopAll();
 				CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_MiniGame1_End.wav"), g_fSoundVolume);
 				m_bMiniGameSound_End = true;

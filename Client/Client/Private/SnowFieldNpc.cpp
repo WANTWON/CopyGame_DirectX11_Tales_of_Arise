@@ -35,7 +35,7 @@ HRESULT CSnowFieldNpc::Initialize(void * pArg)
 		m_eState = HURT;
 		break;
 	case MAN_OLD:
-		m_eState = ANIM_OLD_MAN::CROSSONESARMS_LP;
+		m_eState = ANIM_OLD_MAN::CROSSONESARMS_ST;
 		break;
 	case MAN_GLD:
 		m_eState = ANIM_MAN_GLD::TALKING;
@@ -149,7 +149,30 @@ _bool CSnowFieldNpc::Is_AnimationLoop(_uint eAnimId)
 
 void CSnowFieldNpc::Tick_State(_float fTimeDelta)
 {
-	m_pModelCom->Play_Animation(fTimeDelta, true);
+	switch (m_NpcDesc.eNpcType)
+	{
+	case MAN_OLD:
+		m_bAnimationFinished = m_pModelCom->Play_Animation(fTimeDelta, false);
+		
+		if (m_bAnimationFinished)
+		{
+			if (m_eState == 7)
+				m_eState = 8;
+			else if (m_eState == 8)
+				m_eState = 9;
+			else if (m_eState == 9)
+				m_eState = 7;
+
+			m_pModelCom->Set_CurrentAnimIndex(m_eState);
+			m_bAnimationFinished = false;
+		}
+		
+		break;
+	default:
+		m_pModelCom->Play_Animation(fTimeDelta, true);
+		break;
+	}
+	
 }
 
 void CSnowFieldNpc::LateTick_State(_float fTimeDelta)

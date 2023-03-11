@@ -87,7 +87,7 @@ int CTreasureBox::Tick(_float fTimeDelta)
 
 		if (m_bIsAnimationFinished)
 		{
-			
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("ItemGain.wav"), SOUND_VOICE, 0.5f);
 			m_bOpen = false;
 			m_bOpenFinish = true;
 			CUI_Manager::Get_Instance()->AddItem(ITEMNAME_OMEGAELIXIR, ITEMTYPE_POTION, true, true);

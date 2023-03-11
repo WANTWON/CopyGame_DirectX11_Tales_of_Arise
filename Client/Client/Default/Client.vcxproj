@@ -254,7 +254,6 @@
     <ClInclude Include="..\Public\Duohalem.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Fascinate.h" />
-    <ClInclude Include="..\Public\HawkJumpState.h" />
     <ClInclude Include="..\Public\IceWolfJumpState.h" />
     <ClInclude Include="..\Public\Kisara.h" />
     <ClInclude Include="..\Public\Law.h" />
@@ -551,7 +550,6 @@
     <ClCompile Include="..\Private\Duohalem.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Fascinate.cpp" />
-    <ClCompile Include="..\Private\HawkJumpState.cpp" />
     <ClCompile Include="..\Private\IceWolfJumpState.cpp" />
     <ClCompile Include="..\Private\Kisara.cpp" />
     <ClCompile Include="..\Private\Law.cpp" />

@@ -96,7 +96,7 @@ public: /*Getter Setter*/
 	void AddItem(ITEM_NAME name, ITEM_TYPE type , _bool popup, _bool msgbox, _uint count = 1);
 
 	
-	void PlusGald(_uint gald) { m_iGald += gald; }
+	void PlusGald(_uint gald);
 	void MinusGald(_uint gald) { m_iGald -= gald; }
 	_uint Get_Gald() { return m_iGald; }
 

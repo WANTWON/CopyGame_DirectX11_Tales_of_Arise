@@ -83,7 +83,7 @@ HRESULT CLevel_BattleZone::Initialize()
 		break;
 	case Client::RINWELL:
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellBattleEnter.dat"), XMMatrixIdentity());
-		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_FightWith_Rinwell.wav"), g_fSoundVolume);
 		break;
 	default:
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);

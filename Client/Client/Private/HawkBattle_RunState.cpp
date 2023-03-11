@@ -27,7 +27,12 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 	if (m_pCurTarget == nullptr)
 	{
-		m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+		int iRand = rand() % 2;
+		if (iRand == 0)
+			m_pCurTarget = m_pOwner->Find_MinDistance_Target();
+		else
+			m_pCurTarget = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+
 		m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 		m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 	}
@@ -44,13 +49,12 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 	{
 		if (m_fTarget_Distance > 4.5f)
 		{
-			if (m_b_IsTargetInsight == true)
-			{
-				_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
-				m_pOwner->Get_Transform()->LookDir(vTargetDir);
+			/*if (m_b_IsTargetInsight == true)
+			{*/
+				m_pOwner->Get_Transform()->LookAtExceptY(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 				m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.3f, m_pOwner->Get_Navigation());
-			}
-			else
+			//}
+			/*else
 			{
 				CTransform* pMonSterTransform = m_pOwner->Get_Transform();
 				_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
@@ -58,21 +62,18 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 
 				vLook = XMVectorSetY(vLook, 0.f);
 				vTargetDir = XMVectorSetY(vTargetDir, 0.f);
+				if (XMVectorGetX(XMVectorEqual(vTargetDir, XMVectorSet(0.f, 0.f, 0.f, 0.f))) != 0)
+					return nullptr;
 				_float fDot = XMVectorGetX(XMVector3Dot(vTargetDir, vLook));
 				if (fDot < 0.8f)
 					pMonSterTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 				m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
-			}
+			}*/
 		}
 		else
 		{
-			if (m_b_IsTargetInsight == false)
-			{
-				_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
-				vTargetDir = XMVectorSetY(vTargetDir, 0.f);
-				_vector vPosition = XMVectorSetY(m_vCurTargetPos, XMVectorGetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION)));
-				m_pOwner->Get_Transform()->LookDir(vTargetDir);
-			}
+			m_pOwner->Get_Transform()->LookAtExceptY(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+			
 		}
 	}
 
