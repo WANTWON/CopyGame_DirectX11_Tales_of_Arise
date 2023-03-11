@@ -606,22 +606,99 @@ void CLawAttackState::Enter()
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.bHitLag = true;
+
+			m_HitLagDesc.fHitLagTimer = 0.05f;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+			m_HitLagDesc.fBlurPower = 3.f;
+			m_HitLagDesc.fBlurDetail = 5.f;
+
+			m_HitLagDesc.fZoomDistance = 3.f;
+			m_HitLagDesc.fZoomSpeed = 1.5f;
+
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_0);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack1.wav"), SOUND_RAW_NORMAL1, 0.55f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack1.wav"), SOUND_EFFECT, 0.55f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.bHitLag = true;
+
+			m_HitLagDesc.fHitLagTimer = 0.05f;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+			m_HitLagDesc.fBlurPower = 3.f;
+			m_HitLagDesc.fBlurDetail = 5.f;
+
+
+			m_HitLagDesc.fZoomDistance = 4.f;
+			m_HitLagDesc.fZoomSpeed = 2.f;
+
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_1);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack2.wav"), SOUND_RAW_NORMAL2, 0.55f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack2.wav"), SOUND_EFFECT, 0.55f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.bHitLag = true;
+
+			m_HitLagDesc.fHitLagTimer = 0.05f;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+			m_HitLagDesc.fBlurPower = 5.f;
+			m_HitLagDesc.fBlurDetail = 7.f;
+
+			m_HitLagDesc.fZoomDistance = 5.f;
+			m_HitLagDesc.fZoomSpeed = 2.5f;
+
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_2);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack3.wav"), SOUND_RAW_NORMAL3, 0.55f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack3.wav"), SOUND_EFFECT, 0.55f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.bHitLag = true;
+
+			m_HitLagDesc.fHitLagTimer = 0.1f;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+			m_HitLagDesc.fBlurPower = 5.f;
+			m_HitLagDesc.fBlurDetail = 7.f;
+
+			m_HitLagDesc.fZoomDistance = 6.f;
+			m_HitLagDesc.fZoomSpeed = 3.f;
+
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_3);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack4.wav"), SOUND_RAW_NORMAL4, 0.55f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpNormal_Attack4.wav"), SOUND_EFFECT, 0.55f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK5:
+			m_HitLagDesc.bCritical = true;
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.bHitLag = true;
+
+			m_HitLagDesc.fHitLagTimer = 0.2f;
+			m_HitLagDesc.fShakingPower = 2.f;
+			m_HitLagDesc.fShakingMinusPower = 0.5f;
+
+			m_HitLagDesc.fBlurPower = 6.f;
+			m_HitLagDesc.fBlurDetail = 10.f;
+
+			m_HitLagDesc.fZoomDistance = 8.f;
+			m_HitLagDesc.fZoomSpeed = 4.f;
+
+			m_HitLagDesc.fTakeDamageTimer = 0.3f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_AIR_4);
 			break;
 		}
@@ -631,24 +708,101 @@ void CLawAttackState::Enter()
 		switch (m_eStateId)
 		{
 		case Client::CPlayerState::STATE_NORMAL_ATTACK1:
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.bHitLag = true;
+
+			m_HitLagDesc.fHitLagTimer = 0.05f;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+			m_HitLagDesc.fBlurPower = 3.f;
+			m_HitLagDesc.fBlurDetail = 5.f;
+
+			m_HitLagDesc.fZoomDistance = 3.f;
+			m_HitLagDesc.fZoomSpeed = 1.5f;
+
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_0);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack1.wav"), SOUND_RAW_NORMAL1, 0.45f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack1.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK2:
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.bHitLag = true;
+
+			m_HitLagDesc.fHitLagTimer = 0.05f;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+			m_HitLagDesc.fBlurPower = 3.f;
+			m_HitLagDesc.fBlurDetail = 5.f;
+
+
+			m_HitLagDesc.fZoomDistance = 4.f;
+			m_HitLagDesc.fZoomSpeed = 2.f;
+
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_1);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack2.wav"), SOUND_RAW_NORMAL2, 0.45f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack2.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK3:
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.bHitLag = true;
+
+			m_HitLagDesc.fHitLagTimer = 0.05f;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+			m_HitLagDesc.fBlurPower = 5.f;
+			m_HitLagDesc.fBlurDetail = 7.f;
+
+			m_HitLagDesc.fZoomDistance = 5.f;
+			m_HitLagDesc.fZoomSpeed = 2.5f;
+
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_2);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack3.wav"), SOUND_RAW_NORMAL3, 0.45f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack3.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK4:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_3);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack4.wav"), SOUND_RAW_NORMAL4, 0.45f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack4.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.bHitLag = true;
+
+			m_HitLagDesc.fHitLagTimer = 0.1f;
+			m_HitLagDesc.fShakingPower = 1.f;
+			m_HitLagDesc.fShakingMinusPower = 0.2f;
+
+			m_HitLagDesc.fBlurPower = 5.f;
+			m_HitLagDesc.fBlurDetail = 7.f;
+
+			m_HitLagDesc.fZoomDistance = 6.f;
+			m_HitLagDesc.fZoomSpeed = 3.f;
+
+			m_HitLagDesc.fTakeDamageTimer = 0.1f;
 			break;
 		case Client::CPlayerState::STATE_NORMAL_ATTACK5:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_NORMAL_4);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack5.wav"), SOUND_RAW_NORMAL5, 0.45f);
+			m_HitLagDesc.bCritical = true;
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.bShaking = true;
+			m_HitLagDesc.bHitLag = true;
+			
+			m_HitLagDesc.fHitLagTimer = 0.2f;
+			m_HitLagDesc.fShakingPower = 2.f;
+			m_HitLagDesc.fShakingMinusPower = 0.5f;
+
+			m_HitLagDesc.fBlurPower = 6.f;
+			m_HitLagDesc.fBlurDetail = 10.f;
+
+			m_HitLagDesc.fZoomDistance = 8.f;
+			m_HitLagDesc.fZoomSpeed = 4.f;
+
+			m_HitLagDesc.fTakeDamageTimer = 0.3f;
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Normal_Attack5.wav"), SOUND_LAW_NORMAL_ATTACK, 0.45f);
 			break;
 		}
 	}
@@ -667,6 +821,12 @@ void CLawAttackState::Enter()
 void CLawAttackState::Exit()
 {
 	__super::Exit();
+
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false);
+	}
 
 	Safe_Release(m_pLeftHandCollider);
 	Safe_Release(m_pRightHandCollider);

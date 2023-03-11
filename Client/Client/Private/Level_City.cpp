@@ -144,6 +144,9 @@ void CLevel_City::Tick(_float fTimeDelta)
 		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 		LEVEL eNextLevel = (LEVEL)m_iNextLevelIndex;
+
+		if(eNextLevel == LEVEL_BOSS)
+			CBattleManager::Get_Instance()->Set_BattleMode(true);
 		pGameInstance->Set_DestinationLevel(eNextLevel);
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
 			return;

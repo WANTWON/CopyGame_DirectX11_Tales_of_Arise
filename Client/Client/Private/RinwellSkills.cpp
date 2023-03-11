@@ -418,7 +418,7 @@ void CRinwellSkills::Collision_Check()
 		{
 			if (m_bNormalHit == false)
 			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack_Hit.wav"), SOUND_RINWELL_NORMAL, 0.6f);
+				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Normal_Attack_Hit.wav"), SOUND_WEAPON, 0.6f);
 				m_bNormalHit = true;
 			}
 		}
@@ -600,15 +600,10 @@ void CRinwellSkills::Dead_Effect()
 		BulletDesc.pOwner = m_BulletDesc.pOwner;
 
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC && Check_IsinFrustum(3.f) == true)
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.1f);
+			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.4f, 0.1f);
 
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 			return;
-		/*if (m_bMeteorSound == false)
-		{
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillHit.wav"), SOUND_EFFECT, 1.0f);
-			m_bMeteorSound = true;
-		}*/
 		break;
 	}
 	case THUNDER_FIELD:

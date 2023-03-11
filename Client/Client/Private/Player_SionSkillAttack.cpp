@@ -113,7 +113,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
 							m_fEventStart = pEvent.fStartTime;
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_SION_EFF, 0.5f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_E.wav"), SOUND_SION_SKILL, 0.5f);
 						}
 
 						else if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_TRESVENTOS))
@@ -142,7 +142,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 								return nullptr;
 							m_fEventStart = pEvent.fStartTime;
 							m_iCount++;
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_TEST.wav"), SOUND_SION_EFF, 0.5f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Jump_E_TEST.wav"), SOUND_SION_SKILL, 0.5f);
 						}
 					}
 				}
@@ -179,7 +179,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 				{
 					if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE))
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_R_Test.wav"), SOUND_SION_EFF, 0.5f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_R_Test.wav"), SOUND_SION_SKILL, 0.5f);
 						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 						if (pTarget == nullptr)
 							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
@@ -245,7 +245,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime) && !m_bBulletMade)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_F.wav"), SOUND_SION_EFF, 0.8f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_F.wav"), SOUND_SION_SKILL, 0.8f);
 						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 						if (pTarget == nullptr)
 							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
@@ -302,7 +302,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_E.wav"), SOUND_SION_EFF, 0.6f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_E.wav"), SOUND_SION_SKILL, 0.6f);
 						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 						if (pTarget == nullptr)
 							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
@@ -418,7 +418,7 @@ CPlayerState * CPlayer_SionSkillAttack::Tick(_float fTimeDelta)
 
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_R_Test.wav"), SOUND_SION_EFF, 0.6f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_Ctrl_R_Test.wav"), SOUND_SION_SKILL, 0.6f);
 						CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 						if (pTarget == nullptr)
 							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
@@ -637,8 +637,6 @@ void CPlayer_SionSkillAttack::Exit(void)
 
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_Zoom(false, 3.f, 1.f, 6.f, 10.f);
-
-	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 
 	
 }

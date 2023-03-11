@@ -106,8 +106,9 @@ void CLevel_LawBattle::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
+	if ((CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON) ||
+		CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 	{
 		g_fSoundVolume += 0.01f;
 		if (g_fSoundVolume >= 0.15f)
@@ -320,27 +321,27 @@ void CLevel_LawBattle::BattleLateTick(_float fTimeDelta)
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_1))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::ALPHEN);
-			if (!m_bZumIn)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
-				m_bZumIn = true;
-			}
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_2))
 		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::SION);
-			if (!m_bZumIn)
-			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_EFFECT, 1.0f);
-				m_bZumIn = true;
-			}
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+
 		}
 
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_3))
+		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::RINWELL);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_4))
+		{
 			CPlayerManager::Get_Instance()->Set_ActivePlayer(CPlayer::LAW);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("ZumIn.wav"), SOUND_CROWD, 0.7f);
+		}
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_Z))
 		{
 			CUI_RuneEffect::RUNEDESC desc;
@@ -484,6 +485,7 @@ HRESULT CLevel_LawBattle::Ready_Layer_Player(const _tchar * pLayerTag)
 	pPlayer->Change_Navigation(LEVEL_LAWBATTLE);
 	pPlayer->Compute_CurrentIndex(LEVEL_LAWBATTLE);
 	pPlayer->Check_Navigation();
+	pPlayer->Set_IsActionMode(true);
 	pPlayer->Off_IsFly();
 	pPlayer->Set_BattlePose(false);
 

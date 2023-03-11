@@ -31,6 +31,9 @@ private:
 	_float m_fEffectEventCurTime = 0.f;
 	_float m_fEffectEventEndTime = 0.f;
 	_bool m_bIncreaseOverLimit = false;
+
+	//Sound 
+	_bool m_bDodgeSound = false;
 };
 END
 END

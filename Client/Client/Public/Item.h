@@ -43,12 +43,14 @@ private:
 
 	_bool m_bfirst = false;
 	_float m_fTimeDeltaAcc = 0.f;
+	_float m_fTimeDeltaAcc_Treasure = 0.f;
 
 	vector<class CEffect*> m_pPickupFlares;
 	vector<class CEffect*> m_pGetItem;
 
 	_float m_fDissolveTimer = 0.f;
 	_float m_fDissolveLifespan = 3.f;
+
 
 public:
 	static CItem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

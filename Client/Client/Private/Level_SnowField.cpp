@@ -249,6 +249,7 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 		CPlayerManager::Get_Instance()->Save_LastPosition();
 		m_pCollision_Manager->Clear_AllCollisionGroup();
 
+		CBattleManager::Get_Instance()->Set_BattleMode(true);
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Camera"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Backgorund"));
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_SNOWFIELD, TEXT("Layer_Interact"));
@@ -753,5 +754,5 @@ void CLevel_SnowField::Free()
 	Safe_Release(m_pCollision_Manager);
 	
 	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
-
+	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 }

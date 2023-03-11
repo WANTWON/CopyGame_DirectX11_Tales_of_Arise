@@ -31,6 +31,7 @@ CMonster_LawSkill::CMonster_LawSkill(CMonsterLaw * pPlayer, STATE_ID eStaetType)
 
 CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 {
+	Update_Skill();
 
 	if (nullptr == m_pTarget)
 	{
@@ -39,10 +40,6 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 	}
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-
-	Update_Skill();
-
-	
 
 	if ((m_eStateId == SKILL_F) && (nullptr != m_pTarget))
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
@@ -82,50 +79,6 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 					if (nullptr == m_pRightFootCollider)
 						m_pRightFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 					pCollisionMgr->Add_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pRightFootCollider, m_pOwner);
-					//if ((m_fEventStart != pEvent.fStartTime))
-					//{
-					//	_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK));
-					//	_vector vRight = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_RIGHT));
-					//	_vector vPostion = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
-					//	CBullet::BULLETDESC BulletDesc;
-					//	BulletDesc.eCollisionGroup = MONSTER;
-					//	BulletDesc.eBulletType = CSionSkills::TRESVENTOS;
-					//	BulletDesc.vInitPositon = XMVectorSetY(vPostion, XMVectorGetY(vPostion) + 3.f) + vLook*2.f;
-					//	/*if (m_iCount == 0)
-					//		BulletDesc.vInitPositon -= vRight*2.f;
-					//	if (m_iCount == 1)
-					//		BulletDesc.vInitPositon += vRight*2.f;*/
-					//	 
-					//	BulletDesc.pOwner = m_pOwner;
-					//	BulletDesc.fVelocity = 5.f;
-					//	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
-					//	BulletDesc.pTarget = m_pTarget;
-					//
-					//	
-
-
-					//	BulletDesc.vTargetDir = vLook;
-					//	
-					//	BulletDesc.vInitPositon -= vRight*6.f;
-					//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-					//		return nullptr;
-					//	BulletDesc.vInitPositon += vRight*3.f;
-					//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-					//		return nullptr;
-					//	BulletDesc.vInitPositon += vRight*3.f;
-					//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-					//		return nullptr;
-					//	BulletDesc.vInitPositon += vRight*3.f;
-					//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-					//		return nullptr;
-					//	BulletDesc.vInitPositon += vRight*3.f;
-					//	if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_LAWBATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-					//		return nullptr;
-					//	m_fEventStart = pEvent.fStartTime;
-					//}
-					//m_iCount++;
-
-
 					break;
 				case SKILL_R:
 					if (nullptr == m_pRightFootCollider)
@@ -155,29 +108,29 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 					
 
 					break;
-				case SKILL_STRIKE:
-					if ((m_fEventStart != pEvent.fStartTime))
-					{
-						m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
-						//	CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-						//	if (pTarget == nullptr)
-						//		pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
+				//case SKILL_STRIKE:
+				//	if ((m_fEventStart != pEvent.fStartTime))
+				//	{
+				//		m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
+				//		//	CBaseObj * pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
+				//		//	if (pTarget == nullptr)
+				//		//		pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 
-							CBullet::BULLETDESC BulletDesc;
-							BulletDesc.eCollisionGroup = MONSTER;
-							BulletDesc.fVelocity = 1.f;
-							BulletDesc.eBulletType = CSionSkills::MAGNA_RAY;
-							BulletDesc.iDamage = 74;
-							BulletDesc.fDeadTime = 2.f;
-							BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
-							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*4.f);
-							BulletDesc.pOwner = m_pOwner;
+				//			CBullet::BULLETDESC BulletDesc;
+				//			BulletDesc.eCollisionGroup = MONSTER;
+				//			BulletDesc.fVelocity = 1.f;
+				//			BulletDesc.eBulletType = CSionSkills::MAGNA_RAY;
+				//			BulletDesc.iDamage = 74;
+				//			BulletDesc.fDeadTime = 2.f;
+				//			BulletDesc.vTargetDir = XMVector3Normalize(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_LOOK));
+				//			BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*4.f);
+				//			BulletDesc.pOwner = m_pOwner;
 
-							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-								return nullptr;
-							m_fEventStart = pEvent.fStartTime;
-						
-					}
+				//			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+				//				return nullptr;
+				//			m_fEventStart = pEvent.fStartTime;
+				//		
+				//	}
 				}
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -272,7 +225,11 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 						{
 							if (!m_bRondsenpu)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_1.dat"), mWorldMatrix);
+								vector<CEffect*> Rondsenpu = CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_1.dat"), mWorldMatrix);
+
+								_matrix EffectWorldMatrix = Rondsenpu.front()->Get_Transform()->Get_WorldMatrix();
+								CEffect::PlayEffectAtLocation(TEXT("Rondsenpu_Particles.dat"), EffectWorldMatrix);
+
 								m_bRondsenpu = true;
 							}
 						}
@@ -298,6 +255,8 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 						{
 							if (!m_bGaryoukuuha)
 							{
+								CEffect::PlayEffectAtLocation(TEXT("Garyoukuuha_Particles.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Garyoukuuha_Ring.dat"), mWorldMatrix);
 								m_Garyoukuuha = CEffect::PlayEffectAtLocation(TEXT("Garyoukuuha.dat"), mWorldMatrix);
 								m_bGaryoukuuha = true;
 							}
@@ -324,6 +283,7 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 						{
 							if (!m_bTyourengadan_1)
 							{
+								CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 								CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_1.dat"), mWorldMatrix);
 								m_bTyourengadan_1 = true;
 							}
@@ -344,21 +304,16 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 								m_bTyourengadan_3 = true;
 							}
 						}
-						if (!strcmp(pEvent.szName, "Tyourengadan_4"))
-						{
-							if (!m_bTyourengadan_4)
-							{
-								mWorldMatrix.r[3] = m_vPunchPosition;
-
-								CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_4.dat"), mWorldMatrix);
-								m_bTyourengadan_4 = true;
-							}
-						}
 						if (!strcmp(pEvent.szName, "Tyourengadan_5"))
 						{
 							if (!m_bTyourengadan_5)
 							{
-								CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
+								CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
+								vector<CEffect*> Tyourengadan = CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_5.dat"), mWorldMatrix);
+
+								_matrix EffectWorldMatrix = Tyourengadan.front()->Get_Transform()->Get_WorldMatrix();
+								CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Particles.dat"), EffectWorldMatrix);
+
 								m_bTyourengadan_5 = true;
 							}
 						}
@@ -366,6 +321,7 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 						{
 							if (!m_bTyourengadan_Kick)
 							{
+								CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 								CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Kick.dat"), mWorldMatrix);
 								m_bTyourengadan_Kick = true;
 							}
@@ -389,12 +345,12 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 				{
 					if (!strcmp(pEvent.szName, "Law_Boost"))
 					{
-
 						if (!m_bLawBoost)
 						{
 							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-							vector<CEffect*> Boost = CEffect::PlayEffectAtLocation(TEXT("Law_Boost.dat"), mWorldMatrix);
 
+							CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
+							vector<CEffect*> Boost = CEffect::PlayEffectAtLocation(TEXT("Law_Boost.dat"), mWorldMatrix);
 
 							_vector vPosition = Boost.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 							mWorldMatrix.r[3] = vPosition;
@@ -462,9 +418,8 @@ CMonsterLawState * CMonster_LawSkill::Tick(_float fTimeDelta)
 						}
 						m_fEventStartTime = -1.f;
 					}
+
 					break;
-
-
 				}
 			}
 		}
@@ -607,7 +562,6 @@ CMonsterLawState * CMonster_LawSkill::LateTick(_float fTimeDelta)
 
 void CMonster_LawSkill::Enter(void)
 {
-
 	Reset_Skill();
 
 	switch (m_eStateId)

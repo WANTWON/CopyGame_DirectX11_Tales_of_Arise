@@ -87,6 +87,7 @@ public:
 private:
 	void ZoomSetting(_float fDistance, _float fSpeed, _float fFocusPower, _float fFocusDetail);
 	void Shaking_Camera(_float fTimeDelta);
+	void Shaking_CameraTarget(_float fTimeDelta);
 
 private:
 	class CBaseObj*	m_pTarget = nullptr;

@@ -192,6 +192,9 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
+							CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+							pCamera->Set_Zoom(true, 4.f, 1.f, 5.f, 10.f);
+
 							for (_int i = 0; i < CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1; ++i)
 							{
 								if (CPlayerManager::Get_Instance()->Get_EnumPlayer(i)->Get_Info().fCurrentHp > 0)
@@ -233,6 +236,9 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 								
 								CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 								vector<CEffect*> Boost = CEffect::PlayEffectAtLocation(TEXT("Law_Boost.dat"), mWorldMatrix);
+
+								CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+								pCamera->Set_Zoom(true, 6.f, 3.f, 5.f, 10.f);
 
 								_vector vPosition = Boost.front()->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								mWorldMatrix.r[3] = vPosition;

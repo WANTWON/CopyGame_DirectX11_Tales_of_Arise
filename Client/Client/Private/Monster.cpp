@@ -589,6 +589,7 @@ void CMonster::Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 
 	if (HitDesc.bCritical == true && DamageCauser == CPlayerManager::Get_Instance()->Get_ActivePlayer())
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("CriticalHit.wav"), SOUND_SKILL5, 1.0f);
 		testdesc.itype = 1;
 		if (false == (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Damage"), &testdesc)))
 		{
@@ -674,7 +675,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 
 		}
 		
-		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC && HitDesc.bShaking)
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC && HitDesc.bShaking == true)
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(HitDesc.bShaking, HitDesc.fShakingPower, HitDesc.fShakingMinusPower);
 	}
 
@@ -690,9 +691,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
 		m_tStats.m_fLockonSmashGuage += 0.01f;
 	else
-		m_tStats.m_fLockonSmashGuage += 0.05f; 
-		
-
+		m_tStats.m_fLockonSmashGuage += 0.1f; 
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)
 		m_tStats.m_fLockonSmashGuage = 4.f;

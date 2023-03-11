@@ -3,8 +3,8 @@
 #include "MonsterLawState.h"
 
 BEGIN(Client)
+class CEffect;
 BEGIN(MonsterLaw)
-
 class CMonster_LawAirR final : public CMonsterLawState
 {
 public:
@@ -17,6 +17,10 @@ public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
+private:
+	void Update_Skill(void);
+	void Remove_Skill(void);
+	void Reset_Skill(void);
 
 private:
 	_matrix m_StartMatrix;
@@ -43,10 +47,9 @@ private:
 	_vector m_vPunchPosition_2;
 
 	/* Effect Vectors */
-	vector<class CEffect*> m_Sankamousyuukyaku_1;
-	vector<class CEffect*> m_Sankamousyuukyaku_Punch_1;
-	vector<class CEffect*> m_Sankamousyuukyaku_Punch_2;
-
+	vector<CEffect*> m_Sankamousyuukyaku_1;
+	vector<CEffect*> m_Sankamousyuukyaku_Punch_1;
+	vector<CEffect*> m_Sankamousyuukyaku_Punch_2;
 };
 END
 END

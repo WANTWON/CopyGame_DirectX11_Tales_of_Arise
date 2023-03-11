@@ -416,7 +416,7 @@ void CSionSkills::Collision_Check()
 		m_HitLagDesc.bLockOnChange = false;
 		m_HitLagDesc.bHitLag = true;
 		m_HitLagDesc.fHitLagTimer = 0.05f;
-		m_HitLagDesc.fTakeDamageTimer = 0.05f;
+		m_HitLagDesc.fTakeDamageTimer = 0.1f;
 		m_HitLagDesc.bShaking = false;
 
 		if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
@@ -575,7 +575,16 @@ void CSionSkills::Dead_Effect()
 	case GRAVITY_DEAD:
 	{
 		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
+		{
+			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			{
+				CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+
+				if (pCamera->Get_CamMode() != CCamera_Dynamic::CAM_TARGETMODE)
+					pCamera->Set_ShakingMode(true, 3.f, 0.1f);
+
+			}
+		}
 		if (!m_pEffects.empty())
 		{
 			for (auto& iter : m_pEffects)
@@ -630,8 +639,14 @@ void CSionSkills::Dead_Effect()
 			m_bExplosionSound = true;
 		}
 
-		if(CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
-			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 3.f, 0.1f);
+		if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+		{
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+				
+			if(pCamera->Get_CamMode() != CCamera_Dynamic::CAM_TARGETMODE)
+				pCamera->Set_ShakingMode(true, 3.f, 0.1f);
+
+		}
 		_vector vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		_vector vRight = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE::STATE_RIGHT));
 		_matrix mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();

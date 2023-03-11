@@ -158,10 +158,15 @@ void CAlphenSkills::Collision_Check()
 		case BOOST_2:
 			m_HitLagDesc.bLockOnChange = false;
 			m_HitLagDesc.bHitLag = true;
-			m_HitLagDesc.fHitLagTimer = 0.15f;
+			m_HitLagDesc.fHitLagTimer = 0.1f;
 			m_HitLagDesc.bShaking = true;
 			m_HitLagDesc.fShakingPower = 2.f;
 			m_HitLagDesc.fShakingMinusPower = 0.2f;
+			m_HitLagDesc.bZoom = true;
+			m_HitLagDesc.fZoomDistance = 3.f;
+			m_HitLagDesc.fZoomSpeed = 0.5f;
+			m_HitLagDesc.fBlurPower = 6.f;
+			m_HitLagDesc.fBlurDetail = 10.f;
 
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
