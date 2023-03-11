@@ -926,6 +926,11 @@ HRESULT CLoader::Loading_ForStaticLevel()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/RinwellWeapon/RINWELLWEAPON.dat"))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Model_Rinwell_Weapon */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("KISARAWEAPON"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/KisaraWeapon/KISARAWEAPON.dat"))))
+		return E_FAIL;
+
 	/*For.Prototype_Component_Model_IceWolf*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Ice_Wolf"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Ice_Wolf/Ice_Wolf.dat"))))

@@ -70,7 +70,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 
 					if (!m_bSkill_E_Sound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_LAW_SKILL, 0.25f);
 						m_bSkill_E_Sound = true;
 					}
 					break;
@@ -80,7 +80,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 
 					if (!m_bSkill_R_Sound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_LAW_SKILL, 0.25f);
 						m_bSkill_R_Sound = true;
 					}
 					break;
@@ -105,7 +105,7 @@ CAIState * CAI_LAW_SkillAttack_State::Tick(_float fTimeDelta)
 
 					if (!m_bSkill_F_Sound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_LAW_SKILL, 0.25f);
 						m_bSkill_F_Sound = true;
 					}
 					break;
@@ -540,14 +540,17 @@ void CAI_LAW_SkillAttack_State::Enter(void)
 		case Client::CAIState::STATE_SKILL_ATTACK_E:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_RONDSENPU);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_WARYUNGGONGPA);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillVoice.wav"), SOUND_LAW_VOICE, 0.4f);
 			break;
 		case Client::CAIState::STATE_SKILL_ATTACK_R:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_GARYOUKUUHA);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YOONMUSUNPOONG);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillVoice.wav"), SOUND_LAW_VOICE, 0.5f);
 			break;
 		case Client::CAIState::STATE_SKILL_ATTACK_F:
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_TYOURENGADAN);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_CHOYUNATAN);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillVoice.wav"), SOUND_LAW_VOICE, 0.5f);
 			break;
 	}
 

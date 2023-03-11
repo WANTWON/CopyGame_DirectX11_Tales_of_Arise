@@ -363,7 +363,7 @@ void CAI_LAW_AIRSKILLR::Enter()
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_R.wav"), SOUND_EFFECT, 0.25f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_R.wav"), SOUND_LAW_VOICE, 0.25f);
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_SANHWAMANGSUP);
 	
 	
@@ -377,7 +377,7 @@ void CAI_LAW_AIRSKILLR::Exit()
 	Safe_Release(m_pLeftHandCollider);
 	Safe_Release(m_pRightHandCollider);
 
-	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+	
 }
 
 void CAI_LAW_AIRSKILLR::Update_Skill(void)

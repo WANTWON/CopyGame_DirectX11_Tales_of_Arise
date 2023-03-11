@@ -141,7 +141,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						//m_bCollideFinsh = true;
 						m_fEventStart = pEvent.fStartTime;
 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillSound.wav"), SOUND_RINWELL_SKILL, 0.25f);
 					}
 
 
@@ -187,7 +187,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						//m_bCollideFinsh = true;
 						m_fEventStart = pEvent.fStartTime;
 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_R_SkillSound.wav"), SOUND_EFFECT, 0.2f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_R_SkillSound.wav"), SOUND_RINWELL_SKILL, 0.2f);
 					}
 
 					//m_fEventStart = pEvent.fStartTime;
@@ -232,8 +232,8 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_METEORSWARM);
 						m_fEventStart = pEvent.fStartTime;
 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillSound.wav"), SOUND_EFFECT, 0.2f);
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_EFFECT, 0.3f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillSound.wav"), SOUND_RINWELL_SKILL, 0.2f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_RINWELL_SKILL, 0.3f);
 					}
 				}
 
@@ -279,8 +279,8 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						m_fEventStart = pEvent.fStartTime;
 						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_DIVINESABER);
 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound.wav"), SOUND_EFFECT, 0.2f);
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_EFFECT, 0.3f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound.wav"), SOUND_RINWELL_SKILL, 0.2f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_RINWELL_SKILL, 0.3f);
 
 					}
 				}
@@ -335,7 +335,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						m_fEventStart = pEvent.fStartTime;
 						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_HOLYRANCE);
 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound.wav"), SOUND_RINWELL_SKILL, 0.25f);
 					}
 				}
 
@@ -369,7 +369,7 @@ CAIState * CAI_Rinwell_SkillState::Tick(_float fTimeDelta)
 						m_fEventStart = pEvent.fStartTime;
 						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillSound.wav"), SOUND_EFFECT, 0.25f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillSound.wav"), SOUND_RINWELL_SKILL, 0.25f);
 					}
 				}
 
@@ -627,22 +627,24 @@ void CAI_Rinwell_SkillState::Enter()
 	case STATE_GALEFORCE:
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_FUATU;
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GALEFORCE);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
 		break;
 	case STATE_THUNDERFIELD:
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_DENGEKISYOUHEKI;
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_THUNDERFIELD);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_R_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
 		break;
 	case STATE_METEOR:
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MAGIC_START;
-
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
 		break;
 	case STATE_DIVINE_SABER:
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MAGIC_START;
-		
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.7f);
 		break;
 	case STATE_HOLYRANCE:
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_MAGIC_START;
-
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
 		break;
 	case STATE_BANGJEON:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
@@ -652,6 +654,7 @@ void CAI_Rinwell_SkillState::Enter()
 		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 		m_iCurrentAnimIndex = CRinwell::ANIM::BTL_ATTACK_HOUDEN;
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
 		break;
 	}
 
