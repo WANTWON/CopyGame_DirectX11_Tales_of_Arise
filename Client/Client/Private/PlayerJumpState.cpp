@@ -156,8 +156,6 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.02f), fRotationRadian, m_pOwner->Get_Navigation());
 
-		m_pOwner->Check_Navigation();
-
 		m_bIsJump = false;
 	}
 
@@ -221,10 +219,8 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 	m_pOwner->Get_Navigation()->Compute_CurrentIndex_byXZ(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
 	if (STATETYPE_END == m_eStateType)
-	{
 		m_pOwner->Check_Navigation_Jump();
 
-	}
 	return nullptr;
 }
 
@@ -806,7 +802,12 @@ void CJumpState::Move(_float fTimeDelta)
 		m_bIsDrop = false;
 
 	if (JUMP_RUN == m_eJumpType)
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 3.f);
+	{
+		if (STATETYPE_END != m_eStateType)
+			m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 3.f);
+		else
+			m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f, m_pOwner->Get_Navigation());
+	}
 	else if ((JUMP_BATTLE == m_eJumpType) && (m_eDirection != DIR_END) && (STATETYPE_END != m_eStateType))
-		m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 3.f);
+		m_pOwner->Get_Transform()->Sliding_Straight(fTimeDelta * 3.f, m_pOwner->Get_Navigation());
 }

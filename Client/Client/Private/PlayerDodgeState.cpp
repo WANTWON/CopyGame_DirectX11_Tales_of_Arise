@@ -255,6 +255,9 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 					ColliderDesc.vPosition = _float3(0.f, 2.5f, 0.f);
 
 					m_pDodgeCollider = pCollisionMgr->Reuse_Collider(CCollider::TYPE_SPHERE, LEVEL_STATIC, TEXT("Prototype_Component_Collider_SPHERE"), &ColliderDesc);
+
+					if (m_pOwner->Get_IsJustDodge())
+						m_pOwner->Off_JustDodge();
 				}
 			}
 			if (ANIMEVENT::EVENTTYPE::EVENT_STATE == pEvent.eType)
@@ -264,11 +267,6 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 		{
 			if ((ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType) && (m_pOwner->Get_IsJustDodge() == true))
 			{
-				m_pOwner->Off_JustDodge();
-
-				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
-				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Camera"), 0.3f);
-
 				if (nullptr != m_pDodgeCollider)
 				{
 					CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
@@ -327,7 +325,6 @@ CPlayerState * CDodgeState::LateTick(_float ftimeDelta)
 
 	if (m_bIsAnimationFinished)
 	{
-
 		if (!m_pOwner->Get_Overlimit() && (m_pOwner->Get_Info().idodgecount >= 8))
 		{
 		    CBaseObj* pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
@@ -462,23 +459,59 @@ CPlayerState * CDodgeState::EventInput(void)
 	if (!m_bIsFly)
 	{
 		if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT_LEFT, m_fTime);
+		{
+			m_eDirection = DIR_STRAIGHT_LEFT;
+
+			Enter();
+		}
 		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT_RIGHT, m_fTime);
+		{
+			m_eDirection = DIR_STRAIGHT_RIGHT;
+
+			Enter();
+		}
 		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_BACKWARD_LEFT, m_fTime);
+		{
+			m_eDirection = DIR_BACKWARD_LEFT;
+
+			Enter();
+		}
 		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_BACKWARD_RIGHT, m_fTime);
+		{
+			m_eDirection = DIR_BACKWARD_RIGHT;
+
+			Enter();
+		}
 		else if (pGameInstance->Key_Pressing(DIK_A) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_LEFT, m_fTime);
+		{
+			m_eDirection = DIR_LEFT;
+
+			Enter();
+		}
 		else if (pGameInstance->Key_Pressing(DIK_D) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_RIGHT, m_fTime);
+		{
+			m_eDirection = DIR_RIGHT;
+
+			Enter();
+		}
 		else if (pGameInstance->Key_Pressing(DIK_S) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_BACKWARD, m_fTime);
+		{
+			m_eDirection = DIR_BACKWARD;
+
+			Enter();
+		}
 		else if (pGameInstance->Key_Pressing(DIK_W) && pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_STRAIGHT, m_fTime);
+		{
+			m_eDirection = DIR_STRAIGHT;
+
+			Enter();
+		}
 		else if (pGameInstance->Key_Pressing(DIK_LSHIFT))
-			return new CDodgeState(m_pOwner, DIR_END, m_fTime);
+		{
+			m_eDirection = DIR_END;
+
+			Enter();
+		}
 	}
 
 	return nullptr;
@@ -594,6 +627,16 @@ void CDodgeState::Enter(void)
 	m_pOwner->Set_Manarecover(true);
 
 	Rotation();
+
+	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
+	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Camera"), 1.f);
+
+	if (m_bDodgeEffect)
+	{
+		m_pOwner->Set_DodgeEffect(true);
+		m_bDodgeEffect = false;
+	}
+		
 }
 
 void CDodgeState::Exit(void)
@@ -602,9 +645,6 @@ void CDodgeState::Exit(void)
 
 	if (m_bDodgeEffect)
 		m_pOwner->Set_DodgeEffect(true);
-
-	if (m_pOwner->Get_IsJustDodge())
-		m_pOwner->Off_JustDodge();
 	
 	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 
