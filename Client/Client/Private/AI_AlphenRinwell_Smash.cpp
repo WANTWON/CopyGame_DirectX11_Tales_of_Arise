@@ -305,12 +305,12 @@ void CAI_AlphenRinwell_Smash::Exit()
 			{
 				dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
 				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 			}
 			else
 			{
 				dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
-				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				dynamic_cast<CMonster*>(pLockOn)->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 			}
 		}
 
