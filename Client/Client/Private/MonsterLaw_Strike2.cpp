@@ -272,7 +272,7 @@ void CMonsterLaw_Strike2::Exit()
 
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 	dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
-	dynamic_cast<CPlayer*>(StrikeTarget)->Take_Damage(10000, CPlayerManager::Get_Instance()->Get_ActivePlayer());
+	dynamic_cast<CPlayer*>(StrikeTarget)->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer());
 	
 
 

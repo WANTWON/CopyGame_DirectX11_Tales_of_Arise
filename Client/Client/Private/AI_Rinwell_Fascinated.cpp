@@ -36,7 +36,11 @@ CAIState * CAI_Rinwell_Fascinated::Tick(_float fTimeDelta)
 
 CAIState * CAI_Rinwell_Fascinated::LateTick(_float fTimeDelta)
 {
-
+	for (auto& pEffect : m_pEffects)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
 
 	/*if (m_bIsAnimationFinished)
 	{
@@ -72,8 +76,13 @@ void CAI_Rinwell_Fascinated::Enter()
 void CAI_Rinwell_Fascinated::Exit()
 {
 	__super::Exit();
-	if (!m_pEffects.empty())
+	
+	for (auto& pEffect : m_pEffects)
 	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+
 		for (auto& iter : m_pEffects)
 		{
 			if (iter != nullptr)
@@ -81,9 +90,8 @@ void CAI_Rinwell_Fascinated::Exit()
 				iter->Set_Dead(true);
 				iter = nullptr;
 			}
-
 		}
-	}
+	
 }
 
 

@@ -112,6 +112,9 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 	{
 		dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(2, true, 1, 0);
 	}
+
+
+
 		
 		
 
@@ -2623,6 +2626,14 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("로우")))
 	{
 		m_iPortraitnum = 3;
+	}
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("키사라")))
+	{
+		m_iPortraitnum = 4;
+	}
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("듀오할람")))
+	{
+		m_iPortraitnum = 5;
 	}
 	else
 		m_iPortraitnum = 100;

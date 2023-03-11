@@ -231,6 +231,12 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 		
 
 	}
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_HOME))
+		m_bdoStrike1 = true;
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_END))
+		m_bdoStrike2 = true;
+
+
 
 
 	if(m_bAfterThunder)
