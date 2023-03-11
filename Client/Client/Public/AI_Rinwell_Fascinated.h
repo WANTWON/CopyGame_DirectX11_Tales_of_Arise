@@ -16,15 +16,11 @@ public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
-
-
-
 private:
 	_bool m_bStopRunning = false;
 
 	ITEM_NAME m_eItemname = ITEMNAME_END;
 	_float m_fEventStart = -1.f;
-	vector<class CEffect*> m_pEffects;
 };
 END
 END
