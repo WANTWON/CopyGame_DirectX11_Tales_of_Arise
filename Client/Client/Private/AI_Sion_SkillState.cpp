@@ -608,8 +608,23 @@ void CAI_Sion_SkillState::Enter()
 		if(m_pTarget != nullptr)
 			m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 	}
-	else
-		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	if (nullptr != m_pTarget)
+	{
+		_float4 fTargetPos;
+		XMStoreFloat4(&fTargetPos, m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+		fTargetPos.y = m_pOwner->Get_Transform()->Get_World4x4().m[3][1];
+
+		_vector		vLook = XMLoadFloat4(&fTargetPos) - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
+		_vector		vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		_vector		vRight = XMVector3Cross(vAxisY, vLook);
+
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_RIGHT, XMVector3Normalize(vRight) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_RIGHT));
+		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_LOOK, XMVector3Normalize(vLook) * m_pOwner->Get_Transform()->Get_Scale(CTransform::STATE_LOOK));
+	}
+
 	switch (m_iCurrentAnimIndex)
 	{
 	case CSion::ANIM::BTL_ATTACK_GRAVITY_FORCE:

@@ -442,6 +442,37 @@ PS_GLOW_OUT PS_GLOW_DISSOLVE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_DISCARD(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	//float4 vTextureNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
+	//float3 vNormal;
+
+	////vNormal = float3(vTextureNormal.x*2.f-1.f, vTextureNormal.y*2.f-1.f, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
+	//vNormal = float3(vTextureNormal.x, vTextureNormal.y, sqrt(1 - vTextureNormal.x * vTextureNormal.x - vTextureNormal.y * vTextureNormal.y));
+	//vNormal = normalize(vNormal);
+	//float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+	//vNormal = mul(vNormal, WorldMatrix);
+
+	float3	vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
+
+	vNormal = vNormal * 2.f - 1.f;
+
+	float3x3	WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+
+	vNormal = mul(vNormal, WorldMatrix);
+
+	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+
+	if (Out.vDiffuse.a < 0.2f)
+		discard;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default // 0
@@ -552,5 +583,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_GLOW_DISSOLVE();
+	}
+
+	pass Main_Discard // 10
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_DISCARD();
 	}
 }

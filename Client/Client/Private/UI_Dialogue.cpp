@@ -155,7 +155,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 		if (m_bfadein)
 		{
-			m_fAlpha += 0.02f; //ï¿½ï¿½ï¿½æ¶§
+			m_fAlpha += 0.02f; //????
 			m_fFade += 0.8f;
 		}
 		else if (m_bfadeout)
@@ -168,15 +168,15 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 		//	m_fAlpha = 0.5f;
 
-		//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // ???????
 		//{
 		//	m_bfadeout = true;
 		//}
-		//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // ????????
 		//{
 		//	m_bfadein = true;
 		//}
-		if (CGameInstance::Get_Instance()->Key_Up(DIK_6)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_6)) // ????????
 		{
 			if (m_iVectorIndex == 13 && m_iDialogueindex == 1)
 			{
@@ -346,7 +346,7 @@ int CUI_Dialogue::Tick(_float fTimeDelta)
 
 
 	
-	//if (CGameInstance::Get_Instance()->Key_Up(DIK_9)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_9)) // ????????
 	//{
 	//	++m_iVectorIndex;
 	//}
@@ -2562,13 +2562,13 @@ void CUI_Dialogue::Read_TextFiles_for_LastQuestStart()
 wchar_t * CUI_Dialogue::ConverCtoWC(char * str)
 {
 
-	//wchar_tï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//wchar_t?? ???? ????
 	wchar_t* pStr;
-	//ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½Æ® Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
+	//??? ????? ??? ??? ???? ???
 	int strSize = MultiByteToWideChar(CP_ACP, 0, str, -1, NULL, NULL);
-	//wchar_t ï¿½Þ¸ï¿½ ï¿½Ò´ï¿½
+	//wchar_t ??? ???
 	pStr = new WCHAR[MAX_PATH];
-	//ï¿½ï¿½ ï¿½ï¿½È¯
+	//?? ???
 	MultiByteToWideChar(CP_ACP, 0, str, _uint(strlen(str) + 1), m_szTXT, MAX_PATH);
 	
 	Safe_Delete_Array(pStr);
@@ -2608,20 +2608,19 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	
 	CGameInstance::Get_Instance()->Render_Font(TEXT("Font_Nexon"), m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size()-1], XMVectorSet(390.f, 535.f+m_fFade, 0.f, 1.f), XMVectorSet(m_FontR*(m_fAlpha*2.f), m_FontG*(m_fAlpha*2.f), m_FontB*(m_fAlpha*2.f), m_fAlpha * 2.f), m_fFontsize);
 	
-	_tchar* asd = m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1];
-	if (!_tcsicmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ì•ŒíŽœ")))
+	if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("¾ËÆæ")))
 	{
 		m_iPortraitnum = 0;
 	}
-	else if (!_tcsicmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ì‹œì˜¨")))
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("½Ã¿Â")))
 	{
 		m_iPortraitnum = 1;
 	}
-	else if (!_tcsicmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ë¦°ì›°")))
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("¸°À£")))
 	{
 		m_iPortraitnum = 2;
 	}
-	else if (!_tcsicmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("ë¡œìš°")))
+	else if (!_tcscmp(m_vCurrentDialogue[m_iVectorIndex][index][m_vCurrentDialogue[m_iVectorIndex][index].size() - 1], TEXT("·Î¿ì")))
 	{
 		m_iPortraitnum = 3;
 	}

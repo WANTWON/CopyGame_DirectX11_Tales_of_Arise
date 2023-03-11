@@ -27,6 +27,7 @@ CMonster_LawAirF::CMonster_LawAirF(CMonsterLaw* pPlayer)//, _float fStartHeight,
 
 CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 {
+	Update_Skill();
 
 	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 
@@ -76,35 +77,35 @@ CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 						m_ColliderMatrix.r[1] = XMVector4Normalize(m_ColliderMatrix.r[1]);
 						m_ColliderMatrix.r[2] = XMVector4Normalize(m_ColliderMatrix.r[2]);
 
-						if ((m_fEventStart != pEvent.fStartTime))
-						{
-							//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-							m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
-							//Bullet
-							CBullet::BULLETDESC BulletDesc;
-							BulletDesc.eCollisionGroup = MONSTER;
-							BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
+						//if ((m_fEventStart != pEvent.fStartTime))
+						//{
+						//	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+						//	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
+						//	//Bullet
+						//	CBullet::BULLETDESC BulletDesc;
+						//	BulletDesc.eCollisionGroup = MONSTER;
+						//	BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
 
-							BulletDesc.fVelocity = 0.5f;
-							BulletDesc.vInitPositon = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
-							//BulletDesc.vTargetDir = { -0.3f, -1.f, -0.1f, 0.f };
-							//BulletDesc.vTargetPosition = vTargetPosition;
-							BulletDesc.fDeadTime = 5.5f;
-							BulletDesc.pOwner = m_pOwner;
-							if(m_pOwner->Get_Phase() == 0)
-							m_pOwner->Set_AfterThunder(true);
-							for (_uint i = 0; i < 12; ++i)
-							{
-								m_pOwner->Get_Transform()->Set_Rotation({ 0.f,0.f + i * 30.f , 0.f });
-								BulletDesc.vTargetDir = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
-								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-									return nullptr;
-							}
-							m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-							//	m_bBulletMake = true;
-							//m_bCollideFinsh = true;
-							m_fEventStart = pEvent.fStartTime;
-						}
+						//	BulletDesc.fVelocity = 0.5f;
+						//	BulletDesc.vInitPositon = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+						//	//BulletDesc.vTargetDir = { -0.3f, -1.f, -0.1f, 0.f };
+						//	//BulletDesc.vTargetPosition = vTargetPosition;
+						//	BulletDesc.fDeadTime = 5.5f;
+						//	BulletDesc.pOwner = m_pOwner;
+						//	if(m_pOwner->Get_Phase() == 0)
+						//	m_pOwner->Set_AfterThunder(true);
+						//	for (_uint i = 0; i < 12; ++i)
+						//	{
+						//		m_pOwner->Get_Transform()->Set_Rotation({ 0.f,0.f + i * 30.f , 0.f });
+						//		BulletDesc.vTargetDir = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
+						//		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+						//			return nullptr;
+						//	}
+						//	m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+						//	//	m_bBulletMake = true;
+						//	//m_bCollideFinsh = true;
+						//	m_fEventStart = pEvent.fStartTime;
+						//}
 					}
 				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
@@ -114,6 +115,8 @@ CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 						if (!m_bEnhaBakusaiken_2)
 						{
 							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+
+							CEffect::PlayEffectAtLocation(TEXT("Enha_Bakusaiken_Ring.dat"), mWorldMatrix);
 							vector<CEffect*> pFloor = CEffect::PlayEffectAtLocation(TEXT("Enha_Bakusaiken_Floor.dat"), mWorldMatrix);
 
 							_vector vPosition = pFloor[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
@@ -144,6 +147,28 @@ CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 		if (nullptr != m_pLandCollider)
 			m_pLandCollider->Update(m_ColliderMatrix);
 	}
+	else
+	{
+		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
+		for (auto& pEvent : pEvents)
+		{
+			if (pEvent.isPlay)
+			{
+				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)
+				{
+					if (!strcmp(pEvent.szName, "EnhaBakusaiken_1"))
+					{
+						if (!m_bEnhaBakusaiken_1)
+						{
+							_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+							m_EnhaBakusaiken_1 = CEffect::PlayEffectAtLocation(TEXT("Enha_Bakusaiken_1.dat"), mWorldMatrix);
+							m_bEnhaBakusaiken_1 = true;
+						}
+					}
+				}
+			}
+		}
+	}
 
 	return nullptr;
 }
@@ -151,6 +176,8 @@ CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 
 CMonsterLawState * CMonster_LawAirF::LateTick(_float fTimeDelta)
 {
+	Remove_Skill();
+
 	if (/*(STATETYPE_END == m_eStateType) && */(nullptr != m_pLandCollider))
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -204,6 +231,8 @@ CMonsterLawState * CMonster_LawAirF::LateTick(_float fTimeDelta)
 
 void CMonster_LawAirF::Enter()
 {
+	Reset_Skill();
+
 	m_fEventStart = -1.f;
 
 	m_eStateType = STATETYPE_START;
@@ -239,6 +268,41 @@ void CMonster_LawAirF::Exit()
 	Safe_Release(m_pLandCollider);
 }
 
+void CMonster_LawAirF::Update_Skill(void)
+{
+	for (auto& pEffect : m_EnhaBakusaiken_1)
+	{
+		if (!pEffect || wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
+			continue;
+
+		_float4 vPlayerPosition;
+		XMStoreFloat4(&vPlayerPosition, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+		_float4 vPlayerLook;
+		XMStoreFloat4(&vPlayerLook, m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
+
+		_float4 vEffectPosition;
+		vEffectPosition.y = vPlayerPosition.y;
+
+		XMStoreFloat4(&vEffectPosition, XMLoadFloat4(&vPlayerPosition) + XMLoadFloat4(&vPlayerLook));
+
+		pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vEffectPosition));
+	}
+}
+
+void CMonster_LawAirF::Remove_Skill(void)
+{
+	for (auto& pEffect : m_EnhaBakusaiken_1)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+}
+
+void CMonster_LawAirF::Reset_Skill(void)
+{
+	m_bEnhaBakusaiken_1 = false;
+	m_bEnhaBakusaiken_2 = false;
+}
 
 CCollider * CMonster_LawAirF::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)
 {

@@ -188,21 +188,21 @@ HRESULT CLoader::Loading_ForClient()
 	CTerrain_Manager::Get_Instance()->Add_PrototypeTag(TEXT("HeightMapPlane"));
 
 
-	//For Maptool
-	if (FAILED(Loading_ForActor()))
-		return E_FAIL;
+	////For Maptool
+	//if (FAILED(Loading_ForActor()))
+	//	return E_FAIL;
 
 	//////For Maptool
 	/*if (FAILED(Loading_ForMaptoolSnowFieldModel()))
 		return E_FAIL;*/
 
-	if (FAILED(Loading_ForMaptoolBossRoomModel()))
+	/*if (FAILED(Loading_ForMaptoolBossRoomModel()))
+		return E_FAIL;
+*/
+	if (FAILED(Loading_ForMaptoolVillageModel()))
 		return E_FAIL;
 
-	/*if (FAILED(Loading_ForMaptoolVillageModel()))
-		return E_FAIL;*/
-
-	 /*if (FAILED(Loading_ForMaptoolCityModel()))
+	/* if (FAILED(Loading_ForMaptoolCityModel()))
 	 	return E_FAIL;*/
 
 	 //if (FAILED(Loading_ForMaptoolPlant()))
@@ -217,12 +217,12 @@ HRESULT CLoader::Loading_ForClient()
 	if (FAILED(Loading_ForMaptoolKitchenModel()))
 		return E_FAIL;*/
 
-	//For Effect
-	if (FAILED(Loading_ForEffect()))
-		return E_FAIL;
-	 
-	if (FAILED(Loading_ForEffectTexture()))
-		return E_FAIL;
+	////For Effect
+	//if (FAILED(Loading_ForEffect()))
+	//	return E_FAIL;
+	// 
+	//if (FAILED(Loading_ForEffectTexture()))
+	//	return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("Finished"));
@@ -1069,10 +1069,10 @@ HRESULT CLoader::Loading_ForMaptoolVillageModel()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FountainDel"),
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("FountainDel"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/LawBattle/FountainDel.dat"))))
 		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("FountainDel"));*/
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("FountainDel"));
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("SkyDome"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/LawBattle/SkyDome.dat"))))

@@ -90,14 +90,22 @@ HRESULT CLevel_City::Initialize()
 	m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, -10.f, 0.f));
 
 	g_fSoundVolume = 0.f;
+
 	CGameInstance::Get_Instance()->StopAll();
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LEVEL_CITY3.wav"), g_fSoundVolume);
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_mountain_Bird_Bug.wav"), SOUND_NATURE, 0.1f);
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_Crowd.wav"), SOUND_CROWD, g_fSoundNatureVolume);
-
-	if(g_bEnd)
+	
+	if (g_bEnd)
+	{
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("LogoSong.wav"), g_fSoundVolume);
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("Ending.dat"), XMMatrixIdentity());
+	}
+	else
+	{
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LEVEL_CITY3.wav"), g_fSoundVolume);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_mountain_Bird_Bug.wav"), SOUND_NATURE, 0.1f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_Crowd.wav"), SOUND_CROWD, g_fSoundNatureVolume);
 
+	}
+		
 	return S_OK;
 }
 

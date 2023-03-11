@@ -318,8 +318,11 @@ HRESULT CNonAnim_Instance::SetUp_ShaderResources()
 HRESULT CNonAnim_Instance::SetUp_ShaderID()
 {
 	if (!strcmp(m_ModelDesc.pModeltag, "Snow1") ||
-		!strcmp(m_ModelDesc.pModeltag, "Snow2"))
-		m_eShaderID =  SNOW;
+		!strcmp(m_ModelDesc.pModeltag, "Snow2") )
+		m_eShaderID = FORSNOW;
+	else if (!strcmp(m_ModelDesc.pModeltag, "Dead_Grass_SnowField") ||
+		!strcmp(m_ModelDesc.pModeltag, "Dead_Grass_BattleZone"))
+		m_eShaderID = FORGRASS;
 	else
 		m_eShaderID = DEFAULT;
 	return S_OK;
