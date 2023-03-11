@@ -36,7 +36,7 @@ public:
 	void Set_WeaponDesc(WEAPONDESC tWeaponDesc);
 	void Collision_Immediate();
 	_bool Get_SoundStart() { m_bSoundStart; }
-	void Set_Rotation(_bool bRotation, _float fRotationTime) { m_isRotation = bRotation; m_fRotateTime = fRotationTime; }
+	void Set_Rotation(_bool bRotation, _float fRotationTime) { m_isRotation = bRotation; /*m_fRotateTime = fRotationTime; */}
 	void Reset_RotateTime(void) { m_fRotateTime = 0.f; }
 
 public:
