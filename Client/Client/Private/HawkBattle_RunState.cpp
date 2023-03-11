@@ -47,14 +47,14 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 
 	if (m_ePreBattleState != STATE_ID::STATE_BATTLE)
 	{
-		if (m_fTarget_Distance > 4.5f)
+		if (m_fTarget_Distance > 8.5f)
 		{
-			/*if (m_b_IsTargetInsight == true)
-			{*/
+			if (m_b_IsTargetInsight == true)
+			{
 				m_pOwner->Get_Transform()->LookAtExceptY(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 				m_pOwner->Get_Transform()->Go_Straight(fTimeDelta * 1.3f, m_pOwner->Get_Navigation());
-			//}
-			/*else
+			}
+			else
 			{
 				CTransform* pMonSterTransform = m_pOwner->Get_Transform();
 				_vector vTargetDir = XMVector3Normalize(m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - pMonSterTransform->Get_State(CTransform::STATE_TRANSLATION));
@@ -68,7 +68,7 @@ CHawkState * CBattle_RunState::Tick(_float fTimeDelta)
 				if (fDot < 0.8f)
 					pMonSterTransform->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 				m_pOwner->Get_Transform()->Go_Straight(fTimeDelta *1.6f, m_pOwner->Get_Navigation());
-			}*/
+			}
 		}
 		else
 		{

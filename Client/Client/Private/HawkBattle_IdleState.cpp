@@ -39,12 +39,7 @@ CHawkState * CBattle_IdleState::Tick(_float fTimeDelta)
 	m_vCurTargetPos = m_pCurTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
 	m_fTarget_Distance = m_pOwner->Target_Distance(m_pCurTarget);
 
-	if (m_ePreBattleState == STATE_ID::START_BATTLEMODE)
-	{
-		m_pOwner->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, -1.f, 0.f));
-	}
-
-
+	
 	m_pOwner->Check_Navigation();
 
 	return nullptr;
@@ -102,6 +97,12 @@ void CBattle_IdleState::Enter()
 	else
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CHawk::ANIM::ATTACK_BRAVE);
 	
+	if (m_ePreBattleState == STATE_ID::START_BATTLEMODE)
+	{
+		m_pOwner->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, -1.f, 0.f));
+	}
+
+
 }
 
 void CBattle_IdleState::Exit()

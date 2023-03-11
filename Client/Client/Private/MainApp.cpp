@@ -81,7 +81,11 @@ void CMainApp::Tick(_float fTimeDelta)
 		CLevel* pCurrentLevel = CGameInstance::Get_Instance()->Get_CurrentLevel();
 		pCurrentLevel->Set_NextLevel(true, LEVEL_LAWBATTLE);
 	}
-	
+
+	if (CGameInstance::Get_Instance()->Key_Up(DIK_Y))
+	{
+		CUI_Manager::Get_Instance()->Set_Dialogue_section(6);
+	}
 
 	/*if(m_pGameInstance->Key_Up(DIK_7))
 		dynamic_cast<CUI_Dialoguepopup*>(m_pUI_Manager->Get_Dialoguepopup())->Open_Dialogue(0 , false , 1 ,0);

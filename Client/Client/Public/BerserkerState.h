@@ -42,6 +42,7 @@ public:
 		STATE_ARISE,
 		STATE_DEAD,
 		START_BATTLE,
+		SMASH_DAMAGE,
 		STATE_END
 	};
 

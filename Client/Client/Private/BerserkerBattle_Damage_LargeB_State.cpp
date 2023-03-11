@@ -38,7 +38,10 @@ CBerserkerState * CBattle_Damage_LargeB_State::AI_Behaviour(_float fTimeDelta)
 
 CBerserkerState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 {
-	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
+	if (m_eStateId == Client::CBerserkerState::SMASH_DAMAGE)
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, false);
+	else
+		m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta *1.6f, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "ABone");
 
 	//if (!m_bIsAnimationFinished)
 	//{
@@ -62,11 +65,17 @@ CBerserkerState * CBattle_Damage_LargeB_State::Tick(_float fTimeDelta)
 			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 			m_pOwner->Check_Navigation();
 		}
+		m_pOwner->Check_Navigation_Jump();
 	}
-	else
+	else if (m_eStateId != Client::CBerserkerState::SMASH_DAMAGE)
+	{
 		Move(fTimeDelta);
+		m_pOwner->Check_Navigation_Jump();
+	}
+		
 
-	m_pOwner->Check_Navigation_Jump();
+
+	
 
 	return nullptr;
 }
@@ -103,6 +112,11 @@ CBerserkerState * CBattle_Damage_LargeB_State::LateTick(_float fTimeDelta)
 
 		case Client::CBerserkerState::STATE_DOWN:
 			return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_ARISE);
+		case Client::CBerserkerState::SMASH_DAMAGE:
+		{
+			if(CCameraManager::Get_Instance()->Get_CamState() ==CCameraManager::CAM_DYNAMIC)
+				return new CBattle_IdleState(m_pOwner, STATE_ID::STATE_ARISE);
+		}	
 		}
 	}
 
@@ -158,6 +172,9 @@ void CBattle_Damage_LargeB_State::Enter()
 	case Client::CBerserkerState::STATE_DOWN:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DOWN_F);
 		m_pOwner->Set_OnGoingDown();
+		break;
+	case Client::CBerserkerState::SMASH_DAMAGE:
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CBerserker::ANIM::DAMAGE_LARGE_B);
 		break;
 	}
 

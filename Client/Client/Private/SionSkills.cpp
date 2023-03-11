@@ -634,9 +634,7 @@ void CSionSkills::Dead_Effect()
 			{
 				if (iter != nullptr)
 				{
-					CParticleSystem* pParticleSystem = dynamic_cast<CParticleSystem*>(iter);
-					if (pParticleSystem != nullptr)
-						pParticleSystem->Set_Stop(true);
+					iter->Set_Dead(true);
 				}
 			}
 		}
