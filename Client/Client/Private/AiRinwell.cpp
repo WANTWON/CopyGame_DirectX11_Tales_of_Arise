@@ -399,65 +399,126 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 
 	m_bTakeDamage = true;
 
-	if (CBattleManager::Get_Instance()->Get_KillLawbosslevel())
+	if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
 	{
-		iHp = 0;
-		m_bLastStrikeAttack = true;
-	}
-
-	if (iHp <= 0)
-	{
-		if (!m_bLastStrikeAttack)
+		if (CBattleManager::Get_Instance()->Get_KillLawbosslevel())
 		{
-			m_tStats.m_fLockonSmashGuage = 4.f;
-			m_tStats.m_fCurrentHp = 0;
-			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
-			m_pState = m_pState->ChangeState(m_pState, pState);
-		}
-		else
-		{
-			m_tStats.m_fCurrentHp = 0;
-			CBattleManager::Get_Instance()->Update_LockOn();
-			Check_AmILastMoster();
-
-			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
-			m_pState = m_pState->ChangeState(m_pState, pState);
-		}
-	}
-	else if (m_iDamage >= (m_tStats.m_fMaxHp * 0.15f))
-	{
-		if (m_bIsAir)
-		{
-			m_fMethor = 1000.f;
-			CRinwellState* pState = new CSkillState(this, CRinwellState::METEOR, STATETYPE_START);
-			m_pState = m_pState->ChangeState(m_pState, pState);
-		}
-		else
-		{
-			CRinwellState* pState = new CSkillState(this, CRinwellState::BANGJEON);
-			m_pState = m_pState->ChangeState(m_pState, pState);
+			iHp = 0;
+			m_bLastStrikeAttack = true;
 		}
 
-		m_iDamage = 0;
-	}
-	else if (CRinwellState::STATE_SKILL != m_pState->Get_StateId())
-	{
-		m_pTarget = DamageCauser;
-
-		if (dynamic_cast<CPlayer*>(m_pTarget) == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+		if (iHp <= 0)
 		{
-			m_eDmg_Direction = Calculate_DmgDirection();
-
-			CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
-			m_pState = m_pState->ChangeState(m_pState, pState);
-
-			if (1.5f < m_fHitSound)
+			if (!m_bLastStrikeAttack)
 			{
-				CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_DownSound.wav"), SOUND_SKILL4, 0.65f);
-				m_fHitSound = 0.f;
+				m_tStats.m_fLockonSmashGuage = 4.f;
+				m_tStats.m_fCurrentHp = 0;
+				CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+			}
+			else
+			{
+				m_tStats.m_fCurrentHp = 0;
+				CBattleManager::Get_Instance()->Update_LockOn();
+				Check_AmILastMoster();
+
+				CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+			}
+		}
+		else if (m_iDamage >= (m_tStats.m_fMaxHp * 0.15f))
+		{
+			if (m_bIsAir)
+			{
+				m_fMethor = 1000.f;
+				CRinwellState* pState = new CSkillState(this, CRinwellState::METEOR, STATETYPE_START);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+			}
+			else
+			{
+				CRinwellState* pState = new CSkillState(this, CRinwellState::BANGJEON);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+			}
+
+			m_iDamage = 0;
+		}
+		else if (CRinwellState::STATE_SKILL != m_pState->Get_StateId())
+		{
+			m_pTarget = DamageCauser;
+
+			if (dynamic_cast<CPlayer*>(m_pTarget) == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+			{
+				m_eDmg_Direction = Calculate_DmgDirection();
+
+				CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+				m_pState = m_pState->ChangeState(m_pState, pState);
 			}
 		}
 	}
+	else
+	{
+		/*if (CBattleManager::Get_Instance()->Get_KillLawbosslevel())
+		{
+			iHp = 0;
+			m_bLastStrikeAttack = true;
+		}*/
+
+		if (iHp <= 0)
+		{
+			if (!m_bLastStrikeAttack)
+			{
+				m_tStats.m_fLockonSmashGuage = 4.f;
+				m_tStats.m_fCurrentHp = 1;
+				CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+			}
+			else
+			{
+				m_tStats.m_fCurrentHp = 0;
+				CBattleManager::Get_Instance()->Update_LockOn();
+				Check_AmILastMoster();
+
+				CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DEAD);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+			}
+		}
+		else if (m_iDamage >= (m_tStats.m_fMaxHp * 0.15f))
+		{
+			if (m_bIsAir)
+			{
+				m_fMethor = 1000.f;
+				CRinwellState* pState = new CSkillState(this, CRinwellState::METEOR, STATETYPE_START);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+			}
+			else
+			{
+				CRinwellState* pState = new CSkillState(this, CRinwellState::BANGJEON);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+			}
+
+			m_iDamage = 0;
+		}
+		else if (CRinwellState::STATE_SKILL != m_pState->Get_StateId())
+		{
+			m_pTarget = DamageCauser;
+
+			if (dynamic_cast<CPlayer*>(m_pTarget) == CPlayerManager::Get_Instance()->Get_ActivePlayer())
+			{
+				m_eDmg_Direction = Calculate_DmgDirection();
+
+				CRinwellState* pState = new CDamageState(this, m_eDmg_Direction, CRinwellState::STATE_DAMAGE);
+				m_pState = m_pState->ChangeState(m_pState, pState);
+
+				if (1.5f < m_fHitSound)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_DownSound.wav"), SOUND_SKILL4, 0.65f);
+					m_fHitSound = 0.f;
+				}
+			}
+		}
+	}
+
+	
 	
 	return iHp;
 }
