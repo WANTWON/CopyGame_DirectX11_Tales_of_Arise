@@ -426,7 +426,7 @@ void CAI_BoostAttack::Enter()
 		pos.m128_f32[0] -= 5.f;
 		pos.m128_f32[2] -= 5.f;
 		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, pos);
-		
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("KisaraBoosterAttack.wav"), SOUND_EFFECT, 0.6f);
 			
 		break;
 	}
@@ -439,7 +439,7 @@ void CAI_BoostAttack::Enter()
 		_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
 		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation + vOffset + vLook*2.f;
-		CEffect::PlayEffectAtLocation(TEXT("FriendMagnaStart.dat"), mWorldMatrix);
+		CEffect::PlayEffectAtLocation(TEXT("DuohalemBoosterAttack.dat"), mWorldMatrix);
 
 		CPlayerManager::Get_Instance()->Get_EnumPlayer(5)->Set_BoostGuage(0);
 		m_iCurrentAnimIndex = 0;
@@ -447,6 +447,7 @@ void CAI_BoostAttack::Enter()
 		pos.m128_f32[0] -= 10.f;
 		pos.m128_f32[2] -= 15.f;
 		m_pOwner->Get_Transform()->Set_State(CTransform::STATE_TRANSLATION, pos);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_BoosterAttack.wav"), SOUND_EFFECT, 0.6f);
 
 		break;
 	}
