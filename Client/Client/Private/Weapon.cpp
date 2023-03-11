@@ -129,7 +129,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
 			{
-				pCollided->Take_Damage(rand() % 100, m_WeaponDesc.pOwner, m_HitLagDesc);
+				pCollided->Take_Damage((rand() % 100 + ((rand() % 3) + 1) * 100), m_WeaponDesc.pOwner, m_HitLagDesc);
 			}
 
 			//if (!m_bSoundStart)

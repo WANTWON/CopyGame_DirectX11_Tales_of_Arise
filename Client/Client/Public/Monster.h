@@ -153,6 +153,9 @@ protected:
 	_bool	m_bCritical = false;
 	_bool m_bIsFly = false;
 
+	_bool m_bhitboost = false;
+	_float m_fBoostattackedtimer = 0.f;
+
 	/* Strike Screen Effect */
 	_bool m_bResetStrikeBlur = false;
 	_float m_fStrikeBlurResetDuration = .45f;

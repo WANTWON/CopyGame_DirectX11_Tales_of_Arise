@@ -59,7 +59,7 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	// MakeSpriteFont "��Ʈ�̸�" /FontSize:32 /FastPack /CharacterRegion:0x0020-0x00FF /CharacterRegion:0x3131-0x3163 /CharacterRegion:0xAC00-0xD800 /DefaultCharacter:0xAC00 ��������̸�.spritefont
-	if (FAILED(m_pGameInstance->Add_Fonts(m_pDevice, m_pContext, TEXT("Font_Nexon"), TEXT("../../../Bin/Resources/Fonts/130.spritefont"))))
+	if (FAILED(m_pGameInstance->Add_Fonts(m_pDevice, m_pContext, TEXT("Font_Nexon"), TEXT("../../../Bin/Resources/Fonts/JinGothic.spritefont"))))
 		return E_FAIL;
 
 	return S_OK;

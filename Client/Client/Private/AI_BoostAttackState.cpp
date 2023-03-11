@@ -366,7 +366,11 @@ void CAI_BoostAttack::Enter()
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_Zoom(false);
 
+	m_pOwner->Set_PlayingBoost(true);
+
+
 	m_bShieldSlam = false;
+
 
 	switch (m_eCurrentPlayerID)
 	{
@@ -479,6 +483,7 @@ void CAI_BoostAttack::Enter()
 
 void CAI_BoostAttack::Exit()
 {
+	m_pOwner->Set_PlayingBoost(false);
 	if (m_eCurrentPlayerID == CPlayer::KISARA || m_eCurrentPlayerID == CPlayer::DUOHALEM)
 		m_pOwner->Set_PlayerMode(UNVISIBLE);
 	for (auto& iter : m_pEffects)
