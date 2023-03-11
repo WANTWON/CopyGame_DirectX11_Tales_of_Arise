@@ -141,6 +141,7 @@ public: /*For.State*/
 private:
 	virtual HRESULT Ready_Parts() override;
 	virtual HRESULT Ready_Components(void* pArg) override;
+	virtual void Change_Level(LEVEL eLevel) override;
 	HRESULT SetUp_ShaderResources();
 
 public:
