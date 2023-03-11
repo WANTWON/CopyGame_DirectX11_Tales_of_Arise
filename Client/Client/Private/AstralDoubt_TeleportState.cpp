@@ -69,7 +69,7 @@ CAstralDoubt_State * CAstralDoubt_TeleportState::LateTick(_float fTimeDelta)
 		_vector vDir = XMVector3Normalize(m_pActiveTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION));
 		vDir = XMVectorSetY(vDir, 0.f);
 		if(XMVectorGetX(XMVectorEqual(vDir, XMVectorSet(0.f,0.f,0.f,0.f))) != 1)
-			m_pOwner->Get_Transform()->Go_PosDir(fTimeDelta, vDir);
+			m_pOwner->Get_Transform()->Go_PosDir(fTimeDelta*2.f, vDir);
 		m_pOwner->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 20.f));
 
 		if (5.f < m_fTime)

@@ -1054,7 +1054,7 @@ void CCamera_Dynamic::BossRoom_Camera(_float fTimeDelta)
 	m_pTransform->LookAt(vCenterPos);
 
 
-	if (dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
+	if (!g_bEnd && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage < 4.f)
 	{
 
 		if (m_bShakingMode)

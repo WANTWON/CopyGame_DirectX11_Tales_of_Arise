@@ -85,6 +85,7 @@ HRESULT CCameraManager::Play_ActionCamera(_tchar * wcCameraDataName, _matrix mWo
 		m_eCamState = CAM_ACTION;
 		m_pCurrentCamera = pCamera;
 		dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_TargetMatrix(mWorldMatrix);
+		dynamic_cast<CCamera_Action*>(m_pCurrentCamera)->Set_DataName(wcCameraDataName);
 
 		CCamera_Action::TOOLDESC CamToolData;
 
