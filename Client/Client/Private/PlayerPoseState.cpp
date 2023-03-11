@@ -32,13 +32,13 @@ CPlayerState * CPlayerPoseState::Tick(_float fTimeDelta)
 			if (pEvent.isPlay)
 			{
 				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(true);
+					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(true, 10.f);
 			}
 			else
 			{
 				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
 				{
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(false);
+					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(false, 0.f);
 					//dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Reset_RotateTime();
 				}
 			}
