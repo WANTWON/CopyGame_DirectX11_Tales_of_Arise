@@ -262,6 +262,8 @@ void CHP_Font::Late_Tick(_float fTimeDelta)
 		return;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return;
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+		return;
 
 	if (m_fStart_timer > 0.8f)
 	{

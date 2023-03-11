@@ -323,7 +323,7 @@ void CAI_SionRinwell_Smash::Exit()
 
 void CAI_SionRinwell_Smash::StrikeBlur(_float fTimeDelta)
 {
-	_float fDuration = .45f;
+	_float fDuration = 0.4f;
 	m_fResetTimer += fTimeDelta;
 
 	/* Zoom Blur Lerp */

@@ -77,7 +77,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_E_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_SKILL1, 0.85f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillSound.wav"), SOUND_LAW_SKILL, 0.85f);
 							m_bSkill_E_Sound = true;
 						}
 					}
@@ -88,7 +88,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_E_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_SKILL2, 0.85f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillSound.wav"), SOUND_LAW_SKILL, 0.65f);
 							m_bSkill_E_Sound = true;
 						}
 					}
@@ -101,7 +101,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 					if (!m_bSkill_R_Sound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_SKILL3, 0.45f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillSound.wav"), SOUND_LAW_SKILL, 0.45f);
 						m_bSkill_R_Sound = true;
 					}
 					break;
@@ -125,7 +125,7 @@ CPlayerState * CLawSkillState::Tick(_float fTimeDelta)
 
 						if (!m_bSkill_F_Sound)
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_SKILL4, 0.25f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillSound.wav"), SOUND_LAW_SKILL, 0.25f);
 							m_bSkill_F_Sound = true;
 						}
 					
@@ -632,7 +632,7 @@ void CLawSkillState::Enter(void)
 			m_HitLagDesc.fBlurDetail = 10.f;
 			m_HitLagDesc.bZoom = true;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_BURN_KNUCKLE);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillVoice.wav"), SOUND_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_E_SkillVoice.wav"), SOUND_LAW_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
 			m_HitLagDesc.fTakeDamageTimer = 0.1f;
@@ -670,7 +670,7 @@ void CLawSkillState::Enter(void)
 			m_HitLagDesc.fBlurPower = 3.f;
 			m_HitLagDesc.fBlurDetail = 7.f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_RONDSENPU);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillVoice.wav"), SOUND_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_E_SkillVoice.wav"), SOUND_LAW_VOICE, 0.4f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 			m_HitLagDesc.fTakeDamageTimer = 0.5f;
@@ -687,7 +687,7 @@ void CLawSkillState::Enter(void)
 			m_HitLagDesc.fBlurPower = 3.f;
 			m_HitLagDesc.fBlurDetail = 7.f;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_GARYOUKUUHA);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillVoice.wav"), SOUND_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_R_SkillVoice.wav"), SOUND_LAW_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
 			m_HitLagDesc.fTakeDamageTimer = 0.1f;
@@ -703,7 +703,7 @@ void CLawSkillState::Enter(void)
 			m_HitLagDesc.fBlurDetail = 10.f;
 			m_HitLagDesc.bZoom = true;
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_ATTACK_TYOURENGADAN);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillVoice.wav"), SOUND_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_F_SkillVoice.wav"), SOUND_LAW_VOICE, 0.5f);
 			break;
 		case Client::CPlayerState::STATE_SKILL_BOOST:
 			m_HitLagDesc.fTakeDamageTimer = 0.1f;

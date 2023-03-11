@@ -131,6 +131,8 @@ void CMP_Guage::Late_Tick(_float fTimeDelta)
 		return ;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return ;
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+		return;
 
 	m_fcurrent_render_slot_mp = m_fcurrentmp - (_uint)m_fcurrentmp;
 	
