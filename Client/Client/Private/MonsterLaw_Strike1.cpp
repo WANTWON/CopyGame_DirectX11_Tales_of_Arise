@@ -231,7 +231,8 @@ void CMonsterLaw_Strike1::Enter()
 	m_pOwner->Get_Model()->Reset();
 
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenLaw_Smash.wav"), SOUND_VOICE, 0.55f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_BoosterAttack.wav"), SOUND_EFFECT, 0.6f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_BoosterAttackVoice.wav"), SOUND_EFFECT, 0.6f);
 }
 
 void CMonsterLaw_Strike1::Exit()

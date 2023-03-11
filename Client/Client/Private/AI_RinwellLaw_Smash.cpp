@@ -28,6 +28,26 @@ CAI_RinwellLaw_Smash::CAI_RinwellLaw_Smash(CPlayer* pPlayer, CBaseObj* pTarget)
 
 CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 {
+	CGameInstance::Get_Instance()->StopSound(SOUND_ALPHEN_NORMAL_ATTACK);
+	CGameInstance::Get_Instance()->StopSound(SOUND_ALPHEN_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_ALPHEN_SKILL);
+	CGameInstance::Get_Instance()->StopSound(SOUND_SION_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_SION_SKILL);
+	CGameInstance::Get_Instance()->StopSound(SOUND_RINWELL_NORMAL_ATTCK);
+	CGameInstance::Get_Instance()->StopSound(SOUND_RINWELL_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_RINWELL_SKILL);
+	CGameInstance::Get_Instance()->StopSound(SOUND_LAW_NORMAL_ATTACK);
+	CGameInstance::Get_Instance()->StopSound(SOUND_LAW_VOICE);
+	CGameInstance::Get_Instance()->StopSound(SOUND_LAW_SKILL);
+	CGameInstance::Get_Instance()->StopSound(SOUND_LAW_SKILL);
+
+
+	CGameInstance::Get_Instance()->StopSound(SOUND_SKILL1);
+	CGameInstance::Get_Instance()->StopSound(SOUND_SKILL2);
+	CGameInstance::Get_Instance()->StopSound(SOUND_SKILL3);
+	CGameInstance::Get_Instance()->StopSound(SOUND_SKILL4);
+	CGameInstance::Get_Instance()->StopSound(SOUND_SKILL5);
+	CGameInstance::Get_Instance()->StopSound(SOUND_SKILL);
 	CGameInstance::Get_Instance()->StopSound(SOUND_VOICE);
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 	CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);

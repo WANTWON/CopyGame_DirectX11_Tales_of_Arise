@@ -113,7 +113,7 @@ CAIState * CAI_Overlimit_State::Tick(_float fTimeDelta)
 	case CPlayer::ALPHEN:
 		if (!m_bAlphenSound)
 		{
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenOverLimit.wav"), SOUND_OBJECT, 0.65f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenOverLimit.wav"), SOUND_OBJECT, 0.55f);
 			m_bAlphenSound = true;
 		}
 		break;
@@ -121,7 +121,7 @@ CAIState * CAI_Overlimit_State::Tick(_float fTimeDelta)
 	case CPlayer::SION:
 		if (!m_bSionSound)
 		{
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionOverLimit.wav"), SOUND_OBJECT, 0.65f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionOverLimit.wav"), SOUND_OBJECT, 0.55f);
 			m_bSionSound = true;
 		}
 		break;
@@ -129,7 +129,7 @@ CAIState * CAI_Overlimit_State::Tick(_float fTimeDelta)
 	case CPlayer::RINWELL:
 		if (!m_bRinwellSound)
 		{
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellOverLimit.wav"), SOUND_OBJECT, 0.65f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellOverLimit.wav"), SOUND_OBJECT, 0.55f);
 			m_bRinwellSound = true;
 		}
 		break;
@@ -137,7 +137,7 @@ CAIState * CAI_Overlimit_State::Tick(_float fTimeDelta)
 	case CPlayer::LAW:
 		if (!m_bLawSound)
 		{
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawOverLimit.wav"), SOUND_OBJECT, 0.65f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawOverLimit.wav"), SOUND_OBJECT, 0.55f);
 			m_bLawSound = true;
 		}
 		break;

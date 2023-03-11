@@ -94,6 +94,10 @@ HRESULT CLevel_LawBattle::Initialize()
 		m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_PLAYER);
 		m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, -10.f, 20.f, 0.f));
 
+		CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
+		CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
+		CGameInstance::Get_Instance()->StopAll();
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_FightWith_Law.wav"), g_fSoundVolume);
 	}
 
 	
