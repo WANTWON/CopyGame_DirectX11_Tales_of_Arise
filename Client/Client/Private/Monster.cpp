@@ -134,6 +134,7 @@ void CMonster::Late_Tick(_float fTimeDelta)
 			_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 			mWorldMatrix.r[3] = vLocation;
 
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("KiraKira.wav"), SOUND_OBJECT, 0.1f);
 			m_pDissolveParticles = CEffect::PlayEffectAtLocation(TEXT("Dissolve_Particles.dat"), mWorldMatrix);
 		}
 			
@@ -689,8 +690,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
 		m_tStats.m_fLockonSmashGuage += 0.01f;
 	else
-		m_tStats.m_fLockonSmashGuage += 0.1f; 
-		
+		m_tStats.m_fLockonSmashGuage += 0.02f; 
 
 
 	if (m_tStats.m_fLockonSmashGuage >= 4.f)

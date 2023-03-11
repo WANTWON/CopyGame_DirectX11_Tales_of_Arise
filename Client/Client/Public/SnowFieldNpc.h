@@ -53,6 +53,7 @@ public: /*For.State*/
 private:
 	virtual HRESULT Ready_Components(void* pArg);
 	_uint m_eState = HURT;
+	_bool m_bAnimationFinished = false;
 
 public:
 	static CSnowFieldNpc* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

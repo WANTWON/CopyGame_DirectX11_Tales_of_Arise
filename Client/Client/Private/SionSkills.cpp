@@ -89,14 +89,14 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		break;
 	case TRESVENTOS:
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
-		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+		m_pTransformCom->Set_WorldMatrix(m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix());
+		m_pTransformCom->LookDir(m_BulletDesc.vTargetDir);
+		mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
 		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("TresVentusStart.dat"), mWorldMatrix);
 		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("TresVentosBullet.dat"), mWorldMatrix);
 		m_pSmoke = CEffect::PlayEffectAtLocation(TEXT("TresVentosSmoke.dat"), mWorldMatrix);
-		m_pTransformCom->LookDir(m_BulletDesc.vTargetDir);
 		break;
-
 	case AQUA_LUINA:
 		vLocation = m_BulletDesc.vTargetPosition;
 		//mWorldMatrix.r[]

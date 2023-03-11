@@ -198,14 +198,14 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 						return pEvent;
 				}
 
-				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
-				{
-					if (!m_bLandSound)
-					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
-						m_bLandSound = true;
-					}
-				}
+				//if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
+				//{
+				//	if (!m_bLandSound)
+				//	{
+				//		CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+				//		m_bLandSound = true;
+				//	}
+				//}
 			}
 		}
 	}
@@ -220,7 +220,102 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 
 	if (STATETYPE_END == m_eStateType)
 		m_pOwner->Check_Navigation_Jump();
+		
+		if (!m_bLandSound)
+		{
+			switch (m_ePlayerID)
+			{
+			case CPlayer::ALPHEN:
+				if (JUMP_RUN != m_eJumpType)
+				{
+					if (!m_bLandSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+						m_bLandSound = true;
+					}
+				}
+				else
+				{
+					if (!m_bLandSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_RunJumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+						m_bLandSound = true;
+					}
+				}
+				break;
 
+			case CPlayer::SION:
+				if (JUMP_RUN != m_eJumpType)
+				{
+					if (!m_bLandSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+						m_bLandSound = true;
+					}
+				}
+
+				else
+				{
+					if (!m_bLandSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_RunJumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+						m_bLandSound = true;
+					}
+				}
+				break;
+
+			case CPlayer::RINWELL:
+				if (JUMP_RUN != m_eJumpType)
+				{
+					if (!m_bLandSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+						m_bLandSound = true;
+					}
+				}
+
+				else
+				{
+					if (!m_bLandSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_RunJumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+						m_bLandSound = true;
+					}
+				}
+				break;
+
+			case CPlayer::LAW:
+				if (JUMP_RUN != m_eJumpType)
+				{
+					if (!m_bLandSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+						m_bLandSound = true;
+					}
+				}
+
+				else
+				{
+					if (!m_bLandSound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_RunJumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+						m_bLandSound = true;
+					}
+				}
+				break;
+
+			default:
+				if (!m_bLandSound)
+				{
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
+					m_bLandSound = true;
+				}
+				break;
+			}
+			
+			
+		}
+	}
 	return nullptr;
 }
 
@@ -293,7 +388,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				{
 					if (Check_JumpEnd(1.75f))
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
+						//CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_JUMP_RUN_LAND);
 						m_eStateType = STATETYPE_END;
 					}
@@ -307,7 +402,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				{
 					if (Check_JumpEnd(0.5f))
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
+						//GameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::JUMP_RUN_LANDING);
 						m_eStateType = STATETYPE_END;
 					}
@@ -321,7 +416,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				{
 					if (Check_JumpEnd(1.f))
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
+						//CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::JUMP_RUN_LANDING);
 						m_eStateType = STATETYPE_END;
 					}
@@ -335,7 +430,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				{
 					if (Check_JumpEnd(1.5f))
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
+						//CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
 						m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::JUMP_RUN_LANDING);
 						m_eStateType = STATETYPE_END;
 					}
@@ -453,7 +548,7 @@ CPlayerState * CJumpState::LateTick(_float fTimeDelta)
 				{
 					if (!m_bLandSound)
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.3f);
+						//CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.3f);
 						m_bLandSound = true;
 					}
 				}
@@ -706,6 +801,7 @@ void CJumpState::Exit()
 {
 	if (STATETYPE_END == m_eStateType && Check_JumpEnd(1.f))
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOT, 0.7f);
 		m_pOwner->Off_IsFly();
 		m_fTime = 0.f;
 	}

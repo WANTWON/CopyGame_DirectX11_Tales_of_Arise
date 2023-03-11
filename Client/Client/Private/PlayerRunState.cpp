@@ -320,37 +320,37 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 							{
 								if (m_iDashSoundCount == 0)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound0.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound0.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 1;
 								}
 
 								else if (m_iDashSoundCount == 1)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound1.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound1.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 2;
 								}
 
 								else if (m_iDashSoundCount == 2)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound2.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound2.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 3;
 								}
 
 								else if (m_iDashSoundCount == 3)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound3.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound3.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 4;
 								}
 
 								else if (m_iDashSoundCount == 4)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound4.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound4.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 5;
 								}
 
 								else if (m_iDashSoundCount == 5)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound5.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSound5.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 0;
 								}
 
@@ -366,31 +366,31 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 							{
 								if (m_iDashSoundCount == 0)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound0.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound0.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 1;
 								}
 
 								else if (m_iDashSoundCount == 1)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound1.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound1.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 2;
 								}
 
 								else if (m_iDashSoundCount == 2)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound2.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound2.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 3;
 								}
 
 								else if (m_iDashSoundCount == 3)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound3.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound3.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 4;
 								}
 
 								else if (m_iDashSoundCount == 4)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound4.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSound4.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 0;
 								}
 
@@ -406,55 +406,55 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 							{
 								if (m_iDashSoundCount == 0)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound0.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound0.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 1;
 								}
 
 								else if (m_iDashSoundCount == 1)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound1.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound1.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 2;
 								}
 
 								else if (m_iDashSoundCount == 2)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound2.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound2.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 3;
 								}
 
 								else if (m_iDashSoundCount == 3)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound3.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound3.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 4;
 								}
 
 								else if (m_iDashSoundCount == 4)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound4.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound4.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 5;
 								}
 
 								else if (m_iDashSoundCount == 5)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound5.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound5.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 6;
 								}
 
 								else if (m_iDashSoundCount == 6)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound6.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound6.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 7;
 								}
 
 								else if (m_iDashSoundCount == 7)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound7.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSound7.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 8;
 								}
 
 								else if (m_iDashSoundCount == 8)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSoun8.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSoun8.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 0;
 								}
 
@@ -470,37 +470,37 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 							{
 								if (m_iDashSoundCount == 0)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound0.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound0.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 1;
 								}
 
 								else if (m_iDashSoundCount == 1)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound1.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound1.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 2;
 								}
 
 								else if (m_iDashSoundCount == 2)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound2.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound2.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 3;
 								}
 
 								else if (m_iDashSoundCount == 3)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound3.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound3.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 4;
 								}
 
 								else if (m_iDashSoundCount == 4)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound4.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound4.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 5;
 								}
 
 								else if (m_iDashSoundCount == 5)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound5.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSound5.wav"), SOUND_FOOT, 0.3f);
 									m_iDashSoundCount = 0;
 								}
 
@@ -532,25 +532,25 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 							{
 								if (m_iRunSoundCount == 0)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound1.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound1.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 1;
 								}
 
 								else if (m_iRunSoundCount == 1)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound2.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound2.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 2;
 								}
 
 								else if (m_iRunSoundCount == 2)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound3.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound3.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 3;
 								}
 
 								else if (m_iRunSoundCount == 3)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound4.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_FootSound4.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 0;
 								}
 
@@ -566,43 +566,43 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 							{
 								if (m_iRunSoundCount == 0)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound1.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound1.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 1;
 								}
 
 								else if (m_iRunSoundCount == 1)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound2.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound2.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 2;
 								}
 
 								else if (m_iRunSoundCount == 2)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound3.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound3.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 3;
 								}
 
 								else if (m_iRunSoundCount == 3)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound4.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound4.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 4;
 								}
 
 								else if (m_iRunSoundCount == 4)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound5.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound5.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 5;
 								}
 
 								else if (m_iRunSoundCount == 5)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound6.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound6.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 6;
 								}
 
 								else if (m_iRunSoundCount == 6)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound7.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_FootSound7.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 0;
 								}
 
@@ -618,25 +618,25 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 							{
 								if (m_iRunSoundCount == 0)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_FootSound1.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_FootSound1.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 1;
 								}
 
 								else if (m_iRunSoundCount == 1)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_FootSound2.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_FootSound2.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 2;
 								}
 
 								else if (m_iRunSoundCount == 2)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_FootSound3.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_FootSound3.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 3;
 								}
 
 								else if (m_iRunSoundCount == 3)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_FootSound4.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_FootSound4.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 0;
 								}
 
@@ -652,37 +652,37 @@ CPlayerState * CRunState::Tick(_float fTimeDelta)
 							{
 								if (m_iRunSoundCount == 0)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound1.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound1.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 1;
 								}
 
 								else if (m_iRunSoundCount == 1)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound2.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound2.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 2;
 								}
 
 								else if (m_iRunSoundCount == 2)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound3.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound3.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 3;
 								}
 
 								else if (m_iRunSoundCount == 3)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound4.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound4.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 4;
 								}
 
 								else if (m_iRunSoundCount == 4)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound5.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound5.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 5;
 								}
 
 								else if (m_iRunSoundCount == 5)
 								{
-									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound6.wav"), SOUND_FOOT, 0.1f);
+									CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_FootSound6.wav"), SOUND_FOOT, 0.3f);
 									m_iRunSoundCount = 0;
 								}
 
@@ -967,7 +967,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DASH_BRAKE_LEFT_START);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_DashSoundBreak.wav"), SOUND_FOOT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSoundBreak.wav"), SOUND_FOOTBREAK, 0.65f);
 				}
 			}
 			
@@ -980,7 +980,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::DASH_BRAKE_000);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSoundBreak.wav"), SOUND_FOOT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_DashSoundBreak.wav"), SOUND_FOOTBREAK, 0.55f);
 				}
 			}
 			break;
@@ -992,7 +992,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::DASH_BRAKE_000);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSoundBreak.wav"), SOUND_FOOT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_DashSoundBreak.wav"), SOUND_FOOTBREAK, 0.55f);
 				}
 			}
 			
@@ -1005,7 +1005,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::DASH_BREAK_START);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSoundBreak.wav"), SOUND_FOOT, 0.4f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_DashSoundBreak.wav"), SOUND_FOOTBREAK, 0.65f);
 				}
 			}
 			break;
@@ -1024,7 +1024,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_BATTLE_MOVE_BREAK);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_RunBreak.wav"), SOUND_FOOTBREAK, 0.2f);
 				}
 			}
 			else
@@ -1034,7 +1034,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_RUN_BRAKE_START);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_RunBreak.wav"), SOUND_FOOTBREAK, 0.55f);
 				}
 			}
 			break;
@@ -1046,7 +1046,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_MOVE_BRAKE);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_RunBreak.wav"), SOUND_FOOTBREAK, 0.2f);
 				}
 			}
 			else
@@ -1056,7 +1056,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::RUN_BRAKE_000);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Field_RunBreak.wav"), SOUND_FOOTBREAK, 0.5f);
 				}
 			}
 			break;
@@ -1068,7 +1068,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN_BRAKE_000);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_RunBreak.wav"), SOUND_FOOTBREAK, 0.2f);
 				}
 			}
 			else
@@ -1078,7 +1078,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::RUN_BRAKE_000);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Field_RunBreak.wav"), SOUND_FOOTBREAK, 0.5f);
 				}
 			}
 			break;
@@ -1090,7 +1090,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_MOVE_BRAKE);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_RunBreak.wav"), SOUND_FOOTBREAK, 0.2f);
 				}
 			}
 			else
@@ -1100,7 +1100,7 @@ void CRunState::Enter()
 				else
 				{
 					m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::RUN_BRAKE);
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_RunBreak.wav"), SOUND_FOOT, 0.3f);
+					CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Field_RunBreak.wav"), SOUND_FOOTBREAK, 0.55f);
 				}
 			}
 			break;

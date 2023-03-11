@@ -1347,9 +1347,6 @@
     <ClInclude Include="..\Public\IceWolfJumpState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Ice_Wolf\State\BattleStates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HawkJumpState.h">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\BerserkerJumpState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClInclude>
@@ -2194,9 +2191,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\BerserkerJumpState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\HawkJumpState.cpp">
-      <Filter>02.GameObjects\01.Actor\01.Monster\Hawk\State\BattleStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

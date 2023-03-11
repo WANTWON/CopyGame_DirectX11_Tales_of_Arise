@@ -431,15 +431,15 @@ void CLawAirRSkillState::Update_Skill(void)
 		if (!pEffect || wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
 			continue;
 		
-		_float4 vPlayerPosition;
-		XMStoreFloat4(&vPlayerPosition, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
-		_float4 vPlayerLook;
-		XMStoreFloat4(&vPlayerLook, m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
+		_float4 vLawPosition;
+		XMStoreFloat4(&vLawPosition, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+		_float4 vLawLook;
+		XMStoreFloat4(&vLawLook, m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
 		
 		_float4 vEffectPosition;
-		vEffectPosition.y = vPlayerPosition.y + 3.f;
+		vEffectPosition.y = vLawPosition.y + 3.f;
 		
-		XMStoreFloat4(&vEffectPosition, XMLoadFloat4(&vPlayerPosition) + XMLoadFloat4(&vPlayerLook) * 4);
+		XMStoreFloat4(&vEffectPosition, XMLoadFloat4(&vLawPosition) + XMLoadFloat4(&vLawLook) * 4);
 		
 		pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vEffectPosition));
 	}

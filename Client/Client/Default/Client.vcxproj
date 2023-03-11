@@ -253,7 +253,6 @@
     <ClInclude Include="..\Public\Damagefont_Critical.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Fascinate.h" />
-    <ClInclude Include="..\Public\HawkJumpState.h" />
     <ClInclude Include="..\Public\IceWolfJumpState.h" />
     <ClInclude Include="..\Public\Law.h" />
     <ClInclude Include="..\Public\LawAirFSkillState.h" />
@@ -545,7 +544,6 @@
     <ClCompile Include="..\Private\Damagefont_Critical.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Fascinate.cpp" />
-    <ClCompile Include="..\Private\HawkJumpState.cpp" />
     <ClCompile Include="..\Private\IceWolfJumpState.cpp" />
     <ClCompile Include="..\Private\Law.cpp" />
     <ClCompile Include="..\Private\LawAirFSkillState.cpp" />

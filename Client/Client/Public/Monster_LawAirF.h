@@ -3,8 +3,8 @@
 #include "MonsterLawState.h"
 
 BEGIN(Client)
+class CEffect;
 BEGIN(MonsterLaw)
-
 class CMonster_LawAirF final : public CMonsterLawState
 {
 public:
@@ -17,6 +17,10 @@ public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
+private:
+	void Update_Skill(void);
+	void Remove_Skill(void);
+	void Reset_Skill(void);
 
 private:
 	_matrix m_StartMatrix;
@@ -41,8 +45,8 @@ private:
 	_bool m_bEnhaBakusaiken_1 = false;	// F (Air)
 	_bool m_bEnhaBakusaiken_2 = false;	// F (Air)
 
-										/* Effect Vectors */
-	vector<class CEffect*> m_EnhaBakusaiken_1;
+	/* Effect Vectors */
+	vector<CEffect*> m_EnhaBakusaiken_1;
 
 };
 END

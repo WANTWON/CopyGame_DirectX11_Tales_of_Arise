@@ -159,6 +159,28 @@ PS_OUT PS_SNOW(PS_IN In)
 }
 
 
+PS_OUT PS_GRASS(PS_IN In)
+{
+	PS_OUT Out = (PS_OUT)0;
+	float3	vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
+
+	vNormal = vNormal * 2.f - 1.f;
+
+	float3x3	WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+
+	vNormal = mul(vNormal, WorldMatrix);
+
+	Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vNormal = vector(1.f,1.f,1.f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, 0.f);
+
+	if (Out.vDiffuse.a <= 0.2f)
+		discard;
+
+	return Out;
+}
+
+
 PS_OUT_SHADOW PS_SHADOWDEPTH(PS_IN In)
 {
 	PS_OUT_SHADOW Out = (PS_OUT_SHADOW)0;
@@ -231,5 +253,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_GLOW();
+	}
+
+	pass ForOnlyGrass
+	{
+		SetRasterizerState(RS_Default);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+		SetDepthStencilState(DSS_Default, 0);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_GRASS();
 	}
 };

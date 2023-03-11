@@ -103,6 +103,7 @@ void CPoseState::Enter()
 	}		
 	case Client::CRinwellState::STATE_HP50DOWN:
 	{
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Aggro.wav"), SOUND_VOICE, 0.3f);
 		m_pOwner->Set_50DownCutScene(true);
 		_vector vPosition = XMVectorSet(60.f, 0.2f, 80.f, 1.f);
 		m_pOwner->Get_Transform()->LookDir(XMVectorSet(0.f, 0.f, -1.f, 0.f));

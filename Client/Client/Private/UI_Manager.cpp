@@ -96,9 +96,6 @@ void CUI_Manager::Erase_Itempopup_list(CUI_Base * point)
 void CUI_Manager::AddItem(ITEM_NAME name, ITEM_TYPE type , _bool popup , _bool msgbox , _uint count )
 {
 	
-
-
-
 	ITEMINFO*  itempointer = new  ITEMINFO;
 	itempointer->eitemname = name;
 	itempointer->eitemtype = type;//(ITEM_TYPE)(rand() % 20);
@@ -153,6 +150,12 @@ void CUI_Manager::AddItem(ITEM_NAME name, ITEM_TYPE type , _bool popup , _bool m
 		delete(itempointer);
 
 
+}
+
+void CUI_Manager::PlusGald(_uint gald)
+{
+	 m_iGald += gald;
+	 CGameInstance::Get_Instance()->PlaySounds(TEXT("CoinUp.wav"), SOUND_SYSTEM, 0.2f);
 }
 
 

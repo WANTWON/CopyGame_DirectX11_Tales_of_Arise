@@ -34,7 +34,9 @@ HRESULT CUI_PartyjoinMsg::Initialize(void * pArg)
 	m_fPosition.y = 600.f;
 	m_fAlpha = 0.f;
 
+	
 
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("QuestStart2.wav"), SOUND_SYSTEM, 0.2f);
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
