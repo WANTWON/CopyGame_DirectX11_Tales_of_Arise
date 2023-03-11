@@ -100,7 +100,7 @@ HRESULT CLevel_City::Initialize()
 	}
 	else
 	{
-		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LEVEL_CITY3.wav"), g_fSoundVolume);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_City.wav"), g_fSoundVolume);
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_mountain_Bird_Bug.wav"), SOUND_NATURE, 0.1f);
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_Crowd.wav"), SOUND_CROWD, g_fSoundNatureVolume);
 
@@ -291,6 +291,15 @@ HRESULT CLevel_City::Ready_Lights()
 HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 {
 	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (pGameInstance->Get_PastLevelIndex() == LEVEL_LAWBATTLE)
+	{
+		if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::LAW) == nullptr)
+		{
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+				return E_FAIL;
+		}
+	}
 
 
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();

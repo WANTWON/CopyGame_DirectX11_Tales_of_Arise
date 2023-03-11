@@ -35,6 +35,7 @@
 
 #include "PlayerOverlimit.h"
 #include "ParticleSystem.h"
+#include "PlayerBoostAttackState.h"
 
 
 using namespace Player;
@@ -723,11 +724,10 @@ void CPlayer::Set_PlayerCollectState(CInteractObject * pObject)
 void CPlayer::Play_AISkill(PLAYERID ePlayer)
 {
 	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
-	if (ePlayer != KISARA)
-	{
-		if (m_tInfo.fCurrentBoostGuage < 100.f || eMode != Client::AI_MODE)
-			return;
-	}
+
+	if (m_tInfo.fCurrentBoostGuage < 100.f || eMode != Client::AI_MODE)
+		return;
+	
 	
 
 	switch (ePlayer)
@@ -772,6 +772,48 @@ void CPlayer::Play_AISkill(PLAYERID ePlayer)
 	}
 
 	}
+}
+
+void CPlayer::Play_ActiveSkill(PLAYERID ePlayer)
+{
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	
+	if (m_tInfo.fCurrentBoostGuage < 100.f || eMode == Client::AI_MODE)
+		return;
+	
+
+
+	switch (ePlayer)
+	{
+	case Client::CPlayer::ALPHEN:
+	{
+		CPlayerState* pNewState = new Player::CPlayerBoostAttackState(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
+		break;
+	}
+	case Client::CPlayer::SION:
+	{
+		CPlayerState* pNewState = new Player::CPlayerBoostAttackState(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
+		break;
+	}
+	case Client::CPlayer::RINWELL:
+	{
+		CPlayerState* pNewState = new Player::CPlayerBoostAttackState(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
+		break;
+	}
+	case Client::CPlayer::LAW:
+	{
+		CPlayerState* pNewState = new Player::CPlayerBoostAttackState(this, CBattleManager::Get_Instance()->Get_LackonMonster());
+		m_pPlayerState = m_pPlayerState->ChangeState(m_pPlayerState, pNewState);
+		break;
+	}
+
+	
+
+	}
+
 }
 
 
@@ -981,26 +1023,42 @@ void CPlayer::BoostAttack()
 	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::ACTION)
 		return;
 
-
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == ALPHEN)
-		Play_AISkill(ALPHEN);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == SION)
-		Play_AISkill(SION);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == RINWELL)
-		Play_AISkill(RINWELL);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_tInfo.fCurrentBoostGuage>= 100.f && m_ePlayerID == LAW)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
-		Play_AISkill(LAW);
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_5) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == KISARA)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
+	PLAYER_MODE eMode = m_pPlayerManager->Check_ActiveMode(this);
+	if (eMode == ACTIVE)
 	{
-		Set_PlayerMode(AI_MODE);
-		Play_AISkill(KISARA);
+
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == ALPHEN)
+			Play_ActiveSkill(ALPHEN);
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == SION)
+			Play_ActiveSkill(SION);
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == RINWELL)
+			Play_ActiveSkill(RINWELL);
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == LAW)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
+			Play_ActiveSkill(LAW);
 	}
-	else if (CGameInstance::Get_Instance()->Key_Up(DIK_6) && m_tInfo.fCurrentBoostGuage >= 100.f&&m_ePlayerID == DUOHALEM)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
+	else if (eMode == AI_MODE)
 	{
-		Set_PlayerMode(AI_MODE);
-		Play_AISkill(DUOHALEM);
+		if (CGameInstance::Get_Instance()->Key_Up(DIK_1) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == ALPHEN)
+			Play_AISkill(ALPHEN);
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_2) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == SION)
+			Play_AISkill(SION);
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_3) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == RINWELL)
+			Play_AISkill(RINWELL);
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_4) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == LAW)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
+			Play_AISkill(LAW);
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_5) && m_tInfo.fCurrentBoostGuage >= 100.f && m_ePlayerID == KISARA)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
+		{
+			Set_PlayerMode(AI_MODE);
+			Play_AISkill(KISARA);
+		}
+		else if (CGameInstance::Get_Instance()->Key_Up(DIK_6) && m_tInfo.fCurrentBoostGuage >= 100.f&&m_ePlayerID == DUOHALEM)//m_pPlayerManager->Get_EnumPlayer(3)->Get_BoostGuage()
+		{
+			Set_PlayerMode(AI_MODE);
+			Play_AISkill(DUOHALEM);
+		}
 	}
+
+	
 		
 }
 

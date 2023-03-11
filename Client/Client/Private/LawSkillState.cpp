@@ -452,7 +452,7 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+				pCollided->Take_Damage((rand() % 100 + ((rand() % 3) + 1) * 100), m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -469,7 +469,7 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+				pCollided->Take_Damage((rand() % 100 + ((rand() % 3) + 1) * 100), m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -486,7 +486,7 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+				pCollided->Take_Damage((rand() % 100 + ((rand() % 3) + 1) * 100), m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG
@@ -503,7 +503,7 @@ CPlayerState * CLawSkillState::LateTick(_float fTimeDelta)
 		{
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
-				pCollided->Take_Damage(rand() % 100, m_pOwner, m_HitLagDesc);
+				pCollided->Take_Damage((rand() % 100 + ((rand() % 3) + 1) * 100), m_pOwner, m_HitLagDesc);
 		}
 
 #ifdef _DEBUG

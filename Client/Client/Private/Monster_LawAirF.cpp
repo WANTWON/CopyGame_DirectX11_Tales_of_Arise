@@ -77,6 +77,22 @@ CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 						m_ColliderMatrix.r[1] = XMVector4Normalize(m_ColliderMatrix.r[1]);
 						m_ColliderMatrix.r[2] = XMVector4Normalize(m_ColliderMatrix.r[2]);
 
+
+						if (!m_bSkill_F_Sound)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillHitSound.wav"), SOUND_HIT, 0.5f);
+							m_bSkill_F_Sound = true;
+						}
+						
+						//if ((m_fEventStart != pEvent.fStartTime))
+						//{
+						//	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+						//	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
+						//	//Bullet
+						//	CBullet::BULLETDESC BulletDesc;
+						//	BulletDesc.eCollisionGroup = MONSTER;
+						//	BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
+
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
 							//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -85,6 +101,7 @@ CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = MONSTER;
 							BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
+
 
 							BulletDesc.fVelocity = 0.5f;
 							BulletDesc.vInitPositon = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -250,7 +267,8 @@ void CMonster_LawAirF::Enter()
 	else
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("LawSkillSound_Jump_F.wav"), SOUND_EFFECT, 1.0f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillVoice.wav"), SOUND_LAW_VOICE, 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_F_SkillSoundBegin.wav"), SOUND_LAW_SKILL, 0.7f);
 	dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_YUMPAEFUCKSAY);
 
 
