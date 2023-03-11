@@ -68,6 +68,8 @@ namespace Client
 		float fBlurDetail = 10.f;
 
 
+
+
 	}HITLAGDESC;
 
 	typedef struct ObjectInfo

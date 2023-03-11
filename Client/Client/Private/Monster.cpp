@@ -74,6 +74,18 @@ int CMonster::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	if (m_bhitboost)
+	{
+		m_fBoostattackedtimer += fTimeDelta;
+		if (m_fBoostattackedtimer > 4.f)
+		{
+			m_fBoostattackedtimer = 0.f;
+		}
+
+	}
+		
+
+
 	if (m_bTakeDamage)
 	{
 		m_fTime_TakeDamageDeltaAcc += fTimeDelta;
@@ -532,29 +544,32 @@ void CMonster::Make_DeadEffect(CBaseObj * Target)
 
 void CMonster::Make_UIFont(_uint iDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
-	
-	if (m_tStats.m_iBedamagedCount >= 20)
-	{
-		m_bBedamageAnim = true;
-		m_tStats.m_iBedamagedCount = 0;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
-			return;
-	}
 
-	if (m_tStats.m_iHitcount >= 10)
+	if (dynamic_cast<CPlayer*>(DamageCauser)->Get_PlayingBoost() && !m_bhitboost)
 	{
+		m_bhitboost = true;
 		m_bDownState = true;
 		m_tStats.m_iHitcount = 0;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontboostbreak"), LEVEL_STATIC, TEXT("break"), this)))
 			return;
 	}
-
-	if (m_tStats.m_iBedamagedCount >= 20)
+	else
 	{
-		m_bBedamageAnim = true;
-		m_tStats.m_iBedamagedCount = 0;
-		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
-			return;
+		if (m_tStats.m_iBedamagedCount >= 20)
+		{
+			m_bBedamageAnim = true;
+			m_tStats.m_iBedamagedCount = 0;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+				return;
+		}
+
+		if (m_tStats.m_iHitcount >= 10)
+		{
+			m_bDownState = true;
+			m_tStats.m_iHitcount = 0;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_damagefontbreak"), LEVEL_STATIC, TEXT("break"), this)))
+				return;
+		}
 	}
 
 
