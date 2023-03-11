@@ -202,7 +202,7 @@ CAIState * CAI_AlphenRinwell_Smash::LateTick(_float fTimeDelta)
 	if (m_bBullet && !m_bScreen)
 	{
 		m_fFadeTime += fTimeDelta;
-		if (m_fFadeTime > 2.f)
+		if (m_fFadeTime > 1.7f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 			{

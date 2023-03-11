@@ -121,6 +121,10 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
 
+								if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+									dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.1f);
+
+
 								for (auto& pEffect : Punch)
 								{
 									vPosition += vCamDir*0.1f;
@@ -137,6 +141,9 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawFinishMove_Punch.dat"), mWorldMatrix);
 								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
+
+								if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+									dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.1f);
 
 					
 								for (auto& pEffect : Punch)
@@ -155,6 +162,9 @@ CAIState * CAI_RinwellLaw_Smash::Tick(_float fTimeDelta)
 								vector<CEffect*> Punch = CEffect::PlayEffectAtLocation(TEXT("LawFinishMove_Punch.dat"), mWorldMatrix);
 								_vector vPosition = Punch[0]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 								_vector vCamDir = XMVector3Normalize(XMLoadFloat4(&CGameInstance::Get_Instance()->Get_CamPosition()) - mWorldMatrix.r[3]);
+
+								if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+									dynamic_cast<CCamera_Action*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Set_ShakingMode(true, 1.f, 0.1f);
 
 								for (auto& pEffect : Punch)
 								{
@@ -238,7 +248,7 @@ CAIState * CAI_RinwellLaw_Smash::LateTick(_float fTimeDelta)
 	{
 		m_fFadeTime += fTimeDelta;
 
-		if (m_fFadeTime > 1.f)
+		if (m_fFadeTime > 0.8f)
 		{
 			if (m_eCurrentPlayerID == CPlayer::LAW)
 			{
