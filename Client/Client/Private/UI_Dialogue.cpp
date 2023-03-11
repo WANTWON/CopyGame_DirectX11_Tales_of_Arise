@@ -2695,7 +2695,12 @@ void CUI_Dialogue::Render_Fonts(_uint index)
 	else
 		m_iPortraitnum = 100;
 
-	if(m_iPortraitnum <= 3)
+	if (m_iDialogueindex == 14)
+		m_iPortraitnum = 5;
+	else if (m_iDialogueindex == 15)
+		m_iPortraitnum = 4;
+
+	if(m_iPortraitnum <= 5)
 	{
 
 		m_fSize.x = 600.f;

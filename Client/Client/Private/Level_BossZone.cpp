@@ -10,6 +10,7 @@
 #include "BattleManager.h"
 #include "Monster.h"
 #include "AstralDoubt.h"
+#include "UI_InterectMsg.h"
 
 CLevel_BossZone::CLevel_BossZone(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -20,6 +21,7 @@ CLevel_BossZone::CLevel_BossZone(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CLevel_BossZone::Initialize()
 {
+	
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
 	if (FAILED(__super::Initialize()))
@@ -27,7 +29,7 @@ HRESULT CLevel_BossZone::Initialize()
 
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
-
+	dynamic_cast<CUI_InterectMsg*>(CUI_Manager::Get_Instance()->Get_System_msg())->Close_sysmsg();
 
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Camera")) == false)
 	{

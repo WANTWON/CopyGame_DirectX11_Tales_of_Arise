@@ -42,7 +42,7 @@ HRESULT CCriticalFont::Initialize(void * pArg)
 	}
 	else if (m_damagedesc.itype == 3)
 	{
-		m_fPosition.x -= 25.f;
+		m_fPosition.x -= 23.f;
 		m_fPosition.y += 30.f;
 	}
 	
