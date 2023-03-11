@@ -122,7 +122,7 @@ int CPlayer::Tick(_float fTimeDelta)
 	{
 		if (m_tInfo.fCurrentBoostGuage < 100.f)
 		{
-			m_tInfo.fCurrentBoostGuage += 4.f;
+			m_tInfo.fCurrentBoostGuage += 1.f;
 		}
 
 		if (m_tInfo.fCurrentBoostGuage >= 100.f)

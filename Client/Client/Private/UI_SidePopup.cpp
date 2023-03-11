@@ -784,7 +784,7 @@ HRESULT CUI_SidePopup::Render_Player1()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(1))))
 		return E_FAIL;
-	m_pShaderCom->Begin(UI_EXPBAR);
+	m_pShaderCom->Begin(UI_REALEXP);
 	m_pVIBufferCom->Render();
 
 	m_fSize.x = 16.f;
@@ -1112,7 +1112,7 @@ HRESULT CUI_SidePopup::Render_Player2()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(1))))
 		return E_FAIL;
-	m_pShaderCom->Begin(UI_EXPBAR);
+	m_pShaderCom->Begin(UI_REALEXP);
 	m_pVIBufferCom->Render();
 
 	m_fSize.x = 16.f;
@@ -1440,7 +1440,7 @@ HRESULT CUI_SidePopup::Render_Player3()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(1))))
 		return E_FAIL;
-	m_pShaderCom->Begin(UI_EXPBAR);
+	m_pShaderCom->Begin(UI_REALEXP);
 	m_pVIBufferCom->Render();
 
 	m_fSize.x = 16.f;
@@ -1769,7 +1769,7 @@ HRESULT CUI_SidePopup::Render_Player4()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom1->Get_SRV(1))))
 		return E_FAIL;
-	m_pShaderCom->Begin(UI_EXPBAR);
+	m_pShaderCom->Begin(UI_REALEXP);
 	m_pVIBufferCom->Render();
 
 	m_fSize.x = 16.f;

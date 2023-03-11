@@ -4,6 +4,7 @@
 
 #include "GameInstance.h"
 #include "BattleManager.h"
+#include "CameraManager.h"
 
 CCP_Guage::CCP_Guage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
@@ -29,7 +30,7 @@ HRESULT CCP_Guage::Initialize(void * pArg)
 	m_fSize.x = 42.f;
 	m_fSize.y = 42.f;
 	m_fPosition.x = 1180.f;
-	m_fPosition.y = 280;
+	m_fPosition.y = 220.f;
 
 
 	m_eShaderID = UI_CP_GUAGE;
@@ -42,6 +43,13 @@ HRESULT CCP_Guage::Initialize(void * pArg)
 int CCP_Guage::Tick(_float fTimeDelta)
 {
 
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return OBJ_NOEVENT;
+	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
+		return OBJ_NOEVENT;
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+		return OBJ_NOEVENT;
+	//m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
@@ -76,8 +84,13 @@ int CCP_Guage::Tick(_float fTimeDelta)
 
 void CCP_Guage::Late_Tick(_float fTimeDelta)
 {
+	if (CUI_Manager::Get_Instance()->Get_Mainmenuon())
+		return;
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return;
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+		return;
+	
 
 	__super::Late_Tick(fTimeDelta);
 

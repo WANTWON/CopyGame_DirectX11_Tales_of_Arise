@@ -618,6 +618,20 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MainPlayerMark"), LEVEL_BATTLE, pLayerTag)))
 		return E_FAIL;
+
+
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_BATTLE, pLayerTag)))
+		return E_FAIL;
+
+	for (int i = 0; i < 7; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_BATTLE, pLayerTag, &i)))
+			return E_FAIL;
+
+
+	}
 	
 
 	RELEASE_INSTANCE(CGameInstance);

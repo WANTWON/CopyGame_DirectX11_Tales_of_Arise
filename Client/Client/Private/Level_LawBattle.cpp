@@ -669,7 +669,18 @@ HRESULT CLevel_LawBattle::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	}
 
+	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage"), LEVEL_LAWBATTLE, pLayerTag)))
+		return E_FAIL;
 
+	for (int i = 0; i < 7; ++i)
+	{
+		_uint number = i;
+
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_CPguage_font"), LEVEL_LAWBATTLE, pLayerTag, &i)))
+			return E_FAIL;
+
+
+	}
 
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_Comboline"), LEVEL_LAWBATTLE, pLayerTag)))
 		return E_FAIL;

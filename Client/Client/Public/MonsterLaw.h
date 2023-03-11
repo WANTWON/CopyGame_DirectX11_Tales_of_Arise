@@ -263,6 +263,7 @@ private:
 	_float m_fFinalTimer = 0.f;
 	_bool m_fFinalStrikeOnetime = true;
 
+	_bool m_bReadytokill = false;
 	
 private:
 		/* Strike Screen Effect */

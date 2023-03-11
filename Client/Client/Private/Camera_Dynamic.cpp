@@ -335,13 +335,13 @@ void CCamera_Dynamic::Room_Camera(_float fTimeDelta)
 		{
 			if (XMouseMove < 0)
 			{
-				m_fAngle += 4.f;
+				m_fAngle += 2.f;
 				if (m_fAngle >= 360.f)
 					m_fAngle = 0.f;
 			}
 			else if (XMouseMove > 0)
 			{
-				m_fAngle -= 4.f;
+				m_fAngle -= 2.f;
 				if (m_fAngle <= 0.f)
 					m_fAngle = 360.f;
 			}
