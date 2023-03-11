@@ -197,15 +197,6 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 					if (nullptr != pEvent)
 						return pEvent;
 				}
-
-				//if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
-				//{
-				//	if (!m_bLandSound)
-				//	{
-				//		CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_Field_JumpLand.wav"), SOUND_FOOTBREAK, 0.7f);
-				//		m_bLandSound = true;
-				//	}
-				//}
 			}
 		}
 	}
@@ -219,8 +210,9 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 	m_pOwner->Get_Navigation()->Compute_CurrentIndex_byXZ(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION));
 
 	if (STATETYPE_END == m_eStateType)
+	{
 		m_pOwner->Check_Navigation_Jump();
-		
+
 		if (!m_bLandSound)
 		{
 			switch (m_ePlayerID)
@@ -312,10 +304,9 @@ CPlayerState * CJumpState::Tick(_float fTimeDelta)
 				}
 				break;
 			}
-			
-			
 		}
 	}
+
 	return nullptr;
 }
 
