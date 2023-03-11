@@ -37,7 +37,7 @@ void CPlayerManager::Set_ActivePlayer(CPlayer * pPlayer)
 	m_pActivePlayer->Check_Navigation();
 	if (m_pActivePlayer->Get_IsFly() == true)
 		m_pActivePlayer->Off_IsFly();
-
+	m_pActivePlayer->Change_Level(LEVEL(CGameInstance::Get_Instance()->Get_CurrentLevelIndex()));
 
 	m_pAIPlayers.clear();
 	list<CGameObject*>* pPlayerLists =  CGameInstance::Get_Instance()->Get_ObjectList(LEVEL_STATIC, TEXT("Layer_Player"));

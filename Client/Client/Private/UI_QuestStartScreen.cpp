@@ -4,8 +4,7 @@
 #include "PlayerManager.h"
 #include "Player.h"
 #include "UI_Dialoguepopup.h"
-
-
+#include "UI_PartyjoinMsg_Law.h"
 
 CUI_QuestStartScreen::CUI_QuestStartScreen(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Base(pDevice, pContext)
@@ -178,6 +177,15 @@ int CUI_QuestStartScreen::Tick(_float fTimeDelta)
 		case 4:
 			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(7, false, 0, 2); //jelous popup
 			break;
+
+		case 5:
+
+			UI_PartyjoinMsg_Law::MSGBOXDESC ddd;
+			ZeroMemory(&ddd, sizeof(UI_PartyjoinMsg_Law::MSGBOXDESC));
+			ddd.iIndex = 3;
+			//	ddd.iCount = 5;
+			if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_PartyMessage_Law"), LEVEL_STATIC, (TEXT("party")), &ddd)))
+				return E_FAIL;
 
 		}
 			

@@ -33,6 +33,12 @@ CMonsterLawState * CFascinate::LateTick(_float fTimeDelta)
 
 		return new CMonster_LawIdleState(m_pOwner);
 	}*/
+	for (auto& pEffect : m_pEffects)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+
 	if (m_pOwner->Get_EventFinish())
 	{
 		return new CMonster_LawIdleState(m_pOwner);
@@ -55,6 +61,12 @@ void CFascinate::Enter()
 
 void CFascinate::Exit()
 {
+	for (auto& pEffect : m_pEffects)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+
 	if (!m_pEffects.empty())
 	{
 		for (auto& iter : m_pEffects)

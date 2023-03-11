@@ -218,6 +218,12 @@ public: /*For.State*/
 	void Set_Daguri(_bool tof) { m_bDaguri = tof; }
 	_bool Get_Daguri() { return m_bDaguri; }
 
+	_bool Get_doStrike1() { return m_bdoStrike1; }
+	void Set_doStrike1(_bool tof) { m_bdoStrike1 = tof; }
+
+	_bool Get_doStrike2() { return m_bdoStrike2; }
+	void Set_doStrike2(_bool tof) { m_bdoStrike2 = tof; }
+
 	
 
 private:
@@ -264,8 +270,10 @@ private:
 		_float m_fStrikeBlurResetDuration = .45f;
 		_float m_fStrikeBlurResetTimer = 0.f;
 		_float m_fRandomTargetTimer = 0.f;
-		
 
+		_bool m_bdoStrike1 = false;
+
+		_bool m_bdoStrike2 = false;
 public:
 	static CMonsterLaw* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

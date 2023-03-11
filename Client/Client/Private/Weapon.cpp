@@ -65,20 +65,6 @@ int CWeapon::Tick(_float fTimeDelta)
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, SocketMatrix);
 
-	if (m_isRotation)
-	{
-		m_fRotateTime += fTimeDelta;
-
-		_matrix		RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(90.f) * m_fRotateTime * 3.f);
-		_matrix CombinedMatrix = XMLoadFloat4x4(&m_CombinedWorldMatrix);
-
-		CombinedMatrix.r[0] = XMVector3TransformNormal(CombinedMatrix.r[0], RotationMatrix);
-		CombinedMatrix.r[1] = XMVector3TransformNormal(CombinedMatrix.r[1], RotationMatrix);
-		CombinedMatrix.r[2] = XMVector3TransformNormal(CombinedMatrix.r[2], RotationMatrix);
-
-		XMStoreFloat4x4(&m_CombinedWorldMatrix, CombinedMatrix);
-	}
-
 	if (m_isCollider)
 	{
 		if (nullptr == m_pSPHERECom)

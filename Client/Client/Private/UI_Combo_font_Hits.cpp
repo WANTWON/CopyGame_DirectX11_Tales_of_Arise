@@ -74,11 +74,11 @@ int CUI_Combo_font_Hits::Tick(_float fTimeDelta)
 		
 
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
-	{
-		m_bfadeout = true;
-		m_bmoveright = true;
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_4)) // 사라질때
+	//{
+	//	m_bfadeout = true;
+	//	m_bmoveright = true;
+	//}
 
 
 

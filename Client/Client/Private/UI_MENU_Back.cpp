@@ -974,6 +974,11 @@ HRESULT CUI_MENU_Back::Render()
 	case 2:
 		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(11))))
 			return E_FAIL;
+
+
+	case 3:
+		if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(11))))
+			return E_FAIL;
 		break;
 
 
@@ -1545,6 +1550,51 @@ HRESULT CUI_MENU_Back::Render_MAINBACK()
 
 		m_pVIBufferCom->Render();
 
+		if (m_iMenubackSection == 3)
+		{
+			m_fSize.x = 360.f;
+			m_fSize.y = 720.f;
+			m_fPosition.x = 410.f;
+			m_fPosition.y = 360.f;
+
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(14))))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fMainAlpha, sizeof(_float))))
+				return E_FAIL;
+
+
+			m_pShaderCom->Begin(UI_ALPHASET);
+
+			m_pVIBufferCom->Render();
+
+			m_fSize.x = 360.f;
+			m_fSize.y = 720.f;
+			m_fPosition.x = 410.f;
+			m_fPosition.y = 360.f;
+
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(15))))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fMainAlpha, sizeof(_float))))
+				return E_FAIL;
+
+
+			m_pShaderCom->Begin(UI_ALPHASET);
+
+			m_pVIBufferCom->Render();
+		}
+
 		m_fSize.x = 360.f;
 		m_fSize.y = 720.f;
 		m_fPosition.x = 410.f;
@@ -1608,6 +1658,139 @@ HRESULT CUI_MENU_Back::Render_MAINBACK()
 		m_pShaderCom->Begin(UI_ALPHASET);
 
 		m_pVIBufferCom->Render();
+
+		break;
+
+		case 3:
+			m_fSize.x = 360.f;
+			m_fSize.y = 720.f;
+			m_fPosition.x = 480.f;
+			m_fPosition.y = 360.f;
+
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(14))))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fMainAlpha, sizeof(_float))))
+				return E_FAIL;
+
+
+			m_pShaderCom->Begin(UI_ALPHASET);
+
+			m_pVIBufferCom->Render();
+
+			m_fSize.x = 360.f;
+			m_fSize.y = 720.f;
+			m_fPosition.x = 820.f;
+			m_fPosition.y = 360.f;
+
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(15))))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fMainAlpha, sizeof(_float))))
+				return E_FAIL;
+
+
+			m_pShaderCom->Begin(UI_ALPHASET);
+
+			m_pVIBufferCom->Render();
+
+			m_fSize.x = 720.f;
+			m_fSize.y = 720.f;
+			m_fPosition.x = 670.f;
+			m_fPosition.y = 310.f;
+
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(8))))
+				return E_FAIL;
+
+			m_pShaderCom->Begin(UI_ALPHASET);
+
+			m_pVIBufferCom->Render();
+
+			
+				
+			
+
+			m_fSize.x = 360.f;
+			m_fSize.y = 720.f;
+			m_fPosition.x = 410.f;
+			m_fPosition.y = 360.f;
+
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(9))))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fMainAlpha, sizeof(_float))))
+				return E_FAIL;
+
+
+			m_pShaderCom->Begin(UI_ALPHASET);
+
+			m_pVIBufferCom->Render();
+
+			m_fSize.x = 720.f;
+			m_fSize.y = 720.f;
+			m_fPosition.x = 960.f;
+			m_fPosition.y = 360.f;
+
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(10))))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fMainAlpha, sizeof(_float))))
+				return E_FAIL;
+
+
+			m_pShaderCom->Begin(UI_ALPHASET);
+
+			m_pVIBufferCom->Render();
+
+
+			m_fSize.x = 720.f;
+			m_fSize.y = 720.f;
+			m_fPosition.x = 670.f;
+			m_fPosition.y = 360.f;
+
+			m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
+			m_pTransformCom->Set_Scale(CTransform::STATE_UP, m_fSize.y);
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(m_fPosition.x - g_iWinSizeX * 0.5f, -m_fPosition.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+			if (FAILED(m_pShaderCom->Set_RawValue("g_WorldMatrix", &m_pTransformCom->Get_World4x4_TP(), sizeof(_float4x4))))
+				return E_FAIL;
+
+			if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(7))))
+				return E_FAIL;
+			if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fMainAlpha, sizeof(_float))))
+				return E_FAIL;
+
+
+			m_pShaderCom->Begin(UI_ALPHASET);
+
+			m_pVIBufferCom->Render();
+
+			break;
 
 
 	}
@@ -6661,6 +6844,10 @@ void CUI_MENU_Back::fadeinMain()
 		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_Rune_Effect"), LEVEL_SNOWFIELD, TEXT("test"), &desc)))
 			return;
 		m_iMenubackSection = 2;
+	}
+	if (CPlayerManager::Get_Instance()->Get_AIPlayers().size() >= 4)
+	{
+		m_iMenubackSection = 3;
 	}
 
 	_uint index = (_uint)CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1;

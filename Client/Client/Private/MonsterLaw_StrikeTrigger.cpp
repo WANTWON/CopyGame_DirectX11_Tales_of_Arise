@@ -90,18 +90,32 @@ CMonsterLawState * CMonsterLaw_StrikeTrigger::LateTick(_float ftimeDelta)
 			
 
 					CBattleManager::Get_Instance()->Set_IsStrike(true);
-					switch (rand() % 2)
+
+					if (m_pOwner->Get_doStrike1())
+					{
+						m_pOwner->Set_doStrike1(false);
+						pCameraManager->Play_ActionCamera(TEXT("WithLawStrike2.dat"), XMMatrixIdentity());
+						return new CMonsterLaw_Strike1(m_pOwner, pCollisionTarget);
+					}
+
+					else if (m_pOwner->Get_doStrike2())
+					{
+						m_pOwner->Set_doStrike2(false);
+						pCameraManager->Play_ActionCamera(TEXT("withlaw3.dat"), XMMatrixIdentity());
+						return new CMonsterLaw_Strike2(m_pOwner, pCollisionTarget);
+					}
+
+
+					/*switch (rand() % 2)
 					{
 					case 0:
-					pCameraManager->Play_ActionCamera(TEXT("WithLawStrike2.dat"), XMMatrixIdentity());
-						return new CMonsterLaw_Strike1(m_pOwner, pCollisionTarget);
+					
 						break;
 
 					case 1:
-						pCameraManager->Play_ActionCamera(TEXT("withlaw3.dat"), XMMatrixIdentity());
-						return new CMonsterLaw_Strike2(m_pOwner, pCollisionTarget);
+						
 						break;
-					}
+					}*/
 					
 				//		return new CMonsterLaw_Strike2(m_pOwner, pCollisionTarget);
 						

@@ -77,35 +77,35 @@ CMonsterLawState * CMonster_LawAirF::Tick(_float fTimeDelta)
 						m_ColliderMatrix.r[1] = XMVector4Normalize(m_ColliderMatrix.r[1]);
 						m_ColliderMatrix.r[2] = XMVector4Normalize(m_ColliderMatrix.r[2]);
 
-						//if ((m_fEventStart != pEvent.fStartTime))
-						//{
-						//	//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
-						//	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
-						//	//Bullet
-						//	CBullet::BULLETDESC BulletDesc;
-						//	BulletDesc.eCollisionGroup = MONSTER;
-						//	BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
+						if ((m_fEventStart != pEvent.fStartTime))
+						{
+							//_vector vTargetPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
+							m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
+							//Bullet
+							CBullet::BULLETDESC BulletDesc;
+							BulletDesc.eCollisionGroup = MONSTER;
+							BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
 
-						//	BulletDesc.fVelocity = 0.5f;
-						//	BulletDesc.vInitPositon = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
-						//	//BulletDesc.vTargetDir = { -0.3f, -1.f, -0.1f, 0.f };
-						//	//BulletDesc.vTargetPosition = vTargetPosition;
-						//	BulletDesc.fDeadTime = 5.5f;
-						//	BulletDesc.pOwner = m_pOwner;
-						//	if(m_pOwner->Get_Phase() == 0)
-						//	m_pOwner->Set_AfterThunder(true);
-						//	for (_uint i = 0; i < 12; ++i)
-						//	{
-						//		m_pOwner->Get_Transform()->Set_Rotation({ 0.f,0.f + i * 30.f , 0.f });
-						//		BulletDesc.vTargetDir = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
-						//		if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
-						//			return nullptr;
-						//	}
-						//	m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
-						//	//	m_bBulletMake = true;
-						//	//m_bCollideFinsh = true;
-						//	m_fEventStart = pEvent.fStartTime;
-						//}
+							BulletDesc.fVelocity = 0.5f;
+							BulletDesc.vInitPositon = m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION);
+							//BulletDesc.vTargetDir = { -0.3f, -1.f, -0.1f, 0.f };
+							//BulletDesc.vTargetPosition = vTargetPosition;
+							BulletDesc.fDeadTime = 5.5f;
+							BulletDesc.pOwner = m_pOwner;
+							if(m_pOwner->Get_Phase() == 0)
+							m_pOwner->Set_AfterThunder(true);
+							for (_uint i = 0; i < 12; ++i)
+							{
+								m_pOwner->Get_Transform()->Set_Rotation({ 0.f,0.f + i * 30.f , 0.f });
+								BulletDesc.vTargetDir = m_pOwner->Get_TransformState(CTransform::STATE_LOOK);
+								if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+									return nullptr;
+							}
+							m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+							//	m_bBulletMake = true;
+							//m_bCollideFinsh = true;
+							m_fEventStart = pEvent.fStartTime;
+						}
 					}
 				}
 				if (ANIMEVENT::EVENTTYPE::EVENT_EFFECT == pEvent.eType)

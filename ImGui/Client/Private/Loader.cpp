@@ -2599,10 +2599,10 @@ HRESULT CLoader::Loading_ForActor()
 		return E_FAIL;
 	pImgui->m_AnimObj.push_back("Sion");
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../../Bin/Bin_Data/Anim/Rinwell/Rinwell.dat"))))
 		return E_FAIL;
-	pImgui->m_AnimObj.push_back("Rinwell");
+	pImgui->m_AnimObj.push_back("Rinwell");*/
 
 
 
@@ -2646,10 +2646,10 @@ HRESULT CLoader::Loading_ForActor()
 	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Alphen_NonAnim"));
 
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell_NonAnim"),
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Rinwell"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../../Bin/Bin_Data/NonAnim/Rinwell/Rinwell.dat"))))
 		return E_FAIL;
-	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell_NonAnim"));
+	CModelManager::Get_Instance()->Add_PrototypeTag(TEXT("Rinwell"));
 
 
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("NpcFemaleYoung"),

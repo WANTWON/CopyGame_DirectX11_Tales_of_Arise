@@ -83,7 +83,7 @@ HRESULT CLevel_BattleZone::Initialize()
 		break;
 	case Client::RINWELL:
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellBattleEnter.dat"), XMMatrixIdentity());
-		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_FightWith_Rinwell.wav"), g_fSoundVolume);
 		break;
 	default:
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
@@ -528,6 +528,8 @@ HRESULT CLevel_BattleZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 
 	_int numcreate = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 2);
 	_int PlayerNum = (_int)(CPlayerManager::Get_Instance()->Get_AIPlayers().size() + 1);
+	if (numcreate >= 5)
+		numcreate = 5;
 	for (int i = 0; i < numcreate; ++i)
 	{
 		_uint number = i;

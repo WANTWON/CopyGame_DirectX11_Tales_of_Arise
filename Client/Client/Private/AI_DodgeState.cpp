@@ -187,15 +187,12 @@ CAIState * CAI_DodgeState::LateTick(_float ftimeDelta)
 void CAI_DodgeState::Enter()
 {
 	
-	//__super::Enter();
 
 	if (CBattleManager::Get_Instance()->IsAllMonsterDead())
 		return;
 
 	if (nullptr != CBattleManager::Get_Instance()->Get_LackonMonster())
-	{
 		m_pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
-	}
 	else
 	{
 		m_pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster
@@ -316,7 +313,7 @@ void CAI_DodgeState::Enter()
 	}
 
 	m_pOwner->Set_Manarecover(true);
-
+	m_pOwner->Plus_Overcount();
 }
 
 void CAI_DodgeState::Exit(void)

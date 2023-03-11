@@ -56,10 +56,10 @@ int CUI_Portraitfront::Tick(_float fTimeDelta)
 	m_fSize.x = 95.f;
 	m_fSize.y = 95.f;
 
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 사라질때
-	{
-		m_bfadeout = true;
-	}
+	//if (CGameInstance::Get_Instance()->Key_Up(DIK_5)) // 사라질때
+	//{
+	//	m_bfadeout = true;
+	//}
 
 
 

@@ -22,9 +22,6 @@
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{ffd39a2b-4897-4694-bc2f-d9c96bf2d061}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\03.Effect">
-      <UniqueIdentifier>{7c9e8516-a6f7-48f2-bf6d-b1f00a55a434}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\01.Actor">
       <UniqueIdentifier>{351f7121-273e-4af4-b95f-a59fe4d18953}</UniqueIdentifier>
     </Filter>
@@ -204,24 +201,6 @@
     </Filter>
     <Filter Include="02.GameObjects\01.Actor\00.Player\State\AIState\States">
       <UniqueIdentifier>{01ca6b4e-9be6-4a8d-9d1f-419da47ca73a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03.Effect\00.EffectTexture">
-      <UniqueIdentifier>{d5484d3b-fa55-4e7f-b3c6-6b32995ce9f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03.Effect\01.EffectMesh">
-      <UniqueIdentifier>{cadb140a-2efe-49db-a298-e5397d48ad47}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03.Effect\02.EffectParticle">
-      <UniqueIdentifier>{3761d43f-9900-4fda-aea4-7e067db54cbf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03.Effect\03.Instancing">
-      <UniqueIdentifier>{7ba82ed8-50e9-4eba-837e-fa620dd7bcad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03.Effect\03.Instancing\Rect">
-      <UniqueIdentifier>{6271ddfa-3e2f-4945-9359-9b57227b63fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\03.Effect\03.Instancing\Point">
-      <UniqueIdentifier>{db7dbd70-3c60-4ea1-81f8-2062d9944113}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\04.UI\12.UI_DIALOGUE">
       <UniqueIdentifier>{6ffbc910-eef9-4bbb-87f2-9afea3e8af0a}</UniqueIdentifier>
@@ -469,8 +448,35 @@
     <Filter Include="02.GameObjects\04.UI\31.UI_MainPlayerMark">
       <UniqueIdentifier>{f0a5b304-cb9a-4ce4-88f9-84c37526f074}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\03.Effect">
+      <UniqueIdentifier>{7c9e8516-a6f7-48f2-bf6d-b1f00a55a434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\00.EffectTexture">
+      <UniqueIdentifier>{d5484d3b-fa55-4e7f-b3c6-6b32995ce9f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\01.EffectMesh">
+      <UniqueIdentifier>{cadb140a-2efe-49db-a298-e5397d48ad47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\02.EffectParticle">
+      <UniqueIdentifier>{3761d43f-9900-4fda-aea4-7e067db54cbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\03.Instancing">
+      <UniqueIdentifier>{7ba82ed8-50e9-4eba-837e-fa620dd7bcad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\03.Instancing\Rect">
+      <UniqueIdentifier>{6271ddfa-3e2f-4945-9359-9b57227b63fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03.Effect\03.Instancing\Point">
+      <UniqueIdentifier>{db7dbd70-3c60-4ea1-81f8-2062d9944113}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\03.Effect\04.EffectObject%28NotTool%29">
       <UniqueIdentifier>{89e2a9fa-f6cd-441b-9177-3eb51a1d308c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Player\04.Kisara">
+      <UniqueIdentifier>{0c9e8525-b0c8-434f-ab40-dfb1678a6708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\01.Actor\00.Player\Player\05.Duohalem">
+      <UniqueIdentifier>{b3fabee1-8e7f-4920-af68-fefc12b59558}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1350,6 +1356,21 @@
     <ClInclude Include="..\Public\BerserkerJumpState.h">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Kisara.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\04.Kisara</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Duohalem.h">
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\05.Duohalem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PartyjoinMsg_Law.h">
+      <Filter>02.GameObjects\04.UI\26.UI_PartyJoin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront_sub1.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Portraitfront_sub2.h">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2191,6 +2212,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\BerserkerJumpState.cpp">
       <Filter>02.GameObjects\01.Actor\01.Monster\Berserker\State\BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Kisara.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\04.Kisara</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Duohalem.cpp">
+      <Filter>02.GameObjects\01.Actor\00.Player\Player\05.Duohalem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PartyjoinMsg_Law.cpp">
+      <Filter>02.GameObjects\04.UI\26.UI_PartyJoin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront_sub1.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Portraitfront_sub2.cpp">
+      <Filter>02.GameObjects\04.UI\07.UI_Portrait\Front</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

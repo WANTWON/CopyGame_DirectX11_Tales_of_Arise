@@ -48,13 +48,12 @@ HRESULT CAiRinwell::Initialize(void * pArg)
 		vPosition = XMVectorSetW(vPosition, 1.f);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 		Set_Scale(ModelDesc.vScale);
-
-		if (ModelDesc.m_fAngle != 0)
-			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(ModelDesc.m_fAngle));
+		m_pTransformCom->Set_Rotation(ModelDesc.vRotation);
 	}
 
 
-	if (m_bBattleMode == CBattleManager::Get_Instance()->Get_IsBattleMode())
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+	if (m_bBattleMode == true )
 	{
 		/* Set State */
 		CRinwellState* pState = new AiRinwell::CPoseState(this, CRinwellState::STATE_BATTLESTART);

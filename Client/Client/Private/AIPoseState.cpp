@@ -44,7 +44,7 @@ void CAIPoseState::Enter(void)
 	switch (m_eCurrentPlayerID)
 	{
 	case CPlayer::ALPHEN:
-		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ADVENT;
+		m_iCurrentAnimIndex = CAlphen::ANIM::ANIM_ATTACK_HADOUMEPPU_START;
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(m_iCurrentAnimIndex);
 		break;
 

@@ -98,8 +98,14 @@ void CRinwellIdleState::Enter(void)
 	else
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAiRinwell::ANIM::BTL_MOVE_IDLE);
 
-	Find_ActiveTarget();
-	m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+
+	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == true)
+	{
+		Find_ActiveTarget();
+		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
+	}
+
+	
 
 	m_bAirMove = m_pOwner->Get_AirMode();
 }
