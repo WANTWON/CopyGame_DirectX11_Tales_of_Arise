@@ -688,7 +688,7 @@ _int CMonster::Take_Damage(int fDamage, CBaseObj * DamageCauser, HITLAGDESC HitD
 	if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
 		m_tStats.m_fLockonSmashGuage += 0.01f;
 	else
-		m_tStats.m_fLockonSmashGuage += 0.01f; 
+		m_tStats.m_fLockonSmashGuage += 0.51f; 
 		
 
 

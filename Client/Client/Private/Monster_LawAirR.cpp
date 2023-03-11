@@ -24,7 +24,8 @@ CMonster_LawAirR::CMonster_LawAirR(CMonsterLaw* pPlayer)//, _float fStartHeight,
 
 CMonsterLawState * CMonster_LawAirR::Tick(_float fTimeDelta)
 {
-	
+	Update_Skill();
+
 	m_pTarget = CPlayerManager::Get_Instance()->Get_EnumPlayer(m_pOwner->Get_Phase());
 
 	if ((STATETYPE_END == m_eStateType))
@@ -121,20 +122,11 @@ CMonsterLawState * CMonster_LawAirR::Tick(_float fTimeDelta)
 								m_vPunchPosition_1 = m_Sankamousyuukyaku_Punch_1[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 						}
 					}
-					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Particles_1"))
-					{
-						if (!m_bSankamousyuukyaku_Particles_1)
-						{
-							mWorldMatrix.r[3] = m_vPunchPosition_1;
-
-							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_2.dat"), mWorldMatrix);
-							m_bSankamousyuukyaku_Particles_1 = true;
-						}
-					}
 					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Punch_2"))
 					{
 						if (!m_bSankamousyuukyaku_Punch_2)
 						{
+							CEffect::PlayEffectAtLocation(TEXT("Tyourengadan_Ring.dat"), mWorldMatrix);
 							m_Sankamousyuukyaku_Punch_2 = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_Punch_2.dat"), mWorldMatrix);
 							m_bSankamousyuukyaku_Punch_2 = true;
 
@@ -142,21 +134,15 @@ CMonsterLawState * CMonster_LawAirR::Tick(_float fTimeDelta)
 								m_vPunchPosition_2 = m_Sankamousyuukyaku_Punch_2[1]->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
 						}
 					}
-					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_Particles_2"))
-					{
-						if (!m_bSankamousyuukyaku_Particles_2)
-						{
-							mWorldMatrix.r[3] = m_vPunchPosition_2;
-
-							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_2.dat"), mWorldMatrix);
-							m_bSankamousyuukyaku_Particles_2 = true;
-						}
-					}
 					if (!strcmp(pEvent.szName, "Sanka_Mousyuukyaku_3"))
 					{
 						if (!m_bSankamousyuukyaku_2)
 						{
-							CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_3.dat"), mWorldMatrix);
+							vector<CEffect*> Sanka_Moushuukyoku = CEffect::PlayEffectAtLocation(TEXT("Sanka_Moushuukyoku_3.dat"), mWorldMatrix);
+
+							_matrix EffectWorldMatrix = Sanka_Moushuukyoku.front()->Get_Transform()->Get_WorldMatrix();
+							vector<CEffect*> Sanka_Moushuukyoku_Particles = CEffect::PlayEffectAtLocation(TEXT("Sanka_Mousyuukyaku_Particles.dat"), EffectWorldMatrix);
+
 							m_bSankamousyuukyaku_2 = true;
 						}
 					}
@@ -254,6 +240,8 @@ CMonsterLawState * CMonster_LawAirR::Tick(_float fTimeDelta)
 
 CMonsterLawState * CMonster_LawAirR::LateTick(_float fTimeDelta)
 {
+	Remove_Skill();
+
 	if (nullptr != m_pLeftHandCollider)
 	{
 		CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -368,7 +356,7 @@ void CMonster_LawAirR::Enter()
 void CMonster_LawAirR::Exit()
 {
 	//__super::Exit();
-
+	Reset_Skill();
 	
 	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pRightHandCollider, m_pOwner);
 	CCollision_Manager::Get_Instance()->Out_CollisionGroupCollider(CCollision_Manager::COLLISION_MBULLET, m_pLeftHandCollider, m_pOwner);
@@ -381,6 +369,43 @@ void CMonster_LawAirR::Exit()
 	CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }
 
+void CMonster_LawAirR::Update_Skill(void)
+{
+	for (auto& pEffect : m_Sankamousyuukyaku_1)
+	{
+		if (!pEffect || wcscmp(pEffect->Get_PrototypeId(), TEXT("Akizame")))
+			continue;
+
+		_float4 vPlayerPosition;
+		XMStoreFloat4(&vPlayerPosition, m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION));
+		_float4 vPlayerLook;
+		XMStoreFloat4(&vPlayerLook, m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
+
+		_float4 vEffectPosition;
+		vEffectPosition.y = vPlayerPosition.y + 3.f;
+
+		XMStoreFloat4(&vEffectPosition, XMLoadFloat4(&vPlayerPosition) + XMLoadFloat4(&vPlayerLook) * 4);
+
+		pEffect->Get_Transform()->Set_State(CTransform::STATE::STATE_TRANSLATION, XMLoadFloat4(&vEffectPosition));
+	}
+}
+
+void CMonster_LawAirR::Remove_Skill(void)
+{
+	for (auto& pEffect : m_Sankamousyuukyaku_1)
+	{
+		if (pEffect && pEffect->Get_PreDead())
+			pEffect = nullptr;
+	}
+}
+
+void CMonster_LawAirR::Reset_Skill(void)
+{
+	m_bSankamousyuukyaku_1 = false;
+	m_bSankamousyuukyaku_2 = false;
+	m_bSankamousyuukyaku_Punch_1 = false;
+	m_bSankamousyuukyaku_Punch_2 = false;
+}
 
 CCollider * CMonster_LawAirR::Get_Collider(CCollider::TYPE eType, _float3 vScale, _float3 vRotation, _float3 vPosition)
 {

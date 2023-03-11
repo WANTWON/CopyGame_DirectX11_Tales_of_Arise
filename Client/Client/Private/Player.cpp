@@ -488,20 +488,19 @@ _int CPlayer::Take_Damage(int fDamage, CBaseObj * DamageCauser, _float fMoveLeng
 				_matrix mWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 				mWorldMatrix.r[3] = vLocation;
 
-				switch (Get_PlayerID())
+				CMonster* pMonster = dynamic_cast<CMonster*>(DamageCauser);
+				if (pMonster)
 				{
-				case CPlayer::PLAYERID::ALPHEN:
-					CEffect::PlayEffectAtLocation(TEXT("Alphen_Impact.dat"), mWorldMatrix);
-					break;
-				case CPlayer::PLAYERID::LAW:
-					CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
-					break;
-				case CPlayer::PLAYERID::RINWELL:
-				case CPlayer::PLAYERID::SION:
-					CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
-					break;
+					switch (pMonster->Get_MonsterID())
+					{
+						case MONSTER_ID::LAW_MONSTER:
+							CEffect::PlayEffectAtLocation(TEXT("Law_Impact.dat"), mWorldMatrix);
+							break;
+						default:
+							CEffect::PlayEffectAtLocation(TEXT("Monster_Hit.dat"), mWorldMatrix);
+							break;
+					}
 				}
-
 			
 				if (StateID == CPlayerState::STATE_SKILL_ATTACK_E ||
 					StateID == CPlayerState::STATE_SKILL_ATTACK_R ||

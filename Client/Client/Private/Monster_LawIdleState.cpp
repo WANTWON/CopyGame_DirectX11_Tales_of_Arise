@@ -79,9 +79,6 @@ CMonsterLawState * CMonster_LawIdleState::LateTick(_float fTimeDelta)
 
 	//return new CMonsterLaw_StrikeTrigger(m_pOwner);
 
-
-	//
-
 	if (m_pOwner->Get_Phase() == 1 || m_pOwner->Get_Phase() == 2)
 	{
 		switch (rand() % 6)

@@ -1510,7 +1510,7 @@ HRESULT CLoader::Loading_ForRestaurantLevel()
 
 	/*For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_RESTAURANT, TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/City_SkyBox.dds"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_SpaceBlue2.dds"), 1))))
 		return E_FAIL;
 
 	/* Loading Collider */
@@ -1550,7 +1550,7 @@ HRESULT CLoader::Loading_ForWorkToolLevel()
 
 	/*For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_WORKTOOL, TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/City_SkyBox.dds"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../../Bin/Resources/Textures/SkyBox/Sky_SpaceBlue2.dds"), 1))))
 		return E_FAIL;
 
 	/* Loading Collider */
