@@ -112,7 +112,7 @@ private:
 
 	vector<_tchar*> m_vDialogue14[5]; // LawBossbattleEnd
 
-	vector<_tchar*> m_vDialogue15[17]; // LASTQUESTSTART
+	vector<_tchar*> m_vDialogue15[18]; // LASTQUESTSTART
 
 	vector<vector<vector<_tchar*>>> m_vCurrentDialogue;
 	/*m_vCurrentDialogue.reszie(10);

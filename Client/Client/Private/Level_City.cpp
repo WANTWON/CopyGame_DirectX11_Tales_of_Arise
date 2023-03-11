@@ -292,6 +292,15 @@ HRESULT CLevel_City::Ready_Layer_Player(const _tchar * pLayerTag)
 {
 	CGameInstance*			pGameInstance = GET_INSTANCE(CGameInstance);
 
+	if (pGameInstance->Get_PastLevelIndex() == LEVEL_LAWBATTLE)
+	{
+		if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::LAW) == nullptr)
+		{
+			if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+				return E_FAIL;
+		}
+	}
+
 
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
