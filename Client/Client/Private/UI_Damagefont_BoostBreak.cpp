@@ -64,6 +64,7 @@ int UI_Damagefont_BoostBreak::Tick(_float fTimeDelta)
 	if (m_pPointer == nullptr)
 		return OBJ_DEAD;
 	m_fPosition = m_pPointer->Get_ProjPosition();
+	m_fPosition.y -= 100.f;
 
 	//	if (m_btick)
 	//	{
@@ -176,8 +177,8 @@ HRESULT UI_Damagefont_BoostBreak::Render()
 
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fLevelupAlpha, sizeof(_float))))
 		return E_FAIL;
-	m_fSize.x = 300.f;
-	m_fSize.y = 24.f;
+	m_fSize.x = 362.f;
+	m_fSize.y = 45.f;
 	/*m_fPosition.x = 165.f;
 	m_fPosition.y = 276.f + m_fIndex*50.f;;*/
 	m_pTransformCom->Set_Scale(CTransform::STATE_RIGHT, m_fSize.x);
