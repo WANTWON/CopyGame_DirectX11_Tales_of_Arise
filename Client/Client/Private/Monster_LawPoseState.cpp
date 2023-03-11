@@ -26,10 +26,8 @@ CMonsterLawState * CPoseState::Tick(_float fTimeDelta)
 
 CMonsterLawState * CPoseState::LateTick(_float fTimeDelta)
 {
-	if (m_bIsAnimationFinished)
+	if (m_bIsAnimationFinished && CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
 	{
-
-		
 		return new CMonster_LawIdleState(m_pOwner);
 	}
 

@@ -20,9 +20,7 @@ CLevel_BossZone::CLevel_BossZone(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 HRESULT CLevel_BossZone::Initialize()
 {
-	MONSTER_ID eMonsterID = CBattleManager::Get_Instance()->Get_MonsterType();
-
-	CBattleManager::Get_Instance()->Set_BattleMode(true, ASTRAL_DOUBT, true);
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -30,38 +28,67 @@ HRESULT CLevel_BossZone::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
+
 	if (CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Camera")) == false)
 	{
 		if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 			return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
-		return E_FAIL;
 
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));
 	CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Deco"));
 
-	if (FAILED(Ready_Layer_Battle_UI(TEXT("Layer_UI"))))
-		return E_FAIL;
 
-	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
-	pCameraManager->Ready_Camera(LEVEL::LEVEL_BOSS);
-	m_pCamera = dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera());
-	m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_BOSSBATTLE);
-	m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, -10.f, 0.f));
 
-	g_fSoundVolume = 0.f;
-	CGameInstance::Get_Instance()->StopAll();
-	
-	
-	//CGameInstance::Get_Instance()->PlayBGM(TEXT("BattleZoneBgmOnlyRinwell.wav"), g_fSoundVolume);
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("Boss_Asu_BackGorundSound.wav"), g_fSoundVolume);
-	CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BossEnter.dat"), XMMatrixIdentity());
+	if (!m_bBattleMode)
+	{
+		g_bEnd = true;
+		if (FAILED(Ready_Layer_Player_NotBattle(TEXT("Layer_Player"))))
+			return E_FAIL;
 
-	CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
+		CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+		pCameraManager->Ready_Camera(LEVEL::LEVEL_BOSS);
+		m_pCamera = dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera());
+		m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_BOSSBATTLE);
+		m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, -10.f, 0.f));
+
+		g_fSoundVolume = 0.f;
+		CGameInstance::Get_Instance()->StopAll();
+
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("Boss_Asu_BackGorundSound.wav"), g_fSoundVolume);
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BossRoomEnding.dat"), XMMatrixIdentity());
+	}
+	else
+	{
+		if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
+			return E_FAIL;
+
+		if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+			return E_FAIL;
+
+		MONSTER_ID eMonsterID = CBattleManager::Get_Instance()->Get_MonsterType();
+
+		CBattleManager::Get_Instance()->Set_BattleMode(true, ASTRAL_DOUBT, true);
+
+
+		if (FAILED(Ready_Layer_Battle_UI(TEXT("Layer_UI"))))
+			return E_FAIL;
+
+		CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+		pCameraManager->Ready_Camera(LEVEL::LEVEL_BOSS);
+		m_pCamera = dynamic_cast<CCamera_Dynamic*>(pCameraManager->Get_CurrentCamera());
+		m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_BOSSBATTLE);
+		m_pCamera->Set_Position(CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_TransformState(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 20.f, -10.f, 0.f));
+
+		g_fSoundVolume = 0.f;
+		CGameInstance::Get_Instance()->StopAll();
+
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("Boss_Asu_BackGorundSound.wav"), g_fSoundVolume);
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BossRoomPlayerEnter.dat"), XMMatrixIdentity());
+		CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
+	}
+
+
 	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
 	if (pPlayer)
 		pPlayer->Get_Renderer()->Set_Fog(false);
@@ -72,30 +99,82 @@ void CLevel_BossZone::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if(!m_bFinal)
-		LastAttackCheck();
-
-
-	CBattleManager* pBattleManager = GET_INSTANCE(CBattleManager);
-	if(pBattleManager->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
-		CPlayerManager::Get_Instance()->Set_SmashAttack();
-
-
-	
-	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
+	if ((CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON) ||
+		CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 	{
 		g_fSoundVolume += 0.01f;
 		if (g_fSoundVolume >= 0.15f)
 			g_fSoundVolume = 0.15f;
 	}
-	
+
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 
 
-	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
+	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();
+
+	Check_LevelChange();
+
+
+	if (m_bBattleMode)
+		BattleTick(fTimeDelta);
+	else
 	{
+		if (!m_bFirstCutScene)
+		{
+			if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+			{
+				m_bNextNevel = true;
+				m_bFirstCutScene = true;
+				
+			}
+		}
 		
+
+		if (m_bNextNevel)
+		{
+			CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+			if (pPlayer)
+				pPlayer->Get_Renderer()->Set_ZoomBlur(false);
+
+			m_pCollision_Manager->Clear_AllCollisionGroup();
+
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Camera"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Instancing"));
+			CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Deco"));
+
+			CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+			LEVEL eNextLevel = LEVEL_CITY;
+
+			pGameInstance->Set_DestinationLevel(eNextLevel);
+			if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eNextLevel))))
+				return;
+
+			RELEASE_INSTANCE(CGameInstance);
+		}
+	}
+
+}
+
+void CLevel_BossZone::Late_Tick(_float fTimeDelta)
+{
+	__super::Late_Tick(fTimeDelta);
+
+	SetWindowText(g_hWnd, TEXT("BattleZoneLevel"));
+
+
+
+	if (m_bBattleMode)
+		BattleLateTick(fTimeDelta);
+
+
+}
+
+void CLevel_BossZone::Check_LevelChange()
+{
+	if (!m_bBattleMode && m_bFinal == true)
+	{
 		CUI_Manager::Get_Instance()->ReSet_Arrived_Count();
 
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Layer(LEVEL_BOSS, TEXT("Layer_Camera"));
@@ -105,8 +184,8 @@ void CLevel_BossZone::Tick(_float fTimeDelta)
 		CGameInstance*		pGameInstance = CGameInstance::Get_Instance();
 		Safe_AddRef(pGameInstance);
 
-		LEVEL eNextLevel = LEVEL_CITY;
-
+		LEVEL eNextLevel = LEVEL_BOSS;
+		CBattleManager::Get_Instance()->Set_BattleMode(false);
 		m_pCollision_Manager->Clear_AllCollisionGroup();
 		pGameInstance->Set_DestinationLevel(eNextLevel);
 
@@ -115,6 +194,22 @@ void CLevel_BossZone::Tick(_float fTimeDelta)
 		Safe_Release(pGameInstance);
 
 	}
+}
+
+void CLevel_BossZone::BattleTick(_float fTimeDelta)
+{
+
+	if (!m_bFinal)
+		LastAttackCheck();
+
+	if (!m_bFirstCutScene)
+		FirstCutScene();
+
+
+	CBattleManager* pBattleManager = GET_INSTANCE(CBattleManager);
+	if (pBattleManager->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
+		CPlayerManager::Get_Instance()->Set_SmashAttack();
+
 
 	if (CBattleManager::Get_Instance()->Get_IsHitLeg() == true)
 	{
@@ -127,26 +222,22 @@ void CLevel_BossZone::Tick(_float fTimeDelta)
 	}
 
 	RELEASE_INSTANCE(CBattleManager);
+
+
 }
 
-void CLevel_BossZone::Late_Tick(_float fTimeDelta)
+void CLevel_BossZone::BattleLateTick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
+	if (!m_bFirstCutScene)
+		FirstCutScene();
 
-	SetWindowText(g_hWnd, TEXT("BattleZoneLevel"));
-
-	
-
-
-	_int iMonsterSize = (_int)CBattleManager::Get_Instance()->Get_BattleMonster().size();
-
-
+	_int iMonsterSize = CBattleManager::Get_Instance()->Get_BattleMonster().size();
 	if (iMonsterSize == 0)
 	{
 		CBattleManager::Get_Instance()->Set_BattleMode(false);
 
 	}
-		
+
 	if (CGameInstance::Get_Instance()->Key_Down(DIK_CAPSLOCK))
 	{
 		CUI_RuneEffect::RUNEDESC desc;
@@ -158,7 +249,7 @@ void CLevel_BossZone::Late_Tick(_float fTimeDelta)
 	}
 	if (CGameInstance::Get_Instance()->Key_Pressing(DIK_CAPSLOCK))
 	{
-		
+
 
 		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
 		if (pLockOn != nullptr)
@@ -201,7 +292,7 @@ void CLevel_BossZone::Late_Tick(_float fTimeDelta)
 				return;
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_Z);
 		}
-			
+
 		if (CGameInstance::Get_Instance()->Key_Down(DIK_X))
 		{
 			CUI_RuneEffect::RUNEDESC desc;
@@ -212,7 +303,7 @@ void CLevel_BossZone::Late_Tick(_float fTimeDelta)
 				return;
 			dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Change_LockOn(DIK_X);
 		}
-			
+
 
 	}
 	else
@@ -220,6 +311,33 @@ void CLevel_BossZone::Late_Tick(_float fTimeDelta)
 		if (m_pCamera->Get_CamMode() == CCamera_Dynamic::CAM_LOCKON)
 			m_pCamera->Set_CamMode(CCamera_Dynamic::CAM_LOCKOFF);
 	}
+}
+
+void CLevel_BossZone::FirstCutScene()
+{
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("BossEnter.dat"), XMMatrixIdentity());
+		CBattleManager::Get_Instance()->Get_LackonMonster()->Set_IsActionMode(true);
+		CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
+		pPlayer->Set_IsActionMode(true);
+		pPlayer->Set_BattlePose(false);
+
+
+		vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
+		_int i = 0;
+		for (auto& iter : pAIPlayers)
+		{
+			iter->Set_IsActionMode(true);
+			iter->Set_BattlePose(false);
+			i++;
+		}
+
+		m_bFirstCutScene = true;
+
+	}
+
 }
 
 void CLevel_BossZone::LastAttackCheck()
@@ -258,7 +376,7 @@ void CLevel_BossZone::LastAttackCheck()
 			CloseHandle(hFile);
 
 			CPlayer* Alphen = pPlayerManager->Get_EnumPlayer(CPlayer::ALPHEN);
-			CPlayer* Sion = pPlayerManager->Get_EnumPlayer(CPlayer::SION); 
+			CPlayer* Sion = pPlayerManager->Get_EnumPlayer(CPlayer::SION);
 			CPlayer* Rinwell = pPlayerManager->Get_EnumPlayer(CPlayer::RINWELL);
 			CPlayer* Law = pPlayerManager->Get_EnumPlayer(CPlayer::LAW);
 
@@ -311,7 +429,7 @@ HRESULT CLevel_BossZone::Ready_Lights()
 
 	pGameInstance->Set_ShadowLightView(vLightEye, vLightAt);
 
-	
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -325,7 +443,7 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 	{
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
-	
+
 	}
 	if (CPlayerManager::Get_Instance()->Get_PlayerEnum(CPlayerManager::LAW) == nullptr)
 	{
@@ -384,11 +502,74 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 
 		i++;
 	}
-	
+
 	CPlayerManager::Get_Instance()->Set_BattleMode(true);
 	CPlayerManager::Get_Instance()->Set_Ai_Check();
 	RELEASE_INSTANCE(CGameInstance);
 
+	return S_OK;
+}
+
+HRESULT CLevel_BossZone::Ready_Layer_Player_NotBattle(const _tchar * pLayerTag)
+{
+	CPlayerManager* pPlayerManager = CPlayerManager::Get_Instance();
+
+	HANDLE hFile = 0;
+	_ulong dwByte = 0;
+	NONANIMDESC Active1;
+	NONANIMDESC Active2;
+	NONANIMDESC AIplayer1;
+	NONANIMDESC AIplayer2;
+	_uint iNum = 0;
+
+	hFile = CreateFile(TEXT("../../../Bin/Data/Ending/BossRoom_PlayerPosition.dat"), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	ReadFile(hFile, &(iNum), sizeof(_uint), &dwByte, nullptr);
+
+	ReadFile(hFile, &(Active1), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(Active2), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(AIplayer1), sizeof(NONANIMDESC), &dwByte, nullptr);
+	ReadFile(hFile, &(AIplayer2), sizeof(NONANIMDESC), &dwByte, nullptr);
+	CloseHandle(hFile);
+
+	CPlayer* Alphen = pPlayerManager->Get_EnumPlayer(CPlayer::ALPHEN);
+	CPlayer* Sion = pPlayerManager->Get_EnumPlayer(CPlayer::SION);
+	CPlayer* Rinwell = pPlayerManager->Get_EnumPlayer(CPlayer::RINWELL);
+	CPlayer* Law = pPlayerManager->Get_EnumPlayer(CPlayer::LAW);
+
+	Alphen->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&Active1.vPosition), 1.f));
+	Alphen->Get_Transform()->Set_Rotation(Active1.vRotation);
+	Sion->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&Active2.vPosition), 1.f));
+	Sion->Get_Transform()->Set_Rotation(Active2.vRotation);
+	Rinwell->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&AIplayer1.vPosition), 1.f));
+	Rinwell->Get_Transform()->Set_Rotation(AIplayer1.vRotation);
+	Law->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMLoadFloat3(&AIplayer2.vPosition), 1.f));
+	Law->Get_Transform()->Set_Rotation(AIplayer2.vRotation);
+
+	Alphen->Set_IsActionMode(true);
+	Sion->Set_IsActionMode(true);
+	Rinwell->Set_IsActionMode(true);
+	Law->Set_IsActionMode(true);
+
+	CPlayer* pPlayer = CPlayerManager::Get_Instance()->Get_ActivePlayer();
+	pPlayer->Off_IsFly();
+	pPlayer->Change_Level(LEVEL_BOSS);
+	pPlayer->Set_Overlimit(false);
+
+
+	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
+	_int i = 0;
+	for (auto& iter : pAIPlayers)
+	{
+		iter->Off_IsFly();
+		iter->Set_Overlimit(false);
+		iter->Change_Level(LEVEL_BOSS);
+		i++;
+	}
+
+	CPlayerManager::Get_Instance()->Set_BattleMode(false);
 	return S_OK;
 }
 
@@ -411,10 +592,10 @@ HRESULT CLevel_BossZone::Ready_Layer_Monster(const _tchar * pLayerTag)
 	pBattleManager->Set_BossMonster(pBossMonsterFirst);
 
 
-	pBossMonsterFirst->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMVectorSet(50.f,0.f,60.f,1.f), 1.f));
+	pBossMonsterFirst->Set_State(CTransform::STATE_TRANSLATION, XMVectorSetW(XMVectorSet(50.f, 0.f, 60.f, 1.f), 1.f));
 	dynamic_cast<CMonster*>(pBossMonsterFirst)->Compute_CurrentIndex(LEVEL_BOSS);
 	dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_BattleMode(true);
-	dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_IsActionMode(true);
+	dynamic_cast<CMonster*>(pBossMonsterFirst)->Set_IsActionMode(false);
 	dynamic_cast<CAstralDoubt*>(pBossMonsterFirst)->Set_AmIFirstBoss(true);
 	pBattleManager->Set_LackonMonster(pBossMonsterFirst);
 
@@ -560,7 +741,7 @@ HRESULT CLevel_BossZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_MonsterHP"), LEVEL_BOSS, pLayerTag)))
 		return E_FAIL;
 
-	
+
 	if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_ScreenFadeEffect"), LEVEL_BOSS, pLayerTag)))
 		return E_FAIL;
 
@@ -570,7 +751,7 @@ HRESULT CLevel_BossZone::Ready_Layer_Battle_UI(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_UI_BossMonsterHP"), LEVEL_BOSS, pLayerTag)))
 			return E_FAIL;
 	}
-	
+
 
 	RELEASE_INSTANCE(CGameInstance);
 

@@ -70,19 +70,35 @@ CAIState * CAI_Alphen_NormalAttackState::Tick(_float fTimeDelta)
 				switch (m_iCurrentAnimIndex)
 				{
 					case CAlphen::ANIM::ANIM_ATTACK_NORMAL_0:
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack1.wav"), SOUND_EFFECT, 0.25f);
+						if (!m_bAttackSound1)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack1.wav"), SOUND_EFFECT, 0.25f);
+							m_bAttackSound1 = true;
+						}
 						break;
 					case CAlphen::ANIM::ANIM_ATTACK_NORMAL_8:
 						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_1.dat"));
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack2.wav"), SOUND_EFFECT, 0.25f);
+						if (!m_bAttackSound2)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack2.wav"), SOUND_EFFECT, 0.25f);
+							m_bAttackSound2 = true;
+						}
 						break;
 					case CAlphen::ANIM::ANIM_ATTACK_NORMAL_1:
 						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_2.dat"));
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack3.wav"), SOUND_EFFECT, 0.25f);
+						if (!m_bAttackSound3)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack3.wav"), SOUND_EFFECT, 0.25f);
+							m_bAttackSound3 = true;
+						}
 						break;
 					case CAlphen::ANIM::ANIM_ATTACK_NORMAL_6:
 						wcscpy_s(wcEffectName, MAX_PATH, TEXT("Normal_Attack_3.dat"));
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack4.wav"), SOUND_EFFECT, 0.25f);
+						if (!m_bAttackSound4)
+						{
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Player_Normal_Attack4.wav"), SOUND_EFFECT, 0.25f);
+							m_bAttackSound4 = true;
+						}
 						break;
 				}
 

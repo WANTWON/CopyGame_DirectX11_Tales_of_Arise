@@ -139,7 +139,7 @@ void CCamera_Action::Shaking_Camera(_float fTimeDelta)
 
 
 	++m_iShakingCount;
-	if (m_iShakingCount % 4 == 0)
+	if (m_iShakingCount % 2 == 0)
 	{
 		m_fCameraOffsetX -= m_fVelocity*0.1f;;
 
@@ -148,7 +148,7 @@ void CCamera_Action::Shaking_Camera(_float fTimeDelta)
 		else
 			m_fCameraOffsetY += m_fVelocity*0.1f;
 	}
-	else if (m_iShakingCount % 4 == 1)
+	else if (m_iShakingCount % 2 == 1)
 	{
 		m_fCameraOffsetX += m_fVelocity*0.1f;;
 

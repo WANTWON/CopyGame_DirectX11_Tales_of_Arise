@@ -39,13 +39,18 @@ public:
 	vector<TOOLDESC>		Get_AllCamData() { return m_CamDatas; }
 	void					Remove_Camdata(_int iIndex);
 	void					Set_Play(_bool type);
+	_bool					Get_Play() { return m_bPlay; }
 	void					Set_PlayTime(_float fTime) { m_fPlayTime = fTime; m_fTime = 0.f; }
 	void					Set_TargetMatrix(_matrix matTarget) { m_matTarget = matTarget; }
+	void					Set_DataName(_tchar* Name) { m_DataName = Name; }
+	_tchar*					Get_DataName() { return m_DataName; }
+
 public:
 	void					Set_ShakingMode(_bool type, _float fPower = 1.f, _float fMinusPower = 0.1f);
-
 	int						PlayCamera(_float fTimeDelta);
 	void					Shaking_Camera(_float fTimeDelta);
+
+
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -55,6 +60,7 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	_tchar*		m_DataName = nullptr;
 	_float		m_fPlayTime = 0.f;
 	_bool		m_bPlay = false;
 	_float		m_fTime = 0.f;

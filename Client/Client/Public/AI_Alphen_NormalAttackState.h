@@ -26,6 +26,13 @@ private:
 	_bool m_bEffectSlashSpawned = false;
 	_bool m_bEffectKickSpawned = false;
 	vector<CEffect*> m_SlashEffect;
+
+
+	//Sound
+	_bool	m_bAttackSound1 = false;
+	_bool	m_bAttackSound2 = false;
+	_bool	m_bAttackSound3 = false;
+	_bool	m_bAttackSound4 = false;
 };
 END
 END

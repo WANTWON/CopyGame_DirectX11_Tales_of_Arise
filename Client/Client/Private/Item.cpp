@@ -184,10 +184,22 @@ void CItem::Late_Tick(_float fTimeDelta)
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SONG2MUSHROOM, ITEMTYPE_MATERIAL, true, false);
 					break;
 				case BOX:
-					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_ARSORSWORD, ITEMTYPE_SWORD,false,true);
+				{
+					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_ARSORSWORD, ITEMTYPE_SWORD, false, true);
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_HWANGJELLY, ITEMTYPE_JELLY, true, false);
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_GRAPEJELLY, ITEMTYPE_JELLY, true, false);
+					_bool bBoxSound = false;
+					m_fTimeDeltaAcc_Treasure += fTimeDelta;
+					if (!bBoxSound)
+					{
+						/*if (m_fTimeDeltaAcc_Treasure > 5.05f)
+							CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);*/
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Get_TreasureBox.wav"), SOUND_EFFECT, 0.8f);
+						bBoxSound = true;
+					}
+				}
 					break;
 				case JEWEL:
 					CUI_Manager::Get_Instance()->AddItem(ITEMNAME_SALTROCK, ITEMTYPE_MATERIAL, true, false);
@@ -225,19 +237,34 @@ void CItem::Late_Tick(_float fTimeDelta)
 			}
 			
 			m_fTimeDeltaAcc += fTimeDelta;
-
 			_bool m_bSoundStart = false;
-
+			
 			if (m_bIsGain)
 			{
-				if (!m_bSoundStart)
+				if (m_ItemDesc.etype != BOX)
 				{
-					if (m_fTimeDeltaAcc > 0.04f)
-						CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
+					if (!m_bSoundStart)
+					{
+						if (m_fTimeDeltaAcc > 0.04f)
+							CGameInstance::Get_Instance()->StopSound(SOUND_OBJECT);
 
-					CGameInstance::Get_Instance()->PlaySounds(TEXT("ItemGain.wav"), SOUND_OBJECT, 0.4f);
-					m_bSoundStart = true;
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("ItemGain.wav"), SOUND_OBJECT, 0.4f);
+						m_bSoundStart = true;
+					}
 				}
+
+				/*else
+				{
+					if (!bBoxSound)
+					{
+						if (m_fTimeDeltaAcc_Treasure > 1.05f)
+							CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
+
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Get_TreasureBox"), SOUND_EFFECT, 0.8f);
+						bBoxSound = true;
+					}
+				}*/
+
 			}
 		}
 	}

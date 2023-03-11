@@ -73,13 +73,13 @@ CPlayerState * CLawAirRSkillState::Tick(_float fTimeDelta)
 					if (nullptr == m_pLeftFootCollider)
 						m_pLeftFootCollider = Get_Collider(CCollider::TYPE_SPHERE, _float3(2.f, 2.f, 2.f), _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 0.f));
 
-				//Sound
+				
 
-						if (!m_bSkill_R_Sound)
-						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillSound.wav"), SOUND_RAW_EFF, 0.5f);
-							m_bSkill_R_Sound = true;
-						}
+					if (!m_bSkill_R_Sound)
+					{
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillSound.wav"), SOUND_SKILL, 0.5f);
+						m_bSkill_R_Sound = true;
+					}
 					
 
 				}
@@ -374,6 +374,19 @@ void CLawAirRSkillState::Enter(void)
 
 	Reset_Skill();
 
+	m_HitLagDesc.fTakeDamageTimer = 0.1f;
+	m_HitLagDesc.bHitLag = true;
+	m_HitLagDesc.fHitLagTimer = 0.05f;
+	m_HitLagDesc.bCritical = true;
+	m_HitLagDesc.bShaking = true;
+	m_HitLagDesc.fShakingPower = 1.f;
+	m_HitLagDesc.fShakingMinusPower = 0.2f;
+	m_HitLagDesc.fZoomDistance = 8.f;
+	m_HitLagDesc.fZoomSpeed = 2.f;
+	m_HitLagDesc.fBlurPower = 6.f;
+	m_HitLagDesc.fBlurDetail = 10.f;
+	m_HitLagDesc.bZoom = true;
+
 	m_pOwner->Use_Mana(1.f);
 	m_pOwner->Set_Manarecover(false);
 
@@ -388,18 +401,22 @@ void CLawAirRSkillState::Enter(void)
 	if (nullptr != m_pTarget)
 		m_pOwner->Get_Transform()->LookAtExceptY(m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION));
 
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillVoice.wav"), SOUND_RAW_VOICE, 0.5f);
+	CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_Jump_R_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 }
 
 void CLawAirRSkillState::Exit(void)
 {
 	__super::Exit();
 
+	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC)
+	{
+		CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+		pCamera->Set_Zoom(false);
+	}
 	
 	Safe_Release(m_pLeftFootCollider);
 	Safe_Release(m_pLeftHandCollider);
 	Safe_Release(m_pRightHandCollider);
-	/*CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);*/
 }
 
 void CLawAirRSkillState::Update_Skill(void)

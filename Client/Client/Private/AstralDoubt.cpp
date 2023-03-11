@@ -167,7 +167,8 @@ int CAstralDoubt::Tick(_float fTimeDelta)
 	if (!Check_IsinFrustum(2.f) && !m_bBattleMode)
 		return OBJ_NOSHOW;
 
-	__super::Tick(fTimeDelta);
+	if(ExceptingActionCamHanding() == false)
+		return OBJ_NOSHOW;
 
 	AI_Behaviour(fTimeDelta);
 	Tick_State(fTimeDelta);
@@ -183,19 +184,6 @@ int CAstralDoubt::Tick(_float fTimeDelta)
 		m_fFresnelTimer += fTimeDelta * 6;
 	else
 		m_fFresnelTimer = 0.f;
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_I))
-	{
-		CAstralDoubt_State* pState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_SPEARMULTI);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	}
-
-	if (CGameInstance::Get_Instance()->Key_Up(DIK_K))
-	{
-		CAstralDoubt_State* pState = new CBattle_SpearMultiState(this, CAstralDoubt_State::STATE_ID::STATE_FOOTPRESS);
-		m_pState = m_pState->ChangeState(m_pState, pState);
-	}
-
 
 	return OBJ_NOEVENT;
 }
@@ -314,6 +302,7 @@ void CAstralDoubt::Set_BattleMode(_bool type)
 
 void CAstralDoubt::UpdatePosition()
 {
+	CBattleManager::Get_Instance()->Set_LastbossSecond(true);
 	HANDLE hFile = 0;
 	_ulong dwByte = 0;
 	NONANIMDESC ModelDesc1;

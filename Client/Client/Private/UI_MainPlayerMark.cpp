@@ -48,14 +48,19 @@ int CUI_MainPlayerMark::Tick(_float fTimeDelta)
 	if (CUI_Manager::Get_Instance()->Get_StopTick() || CBattleManager::Get_Instance()->Get_IsStrike())
 		return OBJ_NOEVENT;
 
+	m_fAlpha = 0.5f;
+	--m_fFlowCurrent;
+
+	if (m_fFlowCurrent <= 0)
+		m_fFlowCurrent = 100.f;
 	
 		/*m_fcurrenthp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fCurrentHp;
 		m_fmaxhp = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Info().fMaxHp;*/
 		/*CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 		CTransform*	pPlayerTransform = (CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));*/
 
-	m_fWorldsizeX = 0.8f;
-	m_fWorldsizeY = 1.2f;
+	m_fWorldsizeX = 1.8f;
+	m_fWorldsizeY = 0.9f;
 	CGameObject* pGameObject = CGameInstance::Get_Instance()->Get_Object(LEVEL_STATIC, TEXT("Layer_Player"));
 	CTransform*	pPlayerTransform = CPlayerManager::Get_Instance()->Get_ActivePlayer()->Get_Transform();//(CTransform*)CGameInstance::Get_Instance()->Get_Component(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("Com_Transform"));
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, pPlayerTransform->Get_State(CTransform::STATE_TRANSLATION));
@@ -125,20 +130,27 @@ HRESULT CUI_MainPlayerMark::Render()
 		nullptr == m_pVIBufferCom)
 		return E_FAIL;
 
-	if (FAILED(SetUp_ShaderID()))
-		return E_FAIL;
 
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(0);
+
+
+	m_pShaderCom->Begin(UI_DIALOGUECURSORNONMOVE);
+
+	m_pVIBufferCom->Render();
+	_float alpha = m_fAlpha * 2.f;
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &alpha, sizeof(_float))))
+		return E_FAIL;
+
+	m_pShaderCom->Begin(UI_DIALOGUECURSOR);
 
 	m_pVIBufferCom->Render();
 
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
 
-	m_pShaderCom->Begin(0);
 
-	m_pVIBufferCom->Render();
 
 	/*if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(0))))
 	return E_FAIL;
@@ -167,12 +179,12 @@ HRESULT CUI_MainPlayerMark::Ready_Components(void * pArg)
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Minigame"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dialoguebox"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	///* For.Com_Texture */
-	//if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_hpgrad"), (CComponent**)&m_pTextureCom1)))
-	//	return E_FAIL;
+	if (FAILED(__super::Add_Components(TEXT("Com_Texture1"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_hpgrad"), (CComponent**)&m_pTextureCom1)))
+		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Components(TEXT("Com_VIBuffer"), LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
@@ -205,14 +217,20 @@ HRESULT CUI_MainPlayerMark::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Set_RawValue("g_ProjMatrix", &CGameInstance::Get_Instance()->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(6))))
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_SRV(2))))
 		return E_FAIL;
-
+	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GradationTexture", m_pTextureCom1->Get_SRV(0))))
+		return E_FAIL;
 	/*if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_GradationTexture", m_pTextureCom1->Get_SRV(0))))
 		return E_FAIL;*/
 
-
 	if (FAILED(m_pShaderCom->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fFlowCurrent, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Set_RawValue("g_fMaxHp", &m_fFlowMAX, sizeof(_float))))
 		return E_FAIL;
 
 	/*if (FAILED(m_pShaderCom->Set_RawValue("g_fCurrentHp", &m_fcurrenthp, sizeof(_float))))
@@ -258,6 +276,6 @@ void CUI_MainPlayerMark::Free()
 
 	//Safe_Release(m_pTextureCom1);
 	__super::Free();
-//	Safe_Release(m_pTextureCom1);
+	Safe_Release(m_pTextureCom1);
 	//Safe_Release(m_pTextureCom2);
 }

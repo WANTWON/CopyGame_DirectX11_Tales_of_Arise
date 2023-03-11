@@ -34,19 +34,9 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::HandleInput(void)
 CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 {
 	m_bIsAnimationFinished = m_pOwner->Get_Model()->Play_Animation(fTimeDelta, m_pOwner->Is_AnimationLoop(m_pOwner->Get_Model()->Get_CurrentAnimIndex()), "TransN");
-	if (CRinwell::ANIM::BTL_ATTACK_HOUDEN)
+	if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == CRinwell::ANIM::BTL_ATTACK_DENGEKISYOUHEKI)
 	{
-		if (!m_bIsAnimationFinished)
-		{
-			_vector vecTranslation;
-			_float fRotationRadian;
-
-			m_pOwner->Get_Model()->Get_MoveTransformationMatrix("TransN", &vecTranslation, &fRotationRadian);
-
-			m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.015f), fRotationRadian, m_pOwner->Get_Navigation());
-		}
-		else
-			m_pOwner->Check_Navigation_Jump();
+		m_pOwner->Check_Navigation_Jump();
 	}
 	else
 	{
@@ -81,7 +71,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillSound.wav"), SOUND_RINWELL_EFF, 0.5f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillSound.wav"), SOUND_SKILL, 0.5f);
 						if (m_pOwner->Get_Model()->Get_CurrentAnimIndex() == (CRinwell::ANIM::BTL_ATTACK_FUATU))
 						{
 							CBaseObj * pTarget = nullptr;
@@ -93,8 +83,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 							
 							CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-							pCamera->Set_Zoom(true, 1.f, 0.1f, 5.f, 7.f);
-
+							pCamera->Set_Zoom(false, 1.f, 0.1f, 5.f, 7.f);
 
 							BulletDesc.pTarget = pTarget;
 							_vector vTargetPosition = pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);						
@@ -153,7 +142,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 					{
 						if ((m_fEventStart != pEvent.fStartTime))
 						{
-							CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_R_SkillSound.wav"), SOUND_RINWELL_EFF, 0.4f);
+							CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_R_SkillSound.wav"), SOUND_SKILL, 0.4f);
 							CBullet::BULLETDESC BulletDesc;
 							BulletDesc.eCollisionGroup = PLAYER;
 							BulletDesc.eBulletType = CRinwellSkills::THUNDER_FIELD;
@@ -209,8 +198,8 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillSound.wav"), SOUND_RINWELL_EFF, 0.4f);
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_RINWELL_EFF_BEGIN, 0.7f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillSound.wav"), SOUND_SKILL, 0.4f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_EFFECT, 0.7f);
 						CBullet::BULLETDESC BulletDesc;
 
 
@@ -223,7 +212,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 							_int XRand = rand() % 2 == 0 ? 1.f : -1.f;
 							_int ZRand = rand() % 2 == 0 ? 1.f : -1.f;
 							BulletDesc.vTargetDir = { rand() % 6 * 0.1f *XRand, -1.f, rand() % 6 * 0.1f*ZRand, 0.f };
-
+							BulletDesc.pOwner = m_pOwner;
 							BulletDesc.fVelocity = 4.f + ((_float)(rand() % 20 + 1))*0.1f;
 							_vector pos = { (_float)(rand() % 40 + 40) , 12.f + i*2.5f , (_float)(rand() % 40 + 40), 1.f };
 							BulletDesc.vInitPositon = pos;
@@ -272,7 +261,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 				{
 					if ((m_fEventStart != pEvent.fStartTime))
 					{
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillSound.wav"), SOUND_RINWELL_EFF, 0.5f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillSound.wav"), SOUND_SKILL, 0.5f);
 
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
@@ -282,6 +271,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 						BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 0.5f);
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_RinwellSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
+
 
 						m_fEventStart = pEvent.fStartTime;
 						dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
@@ -333,8 +323,8 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 						if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 							pTarget = CBattleManager::Get_Instance()->Get_LackonMonster();
 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound.wav"), SOUND_RINWELL_EFF, 0.4f);
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_RINWELL_EFF_BEGIN, 0.7f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillSound.wav"), SOUND_SKILL, 0.4f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_SkillSound_Begin.wav"), SOUND_EFFECT, 0.7f);
 
 
 						
@@ -403,7 +393,7 @@ CPlayerState * CPlayer_RinwellSkillAttack_State::Tick(_float fTimeDelta)
 
 						if (pTarget == nullptr)
 							pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound.wav"), SOUND_RINWELL_EFF, 0.5f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillSound.wav"), SOUND_SKILL, 0.5f);
 
 						CBullet::BULLETDESC BulletDesc;
 						BulletDesc.eCollisionGroup = PLAYER;
@@ -572,13 +562,15 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK4:
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN); 
-																							
+						
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(true, 0.5f, 0.1f, 6.f, 10.f);
+
 			_vector vOffset = { 0.f,3.f,0.f,0.f };
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
-			//CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_E.mp3"), SOUND_EFFECT, 1.0f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellElecDischarge.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 			break;
 		}
@@ -595,44 +587,33 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		{
 		case Client::CPlayerState::STATE_SKILL_ATTACK_E:
 		{
-			/* Make Effect */
-			/*_vector vOffset = { 0.f,3.f,0.f,0.f };
-			_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-			_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
-			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();*/
-			//mWorldMatrix.r[3] = vLocation + vOffset + vLook*2.f;
-			//m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayStart.dat"), mWorldMatrix);
+			
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(true, 1.f, 0.1f, 6.f, 7.f);
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_FUATU);//마그나
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellGaleForce.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_GALEFORCE);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_E_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK_R:
 		{
-			///* Make Effect */
-			//_vector vOffset = { 0.f,3.f,0.f,0.f };
-			//_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
-			//_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
-			//mWorldMatrix.r[3] = vLocation + vOffset;
-			//m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("GravitasField.dat"), mWorldMatrix);
-
+	
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(true, -5.f, 1.f, 3.f, 7.f);
 
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_DENGEKISYOUHEKI);
-			/*CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillSound_R.wav"), SOUND_EFFECT, 0.5f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionSkillVoice_R.wav"), SOUND_EFFECT, 0.5f);*/
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_THUNDERFIELD);
-			//CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_R.mp3"), SOUND_EFFECT, 1.0f);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_R_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_R_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 			break;
 		}
-		case Client::CPlayerState::STATE_SKILL_ATTACK_F:
+		case Client::CPlayerState::STATE_SKILL_ATTACK_F://Metoeor
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); // 메테오
 
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_F_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellDevineSabor2.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
 
 			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -647,20 +628,26 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 		case Client::CPlayerState::STATE_SKILL_ATTACK4: //elecdischarge
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_ATTACK_HOUDEN);
-																							
+													
+
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(true, 1.f, 0.1f, 5.f, 10.f);
+
+
 			_vector vOffset = { 0.f,3.f,0.f,0.f };
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("ElecDischargeBegin.dat"), mWorldMatrix);
 			dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_BANGJEON);
-			
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
+			CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("RinwellElecDischarge.dat"), m_pOwner->Get_Transform()->Get_WorldMatrix());
+
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellCtrl_E_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 			break;
 		}
 		case Client::CPlayerState::STATE_SKILL_ATTACK5: //devine
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); 
 		//	m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_ATTACK_CRESCENT_BULLET); 
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.7f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_R_SkillVoice.wav"), SOUND_VOICE, 0.7f);
 
 			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
 			_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)) * 2;
@@ -674,21 +661,23 @@ void CPlayer_RinwellSkillAttack_State::Enter(void)
 			break;
 		}
 
-		case Client::CPlayerState::STATE_SKILL_ATTACK6: //meteor
+		case Client::CPlayerState::STATE_SKILL_ATTACK6: //HolyRance
 		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_MAGIC_START); 
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellSkillSound_Ctrl_F.mp3"), SOUND_EFFECT, 1.0f);
 			//dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->Skillmsg_on(CUI_Skillmessage::SKILLNAME::SKILLNAME_AQUARUINA);
-			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillVoice.wav"), SOUND_RINWELL_VOICE, 0.5f);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_Ctrl_F_SkillVoice.wav"), SOUND_VOICE, 0.5f);
 			//CGameInstance::Get_Instance()->PlaySounds(TEXT("Magic_StartSound.wav"), SOUND_EFFECT, 1.0f);
 			_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
 			_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION) + vOffset + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)) * 2;
 			_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			mWorldMatrix.r[3] = vLocation;
 
+			CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+			pCamera->Set_Zoom(true, -10.f, 0.5f, 3.f, 7.f);
+
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartFlash.dat"), mWorldMatrix);
 			m_pSmokeEffect = CEffect::PlayEffectAtLocation(TEXT("RinwellMagicStartRing.dat"), mWorldMatrix);
-			break;
 			break;
 		}
 		}
@@ -725,5 +714,4 @@ void CPlayer_RinwellSkillAttack_State::Exit(void)
 	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
 	pCamera->Set_Zoom(false, 3.f, 1.f, 6.f, 10.f);
 
-	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
 }

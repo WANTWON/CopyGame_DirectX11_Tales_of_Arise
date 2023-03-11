@@ -92,7 +92,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 							return nullptr;
 
 						//รั น฿ป็ 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_SION_NORMAL, 0.13f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_WEAPON, 0.13f);
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -167,7 +167,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						//รั น฿ป็ 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_SION_NORMAL, 0.13f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_WEAPON, 0.13f);
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -240,7 +240,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						//รั น฿ป็ 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_SION_NORMAL, 0.13f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_WEAPON, 0.13f);
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -317,7 +317,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						//รั น฿ป็ 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_SION_NORMAL, 0.13f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_WEAPON, 0.13f);
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -366,11 +366,11 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 				{
 
-					CGameInstance::Get_Instance()->StopSound(SOUND_SION_EFF);
+					CGameInstance::Get_Instance()->StopSound(SOUND_SKILL);
 					if (!m_bSoundStart)
 					{
 						m_bSoundStart = true;
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_SION_NORMAL, 0.1f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_WEAPON, 0.1f);
 
 
 					}
@@ -408,7 +408,7 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 						if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
 							return nullptr;
 						//รั น฿ป็ 
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_SION_NORMAL, 0.07f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_Shot.wav"), SOUND_WEAPON, 0.07f);
 						m_fEventStart = pEvent.fStartTime;
 
 						_vector vOffset = XMVectorSet(0.f, 3.f, 0.f, 0.f);
@@ -456,11 +456,10 @@ CPlayerState * CPlayer_SionNormalAttack_State::Tick(_float fTimeDelta)
 				if (ANIMEVENT::EVENTTYPE::EVENT_SOUND == pEvent.eType)
 				{
 					
-					CGameInstance::Get_Instance()->StopSound(SOUND_SION_EFF);
 					if (!m_bSoundStart)
 					{
 						m_bSoundStart = true;
-						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_SION_NORMAL, 0.3f);
+						CGameInstance::Get_Instance()->PlaySounds(TEXT("SionReload.wav"), SOUND_WEAPON, 0.3f);
 					}
 				}
 				break;
@@ -641,7 +640,5 @@ void CPlayer_SionNormalAttack_State::Exit()
 {
 	__super::Exit();
 
-	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT);
-	//CGameInstance::Get_Instance()->StopSound(SOUND_EFFECT_SION);
 }
 

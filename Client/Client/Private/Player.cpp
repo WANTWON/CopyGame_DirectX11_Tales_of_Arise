@@ -123,7 +123,6 @@ int CPlayer::Tick(_float fTimeDelta)
 			Tick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-		//break;
 		Tick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
@@ -227,7 +226,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			LateTick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-		//break;
 		LateTick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
@@ -287,7 +285,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 			_float fCollDistance = fRadiusSum - XMVectorGetX(XMVector4Length(vDirection));
 
-			if ((fCollDistance > 0) && (XMVectorGetY(vPlayerPos) >= (XMVectorGetY(vMonsterPos) - 0.5f)))
+			if ((fCollDistance > 0) && (XMVectorGetY(vPlayerPos) >= XMVectorGetY(vMonsterPos)))
 			{
 				_vector vNewPos = vMonsterPos + (XMVector4Normalize(vDirection) * fRadiusSum);
 				_vector vLerpPos = XMVectorLerp(vPlayerPos, XMVectorSetY(vNewPos, XMVectorGetY(vPlayerPos)), 0.5f);
