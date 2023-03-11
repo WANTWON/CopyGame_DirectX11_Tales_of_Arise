@@ -148,8 +148,8 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
 	NdotL = ceil(NdotL * step) / step;*/
 	///////
 
-	if (NdotL < 0.5)
-		NdotL = 0.3f;
+	if (NdotL < 0.4)
+		NdotL = 0.4f;
 	else
 		NdotL = 1.f;
 

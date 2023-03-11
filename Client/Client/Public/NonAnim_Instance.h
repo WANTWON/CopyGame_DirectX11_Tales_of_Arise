@@ -12,7 +12,7 @@ BEGIN(Client)
 class CNonAnim_Instance : public CBaseObj
 {
 public:
-	enum SHADER_INSTANCEID {DEFAULT, SNOW, SHADOW, GLOW};
+	enum SHADER_INSTANCEID {DEFAULT, FORSNOW, SHADOW, GLOW, FORGRASS};
 protected:
 	CNonAnim_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CNonAnim_Instance(const CNonAnim_Instance& rhs);

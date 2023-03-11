@@ -266,9 +266,6 @@ CPlayerState * CDodgeState::Tick(_float fTimeDelta)
 			{
 				m_pOwner->Off_JustDodge();
 
-				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 0.3f);
-				CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Camera"), 0.3f);
-
 				if (nullptr != m_pDodgeCollider)
 				{
 					CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);

@@ -54,7 +54,7 @@ HRESULT CUI_LevelUp::Initialize(void * pArg)
 
 	if (!m_bLevelUp_Sound)
 	{
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("LevelUp.wav"), SOUND_EFFECT, 0.1f);
+		CGameInstance::Get_Instance()->PlaySounds(TEXT("LevelUp.wav"), SOUND_SYSTEM, 0.2f);
 		m_bLevelUp_Sound = true;
 	}
 	return S_OK;
