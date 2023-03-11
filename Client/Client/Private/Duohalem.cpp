@@ -41,37 +41,6 @@ HRESULT CDuohalem::Initialize(void * pArg)
 
 
 
-
-
-
-
-
-	//m_eLevel = LEVEL_END;
-
-
-
-
-
-	/*CAIState* pAIState = new CAI_Boostatt(this, CAIState::STATE_IDLE);
-	m_pAIState = m_pAIState->ChangeState(m_pAIState, pAIState);*/
-
-	//CCollision_Manager::Get_Instance()->Add_CollisionGroup(CCollision_Manager::COLLISION_PLAYER, this);
-
-	/*m_tInfo.fCurrentOverlimitGauge = 100.f;
-
-	m_tInfo.fMaxHp = 5000;
-	m_tInfo.fCurrentHp = m_tInfo.fMaxHp;
-
-	m_tInfo.fMaxMp = 5.f;
-	m_tInfo.fCurrentMp = 2.3f;
-
-	m_tInfo.iDamage = 100;
-
-
-	m_tInfo.iCurrentExp = 500;
-	m_tInfo.iMaxExp = 1000;
-	m_tInfo.iLevel = 47;*/
-
 	return S_OK;
 }
 

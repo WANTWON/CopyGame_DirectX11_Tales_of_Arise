@@ -81,9 +81,17 @@ HRESULT CSionSkills::Initialize(void * pArg)
 		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
 		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
 		mWorldMatrix.r[3] = vLocation;
-		m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayBurst.dat"), mWorldMatrix);
-
-		m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MagnaRayBullet.dat"), mWorldMatrix);
+		if (m_BulletDesc.eCollisionGroup == PLAYER)
+		{
+			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayBurst.dat"), mWorldMatrix);
+			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MagnaRayBullet.dat"), mWorldMatrix);
+		}
+		else if (m_BulletDesc.eCollisionGroup == FRIEND)
+		{
+			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("FriendMagnaBurst.dat"), mWorldMatrix);
+			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("FreindMagna.dat"), mWorldMatrix);
+		}
+		
 		m_pTransformCom->LookDir(m_BulletDesc.vTargetDir);
 		break;
 	case TRESVENTOS:
@@ -255,7 +263,7 @@ void CSionSkills::Late_Tick(_float fTimeDelta)
 				m_fExplosionGroundTimer = 0.f;
 				CBullet::BULLETDESC BulletDesc;
 				_vector vLocation = { 0.f,0.f,0.f,0.f };
-				BulletDesc.iDamage = rand() % 150 + 1;
+				BulletDesc.iDamage = rand() % 150 + 100;
 				BulletDesc.vTargetPosition = m_BulletDesc.vTargetPosition;
 				BulletDesc.eCollisionGroup = PLAYER;
 				BulletDesc.pOwner = m_BulletDesc.pOwner;
@@ -403,6 +411,10 @@ void CSionSkills::Collision_Check()
 		switch (m_BulletDesc.eCollisionGroup)
 		{
 		case PLAYER:
+			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
+				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
+			break;
+		case FRIEND:
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pOBBCom, &pCollisionTarget))
 				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);
 			break;

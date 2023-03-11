@@ -288,7 +288,7 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 								pTarget = dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_MinDistance_Monster(m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION)));
 
 							CBullet::BULLETDESC BulletDesc;
-							BulletDesc.eCollisionGroup = PLAYER;
+							BulletDesc.eCollisionGroup = FRIEND;
 							BulletDesc.fVelocity = 1.f;
 							BulletDesc.eBulletType = CSionSkills::MAGNA_RAY;
 							BulletDesc.iDamage = 74;
@@ -297,10 +297,9 @@ CAIState * CAI_BoostAttack::LateTick(_float fTimeDelta)
 							BulletDesc.vInitPositon = XMVectorSetY(m_pOwner->Get_TransformState(CTransform::STATE_TRANSLATION), 3.f) + XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE_LOOK)*8.f);
 							BulletDesc.pOwner = m_pOwner;
 
-							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_BATTLE, TEXT("Layer_Bullet"), &BulletDesc)))
+							if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_SionSkills"), LEVEL_STATIC, TEXT("Layer_Bullet"), &BulletDesc)))
 								return nullptr;
 						
-
 							m_fEventStart = pEvent.fStartTime;
 						}
 					}
@@ -415,6 +414,15 @@ void CAI_BoostAttack::Enter()
 	}
 	case CPlayer::DUOHALEM:
 	{
+
+		/* Make Effect */
+		_vector vOffset = { 0.f,3.f,0.f,0.f };
+		_vector vLocation = m_pOwner->Get_TransformState(CTransform::STATE::STATE_TRANSLATION);
+		_vector vLook = XMVector3Normalize(m_pOwner->Get_TransformState(CTransform::STATE::STATE_LOOK));
+		_matrix mWorldMatrix = m_pOwner->Get_Transform()->Get_WorldMatrix();
+		mWorldMatrix.r[3] = vLocation + vOffset + vLook*2.f;
+		CEffect::PlayEffectAtLocation(TEXT("FriendMagnaStart.dat"), mWorldMatrix);
+
 		CPlayerManager::Get_Instance()->Get_EnumPlayer(5)->Set_BoostGuage(0);
 		m_iCurrentAnimIndex = 0;
 		_vector pos = CBattleManager::Get_Instance()->Get_LackonMonster()->Get_TransformState(CTransform::STATE_TRANSLATION);
