@@ -24,6 +24,12 @@ private:
 	_bool m_bFinalMode = false;
 
 	_float m_fEventStart = -1.f;
+
+	//Sound
+	_bool m_bAlphenSound = false;
+	_bool m_bSionSound = false;
+	_bool m_bRinwellSound = false;
+	_bool m_bLawSound = false;
 };
 END
 END

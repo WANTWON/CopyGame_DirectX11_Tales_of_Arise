@@ -527,7 +527,10 @@ void CDodgeState::Enter(void)
 	{
 	case CPlayer::ALPHEN:
 		if (m_bIsFly)
+		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_DODGE_AIR);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_NormalDodge.wav"), SOUND_VOICE, 0.6f);
+		}
 		else
 		{
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Alphen_NormalDodge.wav"), SOUND_VOICE, 0.6f);
@@ -551,7 +554,10 @@ void CDodgeState::Enter(void)
 		break;
 	case CPlayer::SION:
 		if (m_bIsFly)
+		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CSion::ANIM::BTL_STEP_AIR);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_NormalDodge.wav"), SOUND_VOICE, 0.6f);
+		}
 		else
 		{
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Sion_NormalDodge.wav"), SOUND_VOICE, 0.6f);
@@ -575,7 +581,10 @@ void CDodgeState::Enter(void)
 		break;
 	case CPlayer::RINWELL:
 		if (m_bIsFly)
+		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CRinwell::ANIM::BTL_STEP_AIR);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Rinwell_NormalDodge.wav"), SOUND_VOICE, 0.6f);
+		}
 
 		else
 		{
@@ -600,7 +609,10 @@ void CDodgeState::Enter(void)
 		break;
 	case CPlayer::LAW:
 		if (m_bIsFly)
+		{
 			m_pOwner->Get_Model()->Set_CurrentAnimIndex(CLaw::ANIM::BTL_STEP_AIR);
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_NormalDodge.wav"), SOUND_VOICE, 0.6f);
+		}
 		else
 		{
 			CGameInstance::Get_Instance()->PlaySounds(TEXT("Law_NormalDodge.wav"), SOUND_VOICE, 0.6f);

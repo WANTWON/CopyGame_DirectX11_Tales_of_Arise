@@ -5983,14 +5983,20 @@ void CImgui_Manager::Set_Animation()
 		case MODEL_ASTRAL_DOUBT:
 			lstrcat(pAnimationDataFilePath, TEXT("Astral_Doubt/Astral_Doubt_Animation_Add.dat"));
 			break;
-		case MODEL_RINWELL:
+		/*case MODEL_RINWELL:
 			lstrcat(pAnimationDataFilePath, TEXT("Rinwell/Rinwell_Animation_Add.dat"));
-			break;
+			break;*/
 		case MODEL_LAW:
 			lstrcat(pAnimationDataFilePath, TEXT("Law/Law_Animation_Add.dat"));
 			break;
 		case MODEL_TREASURE:
 			lstrcat(pAnimationDataFilePath, TEXT("TreasureBox02/TreasureBox02_Animation_Add.dat"));
+			break;
+		case MODEL_KISARA:
+			lstrcat(pAnimationDataFilePath, TEXT("Kisara/Kisara_Animation_Add.dat"));
+			break;
+		case MODEL_DUOHALEM:
+			lstrcat(pAnimationDataFilePath, TEXT("Duohalem/Duohalem_Animation_Add.dat"));
 			break;
 		}
 

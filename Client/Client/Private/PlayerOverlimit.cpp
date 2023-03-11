@@ -45,31 +45,46 @@ CPlayerState * CPlayerOverlimit::Tick(_float fTimeDelta)
 		m_pOwner->Get_Transform()->Sliding_Anim((vecTranslation * 0.01f), fRotationRadian, m_pOwner->Get_Navigation());
 	}
 
-	if (CPlayer::ALPHEN == m_ePlayerID)
-	{
-		vector<ANIMEVENT> pEvents = m_pOwner->Get_Model()->Get_Events();
-
-		CCollision_Manager* pCollisionMgr = CCollision_Manager::Get_Instance();
-
-		for (auto& pEvent : pEvents)
-		{
-			if (pEvent.isPlay)
-			{
-				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(true, 5.f);
-			}
-			else
-			{
-				if (ANIMEVENT::EVENTTYPE::EVENT_INPUT == pEvent.eType)
-				{
-					dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Set_Rotation(false, 1.f);
-					//dynamic_cast<CWeapon*>(m_pOwner->Get_Parts(0))->Reset_RotateTime();
-				}
-			}
-		}
-	}
-
 	m_pOwner->Check_Navigation();
+
+	switch (m_ePlayerID)
+	{
+	case CPlayer::ALPHEN:
+		if (!m_bAlphenSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("AlphenOverLimit.wav"), SOUND_NATURE, 0.85f);
+			m_bAlphenSound = true;
+		}
+		break;
+
+	case CPlayer::SION:
+		if (!m_bSionSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("SionOverLimit.wav"), SOUND_NATURE, 0.85f);
+			m_bSionSound = true;
+		}
+		break;
+
+	case CPlayer::RINWELL:
+		if (!m_bRinwellSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("RinwellOverLimit.wav"), SOUND_NATURE, 0.85f);
+			m_bRinwellSound = true;
+		}
+		break;
+
+	case CPlayer::LAW:
+		if (!m_bLawSound)
+		{
+			CGameInstance::Get_Instance()->PlaySounds(TEXT("LawOverLimit.wav"), SOUND_NATURE, 0.65f);
+			m_bLawSound = true;
+		}
+		break;
+		
+
+	default:
+		break;
+	}
 
 	return nullptr;
 }
@@ -92,9 +107,13 @@ CPlayerState * CPlayerOverlimit::LateTick(_float fTimeDelta)
 void CPlayerOverlimit::Enter(void)
 {
 	__super::Enter();
-
+	m_ePlayerID = m_pOwner->Get_PlayerID();
 	m_eStateId = STATE_ID::STATE_OVERLIMIT;
-	m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
+
+	if (CPlayer::ALPHEN == m_ePlayerID)
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HADOUMEPPU_START);
+	else
+		m_pOwner->Get_Model()->Set_CurrentAnimIndex(0);
 
 	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Object"), 1.f);
 	CGameInstance::Get_Instance()->Set_TimeSpeedOffset(TEXT("Timer_Camera"), 1.f);

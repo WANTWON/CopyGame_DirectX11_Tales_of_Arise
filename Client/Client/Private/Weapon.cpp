@@ -65,20 +65,6 @@ int CWeapon::Tick(_float fTimeDelta)
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, SocketMatrix);
 
-	if (m_isRotation)
-	{
-		m_fRotateTime += fTimeDelta;
-
-		_matrix		RotationMatrix = XMMatrixRotationAxis(SocketMatrix.r[0], XMConvertToRadians(90.f) * m_fRotateTime * 10.f);
-		_matrix CombinedMatrix = XMLoadFloat4x4(&m_CombinedWorldMatrix);
-
-		CombinedMatrix.r[0] = XMVector3TransformNormal(CombinedMatrix.r[0], RotationMatrix);
-		CombinedMatrix.r[1] = XMVector3TransformNormal(CombinedMatrix.r[1], RotationMatrix);
-		CombinedMatrix.r[2] = XMVector3TransformNormal(CombinedMatrix.r[2], RotationMatrix);
-
-		XMStoreFloat4x4(&m_CombinedWorldMatrix, CombinedMatrix);
-	}
-
 	if (m_isCollider)
 	{
 		if (nullptr == m_pSPHERECom)
@@ -143,7 +129,7 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 			CMonster* pCollided = dynamic_cast<CMonster*>(pCollisionTarget);
 			if (pCollided)
 			{
-				pCollided->Take_Damage(rand() % 100, m_WeaponDesc.pOwner, m_HitLagDesc);
+				pCollided->Take_Damage((rand() % 100 + ((rand() % 3) + 1) * 100), m_WeaponDesc.pOwner, m_HitLagDesc);
 			}
 
 			//if (!m_bSoundStart)

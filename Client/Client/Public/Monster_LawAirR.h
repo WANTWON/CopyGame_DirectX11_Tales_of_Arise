@@ -50,6 +50,9 @@ private:
 	vector<CEffect*> m_Sankamousyuukyaku_1;
 	vector<CEffect*> m_Sankamousyuukyaku_Punch_1;
 	vector<CEffect*> m_Sankamousyuukyaku_Punch_2;
+
+	//Sound
+	_bool m_bSkill_R_Sound = false;
 };
 END
 END

@@ -34,6 +34,7 @@ private:
 	_float m_fEventStart1 = -2.f;
 	_float m_fShakingTime = 0.f;
 	_bool m_bShaking = false;
+	vector<_vector> m_vStrikeLockOnPos;
 
 	/* Strike Screen Blur */
 	_bool m_bStrikeBlur = false;
