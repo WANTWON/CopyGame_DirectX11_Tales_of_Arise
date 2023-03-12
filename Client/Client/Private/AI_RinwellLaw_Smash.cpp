@@ -356,23 +356,29 @@ void CAI_RinwellLaw_Smash::Exit()
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
 		dynamic_cast<CUI_Dialogue_Caption*>(CUI_Manager::Get_Instance()->Get_DialogueCaption())->offdialogue();
 
-		if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+		HITLAGDESC m_HitLagDesc;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bShaking = false;
+		if (pLockOn != nullptr)
 		{
-			HITLAGDESC m_HitLagDesc;
-			m_HitLagDesc.bHitLag = false;
-			m_HitLagDesc.bLockOnChange = false;
-			m_HitLagDesc.bShaking = false;
-
-
-			if (!dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Get_LastStrikeAttack())
+			_vector vLastPosition = dynamic_cast<CMonster*>(pLockOn)->Get_LastPosition();
+			if (!CBattleManager::Get_Instance()->Get_Rinwellboss())
 			{
-				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Set_LastStrikeAttack(true);
-				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				if (!dynamic_cast<CMonster*>(pLockOn)->Get_LastStrikeAttack())
+				{
+					dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
+					dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+					dynamic_cast<CMonster*>(pLockOn)->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				}
+				else
+				{
+					dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+					dynamic_cast<CMonster*>(pLockOn)->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				}
 			}
-			else
-			{
-				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
-			}
+
 		}
 
 	}

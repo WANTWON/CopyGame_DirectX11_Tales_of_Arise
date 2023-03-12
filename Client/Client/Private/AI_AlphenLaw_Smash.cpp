@@ -369,7 +369,7 @@ void CAI_AlphenLaw_Smash::Exit()
 		/*if (FAILED(CGameInstance::Get_Instance()->Add_GameObject(TEXT("Prototype_GameObject_UI_StrikeFinish"), LEVEL_STATIC, TEXT("dddd"))))
 			return;*/
 		dynamic_cast<CUI_Skillmessage*>(CUI_Manager::Get_Instance()->Get_Skill_msg())->fadeout();
-		if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
+		/*if (CBattleManager::Get_Instance()->Get_LackonMonster() != nullptr)
 		{
 			HITLAGDESC m_HitLagDesc;
 			m_HitLagDesc.bHitLag = false;
@@ -386,6 +386,30 @@ void CAI_AlphenLaw_Smash::Exit()
 			{
 				dynamic_cast<CMonster*>(CBattleManager::Get_Instance()->Get_LackonMonster())->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 			}
+		}*/
+		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();
+		HITLAGDESC m_HitLagDesc;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bLockOnChange = false;
+		m_HitLagDesc.bShaking = false;
+		if (pLockOn != nullptr)
+		{
+			_vector vLastPosition = dynamic_cast<CMonster*>(pLockOn)->Get_LastPosition();
+			if (!CBattleManager::Get_Instance()->Get_Rinwellboss())
+			{
+				if (!dynamic_cast<CMonster*>(pLockOn)->Get_LastStrikeAttack())
+				{
+					dynamic_cast<CMonster*>(pLockOn)->Set_LastStrikeAttack(true);
+					dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+					dynamic_cast<CMonster*>(pLockOn)->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				}
+				else
+				{
+					dynamic_cast<CMonster*>(pLockOn)->Set_State(CTransform::STATE_TRANSLATION, vLastPosition);
+					dynamic_cast<CMonster*>(pLockOn)->Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+				}
+			}
+
 		}
 
 	}
