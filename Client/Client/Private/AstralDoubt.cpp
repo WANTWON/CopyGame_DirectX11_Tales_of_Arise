@@ -402,7 +402,8 @@ _bool CAstralDoubt::Is_AnimationLoop(_uint eAnimId)
 
 _int CAstralDoubt::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC HitDesc)
 {
-	if (fDamage <= 0 || m_bDead || m_bGlowUp || m_bDissolve || m_bTakeDamage || m_pState->Get_StateId() == CAstralDoubt_State::STATE_DEAD)
+	if (fDamage <= 0 || m_bDead || m_bGlowUp || m_bDissolve || m_bTakeDamage || m_pState->Get_StateId() == CAstralDoubt_State::STATE_DEAD ||
+		m_pState->Get_StateId() == CAstralDoubt_State::STATE_DOWN)
 		return 0;
 
 	_int iHp = __super::Take_Damage(fDamage, DamageCauser, HitDesc);

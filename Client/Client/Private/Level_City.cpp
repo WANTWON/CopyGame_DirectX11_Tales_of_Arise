@@ -11,7 +11,9 @@
 #include "Level_City.h"
 #include "Level_Loading.h"
 #include "Portal.h"
+#include "PlayerIdleState.h"
 
+using namespace Player;
 
 CLevel_City::CLevel_City(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -509,6 +511,9 @@ HRESULT CLevel_City::Ready_Layer_PlayerEnding(const _tchar * pLayerTag)
 	pPlayer->Off_IsFly();
 	pPlayer->Change_Level(LEVEL_CITY);
 	pPlayer->Get_Transform()->LookDir( XMVectorSet(0.f, 0.f, -1.f, 0.f));
+	
+	CPlayerState* pState = new Player::CIdleState(pPlayer, Player::CIdleState::IDLE_SIDE);
+	pPlayer->Set_PlayerState(pState);
 
 	vector<CPlayer*> pAIPlayers = CPlayerManager::Get_Instance()->Get_AIPlayers();
 	_int i = 0;
