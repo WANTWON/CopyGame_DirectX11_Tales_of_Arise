@@ -390,7 +390,7 @@ void CUI_Dialogue::Late_Tick(_float fTimeDelta)
 		}
 
 		if (nullptr != m_pRendererCom)
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_FRONT, this);
 	}
 	
 	

@@ -3,7 +3,7 @@
 
 #include "PlayerIdleState.h"
 #include "UI_Dialoguepopup.h"
-
+#include "BattleManager.h"
 using namespace Player;
 
 CPlayerPoseState::CPlayerPoseState(CPlayer * pPlayer, STATE_ID eStateID)
@@ -44,8 +44,12 @@ void CPlayerPoseState::Enter(void)
 	case CPlayer::ALPHEN:
 		m_pOwner->Get_Model()->Set_CurrentAnimIndex(CAlphen::ANIM::ANIM_ATTACK_HADOUMEPPU_START);
 		
-		if(CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE)
-		dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(9, true, 2, 1);
+		if (CGameInstance::Get_Instance()->Get_CurrentLevelIndex() == LEVEL_LAWBATTLE && CBattleManager::Get_Instance()->Get_popuponetime())
+		{
+			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(9, true, 2, 1);
+			CBattleManager::Get_Instance()->Set_popuponetime(false);
+		}
+		
 		
 		break;
 	case CPlayer::SION:

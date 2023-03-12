@@ -1050,7 +1050,7 @@ void CUI_Dialoguepopup::Read_TextFiles_for_LawBattle()
 	matrix4.push_back(m_vDialoguepopup_Lawbattle4[0]);
 	matrix4.push_back(m_vDialoguepopup_Lawbattle4[1]);
 
-	m_vCurrentDialogue.push_back(matrix2);
+	m_vCurrentDialogue.push_back(matrix4);
 
 
 	
