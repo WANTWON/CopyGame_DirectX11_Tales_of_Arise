@@ -126,6 +126,10 @@ void CEffectMesh::Late_Tick(_float fTimeDelta)
 	if (!m_bCanStart)
 		return;
 
+	_float fRadius = max(max(m_tMeshEffectDesc.vScale.x, m_tMeshEffectDesc.vScale.y), m_tMeshEffectDesc.vScale.z);
+	if (Check_IsinFrustum(fRadius* 5.f) == false)
+		return;
+
 	if (m_pRendererCom)
 	{
 		Compute_CamDistance(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
