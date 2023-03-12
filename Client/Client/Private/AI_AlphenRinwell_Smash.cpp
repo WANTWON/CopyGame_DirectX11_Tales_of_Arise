@@ -309,6 +309,7 @@ void CAI_AlphenRinwell_Smash::Exit()
 	
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	if (m_eCurrentPlayerID == CPlayer::ALPHEN)
 	{
 		CBaseObj* pLockOn = CBattleManager::Get_Instance()->Get_LackonMonster();

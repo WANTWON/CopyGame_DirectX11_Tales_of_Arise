@@ -71,7 +71,7 @@ HRESULT CLevel_LawBattle::Initialize()
 	}
 	else
 	{
-		CBattleManager::Get_Instance()->Set_Rinwellboss(false);
+		//CBattleManager::Get_Instance()->Set_Rinwellboss(false);maybe
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Npc"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Portal"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Effects"));
