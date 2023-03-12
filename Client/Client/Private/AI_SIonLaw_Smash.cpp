@@ -239,9 +239,9 @@ void CAI_SionLaw_Smash::Enter()
 	}
 	
 
-	CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
-	//	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
-	pCamera->Set_Target(m_pOwner);
+	//CCamera_Dynamic* pCamera = dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera());
+	////	pCamera->Set_CamMode(CCamera_Dynamic::CAM_AIBOOSTON);
+	//pCamera->Set_Target(m_pOwner);
 
 	m_pOwner->Set_Manarecover(false);
 
@@ -271,7 +271,7 @@ void CAI_SionLaw_Smash::Exit()
 
 	}*/
 
-
+	CBattleManager::Get_Instance()->Set_IsStrike(false);
 	
 	m_pOwner->Set_StrikeAttack(false);
 	m_pOwner->Set_IsActionMode(false);

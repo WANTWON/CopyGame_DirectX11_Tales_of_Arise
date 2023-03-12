@@ -129,13 +129,21 @@ void CMonster::Late_Tick(_float fTimeDelta)
 	if (CGameInstance::Get_Instance()->Key_Up(DIK_B) && false == m_bTakeDamage)
 	{
 		HITLAGDESC m_HitLagDesc;
-		m_HitLagDesc.bHitLag = true;
-		m_HitLagDesc.bShaking = true;
-		m_HitLagDesc.fHitLagTimer = 0.1f;
-		m_HitLagDesc.fShakingPower = 1.f;
-		m_HitLagDesc.fShakingMinusPower = 0.2f;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bShaking = false;
+		
 
 		Take_Damage(9999, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
+		m_bTakeDamage = true;
+	}
+	else if (CGameInstance::Get_Instance()->Key_Up(DIK_N) && false == m_bTakeDamage)
+	{
+		HITLAGDESC m_HitLagDesc;
+		m_HitLagDesc.bHitLag = false;
+		m_HitLagDesc.bShaking = false;
+	
+
+		Take_Damage(50000, CPlayerManager::Get_Instance()->Get_ActivePlayer(), m_HitLagDesc);
 		m_bTakeDamage = true;
 	}
 

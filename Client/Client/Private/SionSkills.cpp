@@ -78,16 +78,20 @@ HRESULT CSionSkills::Initialize(void * pArg)
 
 		break;
 	case MAGNA_RAY:
-		vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
-		mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
-		mWorldMatrix.r[3] = vLocation;
+		
 		if (m_BulletDesc.eCollisionGroup == PLAYER)
 		{
+			vLocation = m_pTransformCom->Get_State(CTransform::STATE::STATE_TRANSLATION);
+			mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+			mWorldMatrix.r[3] = vLocation;
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("MagnaRayBurst.dat"), mWorldMatrix);
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("MagnaRayBullet.dat"), mWorldMatrix);
 		}
 		else if (m_BulletDesc.eCollisionGroup == FRIEND)
 		{
+			vLocation = m_BulletDesc.vInitPositon;
+			mWorldMatrix = m_BulletDesc.pOwner->Get_Transform()->Get_WorldMatrix();
+			mWorldMatrix.r[3] = vLocation;
 			m_pBlastEffect = CEffect::PlayEffectAtLocation(TEXT("FriendMagnaBurst.dat"), mWorldMatrix);
 			m_pEffects = CEffect::PlayEffectAtLocation(TEXT("FreindMagna.dat"), mWorldMatrix);
 		}
