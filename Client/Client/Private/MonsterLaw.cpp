@@ -185,7 +185,7 @@ int CMonsterLaw::Tick(_float fTimeDelta)
 		{
 	//		if (m_fFinalStrikeOnetime)
 	//		{
-			dynamic_cast<CUI_Dialoguepopup*>(CUI_Manager::Get_Instance()->Get_Dialoguepopup())->Open_Dialogue(14, true, 1, 0);
+			
 				m_tStats.m_fLockonSmashGuage = 4.f;
 				m_fFinalStrikeOnetime = false;
 

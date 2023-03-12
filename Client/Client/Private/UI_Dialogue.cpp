@@ -68,11 +68,14 @@ HRESULT CUI_Dialogue::Initialize(void * pArg)
 	Read_TextFiles_for_LawBossBattleEvent();
 	Read_TextFiles_for_LawBossBattleEnd();
 	Read_TextFiles_for_LastQuestStart();
-	void Read_TextFiles_for_Meetlastboss();
-	void Read_TextFiles_for_Secondbosson();
 
 
-	void Read_TextFiles_for_lastbossclear();
+	 Read_TextFiles_for_Meetlastboss();
+	 Read_TextFiles_for_Secondbosson();
+	 Read_TextFiles_for_Lastoverlimit();
+
+	 Read_TextFiles_for_lastbossclear();
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -387,7 +390,7 @@ void CUI_Dialogue::Late_Tick(_float fTimeDelta)
 		}
 
 		if (nullptr != m_pRendererCom)
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_BACK, this);
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI_FRONT, this);
 	}
 	
 	
