@@ -455,10 +455,10 @@ HRESULT CLevel_BossZone::Ready_Layer_Player(const _tchar * pLayerTag)
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Kisara"), LEVEL_STATIC, TEXT("Layer_FPlayer"), nullptr)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Kisara"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 		return E_FAIL;
 
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Duohaelm"), LEVEL_STATIC, TEXT("Layer_FPlayer"), nullptr)))
+		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Duohaelm"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 		return E_FAIL;
 	}
 
