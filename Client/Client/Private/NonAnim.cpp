@@ -299,7 +299,7 @@ _float CNonAnim::Check_CullingRadius()
 			!strcmp(m_ModelDesc.pModeltag, "Ceiling") ||
 			!strcmp(m_ModelDesc.pModeltag, "Bld_Floor01_outside_Lod1") ||
 			!strcmp(m_ModelDesc.pModeltag, "Bld_D04_Door01_Wall_Lod1"))
-			return 50.f;
+			return 1000.f;
 		break;
 	case Client::LEVEL_LAWBATTLE:
 		if (!strcmp(m_ModelDesc.pModeltag, "FountainDel") ||

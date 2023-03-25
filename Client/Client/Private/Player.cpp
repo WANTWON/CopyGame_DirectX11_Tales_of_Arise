@@ -213,15 +213,15 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	if (m_eLevel == LEVEL_LOADING || m_eLevel == LEVEL_LOGO)
 		return;
 
-	if (Check_IsinFrustum(5.f) == false)
-		return;
-
 	if (CUI_Manager::Get_Instance()->Get_StopTick())
 		return ;
 	if (CPlayer::KISARA == m_ePlayerID || CPlayer::DUOHALEM == m_ePlayerID)
 		m_bIsSionWeapon = false;
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
+
+	if (Check_IsinFrustum(5.f) == false && pCameraManager->Get_CamState() != CCameraManager::CAM_ACTION)
+		return;
 
 	if (CPlayer::KISARA != m_ePlayerID && CPlayer::DUOHALEM != m_ePlayerID)
 	 m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);
