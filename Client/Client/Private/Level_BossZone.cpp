@@ -112,7 +112,7 @@ void CLevel_BossZone::Tick(_float fTimeDelta)
 			g_fSoundVolume = 0.15f;
 	}
 
-	//CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
+	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 
 
 	m_bBattleMode = CBattleManager::Get_Instance()->Get_IsBattleMode();

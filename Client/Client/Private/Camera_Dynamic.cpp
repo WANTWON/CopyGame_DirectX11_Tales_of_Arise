@@ -327,27 +327,31 @@ void CCamera_Dynamic::Room_Camera(_float fTimeDelta)
 
 	ZoomSetting(-5.f, 0.25f, 3.f, 7.f);
 
-	if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
+	if (CGameInstance::Get_Instance()->Get_CurrentLevel()->Get_NextLevel() != true)
 	{
-		m_bLerp = true;
-
-		if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
+		if (XMouseMove = pGameInstance->Get_DIMMoveState(DIMM_X))
 		{
-			if (XMouseMove < 0)
+			m_bLerp = true;
+
+			if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false &&
+				CUI_Manager::Get_Instance()->Get_UIQuestScreen() != true)
 			{
-				m_fAngle += 2.f;
-				if (m_fAngle >= 360.f)
-					m_fAngle = 0.f;
-			}
-			else if (XMouseMove > 0)
-			{
-				m_fAngle -= 2.f;
-				if (m_fAngle <= 0.f)
-					m_fAngle = 360.f;
+				if (XMouseMove < 0)
+				{
+					//m_fAngle += 2.f;
+					m_fAngle -= XMouseMove*0.1f;
+					if (m_fAngle >= 360.f)
+						m_fAngle = 0.f;
+				}
+				else if (XMouseMove > 0)
+				{
+					//m_fAngle -= 2.f;
+					m_fAngle -= XMouseMove*0.1f;
+					if (m_fAngle <= 0.f)
+						m_fAngle = 360.f;
+				}
 			}
 		}
-
-
 	}
 	// 항상 플레이어 위치 바라보게 하기
 	_vector vPlayerPosition = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION);
@@ -359,37 +363,46 @@ void CCamera_Dynamic::Room_Camera(_float fTimeDelta)
 	vCameraPosition = XMVectorSetZ(vCameraPosition, (XMVectorGetZ(vCenterPos) + sin(XMConvertToRadians(m_fAngle))*fLength + cos(XMConvertToRadians(m_fAngle))*fLength));
 	m_vNewPos = vCameraPosition;
 
-	if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
+	if (CGameInstance::Get_Instance()->Get_CurrentLevel()->Get_NextLevel() != true)
 	{
-		m_bLerp = true;
-
-
-		if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
+		if (YMouseMove = pGameInstance->Get_DIMMoveState(DIMM_Y))
 		{
+			m_bLerp = true;
 
-			if (YMouseMove > 0)
+
+			if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false &&
+				CUI_Manager::Get_Instance()->Get_UIQuestScreen() != true)
 			{
-				m_fCameraOffsetY += 0.3f;
-				m_fLookOffsetY -= 0.1f;
-			}
-			else if (YMouseMove < 0)
-			{
-				m_fCameraOffsetY -= 0.3f;
-				m_fLookOffsetY += 0.1f;
-			}
-		}
 
-		if (m_fCameraOffsetY >= 8.f)
-			m_fCameraOffsetY = 8.f;
-		else if (m_fCameraOffsetY <= -2.f)
-			m_fCameraOffsetY = -2.f;
+				if (YMouseMove > 0)
+				{
+					//m_fCameraOffsetY += 0.3f;
+					//m_fLookOffsetY -= 0.1f;
+					m_fCameraOffsetY += YMouseMove*0.05f;
+					m_fLookOffsetY -= YMouseMove*0.01f;
+				}
+				else if (YMouseMove < 0)
+				{
+					/*m_fCameraOffsetY -= 0.3f;
+					m_fLookOffsetY += 0.1f;*/
+					m_fCameraOffsetY += YMouseMove*0.05f;
+					m_fLookOffsetY -= YMouseMove*0.01f;
+				}
+			}
 
-		if (m_fLookOffsetY >= 6.f)
-			m_fLookOffsetY = 6.f;
-		else if (m_fLookOffsetY <= 4.f)
+			if (m_fCameraOffsetY >= 6.f)
+				m_fCameraOffsetY = 6.f;
+			else if (m_fCameraOffsetY <= -2.f)
+				m_fCameraOffsetY = -2.f;
+
+			/*if (m_fLookOffsetY >= 5.f)
+			m_fLookOffsetY = 5.f;
+			else if (m_fLookOffsetY <= 4.f)*/
 			m_fLookOffsetY = 4.f;
 
+		}
 	}
+
 
 	vPlayerPosition = XMVectorSetY(vPlayerPosition, XMVectorGetY(vPlayerPosition) + m_fLookOffsetY);
 	m_vNewPos = XMVectorSetY(vCameraPosition, XMVectorGetY(vPlayerPosition) + m_fCameraOffsetY);
@@ -497,13 +510,15 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 			{
 				if (XMouseMove < 0)
 				{
-					m_fAngle += 2.f;
+					//m_fAngle += 2.f;
+					m_fAngle -= XMouseMove*0.1f;
 					if (m_fAngle >= 360.f)
 						m_fAngle = 0.f;
 				}
 				else if (XMouseMove > 0)
 				{
-					m_fAngle -= 2.f;
+					//m_fAngle -= 2.f;
+					m_fAngle -= XMouseMove*0.1f;
 					if (m_fAngle <= 0.f)
 						m_fAngle = 360.f;
 				}
@@ -533,24 +548,28 @@ void CCamera_Dynamic::Player_Camera(_float fTimeDelta)
 
 				if (YMouseMove > 0)
 				{
-					m_fCameraOffsetY += 0.3f;
-					m_fLookOffsetY -= 0.1f;
+					//m_fCameraOffsetY += 0.3f;
+					//m_fLookOffsetY -= 0.1f;
+					m_fCameraOffsetY += YMouseMove*0.05f;
+					m_fLookOffsetY -= YMouseMove*0.01f;
 				}
 				else if (YMouseMove < 0)
 				{
-					m_fCameraOffsetY -= 0.3f;
-					m_fLookOffsetY += 0.1f;
+					/*m_fCameraOffsetY -= 0.3f;
+					m_fLookOffsetY += 0.1f;*/
+					m_fCameraOffsetY += YMouseMove*0.05f;
+					m_fLookOffsetY -= YMouseMove*0.01f;
 				}
 			}
 
-			if (m_fCameraOffsetY >= 8.f)
-				m_fCameraOffsetY = 8.f;
+			if (m_fCameraOffsetY >= 6.f)
+				m_fCameraOffsetY = 6.f;
 			else if (m_fCameraOffsetY <= -2.f)
 				m_fCameraOffsetY = -2.f;
 
-			if (m_fLookOffsetY >= 6.f)
-				m_fLookOffsetY = 6.f;
-			else if (m_fLookOffsetY <= 4.f)
+			/*if (m_fLookOffsetY >= 5.f)
+				m_fLookOffsetY = 5.f;
+			else if (m_fLookOffsetY <= 4.f)*/
 				m_fLookOffsetY = 4.f;
 
 		}
