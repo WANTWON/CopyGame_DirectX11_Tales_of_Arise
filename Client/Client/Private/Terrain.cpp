@@ -60,6 +60,10 @@ HRESULT CTerrain::Initialize_Load(const _tchar * VIBufferTag, void * pArg)
 		if (FAILED(__super::Add_Components(TEXT("Com_Brush"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Brush"), (CComponent**)&m_pTextureCom[TYPE_BRUSH])))
 			return E_FAIL;
 
+		/* For.Com_Navigation */
+		if (FAILED(__super::Add_Components(TEXT("Com_Navigation"), LEVEL_STATIC, TEXT("Prototype_Component_SnowField_Navigation"), (CComponent**)&m_pNavigationCom)))
+			return E_FAIL;
+
 		/* For.Com_Texture */
 		if (FAILED(__super::Add_Components(TEXT("Com_Texture"), LEVEL_STATIC, TEXT("Prototype_Component_Texture_Terrain"), (CComponent**)&m_pTextureCom[TYPE_DIFFUSE])))
 			return E_FAIL;
@@ -133,6 +137,9 @@ void CTerrain::Late_Tick(_float fTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 	{
+#ifdef _DEBUG
+		m_pRendererCom->Add_Debug(m_pNavigationCom);
+#endif //_DEBUG
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 	}
 }

@@ -115,6 +115,9 @@ private:
 
 	_bool m_bLawbossposepopuponetime = true;
 
+	//_bool m_bLastboss1strike = true;
+
+
 public:
 	virtual void Free() override;
 };

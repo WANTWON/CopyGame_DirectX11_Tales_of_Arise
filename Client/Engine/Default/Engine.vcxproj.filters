@@ -148,9 +148,6 @@
     <ClCompile Include="..\Private\MeshContainer_Instance.cpp">
       <Filter>01.Utility\03.Components\06.Model\MeshContainer_Instance</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PhysX.cpp">
-      <Filter>01.Utility\11.PhysX</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Trail.cpp">
       <Filter>01.Utility\03.Components\02.VIBuffer\07.Trail</Filter>
     </ClCompile>
@@ -315,9 +312,6 @@
     <ClInclude Include="..\Public\MeshContainer_Instance.h">
       <Filter>01.Utility\03.Components\06.Model\MeshContainer_Instance</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PhysX.h">
-      <Filter>01.Utility\11.PhysX</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Trail.h">
       <Filter>01.Utility\03.Components\02.VIBuffer\07.Trail</Filter>
     </ClInclude>
@@ -478,9 +472,6 @@
     </Filter>
     <Filter Include="01.Utility\03.Components\06.Model\MeshContainer_Instance">
       <UniqueIdentifier>{b51f527f-dc4a-48a6-89ea-37873b48cced}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\11.PhysX">
-      <UniqueIdentifier>{d97ed9aa-90fe-465b-b3bd-f7e726f22c8e}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\03.Components\02.VIBuffer\07.Trail">
       <UniqueIdentifier>{9006ecdb-4273-4f09-9d18-b87d4df7774e}</UniqueIdentifier>

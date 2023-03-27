@@ -64,13 +64,14 @@ HRESULT CLevel_LawBattle::Initialize()
 		CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
 		CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
 		CGameInstance::Get_Instance()->StopAll();
-		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_FightWith_Law.wav"), g_fSoundVolume);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_FightWith_Law.wav"), 0.65f);
 		CCameraManager::Get_Instance()->Play_ActionCamera(TEXT("LawBattleEnter.dat"), XMMatrixIdentity());
 
 		CPlayerManager::Get_Instance()->Update_StrikePosition(TEXT("../../../Bin/Data/BattleZoneData/SnowPlane/Strike_Position.dat"));
 	}
 	else
 	{
+		//CBattleManager::Get_Instance()->Set_Rinwellboss(false);maybe
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Npc"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Portal"));
 		CObject_Pool_Manager::Get_Instance()->Reuse_Pooling_Layer(LEVEL_LAWBATTLE, TEXT("Layer_Effects"));
@@ -98,7 +99,7 @@ HRESULT CLevel_LawBattle::Initialize()
 		CGameInstance::Get_Instance()->StopSound(SOUND_CROWD);
 		CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
 		CGameInstance::Get_Instance()->StopAll();
-		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_Before_FightWith_Law.wav"), g_fSoundVolume);
+		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_Before_FightWith_Law.wav"), 0.65f);
 	}
 
 	
@@ -117,8 +118,8 @@ void CLevel_LawBattle::Tick(_float fTimeDelta)
 		CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
 	{
 		g_fSoundVolume += 0.01f;
-		if (g_fSoundVolume >= 0.15f)
-			g_fSoundVolume = 0.15f;
+		if (g_fSoundVolume >= 0.65f)
+			g_fSoundVolume = 0.65f;
 	}
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false && m_iBossDeadCount >= 2)
@@ -192,7 +193,7 @@ void CLevel_LawBattle::BattleTick(_float fTimeDelta)
 			g_fSoundVolume = 0.15f;
 	}
 
-	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
+	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, 0.65f);
 
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)

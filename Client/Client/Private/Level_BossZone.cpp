@@ -357,7 +357,7 @@ void CLevel_BossZone::LastAttackCheck()
 			m_bFinal = true;
 			dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Open_Dialogue(18);
 			CGameInstance::Get_Instance()->StopAll();
-			CGameInstance::Get_Instance()->PlayBGM(TEXT("forvictory.wav"), g_fSoundVolume);
+			CGameInstance::Get_Instance()->PlayBGM(TEXT("forvictory.wav"), 0.3f);
 			CPlayerManager* pPlayerManager = CPlayerManager::Get_Instance();
 
 			HANDLE hFile = 0;

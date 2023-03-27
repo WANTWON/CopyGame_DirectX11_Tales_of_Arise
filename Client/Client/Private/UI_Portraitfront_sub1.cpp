@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "BattleManager.h"
 #include "Monster.h"
+#include "UI_Dialogue.h"
 
 CUI_Portraitfront_sub1::CUI_Portraitfront_sub1(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CUI_Portraitfront(pDevice, pContext)
@@ -267,7 +268,8 @@ HRESULT CUI_Portraitfront_sub1::Render_Glow()
 {
 	if (CUI_Manager::Get_Instance()->Get_UIStrike())
 		return S_OK;
-
+	if (dynamic_cast<CUI_Dialogue*>(CUI_Manager::Get_Instance()->Get_Dialogue())->Get_isDialogueon())
+		return S_OK;
 	if (!m_bportraiton)
 		return S_OK;
 

@@ -72,9 +72,9 @@ CPlayerState * CCloseChaseState::LateTick(_float fTimeDelta)
 		_vector vToTargetDir = m_pTarget->Get_TransformState(CTransform::STATE_TRANSLATION) - m_pOwner->Get_Transform()->Get_State(CTransform::STATE_TRANSLATION);
 		_float fRadiusSum;
 		if (CPlayer::ALPHEN == m_pOwner->Get_PlayerID() && CPlayerState::STATE_SKILL_ATTACK_F == m_eNextState)
-			fRadiusSum = m_pTarget->Get_SPHERECollider()->Get_SphereRadius() + m_pOwner->Get_SPHERECollider()->Get_SphereRadius() + 2.5f;
+			fRadiusSum = m_pTarget->Get_SPHERECollider()->Get_SphereRadius() + m_pOwner->Get_SPHERECollider()->Get_SphereRadius() + 5.5f;
 		else
-			fRadiusSum = m_pTarget->Get_SPHERECollider()->Get_SphereRadius() + m_pOwner->Get_SPHERECollider()->Get_SphereRadius() + 1.5f;
+			fRadiusSum = m_pTarget->Get_SPHERECollider()->Get_SphereRadius() + m_pOwner->Get_SPHERECollider()->Get_SphereRadius() + 4.5f;
 		
 		switch (m_pOwner->Get_PlayerID())
 		{

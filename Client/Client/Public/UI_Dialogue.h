@@ -63,6 +63,8 @@ public:
 
 	wchar_t* ConverCtoWC(char* str);
 
+	_bool Get_isDialogueon() { return m_btick; }
+
 	void Render_Fonts(_uint index);
 
 	void Open_Dialogue(_uint index);// { m_iVectorIndex = index; m_btick = true; }
