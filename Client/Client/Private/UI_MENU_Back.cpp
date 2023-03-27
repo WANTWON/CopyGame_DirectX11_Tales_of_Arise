@@ -55,6 +55,7 @@ int CUI_MENU_Back::Tick(_float fTimeDelta)
 	{
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Open.wav"), SOUND_UI, 1.f);
 		CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, 0.1f);
+		m_iCursor = 0;
 		fadeinMain();
 	}
 
