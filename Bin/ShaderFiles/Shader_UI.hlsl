@@ -1813,24 +1813,22 @@ PS_OUT PS_EXPBAR22(PS_IN In)
 	fa = saturate(fa);
 	if (fa != 1.f)
 		discard;
-	vector color = vector(0.f, 0.f, 0.f, 1.f);
+	vector color = vector(0.f, 0.f, 0.f, 1);
 	vector col = lerp(color, DiffuseTexture, fa);
 	//   col.a *= fr;
 
 	//col = col * col2;//DiffuseTexture;
+
+	Out.vColor = col;
+
 	if (Out.vColor.a < 0.2f)
 		discard;
-	Out.vColor = lerp(float4(1.f, 1.f, 1.f, 1.f), float4(0.9882f, 0.8352f, 0.647f, 1.f), 0.2f);
 
-	/*
+	Out.vColor.a = 1.f;
 
-	Out.vColor.a += 0.6f;*/
+	Out.vColor.a *= g_fAlpha;
 
 	return Out;
-
-
-
-	//	return Out;
 }
 
 

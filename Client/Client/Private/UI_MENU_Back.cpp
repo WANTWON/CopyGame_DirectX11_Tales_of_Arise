@@ -55,6 +55,7 @@ int CUI_MENU_Back::Tick(_float fTimeDelta)
 	{
 		CGameInstance::Get_Instance()->PlaySounds(TEXT("Inventory_Open.wav"), SOUND_UI, 1.f);
 		CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, 0.1f);
+		m_iCursor = 0;
 		fadeinMain();
 	}
 
@@ -2288,7 +2289,7 @@ HRESULT CUI_MENU_Back::Render_Player1_Status_MainMenu()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom26->Get_SRV(1))))
 		return E_FAIL;
-	m_pShaderCom->Begin(UI_EXPBAR);
+	m_pShaderCom->Begin(UI_REALEXP);
 	m_pVIBufferCom->Render();
 
 	m_fSize.x = 20.f;
@@ -2614,7 +2615,7 @@ HRESULT CUI_MENU_Back::Render_Player2_Status_MainMenu()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom26->Get_SRV(1))))
 		return E_FAIL;
-	m_pShaderCom->Begin(UI_EXPBAR);
+	m_pShaderCom->Begin(UI_REALEXP);
 	m_pVIBufferCom->Render();
 
 	m_fSize.x = 20.f;
@@ -2934,7 +2935,7 @@ HRESULT CUI_MENU_Back::Render_Player3_Status_MainMenu()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom26->Get_SRV(1))))
 		return E_FAIL;
-	m_pShaderCom->Begin(UI_EXPBAR);
+	m_pShaderCom->Begin(UI_REALEXP);
 	m_pVIBufferCom->Render();
 
 	m_fSize.x = 20.f;
@@ -3255,7 +3256,7 @@ HRESULT CUI_MENU_Back::Render_Player4_Status_MainMenu()
 
 	if (FAILED(m_pShaderCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom26->Get_SRV(1))))
 		return E_FAIL;
-	m_pShaderCom->Begin(UI_EXPBAR);
+	m_pShaderCom->Begin(UI_REALEXP);
 	m_pVIBufferCom->Render();
 
 	m_fSize.x = 20.f;
