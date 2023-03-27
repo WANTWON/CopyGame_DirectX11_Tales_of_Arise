@@ -166,7 +166,6 @@ CHawkState * CBattle_TornadeState::LateTick(_float fTimeDelta)
 		}
 	}
 
-
 	if (nullptr != m_p2th_AtkColliderCom)
 	{
 		CBaseObj* pCollisionTarget = nullptr;
@@ -233,6 +232,6 @@ void CBattle_TornadeState::Exit()
 	Safe_Release(m_p2th_AtkColliderCom);
 	Safe_Release(m_pAtkColliderCom);
 
-	m_bCollision = false;
-	m_b2th_Collision = false;
+	//m_bCollision = false;
+	//m_b2th_Collision = false;
 }

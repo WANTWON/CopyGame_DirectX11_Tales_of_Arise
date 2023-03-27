@@ -116,7 +116,7 @@ HRESULT CLevel_SnowField::Initialize()
 
 	CGameInstance::Get_Instance()->StopAll();
 	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_SnowyFields.wav"), g_fSoundVolume);
-	CGameInstance::Get_Instance()->PlaySounds(TEXT("Nature_blizzard.wav"), SOUND_NATURE, 0.3f);
+	//CGameInstance::Get_Instance()->PlaySounds(TEXT("Nature_blizzard.wav"), SOUND_NATURE, 0.3f);
 	CPlayerManager::Get_Instance()->Get_ActivePlayer()->Set_StrikeAttack(false);
 
 	if (vecFightedMonster.size() != 0)
@@ -173,12 +173,15 @@ void CLevel_SnowField::Tick(_float fTimeDelta)
 	
 	if (!g_bIsSoundOn)
 	{
-		g_fSoundVolume += 0.001f;
+		g_fSoundVolume = 0.f;//+= 0.01f;
+							 /*if (g_fSoundVolume >= 0.2f)
+							 g_fSoundVolume = 0.2f;*/
+		/*g_fSoundVolume += 0.001f;
 		if (g_fSoundVolume >= 0.3f)
 		{
 			g_fSoundVolume = 0.3f;
 			g_bIsSoundOn = true;
-		}
+		}*/
 
 		CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 	}

@@ -66,7 +66,7 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LOGO.wav"), g_fSoundVolume);
+	//CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_LOGO.wav"), g_fSoundVolume);
 	
 	return S_OK;
 }
@@ -74,9 +74,9 @@ HRESULT CLevel_Logo::Initialize()
 void CLevel_Logo::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);	
-	g_fSoundVolume += 0.01f;
-	if (g_fSoundVolume >= 0.2f)
-		g_fSoundVolume = 0.2f;
+	g_fSoundVolume = 0.f;//+= 0.01f;
+	/*if (g_fSoundVolume >= 0.2f)
+		g_fSoundVolume = 0.2f;*/
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 
 

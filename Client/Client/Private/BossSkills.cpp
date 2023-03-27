@@ -210,6 +210,7 @@ void CBossSkills::Collision_Check()
 		case BULLET_SPEAR_MULTI_6:
 		{
 			CBaseObj* pCollisionTarget = nullptr;
+			m_BulletDesc.iDamage = (rand() % 200) + 200;
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pSPHERECom, &pCollisionTarget))
 			{
 				static_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner);
@@ -222,6 +223,7 @@ void CBossSkills::Collision_Check()
 		case BULLET_LASER:
 		{
 			CBaseObj* pCollisionTarget = nullptr;
+			m_BulletDesc.iDamage = (rand() % 200) + 200;
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_PLAYER, m_pOBBCom, &pCollisionTarget))
 				static_cast<CPlayer*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, 4.f, HIT_DOWN);
 

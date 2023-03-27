@@ -104,19 +104,18 @@ void CLevel_BattleZone::Tick(_float fTimeDelta)
 	if(pBattleManager->Get_LackonMonster() != nullptr && dynamic_cast<CMonster*>(pBattleManager->Get_LackonMonster())->Get_Stats().m_fLockonSmashGuage >= 4.f)
 		CPlayerManager::Get_Instance()->Set_SmashAttack();
 
+	//if ( ( CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+	//	dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON ) ||
+	//	CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION )
+	//{
+	//	//+= 0.01f;
+	//						 /*if (g_fSoundVolume >= 0.2f)
+	//						 g_fSoundVolume = 0.2f;*/
+	//}
 
-	
-	if ( ( CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON ) ||
-		CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION )
-	{
-		g_fSoundVolume += 0.01f;
-		if (g_fSoundVolume >= 0.15f)
-			g_fSoundVolume = 0.15f;
-	}
+	g_fSoundVolume = 0.f;
 	
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
-
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
 	{

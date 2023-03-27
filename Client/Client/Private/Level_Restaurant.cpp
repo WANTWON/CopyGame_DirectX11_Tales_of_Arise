@@ -55,7 +55,7 @@ HRESULT CLevel_Restaurant::Initialize()
 	g_fSoundVolume = 0.f;
 	CGameInstance::Get_Instance()->StopSound(SOUND_NATURE);
 	CGameInstance::Get_Instance()->StopAll();
-	CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_Restaurant.wav"), g_fSoundVolume);
+	//CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_Restaurant.wav"), g_fSoundVolume);
 
 	return S_OK;
 }
@@ -64,9 +64,10 @@ void CLevel_Restaurant::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	g_fSoundVolume += 0.001f;
+	g_fSoundVolume = 0.f;//+= 0.01f;
+	/*g_fSoundVolume += 0.001f;
 	if (g_fSoundVolume >= 0.3f)
-		g_fSoundVolume = 0.3f;
+		g_fSoundVolume = 0.3f;*/
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 
 	if (m_bNextNevel)

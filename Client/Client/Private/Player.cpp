@@ -220,8 +220,8 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 
 	CCameraManager* pCameraManager = CCameraManager::Get_Instance();
 
-	if (Check_IsinFrustum(5.f) == false && pCameraManager->Get_CamState() != CCameraManager::CAM_ACTION)
-		return;
+	/*if (Check_IsinFrustum(5.f) == false && pCameraManager->Get_CamState() != CCameraManager::CAM_ACTION)
+		return;*/
 
 	if (CPlayer::KISARA != m_ePlayerID && CPlayer::DUOHALEM != m_ePlayerID)
 	 m_ePlayerMode = m_pPlayerManager->Check_ActiveMode(this);

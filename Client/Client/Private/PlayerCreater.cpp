@@ -82,7 +82,7 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 			return E_FAIL;
 		CPlayer* pPlayer = dynamic_cast<CPlayer*>(pGameInstance->Get_Object(LEVEL_STATIC, TEXT("Layer_Player")));
 		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(44, 0, 22, 1.f));
-		pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));
+		//pPlayer->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(150, 0, 150, 1.f));
 		CPlayerManager::Get_Instance()->Set_ActivePlayer(pPlayer);
 		CPlayerManager::Get_Instance()->Save_LastPosition();
 		pPlayer->Change_Level(LEVEL_SNOWFIELD);
@@ -95,16 +95,16 @@ HRESULT CPlayerCreater::Cloning_ForPlayer()
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Rinwell"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;
 
-		/*
-		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
+		
+		/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Law"), LEVEL_STATIC, TEXT("Layer_Player"), nullptr)))
 			return E_FAIL;*/
 
 		/*if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Kisara"), LEVEL_STATIC, TEXT("Layer_FPlayer"), nullptr)))
 			return E_FAIL;
 
 		if (FAILED(pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Duohaelm"), LEVEL_STATIC, TEXT("Layer_FPlayer"), nullptr)))
-			return E_FAIL;
-		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Player"), pObject);
+			return E_FAIL;*/
+		/*CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Player"), pObject);
 		CObject_Pool_Manager::Get_Instance()->Add_Pooling_Object(LEVEL_STATIC, TEXT("Layer_Player"), pObject2);*/
 		
 

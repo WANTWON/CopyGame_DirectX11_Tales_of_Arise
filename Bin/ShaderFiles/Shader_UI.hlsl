@@ -1,25 +1,24 @@
-
 #include "Client_Shader_Defines.hpp"
 
-matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D		g_DiffuseTexture;
+matrix         g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+texture2D      g_DiffuseTexture;
 texture2D       g_GradationTexture;
-float			g_fAlpha = 1.f;
+float         g_fAlpha = 1.f;
 float           g_fAlpha1 = 1.f;
 
 float           g_fBright = 0.f;
 
-float			g_fMinRange = 100.f;
-float			g_fMaxRange = 400.f;
+float         g_fMinRange = 100.f;
+float         g_fMaxRange = 400.f;
 float a = 0.f;
-float g_fAngle; 
+float g_fAngle;
 float g_fAngle1;
 
 float g_fCurrentHp;
 float g_fMaxHp;
 
-float4			g_PlayerProjPos;
-float2			g_TexUV;
+float4         g_PlayerProjPos;
+float2         g_TexUV;
 
 float g_UV_sizeX;   //가로 ;
 float g_UV_sizeY;   //세로;
@@ -33,11 +32,11 @@ bool g_SpriteLoop = true;
 float2 g_WinXY;
 
 /* Sprite */
-float2 g_vSprite;			/* Number of Sprites (Horizontally and Vertically). */
-float g_fSpriteTimer;		/* Time elapsed since start of Sprite Animation. */
-float g_fSpriteDuration;	/* Duration of entire Sprite Animation in seconds. */
+float2 g_vSprite;         /* Number of Sprites (Horizontally and Vertically). */
+float g_fSpriteTimer;      /* Time elapsed since start of Sprite Animation. */
+float g_fSpriteDuration;   /* Duration of entire Sprite Animation in seconds. */
 
-/* Glow */
+						   /* Glow */
 texture2D g_GlowTexture;
 float4 g_vGlowColor;
 bool g_bUseDiffuseColor;
@@ -45,14 +44,14 @@ float g_fGlowTimer;
 
 struct VS_IN
 {
-	float3		vPosition : POSITION;
-	float2		vTexUV : TEXCOORD0;
+	float3      vPosition : POSITION;
+	float2      vTexUV : TEXCOORD0;
 };
 
 struct VS_OUT
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexUV : TEXCOORD0;
+	float4      vPosition : SV_POSITION;
+	float2      vTexUV : TEXCOORD0;
 };
 
 /* DrawIndexed함수를 호출하면. */
@@ -60,9 +59,9 @@ struct VS_OUT
 /* 일반적으로 TriangleList로 그릴경우, 정점 세개를 각각 VS_MAIN함수의 인자로 던진다. */
 VS_OUT VS_MAIN(VS_IN In)
 {
-	VS_OUT		Out = (VS_OUT)0;
+	VS_OUT      Out = (VS_OUT)0;
 
-	matrix		matWV, matWVP;
+	matrix      matWV, matWVP;
 
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
@@ -77,13 +76,13 @@ VS_OUT VS_MAIN(VS_IN In)
 
 struct PS_IN
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexUV : TEXCOORD0;
+	float4      vPosition : SV_POSITION;
+	float2      vTexUV : TEXCOORD0;
 };
 
 struct PS_OUT
 {
-	float4		vColor : SV_TARGET0;
+	float4      vColor : SV_TARGET0;
 };
 
 /* 이렇게 만들어진 픽셀을 PS_MAIN함수의 인자로 던진다. */
@@ -92,7 +91,7 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -104,7 +103,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 PS_OUT PS_ALPHA(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vColor.a *= g_fAlpha;
@@ -114,7 +113,7 @@ PS_OUT PS_ALPHA(PS_IN In)
 
 PS_OUT PS_PICKED(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vColor.rgb += 0.1f;
@@ -126,7 +125,7 @@ PS_OUT PS_PICKED(PS_IN In)
 
 PS_OUT PS_SCREEN(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor.rgb = 0.f;
 	Out.vColor.a = g_fAlpha;
@@ -136,7 +135,7 @@ PS_OUT PS_SCREEN(PS_IN In)
 
 PS_OUT PS_FADEOUT(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
 	Out.vColor.a -= g_fAlpha;
@@ -152,7 +151,7 @@ PS_OUT PS_HPbar(PS_IN In)
 		discard;
 	if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
 		discard;
-	
+
 	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
 	if (origincolor.a > 0.4f)
@@ -164,8 +163,8 @@ PS_OUT PS_HPbar(PS_IN In)
 		Out.vColor = lerpcolor;
 	}
 	else
-    Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	
+		Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
 
 	float fGradientRadius = 0.5f;
 	float fGradientStrength = 0.2f;
@@ -199,14 +198,14 @@ PS_OUT PS_HPbar(PS_IN In)
 
 PS_OUT PS_COMBOLINE(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	/*if (Out.vColor.a <= 0.3f)
-		discard;
+	discard;
 
 	if (Out.vColor.r == 0.f&&Out.vColor.g == 0.f&& Out.vColor.b ==0.f )
-		discard;
+	discard;
 
 	Out.vColor.r += 0.929f;
 	Out.vColor.g += 0.8f;
@@ -232,7 +231,7 @@ PS_OUT PS_Golden(PS_IN In)
 	PS_OUT      Out = (PS_OUT)0;
 
 	/*if ((g_fCurrentHp / g_fMaxHp) < In.vTexUV.x)
-		discard;*/
+	discard;*/
 
 	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -280,7 +279,7 @@ PS_OUT PS_CPguage(PS_IN In)
 
 
 	/*if (Out.vColor.a<0.1f)
-		discard;*/
+	discard;*/
 
 	return Out;
 }
@@ -290,14 +289,14 @@ PS_OUT PS_CPguageblack(PS_IN In)
 {
 	PS_OUT      Out = (PS_OUT)0;
 
-	
+
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	return Out;
 }
 
 PS_OUT PS_MPGUAGE(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	if (g_fCurrentHp / 1.f < In.vTexUV.x)
 		discard;
@@ -311,13 +310,13 @@ PS_OUT PS_MPGUAGE(PS_IN In)
 	Out.vColor.b = 0.83441f;
 	if (Out.vColor.a <= 0.1)
 		discard;
-		
+
 	return Out;
 }
 
 PS_OUT PS_BLACKCOLOR(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
 	//Out.vColor.a -= g_fAlpha;
@@ -330,7 +329,7 @@ PS_OUT PS_BLACKCOLOR(PS_IN In)
 
 PS_OUT PS_PORTRAITDARK(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -343,17 +342,17 @@ PS_OUT PS_PORTRAITDARK(PS_IN In)
 	Out.vColor.g -= 0.15f;
 	Out.vColor.b -= 0.15f;
 
-	
+
 
 	return Out;
 }
 
 PS_OUT PS_POREADY(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	/*if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
-		discard;*/
+	discard;*/
 
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
@@ -361,21 +360,21 @@ PS_OUT PS_POREADY(PS_IN In)
 
 	Out.vColor.a -= g_fAlpha;
 	Out.vColor.r = max(0.9372549019607843f, Out.vColor.r);
-	Out.vColor.g = max(0.8745098039215686f, Out.vColor.g); 
-	Out.vColor.b = max(0.7647058823529412f, Out.vColor.b); 
+	Out.vColor.g = max(0.8745098039215686f, Out.vColor.g);
+	Out.vColor.b = max(0.7647058823529412f, Out.vColor.b);
 
 
 	/*if (Out.vColor.a == 0)
-		discard;*/
+	discard;*/
 	return Out;
 }
 
 PS_OUT PS_ALLBLUE(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
-//	if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
-//		discard;
+	//   if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+	//      discard;
 
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
@@ -394,10 +393,10 @@ PS_OUT PS_ALLBLUE(PS_IN In)
 
 PS_OUT PS_RUNECOLOR(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
-	//	if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
-	//		discard;
+	//   if (g_fCurrentHp / g_fMaxHp < In.vTexUV.x)
+	//      discard;
 
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
@@ -419,9 +418,9 @@ PS_OUT PS_RUNECOLOR(PS_IN In)
 
 PS_OUT PS_REVERSELOCKON(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
-	if (1-(g_fCurrentHp / 1.f )> In.vTexUV.x)
+	if (1 - (g_fCurrentHp / 1.f)> In.vTexUV.x)
 		discard;
 
 
@@ -433,7 +432,7 @@ PS_OUT PS_REVERSELOCKON(PS_IN In)
 	Out.vColor.b = 0.83441f;
 
 	if (Out.vColor.a <= 0.1)
-	discard;
+		discard;
 
 	return Out;
 }
@@ -444,8 +443,8 @@ PS_OUT PS_UVROTATION(PS_IN In)
 
 	/*Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	if (Out.vColor.r == 0 && Out.vColor.g == 0 && Out.vColor.b && 0)
-		return Out;*/
-	
+	return Out;*/
+
 
 	float2x2 rotationMatrix = float2x2(cos(g_fAngle), -sin(g_fAngle), sin(g_fAngle), cos(g_fAngle));
 
@@ -455,16 +454,16 @@ PS_OUT PS_UVROTATION(PS_IN In)
 	if (In.vTexUV.y < 0.2f || In.vTexUV.y > 0.8f)
 		discard;
 
-	float2 rotatedUV = mul(rotationMatrix, In.vTexUV -0.5f) + 0.5f;
+	float2 rotatedUV = mul(rotationMatrix, In.vTexUV - 0.5f) + 0.5f;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, rotatedUV);
 
 	Out.vColor.a = Out.vColor.r;
 
 	//if (Out.vColor.r >= 0.2f)
-		Out.vColor.rgb = float3(0.5882352941176471f, 0.5372549019607843f, 0.3686274509803922f);
+	Out.vColor.rgb = float3(0.5882352941176471f, 0.5372549019607843f, 0.3686274509803922f);
 
-		
+
 
 
 	Out.vColor.a -= 0.2f;
@@ -474,14 +473,14 @@ PS_OUT PS_UVROTATION(PS_IN In)
 
 PS_OUT PS_INVENICON(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
-	
+
 
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
-	
+
 	if (Out.vColor.r < 0.53f || Out.vColor.g < 0.5f || Out.vColor.b < 0.5f)
 		discard;
 	else
@@ -516,19 +515,19 @@ PS_OUT PS_INVENICON(PS_IN In)
 
 
 	Out.vColor.rgb += fLerp;   //fLerpValue;
-	
-		
-		
-		
+
+
+
+
 	Out.vColor.a -= 0.3f;
-	
+
 
 	return Out;
 }
 
 PS_OUT PS_INVENBACK(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 
 
@@ -538,16 +537,16 @@ PS_OUT PS_INVENBACK(PS_IN In)
 	Out.vColor.a = Out.vColor.r;
 	Out.vColor.rgb = float3(0.5882352941176471f, 0.5372549019607843f, 0.3686274509803922f);
 	//if (Out.vColor.r < 0.53f || Out.vColor.g < 0.5f || Out.vColor.b < 0.5f)
-	//	discard;
+	//   discard;
 	//else
 	//{
 
-	//	Out.vColor.r = 0.9372549019607843f;
-	//	Out.vColor.g = 0.8745098039215686f;
-	//	Out.vColor.b = 0.7647058823529412f;
-	//	//	Out.vColor.r = max(0.9372549019607843f, Out.vColor.r);
-	//	//	Out.vColor.g = max(0.8745098039215686f, Out.vColor.g);
-	//	//	Out.vColor.b = max(0.7647058823529412f, Out.vColor.b);
+	//   Out.vColor.r = 0.9372549019607843f;
+	//   Out.vColor.g = 0.8745098039215686f;
+	//   Out.vColor.b = 0.7647058823529412f;
+	//   //   Out.vColor.r = max(0.9372549019607843f, Out.vColor.r);
+	//   //   Out.vColor.g = max(0.8745098039215686f, Out.vColor.g);
+	//   //   Out.vColor.b = max(0.7647058823529412f, Out.vColor.b);
 	//}
 
 
@@ -567,8 +566,8 @@ PS_OUT PS_MENULINE(PS_IN In)
 	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
 
-	
-	
+
+
 	//origincolor.a = maskcolor.a;
 	//Out.vColor = origincolor;
 
@@ -576,13 +575,13 @@ PS_OUT PS_MENULINE(PS_IN In)
 
 	Out.vColor = lerpcolor;
 	Out.vColor.a = maskcolor.a;
-	
 
 
-		if (Out.vColor.a == 0.f)
-			discard;
+
+	if (Out.vColor.a == 0.f)
+		discard;
 	/*if (Out.vColor.a<0.3f)
-		discard;*/
+	discard;*/
 
 	return Out;
 }
@@ -590,7 +589,7 @@ PS_OUT PS_MENULINE(PS_IN In)
 
 PS_OUT PS_INVENTOPBOTTOM(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 
 
@@ -611,7 +610,7 @@ PS_OUT PS_INVENTOPBOTTOM(PS_IN In)
 
 PS_OUT PS_INVENTOPBOTTOMALPHA(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 
 
@@ -632,7 +631,7 @@ PS_OUT PS_INVENTOPBOTTOMALPHA(PS_IN In)
 
 PS_OUT PS_GALDBACK(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -640,7 +639,7 @@ PS_OUT PS_GALDBACK(PS_IN In)
 
 	Out.vColor.rgb -= 0.2f;
 	/*if (Out.vColor.a <= 1.f)
-		discard;*/
+	discard;*/
 
 	Out.vColor.a *= g_fAlpha;
 
@@ -699,7 +698,7 @@ PS_OUT PS_USINGITEMPORTRAIT(PS_IN In)
 	float4 lerpcolor = lerp(float4(0.5882352941176471f, 0.5372549019607843f, 0.3686274509803922f, 1.f), float4(0.9f, 0.8352f, 0.9f, 1.f), Out.vColor);
 
 
-	
+
 	Out.vColor = lerpcolor;
 	Out.vColor.a -= 0.5f;
 	return Out;
@@ -720,9 +719,9 @@ PS_OUT PS_LIGHTEFFECT(PS_IN In)
 	//float4 lerpcolor = lerp(float4(0.5882352941176471f, 0.5372549019607843f, 0.3686274509803922f, 1.f), float4(0.9f, 0.8352f, 0.9f, 1.f), Out.vColor);
 
 	Out.vColor.a -= 0.25f;
-	
+
 	//Out.vColor.rgb = lerpcolor.rgb;
-	
+
 	return Out;
 
 
@@ -759,14 +758,14 @@ PS_OUT PS_Bright(PS_IN In)
 	Out.vColor.rgb += fLerp;   //fLerpValue;
 
 
-	if (Out.vColor.a<=0.1f)
+	if (Out.vColor.a <= 0.1f)
 		discard;
 
 	Out.vColor.a *= g_fAlpha;
 
 	return Out;
 
-	
+
 }
 
 PS_OUT PS_HPbarBLUE(PS_IN In)
@@ -827,7 +826,7 @@ PS_OUT PS_Dialoguebox(PS_IN In)
 {
 	PS_OUT      Out = (PS_OUT)0;
 
-	
+
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -835,7 +834,7 @@ PS_OUT PS_Dialoguebox(PS_IN In)
 
 	if (Out.vColor.r == 0)
 		discard;
-	
+
 
 	Out.vColor.rgb = 0.f;
 	Out.vColor.a *= g_fAlpha;
@@ -850,13 +849,13 @@ PS_OUT PS_DialogueLINE(PS_IN In)
 	PS_OUT      Out = (PS_OUT)0;
 
 
-    Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vColor.a = Out.vColor.r;
 
 	if (Out.vColor.r == 0)
 		discard;
 
-    float4 lerpcolor = lerp(float4(0.9019607843137255f, 0.8235294117647059f, 0.6588235294117647f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), Out.vColor);
+	float4 lerpcolor = lerp(float4(0.9019607843137255f, 0.8235294117647059f, 0.6588235294117647f, 1.f), float4(0.7882f, 0.8352f, 0.647f, 1.f), Out.vColor);
 
 	Out.vColor.rgb = lerpcolor.rgb;
 	Out.vColor.a *= g_fAlpha;
@@ -875,13 +874,13 @@ PS_OUT PS_DIALOGUECURSOR(PS_IN In)
 	if (origincolor.r == 0)
 		discard;
 
-		float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
+	float4 maskcolor = g_GradationTexture.Sample(LinearSampler, In.vTexUV);
 
-		float4 lerpcolor = lerp(float4(0.9176470588235294, 0.2313725490196078, 0.2588235294117647, 1.f), float4(0.9254901960784314, 0.5254901960784314, 0.5411764705882353, 1.f), maskcolor);
+	float4 lerpcolor = lerp(float4(0.9176470588235294, 0.2313725490196078, 0.2588235294117647, 1.f), float4(0.9254901960784314, 0.5254901960784314, 0.5411764705882353, 1.f), maskcolor);
 
-		Out.vColor = lerpcolor;
+	Out.vColor = lerpcolor;
 
-		Out.vColor.a *= g_fAlpha;
+	Out.vColor.a *= g_fAlpha;
 
 	return Out;
 }
@@ -908,25 +907,25 @@ PS_OUT PS_DIALOGUECURSORNOTMOVE(PS_IN In)
 
 PS_OUT PS_ALPHATESTSET(PS_IN In)
 {
-//	PS_OUT		Out = (PS_OUT)0;
-//
-//	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-//	if(Out.vColor.r <= 0.f)
-//		discard;
-////	float2 vNewUv = In.vTexUV * 0.5f;
-//	float4 gradtexture = g_GradationTexture.Sample(LinearSampler, vNewUv);
-//	
-//	Out.vColor.a = gradtexture.a;
-//
-//	
-//
-//	/*if (Out.vColor.r <= 1.5f)
-//		discard;*/
-//	Out.vColor.a *= g_fAlpha;
-//
-//	return Out;
+	//   PS_OUT      Out = (PS_OUT)0;
+	//
+	//   Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//   if(Out.vColor.r <= 0.f)
+	//      discard;
+	////   float2 vNewUv = In.vTexUV * 0.5f;
+	//   float4 gradtexture = g_GradationTexture.Sample(LinearSampler, vNewUv);
+	//   
+	//   Out.vColor.a = gradtexture.a;
+	//
+	//   
+	//
+	//   /*if (Out.vColor.r <= 1.5f)
+	//      discard;*/
+	//   Out.vColor.a *= g_fAlpha;
+	//
+	//   return Out;
 
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	/*if (Out.vColor.a <= 0.3f)
@@ -938,11 +937,11 @@ PS_OUT PS_ALPHATESTSET(PS_IN In)
 	Out.vColor.r += 0.929f;
 	Out.vColor.g += 0.8f;
 	Out.vColor.b += 0.486f;*/
-//	float3 yellowRef = normalize(float3(.69f, .62f, .42f)); //텍스쳐색
+	//   float3 yellowRef = normalize(float3(.69f, .62f, .42f)); //텍스쳐색
 
 
-//	float weight = dot(Out.vColor.rgb, yellowRef); //알파만들기
-//	Out.vColor.a = lerp(0, 1, weight);
+	//   float weight = dot(Out.vColor.rgb, yellowRef); //알파만들기
+	//   Out.vColor.a = lerp(0, 1, weight);
 
 	Out.vColor.a = Out.vColor.rgb;//lerp(0, 1, saturate(weight));
 
@@ -954,12 +953,12 @@ PS_OUT PS_ALPHATESTSET(PS_IN In)
 
 PS_OUT PS_BRIGHTFORBLACK(PS_IN In)
 {
-	
 
-	PS_OUT		Out = (PS_OUT)0;
+
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	
+
 
 	Out.vColor.a = Out.vColor.rgb;
 
@@ -1033,7 +1032,7 @@ PS_OUT PS_BRIGHTDialogueLINE(PS_IN In)
 
 
 	Out.vColor.a *= g_fAlpha;
-	
+
 
 	return Out;
 }
@@ -1057,19 +1056,19 @@ PS_OUT PS_OUTLINE(PS_IN In)
 
 
 	//if (fLeft_Line < g_MiddlePoint.x && g_MiddlePoint.x < fLeft_Line + 12.f ||
-	//	fRight_Line > g_MiddlePoint.x && g_MiddlePoint.x > fRight_Line - 12.f ||
-	//	fDown_Line > g_MiddlePoint.y&& g_MiddlePoint.y > fDown_Line - 12.f ||
-	//	fUp_Line < g_MiddlePoint.y && g_MiddlePoint.y < fUp_Line + 12.f)
+	//   fRight_Line > g_MiddlePoint.x && g_MiddlePoint.x > fRight_Line - 12.f ||
+	//   fDown_Line > g_MiddlePoint.y&& g_MiddlePoint.y > fDown_Line - 12.f ||
+	//   fUp_Line < g_MiddlePoint.y && g_MiddlePoint.y < fUp_Line + 12.f)
 	//{
-	//	
-	//	Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
-	//	Out.vColor.a *= 0.5f;
+	//   
+	//   Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	//   Out.vColor.a *= 0.5f;
 	//}
 	//else
 	//{
-	//	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	//	//Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
-	//	Out.vColor.a *= 0.5f;
+	//   Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//   //Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	//   Out.vColor.a *= 0.5f;
 	//}
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	if (In.vTexUV.x < 0.015f || In.vTexUV.x > 0.985f)
@@ -1079,7 +1078,7 @@ PS_OUT PS_OUTLINE(PS_IN In)
 	if (In.vTexUV.y < 0.02f || In.vTexUV.y > 0.98f)
 		Out.vColor.rgb = 0.2f;
 
-		Out.vColor.a *= g_fAlpha;
+	Out.vColor.a *= g_fAlpha;
 
 	return Out;
 }
@@ -1103,19 +1102,19 @@ PS_OUT PS_OUTLINE2(PS_IN In)
 
 
 	//if (fLeft_Line < g_MiddlePoint.x && g_MiddlePoint.x < fLeft_Line + 12.f ||
-	//	fRight_Line > g_MiddlePoint.x && g_MiddlePoint.x > fRight_Line - 12.f ||
-	//	fDown_Line > g_MiddlePoint.y&& g_MiddlePoint.y > fDown_Line - 12.f ||
-	//	fUp_Line < g_MiddlePoint.y && g_MiddlePoint.y < fUp_Line + 12.f)
+	//   fRight_Line > g_MiddlePoint.x && g_MiddlePoint.x > fRight_Line - 12.f ||
+	//   fDown_Line > g_MiddlePoint.y&& g_MiddlePoint.y > fDown_Line - 12.f ||
+	//   fUp_Line < g_MiddlePoint.y && g_MiddlePoint.y < fUp_Line + 12.f)
 	//{
-	//	
-	//	Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
-	//	Out.vColor.a *= 0.5f;
+	//   
+	//   Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	//   Out.vColor.a *= 0.5f;
 	//}
 	//else
 	//{
-	//	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	//	//Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
-	//	Out.vColor.a *= 0.5f;
+	//   Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//   //Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	//   Out.vColor.a *= 0.5f;
 	//}
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 	if (In.vTexUV.x < 0.01f || In.vTexUV.x > 0.99f)
@@ -1246,7 +1245,7 @@ PS_OUT PS_PROGRESSBAR(PS_IN In)
 
 
 
-//	return Out;
+	//   return Out;
 }
 
 
@@ -1306,7 +1305,7 @@ PS_OUT PS_BOSSHPBAR(PS_IN In)
 
 	return Out;
 
-	
+
 }
 
 PS_OUT PS_BOSSHPBARFULL(PS_IN In)
@@ -1417,14 +1416,14 @@ PS_OUT PS_UI_GLOW(PS_IN In)
 		Out.vColor.a = Out.vColor.r;
 		Out.vColor.rgb = g_vGlowColor;
 
-		Out.vColor *=  min(cos(g_fGlowTimer * 4) + 1.5f, 1.f);
+		Out.vColor *= min(cos(g_fGlowTimer * 4) + 1.5f, 1.f);
 	}
 
 	Out.vColor.a *= g_fAlpha;
 	if (Out.vColor.a == 0)
 		discard;
 
-	
+
 
 	return Out;
 }
@@ -1475,7 +1474,7 @@ PS_OUT PS_EXPBAR(PS_IN In)
 
 
 
-	//	return Out;
+	//   return Out;
 }
 
 PS_OUT PS_STRIKEEFFECT(PS_IN In)
@@ -1539,7 +1538,7 @@ PS_OUT PS_UI_SPRITE_GLOW(PS_IN In)
 	float u = fCol * fSpriteWidth;
 	float v = fRow * fSpriteHeight;
 	float2 vSpriteUV = float2(u + In.vTexUV.x * fSpriteWidth, v + In.vTexUV.y * fSpriteHeight);
-	 
+
 	Out.vColor = g_GlowTexture.Sample(LinearSampler, vSpriteUV);
 	Out.vColor.a = Out.vColor.r;
 
@@ -1562,7 +1561,7 @@ PS_OUT PS_Recoverhpfont(PS_IN In)
 	PS_OUT      Out = (PS_OUT)0;
 
 	/*if (In.vTexUV.y > (1.4f - In.vTexUV.x) + (In.vTexUV.y))
-		discard;*/
+	discard;*/
 	float4 origincolor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
 	if (origincolor.a > 0.4f)
@@ -1575,7 +1574,7 @@ PS_OUT PS_Recoverhpfont(PS_IN In)
 	}
 	else
 		discard;
-	//	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+	//   Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
 
 
@@ -1611,13 +1610,13 @@ PS_OUT PS_Hithpfont(PS_IN In)
 	else
 		Out.vColor = origincolor;
 
-	
-	//	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+
+	//   Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
 
 
 	if (Out.vColor.a<0.3f)
-	discard;
+		discard;
 
 	Out.vColor.a *= g_fAlpha;
 
@@ -1626,12 +1625,12 @@ PS_OUT PS_Hithpfont(PS_IN In)
 
 PS_OUT PS_JUSTDODGE(PS_IN In)
 {
-	
 
-	PS_OUT		Out = (PS_OUT)0;
+
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-	
+
 
 	Out.vColor.a = Out.vColor.rgb;
 
@@ -1682,7 +1681,7 @@ PS_OUT PS_CRITICALDAMAGE(PS_IN In)
 {
 
 
-	//PS_OUT		Out = (PS_OUT)0;
+	//PS_OUT      Out = (PS_OUT)0;
 
 	//Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -1691,7 +1690,7 @@ PS_OUT PS_CRITICALDAMAGE(PS_IN In)
 
 	//Out.vColor.b = 0.2745098039215686f;
 	//if (Out.vColor.a<0.3f)
-	//	discard;
+	//   discard;
 	//Out.vColor.a *= g_fAlpha;
 
 	//return Out;
@@ -1729,7 +1728,7 @@ PS_OUT PS_CRITICALDAMAGE(PS_IN In)
 
 PS_OUT PS_ALPHADISCARD(PS_IN In)
 {
-	PS_OUT		Out = (PS_OUT)0;
+	PS_OUT      Out = (PS_OUT)0;
 
 	Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
@@ -1738,7 +1737,7 @@ PS_OUT PS_ALPHADISCARD(PS_IN In)
 
 	Out.vColor.a *= g_fAlpha;
 
-	
+
 
 	return Out;
 }
@@ -1813,24 +1812,22 @@ PS_OUT PS_EXPBAR22(PS_IN In)
 	fa = saturate(fa);
 	if (fa != 1.f)
 		discard;
-	vector color = vector(0.f, 0.f, 0.f, 1.f);
+	vector color = vector(0.f, 0.f, 0.f, 1);
 	vector col = lerp(color, DiffuseTexture, fa);
 	//   col.a *= fr;
 
 	//col = col * col2;//DiffuseTexture;
+
+	Out.vColor = col;
+
 	if (Out.vColor.a < 0.2f)
 		discard;
-	Out.vColor = lerp(float4(1.f, 1.f, 1.f, 1.f), float4(0.9882f, 0.8352f, 0.647f, 1.f), 0.2f);
 
-	/*
+	Out.vColor.a = 1.f;
 
-	Out.vColor.a += 0.6f;*/
+	Out.vColor.a *= g_fAlpha;
 
 	return Out;
-
-
-
-	//	return Out;
 }
 
 
@@ -2112,7 +2109,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_GALDBACK();
 	}
-	
+
 	pass UVROTATIONSTRONG
 	{
 		SetRasterizerState(RS_Default);
@@ -2123,7 +2120,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_UVROTATIONSTRONG();
 	}
-	
+
 	pass USINGITEMPORTRAIT
 	{
 		SetRasterizerState(RS_Default);
@@ -2189,7 +2186,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DialogueLINE();                //31
 	}
-	
+
 	pass DIALOGUECURSOR
 	{
 		SetRasterizerState(RS_Default);
@@ -2211,7 +2208,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DIALOGUECURSORNOTMOVE();                //33
 	}
-	
+
 	pass ALPHASETTEST
 	{
 		SetRasterizerState(RS_Default);
@@ -2222,7 +2219,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHATESTSET();                //34
 	}
-	
+
 	pass BRIGHTBLACK
 	{
 		SetRasterizerState(RS_Default);
@@ -2299,7 +2296,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_BATTLESTART();                //41
 	}
-	
+
 	pass PROGRESSBAR
 	{
 		SetRasterizerState(RS_Default);
@@ -2365,7 +2362,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_EFFECTSCREEN();                //47
 	}
-	
+
 	pass UI_GLOW // 48
 	{
 		SetRasterizerState(RS_Default);
@@ -2442,7 +2439,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_JUSTDODGE();
 	}
-	
+
 
 	pass UI_RESISTDAMAGEFONT // 55
 	{
@@ -2509,7 +2506,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_EXPBAR22();
 	}
-	
-	
-	
+
+
+
 }

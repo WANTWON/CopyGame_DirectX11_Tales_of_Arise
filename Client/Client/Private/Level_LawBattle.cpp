@@ -113,14 +113,17 @@ void CLevel_LawBattle::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if ((CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
-		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON) ||
-		CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
-	{
-		g_fSoundVolume += 0.01f;
-		if (g_fSoundVolume >= 0.65f)
-			g_fSoundVolume = 0.65f;
-	}
+	//if ((CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+	//	dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON) ||
+	//	CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_ACTION)
+	//{
+	//	g_fSoundVolume = 0.f;//+= 0.01f;
+	//						 /*g_fSoundVolume += 0.001f;
+	//						 if (g_fSoundVolume >= 0.3f)
+	//						 g_fSoundVolume = 0.3f;*/
+	//}
+	g_fSoundVolume = 0.f;
+	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false && m_iBossDeadCount >= 2)
 	{

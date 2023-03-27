@@ -517,8 +517,6 @@ _int CAiRinwell::Take_Damage(int fDamage, CBaseObj* DamageCauser, HITLAGDESC Hit
 			}
 		}
 	}
-
-	
 	
 	return iHp;
 }

@@ -103,8 +103,8 @@ HRESULT CLevel_City::Initialize()
 	else
 	{
 		CGameInstance::Get_Instance()->PlayBGM(TEXT("BGM_City.wav"), g_fSoundVolume);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_mountain_Bird_Bug.wav"), SOUND_NATURE, 0.1f);
-		CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_Crowd.wav"), SOUND_CROWD, g_fSoundNatureVolume);
+		//CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_mountain_Bird_Bug.wav"), SOUND_NATURE, 0.1f);
+		//CGameInstance::Get_Instance()->PlaySounds(TEXT("Natrue_Crowd.wav"), SOUND_CROWD, g_fSoundNatureVolume);
 
 	}
 		
@@ -115,9 +115,10 @@ void CLevel_City::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	g_fSoundVolume += 0.001f;
+	g_fSoundVolume = 0.f;//+= 0.01f;
+	/*g_fSoundVolume += 0.001f;
 	if (g_fSoundVolume >= 0.3f)
-		g_fSoundVolume = 0.3f;
+		g_fSoundVolume = 0.3f;*/
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_CROWD, g_fSoundNatureVolume);
 

@@ -167,6 +167,7 @@ void CAlphenSkills::Collision_Check()
 			m_HitLagDesc.fZoomSpeed = 0.5f;
 			m_HitLagDesc.fBlurPower = 6.f;
 			m_HitLagDesc.fBlurDetail = 10.f;
+			m_BulletDesc.iDamage = rand() % 100 + 500;
 
 			if (CCollision_Manager::Get_Instance()->CollisionwithGroup(CCollision_Manager::COLLISION_MONSTER, m_pSPHERECom, &pCollisionTarget))
 				dynamic_cast<CMonster*>(pCollisionTarget)->Take_Damage(m_BulletDesc.iDamage, m_BulletDesc.pOwner, m_HitLagDesc);

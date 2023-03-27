@@ -77,9 +77,10 @@ void CLevel_WorkTool::Tick(_float fTimeDelta)
 		m_fSpawnTime = 0.2f;
 		break;
 	}
-	g_fSoundVolume += 0.001f;
-	if (g_fSoundVolume >= 0.3f)
-		g_fSoundVolume = 0.3f;
+	g_fSoundVolume = 0.f;//+= 0.01f;
+						 /*g_fSoundVolume += 0.001f;
+						 if (g_fSoundVolume >= 0.3f)
+						 g_fSoundVolume = 0.3f;*/
 	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, g_fSoundVolume);
 
 	if (m_bNextNevel)
