@@ -188,15 +188,15 @@ void CLevel_LawBattle::BattleTick(_float fTimeDelta)
 
 
 
-	if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
+	/*if (CCameraManager::Get_Instance()->Get_CamState() == CCameraManager::CAM_DYNAMIC &&
 		dynamic_cast<CCamera_Dynamic*>(CCameraManager::Get_Instance()->Get_CurrentCamera())->Get_CamMode() != CCamera_Dynamic::CAM_LOCKON)
 	{
 		g_fSoundVolume += 0.001f;
 		if (g_fSoundVolume >= 0.15f)
 			g_fSoundVolume = 0.15f;
-	}
+	}*/
 
-	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, 0.65f);
+	CGameInstance::Get_Instance()->SetChannelVolume(SOUND_BGM, 0.f);
 
 
 	if (CBattleManager::Get_Instance()->Get_IsBattleMode() == false)
