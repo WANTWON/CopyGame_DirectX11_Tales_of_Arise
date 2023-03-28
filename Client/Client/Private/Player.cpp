@@ -154,7 +154,7 @@ int CPlayer::Tick(_float fTimeDelta)
 			Tick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-		break;
+		//break;
 		Tick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
@@ -230,7 +230,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 	if (pCameraManager->Get_CamState() == CCameraManager::CAM_ACTION && m_bIsActiveAtActionCamera == false)
 		return;
 
-	if (nullptr != m_pRendererCom && m_ePlayerMode == ACTIVE)
+	if (nullptr != m_pRendererCom && m_ePlayerMode != UNVISIBLE)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 		if (m_bIsSionWeapon)
@@ -265,7 +265,7 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 			LateTick_AIState(fTimeDelta);
 		break;
 	case Client::AI_MODE:
-		break;
+		//break;
 		LateTick_AIState(fTimeDelta);
 		break;
 	case Client::UNVISIBLE:
