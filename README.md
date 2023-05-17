@@ -129,11 +129,13 @@
 
 ### 일반 Camera
 
-<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/8e0a7c3c-cbb4-44af-9475-ec37785d4e0f" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/f66137ac-19d0-4d42-9f2c-f90e71b75cca" width="40%"/>
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/e4e05d0f-6055-469e-b319-5e40d453590a" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/65106f7a-3294-49c1-82a4-c0762dc47112" width="40%"/>
 
 마우스의 움직임을 입력받아서 x의 이동량과 y의 이동량에 따라 플레이어를 공전하는 카메라를 구현했습니다.
 
 ### 배틀 Camera
+
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/7716fd6a-49ae-4c4a-b527-ec2306dc12c4" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/e787920d-7ded-4a7f-ae78-e3255472dfff" width="40%"/>
 
 플레이어와 타겟 몬스터를 하나의 화면 안에 담기위해 카메라용 가상 절두체를 생성하여 타겟인 몬스터가 절두체를 벗어나려고 할 때 카메라를 자동으로 회전시키게 했습니다.
 
@@ -153,11 +155,15 @@ NPC와의 대화나, 스트라이크 스킬을 비롯한 액션씬을 카메라 
 
 ### Terrain Tool
 
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/ebd2d865-7251-4eea-bdfa-16a0f51f2b22" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/a87d0439-696f-42b5-9292-63a1ad137584" width="40%"/>
+
 - 필터 텍스처를 이용해 텍스처 스플래팅 기법을 구현했습니다. 지형에 마우스 픽킹을 통해 동적으로 필터 텍스처를 생성 가능하였고, 그것을 bmp파일로 저장 하고 불러오기가 가능하게 했습니다. 이를 레벨마다 다른 텍스처들을 융합하여 스플래팅으로 섞이도록 처리했습니다.
 - Height Map으로 지형을 불러오기가 가능하게 하였고, 마우스 픽킹을 통해 모양을 세부적으로 조절할 수 있게 처리했습니다.
 - 브러쉬 Shader로 마우스의 픽킹 위치와 범위를 실시간으로 볼 수 있게 했습니다.
 
 ### Model Tool
+
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/ba337953-fa1d-4343-801e-d8472c5ca450" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/77927c23-db50-487a-b7d4-e422e6a74ea5" width="40%"/>
 
 - IMGUI툴을 이용하여 객체들을 설치하고 저장, 불러오기 기능을 하는 맵툴을 구현했습니다.
 - 각 객체들을 Layer별로 설치하고 삭제할 수 있으며 해당 Layer별로 저장이 가능하게 했습니다. 저장은 가독성과 편의성을 위해 다이얼로그 기능을 구현했습니다.
@@ -171,12 +177,16 @@ NPC와의 대화나, 스트라이크 스킬을 비롯한 액션씬을 카메라 
 
 ### Camera Tool
 
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/8969e8cd-e629-4ca6-ab79-b13d778bba81" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/9f374149-3385-458e-b27f-0d9c1e6e3b9b" width="40%"/>
+
 - 카메라가 현재 바라보는 화면을 캡쳐하여 캡쳐한 순간의 카메라의 좌표와, 바라보는 시야의 위치를 저장하게 처리했습니다.
 - 해당 캡쳐 내용을 vector 컨테이너에 담아 play 버튼을 누를 시 처음부터 끝까지 캡쳐한 순서대로 카메라의 위치와 시야가 바뀌도록 처리했습니다.
 - 이동하는 방식은 Lerp함수 또는 CatRom 함수를 통해 가능하며 이는 툴 상에서 선택 가능하게 처리했습니다.
 - 툴로 제작 가능한 카메라는 Target 카메라와 Action 카메라 두 개로 구분되며 용도에 따라 다른 형태로 저장됩니다.
 
 ### Light Tool
+
+![제목 없는 동영상 - Clipchamp로 제작 (19)](https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/e6aa495e-4394-4fe9-8c79-b7fc3b9f7cf4)
 
 - 레벨별로 Directional Light와 Point Light를 설치 가능하게 했습니다.
 - 각 Light 마다 Diffuse , Ambient 등 빛의 속성들을 제어할 수 있고 이를 데이터 파일로 저장 불러오기가 가능하게 처리했습니다.
