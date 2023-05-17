@@ -4,6 +4,10 @@
 
 <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/029ab07d-351e-4622-bc9e-e0e17260fc17" width="50%"/>
 
+개발기간 : 2개월
+  
+개발인원 : 5명
+  
 ##### 📌해당 설명서는 팀원 개개인이 개별적으로 작성하기에 팀원 모두의 구현 내용을 담은 것이 아닙니다. 
 #####  추후 팀원들의 개별 작성을 통해 main branch 에는 팀원들의 전체 내용이, 
 ##### 각 팀원별 branch에는 개인이 담당한 파트 일부분이 기록될 예정입니다. 이 점 참고바랍니다.
@@ -33,6 +37,12 @@
 
 스테이지는 크게 메인필드, 배틀 존, 미니게임, 보스룸으로 구성되어있습니다.
 
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/a97e0d9d-fe7f-4026-81cc-8892c9db29b9" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/521a4eeb-862d-4fac-bdc4-6df8f60fad98" width="40%"/>
+
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/b8d8d1a0-bb2c-443f-9cf3-5c174c2e8f84" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/bbd0c6d4-8d04-4be6-9411-772002cb987e" width="40%"/>
+
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/a194cb49-c842-4862-81c3-68732d47a9f1" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/83f91746-ebf0-49c9-bb4d-1ab7596c6f48" width="40%"/>
+
 # *구현 컨텐츠 및 기능 설명*
 
 
@@ -40,11 +50,17 @@
 
 ### 스레드/오브젝트 풀링
 
+![로딩 스레드](https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/a1ea6f29-28ab-4e6e-ba13-3ee0f415e8df)
+
 - 게임에서 신이 전환되면서 로딩 없이 게임이 바로 진행될 수 있도록 처음 게임을 실행할 때 각 레벨마다 필요한 객체들을 프로토타입 패턴을 이용해 클론형으로 생성했습니다. 이는 스레드를 다중으로 이용하여 시간이 지연되는 것을 방지했습니다.
 - 이렇게 클론된 객체들을 각 필요한 용도에 따라 Layer별로 분류했고, 오브젝트 풀링을 이용해 풀링 레이어 공간에 담아두었다가 필요할 때 바로 꺼내쓸 수 있도록 구현했습니다.
 - 덕분에 객체 생성, 레벨 전환에 있어서 빠른 속도를 유지할 수 있었습니다.
 
 ### 플레이 존/배틀존
+
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/4e7e6655-dbdf-4339-9c13-90ce3dadb3dc" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/d99376a8-fbb7-41ef-a0cf-4978a0971b97" width="40%"/>
+
+![ObjectPool](https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/25226d9c-193c-4a72-aacb-61db1dd8f068)
 
 - 해당 게임은 전투와 비전투 상태가 분류되어서 진행되는 게임입니다.
 - 이를 구현하기 위해 싱글톤 형태로 배틀에 대한 정보를 관리하는 Battle Manager를 구현했습니다.
@@ -59,6 +75,10 @@
 
 ### 상태 패턴
 
+![상태 패턴](https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/6f1ac1b6-03ef-442d-9aea-9e90c39371fb)
+
+![FlowchartDiagram1](https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/48b10a25-f2df-4395-a6d6-66d7c3fa46ea)
+
 - 팀프로젝트를 하면서 업무 분할과 수정, 가독성 등에 있어서 효율적으로 진행하고자 상태 패턴을 활용했습니다.
 - 객체들의 움직임들을 각 상태에 따라 분할하여 제어하도록 처리했습니다.
 
@@ -66,10 +86,14 @@
 
 ### 피격 / 타격 제어
 
+![제목 없는 동영상 - Clipchamp로 제작 (4)](https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/82ffa816-5a00-4d64-bcbb-6f6f41ef0d06)
+
 - 타격감이나 피격, 타격에 따른 처리를 위한 상세한 디테일을 처리했습니다.
 - 추상 클래스에서 가진 Take_Damage 함수를 상속받아 세부적으로 구현했고, 피격을 받을 시 데미지의 타입이나, 쉐이킹, 크리티컬 등 다양한 피격 처리를 진행했습니다.
 
 ### LOCKON / OFF 기능
+
+![제목 없는 동영상 - Clipchamp로 제작 (3)](https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/539f9ed2-267f-48ec-91e3-8dc809b32d83)
 
 - 공격시 타겟몬스터를 설정할 수 있는 LockOn 기능이 있습니다.
 - 각 몬스터마다 LockOn 게이지를 보유하고 있으며, 플레이어는 타겟팅한 대상의 LockOn 게이지를 확인할 수 있습니다.
@@ -79,14 +103,23 @@
 
 ### 플레이어 전환
 
+![제목 없는 동영상 - Clipchamp로 제작 (2)](https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/6f0a04f0-5138-4fdd-8f17-1a3a6921713c)
+
 - 위의 일시정지 기능을 통해 동일하게 플레이어도 변경가능합니다.
 - 1,2,3,4를 통해 원하는 캐릭터를 메인 플레이어로 설정할 수 있습니다.
 
 ### 부스트 어택
 
+![제목 없는 동영상 - Clipchamp로 제작 (5)](https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/8d78dd25-8766-4c55-8fcc-9c87692daec2)
+
 - 플레이어와 AI의 게이지가 다 채워질 경우 부스트 어택을 사용할 수 있습니다. 이때 부스트어택 사용시 카메라가 부스트 어택을 사용한 플레이어로 변환되었다가 다시 돌아옵니다.
 
 ### 스트라이크 어택
+
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/cf78eddd-d4d7-46d4-91a1-9843c1b0b39d" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/e99f0b4c-44a8-4e77-aa9f-fa21052ec8b0" width="40%"/>
+
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/8e0a7c3c-cbb4-44af-9475-ec37785d4e0f" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/f66137ac-19d0-4d42-9f2c-f90e71b75cca" width="40%"/>
+
 
 - 몬스터의 LockOn 게이지가 다 채워지면 시간이 멈추면서 스트라이크 어택(궁극기)를 사용할 수 있게 됩니다.
 - 선택하는 플레이어에 따라 카메라 툴로 제작한 액션카메라로 카메라가 전환됩니다.
@@ -95,6 +128,8 @@
 ## 2. 카메라
 
 ### 일반 Camera
+
+<img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/8e0a7c3c-cbb4-44af-9475-ec37785d4e0f" width="40%"/> <img src="https://github.com/WANTWON/CopyGame_DirectX11_Tales_of_Arise/assets/106663427/f66137ac-19d0-4d42-9f2c-f90e71b75cca" width="40%"/>
 
 마우스의 움직임을 입력받아서 x의 이동량과 y의 이동량에 따라 플레이어를 공전하는 카메라를 구현했습니다.
 
